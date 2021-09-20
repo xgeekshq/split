@@ -1,4 +1,4 @@
-# Contributing to xgeeks - #Project name
+# Contributing to xgeeks - Divide & Conquer
 
 🎉🚀🙌🏻 First off, thanks for taking the time to contribute! 🙌🏻🚀🎉
 
