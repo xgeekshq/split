@@ -1,8 +1,8 @@
 <h1 align="center">
-  #Project name
+  Divide & Conquer
 </h1>
 <h3 align="center">
-  #Project description
+  Large teams retrospectives
 </h3>
 <br>
 
@@ -47,7 +47,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
-[all-contributors-badge]: https://img.shields.io/github/all-contributors/xgeekshq/oss-template?color=orange&style=flat-square
+[all-contributors-badge]: https://img.shields.io/github/all-contributors/xgeekshq/divide-and-conquer?color=orange&style=flat-square
 [coc]: .github/CODE_OF_CONDUCT.md
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 
