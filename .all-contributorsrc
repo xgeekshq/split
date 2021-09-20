@@ -1,0 +1,15 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 50,
+  "commit": false,
+  "contributors": [
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "oss-template",
+  "projectOwner": "xgeekshq",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": false
+}
