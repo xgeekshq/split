@@ -15,7 +15,7 @@ Suggest a new idea for the project.
 <!--
   Please fill out each section below, otherwise your issue will be closed.
 
-  Before opening a new issue, please search existing issues:  https://github.com/xgeekshq/js-intl-kitchen-sink/issues
+  Before opening a new issue, please search existing issues:  https://github.com/xgeekshq/divide-and-conquer/issues
 
   ## A note on adding features to this repo
 
