@@ -10,6 +10,9 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@radix-ui/colors": "^0.1.7",
+    "@radix-ui/react-id": "^0.1.0",
+    "@stitches/react": "^1.2.1",
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2"
