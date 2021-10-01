@@ -22,55 +22,55 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       xl: "(min-width: 1280px)",
     },
     utils: {
-      padding: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      p: (value: Stitches.PropertyValue<"padding">) => ({
         paddingTop: value,
         paddingBottom: value,
         paddingLeft: value,
         paddingRight: value,
       }),
-      paddingTop: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      pt: (value: Stitches.PropertyValue<"padding">) => ({
         paddingTop: value,
       }),
-      paddingRight: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      pr: (value: Stitches.PropertyValue<"padding">) => ({
         paddingRight: value,
       }),
-      paddingBottom: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      pb: (value: Stitches.PropertyValue<"padding">) => ({
         paddingBottom: value,
       }),
-      paddingLeft: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      pl: (value: Stitches.PropertyValue<"padding">) => ({
         paddingLeft: value,
       }),
-      paddingX: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      px: (value: Stitches.PropertyValue<"padding">) => ({
         paddingLeft: value,
         paddingRight: value,
       }),
-      paddingY: (value: Stitches.PropertyValue<"paddingTop">) => ({
+      py: (value: Stitches.PropertyValue<"padding">) => ({
         paddingTop: value,
         paddingBottom: value,
       }),
-      margin: (value: Stitches.PropertyValue<"marginTop">) => ({
+      m: (value: Stitches.PropertyValue<"margin">) => ({
         marginTop: value,
         marginBottom: value,
         marginLeft: value,
         marginRight: value,
       }),
-      marginTop: (value: Stitches.PropertyValue<"marginTop">) => ({
+      mt: (value: Stitches.PropertyValue<"margin">) => ({
         marginTop: value,
       }),
-      marginRight: (value: Stitches.PropertyValue<"marginTop">) => ({
+      mr: (value: Stitches.PropertyValue<"margin">) => ({
         marginRight: value,
       }),
-      marginBottom: (value: Stitches.PropertyValue<"marginTop">) => ({
+      mb: (value: Stitches.PropertyValue<"margin">) => ({
         marginBottom: value,
       }),
-      marginLeft: (value: Stitches.PropertyValue<"marginTop">) => ({
+      ml: (value: Stitches.PropertyValue<"margin">) => ({
         marginLeft: value,
       }),
-      marginX: (value: Stitches.PropertyValue<"marginTop">) => ({
+      mx: (value: Stitches.PropertyValue<"margin">) => ({
         marginLeft: value,
         marginRight: value,
       }),
-      marginY: (value: Stitches.PropertyValue<"marginTop">) => ({
+      my: (value: Stitches.PropertyValue<"margin">) => ({
         marginTop: value,
         marginBottom: value,
       }),
@@ -78,7 +78,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         width: value,
         height: value,
       }),
-      backgroundColor: (value: Stitches.PropertyValue<"backgroundColor">) => ({
+      bc: (value: Stitches.PropertyValue<"backgroundColor">) => ({
         backgroundColor: value,
       }),
     },

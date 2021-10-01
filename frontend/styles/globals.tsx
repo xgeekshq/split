@@ -2,7 +2,7 @@ import { globalCss } from "../stitches.config";
 
 const globalStyles = globalCss({
   body: {
-    backgroundColor: "$gray5",
+    bc: "$gray9",
     margin: 0,
   },
 });

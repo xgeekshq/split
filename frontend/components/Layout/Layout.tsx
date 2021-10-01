@@ -1,6 +1,6 @@
 import { styled } from "../../stitches.config";
 
-const Main = styled("main", { display: "block", paddingX: "$40" });
+const Main = styled("main", { display: "block", px: "$40" });
 
 const Layout: React.FC = ({ children }) => {
   return (
