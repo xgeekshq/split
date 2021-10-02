@@ -12,6 +12,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         16: "1rem",
       },
       space: {
+        16: "1rem",
+        20: "1.25rem",
         40: "2.5rem",
       },
     },
