@@ -25,7 +25,7 @@ const slideLeftAndFade = keyframes({
   "100%": { opacity: 1, transform: "translateX(0)" },
 });
 
-export const DropdownMenuContent = styled(DropdownMenu.Content, {
+const DropdownMenuContent = styled(DropdownMenu.Content, {
   minWidth: "$220",
   backgroundColor: "white",
   borderRadius: "$6",
@@ -45,7 +45,7 @@ export const DropdownMenuContent = styled(DropdownMenu.Content, {
   },
 });
 
-export const itemStyles = {
+const DropdownMenuItem = styled(DropdownMenu.Item, {
   all: "unset",
   fontSize: "$xs",
   color: "violet11",
@@ -65,9 +65,7 @@ export const itemStyles = {
     backgroundColor: "$violet11",
     color: "violet1",
   },
-};
-
-const DropdownMenuItem = styled(DropdownMenu.Item, { ...itemStyles });
+});
 
 const DropdownMenuGroup = styled(DropdownMenu.Group, Flex);
 

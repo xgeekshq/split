@@ -20,7 +20,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       fontWeights: {
         normal: "400",
         medium: "500",
-        semibold: "600",
+        semiBold: "600",
         bold: "700",
         extrabold: "800",
       },

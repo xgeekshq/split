@@ -13,7 +13,7 @@ const defaultTitleContextValues: TitleContextType = {
 const TitleContext = React.createContext<TitleContextType>(defaultTitleContextValues);
 
 export const TitleContextProvider: React.FC = ({ children }) => {
-  const [title, setTitleState] = useState("");
+  const [title, setTitleState] = useState(defaultTitleContextValues.title);
 
   const setTitle = (newTitle: string) => {
     setTitleState(newTitle);
