@@ -26,9 +26,9 @@ const slideLeftAndFade = keyframes({
 });
 
 const DropdownMenuContent = styled(DropdownMenu.Content, {
+  display: "block",
   minWidth: "$220",
   backgroundColor: "white",
-  borderRadius: "$6",
   p: "$8",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
@@ -47,23 +47,21 @@ const DropdownMenuContent = styled(DropdownMenu.Content, {
 
 const DropdownMenuItem = styled(DropdownMenu.Item, {
   all: "unset",
-  fontSize: "$xs",
-  color: "violet11",
-  borderRadius: "$4",
+  borderRadius: "$2",
   display: "flex",
   alignItems: "center",
-  height: "$40",
+  fontWeight: "$medium",
   position: "relative",
   userSelect: "none",
-  px: "$16",
+  px: "$8",
+  py: "$6",
   "&[data-disabled]": {
     color: "mauve8",
     pointerEvents: "none",
   },
 
   "&:focus": {
-    backgroundColor: "$violet11",
-    color: "violet1",
+    backgroundColor: "$gray7",
   },
 });
 
@@ -81,9 +79,11 @@ const Dropdown: React.FC = () => {
   return (
     <DropdownRoot>
       <DropdownMenu.Trigger asChild>
-        <DropdownMenuGroup align="center" gap="8">
+        <DropdownMenuGroup align="center" gap="6">
+          <DropdownLabel fontWeight="medium" size="lg">
+            Retro bot
+          </DropdownLabel>
           <Avatar src={favIcon.src} size={24} />
-          <DropdownLabel size="base">Retro bot</DropdownLabel>
         </DropdownMenuGroup>
       </DropdownMenu.Trigger>
       <DropdownMenuContent>

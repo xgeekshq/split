@@ -20,11 +20,11 @@ const NavBar: React.FC = () => {
   return (
     <Header justify="between" align="center" media="sm">
       <Link href="/">
-        <Text fontWeight="bold" size="base">
+        <Text fontWeight="medium" size="lg">
           Divide & conquer
         </Text>
       </Link>
-      <Text fontWeight="bold" size="base">
+      <Text fontWeight="semiBold" size="xl">
         {titleCtx.title}
       </Text>
       <Dropdown />

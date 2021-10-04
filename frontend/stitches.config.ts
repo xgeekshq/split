@@ -25,6 +25,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         extrabold: "800",
       },
       space: {
+        6: "0.375rem",
         8: "0.5rem",
         16: "1rem",
         20: "1.25rem",
@@ -38,6 +39,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         20: "1.25rem",
       },
       radii: {
+        2: "0.125rem",
         4: "0.25rem",
         6: "0.375rem",
         8: "0.5rem",

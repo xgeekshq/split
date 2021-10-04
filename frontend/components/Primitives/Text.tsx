@@ -11,6 +11,9 @@ const Text = styled("span", {
       lg: {
         fontSize: "$lg",
       },
+      xl: {
+        fontSize: "$xl",
+      },
     },
     lineHeight: {
       20: {
@@ -18,6 +21,12 @@ const Text = styled("span", {
       },
     },
     fontWeight: {
+      medium: {
+        fontWeight: "$medium",
+      },
+      semiBold: {
+        fontWeight: "$semiBold",
+      },
       bold: {
         fontWeight: "$bold",
       },
