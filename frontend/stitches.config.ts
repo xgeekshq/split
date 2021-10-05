@@ -1,6 +1,6 @@
 import { createStitches } from "@stitches/react";
 import type * as Stitches from "@stitches/react";
-import { gray, violet, mauve } from "@radix-ui/colors";
+import { gray, violet, mauve, slate, blue } from "@radix-ui/colors";
 
 export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } =
   createStitches({
@@ -9,6 +9,11 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         ...gray,
         ...violet,
         ...mauve,
+        ...slate,
+        ...blue,
+
+        hiContrast: "$slate12",
+        loContrast: "white",
       },
       fontSizes: {
         xs: "0.75rem",
