@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 
 type TitleContextType = {
   title: string;
@@ -13,17 +12,8 @@ const defaultTitleContextValues: TitleContextType = {
 
 const TitleContext = React.createContext<TitleContextType>(defaultTitleContextValues);
 
-const handleTitle = (path: string) => {
-  let title = "";
-  if (path === "/dashboard") {
-    title = "Dashboard";
-  }
-  return title;
-};
-
 export const TitleContextProvider: React.FC = ({ children }) => {
-  const router = useRouter();
-  const [title, setTitleState] = useState(handleTitle(router.pathname));
+  const [title, setTitleState] = useState(defaultTitleContextValues.title);
 
   const setTitle = (newTitle: string) => {
     setTitleState(newTitle);
