@@ -45,6 +45,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         6: "0.375rem",
         8: "0.5rem",
         12: "0.75rem",
+        16: "1rem",
+        40: "2.5rem",
         round: "50%",
         pill: "9999rem",
       },
