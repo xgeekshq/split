@@ -28,6 +28,10 @@ Suggest a new idea for the project.
 
 Brief explanation of the feature.
 
+## User story it relates to
+
+Link the user story issue this issue relates to. Omit if none
+
 ### Basic example
 
 Omit this section if it's not applicable.
