@@ -3,6 +3,7 @@ import Head from "next/head";
 import { IdProvider } from "@radix-ui/react-id";
 import globalStyles from "../styles/globals";
 import Layout from "../components/Layout/Layout";
+import { TitleContextProvider } from "../store/title-context";
 
 function App({ Component, pageProps }: AppProps): JSX.Element {
   globalStyles();
@@ -12,9 +13,11 @@ function App({ Component, pageProps }: AppProps): JSX.Element {
       <Head>
         <title>Divide & Conquer</title>
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <TitleContextProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </TitleContextProvider>
     </IdProvider>
   );
 }
