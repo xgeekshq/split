@@ -12,8 +12,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["jest", "@testing-library/jest-dom"],
   },
-  "include": ["next.config.js","next-env.d.ts", "**/*.ts", "**/*.tsx", "styles/*"],
+  "include": ["next.config.js","next-env.d.ts", "**/*.ts", "**/*.tsx", "styles/*", "jest.config.js", "jest.setup.js"],
   "exclude": ["node_modules"]
 }
