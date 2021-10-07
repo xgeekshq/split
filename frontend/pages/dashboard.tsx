@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useStoreContext } from "../store/store-context";
-import CreateBoard from "../components/Dashboard/CreateBoardButton";
+import CreateBoard from "../components/Dashboard/CreateBoardModal";
 
 const Dashboard: React.FC = () => {
   const { dispatch } = useStoreContext();

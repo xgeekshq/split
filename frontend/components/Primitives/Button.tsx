@@ -21,7 +21,7 @@ const Button = styled("button", {
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
   // Custom
-  height: "$5",
+  height: "$8",
   px: "$2",
   fontFamily: "$untitled",
   fontSize: "$2",
@@ -53,7 +53,7 @@ const Button = styled("button", {
       },
       "3": {
         borderRadius: "$2",
-        height: "$7",
+        height: "$32",
         px: "$4",
         fontSize: "$4",
         lineHeight: "$sizes$7",
@@ -83,9 +83,9 @@ const Button = styled("button", {
           },
       },
       blue: {
-        backgroundColor: "$blue2",
+        backgroundColor: "$blue11",
         boxShadow: "inset 0 0 0 1px $colors$blue7",
-        color: "$blue11",
+        color: "white",
         "@hover": {
           "&:hover": {
             boxShadow: "inset 0 0 0 1px $colors$blue8",
