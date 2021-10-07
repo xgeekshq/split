@@ -1,6 +1,6 @@
 import { GetStaticProps, GetStaticPaths } from "next";
-import { useContext, useEffect, useRef } from "react";
-import TitleContext from "../../store/title-context";
+import { useEffect, useRef } from "react";
+import { useStoreContext } from "../../store/store-context";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   return {
@@ -19,24 +19,29 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const Board: React.FC<{ slug: string }> = ({ slug }) => {
-  const titleCtx = useContext(TitleContext);
+  const {
+    state: { title },
+    dispatch,
+  } = useStoreContext();
 
   const isFirstRun = useRef(true);
 
   useEffect(() => {
+    dispatch({ type: "setTitle", val: slug });
+    console.log("slug");
     if (isFirstRun.current) {
-      titleCtx.setTitle(slug);
       isFirstRun.current = false;
-      console.log("1");
     } else if (!isFirstRun.current) {
       // update on server
-      console.log("2");
     }
-  }, [slug, titleCtx]);
+  }, [dispatch, slug, title]);
 
   return (
     <>
-      <button type="button" onClick={() => titleCtx.setTitle(Math.random().toString())}>
+      <button
+        type="button"
+        onClick={() => dispatch({ type: "setTitle", val: Math.random().toString() })}
+      >
         aaaa
       </button>
     </>
