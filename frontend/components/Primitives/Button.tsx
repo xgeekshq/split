@@ -42,118 +42,68 @@ const Button = styled("button", {
         height: "$32",
         px: "$4",
         fontSize: "$4",
-        lineHeight: "$sizes$7",
+        lineHeight: "$8",
       },
     },
     variant: {
       gray: {
         backgroundColor: "$loContrast",
-        boxShadow: "inset 0 0 0 1px $colors$slate7",
+        boxShadow: "inset 0 0 0 1px $slate7",
         color: "$hiContrast",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            boxShadow: "inset 0 0 0 1px $slate8",
           },
         },
         "&:active": {
           backgroundColor: "$slate2",
-          boxShadow: "inset 0 0 0 1px $colors$slate8",
+          boxShadow: "inset 0 0 0 1px $slate8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
+          boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
             backgroundColor: "$slate4",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            boxShadow: "inset 0 0 0 1px $slate8",
           },
       },
       blue: {
         backgroundColor: "$blue11",
         color: "white",
-        "@hover": {
-          "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$blue8",
-          },
+        "&:hover": {
+          boxShadow: "inset 0 0 0 1px white",
         },
         "&:active": {
-          backgroundColor: "$blue3",
-          boxShadow: "inset 0 0 0 1px $colors$blue8",
+          backgroundColor: "$blue5",
+          boxShadow: "inset 0 0 0 1px $blue8",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
+          boxShadow: "inset 0 0 0 1px $blue8, 0 0 0 1px $blue8",
         },
         '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
           {
-            backgroundColor: "$blue4",
-            boxShadow: "inset 0 0 0 1px $colors$blue8",
+            backgroundColor: "$blue5",
+            boxShadow: "inset 0 0 0 1px $blue",
           },
-      },
-      transparentWhite: {
-        backgroundColor: "hsla(0,100%,100%,.2)",
-        color: "white",
-        "@hover": {
-          "&:hover": {
-            backgroundColor: "hsla(0,100%,100%,.25)",
-          },
-        },
-        "&:active": {
-          backgroundColor: "hsla(0,100%,100%,.3)",
-        },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px hsla(0,100%,100%,.35), 0 0 0 1px hsla(0,100%,100%,.35)",
-        },
-      },
-      transparentBlack: {
-        backgroundColor: "hsla(0,0%,0%,.2)",
-        color: "black",
-        "@hover": {
-          "&:hover": {
-            backgroundColor: "hsla(0,0%,0%,.25)",
-          },
-        },
-        "&:active": {
-          backgroundColor: "hsla(0,0%,0%,.3)",
-        },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px hsla(0,0%,0%,.35), 0 0 0 1px hsla(0,0%,0%,.35)",
-        },
       },
     },
     state: {
       active: {
         backgroundColor: "$slate4",
-        boxShadow: "inset 0 0 0 1px $colors$slate8",
+        boxShadow: "inset 0 0 0 1px $slate8",
         color: "$slate11",
         "@hover": {
           "&:hover": {
             backgroundColor: "$slate5",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            boxShadow: "inset 0 0 0 1px $slate8",
           },
         },
         "&:active": {
           backgroundColor: "$slate5",
         },
         "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
-        },
-      },
-      waiting: {
-        backgroundColor: "$slate4",
-        boxShadow: "inset 0 0 0 1px $colors$slate8",
-        color: "transparent",
-        pointerEvents: "none",
-        "@hover": {
-          "&:hover": {
-            backgroundColor: "$slate5",
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
-          },
-        },
-        "&:active": {
-          backgroundColor: "$slate5",
-        },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slate8",
+          boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
         },
       },
     },
