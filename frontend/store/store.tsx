@@ -2,9 +2,9 @@ import React, { useReducer, useContext } from "react";
 
 type Action = { type: "setTitle"; val: string };
 type Dispatch = (action: Action) => void;
-type State = TitleContextType;
+type State = StateType;
 
-type TitleContextType = {
+type StateType = {
   title: string;
 };
 
@@ -23,7 +23,7 @@ const storeReducer = (state: State, action: Action) => {
 
 const Context = React.createContext<ContextType | undefined>(undefined);
 
-const ContextProvider: React.FC = ({ children }) => {
+const StoreProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(storeReducer, { title: "" });
 
   const value = {
@@ -37,9 +37,9 @@ const ContextProvider: React.FC = ({ children }) => {
 const useStoreContext = (): ContextType => {
   const context = useContext(Context);
   if (context === undefined) {
-    throw new Error("useStoreContext must be used within a ContextProvider");
+    throw new Error("useStoreContext must be used within a StoreProvider");
   }
   return context;
 };
 
-export { ContextProvider, useStoreContext };
+export { StoreProvider, useStoreContext };
