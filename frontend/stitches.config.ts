@@ -46,13 +46,14 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         6: "0.375rem",
         8: "0.5rem",
         16: "1rem",
-        20: "1,25rem",
+        20: "1.25rem",
         32: "2rem",
         40: "2.5rem",
         220: "13.75rem",
       },
       lineHeights: {
         20: "1.25rem",
+        24: "1.50rem",
       },
       radii: {
         2: "0.125rem",

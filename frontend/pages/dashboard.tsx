@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useStoreContext } from "../store/store-context";
+import { useStoreContext } from "../store/store";
 import CreateBoard from "../components/Dashboard/CreateBoardModal";
 
 const Dashboard: React.FC = () => {

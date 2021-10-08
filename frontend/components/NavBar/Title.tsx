@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Cross2Icon, CheckIcon } from "@modulz/radix-icons";
 import { styled } from "../../stitches.config";
-import { useStoreContext } from "../../store/store-context";
+import { useStoreContext } from "../../store/store";
 import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
 import TextField from "../Primitives/TextField";

@@ -4,7 +4,6 @@ import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
 import DialogTrigger from "../Primitives/Dialog/DialogTrigger";
 import DialogContent from "../Primitives/Dialog/DialogContent";
-
 import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
@@ -17,7 +16,7 @@ const PlusIcon = styled(PlusCircledIcon, {
 
 const Trigger = (
   <DialogTrigger clickable align="center" color="white" direction="column">
-    <Text>Add retro board</Text>
+    <Text size="xl">Add retro board</Text>
     <PlusIcon />
   </DialogTrigger>
 );
@@ -28,7 +27,7 @@ const Content = (
   <DialogContent dialogTitle="New board" direction="column" justify="center">
     <TextField placeholder="Board name" css={{ fontSize: "$xl", width: "50%" }} />
     <FooterContainer justify="center">
-      <Button size="3" variant="blue" css={{ width: "20%", mt: "$16" }}>
+      <Button size="1" variant="blue" css={{ width: "20%", mt: "$16" }}>
         Save
       </Button>
     </FooterContainer>

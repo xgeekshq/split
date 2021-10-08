@@ -5,11 +5,12 @@ import Box from "../Box";
 
 const StyledTrigger = styled(Trigger, Box, {
   borderRadius: "$40",
-  backgroundColor: "White",
+  backgroundColor: "$gray5",
   justifyContent: "center",
   size: "10rem",
+  lineHeight: "$24",
   alignItems: "center",
-  p: "$8",
+  p: "$16",
   border: "none",
 });
 // type StyledPropsType = { styledProps: { align: string; color: string; direction: string } };
