@@ -7,7 +7,6 @@ const overlayShow = keyframes({
 });
 
 const StyledOverlay = styled(Overlay, {
-  backgroundColor: "$blackA9",
   position: "fixed",
   inset: 0,
   "@media (prefers-reduced-motion: no-preference)": {

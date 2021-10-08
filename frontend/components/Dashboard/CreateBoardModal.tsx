@@ -15,7 +15,7 @@ const PlusIcon = styled(PlusCircledIcon, {
 });
 
 const Trigger = (
-  <DialogTrigger clickable align="center" color="white" direction="column">
+  <DialogTrigger clickable align="center" direction="column">
     <Text size="xl">Add retro board</Text>
     <PlusIcon />
   </DialogTrigger>
