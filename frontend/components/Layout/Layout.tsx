@@ -3,7 +3,7 @@ import { styled } from "../../stitches.config";
 import NavBar from "../NavBar/NavBar";
 import Flex from "../Primitives/Flex";
 
-const Main = styled("main", Flex, { px: "$40", py: "$50" });
+const Main = styled("main", Flex, { px: "3vw", py: "$50" });
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();

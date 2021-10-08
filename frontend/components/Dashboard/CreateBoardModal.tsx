@@ -12,7 +12,7 @@ import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardType } from "../../types/boardTypes";
+import { BoardContentType } from "../../types/boardTypes";
 
 const schema = yup
   .object()
@@ -28,8 +28,8 @@ const PlusIcon = styled(PlusCircledIcon, {
 });
 
 const Trigger = (
-  <DialogTrigger clickable align="center" direction="column">
-    <Text size="xl">Add retro board</Text>
+  <DialogTrigger clickable align="center" direction="column" color="">
+    <Text size="20">Add retro board</Text>
     <PlusIcon />
   </DialogTrigger>
 );
@@ -47,7 +47,7 @@ const CreateBoardModal: React.FC<{
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BoardType>({
+  } = useForm<BoardContentType>({
     resolver: yupResolver(schema),
   });
 
@@ -56,8 +56,20 @@ const CreateBoardModal: React.FC<{
     setFetchError(isError);
   }, [isError, isLoading, setFetchLoading, setFetchError]);
 
-  const handleClick = (data: BoardType) => {
-    createBoard.mutate({ title: data.title });
+  // columns and cards hardcoded while dnd feature isnt implemented
+  const handleClick = (data: BoardContentType) => {
+    createBoard.mutate({
+      title: data.title,
+      creationDate: new Date().toISOString().slice(0, 10),
+      columns: {
+        todo: { cards: [{ text: "t1" }], color: "red" },
+        progress: { cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
+        actions: {
+          cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
+          color: "yellow",
+        },
+      },
+    });
   };
 
   const Content = (

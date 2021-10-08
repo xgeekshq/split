@@ -1,29 +1,15 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { styled, keyframes } from "../../stitches.config";
+import { styled } from "../../stitches.config";
 import Flex from "../Primitives/Flex";
 import Label from "../Primitives/Label";
 import favIcon from "../../public/favicon.ico";
 import Avatar from "../Primitives/Avatar";
-
-const slideUpAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(2px)" },
-  "100%": { opacity: 1, transform: "translateY(0)" },
-});
-
-const slideRightAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(-2px)" },
-  "100%": { opacity: 1, transform: "translateX(0)" },
-});
-
-const slideDownAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateY(-2px)" },
-  "100%": { opacity: 1, transform: "translateY(0)" },
-});
-
-const slideLeftAndFade = keyframes({
-  "0%": { opacity: 0, transform: "translateX(2px)" },
-  "100%": { opacity: 1, transform: "translateX(0)" },
-});
+import {
+  slideDownAndFade,
+  slideLeftAndFade,
+  slideUpAndFade,
+  slideRightAndFade,
+} from "../../animations/Slide";
 
 const DropdownMenuContent = styled(DropdownMenu.Content, {
   display: "block",
@@ -32,7 +18,7 @@ const DropdownMenuContent = styled(DropdownMenu.Content, {
   p: "$8",
   boxShadow:
     "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
-  "@media (prefers-reduced-motion: no-preference)": {
+  "@motion": {
     animationDuration: "400ms",
     animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
     willChange: "transform, opacity",
@@ -80,7 +66,7 @@ const Dropdown: React.FC = () => {
     <DropdownRoot>
       <DropdownMenu.Trigger asChild>
         <DropdownMenuGroup align="center" gap="6">
-          <DropdownLabel fontWeight="medium" size="lg">
+          <DropdownLabel fontWeight="medium" size="18">
             Retro bot
           </DropdownLabel>
           <Avatar src={favIcon.src} size={24} />
