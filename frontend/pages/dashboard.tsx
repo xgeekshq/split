@@ -1,14 +1,18 @@
-import { useEffect, useContext } from "react";
-import TitleContext from "../store/title-context";
+import { useEffect } from "react";
+import { useStoreContext } from "../store/store";
+import CreateBoard from "../components/Dashboard/CreateBoardModal";
 
 const Dashboard: React.FC = () => {
-  const titleCtx = useContext(TitleContext);
+  const { dispatch } = useStoreContext();
 
   useEffect(() => {
-    titleCtx.setTitle("Dashboard");
-  }, [titleCtx]);
+    dispatch({ type: "setTitle", val: "Dashboard" });
+  }, [dispatch]);
 
-  return <>Dashboard</>;
+  return (
+    <>
+      <CreateBoard />
+    </>
+  );
 };
-
 export default Dashboard;
