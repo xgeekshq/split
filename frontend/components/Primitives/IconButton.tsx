@@ -1,4 +1,5 @@
 import { styled } from "../../stitches.config";
+<<<<<<< HEAD
 import Button from "./Button";
 
 const IconButton = styled(Button, {
@@ -11,6 +12,33 @@ const IconButton = styled(Button, {
   padding: "0",
   textDecoration: "none",
   color: "$hiContrast",
+=======
+
+const IconButton = styled("button", {
+  // Reset
+  alignItems: "center",
+  appearance: "none",
+  borderWidth: "0",
+  boxSizing: "border-box",
+  display: "inline-flex",
+  flexShrink: 0,
+  fontFamily: "inherit",
+  fontSize: "$sm",
+  justifyContent: "center",
+  lineHeight: "1",
+  outline: "none",
+  padding: "0",
+  textDecoration: "none",
+  userSelect: "none",
+  WebkitTapHighlightColor: "transparent",
+  color: "$hiContrast",
+  "&::before": {
+    boxSizing: "border-box",
+  },
+  "&::after": {
+    boxSizing: "border-box",
+  },
+>>>>>>> feat: added dialog in dashboard
   backgroundColor: "$loContrast",
   border: "1px solid $slate7",
   "@hover": {
@@ -26,6 +54,10 @@ const IconButton = styled(Button, {
     boxShadow: "0 0 0 1px $colors$slate8",
   },
   "&:disabled": {
+<<<<<<< HEAD
+=======
+    pointerEvents: "none",
+>>>>>>> feat: added dialog in dashboard
     backgroundColor: "transparent",
     color: "$slate6",
   },

@@ -21,6 +21,10 @@ const Button = styled("button", {
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
   // Custom
+<<<<<<< HEAD
+=======
+  height: "$8",
+>>>>>>> feat: added dialog in dashboard
   px: "$2",
   fontFamily: "$untitled",
   fontSize: "$2",
