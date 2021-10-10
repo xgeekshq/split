@@ -20,7 +20,7 @@ const StoreProvider: React.FC = ({ children }) => {
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-const useStoreContext = (): ContextType => {
+const useStoreContext = (): Nullable<ContextType> => {
   const context = useContext(Context);
   if (context === undefined || context === null) {
     throw new Error("useStoreContext must be used within a StoreProvider");
