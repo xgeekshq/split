@@ -9,7 +9,7 @@ type ContextType = {
 const Context = React.createContext<Nullable<ContextType>>(undefined);
 
 const StoreProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useStateMachine<string, string>(null);
+  const [state, dispatch] = useStateMachine<string, string>(undefined);
 
   const value = {
     state,
@@ -19,9 +19,9 @@ const StoreProvider: React.FC = ({ children }) => {
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 
-const useStoreContext = (): Nullable<ContextType> => {
+const useStoreContext = (): ContextType => {
   const context = useContext(Context);
-  if (context === undefined) {
+  if (context === undefined || context === null) {
     throw new Error("useStoreContext must be used within a StoreProvider");
   }
   return context;

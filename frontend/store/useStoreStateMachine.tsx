@@ -17,7 +17,7 @@ function useStateMachine<TitleT, ValueT>(
     val: null,
   };
 
-  function fetchReducer(state: State<TitleT, ValueT>, event: Event<ValueT>): State<TitleT, ValueT> {
+  function storeReducer(state: State<TitleT, ValueT>, event: Event<ValueT>): State<TitleT, ValueT> {
     switch (event.type) {
       case "setTitle": {
         return { ...state, title: event.val as unknown as TitleT };
@@ -28,7 +28,7 @@ function useStateMachine<TitleT, ValueT>(
     }
   }
 
-  return useReducer<Reducer<State<TitleT, ValueT>, Event<ValueT>>>(fetchReducer, initialState);
+  return useReducer<Reducer<State<TitleT, ValueT>, Event<ValueT>>>(storeReducer, initialState);
 }
 
 export default useStateMachine;
