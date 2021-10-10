@@ -36,7 +36,7 @@ type ContextType = {
   dispatch: Dispatch<Event<string>>;
 };
 
-const Context = React.createContext<ContextType | undefined>(undefined);
+const Context = React.createContext<Nullable<ContextType>>(undefined);
 
 const StoreProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useStateMachine<string, string>(null);
