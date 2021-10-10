@@ -47,7 +47,7 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof StyledContent>, D
       <Title>{dialogTitle}</Title>
       {children}
       <StyledCloseButton asChild>
-        <IconButton variant="ghost">
+        <IconButton variant="ghost" size="20">
           <Cross1Icon />
         </IconButton>
       </StyledCloseButton>

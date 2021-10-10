@@ -75,6 +75,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       md: "(min-width: 768px)",
       lg: "(min-width: 1024px)",
       xl: "(min-width: 1280px)",
+      motion: "(prefers-reduced-motion)",
+      hover: "(any-hover: hover)",
     },
     utils: {
       p: (value: Stitches.PropertyValue<"padding">) => ({

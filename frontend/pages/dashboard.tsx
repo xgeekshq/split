@@ -9,10 +9,6 @@ const Dashboard: React.FC = () => {
     dispatch({ type: "setTitle", val: "Dashboard" });
   }, [dispatch]);
 
-  return (
-    <>
-      <CreateBoard />
-    </>
-  );
+  return <CreateBoard />;
 };
 export default Dashboard;

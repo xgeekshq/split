@@ -1,30 +1,45 @@
-import React, { useReducer, useContext } from "react";
+import React, { Dispatch, Reducer, useReducer, useContext } from "react";
 
-type Action = { type: "setTitle"; val: string };
-type Dispatch = (action: Action) => void;
-type State = StateType;
+type Nullable<T> = T | null | undefined;
 
-type StateType = {
-  title: string;
+type State<TitleT, ValueT> = {
+  title: Nullable<TitleT>;
+  val: Nullable<ValueT>;
 };
 
-type ContextType = { state: State; dispatch: Dispatch };
+type Event<ValueT> = { type: "setTitle"; val: ValueT };
 
-const storeReducer = (state: State, action: Action) => {
-  switch (action.type) {
-    case "setTitle": {
-      return { ...state, title: action.val };
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+function useStateMachine<TitleT, ValueT>(
+  initialData: Nullable<TitleT>
+): [State<TitleT, ValueT>, Dispatch<Event<ValueT>>] {
+  const initialState: State<TitleT, ValueT> = {
+    title: initialData,
+    val: null,
+  };
+
+  function fetchReducer(state: State<TitleT, ValueT>, event: Event<ValueT>): State<TitleT, ValueT> {
+    switch (event.type) {
+      case "setTitle": {
+        return { ...state, title: event.val as unknown as TitleT };
+      }
+      default: {
+        throw new Error(`Unhandled event type: ${event.type}`);
+      }
     }
   }
+
+  return useReducer<Reducer<State<TitleT, ValueT>, Event<ValueT>>>(fetchReducer, initialState);
+}
+
+type ContextType = {
+  state: State<string, string>;
+  dispatch: Dispatch<Event<string>>;
 };
 
 const Context = React.createContext<ContextType | undefined>(undefined);
 
 const StoreProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(storeReducer, { title: "" });
+  const [state, dispatch] = useStateMachine<string, string>(null);
 
   const value = {
     state,

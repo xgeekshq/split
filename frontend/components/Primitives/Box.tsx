@@ -6,8 +6,10 @@ const Box = styled("div", Flex, {
   variants: {
     clickable: {
       true: {
-        "&:hover": {
-          borderColor: "$blue10",
+        "@hover": {
+          "&:hover": {
+            borderColor: "$blue10",
+          },
         },
       },
     },

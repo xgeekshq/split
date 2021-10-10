@@ -1,5 +1,7 @@
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useStoreContext } from "../../store/store";
+import { CheckIsPageName } from "../../utils/PagesNames";
 import Text from "../Primitives/Text";
 
 const Title: React.FC = () => {
@@ -7,15 +9,28 @@ const Title: React.FC = () => {
   const {
     state: { title },
   } = useStoreContext();
-  const isBoardPage = router.pathname.startsWith("/boards/");
 
-  const pageTitle = (
-    <Text fontWeight="semiBold" size="xl">
-      {title}
-    </Text>
+  const isBoardPage = CheckIsPageName(router.pathname);
+
+  const pageTitle = useMemo(
+    () => (
+      <Text fontWeight="semiBold" size="xl">
+        {title}
+      </Text>
+    ),
+    [title]
   );
 
-  return <>{!isBoardPage && pageTitle}</>;
+  const HandleContent = useCallback(() => {
+    if (!isBoardPage) {
+      return pageTitle;
+    }
+    return <div />;
+  }, [isBoardPage, pageTitle]);
+
+  const content = HandleContent();
+
+  return <>{content}</>;
 };
 
 export default Title;

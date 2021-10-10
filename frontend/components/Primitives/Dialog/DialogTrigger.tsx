@@ -12,7 +12,6 @@ const StyledTrigger = styled(Trigger, Box, {
   p: "$16",
   border: "2px solid $colors$blackA10",
 });
-// type StyledPropsType = { styledProps: { align: string; color: string; direction: string } };
 
 type DialogTriggerPrimitiveProps = React.ComponentProps<typeof Trigger> &
   React.ComponentProps<typeof StyledTrigger>;
