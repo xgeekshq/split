@@ -2,14 +2,12 @@ interface NamesType {
   [key: string]: string;
 }
 
-const names: NamesType = { "/": "Dashboard" };
+const names: NamesType = { Dashboard: "/" };
 
-const GetPageName = (url: string): string => {
-  return names[url];
+export const GetPagePathByName = (pageName: string): string => {
+  return names[pageName];
 };
 
-export const CheckIsPageName = (url: string): boolean => {
+export const CheckIsBoardPage = (url: string): boolean => {
   return url.startsWith("/boards");
 };
-
-export default GetPageName;

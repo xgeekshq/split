@@ -1,6 +1,5 @@
 import { Dispatch, Reducer, useReducer } from "react";
-
-export type Nullable<T> = T | null | undefined;
+import { Nullable } from "../utils/types";
 
 export type State<TitleT, ValueT> = {
   title: Nullable<TitleT>;
