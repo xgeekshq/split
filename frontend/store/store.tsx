@@ -1,5 +1,6 @@
 import React, { Dispatch, useContext } from "react";
-import useStateMachine, { Nullable, State, Event } from "./useStoreStateMachine";
+import { Nullable } from "../utils/types";
+import useStateMachine, { State, Event } from "./useStoreStateMachine";
 
 type ContextType = {
   state: State<string, string>;
