@@ -6,6 +6,7 @@ const Label = styled(LabelPrimitive.Root, Text, {
   display: "inline-block",
   verticalAlign: "middle",
   cursor: "default",
+  userSelect: "none",
 });
 
 export default Label;

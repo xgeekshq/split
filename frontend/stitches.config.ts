@@ -1,6 +1,6 @@
 import { createStitches } from "@stitches/react";
 import type * as Stitches from "@stitches/react";
-import { gray, violet, mauve } from "@radix-ui/colors";
+import { gray, violet, mauve, slate, blue, blackA, slateA } from "@radix-ui/colors";
 
 export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } =
   createStitches({
@@ -9,6 +9,13 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         ...gray,
         ...violet,
         ...mauve,
+        ...slate,
+        ...slateA,
+        ...blue,
+        ...blackA,
+
+        hiContrast: "$slate12",
+        loContrast: "white",
       },
       fontSizes: {
         xs: "0.75rem",
@@ -27,16 +34,29 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       space: {
         6: "0.375rem",
         8: "0.5rem",
+        10: "0.625rem",
         16: "1rem",
         20: "1.25rem",
         40: "2.5rem",
+        50: "3.125rem",
       },
       sizes: {
+        2: "0.125rem",
+        4: "0.25rem",
+        6: "0.375rem",
+        8: "0.5rem",
+        10: "0.625rem",
+        16: "1rem",
+        20: "1.25rem",
+        32: "2rem",
         40: "2.5rem",
         220: "13.75rem",
+        160: "10rem",
       },
       lineHeights: {
+        8: "0.5rem",
         20: "1.25rem",
+        24: "1.50rem",
       },
       radii: {
         2: "0.125rem",
@@ -44,6 +64,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         6: "0.375rem",
         8: "0.5rem",
         12: "0.75rem",
+        16: "1rem",
+        40: "2.5rem",
         round: "50%",
         pill: "9999rem",
       },
@@ -53,6 +75,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       md: "(min-width: 768px)",
       lg: "(min-width: 1024px)",
       xl: "(min-width: 1280px)",
+      motion: "(prefers-reduced-motion)",
+      hover: "(any-hover: hover)",
     },
     utils: {
       p: (value: Stitches.PropertyValue<"padding">) => ({
@@ -116,3 +140,5 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       }),
     },
   });
+
+export type CSS = Stitches.CSS<typeof config>;
