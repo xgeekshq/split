@@ -1,22 +1,20 @@
 import { Dispatch, Reducer, useReducer } from "react";
-import { Nullable } from "../utils/types";
+import { Nullable } from "../types/types";
 
-export type State<TitleT, ValueT> = {
+export type State<TitleT> = {
   title: Nullable<TitleT>;
-  val: Nullable<ValueT>;
 };
 
 export type Event<ValueT> = { type: "setTitle"; val: ValueT };
 
 function useStateMachine<TitleT, ValueT>(
   initialData: Nullable<TitleT>
-): [State<TitleT, ValueT>, Dispatch<Event<ValueT>>] {
-  const initialState: State<TitleT, ValueT> = {
+): [State<TitleT>, Dispatch<Event<ValueT>>] {
+  const initialState: State<TitleT> = {
     title: initialData,
-    val: null,
   };
 
-  function storeReducer(state: State<TitleT, ValueT>, event: Event<ValueT>): State<TitleT, ValueT> {
+  function storeReducer(state: State<TitleT>, event: Event<ValueT>): State<TitleT> {
     switch (event.type) {
       case "setTitle": {
         return { ...state, title: event.val as unknown as TitleT };
@@ -27,7 +25,7 @@ function useStateMachine<TitleT, ValueT>(
     }
   }
 
-  return useReducer<Reducer<State<TitleT, ValueT>, Event<ValueT>>>(storeReducer, initialState);
+  return useReducer<Reducer<State<TitleT>, Event<ValueT>>>(storeReducer, initialState);
 }
 
 export default useStateMachine;
