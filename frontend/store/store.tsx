@@ -1,9 +1,9 @@
 import React, { Dispatch, useContext } from "react";
-import { Nullable } from "../utils/types";
-import useStateMachine, { State, Event } from "./useStoreStateMachine";
+import { Nullable } from "../types/types";
+import useStateMachine, { State, Event } from "../reducers/useStoreStateMachine";
 
 type ContextType = {
-  state: State<string, string>;
+  state: State<string>;
   dispatch: Dispatch<Event<string>>;
 };
 
