@@ -4,20 +4,14 @@ import { BoardType, UseBoardType } from "../types/boardTypes";
 import { Nullable } from "../types/commonTypes";
 import fetchData from "../utils/fetchData";
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export const postBoard = async (newBoard: BoardType): Promise<BoardType> => {
-  return fetchData(
-    `https://dc2021-570aa-default-rtdb.europe-west1.firebasedatabase.app/boards.json`,
-    "POST",
-    JSON.stringify(newBoard)
-  );
+  return fetchData(`${API_URL}/boards.json`, "POST", JSON.stringify(newBoard));
 };
 
 export const getBoard = async (id: Nullable<string>): Promise<BoardType> => {
-  return fetchData(
-    `https://dc2021-570aa-default-rtdb.europe-west1.firebasedatabase.app/boards/${id}.json`,
-    "GET",
-    null
-  );
+  return fetchData(`${API_URL}/boards/${id}.json`, "GET", null);
 };
 
 const useBoard = (): UseBoardType => {

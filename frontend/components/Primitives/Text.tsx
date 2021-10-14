@@ -1,9 +1,16 @@
 import { styled } from "../../stitches.config";
 
 const Text = styled("span", {
-  margin: 0,
   fontWeight: "$normal",
   variants: {
+    noMargin: {
+      true: {
+        margin: 0,
+      },
+      false: {
+        my: "$16",
+      },
+    },
     size: {
       base: {
         fontSize: "$base",
@@ -31,10 +38,16 @@ const Text = styled("span", {
         fontWeight: "$bold",
       },
     },
+    color: {
+      red: {
+        color: "$red10",
+      },
+    },
   },
 
   defaultVariants: {
     size: "base",
+    noMargin: "true",
   },
 });
 

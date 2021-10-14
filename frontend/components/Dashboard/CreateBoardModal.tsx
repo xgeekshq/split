@@ -13,12 +13,11 @@ import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
 import { BoardType } from "../../types/boardTypes";
-import Paragraph from "../Primitives/Paragraph";
 
 const schema = yup
   .object()
   .shape({
-    title: yup.string().required(),
+    title: yup.string().max(15, "Maximum of 15 characters").required(),
   })
   .required();
 
@@ -70,8 +69,10 @@ const CreateBoardModal: React.FC<{
           css={{ fontSize: "$xl", width: "50%" }}
           {...register("title")}
         />
-        {errors.title?.type === "required" && (
-          <Paragraph variant="red">Board name is required</Paragraph>
+        {errors.title && (
+          <Text as="p" color="red" noMargin="false">
+            {errors.title.message}
+          </Text>
         )}
         <FooterContainer justify="center">
           <Button type="submit" size="1" variant="blue" css={{ width: "20%", mt: "$16" }}>
