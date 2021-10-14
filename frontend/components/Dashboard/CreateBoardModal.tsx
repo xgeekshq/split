@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { PlusCircledIcon } from "@modulz/radix-icons";
-import useHttp from "../../hooks/useHttp";
 import Dialog from "../Primitives/Dialog/Dialog";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
@@ -9,6 +8,7 @@ import DialogContent from "../Primitives/Dialog/DialogContent";
 import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
+import useBoard from "../../hooks/useBoard";
 
 const PlusIcon = styled(PlusCircledIcon, {
   size: "$40",
@@ -25,22 +25,22 @@ const Trigger = (
 
 const FooterContainer = styled("div", Flex);
 
-const CreateBoardModal: React.FC = () => {
-  const { error, data, sendRequest } = useHttp();
+const CreateBoardModal: React.FC<{
+  setLoading: (state: boolean) => void;
+  setError: (state: boolean) => void;
+}> = ({ setLoading, setError }) => {
   const [boardValue, setBoardValue] = useState("");
+  const { createBoard } = useBoard();
+  const { isLoading, isError } = createBoard;
+
+  useEffect(() => {
+    setLoading(isLoading);
+    setError(isError);
+  }, [isError, isLoading, setLoading, setError]);
 
   const handleClick = useCallback(() => {
-    sendRequest(
-      "https://dc2021-570aa-default-rtdb.europe-west1.firebasedatabase.app/boards.json",
-      "GET",
-      null
-    );
-    // save firebase
-    // wait for response
-    // push route
-  }, [sendRequest]);
-
-  useEffect(() => {}, [data, error, boardValue]);
+    createBoard.mutate({ title: boardValue });
+  }, [boardValue, createBoard]);
 
   const Content = (
     <DialogContent dialogTitle="New board" direction="column" justify="center">

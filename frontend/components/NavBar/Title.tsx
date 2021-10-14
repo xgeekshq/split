@@ -25,7 +25,7 @@ const Title: React.FC = () => {
     if (!isBoardPage) {
       return pageTitle;
     }
-    return <div />;
+    return pageTitle;
   }, [isBoardPage, pageTitle]);
 
   const content = HandleContent();

@@ -1,5 +1,5 @@
 import React, { Dispatch, useContext } from "react";
-import { Nullable } from "../types/types";
+import { Nullable } from "../types/commonTypes";
 import useStateMachine, { State, Event } from "../reducers/useStoreStateMachine";
 
 type ContextType = {

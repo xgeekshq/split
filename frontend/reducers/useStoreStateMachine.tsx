@@ -1,5 +1,5 @@
 import { Dispatch, Reducer, useReducer } from "react";
-import { Nullable } from "../types/types";
+import { Nullable } from "../types/commonTypes";
 
 export type State<TitleT> = {
   title: Nullable<TitleT>;
