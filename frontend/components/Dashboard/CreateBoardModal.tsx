@@ -1,4 +1,7 @@
-import { useCallback, useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { PlusCircledIcon } from "@modulz/radix-icons";
 import Dialog from "../Primitives/Dialog/Dialog";
 import { styled } from "../../stitches.config";
@@ -9,6 +12,15 @@ import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
+import { BoardType } from "../../types/boardTypes";
+import Paragraph from "../Primitives/Paragraph";
+
+const schema = yup
+  .object()
+  .shape({
+    title: yup.string().required(),
+  })
+  .required();
 
 const PlusIcon = styled(PlusCircledIcon, {
   size: "$40",
@@ -26,36 +38,47 @@ const Trigger = (
 const FooterContainer = styled("div", Flex);
 
 const CreateBoardModal: React.FC<{
-  setLoading: (state: boolean) => void;
-  setError: (state: boolean) => void;
-}> = ({ setLoading, setError }) => {
-  const [boardValue, setBoardValue] = useState("");
+  setFetchLoading: (state: boolean) => void;
+  setFetchError: (state: boolean) => void;
+}> = ({ setFetchLoading, setFetchError }) => {
   const { createBoard } = useBoard();
   const { isLoading, isError } = createBoard;
 
-  useEffect(() => {
-    setLoading(isLoading);
-    setError(isError);
-  }, [isError, isLoading, setLoading, setError]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<BoardType>({
+    resolver: yupResolver(schema), // yup, joi and even your own.
+  });
 
-  const handleClick = useCallback(() => {
-    createBoard.mutate({ title: boardValue });
-  }, [boardValue, createBoard]);
+  useEffect(() => {
+    setFetchLoading(isLoading);
+    setFetchError(isError);
+  }, [isError, isLoading, setFetchLoading, setFetchError]);
+
+  const handleClick = (data: BoardType) => {
+    createBoard.mutate({ title: data.title });
+  };
 
   const Content = (
     <DialogContent dialogTitle="New board" direction="column" justify="center">
-      <TextField
-        onChange={(event) => {
-          setBoardValue(event.target.value);
-        }}
-        placeholder="Board name"
-        css={{ fontSize: "$xl", width: "50%" }}
-      />
-      <FooterContainer justify="center">
-        <Button onClick={handleClick} size="1" variant="blue" css={{ width: "20%", mt: "$16" }}>
-          Save
-        </Button>
-      </FooterContainer>
+      <form onSubmit={handleSubmit((data) => handleClick(data))}>
+        <TextField
+          type="text"
+          placeholder="Board name"
+          css={{ fontSize: "$xl", width: "50%" }}
+          {...register("title")}
+        />
+        {errors.title?.type === "required" && (
+          <Paragraph variant="red">Board name is required</Paragraph>
+        )}
+        <FooterContainer justify="center">
+          <Button type="submit" size="1" variant="blue" css={{ width: "20%", mt: "$16" }}>
+            Save
+          </Button>
+        </FooterContainer>
+      </form>
     </DialogContent>
   );
 
