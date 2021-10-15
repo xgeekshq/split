@@ -48,7 +48,7 @@ const CreateBoardModal: React.FC<{
     handleSubmit,
     formState: { errors },
   } = useForm<BoardType>({
-    resolver: yupResolver(schema), // yup, joi and even your own.
+    resolver: yupResolver(schema),
   });
 
   useEffect(() => {
