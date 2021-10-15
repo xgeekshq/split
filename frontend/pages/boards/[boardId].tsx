@@ -48,21 +48,9 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
     if (data) dispatch({ type: "setTitle", val: data.title });
   }, [dispatch, data]);
 
-  const errorContent = <Text>Error getting board</Text>;
-  const isLoading = <Text>Loading ...</Text>;
-  const body = <div>Board body</div>;
-
-  const handleContent = (): JSX.Element => {
-    if (status === "loading") {
-      return isLoading;
-    }
-    if (status === "error") {
-      return errorContent;
-    }
-    return body;
-  };
-
-  return handleContent();
+  if (status === "loading") return <Text>Loading ...</Text>;
+  if (status === "error") return <Text>Error getting board</Text>;
+  return <div>Board body</div>;
 };
 
 export default Board;

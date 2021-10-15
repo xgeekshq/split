@@ -20,21 +20,8 @@ const Dashboard: React.FC = () => {
     setIsError(state);
   };
 
-  const loadingContent = <div>Loading....</div>;
-  const errorContent = <div>Error</div>;
-
-  const bodyContent = <CreateBoard setFetchLoading={handleLoading} setFetchError={handleError} />;
-
-  const handleContent = () => {
-    if (isLoading) {
-      return loadingContent;
-    }
-    if (isError) {
-      return errorContent;
-    }
-    return bodyContent;
-  };
-
-  return handleContent();
+  if (isLoading) return <div>Loading....</div>;
+  if (isError) return <div>Error</div>;
+  return <CreateBoard setFetchLoading={handleLoading} setFetchError={handleError} />;
 };
 export default Dashboard;

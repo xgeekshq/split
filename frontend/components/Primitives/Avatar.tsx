@@ -1,6 +1,6 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { styled } from "../../stitches.config";
-import Flex from "../Primitives/Flex";
+import Flex from "./Flex";
 
 const AvatarRoot = styled(AvatarPrimitive.Root, Flex);
 
