@@ -3,7 +3,7 @@ import { styled, keyframes } from "../../stitches.config";
 import Flex from "../Primitives/Flex";
 import Label from "../Primitives/Label";
 import favIcon from "../../public/favicon.ico";
-import Avatar from "../UI/Avatar";
+import Avatar from "../Primitives/Avatar";
 
 const slideUpAndFade = keyframes({
   "0%": { opacity: 0, transform: "translateY(2px)" },
