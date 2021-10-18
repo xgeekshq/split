@@ -3,8 +3,7 @@ import { QueryClient, dehydrate, useQuery } from "react-query";
 import { useEffect } from "react";
 import Text from "../../components/Primitives/Text";
 import { useStoreContext } from "../../store/store";
-import { getBoard } from "../../hooks/useBoard";
-import { getBoards } from "../../hooks/useBoards";
+import { getBoard, getBoards } from "../../api/boardService";
 
 interface PathType {
   params: BoardKeyType;
