@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BoardType, ColumnType } from "../../../types/boardTypes";
 import Card from "../../Primitives/Card";
 import { styled } from "../../../stitches.config";

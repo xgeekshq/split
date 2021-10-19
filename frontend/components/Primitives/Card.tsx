@@ -6,8 +6,7 @@ const Card = styled("div", Flex, {
   justifyContent: "center",
   lineHeight: "$24",
   px: "$16",
-  border: "2px solid $colors$blackA10",
-  boxShadow: "0 2px 10px rgb(62 62 82 / 30%)",
+  border: "1px solid $colors$blackA10",
   backgroundColor: "White",
 });
 

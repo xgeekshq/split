@@ -55,6 +55,13 @@ const Text = styled("span", {
         my: "$24",
       },
     },
+    {
+      size: "18",
+      fontWeight: "bold",
+      css: {
+        my: "$16",
+      },
+    },
   ],
   defaultVariants: {
     size: "base",

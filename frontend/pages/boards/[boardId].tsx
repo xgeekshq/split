@@ -1,9 +1,13 @@
+import { useEffect } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { QueryClient, dehydrate, useQuery } from "react-query";
-import { useEffect } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import Text from "../../components/Primitives/Text";
 import { useStoreContext } from "../../store/store";
 import { getBoard, getBoards } from "../../api/boardService";
+import Column from "../../components/Board/Column";
+import { styled } from "../../stitches.config";
+import Flex from "../../components/Primitives/Flex";
 
 interface PathType {
   params: BoardKeyType;
@@ -41,6 +45,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
+const Container = styled(Flex, {});
+
 const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
   const { data, status } = useQuery("board", async () => getBoard(boardId));
 
@@ -50,9 +56,31 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
     if (data) dispatch({ type: "setTitle", val: data.title });
   }, [dispatch, data]);
 
+  const onDragEnd = () => {
+    //   const { destination, source, draggableId } = result;
+    //   if (!destination) {
+    //     return;
+    //   }
+    //   // if (destination.droppableId === source.droppableId && destination.index === source.index) {
+    //   // }
+    //   return;
+  };
+
   if (status === "loading") return <Text>Loading ...</Text>;
-  if (status === "error") return <Text>Error getting board</Text>;
-  return <div>Board body</div>;
+  if (data) {
+    return (
+      // <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Container>
+          {Object.keys(data?.columns).map((title) => {
+            const column = data.columns[title];
+            return <Column key={title} title={title} column={column} cards={column.cards} />;
+          })}
+        </Container>
+      </DragDropContext>
+    );
+  }
+  return <Text>Error getting board data</Text>;
 };
 
 export default Board;
