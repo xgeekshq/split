@@ -12,7 +12,7 @@ import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardContentType } from "../../types/boardTypes";
+import { BoardType } from "../../types/boardTypes";
 
 const schema = yup
   .object()
@@ -38,8 +38,7 @@ const FooterContainer = styled("div", Flex);
 
 const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
-  setFetchError: (state: boolean) => void;
-}> = ({ setFetchLoading, setFetchError }) => {
+}> = ({ setFetchLoading }) => {
   const { createBoard } = useBoard();
   const { isLoading, isError } = createBoard;
 
@@ -47,28 +46,28 @@ const CreateBoardModal: React.FC<{
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BoardContentType>({
+  } = useForm<BoardType>({
     resolver: yupResolver(schema),
   });
 
   useEffect(() => {
     setFetchLoading(isLoading);
-    setFetchError(isError);
-  }, [isError, isLoading, setFetchLoading, setFetchError]);
+  }, [isError, isLoading, setFetchLoading]);
 
   // columns and cards hardcoded while dnd feature isnt implemented
-  const handleClick = (data: BoardContentType) => {
+  const handleClick = (data: BoardType) => {
     createBoard.mutate({
       title: data.title,
       creationDate: new Date().toISOString().slice(0, 10),
-      columns: {
-        todo: { cards: [{ text: "t1" }], color: "red" },
-        progress: { cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
-        actions: {
+      columns: [
+        { title: "todo", cards: [{ text: "t1" }], color: "red" },
+        { title: "progress", cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
+        {
+          title: "actions",
           cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
-          color: "yellow",
+          color: "green",
         },
-      },
+      ],
     });
   };
 

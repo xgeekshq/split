@@ -1,27 +1,26 @@
 import { UseMutationResult } from "react-query";
 
 export interface BoardType {
-  [name: string]: BoardContentType;
-}
-
-export interface BoardContentType {
-  title: string;
+  id?: string;
   creationDate: string;
-  columns: ColumnType;
+  title: string;
+  columns: Array<ColumnType>;
+  columnOrder?: Array<string>;
 }
 
 export interface ColumnType {
-  [columnName: string]: {
-    color: string;
-    cards: Array<CardType>;
-  };
+  id?: string;
+  title: string;
+  color: string;
+  cards: Array<CardType>;
+  order?: Array<string>;
 }
 
 export interface CardType {
-  [cardName: string]: string;
+  id?: string;
   text: string;
 }
 
 export interface UseBoardType {
-  [key: string]: UseMutationResult<BoardType, unknown, BoardContentType, unknown>;
+  [key: string]: UseMutationResult<BoardType, unknown, BoardType, unknown>;
 }

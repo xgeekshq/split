@@ -8,7 +8,8 @@ const useBoard = (): UseBoardType => {
 
   const createBoard = useMutation(postBoard, {
     onSuccess: (data: BoardType) => {
-      router.push(`/boards/${data.name}`);
+      router.push(`/boards/${data.id}`);
+      // update column order and card order
     },
   });
 
