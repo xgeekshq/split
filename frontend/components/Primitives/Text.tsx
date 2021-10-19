@@ -45,6 +45,9 @@ const Text = styled("span", {
       red: {
         color: "$red10",
       },
+      white: {
+        color: "white",
+      },
     },
   },
   compoundVariants: [

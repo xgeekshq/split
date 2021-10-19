@@ -8,7 +8,8 @@ const StyledTrigger = styled(Trigger, Card, {
 });
 
 type DialogTriggerPrimitiveProps = React.ComponentProps<typeof Trigger> &
-  React.ComponentProps<typeof StyledTrigger>;
+  React.ComponentProps<typeof StyledTrigger> &
+  React.ComponentProps<typeof Card>;
 type DialogTriggerProps = DialogTriggerPrimitiveProps & { css?: CSS };
 
 const DialogTrigger = React.forwardRef<React.ElementRef<typeof StyledTrigger>, DialogTriggerProps>(

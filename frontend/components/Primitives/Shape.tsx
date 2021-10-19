@@ -6,7 +6,7 @@ const Shape = styled("div", Flex, {
   variants: {
     variant: {
       circle: {
-        borderRadius: "$pill",
+        borderRadius: "$round",
       },
     },
     bColor: {

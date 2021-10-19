@@ -5,3 +5,5 @@ describe("I am at landing page and I see the projects name", () => {
     cy.get("div").should("contain", "Divide and conquer");
   });
 });
+
+export default {};

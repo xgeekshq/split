@@ -8,6 +8,7 @@ import Flex from "../components/Primitives/Flex";
 import BoardsList from "../components/Dashboard/BoardList/BoardsList";
 import Text from "../components/Primitives/Text";
 import { getBoards } from "../api/boardService";
+import { ERROR_LOADING_DATA } from "../utils/constantsHelper";
 
 export const getStaticProps: GetStaticProps = async () => {
   const queryClient = new QueryClient();
@@ -47,6 +48,6 @@ const Dashboard: React.FC = () => {
         <BoardsList boards={data} />
       </Container>
     );
-  return <div>Error getting data</div>;
+  return <div>{ERROR_LOADING_DATA}</div>;
 };
 export default Dashboard;

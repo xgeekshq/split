@@ -17,6 +17,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
 
         hiContrast: "$slate12",
         loContrast: "white",
+        body: "$gray3",
       },
       fontSizes: {
         12: "0.75rem",
@@ -54,8 +55,9 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         20: "1.25rem",
         32: "2rem",
         40: "2.5rem",
-        220: "13.75rem",
+        130: "5rem",
         160: "10rem",
+        220: "13.75rem",
       },
       lineHeights: {
         8: "0.5rem",

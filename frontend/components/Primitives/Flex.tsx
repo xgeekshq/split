@@ -86,15 +86,6 @@ const Flex = styled("div", {
         gap: "$40",
       },
     },
-    clickable: {
-      true: {
-        "@hover": {
-          "&:hover": {
-            borderColor: "$blue10",
-          },
-        },
-      },
-    },
     media: {
       sm: {
         "@sm": { flexDirection: "column" },

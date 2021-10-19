@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { BoardType, UseBoardType } from "../types/boardTypes";
-import { postBoard } from "../api/boardService";
+import { postBoard, putBoard } from "../api/boardService";
 
 const useBoard = (): UseBoardType => {
   const router = useRouter();
@@ -13,7 +13,9 @@ const useBoard = (): UseBoardType => {
     },
   });
 
-  return { createBoard };
+  const updateBoard = useMutation(putBoard, {});
+
+  return { createBoard, updateBoard };
 };
 
 export default useBoard;
