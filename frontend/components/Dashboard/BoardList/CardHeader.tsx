@@ -11,7 +11,7 @@ const DeleteIcon = styled(Cross1Icon, IconButton);
 
 const CardHeader: React.VFC = () => {
   return (
-    <Container direction="row" justify="between" css={{ alignSelf: "flex-start", width: "100%" }}>
+    <Container justify="between" css={{ alignSelf: "flex-start", width: "100%" }}>
       <Button>
         <CopyUrlIcon size="20" />
       </Button>

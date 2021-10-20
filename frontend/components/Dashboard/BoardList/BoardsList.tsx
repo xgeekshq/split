@@ -7,8 +7,6 @@ import Shape from "../../Primitives/Shape";
 import CardHeader from "./CardHeader";
 import HoverCard from "../../Primitives/HoverCard";
 
-const Container = styled("div", Flex);
-
 const Circle = styled(Shape, {
   size: "$32",
 });
@@ -38,7 +36,7 @@ const handleCols = (columns: ColumnType[]) => {
 
 const BoardsList: React.FC<{ boards: BoardType[] }> = ({ boards }) => {
   return (
-    <Container gap="40" justify="start">
+    <Flex gap="40" justify="start">
       {boards.map((board: BoardType) => (
         <Card
           key={board.id}
@@ -53,10 +51,10 @@ const BoardsList: React.FC<{ boards: BoardType[] }> = ({ boards }) => {
             {board.title}
           </Text>
           <Text>{board.creationDate}</Text>
-          {board.columns && <Container gap="8">{handleCols(board.columns)}</Container>}
+          {board.columns && <Flex gap="8">{handleCols(board.columns)}</Flex>}
         </Card>
       ))}
-    </Container>
+    </Flex>
   );
 };
 
