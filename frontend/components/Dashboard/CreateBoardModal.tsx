@@ -29,7 +29,7 @@ const PlusIcon = styled(PlusCircledIcon, {
 
 const Trigger = (
   <DialogTrigger clickable align="center" direction="column">
-    <Text size="xl">Add retro board</Text>
+    <Text size="20">Add retro board</Text>
     <PlusIcon />
   </DialogTrigger>
 );
@@ -38,8 +38,7 @@ const FooterContainer = styled("div", Flex);
 
 const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
-  setFetchError: (state: boolean) => void;
-}> = ({ setFetchLoading, setFetchError }) => {
+}> = ({ setFetchLoading }) => {
   const { createBoard } = useBoard();
   const { isLoading, isError } = createBoard;
 
@@ -53,11 +52,23 @@ const CreateBoardModal: React.FC<{
 
   useEffect(() => {
     setFetchLoading(isLoading);
-    setFetchError(isError);
-  }, [isError, isLoading, setFetchLoading, setFetchError]);
+  }, [isError, isLoading, setFetchLoading]);
 
+  // columns and cards hardcoded while dnd feature isnt implemented
   const handleClick = (data: BoardType) => {
-    createBoard.mutate({ title: data.title });
+    createBoard.mutate({
+      title: data.title,
+      creationDate: new Date().toISOString().slice(0, 10),
+      columns: [
+        { title: "todo", cards: [{ text: "t1" }], color: "red" },
+        { title: "progress", cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
+        {
+          title: "actions",
+          cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
+          color: "green",
+        },
+      ],
+    });
   };
 
   const Content = (

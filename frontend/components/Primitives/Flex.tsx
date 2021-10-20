@@ -48,6 +48,12 @@ const Flex = styled("div", {
       between: {
         justifyContent: "space-between",
       },
+      around: {
+        justifyContent: "space-around",
+      },
+      evenly: {
+        justifyContent: "space-evenly",
+      },
     },
     wrap: {
       noWrap: {
@@ -73,8 +79,20 @@ const Flex = styled("div", {
       20: {
         gap: "$20",
       },
+      26: {
+        gap: "$26",
+      },
       40: {
         gap: "$40",
+      },
+    },
+    clickable: {
+      true: {
+        "@hover": {
+          "&:hover": {
+            borderColor: "$blue10",
+          },
+        },
       },
     },
     media: {

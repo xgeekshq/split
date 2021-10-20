@@ -6,7 +6,6 @@ const fetchData = async <T,>(url: string, method: string, body: Nullable<string>
     body,
     headers: { "Content-Type": "application/json" },
   });
-
   return response.json();
 };
 

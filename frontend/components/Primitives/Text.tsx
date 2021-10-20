@@ -12,14 +12,17 @@ const Text = styled("span", {
       },
     },
     size: {
-      base: {
-        fontSize: "$base",
+      16: {
+        fontSize: "$16",
       },
-      lg: {
-        fontSize: "$lg",
+      18: {
+        fontSize: "$18",
       },
-      xl: {
-        fontSize: "$xl",
+      20: {
+        fontSize: "$20",
+      },
+      36: {
+        fontSize: "$36",
       },
     },
     lineHeight: {
@@ -44,7 +47,15 @@ const Text = styled("span", {
       },
     },
   },
-
+  compoundVariants: [
+    {
+      size: "36",
+      fontWeight: "bold",
+      css: {
+        my: "$24",
+      },
+    },
+  ],
   defaultVariants: {
     size: "base",
     noMargin: "true",

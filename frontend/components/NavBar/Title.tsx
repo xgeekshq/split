@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import { useStoreContext } from "../../store/store";
 import { CheckIsBoardPage } from "../../utils/PagesNames";
@@ -12,25 +11,14 @@ const Title: React.FC = () => {
 
   const isBoardPage = CheckIsBoardPage(router.pathname);
 
-  const pageTitle = useMemo(
-    () => (
-      <Text fontWeight="semiBold" size="xl">
+  if (!isBoardPage) {
+    return (
+      <Text fontWeight="semiBold" size="18">
         {title}
       </Text>
-    ),
-    [title]
-  );
-
-  const HandleContent = useCallback(() => {
-    if (!isBoardPage) {
-      return pageTitle;
-    }
-    return pageTitle;
-  }, [isBoardPage, pageTitle]);
-
-  const content = HandleContent();
-
-  return <>{content}</>;
+    );
+  }
+  return <div />;
 };
 
 export default Title;

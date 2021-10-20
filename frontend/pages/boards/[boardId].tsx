@@ -28,9 +28,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   const boards = await getBoards();
 
-  const paths: PathType[] = [];
-  Object.keys(boards).forEach((key) => {
-    paths.push({ params: { boardId: key } });
+  const paths: PathType[] = boards.map((board) => {
+    return {
+      params: {
+        boardId: board?.id?.toString() ?? "none",
+      },
+    };
   });
   return {
     paths,

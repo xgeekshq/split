@@ -21,8 +21,6 @@ const Button = styled("button", {
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
   // Custom
-
-  height: "$8",
   px: "$2",
   fontFamily: "$untitled",
   fontSize: "$2",

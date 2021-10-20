@@ -1,16 +1,10 @@
 import { Trigger } from "@radix-ui/react-dialog";
 import React from "react";
 import { styled, CSS } from "../../../stitches.config";
-import Box from "../Box";
+import Card from "../Card";
 
-const StyledTrigger = styled(Trigger, Box, {
-  borderRadius: "$40",
-  justifyContent: "center",
+const StyledTrigger = styled(Trigger, Card, {
   size: "$160",
-  lineHeight: "$24",
-  alignItems: "center",
-  p: "$16",
-  border: "2px solid $colors$blackA10",
 });
 
 type DialogTriggerPrimitiveProps = React.ComponentProps<typeof Trigger> &

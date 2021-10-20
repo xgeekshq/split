@@ -75,7 +75,6 @@ const IconButton = styled(Button, {
     },
   },
   defaultVariants: {
-    size: "1",
     variant: "ghost",
   },
 });
