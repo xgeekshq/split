@@ -1,0 +1,22 @@
+version: "3.9"
+secrets: 
+  dbuser:
+    file: ./secrets/dbuser.txt
+  db_root_pw:
+    file: ./secrets/db_root_pw.txt
+
+services:
+  dc-database:
+    image: mongo
+    restart: always
+    container_name: dc-database
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/dbuser
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/db_root_pw
+      MONGO_INITDB_DATABASE: dc
+    secrets:
+      - dbuser
+      - db_root_pw
+  
