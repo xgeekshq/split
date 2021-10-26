@@ -4,6 +4,8 @@ secrets:
     file: ./secrets/dbuser.txt
   db_root_pw:
     file: ./secrets/db_root_pw.txt
+  db_backend_password:
+    file: ./secrets/db_backend_password.txt
 
 services:
   dc-database:
@@ -12,10 +14,14 @@ services:
     container_name: dc-database
     ports:
       - "27017:27017"
+    volumes:
+      - ./database/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     environment:
       MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/dbuser
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/db_root_pw
       MONGO_INITDB_DATABASE: dc
+      MONGO_BACKEND_USER: backend
+      MONGO_BACKEND_PASSWORD: /run/secrets/db_backend_password
     secrets:
       - dbuser
       - db_root_pw
