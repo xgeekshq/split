@@ -1,30 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Board } from './boards/board.entity';
-import { BoardsController } from './boards/boards.controller';
 import { ConfigModule } from '@nestjs/config';
-
+import { DatabaseModule } from './database/database.module';
+import * as Joi from '@hapi/joi';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.local.env',
+      validationSchema: Joi.object({
+        DB_HOST: Joi.string().required(),
+        DB_USER: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+      }),
     }),
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      host: '127.0.0.1',
-      port: 27017,
-      username: process.env.DBUSER,
-      password: process.env.DB_ROOT_PASSWORD,
-      database: 'dc',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      useUnifiedTopology: true,
-    }),
-    TypeOrmModule.forFeature([Board]),
+    DatabaseModule,
   ],
-  controllers: [AppController, BoardsController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
