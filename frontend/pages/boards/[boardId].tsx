@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { QueryClient, dehydrate, useQuery, useQueryClient } from "react-query";
 import dynamic from "next/dynamic";
@@ -56,7 +56,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const Container = styled(Flex);
 
 const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
-  const [winReady, setWinReady] = useState(false);
   const { updateBoard } = useBoard();
   const { data, status } = useQuery(["board", { id: boardId }], () => getBoard(boardId));
   const { dispatch } = useStoreContext();
@@ -136,7 +135,7 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
   };
 
   if (status === "loading") return <Text>Loading ...</Text>;
-  if (data && winReady) {
+  if (data) {
     return (
       <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
