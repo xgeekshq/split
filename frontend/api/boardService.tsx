@@ -8,6 +8,10 @@ export const postBoard = async (newBoard: BoardType): Promise<BoardType> => {
   return fetchData(`${API_URL}/boards`, "POST", JSON.stringify(newBoard));
 };
 
+export const putBoard = async (newBoard: BoardType): Promise<BoardType> => {
+  return fetchData(`${API_URL}/boards/${newBoard.id}`, "PUT", JSON.stringify(newBoard));
+};
+
 export const getBoard = async (id: Nullable<string>): Promise<BoardType> => {
   return fetchData(`${API_URL}/boards/${id}`, "GET", null);
 };

@@ -28,7 +28,13 @@ const PlusIcon = styled(PlusCircledIcon, {
 });
 
 const Trigger = (
-  <DialogTrigger clickable align="center" direction="column">
+  <DialogTrigger
+    interactive="clickable"
+    direction="column"
+    align="center"
+    radius="40"
+    justify="center"
+  >
     <Text size="20">Add retro board</Text>
     <PlusIcon />
   </DialogTrigger>
@@ -41,7 +47,6 @@ const CreateBoardModal: React.FC<{
 }> = ({ setFetchLoading }) => {
   const { createBoard } = useBoard();
   const { isLoading, isError } = createBoard;
-
   const {
     register,
     handleSubmit,
@@ -73,7 +78,7 @@ const CreateBoardModal: React.FC<{
 
   const Content = (
     <DialogContent dialogTitle="New board" direction="column" justify="center">
-      <form onSubmit={handleSubmit((data) => handleClick(data))}>
+      <form onSubmit={handleSubmit((data: BoardType) => handleClick(data))}>
         <TextField
           type="text"
           placeholder="Board name"

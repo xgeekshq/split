@@ -1,14 +1,29 @@
 import Flex from "./Flex";
 import { styled } from "../../stitches.config";
 
-const Card = styled("div", Flex, {
-  borderRadius: "$40",
-  justifyContent: "center",
+const Card = styled(Flex, {
   lineHeight: "$24",
-  px: "$16",
-  border: "2px solid $colors$blackA10",
-  boxShadow: "0 2px 10px rgb(62 62 82 / 30%)",
+  border: "1px solid $colors$blackA10",
   backgroundColor: "White",
+  variants: {
+    radius: {
+      40: {
+        borderRadius: "$40",
+      },
+    },
+    interactive: {
+      "@hover": {
+        "&:hover": { boxShadow: "10px 10px 20px 1px rgba(0,0,0,.2)" },
+      },
+      clickable: {
+        "@hover": {
+          "&:hover": {
+            borderColor: "$blue10",
+          },
+        },
+      },
+    },
+  },
 });
 
 export default Card;

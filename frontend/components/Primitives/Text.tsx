@@ -45,6 +45,9 @@ const Text = styled("span", {
       red: {
         color: "$red10",
       },
+      white: {
+        color: "white",
+      },
     },
   },
   compoundVariants: [
@@ -53,6 +56,13 @@ const Text = styled("span", {
       fontWeight: "bold",
       css: {
         my: "$24",
+      },
+    },
+    {
+      size: "18",
+      fontWeight: "bold",
+      css: {
+        my: "$16",
       },
     },
   ],

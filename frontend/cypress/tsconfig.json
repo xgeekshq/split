@@ -10,6 +10,6 @@
   "include": [
     "../node_modules/cypress",
     "./**/*.ts"
-, "integration/index.ts"  ],
+, "integration/index.tsx"  ],
   "exclude": ["../node_modules/cypress/**/*.js"] 
 }
