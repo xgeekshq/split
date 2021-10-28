@@ -11,15 +11,10 @@ import * as request from 'supertest';
 
 describe('AuthController', () => {
   let app: INestApplication;
-  let userData: UserEntity;
 
   beforeEach(async () => {
-    userData = {
-      ...mockedUser,
-    };
-
     const usersRepository = {
-      create: jest.fn().mockResolvedValue(userData),
+      create: jest.fn().mockResolvedValue(mockedUser),
       save: jest.fn().mockReturnValue(Promise.resolve()),
     };
 
@@ -45,7 +40,7 @@ describe('AuthController', () => {
     describe('and using valid data', () => {
       it('should respond with the data of the user without the password', () => {
         const expectedData = {
-          ...userData,
+          ...mockedUser,
         };
         delete expectedData.password;
         return request(app.getHttpServer())

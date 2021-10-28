@@ -5,12 +5,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { mockedUser } from '../../mocks/user.mock';
 
-const createUserDto = {
-  email: 'user@email.com',
-  username: 'John',
-  password: 'hash',
-};
-
 describe('UsersService', () => {
   let usersService: UsersService;
 
@@ -65,8 +59,8 @@ describe('UsersService', () => {
   describe('when create a user', () => {
     describe('and the user is correctly inserted', () => {
       it('should return the user', async () => {
-        const result = await usersService.create(createUserDto);
-        expect(repo.create).toHaveBeenCalledWith(createUserDto);
+        const result = await usersService.create(mockedUser);
+        expect(repo.create).toHaveBeenCalledWith(mockedUser);
         expect(result).toEqual(mockedUser);
       });
     });
