@@ -1,15 +1,9 @@
-import {
-  Entity,
-  Column,
-  ObjectID,
-  ObjectIdColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column, ObjectIdColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
   @ObjectIdColumn()
-  _id: ObjectID;
+  _id: string;
   @Column({ nullable: false, unique: true }) username: string;
   @Column({ nullable: false }) password: string;
   @Column({ nullable: false, unique: true }) email: string;

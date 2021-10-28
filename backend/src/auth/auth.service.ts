@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import MongoErrorCode from 'src/database/mongoErrorCode.enum';
+import MongoErrorCode from '../database/mongoErrorCode.enum';
 import RegisterDto from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 
