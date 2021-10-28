@@ -38,12 +38,12 @@ describe('AuthController', () => {
 
   describe('when registering', () => {
     describe('and using valid data', () => {
-      it('should respond with the data of the user without the password', () => {
+      it('should respond with the data of the user without the password', async () => {
         const expectedData = {
           ...mockedUser,
         };
         delete expectedData.password;
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .post('/auth/register')
           .send({
             email: mockedUser.email,
@@ -55,13 +55,45 @@ describe('AuthController', () => {
       });
     });
     describe('and using invalid data', () => {
-      it('should throw an error', () => {
-        return request(app.getHttpServer())
+      it('should throw an error because full data wasnt submitted', async () => {
+        return await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            name: mockedUser.username,
+            username: '',
+            password: '',
+            email: '',
           })
           .expect(400);
+      });
+      it('should throw an error because full data wasnt submitted', async () => {
+        return await request(app.getHttpServer())
+          .post('/auth/register')
+          .send({
+            username: mockedUser.username,
+          })
+          .expect(400);
+      });
+      it('should throw an error because full data wasnt submitted', async () => {
+        return await request(app.getHttpServer())
+          .post('/auth/register')
+          .send({
+            username: mockedUser.username,
+            password: mockedUser.password,
+          })
+          .expect(400);
+      });
+      it('should throw an error because password is short', async () => {
+        const res = await request(app.getHttpServer())
+          .post('/auth/register')
+          .send({
+            username: mockedUser.username,
+            password: '1234',
+            email: mockedUser.email,
+          });
+
+        expect(res.body.message[0]).toBe(
+          'password must be longer than or equal to 7 characters',
+        );
       });
     });
   });
