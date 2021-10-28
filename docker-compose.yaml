@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  dc-database:
+    image: mongo
+    restart: always
+    container_name: dc-database
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      MONGO_BACKEND_USER: ${DB_USER}
+      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD}
