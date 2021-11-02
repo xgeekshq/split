@@ -2,14 +2,14 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import errors from '../database/types/errors';
 import RegisterDto from './dto/register.dto';
-import encryptPassword from 'src/utils/encryptPassword';
+import { encrypt } from 'src/utils/bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   public async register(registrationData: RegisterDto) {
-    const hashedPassword = await encryptPassword(registrationData.password);
+    const hashedPassword = await encrypt(registrationData.password);
     try {
       const createdUser = await this.usersService.create({
         ...registrationData,
