@@ -16,16 +16,12 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException(
-      'User with this email does not exist',
-      HttpStatus.NOT_FOUND,
-    );
+    throw new HttpException('EMAIL_NOT_EXISTS', HttpStatus.NOT_FOUND);
   }
 
   async create(userData: CreateUserDto) {
-    const newUser = await this.usersRepository.create(userData);
-    await this.usersRepository.save(newUser);
-    return newUser;
+    const newUser = this.usersRepository.create(userData);
+    return this.usersRepository.save(newUser);
   }
 
   async delete(email: string) {

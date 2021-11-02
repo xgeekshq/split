@@ -1,15 +1,15 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import MongoErrorCode from '../database/mongoErrorCode.enum';
+import errors from '../database/types/errors';
 import RegisterDto from './dto/register.dto';
-import * as bcrypt from 'bcrypt';
+import encryptPassword from 'src/utils/encryptPassword';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   public async register(registrationData: RegisterDto) {
-    const hashedPassword = await bcrypt.hash(registrationData.password, 10);
+    const hashedPassword = await encryptPassword(registrationData.password);
     try {
       const createdUser = await this.usersService.create({
         ...registrationData,
@@ -18,11 +18,8 @@ export class AuthService {
       createdUser.password = undefined;
       return createdUser;
     } catch (error) {
-      if (error?.code === MongoErrorCode.UniqueViolation) {
-        throw new HttpException(
-          'User with that email already exists',
-          HttpStatus.BAD_REQUEST,
-        );
+      if (error?.code === errors.UniqueViolation) {
+        throw new HttpException('EMAIL_EXISTS', HttpStatus.BAD_REQUEST);
       }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
