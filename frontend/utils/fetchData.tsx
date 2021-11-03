@@ -1,12 +1,15 @@
-import { Nullable } from "../types/commonTypes";
+import axios, { Method } from "axios";
+import { API_URL } from "./constants";
+import { Nullable } from "../types/common";
 
-const fetchData = async <T,>(url: string, method: string, body: Nullable<string>): Promise<T> => {
-  const response = await fetch(url, {
+const fetchData = async <T,>(url: string, method: Method, body: Nullable<string>): Promise<T> => {
+  const { data } = await axios({
+    url: `${API_URL}${url}`,
     method,
-    body,
+    data: body,
     headers: { "Content-Type": "application/json" },
   });
-  return response.json();
+  return data;
 };
 
 export default fetchData;

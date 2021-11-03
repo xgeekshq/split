@@ -20,13 +20,6 @@ const Button = styled("button", {
   lineHeight: "1",
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
-  // Custom
-  px: "$2",
-  fontFamily: "$untitled",
-  fontSize: "$2",
-  fontWeight: 500,
-  fontVariantNumeric: "tabular-nums",
-
   "&:disabled": {
     backgroundColor: "$slate2",
     boxShadow: "inset 0 0 0 1px $colors$slate7",
@@ -43,8 +36,15 @@ const Button = styled("button", {
         fontSize: "$4",
         lineHeight: "$8",
       },
+      "2": {
+        borderRadius: "$2",
+        height: "$32",
+        p: "$20",
+        fontSize: "$20",
+        lineHeight: "$8",
+      },
     },
-    variant: {
+    color: {
       gray: {
         backgroundColor: "$loContrast",
         boxShadow: "inset 0 0 0 1px $slate7",
@@ -88,6 +88,14 @@ const Button = styled("button", {
             boxShadow: "inset 0 0 0 1px $blue",
           },
       },
+      green: {
+        backgroundColor: "$green4",
+        color: "$green11",
+        "@hover": {
+          "&:hover": { backgroundColor: "$green5" },
+          "&:focus": { boxShadow: `0 0 0 2px $green7` },
+        },
+      },
     },
     state: {
       active: {
@@ -117,7 +125,7 @@ const Button = styled("button", {
   },
   defaultVariants: {
     size: "1",
-    variant: "gray",
+    color: "gray",
   },
 });
 

@@ -1,5 +1,5 @@
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
-import { styled } from "@stitches/react";
+import { styled } from "../../stitches.config";
 import {
   slideDownAndFade,
   slideLeftAndFade,
@@ -10,6 +10,9 @@ import {
 const StyledContent = styled(HoverCardPrimitive.Content, {
   borderRadius: 6,
   padding: 20,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   width: "fit-content",
   backgroundColor: "white",
   boxShadow: "hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
@@ -30,21 +33,10 @@ const StyledArrow = styled(HoverCardPrimitive.Arrow, {
   fill: "white",
 });
 
-export const HoverCardRoot = HoverCardPrimitive.Root;
-export const HoverCardTrigger = HoverCardPrimitive.Trigger;
+const StyledCardRoot = styled(HoverCardPrimitive.Root);
+const StyledCardTrigger = styled(HoverCardPrimitive.Trigger);
+
+export const HoverCardRoot = StyledCardRoot;
+export const HoverCardTrigger = StyledCardTrigger;
 export const HoverCardContent = StyledContent;
 export const HoverCardArrow = StyledArrow;
-
-const HoverCard: React.FC<{ trigger: JSX.Element }> = ({ trigger, children }) => {
-  return (
-    <HoverCardRoot>
-      <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
-      <HoverCardContent sideOffset={0}>
-        {children}
-        <HoverCardArrow />
-      </HoverCardContent>
-    </HoverCardRoot>
-  );
-};
-
-export default HoverCard;

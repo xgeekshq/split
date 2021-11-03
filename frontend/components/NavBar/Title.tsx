@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useStoreContext } from "../../store/store";
-import { CheckIsBoardPage } from "../../utils/pagesNames";
+import { CheckIsBoardPage } from "../../utils/PagesNames";
 import Text from "../Primitives/Text";
 
 const Title: React.FC = () => {

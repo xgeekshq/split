@@ -2,24 +2,12 @@ import { styled } from "../../stitches.config";
 
 const TextField = styled("input", {
   // Reset
-  appearance: "none",
-  borderWidth: "0",
+  borderWidth: "1px",
   boxSizing: "border-box",
   fontFamily: "inherit",
-  margin: "0",
-  outline: "none",
-  padding: "0",
-  WebkitTapHighlightColor: "rgba(0,0,0,0)",
-  "&::before": {
-    boxSizing: "border-box",
-  },
-  "&::after": {
-    boxSizing: "border-box",
-  },
 
   // Custom
   backgroundColor: "$loContrast",
-  boxShadow: "inset 0 0 0 1px $colors$slate7",
   color: "$hiContrast",
   fontVariantNumeric: "tabular-nums",
 
@@ -72,13 +60,29 @@ const TextField = styled("input", {
       },
       "2": {
         borderRadius: "$2",
-        height: "$6",
-        fontSize: "$3",
-        px: "$2",
-        lineHeight: "$sizes$6",
+        fontSize: "$20",
+        p: "$8",
         "&:-webkit-autofill::first-line": {
-          fontSize: "$3",
+          fontSize: "$20",
         },
+      },
+      "3": {
+        borderRadius: "$2",
+        fontSize: "$18",
+        p: "$8",
+        "&:-webkit-autofill::first-line": {
+          fontSize: "$18",
+        },
+      },
+    },
+    backgroundColor: {
+      blueLight: {
+        backgroundColor: "$blue4",
+      },
+    },
+    textColor: {
+      white: {
+        color: "white",
       },
     },
     variant: {
@@ -104,6 +108,7 @@ const TextField = styled("input", {
     },
     state: {
       invalid: {
+        borderColor: "$red7",
         boxShadow: "inset 0 0 0 1px $colors$red7",
         "&:focus": {
           boxShadow: "inset 0px 0px 0px 1px $colors$red8, 0px 0px 0px 1px $colors$red8",
