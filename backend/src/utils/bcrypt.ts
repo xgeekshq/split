@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { SALT } from 'src/constants/encrypt';
 
 export const encrypt = (textToEncrypt: string) => {

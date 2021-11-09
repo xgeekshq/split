@@ -15,9 +15,9 @@ import { useStoreContext } from "../../store/store";
 import { getBoard, getBoards } from "../../api/boardService";
 import { styled } from "../../stitches.config";
 import Flex from "../../components/Primitives/Flex";
-import { ERROR_LOADING_DATA, UNDEFINED } from "../../utils/constantsHelper";
+import { ERROR_LOADING_DATA, UNDEFINED } from "../../utils/constants";
 
-const Column = dynamic(import("../../components/Board/Column"));
+const Column = dynamic(() => import("../../components/Board/Column"));
 interface PathType {
   params: BoardKeyType;
 }

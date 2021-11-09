@@ -4,7 +4,7 @@ import { Entity, Column, ObjectIdColumn, CreateDateColumn } from 'typeorm';
 export class UserEntity {
   @ObjectIdColumn()
   _id: string;
-  @Column({ nullable: false, unique: true }) username: string;
+  @Column({ nullable: false }) username: string;
   @Column({ nullable: false }) password: string;
   @Column({ nullable: false, unique: true }) email: string;
   @CreateDateColumn() createdOn?: Date;

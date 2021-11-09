@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "react-query";
-import { BoardType } from "../types/boardTypes";
+import { BoardType } from "../types/board";
 import { getBoards } from "../api/boardService";
 
 export default function useBoards(): UseQueryResult<BoardType[]> {

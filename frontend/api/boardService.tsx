@@ -1,21 +1,19 @@
 import fetchData from "../utils/fetchData";
-import { BoardType } from "../types/boardTypes";
-import { Nullable } from "../types/commonTypes";
+import { BoardType } from "../types/board";
+import { Nullable } from "../types/common";
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-export const postBoard = async (newBoard: BoardType): Promise<BoardType> => {
-  return fetchData(`${API_URL}/boards`, "POST", JSON.stringify(newBoard));
+export const postBoard = (newBoard: BoardType): Promise<BoardType> => {
+  return fetchData(`/boards`, "POST", JSON.stringify(newBoard));
 };
 
-export const putBoard = async (newBoard: BoardType): Promise<BoardType> => {
-  return fetchData(`${API_URL}/boards/${newBoard.id}`, "PUT", JSON.stringify(newBoard));
+export const putBoard = (newBoard: BoardType): Promise<BoardType> => {
+  return fetchData(`/boards/${newBoard.id}`, "PUT", JSON.stringify(newBoard));
 };
 
-export const getBoard = async (id: Nullable<string>): Promise<BoardType> => {
-  return fetchData(`${API_URL}/boards/${id}`, "GET", null);
+export const getBoard = (id: Nullable<string>): Promise<BoardType> => {
+  return fetchData(`/boards/${id}`, "GET", undefined);
 };
 
-export const getBoards = async (): Promise<BoardType[]> => {
-  return fetchData(`${API_URL}/boards`, "GET", null);
+export const getBoards = (): Promise<BoardType[]> => {
+  return fetchData(`/boards`, "GET", undefined);
 };
