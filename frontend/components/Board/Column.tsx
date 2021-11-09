@@ -1,12 +1,12 @@
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { styled } from "../../stitches.config";
-import { CardType, ColumnType } from "../../types/boardTypes";
+import { CardType, ColumnType } from "../../types/board";
 import Flex from "../Primitives/Flex";
 import Shape from "../Primitives/Shape";
 import Text from "../Primitives/Text";
 import CardBoard from "./CardBoard";
-import { UNDEFINED } from "../../utils/constantsHelper";
+import { UNDEFINED } from "../../utils/constants";
 
 const Container = styled(Flex, {
   borderRadius: "$2",

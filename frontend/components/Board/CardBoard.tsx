@@ -1,6 +1,6 @@
 import { Draggable } from "react-beautiful-dnd";
 import { styled } from "../../stitches.config";
-import { CardType, ColumnType } from "../../types/boardTypes";
+import { CardType, ColumnType } from "../../types/board";
 import Card from "../Primitives/Card";
 import Text from "../Primitives/Text";
 

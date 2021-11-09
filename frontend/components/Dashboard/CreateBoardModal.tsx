@@ -1,18 +1,23 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
-import { PlusCircledIcon } from "@modulz/radix-icons";
-import Dialog from "../Primitives/Dialog/Dialog";
+import { PlusCircledIcon, Cross1Icon } from "@modulz/radix-icons";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
-import DialogTrigger from "../Primitives/Dialog/DialogTrigger";
-import DialogContent from "../Primitives/Dialog/DialogContent";
+import {
+  DialogContent,
+  DialogRoot,
+  DialogCloseButton,
+  DialogContentTitle,
+  DialogTrigger,
+} from "../Primitives/Dialog";
 import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardType } from "../../types/boardTypes";
+import { BoardType } from "../../types/board";
+import IconButton from "../Primitives/IconButton";
 
 const schema = yup
   .object()
@@ -30,10 +35,10 @@ const PlusIcon = styled(PlusCircledIcon, {
 const Trigger = (
   <DialogTrigger
     interactive="clickable"
-    direction="column"
     align="center"
     radius="40"
     justify="center"
+    direction="column"
   >
     <Text size="20">Add retro board</Text>
     <PlusIcon />
@@ -77,12 +82,14 @@ const CreateBoardModal: React.FC<{
   };
 
   const Content = (
-    <DialogContent dialogTitle="New board" direction="column" justify="center">
+    <DialogContent direction="column" justify="center" css={{ width: "30vw" }}>
+      <DialogContentTitle>New board</DialogContentTitle>
       <form onSubmit={handleSubmit((data: BoardType) => handleClick(data))}>
         <TextField
           type="text"
           placeholder="Board name"
           css={{ fontSize: "$xl", width: "50%" }}
+          size="2"
           {...register("title")}
         />
         {errors.title && (
@@ -91,19 +98,24 @@ const CreateBoardModal: React.FC<{
           </Text>
         )}
         <FooterContainer justify="center">
-          <Button type="submit" size="1" variant="blue" css={{ width: "20%", mt: "$16" }}>
+          <Button type="submit" size="1" color="blue" css={{ width: "20%", mt: "$26" }}>
             Save
           </Button>
         </FooterContainer>
       </form>
+      <DialogCloseButton asChild>
+        <IconButton variant="ghost" size="20">
+          <Cross1Icon />
+        </IconButton>
+      </DialogCloseButton>
     </DialogContent>
   );
 
   return (
-    <Dialog>
+    <DialogRoot>
       {Trigger}
       {Content}
-    </Dialog>
+    </DialogRoot>
   );
 };
 

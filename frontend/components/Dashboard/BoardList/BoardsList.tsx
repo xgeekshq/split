@@ -1,12 +1,17 @@
 import Link from "next/link";
-import { BoardType, ColumnType } from "../../../types/boardTypes";
+import { BoardType, ColumnType } from "../../../types/board";
+import {
+  HoverCardRoot,
+  HoverCardContent,
+  HoverCardArrow,
+  HoverCardTrigger,
+} from "../../Primitives/HoverCard";
 import Card from "../../Primitives/Card";
 import { styled } from "../../../stitches.config";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import Shape from "../../Primitives/Shape";
 import CardHeader from "./CardHeader";
-import HoverCard from "../../Primitives/HoverCard";
 
 const Circle = styled(Shape, {
   size: "$32",
@@ -28,9 +33,13 @@ const handleCols = (columns: ColumnType[]) => {
       </Circle>
     );
     return (
-      <HoverCard key={column.id} trigger={trigger}>
-        {column.title}
-      </HoverCard>
+      <HoverCardRoot>
+        <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
+        <HoverCardContent sideOffset={0}>
+          {column.title}
+          <HoverCardArrow />
+        </HoverCardContent>
+      </HoverCardRoot>
     );
   });
 };

@@ -12,6 +12,9 @@ const Text = styled("span", {
       },
     },
     size: {
+      12: {
+        fontSize: "$12",
+      },
       16: {
         fontSize: "$16",
       },
@@ -48,6 +51,9 @@ const Text = styled("span", {
       white: {
         color: "white",
       },
+      gray: {
+        color: "gray",
+      },
     },
   },
   compoundVariants: [
@@ -67,7 +73,7 @@ const Text = styled("span", {
     },
   ],
   defaultVariants: {
-    size: "base",
+    size: "16",
     noMargin: "true",
   },
 });
