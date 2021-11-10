@@ -1,8 +1,6 @@
-import { UserEntity } from 'src/users/entity/user.entity';
-
-export const mockedUser: UserEntity = {
+export const mockedUser = {
   _id: '1',
   email: 'user@email.com',
-  username: 'John',
+  name: 'John',
   password: 'hash',
 };

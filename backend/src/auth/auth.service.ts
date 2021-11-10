@@ -1,12 +1,40 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import errors from '../database/types/errors';
-import RegisterDto from './dto/register.dto';
-import { encrypt } from 'src/utils/bcrypt';
+import RegisterDto from '../users/dto/register.dto';
+import { compare, encrypt } from '../utils/bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import TokenPayload from '../interfaces/tokenPayload.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+    try {
+      const user = await this.usersService.getByEmail(email);
+      await this.verifyPassword(plainTextPassword, user.password);
+      user.password = undefined;
+      return user;
+    } catch (error) {
+      throw new HttpException('INVALID_CREDENTIALS', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  private async verifyPassword(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ) {
+    const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
+    if (!isPasswordMatching) {
+      throw new HttpException('INVALID_CREDENTIALS', HttpStatus.BAD_REQUEST);
+    }
+  }
 
   public async register(registrationData: RegisterDto) {
     const hashedPassword = await encrypt(registrationData.password);
@@ -23,5 +51,34 @@ export class AuthService {
       }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public getJwtAccessToken(userId: string) {
+    const payload: TokenPayload = { userId };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
+      )}s`,
+    });
+    return {
+      expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME'),
+      token,
+    };
+  }
+
+  public getJwtRefreshToken(userId: string) {
+    const payload: TokenPayload = { userId };
+
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+      )}d`,
+    });
+    return {
+      expiresIn: this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
+      token,
+    };
   }
 }
