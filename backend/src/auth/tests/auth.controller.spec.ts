@@ -1,12 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UsersService } from '../users/users.service';
-import { AuthController } from './auth.controller';
-import { UserEntity } from '../users/entity/user.entity';
-import { mockedUser } from '../mocks/user.mock';
-import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../../users/users.service';
+import { AuthController } from '../auth.controller';
+import UserEntity from '../../users/entity/user.entity';
+import { mockedUser } from '../../mocks/user.mock';
+import { AuthService } from '../auth.service';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import jwtService from '../../mocks/jwtService.mock';
+import configService from '../../mocks/configService.mock';
 import * as request from 'supertest';
 
 describe('AuthController', () => {
@@ -24,6 +27,14 @@ describe('AuthController', () => {
         UsersService,
         AuthService,
         ConfigService,
+        {
+          provide: ConfigService,
+          useValue: configService,
+        },
+        {
+          provide: JwtService,
+          useValue: jwtService,
+        },
         {
           provide: getRepositoryToken(UserEntity),
           useValue: usersRepository,
@@ -47,8 +58,8 @@ describe('AuthController', () => {
           .post('/auth/register')
           .send({
             email: mockedUser.email,
-            username: mockedUser.username,
-            password: 'strongPassword',
+            name: mockedUser.name,
+            password: '1!Aab2CD',
           })
           .expect(201)
           .expect(expectedData);
@@ -59,7 +70,7 @@ describe('AuthController', () => {
         return await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            username: '',
+            name: '',
             password: '',
             email: '',
           })
@@ -69,7 +80,7 @@ describe('AuthController', () => {
         return await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            username: mockedUser.username,
+            name: mockedUser.name,
           })
           .expect(400);
       });
@@ -77,7 +88,7 @@ describe('AuthController', () => {
         return await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            username: mockedUser.username,
+            name: mockedUser.name,
             password: mockedUser.password,
           })
           .expect(400);
@@ -86,13 +97,13 @@ describe('AuthController', () => {
         const res = await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            username: mockedUser.username,
+            name: mockedUser.name,
             password: '1234',
             email: mockedUser.email,
           });
 
         expect(res.body.message[0]).toBe(
-          'password must be longer than or equal to 7 characters',
+          'Password too weak. Must have 1 uppercase, 1 lowercase, 1 number and 1 special character',
         );
       });
     });
