@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { styled } from "../../stitches.config";
 import Flex from "../Primitives/Flex";
@@ -62,12 +63,16 @@ const DropdownArrow = styled(DropdownMenu.Arrow, {
 const DropdownRoot = styled(DropdownMenu.Root, {});
 
 const Dropdown: React.FC = () => {
+  const { data: session } = useSession({
+    required: false,
+  });
+
   return (
     <DropdownRoot>
       <DropdownMenu.Trigger asChild>
         <DropdownMenuGroup align="center" gap="6">
           <DropdownLabel fontWeight="medium" size="18">
-            Retro bot
+            {session?.user?.name ?? "anonymous"}
           </DropdownLabel>
           <Avatar src={favIcon.src} size={24} />
         </DropdownMenuGroup>

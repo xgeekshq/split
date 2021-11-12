@@ -1,6 +1,7 @@
-import { GetStaticProps } from "next";
-import { dehydrate, QueryClient } from "react-query";
+import { useQuery } from "react-query";
+import { Session } from "next-auth";
 import { useEffect, useState } from "react";
+import { useSession, getSession, GetSessionParams } from "next-auth/react";
 import { useStoreContext } from "../store/store";
 import CreateBoard from "../components/Dashboard/CreateBoardModal";
 import { styled } from "../stitches.config";
@@ -9,30 +10,52 @@ import BoardsList from "../components/Dashboard/BoardList/BoardsList";
 import Text from "../components/Primitives/Text";
 import { getBoards } from "../api/boardService";
 import { ERROR_LOADING_DATA } from "../utils/constants";
-import useBoards from "../hooks/useBoards";
 
-export const getStaticProps: GetStaticProps = async () => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery("boards", getBoards);
+export async function getServerSideProps(context: GetSessionParams | undefined): Promise<
+  | {
+      redirect: {
+        destination: string;
+        permanent: boolean;
+      };
+      props?: undefined;
+    }
+  | {
+      props: {
+        session: Session;
+      };
+      redirect?: undefined;
+    }
+> {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
+
   return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
+    props: { session },
   };
-};
+}
 
 const Container = styled("div", Flex);
 
 const Dashboard: React.FC = () => {
+  const { data: session } = useSession({ required: true });
   const { dispatch } = useStoreContext();
-
-  const { data } = useBoards();
+  const { data } = useQuery("boards", () => getBoards(session?.accessToken), {
+    retry: false,
+  });
 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     dispatch({ type: "setTitle", val: "Dashboard" });
-  }, [dispatch]);
+  }, [dispatch, session]);
 
   const handleLoading = (state: boolean) => {
     setIsLoading(state);

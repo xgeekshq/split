@@ -8,10 +8,10 @@ export type State<TitleT> = {
 export type Event<ValueT> = { type: "setTitle"; val: ValueT };
 
 function useStateMachine<TitleT, ValueT>(
-  initialData: Nullable<TitleT>
+  initialTitle: Nullable<TitleT>
 ): [State<TitleT>, Dispatch<Event<ValueT>>] {
   const initialState: State<TitleT> = {
-    title: initialData,
+    title: initialTitle,
   };
 
   function storeReducer(state: State<TitleT>, event: Event<ValueT>): State<TitleT> {
@@ -20,7 +20,7 @@ function useStateMachine<TitleT, ValueT>(
         return { ...state, title: event.val as unknown as TitleT };
       }
       default: {
-        throw new Error(`Unhandled event type: ${event.type}`);
+        throw new Error(`Unhandled event type: ${event}`);
       }
     }
   }

@@ -1,5 +1,6 @@
 import { UseMutationResult } from "react-query";
 import { AxiosError } from "axios";
+import { AccessToken, RefreshToken } from "./token";
 
 export interface User {
   _id?: string;
@@ -7,10 +8,19 @@ export interface User {
   email: string;
   password?: string;
   passwordConf?: string;
+  accessToken?: AccessToken;
+  refreshToken?: RefreshToken;
 }
 
 export interface UseUserType {
-  [key: string]: UseMutationResult<User, AxiosError, User, unknown>;
+  createUser: UseMutationResult<User, AxiosError, User, unknown>;
+}
+
+export interface LoginUser {
+  email: string;
+  password: string;
 }
 
 export type UserYup = "name" | "email" | "password" | "passwordConf";
+
+export type Credentials = "email" | "password" | "name" | "accessToken" | "refreshToken" | "error";

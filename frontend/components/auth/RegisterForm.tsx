@@ -1,5 +1,4 @@
 import React from "react";
-import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import useUser from "../../hooks/useUser";
@@ -13,16 +12,12 @@ import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
 
 const RegisterForm: React.FC = () => {
-  const router = useRouter();
   const { createUser } = useUser();
-  const { isError, isSuccess, error } = createUser;
+  const { isError, error } = createUser;
 
   const methods = useForm<User>({
     resolver: yupResolver(schemaRegisterForm),
   });
-
-  // todo: if success -> login, save token, redirect dashboard
-  if (isSuccess) router.push("/dashboard");
 
   return (
     <TabsContent value="register">
