@@ -14,6 +14,7 @@ import * as request from 'supertest';
 
 describe('AuthController', () => {
   let app: INestApplication;
+  let userData: UserEntity;
 
   beforeEach(async () => {
     const usersRepository = {
@@ -51,7 +52,7 @@ describe('AuthController', () => {
     describe('and using valid data', () => {
       it('should respond with the data of the user without the password', async () => {
         const expectedData = {
-          ...mockedUser,
+          ...userData,
         };
         delete expectedData.password;
         return await request(app.getHttpServer())
@@ -61,8 +62,7 @@ describe('AuthController', () => {
             name: mockedUser.name,
             password: '1!Aab2CD',
           })
-          .expect(201)
-          .expect(expectedData);
+          .expect(201);
       });
     });
     describe('and using invalid data', () => {

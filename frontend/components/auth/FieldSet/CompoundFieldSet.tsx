@@ -15,7 +15,7 @@ import HoverCard from "./HoverCardFieldSet";
 const StyledEyeOpenIcon = styled(EyeOpenIcon, { size: "$20" });
 const StyledEyeClosedIcon = styled(EyeNoneIcon, { size: "$20" });
 
-const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType }) => {
+const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType, tabValue }) => {
   const [showPw, setShowPw] = useState(inputType !== "password");
   const {
     register,
@@ -73,7 +73,7 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType
       </Flex>
       <Flex align="center" css={{ mt: "$8" }}>
         {errors[id as UserYup] && <Text color="red">{errors[id as UserYup]?.message}</Text>}
-        {id === "password" && errors[id] && <HoverCard />}
+        {id === "password" && errors[id] && tabValue !== "login" && <HoverCard />}
       </Flex>
     </Fieldset>
   );
