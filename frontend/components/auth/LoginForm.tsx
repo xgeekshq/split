@@ -12,6 +12,7 @@ import Button from "../Primitives/Button";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
+import { DASHBOARD_PATH } from "../../utils/constants";
 
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
@@ -22,7 +23,7 @@ const LoginForm: React.FC = () => {
   const onLogin = async (credentials: LoginUser) => {
     const response = await signIn<RedirectableProvider>("credentials", {
       ...credentials,
-      callbackUrl: "/dashboard",
+      callbackUrl: DASHBOARD_PATH,
       redirect: false,
     });
 
@@ -30,7 +31,7 @@ const LoginForm: React.FC = () => {
       setLoginError(true);
     } else {
       setLoginError(false);
-      router.push("/dashboard");
+      router.push(DASHBOARD_PATH);
     }
   };
 

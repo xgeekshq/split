@@ -7,3 +7,5 @@ export const ERROR_LOADING_DATA = "Error loading data";
 
 export const CURRENT_USER = "currentUser";
 export const REFRESH_TOKEN_ERROR = "REFRESH_TOKEN_ERROR";
+
+export const DASHBOARD_PATH = "/dashboard";

@@ -1,7 +1,11 @@
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import { JWT_SIGNING_PRIVATE_KEY, REFRESH_TOKEN_ERROR } from "../../../utils/constants";
+import {
+  DASHBOARD_PATH,
+  JWT_SIGNING_PRIVATE_KEY,
+  REFRESH_TOKEN_ERROR,
+} from "../../../utils/constants";
 import { Credentials, LoginUser, User } from "../../../types/user";
 import { login, refreshToken } from "../../../api/authService";
 import { AccessToken } from "../../../types/token";
@@ -60,7 +64,7 @@ export default NextAuth({
       if (account && user) {
         return {
           accessToken: user.accessToken.token,
-          accessTokenExpires: Date.now() + +user.accessToken.expiresIn * 1000,
+          accessTokenExpires: Date.now() + Number(user.accessToken.expiresIn) * 1000,
           refreshToken: user.refreshToken.token,
           name: token?.name,
           email: token?.email,
@@ -86,7 +90,7 @@ export default NextAuth({
     },
     redirect({ url, baseUrl }) {
       switch (url) {
-        case "/dashboard":
+        case DASHBOARD_PATH:
           return `${baseUrl}${url}`;
         default:
           return url.startsWith(baseUrl) ? url : baseUrl;

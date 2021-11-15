@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Session } from "next-auth";
 import { getSession, GetSessionParams } from "next-auth/react";
 import { styled } from "../../stitches.config";
 import { TabsList, TabsRoot, TabsTrigger } from "../../components/Primitives/Tab";
@@ -9,28 +8,18 @@ import Text from "../../components/Primitives/Text";
 import Flex from "../../components/Primitives/Flex";
 import centerScreen from "../../styles/centerScreen";
 import LoginForm from "../../components/auth/LoginForm";
+import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
+import { DASHBOARD_PATH } from "../../utils/constants";
 
-export async function getServerSideProps(context: GetSessionParams | undefined): Promise<
-  | {
-      redirect: {
-        destination: string;
-        permanent: boolean;
-      };
-      props?: undefined;
-    }
-  | {
-      props: {
-        session?: Session | null;
-      };
-      redirect?: undefined;
-    }
-> {
+export async function getServerSideProps(
+  context: GetSessionParams | undefined
+): Promise<RedirectServerSideProps | SessionServerSideProps> {
   const session = await getSession(context);
 
   if (session) {
     return {
       redirect: {
-        destination: "/dashboard",
+        destination: DASHBOARD_PATH,
         permanent: false,
       },
     };
