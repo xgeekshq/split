@@ -1,8 +1,15 @@
-import { User } from "../types/user";
+import { RefreshToken } from "../types/token";
+import { User, LoginUser } from "../types/user";
 import fetchData from "../utils/fetchData";
 
-const postUser = (newUser: User): Promise<User> => {
-  return fetchData(`/auth/register`, "POST", JSON.stringify(newUser));
+export const postUser = (newUser: User): Promise<User> => {
+  return fetchData(`/auth/register`, "POST", JSON.stringify(newUser), undefined);
 };
 
-export default postUser;
+export const login = (credentials: LoginUser): Promise<User> => {
+  return fetchData("/auth/login", "POST", JSON.stringify(credentials), undefined);
+};
+
+export const refreshToken = (token: Nullable<string>): Promise<RefreshToken> => {
+  return fetchData("/auth/refresh", "GET", undefined, token);
+};

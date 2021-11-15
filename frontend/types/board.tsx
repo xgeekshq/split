@@ -1,4 +1,5 @@
 import { UseMutationResult } from "react-query";
+import { Nullable } from "./common";
 
 export interface BoardType {
   id?: string;
@@ -21,6 +22,11 @@ export interface CardType {
   text: string;
 }
 
+export interface BoardTypeWithToken {
+  newBoard: BoardType;
+  token: Nullable<string>;
+}
+
 export interface UseBoardType {
-  [key: string]: UseMutationResult<BoardType, unknown, BoardType, unknown>;
+  [key: string]: UseMutationResult<BoardType, unknown, BoardTypeWithToken, unknown>;
 }

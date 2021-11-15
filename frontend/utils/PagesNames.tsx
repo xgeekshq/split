@@ -1,16 +1,18 @@
+import { DASHBOARD_PATH } from "./constants";
+
 interface NamesType {
   [key: string]: string;
 }
 
-const names: NamesType = { Dashboard: "/" };
+export const pagesNames: NamesType = { LandingPage: "/", Dashboard: DASHBOARD_PATH };
 
 export const GetPagePathByName = (pageName: string): string => {
-  return names[pageName];
+  return pagesNames[pageName];
 };
 
 export const CheckIsBoardPage = (url: string): boolean => {
   return url.startsWith("/boards");
 };
 export const ShouldRenderNav = (url: string): boolean => {
-  return url !== "/" && url !== "/auth";
+  return url !== "/" && !url.startsWith("/auth") && !url.startsWith("/500");
 };

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import * as yup from "yup";
 import { PlusCircledIcon, Cross1Icon } from "@modulz/radix-icons";
@@ -50,6 +51,7 @@ const FooterContainer = styled("div", Flex);
 const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
 }> = ({ setFetchLoading }) => {
+  const { data: session } = useSession({ required: false });
   const { createBoard } = useBoard();
   const { isLoading, isError } = createBoard;
   const {
@@ -67,17 +69,20 @@ const CreateBoardModal: React.FC<{
   // columns and cards hardcoded while dnd feature isnt implemented
   const handleClick = (data: BoardType) => {
     createBoard.mutate({
-      title: data.title,
-      creationDate: new Date().toISOString().slice(0, 10),
-      columns: [
-        { title: "todo", cards: [{ text: "t1" }], color: "red" },
-        { title: "progress", cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
-        {
-          title: "actions",
-          cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
-          color: "green",
-        },
-      ],
+      newBoard: {
+        title: data.title,
+        creationDate: new Date().toISOString().slice(0, 10),
+        columns: [
+          { title: "todo", cards: [{ text: "t1" }], color: "red" },
+          { title: "progress", cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
+          {
+            title: "actions",
+            cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
+            color: "green",
+          },
+        ],
+      },
+      token: session?.accessToken,
     });
   };
 

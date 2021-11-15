@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { QueryClient, dehydrate, useQuery, useQueryClient } from "react-query";
 import dynamic from "next/dynamic";
+import { getSession, useSession } from "next-auth/react";
 import {
   DragDropContext,
   DragUpdate,
@@ -27,9 +28,10 @@ interface BoardKeyType {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  const session = await getSession();
   const id = context.params?.boardId?.toString();
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["board", { id }], () => getBoard(id));
+  await queryClient.prefetchQuery(["board", { id }], () => getBoard(id, session?.accessToken));
   return {
     props: {
       boardId: id,
@@ -39,7 +41,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const boards = await getBoards();
+  const session = await getSession();
+  const boards = await getBoards(session?.accessToken);
   const paths: PathType[] = boards.map((board) => {
     return {
       params: {
@@ -56,8 +59,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const Container = styled(Flex);
 
 const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
+  const { data: session } = useSession({ required: false });
   const { updateBoard } = useBoard();
-  const { data, status } = useQuery(["board", { id: boardId }], () => getBoard(boardId));
+  const { data, status } = useQuery(["board", { id: boardId }], () =>
+    getBoard(boardId, session?.accessToken)
+  );
   const { dispatch } = useStoreContext();
   const queryClient = useQueryClient();
 
@@ -126,7 +132,7 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
         newData.columns.splice(startColIdx, 1, start);
       }
       queryClient.setQueryData(["board", { id: data.id }], newData);
-      updateBoard.mutate(newData);
+      updateBoard.mutate({ newBoard: { ...newData }, token: session?.accessToken });
     }
   };
 
