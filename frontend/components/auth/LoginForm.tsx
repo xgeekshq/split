@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { signIn, RedirectableProvider } from "next-auth/react";
-
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { LoginUser } from "../../types/user";

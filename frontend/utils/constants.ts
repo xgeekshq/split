@@ -9,3 +9,5 @@ export const CURRENT_USER = "currentUser";
 export const REFRESH_TOKEN_ERROR = "REFRESH_TOKEN_ERROR";
 
 export const DASHBOARD_PATH = "/dashboard";
+export const AUTH_PATH = "/auth";
+export const ERROR_500_PAGE = "/500";
