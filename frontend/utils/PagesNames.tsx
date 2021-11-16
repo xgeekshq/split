@@ -1,10 +1,14 @@
-import { DASHBOARD_PATH } from "./constants";
+import { DASHBOARD_PATH, AUTH_PATH } from "./constants";
 
 interface NamesType {
   [key: string]: string;
 }
 
-export const pagesNames: NamesType = { LandingPage: "/", Dashboard: DASHBOARD_PATH };
+export const pagesNames: NamesType = {
+  LandingPage: "/",
+  Dashboard: DASHBOARD_PATH,
+  Auth: AUTH_PATH,
+};
 
 export const GetPagePathByName = (pageName: string): string => {
   return pagesNames[pageName];

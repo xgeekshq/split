@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { styled } from "../../stitches.config";
 import Flex from "../Primitives/Flex";
@@ -78,9 +78,7 @@ const Dropdown: React.FC = () => {
         </DropdownMenuGroup>
       </DropdownMenu.Trigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>Item1</DropdownMenuItem>
-        <DropdownMenuItem>Item2</DropdownMenuItem>
-        <DropdownMenuItem>Item3</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</DropdownMenuItem>
         <DropdownArrow />
       </DropdownMenuContent>
     </DropdownRoot>

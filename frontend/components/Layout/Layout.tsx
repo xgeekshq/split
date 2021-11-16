@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { styled } from "../../stitches.config";
 import { ShouldRenderNav } from "../../utils/PagesNames";
 import NavBar from "../NavBar/NavBar";
@@ -15,7 +15,7 @@ const Layout: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (session?.error === REFRESH_TOKEN_ERROR) {
-      // signout
+      signOut({ callbackUrl: "/" });
     }
   }, [session]);
 
