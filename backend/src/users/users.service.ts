@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { compare, encrypt } from '../utils/bcrypt';
 import { ObjectId } from 'mongodb';
+import { EMAIL_NOT_EXISTS, USER_NOT_FOUND } from '../constants/httpExceptions';
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,7 +18,7 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('EMAIL_NOT_EXISTS', HttpStatus.NOT_FOUND);
+    throw new HttpException(EMAIL_NOT_EXISTS, HttpStatus.NOT_FOUND);
   }
 
   async getById(_id: string) {
@@ -26,7 +27,7 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('USER_NOT_EXISTS', HttpStatus.NOT_FOUND);
+    throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
