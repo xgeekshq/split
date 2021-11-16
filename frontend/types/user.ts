@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { UseMutationResult } from "react-query";
 import { AxiosError } from "axios";
 import { AccessToken, RefreshToken } from "./token";
@@ -14,6 +15,7 @@ export interface User {
 
 export interface UseUserType {
   createUser: UseMutationResult<User, AxiosError, User, unknown>;
+  setPw: Dispatch<SetStateAction<string>>;
 }
 
 export interface LoginUser {
