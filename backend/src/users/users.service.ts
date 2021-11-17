@@ -4,8 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { compare, encrypt } from '../utils/bcrypt';
-import { ObjectId } from 'mongodb';
-import { EMAIL_NOT_EXISTS, USER_NOT_FOUND } from '../constants/httpExceptions';
+import {
+  EMAIL_NOT_EXISTS,
+  USER_NOT_FOUND,
+  describe,
+} from '../constants/httpExceptions';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -15,19 +19,14 @@ export class UsersService {
 
   async getByEmail(email: string) {
     const user = await this.usersRepository.findOne({ email });
-    if (user) {
-      return user;
-    }
-    throw new HttpException(EMAIL_NOT_EXISTS, HttpStatus.NOT_FOUND);
+    if (user) return user;
+    throw new HttpException(describe(EMAIL_NOT_EXISTS), HttpStatus.NOT_FOUND);
   }
 
   async getById(_id: string) {
-    const user = await this.usersRepository.findOne({ _id: new ObjectId(_id) });
-
-    if (user) {
-      return user;
-    }
-    throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    const user = await this.usersRepository.findOne(_id);
+    if (user) return user;
+    throw new HttpException(describe(USER_NOT_FOUND), HttpStatus.NOT_FOUND);
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
@@ -37,15 +36,12 @@ export class UsersService {
       refreshToken,
       user.currentHashedRefreshToken,
     );
-    if (isRefreshTokenMatching) {
-      return { ...user, password: undefined };
-    }
+    if (isRefreshTokenMatching) return { ...user, password: undefined };
   }
 
-  async create(userData: CreateUserDto) {
+  create(userData: CreateUserDto) {
     const newUser = this.usersRepository.create(userData);
-    await this.usersRepository.save(newUser);
-    return newUser;
+    return this.usersRepository.save(newUser);
   }
 
   async delete(email: string) {

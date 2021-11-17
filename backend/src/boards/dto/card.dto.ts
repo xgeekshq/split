@@ -1,16 +1,12 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { v4 as uuidv4 } from 'uuid';
+import { IsNotEmpty } from 'class-validator';
+import { UserDto } from '../../users/dto/user.dto';
 
 class CardDto {
-  @IsString()
-  _id: string = uuidv4();
-
   @IsNotEmpty()
   title: string;
 
-  @IsEmail()
   @IsNotEmpty()
-  createdBy: string;
+  createdBy: UserDto;
 }
 
 export default CardDto;

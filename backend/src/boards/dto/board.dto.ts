@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import ColumnDto from './column.dto';
+import { UserDto } from '../../users/dto/user.dto';
 
 class BoardDto {
   @IsString()
@@ -20,15 +21,14 @@ class BoardDto {
   @ArrayMinSize(3)
   @IsNotEmpty()
   @ValidateNested({ each: true })
-  @Type(() => ColumnDto)
+  @Type((type) => ColumnDto)
   columns: ColumnDto[];
 
   @IsNotEmpty()
   locked: boolean;
 
-  @IsEmail()
   @IsNotEmpty()
-  createdBy: string;
+  createdBy: UserDto;
 
   @IsOptional()
   password: string;

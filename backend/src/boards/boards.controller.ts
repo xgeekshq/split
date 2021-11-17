@@ -25,41 +25,36 @@ export class BoardsController {
   @UseGuards(JwtAuthenticationGuard)
   @Post()
   async createBoard(@Body() boardData: BoardDto) {
-    const user = await this.usersService.getByEmail(boardData.createdBy);
+    const user = await this.usersService.getByEmail(boardData.createdBy.email);
     if (user) {
-      return await this.boardService.create(boardData);
+      return this.boardService.create(boardData);
     }
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Get()
-  async boards(@Req() request: RequestWithUser) {
-    const user = request.user;
-    const boards = await this.boardService.getAllBoards(user.email);
-    return boards;
+  boards(@Req() request: RequestWithUser) {
+    return this.boardService.getAllBoards(request.user.email);
   }
 
   @Post(':id')
-  async getBoard(@Req() request, @Body() passwordDto?: BoardPasswordDto) {
-    const id = request.params.id;
-    const board = await this.boardService.getBoard(id, passwordDto.password);
-    return board;
+  getBoard(@Req() request, @Body() passwordDto?: BoardPasswordDto) {
+    return this.boardService.getBoard(request.params.id, passwordDto.password);
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Patch(':id/updateLocked')
-  async updateLocked(
+  updateLocked(
     @Req() request: RequestWithUser,
     @Body() updateLockedDto: UpdateLockedDto,
   ) {
     const boardId = request.params.id;
     const user = request.user;
-    const board = await this.boardService.updateLocked(
+    return this.boardService.updateLocked(
       updateLockedDto.locked,
       updateLockedDto.password,
       boardId,
       user.email,
     );
-    return board;
   }
 }

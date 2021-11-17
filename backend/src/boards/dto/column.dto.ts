@@ -1,12 +1,8 @@
 import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
-import { v4 as uuidv4 } from 'uuid';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import CardDto from './card.dto';
 
 export class ColumnDto {
-  @IsString()
-  _id: string = uuidv4();
-
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }): string => value?.trim())

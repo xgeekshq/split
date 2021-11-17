@@ -1,13 +1,17 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity } from 'typeorm';
+import UserEntity from '../../users/entity/user.entity';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import ColumnEntity from './column.entity';
-import { Content } from './content';
+import { ObjectId } from 'mongodb';
 
 @Entity('boards')
-class BoardEntity extends Content {
-  @Column({ nullable: false })
-  createdBy: string;
-  @Column({ array: true })
+class BoardEntity {
+  @ObjectIdColumn()
+  _id: ObjectId;
+  @Column()
+  title: string;
+  @Column()
+  createdBy: UserEntity;
+  @Column({ array: true, nullable: false })
   columns: ColumnEntity[];
   @Column()
   locked: boolean;

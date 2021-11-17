@@ -1,14 +1,13 @@
 import { Column, Entity } from 'typeorm';
-import { Content } from './content';
 import CardEntity from './card.entity';
 
-@Entity('columns')
-class ColumnEntity extends Content {
+class ColumnEntity {
+  @Column()
+  title: string;
   @Column({ nullable: false })
   color: string;
-  @Column((type) => CardEntity)
   @Column({ array: true, nullable: false })
-  cards: Array<CardEntity>;
+  cards: CardEntity[];
 }
 
 export default ColumnEntity;

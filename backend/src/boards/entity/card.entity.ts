@@ -1,10 +1,11 @@
-import { Column, Entity } from 'typeorm';
-import { Content } from './content';
+import UserEntity from '../../users/entity/user.entity';
+import { Column } from 'typeorm';
 
-@Entity('cards')
-class CardEntity extends Content {
-  @Column({ nullable: false })
-  createdBy: string;
+class CardEntity {
+  @Column()
+  title: string;
+  @Column()
+  createdBy: UserEntity;
   @Column({ nullable: false })
   likes: number;
 }

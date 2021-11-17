@@ -11,6 +11,7 @@ import {
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   JWT_REFRESH_TOKEN_SECRET,
+  describe,
 } from '../constants/jwt';
 import { INVALID_CREDENTIALS, EMAIL_EXISTS } from '../constants/httpExceptions';
 
@@ -29,7 +30,10 @@ export class AuthService {
       user.password = undefined;
       return user;
     } catch (error) {
-      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        describe(INVALID_CREDENTIALS),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -39,7 +43,10 @@ export class AuthService {
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
-      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        describe(INVALID_CREDENTIALS),
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -54,7 +61,7 @@ export class AuthService {
       return createdUser;
     } catch (error) {
       if (error?.code === errors.UniqueViolation) {
-        throw new HttpException(EMAIL_EXISTS, HttpStatus.BAD_REQUEST);
+        throw new HttpException(describe(EMAIL_EXISTS), HttpStatus.BAD_REQUEST);
       }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -63,11 +70,15 @@ export class AuthService {
   public getJwtAccessToken(userId: string) {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload, {
-      secret: this.configService.get(JWT_ACCESS_TOKEN_SECRET),
-      expiresIn: `${this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME)}s`,
+      secret: this.configService.get(describe(JWT_ACCESS_TOKEN_SECRET)),
+      expiresIn: `${this.configService.get(
+        describe(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
+      )}s`,
     });
     return {
-      expiresIn: this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
+      expiresIn: this.configService.get(
+        describe(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
+      ),
       token,
     };
   }
@@ -76,13 +87,15 @@ export class AuthService {
     const payload: TokenPayload = { userId };
 
     const token = this.jwtService.sign(payload, {
-      secret: this.configService.get(JWT_REFRESH_TOKEN_SECRET),
+      secret: this.configService.get(describe(JWT_REFRESH_TOKEN_SECRET)),
       expiresIn: `${this.configService.get(
-        JWT_REFRESH_TOKEN_EXPIRATION_TIME,
+        describe(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
       )}d`,
     });
     return {
-      expiresIn: this.configService.get(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
+      expiresIn: this.configService.get(
+        describe(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
+      ),
       token,
     };
   }

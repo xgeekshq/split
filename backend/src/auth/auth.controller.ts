@@ -26,7 +26,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() registrationData: RegisterDto) {
+  register(@Body() registrationData: RegisterDto) {
     return this.authService.register(registrationData);
   }
 
@@ -62,9 +62,6 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(@Req() request: RequestWithUser) {
-    const accessToken = this.authService.getJwtAccessToken(
-      request.user._id.toString(),
-    );
-    return accessToken;
+    return this.authService.getJwtAccessToken(request.user._id.toString());
   }
 }
