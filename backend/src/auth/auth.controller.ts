@@ -9,14 +9,14 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import JwtAuthenticationGuard from './guards/jwtAuth.guard';
+import JwtAuthenticationGuard from '../guards/jwtAuth.guard';
 import { AuthService } from './auth.service';
 import RegisterDto from '../users/dto/register.dto';
-import { LocalAuthGuard } from './guards/localAuth.guard';
+import { LocalAuthGuard } from '../guards/localAuth.guard';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import { UsersService } from '../users/users.service';
-import JwtRefreshGuard from './guards/jwtRefreshAuth.guard';
-import { LoginUserDto } from 'src/users/dto/login.dto';
+import JwtRefreshGuard from '../guards/jwtRefreshAuth.guard';
+import { LoginUserDto } from '../users/dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +26,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() registrationData: RegisterDto) {
+  register(@Body() registrationData: RegisterDto) {
     return this.authService.register(registrationData);
   }
 
@@ -62,9 +62,6 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(@Req() request: RequestWithUser) {
-    const accessToken = this.authService.getJwtAccessToken(
-      request.user._id.toString(),
-    );
-    return { accessToken };
+    return this.authService.getJwtAccessToken(request.user._id.toString());
   }
 }
