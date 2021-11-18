@@ -2,21 +2,25 @@ import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import {
+  AUTH_PATH,
   DASHBOARD_PATH,
-  JWT_SIGNING_PRIVATE_KEY,
+  ERROR_500_PAGE,
+  JWT_SIGNING_KEY,
+  JWT_SIGNING_KEY_ID,
   REFRESH_TOKEN_ERROR,
+  describe,
 } from "../../../utils/constants";
 import { Credentials, LoginUser, User } from "../../../types/user";
 import { login, refreshToken } from "../../../api/authService";
-import { AccessToken } from "../../../types/token";
+import { Token } from "../../../types/token";
 
 async function refreshAccessToken(prevToken: JWT) {
   try {
-    const data: AccessToken = await refreshToken(prevToken.refreshToken ?? null);
+    const data: Token = await refreshToken(prevToken.refreshToken ?? null);
     return {
       ...prevToken,
-      accessToken: data.accessToken.token,
-      accessTokenExpires: Date.now() + +data.accessToken.expiresIn * 1000,
+      accessToken: data.token,
+      accessTokenExpires: Date.now() + +data.expiresIn * 1000,
       error: "",
     };
   } catch (error) {
@@ -37,7 +41,6 @@ export default NextAuth({
           email: credentials.email,
           password: credentials.password,
         };
-
         const data: User = await login(loginUser);
         if (data) {
           const token = {
@@ -54,26 +57,30 @@ export default NextAuth({
   ],
   session: {
     maxAge: 24 * 60 * 60,
-    jwt: true,
   },
   jwt: {
-    signingKey: JWT_SIGNING_PRIVATE_KEY,
+    signingKey: `{
+      "kty": "oct",
+      "kid": "${describe(JWT_SIGNING_KEY_ID)}",
+      "alg": "HS512",
+      "k": "${describe(JWT_SIGNING_KEY)}"
+    }`,
   },
   callbacks: {
     async jwt({ token, user, account }) {
       if (account && user) {
         return {
           accessToken: user.accessToken.token,
-          accessTokenExpires: Date.now() + Number(user.accessToken.expiresIn) * 1000,
+          accessTokenExpires: Date.now() + +user.accessToken.expiresIn * 1000,
           refreshToken: user.refreshToken.token,
           name: token?.name,
           email: token?.email,
           error: "",
         };
       }
-      if (Date.now() < token.accessTokenExpires - 5000) {
-        return token;
-      }
+      // if (Date.now() < token.accessTokenExpires - 5000) {
+      //   return token;
+      // }
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
@@ -98,7 +105,7 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: "/auth/",
-    error: "/500/",
+    signIn: AUTH_PATH,
+    error: ERROR_500_PAGE,
   },
 });

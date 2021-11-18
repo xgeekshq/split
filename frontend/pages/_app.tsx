@@ -9,7 +9,6 @@ import { IdProvider } from "@radix-ui/react-id";
 import globalStyles from "../styles/globals";
 import Layout from "../components/Layout/Layout";
 import { StoreProvider } from "../store/store";
-import { JWT_EXPIRATION_TIME } from "../utils/constants";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX.Element {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,7 +20,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
       <Head>
         <title>Divide & Conquer</title>
       </Head>
-      <SessionProvider session={session} refetchInterval={+JWT_EXPIRATION_TIME - 30}>
+      <SessionProvider session={session} refetchInterval={300}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <StoreProvider>

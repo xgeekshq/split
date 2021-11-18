@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 import axios, { Method } from "axios";
-import { API_URL } from "./constants";
+import { NEXT_PUBLIC_BACKEND_URL, describe } from "./constants";
 import { Nullable } from "../types/common";
 
 const fetchData = async <T,>(
@@ -11,7 +11,7 @@ const fetchData = async <T,>(
   token: Nullable<string>
 ): Promise<T> => {
   const { data } = await axios({
-    baseURL: API_URL,
+    baseURL: describe(NEXT_PUBLIC_BACKEND_URL),
     url,
     method,
     data: body,

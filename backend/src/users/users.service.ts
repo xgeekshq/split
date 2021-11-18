@@ -7,7 +7,7 @@ import { compare, encrypt } from '../utils/bcrypt';
 import {
   EMAIL_NOT_EXISTS,
   USER_NOT_FOUND,
-  describe,
+  describeExceptions,
 } from '../constants/httpExceptions';
 
 @Injectable()
@@ -20,13 +20,19 @@ export class UsersService {
   async getByEmail(email: string) {
     const user = await this.usersRepository.findOne({ email });
     if (user) return user;
-    throw new HttpException(describe(EMAIL_NOT_EXISTS), HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      describeExceptions(EMAIL_NOT_EXISTS),
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async getById(_id: string) {
     const user = await this.usersRepository.findOne(_id);
     if (user) return user;
-    throw new HttpException(describe(USER_NOT_FOUND), HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      describeExceptions(USER_NOT_FOUND),
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
