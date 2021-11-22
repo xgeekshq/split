@@ -1,6 +1,40 @@
 version: "3.9"
 
 services:
+  backend:
+    build:
+      context: backend
+    image: dc-backend
+    ports:
+      - "3200:3200"
+    environment:
+      DB_USER: ${DB_USER:-backend}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-dc}
+      DB_HOST: ${DB_HOST:-mongo:27017}
+      DB_PORT: ${DB_PORT:-27017}
+      PORT: ${BACKEND_PORT:-3200}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET:-backenddc2021}
+      JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-15}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET:-backenddc2021refresh}
+      JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME:-1}
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: frontend
+    image: dc-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3200}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${NEXT_PUBLIC_JWT_ACCESS_TOKEN_EXPIRATION_TIME:-900}
+      JWT_SIGNING_KEY_ID: ${JWT_SIGNING_KEY_ID:-LTmVzCorCFjSYElImYUmbvfEk9YAMuzdvyIQsJA0o2U}
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:-_ncenvNBakBVoZX8dAiK5SBLSYiBZ5S1E-iXvujz14SAnQONwY5ZryMHPjtVJNmI_OYDWkqrfKwcMueaxZFM-w}
+    depends_on:
+      - backend
   mongo:
     image: mongo
     restart: always
