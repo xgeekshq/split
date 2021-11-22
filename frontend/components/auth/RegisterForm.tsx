@@ -24,7 +24,7 @@ const RegisterForm: React.FC = () => {
     <TabsContent value="register">
       <FormProvider {...methods}>
         <form
-          onSubmit={methods.handleSubmit(async (dataUser: User) => {
+          onSubmit={methods.handleSubmit((dataUser: User) => {
             setPw(dataUser?.password || UNDEFINED);
             createUser.mutate(dataUser);
           })}

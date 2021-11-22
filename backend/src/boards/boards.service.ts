@@ -7,7 +7,7 @@ import { compare, encrypt } from '../utils/bcrypt';
 import {
   BOARD_NOT_FOUND,
   BOARDS_NOT_FOUND,
-  describe,
+  describeExceptions,
 } from '../constants/httpExceptions';
 
 @Injectable()
@@ -32,13 +32,19 @@ export class BoardsService {
       },
     });
     if (boards) return boards;
-    throw new HttpException(describe(BOARDS_NOT_FOUND), HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      describeExceptions(BOARDS_NOT_FOUND),
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async getBoardFromRepo(boardId: string) {
     const board = await this.boardsRepository.findOne(boardId);
     if (board) return board;
-    throw new HttpException(describe(BOARD_NOT_FOUND), HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      describeExceptions(BOARD_NOT_FOUND),
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async getBoard(id: string, password?: string) {
@@ -60,7 +66,7 @@ export class BoardsService {
     const board = await this.getBoardFromRepo(boardId);
     if (board.createdBy.email !== email)
       throw new HttpException(
-        describe(BOARD_NOT_FOUND),
+        describeExceptions(BOARD_NOT_FOUND),
         HttpStatus.UNAUTHORIZED,
       );
 

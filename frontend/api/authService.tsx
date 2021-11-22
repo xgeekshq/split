@@ -1,4 +1,4 @@
-import { RefreshToken } from "../types/token";
+import { Token } from "../types/token";
 import { User, LoginUser } from "../types/user";
 import fetchData from "../utils/fetchData";
 
@@ -10,6 +10,6 @@ export const login = (credentials: LoginUser): Promise<User> => {
   return fetchData("/auth/login", "POST", JSON.stringify(credentials), undefined);
 };
 
-export const refreshToken = (token: Nullable<string>): Promise<RefreshToken> => {
+export const refreshToken = (token: Nullable<string>): Promise<Token> => {
   return fetchData("/auth/refresh", "GET", undefined, token);
 };

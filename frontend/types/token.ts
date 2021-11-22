@@ -1,6 +1,11 @@
 export interface AccessToken {
-  [accessToken: string]: { token: string; expiresIn: string };
+  [accessToken: string]: Token;
 }
 export interface RefreshToken {
-  [refreshToken: string]: { token: string; expiresIn: string };
+  [refreshToken: string]: Token;
+}
+
+export interface Token {
+  token: string;
+  expiresIn: string;
 }
