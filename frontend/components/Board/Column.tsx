@@ -1,7 +1,7 @@
 import React from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { styled } from "../../stitches.config";
-import { CardType, ColumnType } from "../../types/board";
+import { ColumnBoardType, ColumnInnerList } from "../../types/column";
 import Flex from "../Primitives/Flex";
 import Shape from "../Primitives/Shape";
 import Text from "../Primitives/Text";
@@ -27,36 +27,28 @@ const Title = styled(Text, {
 
 const CardsList = styled(Flex, { p: "$8", flexGrow: 1, height: "80vh" });
 
-const InnerList = React.memo<{ columns: ColumnType[]; cards: CardType[]; color: string }>(
-  ({ cards, color, columns }) => {
-    return (
-      <>
-        {cards.map((card, idx) => {
-          return (
-            <CardBoard
-              key={card.id}
-              columns={columns}
-              index={idx}
-              cardId={card?.id ?? UNDEFINED}
-              card={card}
-              color={color}
-            />
-          );
-        })}
-      </>
-    );
-  }
-);
-
-const Column: React.FC<{
-  title: string;
-  column: ColumnType;
-  cards: CardType[];
-  index: number;
-  columns: ColumnType[];
-}> = ({ title, cards, column, index, columns }) => {
+const InnerList = React.memo<ColumnInnerList>(({ cards, color, columns }) => {
   return (
-    <Draggable draggableId={column.id ?? UNDEFINED} index={index}>
+    <>
+      {cards.map((card, idx) => {
+        return (
+          <CardBoard
+            key={card._id}
+            columns={columns}
+            index={idx}
+            cardId={card?._id ?? UNDEFINED}
+            card={card}
+            color={color}
+          />
+        );
+      })}
+    </>
+  );
+});
+
+const Column: React.FC<ColumnBoardType> = ({ title, cards, column, index, columns }) => {
+  return (
+    <Draggable draggableId={column._id ?? UNDEFINED} index={index}>
       {(provided) => (
         <Container {...provided.draggableProps} direction="column" ref={provided.innerRef}>
           <Circle
@@ -70,7 +62,7 @@ const Column: React.FC<{
               {title}
             </Title>
           </Circle>
-          <Droppable droppableId={column.id ?? UNDEFINED} type="card">
+          <Droppable droppableId={column._id ?? UNDEFINED} type="card">
             {(prov) => (
               <CardsList direction="column" ref={prov.innerRef} {...prov.droppableProps}>
                 <InnerList columns={columns} cards={cards} color={column.color} />

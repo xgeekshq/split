@@ -7,7 +7,7 @@ export const EMAIL_NOT_EXISTS = Symbol();
 export const BOARD_NOT_FOUND = Symbol();
 export const BOARDS_NOT_FOUND = Symbol();
 
-export function describe(key: symbol): string {
+export function describeExceptions(key: symbol): string {
   switch (key) {
     case USER_NOT_FOUND:
       return 'USER_NOT_FOUND';

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BoardType, ColumnType } from "../../../types/board";
+import { Boards, BoardType } from "../../../types/board";
 import {
   HoverCardRoot,
   HoverCardContent,
@@ -12,6 +12,7 @@ import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import Shape from "../../Primitives/Shape";
 import CardHeader from "./CardHeader";
+import ColumnType from "../../../types/column";
 
 const Circle = styled(Shape, {
   size: "$32",
@@ -33,7 +34,7 @@ const handleCols = (columns: ColumnType[]) => {
       </Circle>
     );
     return (
-      <HoverCardRoot>
+      <HoverCardRoot key={column._id}>
         <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
         <HoverCardContent sideOffset={0}>
           {column.title}
@@ -44,11 +45,11 @@ const handleCols = (columns: ColumnType[]) => {
   });
 };
 
-const BoardsList: React.FC<{ boards: BoardType[] }> = ({ boards }) => {
+const BoardsList: React.FC<Boards> = ({ boards }) => {
   return (
     <Flex gap="40" justify="start">
       {boards.map((board: BoardType) => (
-        <Link key={board.id} href={`boards/${board.id}`}>
+        <Link key={board._id} href={`boards/${board._id}`}>
           <Card
             css={{ size: "$220", px: "$20", py: "$8" }}
             direction="column"

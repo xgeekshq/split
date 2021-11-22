@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import * as yup from "yup";
 import { PlusCircledIcon, Cross1Icon } from "@modulz/radix-icons";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
@@ -19,13 +18,7 @@ import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
 import { BoardType } from "../../types/board";
 import IconButton from "../Primitives/IconButton";
-
-const schema = yup
-  .object()
-  .shape({
-    title: yup.string().max(15, "Maximum of 15 characters").required(),
-  })
-  .required();
+import SchemaCreateBoard from "../../schema/schemaCreateBoardForm";
 
 const PlusIcon = styled(PlusCircledIcon, {
   size: "$40",
@@ -59,28 +52,31 @@ const CreateBoardModal: React.FC<{
     handleSubmit,
     formState: { errors },
   } = useForm<BoardType>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(SchemaCreateBoard),
   });
 
   useEffect(() => {
     setFetchLoading(isLoading);
   }, [isError, isLoading, setFetchLoading]);
 
-  // columns and cards hardcoded while dnd feature isnt implemented
   const handleClick = (data: BoardType) => {
     createBoard.mutate({
       newBoard: {
         title: data.title,
-        creationDate: new Date().toISOString().slice(0, 10),
         columns: [
-          { title: "todo", cards: [{ text: "t1" }], color: "red" },
-          { title: "progress", cards: [{ text: "p1" }, { text: "p2" }], color: "blue" },
+          { title: "todo", cards: [], color: "red" },
+          { title: "progress", cards: [], color: "blue" },
           {
             title: "actions",
-            cards: [{ text: "a1" }, { text: "a2" }, { text: "a3" }, { text: "a4" }],
+            cards: [],
             color: "green",
           },
         ],
+        locked: false,
+        createdBy: {
+          name: session?.user.name ?? "Anonymous",
+          email: session?.user.email ?? "Anonymous",
+        },
       },
       token: session?.accessToken,
     });

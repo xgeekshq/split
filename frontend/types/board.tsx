@@ -1,25 +1,18 @@
 import { UseMutationResult } from "react-query";
-import { Nullable } from "./common";
+import ColumnType from "./column";
+import { HeaderBoardType, Nullable } from "./common";
+import { User } from "./user";
 
-export interface BoardType {
-  id?: string;
-  creationDate: string;
-  title: string;
+export interface BoardType extends HeaderBoardType {
+  creationDate?: string;
   columns: Array<ColumnType>;
-  columnOrder?: Array<string>;
+  createdBy: User;
+  locked: boolean;
+  password?: string;
 }
 
-export interface ColumnType {
-  id?: string;
-  title: string;
-  color: string;
-  cards: Array<CardType>;
-  order?: Array<string>;
-}
-
-export interface CardType {
-  id?: string;
-  text: string;
+export interface Boards {
+  boards: BoardType[];
 }
 
 export interface BoardTypeWithToken {

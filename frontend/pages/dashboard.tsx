@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { Session } from "next-auth";
 import { useEffect, useState } from "react";
 import { useSession, getSession, GetSessionParams } from "next-auth/react";
 import { useStoreContext } from "../store/store";
@@ -9,29 +8,18 @@ import Flex from "../components/Primitives/Flex";
 import BoardsList from "../components/Dashboard/BoardList/BoardsList";
 import Text from "../components/Primitives/Text";
 import { getBoards } from "../api/boardService";
-import { ERROR_LOADING_DATA } from "../utils/constants";
+import { AUTH_PATH, ERROR_LOADING_DATA } from "../utils/constants";
+import { RedirectServerSideProps, SessionServerSideProps } from "../types/serverSideProps";
 
-export async function getServerSideProps(context: GetSessionParams | undefined): Promise<
-  | {
-      redirect: {
-        destination: string;
-        permanent: boolean;
-      };
-      props?: undefined;
-    }
-  | {
-      props: {
-        session: Session;
-      };
-      redirect?: undefined;
-    }
-> {
+export async function getServerSideProps(
+  context: GetSessionParams | undefined
+): Promise<SessionServerSideProps | RedirectServerSideProps> {
   const session = await getSession(context);
 
   if (!session) {
     return {
       redirect: {
-        destination: "/auth",
+        destination: AUTH_PATH,
         permanent: false,
       },
     };
