@@ -1,4 +1,4 @@
-FROM node:14-alpine AS builder
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 COPY . .
@@ -8,7 +8,7 @@ RUN npm install \
     && npm prune --production
 
 # Production image, copy all the files and run next
-FROM node:14-alpine AS runner
+FROM node:16-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
