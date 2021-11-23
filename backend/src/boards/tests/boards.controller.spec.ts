@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import UserEntity from '../../users/entity/user.entity';
-import { UsersService } from '../../users/users.service';
-import { BoardsController } from '../boards.controller';
-import { BoardsService } from '../boards.service';
+import UsersService from '../../users/users.service';
+import BoardsController from '../boards.controller';
+import BoardsService from '../boards.service';
 import BoardEntity from '../entity/board.entity';
 
 describe('BoardsController', () => {

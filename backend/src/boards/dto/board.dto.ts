@@ -4,14 +4,13 @@ import {
   ArrayNotEmpty,
   ArrayMinSize,
   ValidateNested,
-  IsEmail,
   IsOptional,
 } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import ColumnDto from './column.dto';
-import { UserDto } from '../../users/dto/user.dto';
+import UserDto from '../../users/dto/user.dto';
 
-class BoardDto {
+export default class BoardDto {
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
@@ -21,7 +20,7 @@ class BoardDto {
   @ArrayMinSize(3)
   @IsNotEmpty()
   @ValidateNested({ each: true })
-  @Type((type) => ColumnDto)
+  @Type(() => ColumnDto)
   columns: ColumnDto[];
 
   @IsNotEmpty()
@@ -33,4 +32,3 @@ class BoardDto {
   @IsOptional()
   password: string;
 }
-export default BoardDto;

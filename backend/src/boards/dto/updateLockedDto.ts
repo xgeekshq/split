@@ -1,6 +1,6 @@
 import { IsNotEmpty, ValidateIf } from 'class-validator';
 
-class UpdateLockedDto {
+export default class UpdateLockedDto {
   @IsNotEmpty()
   locked: boolean;
 
@@ -8,5 +8,3 @@ class UpdateLockedDto {
   @IsNotEmpty()
   password: string;
 }
-
-export default UpdateLockedDto;

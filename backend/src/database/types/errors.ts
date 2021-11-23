@@ -1,5 +1,5 @@
-enum errors {
+enum Errors {
   UniqueViolation = 11000,
 }
 
-export default errors;
+export default Errors;

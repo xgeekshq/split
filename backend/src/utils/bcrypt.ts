@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { SALT } from '../constants/encrypt';
+import SALT from '../constants/encrypt';
 
 export const encrypt = (textToEncrypt: string) => {
   return bcrypt.hash(textToEncrypt, SALT);

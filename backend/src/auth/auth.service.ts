@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import errors from '../database/types/errors';
-import RegisterDto from '../users/dto/register.dto';
-import { compare, encrypt } from '../utils/bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import UsersService from '../users/users.service';
+import Errors from '../database/types/errors';
+import RegisterDto from '../users/dto/register.dto';
+import { compare, encrypt } from '../utils/bcrypt';
 import TokenPayload from '../interfaces/tokenPayload.interface';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
@@ -20,7 +20,7 @@ import {
 } from '../constants/httpExceptions';
 
 @Injectable()
-export class AuthService {
+export default class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
@@ -64,7 +64,7 @@ export class AuthService {
       createdUser.password = undefined;
       return createdUser;
     } catch (error) {
-      if (error?.code === errors.UniqueViolation) {
+      if (error?.code === Errors.UniqueViolation) {
         throw new HttpException(
           describeExceptions(EMAIL_EXISTS),
           HttpStatus.BAD_REQUEST,
