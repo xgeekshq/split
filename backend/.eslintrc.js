@@ -26,6 +26,8 @@ module.exports = {
   rules: {
     'no-underscore-dangle': 'off',
     'class-methods-use-this': 'off',
-    'no-param-reassign': 'off'
+    'no-param-reassign': 'off',
+    'import/prefer-default-export': 'off'
+    
   },
 };

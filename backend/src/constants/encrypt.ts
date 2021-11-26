@@ -1,3 +1,1 @@
-const SALT = 10;
-
-export default SALT;
+export const SALT = 10;

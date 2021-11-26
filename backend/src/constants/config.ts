@@ -1,3 +1,1 @@
-const PORT = process.env.BACKEND_PORT;
-
-export default PORT;
+export const PORT = process.env.BACKEND_PORT;
