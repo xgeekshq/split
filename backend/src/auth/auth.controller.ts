@@ -9,17 +9,16 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import JwtAuthenticationGuard from '../guards/jwtAuth.guard';
-import { AuthService } from './auth.service';
+import AuthService from './auth.service';
 import RegisterDto from '../users/dto/register.dto';
-import { LocalAuthGuard } from '../guards/localAuth.guard';
+import LocalAuthGuard from '../guards/localAuth.guard';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
-import { UsersService } from '../users/users.service';
+import UsersService from '../users/users.service';
 import JwtRefreshGuard from '../guards/jwtRefreshAuth.guard';
-import { LoginUserDto } from '../users/dto/login.dto';
+import LoginUserDto from '../users/dto/login.dto';
 
 @Controller('auth')
-export class AuthController {
+export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
@@ -47,16 +46,13 @@ export class AuthController {
 
     const { name, email } = user;
 
-    const userWToken: LoginUserDto = { name, email, accessToken, refreshToken };
+    const userWToken: LoginUserDto = {
+      name,
+      email,
+      accessToken,
+      refreshToken,
+    };
     return response.send(userWToken);
-  }
-
-  @UseGuards(JwtAuthenticationGuard)
-  @Get()
-  authenticate(@Req() request: RequestWithUser) {
-    const user = request.user;
-    user.password = undefined;
-    return user;
   }
 
   @UseGuards(JwtRefreshGuard)

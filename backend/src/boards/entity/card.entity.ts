@@ -1,13 +1,13 @@
-import UserEntity from '../../users/entity/user.entity';
 import { Column } from 'typeorm';
+import UserEntity from '../../users/entity/user.entity';
 
-class CardEntity {
+export default class CardEntity {
   @Column()
   title: string;
+
   @Column()
   createdBy: UserEntity;
+
   @Column({ nullable: false })
   likes: number;
 }
-
-export default CardEntity;

@@ -14,11 +14,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
         synchronize: true,
         useUnifiedTopology: true,
       }),
     }),
   ],
 })
-export class DatabaseModule {}
+export default class DatabaseModule {}

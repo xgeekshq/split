@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import BoardEntity from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import BoardDto from './dto/board.dto';
@@ -9,9 +8,10 @@ import {
   BOARDS_NOT_FOUND,
   describeExceptions,
 } from '../constants/httpExceptions';
+import BoardEntity from './entity/board.entity';
 
 @Injectable()
-export class BoardsService {
+export default class BoardsService {
   constructor(
     @InjectRepository(BoardEntity)
     private boardsRepository: Repository<BoardEntity>,
@@ -64,12 +64,12 @@ export class BoardsService {
     email: string,
   ) {
     const board = await this.getBoardFromRepo(boardId);
-    if (board.createdBy.email !== email)
+    if (board.createdBy.email !== email) {
       throw new HttpException(
         describeExceptions(BOARD_NOT_FOUND),
         HttpStatus.UNAUTHORIZED,
       );
-
+    }
     if (locked === false) {
       password = null;
     }

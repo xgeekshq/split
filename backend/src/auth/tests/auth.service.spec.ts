@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../auth.service';
-import { UsersService } from '../../users/users.service';
-import UserEntity from '../../users/entity/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import AuthService from '../auth.service';
+import UsersService from '../../users/users.service';
+import UserEntity from '../../users/entity/user.entity';
 import jwtService from '../../mocks/jwtService.mock';
 import configService from '../../mocks/configService.mock';
 

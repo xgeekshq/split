@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BoardsService } from '../boards.service';
+import BoardsService from '../boards.service';
 import BoardEntity from '../entity/board.entity';
 
 describe('BoardsService', () => {

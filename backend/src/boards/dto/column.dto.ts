@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import CardDto from './card.dto';
 
-export class ColumnDto {
+export default class ColumnDto {
   @IsNotEmpty()
   @IsString()
   @Transform(({ value }): string => value?.trim())
@@ -17,5 +17,3 @@ export class ColumnDto {
   @Type(() => CardDto)
   cards: CardDto[];
 }
-
-export default ColumnDto;

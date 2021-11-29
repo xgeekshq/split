@@ -1,17 +1,18 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import UserEntity from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/createUser.dto';
+import UserEntity from './entity/user.entity';
+import CreateUserDto from './dto/createUser.dto';
 import { compare, encrypt } from '../utils/bcrypt';
 import {
   EMAIL_NOT_EXISTS,
   USER_NOT_FOUND,
   describeExceptions,
+  TOKENS_NOT_MATCHING,
 } from '../constants/httpExceptions';
 
 @Injectable()
-export class UsersService {
+export default class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
@@ -43,6 +44,7 @@ export class UsersService {
       user.currentHashedRefreshToken,
     );
     if (isRefreshTokenMatching) return { ...user, password: undefined };
+    throw new HttpException(describeExceptions(TOKENS_NOT_MATCHING), 401);
   }
 
   create(userData: CreateUserDto) {
