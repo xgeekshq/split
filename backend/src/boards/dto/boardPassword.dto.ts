@@ -1,8 +1,6 @@
 import { IsOptional } from 'class-validator';
 
-class BoardPasswordDto {
+export default class BoardPasswordDto {
   @IsOptional()
   password: string;
 }
-
-export default BoardPasswordDto;

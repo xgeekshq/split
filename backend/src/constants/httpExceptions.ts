@@ -1,11 +1,13 @@
-export const USER_NOT_FOUND = Symbol();
-export const INVALID_CREDENTIALS = Symbol();
+export const USER_NOT_FOUND = Symbol('user not found');
+export const INVALID_CREDENTIALS = Symbol('invalid credentials');
 
-export const EMAIL_EXISTS = Symbol();
-export const EMAIL_NOT_EXISTS = Symbol();
+export const EMAIL_EXISTS = Symbol('email exists');
+export const EMAIL_NOT_EXISTS = Symbol('email does not exist');
 
-export const BOARD_NOT_FOUND = Symbol();
-export const BOARDS_NOT_FOUND = Symbol();
+export const BOARD_NOT_FOUND = Symbol('board not found');
+export const BOARDS_NOT_FOUND = Symbol('boards not found');
+
+export const TOKENS_NOT_MATCHING = Symbol('tokens not matching');
 
 export function describeExceptions(key: symbol): string {
   switch (key) {
@@ -21,5 +23,9 @@ export function describeExceptions(key: symbol): string {
       return 'BOARD_NOT_FOUND';
     case BOARDS_NOT_FOUND:
       return 'BOARDS_NOT_FOUND';
+    case TOKENS_NOT_MATCHING:
+      return 'TOKENS_NOT_MATCHING';
+    default:
+      return 'ERROR';
   }
 }

@@ -2,21 +2,27 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Patch,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { BoardsService } from './boards.service';
+import {
+  describeExceptions,
+  USER_NOT_FOUND,
+} from '../constants/httpExceptions';
+import BoardsService from './boards.service';
 import BoardDto from './dto/board.dto';
 import JwtAuthenticationGuard from '../guards/jwtAuth.guard';
-import { UsersService } from '../users/users.service';
+import UsersService from '../users/users.service';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import BoardPasswordDto from './dto/boardPassword.dto';
 import UpdateLockedDto from './dto/updateLockedDto';
 
 @Controller('boards')
-export class BoardsController {
+export default class BoardsController {
   constructor(
     private readonly boardService: BoardsService,
     private readonly usersService: UsersService,
@@ -29,6 +35,10 @@ export class BoardsController {
     if (user) {
       return this.boardService.create(boardData);
     }
+    throw new HttpException(
+      describeExceptions(USER_NOT_FOUND),
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -49,7 +59,7 @@ export class BoardsController {
     @Body() updateLockedDto: UpdateLockedDto,
   ) {
     const boardId = request.params.id;
-    const user = request.user;
+    const { user } = request;
     return this.boardService.updateLocked(
       updateLockedDto.locked,
       updateLockedDto.password,

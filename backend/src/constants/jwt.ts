@@ -1,8 +1,12 @@
-export const JWT_REFRESH_TOKEN_SECRET = Symbol();
-export const JWT_REFRESH_TOKEN_EXPIRATION_TIME = Symbol();
+export const JWT_REFRESH_TOKEN_SECRET = Symbol('refresh token secret');
+export const JWT_REFRESH_TOKEN_EXPIRATION_TIME = Symbol(
+  'refresh token expiration time',
+);
 
-export const JWT_ACCESS_TOKEN_SECRET = Symbol();
-export const JWT_ACCESS_TOKEN_EXPIRATION_TIME = Symbol();
+export const JWT_ACCESS_TOKEN_SECRET = Symbol('access token secret');
+export const JWT_ACCESS_TOKEN_EXPIRATION_TIME = Symbol(
+  'access token experiation time',
+);
 
 export function describeJWT(key: symbol): string {
   switch (key) {
@@ -14,5 +18,7 @@ export function describeJWT(key: symbol): string {
       return 'JWT_ACCESS_TOKEN_SECRET';
     case JWT_ACCESS_TOKEN_EXPIRATION_TIME:
       return 'JWT_ACCESS_TOKEN_EXPIRATION_TIME';
+    default:
+      return 'ERROR';
   }
 }
