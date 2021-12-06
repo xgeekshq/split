@@ -5,7 +5,7 @@ export const JWT_REFRESH_TOKEN_EXPIRATION_TIME = Symbol(
 
 export const JWT_ACCESS_TOKEN_SECRET = Symbol('access token secret');
 export const JWT_ACCESS_TOKEN_EXPIRATION_TIME = Symbol(
-  'access token experiation time',
+  'access token expiration time',
 );
 
 export function describeJWT(key: symbol): string {

@@ -1,9 +1,9 @@
 export default class LoginUserDto {
-  name: string;
+  name!: string;
 
-  email: string;
+  email!: string;
 
-  accessToken: { expiresIn: string; token: string };
+  accessToken!: { expiresIn: string; token: string };
 
-  refreshToken: { expiresIn: string; token: string };
+  refreshToken!: { expiresIn: string; token: string };
 }

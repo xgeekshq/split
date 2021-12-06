@@ -38,11 +38,14 @@ export default class UsersService {
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
     const user = await this.getById(userId);
+    if (!user.currentHashedRefreshToken)
+      throw new HttpException(describeExceptions(TOKENS_NOT_MATCHING), 401);
 
     const isRefreshTokenMatching = await compare(
       refreshToken,
       user.currentHashedRefreshToken,
     );
+
     if (isRefreshTokenMatching) return { ...user, password: undefined };
     throw new HttpException(describeExceptions(TOKENS_NOT_MATCHING), 401);
   }

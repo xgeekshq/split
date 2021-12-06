@@ -14,7 +14,6 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
   const [queryClient] = useState(() => new QueryClient());
 
   globalStyles();
-
   return (
     <IdProvider>
       <Head>

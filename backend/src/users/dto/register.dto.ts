@@ -11,13 +11,13 @@ export default class RegisterDto {
   @IsEmail()
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
-  email: string;
+  email!: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
   @Transform(({ value }: TransformFnParams) => value.trim())
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
@@ -27,5 +27,5 @@ export default class RegisterDto {
     message:
       'Password too weak. Must have 1 uppercase, 1 lowercase, 1 number and 1 special character',
   })
-  password: string;
+  password!: string;
 }

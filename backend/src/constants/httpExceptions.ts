@@ -7,7 +7,10 @@ export const EMAIL_NOT_EXISTS = Symbol('email does not exist');
 export const BOARD_NOT_FOUND = Symbol('board not found');
 export const BOARDS_NOT_FOUND = Symbol('boards not found');
 
-export const TOKENS_NOT_MATCHING = Symbol('tokens not matching');
+export const TOKENS_NOT_MATCHING = Symbol('tokens not match');
+
+export const UNAUTHORIZED = Symbol('unauthorized');
+export const UPDATE_FAILED = Symbol('update failed');
 
 export function describeExceptions(key: symbol): string {
   switch (key) {
@@ -25,6 +28,10 @@ export function describeExceptions(key: symbol): string {
       return 'BOARDS_NOT_FOUND';
     case TOKENS_NOT_MATCHING:
       return 'TOKENS_NOT_MATCHING';
+    case UNAUTHORIZED:
+      return 'UNAUTHORIZED';
+    case UPDATE_FAILED:
+      return 'UPDATE_FAILED';
     default:
       return 'ERROR';
   }
