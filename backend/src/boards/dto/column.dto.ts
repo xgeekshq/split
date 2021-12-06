@@ -1,19 +1,20 @@
-import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
-import { Transform, TransformFnParams, Type } from 'class-transformer';
-import CardDto from './card.dto';
+import { IsString, IsNotEmpty } from 'class-validator';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 export default class ColumnDto {
   @IsNotEmpty()
   @IsString()
+  _id?: string;
+
+  @IsNotEmpty()
+  @IsString()
   @Transform(({ value }): string => value?.trim())
-  title: string;
+  title!: string;
 
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
-  color: string;
+  color!: string;
 
   @IsNotEmpty()
-  @ValidateNested({ each: true })
-  @Type(() => CardDto)
-  cards: CardDto[];
+  cardsOrder!: string[];
 }

@@ -28,17 +28,15 @@ export default class AuthService {
   ) {}
 
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
-    try {
-      const user = await this.usersService.getByEmail(email);
-      await this.verifyPassword(plainTextPassword, user.password);
-      user.password = undefined;
-      return user;
-    } catch (error) {
+    const user = await this.usersService.getByEmail(email);
+    if (!user.password)
       throw new HttpException(
         describeExceptions(INVALID_CREDENTIALS),
         HttpStatus.BAD_REQUEST,
       );
-    }
+    await this.verifyPassword(plainTextPassword, user.password);
+    user.password = undefined;
+    return user;
   }
 
   private async verifyPassword(
