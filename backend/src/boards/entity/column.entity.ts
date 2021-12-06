@@ -1,13 +1,15 @@
 import { Column } from 'typeorm';
-import CardEntity from './card.entity';
 
 export default class ColumnEntity {
-  @Column()
-  title: string;
+  @Column({ unique: true })
+  _id?: string;
 
   @Column({ nullable: false })
-  color: string;
+  title!: string;
+
+  @Column({ nullable: false })
+  color!: string;
 
   @Column({ array: true, nullable: false })
-  cards: CardEntity[];
+  cardsOrder!: string[];
 }

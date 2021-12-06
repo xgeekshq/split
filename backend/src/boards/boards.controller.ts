@@ -49,7 +49,19 @@ export default class BoardsController {
 
   @Post(':id')
   getBoard(@Req() request, @Body() passwordDto?: BoardPasswordDto) {
-    return this.boardService.getBoard(request.params.id, passwordDto.password);
+    return this.boardService.getBoardWithPassword(
+      request.params.id,
+      passwordDto?.password,
+    );
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Get(':id')
+  getBoardWithAuth(@Req() request: RequestWithUser) {
+    return this.boardService.getBoardWithEmail(
+      request.params.id,
+      request.user.email,
+    );
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -58,13 +70,11 @@ export default class BoardsController {
     @Req() request: RequestWithUser,
     @Body() updateLockedDto: UpdateLockedDto,
   ) {
-    const boardId = request.params.id;
-    const { user } = request;
     return this.boardService.updateLocked(
       updateLockedDto.locked,
       updateLockedDto.password,
-      boardId,
-      user.email,
+      request.params.id,
+      request.user.email,
     );
   }
 }

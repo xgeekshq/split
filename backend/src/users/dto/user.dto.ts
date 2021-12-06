@@ -1,5 +1,5 @@
 export default class UserDto {
-  name: string;
+  name!: string;
 
-  email: string;
+  email!: string;
 }

@@ -7,11 +7,14 @@ export default class UserEntity {
   @ObjectIdColumn()
   _id: ObjectId;
 
-  @Column({ nullable: false }) name: string;
+  @Column({ nullable: false })
+  name!: string;
 
-  @Column({ nullable: false }) password: string;
+  @Column({ nullable: false })
+  password?: string;
 
-  @Column({ nullable: false, unique: true }) email: string;
+  @Column({ nullable: false, unique: true })
+  email!: string;
 
   @CreateDateColumn() createdOn?: Date;
 

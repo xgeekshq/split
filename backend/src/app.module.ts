@@ -5,6 +5,7 @@ import DatabaseModule from './database/database.module';
 import UsersModule from './users/users.module';
 import AuthModule from './auth/auth.module';
 import BoardsModule from './boards/boards.module';
+import ActionsModule from './actions/actions.module';
 
 @Module({
   imports: [
@@ -26,8 +27,8 @@ import BoardsModule from './boards/boards.module';
     UsersModule,
     AuthModule,
     BoardsModule,
+    ActionsModule,
   ],
   controllers: [],
-  providers: [],
 })
 export default class AppModule {}
