@@ -29,7 +29,7 @@ const CardBoard: React.FC<ColumnCardType> = ({ card, index, color, columns }) =>
               : color,
           }}
         >
-          <Text color="white">{card.title}</Text>
+          <Text color="white">{card.text}</Text>
         </Container>
       )}
     </Draggable>
