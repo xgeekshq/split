@@ -3,14 +3,14 @@ import { HeaderBoardType } from "./common";
 
 interface ColumnType extends HeaderBoardType {
   color: string;
-  cards: CardType[];
+  cardsOrder: string[];
 }
 
 interface Columns {
   columns: ColumnType[];
 }
 
-export interface ColumnBoardType extends HeaderBoardType, CardsColumnsType {
+export interface ColumnBoardType {
   column: ColumnType;
   index: number;
 }
@@ -18,16 +18,14 @@ export interface ColumnBoardType extends HeaderBoardType, CardsColumnsType {
 export interface ColumnCardType extends Columns {
   color: string;
   card: CardType;
-  cardId: string;
   index: number;
 }
 
-export interface ColumnInnerList extends CardsColumnsType {
-  color: string;
-}
-
-export interface CardsColumnsType extends Columns {
+export interface ColumnInnerList {
   cards: CardType[];
+  cardsOrder: string[];
+  color: string;
+  columns: ColumnType[];
 }
 
 export default ColumnType;

@@ -4,13 +4,12 @@ import { JWT } from "next-auth/jwt";
 import {
   AUTH_PATH,
   DASHBOARD_PATH,
-  ERROR_500_PAGE,
-  JWT_SIGNING_KEY,
-  JWT_SIGNING_KEY_ID,
-  REFRESH_TOKEN_ERROR,
   describe,
+  ERROR_500_PAGE,
+  REFRESH_TOKEN_ERROR,
+  SECRET,
 } from "../../../utils/constants";
-import { Credentials, LoginUser, User } from "../../../types/user";
+import { LoginUser, User } from "../../../types/user";
 import { login, refreshToken } from "../../../api/authService";
 import { Token } from "../../../types/token";
 
@@ -36,10 +35,10 @@ export default NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<string, Credentials>) {
+      async authorize(credentials) {
         const loginUser: LoginUser = {
-          email: credentials.email,
-          password: credentials.password,
+          email: credentials?.email,
+          password: credentials?.password,
         };
         const data: User = await login(loginUser);
         if (data) {
@@ -55,16 +54,13 @@ export default NextAuth({
       },
     }),
   ],
+  secret: describe(SECRET),
   session: {
+    strategy: "jwt",
     maxAge: 24 * 60 * 60,
   },
   jwt: {
-    signingKey: `{
-      "kty": "oct",
-      "kid": "${describe(JWT_SIGNING_KEY_ID)}",
-      "alg": "HS512",
-      "k": "${describe(JWT_SIGNING_KEY)}"
-    }`,
+    secret: describe(SECRET),
   },
   callbacks: {
     async jwt({ token, user, account }) {

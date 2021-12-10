@@ -30,7 +30,7 @@ const handleCols = (columns: ColumnType[]) => {
           backgroundColor: column.color === undefined ? "gray" : column.color,
         }}
       >
-        {column.cards.length}
+        {column.cardsOrder.length}
       </Circle>
     );
     return (
