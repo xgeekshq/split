@@ -21,7 +21,6 @@ const fetchData = async <T,>(
       Authorization: `Bearer ${token}`,
     },
   });
-
   return data;
 };
 

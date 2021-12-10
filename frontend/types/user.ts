@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { UseMutationResult } from "react-query";
 import { AxiosError } from "axios";
 import { AccessToken, RefreshToken } from "./token";
+import { Nullable } from "./common";
 
 export interface User {
   _id?: string;
@@ -19,10 +20,8 @@ export interface UseUserType {
 }
 
 export interface LoginUser {
-  email: string;
-  password: string;
+  email: Nullable<string>;
+  password: Nullable<string>;
 }
 
 export type UserYup = "name" | "email" | "password" | "passwordConf";
-
-export type Credentials = "email" | "password" | "name" | "accessToken" | "refreshToken" | "error";
