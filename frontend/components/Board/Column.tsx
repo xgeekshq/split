@@ -6,7 +6,7 @@ import Flex from "../Primitives/Flex";
 import Shape from "../Primitives/Shape";
 import Text from "../Primitives/Text";
 import CardBoard from "./CardBoard";
-import { UNDEFINED } from "../../utils/constants";
+import { useStoreContext } from "../../store/store";
 
 const Container = styled(Flex, {
   borderRadius: "$2",
@@ -27,28 +27,25 @@ const Title = styled(Text, {
 
 const CardsList = styled(Flex, { p: "$8", flexGrow: 1, height: "80vh" });
 
-const InnerList = React.memo<ColumnInnerList>(({ cards, color, columns }) => {
+const InnerList = React.memo<ColumnInnerList>(({ cards, cardsOrder, color, columns }) => {
   return (
     <>
-      {cards.map((card, idx) => {
-        return (
-          <CardBoard
-            key={card._id}
-            columns={columns}
-            index={idx}
-            cardId={card?._id ?? UNDEFINED}
-            card={card}
-            color={color}
-          />
-        );
+      {cardsOrder.map((cardId: string, idx) => {
+        const card = cards.find((c) => c._id === cardId);
+        if (!card) return null;
+        return <CardBoard key={card._id} card={card} index={idx} color={color} columns={columns} />;
       })}
     </>
   );
 });
 
-const Column: React.FC<ColumnBoardType> = ({ title, cards, column, index, columns }) => {
+const Column: React.FC<ColumnBoardType> = ({ column, index }) => {
+  const {
+    state: { board },
+  } = useStoreContext();
+  if (!column || !column._id) return null;
   return (
-    <Draggable draggableId={column._id ?? UNDEFINED} index={index}>
+    <Draggable draggableId={column._id} index={index}>
       {(provided) => (
         <Container {...provided.draggableProps} direction="column" ref={provided.innerRef}>
           <Circle
@@ -59,17 +56,26 @@ const Column: React.FC<ColumnBoardType> = ({ title, cards, column, index, column
             {...provided.dragHandleProps}
           >
             <Title color="white" size="18" fontWeight="bold">
-              {title}
+              {column.title}
             </Title>
           </Circle>
-          <Droppable droppableId={column._id ?? UNDEFINED} type="card">
-            {(prov) => (
-              <CardsList direction="column" ref={prov.innerRef} {...prov.droppableProps}>
-                <InnerList columns={columns} cards={cards} color={column.color} />
-                {prov.placeholder}
-              </CardsList>
-            )}
-          </Droppable>
+          {column._id && (
+            <Droppable droppableId={column._id} type="CARD">
+              {(prov) => (
+                <CardsList direction="column" ref={prov.innerRef} {...prov.droppableProps}>
+                  {board?.columns && (
+                    <InnerList
+                      cards={board.cards}
+                      color={column.color}
+                      cardsOrder={column.cardsOrder}
+                      columns={board.columns}
+                    />
+                  )}
+                  {prov.placeholder}
+                </CardsList>
+              )}
+            </Droppable>
+          )}
         </Container>
       )}
     </Draggable>

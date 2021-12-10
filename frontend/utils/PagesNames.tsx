@@ -1,4 +1,4 @@
-import { DASHBOARD_PATH, AUTH_PATH } from "./constants";
+import { DASHBOARD_PATH, AUTH_PATH, UNDEFINED } from "./constants";
 
 interface NamesType {
   [key: string]: string;
@@ -12,6 +12,10 @@ export const pagesNames: NamesType = {
 
 export const GetPagePathByName = (pageName: string): string => {
   return pagesNames[pageName];
+};
+
+export const GetPageTitleByUrl = (url: string): string => {
+  return Object.keys(pagesNames).find((key) => pagesNames[key] === url) ?? UNDEFINED;
 };
 
 export const CheckIsBoardPage = (url: string): boolean => {

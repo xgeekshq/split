@@ -1,7 +1,6 @@
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession, getSession, GetSessionParams } from "next-auth/react";
-import { useStoreContext } from "../store/store";
 import CreateBoard from "../components/Dashboard/CreateBoardModal";
 import { styled } from "../stitches.config";
 import Flex from "../components/Primitives/Flex";
@@ -34,16 +33,11 @@ const Container = styled("div", Flex);
 
 const Dashboard: React.FC = () => {
   const { data: session } = useSession({ required: true });
-  const { dispatch } = useStoreContext();
   const { data } = useQuery("boards", () => getBoards(session?.accessToken), {
     retry: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    dispatch({ type: "setTitle", val: "Dashboard" });
-  }, [dispatch, session]);
 
   const handleLoading = (state: boolean) => {
     setIsLoading(state);

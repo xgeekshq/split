@@ -49,12 +49,7 @@ In the near future all applications will be dockerized.
 An .env file must be in the project root folder where the docker compose file is located and the others in each app folder (frontend and backend).
 This files are already provisioned as an example (`.env.example`) in the respective folders and you can use and edit them.
 
-The frontend .env file have two parameters named _JWT_SIGNING_KEY_ and *JWT_SIGNING_KEY_ID* that are required by next-auth on the frontend and to generate them just run the following command `npm install -g node-jose-tools` in the shell and after the installation, run `jose newkey -s 512 -t oct -a HS512`. Source: [Next-auth](https://next-auth.js.org/v3/warnings#jwt_auto_generated_signing_key).  
-After executing the last command an object is returned as:
-```
-{"kty": "oct","kid": "JWT_SIGNING_KEY_ID","alg": "HS512","k": "JWT_SIGNING_KEY"} 
-```
-The **kid** is the *JWT_SIGNING_KEY_ID* from the env file and **k** the *JWT_SIGNING_KEY*.
+The frontend .env file have the parameter named *SECRET* that is required by next-auth on the frontend and to generate it just run the following command `openssl rand -base64 32` in the shell then paste it in the .env file.  
 
 ### Database
 

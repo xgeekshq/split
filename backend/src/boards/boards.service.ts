@@ -1,9 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import UpdateBoardPayload, {
-  ChangesBoard,
-} from '../interfaces/updateBoardPayload.interface';
+import UpdateBoardPayload from '../interfaces/updateBoardPayload.interface';
 import {
   BOARDS_NOT_FOUND,
   BOARD_NOT_FOUND,
@@ -12,6 +10,7 @@ import {
 import BoardEntity from './entity/board.entity';
 import BoardDto from './dto/board.dto';
 import { encrypt, compare } from '../utils/bcrypt';
+import transformBoard from '../helper/transformBoard';
 
 @Injectable()
 export default class BoardsService {
@@ -101,30 +100,9 @@ export default class BoardsService {
 
   async updateBoardPatch(payload: UpdateBoardPayload) {
     const board = await this.getBoardFromRepo(payload.id);
-    const newBoard = this.transformBoard(board, payload.changes);
+    const newBoard = transformBoard(board, payload.changes);
+    delete newBoard._id;
     const result = await this.boardsRepository.update(payload.id, newBoard);
     return result.raw.result.ok === 1;
   }
-
-  transformBoard = (board: BoardEntity, changes: ChangesBoard) => {
-    const newBoard = { ...board };
-
-    if (changes.type === 'card') {
-      const colToRemove = newBoard.columns.find(
-        (col) => col._id === changes.colToRemove,
-      );
-      const colToAdd = newBoard.columns.find(
-        (col) => col._id === changes.colToAdd,
-      );
-      const cardToAdd = colToRemove?.cardsOrder[changes.cardToRemove];
-      if (!cardToAdd) return newBoard;
-      colToRemove?.cardsOrder.splice(changes.cardToRemove, 1);
-      colToAdd?.cardsOrder.splice(changes.cardToAdd, 0, cardToAdd);
-    } else {
-      const newCol = newBoard.columnsOrder[changes.cardToRemove];
-      newBoard.columnsOrder.splice(changes.cardToRemove, 1);
-      newBoard.columnsOrder.splice(changes.cardToAdd, 0, newCol);
-    }
-    return newBoard;
-  };
 }

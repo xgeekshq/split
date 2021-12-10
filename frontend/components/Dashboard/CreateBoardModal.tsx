@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { PlusCircledIcon, Cross1Icon } from "@modulz/radix-icons";
+import { v4 as uuidv4 } from "uuid";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
 import {
@@ -45,7 +46,7 @@ const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
 }> = ({ setFetchLoading }) => {
   const { data: session } = useSession({ required: false });
-  const { createBoard } = useBoard();
+  const { createBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false }, undefined);
   const { isLoading, isError } = createBoard;
   const {
     register,
@@ -60,30 +61,38 @@ const CreateBoardModal: React.FC<{
   }, [isError, isLoading, setFetchLoading]);
 
   const handleClick = (data: BoardType) => {
+    const idTodo = uuidv4();
+    const idProgress = uuidv4();
+    const idActions = uuidv4();
+
     createBoard.mutate({
       newBoard: {
         title: data.title,
         columns: [
-          { title: "todo", cards: [], color: "red" },
-          { title: "progress", cards: [], color: "blue" },
-          {
-            title: "actions",
-            cards: [],
-            color: "green",
-          },
+          { _id: idTodo, title: "todo", color: "red", cardsOrder: [] },
+          { _id: idProgress, title: "progress", color: "blue", cardsOrder: [] },
+          { _id: idActions, title: "actions", color: "green", cardsOrder: [] },
         ],
+        columnsOrder: [idTodo, idProgress, idActions],
         locked: false,
         createdBy: {
-          name: session?.user.name ?? "Anonymous",
-          email: session?.user.email ?? "Anonymous",
+          name: session?.user.name ?? "anonymous",
+          email: session?.user.email ?? "anonymous@anonymous.com",
         },
+        cards: [],
       },
       token: session?.accessToken,
     });
   };
 
   const Content = (
-    <DialogContent direction="column" justify="center" css={{ width: "30vw" }}>
+    <DialogContent
+      direction="column"
+      justify="center"
+      css={{ width: "30vw" }}
+      aria-label="Create retro board"
+      aria-describedby="create-board-modal"
+    >
       <DialogContentTitle>New board</DialogContentTitle>
       <form onSubmit={handleSubmit((data: BoardType) => handleClick(data))}>
         <TextField

@@ -13,9 +13,10 @@ const Container = styled(Card, {
   mb: "$8",
 });
 
-const CardBoard: React.FC<ColumnCardType> = ({ cardId, card, index, color, columns }) => {
+const CardBoard: React.FC<ColumnCardType> = ({ card, index, color, columns }) => {
+  if (!card._id) return null;
   return (
-    <Draggable key={cardId} draggableId={cardId} index={index}>
+    <Draggable key={card._id} draggableId={card._id} index={index}>
       {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}

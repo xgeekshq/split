@@ -17,7 +17,7 @@ const NavBar: React.FC = () => {
     <Header justify="between" align="center" media="sm">
       <Link href="/">
         <Text fontWeight="medium" size="18">
-          Divide & conquer
+          Divide & Conquer
         </Text>
       </Link>
       <Title />
