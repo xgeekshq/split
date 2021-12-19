@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ObjectIdColumn } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import UserEntity from '../../users/entity/user.entity';
 import ColumnEntity from './column.entity';
@@ -29,4 +29,7 @@ export default class BoardEntity {
 
   @Column({ array: true, nullable: false })
   cards!: CardEntity[];
+  
+  @CreateDateColumn()
+  creationDate!: Date;
 }
