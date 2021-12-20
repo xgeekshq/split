@@ -3,6 +3,7 @@ export const INVALID_CREDENTIALS = Symbol('invalid credentials');
 
 export const EMAIL_EXISTS = Symbol('email exists');
 export const EMAIL_NOT_EXISTS = Symbol('email does not exist');
+export const EMAIL_DONT_MATCH = Symbol('emails does not match');
 
 export const BOARD_NOT_FOUND = Symbol('board not found');
 export const BOARDS_NOT_FOUND = Symbol('boards not found');

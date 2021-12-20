@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -75,6 +76,26 @@ export default class BoardsController {
       updateLockedDto.password,
       request.params.id,
       request.user.email,
+    );
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Delete(':id')
+  deleteBoard(@Req() request: RequestWithUser) {
+    return this.boardService.deleteBoard(request.params.id, request.user.email);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Patch(':id/updateTitle')
+  updateTitle(
+    @Req() request: RequestWithUser,
+    @Body() body: { title: string },
+  ) {
+    const { title } = body;
+    return this.boardService.updateTitle(
+      request.params.id,
+      request.user.email,
+      title,
     );
   }
 }

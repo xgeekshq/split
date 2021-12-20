@@ -24,7 +24,7 @@ const RegisterForm: React.FC = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit((dataUser: User) => {
-            if (dataUser) {
+            if (dataUser.password) {
               setPw(dataUser?.password);
               createUser.mutate(dataUser);
             }
