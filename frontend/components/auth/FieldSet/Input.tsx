@@ -1,10 +1,11 @@
 import TextField from "../../Primitives/TextField";
 import Label from "../../Primitives/Label";
-import { UserYup } from "../../../types/user";
-import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import Flex from "../../Primitives/Flex";
+import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 
-const Input: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
+const Input: React.FC<ItemCompoundFieldSetType> = (props) => {
+  const { label, id, register, ...rest } = props;
+
   return (
     <Flex direction="column" justify="center">
       <TextField
@@ -20,7 +21,8 @@ const Input: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
             transform: "translateY(-1.7rem)",
           },
         }}
-        {...register(id as UserYup)}
+        {...register()}
+        {...rest}
       />
       <Label
         htmlFor={id}

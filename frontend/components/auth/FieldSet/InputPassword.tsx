@@ -2,16 +2,16 @@ import { useState } from "react";
 import { EyeOpenIcon, EyeNoneIcon } from "@modulz/radix-icons";
 import TextField from "../../Primitives/TextField";
 import Label from "../../Primitives/Label";
-import { UserYup } from "../../../types/user";
 import Button from "../../Primitives/Button";
 import { styled } from "../../../stitches.config";
-import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import Flex from "../../Primitives/Flex";
+import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 
 const StyledEyeOpenIcon = styled(EyeOpenIcon, { size: "$20" });
 const StyledEyeClosedIcon = styled(EyeNoneIcon, { size: "$20" });
 
-const InputPassword: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
+const InputPassword: React.FC<ItemCompoundFieldSetType> = (props) => {
+  const { label, id, register, ...rest } = props;
   const [showPw, setShowPw] = useState(false);
 
   return (
@@ -29,7 +29,8 @@ const InputPassword: React.FC<ItemCompoundFieldSetType> = ({ label, id, register
             transform: "translateY(-1.7rem)",
           },
         }}
-        {...register(id as UserYup)}
+        {...register()}
+        {...rest}
       />
       <Label
         htmlFor={id}

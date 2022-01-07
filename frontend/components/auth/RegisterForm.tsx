@@ -49,6 +49,7 @@ const RegisterForm: React.FC = () => {
           ]}
           id="termsAndPrivacyPolicy"
           inputType="checkbox"
+          variants={{ size: "small" }}
         />
         <AuthButton label="Sign up" />
       </form>

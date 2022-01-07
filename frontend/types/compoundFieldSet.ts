@@ -6,8 +6,9 @@ export interface CompoundFieldSetType {
   id: string;
   inputType: "text" | "password" | "checkbox" | "switch";
   showHoverCard?: boolean;
+  variants?: any;
 }
 
 export type ItemCompoundFieldSetType = Pick<CompoundFieldSetType, "id" | "label"> & {
-  register: UseFormRegister<User>;
+  register: () => UseFormRegister<User>;
 };

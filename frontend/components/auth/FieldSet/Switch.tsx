@@ -1,4 +1,3 @@
-import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import { useState } from "react";
 import { styled } from "../../../stitches.config";
 
@@ -49,8 +48,9 @@ const Label = styled("label", {
   },
 });
 
-const Switch: React.FC<ItemCompoundFieldSetType> = ({}) => {
+const Switch: React.FC = () => {
   const [isChecked, setIsChecked] = useState(false);
+
   return (
     <Label>
       <input type="checkbox" checked={isChecked} onClick={() => setIsChecked(!isChecked)} />

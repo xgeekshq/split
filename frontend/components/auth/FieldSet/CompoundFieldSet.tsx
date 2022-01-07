@@ -13,7 +13,7 @@ import Switch from "./Switch";
 const mapper = { text: Input, password: InputPassword, checkbox: Checkbox, switch: Switch };
 
 const CompoundFieldSet: React.FC<CompoundFieldSetType> = (props) => {
-  const { label, id, inputType, showHoverCard } = props;
+  const { label, id, inputType, showHoverCard, variants } = props;
   const {
     register,
     formState: { errors },
@@ -23,7 +23,7 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = (props) => {
 
   return (
     <Fieldset>
-      <Component id={id} label={label} register={register} />
+      <Component id={id} label={label} register={() => register(id as UserYup)} {...variants} />
       <Flex>
         {errors[id as UserYup] && <Text color="red">{errors[id as UserYup]?.message}</Text>}
         {id === "password" && errors[id] && showHoverCard && <HoverCard />}
