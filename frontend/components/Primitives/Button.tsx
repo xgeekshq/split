@@ -38,6 +38,7 @@ const Button = styled("button", {
       },
       "2": {
         borderRadius: "$2",
+        width: "$60",
         height: "$32",
         p: "$20",
         fontSize: "$20",
@@ -51,6 +52,9 @@ const Button = styled("button", {
         lineHeight: "$8",
         width: "100%",
         marginTop: "$8",
+      },
+      inputSize: {
+        height: "$5",
       },
     },
     color: {
@@ -80,25 +84,12 @@ const Button = styled("button", {
         backgroundColor: "$blue11",
         color: "white",
         "@hover": {
-          "&:hover": {
-            boxShadow: "inset 0 0 0 1px white",
-          },
+          "&:hover": { backgroundColor: "$blue5" },
+          "&:focus": { boxShadow: `0 0 0 2px $blue7` },
         },
-        "&:active": {
-          backgroundColor: "$blue5",
-          boxShadow: "inset 0 0 0 1px $blue8",
-        },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px $blue8, 0 0 0 1px $blue8",
-        },
-        '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
-          {
-            backgroundColor: "$blue5",
-            boxShadow: "inset 0 0 0 1px $blue",
-          },
       },
       green: {
-        backgroundColor: "$green4",
+        backgroundColor: "$green7",
         color: "$green11",
         "@hover": {
           "&:hover": { backgroundColor: "$green5" },
@@ -111,6 +102,14 @@ const Button = styled("button", {
         "@hover": {
           "&:hover": { backgroundColor: "$gray11" },
           "&:focus": { boxShadow: `0 0 0 2px $gray10` },
+        },
+      },
+      red: {
+        backgroundColor: "$red11",
+        color: "white",
+        "@hover": {
+          "&:hover": { backgroundColor: "$red5" },
+          "&:focus": { boxShadow: `0 0 0 2px $red7` },
         },
       },
     },
@@ -139,10 +138,6 @@ const Button = styled("button", {
         boxShadow: "none",
       },
     },
-  },
-  defaultVariants: {
-    size: "1",
-    color: "gray",
   },
 });
 

@@ -7,8 +7,3 @@ export interface DataT {
 export interface ErrorT {
   message: string;
 }
-
-export interface HeaderBoardType {
-  _id?: string;
-  title: string;
-}

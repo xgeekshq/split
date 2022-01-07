@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 @Entity('users')
 export default class UserEntity {
   @ObjectIdColumn()
-  _id: ObjectId;
+  _id!: ObjectId;
 
   @Column({ nullable: false })
   name!: string;

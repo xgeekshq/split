@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
@@ -27,20 +27,7 @@ const PlusIcon = styled(PlusCircledIcon, {
   color: "$gray9",
 });
 
-const Trigger = (
-  <DialogTrigger
-    interactive="clickable"
-    align="center"
-    radius="40"
-    justify="center"
-    direction="column"
-  >
-    <Text size="20">Add retro board</Text>
-    <PlusIcon />
-  </DialogTrigger>
-);
-
-const FooterContainer = styled("div", Flex);
+const FooterContainer = styled(Flex);
 
 const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
@@ -60,13 +47,13 @@ const CreateBoardModal: React.FC<{
     setFetchLoading(isLoading);
   }, [isError, isLoading, setFetchLoading]);
 
-  const handleClick = (data: BoardType) => {
-    const idTodo = uuidv4();
-    const idProgress = uuidv4();
-    const idActions = uuidv4();
+  const handleClick = useCallback(
+    (data: BoardType) => {
+      const idTodo = uuidv4();
+      const idProgress = uuidv4();
+      const idActions = uuidv4();
 
-    createBoard.mutate({
-      newBoard: {
+      createBoard.mutate({
         title: data.title,
         columns: [
           { _id: idTodo, title: "todo", color: "red", cardsOrder: [] },
@@ -77,54 +64,59 @@ const CreateBoardModal: React.FC<{
         locked: false,
         createdBy: {
           name: session?.user.name ?? "anonymous",
-          email: session?.user.email ?? "anonymous@anonymous.com",
+          email: session?.user.email ?? "anonymous@gmail.com",
         },
         cards: [],
-      },
-      token: session?.accessToken,
-    });
-  };
-
-  const Content = (
-    <DialogContent
-      direction="column"
-      justify="center"
-      css={{ width: "30vw" }}
-      aria-label="Create retro board"
-      aria-describedby="create-board-modal"
-    >
-      <DialogContentTitle>New board</DialogContentTitle>
-      <form onSubmit={handleSubmit((data: BoardType) => handleClick(data))}>
-        <TextField
-          type="text"
-          placeholder="Board name"
-          css={{ fontSize: "$xl", width: "50%" }}
-          size="2"
-          {...register("title")}
-        />
-        {errors.title && (
-          <Text as="p" color="red" noMargin="false">
-            {errors.title.message}
-          </Text>
-        )}
-        <FooterContainer justify="center">
-          <Button type="submit" size="1" color="blue" css={{ width: "20%", mt: "$26" }}>
-            Save
-          </Button>
-        </FooterContainer>
-      </form>
-      <DialogCloseButton asChild>
-        <IconButton variant="ghost" size="20">
-          <Cross1Icon />
-        </IconButton>
-      </DialogCloseButton>
-    </DialogContent>
+      });
+    },
+    [createBoard, session?.user.email, session?.user.name]
   );
 
   return (
     <DialogRoot>
-      {Trigger}
-      {Content}
+      <DialogTrigger
+        interactive="clickable"
+        align="center"
+        radius="40"
+        justify="center"
+        direction="column"
+      >
+        <Text size="20">Add retro board</Text>
+        <PlusIcon />
+      </DialogTrigger>
+      <DialogContent
+        direction="column"
+        justify="center"
+        css={{ width: "30vw" }}
+        aria-label="Create retro board"
+        aria-describedby="create-board-modal"
+      >
+        <DialogContentTitle>New board</DialogContentTitle>
+        <form onSubmit={handleSubmit(handleClick)}>
+          <TextField
+            type="text"
+            placeholder="Board name"
+            css={{ fontSize: "$xl", width: "50%" }}
+            size="2"
+            {...register("title")}
+          />
+          {!!errors.title && (
+            <Text as="p" color="red" noMargin="false">
+              {errors.title.message}
+            </Text>
+          )}
+          <FooterContainer justify="center">
+            <Button type="submit" size="1" color="blue" css={{ width: "20%", mt: "$26" }}>
+              Save
+            </Button>
+          </FooterContainer>
+        </form>
+        <DialogCloseButton asChild>
+          <IconButton variant="ghost" size="20">
+            <Cross1Icon />
+          </IconButton>
+        </DialogCloseButton>
+      </DialogContent>
     </DialogRoot>
   );
 };

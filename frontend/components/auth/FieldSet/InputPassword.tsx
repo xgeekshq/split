@@ -14,6 +14,10 @@ const InputPassword: React.FC<ItemCompoundFieldSetType> = (props) => {
   const { label, id, register, ...rest } = props;
   const [showPw, setShowPw] = useState(false);
 
+  const handleShowPw = () => {
+    setShowPw(!showPw);
+  };
+
   return (
     <Flex direction="column" justify="center" css={{ position: "relative" }}>
       <TextField
@@ -50,7 +54,7 @@ const InputPassword: React.FC<ItemCompoundFieldSetType> = (props) => {
       </Label>
       <Button
         type="button"
-        onClick={() => setShowPw(!showPw)}
+        onClick={handleShowPw}
         tabIndex={-1}
         css={{
           position: "absolute",

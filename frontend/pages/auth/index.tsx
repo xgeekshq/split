@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getSession, GetSessionParams } from "next-auth/react";
 import Flex from "../../components/Primitives/Flex";
 import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
-import { DASHBOARD_PATH } from "../../utils/constants";
+import { DASHBOARD_ROUTE } from "../../utils/routes";
 import Auth from "../../components/auth";
 import Grid from "../../components/Primitives/Grid";
 
@@ -15,7 +15,7 @@ export async function getServerSideProps(
   if (session) {
     return {
       redirect: {
-        destination: DASHBOARD_PATH,
+        destination: DASHBOARD_ROUTE,
         permanent: false,
       },
     };
@@ -32,7 +32,7 @@ const AuthPage: React.FC = () => {
       <Link href="/">
         <h1>Divide and conquer</h1>
       </Link>
-      <Grid columns={[1, 2]} alignItems="normal">
+      <Grid columns={[1, 3]} justifyContent={["normal", "center"]}>
         <Auth />
         <img src={"https://via.placeholder.com/600"} width={600} height={600} />
       </Grid>

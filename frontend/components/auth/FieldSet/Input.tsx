@@ -14,10 +14,11 @@ const Input: React.FC<ItemCompoundFieldSetType> = (props) => {
         placeholder=" "
         size="3"
         css={{
+          display: "relative",
           p: "$16",
           "&:focus ~ span": { fontSize: "$14", transform: "translateY(-1.7rem)", color: "$accent" },
           "&:not(:placeholder-shown) ~ span": {
-            fontSize: "$14",
+            fontSize: "$12",
             transform: "translateY(-1.7rem)",
           },
         }}

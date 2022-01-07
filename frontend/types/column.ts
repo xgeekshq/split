@@ -1,7 +1,8 @@
 import CardType from "./card";
-import { HeaderBoardType } from "./common";
 
-interface ColumnType extends HeaderBoardType {
+export interface ColumnType {
+  _id?: string;
+  title: string;
   color: string;
   cardsOrder: string[];
 }

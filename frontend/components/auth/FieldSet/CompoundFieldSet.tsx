@@ -22,9 +22,9 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = (props) => {
   const Component = mapper[inputType];
 
   return (
-    <Fieldset>
+    <Fieldset css={{ marginBottom: "$16", justifyContent: "center" }}>
       <Component id={id} label={label} register={() => register(id as UserYup)} {...variants} />
-      <Flex>
+      <Flex align="center" css={{ mt: "$8" }}>
         {errors[id as UserYup] && <Text color="red">{errors[id as UserYup]?.message}</Text>}
         {id === "password" && errors[id] && showHoverCard && <HoverCard />}
       </Flex>

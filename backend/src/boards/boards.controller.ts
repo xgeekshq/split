@@ -91,11 +91,10 @@ export default class BoardsController {
     @Req() request: RequestWithUser,
     @Body() body: { title: string },
   ) {
-    const { title } = body;
     return this.boardService.updateTitle(
       request.params.id,
       request.user.email,
-      title,
+      body.title,
     );
   }
 }

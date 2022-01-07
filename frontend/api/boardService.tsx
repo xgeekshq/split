@@ -1,22 +1,27 @@
 import fetchData from "../utils/fetchData";
-import { BoardIdTypeWithToken, BoardType, BoardTypeWithToken } from "../types/board";
+import { BoardType, UpdateTitleWithToken } from "../types/board";
 import { Nullable } from "../types/common";
 
-export const postBoard = ({ newBoard, token }: BoardTypeWithToken): Promise<BoardType> => {
-  return fetchData(`/boards`, "POST", JSON.stringify(newBoard), token);
+export const postBoard = (newBoard: BoardType): Promise<BoardType> => {
+  return fetchData(`/boards`, { method: "POST", data: newBoard });
 };
 
-export const putBoard = ({ newBoard, token }: BoardTypeWithToken): Promise<BoardType> => {
-  return fetchData(`/boards/${newBoard._id}`, "PUT", JSON.stringify(newBoard), token);
+export const updateBoardTitle = ({ id, title }: UpdateTitleWithToken): Promise<BoardType> => {
+  return fetchData(`/boards/${id}/updateTitle`, { method: "PATCH", data: { title } });
 };
 
 export const getBoard = (id: Nullable<string>): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, "POST", undefined, undefined);
-};
-export const getBoardWithAuth = ({ id, token }: BoardIdTypeWithToken): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, "GET", undefined, token);
+  return fetchData<BoardType>(`/boards/${id}`, { method: "POST" });
 };
 
-export const getBoards = (token: Nullable<string>): Promise<BoardType[]> => {
-  return fetchData<BoardType[]>(`/boards`, "GET", undefined, token);
+export const getBoardWithAuth = (id: string): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`);
+};
+
+export const getBoards = (): Promise<BoardType[]> => {
+  return fetchData<BoardType[]>(`/boards`);
+};
+
+export const deleteBoard = async (id: string): Promise<BoardType> => {
+  return fetchData(`/boards/${id}`, { method: "DELETE" });
 };

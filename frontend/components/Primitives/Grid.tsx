@@ -1,15 +1,15 @@
 import { ReactNode } from "react";
-import { CSS, styled } from "../../stitches.config";
-
-const Div = styled("div");
+import Div from "./Div";
 
 type Props = {
   columns: number[];
   children: ReactNode[];
-} & Pick<CSS, "alignItems" | "justifyContent">;
+  alignItems?: string[];
+  justifyContent?: string[];
+};
 
 const Grid: React.FC<Props> = (props) => {
-  const { columns, children, alignItems = "center", justifyContent = "center" } = props;
+  const { columns, children, alignItems = [], justifyContent = [] } = props;
 
   return (
     <Div css={{ display: "flex", width: "100%" }}>
@@ -18,8 +18,8 @@ const Grid: React.FC<Props> = (props) => {
           css={{
             flex: columns[index],
             display: "flex",
-            alignItems,
-            justifyContent,
+            alignItems: alignItems[index] || "normal",
+            justifyContent: justifyContent[index] || "normal",
           }}
         >
           {child}

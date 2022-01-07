@@ -1,6 +1,6 @@
-import { HeaderBoardType } from "./common";
-
-interface CardType extends HeaderBoardType {
+interface CardType {
+  _id?: string;
+  text: string;
   likes: number;
 }
 

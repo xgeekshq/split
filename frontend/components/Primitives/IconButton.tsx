@@ -3,10 +3,8 @@ import Button from "./Button";
 
 const IconButton = styled(Button, {
   // Reset
-  appearance: "none",
   borderWidth: "0",
   fontFamily: "inherit",
-  fontSize: "$sm",
   outline: "none",
   padding: "0",
   textDecoration: "none",
