@@ -1,19 +1,31 @@
 import React from "react";
 import { styled } from "@stitches/react";
 
-interface Props {
-  text: string;
-  onClick: () => void;
-}
-
 const Span = styled("span", {
   color: "-webkit-link",
   cursor: "pointer",
-  textDecoration: "underline",
+
+  variants: {
+    type: {
+      secondary: {
+        color: "black",
+        textDecoration: "underline",
+      },
+    },
+  },
 });
 
-const TextButton: React.FC<Props> = ({ text, onClick }) => {
-  return <Span onClick={onClick}>{text}</Span>;
+type Props = {
+  text: string;
+  onClick: () => void;
+} & React.ComponentProps<typeof Span>;
+
+const TextButton: React.FC<Props> = ({ text, onClick, type }) => {
+  return (
+    <Span onClick={onClick} type={type}>
+      {text}
+    </Span>
+  );
 };
 
 export default TextButton;

@@ -9,7 +9,7 @@ const AuthButton: React.FC<Props> = ({ label }) => {
       color="black"
       size="3"
       css={{
-        marginTop: "$40",
+        marginTop: "$20",
         position: "relative",
         "> svg": {
           width: "$20",

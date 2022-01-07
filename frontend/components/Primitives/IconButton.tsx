@@ -37,6 +37,11 @@ const IconButton = styled(Button, {
         height: "$20",
         width: "$20",
       },
+      "40": {
+        borderRadius: "$2",
+        height: "$40",
+        width: "$40",
+      },
     },
     variant: {
       ghost: {
@@ -57,6 +62,11 @@ const IconButton = styled(Button, {
           {
             backgroundColor: "$slateA4",
           },
+      },
+      "filled-circle": {
+        borderRadius: "50%",
+        backgroundColor: "$slateA4",
+        border: "none",
       },
     },
     state: {
