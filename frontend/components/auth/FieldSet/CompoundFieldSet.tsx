@@ -8,8 +8,9 @@ import HoverCard from "./HoverCardFieldSet";
 import Checkbox from "./Checkbox";
 import Input from "./Input";
 import InputPassword from "./InputPassword";
+import Switch from "./Switch";
 
-const mapper = { text: Input, password: InputPassword, checkbox: Checkbox };
+const mapper = { text: Input, password: InputPassword, checkbox: Checkbox, switch: Switch };
 
 const CompoundFieldSet: React.FC<CompoundFieldSetType> = (props) => {
   const { label, id, inputType, showHoverCard } = props;

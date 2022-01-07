@@ -4,7 +4,7 @@ import { User } from "./user";
 export interface CompoundFieldSetType {
   label: string | (string | JSX.Element)[];
   id: string;
-  inputType: "text" | "password" | "checkbox";
+  inputType: "text" | "password" | "checkbox" | "switch";
   showHoverCard?: boolean;
 }
 

@@ -7,13 +7,9 @@ const TextField = styled("input", {
   fontFamily: "inherit",
 
   // Custom
-  backgroundColor: "$loContrast !important",
+  backgroundColor: "$loContrast",
   color: "$hiContrast",
   fontVariantNumeric: "tabular-nums",
-
-  "input:-internal-autofill-selected": {
-    backgroundColor: "red !important",
-  },
 
   "&:-webkit-autofill": {
     boxShadow: "inset 0 0 0 1px $colors$blue6, inset 0 0 0 100px $colors$blue3",
