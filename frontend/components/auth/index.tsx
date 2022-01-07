@@ -17,7 +17,7 @@ const Auth: React.FC = () => {
     return (
       <Div css={{ width: "100%" }}>
         <h2>Sign In</h2>
-        <Flex direction="column" align="center" css={{ display: "initial" }}>
+        <Flex direction="column" align="center">
           <LoginForm />
           <AuthIcons />
           <TextButton text="Forgot your password?" onClick={onClick} type="secondary" /> 

@@ -12,6 +12,7 @@ import AuthButton from "./AuthButton";
 import AuthError from "./AuthError";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
 import { instance } from "../../utils/fetchData";
+import Form from "../Primitives/Form";
 
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
@@ -36,16 +37,17 @@ const LoginForm: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <form
+      <Form
         onSubmit={methods.handleSubmit((credentials: LoginUser) => {
           onLogin(credentials);
         })}
+        css={{ width: "100%" }}
       >
         {loginError && <AuthError text={ErrorMessages.INVALID_CREDENTIALS} />}
         <CompoundFieldSet label="Email" inputType="text" id="email" />
         <CompoundFieldSet label="Password" inputType="password" id="password" />
         <AuthButton label=" Sign in" />
-      </form>
+      </Form>
     </FormProvider>
   );
 };
