@@ -6,7 +6,6 @@ import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { LoginUser } from "../../types/user";
 import Flex from "../Primitives/Flex";
-import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
@@ -36,35 +35,33 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <TabsContent value="login">
-      <FormProvider {...methods}>
-        <form
-          onSubmit={methods.handleSubmit((credentials: LoginUser) => {
-            onLogin(credentials);
-          })}
-        >
-          <Flex>
-            {loginError ? (
-              <Text
-                color="red"
-                css={{
-                  mb: "$16",
-                  backgroundColor: "$red5",
-                  fontWeight: "bold",
-                  p: "$16",
-                  width: "100%",
-                }}
-              >
-                {ErrorMessages.INVALID_CREDENTIALS}
-              </Text>
-            ) : null}
-          </Flex>
-          <CompoundFieldSet label="Email" inputType="text" id="email" />
-          <CompoundFieldSet label="Password" inputType="password" id="password" />
-          <AuthButton label="Sign in" />
-        </form>
-      </FormProvider>
-    </TabsContent>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={methods.handleSubmit((credentials: LoginUser) => {
+          onLogin(credentials);
+        })}
+      >
+        <Flex>
+          {loginError ? (
+            <Text
+              color="red"
+              css={{
+                mb: "$16",
+                backgroundColor: "$red5",
+                fontWeight: "bold",
+                p: "$16",
+                width: "100%",
+              }}
+            >
+              {ErrorMessages.INVALID_CREDENTIALS}
+            </Text>
+          ) : null}
+        </Flex>
+        <CompoundFieldSet label="Email" inputType="text" id="email" />
+        <CompoundFieldSet label="Password" inputType="password" id="password" />
+        <AuthButton label=" Sign in" />
+      </form>
+    </FormProvider>
   );
 };
 

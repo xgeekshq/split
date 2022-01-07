@@ -1,15 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { getSession, GetSessionParams } from "next-auth/react";
-import { styled } from "../../stitches.config";
-import { TabsList, TabsRoot, TabsTrigger } from "../../components/Primitives/Tab";
-import RegisterForm from "../../components/auth/RegisterForm";
-import Text from "../../components/Primitives/Text";
 import Flex from "../../components/Primitives/Flex";
-import centerScreen from "../../styles/centerScreen";
-import LoginForm from "../../components/auth/LoginForm";
 import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
 import { DASHBOARD_PATH } from "../../utils/constants";
+import Auth from "../../components/auth";
+import Grid from "../../components/Primitives/Grid";
+import profilePic from "../../public/1200.png";
 
 export async function getServerSideProps(
   context: GetSessionParams | undefined
@@ -30,33 +28,18 @@ export async function getServerSideProps(
   };
 }
 
-const CenteredContainer = styled(Flex, centerScreen);
-
-const Auth: React.FC = () => {
+const AuthPage: React.FC = () => {
   return (
-    <Flex justify="center">
+    <Flex justify="center" direction="column" align="center">
       <Link href="/">
         <h1>Divide and conquer</h1>
       </Link>
-      <CenteredContainer
-        css={{ mt: "$20", borderRadius: "$80", p: "$40", width: "500px", flexShrink: "2" }}
-        justify="center"
-      >
-        <TabsRoot defaultValue="login">
-          <TabsList aria-label="Login or register" css={{ mb: "$20" }}>
-            <TabsTrigger value="login">
-              <Text size="20">Login</Text>
-            </TabsTrigger>
-            <TabsTrigger value="register">
-              <Text size="20">Register</Text>
-            </TabsTrigger>
-          </TabsList>
-          <RegisterForm />
-          <LoginForm />
-        </TabsRoot>
-      </CenteredContainer>
+      <Grid columns={[1, 2]}>
+        <Auth />
+        <Image src={profilePic} alt="Picture of the author" width={500} height={500} />
+      </Grid>
     </Flex>
   );
 };
 
-export default Auth;
+export default AuthPage;
