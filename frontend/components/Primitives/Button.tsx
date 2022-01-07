@@ -43,6 +43,15 @@ const Button = styled("button", {
         fontSize: "$20",
         lineHeight: "$8",
       },
+      3: {
+        borderRadius: "$8",
+        height: "$32",
+        p: "$20",
+        fontSize: "$20",
+        lineHeight: "$8",
+        width: "100%",
+        marginTop: "$8",
+      },
     },
     color: {
       gray: {
@@ -94,6 +103,14 @@ const Button = styled("button", {
         "@hover": {
           "&:hover": { backgroundColor: "$green5" },
           "&:focus": { boxShadow: `0 0 0 2px $green7` },
+        },
+      },
+      black: {
+        backgroundColor: "black",
+        color: "white",
+        "@hover": {
+          "&:hover": { backgroundColor: "$gray11" },
+          "&:focus": { boxShadow: `0 0 0 2px $gray10` },
         },
       },
     },

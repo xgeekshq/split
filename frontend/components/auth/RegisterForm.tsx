@@ -2,7 +2,6 @@ import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import useUser from "../../hooks/useUser";
-import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import { User } from "../../types/user";
@@ -10,6 +9,7 @@ import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
+import AuthButton from "./AuthButton";
 
 const RegisterForm: React.FC = () => {
   const { setPw, createUser } = useUser();
@@ -49,10 +49,18 @@ const RegisterForm: React.FC = () => {
           <CompoundFieldSet label="Email" inputType="text" id="email" />
           <CompoundFieldSet label="Name" inputType="text" id="name" />
           <CompoundFieldSet label="Password" inputType="password" id="password" />
-          <CompoundFieldSet label="Password confirmation" id="passwordConf" inputType="password" />
-          <Button color="green" size="2" css={{ mt: "$8", width: "100%" }} type="submit">
-            Create account
-          </Button>
+          <CompoundFieldSet
+            label="Password confirmation"
+            id="passwordConf"
+            inputType="password"
+            showHoverCard
+          />
+          <CompoundFieldSet
+            label="By signing up you agree to our Terms and Privacy Policy"
+            id="termsAndPrivacyPolicy"
+            inputType="checkbox"
+          />
+          <AuthButton label="Sign up" />
         </form>
       </FormProvider>
     </TabsContent>

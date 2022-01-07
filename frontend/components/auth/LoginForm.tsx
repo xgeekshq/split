@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import { signIn, RedirectableProvider } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { RedirectableProviderType } from "next-auth/providers";
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { LoginUser } from "../../types/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
-import Button from "../Primitives/Button";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_PATH } from "../../utils/constants";
+import AuthButton from "./AuthButton";
 
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
@@ -20,7 +21,7 @@ const LoginForm: React.FC = () => {
   });
 
   const onLogin = async (credentials: LoginUser) => {
-    const response = await signIn<RedirectableProvider>("credentials", {
+    const response = await signIn<RedirectableProviderType>("credentials", {
       ...credentials,
       callbackUrl: DASHBOARD_PATH,
       redirect: false,
@@ -59,10 +60,8 @@ const LoginForm: React.FC = () => {
             ) : null}
           </Flex>
           <CompoundFieldSet label="Email" inputType="text" id="email" />
-          <CompoundFieldSet label="Password" inputType="password" id="password" tabValue="login" />
-          <Button color="green" size="2" css={{ mt: "$8", width: "100%" }} type="submit">
-            Login
-          </Button>
+          <CompoundFieldSet label="Password" inputType="password" id="password" />
+          <AuthButton label="Sign in" />
         </form>
       </FormProvider>
     </TabsContent>
