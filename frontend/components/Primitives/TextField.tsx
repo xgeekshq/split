@@ -20,6 +20,35 @@ const TextField = styled("input", {
     color: "$hiContrast",
   },
 
+  "&[type='checkbox' i]": {
+    position: "relative",
+
+    "&:before": {
+      content: "",
+      position: "absolute",
+      display: "block",
+      width: "11px",
+      height: "11px",
+      border: "1px solid #191B1F",
+      borderRadius: "3px",
+      backgroundColor: "white",
+    },
+    "&:checked:after": {
+      content: "",
+      position: "absolute",
+      display: "block",
+      width: "2px",
+      height: "6px",
+      top: "2px",
+      left: "5px",
+      border: "solid black",
+      borderWidth: "0 1px 1px 0",
+      "-webkit-transform": "rotate(45deg)",
+      "-ms-transform": "rotate(45deg)",
+      transform: "rotate(45deg)",
+    },
+  },
+
   "&:focus": {
     boxShadow: "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8",
     "&:-webkit-autofill": {
@@ -67,7 +96,7 @@ const TextField = styled("input", {
         },
       },
       "3": {
-        borderRadius: "$2",
+        borderRadius: "$6",
         fontSize: "$18",
         p: "$8",
         "&:-webkit-autofill::first-line": {
