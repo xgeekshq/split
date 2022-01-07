@@ -9,7 +9,7 @@ export default class CardDto {
 
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
-  title!: string;
+  text!: string;
 
   @IsNotEmpty()
   @Type(() => UserDto)

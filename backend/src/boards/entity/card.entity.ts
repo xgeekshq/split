@@ -6,7 +6,7 @@ export default class CardEntity {
   _id?: string;
 
   @Column({ nullable: false })
-  title!: string;
+  text!: string;
 
   @Column({ nullable: false })
   createdBy!: UserEntity;
