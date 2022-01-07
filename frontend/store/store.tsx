@@ -2,11 +2,11 @@ import React, { Dispatch, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { io, Socket } from "socket.io-client";
 import { Nullable } from "../types/common";
-import useStateMachine, { State, Event } from "../stateMachine/useStoreStateMachine";
+import useStateMachine, { State, Event } from "../stateMachine/storeStateMachine";
 import { BoardType } from "../types/board";
-import { describe, NEXT_PUBLIC_BACKEND_URL } from "../utils/constants";
-import { CheckIsBoardPage } from "../utils/PagesNames";
+import { NEXT_PUBLIC_BACKEND_URL } from "../utils/constants";
 import BoardChanges from "../types/boardChanges";
+import { CheckIsBoardPage } from "../utils/routes";
 
 type ContextType = {
   state: State<BoardType, string, Socket>;
@@ -21,7 +21,7 @@ const StoreProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (CheckIsBoardPage(router.pathname) && state.board && !state.socket) {
-      const socket: Socket = io(describe(NEXT_PUBLIC_BACKEND_URL) ?? "http://127.0.0.1:3200");
+      const socket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:3200");
       dispatch({
         type: "SET_SOCKET",
         val: socket,

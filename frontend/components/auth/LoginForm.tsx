@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
-import { signIn, RedirectableProvider } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
+import { RedirectableProviderType } from "next-auth/providers";
 import { LoginUser } from "../../types/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
@@ -11,7 +12,8 @@ import Button from "../Primitives/Button";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
-import { DASHBOARD_PATH } from "../../utils/constants";
+import { DASHBOARD_ROUTE } from "../../utils/routes";
+import { instance } from "../../utils/fetchData";
 
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
@@ -20,17 +22,17 @@ const LoginForm: React.FC = () => {
   });
 
   const onLogin = async (credentials: LoginUser) => {
-    const response = await signIn<RedirectableProvider>("credentials", {
-      ...credentials,
-      callbackUrl: DASHBOARD_PATH,
-      redirect: false,
-    });
-
-    if (response?.error) {
+    try {
+      await signIn<RedirectableProviderType>("credentials", {
+        ...credentials,
+        callbackUrl: DASHBOARD_ROUTE,
+        redirect: false,
+      });
+      const session = await getSession();
+      instance.defaults.headers.common.Authorization = `Bearer ${session?.accessToken}`;
+      router.push(DASHBOARD_ROUTE);
+    } catch (error) {
       setLoginError(true);
-    } else {
-      setLoginError(false);
-      router.push(DASHBOARD_PATH);
     }
   };
 

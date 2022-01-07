@@ -67,6 +67,10 @@ const Dropdown: React.FC = () => {
     required: false,
   });
 
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <DropdownRoot>
       <DropdownMenu.Trigger asChild>
@@ -78,7 +82,7 @@ const Dropdown: React.FC = () => {
         </DropdownMenuGroup>
       </DropdownMenu.Trigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
         <DropdownArrow />
       </DropdownMenuContent>
     </DropdownRoot>

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from "react";
-import { GetServerSideProps } from "next";
-import { QueryClient, dehydrate } from "react-query";
-import { useSession, getSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import {
   DragDropContext,
   DraggableLocation,
@@ -12,7 +11,6 @@ import {
 } from "react-beautiful-dnd";
 import Text from "../../components/Primitives/Text";
 import { useStoreContext } from "../../store/store";
-import { getBoard, getBoardWithAuth } from "../../api/boardService";
 import { styled } from "../../stitches.config";
 import Flex from "../../components/Primitives/Flex";
 import { ERROR_LOADING_DATA } from "../../utils/constants";
@@ -20,27 +18,12 @@ import Column from "../../components/Board/Column";
 import useBoard from "../../hooks/useBoard";
 import BoardChanges from "../../types/boardChanges";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  const id = context.params?.boardId?.toString();
-
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["board", { id }], () =>
-    session ? getBoardWithAuth({ id: id ?? "", token: session.accessToken }) : getBoard(id)
-  );
-
-  return {
-    props: {
-      boardId: id,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
-
 const Container = styled(Flex);
 
-const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
+const Board: React.FC = () => {
+  const { query } = useRouter();
+  const boardId = query.boardId as string;
+
   const { data: session } = useSession({ required: false });
   const { fetchBoard } = useBoard({ autoFetchBoard: true, autoFetchBoards: false }, boardId);
   const { data, status } = fetchBoard;
