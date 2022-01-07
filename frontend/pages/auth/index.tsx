@@ -9,7 +9,7 @@ import Flex from "../../components/Primitives/Flex";
 import centerScreen from "../../styles/centerScreen";
 import LoginForm from "../../components/auth/LoginForm";
 import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
-import { DASHBOARD_PATH } from "../../utils/constants";
+import { DASHBOARD_ROUTE } from "../../utils/routes";
 
 export async function getServerSideProps(
   context: GetSessionParams | undefined
@@ -19,7 +19,7 @@ export async function getServerSideProps(
   if (session) {
     return {
       redirect: {
-        destination: DASHBOARD_PATH,
+        destination: DASHBOARD_ROUTE,
         permanent: false,
       },
     };

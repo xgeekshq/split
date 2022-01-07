@@ -7,7 +7,7 @@ import CardEntity from './card.entity';
 @Entity('boards')
 export default class BoardEntity {
   @ObjectIdColumn()
-  _id: ObjectId;
+  _id?: ObjectId;
 
   @Column({ nullable: false })
   title!: string;
@@ -29,7 +29,7 @@ export default class BoardEntity {
 
   @Column({ array: true, nullable: false })
   cards!: CardEntity[];
-  
+
   @CreateDateColumn()
   creationDate!: Date;
 }
