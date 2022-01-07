@@ -5,13 +5,12 @@ import { RedirectableProviderType } from "next-auth/providers";
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { LoginUser } from "../../types/user";
-import Flex from "../Primitives/Flex";
-import Text from "../Primitives/Text";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_PATH } from "../../utils/constants";
 import AuthButton from "./AuthButton";
+import AuthError from "./AuthError";
 
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
@@ -41,22 +40,7 @@ const LoginForm: React.FC = () => {
           onLogin(credentials);
         })}
       >
-        <Flex>
-          {loginError ? (
-            <Text
-              color="red"
-              css={{
-                mb: "$16",
-                backgroundColor: "$red5",
-                fontWeight: "bold",
-                p: "$16",
-                width: "100%",
-              }}
-            >
-              {ErrorMessages.INVALID_CREDENTIALS}
-            </Text>
-          ) : null}
-        </Flex>
+        {loginError && <AuthError text={ErrorMessages.INVALID_CREDENTIALS} />}
         <CompoundFieldSet label="Email" inputType="text" id="email" />
         <CompoundFieldSet label="Password" inputType="password" id="password" />
         <AuthButton label=" Sign in" />

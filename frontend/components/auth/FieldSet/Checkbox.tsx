@@ -4,7 +4,7 @@ import Label from "../../Primitives/Label";
 import { UserYup } from "../../../types/user";
 import Flex from "../../Primitives/Flex";
 
-const FormCheckbox: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
+const Checkbox: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
   return (
     <Flex wrap="noWrap" align="center">
       <TextField id={id} type="checkbox" {...register(id as UserYup)} css={{ mr: "$10" }} />
@@ -15,4 +15,4 @@ const FormCheckbox: React.FC<FormCompoundFieldSetType> = ({ label, id, register 
   );
 };
 
-export default FormCheckbox;
+export default Checkbox;

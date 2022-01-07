@@ -15,6 +15,9 @@ const Text = styled("span", {
       12: {
         fontSize: "$12",
       },
+      14: {
+        fontSize: "$14",
+      },
       16: {
         fontSize: "$16",
       },

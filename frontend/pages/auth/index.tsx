@@ -1,13 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { getSession, GetSessionParams } from "next-auth/react";
 import Flex from "../../components/Primitives/Flex";
 import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
 import { DASHBOARD_PATH } from "../../utils/constants";
 import Auth from "../../components/auth";
 import Grid from "../../components/Primitives/Grid";
-import profilePic from "../../public/1200.png";
 
 export async function getServerSideProps(
   context: GetSessionParams | undefined
@@ -34,9 +32,9 @@ const AuthPage: React.FC = () => {
       <Link href="/">
         <h1>Divide and conquer</h1>
       </Link>
-      <Grid columns={[1, 2]}>
+      <Grid columns={[1, 2]} alignItems="normal">
         <Auth />
-        <Image src={profilePic} alt="Picture of the author" width={500} height={500} />
+        <img src={"https://via.placeholder.com/600"} width={600} height={600} />
       </Grid>
     </Flex>
   );

@@ -2,13 +2,12 @@ import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import useUser from "../../hooks/useUser";
-import Flex from "../Primitives/Flex";
 import { User } from "../../types/user";
-import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
 import AuthButton from "./AuthButton";
+import AuthError from "./AuthError";
 
 const RegisterForm: React.FC = () => {
   const { setPw, createUser } = useUser();
@@ -28,24 +27,11 @@ const RegisterForm: React.FC = () => {
           }
         })}
       >
-        <Flex>
-          {isError ? (
-            <Text
-              color="red"
-              css={{
-                mb: "$16",
-                backgroundColor: "$red5",
-                fontWeight: "bold",
-                p: "$16",
-                width: "100%",
-              }}
-            >
-              {ErrorMessages[error?.response?.data.message] ?? ErrorMessages.DEFAULT}
-            </Text>
-          ) : null}
-        </Flex>
-        <CompoundFieldSet label="Email" inputType="text" id="email" />
+        {isError && (
+          <AuthError text={ErrorMessages[error?.response?.data.message] ?? ErrorMessages.DEFAULT} />
+        )}
         <CompoundFieldSet label="Name" inputType="text" id="name" />
+        <CompoundFieldSet label="Email" inputType="text" id="email" />
         <CompoundFieldSet label="Password" inputType="password" id="password" showHoverCard />
         <CompoundFieldSet
           label="Password confirmation"
