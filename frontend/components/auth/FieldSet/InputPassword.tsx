@@ -5,13 +5,13 @@ import Label from "../../Primitives/Label";
 import { UserYup } from "../../../types/user";
 import Button from "../../Primitives/Button";
 import { styled } from "../../../stitches.config";
-import { FormCompoundFieldSetType } from "../../../types/compoundFieldSet";
+import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import Flex from "../../Primitives/Flex";
 
 const StyledEyeOpenIcon = styled(EyeOpenIcon, { size: "$20" });
 const StyledEyeClosedIcon = styled(EyeNoneIcon, { size: "$20" });
 
-const InputPassword: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
+const InputPassword: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
   const [showPw, setShowPw] = useState(false);
 
   return (
@@ -23,7 +23,7 @@ const InputPassword: React.FC<FormCompoundFieldSetType> = ({ label, id, register
         size="3"
         css={{
           p: "$16",
-          "&:focus ~ span": { fontSize: "$14", transform: "translateY(-1.7rem)" },
+          "&:focus ~ span": { fontSize: "$14", transform: "translateY(-1.7rem)", color: "$accent" },
           "&:not(:placeholder-shown) ~ span": {
             fontSize: "$14",
             transform: "translateY(-1.7rem)",

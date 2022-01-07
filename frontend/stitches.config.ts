@@ -20,7 +20,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         hiContrast: "$slate12",
         loContrast: "white",
         body: "white",
-        link: "#0066FF",
+        accent: "#0066FF",
       },
       fontSizes: {
         8: "0.35rem",

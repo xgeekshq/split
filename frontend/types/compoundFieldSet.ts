@@ -8,6 +8,6 @@ export interface CompoundFieldSetType {
   showHoverCard?: boolean;
 }
 
-export type FormCompoundFieldSetType = Pick<CompoundFieldSetType, "id" | "label"> & {
+export type ItemCompoundFieldSetType = Pick<CompoundFieldSetType, "id" | "label"> & {
   register: UseFormRegister<User>;
 };

@@ -1,10 +1,10 @@
 import TextField from "../../Primitives/TextField";
-import { FormCompoundFieldSetType } from "../../../types/compoundFieldSet";
+import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import Label from "../../Primitives/Label";
 import { UserYup } from "../../../types/user";
 import Flex from "../../Primitives/Flex";
 
-const Checkbox: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
+const Checkbox: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
   return (
     <Flex wrap="noWrap" align="center">
       <TextField id={id} type="checkbox" {...register(id as UserYup)} css={{ mr: "$10" }} />

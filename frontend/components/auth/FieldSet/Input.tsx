@@ -1,10 +1,10 @@
 import TextField from "../../Primitives/TextField";
 import Label from "../../Primitives/Label";
 import { UserYup } from "../../../types/user";
-import { FormCompoundFieldSetType } from "../../../types/compoundFieldSet";
+import { ItemCompoundFieldSetType } from "../../../types/compoundFieldSet";
 import Flex from "../../Primitives/Flex";
 
-const Input: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
+const Input: React.FC<ItemCompoundFieldSetType> = ({ label, id, register }) => {
   return (
     <Flex direction="column" justify="center">
       <TextField
@@ -14,7 +14,7 @@ const Input: React.FC<FormCompoundFieldSetType> = ({ label, id, register }) => {
         size="3"
         css={{
           p: "$16",
-          "&:focus ~ span": { fontSize: "$14", transform: "translateY(-1.7rem)" },
+          "&:focus ~ span": { fontSize: "$14", transform: "translateY(-1.7rem)", color: "$accent" },
           "&:not(:placeholder-shown) ~ span": {
             fontSize: "$14",
             transform: "translateY(-1.7rem)",

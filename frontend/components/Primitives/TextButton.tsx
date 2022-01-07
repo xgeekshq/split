@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../stitches.config";
 
 const Span = styled("span", {
-  color: "$link",
+  color: "$accent",
   cursor: "pointer",
   fontWeight: "bold",
 
