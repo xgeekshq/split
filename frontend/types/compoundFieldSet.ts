@@ -1,6 +1,13 @@
+import { UseFormRegister } from "react-hook-form";
+import { User } from "./user";
+
 export interface CompoundFieldSetType {
-  label: string;
+  label: string | (string | JSX.Element)[];
   id: string;
-  inputType: string;
-  tabValue?: string;
+  inputType: "text" | "password" | "checkbox";
+  showHoverCard?: boolean;
 }
+
+export type FormCompoundFieldSetType = Pick<CompoundFieldSetType, "id" | "label"> & {
+  register: UseFormRegister<User>;
+};

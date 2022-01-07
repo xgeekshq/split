@@ -8,6 +8,7 @@ import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
 import AuthButton from "./AuthButton";
 import AuthError from "./AuthError";
+import TextButton from "../Primitives/TextButton";
 
 const RegisterForm: React.FC = () => {
   const { setPw, createUser } = useUser();
@@ -40,7 +41,12 @@ const RegisterForm: React.FC = () => {
           showHoverCard
         />
         <CompoundFieldSet
-          label="By signing up you agree to our Terms and Privacy Policy"
+          label={[
+            "By signing up you agree to our ",
+            <TextButton text="Terms" onClick={() => {}} />,
+            " and ",
+            <TextButton text="Privacy Policy" onClick={() => {}} />,
+          ]}
           id="termsAndPrivacyPolicy"
           inputType="checkbox"
         />

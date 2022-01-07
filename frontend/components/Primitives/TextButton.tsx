@@ -1,15 +1,17 @@
 import React from "react";
-import { styled } from "@stitches/react";
+import { styled } from "../../stitches.config";
 
 const Span = styled("span", {
-  color: "-webkit-link",
+  color: "$link",
   cursor: "pointer",
+  fontWeight: "bold",
 
   variants: {
     type: {
       secondary: {
         color: "black",
         textDecoration: "underline",
+        fontWeight: "normal",
       },
     },
   },
