@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import DatabaseModule from './database/database.module';
-import UsersModule from './users/users.module';
+import UsersModule from './models/users/users.module';
 import AuthModule from './auth/auth.module';
-import BoardsModule from './boards/boards.module';
+import BoardsModule from './models/boards/boards.module';
 import ActionsModule from './actions/actions.module';
 
 @Module({

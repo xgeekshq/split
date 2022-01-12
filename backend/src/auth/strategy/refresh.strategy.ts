@@ -3,12 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import UsersService from '../../users/users.service';
+import UsersService from '../../models/users/users.service';
 import TokenPayload from '../../interfaces/tokenPayload.interface';
-import {
-  describeExceptions,
-  UNAUTHORIZED,
-} from '../../constants/httpExceptions';
+import { UNAUTHORIZED } from '../../constants/httpExceptions';
 
 @Injectable()
 export default class JwtRefreshTokenStrategy extends PassportStrategy(
@@ -28,8 +25,7 @@ export default class JwtRefreshTokenStrategy extends PassportStrategy(
 
   async validate(request: Request, payload: TokenPayload) {
     const { authorization } = request.headers;
-    if (!authorization)
-      throw new HttpException(describeExceptions(UNAUTHORIZED), 401);
+    if (!authorization) throw new HttpException(UNAUTHORIZED, 401);
     const refreshToken = authorization.replace('Bearer', '').trim();
     return this.userService.getUserIfRefreshTokenMatches(
       refreshToken,

@@ -1,0 +1,20 @@
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { Transform, TransformFnParams } from 'class-transformer';
+import CardDto from '../card/card.dto';
+
+export default class ColumnDto {
+  @IsOptional()
+  _id?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Transform(({ value }): string => value?.trim())
+  title!: string;
+
+  @IsNotEmpty()
+  @Transform(({ value }: TransformFnParams) => value.trim())
+  color!: string;
+
+  @IsNotEmpty()
+  cards!: CardDto[];
+}

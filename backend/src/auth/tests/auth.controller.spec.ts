@@ -1,12 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from '@nestjs/mongoose';
 import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import UsersService from '../../users/users.service';
+import UsersService from '../../models/users/users.service';
 import AuthController from '../auth.controller';
-import UserEntity from '../../users/entity/user.entity';
+import User from '../../models/users/schemas/user.schema';
 import mockedUser from '../../mocks/user.mock';
 import AuthService from '../auth.service';
 import jwtService from '../../mocks/jwtService.mock';
@@ -14,7 +14,7 @@ import configService from '../../mocks/configService.mock';
 
 describe('AuthController', () => {
   let app: INestApplication;
-  let userData: UserEntity;
+  let userData: User;
 
   beforeEach(async () => {
     const usersRepository = {
@@ -37,7 +37,7 @@ describe('AuthController', () => {
           useValue: jwtService,
         },
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: getModelToken('User'),
           useValue: usersRepository,
         },
       ],

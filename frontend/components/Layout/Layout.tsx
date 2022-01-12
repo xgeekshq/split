@@ -8,6 +8,7 @@ import Flex from "../Primitives/Flex";
 import { REFRESH_TOKEN_ERROR } from "../../utils/constants";
 import "react-toastify/dist/ReactToastify.css";
 import { ShouldRenderNav } from "../../utils/routes";
+import { instance } from "../../utils/fetchData";
 
 const Main = styled("main", Flex, { px: "3vw", py: "$50" });
 
@@ -16,6 +17,7 @@ const Layout: React.FC = ({ children }) => {
   const { data: session, status } = useSession({ required: false });
 
   useEffect(() => {
+    instance.defaults.headers.common.Authorization = `Bearer ${session?.accessToken}`;
     if (session?.error === REFRESH_TOKEN_ERROR) {
       signOut({ callbackUrl: "/" });
     }
