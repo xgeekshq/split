@@ -8,9 +8,9 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import BoardsService from 'src/boards/boards.service';
+import BoardsService from 'src/models/boards/boards.service';
 import JoinPayload from 'src/interfaces/joinPayload.interface';
-import UpdateBoardPayload from 'src/interfaces/updateBoardPayload.interface';
+import { BoardDocument } from 'src/models/boards/schemas/board.schema';
 
 @WebSocketGateway({ cors: true })
 export default class ActionsGateway
@@ -23,14 +23,11 @@ export default class ActionsGateway
 
   private logger: Logger = new Logger('AppGateway');
 
-  @SubscribeMessage('updateBoard')
-  async handleMessageUpdate(client: Socket, payload: UpdateBoardPayload) {
-    const result = await this.boardsService.updateBoardPatch(payload);
-    if (result)
-      this.server
-        .to(payload.id)
-        .except(client.id)
-        .emit('updateBoard', payload.changes);
+  sendUpdatedBoard(newBoard: BoardDocument, excludedClient: string) {
+    this.server
+      .to(newBoard._id.toString())
+      .except(excludedClient)
+      .emit('updateAllBoard', newBoard);
   }
 
   afterInit() {

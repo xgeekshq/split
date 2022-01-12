@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import UsersService from '../users/users.service';
+import UsersService from '../models/users/users.service';
 import Errors from '../database/types/errors';
-import RegisterDto from '../users/dto/register.dto';
+import RegisterDto from '../models/users/dto/register.dto';
 import { compare, encrypt } from '../utils/bcrypt';
 import TokenPayload from '../interfaces/tokenPayload.interface';
 import {
@@ -13,11 +13,7 @@ import {
   JWT_REFRESH_TOKEN_SECRET,
   describeJWT,
 } from '../constants/jwt';
-import {
-  INVALID_CREDENTIALS,
-  EMAIL_EXISTS,
-  describeExceptions,
-} from '../constants/httpExceptions';
+import { INVALID_CREDENTIALS, EMAIL_EXISTS } from '../constants/httpExceptions';
 
 @Injectable()
 export default class AuthService {
@@ -30,10 +26,7 @@ export default class AuthService {
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     const user = await this.usersService.getByEmail(email);
     if (!user.password)
-      throw new HttpException(
-        describeExceptions(INVALID_CREDENTIALS),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
     await this.verifyPassword(plainTextPassword, user.password);
     user.password = undefined;
     return user;
@@ -45,10 +38,7 @@ export default class AuthService {
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
-      throw new HttpException(
-        describeExceptions(INVALID_CREDENTIALS),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -63,10 +53,7 @@ export default class AuthService {
       return createdUser;
     } catch (error) {
       if (error?.code === Errors.UniqueViolation) {
-        throw new HttpException(
-          describeExceptions(EMAIL_EXISTS),
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException(EMAIL_EXISTS, HttpStatus.BAD_REQUEST);
       }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

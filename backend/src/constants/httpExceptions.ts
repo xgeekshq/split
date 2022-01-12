@@ -1,39 +1,16 @@
-export const USER_NOT_FOUND = Symbol('user not found');
-export const INVALID_CREDENTIALS = Symbol('invalid credentials');
+export const USER_NOT_FOUND = 'USER_NOT_FOUND';
+export const INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
 
-export const EMAIL_EXISTS = Symbol('email exists');
-export const EMAIL_NOT_EXISTS = Symbol('email does not exist');
-export const EMAIL_DONT_MATCH = Symbol('emails does not match');
+export const EMAIL_EXISTS = 'EMAIL_EXISTS';
+export const EMAIL_NOT_EXISTS = 'EMAIL_NOT_EXISTS';
+export const EMAIL_DONT_MATCH = 'EMAIL_DONT_MATCH';
 
-export const BOARD_NOT_FOUND = Symbol('board not found');
-export const BOARDS_NOT_FOUND = Symbol('boards not found');
+export const BOARD_NOT_FOUND = 'BOARD_NOT_FOUND';
+export const BOARDS_NOT_FOUND = 'BOARDS_NOT_FOUND';
 
-export const TOKENS_NOT_MATCHING = Symbol('tokens not match');
+export const TOKENS_NOT_MATCHING = 'TOKENS_NOT_MATCHING';
 
-export const UNAUTHORIZED = Symbol('unauthorized');
-export const UPDATE_FAILED = Symbol('update failed');
-
-export function describeExceptions(key: symbol): string {
-  switch (key) {
-    case USER_NOT_FOUND:
-      return 'USER_NOT_FOUND';
-    case INVALID_CREDENTIALS:
-      return 'INVALID_CREDENTIALS';
-    case EMAIL_EXISTS:
-      return 'EMAIL_EXISTS';
-    case EMAIL_NOT_EXISTS:
-      return 'EMAIL_NOT_EXISTS';
-    case BOARD_NOT_FOUND:
-      return 'BOARD_NOT_FOUND';
-    case BOARDS_NOT_FOUND:
-      return 'BOARDS_NOT_FOUND';
-    case TOKENS_NOT_MATCHING:
-      return 'TOKENS_NOT_MATCHING';
-    case UNAUTHORIZED:
-      return 'UNAUTHORIZED';
-    case UPDATE_FAILED:
-      return 'UPDATE_FAILED';
-    default:
-      return 'ERROR';
-  }
-}
+export const UNAUTHORIZED = 'UNAUTHORIZED';
+export const UPDATE_FAILED = 'UPDATE_FAILED';
+export const DELETE_FAILED = 'DELETE_FAILED';
+export const INSERT_FAILED = 'INSERT_FAILED';

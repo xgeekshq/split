@@ -1,11 +1,10 @@
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
+import { getModelToken } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import AuthService from '../auth.service';
-import UserEntity from '../../users/entity/user.entity';
-import UsersService from '../../users/users.service';
+import UsersService from '../../models/users/users.service';
 import jwtService from '../../mocks/jwtService.mock';
 import configService from '../../mocks/configService.mock';
 import mockedUser from '../../mocks/user.mock';
@@ -39,7 +38,7 @@ describe('The AuthenticationService', () => {
           useValue: jwtService,
         },
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: getModelToken('User'),
           useValue: usersRepository,
         },
       ],
