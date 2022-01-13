@@ -17,7 +17,8 @@
     },
     "ecmaVersion": 12,
     "sourceType": "module",
-    "extraFileExtensions": [".css"]
+    "extraFileExtensions": [".css"],
+    "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
@@ -25,6 +26,8 @@
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
     "react/jsx-props-no-spreading": "off",
     "no-underscore-dangle": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "react/function-component-definition": "off",
+    "import/no-named-as-default": "off"
   }
 }

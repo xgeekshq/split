@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
   AlertDialogContent,
 } from "../../Primitives/AlertDialog";
-import { EditBoardTitle } from "../../../types/title";
+import EditBoardTitle from "../../../types/board/editTitle";
 
 const CloseButton = styled(AlertDialogCancel, Button, {
   position: "relative",
@@ -33,12 +33,12 @@ interface EditTitleWithBoardId extends EditBoardTitle {
 }
 
 const DeleteBoardButton: React.FC<EditTitleWithBoardId> = ({ boardId, isEditing, onClickEdit }) => {
-  const { removeBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+  const { deleteBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
 
   const handleRemoveBoard = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     if (isEditing) onClickEdit(!isEditing);
-    removeBoard.mutate(boardId);
+    deleteBoard.mutate(boardId);
   };
 
   const handleCloseDialog = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

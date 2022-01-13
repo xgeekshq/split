@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class UpdateCardPositionDto {
   @IsNotEmpty()
   @IsString()
-  columnId!: string;
+  targetColumnId!: string;
 
   @IsNotEmpty()
   @IsString()
@@ -15,7 +15,7 @@ export class UpdateCardPositionDto {
 
   @IsNotEmpty()
   @IsNumber()
-  position!: number;
+  newPosition!: number;
 
   @IsNotEmpty()
   @IsString()

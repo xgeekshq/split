@@ -1,22 +1,22 @@
-import React, { Dispatch, useContext, useEffect } from "react";
+import React, { Dispatch, useContext, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { io, Socket } from "socket.io-client";
 import { Nullable } from "../types/common";
 import useStateMachine, { State, Event } from "../stateMachine/storeStateMachine";
-import { BoardType } from "../types/board";
+import BoardType from "../types/board/board";
 import { NEXT_PUBLIC_BACKEND_URL } from "../utils/constants";
-import BoardChanges from "../types/boardChanges";
 import { CheckIsBoardPage } from "../utils/routes";
+import Action from "../types/action";
 
 type ContextType = {
-  state: State<BoardType, string, Socket>;
-  dispatch: Dispatch<Event<BoardType, string, Socket, BoardChanges>>;
+  state: State<BoardType, Socket, Action>;
+  dispatch: Dispatch<Event<BoardType, Socket, Action>>;
 };
 
 const Context = React.createContext<Nullable<ContextType>>(undefined);
 
 const StoreProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useStateMachine<BoardType, string, Socket, BoardChanges>(undefined);
+  const [state, dispatch] = useStateMachine<BoardType, Socket, Action>();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,19 +39,14 @@ const StoreProvider: React.FC = ({ children }) => {
       state.socket?.on("connect", () => {
         state.socket?.emit("join", { boardId: state.board?._id });
       });
-      state.socket?.on("updateBoard", (payload: BoardChanges) => {
-        if (state.board && (payload.type === "CARD" || payload.type === "COLUMN")) {
-          dispatch({ type: payload.type, val: payload });
-        }
+      state.socket?.on("updateAllBoard", (payload: BoardType) => {
+        dispatch({ type: "SET_BOARD", val: payload as unknown as BoardType });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.socket]);
 
-  const value = {
-    state,
-    dispatch,
-  };
+  const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };

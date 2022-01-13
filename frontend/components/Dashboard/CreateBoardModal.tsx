@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSession } from "next-auth/react";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircledIcon, Cross1Icon } from "@modulz/radix-icons";
-import { v4 as uuidv4 } from "uuid";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
 import {
@@ -17,7 +15,7 @@ import TextField from "../Primitives/TextField";
 import Flex from "../Primitives/Flex";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardType } from "../../types/board";
+import BoardType from "../../types/board/board";
 import IconButton from "../Primitives/IconButton";
 import SchemaCreateBoard from "../../schema/schemaCreateBoardForm";
 
@@ -32,7 +30,6 @@ const FooterContainer = styled(Flex);
 const CreateBoardModal: React.FC<{
   setFetchLoading: (state: boolean) => void;
 }> = ({ setFetchLoading }) => {
-  const { data: session } = useSession({ required: false });
   const { createBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false }, undefined);
   const { isLoading, isError } = createBoard;
   const {
@@ -40,37 +37,25 @@ const CreateBoardModal: React.FC<{
     handleSubmit,
     formState: { errors },
   } = useForm<BoardType>({
-    resolver: yupResolver(SchemaCreateBoard),
+    resolver: zodResolver(SchemaCreateBoard),
   });
 
   useEffect(() => {
     setFetchLoading(isLoading);
   }, [isError, isLoading, setFetchLoading]);
 
-  const handleClick = useCallback(
-    (data: BoardType) => {
-      const idTodo = uuidv4();
-      const idProgress = uuidv4();
-      const idActions = uuidv4();
-
-      createBoard.mutate({
-        title: data.title,
-        columns: [
-          { _id: idTodo, title: "todo", color: "red", cardsOrder: [] },
-          { _id: idProgress, title: "progress", color: "blue", cardsOrder: [] },
-          { _id: idActions, title: "actions", color: "green", cardsOrder: [] },
-        ],
-        columnsOrder: [idTodo, idProgress, idActions],
-        locked: false,
-        createdBy: {
-          name: session?.user.name ?? "anonymous",
-          email: session?.user.email ?? "anonymous@gmail.com",
-        },
-        cards: [],
-      });
-    },
-    [createBoard, session?.user.email, session?.user.name]
-  );
+  const handleClick = (data: BoardType) => {
+    createBoard.mutate({
+      title: data.title,
+      columns: [
+        { title: "todo", color: "#CDE9D6", cards: [] },
+        { title: "progress", color: "#F8E8CF", cards: [] },
+        { title: "actions", color: "#D2E8FD", cards: [] },
+      ],
+      isPublic: true,
+      maxVotes: 6,
+    });
+  };
 
   return (
     <DialogRoot>

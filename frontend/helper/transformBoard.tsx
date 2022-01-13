@@ -1,45 +1,31 @@
-import { BoardType } from "../types/board";
-import BoardChanges, { CardChanges, ColumnChanges } from "../types/boardChanges";
+import Action from "../types/action";
+import BoardType from "../types/board/board";
+import CardType from "../types/card/card";
+import UpdateCardPositionDto from "../types/card/updateCardPosition.dto";
 import { addElementAtIndex, removeElementAtIndex } from "../utils/array";
+import { UPDATE_CARD_POSITION } from "../utils/constants";
 
-const handleCard = <BoardT extends BoardType, CardChangesT extends CardChanges>(
+const handleUpdateCardPosition = <BoardT extends BoardType>(
   board: BoardT,
-  changes: CardChangesT
+  changes: UpdateCardPositionDto
 ) => {
-  const { colIdToAdd, colIdToRemove, cardIdxToAdd, cardIdxToRemove } = changes;
-  const colToRemove = board.columns.find((col) => col._id === colIdToRemove);
-  const colToAdd = board.columns.find((col) => col._id === colIdToAdd);
-  const cardToAdd = colToRemove?.cardsOrder[cardIdxToRemove];
+  const { targetColumnId, oldColumnId, newPosition, oldPosition } = changes;
+  const colToRemove = board.columns.find((col) => col._id === oldColumnId);
+  const colToAdd = board.columns.find((col) => col._id === targetColumnId);
+  const cardToAdd = colToRemove?.cards[oldPosition];
   if (cardToAdd && colToAdd && colToRemove) {
-    colToRemove.cardsOrder = removeElementAtIndex<string>(colToRemove?.cardsOrder, cardIdxToRemove);
-    colToAdd.cardsOrder = addElementAtIndex<string>(colToAdd.cardsOrder, cardIdxToAdd, cardToAdd);
+    colToRemove.cards = removeElementAtIndex<CardType>(colToRemove.cards, oldPosition);
+    colToAdd.cards = addElementAtIndex<CardType>(colToAdd.cards, newPosition, cardToAdd);
   }
-
   return board;
 };
 
-const handleCol = <BoardT extends BoardType, ColumnChangesT extends ColumnChanges>(
-  board: BoardT,
-  changes: ColumnChangesT
-) => {
-  const { colIdxToAdd, colIdxToRemove } = changes;
-  const newCol = board.columnsOrder[colIdxToRemove];
-  board.columnsOrder = removeElementAtIndex<string>(board.columnsOrder, colIdxToRemove);
-  board.columnsOrder = addElementAtIndex<string>(board.columnsOrder, colIdxToAdd, newCol);
-  return board;
-};
-
-const transformBoard = <BoardT, BoardChangesT>(
-  board: BoardT,
-  changes: BoardChangesT
-): BoardType => {
-  const newBoard: BoardType = JSON.parse(JSON.stringify(board));
-
-  switch ((changes as unknown as BoardChanges).type) {
-    case "CARD":
-      return handleCard(newBoard, changes as unknown as CardChanges);
-    case "COLUMN":
-      return handleCol(newBoard, changes as unknown as ColumnChanges);
+const transformBoard = <BoardT, ActionT>(board: BoardT, action: ActionT): BoardType => {
+  const newBoard = { ...board } as unknown as BoardType;
+  const { type, changes } = action as unknown as Action;
+  switch (type) {
+    case UPDATE_CARD_POSITION:
+      return handleUpdateCardPosition(newBoard, changes);
     default:
       return newBoard;
   }

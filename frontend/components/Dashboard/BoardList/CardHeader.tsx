@@ -2,13 +2,12 @@ import { CopyIcon, Pencil2Icon } from "@modulz/radix-icons";
 import ToastMessage from "../../../utils/toast";
 import { styled } from "../../../stitches.config";
 import Flex from "../../Primitives/Flex";
-import Button from "../../Primitives/Button";
 import IconButton from "../../Primitives/IconButton";
-import { BoardType } from "../../../types/board";
+import BoardType from "../../../types/board/board";
 import { NEXT_PUBLIC_NEXTAUTH_URL } from "../../../utils/constants";
 import DeleteBoardButton from "./DeleteBoardButton";
-import { EditBoardTitle } from "../../../types/title";
 import { ROUTES } from "../../../utils/routes";
+import EditBoardTitle from "../../../types/board/editTitle";
 
 const Container = styled(Flex);
 const CopyUrlIcon = styled(CopyIcon, IconButton);
@@ -32,18 +31,14 @@ const CardHeader: React.FC<CardHeaderType> = ({ board, isEditing, onClickEdit })
     onClickEdit(!isEditing);
   };
 
-  if (!board._id) return null;
   return (
-    <Container
-      justify="between"
-      css={{ alignSelf: "flex-start", mt: "$4", width: "100%", pointerEvents: "all" }}
-    >
-      <Button onClick={handleCopyUrl}>
-        <CopyUrlIcon size="20" />
-      </Button>
-      <Button onClick={handleEditTitle}>
-        <EditIcon size="20" />
-      </Button>
+    <Container justify="between" css={{ alignSelf: "flex-start", mt: "$4", width: "100%" }}>
+      <IconButton variant="ghost" size="20" onClick={handleCopyUrl}>
+        <CopyUrlIcon />
+      </IconButton>
+      <IconButton variant="ghost" size="20" onClick={handleEditTitle}>
+        <EditIcon />
+      </IconButton>
       <DeleteBoardButton isEditing={isEditing} boardId={board._id} onClickEdit={onClickEdit} />
     </Container>
   );

@@ -1,15 +1,20 @@
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import { REFRESH_TOKEN_ERROR, SECRET } from "../../../utils/constants";
+import {
+  AUTH_PATH,
+  DASHBOARD_PATH,
+  ERROR_500_PAGE,
+  REFRESH_TOKEN_ERROR,
+  SECRET,
+} from "../../../utils/constants";
 import { LoginUser, User } from "../../../types/user";
 import { login, refreshToken } from "../../../api/authService";
 import { Token } from "../../../types/token";
-import { AUTH_ROUTE, DASHBOARD_ROUTE, ERROR_500_PAGE } from "../../../utils/routes";
 
 async function refreshAccessToken(prevToken: JWT) {
   try {
-    const data: Token = await refreshToken(prevToken.refreshToken);
+    const data: Token = await refreshToken(prevToken.refreshToken ?? null);
     return {
       ...prevToken,
       accessToken: data.token,
@@ -35,14 +40,15 @@ export default NextAuth({
           password: credentials?.password,
         };
         const data: User = await login(loginUser);
-
         if (data) {
-          return {
+          const token = {
             name: data.name,
             email: data.email,
+            id: data.id,
             accessToken: { ...data.accessToken },
             refreshToken: { ...data.refreshToken },
           };
+          return token;
         }
         return null;
       },
@@ -63,14 +69,15 @@ export default NextAuth({
           accessToken: user.accessToken.token,
           accessTokenExpires: Date.now() + +user.accessToken.expiresIn * 1000,
           refreshToken: user.refreshToken.token,
+          id: user.id,
           name: token?.name,
           email: token?.email,
           error: "",
         };
       }
-      // if (Date.now() < token.accessTokenExpires - 5000) {
-      //   return token;
-      // }
+      if (Date.now() < token.accessTokenExpires) {
+        return token;
+      }
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
@@ -80,6 +87,7 @@ export default NextAuth({
         newSession.accessToken = token.accessToken;
         newSession.refreshToken = token.refreshToken;
         newSession.user.email = token.email;
+        newSession.user.id = token.id;
         newSession.error = token.error;
         newSession.expires = token.accessTokenExpires;
       }
@@ -87,7 +95,7 @@ export default NextAuth({
     },
     redirect({ url, baseUrl }) {
       switch (url) {
-        case DASHBOARD_ROUTE:
+        case DASHBOARD_PATH:
           return `${baseUrl}${url}`;
         default:
           return url.startsWith(baseUrl) ? url : baseUrl;
@@ -95,7 +103,7 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: AUTH_ROUTE,
+    signIn: AUTH_PATH,
     error: ERROR_500_PAGE,
   },
 });

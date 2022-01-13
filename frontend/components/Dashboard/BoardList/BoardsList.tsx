@@ -1,4 +1,4 @@
-import { BoardType } from "../../../types/board";
+import BoardType from "../../../types/board/board";
 import Flex from "../../Primitives/Flex";
 import CardBody from "./CardBody";
 

@@ -5,17 +5,17 @@ import TextField from "../../Primitives/TextField";
 import Fieldset from "../../Primitives/Fieldset";
 import Label from "../../Primitives/Label";
 import Text from "../../Primitives/Text";
-import { User, UserYup } from "../../../types/user";
+import { User, UserZod } from "../../../types/user";
 import Flex from "../../Primitives/Flex";
 import Button from "../../Primitives/Button";
 import { styled } from "../../../stitches.config";
-import { CompoundFieldSetType } from "../../../types/compoundFieldSet";
 import HoverCard from "./HoverCardFieldSet";
+import { AuthFieldSetType } from "../../../types/authFieldSet";
 
 const StyledEyeOpenIcon = styled(EyeOpenIcon, { size: "$20" });
 const StyledEyeClosedIcon = styled(EyeNoneIcon, { size: "$20" });
 
-const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType, tabValue }) => {
+const AuthFieldSet: React.FC<AuthFieldSetType> = ({ label, id, inputType, tabValue }) => {
   const [showPw, setShowPw] = useState(inputType !== "password");
 
   const handleShowPw = () => {
@@ -42,7 +42,7 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType
             "&:focus ~ span": { fontSize: "$12", transform: "translateY(-15px)" },
             "&:not(:placeholder-shown) ~ span": { fontSize: "$12", transform: "translateY(-15px)" },
           }}
-          {...register(id as UserYup)}
+          {...register(id as UserZod)}
         />
         <Label
           htmlFor={id}
@@ -77,11 +77,11 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType
         )}
       </Flex>
       <Flex align="center" css={{ mt: "$8" }}>
-        {errors[id as UserYup] && <Text color="red">{errors[id as UserYup]?.message}</Text>}
+        {errors[id as UserZod] && <Text color="red">{errors[id as UserZod]?.message}</Text>}
         {id === "password" && errors[id] && tabValue !== "login" && <HoverCard />}
       </Flex>
     </Fieldset>
   );
 };
 
-export default CompoundFieldSet;
+export default AuthFieldSet;

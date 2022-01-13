@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { useMutation, useQuery } from "react-query";
 import ToastMessage from "../utils/toast";
-import { BoardType } from "../types/board";
+import BoardType from "../types/board/board";
 import {
-  deleteBoard,
-  getBoard,
-  getBoards,
-  getBoardWithAuth,
-  postBoard,
-  updateBoardTitle,
+  deleteBoardRequest,
+  getBoardRequest,
+  getBoardsRequest,
+  createBoardRequest,
+  updateCardPositionRequest,
+  updateBoardRequest,
 } from "../api/boardService";
-import UseBoardType from "../types/useBoard";
+import UseBoardType from "../types/board/useBoard";
 import { useStoreContext } from "../store/store";
 
 interface AutoFetchProps {
@@ -24,25 +23,25 @@ const useBoard = (
   boardId?: string
 ): UseBoardType => {
   const router = useRouter();
-  const { data: session } = useSession({ required: false });
   const { dispatch } = useStoreContext();
 
-  const getBoardMethod = () => {
-    if (!boardId) return null;
-    return session ? getBoardWithAuth(boardId) : getBoard(boardId);
-  };
+  // #region BOARD
 
-  const fetchBoard = useQuery(["board", { id: boardId }], () => getBoardMethod(), {
-    enabled: autoFetchBoard,
-    refetchOnWindowFocus: autoFetchBoard,
-  });
+  const fetchBoard = useQuery(
+    ["board", { id: boardId }],
+    () => (boardId ? getBoardRequest(boardId) : null),
+    {
+      enabled: autoFetchBoard,
+      refetchOnWindowFocus: autoFetchBoard,
+    }
+  );
 
-  const fetchBoards = useQuery("boards", () => getBoards(), {
+  const fetchBoards = useQuery("boards", () => getBoardsRequest(), {
     enabled: autoFetchBoards,
     refetchOnWindowFocus: autoFetchBoards,
   });
 
-  const createBoard = useMutation(postBoard, {
+  const createBoard = useMutation(createBoardRequest, {
     onSuccess: (data: BoardType) => {
       router.push(`/boards/${data._id}`);
     },
@@ -51,7 +50,7 @@ const useBoard = (
     },
   });
 
-  const removeBoard = useMutation(deleteBoard, {
+  const deleteBoard = useMutation(deleteBoardRequest, {
     onSuccess: () => {
       ToastMessage("Board deleted!", "success");
       fetchBoards.refetch();
@@ -61,7 +60,7 @@ const useBoard = (
     },
   });
 
-  const patchBoardTitle = useMutation(updateBoardTitle, {
+  const updateBoard = useMutation(updateBoardRequest, {
     onSuccess: (board: BoardType, variables) => {
       ToastMessage("Board updated!", "success");
       if (!variables.boardPage) {
@@ -75,7 +74,23 @@ const useBoard = (
     },
   });
 
-  return { createBoard, patchBoardTitle, removeBoard, fetchBoards, fetchBoard };
+  // #endregion
+
+  // #region CARD
+
+  const updateCardPosition = useMutation(updateCardPositionRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch({ type: "SET_BOARD", val: board });
+    },
+    onError: () => {
+      ToastMessage("Board not updated!", "error");
+      fetchBoards.refetch();
+    },
+  });
+
+  // #endregion
+
+  return { fetchBoard, fetchBoards, createBoard, deleteBoard, updateBoard, updateCardPosition };
 };
 
 export default useBoard;

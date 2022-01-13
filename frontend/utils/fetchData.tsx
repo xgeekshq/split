@@ -12,6 +12,14 @@ type Options = {
   token?: string;
 } & AxiosRequestConfig;
 
+export const getHeaderToken = () => {
+  return instance.defaults.headers.common.Authorization;
+};
+
+export const setHeaderToken = (token: string | undefined) => {
+  instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
   const { method = "GET", token } = options ?? {};
 

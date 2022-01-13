@@ -4,7 +4,7 @@ import { styled } from "../../stitches.config";
 import TextField from "../Primitives/TextField";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardType } from "../../types/board";
+import BoardType from "../../types/board/board";
 import Flex from "../Primitives/Flex";
 import ToastMessage from "../../utils/toast";
 
@@ -20,10 +20,7 @@ interface InputTitleBoard {
 
 const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage }) => {
   const [title, setTitle] = useState("");
-  const { patchBoardTitle } = useBoard(
-    { autoFetchBoard: false, autoFetchBoards: false },
-    board._id
-  );
+  const { updateBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false }, board._id);
 
   const handleUpdateTitle = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
@@ -33,9 +30,8 @@ const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage
       return;
     }
     if (title !== board.title && board._id) {
-      patchBoardTitle.mutate({
-        id: board._id,
-        title,
+      updateBoard.mutate({
+        board: { ...board, title },
         boardPage: isBoardPage,
       });
     }

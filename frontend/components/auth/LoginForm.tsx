@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { getSession, signIn } from "next-auth/react";
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
 import Button from "../Primitives/Button";
-import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
+import AuthFieldSet from "./FieldSet/AuthFieldSet";
 import ErrorMessages from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
@@ -18,19 +18,23 @@ import { instance } from "../../utils/fetchData";
 const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState(false);
   const methods = useForm<LoginUser>({
-    resolver: yupResolver(SchemaLoginForm),
+    resolver: zodResolver(SchemaLoginForm),
   });
 
   const onLogin = async (credentials: LoginUser) => {
     try {
-      await signIn<RedirectableProviderType>("credentials", {
+      const result = await signIn<RedirectableProviderType>("credentials", {
         ...credentials,
         callbackUrl: DASHBOARD_ROUTE,
         redirect: false,
       });
-      const session = await getSession();
-      instance.defaults.headers.common.Authorization = `Bearer ${session?.accessToken}`;
-      router.push(DASHBOARD_ROUTE);
+      if (!result?.error) {
+        const session = await getSession();
+        instance.defaults.headers.common.Authorization = `Bearer ${session?.accessToken}`;
+        router.push(DASHBOARD_ROUTE);
+      } else {
+        setLoginError(true);
+      }
     } catch (error) {
       setLoginError(true);
     }
@@ -60,8 +64,8 @@ const LoginForm: React.FC = () => {
               </Text>
             ) : null}
           </Flex>
-          <CompoundFieldSet label="Email" inputType="text" id="email" />
-          <CompoundFieldSet label="Password" inputType="password" id="password" tabValue="login" />
+          <AuthFieldSet label="Email" inputType="text" id="email" />
+          <AuthFieldSet label="Password" inputType="password" id="password" tabValue="login" />
           <Button color="green" size="2" css={{ mt: "$8", width: "100%" }} type="submit">
             Login
           </Button>

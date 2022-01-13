@@ -136,7 +136,7 @@ export default class BoardsService {
     cardId: string,
     updateCardPositionDto: UpdateCardPositionDto,
   ) {
-    const { columnId, position } = updateCardPositionDto;
+    const { targetColumnId, newPosition } = updateCardPositionDto;
 
     const cardToMove = await this.getCardFromBoard(boardId, cardId);
 
@@ -163,13 +163,13 @@ export default class BoardsService {
         .findOneAndUpdate(
           {
             _id: boardId,
-            'columns._id': columnId,
+            'columns._id': targetColumnId,
           },
           {
             $push: {
               'columns.$.cards': {
                 $each: [cardToMove],
-                $position: position,
+                $position: newPosition,
               },
             },
           },

@@ -5,7 +5,7 @@ import { AccessToken, RefreshToken } from "./token";
 import { Nullable } from "./common";
 
 export interface User {
-  _id?: string;
+  id?: string;
   name: string;
   email: string;
   password?: string;
@@ -24,4 +24,4 @@ export interface LoginUser {
   password: Nullable<string>;
 }
 
-export type UserYup = "name" | "email" | "password" | "passwordConf";
+export type UserZod = "name" | "email" | "password" | "passwordConf";

@@ -1,6 +1,6 @@
 import React from "react";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
 import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import useUser from "../../hooks/useUser";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
@@ -8,7 +8,7 @@ import { TabsContent } from "../Primitives/Tab";
 import { User } from "../../types/user";
 import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
-import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
+import CompoundFieldSet from "./FieldSet/AuthFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
 
 const RegisterForm: React.FC = () => {
@@ -16,7 +16,7 @@ const RegisterForm: React.FC = () => {
   const { isError, error } = createUser;
 
   const methods = useForm<User>({
-    resolver: yupResolver(schemaRegisterForm),
+    resolver: zodResolver(schemaRegisterForm),
   });
 
   return (

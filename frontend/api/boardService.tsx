@@ -1,27 +1,41 @@
 import fetchData from "../utils/fetchData";
-import { BoardType, UpdateTitleWithToken } from "../types/board";
-import { Nullable } from "../types/common";
+import BoardType, { BoardToAdd } from "../types/board/board";
+import UpdateCardPositionDto from "../types/card/updateCardPosition.dto";
+import UpdateBoardDto from "../types/board/updateBoard";
 
-export const postBoard = (newBoard: BoardType): Promise<BoardType> => {
+// #region BOARD
+
+export const createBoardRequest = (newBoard: BoardToAdd): Promise<BoardType> => {
   return fetchData(`/boards`, { method: "POST", data: newBoard });
 };
 
-export const updateBoardTitle = ({ id, title }: UpdateTitleWithToken): Promise<BoardType> => {
-  return fetchData(`/boards/${id}/updateTitle`, { method: "PATCH", data: { title } });
+export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType> => {
+  return fetchData(`/boards/${board._id}`, { method: "PUT", data: board });
 };
 
-export const getBoard = (id: Nullable<string>): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, { method: "POST" });
-};
-
-export const getBoardWithAuth = (id: string): Promise<BoardType> => {
+export const getBoardRequest = (id: string): Promise<BoardType> => {
   return fetchData<BoardType>(`/boards/${id}`);
 };
 
-export const getBoards = (): Promise<BoardType[]> => {
+export const getBoardsRequest = (): Promise<BoardType[]> => {
   return fetchData<BoardType[]>(`/boards`);
 };
 
-export const deleteBoard = async (id: string): Promise<BoardType> => {
+export const deleteBoardRequest = async (id: string): Promise<BoardType> => {
   return fetchData(`/boards/${id}`, { method: "DELETE" });
 };
+
+// #endregion
+
+// #region CARD
+
+export const updateCardPositionRequest = (
+  updateCardPosition: UpdateCardPositionDto
+): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    `/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/updateCardPosition`,
+    { method: "PUT", data: updateCardPosition }
+  );
+};
+
+// #endregion

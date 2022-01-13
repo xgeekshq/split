@@ -5,7 +5,6 @@ import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Hydrate } from "react-query/hydration";
 import Head from "next/head";
-import { IdProvider } from "@radix-ui/react-id";
 import globalStyles from "../styles/globals";
 import Layout from "../components/Layout/Layout";
 import { StoreProvider } from "../store/store";
@@ -15,7 +14,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
 
   globalStyles();
   return (
-    <IdProvider>
+    <>
       <Head>
         <title>Divide & Conquer</title>
       </Head>
@@ -31,7 +30,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </SessionProvider>
-    </IdProvider>
+    </>
   );
 }
 
