@@ -12,14 +12,17 @@ import BoardsService from './boards.service';
 import BoardDto from './dto/board.dto';
 import JwtAuthenticationGuard from '../../guards/jwtAuth.guard';
 import RequestWithUser from '../../interfaces/requestWithUser.interface';
-import ActionsGateway from '../../actions/actions.gateway';
+import ActionsGateway from '../../socket/socket.gateway';
 import { UpdateCardPositionDto } from './dto/card/updateCardPosition.dto';
+import { AddCardDto } from './dto/card/addCard.dto';
+import DeleteCardDto from './dto/card/deleteCard.dto';
+import UpdateCardDto from './dto/card/updateCard.dto';
 
 @Controller('boards')
 export default class BoardsController {
   constructor(
     private readonly boardService: BoardsService,
-    private readonly actionsService: ActionsGateway,
+    private readonly socketService: ActionsGateway,
   ) {}
 
   // #region BOARD
@@ -39,25 +42,32 @@ export default class BoardsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Get(':id')
+  @Get(':boardId')
   getBoard(@Req() request: RequestWithUser) {
-    const { id: boardId } = request.params;
-    const { _id: userId } = request.user;
+    const {
+      user: { _id: userId },
+      params: { boardId },
+    } = request;
     return this.boardService.getBoardWithEmail(boardId, userId);
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Put(':id')
+  @Put(':boardId')
   updateBoard(@Req() request, @Body() boardData: BoardDto) {
-    const { _id: userId } = request.user;
-    return this.boardService.updateBoard(userId, boardData);
+    const {
+      user: { _id: userId },
+      params: { boardId },
+    } = request;
+    return this.boardService.updateBoard(userId, boardId, boardData);
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Delete(':id')
+  @Delete(':boardId')
   deleteBoard(@Req() request: RequestWithUser) {
-    const { id: boardId } = request.params;
-    const { _id: userId } = request.user;
+    const {
+      user: { _id: userId },
+      params: { boardId },
+    } = request;
     return this.boardService.deleteBoard(boardId, userId);
   }
 
@@ -65,18 +75,69 @@ export default class BoardsController {
 
   // #region CARD
 
-  @Put(':id/card/:cardId/updateCardPosition')
+  @UseGuards(JwtAuthenticationGuard)
+  @Post(':boardId/card')
+  async addCard(@Req() request, @Body() createCardDto: AddCardDto) {
+    const {
+      user: { _id: userId },
+      params: { boardId },
+    } = request;
+    const { card, colIdToAdd, socketId } = createCardDto;
+    const board = await this.boardService.addCardToBoard(
+      boardId,
+      userId,
+      card,
+      colIdToAdd,
+    );
+    this.socketService.sendUpdatedBoard(board, socketId);
+    return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Delete(':boardId/card/:cardId')
+  async deleteCard(@Req() request, @Body() deleteCardDto: DeleteCardDto) {
+    const {
+      params: { boardId, cardId },
+      user: { _id: userId },
+    } = request;
+    const board = await this.boardService.deleteCard(boardId, cardId, userId);
+    this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+    return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Put(':boardId/card/:cardId/items/:cardItemId')
+  async updateCardText(@Req() request, @Body() updateCardDto: UpdateCardDto) {
+    const {
+      params: { boardId, cardId, cardItemId },
+      user: { _id: userId },
+    } = request;
+    const { text, socketId } = updateCardDto;
+    const board = await this.boardService.updateCardText(
+      boardId,
+      cardId,
+      cardItemId,
+      userId,
+      text,
+    );
+    this.socketService.sendUpdatedBoard(board, socketId);
+    return board;
+  }
+
+  @Put(':boardId/card/:cardId/updateCardPosition')
   async updateCardPosition(
     @Req() request,
     @Body() boardData: UpdateCardPositionDto,
   ) {
-    const { id: boardId, cardId } = request.params;
+    const { boardId, cardId } = request.params;
+    const { targetColumnId, newPosition, socketId } = boardData;
     const board = await this.boardService.updateCardPosition(
       boardId,
       cardId,
-      boardData,
+      targetColumnId,
+      newPosition,
     );
-    this.actionsService.sendUpdatedBoard(board, boardData.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
     return board;
   }
 

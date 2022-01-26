@@ -3,19 +3,11 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class UpdateCardPositionDto {
   @IsNotEmpty()
   @IsString()
-  columnId!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  cardId!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  boardId!: string;
+  targetColumnId!: string;
 
   @IsNotEmpty()
   @IsNumber()
-  position!: number;
+  newPosition!: number;
 
   @IsNotEmpty()
   @IsString()

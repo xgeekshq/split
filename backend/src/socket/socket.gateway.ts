@@ -8,16 +8,13 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import BoardsService from 'src/models/boards/boards.service';
 import JoinPayload from 'src/interfaces/joinPayload.interface';
 import { BoardDocument } from 'src/models/boards/schemas/board.schema';
 
 @WebSocketGateway({ cors: true })
-export default class ActionsGateway
+export default class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly boardsService: BoardsService) {}
-
   @WebSocketServer()
   server!: Server;
 

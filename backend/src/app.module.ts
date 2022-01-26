@@ -5,7 +5,7 @@ import DatabaseModule from './database/database.module';
 import UsersModule from './models/users/users.module';
 import AuthModule from './auth/auth.module';
 import BoardsModule from './models/boards/boards.module';
-import ActionsModule from './actions/actions.module';
+import ActionsModule from './socket/socket.module';
 
 @Module({
   imports: [
