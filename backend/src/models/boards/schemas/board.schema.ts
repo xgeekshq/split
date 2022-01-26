@@ -19,10 +19,10 @@ export default class Board {
   @Prop({ type: Date })
   creationDate!: Date;
 
-  @Prop()
+  @Prop({ nullable: false })
   maxVotes!: number;
 
-  @Prop({ type: [ColumnSchema] })
+  @Prop({ nullable: false, type: [ColumnSchema] })
   columns!: Column[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', nullable: false })

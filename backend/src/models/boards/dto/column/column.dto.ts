@@ -1,4 +1,9 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 import CardDto from '../card/card.dto';
 
@@ -16,5 +21,6 @@ export default class ColumnDto {
   color!: string;
 
   @IsNotEmpty()
+  @ValidateNested({ each: true })
   cards!: CardDto[];
 }
