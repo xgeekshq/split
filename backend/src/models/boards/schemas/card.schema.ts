@@ -10,7 +10,7 @@ export default class Card {
   @Prop({ nullable: false })
   text!: string;
 
-  @Prop({ type: [CardItemSchema] })
+  @Prop({ nullable: false, type: [CardItemSchema] })
   items!: CardItem[];
 
   // @Prop({ type: [CommentSchema] })
@@ -19,7 +19,7 @@ export default class Card {
   // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   // votes!: User[] | mongoose.Schema.Types.ObjectId[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', nullable: false })
   createdBy!: User | mongoose.Schema.Types.ObjectId;
 }
 

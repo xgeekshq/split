@@ -12,7 +12,7 @@ import Board, { BoardDocument } from './schemas/board.schema';
 import BoardDto from './dto/board.dto';
 import { encrypt } from '../../utils/bcrypt';
 import Card from './schemas/card.schema';
-import { UpdateCardPositionDto } from './dto/card/updateCardPosition.dto';
+import CardDto from './dto/card/card.dto';
 
 @Injectable()
 export default class BoardsService {
@@ -60,10 +60,10 @@ export default class BoardsService {
     throw new HttpException(BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
-  async updateBoard(userId: string, boardData: BoardDto) {
+  async updateBoard(userId: string, boardId: string, boardData: BoardDto) {
     const result = await this.boardModel.findOneAndUpdate(
       {
-        _id: boardData._id,
+        _id: boardId,
         createdBy: userId,
       },
       boardData,
@@ -134,10 +134,9 @@ export default class BoardsService {
   async updateCardPosition(
     boardId: string,
     cardId: string,
-    updateCardPositionDto: UpdateCardPositionDto,
+    targetColumnId: string,
+    newPosition: number,
   ) {
-    const { columnId, position } = updateCardPositionDto;
-
     const cardToMove = await this.getCardFromBoard(boardId, cardId);
 
     if (cardToMove) {
@@ -163,13 +162,13 @@ export default class BoardsService {
         .findOneAndUpdate(
           {
             _id: boardId,
-            'columns._id': columnId,
+            'columns._id': targetColumnId,
           },
           {
             $push: {
               'columns.$.cards': {
                 $each: [cardToMove],
-                $position: position,
+                $position: newPosition,
               },
             },
           },
@@ -181,6 +180,88 @@ export default class BoardsService {
         return pushResult.value;
       }
     }
+    throw new HttpException(UPDATE_FAILED, HttpStatus.BAD_REQUEST);
+  }
+
+  async addCardToBoard(
+    id: number,
+    userId: string,
+    card: CardDto,
+    colIdToAdd: string,
+  ) {
+    card.createdBy = userId;
+    card.items[0].createdBy = userId;
+    const result = await this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: id,
+          'columns._id': colIdToAdd,
+        },
+        {
+          $push: {
+            'columns.$.cards': { ...card },
+          },
+        },
+        { new: true, rawResult: true },
+      )
+      .exec();
+    if (result.value && result.lastErrorObject?.updatedExisting)
+      return result.value;
+    throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+  }
+
+  async updateCardText(
+    boardId: string,
+    cardId: string,
+    cardItemId: string,
+    userId: string,
+    text: string,
+  ) {
+    const result = await this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+          'columns.cards.createdBy': userId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].text': text,
+            'columns.$.cards.$[c].items.$[item].text': text,
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }, { 'item._id': cardItemId }],
+          new: true,
+          rawResult: true,
+        },
+      )
+      .exec();
+    if (result.value && result.lastErrorObject?.updatedExisting)
+      return result.value;
+    throw new HttpException(UPDATE_FAILED, HttpStatus.BAD_REQUEST);
+  }
+
+  async deleteCard(boardId: string, cardId: string, userId: string) {
+    const result = await this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+          'columns.cards.createdBy': userId,
+        },
+        {
+          $pull: {
+            'columns.$[].cards': { _id: cardId },
+          },
+        },
+        { new: true, rawResult: true },
+      )
+      .exec();
+
+    if (result.value && result.lastErrorObject?.updatedExisting)
+      return result.value;
+
     throw new HttpException(UPDATE_FAILED, HttpStatus.BAD_REQUEST);
   }
 

@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsString } from 'class-validator';
-import { Transform, TransformFnParams } from 'class-transformer';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
+import CommentDto from '../comment/comment.dto';
 
 export default class CardItemDto {
   @IsNotEmpty()
@@ -11,10 +12,16 @@ export default class CardItemDto {
   @Transform(({ value }: TransformFnParams) => value.trim())
   text!: string;
 
-  // @ValidateNested({ each: true })
-  // @Type(() => CommentDto)
-  // comments!: CommentDto[];
+  @IsNotEmpty()
+  @IsString()
+  createdBy!: string;
 
-  // @IsNotEmpty()
-  // votes!: string[];
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CommentDto)
+  comments!: CommentDto[];
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  votes!: string[];
 }

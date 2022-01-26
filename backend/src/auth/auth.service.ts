@@ -28,7 +28,6 @@ export default class AuthService {
     if (!user.password)
       throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
     await this.verifyPassword(plainTextPassword, user.password);
-    user.password = undefined;
     return user;
   }
 
@@ -49,7 +48,6 @@ export default class AuthService {
         ...registrationData,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       if (error?.code === Errors.UniqueViolation) {
