@@ -64,6 +64,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         24: "1.50rem",
         32: "2rem",
         40: "2.5rem",
+        60: "3.75rem",
         130: "5rem",
         160: "10rem",
         220: "13.75rem",

@@ -1,15 +1,14 @@
-import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
-import { useSession, getSession, GetSessionParams } from "next-auth/react";
-import { useStoreContext } from "../store/store";
+import { useState } from "react";
+import { getSession, GetSessionParams } from "next-auth/react";
 import CreateBoard from "../components/Dashboard/CreateBoardModal";
 import { styled } from "../stitches.config";
 import Flex from "../components/Primitives/Flex";
 import BoardsList from "../components/Dashboard/BoardList/BoardsList";
 import Text from "../components/Primitives/Text";
-import { getBoards } from "../api/boardService";
-import { AUTH_PATH, ERROR_LOADING_DATA } from "../utils/constants";
+import { ERROR_LOADING_DATA } from "../utils/constants";
 import { RedirectServerSideProps, SessionServerSideProps } from "../types/serverSideProps";
+import useBoard from "../hooks/useBoard";
+import { AUTH_ROUTE } from "../utils/routes";
 
 export async function getServerSideProps(
   context: GetSessionParams | undefined
@@ -19,7 +18,7 @@ export async function getServerSideProps(
   if (!session) {
     return {
       redirect: {
-        destination: AUTH_PATH,
+        destination: AUTH_ROUTE,
         permanent: false,
       },
     };
@@ -33,17 +32,10 @@ export async function getServerSideProps(
 const Container = styled("div", Flex);
 
 const Dashboard: React.FC = () => {
-  const { data: session } = useSession({ required: true });
-  const { dispatch } = useStoreContext();
-  const { data } = useQuery("boards", () => getBoards(session?.accessToken), {
-    retry: false,
-  });
+  const { fetchBoards } = useBoard({ autoFetchBoard: false, autoFetchBoards: true });
+  const { data } = fetchBoards;
 
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    dispatch({ type: "setTitle", val: "Dashboard" });
-  }, [dispatch, session]);
 
   const handleLoading = (state: boolean) => {
     setIsLoading(state);

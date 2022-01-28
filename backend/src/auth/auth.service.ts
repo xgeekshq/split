@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import errors from '../database/types/errors';
-import RegisterDto from '../users/dto/register.dto';
-import { compare, encrypt } from '../utils/bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import UsersService from '../models/users/users.service';
+import Errors from '../database/types/errors';
+import RegisterDto from '../models/users/dto/register.dto';
+import { compare, encrypt } from '../utils/bcrypt';
 import TokenPayload from '../interfaces/tokenPayload.interface';
 import {
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
@@ -13,14 +13,10 @@ import {
   JWT_REFRESH_TOKEN_SECRET,
   describeJWT,
 } from '../constants/jwt';
-import {
-  INVALID_CREDENTIALS,
-  EMAIL_EXISTS,
-  describeExceptions,
-} from '../constants/httpExceptions';
+import { INVALID_CREDENTIALS, EMAIL_EXISTS } from '../constants/httpExceptions';
 
 @Injectable()
-export class AuthService {
+export default class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
@@ -28,17 +24,11 @@ export class AuthService {
   ) {}
 
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
-    try {
-      const user = await this.usersService.getByEmail(email);
-      await this.verifyPassword(plainTextPassword, user.password);
-      user.password = undefined;
-      return user;
-    } catch (error) {
-      throw new HttpException(
-        describeExceptions(INVALID_CREDENTIALS),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const user = await this.usersService.getByEmail(email);
+    if (!user.password)
+      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+    await this.verifyPassword(plainTextPassword, user.password);
+    return user;
   }
 
   private async verifyPassword(
@@ -47,10 +37,7 @@ export class AuthService {
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
-      throw new HttpException(
-        describeExceptions(INVALID_CREDENTIALS),
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -61,14 +48,10 @@ export class AuthService {
         ...registrationData,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
       return createdUser;
     } catch (error) {
-      if (error?.code === errors.UniqueViolation) {
-        throw new HttpException(
-          describeExceptions(EMAIL_EXISTS),
-          HttpStatus.BAD_REQUEST,
-        );
+      if (error?.code === Errors.UniqueViolation) {
+        throw new HttpException(EMAIL_EXISTS, HttpStatus.BAD_REQUEST);
       }
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

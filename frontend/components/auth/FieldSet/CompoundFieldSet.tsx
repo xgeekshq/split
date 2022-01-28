@@ -17,6 +17,11 @@ const StyledEyeClosedIcon = styled(EyeNoneIcon, { size: "$20" });
 
 const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType, tabValue }) => {
   const [showPw, setShowPw] = useState(inputType !== "password");
+
+  const handleShowPw = () => {
+    setShowPw(!showPw);
+  };
+
   const {
     register,
     formState: { errors },
@@ -56,7 +61,7 @@ const CompoundFieldSet: React.FC<CompoundFieldSetType> = ({ label, id, inputType
         {inputType === "password" && (
           <Button
             type="button"
-            onClick={() => setShowPw(!showPw)}
+            onClick={handleShowPw}
             tabIndex={-1}
             css={{
               position: "absolute",

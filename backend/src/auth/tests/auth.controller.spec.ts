@@ -1,20 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { UsersService } from '../../users/users.service';
-import { AuthController } from '../auth.controller';
-import UserEntity from '../../users/entity/user.entity';
-import { mockedUser } from '../../mocks/user.mock';
-import { AuthService } from '../auth.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from '@nestjs/mongoose';
+import * as request from 'supertest';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import UsersService from '../../models/users/users.service';
+import AuthController from '../auth.controller';
+import User from '../../models/users/schemas/user.schema';
+import mockedUser from '../../mocks/user.mock';
+import AuthService from '../auth.service';
 import jwtService from '../../mocks/jwtService.mock';
 import configService from '../../mocks/configService.mock';
-import * as request from 'supertest';
 
 describe('AuthController', () => {
   let app: INestApplication;
-  let userData: UserEntity;
+  let userData: User;
 
   beforeEach(async () => {
     const usersRepository = {
@@ -37,7 +37,7 @@ describe('AuthController', () => {
           useValue: jwtService,
         },
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: getModelToken('User'),
           useValue: usersRepository,
         },
       ],
@@ -55,7 +55,7 @@ describe('AuthController', () => {
           ...userData,
         };
         delete expectedData.password;
-        return await request(app.getHttpServer())
+        return request(app.getHttpServer())
           .post('/auth/register')
           .send({
             email: mockedUser.email,
@@ -66,33 +66,26 @@ describe('AuthController', () => {
       });
     });
     describe('and using invalid data', () => {
-      it('should throw an error because full data wasnt submitted', async () => {
-        return await request(app.getHttpServer())
+      it('should throw an error because full data wasnt submitted', () =>
+        request(app.getHttpServer())
           .post('/auth/register')
-          .send({
-            name: '',
-            password: '',
-            email: '',
-          })
-          .expect(400);
-      });
-      it('should throw an error because full data wasnt submitted', async () => {
-        return await request(app.getHttpServer())
+          .send({ name: '', password: '', email: '' })
+          .expect(400));
+      it('should throw an error because full data wasnt submitted', async () =>
+        request(app.getHttpServer())
           .post('/auth/register')
           .send({
             name: mockedUser.name,
           })
-          .expect(400);
-      });
-      it('should throw an error because full data wasnt submitted', async () => {
-        return await request(app.getHttpServer())
+          .expect(400));
+      it('should throw an error because full data wasnt submitted', async () =>
+        request(app.getHttpServer())
           .post('/auth/register')
           .send({
             name: mockedUser.name,
             password: mockedUser.password,
           })
-          .expect(400);
-      });
+          .expect(400));
       it('should throw an error because password is short', async () => {
         const res = await request(app.getHttpServer())
           .post('/auth/register')

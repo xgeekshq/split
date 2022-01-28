@@ -1,35 +1,27 @@
-import { v4 as uuidv4 } from "uuid";
 import fetchData from "../utils/fetchData";
-import { BoardType, BoardTypeWithToken } from "../types/board";
+import { BoardType, UpdateTitleWithToken } from "../types/board";
 import { Nullable } from "../types/common";
-import ColumnType from "../types/column";
-import CardType from "../types/card";
 
-const transformBoard = (board: BoardType) => {
-  const newBoard = { ...board };
-  const newCols = board.columns.map((column: ColumnType) => {
-    const cards = column.cards.map((card: CardType) => {
-      return { ...card, _id: uuidv4() };
-    });
-    return { ...column, cards, _id: uuidv4() };
-  });
-  newBoard.columns = newCols;
-  return newBoard;
+export const postBoard = (newBoard: BoardType): Promise<BoardType> => {
+  return fetchData(`/boards`, { method: "POST", data: newBoard });
 };
 
-export const postBoard = ({ newBoard, token }: BoardTypeWithToken): Promise<BoardType> => {
-  return fetchData(`/boards`, "POST", JSON.stringify(newBoard), token);
+export const updateBoardTitle = ({ id, title }: UpdateTitleWithToken): Promise<BoardType> => {
+  return fetchData(`/boards/${id}/updateTitle`, { method: "PATCH", data: { title } });
 };
 
-export const putBoard = ({ newBoard, token }: BoardTypeWithToken): Promise<BoardType> => {
-  return fetchData(`/boards/${newBoard._id}`, "PUT", JSON.stringify(newBoard), token);
+export const getBoard = (id: Nullable<string>): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`, { method: "POST" });
 };
 
-export const getBoard = async (id: Nullable<string>): Promise<BoardType> => {
-  const board = await fetchData<BoardType>(`/boards/${id}`, "POST", undefined, undefined);
-  return transformBoard(board);
+export const getBoardWithAuth = (id: string): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`);
 };
 
-export const getBoards = (token: Nullable<string>): Promise<BoardType[]> => {
-  return fetchData(`/boards`, "GET", undefined, token);
+export const getBoards = (): Promise<BoardType[]> => {
+  return fetchData<BoardType[]>(`/boards`);
+};
+
+export const deleteBoard = async (id: string): Promise<BoardType> => {
+  return fetchData(`/boards/${id}`, { method: "DELETE" });
 };

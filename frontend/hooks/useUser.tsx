@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { AxiosError } from "axios";
-import { RedirectableProvider, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { RedirectableProviderType } from "next-auth/providers";
 import { useMutation } from "react-query";
 import { postUser } from "../api/authService";
 import { LoginUser, User, UseUserType } from "../types/user";
-import { DASHBOARD_PATH, ERROR_500_PAGE } from "../utils/constants";
+import { DASHBOARD_ROUTE, ERROR_500_PAGE } from "../utils/routes";
 
 const useUser = (): UseUserType => {
   const router = useRouter();
@@ -14,16 +15,16 @@ const useUser = (): UseUserType => {
     mutationKey: "register",
     onSuccess: async (user: User) => {
       const credentials: LoginUser = { email: user.email, password: pw };
-      const response = await signIn<RedirectableProvider>("credentials", {
+      const response = await signIn<RedirectableProviderType>("credentials", {
         ...credentials,
-        callbackUrl: DASHBOARD_PATH,
+        callbackUrl: DASHBOARD_ROUTE,
         redirect: false,
       });
       setPw("");
       if (response?.error) {
         router.push(ERROR_500_PAGE);
       } else {
-        router.push(DASHBOARD_PATH);
+        router.push(DASHBOARD_ROUTE);
       }
     },
   });

@@ -1,7 +1,9 @@
 node_modules
-package-lock.json
-yarn.lock
+.DS_Store
+
 .env
+.env.local
 .env.development
 .env.production
 .DS_Store
+

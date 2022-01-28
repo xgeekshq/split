@@ -1,46 +1,42 @@
-import React, { useEffect } from "react";
-import { GetServerSideProps } from "next";
-import { QueryClient, dehydrate, useQuery, useQueryClient } from "react-query";
+import React, { useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import {
   DragDropContext,
+  DraggableLocation,
   DragUpdate,
   Droppable,
   DropResult,
   ResponderProvided,
 } from "react-beautiful-dnd";
-import useBoard from "../../hooks/useBoard";
 import Text from "../../components/Primitives/Text";
 import { useStoreContext } from "../../store/store";
-import { getBoard } from "../../api/boardService";
 import { styled } from "../../stitches.config";
 import Flex from "../../components/Primitives/Flex";
 import { ERROR_LOADING_DATA } from "../../utils/constants";
 import Column from "../../components/Board/Column";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.params?.boardId?.toString();
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["board", { id }], () => getBoard(id));
-  return {
-    props: {
-      boardId: id,
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+import useBoard from "../../hooks/useBoard";
+import BoardChanges from "../../types/boardChanges";
 
 const Container = styled(Flex);
 
-const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
+const Board: React.FC = () => {
+  const { query } = useRouter();
+  const boardId = query.boardId as string;
+
   const { data: session } = useSession({ required: false });
-  const { updateBoard } = useBoard();
-  const { data, status } = useQuery(["board", { id: boardId }], () => getBoard(boardId));
-  const { dispatch } = useStoreContext();
-  const queryClient = useQueryClient();
+  const { fetchBoard } = useBoard({ autoFetchBoard: true, autoFetchBoards: false }, boardId);
+  const { data, status } = fetchBoard;
+  const {
+    state: { board, socket },
+    dispatch,
+  } = useStoreContext();
 
   useEffect(() => {
-    if (data) dispatch({ type: "setTitle", val: data.title });
+    if (data) {
+      dispatch({ type: "SET_BOARD", val: data });
+    }
+    return () => dispatch({ type: "SET_BOARD", val: undefined });
   }, [dispatch, data]);
 
   const onDragUpdate = (update: DragUpdate, provided: ResponderProvided) => {
@@ -50,6 +46,32 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
 
     provided.announce(message);
   };
+
+  const getChanges = useCallback(
+    (
+      type: string,
+      source: DraggableLocation,
+      destination: DraggableLocation | undefined
+    ): BoardChanges => {
+      switch (type) {
+        case "COLUMN": {
+          return { type, colIdxToAdd: destination?.index ?? 0, colIdxToRemove: source.index };
+        }
+        case "CARD": {
+          return {
+            type,
+            colIdToRemove: source.droppableId,
+            colIdToAdd: destination?.droppableId ?? source.droppableId,
+            cardIdxToRemove: source.index,
+            cardIdxToAdd: destination?.index ?? 0,
+          };
+        }
+        default:
+          return { type: "COLUMN", colIdxToAdd: 0, colIdxToRemove: 0 };
+      }
+    },
+    []
+  );
 
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
     const message = result.destination
@@ -68,67 +90,27 @@ const Board: React.FC<{ boardId: string }> = ({ boardId }) => {
       return;
     }
 
-    if (data) {
-      const newData = {
-        ...data,
-      };
-
-      if (type === "column") {
-        const newCol = newData.columns[source.index];
-        newData.columns.splice(source.index, 1);
-        newData.columns.splice(destination.index, 0, newCol);
-      }
-
-      const start = data.columns.find((col) => col._id === source.droppableId);
-      const finish = data.columns.find((col) => col._id === destination.droppableId);
-
-      if (start && finish) {
-        const startColIdx = data.columns.indexOf(start);
-        const newStartCards = Array.from(start.cards);
-        const cardToReorder = start.cards[source.index];
-        newStartCards.splice(source.index, 1);
-
-        const finishColIdx = data.columns.indexOf(finish);
-        const newFinishCards = Array.from(finish.cards);
-
-        if (start === finish) {
-          newStartCards.splice(destination.index, 0, cardToReorder);
-        } else {
-          newFinishCards.splice(destination.index, 0, cardToReorder);
-
-          finish.cards = newFinishCards;
-          newData.columns.splice(finishColIdx, 1, finish);
-        }
-
-        start.cards = newStartCards;
-        newData.columns.splice(startColIdx, 1, start);
-      }
-      queryClient.setQueryData(["board", { id: data._id }], newData);
-      updateBoard.mutate({ newBoard: { ...newData }, token: session?.accessToken });
+    if (board && (type === "CARD" || type === "COLUMN")) {
+      const changes = getChanges(type, source, destination);
+      dispatch({ type, val: changes });
+      socket?.emit("updateBoard", { id: boardId, changes });
     }
   };
 
   if (status === "loading") return <Text>Loading ...</Text>;
-  if (data) {
-    if (data.locked) {
+  if (board) {
+    if (board.locked && session?.user.email !== board.createdBy.email) {
       return <Text>Locked</Text>;
     }
     return (
       <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
-        <Droppable droppableId="all-columns" direction="horizontal" type="column">
+        <Droppable droppableId="all-columns" direction="horizontal" type="COLUMN">
           {(provided) => (
             <Container {...provided.droppableProps} ref={provided.innerRef}>
-              {data.columns.map((column, index) => {
-                return (
-                  <Column
-                    key={column._id}
-                    title={column.title}
-                    column={column}
-                    cards={column.cards}
-                    index={index}
-                    columns={data.columns}
-                  />
-                );
+              {board.columnsOrder.map((columnId, index) => {
+                const column = board.columns.find((col) => col._id === columnId);
+                if (!column) return null;
+                return <Column key={columnId} column={column} index={index} />;
               })}
               {provided.placeholder}
             </Container>

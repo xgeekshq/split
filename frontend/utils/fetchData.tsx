@@ -1,25 +1,34 @@
-import axios, { Method } from "axios";
-import { NEXT_PUBLIC_BACKEND_URL, describe, BACKEND_URL } from "./constants";
-import { Nullable } from "../types/common";
+import axios, { AxiosRequestConfig } from "axios";
+import { NEXT_PUBLIC_BACKEND_URL } from "./constants";
 
-const fetchData = async <T,>(
-  url: string,
-  method: Method,
-  body: Nullable<string>,
-  token: Nullable<string>
-): Promise<T> => {
-  const { data } = await axios({
-    baseURL: describe(BACKEND_URL) ?? describe(NEXT_PUBLIC_BACKEND_URL),
+export const instance = axios.create({
+  baseURL: NEXT_PUBLIC_BACKEND_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+type Options = {
+  token?: string;
+} & AxiosRequestConfig;
+
+const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
+  const { method = "GET", token } = options ?? {};
+
+  const instanceOptions: AxiosRequestConfig = {
     url,
     method,
-    data: body,
-    headers: {
-      "Content-Type": "application/json",
-      accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    ...options,
+  };
 
+  if (token) {
+    instanceOptions.headers = {
+      ...options?.headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
+  const { data } = await instance(instanceOptions);
   return data;
 };
 

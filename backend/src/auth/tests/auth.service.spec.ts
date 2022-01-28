@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../auth.service';
-import { UsersService } from '../../users/users.service';
-import UserEntity from '../../users/entity/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { getModelToken } from '@nestjs/mongoose';
+import AuthService from '../auth.service';
+import UsersService from '../../models/users/users.service';
 import jwtService from '../../mocks/jwtService.mock';
 import configService from '../../mocks/configService.mock';
 
@@ -25,7 +24,7 @@ describe('AuthService', () => {
           useValue: jwtService,
         },
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: getModelToken('User'),
           useValue: {},
         },
       ],

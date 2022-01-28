@@ -10,7 +10,6 @@ import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
 import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
-import { UNDEFINED } from "../../utils/constants";
 
 const RegisterForm: React.FC = () => {
   const { setPw, createUser } = useUser();
@@ -25,8 +24,10 @@ const RegisterForm: React.FC = () => {
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit((dataUser: User) => {
-            setPw(dataUser?.password || UNDEFINED);
-            createUser.mutate(dataUser);
+            if (dataUser.password) {
+              setPw(dataUser?.password);
+              createUser.mutate(dataUser);
+            }
           })}
         >
           <Flex>

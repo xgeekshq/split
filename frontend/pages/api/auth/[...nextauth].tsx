@@ -1,22 +1,15 @@
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import {
-  AUTH_PATH,
-  DASHBOARD_PATH,
-  ERROR_500_PAGE,
-  JWT_SIGNING_KEY,
-  JWT_SIGNING_KEY_ID,
-  REFRESH_TOKEN_ERROR,
-  describe,
-} from "../../../utils/constants";
-import { Credentials, LoginUser, User } from "../../../types/user";
+import { REFRESH_TOKEN_ERROR, SECRET } from "../../../utils/constants";
+import { LoginUser, User } from "../../../types/user";
 import { login, refreshToken } from "../../../api/authService";
 import { Token } from "../../../types/token";
+import { AUTH_ROUTE, DASHBOARD_ROUTE, ERROR_500_PAGE } from "../../../utils/routes";
 
 async function refreshAccessToken(prevToken: JWT) {
   try {
-    const data: Token = await refreshToken(prevToken.refreshToken ?? null);
+    const data: Token = await refreshToken(prevToken.refreshToken);
     return {
       ...prevToken,
       accessToken: data.token,
@@ -36,35 +29,32 @@ export default NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Record<string, Credentials>) {
+      async authorize(credentials) {
         const loginUser: LoginUser = {
-          email: credentials.email,
-          password: credentials.password,
+          email: credentials?.email,
+          password: credentials?.password,
         };
         const data: User = await login(loginUser);
+
         if (data) {
-          const token = {
+          return {
             name: data.name,
             email: data.email,
             accessToken: { ...data.accessToken },
             refreshToken: { ...data.refreshToken },
           };
-          return token;
         }
         return null;
       },
     }),
   ],
+  secret: SECRET,
   session: {
+    strategy: "jwt",
     maxAge: 24 * 60 * 60,
   },
   jwt: {
-    signingKey: `{
-      "kty": "oct",
-      "kid": "${describe(JWT_SIGNING_KEY_ID)}",
-      "alg": "HS512",
-      "k": "${describe(JWT_SIGNING_KEY)}"
-    }`,
+    secret: SECRET,
   },
   callbacks: {
     async jwt({ token, user, account }) {
@@ -97,7 +87,7 @@ export default NextAuth({
     },
     redirect({ url, baseUrl }) {
       switch (url) {
-        case DASHBOARD_PATH:
+        case DASHBOARD_ROUTE:
           return `${baseUrl}${url}`;
         default:
           return url.startsWith(baseUrl) ? url : baseUrl;
@@ -105,7 +95,7 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: AUTH_PATH,
+    signIn: AUTH_ROUTE,
     error: ERROR_500_PAGE,
   },
 });

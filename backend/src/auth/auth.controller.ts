@@ -7,19 +7,21 @@ import {
   Post,
   UseGuards,
   Res,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import JwtAuthenticationGuard from '../guards/jwtAuth.guard';
-import { AuthService } from './auth.service';
-import RegisterDto from '../users/dto/register.dto';
-import { LocalAuthGuard } from '../guards/localAuth.guard';
+import { USER_NOT_FOUND } from 'src/constants/httpExceptions';
+import AuthService from './auth.service';
+import RegisterDto from '../models/users/dto/register.dto';
+import LocalAuthGuard from '../guards/localAuth.guard';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
-import { UsersService } from '../users/users.service';
+import UsersService from '../models/users/users.service';
 import JwtRefreshGuard from '../guards/jwtRefreshAuth.guard';
-import { LoginUserDto } from '../users/dto/login.dto';
+import LoggedUserDto from '../models/users/dto/loggedUser.dto';
 
 @Controller('auth')
-export class AuthController {
+export default class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
@@ -34,34 +36,39 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() request: RequestWithUser, @Res() response: Response) {
-    const { user } = request;
+    const {
+      user: { _id: id, name, email },
+    } = request;
 
-    const userId = user._id.toString();
+    if (id) {
+      const accessToken = this.authService.getJwtAccessToken(id);
 
-    const accessToken = this.authService.getJwtAccessToken(userId);
-    user.password = undefined;
+      const refreshToken = this.authService.getJwtRefreshToken(id);
 
-    const refreshToken = this.authService.getJwtRefreshToken(userId);
+      await this.usersService.setCurrentRefreshToken(refreshToken.token, id);
 
-    await this.usersService.setCurrentRefreshToken(refreshToken.token, userId);
+      const userWToken: LoggedUserDto = {
+        id,
+        name,
+        email,
+        accessToken,
+        refreshToken,
+      };
+      return response.send(userWToken);
+    }
 
-    const { name, email } = user;
-
-    const userWToken: LoginUserDto = { name, email, accessToken, refreshToken };
-    return response.send(userWToken);
-  }
-
-  @UseGuards(JwtAuthenticationGuard)
-  @Get()
-  authenticate(@Req() request: RequestWithUser) {
-    const user = request.user;
-    user.password = undefined;
-    return user;
+    throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(@Req() request: RequestWithUser) {
-    return this.authService.getJwtAccessToken(request.user._id.toString());
+    const {
+      user: { _id: id },
+    } = request;
+    if (id) {
+      return this.authService.getJwtAccessToken(id);
+    }
+    throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 }

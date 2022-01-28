@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './database/database.module';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { BoardsModule } from './boards/boards.module';
 import * as Joi from 'joi';
+import DatabaseModule from './database/database.module';
+import UsersModule from './models/users/users.module';
+import AuthModule from './auth/auth.module';
+import BoardsModule from './models/boards/boards.module';
+import ActionsModule from './socket/socket.module';
 
 @Module({
   imports: [
@@ -26,8 +27,8 @@ import * as Joi from 'joi';
     UsersModule,
     AuthModule,
     BoardsModule,
+    ActionsModule,
   ],
   controllers: [],
-  providers: [],
 })
-export class AppModule {}
+export default class AppModule {}
