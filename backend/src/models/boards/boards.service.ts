@@ -199,7 +199,10 @@ export default class BoardsService {
         },
         {
           $push: {
-            'columns.$.cards': { ...card },
+            'columns.$.cards': {
+              $each: [{ ...card }],
+              $position: 0,
+            },
           },
         },
         { new: true, rawResult: true },
@@ -222,16 +225,18 @@ export default class BoardsService {
         {
           _id: boardId,
           'columns.cards._id': cardId,
-          'columns.cards.createdBy': userId,
         },
         {
           $set: {
-            'columns.$.cards.$[c].text': text,
-            'columns.$.cards.$[c].items.$[item].text': text,
+            'columns.$.cards.$[card].text': text,
+            'columns.$.cards.$[card].items.$[item].text': text,
           },
         },
         {
-          arrayFilters: [{ 'c._id': cardId }, { 'item._id': cardItemId }],
+          arrayFilters: [
+            { 'card._id': cardId },
+            { 'item._id': cardItemId, 'item.createdBy': userId },
+          ],
           new: true,
           rawResult: true,
         },
@@ -248,11 +253,10 @@ export default class BoardsService {
         {
           _id: boardId,
           'columns.cards._id': cardId,
-          'columns.cards.createdBy': userId,
         },
         {
           $pull: {
-            'columns.$[].cards': { _id: cardId },
+            'columns.$[].cards': { _id: cardId, createdBy: userId },
           },
         },
         { new: true, rawResult: true },

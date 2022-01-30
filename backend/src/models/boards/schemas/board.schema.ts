@@ -16,7 +16,7 @@ export default class Board {
   @Prop({ nullable: true })
   password?: string;
 
-  @Prop({ type: Date })
+  @Prop({ type: Date, default: Date.now })
   creationDate!: Date;
 
   @Prop({ nullable: false })

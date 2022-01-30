@@ -1,5 +1,6 @@
 import { useSession, signOut } from "next-auth/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { useRouter } from "next/router";
 import { styled } from "../../stitches.config";
 import Flex from "../Primitives/Flex";
 import Label from "../Primitives/Label";
@@ -11,6 +12,8 @@ import {
   slideUpAndFade,
   slideRightAndFade,
 } from "../../animations/Slide";
+import { LANDING_ROUTE } from "../../utils/routes";
+import ToastMessage from "../../utils/toast";
 
 const DropdownMenuContent = styled(DropdownMenu.Content, {
   display: "block",
@@ -66,9 +69,20 @@ const Dropdown: React.FC = () => {
   const { data: session } = useSession({
     required: false,
   });
+  const router = useRouter();
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
+  const handleSignOut = async () => {
+    try {
+      const result = await signOut({
+        callbackUrl: LANDING_ROUTE,
+        redirect: false,
+      });
+      if (result) {
+        router.push(result.url);
+      }
+    } catch (e) {
+      ToastMessage("Error signing out", "error");
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { mauve, violet } from "@radix-ui/colors";
 import { styled } from "../../stitches.config";
+import Flex from "./Flex";
 
 const StyledTabs = styled(TabsPrimitive.Root, {
   display: "flex",
@@ -37,13 +38,12 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   "&:focus": { position: "relative", boxShadow: `0 0 0 2px black` },
 });
 
-const StyledContent = styled(TabsPrimitive.Content, {
-  padding: 20,
-  gap: "$10",
+const StyledContent = styled(TabsPrimitive.Content, Flex, {
   boxSizing: "border-box",
   backgroundColor: "white",
   borderBottomLeftRadius: 6,
   borderBottomRightRadius: 6,
+  justifyContent: "center",
   outline: "none",
 });
 
