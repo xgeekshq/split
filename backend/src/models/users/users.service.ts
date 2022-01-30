@@ -16,7 +16,7 @@ export default class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async getByEmail(email: string) {
-    const user = await this.userModel.findOne({ email }).exec();
+    const user = await this.userModel.findOne({ email });
     if (user) return user;
     throw new HttpException(EMAIL_NOT_EXISTS, HttpStatus.NOT_FOUND);
   }

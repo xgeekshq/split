@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { USER_NOT_FOUND } from 'src/constants/httpExceptions';
+import { USER_NOT_FOUND } from '../constants/httpExceptions';
 import AuthService from './auth.service';
 import RegisterDto from '../models/users/dto/register.dto';
 import LocalAuthGuard from '../guards/localAuth.guard';
