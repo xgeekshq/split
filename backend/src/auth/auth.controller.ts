@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { USER_NOT_FOUND } from 'src/constants/httpExceptions';
+import { USER_NOT_FOUND } from '../constants/httpExceptions';
 import AuthService from './auth.service';
 import RegisterDto from '../models/users/dto/register.dto';
 import LocalAuthGuard from '../guards/localAuth.guard';
@@ -41,18 +41,16 @@ export default class AuthController {
     } = request;
 
     if (id) {
-      const accessToken = this.authService.getJwtAccessToken(id);
-
-      const refreshToken = this.authService.getJwtRefreshToken(id);
-
-      await this.usersService.setCurrentRefreshToken(refreshToken.token, id);
+      const { accessToken, refreshToken } = await this.authService.getJwt(id);
 
       const userWToken: LoggedUserDto = {
         id,
         name,
         email,
-        accessToken,
-        refreshToken,
+        accessToken: accessToken.token,
+        accessTokenExpiresIn: accessToken.expiresIn,
+        refreshToken: refreshToken.token,
+        refreshTokenExpiresIn: refreshToken.expiresIn,
       };
       return response.send(userWToken);
     }

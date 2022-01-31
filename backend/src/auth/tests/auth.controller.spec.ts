@@ -6,7 +6,6 @@ import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import UsersService from '../../models/users/users.service';
 import AuthController from '../auth.controller';
-import User from '../../models/users/schemas/user.schema';
 import mockedUser from '../../mocks/user.mock';
 import AuthService from '../auth.service';
 import jwtService from '../../mocks/jwtService.mock';
@@ -14,7 +13,6 @@ import configService from '../../mocks/configService.mock';
 
 describe('AuthController', () => {
   let app: INestApplication;
-  let userData: User;
 
   beforeEach(async () => {
     const usersRepository = {
@@ -51,10 +49,6 @@ describe('AuthController', () => {
   describe('when registering', () => {
     describe('and using valid data', () => {
       it('should respond with the data of the user without the password', async () => {
-        const expectedData = {
-          ...userData,
-        };
-        delete expectedData.password;
         return request(app.getHttpServer())
           .post('/auth/register')
           .send({

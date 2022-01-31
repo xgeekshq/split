@@ -35,14 +35,16 @@ export default NextAuth({
           password: credentials?.password,
         };
         const data: User = await login(loginUser);
-
         if (data) {
-          return {
+          const token = {
             name: data.name,
             email: data.email,
-            accessToken: { ...data.accessToken },
-            refreshToken: { ...data.refreshToken },
+            id: data.id,
+            accessToken: data.accessToken,
+            accessTokenExpiresIn: data.accessTokenExpiresIn,
+            refreshToken: data.refreshToken,
           };
+          return token;
         }
         return null;
       },
@@ -60,17 +62,19 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       if (account && user) {
         return {
-          accessToken: user.accessToken.token,
-          accessTokenExpires: Date.now() + +user.accessToken.expiresIn * 1000,
-          refreshToken: user.refreshToken.token,
+          accessToken: user.accessToken,
+          accessTokenExpires: Date.now() + +user.accessTokenExpiresIn * 1000,
+          refreshToken: user.refreshToken,
+          id: user.id,
           name: token?.name,
           email: token?.email,
+          strategy: user.strategy,
           error: "",
         };
       }
-      // if (Date.now() < token.accessTokenExpires - 5000) {
-      //   return token;
-      // }
+      if (Date.now() < token.accessTokenExpires - 5000) {
+        return token;
+      }
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
@@ -80,8 +84,10 @@ export default NextAuth({
         newSession.accessToken = token.accessToken;
         newSession.refreshToken = token.refreshToken;
         newSession.user.email = token.email;
+        newSession.user.id = token.id;
         newSession.error = token.error;
         newSession.expires = token.accessTokenExpires;
+        newSession.strategy = token.strategy ?? "credentials";
       }
       return newSession;
     },

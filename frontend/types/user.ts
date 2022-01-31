@@ -1,17 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
 import { UseMutationResult } from "react-query";
 import { AxiosError } from "axios";
-import { AccessToken, RefreshToken } from "./token";
 import { Nullable } from "./common";
 
 export interface User {
-  _id?: string;
+  id?: string;
   name: string;
   email: string;
   password?: string;
   passwordConf?: string;
-  accessToken?: AccessToken;
-  refreshToken?: RefreshToken;
+  accessToken?: string;
+  accessTokenExpiresIn?: string;
+  refreshToken?: string;
 }
 
 export interface UseUserType {
@@ -24,4 +24,8 @@ export interface LoginUser {
   password: Nullable<string>;
 }
 
-export type UserYup = "name" | "email" | "password" | "passwordConf";
+export interface EmailUser {
+  email: string;
+}
+
+export type UserZod = "name" | "email" | "password" | "passwordConf";

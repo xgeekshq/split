@@ -1,5 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import SocketGateway from '../../../socket/socket.gateway';
 import UsersService from '../../users/users.service';
 import BoardsController from '../boards.controller';
 import BoardsService from '../boards.service';
@@ -13,6 +14,7 @@ describe('BoardsController', () => {
       providers: [
         BoardsService,
         UsersService,
+        SocketGateway,
         {
           provide: getModelToken('User'),
           useValue: {},

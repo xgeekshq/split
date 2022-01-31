@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { getSession, GetSessionParams } from "next-auth/react";
+import { GetServerSideProps } from "next";
 import { styled } from "../../stitches.config";
 import { TabsList, TabsRoot, TabsTrigger } from "../../components/Primitives/Tab";
 import RegisterForm from "../../components/auth/RegisterForm";
@@ -8,27 +8,13 @@ import Text from "../../components/Primitives/Text";
 import Flex from "../../components/Primitives/Flex";
 import centerScreen from "../../styles/centerScreen";
 import LoginForm from "../../components/auth/LoginForm";
-import { RedirectServerSideProps, SessionServerSideProps } from "../../types/serverSideProps";
-import { DASHBOARD_ROUTE } from "../../utils/routes";
+import authenticated from "../../components/HOC/authenticated";
 
-export async function getServerSideProps(
-  context: GetSessionParams | undefined
-): Promise<RedirectServerSideProps | SessionServerSideProps> {
-  const session = await getSession(context);
-
-  if (session) {
-    return {
-      redirect: {
-        destination: DASHBOARD_ROUTE,
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = authenticated(async () => {
   return {
-    props: { session },
+    props: {},
   };
-}
+});
 
 const CenteredContainer = styled(Flex, centerScreen);
 

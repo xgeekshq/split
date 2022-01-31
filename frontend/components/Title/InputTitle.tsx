@@ -4,9 +4,10 @@ import { styled } from "../../stitches.config";
 import TextField from "../Primitives/TextField";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
-import { BoardType } from "../../types/board";
+import BoardType from "../../types/board/board";
 import Flex from "../Primitives/Flex";
 import ToastMessage from "../../utils/toast";
+import ClickEvent from "../../types/events/clickEvent";
 
 const ActionButton = styled(Button, {});
 
@@ -20,12 +21,9 @@ interface InputTitleBoard {
 
 const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage }) => {
   const [title, setTitle] = useState("");
-  const { patchBoardTitle } = useBoard(
-    { autoFetchBoard: false, autoFetchBoards: false },
-    board._id
-  );
+  const { updateBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
 
-  const handleUpdateTitle = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleUpdateTitle = (event: ClickEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     onClickEdit(false);
     if (title.length === 0) {
@@ -33,19 +31,18 @@ const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage
       return;
     }
     if (title !== board.title && board._id) {
-      patchBoardTitle.mutate({
-        id: board._id,
-        title,
+      updateBoard.mutate({
+        board: { ...board, title },
         boardPage: isBoardPage,
       });
     }
   };
 
-  const handleStopPropagationOnTextField = (event: React.MouseEvent<HTMLInputElement>) => {
+  const handleStopPropagationOnTextField = (event: ClickEvent<HTMLInputElement, MouseEvent>) => {
     event.stopPropagation();
   };
 
-  const handleCancelEdit = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCancelEdit = (event: ClickEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     onClickEdit(false);
   };

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { getSession } from "next-auth/react";
 import { NEXT_PUBLIC_BACKEND_URL } from "./constants";
 
 export const instance = axios.create({
@@ -8,13 +9,27 @@ export const instance = axios.create({
   },
 });
 
+const nonNeededToken = ["/auth/login", "/auth/refresh"];
+
+instance.interceptors.request.use(async (config) => {
+  const { url, headers } = config;
+  if (url && headers && !nonNeededToken.includes(url)) {
+    const session = await getSession();
+
+    headers.Authorization = `Bearer ${session?.accessToken}`;
+  }
+
+  return config;
+});
+
+export const fetchInstance = axios.create();
+
 type Options = {
   token?: string;
 } & AxiosRequestConfig;
 
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
   const { method = "GET", token } = options ?? {};
-
   const instanceOptions: AxiosRequestConfig = {
     url,
     method,
