@@ -1,4 +1,4 @@
-export interface CompoundFieldSetType {
+export default interface AuthFieldSetProps {
   label: string;
   id: string;
   inputType: string;

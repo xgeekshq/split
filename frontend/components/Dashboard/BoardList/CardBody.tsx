@@ -6,8 +6,8 @@ import {
   HoverCardArrow,
   HoverCardRoot,
 } from "../../Primitives/HoverCard";
-import { BoardType } from "../../../types/board";
-import { ColumnType } from "../../../types/column";
+import BoardType from "../../../types/board/board";
+import ColumnType from "../../../types/column";
 import Card from "../../Primitives/Card";
 import Flex from "../../Primitives/Flex";
 import CardHeader from "./CardHeader";
@@ -20,42 +20,41 @@ const Circle = styled(Shape, {
   size: "$32",
 });
 
-const HandleCols = React.memo<{ columns: ColumnType[] }>(({ columns }) => {
-  return (
-    <>
-      {columns.map((column) => {
-        const trigger = (
-          <Circle
-            variant="circle"
-            align="center"
-            justify="center"
-            css={{
-              color: "white",
-              backgroundColor: column.color,
-            }}
-          >
-            {column.cardsOrder.length}
-          </Circle>
-        );
-        return (
-          <HoverCardRoot key={column._id}>
-            <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
-            <HoverCardContent sideOffset={0}>
-              {column.title}
-              <HoverCardArrow />
-            </HoverCardContent>
-          </HoverCardRoot>
-        );
-      })}
-    </>
-  );
-});
+interface CardBodyProps {
+  board: BoardType;
+}
 
-const CardBody: React.FC<{ board: BoardType }> = ({ board }) => {
+const handleCols = (columns: ColumnType[]) => {
+  return columns.map((column) => {
+    const trigger = (
+      <Circle
+        variant="circle"
+        align="center"
+        justify="center"
+        css={{
+          color: "white",
+          backgroundColor: column.color === undefined ? "gray" : column.color,
+        }}
+      >
+        {column.cards.length}
+      </Circle>
+    );
+    return (
+      <HoverCardRoot key={column._id}>
+        <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
+        <HoverCardContent sideOffset={0}>
+          {column.title}
+          <HoverCardArrow />
+        </HoverCardContent>
+      </HoverCardRoot>
+    );
+  });
+};
+
+const CardBody: React.FC<CardBodyProps> = ({ board }) => {
   const [showEditTitle, setShowEditTitle] = useState(false);
-
   return (
-    <Link key={board._id} href={`boards/${board._id}`}>
+    <Link key={board._id} href={{ pathname: `boards/[boardId]`, query: { boardId: board._id } }}>
       <Card
         css={{ size: "$220", px: "$20", py: "$8", pointerEvents: showEditTitle ? "none" : "all" }}
         direction="column"
@@ -74,11 +73,7 @@ const CardBody: React.FC<{ board: BoardType }> = ({ board }) => {
           </Text>
         )}
         <Text>{board.creationDate?.slice(0, 10)}</Text>
-        {!!board.columns && (
-          <Flex gap="8">
-            <HandleCols columns={board.columns} />
-          </Flex>
-        )}
+        {board.columns && <Flex gap="8">{handleCols(board.columns)}</Flex>}
       </Card>
     </Link>
   );

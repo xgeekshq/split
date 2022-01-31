@@ -1,25 +1,24 @@
-import * as yup from "yup";
+import * as z from "zod";
 
-const schemaRegisterForm = yup
-  .object()
-  .shape({
-    name: yup
+const schemaRegisterForm = z
+  .object({
+    name: z
       .string()
-      .required("Please enter your name.")
+      .nonempty("Please enter your name.")
       .min(2, "Your name must have more than 2 characters."),
-    email: yup.string().required("Please insert your email.").email("This email is not valid."),
-    password: yup
+    email: z.string().nonempty("Please insert your email.").email("This email is not valid."),
+    password: z
       .string()
-      .required("Please enter your password.")
-      .matches(
+      .nonempty("Please enter your password.")
+      .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{7,})/,
         "Weak password, please check the info card."
       ),
-    passwordConf: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match.")
-      .required("Please enter a valid password."),
+    passwordConf: z.string().nonempty("Please enter a valid password."),
   })
-  .required();
+  .refine((data) => data.password === data.passwordConf, {
+    message: "Passwords don't match",
+    path: ["passwordConf"],
+  });
 
 export default schemaRegisterForm;

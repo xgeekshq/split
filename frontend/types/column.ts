@@ -1,32 +1,38 @@
-import CardType from "./card";
+import CardType from "./card/card";
 
-export interface ColumnType {
-  _id?: string;
+interface ColumnType {
+  _id: string;
   title: string;
   color: string;
-  cardsOrder: string[];
+  cards: CardType[];
 }
 
-interface Columns {
-  columns: ColumnType[];
-}
+export type CreateColumn = Omit<ColumnType, "_id">;
 
 export interface ColumnBoardType {
-  column: ColumnType;
-  index: number;
-}
-
-export interface ColumnCardType extends Columns {
+  columnId: string;
+  userId: string;
+  cards: CardType[];
+  boardId: string;
+  title: string;
   color: string;
-  card: CardType;
-  index: number;
+  socketId: string;
 }
 
 export interface ColumnInnerList {
   cards: CardType[];
-  cardsOrder: string[];
+  colId: string;
+  userId: string;
+  boardId: string;
   color: string;
-  columns: ColumnType[];
+  socketId: string;
 }
+
+export type ColumnDragItem = {
+  index: number;
+  id: string;
+  column: ColumnType;
+  type: "COLUMN";
+};
 
 export default ColumnType;

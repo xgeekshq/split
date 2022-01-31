@@ -25,7 +25,9 @@ const TextField = styled("input", {
       "3": {
         borderRadius: "$2",
         fontSize: "$18",
-        p: "$8",
+        pl: "$12",
+        pt: "$20",
+        pb: "$8",
         "&:-webkit-autofill::first-line": {
           fontSize: "$18",
         },

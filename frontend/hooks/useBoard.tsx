@@ -1,48 +1,47 @@
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { useMutation, useQuery } from "react-query";
 import ToastMessage from "../utils/toast";
-import { BoardType } from "../types/board";
+import BoardType from "../types/board/board";
 import {
-  deleteBoard,
-  getBoard,
-  getBoards,
-  getBoardWithAuth,
-  postBoard,
-  updateBoardTitle,
+  deleteBoardRequest,
+  getBoardRequest,
+  getBoardsRequest,
+  createBoardRequest,
+  updateCardPositionRequest,
+  updateBoardRequest,
+  addCardRequest,
+  deleteCardRequest,
+  updateCardRequest,
 } from "../api/boardService";
-import UseBoardType from "../types/useBoard";
-import { useStoreContext } from "../store/store";
+import UseBoardType from "../types/board/useBoard";
+import { setChangesBoard } from "../store/slicer/boardSlicer";
+import { useAppDispatch } from "../store/hooks";
 
 interface AutoFetchProps {
   autoFetchBoard: boolean;
   autoFetchBoards: boolean;
 }
 
-const useBoard = (
-  { autoFetchBoard = false, autoFetchBoards = false }: AutoFetchProps,
-  boardId?: string
-): UseBoardType => {
+const useBoard = ({
+  autoFetchBoard = false,
+  autoFetchBoards = false,
+}: AutoFetchProps): UseBoardType => {
   const router = useRouter();
-  const { data: session } = useSession({ required: false });
-  const { dispatch } = useStoreContext();
+  const boardId = String(router.query.boardId);
+  const dispatch = useAppDispatch();
+  // #region BOARD
 
-  const getBoardMethod = () => {
-    if (!boardId) return null;
-    return session ? getBoardWithAuth(boardId) : getBoard(boardId);
-  };
-
-  const fetchBoard = useQuery(["board", { id: boardId }], () => getBoardMethod(), {
+  const fetchBoard = useQuery(["board", { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
-    refetchOnWindowFocus: autoFetchBoard,
+    refetchOnWindowFocus: false,
   });
 
-  const fetchBoards = useQuery("boards", () => getBoards(), {
+  const fetchBoards = useQuery("boards", () => getBoardsRequest(), {
     enabled: autoFetchBoards,
     refetchOnWindowFocus: autoFetchBoards,
   });
 
-  const createBoard = useMutation(postBoard, {
+  const createBoard = useMutation(createBoardRequest, {
     onSuccess: (data: BoardType) => {
       router.push(`/boards/${data._id}`);
     },
@@ -51,7 +50,7 @@ const useBoard = (
     },
   });
 
-  const removeBoard = useMutation(deleteBoard, {
+  const deleteBoard = useMutation(deleteBoardRequest, {
     onSuccess: () => {
       ToastMessage("Board deleted!", "success");
       fetchBoards.refetch();
@@ -61,13 +60,11 @@ const useBoard = (
     },
   });
 
-  const patchBoardTitle = useMutation(updateBoardTitle, {
+  const updateBoard = useMutation(updateBoardRequest, {
     onSuccess: (board: BoardType, variables) => {
       ToastMessage("Board updated!", "success");
       if (!variables.boardPage) {
         fetchBoards.refetch();
-      } else {
-        dispatch({ type: "SET_BOARD", val: board });
       }
     },
     onError: () => {
@@ -75,7 +72,63 @@ const useBoard = (
     },
   });
 
-  return { createBoard, patchBoardTitle, removeBoard, fetchBoards, fetchBoard };
+  // #endregion
+
+  // #region CARD
+
+  const addCardInColumn = useMutation(addCardRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(setChangesBoard(board));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Card not inserted!", "error");
+    },
+  });
+
+  const updateCardPosition = useMutation(updateCardPositionRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(setChangesBoard(board));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Board not updated!", "error");
+    },
+  });
+
+  const updateCard = useMutation(updateCardRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(setChangesBoard(board));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Card not updated!", "error");
+    },
+  });
+
+  const deleteCard = useMutation(deleteCardRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(setChangesBoard(board));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Card not deleted!", "error");
+    },
+  });
+
+  // #endregion
+
+  return {
+    fetchBoard,
+    fetchBoards,
+    createBoard,
+    deleteBoard,
+    updateBoard,
+    addCardInColumn,
+    updateCard,
+    deleteCard,
+    updateCardPosition,
+  };
 };
 
 export default useBoard;

@@ -57,6 +57,17 @@ export default class AuthService {
     }
   }
 
+  async getJwt(userId: string) {
+    const accessToken = this.getJwtAccessToken(userId);
+    const refreshToken = this.getJwtRefreshToken(userId);
+    await this.usersService.setCurrentRefreshToken(refreshToken.token, userId);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
   public getJwtAccessToken(userId: string) {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload, {

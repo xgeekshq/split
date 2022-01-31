@@ -14,8 +14,18 @@ export default class LoggedUserDto {
   email!: string;
 
   @IsNotEmpty()
-  accessToken!: { expiresIn: string; token: string };
+  @IsString()
+  accessToken!: string;
 
   @IsNotEmpty()
-  refreshToken!: { expiresIn: string; token: string };
+  @IsString()
+  accessTokenExpiresIn!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  refreshToken!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  refreshTokenExpiresIn!: string;
 }

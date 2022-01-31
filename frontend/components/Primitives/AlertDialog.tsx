@@ -13,13 +13,12 @@ const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   },
 });
 
-const Root: React.FC = ({ children, ...props }) => {
-  return (
-    <AlertDialogPrimitive.Root {...props}>
-      <StyledOverlay />
-      {children}
-    </AlertDialogPrimitive.Root>
-  );
+interface AlertDialogRootProps {
+  defaultOpen: boolean;
+}
+
+const Root: React.FC<AlertDialogRootProps> = ({ children, ...props }) => {
+  return <AlertDialogPrimitive.Root {...props}>{children}</AlertDialogPrimitive.Root>;
 };
 
 const StyledContent = styled(AlertDialogPrimitive.Content, Flex, centerScreen, {
@@ -31,9 +30,12 @@ const StyledContent = styled(AlertDialogPrimitive.Content, Flex, centerScreen, {
 
 export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, Card, Flex, {
   size: "$160",
+  alignSelf: "center",
 });
 
 export const AlertDialog = Root;
 export const AlertDialogContent = StyledContent;
 export const AlertDialogAction = AlertDialogPrimitive.Action;
 export const AlertDialogCancel = AlertDialogPrimitive.Cancel;
+export const AlertDialogPortal = AlertDialogPrimitive.Portal;
+export const AlertDialogOverlay = StyledOverlay;

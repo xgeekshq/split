@@ -1,5 +1,5 @@
 import React from "react";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import useUser from "../../hooks/useUser";
 import Button from "../Primitives/Button";
@@ -8,21 +8,33 @@ import { TabsContent } from "../Primitives/Tab";
 import { User } from "../../types/user";
 import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
-import CompoundFieldSet from "./FieldSet/CompoundFieldSet";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
+import AuthFieldSet from "./FieldSet/AuthFieldSet";
+import { styled } from "../../stitches.config";
+
+const StyledText = styled(Text, {
+  backgroundColor: "$red5",
+  fontWeight: "bold",
+  p: "$16",
+  width: "100%",
+});
+
+const StyledButton = styled(Button, { mt: "$8", width: "100%" });
+const StyledForm = styled("form", { width: "100%" });
 
 const RegisterForm: React.FC = () => {
   const { setPw, createUser } = useUser();
   const { isError, error } = createUser;
 
   const methods = useForm<User>({
-    resolver: yupResolver(schemaRegisterForm),
+    resolver: zodResolver(schemaRegisterForm),
   });
 
   return (
     <TabsContent value="register">
       <FormProvider {...methods}>
-        <form
+        <StyledForm
+          style={{ width: "100%" }}
           onSubmit={methods.handleSubmit((dataUser: User) => {
             if (dataUser.password) {
               setPw(dataUser?.password);
@@ -30,30 +42,21 @@ const RegisterForm: React.FC = () => {
             }
           })}
         >
-          <Flex>
-            {isError ? (
-              <Text
-                color="red"
-                css={{
-                  mb: "$16",
-                  backgroundColor: "$red5",
-                  fontWeight: "bold",
-                  p: "$16",
-                  width: "100%",
-                }}
-              >
+          {isError ? (
+            <Flex css={{ mb: "$16" }}>
+              <StyledText color="red">
                 {ErrorMessages[error?.response?.data.message] ?? ErrorMessages.DEFAULT}
-              </Text>
-            ) : null}
-          </Flex>
-          <CompoundFieldSet label="Email" inputType="text" id="email" />
-          <CompoundFieldSet label="Name" inputType="text" id="name" />
-          <CompoundFieldSet label="Password" inputType="password" id="password" />
-          <CompoundFieldSet label="Password confirmation" id="passwordConf" inputType="password" />
-          <Button color="green" size="2" css={{ mt: "$8", width: "100%" }} type="submit">
+              </StyledText>
+            </Flex>
+          ) : null}
+          <AuthFieldSet label="Email" inputType="text" id="email" />
+          <AuthFieldSet label="Name" inputType="text" id="name" />
+          <AuthFieldSet label="Password" inputType="password" id="password" />
+          <AuthFieldSet label="Password confirmation" id="passwordConf" inputType="password" />
+          <StyledButton color="green" size="2" type="submit">
             Create account
-          </Button>
-        </form>
+          </StyledButton>
+        </StyledForm>
       </FormProvider>
     </TabsContent>
   );

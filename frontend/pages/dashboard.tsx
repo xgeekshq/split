@@ -1,33 +1,19 @@
 import { useState } from "react";
-import { getSession, GetSessionParams } from "next-auth/react";
+import { GetServerSideProps } from "next";
 import CreateBoard from "../components/Dashboard/CreateBoardModal";
 import { styled } from "../stitches.config";
 import Flex from "../components/Primitives/Flex";
 import BoardsList from "../components/Dashboard/BoardList/BoardsList";
 import Text from "../components/Primitives/Text";
 import { ERROR_LOADING_DATA } from "../utils/constants";
-import { RedirectServerSideProps, SessionServerSideProps } from "../types/serverSideProps";
 import useBoard from "../hooks/useBoard";
-import { AUTH_ROUTE } from "../utils/routes";
+import requireAuthentication from "../components/HOC/requireAuthentication";
 
-export async function getServerSideProps(
-  context: GetSessionParams | undefined
-): Promise<SessionServerSideProps | RedirectServerSideProps> {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: AUTH_ROUTE,
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => {
   return {
-    props: { session },
+    props: {},
   };
-}
+});
 
 const Container = styled("div", Flex);
 

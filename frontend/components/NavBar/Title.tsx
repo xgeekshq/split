@@ -1,14 +1,13 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useStoreContext } from "../../store/store";
+import { useAppSelector } from "../../store/hooks";
 import { CheckIsBoardPage, GetPageTitleByUrl } from "../../utils/routes";
 import Text from "../Primitives/Text";
 
 const Title: React.FC = () => {
   const router = useRouter();
-  const {
-    state: { board },
-  } = useStoreContext();
+
+  const board = useAppSelector((state) => state.board.value);
   const [editTitle, setEditTitle] = useState(false);
 
   const isBoardPage = CheckIsBoardPage(router.pathname);
