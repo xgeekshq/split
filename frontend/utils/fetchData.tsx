@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { getSession } from "next-auth/react";
-import { NEXT_PUBLIC_BACKEND_URL } from "./constants";
+import { BACKEND_URL, NEXT_PUBLIC_BACKEND_URL } from "./constants";
 
 export const instance = axios.create({
   baseURL: NEXT_PUBLIC_BACKEND_URL,
@@ -9,7 +9,7 @@ export const instance = axios.create({
   },
 });
 
-const nonNeededToken = ["/auth/login", "/auth/refresh"];
+const nonNeededToken = ["/auth/login", "/auth/refresh", "/auth/registerAzure"];
 
 instance.interceptors.request.use(async (config) => {
   const { url, headers } = config;
@@ -22,14 +22,20 @@ instance.interceptors.request.use(async (config) => {
   return config;
 });
 
-export const fetchInstance = axios.create();
+export const serverSideInstance = axios.create({
+  baseURL: BACKEND_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 type Options = {
   token?: string;
+  serverSide?: boolean;
 } & AxiosRequestConfig;
 
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
-  const { method = "GET", token } = options ?? {};
+  const { method = "GET", token, serverSide } = options ?? {};
   const instanceOptions: AxiosRequestConfig = {
     url,
     method,
@@ -43,7 +49,9 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
     };
   }
 
-  const { data } = await instance(instanceOptions);
+  const { data } = !serverSide
+    ? await instance(instanceOptions)
+    : await serverSideInstance(instanceOptions);
   return data;
 };
 

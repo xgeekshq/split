@@ -11,7 +11,7 @@ import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
 import Button from "../Primitives/Button";
 import AuthFieldSet from "./FieldSet/AuthFieldSet";
-import ErrorMessages from "../../errors/errorMessages";
+import ErrorMessages, { errorCodes } from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
 
@@ -25,7 +25,7 @@ const StyledButton = styled(Button, { mt: "$8", width: "100%" });
 const StyledForm = styled("form", { width: "100%" });
 
 const LoginForm: React.FC = () => {
-  const [loginError, setLoginError] = useState(false);
+  const [loginErrorCode, setLoginErrorCode] = useState(0);
   const methods = useForm<LoginUser>({
     resolver: zodResolver(SchemaLoginForm),
   });
@@ -40,10 +40,10 @@ const LoginForm: React.FC = () => {
       if (!result?.error) {
         router.push(DASHBOARD_ROUTE);
       } else {
-        setLoginError(true);
+        setLoginErrorCode(errorCodes(result.error));
       }
     } catch (error) {
-      setLoginError(true);
+      setLoginErrorCode(errorCodes(error as unknown as string));
     }
   };
 
@@ -56,9 +56,13 @@ const LoginForm: React.FC = () => {
             onLogin(credentials);
           })}
         >
-          {loginError ? (
+          {loginErrorCode > 0 ? (
             <Flex css={{ mb: "$16" }}>
-              <StyledText color="red">{ErrorMessages.INVALID_CREDENTIALS}</StyledText>
+              <StyledText color="red">
+                {loginErrorCode === 401
+                  ? ErrorMessages.INVALID_CREDENTIALS
+                  : ErrorMessages.USER_NOT_FOUND}
+              </StyledText>
             </Flex>
           ) : null}
           <AuthFieldSet label="Email" inputType="text" id="email" />

@@ -1,6 +1,46 @@
 version: "3.9"
 
 services:
+  backend:
+    build:
+      context: backend
+    image: dc-backend
+    ports:
+      - "3200:3200"
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      BACKEND_PORT: ${BACKEND_PORT}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET}
+      JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
+    restart: unless-stopped
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+        - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL}
+    image: dc-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+      BACKEND_URL: ${BACKEND_URL}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL}
+      SECRET: ${SECRET}
+      NEXT_PUBLIC_EXPIRATION_TIME: ${NEXT_PUBLIC_EXPIRATION_TIME}
+    restart: unless-stopped
+    depends_on:
+      - backend
   mongo:
     image: mongo
     restart: always
@@ -10,8 +50,8 @@ services:
     volumes:
       - ./database/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
-      MONGO_BACKEND_USER: ${DB_USER:-backend}
-      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      MONGO_BACKEND_USER: ${DB_USER}
+      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD}

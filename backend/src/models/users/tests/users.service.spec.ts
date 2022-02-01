@@ -49,9 +49,7 @@ describe('UsersService', () => {
         findOne.mockReturnValue(undefined);
       });
       it('should throw an error', async () => {
-        await expect(
-          usersService.getByEmail('test@test.com'),
-        ).rejects.toThrow();
+        expect(await usersService.getByEmail('test@test.com')).toEqual(false);
       });
     });
   });

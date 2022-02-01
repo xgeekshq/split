@@ -5,7 +5,6 @@ import User, { UserDocument } from './schemas/user.schema';
 import CreateUserDto from './dto/createUser.dto';
 import { compare, encrypt } from '../../utils/bcrypt';
 import {
-  EMAIL_NOT_EXISTS,
   USER_NOT_FOUND,
   TOKENS_NOT_MATCHING,
   DELETE_FAILED,
@@ -18,7 +17,7 @@ export default class UsersService {
   async getByEmail(email: string) {
     const user = await this.userModel.findOne({ email });
     if (user) return user;
-    throw new HttpException(EMAIL_NOT_EXISTS, HttpStatus.NOT_FOUND);
+    return false;
   }
 
   async getById(_id: string) {
