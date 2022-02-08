@@ -5,6 +5,18 @@
   "imageSize": 50,
   "commit": false,
   "contributors": [
+    {
+      "login": "nunocaseiro",
+      "name": "Nuno Caseiro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/90208434?v=4",
+      "profile": "https://github.com/nunocaseiro",
+      "contributions": [
+        "code",
+        "test",
+        "infra",
+        "doc"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",
