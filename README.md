@@ -90,7 +90,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table>
- 
+  <tr>
+    <td align="center"><a href="https://github.com/nunocaseiro"><img src="https://avatars.githubusercontent.com/u/90208434?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Nuno Caseiro</b></sub></a><br /><a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=nunocaseiro" title="Code">💻</a> <a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=nunocaseiro" title="Tests">⚠️</a> <a href="#infra-nunocaseiro" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=nunocaseiro" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
