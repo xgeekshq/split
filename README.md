@@ -22,7 +22,8 @@
   - [Database](#database)
   - [Backend](#backend)
   - [Frontend](#frontend)
-  - [Usage](#usage)
+- [🏃  How to Run - with docker](#--how-to-run---with-docker)
+- [Usage](#usage)
 - [📝 License](#-license)
 - [Contributors ✨](#contributors-)
 
@@ -37,7 +38,7 @@ Check out our [**Contributing Guide**](.github/CONTRIBUTING.md) for information 
 ## 🏃  How to Run - Dev mode
 
 To run the project you will need the requirements listed below and configure the env files as described in the example.
-In the near future all applications will be dockerized.
+In the next section [**How to run - with docker**](#--how-to-run---with-docker) you can find instructions on how to run the entire project with docker.
 
 ### Requirements
 
@@ -46,14 +47,15 @@ In the near future all applications will be dockerized.
 3. Env files
 
 ### Env files
-An .env file must be in the project root folder where the docker compose file is located and the others in each app folder (frontend and backend).
-This files are already provisioned as an example (`.env.example`) in the respective folders and you can use and edit them.
 
-The frontend .env file have the parameter named *SECRET* that is required by next-auth on the frontend and to generate it just run the following command `openssl rand -base64 32` in the shell then paste it in the .env file.  
+An `.env` file must be present in each app folder (frontend and backend) and it's also needed the `.env` in the root folder of the project in order to create the database.
+This files are already provisioned as an example (`.env.example`) in the respective folders and you can use and edit them. In order to use the example, please remove the suffix `.example` from the file name.
+
+The frontend `.env` file have the parameter named *SECRET* that is required by next-auth on the frontend and to generate it just run the following command `openssl rand -base64 32` in the shell then paste it in the `.env` file.  
 
 ### Database
 
-Since the database is the only app that is containerized, to run it step into the project root folder and run `docker-compose up -d`.
+Since the database is the only app required to run in dev mode. You need to build it running the follow command `docker-compose up -d mongo` in the project's root folder.
 The mongo image is downloaded, built and the database is created with the name that is passed as described in the env file parameter called *DB_NAME*. After the container is built, the init script that's inside the database folder runs in order to create a user to manage and connect to the database from the backend.
 
 ### Backend
@@ -64,7 +66,11 @@ To run this application for the first time run `npm i` inside the backend folder
 
 To run this application for the first time run `npm i` inside the frontend folder. Once you have installed the dependencies, simply run: `npm run dev`
 
-### Usage
+## 🏃  How to Run - with docker
+
+In order to run the whole project with docker you need to prepare the `.env.example` file that is present in the root folder of the project and from there run the following command: `docker-compose up -d`
+
+## Usage
 
 The backend will run on `http://localhost:BACKEND_PORT` and the frontend on `http://localhost:3000`. Be aware the frontend root page ("/") is the landing page and has not yet been built so you must manually enter one of the following routes:
 

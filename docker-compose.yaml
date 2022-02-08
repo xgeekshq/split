@@ -1,6 +1,46 @@
 version: "3.9"
 
 services:
+  backend:
+    build:
+      context: backend
+    image: dc-backend
+    ports:
+      - "3200:3200"
+    environment:
+      DB_USER: ${DB_USER:-backend}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-dc}
+      DB_HOST: ${DB_HOST:-mongo}
+      DB_PORT: ${DB_PORT:-27017}
+      BACKEND_PORT: ${BACKEND_PORT:-3200}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET:-backenddc2022}
+      JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-900}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET:-backenddc2022refresh}
+      JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME:-1}
+    restart: unless-stopped
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
+        - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
+    image: dc-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3200}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
+      SECRET: ${SECRET:-56e9169e3383d4a73fef9e0b4a3ff4e2}
+      NEXT_PUBLIC_EXPIRATION_TIME: ${NEXT_PUBLIC_EXPIRATION_TIME:-900}
+    restart: unless-stopped
+    depends_on:
+      - backend
   mongo:
     image: mongo
     restart: always
@@ -10,7 +50,7 @@ services:
     volumes:
       - ./database/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-admin}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
       MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
       MONGO_BACKEND_USER: ${DB_USER:-backend}

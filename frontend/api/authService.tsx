@@ -7,9 +7,9 @@ export const postUser = (newUser: User): Promise<User> => {
 };
 
 export const login = (credentials: LoginUser): Promise<User> => {
-  return fetchData("/auth/login", { method: "POST", data: credentials });
+  return fetchData("/auth/login", { method: "POST", data: credentials, serverSide: true });
 };
 
 export const refreshToken = (token: string): Promise<Token> => {
-  return fetchData("/auth/refresh", { token });
+  return fetchData("/auth/refresh", { token, serverSide: true });
 };

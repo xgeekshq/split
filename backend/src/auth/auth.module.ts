@@ -9,7 +9,6 @@ import LocalStrategy from './strategy/local.strategy';
 import JwtStrategy from './strategy/jwt.strategy';
 import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 import {
-  describeJWT,
   JWT_ACCESS_TOKEN_SECRET,
   JWT_ACCESS_TOKEN_EXPIRATION_TIME,
 } from '../constants/jwt';
@@ -23,11 +22,9 @@ import {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get(describeJWT(JWT_ACCESS_TOKEN_SECRET)),
+        secret: configService.get(JWT_ACCESS_TOKEN_SECRET),
         signOptions: {
-          expiresIn: `${configService.get(
-            describeJWT(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
-          )}s`,
+          expiresIn: `${configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME)}s`,
         },
       }),
     }),

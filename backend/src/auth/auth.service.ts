@@ -11,9 +11,12 @@ import {
   JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_EXPIRATION_TIME,
   JWT_REFRESH_TOKEN_SECRET,
-  describeJWT,
 } from '../constants/jwt';
-import { INVALID_CREDENTIALS, EMAIL_EXISTS } from '../constants/httpExceptions';
+import {
+  INVALID_CREDENTIALS,
+  EMAIL_EXISTS,
+  USER_NOT_FOUND,
+} from '../constants/httpExceptions';
 
 @Injectable()
 export default class AuthService {
@@ -25,8 +28,7 @@ export default class AuthService {
 
   public async getAuthenticatedUser(email: string, plainTextPassword: string) {
     const user = await this.usersService.getByEmail(email);
-    if (!user.password)
-      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+    if (!user) throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     await this.verifyPassword(plainTextPassword, user.password);
     return user;
   }
@@ -37,7 +39,7 @@ export default class AuthService {
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
     if (!isPasswordMatching) {
-      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.BAD_REQUEST);
+      throw new HttpException(INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -71,15 +73,11 @@ export default class AuthService {
   public getJwtAccessToken(userId: string) {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload, {
-      secret: this.configService.get(describeJWT(JWT_ACCESS_TOKEN_SECRET)),
-      expiresIn: `${this.configService.get(
-        describeJWT(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
-      )}s`,
+      secret: this.configService.get(JWT_ACCESS_TOKEN_SECRET),
+      expiresIn: `${this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME)}s`,
     });
     return {
-      expiresIn: this.configService.get(
-        describeJWT(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
-      ),
+      expiresIn: this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
       token,
     };
   }
@@ -88,15 +86,13 @@ export default class AuthService {
     const payload: TokenPayload = { userId };
 
     const token = this.jwtService.sign(payload, {
-      secret: this.configService.get(describeJWT(JWT_REFRESH_TOKEN_SECRET)),
+      secret: this.configService.get(JWT_REFRESH_TOKEN_SECRET),
       expiresIn: `${this.configService.get(
-        describeJWT(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
+        JWT_REFRESH_TOKEN_EXPIRATION_TIME,
       )}d`,
     });
     return {
-      expiresIn: this.configService.get(
-        describeJWT(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
-      ),
+      expiresIn: this.configService.get(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
       token,
     };
   }
