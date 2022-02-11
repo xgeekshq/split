@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import DatabaseModule from './database/database.module';
-import UsersModule from './models/users/users.module';
-import AuthModule from './auth/auth.module';
-import BoardsModule from './models/boards/boards.module';
-import ActionsModule from './socket/socket.module';
+import DatabaseModule from './infrastructure/database/database.module';
+import UsersModule from './modules/users/users.module';
+import AuthModule from './modules/auth/auth.module';
+import BoardsModule from './modules/boards/boards.module';
+import ActionsModule from './modules/socket/socket.module';
+import { configuration } from './infrastructure/config/configuration';
+import { CardsModule } from './modules/cards/cards.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
         DB_USER: Joi.string().required(),
@@ -28,7 +32,9 @@ import ActionsModule from './socket/socket.module';
     AuthModule,
     BoardsModule,
     ActionsModule,
+    CardsModule,
   ],
   controllers: [],
+  providers: [],
 })
 export default class AppModule {}
