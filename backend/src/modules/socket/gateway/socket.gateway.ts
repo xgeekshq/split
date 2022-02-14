@@ -8,8 +8,8 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import JoinPayload from 'src/modules/socket/interfaces/joinPayload.interface';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import JoinPayload from '../interfaces/joinPayload.interface';
+import { BoardDocument } from '../../boards/schemas/board.schema';
 
 @WebSocketGateway({ cors: true })
 export default class SocketGateway

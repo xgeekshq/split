@@ -31,8 +31,6 @@ export default class BoardsController {
     private deleteBoardApp: DeleteBoardApplication,
   ) {}
 
-  // #region BOARD
-
   @UseGuards(JwtAuthenticationGuard)
   @Post()
   createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {

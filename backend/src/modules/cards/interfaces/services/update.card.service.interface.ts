@@ -1,4 +1,4 @@
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from '../../../boards/schemas/board.schema';
 
 export interface UpdateCardService {
   updateCardPosition(

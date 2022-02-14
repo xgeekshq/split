@@ -1,7 +1,3 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { BaseDto } from '../../../libs/dto/base.dto';
 
-export default class DeleteCardDto {
-  @IsNotEmpty()
-  @IsString()
-  socketId!: string;
-}
+export default class DeleteCardDto extends BaseDto {}

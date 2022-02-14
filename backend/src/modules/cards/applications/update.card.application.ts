@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from '../../boards/schemas/board.schema';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
-import { TYPES } from '../interfaces/type';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class UpdateCardApplicationImpl implements UpdateCardApplication {

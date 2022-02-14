@@ -8,8 +8,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
+import SocketGateway from '../../socket/gateway/socket.gateway';
 import { AddCardDto } from '../dto/addCard.dto';
 import DeleteCardDto from '../dto/deleteCard.dto';
 import UpdateCardDto from '../dto/updateCard.dto';
@@ -17,7 +17,7 @@ import { UpdateCardPositionDto } from '../dto/updateCardPosition.dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
-import { TYPES } from '../interfaces/type';
+import { TYPES } from '../interfaces/types';
 
 @Controller('boards')
 export default class CardsController {

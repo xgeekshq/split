@@ -5,9 +5,10 @@ import DatabaseModule from './infrastructure/database/database.module';
 import UsersModule from './modules/users/users.module';
 import AuthModule from './modules/auth/auth.module';
 import BoardsModule from './modules/boards/boards.module';
-import ActionsModule from './modules/socket/socket.module';
+import SocketModule from './modules/socket/socket.module';
 import { configuration } from './infrastructure/config/configuration';
 import { CardsModule } from './modules/cards/cards.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -31,8 +32,9 @@ import { CardsModule } from './modules/cards/cards.module';
     UsersModule,
     AuthModule,
     BoardsModule,
-    ActionsModule,
+    SocketModule,
     CardsModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [],

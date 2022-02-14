@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { mongooseModule } from 'src/infrastructure/database/mongoose.module';
+import { mongooseModule } from '../../infrastructure/database/mongoose.module';
 import SocketModule from '../socket/socket.module';
 import {
   createCardApplication,

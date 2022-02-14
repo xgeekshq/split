@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { mongooseModule } from 'src/infrastructure/database/mongoose.module';
 import BoardsController from './controller/boards.controller';
 import UsersModule from '../users/users.module';
 import {
@@ -12,6 +11,7 @@ import {
   deleteBoardApplication,
   getBoardApplication,
 } from './boards.providers';
+import { mongooseModule } from '../../infrastructure/database/mongoose.module';
 
 @Module({
   imports: [UsersModule, mongooseModule],

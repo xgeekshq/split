@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { BaseDto } from '../../../libs/dto/base.dto';
 
-export class UpdateCardPositionDto {
+export class UpdateCardPositionDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
   targetColumnId!: string;
@@ -8,8 +9,4 @@ export class UpdateCardPositionDto {
   @IsNotEmpty()
   @IsNumber()
   newPosition!: number;
-
-  @IsNotEmpty()
-  @IsString()
-  socketId!: string;
 }

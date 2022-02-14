@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from '../../boards/schemas/board.schema';
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
-import { TYPES } from '../interfaces/type';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class DeleteCardApplicationImpl implements DeleteCardApplication {
