@@ -18,6 +18,7 @@ export default class UpdateUserServiceImpl implements UpdateUserService {
           $set: { currentHashedRefreshToken },
         },
       )
-      .lean();
+      .lean()
+      .exec();
   }
 }

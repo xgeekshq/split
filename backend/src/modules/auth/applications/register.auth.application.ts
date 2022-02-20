@@ -11,7 +11,7 @@ export class RegisterAuthApplicationImpl implements RegisterAuthApplication {
     private registerAuthService: RegisterAuthService,
   ) {}
 
-  async register(registrationData: CreateUserDto) {
+  register(registrationData: CreateUserDto) {
     return this.registerAuthService.register(registrationData);
   }
 }

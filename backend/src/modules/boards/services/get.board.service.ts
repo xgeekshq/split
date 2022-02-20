@@ -10,16 +10,17 @@ export default class GetBoardServiceImpl implements GetBoardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async getAllBoards(userId: string) {
+  getAllBoards(userId: string) {
     return this.boardModel
       .find({
         createdBy: userId,
       })
-      .lean();
+      .lean()
+      .exec();
   }
 
-  async getBoardFromRepo(boardId: string) {
-    return this.boardModel.findById(boardId).lean();
+  getBoardFromRepo(boardId: string) {
+    return this.boardModel.findById(boardId).lean().exec();
   }
 
   async getBoardWithEmail(boardId: string, userId: string) {

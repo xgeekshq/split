@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from '../../boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
@@ -13,12 +11,7 @@ export class CreateCardApplicationImpl implements CreateCardApplication {
     private createCardService: CreateCardService,
   ) {}
 
-  create(
-    cardId: string,
-    userId: string,
-    card: CardDto,
-    colIdToAdd: string,
-  ): Promise<LeanDocument<BoardDocument> | null> {
+  create(cardId: string, userId: string, card: CardDto, colIdToAdd: string) {
     return this.createCardService.create(cardId, userId, card, colIdToAdd);
   }
 }

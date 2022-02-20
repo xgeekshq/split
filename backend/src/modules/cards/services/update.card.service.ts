@@ -34,7 +34,8 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
             },
           },
         )
-        .lean();
+        .lean()
+        .exec();
 
       if (pullResult.modifiedCount !== 1) {
         return null;
@@ -56,12 +57,13 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
           },
           { new: true },
         )
-        .lean();
+        .lean()
+        .exec();
     }
     return null;
   }
 
-  async updateCardText(
+  updateCardText(
     boardId: string,
     cardId: string,
     cardItemId: string,
@@ -88,6 +90,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
           new: true,
         },
       )
-      .lean();
+      .lean()
+      .exec();
   }
 }

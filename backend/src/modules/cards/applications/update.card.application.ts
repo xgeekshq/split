@@ -32,7 +32,7 @@ export class UpdateCardApplicationImpl implements UpdateCardApplication {
     cardItemId: string,
     userId: string,
     text: string,
-  ): Promise<LeanDocument<BoardDocument> | null> {
+  ) {
     return this.updateCardService.updateCardText(
       boardId,
       cardId,

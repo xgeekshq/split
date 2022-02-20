@@ -10,21 +10,24 @@ export default class DeleteCommentServiceImpl implements DeleteCommentService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async deleteItemComment(boardId: string, commentId: string, userId: string) {
-    return this.boardModel.findOneAndUpdate(
-      {
-        _id: boardId,
-        'columns.cards.items.comments._id': commentId,
-      },
-      {
-        $pull: {
-          'columns.$.cards.$[].items.$[].comments': {
-            _id: commentId,
-            createdBy: userId,
+  deleteItemComment(boardId: string, commentId: string, userId: string) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.items.comments._id': commentId,
+        },
+        {
+          $pull: {
+            'columns.$.cards.$[].items.$[].comments': {
+              _id: commentId,
+              createdBy: userId,
+            },
           },
         },
-      },
-      { new: true, lean: true },
-    );
+        { new: true },
+      )
+      .lean()
+      .exec();
   }
 }

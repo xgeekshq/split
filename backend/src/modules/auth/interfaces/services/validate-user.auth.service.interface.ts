@@ -10,5 +10,5 @@ export interface ValidateUserAuthService {
   validateUserByRefreshToken(
     authorization: string,
     userId: string,
-  ): Promise<LeanDocument<UserDocument> | null>;
+  ): Promise<false | LeanDocument<UserDocument>>;
 }

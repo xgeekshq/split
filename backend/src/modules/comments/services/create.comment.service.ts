@@ -10,31 +10,33 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async createItemComment(
+  createItemComment(
     boardId: string,
     cardId: string,
     itemId: string,
     userId: string,
     text: string,
   ) {
-    return this.boardModel.findOneAndUpdate(
-      {
-        _id: boardId,
-        'columns.cards.items._id': itemId,
-      },
-      {
-        $push: {
-          'columns.$.cards.$[c].items.$[i].comments': {
-            text,
-            createdBy: userId,
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.items._id': itemId,
+        },
+        {
+          $push: {
+            'columns.$.cards.$[c].items.$[i].comments': {
+              text,
+              createdBy: userId,
+            },
           },
         },
-      },
-      {
-        arrayFilters: [{ 'c._id': cardId }, { 'i._id': itemId }],
-        new: true,
-        lean: true,
-      },
-    );
+        {
+          arrayFilters: [{ 'c._id': cardId }, { 'i._id': itemId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
   }
 }

@@ -27,23 +27,16 @@ export default class ValidateUserAuthServiceImpl
     return user;
   }
 
-  public async validateUserById(userId: string) {
-    const user = await this.getUserService.getById(userId);
-    if (!user) return null;
-    return user;
+  public validateUserById(userId: string) {
+    return this.getUserService.getById(userId);
   }
 
-  public async validateUserByRefreshToken(
-    authorization: string,
-    userId: string,
-  ) {
+  public validateUserByRefreshToken(authorization: string, userId: string) {
     const refreshToken = authorization.replace('Bearer', '').trim();
-    const user = await this.getUserService.getUserIfRefreshTokenMatches(
+    return this.getUserService.getUserIfRefreshTokenMatches(
       refreshToken,
       userId,
     );
-    if (!user) return null;
-    return user;
   }
 
   private async verifyPassword(

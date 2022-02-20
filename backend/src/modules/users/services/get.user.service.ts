@@ -9,15 +9,16 @@ import User, { UserDocument } from '../schemas/user.schema';
 export default class GetUserServiceImpl implements GetUserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async getByEmail(email: string) {
-    return this.userModel.findOne({ email }).lean();
+  getByEmail(email: string) {
+    return this.userModel.findOne({ email }).lean().exec();
   }
 
-  async getById(_id: string) {
+  getById(_id: string) {
     return this.userModel
       .findById(_id)
       .select(['-password -currentHashedRefreshToken'])
-      .lean();
+      .lean()
+      .exec();
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {

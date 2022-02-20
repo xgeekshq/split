@@ -20,7 +20,9 @@ describe('The AuthenticationService', () => {
   let findUser: jest.Mock;
   beforeEach(async () => {
     findUser = jest.fn().mockImplementation(() => ({
-      lean: jest.fn().mockReturnValue(mockedUser),
+      lean: jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockReturnValue(mockedUser),
+      })),
     }));
     const usersRepository = {
       findOne: findUser,
@@ -88,7 +90,9 @@ describe('The AuthenticationService', () => {
       describe('and the user is not found in the database', () => {
         beforeEach(() => {
           findUser.mockImplementation(() => ({
-            lean: jest.fn().mockResolvedValueOnce(undefined),
+            lean: jest.fn().mockImplementation(() => ({
+              exec: jest.fn().mockReturnValue(undefined),
+            })),
           }));
         });
         it('should throw an error', async () => {

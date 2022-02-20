@@ -10,7 +10,7 @@ export class GetTokenAuthApplicationImpl implements GetTokenAuthApplication {
     private getTokenAuthService: GetTokenAuthService,
   ) {}
 
-  async getTokens(userId: string) {
+  getTokens(userId: string) {
     return this.getTokenAuthService.getTokens(userId);
   }
 

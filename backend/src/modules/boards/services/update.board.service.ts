@@ -11,7 +11,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async update(userId: string, boardId: string, boardData: BoardDto) {
+  update(userId: string, boardId: string, boardData: BoardDto) {
     return this.boardModel
       .findOneAndUpdate(
         {
@@ -23,6 +23,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
           new: true,
         },
       )
-      .lean();
+      .lean()
+      .exec();
   }
 }

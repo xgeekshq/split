@@ -10,7 +10,7 @@ export class DeleteBoardApplicationImpl implements DeleteBoardApplication {
     private deleteBoardService: DeleteBoardService,
   ) {}
 
-  async delete(boardId: string, userId: string): Promise<boolean> {
+  delete(boardId: string, userId: string): Promise<boolean> {
     return this.deleteBoardService.delete(boardId, userId);
   }
 }

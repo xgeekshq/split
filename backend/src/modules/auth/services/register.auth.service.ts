@@ -14,10 +14,9 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
   public async register(registrationData: CreateUserDto) {
     const hashedPassword = await encrypt(registrationData.password);
-    const createdUser = await this.createUserService.create({
+    return this.createUserService.create({
       ...registrationData,
       password: hashedPassword,
     });
-    return createdUser;
   }
 }

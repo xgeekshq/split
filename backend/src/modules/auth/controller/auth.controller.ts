@@ -54,17 +54,13 @@ export default class AuthController {
       user: { _id: id, name, email },
     } = request;
 
-    const result = await this.getTokenAuthApp.getTokens(id);
-    if (!result) throw new NotFoundException(USER_NOT_FOUND);
-    const { accessToken, refreshToken } = result;
+    const tokens = await this.getTokenAuthApp.getTokens(id);
+    if (!tokens) throw new NotFoundException(USER_NOT_FOUND);
     const userWToken: LoggedUserDto = {
       id,
       name,
       email,
-      accessToken: accessToken.token,
-      accessTokenExpiresIn: accessToken.expiresIn,
-      refreshToken: refreshToken.token,
-      refreshTokenExpiresIn: refreshToken.expiresIn,
+      ...tokens,
     };
 
     return userWToken;

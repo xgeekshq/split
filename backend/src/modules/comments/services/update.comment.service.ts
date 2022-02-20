@@ -10,7 +10,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async updateItemComment(
+  updateItemComment(
     boardId: string,
     cardId: string,
     cardItemId: string,
@@ -18,25 +18,27 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
     userId: string,
     text: string,
   ) {
-    return this.boardModel.findOneAndUpdate(
-      {
-        _id: boardId,
-        'columns.cards.items.comments._id': commentId,
-      },
-      {
-        $set: {
-          'columns.$.cards.$[c].items.$[i].comments.$[com].text': text,
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.items.comments._id': commentId,
         },
-      },
-      {
-        arrayFilters: [
-          { 'c._id': cardId },
-          { 'i._id': cardItemId },
-          { 'com._id': commentId, 'com.createdBy': userId },
-        ],
-        new: true,
-        lean: true,
-      },
-    );
+        {
+          $set: {
+            'columns.$.cards.$[c].items.$[i].comments.$[com].text': text,
+          },
+        },
+        {
+          arrayFilters: [
+            { 'c._id': cardId },
+            { 'i._id': cardItemId },
+            { 'com._id': commentId, 'com.createdBy': userId },
+          ],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
   }
 }

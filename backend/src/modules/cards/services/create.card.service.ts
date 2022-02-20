@@ -12,12 +12,7 @@ export default class CreateCardServiceImpl implements CreateCardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async create(
-    cardId: string,
-    userId: string,
-    card: CardDto,
-    colIdToAdd: string,
-  ) {
+  create(cardId: string, userId: string, card: CardDto, colIdToAdd: string) {
     card.createdBy = userId;
 
     if (isEmpty(card.items)) {
@@ -43,6 +38,7 @@ export default class CreateCardServiceImpl implements CreateCardService {
         },
         { new: true },
       )
-      .lean();
+      .lean()
+      .exec();
   }
 }

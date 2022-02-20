@@ -11,40 +11,42 @@ export default class GetCardServiceImpl implements GetCardService {
   ) {}
 
   async getCardFromBoard(boardId: string, cardId: string) {
-    const result = await this.boardModel.aggregate([
-      {
-        $match: {
-          _id: new Types.ObjectId(boardId),
-          'columns.cards._id': new Types.ObjectId(cardId),
+    const result = await this.boardModel
+      .aggregate([
+        {
+          $match: {
+            _id: new Types.ObjectId(boardId),
+            'columns.cards._id': new Types.ObjectId(cardId),
+          },
         },
-      },
-      {
-        $unwind: {
-          path: '$columns',
+        {
+          $unwind: {
+            path: '$columns',
+          },
         },
-      },
-      {
-        $unwind: {
-          path: '$columns.cards',
+        {
+          $unwind: {
+            path: '$columns.cards',
+          },
         },
-      },
-      {
-        $project: {
-          card: '$columns.cards',
-          _id: 0,
+        {
+          $project: {
+            card: '$columns.cards',
+            _id: 0,
+          },
         },
-      },
-      {
-        $replaceRoot: {
-          newRoot: '$card',
+        {
+          $replaceRoot: {
+            newRoot: '$card',
+          },
         },
-      },
-      {
-        $match: {
-          _id: new Types.ObjectId(cardId),
+        {
+          $match: {
+            _id: new Types.ObjectId(cardId),
+          },
         },
-      },
-    ]);
+      ])
+      .exec();
 
     return result.length === 1 ? result[0] : null;
   }

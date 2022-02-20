@@ -11,7 +11,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  async delete(boardId: string, cardId: string, userId: string) {
+  delete(boardId: string, cardId: string, userId: string) {
     return this.boardModel
       .findOneAndUpdate(
         {
@@ -25,6 +25,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
         },
         { new: true },
       )
-      .lean();
+      .lean()
+      .exec();
   }
 }

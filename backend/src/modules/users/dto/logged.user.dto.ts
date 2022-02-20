@@ -1,4 +1,5 @@
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { Token } from '../../../libs/interfaces/jwt/token.interface';
 
 export default class LoggedUserDto {
   @IsNotEmpty()
@@ -15,18 +16,8 @@ export default class LoggedUserDto {
   email!: string;
 
   @IsNotEmpty()
-  @IsString()
-  accessToken!: string;
+  accessToken!: Token;
 
   @IsNotEmpty()
-  @IsString()
-  accessTokenExpiresIn!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  refreshToken!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  refreshTokenExpiresIn!: string;
+  refreshToken!: Token;
 }
