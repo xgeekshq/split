@@ -1,19 +1,29 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Inject,
+  Param,
   Post,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  DELETE_FAILED,
+  INSERT_FAILED,
+  UPDATE_FAILED,
+} from '../../../libs/exceptions/messages';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import SocketGateway from '../../socket/gateway/socket.gateway';
-import CommentDto from '../dto/comment';
-import DeleteCommentDto from '../dto/deleteComment.dto';
-import UpdateCardCommentDto from '../dto/updateComment.dto';
+import CreateCommentDto from '../dto/create.comment.dto';
+import DeleteCommentDto from '../dto/delete.comment.dto';
+import { CreateCommentParams } from '../dto/params/create.comment.params';
+import { DeleteCommentParams } from '../dto/params/delete.comment.params';
+import { UpdateCommentParams } from '../dto/params/update.comment.params';
+import UpdateCardCommentDto from '../dto/update.comment.dto';
 import { CreateCommentApplication } from '../interfaces/applications/create.comment.application.interface';
 import { DeleteCommentApplication } from '../interfaces/applications/delete.comment.application.interface';
 import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
@@ -32,15 +42,17 @@ export default class CommentsController {
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
-  @Post(':id/card/:cardId/items/:itemId/comment')
+  @Post(':boardId/card/:cardId/items/:itemId/comment')
   async addItemComment(
     @Req() request: RequestWithUser,
-    @Body() createCommentDto: CommentDto,
+    @Param()
+    params: CreateCommentParams,
+    @Body() createCommentDto: CreateCommentDto,
   ) {
     const {
-      params: { id: boardId, cardId, itemId },
       user: { _id: userId },
     } = request;
+    const { boardId, cardId, itemId } = params;
     const { text } = createCommentDto;
 
     const board = await this.createCommentApp.createItemComment(
@@ -50,48 +62,53 @@ export default class CommentsController {
       userId,
       text,
     );
+    if (!board) throw new BadRequestException(INSERT_FAILED);
     this.socketService.sendUpdatedBoard(board, createCommentDto.socketId);
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Put(':id/card/:cardId/items/:cardItemId/comment/:commentId')
+  @Put(':boardId/card/:cardId/items/:itemId/comment/:commentId')
   async updateCardItemComment(
     @Req() request: RequestWithUser,
+    @Param() params: UpdateCommentParams,
     @Body() commentData: UpdateCardCommentDto,
   ) {
     const {
-      params: { id: boardId, cardId, cardItemId, commentId },
       user: { _id: userId },
     } = request;
+    const { boardId, cardId, itemId, commentId } = params;
     const { text } = commentData;
     const board = await this.updateCommentApp.updateItemComment(
       boardId,
       cardId,
-      cardItemId,
+      itemId,
       commentId,
       userId,
       text,
     );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, commentData.socketId);
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Delete(':id/card/:cardId/items/:cardItemId/comment/:commentId')
+  @Delete(':boardId/card/:cardId/items/:itemId/comment/:commentId')
   async deleteCardItemComment(
     @Req() request: RequestWithUser,
+    @Param() params: DeleteCommentParams,
     @Body() deleteData: DeleteCommentDto,
   ) {
     const {
-      params: { id: boardId, commentId },
       user: { _id: userId },
     } = request;
+    const { boardId, commentId } = params;
     const board = await this.deleteCommentApp.deleteItemComment(
       boardId,
       commentId,
       userId,
     );
+    if (!board) throw new BadRequestException(DELETE_FAILED);
     this.socketService.sendUpdatedBoard(board, deleteData.socketId);
     return board;
   }

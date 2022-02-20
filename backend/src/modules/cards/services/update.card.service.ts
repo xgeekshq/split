@@ -1,7 +1,6 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UPDATE_FAILED } from '../../../libs/exceptions/messages';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
@@ -35,13 +34,13 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
             },
           },
         )
-        .exec();
+        .lean();
 
       if (pullResult.modifiedCount !== 1) {
-        throw new BadRequestException(UPDATE_FAILED);
+        return null;
       }
 
-      const pushResult = await this.boardModel
+      return this.boardModel
         .findOneAndUpdate(
           {
             _id: boardId,
@@ -55,15 +54,11 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
               },
             },
           },
-          { rawResult: true, new: true },
+          { new: true },
         )
-        .exec();
-
-      if (pushResult.lastErrorObject?.updatedExisting && pushResult.value) {
-        return pushResult.value;
-      }
+        .lean();
     }
-    throw new BadRequestException(UPDATE_FAILED);
+    return null;
   }
 
   async updateCardText(
@@ -73,7 +68,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
     userId: string,
     text: string,
   ) {
-    const result = await this.boardModel
+    return this.boardModel
       .findOneAndUpdate(
         {
           _id: boardId,
@@ -91,12 +86,8 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
             { 'item._id': cardItemId, 'item.createdBy': userId },
           ],
           new: true,
-          rawResult: true,
         },
       )
-      .exec();
-    if (result.value && result.lastErrorObject?.updatedExisting)
-      return result.value;
-    throw new BadRequestException(UPDATE_FAILED);
+      .lean();
   }
 }

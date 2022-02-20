@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../../boards/schemas/board.schema';
 
 export interface UpdateCommentService {
@@ -8,5 +9,5 @@ export interface UpdateCommentService {
     commentId: string,
     userId: string,
     text: string,
-  ): Promise<BoardDocument>;
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export default class LoggedUserDto {
   @IsNotEmpty()
+  @IsMongoId()
   @IsString()
   id!: string;
 

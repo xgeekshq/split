@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../boards/schemas/board.schema';
 import { DeleteCommentApplication } from '../interfaces/applications/delete.comment.application.interface';
 import { DeleteCommentService } from '../interfaces/services/delete.comment.service.interface';
@@ -15,7 +16,7 @@ export class DeleteCommentApplicationImpl implements DeleteCommentApplication {
     boardId: string,
     commentId: string,
     userId: string,
-  ): Promise<BoardDocument> {
+  ): Promise<LeanDocument<BoardDocument> | null> {
     return this.deleteCommentService.deleteItemComment(
       boardId,
       commentId,

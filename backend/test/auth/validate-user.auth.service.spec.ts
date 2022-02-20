@@ -19,7 +19,9 @@ describe('The AuthenticationService', () => {
   let bcryptCompare: jest.Mock;
   let findUser: jest.Mock;
   beforeEach(async () => {
-    findUser = jest.fn().mockResolvedValue(mockedUser);
+    findUser = jest.fn().mockImplementation(() => ({
+      lean: jest.fn().mockReturnValue(mockedUser),
+    }));
     const usersRepository = {
       findOne: findUser,
     };
@@ -62,12 +64,12 @@ describe('The AuthenticationService', () => {
         bcryptCompare.mockReturnValue(false);
       });
       it('should throw an error', async () => {
-        await expect(
-          authenticationService.validateUserWithCredentials(
+        expect(
+          await authenticationService.validateUserWithCredentials(
             'user@email.com',
             'strongPassword',
           ),
-        ).rejects.toThrow();
+        ).toEqual(null);
       });
     });
     describe('and the provided password is valid', () => {
@@ -75,9 +77,6 @@ describe('The AuthenticationService', () => {
         bcryptCompare.mockReturnValue(true);
       });
       describe('and the user is found in the database', () => {
-        beforeEach(() => {
-          findUser.mockResolvedValue(mockedUser);
-        });
         it('should return the user data', async () => {
           const user = await authenticationService.validateUserWithCredentials(
             'user@email.com',
@@ -88,7 +87,9 @@ describe('The AuthenticationService', () => {
       });
       describe('and the user is not found in the database', () => {
         beforeEach(() => {
-          findUser.mockResolvedValue(undefined);
+          findUser.mockImplementation(() => ({
+            lean: jest.fn().mockResolvedValueOnce(undefined),
+          }));
         });
         it('should throw an error', async () => {
           await expect(
@@ -96,7 +97,7 @@ describe('The AuthenticationService', () => {
               'user@email.com',
               'strongPassword',
             ),
-          ).rejects.toThrow();
+          ).resolves.toEqual(null);
         });
       });
     });

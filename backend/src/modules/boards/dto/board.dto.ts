@@ -7,12 +7,14 @@ import {
   IsOptional,
   IsBoolean,
   IsNumber,
+  IsMongoId,
 } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import ColumnDto from './column/column.dto';
 
 export default class BoardDto {
   @IsOptional()
+  @IsMongoId()
   _id?: string;
 
   @IsString()

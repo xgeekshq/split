@@ -23,11 +23,11 @@ export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
   async getTokens(userId: string) {
     const accessToken = this.getAccessToken(userId);
     const refreshToken = this.getRefreshToken(userId);
-    await this.updateUserService.setCurrentRefreshToken(
+    const user = await this.updateUserService.setCurrentRefreshToken(
       refreshToken.token,
       userId,
     );
-
+    if (!user) return null;
     return {
       accessToken,
       refreshToken,

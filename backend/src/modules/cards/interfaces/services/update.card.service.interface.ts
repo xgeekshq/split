@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../../boards/schemas/board.schema';
 
 export interface UpdateCardService {
@@ -6,12 +7,12 @@ export interface UpdateCardService {
     cardId: string,
     targetColumnId: string,
     newPosition: number,
-  ): Promise<BoardDocument>;
+  ): Promise<LeanDocument<BoardDocument> | null>;
   updateCardText(
     boardId: string,
     cardId: string,
     cardItemId: string,
     userId: string,
     text: string,
-  ): Promise<BoardDocument>;
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

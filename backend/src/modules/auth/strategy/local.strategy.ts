@@ -1,9 +1,11 @@
+import { LeanDocument } from 'mongoose';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Inject, Injectable } from '@nestjs/common';
-import User from '../../users/schemas/user.schema';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserDocument } from '../../users/schemas/user.schema';
 import { TYPES } from '../interfaces/types';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
+import { INVALID_CREDENTIALS } from '../../../libs/exceptions/messages';
 
 @Injectable()
 export default class LocalStrategy extends PassportStrategy(Strategy) {
@@ -16,10 +18,15 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(email: string, password: string): Promise<User> {
-    return this.validateUserAuthService.validateUserWithCredentials(
+  async validate(
+    email: string,
+    password: string,
+  ): Promise<LeanDocument<UserDocument> | null> {
+    const user = await this.validateUserAuthService.validateUserWithCredentials(
       email,
       password,
     );
+    if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
+    return user;
   }
 }

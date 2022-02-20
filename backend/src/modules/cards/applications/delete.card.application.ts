@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../boards/schemas/board.schema';
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
@@ -15,7 +16,7 @@ export class DeleteCardApplicationImpl implements DeleteCardApplication {
     boardId: string,
     cardId: string,
     userId: string,
-  ): Promise<BoardDocument> {
+  ): Promise<LeanDocument<BoardDocument> | null> {
     return this.deleteCardService.delete(boardId, cardId, userId);
   }
 }

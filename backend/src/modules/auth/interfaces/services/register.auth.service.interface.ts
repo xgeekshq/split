@@ -1,6 +1,9 @@
-import RegisterDto from '../../../users/dto/register.dto';
+import { LeanDocument } from 'mongoose';
+import CreateUserDto from '../../../users/dto/create.user.dto';
 import { UserDocument } from '../../../users/schemas/user.schema';
 
 export interface RegisterAuthService {
-  register(registrationData: RegisterDto): Promise<UserDocument>;
+  register(
+    registrationData: CreateUserDto,
+  ): Promise<LeanDocument<UserDocument>>;
 }

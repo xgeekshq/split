@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -20,7 +21,10 @@ export default class SocketGateway
 
   private logger: Logger = new Logger('AppGateway');
 
-  sendUpdatedBoard(newBoard: BoardDocument, excludedClient: string) {
+  sendUpdatedBoard(
+    newBoard: LeanDocument<BoardDocument>,
+    excludedClient: string,
+  ) {
     this.server
       .to(newBoard._id.toString())
       .except(excludedClient)

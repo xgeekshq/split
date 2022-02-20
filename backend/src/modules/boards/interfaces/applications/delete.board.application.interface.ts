@@ -1,3 +1,3 @@
 export interface DeleteBoardApplication {
-  delete(boardId: string, userId: string): Promise<string>;
+  delete(boardId: string, userId: string): Promise<boolean>;
 }

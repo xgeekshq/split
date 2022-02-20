@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../../boards/schemas/board.schema';
 
 export interface DeleteCommentService {
@@ -5,5 +6,5 @@ export interface DeleteCommentService {
     boardId: string,
     commentId: string,
     userId: string,
-  ): Promise<BoardDocument>;
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

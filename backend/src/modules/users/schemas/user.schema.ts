@@ -1,6 +1,7 @@
+import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type UserDocument = User & Document;
+export type UserDocument = User & mongoose.Document;
 
 @Schema()
 export default class User {
@@ -19,8 +20,8 @@ export default class User {
 
   @Prop({ nullable: false }) strategy!: string;
 
-  @Prop()
-  public currentHashedRefreshToken?: string;
+  @Prop({ nullable: true })
+  currentHashedRefreshToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

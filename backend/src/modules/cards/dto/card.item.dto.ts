@@ -1,4 +1,5 @@
 import {
+  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -9,6 +10,7 @@ import CommentDto from '../../comments/dto/comment';
 
 export default class CardItemDto {
   @IsOptional()
+  @IsMongoId()
   @IsString()
   _id?: string;
 
@@ -18,6 +20,7 @@ export default class CardItemDto {
   text!: string;
 
   @IsNotEmpty()
+  @IsMongoId()
   @IsString()
   createdBy!: string;
 

@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../../boards/schemas/board.schema';
 
 export interface DeleteCardApplication {
@@ -5,5 +6,5 @@ export interface DeleteCardApplication {
     boardId: string,
     cardId: string,
     userId: string,
-  ): Promise<BoardDocument>;
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

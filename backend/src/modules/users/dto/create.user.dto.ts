@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 
-export default class RegisterDto {
+export default class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())

@@ -1,8 +1,7 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { compare } from '../../../libs/utils/bcrypt';
 import { TYPES } from '../../users/interfaces/types';
 import { GetUserService } from '../../users/interfaces/services/get.user.service.interface';
-import { INVALID_CREDENTIALS } from '../../../libs/exceptions/messages';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
 
 @Injectable()
@@ -19,15 +18,19 @@ export default class ValidateUserAuthServiceImpl
     plainTextPassword: string,
   ) {
     const user = await this.getUserService.getByEmail(email);
-    if (!user) throw new UnauthorizedException();
-    await this.verifyPassword(plainTextPassword, user.password);
+    if (!user) return null;
+    const passwordsMatch = await this.verifyPassword(
+      plainTextPassword,
+      user.password,
+    );
+    if (!passwordsMatch) return null;
     return user;
   }
 
   public async validateUserById(userId: string) {
     const user = await this.getUserService.getById(userId);
-    if (user) return user;
-    throw new UnauthorizedException(INVALID_CREDENTIALS);
+    if (!user) return null;
+    return user;
   }
 
   public async validateUserByRefreshToken(
@@ -39,8 +42,8 @@ export default class ValidateUserAuthServiceImpl
       refreshToken,
       userId,
     );
-    if (user) return user;
-    throw new UnauthorizedException(INVALID_CREDENTIALS);
+    if (!user) return null;
+    return user;
   }
 
   private async verifyPassword(
@@ -48,8 +51,7 @@ export default class ValidateUserAuthServiceImpl
     hashedPassword: string,
   ) {
     const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
-    if (!isPasswordMatching) {
-      throw new UnauthorizedException(INVALID_CREDENTIALS);
-    }
+    if (!isPasswordMatching) return null;
+    return isPasswordMatching;
   }
 }

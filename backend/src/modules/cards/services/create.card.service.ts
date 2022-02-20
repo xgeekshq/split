@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { INSERT_FAILED } from '../../../libs/exceptions/messages';
+import isEmpty from '../../../libs/utils/isEmpty';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
@@ -13,21 +13,21 @@ export default class CreateCardServiceImpl implements CreateCardService {
   ) {}
 
   async create(
-    cardId: number,
+    cardId: string,
     userId: string,
     card: CardDto,
     colIdToAdd: string,
   ) {
-    card.createdBy = userId.toString();
+    card.createdBy = userId;
 
-    if (card.items.length === 0) {
+    if (isEmpty(card.items)) {
       card.items.push({
         text: card.text,
         createdBy: userId,
         comments: [],
       });
     }
-    const result = await this.boardModel
+    return this.boardModel
       .findOneAndUpdate(
         {
           _id: cardId,
@@ -41,11 +41,8 @@ export default class CreateCardServiceImpl implements CreateCardService {
             },
           },
         },
-        { new: true, rawResult: true },
+        { new: true },
       )
-      .exec();
-    if (result.value && result.lastErrorObject?.updatedExisting)
-      return result.value;
-    throw new BadRequestException(INSERT_FAILED);
+      .lean();
   }
 }
