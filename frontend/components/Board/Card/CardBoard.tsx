@@ -10,14 +10,14 @@ import DeleteItem from "../Item/DeleteItem";
 import EditItem from "../Item/EditItem";
 import TextItem from "../Item/TextItem";
 import UpdateItem from "../Item/UpdateItem";
+import CardFooter from "./CardFooter";
+import SideBard from "./SideBar";
 
 const Container = styled(Card, {
+  borderRadius: "$2",
   p: "$8",
   mt: "$16",
   wordBreak: "breakWord",
-  cursor: "grab",
-  borderRadius: "$6",
-  boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
 });
 
 interface CardBoardProps {
@@ -34,6 +34,7 @@ interface CardBoardProps {
 const CardBoard: React.FC<CardBoardProps> = ({
   card,
   index,
+  color,
   isPreview,
   boardId,
   socketId,
@@ -45,6 +46,10 @@ const CardBoard: React.FC<CardBoardProps> = ({
   const [editText, setEditText] = useState(false);
   const [newText, setNewText] = useState(card.text);
 
+  const [show, setShow] = useState(false);
+  const handleOpenSideBar = () => {
+    if (!editText) setShow(true);
+  };
   const handleUpdateCardText = () => {
     if (newText.trim() !== card.text) {
       if (newText?.length > 0 && boardId) {
@@ -56,11 +61,11 @@ const CardBoard: React.FC<CardBoardProps> = ({
           socketId,
           isCardGroup,
         });
-        setEditText(false);
       } else {
         ToastMessage("Card text cannot be empty!", "error");
       }
     }
+    setEditText(false);
   };
 
   return (
@@ -68,9 +73,15 @@ const CardBoard: React.FC<CardBoardProps> = ({
       {(provided) => (
         <Container
           direction="column"
+          css={{
+            cursor: "grab",
+            borderRadius: "$6",
+            boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
+          }}
           {...provided.dragHandleProps}
           {...provided.draggableProps}
           ref={provided.innerRef}
+          onClick={handleOpenSideBar}
         >
           {!editText && !isPreview && card.createdBy === userId && (
             <Flex justify="end" gap="4">
@@ -91,6 +102,20 @@ const CardBoard: React.FC<CardBoardProps> = ({
               newText={newText}
               setNewText={setNewText}
               text={card.text}
+            />
+          )}
+          {!editText && !isPreview && (
+            <CardFooter boardId={boardId} socketId={socketId} userId={userId} card={card} />
+          )}
+          {!isPreview && (
+            <SideBard
+              show={show}
+              setShow={setShow}
+              card={card}
+              color={color}
+              userId={userId}
+              boardId={boardId}
+              socketId={socketId}
             />
           )}
           {editText && <UpdateItem handleUpdate={handleUpdateCardText} />}

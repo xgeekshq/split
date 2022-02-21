@@ -1,5 +1,5 @@
 import ColumnType, { CreateColumn } from "../column";
-import { User } from "../user";
+import { User } from "../user/user";
 
 export default interface BoardType {
   _id: string;

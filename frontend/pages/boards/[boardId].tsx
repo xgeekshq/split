@@ -29,6 +29,12 @@ const Container = styled(Flex, {
   height: "100%",
 });
 
+const ContainerSideBar = styled("div", {
+  position: "absolute",
+  right: 0,
+  zIndex: 100,
+});
+
 interface ColumnListProps {
   columns: ColumnType[];
   boardId: string;
@@ -92,7 +98,7 @@ const Board: React.FC = () => {
     });
 
     newSocket.on("updateAllBoard", (payload: BoardType) => {
-      dispatch(setChangesBoard(payload));
+      dispatch(setChangesBoard({ board: payload }));
     });
     socketClient.current = newSocket;
   }, [boardId, dispatch]);
@@ -166,6 +172,13 @@ const Board: React.FC = () => {
             socketId={socketId ?? ""}
           />
         </DragDropContext>
+        <ContainerSideBar
+          id="sidebar"
+          css={{
+            top: document.getElementById("nav-bar")?.clientHeight ?? "5%",
+            height: document.body.clientHeight,
+          }}
+        />
       </Container>
     );
   }

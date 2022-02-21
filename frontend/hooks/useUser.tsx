@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { RedirectableProviderType } from "next-auth/providers";
 import { useMutation } from "react-query";
 import { postUser } from "../api/authService";
-import { LoginUser, User, UseUserType } from "../types/user";
+import { LoginUser, User, UseUserType } from "../types/user/user";
 import { DASHBOARD_ROUTE, ERROR_500_PAGE } from "../utils/routes";
 
 const useUser = (): UseUserType => {

@@ -5,6 +5,9 @@ import UpdateBoardDto from "../types/board/updateBoard";
 import AddCardDto from "../types/card/addCard.dto";
 import DeleteCardDto from "../types/card/deleteCard.dto";
 import UpdateCardDto from "../types/card/updateCard.dto";
+import AddCommentDto from "../types/comment/addComment.dto";
+import DeleteCommentDto from "../types/comment/deleteComment.dto";
+import UpdateCommentDto from "../types/comment/updateComment.dto";
 // #region BOARD
 
 export const createBoardRequest = (newBoard: BoardToAdd): Promise<BoardType> => {
@@ -61,6 +64,36 @@ export const deleteCardRequest = (deleteCardDto: DeleteCardDto): Promise<BoardTy
     method: "DELETE",
     data: deleteCardDto,
   });
+};
+
+// #endregion
+
+// #region COMMENTS
+export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    addCommentDto.isCardGroup
+      ? `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/comment`
+      : `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/items/${addCommentDto.cardItemId}/comment`,
+    { method: "POST", data: addCommentDto }
+  );
+};
+
+export const updateCommentRequest = (updateCommentDto: UpdateCommentDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    updateCommentDto.isCardGroup
+      ? `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/comment/${updateCommentDto.commentId}`
+      : `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/items/${updateCommentDto.cardItemId}/comment/${updateCommentDto.commentId}`,
+    { method: "PUT", data: updateCommentDto }
+  );
+};
+
+export const deleteCommentRequest = (deleteCommentDto: DeleteCommentDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    deleteCommentDto.isCardGroup
+      ? `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/comment/${deleteCommentDto.commentId}`
+      : `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/items/${deleteCommentDto.cardItemId}/comment/${deleteCommentDto.commentId}`,
+    { method: "DELETE", data: deleteCommentDto }
+  );
 };
 
 // #endregion

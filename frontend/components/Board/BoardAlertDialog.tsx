@@ -50,11 +50,11 @@ const BoardAlertDialog: React.FC<BoardAlertDialogProps> = ({
       {!defaultOpen && (
         <AlertDialogTrigger align="center" asChild>
           <Button
+            ghost
             id="delete-item"
             size="20"
             onClick={handleStopPropagation}
-            variant="ghost"
-            css={{ cursor: "pointer" }}
+            css={{ cursor: "pointer", border: "none" }}
           >
             <StyledCrossIcon />
           </Button>

@@ -3,6 +3,7 @@ import { styled } from "../../stitches.config";
 const Text = styled("span", {
   fontWeight: "$normal",
   width: "fit-content",
+  height: "fit-content",
   variants: {
     noMargin: {
       true: {

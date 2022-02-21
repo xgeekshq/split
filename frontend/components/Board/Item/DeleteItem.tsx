@@ -11,8 +11,15 @@ interface DeleteProps {
   socketId: string | undefined;
 }
 
-const DeleteItem: React.FC<DeleteProps> = ({ type, itemId, socketId, boardId }) => {
-  const { deleteCard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+const DeleteItem: React.FC<DeleteProps> = ({
+  type,
+  itemId,
+  socketId,
+  boardId,
+  cardId,
+  cardItemId,
+}) => {
+  const { deleteComment, deleteCard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
 
   const handleDelete = (event: ClickEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
@@ -21,6 +28,17 @@ const DeleteItem: React.FC<DeleteProps> = ({ type, itemId, socketId, boardId }) 
         cardId: itemId,
         boardId,
         socketId,
+      });
+    }
+
+    if (type === "COMMENT") {
+      deleteComment.mutate({
+        cardId,
+        cardItemId,
+        boardId,
+        socketId,
+        commentId: itemId,
+        isCardGroup: cardItemId === undefined,
       });
     }
   };
