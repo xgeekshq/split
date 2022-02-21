@@ -1,7 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DELETE_FAILED } from '../../../libs/exceptions/messages';
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 
@@ -17,8 +16,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
       createdBy: userId,
     });
     if (result.deletedCount === 1) {
-      return 'OK';
+      return true;
     }
-    throw new BadRequestException(DELETE_FAILED);
+    return false;
   }
 }

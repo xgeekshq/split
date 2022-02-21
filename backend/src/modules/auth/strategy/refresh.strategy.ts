@@ -7,6 +7,7 @@ import { JWT_REFRESH_TOKEN_SECRET } from '../../../libs/constants/jwt';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
 import { TYPES } from '../interfaces/types';
 import TokenPayload from '../../../libs/interfaces/jwt/token-payload.interface';
+import { INVALID_CREDENTIALS } from '../../../libs/exceptions/messages';
 
 @Injectable()
 export default class JwtRefreshTokenStrategy extends PassportStrategy(
@@ -26,12 +27,13 @@ export default class JwtRefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(request: Request, payload: TokenPayload) {
+  async validate(request: Request, payload: TokenPayload) {
     const { authorization } = request.headers;
-    if (!authorization) throw new UnauthorizedException();
-    return this.validateUserAuthService.validateUserByRefreshToken(
-      authorization,
+    const user = await this.validateUserAuthService.validateUserByRefreshToken(
+      authorization!,
       payload.userId,
     );
+    if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
+    return user;
   }
 }

@@ -1,17 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { BaseDto } from '../../../libs/dto/base.dto';
 import CardDto from './card.dto';
 
-export class AddCardDto {
+export class CreateCardDto extends BaseDto {
   @IsNotEmpty()
+  @IsMongoId()
   @IsString()
   colIdToAdd!: string;
 
   @IsNotEmpty()
   @Type(() => CardDto)
   card!: CardDto;
-
-  @IsNotEmpty()
-  @IsString()
-  socketId!: string;
 }

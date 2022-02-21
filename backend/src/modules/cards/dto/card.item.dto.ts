@@ -1,11 +1,18 @@
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
-import CommentDto from '../../boards/dto/comment/comment.dto';
+import CommentDto from '../../comments/dto/comment';
 
 export default class CardItemDto {
-  @IsNotEmpty()
+  @IsOptional()
+  @IsMongoId()
   @IsString()
-  _id!: string;
+  _id?: string;
 
   @IsNotEmpty()
   @IsString()
@@ -13,6 +20,7 @@ export default class CardItemDto {
   text!: string;
 
   @IsNotEmpty()
+  @IsMongoId()
   @IsString()
   createdBy!: string;
 
@@ -21,7 +29,7 @@ export default class CardItemDto {
   @Type(() => CommentDto)
   comments!: CommentDto[];
 
-  @IsNotEmpty()
-  @ValidateNested({ each: true })
-  votes!: string[];
+  // @IsNotEmpty()
+  // @ValidateNested({ each: true })
+  // votes!: string[];
 }

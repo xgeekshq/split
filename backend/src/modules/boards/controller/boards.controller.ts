@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Inject,
+  Param,
   Post,
   Put,
   Req,
@@ -17,6 +19,13 @@ import { CreateBoardApplication } from '../interfaces/applications/create.board.
 import { GetBoardApplication } from '../interfaces/applications/get.board.application.interface';
 import { DeleteBoardApplication } from '../interfaces/applications/delete.board.application.interface';
 import { UpdateBoardApplication } from '../interfaces/applications/update.board.application.interface';
+import {
+  BOARD_NOT_FOUND,
+  DELETE_FAILED,
+  INSERT_FAILED,
+  UPDATE_FAILED,
+} from '../../../libs/exceptions/messages';
+import { BaseParam } from '../../../libs/dto/param/base.param';
 
 @Controller('boards')
 export default class BoardsController {
@@ -31,13 +40,16 @@ export default class BoardsController {
     private deleteBoardApp: DeleteBoardApplication,
   ) {}
 
-  // #region BOARD
-
   @UseGuards(JwtAuthenticationGuard)
   @Post()
-  createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
+  async createBoard(
+    @Req() request: RequestWithUser,
+    @Body() boardData: BoardDto,
+  ) {
     const { _id: userId } = request.user;
-    return this.createBoardApp.create(boardData, userId);
+    const board = await this.createBoardApp.create(boardData, userId);
+    if (!board) throw new BadRequestException(INSERT_FAILED);
+    return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -49,31 +61,44 @@ export default class BoardsController {
 
   @UseGuards(JwtAuthenticationGuard)
   @Get(':boardId')
-  getBoard(@Req() request: RequestWithUser) {
+  async getBoard(@Param() params: BaseParam, @Req() request: RequestWithUser) {
     const {
       user: { _id: userId },
-      params: { boardId },
     } = request;
-    return this.getBoardApp.getBoardWithEmail(boardId, userId);
+    const { boardId } = params;
+    const board = await this.getBoardApp.getBoardWithEmail(boardId, userId);
+    if (!board) throw new BadRequestException(BOARD_NOT_FOUND);
+    return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Put(':boardId')
-  updateBoard(@Req() request, @Body() boardData: BoardDto) {
+  async updateBoard(
+    @Req() request,
+    @Param() params: BaseParam,
+    @Body() boardData: BoardDto,
+  ) {
     const {
       user: { _id: userId },
-      params: { boardId },
     } = request;
-    return this.updateBoardApp.update(userId, boardId, boardData);
+    const { boardId } = params;
+    const board = await this.updateBoardApp.update(userId, boardId, boardData);
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
+    return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId')
-  deleteBoard(@Req() request: RequestWithUser) {
+  async deleteBoard(
+    @Param() params: BaseParam,
+    @Req() request: RequestWithUser,
+  ) {
     const {
       user: { _id: userId },
-      params: { boardId },
     } = request;
-    return this.deleteBoardApp.delete(boardId, userId);
+    const { boardId } = params;
+    const result = await this.deleteBoardApp.delete(boardId, userId);
+    if (!result) throw new BadRequestException(DELETE_FAILED);
+    return result;
   }
 }

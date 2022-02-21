@@ -1,0 +1,19 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts", "tsx"],
+  "rootDir": ".",
+  "testRegex": ".spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["**/*.(t|j)s"],
+  "coverageDirectory": "./test/coverage",
+  "testEnvironment": "node",
+  "modulePathIgnorePatterns": [
+    "<rootDir>/dist/",
+    "<rootDir>/coverage/",
+    ".module.ts",
+    "main.ts",
+    ".eslintrc.js",
+    "jest.config.js"
+  ]
+}

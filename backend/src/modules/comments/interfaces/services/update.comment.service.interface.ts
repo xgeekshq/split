@@ -1,0 +1,13 @@
+import { LeanDocument } from 'mongoose';
+import { BoardDocument } from '../../../boards/schemas/board.schema';
+
+export interface UpdateCommentService {
+  updateItemComment(
+    boardId: string,
+    cardId: string,
+    cardItemId: string,
+    commentId: string,
+    userId: string,
+    text: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
+}

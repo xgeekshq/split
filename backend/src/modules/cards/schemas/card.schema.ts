@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
-import User from 'src/modules/users/schemas/user.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { CommentSchema } from '../../comments/schemas/comment.schema';
+import User from '../../users/schemas/user.schema';
 import CardItem, { CardItemSchema } from './card.item.schema';
 
 export type CardDocument = Card & mongoose.Document;
@@ -13,8 +14,8 @@ export default class Card {
   @Prop({ nullable: false, type: [CardItemSchema] })
   items!: CardItem[];
 
-  // @Prop({ type: [CommentSchema] })
-  // comments!: Comment[];
+  @Prop({ type: [CommentSchema] })
+  comments!: Comment[];
 
   // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   // votes!: User[] | mongoose.Schema.Types.ObjectId[];

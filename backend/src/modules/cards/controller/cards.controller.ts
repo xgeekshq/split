@@ -1,23 +1,34 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Inject,
+  Param,
   Post,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { AddCardDto } from '../dto/addCard.dto';
-import DeleteCardDto from '../dto/deleteCard.dto';
-import UpdateCardDto from '../dto/updateCard.dto';
-import { UpdateCardPositionDto } from '../dto/updateCardPosition.dto';
+import {
+  DELETE_FAILED,
+  INSERT_FAILED,
+  UPDATE_FAILED,
+} from '../../../libs/exceptions/messages';
+import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
+import SocketGateway from '../../socket/gateway/socket.gateway';
+import { CreateCardDto } from '../dto/create.card.dto';
+import DeleteCardDto from '../dto/delete.card.dto';
+import { CreateCardParams } from '../dto/params/create.card.params';
+import { DeleteCardParams } from '../dto/params/delete.card.params';
+import { UpdateCardParams } from '../dto/params/update-position.card.params';
+import { UpdatePositionCardParams } from '../dto/params/update-text.card.params copy';
+import UpdateCardDto from '../dto/update.card.dto';
+import { UpdateCardPositionDto } from '../dto/update-position.card..dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
-import { TYPES } from '../interfaces/type';
+import { TYPES } from '../interfaces/types';
 
 @Controller('boards')
 export default class CardsController {
@@ -33,11 +44,16 @@ export default class CardsController {
 
   @UseGuards(JwtAuthenticationGuard)
   @Post(':boardId/card')
-  async addCard(@Req() request, @Body() createCardDto: AddCardDto) {
+  async addCard(
+    @Req() request,
+    @Param()
+    params: CreateCardParams,
+    @Body() createCardDto: CreateCardDto,
+  ) {
     const {
       user: { _id: userId },
-      params: { boardId },
     } = request;
+    const { boardId } = params;
     const { card, colIdToAdd, socketId } = createCardDto;
     const board = await this.createCardApp.create(
       boardId,
@@ -45,37 +61,50 @@ export default class CardsController {
       card,
       colIdToAdd,
     );
+    if (!board) throw new BadRequestException(INSERT_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId/card/:cardId')
-  async deleteCard(@Req() request, @Body() deleteCardDto: DeleteCardDto) {
+  async deleteCard(
+    @Req() request,
+    @Param()
+    params: DeleteCardParams,
+    @Body() deleteCardDto: DeleteCardDto,
+  ) {
     const {
-      params: { boardId, cardId },
       user: { _id: userId },
     } = request;
+    const { boardId, cardId } = params;
     const board = await this.deleteCardApp.delete(boardId, cardId, userId);
+    if (!board) throw new BadRequestException(DELETE_FAILED);
     this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Put(':boardId/card/:cardId/items/:cardItemId')
-  async updateCardText(@Req() request, @Body() updateCardDto: UpdateCardDto) {
+  @Put(':boardId/card/:cardId/items/:itemId')
+  async updateCardText(
+    @Req() request,
+    @Param()
+    params: UpdateCardParams,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
     const {
-      params: { boardId, cardId, cardItemId },
       user: { _id: userId },
     } = request;
+    const { boardId, cardId, itemId } = params;
     const { text, socketId } = updateCardDto;
     const board = await this.updateCardApp.updateCardText(
       boardId,
       cardId,
-      cardItemId,
+      itemId,
       userId,
       text,
     );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
     return board;
   }
@@ -83,9 +112,11 @@ export default class CardsController {
   @Put(':boardId/card/:cardId/updateCardPosition')
   async updateCardPosition(
     @Req() request,
+    @Param()
+    params: UpdatePositionCardParams,
     @Body() boardData: UpdateCardPositionDto,
   ) {
-    const { boardId, cardId } = request.params;
+    const { boardId, cardId } = params;
     const { targetColumnId, newPosition, socketId } = boardData;
     const board = await this.updateCardApp.updateCardPosition(
       boardId,
@@ -93,6 +124,7 @@ export default class CardsController {
       targetColumnId,
       newPosition,
     );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
     return board;
   }

@@ -27,7 +27,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'class-methods-use-this': 'off',
     'no-param-reassign': 'off',
-    'import/prefer-default-export': 'off'
-    
+    'import/prefer-default-export': 'off',
+    '@typescript-eslint/ban-types': 'off',
   },
 };

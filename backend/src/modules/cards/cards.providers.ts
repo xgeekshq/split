@@ -1,7 +1,7 @@
 import { CreateCardApplicationImpl } from './applications/create.card.application';
 import { DeleteCardApplicationImpl } from './applications/delete.card.application';
 import { UpdateCardApplicationImpl } from './applications/update.card.application';
-import { TYPES } from './interfaces/type';
+import { TYPES } from './interfaces/types';
 import CreateCardServiceImpl from './services/create.card.service';
 import DeleteCardServiceImpl from './services/delete.card.service';
 import GetCardServiceImpl from './services/get.card.service';

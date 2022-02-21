@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import BoardsModule from 'src/modules/boards/boards.module';
+import BoardsModule from '../boards/boards.module';
 import SocketGateway from './gateway/socket.gateway';
 
 @Module({

@@ -12,7 +12,7 @@ export class CreateBoardApplicationImpl implements CreateBoardApplication {
     private createBoardService: CreateBoardService,
   ) {}
 
-  async create(board: BoardDto, userId: string): Promise<BoardDocument> {
+  create(board: BoardDto, userId: string): Promise<BoardDocument> {
     return this.createBoardService.create(board, userId);
   }
 }

@@ -11,11 +11,14 @@ export default class UpdateUserServiceImpl implements UpdateUserService {
 
   async setCurrentRefreshToken(refreshToken: string, userId: string) {
     const currentHashedRefreshToken = await encrypt(refreshToken);
-    await this.userModel.findOneAndUpdate(
-      { _id: userId },
-      {
-        $set: { currentHashedRefreshToken },
-      },
-    );
+    return this.userModel
+      .findOneAndUpdate(
+        { _id: userId },
+        {
+          $set: { currentHashedRefreshToken },
+        },
+      )
+      .lean()
+      .exec();
   }
 }

@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -8,8 +9,8 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import JoinPayload from 'src/modules/socket/interfaces/joinPayload.interface';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import JoinPayload from '../interfaces/joinPayload.interface';
+import { BoardDocument } from '../../boards/schemas/board.schema';
 
 @WebSocketGateway({ cors: true })
 export default class SocketGateway
@@ -20,7 +21,10 @@ export default class SocketGateway
 
   private logger: Logger = new Logger('AppGateway');
 
-  sendUpdatedBoard(newBoard: BoardDocument, excludedClient: string) {
+  sendUpdatedBoard(
+    newBoard: LeanDocument<BoardDocument>,
+    excludedClient: string,
+  ) {
     this.server
       .to(newBoard._id.toString())
       .except(excludedClient)

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export default class DeleteCardDto {
+export class BaseDto {
   @IsNotEmpty()
   @IsString()
   socketId!: string;

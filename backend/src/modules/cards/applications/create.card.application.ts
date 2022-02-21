@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
-import { TYPES } from '../interfaces/type';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class CreateCardApplicationImpl implements CreateCardApplication {
@@ -12,12 +11,7 @@ export class CreateCardApplicationImpl implements CreateCardApplication {
     private createCardService: CreateCardService,
   ) {}
 
-  create(
-    cardId: number,
-    userId: string,
-    card: CardDto,
-    colIdToAdd: string,
-  ): Promise<BoardDocument> {
+  create(cardId: string, userId: string, card: CardDto, colIdToAdd: string) {
     return this.createCardService.create(cardId, userId, card, colIdToAdd);
   }
 }
