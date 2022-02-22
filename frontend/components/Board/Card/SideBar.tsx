@@ -17,6 +17,10 @@ const SideBarContent = styled("div", {
   position: "sticky",
   top: 0,
   background: "White",
+  borderTop: "2px solid black",
+  borderBottom: "2px solid black",
+  borderLeft: "2px solid black",
+  width: "$400",
 });
 
 const StyledCheckIcon = styled(CheckIcon, { size: "$20" });
@@ -65,15 +69,7 @@ const SideBard = React.memo<SideBarProps>(
     };
     if (!show) return null;
     return createPortal(
-      <SideBarContent
-        ref={ref}
-        css={{
-          borderTop: "2px solid black",
-          borderBottom: "2px solid black",
-          borderLeft: "2px solid black",
-          width: "$400",
-        }}
-      >
+      <SideBarContent ref={ref}>
         <Flex direction="column">
           <ResizableTextArea value={text} editText={setText} border={false} edit={false} />
           <Button css={{ borderTop: "1px solid black" }} color="green" onClick={handleAddComment}>

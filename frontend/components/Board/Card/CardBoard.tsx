@@ -14,10 +14,12 @@ import CardFooter from "./CardFooter";
 import SideBard from "./SideBar";
 
 const Container = styled(Card, {
-  borderRadius: "$2",
   p: "$8",
   mt: "$16",
   wordBreak: "breakWord",
+  cursor: "grab",
+  borderRadius: "$6",
+  boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
 });
 
 interface CardBoardProps {
@@ -73,11 +75,6 @@ const CardBoard: React.FC<CardBoardProps> = ({
       {(provided) => (
         <Container
           direction="column"
-          css={{
-            cursor: "grab",
-            borderRadius: "$6",
-            boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
-          }}
           {...provided.dragHandleProps}
           {...provided.draggableProps}
           ref={provided.innerRef}

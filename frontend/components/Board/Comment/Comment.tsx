@@ -11,8 +11,9 @@ import TextItem from "../Item/TextItem";
 import UpdateItem from "../Item/UpdateItem";
 
 const Container = styled(Card, {
-  borderRadius: "$2",
   mt: "$8",
+  borderRadius: "$6",
+  boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
 });
 
 interface CommentProps {
@@ -64,8 +65,6 @@ const Comment: React.FC<CommentProps> = ({
       css={{
         backgroundColor: editText ? "White" : color,
         border: editText ? `5px solid ${color}` : "none",
-        borderRadius: "$6",
-        boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
         padding: !editText ? "$8" : "0",
       }}
       direction="column"
