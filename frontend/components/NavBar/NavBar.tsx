@@ -14,7 +14,7 @@ const Header = styled("header", Flex, {
 
 const NavBar: React.FC = () => {
   return (
-    <Header justify="between" align="center" media="sm">
+    <Header justify="between" align="center" media="sm" id="nav-bar">
       <Link href="/">
         <Text fontWeight="medium" size="18">
           Divide & Conquer

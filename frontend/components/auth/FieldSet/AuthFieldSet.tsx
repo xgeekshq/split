@@ -5,7 +5,7 @@ import TextField from "../../Primitives/TextField";
 import Fieldset from "../../Primitives/Fieldset";
 import Label from "../../Primitives/Label";
 import Text from "../../Primitives/Text";
-import { User, UserZod } from "../../../types/user";
+import { User, UserZod } from "../../../types/user/user";
 import Flex from "../../Primitives/Flex";
 import Button from "../../Primitives/Button";
 import { styled } from "../../../stitches.config";

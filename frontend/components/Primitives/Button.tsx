@@ -12,6 +12,8 @@ const Button = styled("button", {
   "&::after": {
     boxSizing: "border-box",
   },
+  cursor: "pointer",
+
   // Custom reset?
   display: "inline-flex",
   flexShrink: 0,
@@ -37,7 +39,9 @@ const Button = styled("button", {
       },
       "2": {
         borderRadius: "$2",
+        width: "$60",
         height: "$32",
+        p: "$20",
         fontSize: "$20",
         lineHeight: "$8",
       },
@@ -117,30 +121,17 @@ const Button = styled("button", {
         },
       },
     },
-    variant: {
-      ghost: {
+    ghost: {
+      true: {
         backgroundColor: "transparent",
-        borderWidth: "0",
         "@hover": {
           "&:hover": {
-            backgroundColor: "$slateA4",
+            backgroundColor: "$slate5",
           },
         },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px $colors$slateA8, 0 0 0 1px $colors$slateA8",
-        },
-        "&:active": {
-          backgroundColor: "$slateA4",
-        },
-        '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
-          {
-            backgroundColor: "$slateA4",
-          },
       },
     },
   },
 });
 
 export default Button;
-
-export const StyledIconButton = styled(Button, { cursor: "pointer" });

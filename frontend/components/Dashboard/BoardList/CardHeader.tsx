@@ -34,10 +34,10 @@ const CardHeader: React.FC<CardHeaderType> = ({ board, isEditing, onClickEdit })
 
   return (
     <Container justify="between" css={{ alignSelf: "flex-start", mt: "$4", width: "100%" }}>
-      <Button variant="ghost" size="20" onClick={handleCopyUrl}>
+      <Button ghost size="20" onClick={handleCopyUrl}>
         <CopyUrlIcon />
       </Button>
-      <Button variant="ghost" size="20" onClick={handleEditTitle}>
+      <Button ghost size="20" onClick={handleEditTitle}>
         <EditIcon />
       </Button>
       <DeleteBoardButton isEditing={isEditing} boardId={board._id} onClickEdit={onClickEdit} />

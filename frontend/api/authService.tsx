@@ -1,5 +1,6 @@
 import { Token } from "../types/token";
-import { User, LoginUser } from "../types/user";
+import { CreateOrLogin } from "../types/user/create-login.user";
+import { User, LoginUser } from "../types/user/user";
 import fetchData from "../utils/fetchData";
 
 export const postUser = (newUser: User): Promise<User> => {
@@ -12,4 +13,12 @@ export const login = (credentials: LoginUser): Promise<User> => {
 
 export const refreshToken = (token: string): Promise<Token> => {
   return fetchData("/auth/refresh", { token, serverSide: true });
+};
+
+export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
+  return fetchData(`/auth/registerAzure`, {
+    method: "POST",
+    data: { token: azureAccessToken },
+    serverSide: true,
+  });
 };

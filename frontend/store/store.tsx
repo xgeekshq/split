@@ -9,5 +9,7 @@ const store = configureStore({
 
 export default store;
 
+export const selectBoard = (state: RootState) => state.board;
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

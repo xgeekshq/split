@@ -5,6 +5,9 @@ import UpdateCardPositionDto from "../card/updateCardPosition.dto";
 import AddCardDto from "../card/addCard.dto";
 import UpdateCardDto from "../card/updateCard.dto";
 import DeleteCardDto from "../card/deleteCard.dto";
+import AddCommentDto from "../comment/addComment.dto";
+import DeleteCommentDto from "../comment/deleteComment.dto";
+import UpdateCommentDto from "../comment/updateComment.dto";
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, BoardToAdd, unknown>;
@@ -16,4 +19,7 @@ export default interface UseBoardType {
   updateCard: UseMutationResult<BoardType, unknown, UpdateCardDto, unknown>;
   deleteCard: UseMutationResult<BoardType, unknown, DeleteCardDto, unknown>;
   updateCardPosition: UseMutationResult<BoardType, unknown, UpdateCardPositionDto, unknown>;
+  addCommentInCard: UseMutationResult<BoardType, unknown, AddCommentDto, unknown>;
+  updateComment: UseMutationResult<BoardType, unknown, UpdateCommentDto, unknown>;
+  deleteComment: UseMutationResult<BoardType, unknown, DeleteCommentDto, unknown>;
 }

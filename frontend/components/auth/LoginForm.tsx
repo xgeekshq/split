@@ -5,7 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { RedirectableProviderType } from "next-auth/providers";
 import { styled } from "../../stitches.config";
-import { LoginUser } from "../../types/user";
+import { LoginUser } from "../../types/user/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
@@ -67,7 +67,7 @@ const LoginForm: React.FC = () => {
           ) : null}
           <AuthFieldSet label="Email" inputType="text" id="email" />
           <AuthFieldSet label="Password" inputType="password" id="password" tabValue="login" />
-          <StyledButton color="green" size="2" type="submit">
+          <StyledButton color="green" size="2" type="submit" css={{ width: "100%" }}>
             Login
           </StyledButton>
         </StyledForm>

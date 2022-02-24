@@ -5,10 +5,15 @@ import BoardType from "../../types/board/board";
 import { Nullable } from "../../types/common";
 import BoardChanges from "../../types/board/boardChanges";
 import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
-import { handleUpdateCardPosition } from "../../helper/transformBoard";
+import { handleUpdateCardPosition } from "../../helper/board/transformBoard";
 
 interface BoardState {
   value: Nullable<BoardType>;
+}
+
+interface BoardAction {
+  board: BoardType;
+  userId?: string;
 }
 
 const initialState: BoardState = {
@@ -22,9 +27,10 @@ export const boardSlice = createSlice({
     setBoard: (state, action: PayloadAction<Nullable<BoardType>>) => {
       state.value = action.payload;
     },
-    setChangesBoard: (state, action: PayloadAction<BoardType>) => {
+    setChangesBoard: (state, action: PayloadAction<BoardAction>) => {
+      const { board } = action.payload;
       if (state.value) {
-        const operation = jsonPatch.compare(state.value, action.payload);
+        const operation = jsonPatch.compare(state.value, board);
         if (operation.length > 0)
           state.value = jsonPatch.applyPatch(state.value, operation).newDocument;
       }

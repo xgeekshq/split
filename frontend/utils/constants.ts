@@ -9,6 +9,11 @@ export const BACKEND_URL = process.env.BACKEND_URL;
 export const SECRET = process.env.SECRET;
 export const NEXT_PUBLIC_NEXTAUTH_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
 
+export const CLIENTID = process.env.CLIENTID;
+export const CLIENTSECRET = process.env.CLIENTSECRET;
+export const TENANTID = process.env.TENANTID;
+export const NEXT_PUBLIC_ENABLE_AZURE = process.env.NEXT_PUBLIC_ENABLE_AZURE === "true";
+
 export const CURRENT_USER = "currentUser";
 export const REFRESH_TOKEN_ERROR = "REFRESH_TOKEN_ERROR";
 

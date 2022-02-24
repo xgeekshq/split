@@ -9,7 +9,7 @@ import { REFRESH_TOKEN_ERROR } from "../../utils/constants";
 import "react-toastify/dist/ReactToastify.css";
 import { ShouldRenderNav } from "../../utils/routes";
 
-const Main = styled("main", Flex, { px: "3vw", py: "$50" });
+const Main = styled("main", Flex, { px: "3vw", py: "$50", height: "100%" });
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <div>
-      {ShouldRenderNav(router.asPath) && <NavBar />}
+      {ShouldRenderNav(router.asPath) && session && <NavBar />}
       <Main direction="column">{children}</Main>
       <ToastContainer limit={3} />
     </div>

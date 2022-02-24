@@ -1,6 +1,6 @@
 import { CheckIcon } from "@modulz/radix-icons";
 import { styled } from "../../../stitches.config";
-import { StyledIconButton } from "../../Primitives/Button";
+import Button from "../../Primitives/Button";
 
 const StyledCheckIcon = styled(CheckIcon, { size: "$20" });
 
@@ -10,9 +10,9 @@ interface UpdateItemProps {
 
 const UpdateItem: React.FC<UpdateItemProps> = ({ handleUpdate }) => {
   return (
-    <StyledIconButton css={{ alignSelf: "end" }} variant="ghost" onClick={handleUpdate}>
+    <Button css={{ alignSelf: "end" }} ghost onClick={handleUpdate}>
       <StyledCheckIcon />
-    </StyledIconButton>
+    </Button>
   );
 };
 

@@ -2,7 +2,7 @@ import { Pencil1Icon } from "@modulz/radix-icons";
 import { SetStateAction } from "react";
 import { styled } from "../../../stitches.config";
 import ClickEvent from "../../../types/events/clickEvent";
-import { StyledIconButton } from "../../Primitives/Button";
+import Button from "../../Primitives/Button";
 
 const StyledPencilIcon = styled(Pencil1Icon, { size: "$15" });
 
@@ -17,9 +17,9 @@ const EditItem: React.FC<EditItemProps> = ({ editText, setEditText }) => {
   };
 
   return (
-    <StyledIconButton variant="ghost" onClick={handleEditText}>
+    <Button ghost onClick={handleEditText}>
       <StyledPencilIcon />
-    </StyledIconButton>
+    </Button>
   );
 };
 

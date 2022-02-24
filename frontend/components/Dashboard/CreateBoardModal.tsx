@@ -100,7 +100,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({ setFetchLoading }) 
           </FooterContainer>
         </StyledForm>
         <DialogCloseButton asChild>
-          <Button variant="ghost" size="20">
+          <Button ghost size="20">
             <Cross1Icon />
           </Button>
         </DialogCloseButton>
