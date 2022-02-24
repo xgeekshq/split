@@ -8,6 +8,7 @@ import BoardType from "../../types/board/board";
 import Flex from "../Primitives/Flex";
 import ToastMessage from "../../utils/toast";
 import ClickEvent from "../../types/events/clickEvent";
+import isEmpty from "../../utils/isEmpty";
 
 const ActionButton = styled(Button, {});
 
@@ -26,7 +27,7 @@ const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage
   const handleUpdateTitle = (event: ClickEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     onClickEdit(false);
-    if (title.length === 0) {
+    if (isEmpty(title)) {
       ToastMessage("Title cannot be empty", "error");
       return;
     }

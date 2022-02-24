@@ -8,6 +8,7 @@ import UpdateCardDto from "../types/card/updateCard.dto";
 import AddCommentDto from "../types/comment/addComment.dto";
 import DeleteCommentDto from "../types/comment/deleteComment.dto";
 import UpdateCommentDto from "../types/comment/updateComment.dto";
+import VoteDto from "../types/board/vote/vote.dto";
 // #region BOARD
 
 export const createBoardRequest = (newBoard: BoardToAdd): Promise<BoardType> => {
@@ -18,8 +19,12 @@ export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType
   return fetchData(`/boards/${board._id}`, { method: "PUT", data: board });
 };
 
-export const getBoardRequest = (id: string): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`);
+export const getBoardRequest = (
+  id: string,
+  token?: string,
+  serverSide?: boolean
+): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`, { token, serverSide });
 };
 
 export const getBoardsRequest = (): Promise<BoardType[]> => {
@@ -96,4 +101,24 @@ export const deleteCommentRequest = (deleteCommentDto: DeleteCommentDto): Promis
   );
 };
 
+// #endregion
+
+// #region VOTES
+export const addVoteRequest = (voteDto: VoteDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    voteDto.isCardGroup
+      ? `/boards/${voteDto.boardId}/card/${voteDto.cardId}/vote`
+      : `/boards/${voteDto.boardId}/card/${voteDto.cardId}/items/${voteDto.cardItemId}/vote`,
+    { method: "POST", data: voteDto }
+  );
+};
+
+export const deleteVoteRequest = (voteDto: VoteDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    voteDto.isCardGroup
+      ? `/boards/${voteDto.boardId}/card/${voteDto.cardId}/vote`
+      : `/boards/${voteDto.boardId}/card/${voteDto.cardId}/items/${voteDto.cardItemId}/vote`,
+    { method: "DELETE", data: voteDto }
+  );
+};
 // #endregion

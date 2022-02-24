@@ -15,8 +15,7 @@ instance.interceptors.request.use(async (config) => {
   const { url, headers } = config;
   if (url && headers && !nonNeededToken.includes(url)) {
     const session = await getSession();
-
-    headers.Authorization = `Bearer ${session?.accessToken}`;
+    if (session) headers.Authorization = `Bearer ${session?.accessToken}`;
   }
 
   return config;
