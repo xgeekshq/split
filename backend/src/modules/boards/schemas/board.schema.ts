@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import User from '../../users/schemas/user.schema';
-import Column, { ColumnSchema } from './column.schema';
+import { ColumnDocument, ColumnSchema } from './column.schema';
 
 export type BoardDocument = Board & mongoose.Document;
 
@@ -23,7 +23,7 @@ export default class Board {
   maxVotes!: number;
 
   @Prop({ nullable: false, type: [ColumnSchema] })
-  columns!: Column[];
+  columns!: ColumnDocument[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', nullable: false })
   createdBy!: User | mongoose.Schema.Types.ObjectId;

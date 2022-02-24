@@ -3,7 +3,7 @@ import { BoardDocument } from '../../schemas/board.schema';
 
 export interface GetBoardApplication {
   getAllBoards(userId: string): Promise<LeanDocument<BoardDocument>[] | null>;
-  getBoardWithEmail(
+  getBoard(
     boardId: string,
     userId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;

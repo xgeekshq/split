@@ -14,7 +14,7 @@ export class GetBoardApplicationImpl implements GetBoardApplication {
     return this.getBoardService.getAllBoards(userId);
   }
 
-  getBoardWithEmail(boardId: string, userId: string) {
-    return this.getBoardService.getBoardWithEmail(boardId, userId);
+  getBoard(boardId: string, userId: string) {
+    return this.getBoardService.getBoard(boardId, userId);
   }
 }

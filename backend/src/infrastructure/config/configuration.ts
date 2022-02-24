@@ -1,23 +1,6 @@
-export const DEFAULT_SERVER_PORT = 3200;
+import { Configuration } from './interfaces/configuration.interface';
 
-interface Configuration {
-  server: {
-    port: number;
-  };
-  database: {
-    uri: string;
-  };
-  jwt: {
-    accessToken: {
-      secret: string;
-      expirationTime: number;
-    };
-    refreshToken: {
-      secret: string;
-      expirationTime: number;
-    };
-  };
-}
+export const DEFAULT_SERVER_PORT = 3200;
 
 export const configuration = (): Configuration => {
   const defaultConfiguration = {

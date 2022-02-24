@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import Card, { CardSchema } from '../../cards/schemas/card.schema';
+import { CardDocument, CardSchema } from '../../cards/schemas/card.schema';
 
 export type ColumnDocument = Column & mongoose.Document;
 
@@ -13,7 +13,7 @@ export default class Column {
   color!: string;
 
   @Prop({ nullable: false, type: [CardSchema] })
-  cards!: Card[];
+  cards!: CardDocument[];
 }
 
 export const ColumnSchema = SchemaFactory.createForClass(Column);

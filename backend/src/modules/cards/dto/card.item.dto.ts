@@ -29,7 +29,7 @@ export default class CardItemDto {
   @Type(() => CommentDto)
   comments!: CommentDto[];
 
-  // @IsNotEmpty()
-  // @ValidateNested({ each: true })
-  // votes!: string[];
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  votes!: string[];
 }
