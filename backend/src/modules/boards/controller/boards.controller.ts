@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Inject,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -67,7 +68,7 @@ export default class BoardsController {
     } = request;
     const { boardId } = params;
     const board = await this.getBoardApp.getBoard(boardId, userId);
-    if (!board) throw new BadRequestException(BOARD_NOT_FOUND);
+    if (!board) throw new NotFoundException(BOARD_NOT_FOUND);
     return board;
   }
 

@@ -1,1 +1,1 @@
-export const DATABASE_URI = 'database.uri';
+export const DATABASE_URI_KEY = 'database.uri';
