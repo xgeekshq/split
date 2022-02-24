@@ -20,7 +20,10 @@ export default class CreateCardServiceImpl implements CreateCardService {
         text: card.text,
         createdBy: userId,
         comments: [],
+        votes: [],
       });
+    } else {
+      card.items[0].createdBy = userId;
     }
     return this.boardModel
       .findOneAndUpdate(

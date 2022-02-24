@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { mongooseModule } from '../../infrastructure/database/mongoose.module';
+import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
 import SocketModule from '../socket/socket.module';
 import {
   createCardApplication,
@@ -13,7 +13,7 @@ import {
 import CardsController from './controller/cards.controller';
 
 @Module({
-  imports: [mongooseModule, forwardRef(() => SocketModule)],
+  imports: [mongooseBoardModule, forwardRef(() => SocketModule)],
   controllers: [CardsController],
   providers: [
     createCardService,
@@ -25,6 +25,6 @@ import CardsController from './controller/cards.controller';
     updateCardApplication,
     deleteCardApplication,
   ],
-  exports: [],
+  exports: [getCardService],
 })
 export class CardsModule {}

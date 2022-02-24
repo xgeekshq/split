@@ -1,8 +1,11 @@
 import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CommentSchema } from '../../comments/schemas/comment.schema';
+import {
+  CommentDocument,
+  CommentSchema,
+} from '../../comments/schemas/comment.schema';
 import User from '../../users/schemas/user.schema';
-import CardItem, { CardItemSchema } from './card.item.schema';
+import { CardItemDocument, CardItemSchema } from './card.item.schema';
 
 export type CardDocument = Card & mongoose.Document;
 
@@ -12,13 +15,13 @@ export default class Card {
   text!: string;
 
   @Prop({ nullable: false, type: [CardItemSchema] })
-  items!: CardItem[];
+  items!: CardItemDocument[];
 
   @Prop({ type: [CommentSchema] })
-  comments!: Comment[];
+  comments!: CommentDocument[];
 
-  // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  // votes!: User[] | mongoose.Schema.Types.ObjectId[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  votes!: User[] | mongoose.Schema.Types.ObjectId[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', nullable: false })
   createdBy!: User | mongoose.Schema.Types.ObjectId;

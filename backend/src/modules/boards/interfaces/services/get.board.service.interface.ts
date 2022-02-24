@@ -6,7 +6,7 @@ export interface GetBoardService {
   getBoardFromRepo(
     boardId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
-  getBoardWithEmail(
+  getBoard(
     boardId: string,
     userId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;

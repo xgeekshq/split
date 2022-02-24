@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { isEmpty } from 'class-validator';
+import { LeanDocument, Model, Types } from 'mongoose';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { CardDocument } from '../schemas/card.schema';
 
 @Injectable()
 export default class GetCardServiceImpl implements GetCardService {
@@ -48,6 +50,6 @@ export default class GetCardServiceImpl implements GetCardService {
       ])
       .exec();
 
-    return result.length === 1 ? result[0] : null;
+    return !isEmpty(result) ? (result[0] as LeanDocument<CardDocument>) : null;
   }
 }

@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { mongooseModule } from '../../infrastructure/database/mongoose.module';
+import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
 import SocketModule from '../socket/socket.module';
 import {
   createCommentApplication,
@@ -12,7 +12,7 @@ import {
 import CommentsController from './controller/comments.controller';
 
 @Module({
-  imports: [mongooseModule, forwardRef(() => SocketModule)],
+  imports: [mongooseBoardModule, forwardRef(() => SocketModule)],
   controllers: [CommentsController],
   providers: [
     createCommentApplication,
