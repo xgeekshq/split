@@ -1,12 +1,10 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../../boards/schemas/board.schema';
-import CardDto from '../../dto/card.dto';
 
-export interface CreateCardService {
-  create(
+export interface MergeCardService {
+  mergeCards(
     boardId: string,
-    userId: string,
-    card: CardDto,
-    colIdToAdd: string,
+    draggedCardId: string,
+    cardId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
 }

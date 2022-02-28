@@ -5,6 +5,8 @@ import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
+import { pullCard } from '../shared/pull.card';
+import { pushCardIntoPosition } from '../shared/push.card';
 
 @Injectable()
 export default class UpdateCardServiceImpl implements UpdateCardService {
@@ -20,45 +22,38 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
     targetColumnId: string,
     newPosition: number,
   ) {
-    const cardToMove = await this.cardService.getCardFromBoard(boardId, cardId);
-    if (cardToMove) {
-      const pullResult = await this.boardModel
-        .updateOne(
-          {
-            _id: boardId,
-            'columns.cards._id': cardId,
-          },
-          {
-            $pull: {
-              'columns.$[].cards': { _id: cardId },
-            },
-          },
-        )
-        .lean()
-        .exec();
+    const session = await this.boardModel.db.startSession();
+    session.startTransaction();
+    try {
+      const cardToMove = await this.cardService.getCardFromBoard(
+        boardId,
+        cardId,
+      );
+      if (!cardToMove) return null;
+      const pullResult = await pullCard(
+        boardId,
+        cardId,
+        this.boardModel,
+        session,
+      );
+      if (pullResult.modifiedCount === 0) throw Error();
 
-      if (pullResult.modifiedCount !== 1) {
-        return null;
-      }
+      const pushResult = await pushCardIntoPosition(
+        boardId,
+        targetColumnId,
+        newPosition,
+        cardToMove,
+        this.boardModel,
+        session,
+      );
+      if (!pushResult) throw Error();
 
-      return this.boardModel
-        .findOneAndUpdate(
-          {
-            _id: boardId,
-            'columns._id': targetColumnId,
-          },
-          {
-            $push: {
-              'columns.$.cards': {
-                $each: [cardToMove],
-                $position: newPosition,
-              },
-            },
-          },
-          { new: true },
-        )
-        .lean()
-        .exec();
+      await session.commitTransaction();
+      return pushResult;
+    } catch (e) {
+      await session.abortTransaction();
+    } finally {
+      await session.endSession();
     }
     return null;
   }

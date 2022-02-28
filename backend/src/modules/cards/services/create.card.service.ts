@@ -5,6 +5,7 @@ import isEmpty from '../../../libs/utils/isEmpty';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
+import { pushCardIntoPosition } from '../shared/push.card';
 
 @Injectable()
 export default class CreateCardServiceImpl implements CreateCardService {
@@ -12,7 +13,7 @@ export default class CreateCardServiceImpl implements CreateCardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
   ) {}
 
-  create(cardId: string, userId: string, card: CardDto, colIdToAdd: string) {
+  create(boardId: string, userId: string, card: CardDto, colIdToAdd: string) {
     card.createdBy = userId;
 
     if (isEmpty(card.items)) {
@@ -25,23 +26,6 @@ export default class CreateCardServiceImpl implements CreateCardService {
     } else {
       card.items[0].createdBy = userId;
     }
-    return this.boardModel
-      .findOneAndUpdate(
-        {
-          _id: cardId,
-          'columns._id': colIdToAdd,
-        },
-        {
-          $push: {
-            'columns.$.cards': {
-              $each: [{ ...card }],
-              $position: 0,
-            },
-          },
-        },
-        { new: true },
-      )
-      .lean()
-      .exec();
+    return pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
   }
 }

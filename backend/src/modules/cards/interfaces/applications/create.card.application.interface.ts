@@ -4,7 +4,7 @@ import CardDto from '../../dto/card.dto';
 
 export interface CreateCardApplication {
   create(
-    cardId: string,
+    boardId: string,
     userId: string,
     card: CardDto,
     colIdToAdd: string,
