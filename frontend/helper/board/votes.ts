@@ -2,33 +2,24 @@ import BoardType from "../../types/board/board";
 import CardType from "../../types/card/card";
 
 const countVotes = (board: BoardType, userId: string) => {
-  let votes = 0;
-  if (userId && board) {
-    for (let i = 0; i < board.columns.length; i++) {
-      const column = board.columns[i];
-      for (let j = 0; j < column.cards.length; j++) {
-        const card = column.cards[j];
-        if (card.votes.includes(userId)) {
-          for (let k = 0; k < card.votes.length; k++) {
-            if (card.votes[k] === userId) {
-              votes++;
-            }
-          }
-        }
-        for (let x = 0; x < card.items.length; x++) {
-          const item = card.items[x];
-          if (item.votes.includes(userId)) {
-            for (let y = 0; y < item.votes.length; y++) {
-              if (item.votes[y] === userId) {
-                votes++;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return votes;
+  if (!userId || !board) return 0;
+  return board.columns.reduce((acc, column) => {
+    column.cards.forEach((card) => {
+      card.votes
+        .filter((vote) => vote === userId)
+        .forEach(() => {
+          acc++;
+        });
+      card.items.forEach((item) => {
+        item.votes
+          .filter((vote) => vote === userId)
+          .forEach(() => {
+            acc++;
+          });
+      });
+    });
+    return acc;
+  }, 0);
 };
 
 export const getCardVotes = (card: CardType) => {

@@ -19,12 +19,8 @@ export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType
   return fetchData(`/boards/${board._id}`, { method: "PUT", data: board });
 };
 
-export const getBoardRequest = (
-  id: string,
-  token?: string,
-  serverSide?: boolean
-): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, { token, serverSide });
+export const getBoardRequest = (id: string, serverSide?: boolean): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`, { serverSide });
 };
 
 export const getBoardsRequest = (): Promise<BoardType[]> => {

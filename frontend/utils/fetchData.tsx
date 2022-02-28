@@ -28,6 +28,14 @@ export const serverSideInstance = axios.create({
   },
 });
 
+export const setHeaderToken = (serverSide: boolean, token: string | undefined) => {
+  if (serverSide) {
+    serverSideInstance.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
+};
+
 type Options = {
   token?: string;
   serverSide?: boolean;

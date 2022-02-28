@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { QueryClient, dehydrate } from "react-query";
 import { useRouter } from "next/router";
 import { io, Socket } from "socket.io-client";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { DragDropContext, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import Flex from "../../components/Primitives/Flex";
 import Text from "../../components/Primitives/Text";
@@ -67,10 +67,9 @@ const ColumnList = React.memo<ColumnListProps>(({ columns, boardId, userId, sock
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
   const { boardId } = context.query;
-  const session = await getSession(context);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["board", { id: boardId }], () =>
-    getBoardRequest(boardId as string, session?.accessToken, true)
+    getBoardRequest(boardId as string, true)
   );
 
   return {

@@ -48,30 +48,28 @@ const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card })
 
   const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
-    if (!isEmpty(votesOfUserInThisCard)) {
-      ToastMessage(`You have ${maxVotes - actualBoardVotes + 1} remaining`, "info");
-      deleteVote.mutate({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: !cardItemId,
-      });
-    }
+    if (isEmpty(votesOfUserInThisCard)) return;
+    ToastMessage(`You have ${maxVotes - actualBoardVotes + 1} remaining`, "info");
+    deleteVote.mutate({
+      boardId,
+      cardId: card._id,
+      socketId,
+      cardItemId,
+      isCardGroup: !cardItemId,
+    });
   };
 
   const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
-    if (actualBoardVotes < maxVotes) {
-      ToastMessage(`You have ${maxVotes - actualBoardVotes - 1} remaining`, "info");
-      addVote.mutate({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: !cardItemId,
-      });
-    }
+    if (actualBoardVotes >= maxVotes) return;
+    ToastMessage(`You have ${maxVotes - actualBoardVotes - 1} remaining`, "info");
+    addVote.mutate({
+      boardId,
+      cardId: card._id,
+      socketId,
+      cardItemId,
+      isCardGroup: !cardItemId,
+    });
   };
 
   return (
