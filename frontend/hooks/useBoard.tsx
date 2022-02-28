@@ -16,9 +16,11 @@ import {
   addCommentRequest,
   deleteCommentRequest,
   updateCommentRequest,
+  addVoteRequest,
+  deleteVoteRequest,
 } from "../api/boardService";
 import UseBoardType from "../types/board/useBoard";
-import { setChangesBoard } from "../store/slicer/boardSlicer";
+import { decrementVote, incrementVote, setChangesBoard } from "../store/slicer/boardSlicer";
 import { useAppDispatch } from "../store/hooks";
 
 interface AutoFetchProps {
@@ -159,6 +161,34 @@ const useBoard = ({
 
   // #endregion
 
+  // #region VOTE
+  // #region VOTES
+
+  const addVote = useMutation(addVoteRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(incrementVote());
+      dispatch(setChangesBoard({ board, userId }));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Vote not inserted!", "error");
+    },
+  });
+
+  const deleteVote = useMutation(deleteVoteRequest, {
+    onSuccess: (board: BoardType) => {
+      dispatch(decrementVote());
+      dispatch(setChangesBoard({ board, userId }));
+    },
+    onError: () => {
+      fetchBoard.refetch();
+      ToastMessage("Vote not deleted!", "error");
+    },
+  });
+
+  // #endregion
+
+  // #endregion
   return {
     fetchBoard,
     fetchBoards,
@@ -172,6 +202,8 @@ const useBoard = ({
     addCommentInCard,
     deleteComment,
     updateComment,
+    addVote,
+    deleteVote,
   };
 };
 

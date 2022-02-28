@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { GetServerSideProps } from "next";
+import { QueryClient, dehydrate } from "react-query";
 import { useRouter } from "next/router";
 import { io, Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
@@ -21,6 +22,7 @@ import {
 import BoardType from "../../types/board/board";
 import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
 import requireAuthentication from "../../components/HOC/requireAuthentication";
+import { getBoardRequest } from "../../api/boardService";
 
 const Container = styled(Flex, {
   alignItems: "flex-start",
@@ -63,9 +65,17 @@ const ColumnList = React.memo<ColumnListProps>(({ columns, boardId, userId, sock
   );
 });
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => {
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
+  const { boardId } = context.query;
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["board", { id: boardId }], () =>
+    getBoardRequest(boardId as string, true)
+  );
+
   return {
-    props: {},
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 });
 
@@ -86,9 +96,9 @@ const Board: React.FC = () => {
 
   useEffect(() => {
     if (data && !board) {
-      dispatch(setBoard(data));
+      dispatch(setBoard({ board: data, userId }));
     }
-  }, [board, data, dispatch]);
+  }, [board, data, dispatch, userId]);
 
   useEffect(() => {
     const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:3200");

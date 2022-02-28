@@ -8,6 +8,7 @@ import DeleteCardDto from "../card/deleteCard.dto";
 import AddCommentDto from "../comment/addComment.dto";
 import DeleteCommentDto from "../comment/deleteComment.dto";
 import UpdateCommentDto from "../comment/updateComment.dto";
+import VoteDto from "./vote/vote.dto";
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, BoardToAdd, unknown>;
@@ -22,4 +23,6 @@ export default interface UseBoardType {
   addCommentInCard: UseMutationResult<BoardType, unknown, AddCommentDto, unknown>;
   updateComment: UseMutationResult<BoardType, unknown, UpdateCommentDto, unknown>;
   deleteComment: UseMutationResult<BoardType, unknown, DeleteCommentDto, unknown>;
+  addVote: UseMutationResult<BoardType, unknown, VoteDto, unknown>;
+  deleteVote: UseMutationResult<BoardType, unknown, VoteDto, unknown>;
 }

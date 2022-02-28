@@ -15,8 +15,7 @@ instance.interceptors.request.use(async (config) => {
   const { url, headers } = config;
   if (url && headers && !nonNeededToken.includes(url)) {
     const session = await getSession();
-
-    headers.Authorization = `Bearer ${session?.accessToken}`;
+    if (session) headers.Authorization = `Bearer ${session?.accessToken}`;
   }
 
   return config;
@@ -28,6 +27,14 @@ export const serverSideInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const setHeaderToken = (serverSide: boolean, token: string | undefined) => {
+  if (serverSide) {
+    serverSideInstance.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
+};
 
 type Options = {
   token?: string;

@@ -1,5 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { getSession } from "next-auth/react";
+import { setHeaderToken } from "../../utils/fetchData";
 import { AUTH_ROUTE } from "../../utils/routes";
 
 function requireAuthentication(gssp: GetServerSideProps) {
@@ -20,6 +21,8 @@ function requireAuthentication(gssp: GetServerSideProps) {
         },
       };
     }
+
+    setHeaderToken(true, session.accessToken);
 
     return gssp(ctx);
   };

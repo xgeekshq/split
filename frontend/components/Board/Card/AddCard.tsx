@@ -9,6 +9,7 @@ import BlurEvent from "../../../types/events/blurEvent";
 import Button from "../../Primitives/Button";
 import Flex from "../../Primitives/Flex";
 import ResizableTextArea from "../../Primitives/ResizableTextArea";
+import isEmpty from "../../../utils/isEmpty";
 
 const ActionButton = styled(Button, { borderRadius: "$round" });
 
@@ -41,7 +42,7 @@ const AddCard = React.memo<AddCardProps>(({ colId, boardId, socketId }) => {
   const handleFocus = () => setIsClicked(true);
 
   const handleAddCard = () => {
-    if (text?.length === 0) {
+    if (isEmpty(text)) {
       ToastMessage("Card text cannot be empty!", "error");
       return;
     }
