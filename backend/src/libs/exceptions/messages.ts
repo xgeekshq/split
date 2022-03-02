@@ -14,3 +14,7 @@ export const UNAUTHORIZED = 'UNAUTHORIZED';
 export const UPDATE_FAILED = 'UPDATE_FAILED';
 export const DELETE_FAILED = 'DELETE_FAILED';
 export const INSERT_FAILED = 'INSERT_FAILED';
+
+export const CARD_NOT_REMOVED = "Card wasn't removed";
+export const CARD_NOT_INSERTED = "Card wasn't inserted";
+export const CARD_NOT_FOUND = "Card wasn't found";

@@ -1,6 +1,12 @@
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import {
+  CARD_NOT_FOUND,
+  CARD_NOT_INSERTED,
+  CARD_NOT_REMOVED,
+  UPDATE_FAILED,
+} from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
@@ -37,13 +43,13 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         this.boardModel,
         session,
       );
-      if (pullResult.modifiedCount !== 1) throw Error();
+      if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const cardGroup = await this.cardService.getCardFromBoard(
         boardId,
         cardGroupId,
       );
-      if (!cardGroup) throw Error();
+      if (!cardGroup) throw Error(CARD_NOT_FOUND);
 
       const { text, comments, votes: itemVotes } = cardGroup.items[0];
       const newComments = cardGroup.comments.concat(comments);
@@ -75,7 +81,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
           .lean()
           .exec();
 
-        if (updateResult.modifiedCount !== 1) throw Error();
+        if (updateResult.modifiedCount !== 1) throw Error(UPDATE_FAILED);
       }
 
       const newCardItem = { ...cardItemToMove };
@@ -96,7 +102,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         this.boardModel,
         session,
       );
-      if (!pushResult) throw Error();
+      if (!pushResult) throw Error(CARD_NOT_INSERTED);
       await session.commitTransaction();
       return pushResult;
     } catch (e) {

@@ -1,6 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import {
+  CARD_NOT_FOUND,
+  CARD_NOT_REMOVED,
+  UPDATE_FAILED,
+} from '../../../libs/exceptions/messages';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { MergeCardService } from '../interfaces/services/merge.card.service.interface';
@@ -29,13 +34,13 @@ export class MergeCardServiceImpl implements MergeCardService {
         this.boardModel,
         session,
       );
-      if (pullResult.modifiedCount !== 1) throw Error();
+      if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const cardGroup = await this.cardService.getCardFromBoard(
         boardId,
         cardId,
       );
-      if (!cardGroup) throw Error();
+      if (!cardGroup) throw Error(CARD_NOT_FOUND);
       const { items, comments, votes } = cardToMove;
       const newItems = cardGroup.items.concat(items);
       const newVotes = (cardGroup.votes as unknown as string[]).concat(
@@ -63,7 +68,7 @@ export class MergeCardServiceImpl implements MergeCardService {
         )
         .lean()
         .session(session);
-      if (!setResult) throw Error();
+      if (!setResult) throw Error(UPDATE_FAILED);
       await session.commitTransaction();
       return setResult;
     } catch (e) {

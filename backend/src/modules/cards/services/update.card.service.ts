@@ -1,6 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import {
+  CARD_NOT_INSERTED,
+  CARD_NOT_REMOVED,
+} from '../../../libs/exceptions/messages';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
@@ -36,7 +40,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
         this.boardModel,
         session,
       );
-      if (pullResult.modifiedCount === 0) throw Error();
+      if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const pushResult = await pushCardIntoPosition(
         boardId,
@@ -46,7 +50,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
         this.boardModel,
         session,
       );
-      if (!pushResult) throw Error();
+      if (!pushResult) throw Error(CARD_NOT_INSERTED);
 
       await session.commitTransaction();
       return pushResult;
