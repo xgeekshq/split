@@ -6,4 +6,8 @@ export interface GetCardService {
     boardId: string,
     cardId: string,
   ): Promise<LeanDocument<CardDocument> | null>;
+  getCardItemFromGroup(
+    boardId: string,
+    cardItemId: string,
+  ): Promise<LeanDocument<CardDocument> | null>;
 }

@@ -52,4 +52,47 @@ export default class GetCardServiceImpl implements GetCardService {
 
     return !isEmpty(result) ? (result[0] as LeanDocument<CardDocument>) : null;
   }
+
+  async getCardItemFromGroup(boardId: string, cardItemId: string) {
+    const result = await this.boardModel.aggregate([
+      {
+        $match: {
+          _id: new Types.ObjectId(boardId),
+          'columns.cards.items._id': new Types.ObjectId(cardItemId),
+        },
+      },
+      {
+        $unwind: {
+          path: '$columns',
+        },
+      },
+      {
+        $unwind: {
+          path: '$columns.cards',
+        },
+      },
+      {
+        $unwind: {
+          path: '$columns.cards.items',
+        },
+      },
+      {
+        $project: {
+          card: '$columns.cards.items',
+          _id: 0,
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: '$card',
+        },
+      },
+      {
+        $match: {
+          _id: new Types.ObjectId(cardItemId),
+        },
+      },
+    ]);
+    return !isEmpty(result) ? (result[0] as LeanDocument<CardDocument>) : null;
+  }
 }

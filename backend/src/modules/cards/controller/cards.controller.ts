@@ -29,6 +29,12 @@ import { CreateCardApplication } from '../interfaces/applications/create.card.ap
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
+import { MergeCardApplication } from '../interfaces/applications/merge.card.application.interface';
+import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.application.interface';
+import { BaseDto } from '../../../libs/dto/base.dto';
+import { MergeCardsParams } from '../../../libs/dto/param/merge.cards.params';
+import { UnmergeCardsParams } from '../../../libs/dto/param/unmerge.cards.params';
+import UnmergeCardsDto from '../dto/unmerge.dto';
 
 @Controller('boards')
 export default class CardsController {
@@ -39,6 +45,10 @@ export default class CardsController {
     private updateCardApp: UpdateCardApplication,
     @Inject(TYPES.applications.DeleteCardApplication)
     private deleteCardApp: DeleteCardApplication,
+    @Inject(TYPES.applications.MergeCardApplication)
+    private mergeCardApp: MergeCardApplication,
+    @Inject(TYPES.applications.UnmergeCardApplication)
+    private unmergeCardApp: UnmergeCardApplication,
     private socketService: SocketGateway,
   ) {}
 
@@ -122,6 +132,44 @@ export default class CardsController {
       boardId,
       cardId,
       targetColumnId,
+      newPosition,
+    );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
+    this.socketService.sendUpdatedBoard(board, socketId);
+    return board;
+  }
+
+  @Put(':boardId/card/:cardId/merge/:targetCardId')
+  async mergeCards(
+    @Req() request,
+    @Param() params: MergeCardsParams,
+    @Body() mergeCardsDto: BaseDto,
+  ) {
+    const { boardId, cardId: draggedCardId, targetCardId } = params;
+    const { socketId } = mergeCardsDto;
+    const board = await this.mergeCardApp.mergeCards(
+      boardId,
+      draggedCardId,
+      targetCardId,
+    );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
+    this.socketService.sendUpdatedBoard(board, socketId);
+    return board;
+  }
+
+  @Put(':boardId/card/:cardId/cardItem/:itemId/removeFromCardGroup')
+  async unmergeCards(
+    @Req() request,
+    @Param() params: UnmergeCardsParams,
+    @Body() unmergeCardsDto: UnmergeCardsDto,
+  ) {
+    const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
+    const { columnId, socketId, newPosition } = unmergeCardsDto;
+    const board = await this.unmergeCardApp.unmergeAndUpdatePosition(
+      boardId,
+      cardGroupId,
+      draggedCardId,
+      columnId,
       newPosition,
     );
     if (!board) throw new BadRequestException(UPDATE_FAILED);
