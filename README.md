@@ -55,8 +55,9 @@ The frontend `.env` file have the parameter named *SECRET* that is required by n
 
 ### Database
 
-Since the database is the only app required to run in dev mode. You need to build it running the follow command `docker-compose up -d mongo` in the project's root folder.
-The mongo image is downloaded, built and the database is created with the name that is passed as described in the env file parameter called *DB_NAME*. After the container is built, the init script that's inside the database folder runs in order to create a user to manage and connect to the database from the backend.
+In the dev mode the database is the only resource you need to build with docker.
+Before running the docker compose command you should edit the `rs-init.sh` file permissions. To do that you can run `chmod +x database/rs-init.sh` from the project's root folder. After this you should run the follow command `docker-compose up -d mongo mongo2` in the project's root folder.
+The mongo image is downloaded, two containers are built and a database is created with the name that is passed in the env file parameter called *DB_NAME*. After the containers have been built you should start the replica set by running the follow comand `docker exec mongo /scripts/rs-init.sh`. (It will take 30s to conclude the process - after the first *bye* appears you should wait)
 
 ### Backend
 
@@ -68,7 +69,7 @@ To run this application for the first time run `npm i` inside the frontend folde
 
 ## 🏃  How to Run - with docker
 
-In order to run the whole project with docker you need to prepare the `.env.example` file that is present in the root folder of the project and from there run the following command: `docker-compose up -d`
+In order to run the whole project with docker you need to prepare the `.env.example` file that is present in the root folder of the project and from there run the following command: `docker-compose up -d`. After the containers have been built you should start the replica set by running the follow comand `docker exec mongo /scripts/rs-init.sh`. (It will take 30s to conclude the process - after the first *bye* appears you should wait)
 
 ## Usage
 
