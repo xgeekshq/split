@@ -17,4 +17,12 @@ export class DeleteCommentApplicationImpl implements DeleteCommentApplication {
       userId,
     );
   }
+
+  deleteCardGroupComment(boardId: string, commentId: string, userId: string) {
+    return this.deleteCommentService.deleteCardGroupComment(
+      boardId,
+      commentId,
+      userId,
+    );
+  }
 }

@@ -5,6 +5,7 @@ import { GetCardService } from 'src/modules/cards/interfaces/services/get.card.s
 import { TYPES } from '../../cards/interfaces/types';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { DeleteVoteService } from '../interfaces/services/delete.vote.service.interface';
+import isEmpty from '../../../libs/utils/isEmpty';
 
 @Injectable()
 export default class DeleteVoteServiceImpl implements DeleteVoteService {
@@ -51,6 +52,58 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
           .lean()
           .exec();
       }
+    }
+    return null;
+  }
+
+  async deleteVoteFromCardGroup(
+    boardId: string,
+    cardId: string,
+    userId: string,
+  ) {
+    const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+    if (card) {
+      const votes = card.votes as unknown as string[];
+      if (isEmpty(votes.length)) {
+        for (let i = 0; i < card.items.length; i += 1) {
+          const item = card.items[i];
+          const itemVotes = item.votes.map(String);
+          if (itemVotes.includes(userId.toString())) {
+            return this.deleteVoteFromCard(
+              boardId,
+              cardId,
+              userId,
+              item._id.toString(),
+            );
+          }
+        }
+
+        return null;
+      }
+
+      votes.splice(
+        votes.findIndex((vote) => vote === userId),
+        1,
+      );
+
+      return this.boardModel
+        .findOneAndUpdate(
+          {
+            _id: boardId,
+            'columns.cards._id': cardId,
+          },
+          {
+            $set: {
+              'columns.$.cards.$[c].votes': votes,
+            },
+          },
+          {
+            arrayFilters: [{ 'c._id': cardId }],
+            new: true,
+          },
+        )
+        .lean()
+        .exec();
     }
     return null;
   }

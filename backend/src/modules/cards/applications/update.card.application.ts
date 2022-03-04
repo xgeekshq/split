@@ -41,4 +41,18 @@ export class UpdateCardApplicationImpl implements UpdateCardApplication {
       text,
     );
   }
+
+  updateCardGroupText(
+    boardId: string,
+    cardId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.updateCardService.updateCardGroupText(
+      boardId,
+      cardId,
+      userId,
+      text,
+    );
+  }
 }

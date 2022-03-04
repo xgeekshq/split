@@ -23,4 +23,8 @@ export class CreateVoteApplicationImpl implements CreateVoteApplication {
       cardItemId,
     );
   }
+
+  addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
+    return this.createVoteService.addVoteToCardGroup(boardId, cardId, userId);
+  }
 }
