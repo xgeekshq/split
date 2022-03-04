@@ -22,38 +22,39 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     cardItemId: string,
   ) {
     const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-    if (card) {
-      const cardItem = card.items.find(
-        (item) => item._id.toString() === cardItemId,
-      );
-      if (cardItem) {
-        const votes = cardItem.votes as unknown as string[];
-        votes.splice(
-          votes.findIndex((vote) => vote === userId),
-          1,
-        );
 
-        return this.boardModel
-          .findOneAndUpdate(
-            {
-              _id: boardId,
-              'columns.cards.items._id': cardItemId,
-            },
-            {
-              $set: {
-                'columns.$.cards.$[c].items.$[i].votes': votes,
-              },
-            },
-            {
-              arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-              new: true,
-            },
-          )
-          .lean()
-          .exec();
-      }
-    }
-    return null;
+    if (!card) return null;
+
+    const cardItem = card.items.find(
+      (item) => item._id.toString() === cardItemId,
+    );
+
+    if (!cardItem) return null;
+
+    const votes = cardItem.votes as unknown as string[];
+    votes.splice(
+      votes.findIndex((vote) => vote === userId),
+      1,
+    );
+
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.items._id': cardItemId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].items.$[i].votes': votes,
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
   }
 
   async deleteVoteFromCardGroup(
@@ -62,49 +63,46 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     userId: string,
   ) {
     const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-    if (card) {
-      const votes = card.votes as unknown as string[];
-      if (isEmpty(votes.length)) {
-        for (let i = 0; i < card.items.length; i += 1) {
-          const item = card.items[i];
-          const itemVotes = item.votes.map(String);
-          if (itemVotes.includes(userId.toString())) {
-            return this.deleteVoteFromCard(
-              boardId,
-              cardId,
-              userId,
-              item._id.toString(),
-            );
-          }
-        }
+    if (!card) return null;
 
-        return null;
-      }
-
-      votes.splice(
-        votes.findIndex((vote) => vote === userId),
-        1,
+    const votes = card.votes as unknown as string[];
+    if (isEmpty(votes.length)) {
+      const item = card.items.find(({ votes: itemVotes }) =>
+        (itemVotes as unknown as string[]).includes(userId),
       );
 
-      return this.boardModel
-        .findOneAndUpdate(
-          {
-            _id: boardId,
-            'columns.cards._id': cardId,
-          },
-          {
-            $set: {
-              'columns.$.cards.$[c].votes': votes,
-            },
-          },
-          {
-            arrayFilters: [{ 'c._id': cardId }],
-            new: true,
-          },
-        )
-        .lean()
-        .exec();
+      if (!item) return null;
+
+      return this.deleteVoteFromCard(
+        boardId,
+        cardId,
+        userId,
+        item._id.toString(),
+      );
     }
-    return null;
+
+    votes.splice(
+      votes.findIndex((vote) => vote === userId),
+      1,
+    );
+
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].votes': votes,
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
   }
 }
