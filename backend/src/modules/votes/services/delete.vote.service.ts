@@ -6,6 +6,7 @@ import { TYPES } from '../../cards/interfaces/types';
 import Board, { BoardDocument } from '../../boards/schemas/board.schema';
 import { DeleteVoteService } from '../interfaces/services/delete.vote.service.interface';
 import isEmpty from '../../../libs/utils/isEmpty';
+import { arrayIdToString } from '../../../libs/utils/arrayIdToString';
 
 @Injectable()
 export default class DeleteVoteServiceImpl implements DeleteVoteService {
@@ -65,10 +66,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     const card = await this.getCardService.getCardFromBoard(boardId, cardId);
     if (!card) return null;
 
-    const votes = card.votes as unknown as string[];
+    const { votes } = card;
+    const newVotes = arrayIdToString(votes as unknown as string[]);
     if (isEmpty(votes.length)) {
       const item = card.items.find(({ votes: itemVotes }) =>
-        (itemVotes as unknown as string[]).includes(userId),
+        arrayIdToString(itemVotes as unknown as string[]).includes(userId),
       );
 
       if (!item) return null;
@@ -81,8 +83,8 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
       );
     }
 
-    votes.splice(
-      votes.findIndex((vote) => vote === userId),
+    newVotes.splice(
+      newVotes.findIndex((vote) => vote === userId),
       1,
     );
 
@@ -94,7 +96,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
         },
         {
           $set: {
-            'columns.$.cards.$[c].votes': votes,
+            'columns.$.cards.$[c].votes': newVotes,
           },
         },
         {
