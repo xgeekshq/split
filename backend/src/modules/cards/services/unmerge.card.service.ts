@@ -55,7 +55,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         (item) => item._id.toString() !== draggedCardId,
       );
       if (items.length === 1) {
-        const { text, comments, votes: itemVotes } = items[0];
+        const [{ text, comments, votes: itemVotes }] = items;
         const newComments = cardGroup.comments.concat(comments);
         const newVotes = (cardGroup.votes as unknown as string[]).concat(
           itemVotes as unknown as string[],
