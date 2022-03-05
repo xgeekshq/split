@@ -35,4 +35,25 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
       .lean()
       .exec();
   }
+
+  addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+        },
+        {
+          $push: {
+            'columns.$.cards.$[c].votes': userId,
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
+  }
 }

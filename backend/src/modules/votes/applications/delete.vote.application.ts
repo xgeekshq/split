@@ -23,4 +23,12 @@ export class DeleteVoteApplicationImpl implements DeleteVoteApplication {
       cardItemId,
     );
   }
+
+  deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string) {
+    return this.deleteVoteService.deleteVoteFromCardGroup(
+      boardId,
+      cardId,
+      userId,
+    );
+  }
 }

@@ -39,4 +39,33 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
       .lean()
       .exec();
   }
+
+  createCardGroupComment(
+    boardId: string,
+    cardId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+        },
+        {
+          $push: {
+            'columns.$.cards.$[c].comments': {
+              text,
+              createdBy: userId,
+            },
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
+  }
 }

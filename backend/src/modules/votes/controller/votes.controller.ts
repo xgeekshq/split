@@ -9,6 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { VoteGroupParams } from '../../../libs/dto/param/vote.group.params';
 import { VoteItemParams } from '../../../libs/dto/param/vote.item.params';
 import {
   DELETE_FAILED,
@@ -55,19 +56,63 @@ export default class VotesController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
+  @Post(':boardId/card/:cardId/vote')
+  async addVoteToCardGroup(
+    @Req() request,
+    @Param() params: VoteGroupParams,
+    @Body() createVoteDto: VoteDto,
+  ) {
+    const {
+      user: { _id: userId },
+    } = request;
+    const { boardId, cardId } = params;
+    const board = await this.createVoteApp.addVoteToCardGroup(
+      boardId,
+      cardId,
+      userId,
+    );
+    if (!board) throw new BadRequestException(INSERT_FAILED);
+    this.socketService.sendUpdatedBoard(board, createVoteDto.socketId);
+    return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId/card/:cardId/items/:itemId/vote')
   async deleteVoteFromCard(
     @Req() request,
     @Param() params: VoteItemParams,
     @Body() deleteCardDto: VoteDto,
   ) {
-    const userId = request.user._id;
+    const {
+      user: { _id: userId },
+    } = request;
     const { boardId, cardId, itemId } = params;
     const board = await this.deleteVoteApp.deleteVoteFromCard(
       boardId,
       cardId,
       userId,
       itemId,
+    );
+    if (!board) throw new BadRequestException(DELETE_FAILED);
+    this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+    return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Delete(':boardId/card/:cardId/vote')
+  async deleteVoteFromCardGroup(
+    @Req() request,
+    @Param() params: VoteGroupParams,
+    @Body() deleteCardDto: VoteDto,
+  ) {
+    const { boardId, cardId } = params;
+    const {
+      user: { _id: userId },
+    } = request;
+    const board = await this.deleteVoteApp.deleteVoteFromCardGroup(
+      boardId,
+      cardId,
+      userId,
     );
     if (!board) throw new BadRequestException(DELETE_FAILED);
     this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);

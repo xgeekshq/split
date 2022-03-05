@@ -27,4 +27,20 @@ export class UpdateCommentApplicationImpl implements UpdateCommentApplication {
       text,
     );
   }
+
+  updateCardGroupComment(
+    boardId: string,
+    cardId: string,
+    commentId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.updateCommentService.updateCardGroupComment(
+      boardId,
+      cardId,
+      commentId,
+      userId,
+      text,
+    );
+  }
 }

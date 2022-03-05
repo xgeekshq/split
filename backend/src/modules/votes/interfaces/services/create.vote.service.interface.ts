@@ -8,4 +8,9 @@ export interface CreateVoteService {
     userId: string,
     cardItemId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  addVoteToCardGroup(
+    boardId: string,
+    cardId: string,
+    userId: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

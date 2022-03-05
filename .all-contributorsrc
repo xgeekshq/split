@@ -18,6 +18,18 @@
       ]
     },
     {
+      "login": "gfdias",
+      "name": "Gonçalo Dias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5095726?v=4",
+      "profile": "https://github.com/gfdias",
+      "contributions": [
+        "code",
+        "review",
+        "doc",
+        "projectManagement"
+      ]
+    }
+    {
       "login": "rpvsilva",
       "name": "Rui Silva",
       "avatar_url": "https://avatars.githubusercontent.com/u/25325644?v=4",
@@ -25,8 +37,7 @@
       "contributions": [
         "code",
         "review"
-      ]
-    }
+]},  
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",

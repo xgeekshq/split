@@ -9,4 +9,10 @@ export interface CreateCommentApplication {
     userId: string,
     text: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  createCardGroupComment(
+    boardId: string,
+    cardId: string,
+    userId: string,
+    text: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

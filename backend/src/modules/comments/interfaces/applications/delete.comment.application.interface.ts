@@ -7,4 +7,9 @@ export interface DeleteCommentApplication {
     commentId: string,
     userId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  deleteCardGroupComment(
+    boardId: string,
+    commentId: string,
+    userId: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

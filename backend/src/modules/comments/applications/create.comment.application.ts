@@ -25,4 +25,18 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
       text,
     );
   }
+
+  createCardGroupComment(
+    boardId: string,
+    cardId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.createCommentService.createCardGroupComment(
+      boardId,
+      cardId,
+      userId,
+      text,
+    );
+  }
 }

@@ -92,4 +92,30 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
       .lean()
       .exec();
   }
+
+  updateCardGroupText(
+    boardId: string,
+    cardId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards._id': cardId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].text': text,
+          },
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId, 'c.createdBy': userId }],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
+  }
 }
