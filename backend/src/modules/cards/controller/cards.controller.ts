@@ -19,10 +19,6 @@ import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import SocketGateway from '../../socket/gateway/socket.gateway';
 import { CreateCardDto } from '../dto/create.card.dto';
 import DeleteCardDto from '../dto/delete.card.dto';
-import { CreateCardParams } from '../dto/params/create.card.params';
-import { DeleteCardParams } from '../dto/params/delete.card.params';
-import { UpdateCardParams } from '../dto/params/update-position.card.params';
-import { UpdatePositionCardParams } from '../dto/params/update-text.card.params copy';
 import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card..dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
@@ -35,6 +31,9 @@ import { BaseDto } from '../../../libs/dto/base.dto';
 import { MergeCardsParams } from '../../../libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from '../../../libs/dto/param/unmerge.cards.params';
 import UnmergeCardsDto from '../dto/unmerge.dto';
+import { BaseParam } from '../../../libs/dto/param/base.param';
+import { CardGroupParams } from '../../../libs/dto/param/card.group.params';
+import { CardItemParams } from '../../../libs/dto/param/card.item.params';
 
 @Controller('boards')
 export default class CardsController {
@@ -57,7 +56,7 @@ export default class CardsController {
   async addCard(
     @Req() request,
     @Param()
-    params: CreateCardParams,
+    params: BaseParam,
     @Body() createCardDto: CreateCardDto,
   ) {
     const {
@@ -81,7 +80,7 @@ export default class CardsController {
   async deleteCard(
     @Req() request,
     @Param()
-    params: DeleteCardParams,
+    params: CardGroupParams,
     @Body() deleteCardDto: DeleteCardDto,
   ) {
     const {
@@ -99,7 +98,7 @@ export default class CardsController {
   async updateCardText(
     @Req() request,
     @Param()
-    params: UpdateCardParams,
+    params: CardItemParams,
     @Body() updateCardDto: UpdateCardDto,
   ) {
     const {
@@ -119,11 +118,34 @@ export default class CardsController {
     return board;
   }
 
+  @UseGuards(JwtAuthenticationGuard)
+  @Put(':boardId/card/:cardId')
+  async updateCardGroupText(
+    @Req() request,
+    @Param() params: CardGroupParams,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
+    const { boardId, cardId } = params;
+    const {
+      user: { _id: userId },
+    } = request;
+    const { text } = updateCardDto;
+    const board = await this.updateCardApp.updateCardGroupText(
+      boardId,
+      cardId,
+      userId,
+      text,
+    );
+    if (!board) throw new BadRequestException(UPDATE_FAILED);
+    this.socketService.sendUpdatedBoard(board, updateCardDto.socketId);
+    return board;
+  }
+
   @Put(':boardId/card/:cardId/updateCardPosition')
   async updateCardPosition(
     @Req() request,
     @Param()
-    params: UpdatePositionCardParams,
+    params: CardGroupParams,
     @Body() boardData: UpdateCardPositionDto,
   ) {
     const { boardId, cardId } = params;

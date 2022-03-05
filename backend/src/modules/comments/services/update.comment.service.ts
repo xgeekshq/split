@@ -41,4 +41,34 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
       .lean()
       .exec();
   }
+
+  updateCardGroupComment(
+    boardId: string,
+    cardId: string,
+    commentId: string,
+    userId: string,
+    text: string,
+  ) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.comments._id': commentId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].comments.$[com].text': text,
+          },
+        },
+        {
+          arrayFilters: [
+            { 'c._id': cardId },
+            { 'com._id': commentId, 'com.createdBy': userId },
+          ],
+          new: true,
+        },
+      )
+      .lean()
+      .exec();
+  }
 }

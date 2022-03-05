@@ -30,4 +30,25 @@ export default class DeleteCommentServiceImpl implements DeleteCommentService {
       .lean()
       .exec();
   }
+
+  deleteCardGroupComment(boardId: string, commentId: string, userId: string) {
+    return this.boardModel
+      .findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.comments._id': commentId,
+        },
+        {
+          $pull: {
+            'columns.$.cards.$[].comments': {
+              _id: commentId,
+              createdBy: userId,
+            },
+          },
+        },
+        { new: true },
+      )
+      .lean()
+      .exec();
+  }
 }

@@ -8,4 +8,9 @@ export interface DeleteVoteApplication {
     userId: string,
     cardItemId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  deleteVoteFromCardGroup(
+    boardId: string,
+    cardId: string,
+    userId: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }
