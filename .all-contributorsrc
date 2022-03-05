@@ -16,6 +16,18 @@
         "infra",
         "doc"
       ]
+    },
+    {
+      "login": "gfdias",
+      "name": "Gonçalo Dias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5095726?v=4",
+      "profile": "https://github.com/gfdias",
+      "contributions": [
+        "code",
+        "review",
+        "doc",
+        "projectManagement"
+      ]
     }
   ],
   "contributorsPerLine": 7,
