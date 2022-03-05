@@ -16,6 +16,16 @@
         "infra",
         "doc"
       ]
+    },
+    {
+      "login": "rpvsilva",
+      "name": "Rui Silva",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25325644?v=4",
+      "profile": "https://github.com/rpvsilva",
+      "contributions": [
+        "code",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
