@@ -83,7 +83,9 @@ export default class VotesController {
     @Param() params: VoteItemParams,
     @Body() deleteCardDto: VoteDto,
   ) {
-    const userId = request.user._id;
+    const {
+      user: { _id: userId },
+    } = request;
     const { boardId, cardId, itemId } = params;
     const board = await this.deleteVoteApp.deleteVoteFromCard(
       boardId,
@@ -97,13 +99,16 @@ export default class VotesController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Delete(':boardId/card/:cardId/vote/:userId')
+  @Delete(':boardId/card/:cardId/vote')
   async deleteVoteFromCardGroup(
     @Req() request,
     @Param() params: VoteGroupParams,
     @Body() deleteCardDto: VoteDto,
   ) {
-    const { boardId, cardId, userId } = params;
+    const { boardId, cardId } = params;
+    const {
+      user: { _id: userId },
+    } = request;
     const board = await this.deleteVoteApp.deleteVoteFromCardGroup(
       boardId,
       cardId,
