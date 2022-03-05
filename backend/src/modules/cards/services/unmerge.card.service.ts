@@ -51,13 +51,15 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
       );
       if (!cardGroup) throw Error(CARD_NOT_FOUND);
 
-      const { text, comments, votes: itemVotes } = cardGroup.items[0];
-      const newComments = cardGroup.comments.concat(comments);
-      const newVotes = (cardGroup.votes as unknown as string[]).concat(
-        itemVotes as unknown as string[],
+      const items = cardGroup.items.filter(
+        (item) => item._id.toString() !== draggedCardId,
       );
-
-      if (cardGroup.items.length === 1) {
+      if (items.length === 1) {
+        const { text, comments, votes: itemVotes } = items[0];
+        const newComments = cardGroup.comments.concat(comments);
+        const newVotes = (cardGroup.votes as unknown as string[]).concat(
+          itemVotes as unknown as string[],
+        );
         const updateResult = await this.boardModel
           .updateOne(
             {
