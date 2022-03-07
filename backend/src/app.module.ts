@@ -8,19 +8,27 @@ import { CardsModule } from './modules/cards/cards.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import AppConfigModule from './infrastructure/config/config.module';
 import { VotesModule } from './modules/votes/votes.module';
+import { configuration } from './infrastructure/config/configuration';
+import AzureModule from './modules/azure/azure.module';
+
+const imports = [
+  AppConfigModule,
+  DatabaseModule,
+  UsersModule,
+  AuthModule,
+  BoardsModule,
+  SocketModule,
+  CardsModule,
+  CommentsModule,
+  VotesModule,
+];
+
+if (configuration().azure.enabled) {
+  imports.push(AzureModule);
+}
 
 @Module({
-  imports: [
-    AppConfigModule,
-    DatabaseModule,
-    UsersModule,
-    AuthModule,
-    BoardsModule,
-    SocketModule,
-    CardsModule,
-    CommentsModule,
-    VotesModule,
-  ],
+  imports,
   controllers: [],
   providers: [],
 })
