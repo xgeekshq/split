@@ -10,6 +10,7 @@ import { AuthAzureService } from '../interfaces/services/auth.azure.service.inte
 import { signIn } from '../../auth/shared/login.auth';
 import { TYPES } from '../interfaces/types';
 import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
+import isEmpty from '../../../libs/utils/isEmpty';
 
 interface AzureUserFound {
   mail: string | undefined;
@@ -53,16 +54,19 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
     return null;
   }
 
+  getGraphQueryUrl(email: string) {
+    return `https://graph.microsoft.com/v1.0/users?$search="mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"&$orderbydisplayName&$count=true`;
+  }
+
   async checkUserExistsInActiveDirectory(email: string) {
-    const { data } = await axios.get(
-      `https://graph.microsoft.com/v1.0/users?$search="mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"&$orderbydisplayName&$count=true`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.cronAzureService.getToken()}`,
-          ConsistencyLevel: 'eventual',
-        },
+    const queryUrl = this.getGraphQueryUrl(email);
+
+    const { data } = await axios.get(queryUrl, {
+      headers: {
+        Authorization: `Bearer ${this.cronAzureService.getToken()}`,
+        ConsistencyLevel: 'eventual',
       },
-    );
+    });
 
     const user = data.value.find(
       (userFound: AzureUserFound) =>
@@ -70,8 +74,6 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
         userFound.displayName?.toLowerCase() === email.toLowerCase() ||
         userFound.userPrincipalName?.toLowerCase() === email.toLowerCase(),
     );
-    if (user) return true;
-
-    return false;
+    return !isEmpty(user);
   }
 }

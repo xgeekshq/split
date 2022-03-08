@@ -20,6 +20,22 @@ import { configuration } from './configuration';
         JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        AZURE_ENABLE: Joi.string().required(),
+        AZURE_CLIENT_ID: Joi.any().when('AZURE_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+          otherwise: Joi.optional(),
+        }),
+        AZURE_CLIENT_SECRET: Joi.any().when('AZURE_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+          otherwise: Joi.optional(),
+        }),
+        AZURE_TENANT_ID: Joi.any().when('AZURE_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+          otherwise: Joi.optional(),
+        }),
       }),
     }),
   ],
