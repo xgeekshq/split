@@ -32,5 +32,6 @@ module.exports = {
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-empty-interface' : 'off',
+    "prefer-destructuring": "off",
   },
 };

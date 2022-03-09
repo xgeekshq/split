@@ -1,0 +1,28 @@
+name: Deploy frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: divideandconquer.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - run: |
+          docker build ./frontend --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t divideandconquer.azurecr.io/divideandconquer-fe:latest
+          docker push divideandconquer.azurecr.io/divideandconquer-fe:latest
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: "divideandconquer"
+          publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+          images: "divideandconquer.azurecr.io/divideandconquer-fe:latest"

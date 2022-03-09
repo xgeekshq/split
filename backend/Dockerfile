@@ -8,13 +8,14 @@ COPY . /home/node
 
 RUN npm ci \
     && npm run build \
-    && npm prune --production
+    && npm prune --staging
 
 # ---
 
 FROM node:16-alpine
 
-ENV NODE_ENV production
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV}
 
 EXPOSE 3200
 

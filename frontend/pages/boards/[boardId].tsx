@@ -101,7 +101,9 @@ const Board: React.FC = () => {
   }, [board, data, dispatch, userId]);
 
   useEffect(() => {
-    const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:3200");
+    const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:3200", {
+      transports: ["polling"],
+    });
 
     newSocket.on("connect", () => {
       newSocket.emit("join", { boardId });
