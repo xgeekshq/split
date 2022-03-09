@@ -28,7 +28,7 @@
         "doc",
         "projectManagement"
       ]
-    }
+    },
     {
       "login": "rpvsilva",
       "name": "Rui Silva",
@@ -37,7 +37,8 @@
       "contributions": [
         "code",
         "review"
-]},  
+      ]
+    }  
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",

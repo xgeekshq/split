@@ -14,7 +14,7 @@ module.exports = {
   ],
   parserOptions: {
     project: './tsconfig.json',
-    "ecmaVersion": 12,
+    ecmaVersion: 12,
   },
   root: true,
   env: {
@@ -29,5 +29,8 @@ module.exports = {
     'no-param-reassign': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-empty-interface' : 'off',
   },
 };

@@ -43,5 +43,6 @@ import {
     JwtRefreshTokenStrategy,
   ],
   controllers: [AuthController],
+  exports: [getTokenAuthService],
 })
 export default class AuthModule {}

@@ -27,6 +27,12 @@ export const configuration = (): Configuration => {
         ),
       },
     },
+    azure: {
+      clientId: process.env.AZURE_CLIENT_ID as string,
+      clientSecret: process.env.AZURE_CLIENT_SECRET as string,
+      tenantId: process.env.AZURE_TENANT_ID as string,
+      enabled: process.env.AZURE_ENABLE === 'true',
+    },
   };
 
   return defaultConfiguration;

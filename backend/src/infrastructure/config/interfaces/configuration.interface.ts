@@ -1,4 +1,6 @@
-export interface Configuration {
+import { AzureConfiguration } from './azure.configuration.interface';
+
+export interface Configuration extends AzureConfiguration {
   server: {
     port: number;
   };
