@@ -2,14 +2,12 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import useUser from "../../hooks/useUser";
-import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import { User } from "../../types/user/user";
 import Text from "../Primitives/Text";
 import ErrorMessages from "../../errors/errorMessages";
 import schemaRegisterForm from "../../schema/schemaRegisterForm";
-import AuthFieldSet from "./FieldSet/AuthFieldSet";
 import { styled } from "../../stitches.config";
 
 const StyledText = styled(Text, {
@@ -19,7 +17,6 @@ const StyledText = styled(Text, {
   width: "100%",
 });
 
-const StyledButton = styled(Button, { mt: "$8" });
 const StyledForm = styled("form", { width: "100%" });
 
 const RegisterForm: React.FC = () => {
@@ -49,13 +46,13 @@ const RegisterForm: React.FC = () => {
               </StyledText>
             </Flex>
           ) : null}
-          <AuthFieldSet label="Email" inputType="text" id="email" />
+          {/* <AuthFieldSet label="Email" inputType="text" id="email" />
           <AuthFieldSet label="Name" inputType="text" id="name" />
           <AuthFieldSet label="Password" inputType="password" id="password" />
           <AuthFieldSet label="Password confirmation" id="passwordConf" inputType="password" />
           <StyledButton color="green" size="2" type="submit" css={{ width: "100%" }}>
             Create account
-          </StyledButton>
+          </StyledButton> */}
         </StyledForm>
       </FormProvider>
     </TabsContent>

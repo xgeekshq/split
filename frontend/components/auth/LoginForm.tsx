@@ -9,11 +9,10 @@ import { LoginUser } from "../../types/user/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
-import Button from "../Primitives/Button";
-import AuthFieldSet from "./FieldSet/AuthFieldSet";
 import ErrorMessages, { errorCodes } from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
+import Logo from "../Primitives/icons/logo";
 
 const StyledText = styled(Text, {
   backgroundColor: "$red5",
@@ -21,8 +20,7 @@ const StyledText = styled(Text, {
   p: "$16",
   width: "100%",
 });
-const StyledButton = styled(Button, { mt: "$8", width: "100%" });
-const StyledForm = styled("form", { width: "100%" });
+const StyledForm = styled("form", Flex, { width: "100%" });
 
 const LoginForm: React.FC = () => {
   const [loginErrorCode, setLoginErrorCode] = useState(0);
@@ -48,14 +46,22 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <TabsContent value="login">
+    <TabsContent value="login" css={{ mb: "$48" }}>
       <FormProvider {...methods}>
         <StyledForm
+          direction="column"
           style={{ width: "100%" }}
           onSubmit={methods.handleSubmit((credentials: LoginUser) => {
             onLogin(credentials);
           })}
         >
+          <Logo />
+          <Text css={{ mt: "$24" }} heading="1">
+            Log In
+          </Text>
+          <Text size="md" css={{ mt: "$8", color: "$primary500" }}>
+            Enter your email and password to log in.
+          </Text>
           {loginErrorCode > 0 ? (
             <Flex css={{ mb: "$16" }}>
               <StyledText color="red">
@@ -65,11 +71,6 @@ const LoginForm: React.FC = () => {
               </StyledText>
             </Flex>
           ) : null}
-          <AuthFieldSet label="Email" inputType="text" id="email" />
-          <AuthFieldSet label="Password" inputType="password" id="password" tabValue="login" />
-          <StyledButton color="green" size="2" type="submit" css={{ width: "100%" }}>
-            Login
-          </StyledButton>
         </StyledForm>
       </FormProvider>
     </TabsContent>

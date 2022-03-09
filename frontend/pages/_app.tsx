@@ -7,7 +7,6 @@ import { Hydrate } from "react-query/hydration";
 import { Provider } from "react-redux";
 import Head from "next/head";
 import globalStyles from "../styles/globals";
-import Layout from "../components/Layout/Layout";
 import store from "../store/store";
 import { JWT_EXPIRATION_TIME } from "../utils/constants";
 
@@ -24,9 +23,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Provider store={store}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              <Component {...pageProps} />
             </Provider>
           </Hydrate>
           <ReactQueryDevtools initialIsOpen={false} />

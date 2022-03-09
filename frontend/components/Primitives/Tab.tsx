@@ -1,50 +1,53 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { mauve, violet } from "@radix-ui/colors";
 import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 
 const StyledTabs = styled(TabsPrimitive.Root, {
-  display: "flex",
-  flexDirection: "column",
-  width: "inherit",
+  width: "500px",
+  boxShadow: "0px 4px 54px rgba(0, 0, 0, 0.5)",
+  borderRadius: "$12",
+  backgroundColor: "$white",
 });
 
 const StyledList = styled(TabsPrimitive.List, {
+  flexShrink: 0,
   display: "flex",
-  borderBottom: `1px solid ${mauve.mauve6}`,
+  borderBottom: `1px solid var(--color-black)`,
+  pb: "$48",
 });
 
 const StyledTrigger = styled(TabsPrimitive.Trigger, {
   all: "unset",
   fontFamily: "inherit",
   backgroundColor: "white",
-  padding: "0 20px",
-  height: 45,
+  height: "100%",
   flex: 1,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   fontSize: 15,
   lineHeight: 1,
-  color: mauve.mauve11,
   userSelect: "none",
-  "&:first-child": { borderTopLeftRadius: 6 },
-  "&:last-child": { borderTopRightRadius: 6 },
-  "&:hover": { color: violet.violet11 },
+  "&:first-child": { borderTopLeftRadius: "$12" },
+  "&:last-child": { borderTopRightRadius: "$12" },
+  borderBottom: "1px solid var(--colors-primary100)",
   '&[data-state="active"]': {
-    color: violet.violet11,
-    boxShadow: "inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor",
+    color: "$black",
+    borderBottom: "2px solid var(--colors-primaryBase)",
   },
-  "&:focus": { position: "relative", boxShadow: `0 0 0 2px black` },
 });
 
 const StyledContent = styled(TabsPrimitive.Content, Flex, {
   boxSizing: "border-box",
   backgroundColor: "white",
-  borderBottomLeftRadius: 6,
-  borderBottomRightRadius: 6,
   justifyContent: "center",
   outline: "none",
+  borderRadius: "$12",
+  px: "$32",
+  '&[data-state="inactive"]': {
+    pt: "0",
+    pb: "0",
+  },
 });
 
 export const TabsRoot = StyledTabs;

@@ -1,25 +1,36 @@
 import { createStitches } from "@stitches/react";
 import type * as Stitches from "@stitches/react";
-import { gray, violet, mauve, slate, blue, blackA, slateA, red, green } from "@radix-ui/colors";
+import dangerColors from "./styles/colors/danger.colors";
+import highlight1Colors from "./styles/colors/highlight1Colors";
+import highlight2Colors from "./styles/colors/highlight2Colors";
+import highlight3Colors from "./styles/colors/highlight3Colors";
+import highlight4Colors from "./styles/colors/highlight4Colors";
+import infoColors from "./styles/colors/info.colors";
+import primaryColors from "./styles/colors/primaryColors";
+import secondaryColors from "./styles/colors/secondaryColors";
+import successColors from "./styles/colors/successColors";
+import warningColors from "./styles/colors/warning.colors";
 
 export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } =
   createStitches({
     theme: {
       colors: {
-        ...gray,
-        ...green,
-        ...violet,
-        ...mauve,
-        ...slate,
-        ...slateA,
-        ...blue,
-        ...blackA,
-        ...red,
-        ...violet,
+        background: "#F8F8F8",
+        surface: "#FFFFFF",
+        transparent: "#FFFFFF 0%",
+        black: "#000000",
+        white: "#FFFFFF",
 
-        hiContrast: "$slate12",
-        loContrast: "white",
-        body: "$gray3",
+        ...primaryColors,
+        ...secondaryColors,
+        ...highlight1Colors,
+        ...highlight2Colors,
+        ...highlight3Colors,
+        ...highlight4Colors,
+        ...dangerColors,
+        ...successColors,
+        ...warningColors,
+        ...infoColors,
       },
       fontSizes: {
         8: "0.35rem",
@@ -29,7 +40,13 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         16: "1rem",
         18: "1.125rem",
         20: "1.25rem",
-        36: "2rem",
+        24: "1.5rem",
+        28: "1.75rem",
+        32: "2rem",
+        36: "2.25rem",
+        48: "3rem",
+        64: "4rem",
+        72: "4.5rem",
       },
       fontWeights: {
         normal: "400",
@@ -37,6 +54,19 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         semiBold: "600",
         bold: "700",
         extrabold: "800",
+      },
+      letterSpacings: {
+        "-0.15": "-0.009375rem",
+        "-0.17": "-0.010625rem",
+        "-0.2": "-0.0125rem",
+        "0-25": "-0.015625rem",
+        "-0.3": "-0.01875rem",
+        "-0.35": "-0.021875rem",
+        "0-4": "-0.025rem",
+        "-1": "-0.0625rem",
+        "-2": "-0.125rem",
+        "-3": "-0.1875rem",
+        "1": "0.0625rem",
       },
       space: {
         2: "0.125rem",
@@ -50,8 +80,14 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         20: "1.25rem",
         24: "1.5rem",
         26: "1.625rem",
+        32: "2rem",
         40: "2.5rem",
+        48: "3rem",
         50: "3.125rem",
+        62: "3.875rem",
+        74: "4.625rem",
+        162: "10.125rem",
+        202: "12.625rem",
       },
       sizes: {
         2: "0.125rem",
@@ -65,6 +101,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         32: "2rem",
         40: "2.5rem",
         60: "3.75rem",
+        74: "4.625rem",
         130: "5rem",
         160: "10rem",
         220: "13.75rem",
