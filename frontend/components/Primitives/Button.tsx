@@ -16,6 +16,13 @@ const StyledButton = styled("button", {
       cursor: "pointer",
     },
   },
+  "&:disabled": {
+    "@hover": {
+      "&:hover": {
+        cursor: "default",
+      },
+    },
+  },
   variants: {
     variant: {
       primary: {

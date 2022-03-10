@@ -4,32 +4,39 @@ import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { RedirectableProviderType } from "next-auth/providers";
+import { ThreeDots } from "react-loader-spinner";
 import { styled } from "../../stitches.config";
 import { LoginUser } from "../../types/user/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
-import ErrorMessages, { errorCodes } from "../../errors/errorMessages";
+import { errorCodes } from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
 import Logo from "../Primitives/icons/logo";
+import Input from "../Primitives/Input";
+import Eye from "../Primitives/icons/Eye";
+import Button from "../Primitives/Button";
+import OrSeparator from "../Primitives/OrSeparator";
+import { AUTH_SSO, NEXT_PUBLIC_ENABLE_AZURE, NEXT_PUBLIC_ENABLE_GIT } from "../../utils/constants";
+import MicrosoftIcon from "../Primitives/icons/Microsoft";
+import GitHubIcon from "../Primitives/icons/GitHub";
+import useUser from "../../hooks/useUser";
 
-const StyledText = styled(Text, {
-  backgroundColor: "$red5",
-  fontWeight: "bold",
-  p: "$16",
-  width: "100%",
-});
 const StyledForm = styled("form", Flex, { width: "100%" });
 
 const LoginForm: React.FC = () => {
-  const [loginErrorCode, setLoginErrorCode] = useState(0);
+  const [loginErrorCode, setLoginErrorCode] = useState(-1);
+  const { loginAzure } = useUser(setLoginErrorCode);
   const methods = useForm<LoginUser>({
+    mode: "onChange",
+    reValidateMode: "onChange",
     resolver: zodResolver(SchemaLoginForm),
   });
 
-  const onLogin = async (credentials: LoginUser) => {
+  const handleLogin = async (credentials: LoginUser) => {
     try {
+      setLoginErrorCode(0);
       const result = await signIn<RedirectableProviderType>("credentials", {
         ...credentials,
         callbackUrl: DASHBOARD_ROUTE,
@@ -46,13 +53,13 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <TabsContent value="login" css={{ mb: "$48" }}>
+    <TabsContent value="login">
       <FormProvider {...methods}>
         <StyledForm
           direction="column"
           style={{ width: "100%" }}
           onSubmit={methods.handleSubmit((credentials: LoginUser) => {
-            onLogin(credentials);
+            handleLogin(credentials);
           })}
         >
           <Logo />
@@ -62,7 +69,81 @@ const LoginForm: React.FC = () => {
           <Text size="md" css={{ mt: "$8", color: "$primary500" }}>
             Enter your email and password to log in.
           </Text>
-          {loginErrorCode > 0 ? (
+          <Input css={{ mt: "$32" }} id="email" type="text" placeholder="Email address" />
+          <Input
+            id="password"
+            type="password"
+            placeholder="Password"
+            icon={<Eye />}
+            iconPosition="right"
+          />
+
+          <Button
+            disabled={!methods.formState.isValid || loginErrorCode === 0}
+            size="lg"
+            css={{
+              fontWeight: "$medium",
+              fontSize: "$18",
+              "& svg": {
+                height: "$40 !important",
+                width: "$40 !important",
+              },
+            }}
+          >
+            {loginErrorCode === 0 && <ThreeDots color="#FFFFF" height={80} width={80} />}
+            {loginErrorCode !== 0 && "Log in"}
+          </Button>
+          <Text
+            size="sm"
+            css={{
+              alignSelf: "center",
+              mt: "$16",
+              "&:hover": {
+                textDecorationLine: "underline",
+                cursor: "pointer",
+              },
+            }}
+          >
+            Forgot password
+          </Text>
+          {AUTH_SSO && (
+            <Flex justify="center" align="center" direction="column">
+              <Flex
+                css={{
+                  mt: "$26",
+                  mb: "$32",
+                }}
+              >
+                <OrSeparator />
+              </Flex>
+              <Flex gap="32">
+                {NEXT_PUBLIC_ENABLE_GIT && (
+                  <Flex
+                    css={{
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <GitHubIcon />
+                  </Flex>
+                )}
+                {NEXT_PUBLIC_ENABLE_AZURE && (
+                  <Flex
+                    onClick={loginAzure}
+                    css={{
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <MicrosoftIcon />
+                  </Flex>
+                )}
+              </Flex>
+            </Flex>
+          )}
+          {/* {loginErrorCode > 0 ? (
             <Flex css={{ mb: "$16" }}>
               <StyledText color="red">
                 {loginErrorCode === 401
@@ -70,7 +151,7 @@ const LoginForm: React.FC = () => {
                   : ErrorMessages.USER_NOT_FOUND}
               </StyledText>
             </Flex>
-          ) : null}
+          ) : null} */}
         </StyledForm>
       </FormProvider>
     </TabsContent>

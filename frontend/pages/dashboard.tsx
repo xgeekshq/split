@@ -33,9 +33,7 @@ const Dashboard: React.FC = () => {
   return (
     <Container direction="column" gap="40">
       <CreateBoard setFetchLoading={handleLoading} />
-      <Text size="36" fontWeight="bold">
-        All boards
-      </Text>
+      <Text>All boards</Text>
       {BoardsListContent}
     </Container>
   );

@@ -8,9 +8,9 @@ import Text from "../components/Primitives/Text";
 import { styled } from "../stitches.config";
 
 const CenteredContainer = styled(Flex, {
-  position: "fixed",
-  top: "202px",
-  right: "162px",
+  position: "absolute",
+  top: "$202",
+  right: "$162",
   "&:focus": { outline: "none" },
 });
 
@@ -18,10 +18,11 @@ const Home: NextPage = () => {
   return (
     <Flex
       css={{
+        position: "relative",
         height: "100vh",
         width: "100vw",
         backgroundColor: "$black",
-        backgroundImage: "url(background.png)",
+        backgroundImage: "url(background.svg)",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}

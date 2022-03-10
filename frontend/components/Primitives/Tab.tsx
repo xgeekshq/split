@@ -25,8 +25,6 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 15,
-  lineHeight: 1,
   userSelect: "none",
   "&:first-child": { borderTopLeftRadius: "$12" },
   "&:last-child": { borderTopRightRadius: "$12" },
@@ -34,6 +32,12 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   '&[data-state="active"]': {
     color: "$black",
     borderBottom: "2px solid var(--colors-primaryBase)",
+  },
+  '&[data-state="inactive"]': {
+    "& span": {
+      color: "$primary300",
+      fontWeight: "$normal",
+    },
   },
 });
 
@@ -44,6 +48,7 @@ const StyledContent = styled(TabsPrimitive.Content, Flex, {
   outline: "none",
   borderRadius: "$12",
   px: "$32",
+  pb: "$48",
   '&[data-state="inactive"]': {
     pt: "0",
     pb: "0",

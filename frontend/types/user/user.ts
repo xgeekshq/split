@@ -17,6 +17,7 @@ export interface User {
 export interface UseUserType {
   createUser: UseMutationResult<User, AxiosError, User, unknown>;
   setPw: Dispatch<SetStateAction<string>>;
+  loginAzure: () => Promise<void>;
 }
 
 export interface LoginUser {

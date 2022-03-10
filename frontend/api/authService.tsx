@@ -16,7 +16,7 @@ export const refreshToken = (token: string): Promise<Token> => {
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
-  return fetchData(`/auth/registerAzure`, {
+  return fetchData(`/auth/signAzure`, {
     method: "POST",
     data: { token: azureAccessToken },
     serverSide: true,

@@ -4,6 +4,8 @@ const Text = styled("span", {
   fontWeight: "$regular",
   color: "$primaryBase",
   fontFamily: "DM Sans",
+  fontSize: "$16",
+  lineHeight: "$24",
   variants: {
     display: {
       1: {
@@ -129,9 +131,6 @@ const Text = styled("span", {
         color: "$primary300",
       },
     },
-  },
-  defaultVariants: {
-    size: "md",
   },
 });
 

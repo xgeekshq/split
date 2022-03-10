@@ -2,7 +2,6 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SessionProvider } from "next-auth/react";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { Hydrate } from "react-query/hydration";
 import { Provider } from "react-redux";
 import Head from "next/head";
@@ -26,7 +25,6 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
               <Component {...pageProps} />
             </Provider>
           </Hydrate>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </SessionProvider>
     </>

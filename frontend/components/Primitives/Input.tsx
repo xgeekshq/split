@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { css } from "@stitches/react";
 import Text from "./Text";
-import { CSS, styled } from "../../stitches.config";
+import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 import isEmpty from "../../utils/isEmpty";
 import InfoIcon from "./icons/Info";
@@ -25,20 +24,22 @@ const StyledInput = styled("input", {
     boxSizing: "border-box",
   },
   "&:-internal-autofill-selected": {
-    "-webkit-box-shadow": "0 0 0px 1000px white inset",
     backgroundColor: "$white",
   },
 
   "&:-webkit-autofill,&:-webkit-autofill:active,&:-webkit-autofill:focus": {
-    "-webkit-box-shadow": "0 0 0px 1000px white inset",
-    backgroundColor: "$white",
+    "-webkit-box-shadow":
+      "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-successLightest)",
   },
 
   "&:-webkit-autofill::first-line": {
     color: "$dangerBase",
     fontFamily: "DM Sans",
     fontSize: "$16",
-    fontWeight: "$bold",
+  },
+
+  ":-internal-autofill-previewed": {
+    fontSize: "22px !important",
   },
 
   // Custom
@@ -66,14 +67,27 @@ const StyledInput = styled("input", {
           borderColor: "$primary400",
           boxShadow: "0px 0px 0px 2px var(--colors-primaryLightest)",
         },
+        "&:-webkit-autofill": {
+          fontSize: "22px !important",
+          "-webkit-box-shadow":
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-primaryLightest)",
+        },
       },
       valid: {
         borderColor: "$success700",
         boxShadow: "0px 0px 0px 2px var(--colors-successLightest)",
+        "&:-webkit-autofill": {
+          "-webkit-box-shadow":
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-successLightest)",
+        },
       },
       error: {
         borderColor: "$danger700",
         boxShadow: "0px 0px 0px 2px var(--colors-dangerLightest)",
+        "&:-webkit-autofill": {
+          "-webkit-box-shadow":
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-dangerLightest)",
+        },
       },
     },
   },
@@ -86,7 +100,9 @@ const StyledInput = styled("input", {
   },
 });
 
-interface InputProps {
+type StyledInpupProps = React.ComponentProps<typeof StyledInput>;
+
+interface InputProps extends StyledInpupProps {
   id: string;
   type: "text" | "password" | "email" | "number" | "tel" | "url";
   placeholder: string;
@@ -94,7 +110,6 @@ interface InputProps {
   icon?: JSX.Element;
   helperText?: string;
   iconPosition?: "left" | "right";
-  customCss?: CSS;
   disabled?: boolean;
 }
 
@@ -105,17 +120,17 @@ const Input: React.FC<InputProps> = ({
   iconPosition,
   helperText,
   type,
-  customCss,
   disabled,
+  css,
 }) => {
   Input.defaultProps = {
     iconPosition: "left",
     icon: undefined,
     helperText: "",
-    customCss: undefined,
     disabled: false,
   };
 
+  const [currentType, setType] = useState(type);
   const isIconLeft = iconPosition === "left";
   const isIconRight = iconPosition === "right";
 
@@ -125,22 +140,32 @@ const Input: React.FC<InputProps> = ({
   } = values;
   const isValueEmpty = isEmpty(values.getValues()[id]);
   const state = errors[`${id}`] ? "error" : isValueEmpty ? "default" : "valid";
+
+  const handleOnClickIcon = () => {
+    setType(currentType === "password" ? "text" : "password");
+  };
+
   return (
     <Flex
       direction="column"
-      css={{ position: "relative", width: "100%", mb: "$20", height: "auto", ...customCss }}
+      css={{ position: "relative", width: "100%", mb: "$20", height: "auto", ...css }}
       onBlur={() => {
-        if (isValueEmpty) values.clearErrors();
+        if (isValueEmpty) {
+          values.clearErrors();
+        }
       }}
     >
       {!!icon && (
         <Flex
+          onClick={handleOnClickIcon}
           css={{
-            ...css,
             position: "absolute",
             top: "$16",
             left: isIconLeft ? "$16" : "undefined",
             right: isIconRight ? "$16" : "undefined",
+            "&:hover": {
+              cursor: type === "password" ? "pointer" : "none",
+            },
           }}
         >
           {icon}
@@ -151,7 +176,7 @@ const Input: React.FC<InputProps> = ({
           id={id}
           placeholder=" "
           disabled={disabled}
-          type={type}
+          type={currentType}
           variant={state}
           data-state={state}
           data-icon-position={iconPosition}
