@@ -38,6 +38,7 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
     if (!loginResult?.error) {
       // setLoginErrorCode(errorCodes(loginResult?.error));
     } else {
+      console.log(loginResult);
       router.push(DASHBOARD_ROUTE);
     }
   };

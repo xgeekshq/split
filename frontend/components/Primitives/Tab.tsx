@@ -3,7 +3,7 @@ import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 
 const StyledTabs = styled(TabsPrimitive.Root, {
-  width: "500px",
+  width: "$500",
   boxShadow: "0px 4px 54px rgba(0, 0, 0, 0.5)",
   borderRadius: "$12",
   backgroundColor: "$white",
@@ -20,9 +20,10 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   all: "unset",
   fontFamily: "inherit",
   backgroundColor: "white",
-  height: "100%",
+  boxSizing: "border-box",
   flex: 1,
   display: "flex",
+  height: "$74",
   alignItems: "center",
   justifyContent: "center",
   userSelect: "none",
@@ -36,7 +37,10 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   '&[data-state="inactive"]': {
     "& span": {
       color: "$primary300",
-      fontWeight: "$normal",
+      fontStyle: "normal",
+      fontWeight: "$regular",
+      lineHeight: "$28",
+      letterSpacing: "0px",
     },
   },
 });

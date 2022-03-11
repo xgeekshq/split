@@ -1,6 +1,9 @@
 import { globalCss } from "../stitches.config";
 
 const globalStyles = globalCss({
+  "*": {
+    boxSizing: "border-box",
+  },
   body: {
     bc: "$background",
     margin: 0,
@@ -8,8 +11,10 @@ const globalStyles = globalCss({
     fontWeight: "$regular",
     fontSize: "$16",
     lineHeight: "$24",
-    width: "100vw",
-    height: "100vh",
+    minHeight: "100vh",
+  },
+  "#__next": {
+    minHeight: "100vh",
   },
 });
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import router from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
@@ -25,12 +25,20 @@ import useUser from "../../hooks/useUser";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser(setLoginErrorCode);
   const methods = useForm<LoginUser>({
     mode: "onChange",
     reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     resolver: zodResolver(SchemaLoginForm),
   });
 
@@ -52,10 +60,15 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  const handleShowTrubleLogginIn = () => {
+    setShowTroubleLogin(true);
+  };
+
   return (
     <TabsContent value="login">
       <FormProvider {...methods}>
         <StyledForm
+          autoComplete="off"
           direction="column"
           style={{ width: "100%" }}
           onSubmit={methods.handleSubmit((credentials: LoginUser) => {
@@ -79,7 +92,8 @@ const LoginForm: React.FC = () => {
           />
 
           <Button
-            disabled={!methods.formState.isValid || loginErrorCode === 0}
+            type="submit"
+            disabled={loginErrorCode === 0}
             size="lg"
             css={{
               fontWeight: "$medium",
@@ -103,6 +117,7 @@ const LoginForm: React.FC = () => {
                 cursor: "pointer",
               },
             }}
+            onClick={handleShowTrubleLogginIn}
           >
             Forgot password
           </Text>
@@ -110,7 +125,7 @@ const LoginForm: React.FC = () => {
             <Flex justify="center" align="center" direction="column">
               <Flex
                 css={{
-                  mt: "$26",
+                  mt: "$24",
                   mb: "$32",
                 }}
               >
@@ -143,15 +158,6 @@ const LoginForm: React.FC = () => {
               </Flex>
             </Flex>
           )}
-          {/* {loginErrorCode > 0 ? (
-            <Flex css={{ mb: "$16" }}>
-              <StyledText color="red">
-                {loginErrorCode === 401
-                  ? ErrorMessages.INVALID_CREDENTIALS
-                  : ErrorMessages.USER_NOT_FOUND}
-              </StyledText>
-            </Flex>
-          ) : null} */}
         </StyledForm>
       </FormProvider>
     </TabsContent>

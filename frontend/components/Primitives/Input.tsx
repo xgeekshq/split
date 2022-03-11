@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import Text from "./Text";
 import { styled } from "../../stitches.config";
@@ -55,6 +55,7 @@ const StyledInput = styled("input", {
   pt: "$28",
   pb: "$8",
   "&::-webkit-input-placeholder": {
+    fontSize: "22px !important",
     color: "$primary300",
   },
   "&:disabled": {
@@ -68,7 +69,6 @@ const StyledInput = styled("input", {
           boxShadow: "0px 0px 0px 2px var(--colors-primaryLightest)",
         },
         "&:-webkit-autofill": {
-          fontSize: "22px !important",
           "-webkit-box-shadow":
             "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-primaryLightest)",
         },
@@ -106,7 +106,6 @@ interface InputProps extends StyledInpupProps {
   id: string;
   type: "text" | "password" | "email" | "number" | "tel" | "url";
   placeholder: string;
-  // value?: string;
   icon?: JSX.Element;
   helperText?: string;
   iconPosition?: "left" | "right";
@@ -129,12 +128,13 @@ const Input: React.FC<InputProps> = ({
     helperText: "",
     disabled: false,
   };
-
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentType, setType] = useState(type);
   const isIconLeft = iconPosition === "left";
   const isIconRight = iconPosition === "right";
 
   const values = useFormContext();
+  const { ref, ...rest } = values.register(id);
   const {
     formState: { errors },
   } = values;
@@ -145,10 +145,17 @@ const Input: React.FC<InputProps> = ({
     setType(currentType === "password" ? "text" : "password");
   };
 
+  useEffect(() => {
+    if (id === "password") inputRef.current?.focus();
+    setTimeout(() => {
+      if (id === "email") inputRef.current?.focus();
+    }, 50);
+  }, []);
+
   return (
     <Flex
       direction="column"
-      css={{ position: "relative", width: "100%", mb: "$20", height: "auto", ...css }}
+      css={{ position: "relative", width: "100%", mb: "$16", height: "auto", ...css }}
       onBlur={() => {
         if (isValueEmpty) {
           values.clearErrors();
@@ -173,13 +180,18 @@ const Input: React.FC<InputProps> = ({
       )}
       <Flex>
         <StyledInput
+          {...rest}
+          ref={(e) => {
+            ref(e);
+            inputRef.current = e;
+          }}
           id={id}
           placeholder=" "
           disabled={disabled}
           type={currentType}
           variant={state}
           data-state={state}
-          data-icon-position={iconPosition}
+          autoComplete="off"
           css={{
             height: "$56",
             width: "100%",
@@ -196,7 +208,6 @@ const Input: React.FC<InputProps> = ({
             pl: icon && isIconLeft ? "$56" : "$16",
             pr: icon && iconPosition === "right" ? "$56" : "$16",
           }}
-          {...values?.register(id)}
         />
         <Text
           as="label"
@@ -218,28 +229,31 @@ const Input: React.FC<InputProps> = ({
         </Text>
       </Flex>
 
-      <Flex
-        gap="4"
-        align="center"
-        css={{
-          mt: "$8",
-          "& svg": {
-            height: "$16 !important",
-            width: "$16 !important",
-            color: "$dangerBase",
-          },
-        }}
-      >
-        {state === "error" && <InfoIcon />}
-        <Text
-          css={{
-            color: state === "error" ? "$dangerBase" : "$primary300",
-          }}
-          hint
-        >
-          {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
-        </Text>
-      </Flex>
+      {!isEmpty(helperText) ||
+        (!isEmpty(errors[`${id}`]) && (
+          <Flex
+            gap="4"
+            align="center"
+            css={{
+              mt: "$8",
+              "& svg": {
+                height: "$16 !important",
+                width: "$16 !important",
+                color: "$dangerBase",
+              },
+            }}
+          >
+            {state === "error" && <InfoIcon />}
+            <Text
+              css={{
+                color: state === "error" ? "$dangerBase" : "$primary300",
+              }}
+              hint
+            >
+              {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
+            </Text>
+          </Flex>
+        ))}
     </Flex>
   );
 };

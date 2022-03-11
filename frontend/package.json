@@ -39,6 +39,7 @@
     "react-query": "^3.34.16",
     "react-redux": "^7.2.6",
     "react-toastify": "^8.2.0",
+    "recoil": "^0.6.1",
     "socket.io-client": "^4.4.1",
     "uuid": "^8.3.2",
     "yup": "^0.32.11",
