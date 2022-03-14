@@ -9,6 +9,7 @@ import Logo from "../../public/icons/logo.svg";
 import Input from "../Primitives/Input";
 import Text from "../Primitives/Text";
 import LeftArrowIcon from "../../public/icons/leftArrow.svg";
+import { EmailUser } from "../../types/user/user";
 
 const MainContainer = styled("form", Flex, {
   width: "$500",
@@ -24,7 +25,7 @@ interface TroubleLoginProps {
 }
 
 const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
-  const methods = useForm<{ email: string }>({
+  const methods = useForm<EmailUser>({
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {

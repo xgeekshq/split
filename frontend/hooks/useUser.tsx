@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { postUser } from "../api/authService";
 import { LoginUser, User, UseUserType } from "../types/user/user";
 import { DASHBOARD_ROUTE } from "../utils/routes";
-import { errorCodes } from "../errors/errorMessages";
+import { errorCodes } from "../utils/errorCodes";
 
 const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserType => {
   const router = useRouter();
@@ -38,7 +38,6 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
     if (!loginResult?.error) {
       // setLoginErrorCode(errorCodes(loginResult?.error));
     } else {
-      console.log(loginResult);
       router.push(DASHBOARD_ROUTE);
     }
   };

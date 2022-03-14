@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import LoginForm from "../components/auth/LoginForm";
-import RegisterForm from "../components/auth/RegisterForm";
 import TroubleLogin from "../components/auth/TroubleLogin";
 import Banner from "../components/Primitives/Banner";
 import Flex from "../components/Primitives/Flex";
@@ -54,7 +53,6 @@ const Home: NextPage = () => {
                 <Text heading="4">Sign up</Text>
               </TabsTrigger>
             </TabsList>
-            <RegisterForm />
             <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
           </TabsRoot>
         )}

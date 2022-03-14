@@ -10,7 +10,6 @@ import { LoginUser } from "../../types/user/user";
 import Flex from "../Primitives/Flex";
 import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
-import { errorCodes } from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
 import Logo from "../../public/icons/logo.svg";
@@ -21,8 +20,15 @@ import { AUTH_SSO, NEXT_PUBLIC_ENABLE_AZURE, NEXT_PUBLIC_ENABLE_GIT } from "../.
 import useUser from "../../hooks/useUser";
 import MicrosoftIcon from "../../public/icons/microsoft.svg";
 import GitHubIcon from "../../public/icons/gitHub.svg";
+import { errorCodes } from "../../utils/errorCodes";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
+
+const StyledHoverIconFlex = styled("div", Flex, {
+  "&:hover": {
+    cursor: "pointer",
+  },
+});
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -42,20 +48,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   });
 
   const handleLogin = async (credentials: LoginUser) => {
-    try {
-      setLoginErrorCode(0);
-      const result = await signIn<RedirectableProviderType>("credentials", {
-        ...credentials,
-        callbackUrl: DASHBOARD_ROUTE,
-        redirect: false,
-      });
-      if (!result?.error) {
-        router.push(DASHBOARD_ROUTE);
-      } else {
-        setLoginErrorCode(errorCodes(result.error));
-      }
-    } catch (error) {
-      setLoginErrorCode(errorCodes(error as unknown as string));
+    setLoginErrorCode(0);
+    const result = await signIn<RedirectableProviderType>("credentials", {
+      ...credentials,
+      callbackUrl: DASHBOARD_ROUTE,
+      redirect: false,
+    });
+    if (!result?.error) {
+      router.push(DASHBOARD_ROUTE);
+    } else {
+      setLoginErrorCode(errorCodes(result.error));
     }
   };
 
@@ -132,27 +134,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
               </Flex>
               <Flex gap="32">
                 {NEXT_PUBLIC_ENABLE_GIT && (
-                  <Flex
-                    css={{
-                      "&:hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
+                  <StyledHoverIconFlex>
                     <GitHubIcon />
-                  </Flex>
+                  </StyledHoverIconFlex>
                 )}
                 {NEXT_PUBLIC_ENABLE_AZURE && (
-                  <Flex
-                    onClick={loginAzure}
-                    css={{
-                      "&:hover": {
-                        cursor: "pointer",
-                      },
-                    }}
-                  >
+                  <StyledHoverIconFlex onClick={loginAzure}>
                     <MicrosoftIcon />
-                  </Flex>
+                  </StyledHoverIconFlex>
                 )}
               </Flex>
             </Flex>
