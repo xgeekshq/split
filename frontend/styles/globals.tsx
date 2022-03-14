@@ -7,7 +7,7 @@ const globalStyles = globalCss({
   body: {
     bc: "$background",
     margin: 0,
-    fontFamily: "DM Sans",
+    fontFamily: "$body",
     fontWeight: "$regular",
     fontSize: "$16",
     lineHeight: "$24",
@@ -16,6 +16,7 @@ const globalStyles = globalCss({
   "#__next": {
     minHeight: "100vh",
   },
+  svg: { verticalAlign: "middle" },
 });
 
 export default globalStyles;

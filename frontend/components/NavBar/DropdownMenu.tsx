@@ -12,7 +12,7 @@ import {
   slideUpAndFade,
   slideRightAndFade,
 } from "../../animations/Slide";
-import { LANDING_ROUTE } from "../../utils/routes";
+import { START_PAGE_ROUTE } from "../../utils/routes";
 import ToastMessage from "../../utils/toast";
 
 const DropdownMenuContent = styled(DropdownMenu.Content, {
@@ -74,7 +74,7 @@ const Dropdown: React.FC = () => {
   const handleSignOut = async () => {
     try {
       const result = await signOut({
-        callbackUrl: LANDING_ROUTE,
+        callbackUrl: START_PAGE_ROUTE,
         redirect: false,
       });
       if (result) {
@@ -89,9 +89,7 @@ const Dropdown: React.FC = () => {
     <DropdownRoot>
       <DropdownMenu.Trigger asChild>
         <DropdownMenuGroup align="center" gap="6">
-          <DropdownLabel fontWeight="medium" size="18">
-            {session?.user?.name ?? "anonymous"}
-          </DropdownLabel>
+          <DropdownLabel>{session?.user?.name ?? "anonymous"}</DropdownLabel>
           <Avatar src={favIcon.src} size={24} />
         </DropdownMenuGroup>
       </DropdownMenu.Trigger>

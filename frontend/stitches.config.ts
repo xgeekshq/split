@@ -32,6 +32,9 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         ...warningColors,
         ...infoColors,
       },
+      fonts: {
+        body: "'DM Sans', sans-serif",
+      },
       fontSizes: {
         8: "0.35rem",
         10: "0.50rem",

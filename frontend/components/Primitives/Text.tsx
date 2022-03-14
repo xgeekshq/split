@@ -3,7 +3,7 @@ import { styled } from "../../stitches.config";
 const Text = styled("span", {
   fontWeight: "$regular",
   color: "$primaryBase",
-  fontFamily: "DM Sans",
+  fontFamily: "$body",
   fontSize: "$16",
   lineHeight: "$24",
   variants: {

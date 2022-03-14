@@ -4,7 +4,8 @@ import Text from "./Text";
 import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 import isEmpty from "../../utils/isEmpty";
-import InfoIcon from "./icons/Info";
+import InfoIcon from "../../public/icons/info.svg";
+import EyeIcon from "../../public/icons/eye.svg";
 
 const StyledInput = styled("input", {
   // Reset
@@ -14,7 +15,7 @@ const StyledInput = styled("input", {
   margin: "0",
   outlineOffset: "0",
   padding: "0",
-  fontFamily: "DM Sans",
+  fontFamily: "$body",
   WebkitTapHighlightColor: "rgba(0,0,0,0)",
   backgroundColor: "$white",
   "&::before": {
@@ -34,12 +35,13 @@ const StyledInput = styled("input", {
 
   "&:-webkit-autofill::first-line": {
     color: "$dangerBase",
-    fontFamily: "DM Sans",
+    fontFamily: "DM Sans, sans-serif",
     fontSize: "$16",
   },
 
   ":-internal-autofill-previewed": {
-    fontSize: "22px !important",
+    fontFamily: "DM Sans, sans-serif",
+    fontSize: "$16",
   },
 
   // Custom
@@ -106,7 +108,7 @@ interface InputProps extends StyledInpupProps {
   id: string;
   type: "text" | "password" | "email" | "number" | "tel" | "url";
   placeholder: string;
-  icon?: JSX.Element;
+  icon?: "eye";
   helperText?: string;
   iconPosition?: "left" | "right";
   disabled?: boolean;
@@ -142,6 +144,7 @@ const Input: React.FC<InputProps> = ({
   const state = errors[`${id}`] ? "error" : isValueEmpty ? "default" : "valid";
 
   const handleOnClickIcon = () => {
+    if (type === "text") return;
     setType(currentType === "password" ? "text" : "password");
   };
 
@@ -171,11 +174,11 @@ const Input: React.FC<InputProps> = ({
             left: isIconLeft ? "$16" : "undefined",
             right: isIconRight ? "$16" : "undefined",
             "&:hover": {
-              cursor: type === "password" ? "pointer" : "none",
+              cursor: type === "password" ? "pointer" : "default",
             },
           }}
         >
-          {icon}
+          {icon === "eye" && <EyeIcon />}
         </Flex>
       )}
       <Flex>
@@ -244,6 +247,7 @@ const Input: React.FC<InputProps> = ({
             }}
           >
             {state === "error" && <InfoIcon />}
+            {/* {state === "error" && <img src="/icons/info.svg" alt="info" />} */}
             <Text
               css={{
                 color: state === "error" ? "$dangerBase" : "$primary300",

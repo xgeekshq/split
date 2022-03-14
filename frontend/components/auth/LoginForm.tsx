@@ -13,15 +13,14 @@ import Text from "../Primitives/Text";
 import { errorCodes } from "../../errors/errorMessages";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
-import Logo from "../Primitives/icons/logo";
+import Logo from "../../public/icons/logo.svg";
 import Input from "../Primitives/Input";
-import Eye from "../Primitives/icons/Eye";
 import Button from "../Primitives/Button";
 import OrSeparator from "../Primitives/OrSeparator";
 import { AUTH_SSO, NEXT_PUBLIC_ENABLE_AZURE, NEXT_PUBLIC_ENABLE_GIT } from "../../utils/constants";
-import MicrosoftIcon from "../Primitives/icons/Microsoft";
-import GitHubIcon from "../Primitives/icons/GitHub";
 import useUser from "../../hooks/useUser";
+import MicrosoftIcon from "../../public/icons/microsoft.svg";
+import GitHubIcon from "../../public/icons/gitHub.svg";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
@@ -87,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             id="password"
             type="password"
             placeholder="Password"
-            icon={<Eye />}
+            icon="eye"
             iconPosition="right"
           />
 

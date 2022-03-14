@@ -5,10 +5,10 @@ import SchemaEmail from "../../schema/schemaEmail";
 import { styled } from "../../stitches.config";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
-import LeftArrow from "../Primitives/icons/LeftArrow";
-import Logo from "../Primitives/icons/logo";
+import Logo from "../../public/icons/logo.svg";
 import Input from "../Primitives/Input";
 import Text from "../Primitives/Text";
+import LeftArrowIcon from "../../public/icons/leftArrow.svg";
 
 const MainContainer = styled("form", Flex, {
   width: "$500",
@@ -70,20 +70,18 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
         <Flex
           gap="8"
           align="center"
-          css={{ mt: "$24", textAlign: "center" }}
+          css={{
+            mt: "$24",
+            textAlign: "center",
+            "&:hover": {
+              textDecorationLine: "underline",
+              cursor: "pointer",
+            },
+          }}
           onClick={handleShowTrubleLogginIn}
         >
-          <LeftArrow />
-          <Text
-            css={{
-              "&:hover": {
-                textDecorationLine: "underline",
-                cursor: "pointer",
-              },
-            }}
-          >
-            Go back
-          </Text>
+          <LeftArrowIcon />
+          <Text>Go back</Text>
         </Flex>
       </FormProvider>
     </MainContainer>

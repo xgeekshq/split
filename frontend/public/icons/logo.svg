@@ -1,8 +1,4 @@
-import Svg from "../Svg";
-
-const Logo: React.FC = () => {
-  return (
-    <Svg width="42" height="40" viewBox="0 0 42 40" fill="black" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="40" viewBox="0 0 42 40" fill="black" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_169_20252)">
         <path
           d="M24.5398 39.9435C24.1874 39.5662 24.039 39.3963 23.872 39.2265C21.3865 36.7926 20.0696 33.8492 19.8841 30.3209C19.8284 29.1322 19.6615 27.9058 19.3276 26.7737C17.3615 20.1888 9.01462 17.4907 3.50569 22.4529C0.278236 25.3586 -0.649193 29.736 0.834693 33.6416C2.17019 37.1511 5.87991 40.1133 10.2945 39.9624C13.9114 39.8303 17.547 39.9435 21.1825 39.9435C22.2027 39.9435 23.2414 39.9435 24.5398 39.9435Z"
@@ -34,8 +30,4 @@ const Logo: React.FC = () => {
           <rect width="42.1053" height="40" fill="black" />
         </clipPath>
       </defs>
-    </Svg>
-  );
-};
-
-export default Logo;
+</svg>

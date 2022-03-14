@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "../../stitches.config";
 
 const StyledButton = styled("button", {
-  fontFamily: "DM Sans",
+  fontFamily: "$body",
   borderRadius: "$12",
   height: "$56",
   display: "flex",
