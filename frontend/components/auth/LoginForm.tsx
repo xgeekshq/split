@@ -102,9 +102,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                 width: "$40 !important",
               },
             }}
-          >
-            {loginErrorCode === 0 && <ThreeDots color="#FFFFF" height={80} width={80} />}
-            {loginErrorCode !== 0 && "Log in"}
+          > 
+          {loginErrorCode === 0 && <ThreeDots color="#FFFFF" height={80} width={80} />}
+          {loginErrorCode !== 0 && "Log in"}
+           
           </Button>
           <Text
             size="sm"

@@ -20,6 +20,7 @@ const Container = styled("div", Flex);
 const Dashboard: React.FC = () => {
   const { fetchBoards } = useBoard({ autoFetchBoard: false, autoFetchBoards: true });
   const { data } = fetchBoards;
+  
 
   const [isLoading, setIsLoading] = useState(false);
 

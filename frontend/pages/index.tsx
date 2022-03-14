@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
 import LoginForm from "../components/auth/LoginForm";
-import RegisterForm from "../components/auth/RegisterForm";
+import RegisterForm from "../components/auth/signUp/SignUpTabContent";
 import TroubleLogin from "../components/auth/TroubleLogin";
 import Banner from "../components/Primitives/Banner";
 import Flex from "../components/Primitives/Flex";

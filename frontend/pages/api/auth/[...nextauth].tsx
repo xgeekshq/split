@@ -3,10 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
 import {
-  CLIENTID,
-  CLIENTSECRET,
+  CLIENT_ID,
+  CLIENT_SECRET,
   SECRET,
-  TENANTID,
+  TENANT_ID,
   UNDEFINED,
   NEXT_PUBLIC_NEXTAUTH_URL,
   REFRESH_TOKEN_ERROR,
@@ -33,9 +33,9 @@ async function refreshAccessToken(prevToken: JWT) {
 export default NextAuth({
   providers: [
     AzureADProvider({
-      clientId: CLIENTID ?? UNDEFINED,
-      clientSecret: CLIENTSECRET ?? UNDEFINED,
-      tenantId: TENANTID,
+      clientId: CLIENT_ID ?? UNDEFINED,
+      clientSecret: CLIENT_SECRET ?? UNDEFINED,
+      tenantId: TENANT_ID,
     }),
     CredentialsProvider({
       name: "Credentials",

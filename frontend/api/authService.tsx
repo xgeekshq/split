@@ -1,3 +1,4 @@
+import { boolean } from "yup";
 import { Token } from "../types/token";
 import { CreateOrLogin } from "../types/user/create-login.user";
 import { User, LoginUser } from "../types/user/user";
@@ -14,6 +15,12 @@ export const login = (credentials: LoginUser): Promise<User> => {
 export const refreshToken = (token: string): Promise<Token> => {
   return fetchData("/auth/refresh", { token, serverSide: true });
 };
+
+export const checkUserExistsAD = (email: string): Promise<boolean> => {
+  return fetchData(`/auth/checkUserExists/${email}`);
+};
+
+// `/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/updateCardPosition`, interpolation 
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
   return fetchData(`/auth/signAzure`, {
