@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,11 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": [
-      "@types/jest",
-      "jest",
-      "@testing-library/jest-dom",
-    ],
+    "types": ["@types/jest", "jest", "@testing-library/jest-dom"],
     "typeRoots": ["./types", "./vendor/types"],
     "incremental": true
   },
@@ -34,7 +26,5 @@
     "jest.config.js",
     "jest.setup.js"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", "cypress/integration/*"]
 }

@@ -32,25 +32,27 @@ export const serverSideInstance = axios.create({
 });
 
 type Options = {
+  refreshToken?: string;
+  serverSide?: boolean;
   context?: GetServerSidePropsContext;
 } & AxiosRequestConfig;
 
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
-  const { method = "GET", context } = options ?? {};
+  const { method = "GET", context, refreshToken, serverSide } = options ?? {};
   const instanceOptions: AxiosRequestConfig = {
     url,
     method,
     ...options,
   };
 
-  if (context) {
+  if (context || refreshToken) {
     instanceOptions.headers = {
       ...options?.headers,
-      Authorization: await getToken(context),
+      Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
     };
   }
 
-  const { data } = !context
+  const { data } = !serverSide
     ? await instance(instanceOptions)
     : await serverSideInstance(instanceOptions);
   return data;

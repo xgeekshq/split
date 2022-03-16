@@ -94,6 +94,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         57: "3.5625rem",
         62: "3.875rem",
         74: "4.625rem",
+        106: "6.625rem",
         162: "10.125rem",
         202: "12.625rem",
       },
@@ -119,6 +120,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         160: "10rem",
         220: "13.75rem",
         400: "25rem",
+        455: "28.4375rem",
         500: "31.25rem",
       },
       lineHeights: {

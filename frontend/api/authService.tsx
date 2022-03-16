@@ -11,8 +11,8 @@ export const login = (credentials: LoginUser): Promise<User> => {
   return fetchData("/auth/login", { method: "POST", data: credentials, serverSide: true });
 };
 
-export const refreshToken = (token: string): Promise<Token> => {
-  return fetchData("/auth/refresh", { token, serverSide: true });
+export const refreshAccessToken = (refreshToken: string): Promise<Token> => {
+  return fetchData("/auth/refresh", { refreshToken, serverSide: true });
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {

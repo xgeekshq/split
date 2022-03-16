@@ -12,13 +12,13 @@ import {
   REFRESH_TOKEN_ERROR,
 } from "../../../utils/constants";
 import { LoginUser, User } from "../../../types/user/user";
-import { createOrLoginUserAzure, login, refreshToken } from "../../../api/authService";
+import { createOrLoginUserAzure, login, refreshAccessToken } from "../../../api/authService";
 import { Token } from "../../../types/token";
 import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from "../../../utils/routes";
 
-async function refreshAccessToken(prevToken: JWT) {
+async function getNewAccessToken(prevToken: JWT) {
   try {
-    const data: Token = await refreshToken(prevToken.refreshToken);
+    const data: Token = await refreshAccessToken(prevToken.refreshToken);
     return {
       ...prevToken,
       accessToken: data.token,
@@ -103,7 +103,7 @@ export default NextAuth({
       if (Date.now() < token.accessTokenExpires - 5000) {
         return token;
       }
-      return refreshAccessToken(token);
+      return getNewAccessToken(token);
     },
     async session({ session, token }) {
       const newSession: Session = { ...session };

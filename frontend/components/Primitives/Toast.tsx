@@ -31,7 +31,7 @@ const StyledViewport = styled(ToastPrimitive.Viewport, {
   display: "flex",
   flexDirection: "column",
   paddingRight: VIEWPORT_PADDING,
-  paddingTop: 106,
+  paddingTop: "$106",
   width: "fit-content",
   maxWidth: "100vw",
   margin: 0,
@@ -47,7 +47,7 @@ const StyledToast = styled(ToastPrimitive.Root, {
   boxShadow: "0px 4px 16px -4px rgba(18, 25, 34, 0.2)",
   display: "flex",
   height: "$56",
-  width: "455px",
+  width: "$455",
   justifyContent: "space-between",
   alignItems: "center",
   direction: "raw",
@@ -98,7 +98,6 @@ const StyledClose = styled(ToastPrimitive.Close, {
   background: "none",
   ml: "$20",
   fontSize: "$12",
-  fontFamily: "$body",
   color: "$primary400",
   textAlign: "center",
 });
@@ -143,7 +142,7 @@ const Toast: React.FC<{
           {children}
         </ToastAction>
       )}
-      <ToastClose aria-label="Close">x</ToastClose>
+      <ToastClose aria-label="Close">X</ToastClose>
     </ToastRoot>
   );
 };

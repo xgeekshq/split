@@ -26,6 +26,7 @@
     "@radix-ui/react-toast": "^0.1.1",
     "@reduxjs/toolkit": "^1.8.0",
     "@stitches/react": "^1.2.7",
+    "@svgr/webpack": "^6.2.1",
     "axios": "^0.26.1",
     "cypress": "^9.5.2",
     "fast-json-patch": "^3.1.0",

@@ -129,10 +129,10 @@ const StyledInput = styled("input", {
       },
       error: {
         borderColor: "$danger700",
-        boxShadow: "0px 0px 0px 2px var(--colors-dangerLightest)",
+        boxShadow: "0px 0px 0px 2px $colors$dangerLightest",
         "&:-webkit-autofill": {
           "-webkit-box-shadow":
-            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-dangerLightest)",
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$dangerLightest",
         },
       },
     },
@@ -228,7 +228,7 @@ const Input: React.FC<InputProps> = ({
     if (id === "password") inputRef.current?.focus();
     setTimeout(() => {
       if (id === "email") inputRef.current?.focus();
-    }, 60);
+    }, 80);
   }, []);
 
   return (

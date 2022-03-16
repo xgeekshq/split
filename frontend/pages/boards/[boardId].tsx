@@ -22,6 +22,7 @@ import {
 import BoardType from "../../types/board/board";
 import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
 import { getBoardRequest } from "../../api/boardService";
+import requireAuthentication from "../../components/HOC/requireAuthentication";
 
 const Container = styled(Flex, {
   alignItems: "flex-start",
@@ -64,7 +65,7 @@ const ColumnList = React.memo<ColumnListProps>(({ columns, boardId, userId, sock
   );
 });
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
   const { boardId } = context.query;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["board", { id: boardId }], () =>
@@ -76,7 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       dehydratedState: dehydrate(queryClient),
     },
   };
-};
+});
 
 const Board: React.FC = () => {
   const { query } = useRouter();

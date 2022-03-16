@@ -52,6 +52,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [toastOpened, setToastOpened] = useState<boolean>(false);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser(setLoginErrorCode);
   const methods = useForm<LoginUser>({
@@ -65,6 +66,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   });
 
   const clearErrors = () => {
+    setToastOpened(false);
     setLoginErrorCode(-1);
   };
 
@@ -78,6 +80,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     if (!result?.error) {
       router.push(DASHBOARD_ROUTE);
     } else {
+      setToastOpened(true);
       setLoading(false);
       setLoginErrorCode(transformLoginErrorCodes(result.error));
     }
@@ -173,8 +176,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         </StyledForm>
       </FormProvider>
       <Toast
-        open={loginErrorCode > 0}
-        type={ToastStateEnum.SUCCESS}
+        open={toastOpened}
+        onOpenChange={setToastOpened}
+        type={ToastStateEnum.ERROR}
         content={getAuthError(loginErrorCode)}
       />
     </TabsContent>

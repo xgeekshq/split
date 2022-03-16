@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { dehydrate, QueryClient } from "react-query";
 import { useState } from "react";
 import CreateBoard from "../../components/Dashboard/CreateBoardModal";
@@ -9,19 +9,21 @@ import Text from "../../components/Primitives/Text";
 import { ERROR_LOADING_DATA } from "../../utils/constants";
 import useBoard from "../../hooks/useBoard";
 import { getBoardsRequest } from "../../api/boardService";
+import requireAuthentication from "../../components/HOC/requireAuthentication";
 
 const Container = styled("div", Flex);
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery("boards", () => getBoardsRequest(context));
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+  async (context: GetServerSidePropsContext) => {
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery("boards", () => getBoardsRequest(context));
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+      },
+    };
+  }
+);
 
 const Dashboard: React.FC = () => {
   const { fetchBoards } = useBoard({ autoFetchBoard: false, autoFetchBoards: true });

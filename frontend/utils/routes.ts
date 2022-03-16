@@ -13,10 +13,3 @@ export const ROUTES = {
 export const GetPageTitleByUrl = (url: string): string => {
   return Object.keys(ROUTES).find((key) => ROUTES[key as keyof typeof ROUTES] === url) ?? UNDEFINED;
 };
-
-export const CheckIsBoardPage = (url: string): boolean => {
-  return url.startsWith("/boards");
-};
-export const ShouldRenderNav = (url: string): boolean => {
-  return url !== "/" && !url.startsWith("/500");
-};

@@ -24,11 +24,11 @@ export const getBoardRequest = (
   id: string,
   context?: GetServerSidePropsContext
 ): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, { context });
+  return fetchData<BoardType>(`/boards/${id}`, { context, serverSide: !!context });
 };
 
 export const getBoardsRequest = (context?: GetServerSidePropsContext): Promise<BoardType[]> => {
-  return fetchData<BoardType[]>(`/boards`, { context });
+  return fetchData<BoardType[]>(`/boards`, { context, serverSide: !!context });
 };
 
 export const deleteBoardRequest = async (id: string): Promise<BoardType> => {
