@@ -18,9 +18,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "types": [
+      "@types/jest",
       "jest",
       "@testing-library/jest-dom",
-      "cypress"
     ],
     "typeRoots": ["./types", "./vendor/types"],
     "incremental": true
