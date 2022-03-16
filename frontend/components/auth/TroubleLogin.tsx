@@ -20,6 +20,15 @@ const MainContainer = styled("form", Flex, {
   px: "$32",
 });
 
+const GoBackWrapper = styled(Flex, {
+  mt: "$24",
+  textAlign: "center",
+  "&:hover": {
+    textDecorationLine: "underline",
+    cursor: "pointer",
+  },
+});
+
 interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
@@ -68,22 +77,10 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
         >
           Recover password
         </Button>
-        <Flex
-          gap="8"
-          align="center"
-          css={{
-            mt: "$24",
-            textAlign: "center",
-            "&:hover": {
-              textDecorationLine: "underline",
-              cursor: "pointer",
-            },
-          }}
-          onClick={handleShowTrubleLogginIn}
-        >
+        <GoBackWrapper gap="8" align="center" onClick={handleShowTrubleLogginIn}>
           <LeftArrowIcon />
           <Text>Go back</Text>
-        </Flex>
+        </GoBackWrapper>
       </FormProvider>
     </MainContainer>
   );

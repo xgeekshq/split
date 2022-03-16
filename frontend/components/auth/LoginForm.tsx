@@ -16,13 +16,29 @@ import Logo from "../../public/icons/logo.svg";
 import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
 import OrSeparator from "../Primitives/OrSeparator";
-import { AUTH_SSO, NEXT_PUBLIC_ENABLE_AZURE, NEXT_PUBLIC_ENABLE_GIT } from "../../utils/constants";
+import {
+  AUTH_SSO,
+  NEXT_PUBLIC_ENABLE_AZURE,
+  NEXT_PUBLIC_ENABLE_GIT,
+  NEXT_PUBLIC_ENABLE_GOOGLE,
+} from "../../utils/constants";
 import useUser from "../../hooks/useUser";
 import MicrosoftIcon from "../../public/icons/microsoft.svg";
 import GitHubIcon from "../../public/icons/gitHub.svg";
-import { errorCodes } from "../../utils/errorCodes";
+import { transformLoginErrorCodes } from "../../utils/errorCodes";
+import Toast from "../Primitives/Toast";
+import { ToastStateEnum } from "../../utils/enums/toast-types";
+import { getAuthError } from "../../errors/auth-messages";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
+
+const LoginButton = styled(Button, {
+  fontWeight: "$medium",
+  "& svg": {
+    height: "$40 !important",
+    width: "$40 !important",
+  },
+});
 
 const StyledHoverIconFlex = styled("div", Flex, {
   "&:hover": {
@@ -35,6 +51,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser(setLoginErrorCode);
   const methods = useForm<LoginUser>({
@@ -47,8 +64,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     resolver: zodResolver(SchemaLoginForm),
   });
 
+  const clearErrors = () => {
+    setLoginErrorCode(-1);
+  };
+
   const handleLogin = async (credentials: LoginUser) => {
-    setLoginErrorCode(0);
+    setLoading(true);
     const result = await signIn<RedirectableProviderType>("credentials", {
       ...credentials,
       callbackUrl: DASHBOARD_ROUTE,
@@ -57,7 +78,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     if (!result?.error) {
       router.push(DASHBOARD_ROUTE);
     } else {
-      setLoginErrorCode(errorCodes(result.error));
+      setLoading(false);
+      setLoginErrorCode(transformLoginErrorCodes(result.error));
     }
   };
 
@@ -83,8 +105,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           <Text size="md" css={{ mt: "$8", color: "$primary500" }}>
             Enter your email and password to log in.
           </Text>
-          <Input css={{ mt: "$32" }} id="email" type="text" placeholder="Email address" />
           <Input
+            clearErrorCode={clearErrors}
+            state={loginErrorCode > 0 ? "error" : undefined}
+            css={{ mt: "$32" }}
+            id="email"
+            type="text"
+            placeholder="Email address"
+          />
+          <Input
+            clearErrorCode={clearErrors}
+            state={loginErrorCode > 0 ? "error" : undefined}
             id="password"
             type="password"
             placeholder="Password"
@@ -92,22 +123,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             iconPosition="right"
           />
 
-          <Button
-            type="submit"
-            disabled={loginErrorCode === 0}
-            size="lg"
-            css={{
-              fontWeight: "$medium",
-              fontSize: "$18",
-              "& svg": {
-                height: "$40 !important",
-                width: "$40 !important",
-              },
-            }}
-          >
-            {loginErrorCode === 0 && <ThreeDots color="#FFFFF" height={80} width={80} />}
-            {loginErrorCode !== 0 && "Log in"}
-          </Button>
+          <LoginButton type="submit" disabled={loginErrorCode === 0} size="lg">
+            {loading && <ThreeDots color="white" height={80} width={80} />}
+            {!loading && "Log in"}
+          </LoginButton>
           <Text
             size="sm"
             css={{
@@ -138,6 +157,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                     <GitHubIcon />
                   </StyledHoverIconFlex>
                 )}
+                {NEXT_PUBLIC_ENABLE_GOOGLE && (
+                  <StyledHoverIconFlex>
+                    <GitHubIcon />
+                  </StyledHoverIconFlex>
+                )}
                 {NEXT_PUBLIC_ENABLE_AZURE && (
                   <StyledHoverIconFlex onClick={loginAzure}>
                     <MicrosoftIcon />
@@ -148,6 +172,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           )}
         </StyledForm>
       </FormProvider>
+      <Toast
+        open={loginErrorCode > 0}
+        type={ToastStateEnum.SUCCESS}
+        content={getAuthError(loginErrorCode)}
+      />
     </TabsContent>
   );
 };

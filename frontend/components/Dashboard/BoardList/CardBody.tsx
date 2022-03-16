@@ -68,9 +68,7 @@ const CardBody: React.FC<CardBodyProps> = ({ board }) => {
         {showEditTitle ? (
           <InputTitle board={board} onClickEdit={setShowEditTitle} isBoardPage={false} />
         ) : (
-          <Text size="20" fontWeight="bold">
-            {board.title}
-          </Text>
+          <Text>{board.title}</Text>
         )}
         <Text>{board.creationDate?.slice(0, 10)}</Text>
         {board.columns && <Flex gap="8">{handleCols(board.columns)}</Flex>}

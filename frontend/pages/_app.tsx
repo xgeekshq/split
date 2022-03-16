@@ -8,6 +8,7 @@ import Head from "next/head";
 import globalStyles from "../styles/globals";
 import store from "../store/store";
 import { JWT_EXPIRATION_TIME } from "../utils/constants";
+import { ToastProvider, ToastViewport } from "../components/Primitives/Toast";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX.Element {
   const [queryClient] = useState(() => new QueryClient());
@@ -23,7 +24,10 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Provider store={store}>
-              <Component {...pageProps} />
+              <ToastProvider duration={100000}>
+                <Component {...pageProps} />
+                <ToastViewport />
+              </ToastProvider>
             </Provider>
           </Hydrate>
         </QueryClientProvider>

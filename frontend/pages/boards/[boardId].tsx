@@ -21,7 +21,6 @@ import {
 } from "../../store/slicer/boardSlicer";
 import BoardType from "../../types/board/board";
 import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
-import requireAuthentication from "../../components/HOC/requireAuthentication";
 import { getBoardRequest } from "../../api/boardService";
 
 const Container = styled(Flex, {
@@ -65,11 +64,11 @@ const ColumnList = React.memo<ColumnListProps>(({ columns, boardId, userId, sock
   );
 });
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { boardId } = context.query;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["board", { id: boardId }], () =>
-    getBoardRequest(boardId as string, true)
+    getBoardRequest(boardId as string, context)
   );
 
   return {
@@ -77,7 +76,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
       dehydratedState: dehydrate(queryClient),
     },
   };
-});
+};
 
 const Board: React.FC = () => {
   const { query } = useRouter();

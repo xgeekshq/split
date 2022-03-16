@@ -7,6 +7,49 @@ import isEmpty from "../../utils/isEmpty";
 import InfoIcon from "../../public/icons/info.svg";
 import EyeIcon from "../../public/icons/eye.svg";
 
+const PlaceholderText = styled(Text, {
+  color: "$primary300",
+  position: "absolute",
+  pointerEvents: "none",
+  transformOrigin: "0 0",
+  transition: "all .2s ease-in-out",
+  p: "$16",
+  "&[data-iconposition='left']": {
+    pl: "$57",
+  },
+  "&[data-iconposition='right']": {
+    pl: "$17",
+  },
+});
+
+const IconWrapper = styled(Flex, {
+  position: "absolute",
+  top: "$16",
+  left: "none",
+  right: "none",
+  cursor: "default",
+  "&[data-iconposition='left']": {
+    left: "$16",
+  },
+  "&[data-iconposition='right']": {
+    right: "$16",
+  },
+  "&[data-type='password']": {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+});
+
+const HelperTextWrapper = styled(Flex, {
+  mt: "$8",
+  "& svg": {
+    height: "$16 !important",
+    width: "$16 !important",
+    color: "$dangerBase",
+  },
+});
+
 const StyledInput = styled("input", {
   // Reset
   appearance: "none",
@@ -29,18 +72,17 @@ const StyledInput = styled("input", {
   },
 
   "&:-webkit-autofill,&:-webkit-autofill:active,&:-webkit-autofill:focus": {
-    "-webkit-box-shadow":
-      "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-successLightest)",
+    "-webkit-box-shadow": "0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$successLightest",
   },
 
   "&:-webkit-autofill::first-line": {
     color: "$dangerBase",
-    fontFamily: "DM Sans, sans-serif",
+    fontFamily: "$body",
     fontSize: "$16",
   },
 
   ":-internal-autofill-previewed": {
-    fontFamily: "DM Sans, sans-serif",
+    fontFamily: "$body",
     fontSize: "$16",
   },
 
@@ -52,8 +94,10 @@ const StyledInput = styled("input", {
   boxShadow: "0",
   border: "1px solid $primary200",
   outline: "none",
+  width: "100%",
   borderRadius: "$4",
   lineHeight: "$20",
+  height: "$56",
   pt: "$28",
   pb: "$8",
   "&::-webkit-input-placeholder": {
@@ -68,19 +112,19 @@ const StyledInput = styled("input", {
       default: {
         "&:focus": {
           borderColor: "$primary400",
-          boxShadow: "0px 0px 0px 2px var(--colors-primaryLightest)",
+          boxShadow: "0px 0px 0px 2px $colors$primaryLightest",
         },
         "&:-webkit-autofill": {
           "-webkit-box-shadow":
-            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-primaryLightest)",
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest",
         },
       },
       valid: {
         borderColor: "$success700",
-        boxShadow: "0px 0px 0px 2px var(--colors-successLightest)",
+        boxShadow: "0px 0px 0px 2px $colors$successLightest",
         "&:-webkit-autofill": {
           "-webkit-box-shadow":
-            "0 0 0px 1000px white inset, 0px 0px 0px 2px var(--colors-successLightest)",
+            "0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$successLightest",
         },
       },
       error: {
@@ -100,48 +144,80 @@ const StyledInput = styled("input", {
     },
     color: "$primary300",
   },
+  "&:not(:placeholder-shown) ~ label": {
+    transform: `scale(0.875) translateX(0.1rem) translateY(-0.5rem)`,
+  },
+  "&:focus ~ label": {
+    transform: `scale(0.875) translateX(0.1rem) translateY(-0.5rem)`,
+  },
+
+  "&[data-iconposition='left']": {
+    pl: "$56",
+    "&:not(:placeholder-shown) ~ label": {
+      transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
+    },
+    "&:focus ~ label": {
+      transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
+    },
+  },
+
+  "&[data-iconposition='right']": {
+    pr: "$56",
+  },
 });
 
 type StyledInpupProps = React.ComponentProps<typeof StyledInput>;
 
 interface InputProps extends StyledInpupProps {
   id: string;
-  type: "text" | "password" | "email" | "number" | "tel" | "url";
+  state?: "default" | "error" | "valid";
+  type: "text" | "password" | "email" | "number";
   placeholder: string;
   icon?: "eye";
   helperText?: string;
   iconPosition?: "left" | "right";
   disabled?: boolean;
+  clearErrorCode?: () => void;
 }
 
 const Input: React.FC<InputProps> = ({
   id,
   placeholder,
+  state,
   icon,
   iconPosition,
   helperText,
   type,
   disabled,
   css,
+  clearErrorCode,
 }) => {
   Input.defaultProps = {
-    iconPosition: "left",
+    state: undefined,
+    iconPosition: undefined,
     icon: undefined,
     helperText: "",
     disabled: false,
+    clearErrorCode: undefined,
   };
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentType, setType] = useState(type);
-  const isIconLeft = iconPosition === "left";
-  const isIconRight = iconPosition === "right";
 
-  const values = useFormContext();
-  const { ref, ...rest } = values.register(id);
   const {
+    register,
+    getValues,
+    clearErrors,
     formState: { errors },
-  } = values;
-  const isValueEmpty = isEmpty(values.getValues()[id]);
-  const state = errors[`${id}`] ? "error" : isValueEmpty ? "default" : "valid";
+  } = useFormContext();
+  const { ref, ...rest } = register(id);
+
+  const message = errors[id]?.message;
+
+  const isValueEmpty = isEmpty(getValues()[id]);
+  const autoState = message ? "error" : isValueEmpty ? "default" : "valid";
+  const currentState = state ?? autoState;
+
+  const isHelperEmpty = isEmpty(helperText) && isEmpty(message);
 
   const handleOnClickIcon = () => {
     if (type === "text") return;
@@ -152,7 +228,7 @@ const Input: React.FC<InputProps> = ({
     if (id === "password") inputRef.current?.focus();
     setTimeout(() => {
       if (id === "email") inputRef.current?.focus();
-    }, 50);
+    }, 60);
   }, []);
 
   return (
@@ -161,25 +237,14 @@ const Input: React.FC<InputProps> = ({
       css={{ position: "relative", width: "100%", mb: "$16", height: "auto", ...css }}
       onBlur={() => {
         if (isValueEmpty) {
-          values.clearErrors();
+          clearErrors();
         }
       }}
     >
       {!!icon && (
-        <Flex
-          onClick={handleOnClickIcon}
-          css={{
-            position: "absolute",
-            top: "$16",
-            left: isIconLeft ? "$16" : "undefined",
-            right: isIconRight ? "$16" : "undefined",
-            "&:hover": {
-              cursor: type === "password" ? "pointer" : "default",
-            },
-          }}
-        >
+        <IconWrapper data-iconposition={iconPosition} data-type={type} onClick={handleOnClickIcon}>
           {icon === "eye" && <EyeIcon />}
-        </Flex>
+        </IconWrapper>
       )}
       <Flex>
         <StyledInput
@@ -192,72 +257,30 @@ const Input: React.FC<InputProps> = ({
           placeholder=" "
           disabled={disabled}
           type={currentType}
-          variant={state}
-          data-state={state}
+          variant={currentState}
+          data-state={currentState}
           autoComplete="off"
-          css={{
-            height: "$56",
-            width: "100%",
-            "&:not(:placeholder-shown) ~ label": {
-              transform: `scale(0.875) translateX(${
-                icon && isIconLeft ? "0.5rem" : "0.1rem"
-              }) translateY(-0.5rem)`,
-            },
-            "&:focus ~ label": {
-              transform: `scale(0.875) translateX(${
-                icon && isIconLeft ? "0.5rem" : "0.1rem"
-              }) translateY(-0.5rem)`,
-            },
-            pl: icon && isIconLeft ? "$56" : "$16",
-            pr: icon && iconPosition === "right" ? "$56" : "$16",
-          }}
+          onFocus={clearErrorCode}
+          data-iconposition={iconPosition}
         />
-        <Text
-          as="label"
-          htmlFor={id}
-          css={{
-            fontSize: "$16",
-            p: "$16",
-            pl: icon && isIconLeft ? "$57" : "$17",
-            top: "0",
-            lineHeight: "$24",
-            color: "$primary300",
-            position: "absolute",
-            pointerEvents: "none",
-            transformOrigin: "0 0",
-            transition: "all .2s ease-in-out",
-          }}
-        >
+        <PlaceholderText as="label" htmlFor={id} data-iconposition={iconPosition}>
           {placeholder}
-        </Text>
+        </PlaceholderText>
       </Flex>
 
-      {!isEmpty(helperText) ||
-        (!isEmpty(errors[`${id}`]) && (
-          <Flex
-            gap="4"
-            align="center"
+      {!isHelperEmpty && (
+        <HelperTextWrapper gap="4" align="center">
+          {currentState === "error" && <InfoIcon />}
+          <Text
             css={{
-              mt: "$8",
-              "& svg": {
-                height: "$16 !important",
-                width: "$16 !important",
-                color: "$dangerBase",
-              },
+              color: currentState === "error" ? "$dangerBase" : "$primary300",
             }}
+            hint
           >
-            {state === "error" && <InfoIcon />}
-            {/* {state === "error" && <img src="/icons/info.svg" alt="info" />} */}
-            <Text
-              css={{
-                color: state === "error" ? "$dangerBase" : "$primary300",
-              }}
-              hint
-            >
-              {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
-            </Text>
-          </Flex>
-        ))}
+            {!isEmpty(helperText) ? helperText : message}
+          </Text>
+        </HelperTextWrapper>
+      )}
     </Flex>
   );
 };

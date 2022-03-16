@@ -1,3 +1,4 @@
+import { GetServerSidePropsContext } from "next";
 import fetchData from "../utils/fetchData";
 import BoardType, { BoardToAdd } from "../types/board/board";
 import UpdateCardPositionDto from "../types/card/updateCardPosition.dto";
@@ -19,12 +20,15 @@ export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType
   return fetchData(`/boards/${board._id}`, { method: "PUT", data: board });
 };
 
-export const getBoardRequest = (id: string, serverSide?: boolean): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, { serverSide });
+export const getBoardRequest = (
+  id: string,
+  context?: GetServerSidePropsContext
+): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${id}`, { context });
 };
 
-export const getBoardsRequest = (): Promise<BoardType[]> => {
-  return fetchData<BoardType[]>(`/boards`);
+export const getBoardsRequest = (context?: GetServerSidePropsContext): Promise<BoardType[]> => {
+  return fetchData<BoardType[]>(`/boards`, { context });
 };
 
 export const deleteBoardRequest = async (id: string): Promise<BoardType> => {

@@ -1,8 +1,18 @@
 enum AuthErrorEnumMessages {
-  DEFAULT = "An error occurred. Please check your internet connection.",
-  EMAIL_EXISTS = "Registration failed. This email is already registered. Please try to login",
-  INVALID_CREDENTIALS = "Login failed. Please, make sure you entered the right credentials",
-  USER_NOT_FOUND = "Login failed. Please, make sure you are already registered",
+  DEFAULT = "There was a connection error, please try again.",
+  EMAIL_EXISTS = "This email already exists.",
+  INVALID_CREDENTIALS = "The username or password you have entered is invalid.",
 }
+
+export const getAuthError = (code: number) => {
+  switch (code) {
+    case 401:
+      return AuthErrorEnumMessages.INVALID_CREDENTIALS;
+    case 400:
+      return AuthErrorEnumMessages.EMAIL_EXISTS;
+    default:
+      return AuthErrorEnumMessages.DEFAULT;
+  }
+};
 
 export default AuthErrorEnumMessages;

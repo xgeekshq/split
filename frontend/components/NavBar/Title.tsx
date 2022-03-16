@@ -21,7 +21,7 @@ const Title: React.FC = () => {
   };
 
   return (
-    <Text fontWeight="semiBold" size="18" onClick={handleSetEditTitle}>
+    <Text onClick={handleSetEditTitle}>
       {!isBoardPage ? GetPageTitleByUrl(router.pathname) : board?.title}
     </Text>
   );

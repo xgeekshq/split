@@ -1,4 +1,5 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
+import { getSession } from "next-auth/react";
 import { useState } from "react";
 import LoginForm from "../components/auth/LoginForm";
 import TroubleLogin from "../components/auth/TroubleLogin";
@@ -7,6 +8,7 @@ import Flex from "../components/Primitives/Flex";
 import { TabsRoot, TabsList, TabsTrigger } from "../components/Primitives/Tab";
 import Text from "../components/Primitives/Text";
 import { styled } from "../stitches.config";
+import { DASHBOARD_ROUTE } from "../utils/routes";
 
 const CenteredContainer = styled(Flex, {
   position: "absolute",
@@ -34,6 +36,20 @@ const BannerContainer = styled(Flex, {
   ml: "$62",
   size: "fit-content",
 });
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: DASHBOARD_ROUTE,
+        permanent: true,
+      },
+    };
+  }
+  return { props: {} };
+};
 
 const Home: NextPage = () => {
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);

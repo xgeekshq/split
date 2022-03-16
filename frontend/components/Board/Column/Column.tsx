@@ -36,9 +36,7 @@ const Column = React.memo<ColumnBoardType>(
         <Droppable droppableId={columnId} type="CARD" isCombineEnabled>
           {(provided) => (
             <Container direction="column" css={{ backgroundColor: color }}>
-              <Title size="18" fontWeight="bold">
-                {title}
-              </Title>
+              <Title>{title}</Title>
               <AddCard colId={columnId} boardId={boardId} socketId={socketId} />
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 <CardsList

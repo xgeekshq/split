@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { postUser } from "../api/authService";
 import { LoginUser, User, UseUserType } from "../types/user/user";
 import { DASHBOARD_ROUTE } from "../utils/routes";
-import { errorCodes } from "../utils/errorCodes";
+import { transformLoginErrorCodes } from "../utils/errorCodes";
 
 const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserType => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
       });
       setPw("");
       if (response?.error) {
-        setLoginErrorCode(errorCodes(response.error));
+        setLoginErrorCode(transformLoginErrorCodes(response.error));
       } else {
         router.push(DASHBOARD_ROUTE);
       }
@@ -35,8 +35,8 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
       callbackUrl: DASHBOARD_ROUTE,
       redirect: false,
     });
-    if (!loginResult?.error) {
-      // setLoginErrorCode(errorCodes(loginResult?.error));
+    if (loginResult?.error) {
+      setLoginErrorCode(transformLoginErrorCodes(loginResult.error));
     } else {
       router.push(DASHBOARD_ROUTE);
     }

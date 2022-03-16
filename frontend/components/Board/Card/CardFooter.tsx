@@ -93,7 +93,7 @@ const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card })
         <StyledCThickArrowUpIcon />
       </Button>
 
-      <Text noMargin>{votesInThisCard.length}</Text>
+      <Text>{votesInThisCard.length}</Text>
 
       <Button
         css={{ size: "$20" }}
