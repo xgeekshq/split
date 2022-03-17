@@ -1,137 +1,245 @@
+import React from "react";
 import { styled } from "../../stitches.config";
 
-const Button = styled("button", {
-  // Reset
-  all: "unset",
-  alignItems: "center",
-  boxSizing: "border-box",
-  userSelect: "none",
-  "&::before": {
-    boxSizing: "border-box",
-  },
-  "&::after": {
-    boxSizing: "border-box",
-  },
-  cursor: "pointer",
-
-  // Custom reset?
-  display: "inline-flex",
-  flexShrink: 0,
+const StyledButton = styled("button", {
+  fontFamily: "$body",
+  borderRadius: "$12",
+  height: "$56",
+  display: "flex",
   justifyContent: "center",
-  lineHeight: "1",
-  WebkitTapHighlightColor: "rgba(0,0,0,0)",
-
-  "&:disabled": {
-    backgroundColor: "$slate2",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
-    color: "$slate8",
-    pointerEvents: "none",
+  alignItems: "center",
+  border: "none",
+  outline: "none",
+  gap: "$8",
+  "@hover": {
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
-
+  "&:disabled": {
+    "@hover": {
+      "&:hover": {
+        cursor: "default",
+      },
+    },
+  },
   variants: {
-    size: {
-      "1": {
-        borderRadius: "$2",
-        height: "$32",
-        px: "$4",
-        fontSize: "$4",
-        lineHeight: "$8",
-      },
-      "2": {
-        borderRadius: "$2",
-        width: "$60",
-        height: "$32",
-        p: "$20",
-        fontSize: "$20",
-        lineHeight: "$8",
-      },
-      "20": {
-        borderRadius: "$2",
-        height: "$20",
-        width: "$20",
-      },
-      inputSize: {
-        height: "$5",
-      },
-    },
-    color: {
-      gray: {
-        backgroundColor: "$loContrast",
-        boxShadow: "inset 0 0 0 1px $slate7",
-        color: "$hiContrast",
+    variant: {
+      primary: {
+        color: "white",
+        backgroundColor: "$primaryBase",
         "@hover": {
           "&:hover": {
-            boxShadow: "inset 0 0 0 1px $slate8",
+            backgroundColor: "$primary600",
           },
         },
         "&:active": {
-          backgroundColor: "$slate2",
-          boxShadow: "inset 0 0 0 1px $slate8",
+          backgroundColor: "$primary600",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.8)",
         },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
-        },
-        '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
-          {
-            backgroundColor: "$slate4",
-            boxShadow: "inset 0 0 0 1px $slate8",
-          },
-      },
-      blue: {
-        backgroundColor: "$blue11",
-        color: "white",
-        "@hover": {
-          "&:hover": { backgroundColor: "$blue5" },
-          "&:focus": { boxShadow: `0 0 0 2px $blue7` },
+
+        "&:disabled": {
+          backgroundColor: "$primary200",
         },
       },
-      green: {
-        backgroundColor: "$green7",
-        color: "$green11",
-        "@hover": {
-          "&:hover": { backgroundColor: "$green5" },
-          "&:focus": { boxShadow: `0 0 0 2px $green7` },
-        },
-      },
-      red: {
-        backgroundColor: "$red11",
-        color: "white",
-        "@hover": {
-          "&:hover": { backgroundColor: "$red5" },
-          "&:focus": { boxShadow: `0 0 0 2px $red7` },
-        },
-      },
-    },
-    state: {
-      active: {
-        backgroundColor: "$slate4",
-        boxShadow: "inset 0 0 0 1px $slate8",
-        color: "$slate11",
-        "@hover": {
-          "&:hover": {
-            backgroundColor: "$slate5",
-            boxShadow: "inset 0 0 0 1px $slate8",
-          },
-        },
-        "&:active": {
-          backgroundColor: "$slate5",
-        },
-        "&:focus": {
-          boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
-        },
-      },
-    },
-    ghost: {
-      true: {
+      primaryOutline: {
         backgroundColor: "transparent",
+        border: "2px solid $primaryBase",
+        boxSizing: "border-box",
         "@hover": {
           "&:hover": {
-            backgroundColor: "$slate5",
+            color: "white",
+            border: "2px solid $primary600",
+            backgroundColor: "$primary600",
           },
+        },
+        "&:active": {
+          color: "white",
+          backgroundColor: "$primary600",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.5)",
+        },
+        "&:disabled": {
+          backgroundColor: "2px solid $primary100",
+        },
+      },
+      light: {
+        backgroundColor: "$primary100",
+        "@hover": {
+          "&:hover": {
+            backgroundColor: "$primary200",
+          },
+        },
+        "&:active": {
+          backgroundColor: "$primary200",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.1)",
+        },
+
+        "&:disabled": {
+          backgroundColor: "$primary50",
+          opacity: 0.8,
+        },
+      },
+      lightOutline: {
+        backgroundColor: "transparent",
+        border: "2px solid $primary200",
+        boxSizing: "border-box",
+        "@hover": {
+          "&:hover": {
+            backgroundColor: "$primary200",
+          },
+        },
+        "&:active": {
+          backgroundColor: "$primary200",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.1)",
+        },
+        "&:disabled": {
+          backgroundColor: "2px solid $primary100",
+          opacity: 0.3,
+        },
+      },
+      danger: {
+        color: "white",
+        backgroundColor: "$dangerBase",
+        "@hover": {
+          "&:hover": {
+            backgroundColor: "$danger700",
+          },
+        },
+        "&:active": {
+          backgroundColor: "$danger700",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.1)",
+        },
+
+        "&:disabled": {
+          backgroundColor: "$danger400",
+          opacity: 0.3,
+        },
+      },
+      dangerOutline: {
+        color: "$dangerBase",
+        backgroundColor: "transparent",
+        border: "2px solid $danger500",
+        boxSizing: "border-box",
+        "@hover": {
+          "&:hover": {
+            color: "white",
+            border: "2px solid $danger700",
+            backgroundColor: "$danger700",
+          },
+        },
+        "&:active": {
+          color: "white",
+          backgroundColor: "$danger700",
+          border: "2px solid $danger700",
+          boxShadow: "inset 0px 2px 4px rgba(0, 0, 0, 0.1)",
+        },
+        "&:disabled": {
+          backgroundColor: "1px solid $dangerBase",
+          opacity: 0.3,
         },
       },
     },
+    isIcon: {
+      true: {},
+    },
+    textSize: {
+      lg: {
+        fontSize: "$18",
+        lineHeight: "$24",
+      },
+      md: {
+        fontSize: "$16",
+        lineHeight: "$20",
+      },
+      sm: {
+        fontSize: "$14",
+        lineHeight: "$16",
+      },
+    },
+    size: {
+      lg: {
+        height: "$56",
+        fontWeight: "$bold",
+        fontSize: "$18",
+        lineHeight: "$24",
+        px: "$24",
+        py: "$16",
+        "& svg": {
+          height: "$24 !important",
+          width: "$24 !important",
+        },
+        "& span": {
+          height: "$24 !important",
+          width: "$24 !important",
+        },
+      },
+      md: {
+        height: "$48",
+        fontWeight: "$bold",
+        fontSize: "$16",
+        lineHeight: "$20",
+        px: "$24",
+        py: "$14",
+        "& svg": {
+          height: "$20 !important",
+          width: "$20 !important",
+        },
+        "& span": {
+          height: "$20 !important",
+          width: "$20 !important",
+        },
+      },
+      sm: {
+        height: "$36",
+        fontWeight: "$bold",
+        fontSize: "$14",
+        lineHeight: "$16",
+        px: "$16",
+        py: "$10",
+        "& svg": {
+          height: "$16 !important",
+          width: "$16 !important",
+        },
+        "& span": {
+          height: "$16 !important",
+          width: "$16 !important",
+        },
+      },
+    },
+  },
+  compoundVariants: [
+    {
+      size: "lg",
+      isIcon: "true",
+      css: {
+        p: "$16",
+      },
+    },
+    {
+      size: "md",
+      isIcon: "true",
+      css: {
+        p: "$14",
+      },
+    },
+    {
+      size: "sm",
+      isIcon: "true",
+      css: {
+        p: "$10",
+      },
+    },
+  ],
+  defaultVariants: {
+    variant: "primary",
+    size: "md",
   },
 });
+
+type ButtonProps = React.ComponentProps<typeof StyledButton>;
+
+const Button: React.FC<ButtonProps> = ({ ...props }) => {
+  return <StyledButton role="button" {...props} />;
+};
 
 export default Button;

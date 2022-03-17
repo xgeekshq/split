@@ -10,7 +10,7 @@ interface UpdateItemProps {
 
 const UpdateItem: React.FC<UpdateItemProps> = ({ handleUpdate }) => {
   return (
-    <Button css={{ alignSelf: "end" }} ghost onClick={handleUpdate}>
+    <Button css={{ alignSelf: "end" }} onClick={handleUpdate}>
       <StyledCheckIcon />
     </Button>
   );

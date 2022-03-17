@@ -3,11 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
 import {
-  AUTH_PATH,
   CLIENTID,
   CLIENTSECRET,
-  DASHBOARD_PATH,
-  ERROR_500_PAGE,
   SECRET,
   TENANTID,
   UNDEFINED,
@@ -15,12 +12,13 @@ import {
   REFRESH_TOKEN_ERROR,
 } from "../../../utils/constants";
 import { LoginUser, User } from "../../../types/user/user";
-import { createOrLoginUserAzure, login, refreshToken } from "../../../api/authService";
+import { createOrLoginUserAzure, login, refreshAccessToken } from "../../../api/authService";
 import { Token } from "../../../types/token";
+import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from "../../../utils/routes";
 
-async function refreshAccessToken(prevToken: JWT) {
+async function getNewAccessToken(prevToken: JWT) {
   try {
-    const data: Token = await refreshToken(prevToken.refreshToken);
+    const data: Token = await refreshAccessToken(prevToken.refreshToken);
     return {
       ...prevToken,
       accessToken: data.token,
@@ -105,7 +103,7 @@ export default NextAuth({
       if (Date.now() < token.accessTokenExpires - 5000) {
         return token;
       }
-      return refreshAccessToken(token);
+      return getNewAccessToken(token);
     },
     async session({ session, token }) {
       const newSession: Session = { ...session };
@@ -123,7 +121,7 @@ export default NextAuth({
     },
     redirect({ url, baseUrl }) {
       switch (url) {
-        case DASHBOARD_PATH:
+        case DASHBOARD_ROUTE:
           return `${baseUrl}${url}`;
         case `/logoutAzure`:
           return `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${NEXT_PUBLIC_NEXTAUTH_URL}`;
@@ -133,7 +131,7 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: AUTH_PATH,
+    signIn: START_PAGE_ROUTE,
     error: ERROR_500_PAGE,
   },
 });

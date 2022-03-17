@@ -50,9 +50,7 @@ const BoardAlertDialog: React.FC<BoardAlertDialogProps> = ({
       {!defaultOpen && (
         <AlertDialogTrigger align="center" asChild>
           <Button
-            ghost
             id="delete-item"
-            size="20"
             onClick={handleStopPropagation}
             css={{ cursor: "pointer", border: "none" }}
           >
@@ -69,12 +67,11 @@ const BoardAlertDialog: React.FC<BoardAlertDialogProps> = ({
         >
           <Text>{text}</Text>
           <Flex justify="end" css={{ mt: "$16" }} gap="16">
-            <ActionButton size="2" color="red" css={{ width: "10%" }} onClick={handleConfirm}>
+            <ActionButton color="red" css={{ width: "10%" }} onClick={handleConfirm}>
               Yes
             </ActionButton>
             <CloseButton
               color="blue"
-              size="2"
               css={{ position: "relative", width: "10%" }}
               onClick={handleClose}
             >

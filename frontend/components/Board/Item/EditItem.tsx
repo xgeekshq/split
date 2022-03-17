@@ -17,7 +17,7 @@ const EditItem: React.FC<EditItemProps> = ({ editText, setEditText }) => {
   };
 
   return (
-    <Button ghost onClick={handleEditText}>
+    <Button onClick={handleEditText}>
       <StyledPencilIcon />
     </Button>
   );

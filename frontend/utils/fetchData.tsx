@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { BACKEND_URL, NEXT_PUBLIC_BACKEND_URL } from "./constants";
 
@@ -11,13 +12,15 @@ export const instance = axios.create({
 
 const nonNeededToken = ["/auth/login", "/auth/refresh", "/auth/registerAzure"];
 
+export const getToken = async (context?: GetServerSidePropsContext) => {
+  const session = await getSession(context);
+  if (session) return `Bearer ${session?.accessToken}`;
+  return "Bearer ";
+};
+
 instance.interceptors.request.use(async (config) => {
   const { url, headers } = config;
-  if (url && headers && !nonNeededToken.includes(url)) {
-    const session = await getSession();
-    if (session) headers.Authorization = `Bearer ${session?.accessToken}`;
-  }
-
+  if (url && headers && !nonNeededToken.includes(url)) headers.Authorization = await getToken();
   return config;
 });
 
@@ -28,31 +31,24 @@ export const serverSideInstance = axios.create({
   },
 });
 
-export const setHeaderToken = (serverSide: boolean, token: string | undefined) => {
-  if (serverSide) {
-    serverSideInstance.defaults.headers.common.Authorization = `Bearer ${token}`;
-  } else {
-    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
-  }
-};
-
 type Options = {
-  token?: string;
+  refreshToken?: string;
   serverSide?: boolean;
+  context?: GetServerSidePropsContext;
 } & AxiosRequestConfig;
 
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
-  const { method = "GET", token, serverSide } = options ?? {};
+  const { method = "GET", context, refreshToken, serverSide } = options ?? {};
   const instanceOptions: AxiosRequestConfig = {
     url,
     method,
     ...options,
   };
 
-  if (token) {
+  if (context || refreshToken) {
     instanceOptions.headers = {
       ...options?.headers,
-      Authorization: `Bearer ${token}`,
+      Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
     };
   }
 

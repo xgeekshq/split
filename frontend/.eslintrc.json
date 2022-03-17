@@ -31,6 +31,9 @@
     "@typescript-eslint/no-empty-interface": "off",
     "import/prefer-default-export": "off",
     "import/no-cycle": "off",
-    "no-plusplus" : "off"
+    "no-plusplus": "off",
+    "no-useless-escape": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "no-restricted-exports": "off"
   }
 }

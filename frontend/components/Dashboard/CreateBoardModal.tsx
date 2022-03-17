@@ -11,7 +11,7 @@ import {
   DialogRoot,
   DialogTrigger,
 } from "../Primitives/Dialog";
-import TextField from "../Primitives/TextField";
+import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import useBoard from "../../hooks/useBoard";
@@ -36,7 +36,6 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({ setFetchLoading }) 
   const { createBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
   const { isLoading, isError } = createBoard;
   const {
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm<BoardType>({
@@ -69,7 +68,7 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({ setFetchLoading }) 
         justify="center"
         direction="column"
       >
-        <Text size="20">Add retro board</Text>
+        <Text>Add retro board</Text>
         <PlusIcon />
       </DialogTrigger>
       <DialogContent
@@ -81,26 +80,21 @@ const CreateBoardModal: React.FC<CreateBoardModalProps> = ({ setFetchLoading }) 
       >
         <DialogContentTitle>New board</DialogContentTitle>
         <StyledForm direction="column" onSubmit={handleSubmit(handleClick)}>
-          <TextField
+          <Input
             type="text"
             placeholder="Board name"
             css={{ fontSize: "$xl", width: "100%", alignSelf: "center" }}
-            size="2"
-            {...register("title")}
+            id="title"
           />
-          {!!errors.title && (
-            <Text as="p" color="red" noMargin="false">
-              {errors.title.message}
-            </Text>
-          )}
+          {!!errors.title && <Text as="p">{errors.title.message}</Text>}
           <FooterContainer justify="center">
-            <Button type="submit" size="1" color="blue" css={{ width: "20%", mt: "$26" }}>
+            <Button type="submit" css={{ width: "20%", mt: "$26" }}>
               Save
             </Button>
           </FooterContainer>
         </StyledForm>
         <DialogCloseButton asChild>
-          <Button ghost size="20">
+          <Button>
             <Cross1Icon />
           </Button>
         </DialogCloseButton>

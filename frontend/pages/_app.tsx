@@ -2,14 +2,13 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SessionProvider } from "next-auth/react";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { Hydrate } from "react-query/hydration";
 import { Provider } from "react-redux";
 import Head from "next/head";
 import globalStyles from "../styles/globals";
-import Layout from "../components/Layout/Layout";
 import store from "../store/store";
 import { JWT_EXPIRATION_TIME } from "../utils/constants";
+import { ToastProvider, ToastViewport } from "../components/Primitives/Toast";
 
 function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX.Element {
   const [queryClient] = useState(() => new QueryClient());
@@ -19,17 +18,18 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
     <>
       <Head>
         <title>Divide & Conquer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <SessionProvider session={session} refetchInterval={JWT_EXPIRATION_TIME - 5}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Provider store={store}>
-              <Layout>
+              <ToastProvider duration={100000}>
                 <Component {...pageProps} />
-              </Layout>
+                <ToastViewport />
+              </ToastProvider>
             </Provider>
           </Hydrate>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </SessionProvider>
     </>

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { CheckIcon, Cross2Icon } from "@modulz/radix-icons";
 import { styled } from "../../stitches.config";
-import TextField from "../Primitives/TextField";
+import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
 import useBoard from "../../hooks/useBoard";
 import BoardType from "../../types/board/board";
@@ -55,7 +55,7 @@ const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage
         e.stopPropagation();
       }}
     >
-      <TextField
+      <Input
         css={{
           pointerEvents: "all",
           width: "100%",
@@ -63,6 +63,8 @@ const InputTitle: React.FC<InputTitleBoard> = ({ board, onClickEdit, isBoardPage
           outline: "none",
           "&:focus": { outline: "none", border: "none", boxShadow: "none" },
         }}
+        id="title"
+        type="text"
         placeholder={board.title}
         autoFocus
         value={title}
