@@ -42,7 +42,12 @@ const LoginButton = styled(Button, {
 
 const StyledHoverIconFlex = styled("div", Flex, {
   "&:hover": {
-    cursor: "pointer",
+    "&[data-loading='true']": {
+      cursor: "default",
+    },
+    "&[data-loading='false']": {
+      cursor: "pointer",
+    },
   },
 });
 
@@ -51,7 +56,7 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState({ credentials: false, sso: false });
   const [toastOpened, setToastOpened] = useState<boolean>(false);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser(setLoginErrorCode);
@@ -67,11 +72,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 
   const clearErrors = () => {
     setToastOpened(false);
+    setLoading({ credentials: false, sso: false });
     setLoginErrorCode(-1);
   };
 
+  const handleLoginAzure = () => {
+    if (loading.sso) return;
+    setLoading((prevState) => ({ ...prevState, sso: true }));
+    loginAzure();
+  };
+
   const handleLogin = async (credentials: LoginUser) => {
-    setLoading(true);
+    setLoading((prevState) => ({ ...prevState, credentials: true }));
     const result = await signIn<RedirectableProviderType>("credentials", {
       ...credentials,
       callbackUrl: DASHBOARD_ROUTE,
@@ -79,14 +91,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     });
     if (!result?.error) {
       router.push(DASHBOARD_ROUTE);
-    } else {
-      setToastOpened(true);
-      setLoading(false);
-      setLoginErrorCode(transformLoginErrorCodes(result.error));
+      return;
     }
+    setToastOpened(true);
+    setLoading((prevState) => ({ ...prevState, credentials: false }));
+    setLoginErrorCode(transformLoginErrorCodes(result.error));
   };
 
-  const handleShowTrubleLogginIn = () => {
+  const handleShowTroubleLogginIn = () => {
     setShowTroubleLogin(true);
   };
 
@@ -126,9 +138,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             iconPosition="right"
           />
 
-          <LoginButton type="submit" disabled={loginErrorCode === 0} size="lg">
-            {loading && <ThreeDots color="white" height={80} width={80} />}
-            {!loading && "Log in"}
+          <LoginButton type="submit" disabled={loading.credentials} size="lg">
+            {loading.credentials && <ThreeDots color="black" height={80} width={80} />}
+            {!loading.credentials && "Log in"}
           </LoginButton>
           <Text
             size="sm"
@@ -140,7 +152,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                 cursor: "pointer",
               },
             }}
-            onClick={handleShowTrubleLogginIn}
+            onClick={handleShowTroubleLogginIn}
           >
             Forgot password
           </Text>
@@ -166,7 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                   </StyledHoverIconFlex>
                 )}
                 {NEXT_PUBLIC_ENABLE_AZURE && (
-                  <StyledHoverIconFlex onClick={loginAzure}>
+                  <StyledHoverIconFlex data-loading={loading.sso} onClick={handleLoginAzure}>
                     <MicrosoftIcon />
                   </StyledHoverIconFlex>
                 )}

@@ -43,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       redirect: {
         destination: DASHBOARD_ROUTE,
-        permanent: true,
+        permanent: false,
       },
     };
   }

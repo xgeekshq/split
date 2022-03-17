@@ -24,9 +24,9 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
       setPw("");
       if (response?.error) {
         setLoginErrorCode(transformLoginErrorCodes(response.error));
-      } else {
-        router.push(DASHBOARD_ROUTE);
+        return;
       }
+      router.push(DASHBOARD_ROUTE);
     },
   });
 
@@ -37,9 +37,9 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
     });
     if (loginResult?.error) {
       setLoginErrorCode(transformLoginErrorCodes(loginResult.error));
-    } else {
-      router.push(DASHBOARD_ROUTE);
+      return;
     }
+    router.push(DASHBOARD_ROUTE);
   };
 
   return { setPw, createUser, loginAzure };

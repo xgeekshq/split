@@ -32,7 +32,6 @@
     "import/prefer-default-export": "off",
     "import/no-cycle": "off",
     "no-plusplus": "off",
-    "no-nested-ternary": "off",
     "no-useless-escape": "off",
     "react-hooks/exhaustive-deps": "off",
     "no-restricted-exports": "off"

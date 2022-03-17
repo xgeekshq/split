@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import Text from "./Text";
 import { styled } from "../../stitches.config";
@@ -212,9 +212,19 @@ const Input: React.FC<InputProps> = ({
   const { ref, ...rest } = register(id);
 
   const message = errors[id]?.message;
-
   const isValueEmpty = isEmpty(getValues()[id]);
-  const autoState = message ? "error" : isValueEmpty ? "default" : "valid";
+
+  const getState = useCallback(() => {
+    if (message) {
+      return "error";
+    }
+    if (isValueEmpty) {
+      return "default";
+    }
+    return "valid";
+  }, [message, isValueEmpty]);
+
+  const autoState = getState();
   const currentState = state ?? autoState;
 
   const isHelperEmpty = isEmpty(helperText) && isEmpty(message);
