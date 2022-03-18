@@ -3,7 +3,8 @@ version: "3.9"
 services:
   backend:
     build:
-      context: backend
+      context: .
+      dockerfile: backend/Dockerfile
     image: dc-backend
     ports:
       - "3200:3200"
@@ -31,8 +32,8 @@ services:
       - mongo
   frontend:
     build:
-      context: frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
       args:
         - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
         - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}

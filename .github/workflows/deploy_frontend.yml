@@ -2,7 +2,7 @@ name: Deploy frontend
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build ./frontend --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t divideandconquer.azurecr.io/frontend:latest
+          docker build . -f ./frontend/Dockerfile --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t divideandconquer.azurecr.io/frontend:latest
           docker push divideandconquer.azurecr.io/frontend:latest
 
       - uses: azure/webapps-deploy@v2

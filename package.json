@@ -5,8 +5,11 @@
     "backend"
   ],
   "devDependencies": {
-    "husky": "^7.0.2",
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0"
+    "husky": "^7.0.0",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1"
+  },
+  "scripts": {
+    "prepare": "husky install"
   }
 }
