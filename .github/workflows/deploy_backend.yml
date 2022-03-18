@@ -2,7 +2,7 @@ name: Deploy backend
 
 on: 
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
-        docker build ./backend -t divideandconquer.azurecr.io/backend:latest
+        docker build . -f ./backend/Dockerfile  -t divideandconquer.azurecr.io/backend:latest
         docker push divideandconquer.azurecr.io/backend:latest     
 
     - uses: azure/webapps-deploy@v2

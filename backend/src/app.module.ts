@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import DatabaseModule from './infrastructure/database/database.module';
 import UsersModule from './modules/users/users.module';
 import AuthModule from './modules/auth/auth.module';
@@ -21,6 +22,7 @@ const imports = [
   CardsModule,
   CommentsModule,
   VotesModule,
+  ScheduleModule.forRoot(),
 ];
 
 if (configuration().azure.enabled) {
