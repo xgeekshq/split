@@ -23,12 +23,11 @@ export default class AzureController {
   @Get('checkUserEmailAD/:email')
   async checkEmail(@Param() emailParam: EmailParam) {
     const { email } = emailParam;
-    const existAzure = await this.authAzureApp.checkUserExistsInActiveDirectory(
-      email,
-    );
-    if (existAzure) return 'az';
-    const existDB = await this.getUserApp.getByEmail(email);
-    if (existDB) return 'local';
+    const existUserInAzure =
+      await this.authAzureApp.checkUserExistsInActiveDirectory(email);
+    if (existUserInAzure) return 'az';
+    const existUserInDB = await this.getUserApp.getByEmail(email);
+    if (existUserInDB) return 'local';
     return false;
   }
 }

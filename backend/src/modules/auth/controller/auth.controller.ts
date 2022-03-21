@@ -42,12 +42,13 @@ export default class AuthController {
   @Post('register')
   async register(@Body() registrationData: CreateUserDto) {
     try {
-      const user = await this.registerAuthApp.register(registrationData);
+      const { _id, firstName, lastName, email } =
+        await this.registerAuthApp.register(registrationData);
       return {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
+        _id,
+        firstName,
+        lastName,
+        email,
       };
     } catch (error) {
       if (error.code === uniqueViolation) {
