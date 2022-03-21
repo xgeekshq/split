@@ -4,11 +4,22 @@ import {
   createUserService,
   getUserService,
   updateUserService,
+  getUserApplication,
 } from './users.providers';
 
 @Module({
   imports: [mongooseUserModule],
-  providers: [createUserService, getUserService, updateUserService],
-  exports: [createUserService, getUserService, updateUserService],
+  providers: [
+    createUserService,
+    getUserService,
+    updateUserService,
+    getUserApplication,
+  ],
+  exports: [
+    createUserService,
+    getUserService,
+    updateUserService,
+    getUserApplication,
+  ],
 })
 export default class UsersModule {}

@@ -17,7 +17,13 @@ export default class CreateUserDto {
   @IsNotEmpty()
   @MinLength(3)
   @Transform(({ value }: TransformFnParams) => value.trim())
-  name!: string;
+  firstName!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(3)
+  @Transform(({ value }: TransformFnParams) => value.trim())
+  lastName!: string;
 
   @IsString()
   @IsNotEmpty()

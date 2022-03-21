@@ -9,7 +9,11 @@ export default class LoggedUserDto {
 
   @IsNotEmpty()
   @IsString()
-  name!: string;
+  firstName!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  lastName!: string;
 
   @IsNotEmpty()
   @IsString()

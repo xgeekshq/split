@@ -8,7 +8,11 @@ export default class UserDto {
 
   @IsNotEmpty()
   @IsString()
-  name!: string;
+  firstName!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  lastName!: string;
 
   @IsNotEmpty()
   @IsString()

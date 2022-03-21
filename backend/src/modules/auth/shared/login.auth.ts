@@ -14,7 +14,8 @@ export const signIn = async (
   return {
     ...jwt,
     email: user.email,
-    name: user.name,
+    firstName: user.firstName,
+    lastName: user.lastName,
     strategy,
     id: user._id,
   };

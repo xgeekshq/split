@@ -1,7 +1,8 @@
 const mockedUser = {
   _id: '1',
   email: 'user1@email.com',
-  name: 'John',
+  firstName: 'John',
+  lastName: 'Doe',
   password: 'hash',
 };
 

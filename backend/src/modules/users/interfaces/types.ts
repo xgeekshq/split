@@ -4,4 +4,7 @@ export const TYPES = {
     GetUserService: 'GetUserService',
     UpdateUserService: 'UpdateUserService',
   },
+  applications: {
+    GetUserApplication: 'GetUserApplication',
+  },
 };
