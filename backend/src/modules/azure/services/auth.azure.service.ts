@@ -47,7 +47,8 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 
     const createdUser = await this.createUserService.create({
       email: email ?? unique_name,
-      name: `${given_name} ${family_name}`,
+      firstName: given_name,
+      lastName: family_name,
     });
     if (createdUser) return signIn(createdUser, this.getTokenService, 'azure');
 

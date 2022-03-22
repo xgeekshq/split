@@ -9,6 +9,7 @@ import {
   Inject,
   NotFoundException,
   BadRequestException,
+  Param,
 } from '@nestjs/common';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -23,6 +24,9 @@ import {
 import CreateUserDto from '../../users/dto/create.user.dto';
 import { uniqueViolation } from '../../../infrastructure/database/errors/unique.user';
 import { signIn } from '../shared/login.auth';
+import * as User from '../../users/interfaces/types';
+import { EmailParam } from '../../../libs/dto/param/email.param';
+import { GetUserApplication } from '../../users/interfaces/applications/get.user.application.interface';
 
 @Controller('auth')
 export default class AuthController {
@@ -31,13 +35,21 @@ export default class AuthController {
     private registerAuthApp: RegisterAuthApplication,
     @Inject(TYPES.applications.GetTokenAuthApplication)
     private getTokenAuthApp: GetTokenAuthApplication,
+    @Inject(User.TYPES.applications.GetUserApplication)
+    private getUserApp: GetUserApplication,
   ) {}
 
   @Post('register')
   async register(@Body() registrationData: CreateUserDto) {
     try {
-      const user = await this.registerAuthApp.register(registrationData);
-      return { _id: user._id, name: user.name, email: user.email };
+      const { _id, firstName, lastName, email } =
+        await this.registerAuthApp.register(registrationData);
+      return {
+        _id,
+        firstName,
+        lastName,
+        email,
+      };
     } catch (error) {
       if (error.code === uniqueViolation) {
         throw new BadRequestException(EMAIL_EXISTS);
@@ -64,5 +76,12 @@ export default class AuthController {
       user: { _id: id },
     } = request;
     return this.getTokenAuthApp.getAccessToken(id);
+  }
+
+  @Get('checkUserEmail/:email')
+  async checkEmail(@Param() emailParam: EmailParam) {
+    const { email } = emailParam;
+    const found = await this.getUserApp.getByEmail(email);
+    return !!found;
   }
 }

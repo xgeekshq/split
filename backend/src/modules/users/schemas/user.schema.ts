@@ -6,7 +6,10 @@ export type UserDocument = User & mongoose.Document;
 @Schema()
 export default class User {
   @Prop({ nullable: false })
-  name!: string;
+  firstName!: string;
+
+  @Prop({ nullable: false })
+  lastName!: string;
 
   @Prop({ nullable: false })
   password!: string;

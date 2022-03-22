@@ -3,7 +3,11 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export default class CreateUserAzureDto {
   @IsNotEmpty()
   @IsString()
-  name!: string;
+  firstName!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  lastName!: string;
 
   @IsNotEmpty()
   @IsString()

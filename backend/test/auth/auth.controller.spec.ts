@@ -16,6 +16,8 @@ import {
 } from '../../src/modules/auth/auth.providers';
 import {
   createUserService,
+  getUserApplication,
+  getUserService,
   updateUserService,
 } from '../../src/modules/users/users.providers';
 
@@ -37,6 +39,8 @@ describe('AuthController', () => {
         registerAuthService,
         updateUserService,
         createUserService,
+        getUserApplication,
+        getUserService,
         ConfigService,
         {
           provide: ConfigService,
@@ -65,7 +69,8 @@ describe('AuthController', () => {
           .post('/auth/register')
           .send({
             email: mockedUser.email,
-            name: mockedUser.name,
+            firstName: mockedUser.firstName,
+            lastName: mockedUser.lastName,
             password: '1!Aab2CD',
           })
           .expect(201);
@@ -81,14 +86,16 @@ describe('AuthController', () => {
         request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            name: mockedUser.name,
+            firstName: mockedUser.firstName,
+            lastName: mockedUser.lastName,
           })
           .expect(400));
       it('should throw an error because full data wasnt submitted', async () =>
         request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            name: mockedUser.name,
+            firstName: mockedUser.firstName,
+            lastName: mockedUser.lastName,
             password: mockedUser.password,
           })
           .expect(400));
@@ -96,7 +103,8 @@ describe('AuthController', () => {
         const res = await request(app.getHttpServer())
           .post('/auth/register')
           .send({
-            name: mockedUser.name,
+            firstName: mockedUser.firstName,
+            lastName: mockedUser.lastName,
             password: '1234',
             email: mockedUser.email,
           });

@@ -4,6 +4,6 @@ export const TYPES = {
     CronAzureService: 'CronAzureService',
   },
   applications: {
-    AuthAzureApplication: 'AuthAuthApplication',
+    AuthAzureApplication: 'AuthAzureApplication',
   },
 };

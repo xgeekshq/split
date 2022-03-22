@@ -1,13 +1,18 @@
-import { Body, Controller, Get, Inject, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { EmailParam } from '../../../libs/dto/param/email.param';
 import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
+import * as User from '../../users/interfaces/types';
+import { GetUserApplication } from '../../users/interfaces/applications/get.user.application.interface';
 
 @Controller('auth')
 export default class AzureController {
   constructor(
     @Inject(TYPES.applications.AuthAzureApplication)
     private authAzureApp: AuthAzureApplication,
+    @Inject(User.TYPES.applications.GetUserApplication)
+    private getUserApp: GetUserApplication,
   ) {}
 
   @Post('signAzure')
@@ -15,9 +20,14 @@ export default class AzureController {
     return this.authAzureApp.registerOrLogin(azureToken.token);
   }
 
-  @Get('checkUserExists/:email')
-  checkUserExists(@Req() request) {
-    const { email } = request.params;
-    return this.authAzureApp.checkUserExistsInActiveDirectory(email);
+  @Get('checkUserEmailAD/:email')
+  async checkEmail(@Param() emailParam: EmailParam) {
+    const { email } = emailParam;
+    const existUserInAzure =
+      await this.authAzureApp.checkUserExistsInActiveDirectory(email);
+    if (existUserInAzure) return 'az';
+    const existUserInDB = await this.getUserApp.getByEmail(email);
+    if (existUserInDB) return 'local';
+    return false;
   }
 }

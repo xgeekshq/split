@@ -1,8 +1,11 @@
+import { faker } from '@faker-js/faker';
+
 const mockedUser = {
-  _id: '1',
-  email: 'user1@email.com',
-  name: 'John',
-  password: 'hash',
+  _id: faker.datatype.uuid(),
+  email: faker.internet.email(),
+  firstName: faker.name.firstName(),
+  lastName: faker.name.lastName(),
+  password: faker.internet.password(),
 };
 
 export default mockedUser;
