@@ -9,6 +9,9 @@ export const configuration = (): Configuration => {
       port:
         parseInt(process.env.BACKEND_PORT as string, 10) || DEFAULT_SERVER_PORT,
     },
+    frontend: {
+      url: process.env.NEXT_PUBLIC_NEXTAUTH_URL as string,
+    },
     database: {
       uri:
         NODE_ENV === 'dev'
@@ -36,6 +39,13 @@ export const configuration = (): Configuration => {
       clientSecret: process.env.AZURE_CLIENT_SECRET as string,
       tenantId: process.env.AZURE_TENANT_ID as string,
       enabled: process.env.AZURE_ENABLE === 'true',
+    },
+    smtp: {
+      host: process.env.SMTP_HOST as string,
+      port: process.env.SMTP_PORT as unknown as number,
+      user: process.env.SMTP_USER as string,
+      password: process.env.SMTP_PASSWORD as string,
+      enabled: process.env.STMP_ENABLE === 'true',
     },
   };
 
