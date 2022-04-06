@@ -26,7 +26,7 @@ const MainContainer = styled(Flex, {
   width: "100vw",
   position: "relative",
   backgroundColor: "$black",
-  backgroundImage: "url(background.svg)",
+  backgroundImage: "url(images/background.svg)",
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
 });

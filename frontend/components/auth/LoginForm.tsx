@@ -12,7 +12,7 @@ import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
-import Logo from "../../public/icons/logo.svg";
+import LogoIcon from "../icons/logo";
 import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
 import OrSeparator from "../Primitives/OrSeparator";
@@ -23,8 +23,8 @@ import {
   NEXT_PUBLIC_ENABLE_GOOGLE,
 } from "../../utils/constants";
 import useUser from "../../hooks/useUser";
-import MicrosoftIcon from "../../public/icons/microsoft.svg";
-import GitHubIcon from "../../public/icons/gitHub.svg";
+import MicrosoftIcon from "../icons/microsoft";
+import GitHubIcon from "../icons/github";
 import { transformLoginErrorCodes } from "../../utils/errorCodes";
 import Toast from "../Primitives/Toast";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
@@ -113,7 +113,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             handleLogin(credentials);
           })}
         >
-          <Logo />
+          <LogoIcon />
           <Text css={{ mt: "$24" }} heading="1">
             Log In
           </Text>

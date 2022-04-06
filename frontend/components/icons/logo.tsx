@@ -1,3 +1,7 @@
+import React from "react";
+
+const LogoIcon = () => {
+  return (
     <svg width="42" height="40" viewBox="0 0 42 40" fill="black" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_169_20252)">
         <path
@@ -30,4 +34,8 @@
           <rect width="42.1053" height="40" fill="black" />
         </clipPath>
       </defs>
-</svg>
+    </svg>
+  );
+};
+
+export default LogoIcon;

@@ -59,7 +59,7 @@ The mongo image is downloaded, two containers are built and a database is create
 
 ### Dependencies
 
-Inside the project root's folder you should run `npm i`. It will also start the husky package.
+Inside the project root's folder you should run `npm i` If an error is shown you can use the flag `--legacy-peer-deps`. After succesfully installed you should run `npx husky install`.
 
 ### Backend
 
