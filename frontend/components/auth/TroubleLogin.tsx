@@ -5,10 +5,10 @@ import SchemaEmail from "../../schema/schemaEmail";
 import { styled } from "../../stitches.config";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
-import Logo from "../../public/icons/logo.svg";
+import LogoIcon from "../icons/logo";
 import Input from "../Primitives/Input";
 import Text from "../Primitives/Text";
-import LeftArrowIcon from "../../public/icons/leftArrow.svg";
+import LeftArrowIcon from "../icons/leftArrow";
 import { EmailUser } from "../../types/user/user";
 
 const MainContainer = styled("form", Flex, {
@@ -59,7 +59,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
       })}
     >
       <FormProvider {...methods}>
-        <Logo />
+        <LogoIcon />
         <Text css={{ mt: "$24" }} heading="1">
           Trouble logging in?
         </Text>

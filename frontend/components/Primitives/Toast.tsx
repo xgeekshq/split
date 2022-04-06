@@ -3,7 +3,7 @@ import * as React from "react";
 import { slate } from "@radix-ui/colors";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { styled, keyframes } from "../../stitches.config";
-import AlertIcon from "../../public/icons/toast/alert.svg";
+import AlertIcon from "../icons/toast/alert";
 import Text from "./Text";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
 

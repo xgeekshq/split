@@ -4,8 +4,8 @@ import Text from "./Text";
 import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 import isEmpty from "../../utils/isEmpty";
-import InfoIcon from "../../public/icons/info.svg";
-import EyeIcon from "../../public/icons/eye.svg";
+import InfoIcon from "../icons/info";
+import EyeIcon from "../icons/eye";
 
 const PlaceholderText = styled(Text, {
   color: "$primary300",
