@@ -14,6 +14,9 @@ import ResetPassword, {
 import Schedules, {
   SchedulesSchema,
 } from '../../modules/schedules/schemas/schedules.schema';
+import ResetPassword, {
+  ResetPasswordSchema,
+} from '../../modules/auth/schemas/reset-password.schema';
 
 export const mongooseBoardModule = MongooseModule.forFeature([
   { name: Board.name, schema: BoardSchema },
@@ -25,6 +28,9 @@ export const mongooseBoardUserModule = MongooseModule.forFeature([
 
 export const mongooseUserModule = MongooseModule.forFeature([
   { name: User.name, schema: UserSchema },
+]);
+export const mongooseResetModule = MongooseModule.forFeature([
+  { name: ResetPassword.name, schema: ResetPasswordSchema },
 ]);
 
 export const mongooseResetModule = MongooseModule.forFeature([

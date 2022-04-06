@@ -92,7 +92,8 @@ export default class AuthController {
   }
 
   @Post('recoverPassword')
-  forgot(@Body() { email }: EmailParam) {
+  async forgot(@Body() emailDto: EmailParam) {
+    const { email } = emailDto;
     return this.createResetTokenAuthApp.create(email);
   }
 

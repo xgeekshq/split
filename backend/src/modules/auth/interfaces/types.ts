@@ -5,6 +5,7 @@ export const TYPES = {
     RegisterAuthService: 'RegisterAuthService',
     CreateResetTokenAuthService: 'CreateResetTokenAuthService',
     AzureAuthService: 'AzureAuthService',
+    CreateResetTokenAuthService: 'CreateResetTokenAuthService',
   },
   applications: {
     GetTokenAuthApplication: 'GetTokenAuthApplication',

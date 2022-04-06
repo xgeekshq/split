@@ -1,8 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ClientSession } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
 import ResetPassword, {
   ResetPasswordDocument,
@@ -19,60 +24,47 @@ export default class CreateResetTokenAuthServiceImpl
     private configService: ConfigService,
   ) {}
 
-  public async emailBody(token: string, emailAddress: string) {
-    const url = `${this.configService.get<string>('frontend.url')}?${token}`;
-    const msg = 'please check your email';
-    await this.mailerService.sendMail({
-      to: emailAddress,
-      subject: 'You requested a password reset',
-      html: `Trouble signing in?
-      Resetting your password is easy.
-      
-      Just click <a href ="${url}"> here </a> to reset your password. We’ll have you up and running in no time.
-      
-      If you did not make this request then please ignore this email.`,
-    });
-    return { message: msg };
-  }
-
-  public tokenGenerator(emailAddress: string, session: ClientSession) {
-    const genToken = (Math.floor(Math.random() * 9000000) + 1000000).toString();
-    return this.resetModel
-      .findOneAndUpdate(
-        { emailAddress },
-        {
-          emailAddress,
-          token: genToken,
-          updatedAt: new Date(),
-        },
-        { upsert: true, new: true },
-      )
-      .session(session)
-      .lean()
-      .exec();
-  }
-
-  public tokenValidator(updatedAt: Date) {
-    const isTokenInvalid =
-      (new Date().getTime() - updatedAt.getTime()) / 60000 < 1;
-    if (isTokenInvalid) {
-      throw new Error('EMAIL_SENDED_RECENTLY');
-    }
-  }
+  private frontendUrl = this.configService.get<string>('frontend.url');
 
   async create(emailAddress: string) {
     const session = await this.resetModel.db.startSession();
     session.startTransaction();
+
     try {
-      const passwordModel = await this.resetModel.findOne({ emailAddress });
-      if (passwordModel) {
-        this.tokenValidator(passwordModel.updatedAt);
+      const forgottenPassword = await this.resetModel.findOne({ emailAddress });
+      const isTokenInvalid =
+        forgottenPassword &&
+        (new Date().getTime() - forgottenPassword.updatedAt.getTime()) / 60000 <
+          1;
+      if (isTokenInvalid) {
+        throw new HttpException(
+          'RESET_PASSWORD.EMAIL_SENDED_RECENTLY',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
-      const { token } = await this.tokenGenerator(emailAddress, session);
-      if (token) {
-        const res = await this.emailBody(token, emailAddress);
-        await session.commitTransaction();
-        return res;
+      const genToken = (
+        Math.floor(Math.random() * 9000000) + 1000000
+      ).toString();
+      const resetPasswordModel = await this.resetModel
+        .findOneAndUpdate(
+          { emailAddress },
+          {
+            emailAddress,
+            token: genToken,
+            updatedAt: new Date(),
+          },
+          { upsert: true, new: true },
+        )
+        .lean()
+        .exec();
+      if (resetPasswordModel) {
+        const url = `${this.frontendUrl}?${resetPasswordModel.token}`;
+        await this.mailerService.sendMail({
+          to: emailAddress,
+          subject: 'reset your password',
+          html: `click <a href ="${url}"> here </a> to reset your password`,
+        });
+        return { message: 'please check your email' };
       }
       throw new InternalServerErrorException();
     } catch (e) {
