@@ -8,4 +8,5 @@ export interface GetUserService {
     refreshToken: string,
     userId: string,
   ): Promise<LeanDocument<UserDocument> | false>;
+  countUsers(): Promise<number>;
 }

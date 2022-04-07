@@ -37,6 +37,10 @@ describe('BoardsController', () => {
           provide: getModelToken('Board'),
           useValue: {},
         },
+        {
+          provide: getModelToken('BoardUser'),
+          useValue: {},
+        },
       ],
     }).compile();
 

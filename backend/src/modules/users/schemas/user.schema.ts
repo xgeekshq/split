@@ -3,7 +3,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type UserDocument = User & mongoose.Document;
 
-@Schema()
+@Schema({
+  toJSON: {
+    virtuals: true,
+  },
+})
 export default class User {
   @Prop({ nullable: false })
   firstName!: string;
@@ -11,20 +15,21 @@ export default class User {
   @Prop({ nullable: false })
   lastName!: string;
 
-  @Prop({ nullable: false })
+  @Prop({ nullable: true })
   password!: string;
 
   @Prop({ nullable: false, unique: true })
   email!: string;
 
-  @Prop({ type: Date }) createdOn?: Date;
-
-  @Prop({ type: Date }) updatedOn?: Date;
+  @Prop({ type: Date, default: Date.now }) joinedAt!: Date;
 
   @Prop({ nullable: false }) strategy!: string;
 
   @Prop({ nullable: true })
   currentHashedRefreshToken?: string;
+
+  @Prop({ nullable: true, default: false })
+  isSAdmin!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
