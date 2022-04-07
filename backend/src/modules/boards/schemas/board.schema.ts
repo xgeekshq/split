@@ -1,10 +1,10 @@
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
-import * as mongoose from 'mongoose';
+import { ObjectId, SchemaTypes, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ColumnDocument, ColumnSchema } from './column.schema';
 import User from '../../users/schemas/user.schema';
 
-export type BoardDocument = Board & mongoose.Document;
+export type BoardDocument = Board & Document;
 
 @Schema({
   timestamps: true,
@@ -22,8 +22,8 @@ export default class Board {
   @Prop({ nullable: true })
   password?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  submitedByUser!: mongoose.Schema.Types.ObjectId;
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  submitedByUser!: ObjectId;
 
   @Prop({ nullable: false })
   maxVotes!: number;
@@ -31,19 +31,19 @@ export default class Board {
   @Prop({ nullable: false, type: [ColumnSchema] })
   columns!: ColumnDocument[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Board' }] })
-  dividedBoards!: Board[] | mongoose.Schema.Types.ObjectId[];
+  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Board' }] })
+  dividedBoards!: Board[] | ObjectId[];
 
   // @Prop({
-  //   type: mongoose.Schema.Types.ObjectId,
+  //   type: SchemaTypes.ObjectId,
   //   ref: 'Team',
   //   nullable: true,
   //   default: null,
   // })
-  // team!: Team | mongoose.Schema.Types.ObjectId;
+  // team!: Team | ObjectId;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  createdBy!: User | mongoose.Schema.Types.ObjectId;
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  createdBy!: User | ObjectId;
 
   @Prop({ default: false })
   recurrent!: boolean;

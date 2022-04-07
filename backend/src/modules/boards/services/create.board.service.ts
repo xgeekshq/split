@@ -5,6 +5,7 @@ import { BoardRoles } from '../../../libs/enum/board.roles';
 import { encrypt } from '../../../libs/utils/bcrypt';
 import isEmpty from '../../../libs/utils/isEmpty';
 import BoardDto from '../dto/board.dto';
+import BoardUserDto from '../dto/board.user.dto';
 import { CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
@@ -17,39 +18,33 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     private boardUserModel: Model<BoardUserDocument>,
   ) {}
 
-  async createDividedBoards(boards: BoardDto[], userId: string) {
-    const newBoardsIds: string[] = [];
-
-    await boards.reduce(async (previous, current) => {
-      await previous;
-      const newBoard = await this.boardModel.create({
-        ...current,
-        userId,
-        isSubBoard: true,
-      });
-      const { users } = current;
-      newBoardsIds.push(newBoard._id);
-
-      if (!isEmpty(users)) {
-        await users.reduce(async (prevUser, currentUser) => {
-          await prevUser;
-          await this.boardUserModel.create({
-            ...currentUser,
-            board: newBoard._id,
-          });
-        }, Promise.resolve());
-      }
-    }, Promise.resolve());
-    return newBoardsIds;
+  saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
+    Promise.all(
+      newUsers.map((user) =>
+        this.boardUserModel.create({ ...user, board: newBoardId }),
+      ),
+    );
   }
 
-  async create(boardData: BoardDto, userId: string) {
-    const { password, dividedBoards, users } = boardData;
-    if (password) {
-      boardData.password = await encrypt(password);
-    }
+  async createDividedBoards(boards: BoardDto[], userId: string) {
+    const newBoardsIds = await Promise.allSettled(
+      boards.map(async (board) => {
+        const { users } = board;
+        const { _id } = await this.create(board, userId);
+        if (!isEmpty(users)) {
+          this.saveBoardUsers(users, _id);
+        }
+        return _id;
+      }),
+    );
+    return newBoardsIds.flatMap((result) =>
+      result.status === 'fulfilled' ? [result.value] : [],
+    );
+  }
 
-    const newBoard = await this.boardModel.create({
+  async createBoard(boardData: BoardDto, userId: string) {
+    const { dividedBoards } = boardData;
+    return this.boardModel.create({
       ...boardData,
       createdBy: userId,
       dividedBoards: await this.createDividedBoards(
@@ -57,21 +52,30 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
         userId,
       ),
     });
+  }
 
-    const newUsers = [...users];
-    newUsers.push({
-      user: userId.toString(),
-      role: BoardRoles.OWNER,
-    });
+  addOwner(users: BoardUserDto[], userId: string) {
+    return [
+      ...users,
+      {
+        user: userId.toString(),
+        role: BoardRoles.OWNER,
+      },
+    ];
+  }
+
+  async create(boardData: BoardDto, userId: string) {
+    const { password, users } = boardData;
+    if (password) {
+      boardData.password = await encrypt(password);
+    }
+
+    const newBoard = await this.createBoard(boardData, userId);
+
+    const newUsers = this.addOwner(users, userId);
 
     if (!isEmpty(newUsers)) {
-      await newUsers.reduce(async (prevUser, currentUser) => {
-        await prevUser;
-        await this.boardUserModel.create({
-          ...currentUser,
-          board: newBoard._id,
-        });
-      }, Promise.resolve());
+      this.saveBoardUsers(newUsers, newBoard._id);
     }
 
     return newBoard;
