@@ -3,6 +3,7 @@ import { ObjectId, SchemaTypes, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ColumnDocument, ColumnSchema } from './column.schema';
 import User from '../../users/schemas/user.schema';
+import Team from '../../teams/schemas/teams.schema';
 
 export type BoardDocument = Board & Document;
 
@@ -34,13 +35,13 @@ export default class Board {
   @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Board' }] })
   dividedBoards!: Board[] | ObjectId[];
 
-  // @Prop({
-  //   type: SchemaTypes.ObjectId,
-  //   ref: 'Team',
-  //   nullable: true,
-  //   default: null,
-  // })
-  // team!: Team | ObjectId;
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'Team',
+    nullable: true,
+    default: null,
+  })
+  team!: Team | ObjectId;
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy!: User | ObjectId;

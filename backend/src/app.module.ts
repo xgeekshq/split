@@ -11,6 +11,7 @@ import AppConfigModule from './infrastructure/config/config.module';
 import { VotesModule } from './modules/votes/votes.module';
 import { configuration } from './infrastructure/config/configuration';
 import AzureModule from './modules/azure/azure.module';
+import TeamsModule from './modules/teams/teams.module';
 
 const imports = [
   AppConfigModule,
@@ -22,6 +23,7 @@ const imports = [
   CardsModule,
   CommentsModule,
   VotesModule,
+  TeamsModule,
   ScheduleModule.forRoot(),
 ];
 
