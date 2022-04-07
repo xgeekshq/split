@@ -13,4 +13,8 @@ export class GetUserApplicationImpl implements GetUserApplication {
   getByEmail(email: string) {
     return this.getUserService.getByEmail(email);
   }
+
+  countUsers() {
+    return this.getUserService.countUsers();
+  }
 }

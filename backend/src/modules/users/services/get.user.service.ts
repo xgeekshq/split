@@ -32,4 +32,8 @@ export default class GetUserServiceImpl implements GetUserService {
     if (isRefreshTokenMatching) return user;
     return false;
   }
+
+  countUsers() {
+    return this.userModel.countDocuments().exec();
+  }
 }

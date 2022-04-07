@@ -11,10 +11,13 @@ import {
   deleteBoardApplication,
   getBoardApplication,
 } from './boards.providers';
-import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
+import {
+  mongooseBoardModule,
+  mongooseBoardUserModule,
+} from '../../infrastructure/database/mongoose.module';
 
 @Module({
-  imports: [UsersModule, mongooseBoardModule],
+  imports: [UsersModule, mongooseBoardModule, mongooseBoardUserModule],
   providers: [
     createBoardService,
     updateBoardService,
