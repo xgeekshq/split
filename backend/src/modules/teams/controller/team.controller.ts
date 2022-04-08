@@ -24,8 +24,7 @@ export default class TeamsController {
   @UseGuards(JwtAuthenticationGuard)
   @Post()
   async create(@Req() request: RequestWithUser, @Body() teamData: TeamDto) {
-    const { _id: userId } = request.user;
-    const team = await this.createTeamApp.create(teamData, userId);
+    const team = await this.createTeamApp.create(teamData, request.user._id);
     if (!team) throw new BadRequestException(INSERT_FAILED);
     return team;
   }

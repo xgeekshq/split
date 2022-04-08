@@ -16,18 +16,8 @@ export default class CreateTeamServiceImpl implements CreateTeamService {
     @InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
   ) {}
 
-  addTeamAdmin(users: TeamUserDto[], userId: string) {
-    return [
-      ...users,
-      {
-        user: userId,
-        role: TeamRoles.ADMIN,
-      },
-    ];
-  }
-
-  createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
-    Promise.all(
+  async createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
+    await Promise.all(
       teamUsers.map((user) =>
         this.teamUserModel.create({ ...user, team: teamId }),
       ),
@@ -35,17 +25,23 @@ export default class CreateTeamServiceImpl implements CreateTeamService {
   }
 
   async create(teamData: TeamDto, userId: string) {
-    const { users } = teamData;
+    const { users, name } = teamData;
     const newTeam = await this.teamModel.create({
-      name: teamData.name,
+      name,
     });
 
-    const newUsers = this.addTeamAdmin(users, userId);
+    const newUsers = [
+      ...users,
+      {
+        user: userId,
+        role: TeamRoles.ADMIN,
+      },
+    ];
 
     if (!isEmpty(newUsers)) {
-      this.createTeamUsers(newUsers, newTeam._id);
+      await this.createTeamUsers(newUsers, newTeam._id);
     }
 
-    return newTeam;
+    return newTeam.populate('users');
   }
 }
