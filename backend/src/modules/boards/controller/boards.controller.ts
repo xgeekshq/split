@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -27,6 +28,8 @@ import {
   INSERT_FAILED,
   UPDATE_FAILED,
 } from '../../../libs/exceptions/messages';
+import { BaseParam } from '../../../libs/dto/param/base.param';
+import { PaginationParams } from '../../../libs/dto/param/pagination.params';
 
 @Controller('boards')
 export default class BoardsController {
@@ -54,9 +57,25 @@ export default class BoardsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
+  @Get('/dashboard')
+  getDashboardBoards(
+    @Req() request: RequestWithUser,
+    @Query() { page, size }: PaginationParams,
+  ) {
+    const { _id: userId } = request.user;
+    return this.getBoardApp.getBoards('dashboard', userId, page, size);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
-  boards(@Req() request: RequestWithUser) {
-    return this.getBoardApp.getAllBoards(request.user._id);
+  getAllBoards(
+    @Req() request: RequestWithUser,
+    @Query() { page, size }: PaginationParams,
+  ) {
+    const { _id: userId, isSAdmin } = request.user;
+    if (isSAdmin)
+      return this.getBoardApp.getBoards('allBoards', userId, page, size);
+    return this.getBoardApp.getBoards('myBoards', userId, page, size);
   }
 
   @UseGuards(JwtAuthenticationGuard)

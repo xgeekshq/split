@@ -15,9 +15,15 @@ import {
   mongooseBoardModule,
   mongooseBoardUserModule,
 } from '../../infrastructure/database/mongoose.module';
+import TeamsModule from '../teams/teams.module';
 
 @Module({
-  imports: [UsersModule, mongooseBoardModule, mongooseBoardUserModule],
+  imports: [
+    UsersModule,
+    TeamsModule,
+    mongooseBoardModule,
+    mongooseBoardUserModule,
+  ],
   providers: [
     createBoardService,
     updateBoardService,
@@ -29,6 +35,6 @@ import {
     getBoardApplication,
   ],
   controllers: [BoardsController],
-  exports: [],
+  exports: [getBoardApplication],
 })
 export default class BoardsModule {}

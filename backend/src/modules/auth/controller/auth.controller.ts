@@ -26,7 +26,13 @@ import CreateUserDto from '../../users/dto/create.user.dto';
 import { uniqueViolation } from '../../../infrastructure/database/errors/unique.user';
 import { signIn } from '../shared/login.auth';
 import * as User from '../../users/interfaces/types';
+import * as Teams from '../../teams/interfaces/types';
+import * as Boards from '../../boards/interfaces/types';
+import { EmailParam } from '../../../libs/dto/param/email.param';
 import { GetUserApplication } from '../../users/interfaces/applications/get.user.application.interface';
+import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
+import { GetBoardApplication } from '../../boards/interfaces/applications/get.board.application.interface';
+import { GetTeamApplication } from '../../teams/interfaces/applications/get.team.application.interface';
 
 @Controller('auth')
 export default class AuthController {
@@ -37,6 +43,10 @@ export default class AuthController {
     private getTokenAuthApp: GetTokenAuthApplication,
     @Inject(User.TYPES.applications.GetUserApplication)
     private getUserApp: GetUserApplication,
+    @Inject(Teams.TYPES.applications.GetTeamApplication)
+    private getTeamsApp: GetTeamApplication,
+    @Inject(Boards.TYPES.applications.GetBoardApplication)
+    private getBoardApp: GetBoardApplication,
   ) {}
 
   @Post('register')
@@ -77,5 +87,15 @@ export default class AuthController {
   @Get('checkUserEmail/:email')
   checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
     return this.getUserApp.getByEmail(email).then((user) => !!user);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Get('/dashboardStatistics')
+  async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
+    const { _id: userId } = request.user;
+    const usersCount = await this.getUserApp.countUsers();
+    const teamsCount = await this.getTeamsApp.countTeams(userId);
+    const boardsCount = await this.getBoardApp.countBoards(userId);
+    return { usersCount, teamsCount, boardsCount };
   }
 }

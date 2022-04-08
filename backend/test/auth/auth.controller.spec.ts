@@ -20,6 +20,14 @@ import {
   getUserService,
   updateUserService,
 } from '../../src/modules/users/users.providers';
+import {
+  getTeamApplication,
+  getTeamService,
+} from '../../src/modules/teams/providers';
+import {
+  getBoardApplication,
+  getBoardService,
+} from '../../src/modules/boards/boards.providers';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -36,6 +44,10 @@ describe('AuthController', () => {
         registerAuthApplication,
         getTokenAuthApplication,
         getTokenAuthService,
+        getTeamService,
+        getTeamApplication,
+        getBoardApplication,
+        getBoardService,
         registerAuthService,
         updateUserService,
         createUserService,
@@ -51,8 +63,24 @@ describe('AuthController', () => {
           useValue: jwtService,
         },
         {
+          provide: getModelToken('Board'),
+          useValue: {},
+        },
+        {
+          provide: getModelToken('BoardUser'),
+          useValue: {},
+        },
+        {
           provide: getModelToken('User'),
           useValue: usersRepository,
+        },
+        {
+          provide: getModelToken('Team'),
+          useValue: {},
+        },
+        {
+          provide: getModelToken('TeamUser'),
+          useValue: {},
         },
       ],
     }).compile();

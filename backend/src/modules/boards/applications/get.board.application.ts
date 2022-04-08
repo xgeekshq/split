@@ -10,11 +10,20 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
     private getBoardService: GetBoardService,
   ) {}
 
-  getAllBoards(userId: string) {
-    return this.getBoardService.getAllBoards(userId);
+  getBoards(
+    option: 'dashboard' | 'allBoards' | 'myBoards',
+    userId: string,
+    page?: number,
+    size?: number,
+  ) {
+    return this.getBoardService.getBoards(option, userId, page, size);
   }
 
   getBoard(boardId: string, userId: string) {
     return this.getBoardService.getBoard(boardId, userId);
+  }
+
+  countBoards(userId: string) {
+    return this.getBoardService.countBoards(userId);
   }
 }
