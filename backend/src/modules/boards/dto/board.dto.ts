@@ -50,10 +50,10 @@ export default class BoardDto {
   @ValidateNested({ each: true })
   dividedBoards?: BoardDto[];
 
-  // @IsOptional()
-  // @IsMongoId()
-  // @IsString()
-  // team?: string;
+  @IsOptional()
+  @IsMongoId()
+  @IsString()
+  team?: string;
 
   @IsOptional()
   socketId?: string;
