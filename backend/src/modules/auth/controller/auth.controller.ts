@@ -93,9 +93,11 @@ export default class AuthController {
   @Get('/dashboardStatistics')
   async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
     const { _id: userId } = request.user;
-    const usersCount = await this.getUserApp.countUsers();
-    const teamsCount = await this.getTeamsApp.countTeams(userId);
-    const boardsCount = await this.getBoardApp.countBoards(userId);
+    const [usersCount, teamsCount, boardsCount] = await Promise.all([
+      this.getUserApp.countUsers(),
+      this.getTeamsApp.countTeams(userId),
+      this.getBoardApp.countBoards(userId),
+    ]);
     return { usersCount, teamsCount, boardsCount };
   }
 }

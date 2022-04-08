@@ -27,8 +27,10 @@ export default class GetBoardServiceImpl implements GetBoardService {
   }
 
   async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
-    const boardIds = await this.getAllBoardsIdsOfUser(userId);
-    const teamIds = await this.getTeamService.getTeamsOfUser(userId);
+    const [boardIds, teamIds] = await Promise.all([
+      this.getAllBoardsIdsOfUser(userId),
+      this.getTeamService.getTeamsOfUser(userId),
+    ]);
     return { boardIds, teamIds };
   }
 
@@ -41,9 +43,8 @@ export default class GetBoardServiceImpl implements GetBoardService {
     );
 
     if (option === 'dashboard') {
-      const last3Months = new Date(
-        new Date().setMonth(new Date().getMonth() - 3),
-      );
+      const now = new Date();
+      const last3Months = new Date().setMonth(now.getMonth() - 3);
       return {
         $and: [
           { isSubBoard: false, updatedAt: { $gte: last3Months } },

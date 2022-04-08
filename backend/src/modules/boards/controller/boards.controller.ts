@@ -62,8 +62,12 @@ export default class BoardsController {
     @Req() request: RequestWithUser,
     @Query() { page, size }: PaginationParams,
   ) {
-    const { _id: userId } = request.user;
-    return this.getBoardApp.getBoards('dashboard', userId, page, size);
+    return this.getBoardApp.getBoards(
+      'dashboard',
+      request.user._id,
+      page,
+      size,
+    );
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -73,8 +77,9 @@ export default class BoardsController {
     @Query() { page, size }: PaginationParams,
   ) {
     const { _id: userId, isSAdmin } = request.user;
-    if (isSAdmin)
+    if (isSAdmin) {
       return this.getBoardApp.getBoards('allBoards', userId, page, size);
+    }
     return this.getBoardApp.getBoards('myBoards', userId, page, size);
   }
 
