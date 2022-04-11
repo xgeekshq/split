@@ -33,10 +33,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     if (!cardItem) return null;
 
     const votes = cardItem.votes as unknown as string[];
-    votes.splice(
-      votes.findIndex((vote) => vote === userId),
-      1,
-    );
+
+    const voteIndex = votes.findIndex((vote) => vote === userId);
+    if (voteIndex === -1) return null;
+
+    votes.splice(voteIndex, 1);
 
     return this.boardModel
       .findOneAndUpdate(
@@ -68,6 +69,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
     const { votes } = card;
     const newVotes = arrayIdToString(votes as unknown as string[]);
+
     if (isEmpty(votes.length)) {
       const item = card.items.find(({ votes: itemVotes }) =>
         arrayIdToString(itemVotes as unknown as string[]).includes(userId),
@@ -83,10 +85,10 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
       );
     }
 
-    newVotes.splice(
-      newVotes.findIndex((vote) => vote === userId),
-      1,
-    );
+    const voteIndex = newVotes.findIndex((vote) => vote === userId);
+    if (voteIndex === -1) return null;
+
+    votes.splice(voteIndex, 1);
 
     return this.boardModel
       .findOneAndUpdate(
