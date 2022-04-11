@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BaseParam } from 'src/libs/dto/param/base.param';
 import {
   DELETE_FAILED,
   INSERT_FAILED,
@@ -55,7 +56,7 @@ export default class CardsController {
   @Post(':boardId/card')
   async addCard(
     @Req() request: RequestWithUser,
-    @Param('boardId') boardId: string,
+    @Param() { boardId }: BaseParam,
     @Body() createCardDto: CreateCardDto,
   ) {
     const { card, colIdToAdd, socketId } = createCardDto;

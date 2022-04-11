@@ -12,6 +12,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { BaseParam } from '../../../libs/dto/param/base.param';
 import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -61,7 +62,7 @@ export default class BoardsController {
   @UseGuards(JwtAuthenticationGuard)
   @Get(':boardId')
   async getBoard(
-    @Param('boardId') boardId: string,
+    @Param() { boardId }: BaseParam,
     @Req() request: RequestWithUser,
   ) {
     const board = await this.getBoardApp.getBoard(boardId, request.user._id);
@@ -74,7 +75,7 @@ export default class BoardsController {
   @Put(':boardId')
   async updateBoard(
     @Req() request: RequestWithUser,
-    @Param('boardId') boardId: string,
+    @Param() { boardId }: BaseParam,
     @Body() boardData: BoardDto,
   ) {
     const board = await this.updateBoardApp.update(
@@ -91,7 +92,7 @@ export default class BoardsController {
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId')
   async deleteBoard(
-    @Param('boardId') boardId: string,
+    @Param() { boardId }: BaseParam,
     @Req() request: RequestWithUser,
   ) {
     const result = await this.deleteBoardApp.delete(boardId, request.user._id);

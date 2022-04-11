@@ -11,6 +11,7 @@ import {
   BadRequestException,
   Param,
 } from '@nestjs/common';
+import { EmailParam } from '../../../libs/dto/param/email.param';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import JwtRefreshGuard from '../../../libs/guards/jwtRefreshAuth.guard';
@@ -74,7 +75,7 @@ export default class AuthController {
   }
 
   @Get('checkUserEmail/:email')
-  checkEmail(@Param('email') email: string): Promise<boolean> {
+  checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
     return this.getUserApp.getByEmail(email).then((user) => !!user);
   }
 }
