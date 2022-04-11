@@ -11,7 +11,6 @@ import {
   BadRequestException,
   Param,
 } from '@nestjs/common';
-import { EmailParam } from '../../../libs/dto/param/email.param';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import JwtRefreshGuard from '../../../libs/guards/jwtRefreshAuth.guard';
@@ -31,8 +30,8 @@ import * as Boards from '../../boards/interfaces/types';
 import { EmailParam } from '../../../libs/dto/param/email.param';
 import { GetUserApplication } from '../../users/interfaces/applications/get.user.application.interface';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
-import { GetBoardApplication } from '../../boards/interfaces/applications/get.board.application.interface';
-import { GetTeamApplication } from '../../teams/interfaces/applications/get.team.application.interface';
+import { GetBoardApplicationInterface } from '../../boards/interfaces/applications/get.board.application.interface';
+import { GetTeamApplicationInterface } from '../../teams/interfaces/applications/get.team.application.interface';
 
 @Controller('auth')
 export default class AuthController {
@@ -44,9 +43,9 @@ export default class AuthController {
     @Inject(User.TYPES.applications.GetUserApplication)
     private getUserApp: GetUserApplication,
     @Inject(Teams.TYPES.applications.GetTeamApplication)
-    private getTeamsApp: GetTeamApplication,
+    private getTeamsApp: GetTeamApplicationInterface,
     @Inject(Boards.TYPES.applications.GetBoardApplication)
-    private getBoardApp: GetBoardApplication,
+    private getBoardApp: GetBoardApplicationInterface,
   ) {}
 
   @Post('register')

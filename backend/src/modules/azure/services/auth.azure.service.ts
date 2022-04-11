@@ -42,6 +42,8 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
     const { unique_name, email, given_name, family_name } = <AzureDecodedUser>(
       jwt_decode(azureToken)
     );
+    const userExists = await this.checkUserExistsInActiveDirectory(email);
+    if (!userExists) return null;
 
     const emailOrUniqueName = email ?? unique_name;
     const user = await this.getUserService.getByEmail(emailOrUniqueName);

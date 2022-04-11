@@ -13,7 +13,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { BaseParam } from '../../../libs/dto/param/base.param';
 import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -62,8 +61,7 @@ export default class BoardsController {
     @Req() request: RequestWithUser,
     @Query() { page, size }: PaginationParams,
   ) {
-    return this.getBoardApp.getBoards(
-      'dashboard',
+    return this.getBoardApp.getUserBoardsOfLast3Months(
       request.user._id,
       page,
       size,
@@ -78,9 +76,9 @@ export default class BoardsController {
   ) {
     const { _id: userId, isSAdmin } = request.user;
     if (isSAdmin) {
-      return this.getBoardApp.getBoards('allBoards', userId, page, size);
+      return this.getBoardApp.getSuperAdminBoards(userId, page, size);
     }
-    return this.getBoardApp.getBoards('myBoards', userId, page, size);
+    return this.getBoardApp.getUsersBoards(userId, page, size);
   }
 
   @UseGuards(JwtAuthenticationGuard)

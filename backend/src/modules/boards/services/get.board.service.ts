@@ -3,12 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { GetTeamService } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
-import { GetBoardService } from '../interfaces/services/get.board.service.interface';
+import { QueryType } from '../interfaces/findQuery';
+import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 
 @Injectable()
-export default class GetBoardServiceImpl implements GetBoardService {
+export default class GetBoardServiceImpl implements GetBoardServiceInterface {
   constructor(
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
     @InjectModel(BoardUser.name)
@@ -34,56 +35,62 @@ export default class GetBoardServiceImpl implements GetBoardService {
     return { boardIds, teamIds };
   }
 
-  async getFindQuery(
-    option: 'dashboard' | 'allBoards' | 'myBoards',
+  async getUserBoardsOfLast3Months(
     userId: string,
+    page: number,
+    size?: number,
   ) {
     const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(
       userId,
     );
 
-    if (option === 'dashboard') {
-      const now = new Date();
-      const last3Months = new Date().setMonth(now.getMonth() - 3);
-      return {
-        $and: [
-          { isSubBoard: false, updatedAt: { $gte: last3Months } },
-          { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
-        ],
-      };
-    }
+    const now = new Date();
+    const last3Months = new Date().setMonth(now.getMonth() - 3);
+    const query = {
+      $and: [
+        { isSubBoard: false, updatedAt: { $gte: last3Months } },
+        { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
+      ],
+    };
 
-    if (option === 'myBoards')
-      return {
-        $and: [
-          { isSubBoard: false },
-          { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
-        ],
-      };
+    return this.getBoards(false, query, page, size);
+  }
 
-    return {
+  async getSuperAdminBoards(userId: string, page: number, size?: number) {
+    const { boardIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
+
+    const query = {
       $and: [
         { isSubBoard: false },
         { $or: [{ _id: { $in: boardIds } }, { team: { $ne: null } }] },
       ],
     };
+
+    return this.getBoards(true, query, page, size);
   }
 
-  async getBoards(
-    option: 'dashboard' | 'allBoards' | 'myBoards',
-    userId: string,
-    page = 0,
-    size = 10,
-  ) {
-    const query = await this.getFindQuery(option, userId);
+  async getUsersBoards(userId: string, page: number, size?: number) {
+    const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(
+      userId,
+    );
+    const query = {
+      $and: [
+        { isSubBoard: false },
+        { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
+      ],
+    };
+    return this.getBoards(false, query, page, size);
+  }
+
+  async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
     const count = await this.boardModel.find(query).countDocuments().exec();
     const hasNextPage =
-      page + 1 < Math.ceil(count / (option === 'allBoards' ? count : size));
+      page + 1 < Math.ceil(count / (allBoards ? count : size));
     const boards = await this.boardModel
       .find(query)
       .sort({ updatedAt: 'desc' })
-      .skip(option === 'allBoards' ? 0 : page * size)
-      .limit(option === 'allBoards' ? count : size)
+      .skip(allBoards ? 0 : page * size)
+      .limit(allBoards ? count : size)
       .select('-__v -createdAt -id')
       .populate({ path: 'createdBy', select: 'firstName lastName' })
       .populate({
