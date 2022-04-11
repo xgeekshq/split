@@ -26,6 +26,16 @@ export default class CreateResetTokenAuthServiceImpl
 
   private frontendUrl = this.configService.get<string>('frontend.url');
 
+  public async emailBody(resetPasswordModel, emailAddress) {
+    const url = `${this.frontendUrl}?${resetPasswordModel.token}`;
+    await this.mailerService.sendMail({
+      to: emailAddress,
+      subject: 'reset your password',
+      html: `click <a href ="${url}"> here </a> to reset your password`,
+    });
+    return { message: 'please check your email' };
+  }
+
   async create(emailAddress: string) {
     const session = await this.resetModel.db.startSession();
     session.startTransaction();
@@ -58,13 +68,7 @@ export default class CreateResetTokenAuthServiceImpl
         .lean()
         .exec();
       if (resetPasswordModel) {
-        const url = `${this.frontendUrl}?${resetPasswordModel.token}`;
-        await this.mailerService.sendMail({
-          to: emailAddress,
-          subject: 'reset your password',
-          html: `click <a href ="${url}"> here </a> to reset your password`,
-        });
-        return { message: 'please check your email' };
+        this.emailBody(resetPasswordModel, emailAddress);
       }
       throw new InternalServerErrorException();
     } catch (e) {
