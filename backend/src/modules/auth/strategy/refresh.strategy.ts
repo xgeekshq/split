@@ -33,7 +33,9 @@ export default class JwtRefreshTokenStrategy extends PassportStrategy(
       authorization!,
       payload.userId,
     );
+
     if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
+
     return user;
   }
 }

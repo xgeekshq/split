@@ -29,8 +29,8 @@ export default class GetUserServiceImpl implements GetUserService {
       refreshToken,
       user.currentHashedRefreshToken,
     );
-    if (isRefreshTokenMatching) return user;
-    return false;
+
+    return isRefreshTokenMatching ? user : false;
   }
 
   countUsers() {

@@ -23,7 +23,6 @@ import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import SocketGateway from '../../socket/gateway/socket.gateway';
 import CreateCommentDto from '../dto/create.comment.dto';
-import DeleteCommentDto from '../dto/delete.comment.dto';
 import UpdateCardCommentDto from '../dto/update.comment.dto';
 import { CreateCommentApplication } from '../interfaces/applications/create.comment.application.interface';
 import { DeleteCommentApplication } from '../interfaces/applications/delete.comment.application.interface';
@@ -46,13 +45,9 @@ export default class CommentsController {
   @Post(':boardId/card/:cardId/items/:itemId/comment')
   async addItemComment(
     @Req() request: RequestWithUser,
-    @Param()
-    params: CardItemParams,
+    @Param() params: CardItemParams,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, itemId } = params;
     const { text } = createCommentDto;
 
@@ -60,11 +55,13 @@ export default class CommentsController {
       boardId,
       cardId,
       itemId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(INSERT_FAILED);
     this.socketService.sendUpdatedBoard(board, createCommentDto.socketId);
+
     return board;
   }
 
@@ -72,24 +69,22 @@ export default class CommentsController {
   @Post(':boardId/card/:cardId/comment')
   async addCardGroupComment(
     @Req() request: RequestWithUser,
-    @Param()
-    params: CardGroupParams,
+    @Param() params: CardGroupParams,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId } = params;
-    const { text } = createCommentDto;
+    const { text, socketId } = createCommentDto;
 
     const board = await this.createCommentApp.createCardGroupComment(
       boardId,
       cardId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, createCommentDto.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
@@ -100,21 +95,21 @@ export default class CommentsController {
     @Param() params: CommentItemParams,
     @Body() commentData: UpdateCardCommentDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, itemId, commentId } = params;
-    const { text } = commentData;
+    const { text, socketId } = commentData;
+
     const board = await this.updateCommentApp.updateItemComment(
       boardId,
       cardId,
       itemId,
       commentId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, commentData.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
@@ -125,20 +120,20 @@ export default class CommentsController {
     @Param() params: CommentGroupParams,
     @Body() commentData: UpdateCardCommentDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, commentId } = params;
-    const { text } = commentData;
+    const { text, socketId } = commentData;
+
     const board = await this.updateCommentApp.updateCardGroupComment(
       boardId,
       cardId,
       commentId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, commentData.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
@@ -147,19 +142,18 @@ export default class CommentsController {
   async deleteCardItemComment(
     @Req() request: RequestWithUser,
     @Param() params: CommentItemParams,
-    @Body() deleteData: DeleteCommentDto,
+    @Body('socketId') socketId: string,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, commentId } = params;
     const board = await this.deleteCommentApp.deleteItemComment(
       boardId,
       commentId,
-      userId,
+      request.user._id,
     );
+
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, deleteData.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
@@ -168,19 +162,19 @@ export default class CommentsController {
   async deleteCardGroupComment(
     @Req() request: RequestWithUser,
     @Param() params: CommentGroupParams,
-    @Body() deleteData: DeleteCommentDto,
+    @Body('socketId') socketId: string,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, commentId } = params;
+
     const board = await this.deleteCommentApp.deleteCardGroupComment(
       boardId,
       commentId,
-      userId,
+      request.user._id,
     );
+
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, deleteData.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 }

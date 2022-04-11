@@ -12,18 +12,18 @@ import { TYPES } from '../interfaces/types';
 import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
 import isEmpty from '../../../libs/utils/isEmpty';
 
-interface AzureUserFound {
-  mail: string | undefined;
-  displayName: string | undefined;
-  userPrincipalName: string | undefined;
-}
+type AzureUserFound = {
+  mail?: string;
+  displayName?: string;
+  userPrincipalName?: string;
+};
 
-interface AzureDecodedUser {
+type AzureDecodedUser = {
   unique_name: string;
   email: string;
   given_name: string;
   family_name: string;
-}
+};
 
 @Injectable()
 export default class AuthAzureServiceImpl implements AuthAzureService {
@@ -42,17 +42,20 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
     const { unique_name, email, given_name, family_name } = <AzureDecodedUser>(
       jwt_decode(azureToken)
     );
-    const user = await this.getUserService.getByEmail(email ?? unique_name);
+
+    const emailOrUniqueName = email ?? unique_name;
+    const user = await this.getUserService.getByEmail(emailOrUniqueName);
     if (user) return signIn(user, this.getTokenService, 'azure');
 
     const createdUser = await this.createUserService.create({
-      email: email ?? unique_name,
+      email: emailOrUniqueName,
       firstName: given_name,
       lastName: family_name,
     });
-    if (createdUser) return signIn(createdUser, this.getTokenService, 'azure');
 
-    return null;
+    if (!createdUser) return null;
+
+    return signIn(createdUser, this.getTokenService, 'azure');
   }
 
   getGraphQueryUrl(email: string) {

@@ -31,26 +31,27 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
       boards.map(async (board) => {
         const { users } = board;
         const { _id } = await this.create(board, userId);
+
         if (!isEmpty(users)) {
           this.saveBoardUsers(users, _id);
         }
+
         return _id;
       }),
     );
+
     return newBoardsIds.flatMap((result) =>
       result.status === 'fulfilled' ? [result.value] : [],
     );
   }
 
   async createBoard(boardData: BoardDto, userId: string) {
-    const { dividedBoards } = boardData;
+    const { dividedBoards = [] } = boardData;
+
     return this.boardModel.create({
       ...boardData,
       createdBy: userId,
-      dividedBoards: await this.createDividedBoards(
-        dividedBoards ?? [],
-        userId,
-      ),
+      dividedBoards: await this.createDividedBoards(dividedBoards, userId),
     });
   }
 

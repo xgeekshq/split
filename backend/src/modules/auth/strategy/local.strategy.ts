@@ -26,7 +26,9 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
       email,
       password,
     );
+
     if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
+
     return user;
   }
 }

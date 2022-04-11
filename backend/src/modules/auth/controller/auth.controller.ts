@@ -11,6 +11,7 @@ import {
   BadRequestException,
   Param,
 } from '@nestjs/common';
+import { EmailParam } from '../../../libs/dto/param/email.param';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import JwtRefreshGuard from '../../../libs/guards/jwtRefreshAuth.guard';
@@ -25,7 +26,6 @@ import CreateUserDto from '../../users/dto/create.user.dto';
 import { uniqueViolation } from '../../../infrastructure/database/errors/unique.user';
 import { signIn } from '../shared/login.auth';
 import * as User from '../../users/interfaces/types';
-import { EmailParam } from '../../../libs/dto/param/email.param';
 import { GetUserApplication } from '../../users/interfaces/applications/get.user.application.interface';
 
 @Controller('auth')
@@ -44,12 +44,8 @@ export default class AuthController {
     try {
       const { _id, firstName, lastName, email } =
         await this.registerAuthApp.register(registrationData);
-      return {
-        _id,
-        firstName,
-        lastName,
-        email,
-      };
+
+      return { _id, firstName, lastName, email };
     } catch (error) {
       if (error.code === uniqueViolation) {
         throw new BadRequestException(EMAIL_EXISTS);
@@ -62,26 +58,24 @@ export default class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() request: RequestWithUser) {
-    const { user } = request;
-
-    const loggedUser = await signIn(user, this.getTokenAuthApp, 'local');
+    const loggedUser = await signIn(
+      request.user,
+      this.getTokenAuthApp,
+      'local',
+    );
     if (!loggedUser) throw new NotFoundException(USER_NOT_FOUND);
+
     return loggedUser;
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   refresh(@Req() request: RequestWithUser) {
-    const {
-      user: { _id: id },
-    } = request;
-    return this.getTokenAuthApp.getAccessToken(id);
+    return this.getTokenAuthApp.getAccessToken(request.user._id);
   }
 
   @Get('checkUserEmail/:email')
-  async checkEmail(@Param() emailParam: EmailParam) {
-    const { email } = emailParam;
-    const found = await this.getUserApp.getByEmail(email);
-    return !!found;
+  checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
+    return this.getUserApp.getByEmail(email).then((user) => !!user);
   }
 }

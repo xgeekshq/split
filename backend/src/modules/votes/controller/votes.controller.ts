@@ -9,6 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { VoteGroupParams } from '../../../libs/dto/param/vote.group.params';
 import { VoteItemParams } from '../../../libs/dto/param/vote.item.params';
 import {
@@ -17,7 +18,6 @@ import {
 } from '../../../libs/exceptions/messages';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import SocketGateway from '../../socket/gateway/socket.gateway';
-import VoteDto from '../dto/vote.dto';
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
 import { DeleteVoteApplication } from '../interfaces/applications/delete.vote.application.interface';
 
@@ -36,86 +36,82 @@ export default class VotesController {
   @UseGuards(JwtAuthenticationGuard)
   @Post(':boardId/card/:cardId/items/:itemId/vote')
   async addVoteToCard(
-    @Req() request,
+    @Req() request: RequestWithUser,
     @Param() params: VoteItemParams,
-    @Body() createVoteDto: VoteDto,
+    @Body('socketId') socketId: string,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, itemId } = params;
     const board = await this.createVoteApp.addVoteToCard(
       boardId,
       cardId,
-      userId,
+      request.user._id,
       itemId,
     );
+
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, createVoteDto.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Post(':boardId/card/:cardId/vote')
   async addVoteToCardGroup(
-    @Req() request,
+    @Req() request: RequestWithUser,
     @Param() params: VoteGroupParams,
-    @Body() createVoteDto: VoteDto,
+    @Body('socketId') socketId: string,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId } = params;
     const board = await this.createVoteApp.addVoteToCardGroup(
       boardId,
       cardId,
-      userId,
+      request.user._id,
     );
+
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, createVoteDto.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId/card/:cardId/items/:itemId/vote')
   async deleteVoteFromCard(
-    @Req() request,
+    @Req() request: RequestWithUser,
     @Param() params: VoteItemParams,
-    @Body() deleteCardDto: VoteDto,
+    @Body('socketId') socketId: string,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, itemId } = params;
     const board = await this.deleteVoteApp.deleteVoteFromCard(
       boardId,
       cardId,
-      userId,
+      request.user._id,
       itemId,
     );
+
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId/card/:cardId/vote')
   async deleteVoteFromCardGroup(
-    @Req() request,
+    @Req() request: RequestWithUser,
     @Param() params: VoteGroupParams,
-    @Body() deleteCardDto: VoteDto,
+    @Body('socketId') socketId: string,
   ) {
     const { boardId, cardId } = params;
-    const {
-      user: { _id: userId },
-    } = request;
     const board = await this.deleteVoteApp.deleteVoteFromCardGroup(
       boardId,
       cardId,
-      userId,
+      request.user._id,
     );
+
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+    this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 }

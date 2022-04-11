@@ -10,6 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BaseParam } from 'src/libs/dto/param/base.param';
 import {
   DELETE_FAILED,
   INSERT_FAILED,
@@ -31,7 +33,6 @@ import { BaseDto } from '../../../libs/dto/base.dto';
 import { MergeCardsParams } from '../../../libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from '../../../libs/dto/param/unmerge.cards.params';
 import UnmergeCardsDto from '../dto/unmerge.dto';
-import { BaseParam } from '../../../libs/dto/param/base.param';
 import { CardGroupParams } from '../../../libs/dto/param/card.group.params';
 import { CardItemParams } from '../../../libs/dto/param/card.item.params';
 
@@ -54,139 +55,141 @@ export default class CardsController {
   @UseGuards(JwtAuthenticationGuard)
   @Post(':boardId/card')
   async addCard(
-    @Req() request,
-    @Param()
-    params: BaseParam,
+    @Req() request: RequestWithUser,
+    @Param() { boardId }: BaseParam,
     @Body() createCardDto: CreateCardDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
-    const { boardId } = params;
     const { card, colIdToAdd, socketId } = createCardDto;
+
     const board = await this.createCardApp.create(
       boardId,
-      userId,
+      request.user._id,
       card,
       colIdToAdd,
     );
+
     if (!board) throw new BadRequestException(INSERT_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId/card/:cardId')
   async deleteCard(
-    @Req() request,
-    @Param()
-    params: CardGroupParams,
+    @Req() request: RequestWithUser,
+    @Param() params: CardGroupParams,
     @Body() deleteCardDto: DeleteCardDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId } = params;
-    const board = await this.deleteCardApp.delete(boardId, cardId, userId);
+    const board = await this.deleteCardApp.delete(
+      boardId,
+      cardId,
+      request.user._id,
+    );
+
     if (!board) throw new BadRequestException(DELETE_FAILED);
     this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Put(':boardId/card/:cardId/items/:itemId')
   async updateCardText(
-    @Req() request,
-    @Param()
-    params: CardItemParams,
+    @Req() request: RequestWithUser,
+    @Param() params: CardItemParams,
     @Body() updateCardDto: UpdateCardDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
     const { boardId, cardId, itemId } = params;
     const { text, socketId } = updateCardDto;
+
     const board = await this.updateCardApp.updateCardText(
       boardId,
       cardId,
       itemId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Put(':boardId/card/:cardId')
   async updateCardGroupText(
-    @Req() request,
+    @Req() request: RequestWithUser,
     @Param() params: CardGroupParams,
     @Body() updateCardDto: UpdateCardDto,
   ) {
     const { boardId, cardId } = params;
-    const {
-      user: { _id: userId },
-    } = request;
     const { text } = updateCardDto;
+
     const board = await this.updateCardApp.updateCardGroupText(
       boardId,
       cardId,
-      userId,
+      request.user._id,
       text,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, updateCardDto.socketId);
+
     return board;
   }
 
   @Put(':boardId/card/:cardId/updateCardPosition')
   async updateCardPosition(
-    @Req() request,
-    @Param()
-    params: CardGroupParams,
+    @Param() params: CardGroupParams,
     @Body() boardData: UpdateCardPositionDto,
   ) {
     const { boardId, cardId } = params;
     const { targetColumnId, newPosition, socketId } = boardData;
+
     const board = await this.updateCardApp.updateCardPosition(
       boardId,
       cardId,
       targetColumnId,
       newPosition,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @Put(':boardId/card/:cardId/merge/:targetCardId')
   async mergeCards(
-    @Req() request,
     @Param() params: MergeCardsParams,
     @Body() mergeCardsDto: BaseDto,
   ) {
     const { boardId, cardId: draggedCardId, targetCardId } = params;
     const { socketId } = mergeCardsDto;
+
     const board = await this.mergeCardApp.mergeCards(
       boardId,
       draggedCardId,
       targetCardId,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 
   @Put(':boardId/card/:cardId/cardItem/:itemId/removeFromCardGroup')
   async unmergeCards(
-    @Req() request,
     @Param() params: UnmergeCardsParams,
     @Body() unmergeCardsDto: UnmergeCardsDto,
   ) {
     const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
     const { columnId, socketId, newPosition } = unmergeCardsDto;
+
     const board = await this.unmergeCardApp.unmergeAndUpdatePosition(
       boardId,
       cardGroupId,
@@ -194,8 +197,10 @@ export default class CardsController {
       columnId,
       newPosition,
     );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
     this.socketService.sendUpdatedBoard(board, socketId);
+
     return board;
   }
 }

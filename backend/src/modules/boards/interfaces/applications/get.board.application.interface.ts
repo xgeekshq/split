@@ -1,7 +1,7 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../schemas/board.schema';
 
-export interface GetBoardApplication {
+export interface GetBoardApplicationInterface {
   getAllBoards(userId: string): Promise<LeanDocument<BoardDocument>[] | null>;
   getBoard(
     boardId: string,

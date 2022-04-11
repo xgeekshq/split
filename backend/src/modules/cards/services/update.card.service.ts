@@ -28,18 +28,22 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
   ) {
     const session = await this.boardModel.db.startSession();
     session.startTransaction();
+
     try {
       const cardToMove = await this.cardService.getCardFromBoard(
         boardId,
         cardId,
       );
+
       if (!cardToMove) return null;
+
       const pullResult = await pullCard(
         boardId,
         cardId,
         this.boardModel,
         session,
       );
+
       if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const pushResult = await pushCardIntoPosition(
@@ -50,9 +54,11 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
         this.boardModel,
         session,
       );
+
       if (!pushResult) throw Error(CARD_NOT_INSERTED);
 
       await session.commitTransaction();
+
       return pushResult;
     } catch (e) {
       await session.abortTransaction();
