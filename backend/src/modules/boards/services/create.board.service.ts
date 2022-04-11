@@ -52,6 +52,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
       ...boardData,
       createdBy: userId,
       dividedBoards: await this.createDividedBoards(dividedBoards, userId),
+      isSubBoard: isEmpty(dividedBoards),
     });
   }
 

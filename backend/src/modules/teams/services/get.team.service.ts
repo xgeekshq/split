@@ -21,7 +21,11 @@ export default class GetTeamServiceImpl implements GetTeamService {
   }
 
   getTeamsOfUser(userId: string) {
-    return this.teamUserModel.find({ user: userId }).lean().exec();
+    return this.teamUserModel
+      .find({ user: userId })
+      .distinct('team')
+      .lean()
+      .exec();
   }
 
   getTeamUser(userId: string, teamId: string) {

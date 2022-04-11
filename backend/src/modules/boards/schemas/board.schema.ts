@@ -9,9 +9,6 @@ export type BoardDocument = Board & Document;
 
 @Schema({
   timestamps: true,
-  toJSON: {
-    virtuals: true,
-  },
 })
 export default class Board {
   @Prop({ nullable: false })

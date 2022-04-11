@@ -12,6 +12,10 @@ import {
   updateBoardApplication,
   updateBoardService,
 } from '../../src/modules/boards/boards.providers';
+import {
+  getTeamApplication,
+  getTeamService,
+} from '../../src/modules/teams/providers';
 
 describe('BoardsController', () => {
   let controller: BoardsController;
@@ -25,6 +29,8 @@ describe('BoardsController', () => {
         createBoardService,
         getBoardApplication,
         getBoardService,
+        getTeamService,
+        getTeamApplication,
         updateBoardApplication,
         updateBoardService,
         deleteBoardApplication,
@@ -39,6 +45,14 @@ describe('BoardsController', () => {
         },
         {
           provide: getModelToken('BoardUser'),
+          useValue: {},
+        },
+        {
+          provide: getModelToken('Team'),
+          useValue: {},
+        },
+        {
+          provide: getModelToken('TeamUser'),
           useValue: {},
         },
       ],

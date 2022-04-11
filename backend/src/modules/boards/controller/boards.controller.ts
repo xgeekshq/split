@@ -9,10 +9,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { BaseParam } from '../../../libs/dto/param/base.param';
 import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -27,6 +27,8 @@ import {
   INSERT_FAILED,
   UPDATE_FAILED,
 } from '../../../libs/exceptions/messages';
+import { BaseParam } from '../../../libs/dto/param/base.param';
+import { PaginationParams } from '../../../libs/dto/param/pagination.params';
 
 @Controller('boards')
 export default class BoardsController {
@@ -54,9 +56,29 @@ export default class BoardsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
+  @Get('/dashboard')
+  getDashboardBoards(
+    @Req() request: RequestWithUser,
+    @Query() { page, size }: PaginationParams,
+  ) {
+    return this.getBoardApp.getUserBoardsOfLast3Months(
+      request.user._id,
+      page,
+      size,
+    );
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
-  boards(@Req() request: RequestWithUser) {
-    return this.getBoardApp.getAllBoards(request.user._id);
+  getAllBoards(
+    @Req() request: RequestWithUser,
+    @Query() { page, size }: PaginationParams,
+  ) {
+    const { _id: userId, isSAdmin } = request.user;
+    if (isSAdmin) {
+      return this.getBoardApp.getSuperAdminBoards(userId, page, size);
+    }
+    return this.getBoardApp.getUsersBoards(userId, page, size);
   }
 
   @UseGuards(JwtAuthenticationGuard)
