@@ -25,8 +25,11 @@ export default class GetBoardServiceImpl implements GetBoardService {
 
   async getBoard(boardId: string, userId: string) {
     const board = await this.getBoardFromRepo(boardId);
-    if (board?.isPublic) return board;
-    if (board?.createdBy?.toString() === userId) return board;
+
+    if (board?.isPublic || board?.createdBy?.toString() === userId) {
+      return board;
+    }
+
     return null;
   }
 }

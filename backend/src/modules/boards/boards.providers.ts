@@ -1,7 +1,7 @@
-import { CreateBoardApplicationImpl } from './applications/create.board.application';
-import { DeleteBoardApplicationImpl } from './applications/delete.board.application';
-import { GetBoardApplicationImpl } from './applications/get.board.application';
-import { UpdateBoardApplicationImpl } from './applications/update.board.application';
+import { CreateBoardApplication } from './applications/create.board.application';
+import { DeleteBoardApplication } from './applications/delete.board.application';
+import { GetBoardApplication } from './applications/get.board.application';
+import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
 import CreateBoardServiceImpl from './services/create.board.service';
 import DeleteBoardServiceImpl from './services/delete.board.service';
@@ -30,20 +30,20 @@ export const deleteBoardService = {
 
 export const createBoardApplication = {
   provide: TYPES.applications.CreateBoardApplication,
-  useClass: CreateBoardApplicationImpl,
+  useClass: CreateBoardApplication,
 };
 
 export const getBoardApplication = {
   provide: TYPES.applications.GetBoardApplication,
-  useClass: GetBoardApplicationImpl,
+  useClass: GetBoardApplication,
 };
 
 export const updateBoardApplication = {
   provide: TYPES.applications.UpdateBoardApplication,
-  useClass: UpdateBoardApplicationImpl,
+  useClass: UpdateBoardApplication,
 };
 
 export const deleteBoardApplication = {
   provide: TYPES.applications.DeleteBoardApplication,
-  useClass: DeleteBoardApplicationImpl,
+  useClass: DeleteBoardApplication,
 };

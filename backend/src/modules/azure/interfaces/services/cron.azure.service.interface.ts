@@ -1,5 +1,5 @@
 export interface CronAzureService {
-  getAzureAccessToken: () => Promise<void>;
+  getAzureAccessToken: () => Promise<string>;
   getToken: () => string | undefined;
   handleCron(): Promise<void>;
 }

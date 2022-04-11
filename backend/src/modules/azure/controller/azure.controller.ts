@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { EmailParam } from '../../../libs/dto/param/email.param';
 import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
@@ -21,13 +20,14 @@ export default class AzureController {
   }
 
   @Get('checkUserEmailAD/:email')
-  async checkEmail(@Param() emailParam: EmailParam) {
-    const { email } = emailParam;
+  async checkEmail(@Param('email') email: string) {
     const existUserInAzure =
       await this.authAzureApp.checkUserExistsInActiveDirectory(email);
     if (existUserInAzure) return 'az';
+
     const existUserInDB = await this.getUserApp.getByEmail(email);
     if (existUserInDB) return 'local';
+
     return false;
   }
 }

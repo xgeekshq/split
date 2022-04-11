@@ -16,29 +16,28 @@ import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import { TYPES } from '../interfaces/types';
-import { CreateBoardApplication } from '../interfaces/applications/create.board.application.interface';
-import { GetBoardApplication } from '../interfaces/applications/get.board.application.interface';
-import { DeleteBoardApplication } from '../interfaces/applications/delete.board.application.interface';
-import { UpdateBoardApplication } from '../interfaces/applications/update.board.application.interface';
+import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
+import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
+import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
+import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import {
   BOARD_NOT_FOUND,
   DELETE_FAILED,
   INSERT_FAILED,
   UPDATE_FAILED,
 } from '../../../libs/exceptions/messages';
-import { BaseParam } from '../../../libs/dto/param/base.param';
 
 @Controller('boards')
 export default class BoardsController {
   constructor(
     @Inject(TYPES.applications.CreateBoardApplication)
-    private createBoardApp: CreateBoardApplication,
+    private createBoardApp: CreateBoardApplicationInterface,
     @Inject(TYPES.applications.GetBoardApplication)
-    private getBoardApp: GetBoardApplication,
+    private getBoardApp: GetBoardApplicationInterface,
     @Inject(TYPES.applications.UpdateBoardApplication)
-    private updateBoardApp: UpdateBoardApplication,
+    private updateBoardApp: UpdateBoardApplicationInterface,
     @Inject(TYPES.applications.DeleteBoardApplication)
-    private deleteBoardApp: DeleteBoardApplication,
+    private deleteBoardApp: DeleteBoardApplicationInterface,
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
@@ -47,59 +46,57 @@ export default class BoardsController {
     @Req() request: RequestWithUser,
     @Body() boardData: BoardDto,
   ) {
-    const { _id: userId } = request.user;
-    const board = await this.createBoardApp.create(boardData, userId);
+    const board = await this.createBoardApp.create(boardData, request.user._id);
     if (!board) throw new BadRequestException(INSERT_FAILED);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Get()
   boards(@Req() request: RequestWithUser) {
-    const { _id: userId } = request.user;
-    return this.getBoardApp.getAllBoards(userId);
+    return this.getBoardApp.getAllBoards(request.user._id);
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Get(':boardId')
-  async getBoard(@Param() params: BaseParam, @Req() request: RequestWithUser) {
-    const {
-      user: { _id: userId },
-    } = request;
-    const { boardId } = params;
-    const board = await this.getBoardApp.getBoard(boardId, userId);
+  async getBoard(
+    @Param('boardId') boardId: string,
+    @Req() request: RequestWithUser,
+  ) {
+    const board = await this.getBoardApp.getBoard(boardId, request.user._id);
     if (!board) throw new NotFoundException(BOARD_NOT_FOUND);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Put(':boardId')
   async updateBoard(
-    @Req() request,
-    @Param() params: BaseParam,
+    @Req() request: RequestWithUser,
+    @Param('boardId') boardId: string,
     @Body() boardData: BoardDto,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
-    const { boardId } = params;
-    const board = await this.updateBoardApp.update(userId, boardId, boardData);
+    const board = await this.updateBoardApp.update(
+      request.user._id,
+      boardId,
+      boardData,
+    );
+
     if (!board) throw new BadRequestException(UPDATE_FAILED);
+
     return board;
   }
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(':boardId')
   async deleteBoard(
-    @Param() params: BaseParam,
+    @Param('boardId') boardId: string,
     @Req() request: RequestWithUser,
   ) {
-    const {
-      user: { _id: userId },
-    } = request;
-    const { boardId } = params;
-    const result = await this.deleteBoardApp.delete(boardId, userId);
+    const result = await this.deleteBoardApp.delete(boardId, request.user._id);
     if (!result) throw new BadRequestException(DELETE_FAILED);
+
     return result;
   }
 }

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetBoardApplication } from '../interfaces/applications/get.board.application.interface';
+import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { GetBoardService } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class GetBoardApplicationImpl implements GetBoardApplication {
+export class GetBoardApplication implements GetBoardApplicationInterface {
   constructor(
     @Inject(TYPES.services.GetBoardService)
     private getBoardService: GetBoardService,

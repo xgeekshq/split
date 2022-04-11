@@ -11,11 +11,13 @@ import { CronAzureService } from '../interfaces/services/cron.azure.service.inte
 
 @Injectable()
 export default class CronAzureServiceImpl implements CronAzureService {
-  constructor(private readonly configService: ConfigService) {
-    this.getAzureAccessToken();
-  }
-
   private azureAccessToken: string | undefined = undefined;
+
+  constructor(private readonly configService: ConfigService) {
+    this.getAzureAccessToken().then((token) => {
+      this.azureAccessToken = token;
+    });
+  }
 
   @Cron('0 45 * * * *')
   async handleCron() {
@@ -30,7 +32,7 @@ export default class CronAzureServiceImpl implements CronAzureService {
     return `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
   }
 
-  async getAzureAccessToken() {
+  async getAzureAccessToken(): Promise<string> {
     const params = new URLSearchParams();
     params.append('grant_type', 'client_credentials');
     params.append('client_id', this.configService.get(AZURE_CLIENT_ID)!);
@@ -48,8 +50,7 @@ export default class CronAzureServiceImpl implements CronAzureService {
 
     const authUrl = this.getOAuthUrl(this.configService.get(AZURE_TENANT_ID)!);
 
-    const { data: tokenData } = await axios.post(authUrl, params, config);
-    const { access_token: accessToken } = tokenData;
-    this.azureAccessToken = accessToken;
+    const { data } = await axios.post(authUrl, params, config);
+    return data.access_token;
   }
 }

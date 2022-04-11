@@ -26,7 +26,9 @@ export default class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.validateUserAuthService.validateUserById(
       payload.userId,
     );
+
     if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
+
     return user;
   }
 }

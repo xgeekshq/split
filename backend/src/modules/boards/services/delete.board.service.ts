@@ -15,9 +15,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
       _id: boardId,
       createdBy: userId,
     });
-    if (result.deletedCount === 1) {
-      return true;
-    }
+
+    if (result.deletedCount === 1) return true;
+
     return false;
   }
 }

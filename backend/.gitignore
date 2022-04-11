@@ -43,3 +43,5 @@ lerna-debug.log*
 .env
 .env.dev
 .env.staging
+
+.vscode
