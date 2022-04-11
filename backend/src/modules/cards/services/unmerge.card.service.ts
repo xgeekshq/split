@@ -30,6 +30,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
   ) {
     const session = await this.boardModel.db.startSession();
     session.startTransaction();
+
     try {
       const cardItemToMove = await this.cardService.getCardItemFromGroup(
         boardId,
@@ -37,29 +38,35 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
       );
 
       if (!cardItemToMove) return null;
+
       const pullResult = await pullItem(
         boardId,
         draggedCardId,
         this.boardModel,
         session,
       );
+
       if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const cardGroup = await this.cardService.getCardFromBoard(
         boardId,
         cardGroupId,
       );
+
       if (!cardGroup) throw Error(CARD_NOT_FOUND);
 
       const items = cardGroup.items.filter(
         (item) => item._id.toString() !== draggedCardId,
       );
+
       if (items.length === 1) {
         const [{ text, comments, votes: itemVotes }] = items;
         const newComments = cardGroup.comments.concat(comments);
+
         const newVotes = (cardGroup.votes as unknown as string[]).concat(
           itemVotes as unknown as string[],
         );
+
         const updateResult = await this.boardModel
           .updateOne(
             {
@@ -93,7 +100,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         ...cardItemToMove,
         comments: [],
         votes: [],
-        items: [{ ...newCardItem }],
+        items: [newCardItem],
       };
 
       const pushResult = await pushCardIntoPosition(
@@ -106,6 +113,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
       );
       if (!pushResult) throw Error(CARD_NOT_INSERTED);
       await session.commitTransaction();
+
       return pushResult;
     } catch (e) {
       await session.abortTransaction();

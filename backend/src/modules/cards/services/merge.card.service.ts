@@ -22,30 +22,38 @@ export class MergeCardServiceImpl implements MergeCardService {
   async mergeCards(boardId: string, draggedCardId: string, cardId: string) {
     const session = await this.boardModel.db.startSession();
     session.startTransaction();
+
     try {
       const cardToMove = await this.cardService.getCardFromBoard(
         boardId,
         draggedCardId,
       );
+
       if (!cardToMove) return null;
+
       const pullResult = await pullCard(
         boardId,
         draggedCardId,
         this.boardModel,
         session,
       );
+
       if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
       const cardGroup = await this.cardService.getCardFromBoard(
         boardId,
         cardId,
       );
+
       if (!cardGroup) throw Error(CARD_NOT_FOUND);
+
       const { items, comments, votes } = cardToMove;
       const newItems = cardGroup.items.concat(items);
+
       const newVotes = (cardGroup.votes as unknown as string[]).concat(
         votes as unknown as string[],
       );
+
       const newComments = cardGroup.comments.concat(comments);
 
       const setResult = await this.boardModel
@@ -68,8 +76,10 @@ export class MergeCardServiceImpl implements MergeCardService {
         )
         .lean()
         .session(session);
+
       if (!setResult) throw Error(UPDATE_FAILED);
       await session.commitTransaction();
+
       return setResult;
     } catch (e) {
       await session.abortTransaction();
