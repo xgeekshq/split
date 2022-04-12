@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
     user: {
-      name: string;
+      firstName: string;
+      lastName: string;
       email: string;
       id: string;
     };
@@ -13,6 +13,7 @@ declare module "next-auth" {
     refreshToken?: string;
     expires: number;
     strategy: string;
+    isSAdmin: boolean;
   }
 
   interface User {
@@ -22,6 +23,9 @@ declare module "next-auth" {
     refreshTokenExpiresIn: string;
     strategy: string;
     id: string;
+    firstName: string;
+    lastName: string;
+    isSAdmin: boolean;
   }
 }
 
@@ -29,11 +33,13 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken: string;
     refreshToken: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     id: string;
     error: string;
     accessTokenExpires: number;
     strategy: string;
+    isSAdmin: boolean;
   }
 }

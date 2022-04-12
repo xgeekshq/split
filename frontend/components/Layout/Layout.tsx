@@ -1,27 +1,56 @@
-import { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
+import React, { ReactNode, useMemo } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { styled } from "../../stitches.config";
+import { TailSpin } from "react-loader-spinner";
+import { useRouter } from "next/router";
 import Flex from "../Primitives/Flex";
 import { REFRESH_TOKEN_ERROR } from "../../utils/constants";
-import "react-toastify/dist/ReactToastify.css";
+import SideBar from "../Sidebar/Sidebar";
+import SpinnerPage from "../Loading/SpinnerPage";
+import { BOARDS_ROUTE, DASHBOARD_ROUTE } from "../../utils/routes";
+import DashboardLayout from "./DashboardLayout";
 
-const Main = styled("main", Flex, { px: "3vw", py: "$50", height: "100%" });
+const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const { data: session } = useSession({ required: true });
+  const router = useRouter();
 
-const Layout: React.FC = ({ children }) => {
-  const { data: session, status } = useSession({ required: false });
+  const isDashboard = router.pathname === DASHBOARD_ROUTE;
+  const isBoards = router.pathname === BOARDS_ROUTE;
 
-  useEffect(() => {
-    if (session?.error === REFRESH_TOKEN_ERROR) {
-      signOut({ callbackUrl: "/" });
-    }
-  }, [session, status]);
+  if (session?.error === REFRESH_TOKEN_ERROR) {
+    signOut({ callbackUrl: "/" });
+  }
 
+  const renderMain = useMemo(() => {
+    if (!session) return null;
+    return (
+      <DashboardLayout
+        firstName={session.user.firstName}
+        isDashboard={isDashboard}
+        isBoards={isBoards}
+      >
+        {children}
+      </DashboardLayout>
+    );
+  }, [children, isBoards, isDashboard, session]);
+
+  if (!session) return <SpinnerPage />;
   return (
-    <div>
-      <Main direction="column">{children}</Main>
-      <ToastContainer limit={3} />
-    </div>
+    <Flex css={{ height: "100vh", width: "100vw" }}>
+      <SideBar
+        firstName={session.user.firstName}
+        lastName={session.user.lastName}
+        email={session.user.email}
+        strategy={session.strategy}
+      />
+      {renderMain}
+      {!session && (
+        <Flex css={{ height: "100vh", width: "100vw" }}>
+          <Flex css={{ position: "absolute", top: "40%", left: "55%" }}>
+            <TailSpin height={150} width={150} />
+          </Flex>
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

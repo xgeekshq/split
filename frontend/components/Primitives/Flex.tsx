@@ -78,17 +78,26 @@ const Flex = styled("div", {
       8: {
         gap: "$8",
       },
+      12: {
+        gap: "$12",
+      },
       16: {
         gap: "$16",
       },
       20: {
         gap: "$20",
       },
+      24: {
+        gap: "$24",
+      },
       26: {
         gap: "$26",
       },
       32: {
         gap: "$32",
+      },
+      36: {
+        gap: "$36",
       },
       40: {
         gap: "$40",
@@ -99,6 +108,15 @@ const Flex = styled("div", {
         "@hover": {
           "&:hover": {
             borderColor: "$blue10",
+          },
+        },
+      },
+    },
+    pointer: {
+      true: {
+        "@hover": {
+          "&:hover": {
+            cursor: "pointer",
           },
         },
       },

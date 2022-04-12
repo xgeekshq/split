@@ -1,18 +1,38 @@
-import type { AppProps } from "next/app";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { AppProps } from "next/app";
+import { ReactElement, ReactNode } from "react";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { SessionProvider } from "next-auth/react";
-import { Hydrate } from "react-query/hydration";
-import { Provider } from "react-redux";
 import Head from "next/head";
+import { NextPage } from "next";
+import { RecoilRoot } from "recoil";
+import { useRouter } from "next/router";
 import globalStyles from "../styles/globals";
-import store from "../store/store";
 import { JWT_EXPIRATION_TIME } from "../utils/constants";
-import { ToastProvider, ToastViewport } from "../components/Primitives/Toast";
+import Toast, { ToastProvider, ToastViewport } from "../components/Primitives/Toast";
+import { ROUTES } from "../utils/routes";
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX.Element {
-  const [queryClient] = useState(() => new QueryClient());
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
 
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLayout): JSX.Element {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        suspense: true,
+      },
+    },
+  });
+
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  const router = useRouter();
   globalStyles();
   return (
     <>
@@ -23,13 +43,17 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps): JSX
       <SessionProvider session={session} refetchInterval={JWT_EXPIRATION_TIME - 5}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <Provider store={store}>
-              <ToastProvider duration={100000}>
-                <Component {...pageProps} />
-                <ToastViewport />
-              </ToastProvider>
-            </Provider>
+            <ToastProvider duration={100000}>
+              <RecoilRoot>
+                {getLayout(<Component {...pageProps} />)}
+                <Toast />
+              </RecoilRoot>
+              <ToastViewport
+                css={{ paddingRight: router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56 }}
+              />
+            </ToastProvider>
           </Hydrate>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </SessionProvider>
     </>

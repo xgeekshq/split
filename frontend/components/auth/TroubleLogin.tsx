@@ -5,10 +5,10 @@ import SchemaEmail from "../../schema/schemaEmail";
 import { styled } from "../../stitches.config";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
-import LogoIcon from "../icons/logo";
+import LogoIcon from "../icons/Logo";
 import Input from "../Primitives/Input";
 import Text from "../Primitives/Text";
-import LeftArrowIcon from "../icons/leftArrow";
+import LeftArrowIcon from "../icons/LeftArrow";
 import { EmailUser } from "../../types/user/user";
 
 const MainContainer = styled("form", Flex, {

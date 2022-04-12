@@ -4,6 +4,8 @@ const secondaryColors = {
   secondaryLight: "#F6FF67",
   secondaryLighter: "#FBFFB9",
   secondaryLightest: "#FEFFEC",
+  secondaryDarkest: "#857F00",
+  secondaryDarker: "#88830F",
 };
 
 export default secondaryColors;

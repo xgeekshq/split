@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Draggable } from "react-beautiful-dnd";
-import useBoard from "../../../hooks/useBoard";
+import { Draggable } from "@react-forked/dnd";
+import useCards from "../../../hooks/useCards";
 import { styled } from "../../../stitches.config";
 import CardType from "../../../types/card/card";
 import ToastMessage from "../../../utils/toast";
@@ -43,8 +43,7 @@ const CardBoard: React.FC<CardBoardProps> = ({
   userId,
 }) => {
   const isCardGroup = card.items.length > 1;
-  const { updateCard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
-
+  const { updateCard } = useCards();
   const [editText, setEditText] = useState(false);
   const [newText, setNewText] = useState(card.text);
 

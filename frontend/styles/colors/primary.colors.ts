@@ -11,6 +11,8 @@ const primaryColors = {
   primary400: "#434D5A",
   primary500: "#2F3742",
   primary600: "#212832",
+  primary700: "#141A22",
+  primary800: "#060D16",
 };
 
 export default primaryColors;

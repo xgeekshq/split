@@ -4,7 +4,7 @@ import { QueryClient, dehydrate } from "react-query";
 import { useRouter } from "next/router";
 import { io, Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
-import { DragDropContext, DropResult, ResponderProvided } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, ResponderProvided } from "@react-forked/dnd";
 import Flex from "../../components/Primitives/Flex";
 import Text from "../../components/Primitives/Text";
 import { styled } from "../../stitches.config";
@@ -12,17 +12,10 @@ import { ERROR_LOADING_DATA, NEXT_PUBLIC_BACKEND_URL } from "../../utils/constan
 import ColumnType from "../../types/column";
 import Column from "../../components/Board/Column/Column";
 import useBoard from "../../hooks/useBoard";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  clearBoard,
-  setBoard,
-  setChangesBoard,
-  setNewCardPosition,
-} from "../../store/slicer/boardSlicer";
-import BoardType from "../../types/board/board";
 import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
 import { getBoardRequest } from "../../api/boardService";
 import requireAuthentication from "../../components/HOC/requireAuthentication";
+import useCards from "../../hooks/useCards";
 
 const Container = styled(Flex, {
   alignItems: "flex-start",
@@ -86,19 +79,21 @@ const Board: React.FC = () => {
   const userId = session?.user?.id;
   const socketClient = useRef<Socket>();
   const socketId = socketClient.current?.id ?? undefined;
-  const { updateCardPosition, fetchBoard } = useBoard({
-    autoFetchBoard: true,
-    autoFetchBoards: false,
-  });
-  const { data, status } = fetchBoard;
-  const board = useAppSelector((state) => state.board.value);
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (data && !board) {
-      dispatch(setBoard({ board: data, userId }));
-    }
-  }, [board, data, dispatch, userId]);
+  const { updateCardPosition } = useCards();
+
+  const { fetchBoard } = useBoard({
+    autoFetchBoard: true,
+  });
+  const { status } = fetchBoard;
+  const board = {};
+  // const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   if (data && !board) {
+  //     dispatch(setBoard({ board: data, userId }));
+  //   }
+  // }, [board, data, dispatch, userId]);
 
   useEffect(() => {
     const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:3200", {
@@ -109,19 +104,19 @@ const Board: React.FC = () => {
       newSocket.emit("join", { boardId });
     });
 
-    newSocket.on("updateAllBoard", (payload: BoardType) => {
-      dispatch(setChangesBoard({ board: payload }));
-    });
+    // newSocket.on("updateAllBoard", (payload: BoardType) => {
+    //   dispatch(setChangesBoard({ board: payload }));
+    // });
     socketClient.current = newSocket;
-  }, [boardId, dispatch]);
+  }, [boardId]);
 
   useEffect(
     () => () => {
       if (socketClient.current) socketClient.current?.close();
       socketClient.current = undefined;
-      dispatch(clearBoard());
+      // dispatch(clearBoard());
     },
-    [dispatch]
+    []
   );
 
   const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
@@ -133,7 +128,7 @@ const Board: React.FC = () => {
 
     provided.announce(message);
 
-    if (!board?._id || !socketId || !result) return;
+    // if (!board?._id || !socketId || !result) return;
     const { destination, source, combine, draggableId } = result;
 
     if (!source) return;
@@ -161,28 +156,23 @@ const Board: React.FC = () => {
         newPosition: destinationIndex,
         cardPosition: sourceIndex,
         cardId: draggableId,
-        boardId: board._id,
-        socketId,
+        boardId: "1", // board._id
+        socketId: "aaa",
       };
-      dispatch(setNewCardPosition(changes));
+      // dispatch(setNewCardPosition(changes));
       updateCardPosition.mutate(changes);
     }
   };
 
   if (status === "loading") return <Text>Loading ...</Text>;
   if (board && userId) {
-    if (!board.isPublic) {
-      return <Text>Locked</Text>;
-    }
+    // if (!board.isPublic) {
+    //   return <Text>Locked</Text>;
+    // }
     return (
       <Container>
         <DragDropContext onDragEnd={onDragEnd}>
-          <ColumnList
-            columns={board.columns}
-            boardId={boardId}
-            userId={userId}
-            socketId={socketId ?? ""}
-          />
+          <ColumnList columns={[]} boardId={boardId} userId={userId} socketId={socketId ?? ""} />
         </DragDropContext>
         <ContainerSideBar
           id="sidebar"

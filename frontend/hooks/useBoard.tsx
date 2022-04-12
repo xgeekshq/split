@@ -1,53 +1,33 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useSetRecoilState } from "recoil";
 import { useMutation, useQuery } from "react-query";
-import ToastMessage from "../utils/toast";
 import BoardType from "../types/board/board";
 import {
   deleteBoardRequest,
   getBoardRequest,
-  getBoardsRequest,
   createBoardRequest,
-  updateCardPositionRequest,
   updateBoardRequest,
-  addCardRequest,
-  deleteCardRequest,
-  updateCardRequest,
-  addCommentRequest,
-  deleteCommentRequest,
-  updateCommentRequest,
-  addVoteRequest,
-  deleteVoteRequest,
 } from "../api/boardService";
 import UseBoardType from "../types/board/useBoard";
-import { decrementVote, incrementVote, setChangesBoard } from "../store/slicer/boardSlicer";
-import { useAppDispatch } from "../store/hooks";
+import { boardState } from "../store/board/atoms/board.atom";
+import { ToastStateEnum } from "../utils/enums/toast-types";
+import useBoardUtils from "./useBoardUtils";
 
 interface AutoFetchProps {
   autoFetchBoard: boolean;
-  autoFetchBoards: boolean;
 }
 
-const useBoard = ({
-  autoFetchBoard = false,
-  autoFetchBoards = false,
-}: AutoFetchProps): UseBoardType => {
-  const router = useRouter();
-  const { data: session } = useSession({ required: false });
-  const userId = session?.user.id;
-  const boardId = String(router.query.boardId);
-  const dispatch = useAppDispatch();
+const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
+  const { boardId, queryClient, setToastState, router } = useBoardUtils();
 
+  const setBoard = useSetRecoilState(boardState);
   // #region BOARD
 
   const fetchBoard = useQuery(["board", { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
     refetchOnWindowFocus: false,
-  });
-
-  const fetchBoards = useQuery("boards", () => getBoardsRequest(), {
-    enabled: autoFetchBoards,
-    refetchOnWindowFocus: autoFetchBoards,
+    onError: () => {
+      setToastState({ open: true, content: "Error getting the board", type: ToastStateEnum.ERROR });
+    },
   });
 
   const createBoard = useMutation(createBoardRequest, {
@@ -55,155 +35,50 @@ const useBoard = ({
       router.push(`/boards/${data._id}`);
     },
     onError: () => {
-      ToastMessage("Board not created!", "error");
+      setToastState({
+        open: true,
+        content: "Error creating the board",
+        type: ToastStateEnum.ERROR,
+      });
     },
   });
 
   const deleteBoard = useMutation(deleteBoardRequest, {
     onSuccess: () => {
-      ToastMessage("Board deleted!", "success");
-      fetchBoards.refetch();
+      queryClient.invalidateQueries("boards");
+      setToastState({
+        open: true,
+        content: "The board was successfully deleted.",
+        type: ToastStateEnum.SUCCESS,
+      });
     },
     onError: () => {
-      ToastMessage("Board not deleted!", "error");
+      setToastState({
+        open: true,
+        content: "Error deleting the board",
+        type: ToastStateEnum.ERROR,
+      });
     },
   });
 
   const updateBoard = useMutation(updateBoardRequest, {
-    onSuccess: (board: BoardType, variables) => {
-      ToastMessage("Board updated!", "success");
-      if (!variables.boardPage) {
-        fetchBoards.refetch();
-      }
-    },
-    onError: () => {
-      ToastMessage("Board not updated!", "error");
-    },
-  });
-
-  // #endregion
-
-  // #region CARD
-
-  const addCardInColumn = useMutation(addCardRequest, {
     onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
+      setBoard(board);
     },
     onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Card not inserted!", "error");
+      setToastState({
+        open: true,
+        content: "Error updating the board",
+        type: ToastStateEnum.ERROR,
+      });
     },
   });
 
-  const updateCardPosition = useMutation(updateCardPositionRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Board not updated!", "error");
-    },
-  });
-
-  const updateCard = useMutation(updateCardRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Card not updated!", "error");
-    },
-  });
-
-  const deleteCard = useMutation(deleteCardRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Card not deleted!", "error");
-    },
-  });
-
-  // #endregion
-
-  // #region COMMENT
-
-  const addCommentInCard = useMutation(addCommentRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Comment not inserted!", "error");
-    },
-  });
-
-  const deleteComment = useMutation(deleteCommentRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Comment not deleted!", "error");
-    },
-  });
-
-  const updateComment = useMutation(updateCommentRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Comment not updated!", "error");
-    },
-  });
-
-  // #endregion
-
-  // #region VOTE
-  // #region VOTES
-
-  const addVote = useMutation(addVoteRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(incrementVote());
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Vote not inserted!", "error");
-    },
-  });
-
-  const deleteVote = useMutation(deleteVoteRequest, {
-    onSuccess: (board: BoardType) => {
-      dispatch(decrementVote());
-      dispatch(setChangesBoard({ board, userId }));
-    },
-    onError: () => {
-      fetchBoard.refetch();
-      ToastMessage("Vote not deleted!", "error");
-    },
-  });
-
-  // #endregion
-
-  // #endregion
   return {
     fetchBoard,
-    fetchBoards,
     createBoard,
     deleteBoard,
     updateBoard,
-    addCardInColumn,
-    updateCard,
-    deleteCard,
-    updateCardPosition,
-    addCommentInCard,
-    deleteComment,
-    updateComment,
-    addVote,
-    deleteVote,
   };
 };
 

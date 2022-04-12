@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
 import Text from "../../Primitives/Text";
-import ResizableTextArea from "../../Primitives/ResizableTextArea";
 
 interface TextItemProps {
   editText: boolean;
@@ -9,9 +8,10 @@ interface TextItemProps {
   text: string;
 }
 
-const TextItem: React.FC<TextItemProps> = ({ editText, newText, setNewText, text }) => {
+const TextItem: React.FC<TextItemProps> = ({ editText, text }) => {
   if (!editText) return <Text css={{ wordBreak: "break-word" }}>{text}</Text>;
-  return <ResizableTextArea value={newText} editText={setNewText} border={false} edit />;
+  // return <ResizableTextArea value={newText} editText={setNewText} border={false} edit />;
+  return null;
 };
 
 export default TextItem;

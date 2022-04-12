@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useBoard from "../../../hooks/useBoard";
+import useComments from "../../../hooks/useComments";
 import { styled } from "../../../stitches.config";
 import CardComment from "../../../types/comment/comment";
 import ToastMessage from "../../../utils/toast";
@@ -41,7 +41,7 @@ const Comment: React.FC<CommentProps> = ({
   const [editText, setEditText] = useState(false);
   const [newText, setNewText] = useState(comment.text);
 
-  const { updateComment } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+  const { updateComment } = useComments();
 
   const handleUpdateCommentText = () => {
     if (newText?.length > 0 && boardId) {

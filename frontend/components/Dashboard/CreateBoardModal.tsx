@@ -33,7 +33,7 @@ interface CreateBoardModalProps {
 }
 
 const CreateBoardModal: React.FC<CreateBoardModalProps> = ({ setFetchLoading }) => {
-  const { createBoard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+  const { createBoard } = useBoard({ autoFetchBoard: false });
   const { isLoading, isError } = createBoard;
   const {
     handleSubmit,

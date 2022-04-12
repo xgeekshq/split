@@ -1,5 +1,5 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable } from "@react-forked/dnd";
 import { styled } from "../../../stitches.config";
 import { ColumnBoardType } from "../../../types/column";
 import Flex from "../../Primitives/Flex";
