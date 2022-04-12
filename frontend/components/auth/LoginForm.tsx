@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import router from "next/router";
-import { FormProvider, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import router from "next/router";
+import { useSetRecoilState } from "recoil";
+import { FormProvider, useForm } from "react-hook-form";
 import { RedirectableProviderType } from "next-auth/providers";
 import { ThreeDots } from "react-loader-spinner";
 import { styled } from "../../stitches.config";
@@ -12,10 +13,10 @@ import { TabsContent } from "../Primitives/Tab";
 import Text from "../Primitives/Text";
 import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
-import LogoIcon from "../icons/logo";
 import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
-import OrSeparator from "../Primitives/OrSeparator";
+import OrSeparator from "../icons/OrSeparator";
+import LogoIcon from "../icons/Logo";
 import {
   AUTH_SSO,
   NEXT_PUBLIC_ENABLE_AZURE,
@@ -23,12 +24,12 @@ import {
   NEXT_PUBLIC_ENABLE_GOOGLE,
 } from "../../utils/constants";
 import useUser from "../../hooks/useUser";
-import MicrosoftIcon from "../icons/microsoft";
-import GitHubIcon from "../icons/github";
+import MicrosoftIcon from "../icons/Microsoft";
+import GitHubIcon from "../icons/Github";
 import { transformLoginErrorCodes } from "../../utils/errorCodes";
-import Toast from "../Primitives/Toast";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
 import { getAuthError } from "../../errors/auth-messages";
+import { toastState } from "../../store/toast/atom/toast.atom";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
@@ -57,12 +58,12 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
-  const [toastOpened, setToastOpened] = useState<boolean>(false);
+  const setToastState = useSetRecoilState(toastState);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser(setLoginErrorCode);
   const methods = useForm<LoginUser>({
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: "onBlur",
+    reValidateMode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
@@ -71,7 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   });
 
   const clearErrors = () => {
-    setToastOpened(false);
+    setToastState((prev) => ({ ...prev, open: false }));
     setLoading({ credentials: false, sso: false });
     setLoginErrorCode(-1);
   };
@@ -90,10 +91,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
       redirect: false,
     });
     if (!result?.error) {
+      setToastState((prev) => ({ ...prev, open: false }));
       router.push(DASHBOARD_ROUTE);
       return;
     }
-    setToastOpened(true);
+    setToastState({
+      open: true,
+      type: ToastStateEnum.ERROR,
+      content: getAuthError(loginErrorCode),
+    });
     setLoading((prevState) => ({ ...prevState, credentials: false }));
     setLoginErrorCode(transformLoginErrorCodes(result.error));
   };
@@ -103,7 +109,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   };
 
   return (
-    <TabsContent value="login">
+    <TabsContent value="login" css={{ justifyContent: "center" }}>
       <FormProvider {...methods}>
         <StyledForm
           autoComplete="off"
@@ -127,6 +133,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             id="email"
             type="text"
             placeholder="Email address"
+            forceState={loginErrorCode > 0}
           />
           <Input
             clearErrorCode={clearErrors}
@@ -136,6 +143,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
             placeholder="Password"
             icon="eye"
             iconPosition="right"
+            forceState={loginErrorCode > 0}
           />
 
           <LoginButton type="submit" disabled={loading.credentials} size="lg">
@@ -187,12 +195,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           )}
         </StyledForm>
       </FormProvider>
-      <Toast
-        open={toastOpened}
-        onOpenChange={setToastOpened}
-        type={ToastStateEnum.ERROR}
-        content={getAuthError(loginErrorCode)}
-      />
     </TabsContent>
   );
 };

@@ -1,17 +1,16 @@
 import { CheckIcon } from "@modulz/radix-icons";
-import React, { Dispatch, SetStateAction, useState, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { styled } from "../../../stitches.config";
 import Comment from "../Comment/Comment";
 import ToastMessage from "../../../utils/toast";
 import Flex from "../../Primitives/Flex";
-import useBoard from "../../../hooks/useBoard";
 import AddCommentDto from "../../../types/comment/addComment.dto";
 import useOnClickOutside from "../../../hooks/useOnClickOutside";
-import ResizableTextArea from "../../Primitives/ResizableTextArea";
 import CardType from "../../../types/card/card";
 import { getCommentsFromCardGroup } from "../../../helper/board/comments";
 import Button from "../../Primitives/Button";
+import useComments from "../../../hooks/useComments";
 
 const SideBarContent = styled("div", {
   position: "sticky",
@@ -37,12 +36,13 @@ interface SideBarProps {
 
 const SideBard = React.memo<SideBarProps>(
   ({ show, setShow, card, color, userId, boardId, socketId }) => {
-    const { addCommentInCard } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+    const { addCommentInCard } = useComments();
 
     const cardItemId = card.items && card.items.length === 1 ? card.items[0]._id : undefined;
     const comments = cardItemId ? card.items[0].comments : getCommentsFromCardGroup(card);
 
-    const [text, setText] = useState("");
+    // setText is missing
+    const [text] = useState("");
     const ref = useRef<HTMLDivElement>(null);
     useOnClickOutside(ref, () => setShow(false));
 
@@ -71,7 +71,7 @@ const SideBard = React.memo<SideBarProps>(
     return createPortal(
       <SideBarContent ref={ref}>
         <Flex direction="column">
-          <ResizableTextArea value={text} editText={setText} border={false} edit={false} />
+          {/* <ResizableTextArea value={text} editText={setText} border={false} edit={false} /> */}
           <Button css={{ borderTop: "1px solid black" }} color="green" onClick={handleAddComment}>
             <StyledCheckIcon />
           </Button>

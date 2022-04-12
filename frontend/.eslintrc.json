@@ -33,7 +33,6 @@
     "import/no-cycle": "off",
     "no-plusplus": "off",
     "no-useless-escape": "off",
-    "react-hooks/exhaustive-deps": "off",
     "no-restricted-exports": "off"
   }
 }

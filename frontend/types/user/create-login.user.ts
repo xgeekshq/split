@@ -6,5 +6,7 @@ export interface CreateOrLogin {
   id: string;
   accessToken: Token;
   refreshToken: Token;
-  name: string;
+  firstName: string;
+  lastName: string;
+  isSAdmin: boolean;
 }

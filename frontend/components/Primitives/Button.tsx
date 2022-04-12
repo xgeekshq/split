@@ -1,7 +1,6 @@
-import React from "react";
 import { styled } from "../../stitches.config";
 
-const StyledButton = styled("button", {
+const Button = styled("button", {
   fontFamily: "$body",
   borderRadius: "$12",
   height: "$56",
@@ -81,11 +80,13 @@ const StyledButton = styled("button", {
       },
       lightOutline: {
         backgroundColor: "transparent",
+        color: "$primary300",
         border: "2px solid $primary200",
         boxSizing: "border-box",
         "@hover": {
           "&:hover": {
             backgroundColor: "$primary200",
+            color: "$primary800",
           },
         },
         "&:active": {
@@ -140,7 +141,23 @@ const StyledButton = styled("button", {
       },
     },
     isIcon: {
-      true: {},
+      true: {
+        padding: "0",
+        backgroundColor: "transparent",
+        "@hover": {
+          "&:hover": {
+            backgroundColor: "$transparent",
+          },
+        },
+        "&:active": {
+          backgroundColor: "$transparent",
+          boxShadow: "none",
+        },
+
+        "&:disabled": {
+          backgroundColor: "$transparent",
+        },
+      },
     },
     textSize: {
       lg: {
@@ -235,11 +252,5 @@ const StyledButton = styled("button", {
     size: "md",
   },
 });
-
-type ButtonProps = React.ComponentProps<typeof StyledButton>;
-
-const Button: React.FC<ButtonProps> = ({ ...props }) => {
-  return <StyledButton role="button" {...props} />;
-};
 
 export default Button;

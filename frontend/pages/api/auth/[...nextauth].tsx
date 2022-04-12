@@ -3,10 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
 import {
-  CLIENTID,
-  CLIENTSECRET,
+  CLIENT_ID,
+  CLIENT_SECRET,
   SECRET,
-  TENANTID,
+  TENANT_ID,
   UNDEFINED,
   NEXT_PUBLIC_NEXTAUTH_URL,
   REFRESH_TOKEN_ERROR,
@@ -33,9 +33,9 @@ async function getNewAccessToken(prevToken: JWT) {
 export default NextAuth({
   providers: [
     AzureADProvider({
-      clientId: CLIENTID ?? UNDEFINED,
-      clientSecret: CLIENTSECRET ?? UNDEFINED,
-      tenantId: TENANTID,
+      clientId: CLIENT_ID ?? UNDEFINED,
+      clientSecret: CLIENT_SECRET ?? UNDEFINED,
+      tenantId: TENANT_ID,
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -51,11 +51,13 @@ export default NextAuth({
         const data: User = await login(loginUser);
         if (data) {
           const token = {
-            name: data.name,
+            firstName: data.firstName,
+            lastName: data.lastName,
             email: data.email,
             id: data.id,
             accessToken: data.accessToken?.token,
             refreshToken: data.refreshToken?.token,
+            isSAdmin: data.isSAdmin,
           };
           return token;
         }
@@ -74,17 +76,21 @@ export default NextAuth({
   callbacks: {
     async signIn({ account, user }) {
       if (account.provider === "azure-ad") {
-        const { access_token: accessToken } = account;
-        const data = await createOrLoginUserAzure(accessToken ?? "");
+        const { access_token: azureAccessToken } = account;
+        const data = await createOrLoginUserAzure(azureAccessToken ?? "");
         if (!data) return false;
-        user.name = data.name;
-        user.accessToken = data.accessToken.token;
-        user.accessTokenExpiresIn = data.accessToken.expiresIn;
-        user.refreshToken = data.refreshToken.token;
-        user.email = data.email;
+        const { firstName, lastName, accessToken, refreshToken, email, id, isSAdmin } = data;
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.accessToken = accessToken.token;
+        user.accessTokenExpiresIn = accessToken.expiresIn;
+        user.refreshToken = refreshToken.token;
+        user.email = email;
         user.strategy = "azure";
-        user.id = data.id;
+        user.id = id;
+        user.isSAdmin = isSAdmin;
       }
+
       return true;
     },
     async jwt({ token, user, account }) {
@@ -94,10 +100,12 @@ export default NextAuth({
           accessTokenExpires: Date.now() + +user.accessTokenExpiresIn * 1000,
           refreshToken: user.refreshToken,
           id: user.id,
-          name: token?.name,
-          email: token?.email,
-          strategy: user.strategy,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: token.email,
+          strategy: user.strategy ?? "local",
           error: "",
+          isSAdmin: user.isSAdmin,
         };
       }
       if (Date.now() < token.accessTokenExpires - 5000) {
@@ -108,7 +116,8 @@ export default NextAuth({
     async session({ session, token }) {
       const newSession: Session = { ...session };
       if (token) {
-        newSession.user.name = token.name;
+        newSession.user.firstName = token.firstName;
+        newSession.user.lastName = token.lastName;
         newSession.accessToken = token.accessToken;
         newSession.refreshToken = token.refreshToken;
         newSession.user.email = token.email;
@@ -116,6 +125,7 @@ export default NextAuth({
         newSession.error = token.error;
         newSession.expires = token.accessTokenExpires;
         newSession.strategy = token.strategy;
+        newSession.isSAdmin = token.isSAdmin;
       }
       return newSession;
     },

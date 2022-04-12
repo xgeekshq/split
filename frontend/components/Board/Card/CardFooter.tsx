@@ -11,12 +11,10 @@ import { styled } from "../../../stitches.config";
 import CardType from "../../../types/card/card";
 import { getCommentsFromCardGroup } from "../../../helper/board/comments";
 import Button from "../../Primitives/Button";
-import useBoard from "../../../hooks/useBoard";
-import { useAppSelector } from "../../../store/hooks";
 import { getCardVotes } from "../../../helper/board/votes";
-import { maxBoardVotes } from "../../../store/store";
 import ToastMessage from "../../../utils/toast";
 import isEmpty from "../../../utils/isEmpty";
+import useVotes from "../../../hooks/useVotes";
 
 const StyledChatBubbleIcon = styled(ChatBubbleIcon, { size: "100%" });
 const StyledPlusIcon = styled(PlusCircledIcon, { size: "100%" });
@@ -31,9 +29,9 @@ interface FooterProps {
 }
 
 const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card }) => {
-  const { addVote, deleteVote } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+  const { addVote, deleteVote } = useVotes();
 
-  const actualBoardVotes = useAppSelector((state) => state.board.votes);
+  const actualBoardVotes = 0;
 
   const cardItemId = card.items.length === 1 ? card.items[0]._id : undefined;
 
@@ -44,7 +42,7 @@ const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card })
   const comments =
     card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card);
 
-  const maxVotes = maxBoardVotes();
+  const maxVotes = 6;
 
   const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
@@ -98,7 +96,7 @@ const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card })
       <Button
         css={{ size: "$20" }}
         onClick={handleAddVote}
-        disabled={actualBoardVotes === maxVotes}
+        // disabled={actualBoardVotes === maxVotes}
       >
         <StyledPlusIcon />
       </Button>

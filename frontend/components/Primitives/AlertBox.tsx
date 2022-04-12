@@ -1,7 +1,7 @@
 import * as React from "react";
 import Text from "./Text";
-import AlertIcon from "../icons/toast/alert";
-import InfoAlertIcon from "../icons/toast/infoAlert";
+import AlertIcon from "../icons/toast/ErrorAlert";
+import InfoAlertIcon from "../icons/toast/InfoAlert";
 import Flex from "./Flex";
 import { styled } from "../../stitches.config";
 

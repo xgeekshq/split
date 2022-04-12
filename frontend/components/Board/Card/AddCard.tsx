@@ -3,13 +3,12 @@ import React, { useState } from "react";
 import { styled } from "../../../stitches.config";
 import { CardToAdd } from "../../../types/card/card";
 import ToastMessage from "../../../utils/toast";
-import useBoard from "../../../hooks/useBoard";
 import AddCardDto from "../../../types/card/addCard.dto";
 import BlurEvent from "../../../types/events/blurEvent";
 import Button from "../../Primitives/Button";
 import Flex from "../../Primitives/Flex";
-import ResizableTextArea from "../../Primitives/ResizableTextArea";
 import isEmpty from "../../../utils/isEmpty";
+import useCards from "../../../hooks/useCards";
 
 const ActionButton = styled(Button, { borderRadius: "$round" });
 
@@ -23,7 +22,7 @@ interface AddCardProps {
 }
 
 const AddCard = React.memo<AddCardProps>(({ colId, boardId, socketId }) => {
-  const { addCardInColumn } = useBoard({ autoFetchBoard: false, autoFetchBoards: false });
+  const { addCardInColumn } = useCards();
 
   const [text, setText] = useState<string>("");
   const [isClicked, setIsClicked] = useState(false);
@@ -82,7 +81,7 @@ const AddCard = React.memo<AddCardProps>(({ colId, boardId, socketId }) => {
       onBlur={handleBlur}
       onFocus={handleFocus}
     >
-      <ResizableTextArea value={text} editText={setText} border={false} edit={false} />
+      {/* <TextArea  /> */}
       {isClicked && (
         <Flex justify="end" gap="4" css={{ width: "100%" }}>
           <ActionButton color="red" onClick={handleDisableEdit}>

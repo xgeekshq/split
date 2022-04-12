@@ -14,7 +14,7 @@ import CardHeader from "./CardHeader";
 import { styled } from "../../../stitches.config";
 import Shape from "../../Primitives/Shape";
 import Text from "../../Primitives/Text";
-import InputTitle from "../../Title/InputTitle";
+// import InputTitle from "../../Title/InputTitle";
 
 const Circle = styled(Shape, {
   size: "$32",
@@ -65,9 +65,8 @@ const CardBody: React.FC<CardBodyProps> = ({ board }) => {
         interactive="clickable"
       >
         <CardHeader board={board} isEditing={showEditTitle} onClickEdit={setShowEditTitle} />
-        {showEditTitle ? (
-          <InputTitle board={board} onClickEdit={setShowEditTitle} isBoardPage={false} />
-        ) : (
+        {showEditTitle ? null : (
+          // <InputTitle board={board} onClickEdit={setShowEditTitle} isBoardPage={false} />
           <Text>{board.title}</Text>
         )}
         <Text>{board.creationDate?.slice(0, 10)}</Text>

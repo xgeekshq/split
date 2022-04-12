@@ -6,12 +6,15 @@ import { AccessToken, RefreshToken } from "../token";
 
 export interface User {
   id?: string;
-  name: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password?: string;
   passwordConf?: string;
   accessToken?: AccessToken;
   refreshToken?: RefreshToken;
+  isSAdmin: boolean;
 }
 
 export interface UseUserType {

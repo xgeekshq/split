@@ -18,7 +18,7 @@ const StyledList = styled(TabsPrimitive.List, {
 
 const StyledTrigger = styled(TabsPrimitive.Trigger, {
   all: "unset",
-  fontFamily: "inherit",
+  fontFamily: "DM Sans",
   backgroundColor: "white",
   boxSizing: "border-box",
   flex: 1,
@@ -27,6 +27,9 @@ const StyledTrigger = styled(TabsPrimitive.Trigger, {
   alignItems: "center",
   justifyContent: "center",
   userSelect: "none",
+  "&:hover": {
+    cursor: "pointer",
+  },
   "&:first-child": { borderTopLeftRadius: "$12" },
   "&:last-child": { borderTopRightRadius: "$12" },
   borderBottom: "1px solid var(--colors-primary100)",

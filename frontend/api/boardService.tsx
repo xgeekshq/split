@@ -9,7 +9,10 @@ import UpdateCardDto from "../types/card/updateCard.dto";
 import AddCommentDto from "../types/comment/addComment.dto";
 import DeleteCommentDto from "../types/comment/deleteComment.dto";
 import UpdateCommentDto from "../types/comment/updateComment.dto";
-import VoteDto from "../types/board/vote/vote.dto";
+import VoteDto from "../types/vote/vote.dto";
+import MergeCardsDto from "../types/board/mergeCard.dto";
+import RemoveFromCardGroupDto from "../types/card/removeFromCardGroup.dto";
+
 // #region BOARD
 
 export const createBoardRequest = (newBoard: BoardToAdd): Promise<BoardType> => {
@@ -27,8 +30,21 @@ export const getBoardRequest = (
   return fetchData<BoardType>(`/boards/${id}`, { context, serverSide: !!context });
 };
 
-export const getBoardsRequest = (context?: GetServerSidePropsContext): Promise<BoardType[]> => {
-  return fetchData<BoardType[]>(`/boards`, { context, serverSide: !!context });
+export const getDashboardBoardsRequest = (
+  pageParam: number,
+  context?: GetServerSidePropsContext
+): Promise<{ boards: BoardType[]; hasNextPage: boolean; page: number }> => {
+  return fetchData(`/boards/dashboard?page=${pageParam ?? 0}&size=10`, {
+    context,
+    serverSide: !!context,
+  });
+};
+
+export const getBoardsRequest = (
+  pageParam: number,
+  context?: GetServerSidePropsContext
+): Promise<{ boards: BoardType[]; hasNextPage: boolean; page: number }> => {
+  return fetchData(`/boards?page=${pageParam ?? 0}&size=10`, { context, serverSide: !!context });
 };
 
 export const deleteBoardRequest = async (id: string): Promise<BoardType> => {
@@ -73,7 +89,26 @@ export const deleteCardRequest = (deleteCardDto: DeleteCardDto): Promise<BoardTy
 
 // #endregion
 
-// #region COMMENTS
+// #region MERGE_CARDS
+export const mergeCardsRequest = (mergeCard: MergeCardsDto): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    `/boards/${mergeCard.boardId}/card/${mergeCard.cardId}/merge/${mergeCard.cardGroupId}`,
+    { method: "PUT", data: mergeCard }
+  );
+};
+
+export const removeFromMergeRequest = (
+  removeFromMerge: RemoveFromCardGroupDto
+): Promise<BoardType> => {
+  return fetchData<BoardType>(
+    `/boards/${removeFromMerge.boardId}/card/${removeFromMerge.cardGroupId}/cardItem/${removeFromMerge.cardId}/removeFromCardGroup`,
+    { method: "PUT", data: removeFromMerge }
+  );
+};
+
+// #endregion
+
+// #region COMMENT
 export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardType> => {
   return fetchData<BoardType>(
     addCommentDto.isCardGroup

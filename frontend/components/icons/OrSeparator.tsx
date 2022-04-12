@@ -1,4 +1,6 @@
-const OrSeparator: React.FC = () => {
+import React from "react";
+
+const OrSeparator = () => {
   return (
     <svg
       width="436"

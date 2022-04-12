@@ -1,9 +1,9 @@
-import type { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
 import LoginForm from "../components/auth/LoginForm";
 import TroubleLogin from "../components/auth/TroubleLogin";
-import Banner from "../components/Primitives/Banner";
+import Banner from "../components/icons/Banner";
 import Flex from "../components/Primitives/Flex";
 import { TabsRoot, TabsList, TabsTrigger } from "../components/Primitives/Tab";
 import Text from "../components/Primitives/Text";

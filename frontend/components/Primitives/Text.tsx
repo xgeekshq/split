@@ -6,6 +6,7 @@ const Text = styled("span", {
   fontFamily: "$body",
   fontSize: "$16",
   lineHeight: "$24",
+  height: "fit-content",
   variants: {
     display: {
       1: {
@@ -43,7 +44,7 @@ const Text = styled("span", {
       3: {
         fontWeight: "$bold",
         fontSize: "$24",
-        letterSpacing: "$-0.3",
+        letterSpacing: "$0-3",
         lineHeight: "$28",
       },
       4: {
@@ -55,19 +56,19 @@ const Text = styled("span", {
       5: {
         fontWeight: "$bold",
         fontSize: "$16",
-        letterSpacing: "$-0.2",
+        letterSpacing: "$0-2",
         lineHeight: "$20",
       },
       6: {
         fontWeight: "$bold",
         fontSize: "$14",
-        letterSpacing: "$-0.17",
+        letterSpacing: "$0-17",
         lineHeight: "$18",
       },
       7: {
         fontWeight: "$bold",
         fontSize: "$12",
-        letterSpacing: "$-0.15",
+        letterSpacing: "$0-15",
         lineHeight: "$16",
       },
     },
@@ -83,6 +84,11 @@ const Text = styled("span", {
         fontSize: "$12",
         letterSpacing: "$1",
         lineHeight: "$14",
+      },
+    },
+    weight: {
+      medium: {
+        fontWeight: "$medium",
       },
     },
     size: {
@@ -129,6 +135,20 @@ const Text = styled("span", {
         fontSize: "$12",
         lineHeight: "$16",
         color: "$primary300",
+      },
+    },
+    color: {
+      white: {
+        color: "$white",
+      },
+      primary300: {
+        color: "$primary300",
+      },
+      primary400: {
+        color: "$primary400",
+      },
+      primary800: {
+        color: "$primary800",
       },
     },
   },

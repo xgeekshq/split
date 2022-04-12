@@ -15,7 +15,7 @@ RUN npm ci
 FROM node:16-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY ./frontend .
+COPY ./frontend/ .
 
 ARG NEXT_PUBLIC_ENABLE_AZURE
 ENV NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
