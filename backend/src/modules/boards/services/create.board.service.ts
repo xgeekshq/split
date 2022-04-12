@@ -30,7 +30,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     const newBoardsIds = await Promise.allSettled(
       boards.map(async (board) => {
         const { users } = board;
-        const { _id } = await this.create(board, userId);
+        const { _id } = await this.createBoard(board, userId);
 
         if (!isEmpty(users)) {
           this.saveBoardUsers(users, _id);
