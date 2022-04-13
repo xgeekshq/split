@@ -3,6 +3,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ClientSession } from 'mongoose';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
 import ResetPassword, {
   ResetPasswordDocument,
@@ -19,9 +20,10 @@ export default class CreateResetTokenAuthServiceImpl
     private configService: ConfigService,
   ) {}
 
+  private frontendUrl = this.configService.get<string>('frontend.url');
+
   public async emailBody(token: string, emailAddress: string) {
-    const url = `${this.configService.get<string>('frontend.url')}?${token}`;
-    const msg = 'please check your email';
+    const url = `${this.frontendUrl}?${token}`;
     await this.mailerService.sendMail({
       to: emailAddress,
       subject: 'You requested a password reset',
@@ -65,14 +67,13 @@ export default class CreateResetTokenAuthServiceImpl
     session.startTransaction();
     try {
       const passwordModel = await this.resetModel.findOne({ emailAddress });
-      if (passwordModel) {
-        this.tokenValidator(passwordModel.updatedAt);
-      }
+      if (!passwordModel) throw Error(INSERT_FAILED);
+      this.tokenValidator(passwordModel?.updatedAt);
+
       const { token } = await this.tokenGenerator(emailAddress, session);
       if (token) {
-        const res = await this.emailBody(token, emailAddress);
         await session.commitTransaction();
-        return res;
+        return await this.emailBody(token, emailAddress);
       }
       throw new InternalServerErrorException();
     } catch (e) {
