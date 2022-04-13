@@ -38,7 +38,17 @@
         "code",
         "review"
       ]
-    }  
+    },
+    {
+      "login": "r-dmatos",
+      "name": "r-dmatos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/100219341?v=4",
+      "profile": "https://github.com/r-dmatos",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",
