@@ -3,7 +3,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ClientSession } from 'mongoose';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { INSERT_FAILED } from '../../../libs/exceptions/messages';
 import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
 import ResetPassword, {
   ResetPasswordDocument,
