@@ -13,7 +13,7 @@ const QueryError: React.FC = ({ children }) => {
           fallbackRender={({ resetErrorBoundary }) => (
             <Flex css={{ my: "$24" }}>
               There was an error!
-              <Button onClick={() => resetErrorBoundary()}>Try again</Button>
+              <Button onClick={resetErrorBoundary}>Try again</Button>
             </Flex>
           )}
         >

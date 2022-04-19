@@ -8,6 +8,7 @@ type CardtitleProps = {
   userIsParticipating: boolean;
   boardId: string;
   title: string;
+  isSubBoard: boolean | undefined;
 };
 
 const StyledBoardTitle = styled(Text, {
@@ -24,20 +25,27 @@ const StyledBoardTitle = styled(Text, {
   },
 });
 
-const CardTitle = ({ userIsParticipating, boardId, title }: CardtitleProps) => {
-  if (userIsParticipating) {
-    <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
-      <Flex>
-        <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId } }}>
-          <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
-        </Link>
-      </Flex>
-    </Tooltip>;
+const CardTitle = ({ userIsParticipating, boardId, title, isSubBoard }: CardtitleProps) => {
+  if (isSubBoard) {
+    return (
+      <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
+        <Flex>
+          {userIsParticipating && isSubBoard && (
+            <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId } }}>
+              <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
+            </Link>
+          )}
+          {!userIsParticipating && isSubBoard && (
+            <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
+          )}
+        </Flex>
+      </Tooltip>
+    );
   }
   return (
-    <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
+    <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId } }}>
       <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
-    </Tooltip>
+    </Link>
   );
 };
 

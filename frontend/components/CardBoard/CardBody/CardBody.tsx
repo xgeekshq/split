@@ -11,8 +11,6 @@ import CardAvatars from "../CardAvatars";
 import Tooltip from "../../Primitives/Tooltip";
 import ClickEvent from "../../../types/events/clickEvent";
 import LeftArrow from "./LeftArrow";
-import { BoardUser } from "../../../types/board/board.user";
-import { TeamUser } from "../../../types/team/team.user";
 import CardEnd from "./CardEnd";
 import CardTitle from "./CardTitle";
 import SubBoards from "./SubBoards";
@@ -74,20 +72,6 @@ const CardBody = React.memo<CardBodyProps>(
       [countDividedBoards, isDashboard, userId]
     );
 
-    const renderCardAvatars = useCallback(
-      (listUsers: BoardUser[] | TeamUser[], onlyResponsible: boolean, teamAdmins: boolean) => {
-        return (
-          <CardAvatars
-            listUsers={listUsers}
-            responsible={onlyResponsible}
-            teamAdmins={teamAdmins}
-            userId={userId}
-          />
-        );
-      },
-      [userId]
-    );
-
     return (
       <Flex direction="column" css={{ flex: "1 1 0" }} gap="8">
         <Flex>
@@ -111,6 +95,7 @@ const CardBody = React.memo<CardBodyProps>(
                     userIsParticipating={userIsParticipating}
                     boardId={id}
                     title={board.title}
+                    isSubBoard={isSubBoard}
                   />
                   {isSubBoard && (
                     <Text size="xs" color="primary300">
@@ -120,12 +105,19 @@ const CardBody = React.memo<CardBodyProps>(
                   {!userIsParticipating && !isDashboard && <Lock />}
                   {board.recurrent && (
                     <Tooltip content="Recurrs every X week">
-                      <RecurrentIcon />
+                      <div>
+                        <RecurrentIcon />
+                      </div>
                     </Tooltip>
                   )}
-                  {!isDashboard &&
-                    isSubBoard &&
-                    renderCardAvatars(!team ? users : team.users, false, false)}
+                  {!isDashboard && isSubBoard && (
+                    <CardAvatars
+                      listUsers={!team ? users : team.users}
+                      responsible={false}
+                      teamAdmins={false}
+                      userId={userId}
+                    />
+                  )}
                   {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
                     <CenterMainBoard
                       countDividedBoards={countDividedBoards}
@@ -142,12 +134,12 @@ const CardBody = React.memo<CardBodyProps>(
               isDashboard={isDashboard}
               isSubBoard={isSubBoard}
               index={index}
-              renderCardAvatars={renderCardAvatars}
               userIsAdmin={userIsAdmin}
+              userId={userId}
             />
           </InnerContainer>
         </Flex>
-        {(openSubBoards === true || isDashboard) && (
+        {(openSubBoards || isDashboard) && (
           <SubBoards
             isDashboard={isDashboard}
             isSubBoard={isSubBoard}

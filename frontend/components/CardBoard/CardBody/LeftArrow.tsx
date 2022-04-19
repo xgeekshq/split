@@ -11,20 +11,18 @@ type LeftArrowProps = {
 const LeftArrow = ({ isDashboard, index }: LeftArrowProps) => {
   return (
     <Flex>
-      {(isDashboard || index === 0) && (
-        <Flex css={{ position: "relative", size: 0 }}>
+      <Flex css={{ position: "relative", size: 0 }}>
+        {(isDashboard || index === 0) && (
           <Flex css={{ mt: "$11", ml: "$8", mr: "$8" }}>
             <LateralUpArrow />
           </Flex>
-        </Flex>
-      )}
-      {!isDashboard && index !== 0 && (
-        <Flex css={{ position: "relative", size: 0 }}>
+        )}
+        {!isDashboard && index !== 0 && (
           <Flex css={{ mt: "$2", ml: "13px", mr: "$4", position: "relative", bottom: "42px" }}>
             <StartArrow />
           </Flex>
-        </Flex>
-      )}
+        )}
+      </Flex>
     </Flex>
   );
 };

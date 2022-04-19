@@ -1,12 +1,11 @@
 import React, { useMemo } from "react";
 import BoardType from "../../../types/board/board";
-import { BoardUser } from "../../../types/board/board.user";
-import { TeamUser } from "../../../types/team/team.user";
 import CopyIcon from "../../icons/CopyIcon";
 import Flex from "../../Primitives/Flex";
 import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
 import Tooltip from "../../Primitives/Tooltip";
+import CardAvatars from "../CardAvatars";
 import DeleteBoard from "../DeleteBoard";
 import CountCards from "./CountCards";
 
@@ -15,16 +14,12 @@ type CardEndProps = {
   isDashboard: boolean;
   isSubBoard: boolean | undefined;
   index: number | undefined;
-  renderCardAvatars: (
-    listUsers: BoardUser[] | TeamUser[],
-    onlyResponsible: boolean,
-    teamAdmins: boolean
-  ) => JSX.Element;
   userIsAdmin: boolean;
+  userId: string;
 };
 
 const CardEnd = React.memo(
-  ({ board, isDashboard, isSubBoard, index, renderCardAvatars, userIsAdmin }: CardEndProps) => {
+  ({ board, isDashboard, isSubBoard, index, userIsAdmin, userId }: CardEndProps) => {
     const { _id: id, title, columns, users, team, createdBy } = board;
 
     const boardTypeCaption = useMemo(() => {
@@ -57,7 +52,12 @@ const CardEnd = React.memo(
           <Text css={{ mx: "$8" }} size="sm" weight="medium" color="primary800">
             {boardOwnerName}
           </Text>
-          {renderCardAvatars(!team ? users : team.users, false, false)}
+          <CardAvatars
+            listUsers={!team ? users : team.users}
+            responsible={false}
+            teamAdmins={false}
+            userId={userId}
+          />
         </Flex>
       );
     }
@@ -70,7 +70,12 @@ const CardEnd = React.memo(
               <Text size="sm" color="primary300">
                 Responsible
               </Text>
-              {renderCardAvatars(!team ? users : team.users, true, false)}
+              <CardAvatars
+                listUsers={!team ? users : team.users}
+                responsible
+                teamAdmins={false}
+                userId={userId}
+              />
             </Flex>
           )}
           <CountCards columns={columns} />

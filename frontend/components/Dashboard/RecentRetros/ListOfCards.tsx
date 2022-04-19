@@ -52,8 +52,8 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
   const onScroll = () => {
     if (scrollRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-      if (scrollTop + clientHeight + 2 >= scrollHeight) {
-        if (fetchBoards.hasNextPage) fetchBoards.fetchNextPage();
+      if (scrollTop + clientHeight + 2 >= scrollHeight && fetchBoards.hasNextPage) {
+        fetchBoards.fetchNextPage();
       }
     }
   };
