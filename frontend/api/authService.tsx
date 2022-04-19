@@ -1,3 +1,5 @@
+import { GetServerSidePropsContext } from "next";
+import { HeaderInfo } from "../types/dashboard/header.info";
 import { Token } from "../types/token";
 import { CreateOrLogin } from "../types/user/create-login.user";
 import { User, LoginUser } from "../types/user/user";
@@ -21,4 +23,10 @@ export const createOrLoginUserAzure = (azureAccessToken: string): Promise<Create
 
 export const refreshAccessToken = (token: string): Promise<Token> => {
   return fetchData("/auth/refresh", { refreshToken: token, serverSide: true });
+};
+
+export const getDashboardHeaderInfo = (
+  context?: GetServerSidePropsContext
+): Promise<HeaderInfo> => {
+  return fetchData(`auth/dashboardStatistics`, { context, serverSide: !!context });
 };

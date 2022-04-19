@@ -248,3 +248,5 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
   });
 
 export type CSS = Stitches.CSS<typeof config>;
+
+export type CSSProps = { css?: Stitches.CSS<typeof config> };
