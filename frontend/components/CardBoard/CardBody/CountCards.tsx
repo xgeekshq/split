@@ -1,3 +1,4 @@
+import { countBoardCards } from "../../../helper/board/countCards";
 import ColumnType from "../../../types/column";
 import Text from "../../Primitives/Text";
 
@@ -6,12 +7,7 @@ type CounCardsProps = {
 };
 
 const CountCards = ({ columns }: CounCardsProps) => {
-  const countCards = columns.reduce((acc, column) => {
-    column.cards.forEach((card) => {
-      acc += card.items.length;
-    });
-    return acc;
-  }, 0);
+  const countCards = countBoardCards(columns);
 
   return (
     <Text size="sm" weight="medium" css={{ ml: "$40" }}>

@@ -32,8 +32,8 @@ const MainContainer = styled(Flex, {
 });
 
 const BannerContainer = styled(Flex, {
-  mt: "$74",
-  ml: "$62",
+  mt: "$72",
+  ml: "$112",
   size: "fit-content",
 });
 

@@ -16,10 +16,14 @@ type CardEndProps = {
   index: number | undefined;
   userIsAdmin: boolean;
   userId: string;
+  userSAdmin?: boolean;
 };
 
-const CardEnd = React.memo(
-  ({ board, isDashboard, isSubBoard, index, userIsAdmin, userId }: CardEndProps) => {
+const CardEnd: React.FC<CardEndProps> = React.memo(
+  ({ board, isDashboard, isSubBoard, index, userIsAdmin, userId, userSAdmin = undefined }) => {
+    CardEnd.defaultProps = {
+      userSAdmin: undefined,
+    };
     const { _id: id, title, columns, users, team, createdBy } = board;
 
     const boardTypeCaption = useMemo(() => {
@@ -79,11 +83,11 @@ const CardEnd = React.memo(
             </Flex>
           )}
           <CountCards columns={columns} />
-          {userIsAdmin && !isSubBoard && (
+          {(userIsAdmin || userSAdmin) && !isSubBoard && (
             <Flex css={{ ml: "$24" }} gap="24" align="center">
               <Separator
                 orientation="vertical"
-                css={{ ml: "$8", backgroundColor: "$primary300", height: "$24 !important" }}
+                css={{ ml: "$8", backgroundColor: "$primary100", height: "$24 !important" }}
               />
               <Tooltip content="Duplicate board">
                 <Flex pointer onClick={() => console.log("DUPLICATE")}>

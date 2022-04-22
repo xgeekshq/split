@@ -29,27 +29,27 @@ type CardBodyProps = {
   index?: number;
   dividedBoardsCount: number;
   isDashboard: boolean;
+  mainBoardId?: string;
+  isSAdmin?: boolean;
 };
 
 const CardBody = React.memo<CardBodyProps>(
-  ({ userId, board, index, isDashboard, dividedBoardsCount }) => {
+  ({ userId, board, index, isDashboard, dividedBoardsCount, mainBoardId, isSAdmin }) => {
     const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
     const countDividedBoards = dividedBoardsCount || dividedBoards.length;
     const [openSubBoards, setSubBoardsOpen] = useState(true);
 
     const userIsParticipating = useMemo(() => {
-      if (team) {
-        return !!team.users.find((user) => user.user._id === userId);
-      }
       return !!users.find((user) => user.user._id === userId);
-    }, [users, team, userId]);
+    }, [users, userId]);
 
     const userIsAdmin = useMemo(() => {
+      if (isSAdmin) return true;
       if (team) {
         return !!team.users.find((user) => user.role === "admin");
       }
       return !!users.find((user) => user.role === "owner");
-    }, [team, users]);
+    }, [isSAdmin, team, users]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();
@@ -66,14 +66,15 @@ const CardBody = React.memo<CardBodyProps>(
             index={idx}
             isDashboard={isDashboard}
             dividedBoardsCount={countDividedBoards}
+            mainBoardId={board._id}
           />
         );
       },
-      [countDividedBoards, isDashboard, userId]
+      [board._id, countDividedBoards, isDashboard, userId]
     );
 
     return (
-      <Flex direction="column" css={{ flex: "1 1 0" }} gap="8">
+      <Flex direction="column" css={{ flex: "1 1 0" }} gap="12">
         <Flex>
           {isSubBoard && <LeftArrow isDashboard={isDashboard} index={index} />}
           <InnerContainer
@@ -89,13 +90,16 @@ const CardBody = React.memo<CardBodyProps>(
           >
             <Flex align="center">
               <Flex gap="8" align="center">
-                {!isSubBoard && <CardIcon board={board} isParticipating={userIsParticipating} />}
+                {!isSubBoard && (
+                  <CardIcon board={board} isParticipating={userIsParticipating} toAdd={false} />
+                )}
                 <Flex align="center" gap="8">
                   <CardTitle
                     userIsParticipating={userIsParticipating}
                     boardId={id}
                     title={board.title}
                     isSubBoard={isSubBoard}
+                    mainBoardId={mainBoardId}
                   />
                   {isSubBoard && (
                     <Text size="xs" color="primary300">
@@ -136,6 +140,7 @@ const CardBody = React.memo<CardBodyProps>(
               index={index}
               userIsAdmin={userIsAdmin}
               userId={userId}
+              userSAdmin={isSAdmin}
             />
           </InnerContainer>
         </Flex>
