@@ -39,7 +39,12 @@ export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {})
 
 type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void };
 
-const Content = ({ children, css, handleClose, ...props }: ContentProps) => {
+const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props }) => {
+  Content.defaultProps = {
+    css: undefined,
+    children: undefined,
+    handleClose: undefined,
+  };
   return (
     <AlertDialogPrimitive.Portal>
       <StyledOverlay />

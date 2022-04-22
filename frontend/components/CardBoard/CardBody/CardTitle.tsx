@@ -26,13 +26,16 @@ const StyledBoardTitle = styled(Text, {
   },
 });
 
-const CardTitle = ({
+const CardTitle: React.FC<CardtitleProps> = ({
   userIsParticipating,
   boardId,
   title,
   isSubBoard,
   mainBoardId,
-}: CardtitleProps) => {
+}) => {
+  CardTitle.defaultProps = {
+    mainBoardId: undefined,
+  };
   if (isSubBoard) {
     return (
       <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">

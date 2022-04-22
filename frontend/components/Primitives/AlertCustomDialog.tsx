@@ -16,15 +16,15 @@ interface BoardAlertDialog {
   text: string;
   cancelText: string;
   confirmText: string;
-  handleClose: () => void;
   handleConfirm: () => void;
   title: string;
+  handleClose?: () => void;
   children?: React.ReactNode;
   css?: CSS;
   variant?: "primary";
 }
 
-const AlertCustomDialog = ({
+const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
   defaultOpen,
   text,
   handleClose,
@@ -35,7 +35,13 @@ const AlertCustomDialog = ({
   children,
   css,
   variant,
-}: BoardAlertDialog) => {
+}) => {
+  AlertCustomDialog.defaultProps = {
+    variant: "primary",
+    css: undefined,
+    children: undefined,
+    handleClose: undefined,
+  };
   return (
     <AlertDialog defaultOpen={defaultOpen}>
       {children}
@@ -64,10 +70,7 @@ const AlertCustomDialog = ({
             <AlertDialogCancel variant="primaryOutline" onClick={handleClose}>
               {cancelText}
             </AlertDialogCancel>
-            <AlertDialogAction
-              variant={variant && variant === "primary" ? "primary" : "danger"}
-              onClick={handleConfirm}
-            >
+            <AlertDialogAction variant={variant || "danger"} onClick={handleConfirm}>
               {confirmText}
             </AlertDialogAction>
           </Flex>

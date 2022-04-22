@@ -40,11 +40,8 @@ const CardBody = React.memo<CardBodyProps>(
     const [openSubBoards, setSubBoardsOpen] = useState(true);
 
     const userIsParticipating = useMemo(() => {
-      if (team) {
-        return !!team.users.find((user) => user.user._id === userId);
-      }
       return !!users.find((user) => user.user._id === userId);
-    }, [users, team, userId]);
+    }, [users, userId]);
 
     const userIsAdmin = useMemo(() => {
       if (isSAdmin) return true;

@@ -59,14 +59,14 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         if (!boardsOfTeam) {
           boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
           if (board.team) teams.set(`${board.team?._id}`, board.team);
-        } else {
-          const boardsOfDay = boardsOfTeam.get(date);
-          if (boardsOfDay) {
-            boardsOfDay.push(board);
-          } else {
-            boardsOfTeam.set(date, [board]);
-          }
+          return;
         }
+        const boardsOfDay = boardsOfTeam.get(date);
+        if (boardsOfDay) {
+          boardsOfDay.push(board);
+          return;
+        }
+        boardsOfTeam.set(date, [board]);
       });
     });
     return { boardsTeamAndDate, teams };
@@ -188,9 +188,12 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
           </Flex>
         );
       })}
-      <Flex css={{ width: "100%", "& svg": { color: "black" } }} justify="center">
-        {isLoading && <TailSpin color="#060D16" height={60} width={60} />}
-      </Flex>
+
+      {isLoading && (
+        <Flex css={{ width: "100%", "& svg": { color: "black" } }} justify="center">
+          <TailSpin color="#060D16" height={60} width={60} />
+        </Flex>
+      )}
     </Flex>
   );
 });

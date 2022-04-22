@@ -19,8 +19,11 @@ type CardEndProps = {
   userSAdmin?: boolean;
 };
 
-const CardEnd = React.memo(
-  ({ board, isDashboard, isSubBoard, index, userIsAdmin, userId, userSAdmin }: CardEndProps) => {
+const CardEnd: React.FC<CardEndProps> = React.memo(
+  ({ board, isDashboard, isSubBoard, index, userIsAdmin, userId, userSAdmin = undefined }) => {
+    CardEnd.defaultProps = {
+      userSAdmin: undefined,
+    };
     const { _id: id, title, columns, users, team, createdBy } = board;
 
     const boardTypeCaption = useMemo(() => {

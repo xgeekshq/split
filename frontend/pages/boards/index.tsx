@@ -29,20 +29,6 @@ const StyledTextTab = styled(Text, {
   },
 });
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-  async (context: GetServerSidePropsContext) => {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchInfiniteQuery("boards", ({ pageParam = 0 }) =>
-      getBoardsRequest(pageParam, context)
-    );
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  }
-);
-
 const Boards = () => {
   const [currentTab, setCurrentTab] = useState("boards");
   const { data: session } = useSession({ required: true });
@@ -88,3 +74,17 @@ const Boards = () => {
 export default Boards;
 
 Boards.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+  async (context: GetServerSidePropsContext) => {
+    const queryClient = new QueryClient();
+    await queryClient.prefetchInfiniteQuery("boards", ({ pageParam = 0 }) =>
+      getBoardsRequest(pageParam, context)
+    );
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+);
