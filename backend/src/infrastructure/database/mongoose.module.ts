@@ -26,6 +26,7 @@ export const mongooseBoardUserModule = MongooseModule.forFeature([
 export const mongooseUserModule = MongooseModule.forFeature([
   { name: User.name, schema: UserSchema },
 ]);
+
 export const mongooseResetModule = MongooseModule.forFeature([
   { name: ResetPassword.name, schema: ResetPasswordSchema },
 ]);
