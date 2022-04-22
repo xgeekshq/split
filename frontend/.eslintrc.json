@@ -33,6 +33,7 @@
     "import/no-cycle": "off",
     "no-plusplus": "off",
     "no-useless-escape": "off",
-    "no-restricted-exports": "off"
+    "no-restricted-exports": "off",
+    "react/require-default-props": "off"
   }
 }

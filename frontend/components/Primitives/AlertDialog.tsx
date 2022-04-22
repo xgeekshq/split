@@ -1,6 +1,7 @@
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+import { ReactNode } from "react";
 import { overlayShow } from "../../animations/DialogShow";
-import { styled } from "../../stitches.config";
+import { CSS, styled } from "../../stitches.config";
 import Flex from "./Flex";
 import Box from "./Box";
 import Button from "./Button";
@@ -25,20 +26,26 @@ const StyledContent = styled(AlertDialogPrimitive.Content, Flex, Box, {
   left: "41.53%",
   maxWidth: "500px",
   width: "90vw",
-  zIndex: "100",
+  zIndex: 2147483648,
   boxShadow: "0px 4px 16px -4px rgba(18, 25, 34, 0.2)",
   "&:focus": { outline: "none" },
 });
 
 export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
-export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
+export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {
+  "@hover": { "&:hover": { cursor: "pointer" } },
+});
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 
-const Content: React.FC = ({ children, ...props }) => {
+type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void };
+
+const Content = ({ children, css, handleClose, ...props }: ContentProps) => {
   return (
     <AlertDialogPrimitive.Portal>
       <StyledOverlay />
-      <StyledContent {...props}>{children}</StyledContent>
+      <StyledContent onCloseAutoFocus={handleClose} css={css} {...props}>
+        {children}
+      </StyledContent>
     </AlertDialogPrimitive.Portal>
   );
 };

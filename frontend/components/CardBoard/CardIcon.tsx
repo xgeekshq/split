@@ -5,12 +5,12 @@ import TeamBoardIcon from "../icons/TeamBoard";
 import isEmpty from "../../utils/isEmpty";
 import Tooltip from "../Primitives/Tooltip";
 
-type CardIconProps = { board: BoardType; isParticipating: boolean };
+type CardIconProps = { board: BoardType; toAdd: boolean; isParticipating: boolean };
 
-const CardIcon: React.FC<CardIconProps> = ({ board, isParticipating = false }) => {
+const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipating = false }) => {
   const { team, dividedBoards } = board;
   const isDividedBoardsEmpty = isEmpty(dividedBoards);
-  if (!isDividedBoardsEmpty) {
+  if (!isDividedBoardsEmpty || toAdd) {
     return (
       <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
         <div>

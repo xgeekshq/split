@@ -9,6 +9,7 @@ type CardtitleProps = {
   boardId: string;
   title: string;
   isSubBoard: boolean | undefined;
+  mainBoardId?: string;
 };
 
 const StyledBoardTitle = styled(Text, {
@@ -25,13 +26,22 @@ const StyledBoardTitle = styled(Text, {
   },
 });
 
-const CardTitle = ({ userIsParticipating, boardId, title, isSubBoard }: CardtitleProps) => {
+const CardTitle = ({
+  userIsParticipating,
+  boardId,
+  title,
+  isSubBoard,
+  mainBoardId,
+}: CardtitleProps) => {
   if (isSubBoard) {
     return (
       <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
         <Flex>
           {userIsParticipating && isSubBoard && (
-            <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId } }}>
+            <Link
+              key={boardId}
+              href={{ pathname: `boards/[boardId]`, query: { boardId, mainBoardId } }}
+            >
               <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
             </Link>
           )}
@@ -43,7 +53,7 @@ const CardTitle = ({ userIsParticipating, boardId, title, isSubBoard }: Cardtitl
     );
   }
   return (
-    <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId } }}>
+    <Link key={boardId} href={{ pathname: `boards/[boardId]`, query: { boardId, mainBoardId } }}>
       <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>
     </Link>
   );

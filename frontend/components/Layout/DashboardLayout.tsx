@@ -38,12 +38,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
         <Flex justify="between">
           {isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
           {isBoards && <Text heading="1">Boards</Text>}
-          <AddNewBoardButton
-            onClick={handleOnClickNewBoard}
-            css={{
-              top: isBoards ? "46px" : "none",
-            }}
-          >
+          <AddNewBoardButton onClick={handleOnClickNewBoard} size={isDashboard ? "sm" : "md"}>
             <PlusIcon css={{ color: "white", mr: "$8" }} />
             Add new board
           </AddNewBoardButton>
