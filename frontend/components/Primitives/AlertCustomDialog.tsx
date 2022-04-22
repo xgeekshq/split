@@ -34,14 +34,8 @@ const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
   confirmText,
   children,
   css,
-  variant,
+  variant = "primary",
 }) => {
-  AlertCustomDialog.defaultProps = {
-    variant: "primary",
-    css: undefined,
-    children: undefined,
-    handleClose: undefined,
-  };
   return (
     <AlertDialog defaultOpen={defaultOpen}>
       {children}
