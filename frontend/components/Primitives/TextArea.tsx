@@ -171,7 +171,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, helperTex
           },
         }}
       >
-        {state === "error" && <InfoIcon />}
+        {state === "error" && <InfoIcon size="24" />}
         <Text
           css={{
             color: state === "error" ? "$dangerBase" : "$primary300",
