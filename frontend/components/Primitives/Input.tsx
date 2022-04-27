@@ -218,7 +218,7 @@ const Input: React.FC<InputProps> = ({
     register,
     getValues,
     clearErrors,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext();
   const { ref, ...rest } = register(id);
 
@@ -227,19 +227,16 @@ const Input: React.FC<InputProps> = ({
   const isValueEmpty = isEmpty(value);
 
   const autoState = useMemo(() => {
-    if (message) {
-      return "error";
-    }
-    if (isValueEmpty) {
-      return "default";
-    }
+    if (message) return "error";
+    if (isValueEmpty) return "default";
     return "valid";
   }, [message, isValueEmpty]);
 
   const currentState = useMemo(() => {
-    if (state && forceState) return state;
+    if (disabled && !touchedFields[id]) return "default";
+    if (state && forceState && !touchedFields[id]) return state;
     return autoState;
-  }, [autoState, forceState, state]);
+  }, [autoState, disabled, forceState, id, state, touchedFields]);
 
   const isHelperEmpty = isEmpty(helperText) && isEmpty(message);
 
@@ -287,7 +284,7 @@ const Input: React.FC<InputProps> = ({
       <Flex justify={!isHelperEmpty ? "between" : "end"}>
         {!isHelperEmpty && (
           <HelperTextWrapper gap="4" align="center" css={{ mt: "$8" }}>
-            {currentState === "error" && <InfoIcon />}
+            {currentState === "error" && <InfoIcon size="24" />}
             <Text
               css={{
                 color: currentState === "error" ? "$dangerBase" : "$primary300",

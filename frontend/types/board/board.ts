@@ -1,7 +1,18 @@
 import ColumnType, { CreateColumn } from "../column";
 import { Team } from "../team/team";
 import { User } from "../user/user";
-import { BoardUser } from "./board.user";
+import { BoardUser, BoardUserDto, BoardUserToAdd } from "./board.user";
+
+export interface GetBoardResponse {
+  board: BoardType;
+  mainBoardData: {
+    team: Team;
+    dividedBoards: {
+      _id: string;
+      title: string;
+    };
+  };
+}
 
 export default interface BoardType {
   _id: string;
@@ -11,7 +22,6 @@ export default interface BoardType {
   columns: ColumnType[];
   isPublic: boolean;
   password?: string;
-  maxVotes: number;
   dividedBoards: BoardType[];
   recurrent: boolean;
   team: Team;
@@ -19,8 +29,27 @@ export default interface BoardType {
   createdBy: User;
   socketId?: string;
   isSubBoard?: boolean;
+  maxVotes?: string;
+  hideCards: boolean;
+  hideVotes: boolean;
+  postAnonymously: boolean;
+  submitedByUser?: string;
+  submitedAt?: Date;
 }
 
-export interface BoardToAdd extends Omit<BoardType, "_id" | "columns"> {
+export interface BoardToAdd
+  extends Omit<
+    BoardType,
+    "_id" | "columns" | "team" | "createdBy" | "updatedAt" | "dividedBoards" | "users"
+  > {
   columns: CreateColumn[];
+  team: string | null;
+  users: BoardUserToAdd[];
+  dividedBoards: BoardToAdd[];
+}
+
+export interface CreateBoardDto extends Omit<BoardToAdd, "dividedBoards" | "users"> {
+  dividedBoards: CreateBoardDto[];
+  users: BoardUserDto[];
+  maxUsers?: string;
 }
