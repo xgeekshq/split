@@ -15,6 +15,7 @@ export interface User {
   accessToken?: AccessToken;
   refreshToken?: RefreshToken;
   isSAdmin: boolean;
+  joinedAt: string;
 }
 
 export interface UseUserType {

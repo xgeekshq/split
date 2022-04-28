@@ -72,6 +72,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       },
       space: {
         2: "0.125rem",
+        3: "0.1875rem",
         4: "0.250rem",
         6: "0.375rem",
         8: "0.5rem",
@@ -87,6 +88,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         24: "1.5rem",
         26: "1.625rem",
         28: "1.75rem",
+        29: "1.8125rem",
         32: "2rem",
         36: "2.25rem",
         37: "2.3125rem",
@@ -136,6 +138,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
         64: "4rem",
         74: "4.625rem",
         76: "4.75rem",
+        80: "5rem",
         92: "5.75rem",
         100: "6.25rem",
         130: "8.125rem",

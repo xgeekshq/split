@@ -7,9 +7,9 @@ import { TeamUserRoles } from "../../utils/enums/team.user.roles";
 import { BoardUserRoles } from "../../utils/enums/board.user.roles";
 
 type ListUsersType = {
-  user: User;
+  user: User | string;
   role: TeamUserRoles | BoardUserRoles;
-  _id: string;
+  _id?: string;
 };
 
 type CardAvatarProps = {
@@ -30,10 +30,10 @@ const CardAvatars = React.memo<CardAvatarProps>(
         return listUsers.filter((user) => user.role === "admin").map((user) => user.user);
 
       return listUsers.reduce((acc: User[], userFound: ListUsersType) => {
-        if (userFound.user._id === userId) {
-          acc.unshift(userFound.user);
+        if ((userFound.user as User)._id === userId) {
+          acc.unshift(userFound.user as User);
         } else {
-          acc.push(userFound.user);
+          acc.push(userFound.user as User);
         }
         return acc;
       }, []);
@@ -74,7 +74,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 
     return (
       <Flex align="center" css={{ height: "fit-content", overflow: "hidden" }}>
-        {data.slice(0, !myBoards ? 3 : 1).map((user: User, index: number) => {
+        {(data.slice(0, !myBoards ? 3 : 1) as User[]).map((user: User, index: number) => {
           return renderAvatar(getInitials(user, index), index);
         })}
       </Flex>

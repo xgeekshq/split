@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { SetterOrUpdater, useRecoilValue } from "recoil";
-import ClickEvent from "../../../types/events/clickEvent";
-import Flex from "../../Primitives/Flex";
-import { styled } from "../../../stitches.config";
-import SchemaCreateBoard from "../../../schema/schemaCreateBoardForm";
-import Button from "../../Primitives/Button";
+import ClickEvent from "../../types/events/clickEvent";
+import Flex from "../Primitives/Flex";
+import { styled } from "../../stitches.config";
+import SchemaCreateBoard from "../../schema/schemaCreateBoardForm";
+import Button from "../Primitives/Button";
 import BoardName from "./BoardName";
-import { createBoardDataState } from "../../../store/createBoard/atoms/create-board.atom";
+import { createBoardDataState } from "../../store/createBoard/atoms/create-board.atom";
+import SettingsTabs from "./SettingsTabs";
 
 const StyledForm = styled("form", Flex, {});
 
@@ -40,9 +41,7 @@ const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({
     <StyledForm
       direction="column"
       css={{ width: "100%", height: "100%", backgroundColor: "$background" }}
-      onSubmit={methods.handleSubmit(() => {
-        // saveBoard(text, maxVotes);
-      })}
+      onSubmit={methods.handleSubmit(() => {})}
     >
       <Flex
         direction="column"
@@ -57,7 +56,7 @@ const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({
       >
         <FormProvider {...methods}>
           <BoardName mainBoardName={mainBoardName} />
-          {/* <Settings /> */}
+          <SettingsTabs />
         </FormProvider>
       </Flex>
       <Flex justify="end" gap="24" css={{ backgroundColor: "white", py: "$16", pr: "$32" }}>
