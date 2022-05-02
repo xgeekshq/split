@@ -58,19 +58,18 @@ const useCreateBoard = (team: Team) => {
   );
 
   const handleSplitBoards = useCallback(
-    (maxTeams: number, maxUsers: number) => {
+    (maxTeams: number) => {
       const subBoards: BoardToAdd[] = [];
-      const splitedUsers: BoardUserToAdd[][] = [];
+      const splitedUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
       let availableUsers = [...teamMembers];
 
-      for (let i = 0; i < teamMembers.length; i++) {
+      for (let i = 0, j = 0; i < teamMembers.length; i++, j++) {
         const teamUser = getRandomUser(availableUsers);
-        if (splitedUsers[i]?.length === maxUsers) break;
 
-        if (i >= maxTeams) i = 0;
-        splitedUsers[i] = [
-          ...(splitedUsers[i] ?? []),
+        if (j >= maxTeams) j = 0;
+        splitedUsers[j] = [
+          ...splitedUsers[j],
           {
             user: teamUser.user,
             role: BoardUserRoles.MEMBER,
@@ -81,13 +80,13 @@ const useCreateBoard = (team: Team) => {
         availableUsers = availableUsers.filter((user) => user.user._id !== teamUser.user._id);
       }
 
-      for (let i = 0; i < maxTeams; i++) {
+      new Array(maxTeams).fill(0).forEach((_, i) => {
         const newBoard = generateSubBoard(i + 1);
         splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
           BoardUserRoles.RESPONSIBLE;
         newBoard.users = splitedUsers[i];
         subBoards.push(newBoard);
-      }
+      });
       return subBoards;
     },
     [generateSubBoard, getRandomUser, teamMembers]
@@ -116,10 +115,7 @@ const useCreateBoard = (team: Team) => {
       count: { ...prev.count, maxUsersCount: countUsers, teamsCount: dividedBoardsCount + 1 },
       board: {
         ...prev.board,
-        dividedBoards: handleSplitBoards(
-          dividedBoardsCount + 1,
-          Math.ceil(teamMembers.length / (dividedBoardsCount + 1))
-        ),
+        dividedBoards: handleSplitBoards(dividedBoardsCount + 1),
       },
     }));
   };
@@ -132,7 +128,7 @@ const useCreateBoard = (team: Team) => {
       count: { ...prev.count, maxUsersCount: countUsers, teamsCount: dividedBoardsCount - 1 },
       board: {
         ...prev.board,
-        dividedBoards: handleSplitBoards(dividedBoardsCount - 1, countUsers),
+        dividedBoards: handleSplitBoards(dividedBoardsCount - 1),
       },
     }));
   };

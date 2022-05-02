@@ -123,7 +123,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       },
       board: {
         ...prev.board,
-        dividedBoards: handleSplitBoards(Number(values.teamsCount), Number(values.maxUsersCount)),
+        dividedBoards: handleSplitBoards(Number(values.teamsCount)),
       },
     }));
   };

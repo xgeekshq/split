@@ -75,7 +75,7 @@ const MainBoardCard = React.memo(({ team }: { team: Team }) => {
     setCreateBoardData((prev) => ({
       ...prev,
       users,
-      board: { ...prev.board, dividedBoards: handleSplitBoards(2, maxUsersCount) },
+      board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
       count: {
         ...prev.count,
         teamsCount,
