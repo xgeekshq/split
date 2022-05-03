@@ -53,33 +53,12 @@ const useCreateBoard = (team: Team) => {
   );
 
   const getRandomUser = useCallback(
-    (list: TeamUser[]) => list[Math.floor(Math.random() * list.length)],
+    (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0],
     []
   );
 
-  const handleSplitBoards = useCallback(
-    (maxTeams: number) => {
-      const subBoards: BoardToAdd[] = [];
-      const splitedUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
-
-      let availableUsers = [...teamMembers];
-
-      for (let i = 0, j = 0; i < teamMembers.length; i++, j++) {
-        const teamUser = getRandomUser(availableUsers);
-
-        if (j >= maxTeams) j = 0;
-        splitedUsers[j] = [
-          ...splitedUsers[j],
-          {
-            user: teamUser.user,
-            role: BoardUserRoles.MEMBER,
-            votesCount: 0,
-          },
-        ];
-
-        availableUsers = availableUsers.filter((user) => user.user._id !== teamUser.user._id);
-      }
-
+  const generateSubBoards = useCallback(
+    (maxTeams: number, splitedUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
       new Array(maxTeams).fill(0).forEach((_, i) => {
         const newBoard = generateSubBoard(i + 1);
         splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
@@ -87,9 +66,32 @@ const useCreateBoard = (team: Team) => {
         newBoard.users = splitedUsers[i];
         subBoards.push(newBoard);
       });
+    },
+    [generateSubBoard]
+  );
+
+  const handleSplitBoards = useCallback(
+    (maxTeams: number) => {
+      const subBoards: BoardToAdd[] = [];
+      const splitedUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
+
+      const availableUsers = [...teamMembers];
+
+      new Array(teamMembers.length).fill(0).reduce((j) => {
+        if (j >= maxTeams) j = 0;
+        const teamUser = getRandomUser(availableUsers);
+        splitedUsers[j] = [
+          ...splitedUsers[j],
+          { user: teamUser.user, role: BoardUserRoles.MEMBER, votesCount: 0 },
+        ];
+        return ++j;
+      }, 0);
+
+      generateSubBoards(maxTeams, splitedUsers, subBoards);
+
       return subBoards;
     },
-    [generateSubBoard, getRandomUser, teamMembers]
+    [generateSubBoards, getRandomUser, teamMembers]
   );
 
   const canAdd = useMemo(() => {
