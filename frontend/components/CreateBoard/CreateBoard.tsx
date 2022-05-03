@@ -6,7 +6,7 @@ import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
-import CreateBoardContent from "./Content/Content";
+import CreateBoardContent from "./Content";
 import CreateBoardTipBar from "./TipBar";
 
 const MainContainter = styled(Flex, {

@@ -1,6 +1,6 @@
 import React from "react";
-import Input from "../../Primitives/Input";
-import Text from "../../Primitives/Text";
+import Input from "../Primitives/Input";
+import Text from "../Primitives/Text";
 
 const BoardName = (props: { mainBoardName: string }) => {
   const { mainBoardName } = props;
