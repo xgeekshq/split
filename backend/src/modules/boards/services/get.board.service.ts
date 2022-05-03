@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { GetTeamService } from '../../teams/interfaces/services/get.team.service.interface';
+import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
@@ -15,7 +15,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     @InjectModel(BoardUser.name)
     private boardUserModel: Model<BoardUserDocument>,
     @Inject(Team.TYPES.services.GetTeamService)
-    private getTeamService: GetTeamService,
+    private getTeamService: GetTeamServiceInterface,
   ) {}
 
   getAllBoardsIdsOfUser(userId: string) {

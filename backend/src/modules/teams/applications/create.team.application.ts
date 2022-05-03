@@ -1,15 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import TeamDto from '../dto/team.dto';
-import { CreateTeamApplication } from '../interfaces/applications/create.team.application.interface';
-import { CreateTeamService } from '../interfaces/services/create.team.service.interface';
+import teamUserDto from '../dto/team.user.dto';
+import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
+import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class CreateTeamApplicationImpl implements CreateTeamApplication {
+export class CreateTeamApplication implements CreateTeamApplicationInterface {
   constructor(
     @Inject(TYPES.services.CreateTeamService)
-    private createTeamService: CreateTeamService,
+    private createTeamService: CreateTeamServiceInterface,
   ) {}
+
+  createTeamUser(teamUser: teamUserDto) {
+    return this.createTeamUser(teamUser);
+  }
 
   create(teamData: TeamDto, userId: string) {
     return this.createTeamService.create(teamData, userId);

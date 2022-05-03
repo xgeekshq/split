@@ -6,8 +6,6 @@ import {
   ValidateNested,
   IsOptional,
   IsBoolean,
-  IsNumber,
-  ValidateIf,
   IsMongoId,
   Validate,
 } from 'class-validator';
@@ -37,23 +35,41 @@ export default class BoardDto {
   @IsBoolean()
   isPublic!: boolean;
 
-  @ValidateIf((o) => o.isPublic === false)
   @IsNotEmpty()
-  @Transform(({ value }: TransformFnParams) => value.trim())
-  password?: string;
+  @IsString()
+  @IsOptional()
+  maxVotes?: string | null;
 
   @IsNotEmpty()
-  @IsNumber()
-  maxVotes!: number;
+  @IsString()
+  @IsOptional()
+  maxUsers?: string | null;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
+  maxTeams?: string | null;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  hideCards!: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  hideVotes!: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  postAnonymously!: boolean;
 
   @IsOptional()
   @ValidateNested({ each: true })
-  dividedBoards?: BoardDto[];
+  dividedBoards!: BoardDto[];
 
   @IsOptional()
   @IsMongoId()
   @IsString()
-  team?: string;
+  team?: string | null;
 
   @IsOptional()
   socketId?: string;
@@ -61,4 +77,12 @@ export default class BoardDto {
   @IsOptional()
   @Validate(CheckUniqueUsers)
   users!: BoardUserDto[];
+
+  @IsNotEmpty()
+  @IsBoolean()
+  recurrent?: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isSubBoard?: boolean;
 }

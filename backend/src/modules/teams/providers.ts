@@ -1,5 +1,5 @@
-import { CreateTeamApplicationImpl } from './applications/create.team.application';
-import { GetTeamApplicationImpl } from './applications/get.team.application';
+import { CreateTeamApplication } from './applications/create.team.application';
+import { GetTeamApplication } from './applications/get.team.application';
 import { TYPES } from './interfaces/types';
 import CreateTeamServiceImpl from './services/create.team.service';
 import GetTeamServiceImpl from './services/get.team.service';
@@ -11,7 +11,7 @@ export const createTeamService = {
 
 export const createTeamApplication = {
   provide: TYPES.applications.CreateTeamApplication,
-  useClass: CreateTeamApplicationImpl,
+  useClass: CreateTeamApplication,
 };
 
 export const getTeamService = {
@@ -21,5 +21,5 @@ export const getTeamService = {
 
 export const getTeamApplication = {
   provide: TYPES.applications.GetTeamApplication,
-  useClass: GetTeamApplicationImpl,
+  useClass: GetTeamApplication,
 };
