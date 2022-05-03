@@ -6,6 +6,7 @@ import QueryError from "../Errors/QueryError";
 import Flex from "../Primitives/Flex";
 import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
+import BoardConfigurations from "./Configurations/BoardConfigurations";
 import TeamSubTeamsConfigurations from "./SubTeamsTab/TeamSubTeamsConfigurations";
 
 const StyledTextTab = styled(Text, {
@@ -65,6 +66,13 @@ const SettingsTabs = () => {
         <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
           <QueryError>
             <TeamSubTeamsConfigurations />
+          </QueryError>
+        </Suspense>
+      )}
+      {currentTab === 2 && (
+        <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
+          <QueryError>
+            <BoardConfigurations />
           </QueryError>
         </Suspense>
       )}
