@@ -57,6 +57,14 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
     }, []);
 
+    const colors = useMemo(() => {
+      const col = [];
+      for (let i = 0; i < 3; i++) {
+        col.push(getRandomColor());
+      }
+      return col;
+    }, [getRandomColor]);
+
     const renderAvatar = useCallback(
       (initials, idx) => {
         return (
@@ -64,12 +72,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
             key={`${initials}-${idx}-${Math.random()}`}
             css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
             size={32}
-            colors={getRandomColor()}
+            colors={colors[idx]}
             fallbackText={initials}
           />
         );
       },
-      [getRandomColor]
+      [colors]
     );
 
     return (

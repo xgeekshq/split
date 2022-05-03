@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { TailSpin } from "react-loader-spinner";
 import { useRouter } from "next/router";
@@ -12,7 +12,7 @@ import DashboardLayout from "./DashboardLayout";
 import { createBoardState } from "../../store/createBoard/atoms/create-board.atom";
 import CreateBoard from "../CreateBoard/CreateBoard";
 
-const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
+const Layout: React.FC = ({ children }) => {
   const { data: session } = useSession({ required: true });
   const [showCreateBoard] = useRecoilState(createBoardState);
 
@@ -57,7 +57,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
       {!session && (
         <Flex css={{ height: "100vh", width: "100vw" }}>
           <Flex css={{ position: "absolute", top: "40%", left: "55%" }}>
-            <TailSpin height={150} width={150} />
+            <TailSpin color="#060D16" height={150} width={150} />
           </Flex>
         </Flex>
       )}

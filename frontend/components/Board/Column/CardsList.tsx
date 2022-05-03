@@ -4,7 +4,19 @@ import { ColumnInnerList } from "../../../types/column";
 import CardBoard from "../Card/CardBoard";
 
 const CardsList = React.memo<ColumnInnerList>(
-  ({ cards, color, colId, userId, boardId, socketId }) => {
+  ({
+    cards,
+    color,
+    colId,
+    userId,
+    boardId,
+    socketId,
+    anonymous,
+    isMainboard,
+    boardUser,
+    maxVotes,
+    isSubmited,
+  }) => {
     return (
       <>
         {cards.map((card: CardType, idx) => {
@@ -13,12 +25,16 @@ const CardsList = React.memo<ColumnInnerList>(
               key={card._id}
               card={card}
               index={idx}
-              isPreview={false}
               color={color}
               colId={colId}
               userId={userId}
               boardId={boardId}
               socketId={socketId}
+              anonymous={anonymous}
+              isMainboard={isMainboard}
+              boardUser={boardUser}
+              maxVotes={maxVotes}
+              isSubmited={isSubmited}
             />
           );
         })}

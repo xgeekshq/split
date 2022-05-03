@@ -6,14 +6,14 @@ import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import AddCard from "../Card/AddCard";
 import CardsList from "./CardsList";
+import Box from "../../Primitives/Box";
+import Separator from "../../Sidebar/Separator";
 
-const Container = styled(Flex, {
-  borderRadius: "$8",
-  height: "fit-content",
+const Container = styled(Flex, Box, {
+  borderRadius: "$12",
   flexShrink: 0,
   flex: "1",
-  pb: "$40",
-  px: "$24",
+  pb: "$24",
   width: "100%",
 });
 
@@ -30,25 +30,77 @@ const Title = styled(Text, {
 });
 
 const Column = React.memo<ColumnBoardType>(
-  ({ columnId, cards, userId, boardId, title, color, socketId }) => {
+  ({
+    columnId,
+    cards,
+    userId,
+    boardId,
+    title,
+    color,
+    socketId,
+    anonymous,
+    isMainboard,
+    boardUser,
+    maxVotes,
+    countAllCards,
+    isSubmited,
+    filter,
+  }) => {
     return (
       <OuterContainer>
         <Droppable droppableId={columnId} type="CARD" isCombineEnabled>
           {(provided) => (
-            <Container direction="column" css={{ backgroundColor: color }}>
-              <Title>{title}</Title>
-              <AddCard colId={columnId} boardId={boardId} socketId={socketId} />
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                <CardsList
-                  cards={cards}
-                  color={color}
-                  colId={columnId}
-                  userId={userId}
-                  boardId={boardId}
-                  socketId={socketId}
-                />
-                {provided.placeholder}
-              </div>
+            <Container direction="column" elevation="2">
+              <Flex css={{ pl: "$16", pt: "$20", pb: "$16" }}>
+                <Title heading="4">{title}</Title>
+                <Text
+                  size="xs"
+                  color="primary400"
+                  css={{
+                    borderRadius: "$4",
+                    border: "1px solid $colors$primary100",
+                    px: "$8",
+                    py: "$2",
+                  }}
+                >
+                  {cards.length} cards
+                </Text>
+              </Flex>
+              <Separator css={{ backgroundColor: "$primary100", mb: "$20" }} />
+              <Flex direction="column" css={{ px: "$20" }}>
+                {!isSubmited && (
+                  <AddCard
+                    isCard
+                    colId={columnId}
+                    boardId={boardId}
+                    socketId={socketId}
+                    isUpdate={false}
+                    defaultOpen={countAllCards === 0}
+                  />
+                )}
+                <Flex
+                  direction="column"
+                  css={{ mt: "$20" }}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  <CardsList
+                    cards={cards}
+                    color={color}
+                    colId={columnId}
+                    userId={userId}
+                    boardId={boardId}
+                    socketId={socketId}
+                    anonymous={anonymous}
+                    isMainboard={isMainboard}
+                    boardUser={boardUser}
+                    maxVotes={maxVotes}
+                    isSubmited={isSubmited}
+                    filter={filter}
+                  />
+                  {provided.placeholder}
+                </Flex>
+              </Flex>
             </Container>
           )}
         </Droppable>
@@ -56,4 +108,5 @@ const Column = React.memo<ColumnBoardType>(
     );
   }
 );
+
 export default Column;

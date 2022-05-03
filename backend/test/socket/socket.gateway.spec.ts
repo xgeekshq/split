@@ -4,7 +4,7 @@ import SocketGateway from '../../src/modules/socket/gateway/socket.gateway';
 describe('ActionsGateway', () => {
   let gateway: SocketGateway;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [SocketGateway],
     }).compile();

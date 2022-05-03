@@ -26,8 +26,8 @@ export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType
 export const getBoardRequest = (
   id: string,
   context?: GetServerSidePropsContext
-): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${id}`, { context, serverSide: !!context });
+): Promise<GetBoardResponse> => {
+  return fetchData<GetBoardResponse>(`/boards/${id}`, { context, serverSide: !!context });
 };
 
 export const getStakeholders = (): Promise<string[]> => {
@@ -75,6 +75,10 @@ export const updateCardRequest = (updateCard: UpdateCardDto): Promise<BoardType>
   );
 };
 
+export const mergeBoardRequest = (subBoardId: string): Promise<BoardType> => {
+  return fetchData<BoardType>(`/boards/${subBoardId}/merge`, { method: "PUT" });
+};
+
 export const updateCardPositionRequest = (
   updateCardPosition: UpdateCardPositionDto
 ): Promise<BoardType> => {
@@ -85,10 +89,15 @@ export const updateCardPositionRequest = (
 };
 
 export const deleteCardRequest = (deleteCardDto: DeleteCardDto): Promise<BoardType> => {
-  return fetchData<BoardType>(`/boards/${deleteCardDto.boardId}/card/${deleteCardDto.cardId}`, {
-    method: "DELETE",
-    data: deleteCardDto,
-  });
+  return fetchData<BoardType>(
+    deleteCardDto.isCardGroup
+      ? `/boards/${deleteCardDto.boardId}/card/${deleteCardDto.cardId}`
+      : `/boards/${deleteCardDto.boardId}/card/${deleteCardDto.cardId}/items/${deleteCardDto.cardItemId}`,
+    {
+      method: "DELETE",
+      data: deleteCardDto,
+    }
+  );
 };
 
 // #endregion

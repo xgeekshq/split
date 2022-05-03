@@ -107,8 +107,6 @@ const Checkbox: React.FC<{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              // width: `$${size} !important`,
-              // height: `$${size} !important`,
               "& svg": {
                 width:
                   currentCheckValue === "indeterminate"

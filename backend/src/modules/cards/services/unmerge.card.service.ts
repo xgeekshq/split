@@ -68,7 +68,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
         );
 
         const updateResult = await this.boardModel
-          .updateOne(
+          .findOneAndUpdate(
             {
               _id: boardId,
               'columns.cards._id': cardGroupId,
@@ -90,7 +90,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
           .lean()
           .exec();
 
-        if (updateResult.modifiedCount !== 1) throw Error(UPDATE_FAILED);
+        if (!updateResult) throw Error(UPDATE_FAILED);
       }
 
       const newCardItem = { ...cardItemToMove };

@@ -15,7 +15,13 @@
     "jsx": "preserve",
     "types": ["@types/jest", "jest", "@testing-library/jest-dom"],
     "typeRoots": ["./types", "./vendor/types"],
-    "incremental": true
+    "incremental": true,
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@storybook/theming": ["./types.d.ts"],
+      "@emotion/core": ["./types/index.d.ts"]
+    }
   },
   "include": [
     "next.config.js",

@@ -18,3 +18,5 @@ export const INSERT_FAILED = 'INSERT_FAILED';
 export const CARD_NOT_REMOVED = "Card wasn't removed";
 export const CARD_NOT_INSERTED = "Card wasn't inserted";
 export const CARD_NOT_FOUND = "Card wasn't found";
+
+export const USER_MUST_BE_UNIQUE = 'USER_MUST_BE_UNIQUE';

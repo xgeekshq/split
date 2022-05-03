@@ -22,7 +22,8 @@ export default class CardItemDto {
   @IsNotEmpty()
   @IsMongoId()
   @IsString()
-  createdBy!: string;
+  @IsMongoId()
+  createdBy?: string;
 
   @IsNotEmpty()
   @ValidateNested({ each: true })

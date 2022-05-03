@@ -10,9 +10,7 @@ import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
 @Injectable()
-export default class CreateTeamServiceImpl
-  implements CreateTeamServiceInterface
-{
+export default class CreateTeamService implements CreateTeamServiceInterface {
   constructor(
     @InjectModel(Team.name) private teamModel: Model<TeamDocument>,
     @InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
@@ -24,6 +22,10 @@ export default class CreateTeamServiceImpl
         this.teamUserModel.create({ ...user, team: teamId }),
       ),
     );
+  }
+
+  async createTeamUser(teamUser: TeamUserDto) {
+    return this.teamUserModel.create({ ...teamUser });
   }
 
   async create(teamData: TeamDto, userId: string) {

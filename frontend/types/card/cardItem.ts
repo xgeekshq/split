@@ -1,4 +1,6 @@
 import CommentType from "../comment/comment";
+import { Team } from "../team/team";
+import { User } from "../user/user";
 
 export type CardGroupDragItem = {
   index: number;
@@ -13,7 +15,8 @@ export interface CardItemType {
   text: string;
   comments: CommentType[];
   votes: string[];
-  createdBy?: string;
+  createdBy?: User;
+  createdByTeam?: Team;
 }
 
 export interface CardItemToAdd extends Omit<CardItemType, "_id"> {

@@ -25,15 +25,16 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
 });
 
 type AvatarType = {
-  colors: { bg: string; fontColor: any };
+  colors: { bg: string; fontColor: string };
   fallbackText: string;
   src?: string;
   size?: number;
+  isBoardPage?: boolean;
 };
 
 type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
 
-const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css, isBoardPage }) => {
   return (
     <AvatarRoot
       css={{
@@ -46,8 +47,9 @@ const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css })
       <AvatarImage src={src} />
       <AvatarFallback
         css={{
-          fontSize: "$12",
-          fontWeight: "$medium",
+          fontSize: !isBoardPage ? "$12" : "$10",
+          lineHeight: !isBoardPage ? "$16" : "$12",
+          fontWeight: !isBoardPage ? "$medium" : "$regular",
           fontFamily: "DM Sans",
           color: colors.fontColor,
           "& span": "",

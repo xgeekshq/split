@@ -13,6 +13,8 @@ const AddNewBoardButton = styled(Button, {
   display: "flex",
   position: "relative",
   height: "$48",
+  fontWeight: "$medium !important",
+  lineHeight: "$20 !important",
 });
 
 const Main = styled("main", Flex, { width: "100%", height: "100%", ml: "48px" });

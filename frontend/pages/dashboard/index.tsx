@@ -42,12 +42,12 @@ const Dashboard = () => {
   if (!session || !data) return null;
   return (
     <InnerContainer direction="column">
-      <Suspense fallback={<TailSpin height={80} width={80} />}>
+      <Suspense fallback={<TailSpin color="#060D16" height={80} width={80} />}>
         <QueryError>
           <Tiles data={data} />
         </QueryError>
       </Suspense>
-      <Suspense fallback={<TailSpin height={80} width={80} />}>
+      <Suspense fallback={<TailSpin color="#060D16" height={80} width={80} />}>
         <QueryError>
           <Text css={{ mt: "$64" }} heading="4">
             My recent retros

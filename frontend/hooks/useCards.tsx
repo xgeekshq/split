@@ -1,4 +1,5 @@
 import { useMutation } from "react-query";
+import { useSetRecoilState } from "recoil";
 import {
   addCardRequest,
   updateCardPositionRequest,
@@ -6,39 +7,137 @@ import {
   deleteCardRequest,
   mergeCardsRequest,
   removeFromMergeRequest,
+  mergeBoardRequest,
 } from "../api/boardService";
+import { handleUpdateCardPosition } from "../helper/board/transformBoard";
+import { mergeCardState } from "../store/mergeCard/atoms/merge-card.atom";
+import BoardType from "../types/board/board";
+import { ToastStateEnum } from "../utils/enums/toast-types";
+import useBoardUtils from "./useBoardUtils";
 
 const useCards = () => {
+  const { queryClient, setToastState } = useBoardUtils();
+
+  const setMergeCard = useSetRecoilState(mergeCardState);
+
   const addCardInColumn = useMutation(addCardRequest, {
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries("board");
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: "Error adding the card",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   const updateCardPosition = useMutation(updateCardPositionRequest, {
+    onMutate: async (data) => {
+      const query = ["board", { id: data.boardId }];
+      await queryClient.cancelQueries(query);
+
+      const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
+      const board = prevData?.board;
+      if (board) {
+        const newBoard = handleUpdateCardPosition(board, data);
+
+        queryClient.setQueryData<BoardType | undefined>(query, (old: BoardType | undefined) => {
+          if (old)
+            return {
+              ...old,
+              columns: newBoard.columns,
+            };
+          return old;
+        });
+      }
+
+      return { previousBoard: board, data };
+    },
+    onSettled: (data) => {
+      queryClient.invalidateQueries(["board", { id: data?._id }]);
+    },
     onSuccess: () => {},
-    onError: () => {},
+    onError: (data, variables, context) => {
+      queryClient.setQueryData(
+        ["board", { id: variables.boardId }],
+        (context as { previousBoard: BoardType }).previousBoard
+      );
+      setToastState({
+        open: true,
+        content: "Error updating the card position",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   const updateCard = useMutation(updateCardRequest, {
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["board", { id: data?._id }]);
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: "Error updating the card",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   const deleteCard = useMutation(deleteCardRequest, {
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["board", { id: data?._id }]);
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: "Error deleting the card",
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  const mergeBoard = useMutation(mergeBoardRequest, {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries(["board", { id: variables }]);
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: "Error mergint the board",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   // #region MERGE_CARDS
 
   const mergeCards = useMutation(mergeCardsRequest, {
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["board", { id: data?._id }]);
+    },
+    onError: () => {
+      setMergeCard(undefined);
+      setToastState({
+        open: true,
+        content: "Error merging the cards",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   const removeFromMergeCard = useMutation(removeFromMergeRequest, {
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["board", { id: data?._id }]);
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: "Error unmerge the card",
+        type: ToastStateEnum.ERROR,
+      });
+    },
   });
 
   // #endregion
@@ -50,6 +149,7 @@ const useCards = () => {
     deleteCard,
     mergeCards,
     removeFromMergeCard,
+    mergeBoard,
   };
 };
 

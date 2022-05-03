@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+import { Module } from '@nestjs/common';
 import DatabaseModule from './infrastructure/database/database.module';
 import UsersModule from './modules/users/users.module';
 import AuthModule from './modules/auth/auth.module';
@@ -10,6 +10,7 @@ import { CommentsModule } from './modules/comments/comments.module';
 import AppConfigModule from './infrastructure/config/config.module';
 import { VotesModule } from './modules/votes/votes.module';
 import { configuration } from './infrastructure/config/configuration';
+import { SchedulesModule } from './modules/schedules/schedules.module';
 import AzureModule from './modules/azure/azure.module';
 import TeamsModule from './modules/teams/teams.module';
 
@@ -25,6 +26,7 @@ const imports = [
   VotesModule,
   TeamsModule,
   ScheduleModule.forRoot(),
+  SchedulesModule,
 ];
 
 if (configuration().azure.enabled) {

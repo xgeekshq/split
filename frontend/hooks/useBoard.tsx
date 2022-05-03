@@ -17,7 +17,7 @@ interface AutoFetchProps {
 }
 
 const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
-  const { boardId, queryClient, setToastState, router } = useBoardUtils();
+  const { boardId, queryClient, setToastState } = useBoardUtils();
 
   const setBoard = useSetRecoilState(boardState);
   // #region BOARD
@@ -31,9 +31,6 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
   });
 
   const createBoard = useMutation(createBoardRequest, {
-    onSuccess: (data: BoardType) => {
-      router.push(`/boards/${data._id}`);
-    },
     onError: () => {
       setToastState({
         open: true,

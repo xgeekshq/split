@@ -45,7 +45,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
           <Hydrate state={pageProps.dehydratedState}>
             <ToastProvider duration={100000}>
               <RecoilRoot>
-                {getLayout(<Component {...pageProps} />)}
+                {getLayout(<Component key={router.route} {...pageProps} />)}
                 <Toast />
               </RecoilRoot>
               <ToastViewport

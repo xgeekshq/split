@@ -1,4 +1,6 @@
 import CommentType from "../comment/comment";
+import { Team } from "../team/team";
+import { User } from "../user/user";
 import { CardItemToAdd, CardItemType } from "./cardItem";
 
 export default interface CardType {
@@ -7,7 +9,8 @@ export default interface CardType {
   votes: string[];
   comments: CommentType[];
   items: CardItemType[];
-  createdBy?: string;
+  createdBy?: User;
+  createdByTeam?: Team;
 }
 
 export interface CardToAdd extends Omit<CardType, "_id" | "items"> {

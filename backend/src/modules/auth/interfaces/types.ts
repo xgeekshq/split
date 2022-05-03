@@ -3,6 +3,7 @@ export const TYPES = {
     GetTokenAuthService: 'GetTokenAuthService',
     ValidateAuthService: 'ValidateAuthService',
     RegisterAuthService: 'RegisterAuthService',
+    AzureAuthService: 'AzureAuthService',
   },
   applications: {
     GetTokenAuthApplication: 'GetTokenAuthApplication',
