@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
-import { SetterOrUpdater, useRecoilValue } from "recoil";
+import { SetterOrUpdater, useRecoilValue, useResetRecoilState } from "recoil";
 import ClickEvent from "../../types/events/clickEvent";
 import Flex from "../Primitives/Flex";
 import { styled } from "../../stitches.config";
@@ -9,20 +10,24 @@ import Button from "../Primitives/Button";
 import BoardName from "./BoardName";
 import { createBoardDataState } from "../../store/createBoard/atoms/create-board.atom";
 import SettingsTabs from "./SettingsTabs";
+import useBoard from "../../hooks/useBoard";
+import { CreateBoardDto } from "../../types/board/board";
 
 const StyledForm = styled("form", Flex, {});
 
 const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({ setOpened }) => {
+  const boardState = useRecoilValue(createBoardDataState);
+  const resetBoardState = useResetRecoilState(createBoardDataState);
   const {
-    board: { maxVotes },
-  } = useRecoilValue(createBoardDataState);
+    createBoard: { status, mutate },
+  } = useBoard({ autoFetchBoard: false });
 
   const methods = useForm<{ text: string; maxVotes: string }>({
     mode: "onBlur",
     reValidateMode: "onBlur",
     defaultValues: {
       text: "Main board -",
-      maxVotes: maxVotes ?? "",
+      maxVotes: String(boardState.board.maxVotes) ?? "",
     },
     resolver: zodResolver(SchemaCreateBoard),
   });
@@ -37,11 +42,45 @@ const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({
     setOpened(false);
   };
 
+  const saveBoard = (title: string, maxVotes: string) => {
+    const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
+      const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
+      newSubBoard.hideCards = boardState.board.hideCards;
+      newSubBoard.hideVotes = boardState.board.hideVotes;
+      newSubBoard.postAnonymously = boardState.board.postAnonymously;
+      newSubBoard.maxVotes = maxVotes;
+      const users = subBoard.users.map((boardUser) => ({
+        user: boardUser.user._id,
+        role: boardUser.role,
+      }));
+      newSubBoard.users = users;
+      return newSubBoard;
+    });
+
+    mutate({
+      ...boardState.board,
+      users: boardState.users,
+      title,
+      dividedBoards: newDividedBoards,
+      maxVotes,
+      maxUsers: boardState.count.maxUsersCount.toString(),
+    });
+  };
+
+  useEffect(() => {
+    if (status === "success") {
+      setOpened(false);
+      resetBoardState();
+    }
+  }, [status, setOpened, resetBoardState]);
+
   return (
     <StyledForm
       direction="column"
       css={{ width: "100%", height: "100%", backgroundColor: "$background" }}
-      onSubmit={methods.handleSubmit(() => {})}
+      onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
+        saveBoard(text, maxVotes);
+      })}
     >
       <Flex
         direction="column"

@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import fetchData from "../utils/fetchData";
-import BoardType, { BoardToAdd } from "../types/board/board";
+import BoardType, { CreateBoardDto } from "../types/board/board";
 import UpdateCardPositionDto from "../types/card/updateCardPosition.dto";
 import UpdateBoardDto from "../types/board/updateBoard";
 import AddCardDto from "../types/card/addCard.dto";
@@ -15,7 +15,7 @@ import RemoveFromCardGroupDto from "../types/card/removeFromCardGroup.dto";
 
 // #region BOARD
 
-export const createBoardRequest = (newBoard: BoardToAdd): Promise<BoardType> => {
+export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType> => {
   return fetchData(`/boards`, { method: "POST", data: newBoard });
 };
 

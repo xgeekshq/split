@@ -82,6 +82,17 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
               orientation="vertical"
               css={{ "&[data-orientation=vertical]": { height: "$12", width: 1 } }}
             />
+            <Flex
+              css={{
+                borderRadius: "$round",
+                p: "4px",
+                border: "1px solid $colors$primary400",
+                ml: "$12",
+              }}
+              onClick={handleLottery}
+            >
+              <WandIcon />
+            </Flex>
             <Text size="sm" color="primary300" css={{ mx: "$8" }}>
               {responsible?.firstName} {responsible?.lastName}
             </Text>
@@ -94,17 +105,6 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
               }}
               fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
             />
-            <Flex
-              css={{
-                borderRadius: "$round",
-                p: "4px",
-                border: "1px solid $colors$primary400",
-                ml: "$8",
-              }}
-              onClick={handleLottery}
-            >
-              <WandIcon />
-            </Flex>
           </Flex>
         </Flex>
         <Flex align="center" gap="8">
