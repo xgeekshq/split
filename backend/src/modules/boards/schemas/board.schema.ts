@@ -9,6 +9,9 @@ export type BoardDocument = Board & Document;
 
 @Schema({
   timestamps: true,
+  toJSON: {
+    virtuals: true,
+  },
 })
 export default class Board {
   @Prop({ nullable: false })
@@ -17,14 +20,11 @@ export default class Board {
   @Prop({ nullable: false })
   isPublic!: boolean;
 
-  @Prop({ nullable: true })
-  password?: string;
-
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   submitedByUser!: ObjectId;
 
-  @Prop({ nullable: false })
-  maxVotes!: number;
+  @Prop({ type: Date, nullable: true, default: null })
+  submitedAt!: Date;
 
   @Prop({ nullable: false, type: [ColumnSchema] })
   columns!: ColumnDocument[];
@@ -43,11 +43,23 @@ export default class Board {
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
   createdBy!: User | ObjectId;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   recurrent!: boolean;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   isSubBoard!: boolean;
+
+  @Prop({ type: String, nullable: true, default: null })
+  maxVotes?: string;
+
+  @Prop({ type: Boolean, nullable: false, default: false })
+  hideCards?: boolean;
+
+  @Prop({ type: Boolean, nullable: false, default: false })
+  hideVotes?: boolean;
+
+  @Prop({ type: Boolean, nullable: false, default: false })
+  postAnonymously?: boolean;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

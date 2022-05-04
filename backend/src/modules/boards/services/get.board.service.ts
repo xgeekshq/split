@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { GetTeamService } from '../../teams/interfaces/services/get.team.service.interface';
+import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
@@ -15,7 +15,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     @InjectModel(BoardUser.name)
     private boardUserModel: Model<BoardUserDocument>,
     @Inject(Team.TYPES.services.GetTeamService)
-    private getTeamService: GetTeamService,
+    private getTeamService: GetTeamServiceInterface,
   ) {}
 
   getAllBoardsIdsOfUser(userId: string) {
@@ -101,7 +101,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
           select: 'user role',
           populate: {
             path: 'user',
-            select: 'firstName lastName',
+            select: 'firstName lastName joinedAt',
           },
         },
       })
@@ -114,7 +114,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
           populate: {
             path: 'user',
             model: 'User',
-            select: 'firstName lastName',
+            select: 'firstName lastName joinedAt',
           },
         },
       })
@@ -123,7 +123,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         select: 'user role -board',
         populate: {
           path: 'user',
-          select: 'firstName lastName',
+          select: 'firstName lastName joinedAt',
         },
       })
       .lean({ virtuals: true })
@@ -141,7 +141,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .findById(boardId)
       .populate({
         path: 'users',
-        select: 'user role -board',
+        select: 'user role -board votesCount',
+        populate: { path: 'user', select: 'firstName lastName _id' },
       })
       .populate({
         path: 'team',
@@ -149,12 +150,66 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         populate: {
           path: 'users',
           select: 'user role',
+          populate: { path: 'user', select: 'firstName lastName joinedAt' },
         },
       })
+      .populate({
+        path: 'columns.cards.createdBy',
+        select: '_id firstName lastName',
+      })
+      .populate({
+        path: 'columns.cards.createdByTeam',
+        select: '_id name',
+      })
+      .populate({
+        path: 'columns.cards.items.createdByTeam',
+        select: '_id name',
+      })
+      .populate({
+        path: 'columns.cards.items.createdBy',
+        select: '_id firstName lastName',
+      })
+      .populate({
+        path: 'columns.cards.comments.createdBy',
+        select: '_id  firstName lastName',
+      })
+      .populate({
+        path: 'columns.cards.items.comments.createdBy',
+        select: '_id firstName lastName',
+      })
+      .populate({ path: 'dividedBoards', select: '-__v -createdAt -_id' })
       .lean({ virtuals: true })
       .exec();
+
     if (!board) return null;
-    return board;
+
+    if (board.isSubBoard) {
+      const mainBoard = await this.boardModel
+        .findOne({ dividedBoards: { $in: boardId } })
+        .select('dividedBoards team')
+        .populate({
+          path: 'dividedBoards',
+          select: '_id title',
+        })
+        .populate({
+          path: 'team',
+          select: 'name users _id',
+          populate: {
+            path: 'users',
+            select: 'user role',
+            populate: {
+              path: 'user',
+              select: 'firstName lastName joinedAt',
+            },
+          },
+        })
+        .lean({ virtuals: true })
+        .exec();
+      if (!mainBoard) return null;
+      return { board, mainBoardData: mainBoard };
+    }
+
+    return { board };
   }
 
   async countBoards(userId: string) {

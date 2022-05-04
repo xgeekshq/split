@@ -29,6 +29,7 @@ import {
 } from '../../../libs/exceptions/messages';
 import { BaseParam } from '../../../libs/dto/param/base.param';
 import { PaginationParams } from '../../../libs/dto/param/pagination.params';
+import * as StakeholdersData from '../../../libs/utils/ignored_users.json';
 
 @Controller('boards')
 export default class BoardsController {
@@ -91,6 +92,12 @@ export default class BoardsController {
     if (!board) throw new NotFoundException(BOARD_NOT_FOUND);
 
     return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Get('/stakeholders/all')
+  getStakeholders() {
+    return StakeholdersData as unknown as string[];
   }
 
   @UseGuards(JwtAuthenticationGuard)

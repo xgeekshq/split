@@ -5,12 +5,14 @@ import { TeamRoles } from '../../../libs/enum/team.roles';
 import isEmpty from '../../../libs/utils/isEmpty';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
-import { CreateTeamService } from '../interfaces/services/create.team.service.interface';
+import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
 @Injectable()
-export default class CreateTeamServiceImpl implements CreateTeamService {
+export default class CreateTeamServiceImpl
+  implements CreateTeamServiceInterface
+{
   constructor(
     @InjectModel(Team.name) private teamModel: Model<TeamDocument>,
     @InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
@@ -43,5 +45,9 @@ export default class CreateTeamServiceImpl implements CreateTeamService {
     }
 
     return newTeam.populate('users');
+  }
+
+  async createTeamUser(teamUser: TeamUserDto) {
+    return this.teamUserModel.create({ ...teamUser });
   }
 }

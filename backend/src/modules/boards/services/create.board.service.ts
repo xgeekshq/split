@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BoardRoles } from '../../../libs/enum/board.roles';
-import { encrypt } from '../../../libs/utils/bcrypt';
 import isEmpty from '../../../libs/utils/isEmpty';
+import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
+import { TYPES } from '../../teams/interfaces/types';
+import { UserDocument } from '../../users/schemas/user.schema';
 import BoardDto from '../dto/board.dto';
+import * as stakeHolders from '../../../libs/utils/ignored_users.json';
 import BoardUserDto from '../dto/board.user.dto';
 import { CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
@@ -16,6 +19,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
     @InjectModel(BoardUser.name)
     private boardUserModel: Model<BoardUserDocument>,
+    @Inject(TYPES.services.GetTeamService)
+    private getTeamService: GetTeamServiceInterface,
   ) {}
 
   saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
@@ -65,16 +70,37 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     ];
   }
 
+  async saveBoardUsersFromTeam(
+    newUsers: BoardUserDto[],
+    users: BoardUserDto[],
+    team: string,
+  ) {
+    const usersIds = users.map((usersFound) => usersFound.user);
+    const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+    teamUsers.forEach((teamUser) => {
+      const user = teamUser.user as UserDocument;
+      if (!usersIds.includes(user._id.toString())) {
+        newUsers.push({
+          user: user._id.toString(),
+          role: !stakeHolders.includes(user.email)
+            ? BoardRoles.MEMBER
+            : BoardRoles.STAKEHOLDER,
+          votesCount: 0,
+        });
+      }
+    });
+  }
+
   async create(boardData: BoardDto, userId: string) {
-    const { password, users } = boardData;
-    if (password) {
-      boardData.password = await encrypt(password);
-    }
+    const { users, team } = boardData;
     const newUsers = this.addOwner(users, userId);
 
     const newBoard = await this.createBoard(boardData, userId);
 
     if (!isEmpty(newUsers)) {
+      if (team) {
+        await this.saveBoardUsersFromTeam(newUsers, users, team);
+      }
       this.saveBoardUsers(newUsers, newBoard._id);
     }
 

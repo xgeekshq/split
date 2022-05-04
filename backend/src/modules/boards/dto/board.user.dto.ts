@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsMongoId,
   IsEnum,
+  IsNumber,
 } from 'class-validator';
 import { BoardRoles } from '../../../libs/enum/board.roles';
 
@@ -21,4 +22,8 @@ export default class BoardUserDto {
   @IsString()
   @IsNotEmpty()
   user!: string;
+
+  @IsOptional()
+  @IsNumber()
+  votesCount?: number;
 }
