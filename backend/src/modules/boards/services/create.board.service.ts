@@ -6,7 +6,6 @@ import isEmpty from '../../../libs/utils/isEmpty';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import { TYPES } from '../../teams/interfaces/types';
 import BoardDto from '../dto/board.dto';
-import * as stakeHolders from '../../../libs/utils/ignored_users.json';
 import BoardUserDto from '../dto/board.user.dto';
 import {
   Configs,

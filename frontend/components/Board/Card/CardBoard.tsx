@@ -120,10 +120,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     </Flex>
                   )}
                   {!isCardGroup && (
-                    <Flex
-                      justify="between"
-                      css={{ mb: "$8", "& > div": { zIndex: !isSubmited ? 999 : 1 } }}
-                    >
+                    <Flex justify="between" css={{ mb: "$8", "& > div": { zIndex: 2 } }}>
                       <Text size="md" css={{ wordBreak: "break-word" }}>
                         {card.text}
                       </Text>

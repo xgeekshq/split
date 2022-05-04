@@ -48,8 +48,4 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 
     return newTeam.populate('users');
   }
-
-  async createTeamUser(teamUser: TeamUserDto) {
-    return this.teamUserModel.create({ ...teamUser });
-  }
 }

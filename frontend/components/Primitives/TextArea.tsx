@@ -122,7 +122,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
     <Flex
       ref={flexRef}
       direction="column"
-      css={{ position: "relative", width: "100%", height: "auto" }}
+      css={{ position: "relative", width: "100%", height: "auto", zIndex: 1 }}
     >
       <Flex>
         {floatPlaceholder && (

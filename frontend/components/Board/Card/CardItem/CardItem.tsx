@@ -62,7 +62,7 @@ const CardItem = React.memo(
       <Container gap="10" direction="column" css={{ backgroundColor: color }} justify="between">
         {!editing && (
           <Flex direction="column">
-            <Flex justify="between" css={{ "& > div": { zIndex: !isSubmited ? 999 : 1 } }}>
+            <Flex justify="between" css={{ "& > div": { zIndex: 2 } }}>
               <Text size="sm">{item.text}</Text>
               {isSubmited && (
                 <Flex css={{ position: "relative", top: firstOne ? "-35px" : 0 }}>
