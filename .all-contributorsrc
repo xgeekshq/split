@@ -38,7 +38,17 @@
         "code",
         "review"
       ]
-    }  
+    },
+    {
+      "login": "RubenMCCarreira",
+      "name": "Rúben Carreira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/75999036?v=4",
+      "profile": "https://github.com/RubenMCCarreira",
+      "contributions": [
+        "code",
+        "review"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",
