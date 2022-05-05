@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: frontend # to start on frontend folder
+      dockerfile: docker/dev/Dockerfile # path to dev Dockerfile
+      args:
+        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
+        - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
+        - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
+
+    # set image name
+    image: dc-frontend
+
+    # set container name
+    container_name: frontend
+
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
+      BACKEND_URL: ${BACKEND_URL:-http://backend:3200}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
+      SECRET: ${SECRET:-56e9169e3383d4a73fef9e0b4a3ff4e2}
+      NEXT_PUBLIC_EXPIRATION_TIME: ${NEXT_PUBLIC_EXPIRATION_TIME:-900}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      NEXT_PUBLIC_ENABLE_AZURE: ${NEXT_PUBLIC_ENABLE_AZURE}
+
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+
+    # restart strategy
+    # restart: unless-stopped
+
+    # set ports
+    ports:
+      - 3000:3000
+
+# Networks
+networks:
+  dc-network:
+    driver: bridge
