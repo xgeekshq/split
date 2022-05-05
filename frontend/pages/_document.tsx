@@ -11,6 +11,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml" />
         <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
       </Head>
       <body>
