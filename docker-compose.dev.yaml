@@ -1,6 +1,55 @@
 version: "3.9"
 
 services:
+  backend:
+    build:
+      context: backend  # starts on backend folder instead on root
+      target: development # choose development part from Dockerfile
+      dockerfile: docker/dev/Dockerfile
+
+    # image name
+    image: dc-backend
+
+    # container name
+    container_name: backend
+
+    networks:
+      - dc-network
+    depends_on:
+      - mongo
+
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DB_USER: ${DB_USER:-backend}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_NAME: ${DB_NAME:-dc}
+      DB_HOST: ${DB_HOST:-mongo}
+      DB_PORT: ${DB_PORT:-27017}
+      DB_REPLICA_SET: ${DB_REPLICA_SET:-dcrs}
+      BACKEND_PORT: ${BACKEND_PORT:-3200}
+      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET:-backenddc2022}
+      JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-900}
+      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET:-backenddc2022refresh}
+      JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME:-1}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      AZURE_ENABLE: ${AZURE_ENABLE}
+
+    # restart strategy
+    restart: unless-stopped
+
+    volumes:
+      - ./backend:/app/backend
+      - /app/backend/node_modules
+
+    command: yarn start:debug
+
+    ports:
+      - 3200:3200
+      # debugging port
+      - 9229:9229
+
   frontend:
     build:
       context: frontend # to start on frontend folder
@@ -15,6 +64,11 @@ services:
 
     # set container name
     container_name: frontend
+
+    networks:
+      - dc-network
+    depends_on:
+      - backend
 
     environment:
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
@@ -33,11 +87,48 @@ services:
       - /app/frontend/node_modules
 
     # restart strategy
-    # restart: unless-stopped
+    restart: unless-stopped
 
     # set ports
     ports:
       - 3000:3000
+
+  mongo2:
+    image: mongo
+    restart: always
+    container_name: mongo2
+    networks:
+      - dc-network
+    ports:
+      - "27018:27017"
+    entrypoint:  "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
+      MONGO_BACKEND_USER: ${DB_USER:-backend}
+      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
+      MONGO_REPLICA_NAME: ${DB_REPLICA_SET:-dcrs}
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./database/rs-init.sh:/scripts/rs-init.sh
+    networks:
+      - dc-network
+    links:
+      - mongo2
+    command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
+      MONGO_BACKEND_USER: ${DB_USER:-backend}
+      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
+      MONGO_REPLICA_NAME: ${DB_REPLICA_SET:-dcrs}
 
 # Networks
 networks:
