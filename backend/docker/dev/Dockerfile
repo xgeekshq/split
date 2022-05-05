@@ -4,7 +4,7 @@ FROM node:16-alpine AS development
 # Container Dir
 WORKDIR /app/backend
 
-# Copy package.json (to install all the packages)
+# Copy package.json (to install all packages)
 COPY package.json ./
 
 # Install the packages (on the package.json)

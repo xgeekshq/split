@@ -1,20 +1,20 @@
-# Use node alpine as it's a small node image
+# Use Node image with version 16
 FROM node:16-alpine
 
-# Create the directory on the node image
-# where our Next.js app will live
-#RUN mkdir -p /app/frontend
-
-# Set /app/frontend as the working directory
+# Container Dir
 WORKDIR /app/frontend
 
+# Copy package.json (to install all packages)
 COPY ./package.json .
 
+# Install the packages (on the package.json)
 RUN yarn install
 
+# Copy all files
 COPY ./ .
 
+# Export the port used by Next.js
 EXPOSE 3000
 
-# Run yarn dev, as we would via the command line
+# Run uarn dev (as you do via terminal)
 CMD ["yarn", "dev"]
