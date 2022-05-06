@@ -335,7 +335,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				populate: {
 					path: 'users',
 					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName joinedAt' }
+					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
 				}
 			})
 			.populate({
