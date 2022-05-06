@@ -13,7 +13,7 @@ export class CreateTeamApplication implements CreateTeamApplicationInterface {
   ) {}
 
   createTeamUser(teamUser: teamUserDto) {
-    return this.createTeamUser(teamUser);
+    return this.createTeamService.createTeamUser(teamUser);
   }
 
   create(teamData: TeamDto, userId: string) {
