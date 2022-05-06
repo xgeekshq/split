@@ -1,28 +1,28 @@
 name: Deploy backend
 
-on: 
-  push:
-    branches: [ main ]
+on:
+    push:
+        branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+        steps:
+            - uses: actions/checkout@v2
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: divideandconquer.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+            - uses: azure/docker-login@v1
+              with:
+                  login-server: divideandconquer.azurecr.io
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - run: |
-        docker build . -f ./backend/Dockerfile  -t divideandconquer.azurecr.io/backend:latest
-        docker push divideandconquer.azurecr.io/backend:latest     
+            - run: |
+                  docker build . -f ./backend/docker/prod/Dockerfile  -t divideandconquer.azurecr.io/backend:latest
+                  docker push divideandconquer.azurecr.io/backend:latest
 
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'divideandconquer-be'
-        publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
-        images: 'divideandconquer.azurecr.io/backend:latest'
+            - uses: azure/webapps-deploy@v2
+              with:
+                  app-name: 'divideandconquer-be'
+                  publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+                  images: 'divideandconquer.azurecr.io/backend:latest'
