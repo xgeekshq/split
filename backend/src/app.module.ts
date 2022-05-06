@@ -17,6 +17,7 @@ import {
   mongooseResetModule,
   mongooseUserModule,
 } from './infrastructure/database/mongoose.module';
+import { CommunicationModule } from './modules/communication/communication.module';
 
 const imports = [
   AppConfigModule,
@@ -41,6 +42,9 @@ if (configuration().azure.enabled) {
 
 if (configuration().smtp.enabled) {
   imports.push(EmailModule);
+}
+if (configuration().slack.enable) {
+  imports.push(CommunicationModule);
 }
 
 @Module({

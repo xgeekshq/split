@@ -19,4 +19,7 @@ module.exports = {
     'configuration.ts',
     'test/coverage/',
   ],
+  moduleNameMapper: {
+    '^src/(.*)': '<rootDir>/src/$1',
+  },
 };
