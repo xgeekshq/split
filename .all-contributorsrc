@@ -38,7 +38,17 @@
         "code",
         "review"
       ]
-    }  
+    },
+    {
+      "login": "dsousa12",
+      "name": "Daniel Sousa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/104842894?v=4",
+      "profile": "https://daniel-sousa.com",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",
