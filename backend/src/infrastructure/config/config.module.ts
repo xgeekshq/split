@@ -65,6 +65,16 @@ const NODE_ENV = process.env.NODE_ENV;
           then: Joi.required(),
         }),
         NEXT_PUBLIC_NEXTAUTH_URL: Joi.string().required(),
+        SLACK_API_BOT_TOKEN: Joi.string().when('SLACK_API_BOT_TOKEN', {
+          is: 'true',
+          then: Joi.required(),
+          otherwise: Joi.optional(),
+        }),
+        SLACK_CHANNEL_SUFFIX: Joi.string().when('SLACK_CHANNEL_SUFFIX', {
+          is: 'true',
+          then: Joi.required(),
+          otherwise: Joi.optional(),
+        }),
       }),
     }),
   ],
