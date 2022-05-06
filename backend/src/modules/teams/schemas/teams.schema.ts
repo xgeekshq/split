@@ -16,7 +16,7 @@ export default class Team {
 
 export const TeamSchema = SchemaFactory.createForClass(Team);
 
-TeamSchema.plugin(leanVirtualsPlugin);
+// TeamSchema.plugin(leanVirtualsPlugin);
 
 TeamSchema.virtual('users', {
   ref: 'TeamUser',

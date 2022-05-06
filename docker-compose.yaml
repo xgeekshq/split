@@ -5,7 +5,12 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+      # image name
     image: dc-backend
+
+    # container name
+    container_name: backend
+
     ports:
       - "3200:3200"
     environment:
@@ -38,7 +43,13 @@ services:
         - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
         - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
         - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
+
+    # set image name
     image: dc-frontend
+
+    # set container name
+    container_name: frontend
+
     ports:
       - "3000:3000"
     environment:
