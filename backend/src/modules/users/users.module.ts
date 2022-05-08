@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { mongooseUserModule } from 'src/infrastructure/database/mongoose.module';
 import TeamsModule from '../teams/teams.module';
 import {
+  mongooseResetModule,
+  mongooseUserModule,
+} from 'src/infrastructure/database/mongoose.module';
+import {
   createUserService,
   getUserService,
   updateUserService,
@@ -9,6 +13,7 @@ import {
 } from './users.providers';
 
 @Module({
+  imports: [mongooseUserModule, mongooseResetModule],
   imports: [mongooseUserModule, TeamsModule],
   providers: [
     createUserService,

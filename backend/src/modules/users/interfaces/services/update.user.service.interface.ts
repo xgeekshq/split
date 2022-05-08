@@ -6,4 +6,9 @@ export interface UpdateUserService {
     refreshToken: string,
     userId: string,
   ): Promise<LeanDocument<UserDocument> | null>;
+  setPassword(
+    userEmail: string,
+    newPassword: string,
+  ): Promise<UserDocument | null>;
+  checkEmail(token: string): Promise<string>;
 }

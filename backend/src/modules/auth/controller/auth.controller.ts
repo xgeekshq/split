@@ -10,7 +10,10 @@ import {
   NotFoundException,
   BadRequestException,
   Param,
+  HttpStatus,
 } from '@nestjs/common';
+import { ResetPasswordDto } from '../../users/dto/reset-password.dto';
+import { UpdateUserService } from '../../users/interfaces/services/update.user.service.interface';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import JwtRefreshGuard from '../../../libs/guards/jwtRefreshAuth.guard';
@@ -49,6 +52,8 @@ export default class AuthController {
     private getBoardApp: GetBoardApplicationInterface,
     @Inject(TYPES.applications.CreateResetTokenAuthApplication)
     private createResetTokenAuthApp: CreateResetTokenAuthApplication,
+    @Inject(TYPES.services.UpdateUserService)
+    private updateUserService: UpdateUserService,
   ) {}
 
   @Post('register')
@@ -92,9 +97,16 @@ export default class AuthController {
   }
 
   @Post('recoverPassword')
-  async forgot(@Body() emailDto: EmailParam) {
-    const { email } = emailDto;
+  forgot(@Body() { email }: EmailParam) {
     return this.createResetTokenAuthApp.create(email);
+  }
+
+  @Post('updatepassword')
+  @HttpCode(HttpStatus.OK)
+  async setNewPassword(@Body() { token, newPassword }: ResetPasswordDto) {
+    const email = await this.updateUserService.checkEmail(token);
+    if (!email) return { message: 'token not valid' };
+    return !!this.updateUserService.setPassword(email, newPassword);
   }
 
   @UseGuards(JwtAuthenticationGuard)

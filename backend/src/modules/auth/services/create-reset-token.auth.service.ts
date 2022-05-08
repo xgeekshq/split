@@ -3,7 +3,6 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ClientSession } from 'mongoose';
-import { INSERT_FAILED } from '../../../libs/exceptions/messages';
 import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
 import ResetPassword, {
   ResetPasswordDocument,
@@ -20,10 +19,9 @@ export default class CreateResetTokenAuthServiceImpl
     private configService: ConfigService,
   ) {}
 
-  private frontendUrl = this.configService.get<string>('frontend.url');
-
   public async emailBody(token: string, emailAddress: string) {
-    const url = `${this.frontendUrl}?${token}`;
+    const url = `${this.configService.get<string>('frontend.url')}?${token}`;
+    const msg = 'please check your email';
     await this.mailerService.sendMail({
       to: emailAddress,
       subject: 'You requested a password reset',
@@ -34,7 +32,7 @@ export default class CreateResetTokenAuthServiceImpl
       
       If you did not make this request then please ignore this email.`,
     });
-    return { message: 'please check your email' };
+    return { message: msg };
   }
 
   public tokenGenerator(emailAddress: string, session: ClientSession) {
@@ -65,16 +63,16 @@ export default class CreateResetTokenAuthServiceImpl
   async create(emailAddress: string) {
     const session = await this.resetModel.db.startSession();
     session.startTransaction();
-
     try {
       const passwordModel = await this.resetModel.findOne({ emailAddress });
-      if (!passwordModel) throw Error(INSERT_FAILED);
-      this.tokenValidator(passwordModel?.updatedAt);
-
+      if (passwordModel) {
+        this.tokenValidator(passwordModel.updatedAt);
+      }
       const { token } = await this.tokenGenerator(emailAddress, session);
       if (token) {
+        const res = await this.emailBody(token, emailAddress);
         await session.commitTransaction();
-        return await this.emailBody(token, emailAddress);
+        return res;
       }
       throw new InternalServerErrorException();
     } catch (e) {
