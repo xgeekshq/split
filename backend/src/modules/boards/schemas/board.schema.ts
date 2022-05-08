@@ -64,7 +64,7 @@ export default class Board {
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
 
-// BoardSchema.plugin(leanVirtualsPlugin);
+BoardSchema.plugin(leanVirtualsPlugin);
 
 BoardSchema.virtual('users', {
   ref: 'BoardUser',
