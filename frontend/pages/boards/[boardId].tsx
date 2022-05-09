@@ -6,6 +6,7 @@ import { io, Socket } from "socket.io-client";
 import { DragDropContext, DropResult, ResponderProvided } from "@react-forked/dnd";
 import Link from "next/link";
 import Select from "react-select";
+import BoardHeader from "../../components/Board/Header";
 import Flex from "../../components/Primitives/Flex";
 import { styled } from "../../stitches.config";
 import { NEXT_PUBLIC_BACKEND_URL } from "../../utils/constants";
@@ -66,6 +67,9 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
     autoFetchBoard: true,
   });
   const { data } = fetchBoard;
+
+  console.log(fetchBoard);
+
   const board = data?.board;
 
   const isResponsible = board?.users.find(
@@ -158,6 +162,7 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
       updateCardPosition.mutate(changes);
     }
   };
+
   const filteredColumns = () => {
     if (filter === "order") return board?.columns;
     const newCols = board?.columns.map((col) => ({
@@ -178,96 +183,99 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
 
   if (board && userId && socketId && filteredColumns) {
     return (
-      <Container>
-        <Flex css={{ width: "100%", px: "$36" }} direction="column">
-          <Flex>
-            <Select
-              value={{
-                value: filter,
-                label: `${filter.charAt(0).toUpperCase()}${filter.substring(1)}`,
-              }}
-              options={[
-                { value: "order", label: "Order" },
-                { value: "votes", label: "Votes" },
-              ]}
-              onChange={(option) => setFilter((option as OptionType)?.value)}
-            />
-          </Flex>
-          {board.submitedByUser && board.submitedAt && (
-            <AlertBox
-              type="info"
-              title={`Sub-team board successfully merged into main board ${new Date(
-                board.submitedAt
-              ).toLocaleDateString()}, ${new Date(board.submitedAt).toLocaleTimeString()}`}
-              text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
-            >
-              <Link
-                key={mainBoardId}
-                href={{ pathname: `[boardId]`, query: { boardId: mainBoardId } }}
+      <>
+        <BoardHeader board={board} />
+        <Container>
+          <Flex css={{ width: "100%", px: "$36" }} direction="column">
+            <Flex>
+              <Select
+                value={{
+                  value: filter,
+                  label: `${filter.charAt(0).toUpperCase()}${filter.substring(1)}`,
+                }}
+                options={[
+                  { value: "order", label: "Order" },
+                  { value: "votes", label: "Votes" },
+                ]}
+                onChange={(option) => setFilter((option as OptionType)?.value)}
+              />
+            </Flex>
+            {board.submitedByUser && board.submitedAt && (
+              <AlertBox
+                type="info"
+                title={`Sub-team board successfully merged into main board ${new Date(
+                  board.submitedAt
+                ).toLocaleDateString()}, ${new Date(board.submitedAt).toLocaleTimeString()}`}
+                text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
               >
-                <Button size="sm">Go to main board</Button>
-              </Link>
-            </AlertBox>
-          )}
-          {board.isSubBoard && !board.submitedByUser && isResponsible && (
-            <AlertCustomDialog
-              css={{ left: "37% !important" }}
-              defaultOpen={false}
-              title="Merge board into main board"
-              text="If you merge your sub-teams’ board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
-              cancelText="Cancel"
-              confirmText="Merge into main board"
-              handleConfirm={() => {
-                mergeBoard.mutate(boardId);
-              }}
-              variant="primary"
-            >
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="primaryOutline"
-                  size="sm"
-                  css={{
-                    fontWeight: "$medium",
-                    my: "$20",
-                    width: "206px",
-                  }}
+                <Link
+                  key={mainBoardId}
+                  href={{ pathname: `[boardId]`, query: { boardId: mainBoardId } }}
                 >
-                  Merge into main board
-                </Button>
-              </AlertDialogTrigger>
-            </AlertCustomDialog>
-          )}
+                  <Button size="sm">Go to main board</Button>
+                </Link>
+              </AlertBox>
+            )}
+            {board.isSubBoard && !board.submitedByUser && isResponsible && (
+              <AlertCustomDialog
+                css={{ left: "37% !important" }}
+                defaultOpen={false}
+                title="Merge board into main board"
+                text="If you merge your sub-teams’ board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
+                cancelText="Cancel"
+                confirmText="Merge into main board"
+                handleConfirm={() => {
+                  mergeBoard.mutate(boardId);
+                }}
+                variant="primary"
+              >
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="primaryOutline"
+                    size="sm"
+                    css={{
+                      fontWeight: "$medium",
+                      my: "$20",
+                      width: "206px",
+                    }}
+                  >
+                    Merge into main board
+                  </Button>
+                </AlertDialogTrigger>
+              </AlertCustomDialog>
+            )}
 
-          <Flex css={{ width: "100%", mt: "$32" }} gap="24">
-            <DragDropContext onDragEnd={onDragEnd}>
-              {filteredColumns()?.map((column, index) => {
-                return (
-                  <Column
-                    key={column._id}
-                    cards={column.cards}
-                    columnId={column._id}
-                    index={index}
-                    userId={userId}
-                    boardId={boardId}
-                    title={column.title}
-                    color={column.color}
-                    socketId={socketId}
-                    anonymous={board.postAnonymously}
-                    isMainboard={!board.isSubBoard}
-                    boardUser={board.users.find(
-                      (userFound) => (userFound.user._id as unknown as string) === userId
-                    )}
-                    maxVotes={Number(board.maxVotes)}
-                    countAllCards={countAllCards}
-                    isSubmited={!!board.submitedByUser}
-                    filter={filter}
-                  />
-                );
-              })}
-            </DragDropContext>
+            <Flex css={{ width: "100%", mt: "$32" }} gap="24">
+              <DragDropContext onDragEnd={onDragEnd}>
+                {filteredColumns()?.map((column, index) => {
+                  return (
+                    <Column
+                      key={column._id}
+                      cards={column.cards}
+                      columnId={column._id}
+                      index={index}
+                      userId={userId}
+                      boardId={boardId}
+                      title={column.title}
+                      color={column.color}
+                      socketId={socketId}
+                      anonymous={board.postAnonymously}
+                      isMainboard={!board.isSubBoard}
+                      boardUser={board.users.find(
+                        (userFound) => (userFound.user._id as unknown as string) === userId
+                      )}
+                      maxVotes={Number(board.maxVotes)}
+                      countAllCards={countAllCards}
+                      isSubmited={!!board.submitedByUser}
+                      filter={filter}
+                    />
+                  );
+                })}
+              </DragDropContext>
+            </Flex>
           </Flex>
-        </Flex>
-      </Container>
+        </Container>
+      </>
     );
   }
   return <SpinnerPage />;
