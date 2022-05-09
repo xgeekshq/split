@@ -54,6 +54,12 @@ const StyledPopoverItem = styled(Flex, {
       },
       "& svg": {
         color: "white",
+        fill: "white",
+
+        "> *": {
+          color: "white",
+          fill: "white",
+        },
       },
     },
   },

@@ -18,6 +18,7 @@ const StyledButton = styled(Button, {
   fontSize: "$14 !important",
   lineHeight: "$20 !important",
   fontWeight: "$medium !important",
+
   "&[data-active='true']": {
     borderColor: "$primary800",
     color: "$primary800 !important",
