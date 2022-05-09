@@ -6,6 +6,7 @@ import useCards from "../../../hooks/useCards";
 import EditIcon from "../../icons/Edit";
 import BinIcon from "../../icons/BinIcon";
 import ArrowLongRight from "../../icons/ArrowLongRight";
+import { styled } from "../../../stitches.config";
 
 interface PopoverSettingsContentProps {
   isItem: boolean;
@@ -13,6 +14,20 @@ interface PopoverSettingsContentProps {
   setEditCard: () => void;
   setDeleteCard?: () => void;
 }
+
+const PopoverTriggerStyled = styled(PopoverTrigger, {
+  "&:hover": {
+    backgroundColor: "$primary500",
+
+    "&>svg": {
+      fill: "white",
+
+      "&>*": {
+        fill: "white",
+      },
+    },
+  },
+});
 
 const PopoverSettingsContent = ({
   isItem,
@@ -88,9 +103,9 @@ const PopoverCardSettings = React.memo(
 
     return (
       <Popover>
-        <PopoverTrigger css={{ position: "relative", top: firstOne ? "-35px" : 0 }}>
+        <PopoverTriggerStyled css={{ position: "relative", top: firstOne ? "-35px" : 0 }}>
           <VerticalThreeDotsIcon />
-        </PopoverTrigger>
+        </PopoverTriggerStyled>
         <PopoverSettingsContent
           isItem={isItem}
           unmergeCard={unmergeCard}
