@@ -68,9 +68,8 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
   });
   const { data } = fetchBoard;
 
-  console.log(fetchBoard);
-
   const board = data?.board;
+  console.log(board);
 
   const isResponsible = board?.users.find(
     (boardUser) => boardUser.role === "responsible" && boardUser.user._id === userId

@@ -3,7 +3,7 @@ import { styled } from "../../../stitches.config";
 const StyledHeader = styled("div", {
   width: "100%",
 
-  padding: "$18",
+  padding: "$24 $37",
   borderBottomStyle: "solid",
   borderBottomWidth: 1,
   borderBottomColor: "$primary100",
