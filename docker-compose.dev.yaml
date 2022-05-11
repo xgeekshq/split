@@ -3,17 +3,21 @@ version: "3.9"
 services:
   backend:
     build:
-      context: .
-      dockerfile: backend/docker/prod/Dockerfile
+      context: backend  # starts on backend folder instead on root
+      target: development # choose development part from Dockerfile
+      dockerfile: docker/dev/Dockerfile
 
-    # set image name
+    # image name
     image: dc-backend
 
-    # set container name
+    # container name
     container_name: backend
 
-    ports:
-      - 3200:3200
+    networks:
+      - dc-network
+    depends_on:
+      - mongo
+
     environment:
       NODE_ENV: ${NODE_ENV}
       DB_USER: ${DB_USER:-backend}
@@ -31,15 +35,25 @@ services:
       AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
       AZURE_TENANT_ID: ${AZURE_TENANT_ID}
       AZURE_ENABLE: ${AZURE_ENABLE}
+
+    # restart strategy
     restart: unless-stopped
-    networks:
-      - dc-network
-    depends_on:
-      - mongo
+
+    volumes:
+      - ./backend:/app/backend
+      - /app/backend/node_modules
+
+    command: yarn start:debug
+
+    ports:
+      - 3200:3200
+      # debugging port
+      - 9229:9229
+
   frontend:
     build:
-      context: .
-      dockerfile: frontend/docker/prod/Dockerfile
+      context: frontend # to start on frontend folder
+      dockerfile: docker/dev/Dockerfile # path to dev Dockerfile
       args:
         - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
         - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
@@ -51,8 +65,11 @@ services:
     # set container name
     container_name: frontend
 
-    ports:
-      - 3000:3000
+    networks:
+      - dc-network
+    depends_on:
+      - backend
+
     environment:
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
       BACKEND_URL: ${BACKEND_URL:-http://backend:3200}
@@ -64,11 +81,18 @@ services:
       AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
       AZURE_TENANT_ID: ${AZURE_TENANT_ID}
       NEXT_PUBLIC_ENABLE_AZURE: ${NEXT_PUBLIC_ENABLE_AZURE}
+
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+
+    # restart strategy
     restart: unless-stopped
-    networks:
-      - dc-network
-    depends_on:
-      - backend
+
+    # set ports
+    ports:
+      - 3000:3000
+
   mongo2:
     image: mongo
     restart: always
@@ -105,6 +129,8 @@ services:
       MONGO_BACKEND_USER: ${DB_USER:-backend}
       MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
       MONGO_REPLICA_NAME: ${DB_REPLICA_SET:-dcrs}
+
+# Networks
 networks:
   dc-network:
     driver: bridge

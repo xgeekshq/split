@@ -1,3 +1,4 @@
+import { BoardUser } from "./board/board.user";
 import CardType from "./card/card";
 
 interface ColumnType {
@@ -7,16 +8,26 @@ interface ColumnType {
   cards: CardType[];
 }
 
-export type CreateColumn = Omit<ColumnType, "_id">;
+export interface CreateColumn extends Omit<ColumnType, "_id" | "cards"> {
+  cards: never[];
+}
 
 export interface ColumnBoardType {
   columnId: string;
+  index: number;
   userId: string;
   cards: CardType[];
   boardId: string;
   title: string;
   color: string;
   socketId: string;
+  anonymous: boolean;
+  isMainboard: boolean;
+  boardUser?: BoardUser;
+  maxVotes?: number;
+  countAllCards: number;
+  isSubmited: boolean;
+  filter: string;
 }
 
 export interface ColumnInnerList {
@@ -26,6 +37,12 @@ export interface ColumnInnerList {
   boardId: string;
   color: string;
   socketId: string;
+  anonymous: boolean;
+  isMainboard: boolean;
+  boardUser?: BoardUser;
+  maxVotes?: number;
+  isSubmited: boolean;
+  filter: string;
 }
 
 export type ColumnDragItem = {
