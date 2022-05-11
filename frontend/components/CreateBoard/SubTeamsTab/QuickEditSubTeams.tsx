@@ -131,7 +131,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Flex align="center" justify="end" css={{ py: "$14" }} gap="8">
+        <Flex align="center" justify="end" css={{ py: "$14", cursor: "pointer" }} gap="8">
           <EditIcon dropdown={false} />
           <Text size="sm" weight="medium">
             Quick edit sub-teams configurations

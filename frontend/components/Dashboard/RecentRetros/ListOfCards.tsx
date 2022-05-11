@@ -79,7 +79,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
             <LastUpdatedText size="xs" color="primary300">
               Last updated - {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
             </LastUpdatedText>
-            <Flex gap="8" direction="column" css={{ overflow: "scroll" }}>
+            <Flex gap="20" direction="column">
               {splitedBoard.map((board: BoardType) => (
                 <CardBody
                   userId={userId}
@@ -94,7 +94,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
         );
       })}
       <Flex css={{ width: "100%", "& svg": { color: "black" } }} justify="center">
-        {isLoading && <TailSpin color="#768291" height={60} width={60} />}
+        {isLoading && <TailSpin color="#060D16" height={60} width={60} />}
       </Flex>
     </Flex>
   );

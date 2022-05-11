@@ -15,7 +15,7 @@ const SubBoards = React.memo(
     if (isSubBoard) return null;
     if (isDashboard) {
       return (
-        <Flex direction="column" gap="12">
+        <Flex direction="column" gap="8">
           {dividedBoards.map((subBoard, idx) => {
             return subBoard.users.find((boardUser) => boardUser.user._id === userId)
               ? renderCardBody(subBoard, idx)
@@ -25,7 +25,7 @@ const SubBoards = React.memo(
       );
     }
     return (
-      <Flex direction="column" gap="12">
+      <Flex direction="column" gap="8">
         {dividedBoards.map((subBoard, idx) => {
           return renderCardBody(subBoard, idx);
         })}

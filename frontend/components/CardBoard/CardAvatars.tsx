@@ -5,6 +5,7 @@ import Flex from "../Primitives/Flex";
 import { User } from "../../types/user/user";
 import { TeamUserRoles } from "../../utils/enums/team.user.roles";
 import { BoardUserRoles } from "../../utils/enums/board.user.roles";
+import Tooltip from "../Primitives/Tooltip";
 
 type ListUsersType = {
   user: User | string;
@@ -46,7 +47,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
         if (usersCount - 1 > index && index > 1) {
           return `+${usersCount - 2}`;
         }
-        return user ? `${user.firstName[0]}${user.lastName[0]}` : "--";
+        return user ?? "--";
       },
       [usersCount]
     );
@@ -57,19 +58,45 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
     }, []);
 
+    const colors = useMemo(() => {
+      const col = [];
+      for (let i = 0; i < 3; i++) {
+        col.push(getRandomColor());
+      }
+      return col;
+    }, [getRandomColor]);
+
     const renderAvatar = useCallback(
-      (initials, idx) => {
+      (value: User | string, idx) => {
+        if (typeof value === "string") {
+          return (
+            <Avatar
+              key={`${value}-${idx}-${Math.random()}`}
+              css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
+              size={32}
+              colors={colors[idx]}
+              fallbackText={value}
+            />
+          );
+        }
+        const initials = `${value.firstName[0]}${value.lastName[0]}`;
         return (
-          <Avatar
-            key={`${initials}-${idx}-${Math.random()}`}
-            css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
-            size={32}
-            colors={getRandomColor()}
-            fallbackText={initials}
-          />
+          <Tooltip
+            key={`${value}-${idx}-${Math.random()}`}
+            content={`${value.firstName} ${value.lastName}`}
+          >
+            <div>
+              <Avatar
+                css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
+                size={32}
+                colors={colors[idx]}
+                fallbackText={initials}
+              />
+            </div>
+          </Tooltip>
         );
       },
-      [getRandomColor]
+      [colors]
     );
 
     return (

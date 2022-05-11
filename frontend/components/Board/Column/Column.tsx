@@ -4,7 +4,7 @@ import { styled } from "../../../stitches.config";
 import { ColumnBoardType } from "../../../types/column";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
-import AddCardOrComments from "../AddCardOrComments";
+import AddCardOrComment from "../AddCardOrComment";
 import CardsList from "./CardsList";
 import Box from "../../Primitives/Box";
 import Separator from "../../Sidebar/Separator";
@@ -69,7 +69,7 @@ const Column = React.memo<ColumnBoardType>(
               <Separator css={{ backgroundColor: "$primary100", mb: "$20" }} />
               <Flex direction="column" css={{ px: "$20" }}>
                 {!isSubmited && (
-                  <AddCardOrComments
+                  <AddCardOrComment
                     isCard
                     colId={columnId}
                     boardId={boardId}

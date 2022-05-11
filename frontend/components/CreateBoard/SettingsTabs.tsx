@@ -25,7 +25,7 @@ const StyledTextTab = styled(Text, {
   },
 });
 
-const SettingsTabs = () => {
+const Settings = () => {
   const [currentTab, setCurrentTab] = useState(1);
 
   const {
@@ -80,4 +80,4 @@ const SettingsTabs = () => {
   );
 };
 
-export default SettingsTabs;
+export default Settings;
