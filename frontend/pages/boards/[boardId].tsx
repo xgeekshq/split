@@ -22,6 +22,8 @@ import Button from "../../components/Primitives/Button";
 import AlertCustomDialog from "../../components/Primitives/AlertCustomDialog";
 import { AlertDialogTrigger } from "../../components/Primitives/AlertDialog";
 import AlertBox from "../../components/Primitives/AlertBox";
+import { useSetRecoilState } from "recoil";
+import { boardState } from "../../store/board/atoms/board.atom";
 
 const Container = styled(Flex, {
   alignItems: "flex-start",
@@ -69,7 +71,12 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
   const { data } = fetchBoard;
 
   const board = data?.board;
-  console.log(board);
+
+  // Set Recoil Atom
+  if (data) {
+    const setBoard = useSetRecoilState(boardState);
+    setBoard(data);
+  }
 
   const isResponsible = board?.users.find(
     (boardUser) => boardUser.role === "responsible" && boardUser.user._id === userId
@@ -183,7 +190,7 @@ const Board: React.FC<{ boardId: string; mainBoardId?: string }> = ({ boardId, m
   if (board && userId && socketId && filteredColumns) {
     return (
       <>
-        <BoardHeader board={board} />
+        <BoardHeader />
         <Container>
           <Flex css={{ width: "100%", px: "$36" }} direction="column">
             <Flex>

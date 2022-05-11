@@ -1,46 +1,52 @@
 import RecurrentIcon from "../../icons/Recurrent";
 import Text from "../../Primitives/Text";
 import LogoIcon from "../../icons/Logo";
-import { StyledHeader, StyledLogo, TitleSection } from "./styles";
+import { FlexSection, StyledHeader, StyledLogo, TitleSection } from "./styles";
 import Tooltip from "../../Primitives/Tooltip";
 import BoardBreadcrumb from "../Breadcrumb";
+import { boardState } from "../../../store/board/atoms/board.atom";
+import { useRecoilValue } from "recoil";
+import CardAvatars from "../../CardBoard/CardAvatars";
+import { useSession } from "next-auth/react";
 
-type Props = {
-  board: {
-    title: string;
-    recurrent?: boolean;
-  };
-};
+const BoardHeader = () => {
+  const { data: session } = useSession({ required: true });
 
-const BoardHeader = ({ board }: Props) => {
-  const items = [
-    {
-      title: "Boards",
-      link: "/boards",
-    },
-    {
-      title: board.title,
-      isActive: true,
-    },
-  ];
+  const boardData = useRecoilValue(boardState);
+  const { title, recurrent, users, team, isSubBoard } = boardData!.board;
 
   return (
     <StyledHeader>
-      <BoardBreadcrumb items={items} />
-      <TitleSection>
-        <StyledLogo>
-          <LogoIcon />
-        </StyledLogo>
-        <Text heading="2">{board.title}</Text>
+      <FlexSection>
+        <div>
+          <BoardBreadcrumb />
+          <TitleSection>
+            <StyledLogo>
+              <LogoIcon />
+            </StyledLogo>
+            <Text heading="2">{title}</Text>
 
-        {board.recurrent && (
-          <Tooltip content="Occurs every X week">
-            <div>
-              <RecurrentIcon />
-            </div>
-          </Tooltip>
-        )}
-      </TitleSection>
+            {recurrent && (
+              <Tooltip content="Occurs every X week">
+                <div>
+                  <RecurrentIcon />
+                </div>
+              </Tooltip>
+            )}
+          </TitleSection>
+        </div>
+
+        <CardAvatars
+          listUsers={
+            isSubBoard && boardData?.mainBoardData
+              ? boardData!.mainBoardData?.team.users
+              : team.users
+          }
+          responsible={false}
+          teamAdmins={false}
+          userId={session!.user.id}
+        />
+      </FlexSection>
     </StyledHeader>
   );
 };

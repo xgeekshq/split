@@ -1,7 +1,7 @@
-type Breadcrumb = {
+type BreadcrumbType = {
   title: string;
   link?: string;
   isActive?: boolean;
 }[];
 
-export { Breadcrumb };
+export { BreadcrumbType };

@@ -21,10 +21,28 @@ const StyledLogo = styled("div", {
   alignItems: "center",
 });
 
-const TitleSection = styled("section", {
+const TitleSection = styled("div", {
   display: "flex",
   alignItems: "center",
   gap: "$10",
 });
 
-export { StyledHeader, StyledLogo, TitleSection };
+const FlexSection = styled("section", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 20,
+
+  "&>div:first-of-type": {
+    display: "flex",
+    flexDirection: "column",
+  },
+
+  "&>div:nth-of-type(2)": {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+  },
+});
+
+export { StyledHeader, StyledLogo, TitleSection, FlexSection };

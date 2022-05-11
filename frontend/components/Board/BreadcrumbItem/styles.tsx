@@ -5,6 +5,10 @@ const StyledBreadcrumbItem = styled("li", {
     isActive: {
       true: {
         color: "$primary800",
+
+        "& a": {
+          color: "$primary800",
+        },
       },
       false: {
         color: "$primary300",
