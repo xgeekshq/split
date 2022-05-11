@@ -79,15 +79,14 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     const teamUsers = await this.getTeamService.getUsersOfTeam(team);
     teamUsers.forEach((teamUser) => {
       const user = teamUser.user as UserDocument;
-      if (!usersIds.includes(user._id.toString())) {
-        newUsers.push({
-          user: user._id.toString(),
-          role: !stakeHolders.includes(user.email)
-            ? BoardRoles.MEMBER
-            : BoardRoles.STAKEHOLDER,
-          votesCount: 0,
-        });
-      }
+      if (usersIds.includes(user._id.toString())) return;
+      newUsers.push({
+        user: user._id.toString(),
+        role: !stakeHolders.includes(user.email)
+          ? BoardRoles.MEMBER
+          : BoardRoles.STAKEHOLDER,
+        votesCount: 0,
+      });
     });
   }
 

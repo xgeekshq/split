@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import { styled } from "../../stitches.config";
 import isEmpty from "../../utils/isEmpty";
@@ -28,14 +28,24 @@ const StyledTextArea = styled("textarea", {
   lineHeight: "$20",
   resize: "none",
   height: "auto",
-  px: "$16",
-  py: "$16",
   boxShadow: "0",
   border: "1px solid $primary200",
   borderRadius: "$4",
   outline: "none",
   fontWeight: "normal",
   width: "100%",
+  pt: "$28",
+  pb: "$8",
+  pl: "$16",
+  pr: "$16",
+  "&:focus ~ label": {
+    transform: `scale(0.875) translateX(0.115rem) translateY(-0.5rem)`,
+  },
+  "&:not(:placeholder-shown) ~ label": {
+    transform: `scale(0.875) translateX(0.115rem) translateY(-0.5rem)`,
+  },
+  overflowWrap: "break-word",
+  overflow: "hidden",
   "&:disabled": {
     backgroundColor: "$primary50",
   },
@@ -44,30 +54,37 @@ const StyledTextArea = styled("textarea", {
     color: "$primary300",
   },
   fontFamily: "DM Sans",
-  overflowWrap: "break-word",
-  overflow: "hidden",
-  pt: "$28",
-  pb: "$8",
-  pl: "$16",
-  pr: "$16",
   variants: {
     variant: {
       default: {
         "&:focus": {
           borderColor: "$primary400",
-          boxShadow: "0px 0px 0px 2px var(--colors-primaryLightest)",
+          boxShadow: "0px 0px 0px 2px $colors$primaryLightest)",
         },
       },
       valid: {
         borderColor: "$success700",
-        boxShadow: "0px 0px 0px 2px var(--colors-successLightest)",
+        boxShadow: "0px 0px 0px 2px $colors$successLightest)",
       },
       error: {
         borderColor: "$danger700",
-        boxShadow: "0px 0px 0px 2px var(--colors-dangerLightest)",
+        boxShadow: "0px 0px 0px 2px $colors$dangerLightest)",
       },
     },
   },
+});
+
+const StyledText = styled(Text, {
+  fontSize: "$16",
+  top: "0",
+  p: "$16",
+  pl: "$17",
+  lineHeight: "24px",
+  color: "$primary300",
+  position: "absolute",
+  pointerEvents: "none",
+  transformOrigin: "0 0",
+  transition: "all .2s ease-in-out",
 });
 
 interface ResizableTextAreaProps {
@@ -75,9 +92,16 @@ interface ResizableTextAreaProps {
   placeholder: string;
   helperText?: string;
   disabled?: boolean;
+  floatPlaceholder?: boolean;
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, helperText, disabled }) => {
+const TextArea: React.FC<ResizableTextAreaProps> = ({
+  id,
+  placeholder,
+  helperText,
+  disabled,
+  floatPlaceholder,
+}) => {
   TextArea.defaultProps = {
     helperText: undefined,
     disabled: false,
@@ -86,101 +110,90 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, helperTex
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const flexRef = useRef<HTMLDivElement | null>(null);
 
-  const values = useFormContext();
-  const { ref, ...rest } = values.register(id);
   const {
-    formState: { errors },
-  } = values;
-  const value = values?.getValues()[id];
+    register,
+    getValues,
+    formState: { errors, touchedFields },
+  } = useFormContext();
+  const { ref, ...rest } = register(id);
 
-  useEffect(() => {
-    if (textareaRef && textareaRef.current) {
-      textareaRef.current.value = value;
-      textareaRef.current.style.height = "0px";
-      const { scrollHeight } = textareaRef.current;
-      textareaRef.current.style.height = `${scrollHeight === 42 ? 0 : scrollHeight}px`;
-    }
-  }, [value]);
-
+  const message = errors[id]?.message;
+  const value = getValues()[id];
   const isValueEmpty = isEmpty(value);
 
-  const state = useMemo(() => {
-    if (errors[id]) {
-      return "error";
-    }
-    if (isValueEmpty) {
-      return "default";
-    }
+  const autoState = useMemo(() => {
+    if (message) return "error";
+    if (isValueEmpty || (value && !touchedFields.text)) return "default";
     return "valid";
-  }, [errors, id, isValueEmpty]);
+  }, [message, isValueEmpty, value, touchedFields.text]);
+
+  const currentState = useMemo(() => {
+    if (disabled && !touchedFields[id]) return "default";
+    return autoState;
+  }, [autoState, disabled, id, touchedFields]);
 
   return (
     <Flex
       ref={flexRef}
       direction="column"
-      css={{ position: "relative", width: "100%", height: "auto", mb: "$20" }}
+      css={{ position: "relative", width: "100%", height: "auto" }}
     >
       <Flex>
-        <StyledTextArea
-          {...rest}
-          id={id}
-          placeholder=" "
-          disabled={disabled}
-          variant={state}
-          ref={(e) => {
-            if (ref) ref(e);
-            textareaRef.current = e;
-          }}
-          css={{
-            "&:focus ~ label": {
-              transform: `scale(0.875) translateX(0.115rem) translateY(-0.5rem)`,
-            },
-            "&:not(:placeholder-shown) ~ label": {
-              transform: `scale(0.875) translateX(0.115rem) translateY(-0.5rem)`,
-            },
-          }}
-        />
-        <Text
-          as="label"
-          htmlFor={id}
-          css={{
-            fontSize: "$16",
-            top: "0",
-            p: "$16",
-            pl: "$17",
-            lineHeight: "24px",
-            color: "$primary300",
-            position: "absolute",
-            pointerEvents: "none",
-            transformOrigin: "0 0",
-            transition: "all .2s ease-in-out",
-          }}
-        >
-          {placeholder}
-        </Text>
+        {floatPlaceholder && (
+          <Flex>
+            <StyledTextArea
+              {...rest}
+              id={id}
+              placeholder=" "
+              disabled={disabled}
+              variant={currentState}
+              ref={(e) => {
+                if (ref) ref(e);
+                textareaRef.current = e;
+              }}
+            />
+            <StyledText as="label" htmlFor={id}>
+              {placeholder}
+            </StyledText>
+          </Flex>
+        )}
       </Flex>
-      <Flex
-        gap="4"
-        align="center"
-        css={{
-          mt: "$8",
-          "& svg": {
-            height: "$16 !important",
-            width: "$16 !important",
-            color: "$dangerBase",
-          },
+      <StyledTextArea
+        {...rest}
+        id={id}
+        placeholder={placeholder}
+        disabled={disabled}
+        variant={currentState}
+        ref={(e) => {
+          if (ref) ref(e);
+          textareaRef.current = e;
         }}
-      >
-        {state === "error" && <InfoIcon size="24" />}
-        <Text
+        css={{ minHeight: "$80", backgroundColor: "$primary50", py: "$12", px: "$16" }}
+      />
+      {floatPlaceholder && (
+        <Flex
+          gap="4"
+          align="center"
           css={{
-            color: state === "error" ? "$dangerBase" : "$primary300",
+            mt: "$8",
+            "& svg": {
+              height: "$16 !important",
+              width: "$16 !important",
+              color: "$dangerBase",
+            },
           }}
-          hint
         >
-          {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
-        </Text>
-      </Flex>
+          {currentState === "error" && <InfoIcon size="24" />}
+          <Text
+            css={{
+              color: currentState === "error" ? "$dangerBase" : "$primary300",
+            }}
+            hint
+          >
+            {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
+          </Text>
+        </Flex>
+      )}
     </Flex>
   );
 };
