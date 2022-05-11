@@ -33,13 +33,13 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
       ...user,
       role: BoardUserRoles.MEMBER,
     }));
+
     let userFound: BoardUserToAdd | undefined;
-
-    while (userFound?.user.email === responsible?.email) {
+    do {
       userFound = cloneUsers[Math.floor(Math.random() * cloneUsers.length)];
-    }
-    if (!userFound) return;
+    } while (userFound?.user.email === responsible?.email);
 
+    if (!userFound) return;
     userFound.role = BoardUserRoles.RESPONSIBLE;
 
     setBoard((prevBoard) => ({
@@ -88,6 +88,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
                 p: "4px",
                 border: "1px solid $colors$primary400",
                 ml: "$12",
+                pointer: "cursor",
               }}
               onClick={handleLottery}
             >

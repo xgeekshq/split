@@ -1,120 +1,187 @@
-import React from "react";
-import {
-  ChatBubbleIcon,
-  ThickArrowUpIcon,
-  PlusCircledIcon,
-  MinusCircledIcon,
-} from "@modulz/radix-icons";
+import React, { useMemo } from "react";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import { styled } from "../../../stitches.config";
 import CardType from "../../../types/card/card";
-import { getCommentsFromCardGroup } from "../../../helper/board/comments";
 import Button from "../../Primitives/Button";
+import Avatar from "../../Primitives/Avatar";
+import { getRandomColor } from "../../../utils/initialNames";
+import { CardItemType } from "../../../types/card/cardItem";
+import CommentIcon from "../../icons/Comment";
+import DownVoteIcon from "../../icons/DownVote";
+import UpVoteIcon from "../../icons/UpVote";
+import CommentType from "../../../types/comment/comment";
+import { BoardUser } from "../../../types/board/board.user";
 import { getCardVotes } from "../../../helper/board/votes";
-import ToastMessage from "../../../utils/toast";
-import isEmpty from "../../../utils/isEmpty";
 import useVotes from "../../../hooks/useVotes";
-
-const StyledChatBubbleIcon = styled(ChatBubbleIcon, { size: "100%" });
-const StyledPlusIcon = styled(PlusCircledIcon, { size: "100%" });
-const StyledMinusIcon = styled(MinusCircledIcon, { size: "100%" });
-const StyledCThickArrowUpIcon = styled(ThickArrowUpIcon, { size: "100%" });
 
 interface FooterProps {
   boardId: string;
   userId: string;
   socketId: string | undefined;
-  card: CardType;
+  card: CardType | CardItemType;
+  anonymous: boolean;
+  isItem: boolean;
+  teamName?: string;
+  isMainboard: boolean;
+  setOpenComments?: () => void;
+  comments?: CommentType[];
+  isCommentsOpened?: boolean;
+  boardUser?: BoardUser;
+  maxVotes?: number;
 }
 
-const CardFooter = React.memo<FooterProps>(({ boardId, userId, socketId, card }) => {
-  const { addVote, deleteVote } = useVotes();
-
-  const actualBoardVotes = 0;
-
-  const cardItemId = card.items.length === 1 ? card.items[0]._id : undefined;
-
-  const votesInThisCard = card.items.length === 1 ? card.items[0].votes : getCardVotes(card);
-
-  const votesOfUserInThisCard = votesInThisCard.filter((vote) => vote === userId).length;
-
-  const comments =
-    card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card);
-
-  const maxVotes = 6;
-
-  const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation();
-    if (isEmpty(votesOfUserInThisCard)) return;
-    ToastMessage(`You have ${maxVotes - actualBoardVotes + 1} remaining`, "info");
-    deleteVote.mutate({
-      boardId,
-      cardId: card._id,
-      socketId,
-      cardItemId,
-      isCardGroup: !cardItemId,
-    });
-  };
-
-  const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation();
-    if (actualBoardVotes >= maxVotes) return;
-    ToastMessage(`You have ${maxVotes - actualBoardVotes - 1} remaining`, "info");
-    addVote.mutate({
-      boardId,
-      cardId: card._id,
-      socketId,
-      cardItemId,
-      isCardGroup: !cardItemId,
-    });
-  };
-
-  return (
-    <Flex align="center" justify="end" css={{ mt: "auto" }} gap="6">
-      <Button
-        css={{
-          mr: "$4",
-          size: "$20",
-          cursor: "grab",
-        }}
-      >
-        <StyledChatBubbleIcon />
-      </Button>
-      <Text>{comments.length}</Text>
-      <Button
-        css={{
-          size: "$20",
-          cursor: "grab",
-        }}
-      >
-        <StyledCThickArrowUpIcon />
-      </Button>
-
-      <Text>{votesInThisCard.length}</Text>
-
-      <Button
-        css={{ size: "$20" }}
-        onClick={handleAddVote}
-        // disabled={actualBoardVotes === maxVotes}
-      >
-        <StyledPlusIcon />
-      </Button>
-
-      {!isEmpty(votesOfUserInThisCard) && (
-        <>
-          <Text>{votesOfUserInThisCard}</Text>
-          <Button
-            css={{ size: "$20" }}
-            onClick={handleDeleteVote}
-            disabled={isEmpty(actualBoardVotes)}
-          >
-            <StyledMinusIcon />
-          </Button>
-        </>
-      )}
-    </Flex>
-  );
+const StyledButtonIcon = styled(Button, {
+  m: "0 !important",
+  p: "0 !important",
+  lineHeight: "0 !important",
+  height: "fit-content !important",
+  backgroundColor: "transparent !important",
+  "& svg": {
+    color: "$primary500 !important",
+  },
+  "@hover": {
+    "&:hover": {
+      backgroundColor: "transparent !important",
+    },
+  },
+  "&:active": {
+    boxShadow: "none !important",
+  },
 });
+
+const CardFooter = React.memo<FooterProps>(
+  ({
+    boardId,
+    userId,
+    socketId,
+    card,
+    anonymous,
+    teamName,
+    isItem,
+    isMainboard,
+    comments,
+    boardUser,
+    maxVotes,
+    setOpenComments,
+    isCommentsOpened,
+  }) => {
+    const { createdBy } = card;
+
+    const { addVote, deleteVote } = useVotes();
+    const actualBoardVotes = boardUser?.votesCount;
+
+    const votesData = useMemo(() => {
+      if (Object.hasOwnProperty.call(card, "items")) {
+        const cardTyped = card as CardType;
+        const cardItemId = cardTyped.items.length === 1 ? cardTyped.items[0]._id : undefined;
+
+        const votesInThisCard =
+          cardTyped.items.length === 1 ? cardTyped.items[0].votes : getCardVotes(cardTyped);
+
+        const votesOfUserInThisCard = votesInThisCard.filter((vote) => vote === userId).length;
+        return { cardItemId, votesOfUserInThisCard, votesInThisCard };
+      }
+      return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
+    }, [card, userId]);
+
+    const { cardItemId, votesOfUserInThisCard, votesInThisCard } = votesData;
+
+    const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      if (votesOfUserInThisCard <= 0) return;
+      deleteVote.mutate({
+        boardId,
+        cardId: card._id,
+        socketId,
+        cardItemId,
+        isCardGroup: cardItemId === undefined,
+      });
+    };
+
+    const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
+      addVote.mutate({
+        boardId,
+        cardId: card._id,
+        socketId,
+        cardItemId,
+        isCardGroup: cardItemId === undefined,
+      });
+    };
+
+    const color = useMemo(() => {
+      return getRandomColor();
+    }, []);
+
+    return (
+      <Flex align="center" justify={!anonymous ? "between" : "end"} gap="6">
+        {!anonymous && !teamName && (
+          <Flex gap="4" align="center">
+            <Avatar
+              size={20}
+              colors={color}
+              fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
+              isBoardPage
+            />
+            <Text size="xs">
+              {createdBy?.firstName} {createdBy?.lastName}
+            </Text>
+          </Flex>
+        )}
+        {teamName && (
+          <Text size="xs" weight="medium">
+            {teamName}
+          </Text>
+        )}
+        {!isItem && comments && (
+          <Flex gap="10" align="center">
+            <Flex align="center" gap="2">
+              <StyledButtonIcon
+                onClick={handleAddVote}
+                disabled={!isMainboard || actualBoardVotes === maxVotes}
+              >
+                <UpVoteIcon disabled={!isMainboard || actualBoardVotes === maxVotes} />
+              </StyledButtonIcon>
+              <Text
+                size="xs"
+                css={{
+                  visibility: votesInThisCard.length > 0 ? "visible" : "hidden",
+                  width: "10px",
+                }}
+              >
+                {votesInThisCard.length}
+              </Text>
+            </Flex>
+
+            <Flex align="center" gap="2" css={{ mr: "$10" }}>
+              <StyledButtonIcon
+                onClick={handleDeleteVote}
+                disabled={!isMainboard || votesOfUserInThisCard === 0}
+              >
+                <DownVoteIcon disabled={!isMainboard || votesOfUserInThisCard === 0} />
+              </StyledButtonIcon>
+            </Flex>
+
+            <Flex align="center" gap="2">
+              <StyledButtonIcon onClick={setOpenComments}>
+                <CommentIcon
+                  isSelected={
+                    !!comments?.find((comment) => comment.createdBy._id === userId) ||
+                    !!isCommentsOpened
+                  }
+                />
+              </StyledButtonIcon>
+              <Text size="xs" css={{ visibility: comments.length > 0 ? "visible" : "hidden" }}>
+                {comments.length}
+              </Text>
+            </Flex>
+          </Flex>
+        )}
+      </Flex>
+    );
+  }
+);
 
 export default CardFooter;

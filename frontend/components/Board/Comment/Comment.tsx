@@ -1,92 +1,89 @@
 import React, { useState } from "react";
 import useComments from "../../../hooks/useComments";
-import { styled } from "../../../stitches.config";
-import CardComment from "../../../types/comment/comment";
-import ToastMessage from "../../../utils/toast";
-import Card from "../../Primitives/Card";
+import CommentType from "../../../types/comment/comment";
+import DeleteCommentDto from "../../../types/comment/deleteComment.dto";
+import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
 import Flex from "../../Primitives/Flex";
-import DeleteItem from "../Item/DeleteItem";
-import EditItem from "../Item/EditItem";
-import TextItem from "../Item/TextItem";
-import UpdateItem from "../Item/UpdateItem";
-
-const Container = styled(Card, {
-  mt: "$8",
-  borderRadius: "$6",
-  boxShadow: "1px 2px 10px rgba(0, 0, 0, 0.2)",
-});
+import Text from "../../Primitives/Text";
+import AddCard from "../Card/AddCard";
+import PopoverCommentSettings from "./PopoverSettings";
 
 interface CommentProps {
-  comment: CardComment;
-  color: string;
+  comment: CommentType;
   cardId: string;
   cardItemId?: string;
-  userId: string;
   boardId: string;
   socketId: string;
-  isNested?: boolean;
+  isSubmited: boolean;
 }
 
-const Comment: React.FC<CommentProps> = ({
-  comment,
-  color,
-  cardId,
-  cardItemId,
-  userId,
-  boardId,
-  isNested,
-  socketId,
-}) => {
-  Comment.defaultProps = { cardItemId: undefined, isNested: false };
-  const [editText, setEditText] = useState(false);
-  const [newText, setNewText] = useState(comment.text);
+const Comment: React.FC<CommentProps> = React.memo(
+  ({ comment, cardId, cardItemId, boardId, socketId, isSubmited }) => {
+    const { deleteComment } = useComments();
 
-  const { updateComment } = useComments();
+    const [editing, setEditing] = useState(false);
 
-  const handleUpdateCommentText = () => {
-    if (newText?.length > 0 && boardId) {
-      updateComment.mutate({
+    const handleDeleteComment = () => {
+      const deleteCommentDto: DeleteCommentDto = {
         boardId,
         cardItemId,
         commentId: comment._id,
         cardId,
-        text: newText,
         socketId,
-        isCardGroup: cardItemId === undefined,
-      });
-    } else {
-      ToastMessage("Comment text cannot be empty!", "error");
-    }
-    setEditText(false);
-  };
-  if (!cardId) return null;
-  return (
-    <Container
-      css={{
-        backgroundColor: editText ? "White" : color,
-        border: editText ? `5px solid ${color}` : "none",
-        padding: !editText ? "$8" : "0",
-      }}
-      direction="column"
-    >
-      {!editText && !isNested && comment.createdBy === userId && (
-        <Flex justify="end" gap="4">
-          <EditItem editText={editText} setEditText={setEditText} />
-          {!!comment._id && (
-            <DeleteItem
-              itemId={comment._id}
-              type="COMMENT"
-              socketId={socketId}
-              boardId={boardId}
-              cardId={cardId}
-              cardItemId={cardItemId}
-            />
-          )}
-        </Flex>
-      )}
-      <TextItem editText={editText} newText={newText} setNewText={setNewText} text={comment.text} />
-      {editText && <UpdateItem handleUpdate={handleUpdateCommentText} />}
-    </Container>
-  );
-};
+        isCardGroup: !cardItemId,
+      };
+
+      deleteComment.mutate(deleteCommentDto);
+    };
+
+    const handleEditing = () => {
+      setEditing(!editing);
+    };
+
+    return (
+      <Flex
+        css={{
+          border: "1px solid $colors$primaryBase",
+          width: "100%",
+          borderRadius: "16px 16px 0px 16px",
+          p: "$12",
+        }}
+        direction="column"
+      >
+        {!editing && (
+          <Flex direction="column">
+            <Flex justify="between" css={{ width: "100%" }}>
+              <Text size="xs">{comment.text}</Text>
+              {isSubmited && <VerticalThreeDotsIcon />}
+              {!isSubmited && (
+                <PopoverCommentSettings
+                  handleEditing={handleEditing}
+                  handleDeleteComment={handleDeleteComment}
+                />
+              )}
+            </Flex>
+            <Text size="xs" weight="medium">
+              {comment.createdBy.firstName} {comment.createdBy.lastName}
+            </Text>
+          </Flex>
+        )}
+        {editing && (
+          <AddCard
+            isUpdate
+            isCard={false}
+            colId="1"
+            boardId={boardId}
+            socketId={socketId}
+            commentId={comment._id}
+            cardText={comment.text}
+            cardItemId={cardItemId}
+            cardId={cardId}
+            cancelUpdate={handleEditing}
+          />
+        )}
+      </Flex>
+    );
+  }
+);
+
 export default Comment;

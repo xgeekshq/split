@@ -1,6 +1,15 @@
 import { globalCss } from "../stitches.config";
 
 const globalStyles = globalCss({
+  "@import": [
+    "url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')",
+  ],
+  "@font-face": [
+    {
+      fontFamily: "'DM Sans', sans-serif",
+      src: "url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap')",
+    },
+  ],
   "*": {
     boxSizing: "border-box",
   },

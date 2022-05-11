@@ -58,6 +58,7 @@ const useCards = () => {
     onSettled: (data) => {
       queryClient.invalidateQueries(["board", { id: data?._id }]);
     },
+    onSuccess: () => {},
     onError: (data, variables, context) => {
       queryClient.setQueryData(
         ["board", { id: variables.boardId }],

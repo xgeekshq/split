@@ -169,7 +169,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
                         </Text>
                       </Flex>
                     </Flex> */}
-                    <Flex gap="8" direction="column">
+                    <Flex gap="20" direction="column">
                       {boardsOfDay.map((board: BoardType) => (
                         <CardBody
                           key={board._id}

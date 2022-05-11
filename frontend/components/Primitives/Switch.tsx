@@ -10,6 +10,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
   backgroundColor: "$primary200",
   borderRadius: "9999px",
   position: "relative",
+  cursor: "pointer",
   WebkitTapHighlightColor: "rgba(0, 0, 0, 0)",
   '&[data-state="checked"]': { backgroundColor: "$successBase" },
   boxSizing: "border-box",
@@ -25,6 +26,7 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   transition: "transform 100ms",
   transform: "translate(1.5px, 1.5px)",
   willChange: "transform",
+  cursor: "pointer",
   '&[data-state="checked"]': { transform: "translate(19px, 1.5px)" },
 });
 
