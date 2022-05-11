@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsMongoId, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsMongoId,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
 import { TeamRoles } from '../../../libs/enum/team.roles';
 
 export default class TeamUserDto {
@@ -11,4 +17,9 @@ export default class TeamUserDto {
   @IsNotEmpty()
   @IsEnum(TeamRoles, { each: true })
   role!: string;
+
+  @IsOptional()
+  @IsString()
+  @IsMongoId()
+  team?: string;
 }

@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CardDocument, CardSchema } from '../../cards/schemas/card.schema';
 
@@ -17,3 +18,17 @@ export default class Column {
 }
 
 export const ColumnSchema = SchemaFactory.createForClass(Column);
+
+ColumnSchema.plugin(leanVirtualsPlugin);
+
+// ColumnSchema.virtual('countCards').get(function (this: ColumnDocument) {
+//   return this.cards.reduce((acc, card) => {
+//     acc++;
+//     if (card.items.length > 1) {
+//       card.items.forEach(() => {
+//         acc++;
+//       });
+//     }
+//     return acc;
+//   }, 0);
+// });

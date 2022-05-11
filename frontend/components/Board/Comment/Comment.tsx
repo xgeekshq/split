@@ -5,7 +5,7 @@ import DeleteCommentDto from "../../../types/comment/deleteComment.dto";
 import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
-import AddCard from "../Card/AddCard";
+import AddCardOrComment from "../AddCardOrComment";
 import PopoverCommentSettings from "./PopoverSettings";
 
 interface CommentProps {
@@ -68,7 +68,7 @@ const Comment: React.FC<CommentProps> = React.memo(
           </Flex>
         )}
         {editing && (
-          <AddCard
+          <AddCardOrComment
             isUpdate
             isCard={false}
             colId="1"

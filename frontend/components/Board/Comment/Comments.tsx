@@ -5,7 +5,7 @@ import PlusIcon from "../../icons/PlusIcon";
 import Flex from "../../Primitives/Flex";
 import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
-import AddCard from "../Card/AddCard";
+import AddCardOrComment from "../AddCardOrComment";
 import Comment from "./Comment";
 
 interface CommentsListProps {
@@ -59,7 +59,7 @@ const Comments = React.memo(
         </Flex>
         {isCreateCommentOpened && !isSubmited && (
           <Flex css={{ width: "100%", px: "$16" }}>
-            <AddCard
+            <AddCardOrComment
               isCard={false}
               isUpdate={false}
               colId="1"

@@ -14,14 +14,14 @@ const PlusIcon: React.FC<PlusIconProps> = ({ size, ...rest }) => {
         width="16"
         height="16"
         viewBox="0 0 16 16"
-        fill="none"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/Svg"
       >
         <path
           fillRule="evenodd"
           clipRule="evenodd"
           d="M8.75 2.75C8.75 2.33579 8.41421 2 8 2C7.58579 2 7.25 2.33579 7.25 2.75V7.25H2.75C2.33579 7.25 2 7.58579 2 8C2 8.41421 2.33579 8.75 2.75 8.75H7.25V13.25C7.25 13.6642 7.58579 14 8 14C8.41421 14 8.75 13.6642 8.75 13.25V8.75H13.25C13.6642 8.75 14 8.41421 14 8C14 7.58579 13.6642 7.25 13.25 7.25H8.75V2.75Z"
-          fill="#060D16"
+          fill="currentColor"
         />
       </Svg>
     );

@@ -17,7 +17,7 @@ import useComments from "../../hooks/useComments";
 import AddCommentDto from "../../types/comment/addComment.dto";
 import UpdateCommentDto from "../../types/comment/updateComment.dto";
 
-const ActionButton = styled(Button, { width: "$48", height: "$36" });
+const ActionButton = styled(Button, {});
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
@@ -35,7 +35,7 @@ interface AddCardProps {
   defaultOpen?: boolean;
 }
 
-const AddCardOrComment = React.memo<AddCardProps>(
+const AddCard = React.memo<AddCardProps>(
   ({
     isUpdate,
     colId,
@@ -83,6 +83,7 @@ const AddCardOrComment = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
+      methods.reset({ text: "" });
     };
 
     const handleUpdateCard = (text: string) => {
@@ -141,23 +142,6 @@ const AddCardOrComment = React.memo<AddCardProps>(
       setIsOpen(false);
     };
 
-    const handleSubmit = (text: string) => {
-      if (isCard) {
-        if (!isUpdate) {
-          handleAddCard(text);
-          return;
-        }
-        handleUpdateCard(text);
-      }
-      if (!isCard) {
-        if (!isUpdate) {
-          handleAddComment(text);
-          return;
-        }
-        handleUpdateComment(text);
-      }
-    };
-
     if (!isOpen)
       return (
         <ActionButton css={{ display: "flex" }} onClick={() => setIsOpen(true)}>
@@ -174,20 +158,44 @@ const AddCardOrComment = React.memo<AddCardProps>(
         gap="8"
         tabIndex={0}
         onSubmit={methods.handleSubmit(({ text }) => {
-          handleSubmit(text);
+          if (isCard) {
+            if (!isUpdate) {
+              handleAddCard(text);
+              return;
+            }
+            handleUpdateCard(text);
+          }
+          if (!isCard) {
+            if (!isUpdate) {
+              handleAddComment(text);
+              return;
+            }
+            handleUpdateComment(text);
+          }
         })}
       >
         <FormProvider {...methods}>
-          <TextArea id="text" floatPlaceholder={false} placeholder="Write your comment here..." />
+          <TextArea
+            id="text"
+            // variant={!isEmpty(cardText) ? default : undefined} }
+            floatPlaceholder={false}
+            placeholder="Write your comment here..."
+          />
           <Flex justify="end" gap="4" css={{ width: "100%" }}>
             <ActionButton
               size="sm"
+              css={{ width: "$48", height: "$36" }}
               variant={!isUpdate && isCard ? "lightOutline" : "primaryOutline"}
               onClick={handleClear}
             >
               <CrossIcon size="16" />
             </ActionButton>
-            <ActionButton size="sm" type="submit" variant="primary">
+            <ActionButton
+              css={{ width: "$48", height: "$36" }}
+              size="sm"
+              type="submit"
+              variant="primary"
+            >
               <CheckIcon />
             </ActionButton>
           </Flex>
@@ -196,4 +204,4 @@ const AddCardOrComment = React.memo<AddCardProps>(
     );
   }
 );
-export default AddCardOrComment;
+export default AddCard;

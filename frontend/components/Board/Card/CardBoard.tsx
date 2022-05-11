@@ -10,7 +10,7 @@ import MergedIcon from "../../icons/Merged";
 import Comments from "../Comment/Comments";
 import { getCommentsFromCardGroup } from "../../../helper/board/comments";
 import PopoverCardSettings from "./PopoverSettings";
-import AddCard from "./AddCard";
+import AddCardOrComment from "../AddCardOrComment";
 import DeleteCard from "./DeleteCard";
 import { BoardUser } from "../../../types/board/board.user";
 import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
@@ -95,7 +95,7 @@ const CardBoard = React.memo<CardBoardProps>(
               }}
             >
               {editing && !isSubmited && (
-                <AddCard
+                <AddCardOrComment
                   isCard
                   isUpdate
                   colId={colId}

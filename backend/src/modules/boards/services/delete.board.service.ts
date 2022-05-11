@@ -49,7 +49,6 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
     const result = await this.boardModel.findOneAndRemove(
       {
         _id: boardId,
-        createdBy: userId,
       },
       { session: boardSession },
     );

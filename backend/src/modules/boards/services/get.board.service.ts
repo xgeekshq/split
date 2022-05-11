@@ -158,14 +158,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         select: '_id firstName lastName',
       })
       .populate({
-        path: 'columns.cards.createdByTeam',
-        select: '_id name',
-      })
-      .populate({
-        path: 'columns.cards.items.createdByTeam',
-        select: '_id name',
-      })
-      .populate({
         path: 'columns.cards.items.createdBy',
         select: '_id firstName lastName',
       })

@@ -1,5 +1,8 @@
-import { Module } from '@nestjs/common';
-import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
+import { forwardRef, Module } from '@nestjs/common';
+import {
+  mongooseBoardModule,
+  mongooseBoardUserModule,
+} from '../../infrastructure/database/mongoose.module';
 import { CardsModule } from '../cards/cards.module';
 import SocketModule from '../socket/socket.module';
 import VotesController from './controller/votes.controller';
@@ -11,7 +14,12 @@ import {
 } from './votes.providers';
 
 @Module({
-  imports: [mongooseBoardModule, CardsModule, SocketModule],
+  imports: [
+    mongooseBoardModule,
+    mongooseBoardUserModule,
+    forwardRef(() => CardsModule),
+    SocketModule,
+  ],
   controllers: [VotesController],
   providers: [
     createVoteApplication,
@@ -19,6 +27,6 @@ import {
     deleteVoteApplication,
     deleteVoteService,
   ],
-  exports: [],
+  exports: [deleteVoteService],
 })
 export class VotesModule {}

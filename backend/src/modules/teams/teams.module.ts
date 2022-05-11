@@ -20,6 +20,6 @@ import {
     getTeamApplication,
   ],
   controllers: [TeamsController],
-  exports: [getTeamApplication, getTeamService],
+  exports: [getTeamApplication, getTeamService, createTeamService],
 })
 export default class TeamsModule {}

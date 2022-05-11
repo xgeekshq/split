@@ -23,6 +23,7 @@ type AzureDecodedUser = {
   email: string;
   given_name: string;
   family_name: string;
+  name: string;
 };
 
 @Injectable()
@@ -39,9 +40,15 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
   ) {}
 
   async loginOrRegisterAzureToken(azureToken: string) {
-    const { unique_name, email, given_name, family_name } = <AzureDecodedUser>(
-      jwt_decode(azureToken)
-    );
+    const { unique_name, email, name, given_name, family_name } = <
+      AzureDecodedUser
+    >jwt_decode(azureToken);
+
+    const splitedName = name ? name.split(' ') : [];
+    const firstName = given_name ?? splitedName[0] ?? 'first';
+    const lastName =
+      family_name ?? splitedName[splitedName.length - 1] ?? 'last';
+
     const userExists = await this.checkUserExistsInActiveDirectory(email);
     if (!userExists) return null;
 
@@ -51,8 +58,8 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 
     const createdUser = await this.createUserService.create({
       email: emailOrUniqueName,
-      firstName: given_name,
-      lastName: family_name,
+      firstName,
+      lastName,
     });
 
     if (!createdUser) return null;

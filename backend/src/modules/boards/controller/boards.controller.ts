@@ -129,4 +129,19 @@ export default class BoardsController {
 
     return result;
   }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Put(':boardId/merge')
+  async mergeBoard(
+    @Param() { boardId }: BaseParam,
+    @Req() request: RequestWithUser,
+  ) {
+    const result = await this.updateBoardApp.mergeBoards(
+      boardId,
+      request.user._id,
+    );
+    if (!result) throw new BadRequestException(UPDATE_FAILED);
+
+    return result;
+  }
 }

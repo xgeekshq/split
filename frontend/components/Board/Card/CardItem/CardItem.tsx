@@ -5,7 +5,7 @@ import { styled } from "../../../../stitches.config";
 import Text from "../../../Primitives/Text";
 import CardFooter from "../CardFooter";
 import PopoverCardSettings from "../PopoverSettings";
-import AddCard from "../AddCard";
+import AddCardOrComment from "../../AddCardOrComment";
 import DeleteCard from "../DeleteCard";
 import VerticalThreeDotsIcon from "../../../icons/VerticalThreeDots";
 
@@ -100,7 +100,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
           </Flex>
         )}
         {editing && !isSubmited && (
-          <AddCard
+          <AddCardOrComment
             isCard
             isUpdate
             colId={columnId}

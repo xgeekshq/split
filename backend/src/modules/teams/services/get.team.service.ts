@@ -20,6 +20,10 @@ export default class GetTeamService implements GetTeamServiceInterface {
       .exec();
   }
 
+  countAllTeams() {
+    return this.teamModel.countDocuments().exec();
+  }
+
   getTeam(teamId: string) {
     return this.teamModel.findById(teamId).lean().exec();
   }

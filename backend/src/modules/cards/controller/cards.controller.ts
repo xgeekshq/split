@@ -69,7 +69,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -89,7 +89,28 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, deleteCardDto.socketId);
+    this.socketService.sendUpdatedBoard(boardId, deleteCardDto.socketId);
+
+    return board;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Delete(':boardId/card/:cardId/items/:itemId')
+  async deleteCardItem(
+    @Req() request: RequestWithUser,
+    @Param() params: CardItemParams,
+    @Body() deleteCardDto: DeleteCardDto,
+  ) {
+    const { boardId, cardId, itemId } = params;
+    const board = await this.deleteCardApp.deleteFromCardGroup(
+      boardId,
+      cardId,
+      itemId,
+      request.user._id,
+    );
+
+    if (!board) throw new BadRequestException(DELETE_FAILED);
+    this.socketService.sendUpdatedBoard(boardId, deleteCardDto.socketId);
 
     return board;
   }
@@ -113,7 +134,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -136,7 +157,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, updateCardDto.socketId);
+    this.socketService.sendUpdatedBoard(boardId, updateCardDto.socketId);
 
     return board;
   }
@@ -157,7 +178,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -177,7 +198,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -199,7 +220,7 @@ export default class CardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }

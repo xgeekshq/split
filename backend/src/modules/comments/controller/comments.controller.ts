@@ -60,7 +60,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, createCommentDto.socketId);
+    this.socketService.sendUpdatedBoard(boardId, createCommentDto.socketId);
 
     return board;
   }
@@ -83,7 +83,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -108,7 +108,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -132,7 +132,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -152,7 +152,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -173,7 +173,7 @@ export default class CommentsController {
     );
 
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }

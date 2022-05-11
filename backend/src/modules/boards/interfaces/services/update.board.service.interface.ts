@@ -8,4 +8,8 @@ export interface UpdateBoardService {
     boardId: string,
     boardData: BoardDto,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  mergeBoards(
+    subBoardId: string,
+    userId: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

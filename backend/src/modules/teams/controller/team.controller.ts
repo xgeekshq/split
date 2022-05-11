@@ -5,6 +5,7 @@ import {
   Get,
   Inject,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -35,7 +36,7 @@ export default class TeamsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Post()
+  @Put()
   async createTeamUser(@Body() teamData: TeamUserDto) {
     const team = await this.createTeamApp.createTeamUser(teamData);
     if (!team) throw new BadRequestException(INSERT_FAILED);
