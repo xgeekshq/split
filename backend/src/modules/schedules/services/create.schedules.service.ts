@@ -35,9 +35,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
       });
       if (!cronJobDoc) throw Error('CronJob not created');
       const job = new CronJob(`0 10 ${day} ${month} *`, () => {
-        // const job = new CronJob(`*/10 * * * * *`, () => {
-        console.log('after 10 seconds');
-        this.handleComplete(
+        return this.handleComplete(
           job,
           configs,
           ownerId,
@@ -62,7 +60,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
   ) {
     const day = getDay();
     const month = getNextMonth();
-    job.setTime(new CronTime(`0 10 ${day} ${month} *`));
 
     this.createBoardService
       .splitBoardByTeam(ownerId, teamId, configs)
@@ -79,7 +76,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
         });
       });
 
-    job.setTime(new CronTime(`*/10 * * * * *`));
+    job.setTime(new CronTime(`0 10 ${day} ${month} *`));
     job.start();
   }
 }

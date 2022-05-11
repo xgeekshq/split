@@ -23,6 +23,10 @@ import TeamUser, {
 import { getNextMonth, getDay } from '../../../libs/utils/dates';
 import { CreateSchedulesServiceInterface } from '../../schedules/interfaces/services/create.schedules.service';
 import { AddCronJobDto } from '../../schedules/dto/add.cronjob.dto';
+import {
+  generateBoardDtoData,
+  generateSubBoardDtoData,
+} from '../../../libs/utils/generateBoardData';
 
 export interface CreateBoardDto {
   maxUsers: number;
@@ -128,83 +132,35 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
     this.saveBoardUsers(newUsers, newBoard._id);
 
-    console.log(recurrent, team, maxUsers);
     if (newBoard && recurrent && team && maxUsers) {
-      console.log('FIRST CRON JOB');
-      this.createFirstCronJob(
-        newBoard,
-        userId,
-        team,
-        maxUsers,
-        recurrent,
-        postAnonymously,
-        maxVotes,
-        hideCards,
-        hideVotes,
-      );
+      const addCronJobDto: AddCronJobDto = {
+        boardId: newBoard._id,
+        ownerId: userId,
+        teamId: team,
+        configs: {
+          maxUsers: Number(maxUsers),
+          recurrent,
+          maxVotes,
+          hideCards,
+          hideVotes,
+          anonymously: postAnonymously,
+        },
+      };
+
+      this.createFirstCronJob(addCronJobDto);
     }
 
     return newBoard;
   }
 
-  createFirstCronJob(
-    newBoard: BoardDocument,
-    userId: string,
-    team: string,
-    maxUsers: string,
-    recurrent: boolean,
-    postAnonymously: boolean,
-    maxVotes?: string | null,
-    hideCards?: boolean,
-    hideVotes?: boolean,
-  ) {
+  createFirstCronJob(addCronJobDto: AddCronJobDto) {
     const dayToRun = getDay();
-
-    const addCronJobDto: AddCronJobDto = {
-      boardId: newBoard._id,
-      ownerId: userId,
-      teamId: team,
-      configs: {
-        maxUsers: Number(maxUsers),
-        recurrent,
-        maxVotes,
-        hideCards,
-        hideVotes,
-        anonymously: postAnonymously,
-      },
-    };
 
     this.createSchedulesService.addCronJob(
       dayToRun,
       getNextMonth(),
       addCronJobDto,
     );
-  }
-
-  getBoardDto(): CreateBoardDto {
-    return {
-      users: [],
-      team: null,
-      maxUsers: 2,
-      board: {
-        title: 'Main Board -',
-        columns: [
-          { title: 'Went well', color: '$highlight1Light', cards: [] },
-          { title: 'To improve', color: '$highlight4Light', cards: [] },
-          { title: 'Action points', color: '$highlight3Light', cards: [] },
-        ],
-        isPublic: false,
-        maxVotes: undefined,
-        dividedBoards: [],
-        recurrent: true,
-        users: [],
-        team: null,
-        isSubBoard: false,
-        hideCards: false,
-        hideVotes: false,
-        postAnonymously: false,
-      },
-    };
   }
 
   async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs) {
@@ -220,14 +176,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     const maxTeams = Math.ceil(teamLength / maxUsers);
 
     const boardData: BoardDto = {
-      ...this.getBoardDto().board,
+      ...generateBoardDtoData().board,
       users: [],
       team: teamId,
-      dividedBoards: this.handleSplitBoards(
-        maxTeams,
-        maxUsers,
-        teamUsersWotStakeholders,
-      ),
+      dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders),
       recurrent: configs.recurrent,
       maxVotes: configs.maxVotes ?? null,
       hideCards: configs.hideCards ?? false,
@@ -245,7 +197,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
   handleSplitBoards = (
     maxTeams: number,
-    maxUsers: number,
     teamMembers: LeanDocument<TeamUserDocument>[],
   ) => {
     const subBoards: BoardDto[] = [];
@@ -278,32 +229,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
     subBoards: BoardDto[],
   ) {
     new Array(maxTeams).fill(0).forEach((_, i) => {
-      const newBoard = this.generateSubBoard(i + 1);
+      const newBoard = generateSubBoardDtoData(i + 1);
       splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
         BoardRoles.RESPONSIBLE;
       newBoard.users = splitedUsers[i];
       subBoards.push(newBoard);
     });
   }
-
-  generateSubBoard = (index: number, users: BoardUserDto[] = []): BoardDto => {
-    return {
-      title: `Sub-team board ${index}`,
-      columns: [
-        { title: 'Went well', color: '$highlight1Light', cards: [] },
-        { title: 'To improve', color: '$highlight4Light', cards: [] },
-        { title: 'Action points', color: '$highlight3Light', cards: [] },
-      ],
-      isPublic: false,
-      dividedBoards: [],
-      recurrent: false,
-      users,
-      team: null,
-      isSubBoard: true,
-      maxVotes: undefined,
-      hideCards: false,
-      hideVotes: false,
-      postAnonymously: false,
-    };
-  };
 }
