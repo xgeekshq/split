@@ -31,7 +31,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
         return listUsers.filter((user) => user.role === "admin").map((user) => user.user);
 
       if (stakeholders) {
-        // return listUsers.filter((user) => user.role === "stakeholder").map((user) => user.user);
+        return listUsers.filter((user) => user.role === "stakeholder").map((user) => user.user);
       }
 
       return listUsers.reduce((acc: User[], userFound: ListUsersType) => {
@@ -90,7 +90,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
       },
       [colors]
     );
-    console.log(listUsers);
 
     return (
       <Flex align="center" css={{ height: "fit-content", overflow: "hidden" }}>

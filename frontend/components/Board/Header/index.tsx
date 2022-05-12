@@ -30,8 +30,6 @@ const BoardHeader = () => {
 
   const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } = boardData!.board;
 
-  console.log(boardData);
-
   return (
     <StyledHeader>
       <Flex align="center" justify="between" gap="20">
