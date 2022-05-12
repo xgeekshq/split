@@ -86,7 +86,7 @@ const BoardCounter = styled("button", {
   },
 });
 
-const StyledContent = styled(PopoverPrimitive.Content, {
+const StyledPopoverContent = styled(PopoverPrimitive.Content, {
   borderRadius: "$12",
   padding: "$20 0",
   minWidth: 260,
@@ -95,11 +95,11 @@ const StyledContent = styled(PopoverPrimitive.Content, {
   boxShadow: "0px 4px 16px -4px rgba(18, 25, 34, 0.2)",
 });
 
-const StyledArrow = styled(PopoverPrimitive.Arrow, {
+const StyledPopoverArrow = styled(PopoverPrimitive.Arrow, {
   fill: "$primary800",
 });
 
-const StyledItem = styled("div", {
+const StyledPopoverItem = styled("div", {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -148,7 +148,7 @@ export {
   TitleSection,
   MergeIconContainer,
   BoardCounter,
-  StyledContent,
-  StyledArrow,
-  StyledItem,
+  StyledPopoverContent,
+  StyledPopoverArrow,
+  StyledPopoverItem,
 };

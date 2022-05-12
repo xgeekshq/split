@@ -4,11 +4,11 @@ import LogoIcon from "../../icons/Logo";
 import {
   BoardCounter,
   MergeIconContainer,
-  StyledArrow,
-  StyledContent,
   StyledHeader,
-  StyledItem,
   StyledLogo,
+  StyledPopoverArrow,
+  StyledPopoverContent,
+  StyledPopoverItem,
   TitleSection,
 } from "./styles";
 import Tooltip from "../../Primitives/Tooltip";
@@ -62,40 +62,35 @@ const BoardHeader = () => {
         <Flex align="center" gap="24">
           <Flex align="center" gap="10">
             <Text color="primary800" size="sm" css={{ fontWeight: 500 }}>
-              {isSubBoard && boardData?.mainBoardData
-                ? boardData!.mainBoardData?.team.name
-                : team.name}
+              {isSubBoard ? title.replace("board", "") : team.name}
             </Text>
             <CardAvatars
-              listUsers={
-                isSubBoard && boardData?.mainBoardData
-                  ? boardData!.mainBoardData?.team.users
-                  : team.users
-              }
+              listUsers={users}
               responsible={false}
               teamAdmins={false}
               userId={session!.user.id}
             />
           </Flex>
 
-          <Separator data-orientation="vertical" css={{ height: "$24 !important" }} />
+          {(boardData!.board.users || users).filter((user) => user.role === "stakeholder").length >
+            0 && (
+            <>
+              <Separator data-orientation="vertical" css={{ height: "$24 !important" }} />
 
-          <Flex align="center" gap="10">
-            <Text color="primary300" size="sm">
-              Stakeholders
-            </Text>
-            <CardAvatars
-              listUsers={
-                isSubBoard && boardData?.mainBoardData
-                  ? boardData!.mainBoardData?.team.users
-                  : team.users
-              }
-              responsible={false}
-              teamAdmins={false}
-              stakeholders={true}
-              userId={session!.user.id}
-            />
-          </Flex>
+              <Flex align="center" gap="10">
+                <Text color="primary300" size="sm">
+                  Stakeholders
+                </Text>
+                <CardAvatars
+                  listUsers={users}
+                  responsible={false}
+                  teamAdmins={false}
+                  stakeholders={true}
+                  userId={session!.user.id}
+                />
+              </Flex>
+            </>
+          )}
         </Flex>
       </Flex>
 
@@ -107,10 +102,10 @@ const BoardHeader = () => {
               of {dividedBoards.length} sub-team boards merged
             </BoardCounter>
           </PopoverTrigger>
-          <StyledContent>
+          <StyledPopoverContent>
             <Flex direction={"column"}>
               {dividedBoards.map((board) => (
-                <StyledItem key={board.title.toLowerCase().split(" ").join("-")}>
+                <StyledPopoverItem key={board.title.toLowerCase().split(" ").join("-")}>
                   <p>{board.title}</p>
 
                   <div>
@@ -119,12 +114,12 @@ const BoardHeader = () => {
                       <MergeIcon />
                     </MergeIconContainer>{" "}
                   </div>
-                </StyledItem>
+                </StyledPopoverItem>
               ))}
             </Flex>
 
-            <StyledArrow />
-          </StyledContent>
+            <StyledPopoverArrow />
+          </StyledPopoverContent>
         </Popover>
       )}
     </StyledHeader>
