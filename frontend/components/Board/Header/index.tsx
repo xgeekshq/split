@@ -39,9 +39,9 @@ const BoardHeader = () => {
 
   // Found sub-board
   const getSubBoard = () => {
-    const board = dividedBoards.filter((board: BoardType) =>
-      board.users.filter((user) => user.user === session!.user.id)
-    )[0];
+    const board = dividedBoards.find((board: BoardType) =>
+      board.users.find((user) => user.user === session!.user.id)
+    );
 
     return {
       id: board.id,
