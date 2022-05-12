@@ -16,18 +16,23 @@ type CardAvatarProps = {
   listUsers: ListUsersType[];
   responsible: boolean;
   teamAdmins: boolean;
+  stakeholders?: boolean;
   userId: string;
   myBoards?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
-  ({ listUsers, teamAdmins, userId, responsible, myBoards }) => {
+  ({ listUsers, teamAdmins, stakeholders, userId, responsible, myBoards }) => {
     const data = useMemo(() => {
       if (responsible)
         return listUsers.filter((user) => user.role === "responsible").map((user) => user.user);
 
       if (teamAdmins)
         return listUsers.filter((user) => user.role === "admin").map((user) => user.user);
+
+      if (stakeholders) {
+        // return listUsers.filter((user) => user.role === "stakeholder").map((user) => user.user);
+      }
 
       return listUsers.reduce((acc: User[], userFound: ListUsersType) => {
         if ((userFound.user as User)._id === userId) {
@@ -65,6 +70,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return col;
     }, [getRandomColor]);
 
+    const stakeholdersColors = {
+      border: true,
+      bg: "white",
+      fontColor: "$primary400",
+    };
+
     const renderAvatar = useCallback(
       (initials, idx) => {
         return (
@@ -72,13 +83,14 @@ const CardAvatars = React.memo<CardAvatarProps>(
             key={`${initials}-${idx}-${Math.random()}`}
             css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
             size={32}
-            colors={colors[idx]}
+            colors={stakeholders ? stakeholdersColors : colors[idx]}
             fallbackText={initials}
           />
         );
       },
       [colors]
     );
+    console.log(listUsers);
 
     return (
       <Flex align="center" css={{ height: "fit-content", overflow: "hidden" }}>

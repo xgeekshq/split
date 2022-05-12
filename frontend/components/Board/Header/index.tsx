@@ -71,10 +71,8 @@ const BoardHeader = () => {
             <CardAvatars
               listUsers={
                 isSubBoard && boardData?.mainBoardData
-                  ? boardData!.mainBoardData?.team.users.filter(
-                      (user) => user.role !== "stakeholder"
-                    )
-                  : team.users.filter((user) => user.role !== "stakeholder")
+                  ? boardData!.mainBoardData?.team.users
+                  : team.users
               }
               responsible={false}
               teamAdmins={false}
@@ -91,13 +89,12 @@ const BoardHeader = () => {
             <CardAvatars
               listUsers={
                 isSubBoard && boardData?.mainBoardData
-                  ? boardData!.mainBoardData?.team.users.filter(
-                      (user) => user.role === "stakeholder"
-                    )
-                  : team.users.filter((user) => user.role === "stakeholder")
+                  ? boardData!.mainBoardData?.team.users
+                  : team.users
               }
               responsible={false}
               teamAdmins={false}
+              stakeholders={true}
               userId={session!.user.id}
             />
           </Flex>
