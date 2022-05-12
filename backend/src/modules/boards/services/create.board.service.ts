@@ -134,7 +134,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
     if (newBoard && recurrent && team && maxUsers) {
       const addCronJobDto: AddCronJobDto = {
-        boardId: newBoard._id,
+        boardId: newBoard._id.toString(),
         ownerId: userId,
         teamId: team,
         configs: {
@@ -189,7 +189,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
     const board = await this.create(boardData, ownerId);
     if (!board) return null;
-    return board;
+    return board._id.toString();
   }
 
   getRandomUser = (list: TeamUser[]) =>

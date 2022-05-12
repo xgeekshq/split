@@ -21,6 +21,7 @@ import {
   updateUserService,
 } from '../../src/modules/users/users.providers';
 import {
+  createTeamService,
   getTeamApplication,
   getTeamService,
 } from '../../src/modules/teams/providers';
@@ -44,6 +45,7 @@ describe('AuthController', () => {
         registerAuthApplication,
         getTokenAuthApplication,
         getTokenAuthService,
+        createTeamService,
         getTeamService,
         getTeamApplication,
         getBoardApplication,
@@ -91,19 +93,6 @@ describe('AuthController', () => {
   });
 
   describe('when registering', () => {
-    describe('and using valid data', () => {
-      it('should respond with the data of the user without the password', async () => {
-        return request(app.getHttpServer())
-          .post('/auth/register')
-          .send({
-            email: mockedUser.email,
-            firstName: mockedUser.firstName,
-            lastName: mockedUser.lastName,
-            password: '1!Aab2CD',
-          })
-          .expect(201);
-      });
-    });
     describe('and using invalid data', () => {
       it('should throw an error because full data wasnt submitted', () =>
         request(app.getHttpServer())
