@@ -31,23 +31,28 @@ const AlertText = styled(Flex, {
 
 const AlertIconStyle = styled(Flex, {});
 
-const AlertBox: React.FC<AlertBoxProps> = ({ type, title, text }) => {
+const AlertBox: React.FC<AlertBoxProps> = ({ type, title, text, children }) => {
   AlertBox.defaultProps = { title: undefined };
   const isWarning = type === "warning";
 
   return (
     <AlertStyle
+      align="center"
+      justify="between"
       css={{
         backgroundColor: isWarning ? "$dangerLightest" : "$infoLightest",
         border: isWarning ? "1px solid $colors$highlight4Base" : "1px solid $colors$infoBase",
       }}
     >
-      <AlertIconStyle> {isWarning ? <AlertIcon /> : <InfoAlertIcon />}</AlertIconStyle>
-      <AlertText direction="column">
-        {!!title && <Text heading="5">{title}</Text>}
+      <Flex align="center">
+        <AlertIconStyle> {isWarning ? <AlertIcon /> : <InfoAlertIcon />}</AlertIconStyle>
+        <AlertText direction="column">
+          {!!title && <Text heading="5">{title}</Text>}
 
-        <Text size="sm">{text}</Text>
-      </AlertText>
+          <Text size="sm">{text}</Text>
+        </AlertText>
+      </Flex>
+      {children}
     </AlertStyle>
   );
 };

@@ -169,7 +169,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         path: 'columns.cards.items.comments.createdBy',
         select: '_id firstName lastName',
       })
-      .populate({ path: 'dividedBoards', select: '-__v -createdAt -_id' })
+      .populate({
+        path: 'dividedBoards',
+        select: '-__v -createdAt -id',
+        populate: {
+          path: 'users',
+          select: 'role user',
+        },
+      })
       .lean({ virtuals: true })
       .exec();
 
