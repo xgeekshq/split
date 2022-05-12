@@ -2,10 +2,17 @@ import { BoardUserRoles } from "../../utils/enums/board.user.roles";
 import { User } from "../user/user";
 
 export interface BoardUser {
-  user: User;
+  user: User | string;
   role: BoardUserRoles;
   _id: string;
   votesCount: number;
+}
+
+export interface BoardUserNoPopulated {
+  _id: string;
+  board: string;
+  role: string;
+  user: string;
 }
 
 export interface BoardUserToAdd {
