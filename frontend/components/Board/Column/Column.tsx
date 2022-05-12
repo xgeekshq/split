@@ -15,6 +15,8 @@ const Container = styled(Flex, Box, {
   flex: "1",
   pb: "$24",
   width: "100%",
+  boxShadow: "0px 2px 8px rgba(18, 25, 34, 0.05)",
+  backgroundColor: "$surface",
 });
 
 const OuterContainer = styled(Flex, {

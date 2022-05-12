@@ -3,7 +3,7 @@ import { CSS } from "../../stitches.config";
 import Svg from "../Primitives/Svg";
 
 interface InfoIconProps {
-  size: "24" | "16" | "14";
+  size?: "24" | "16" | "14";
   css?: CSS;
 }
 
