@@ -1,4 +1,4 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import { Head, Html, Main, NextScript } from "next/document";
 import { getCssText } from "../stitches.config";
 
 export default function Document() {
@@ -12,6 +12,7 @@ export default function Document() {
           rel="stylesheet"
           crossOrigin="true"
         />
+        <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
         <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
       </Head>
       <body>
