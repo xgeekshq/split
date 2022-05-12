@@ -25,7 +25,7 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
 });
 
 type AvatarType = {
-  colors: { bg: string; fontColor: string };
+  colors: { bg: string; fontColor: string; border?: boolean };
   fallbackText: string;
   src?: string;
   size?: number;
@@ -40,6 +40,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css, i
       css={{
         size,
         backgroundColor: colors.bg,
+        border: colors.border ? "1px solid $primary200" : undefined,
         ...css,
         filter: "drop-shadow(0px 1px 4px rgba(18, 25, 34, 0.05))",
       }}

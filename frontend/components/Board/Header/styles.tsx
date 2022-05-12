@@ -1,7 +1,10 @@
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { styled } from "../../../stitches.config";
 
 const StyledHeader = styled("div", {
   width: "100%",
+
+  position: "relative",
 
   padding: "$24 $37",
   borderBottomStyle: "solid",
@@ -27,22 +30,125 @@ const TitleSection = styled("div", {
   gap: "$10",
 });
 
-const FlexSection = styled("section", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 20,
-
-  "&>div:first-of-type": {
-    display: "flex",
-    flexDirection: "column",
+const MergeIconContainer = styled("div", {
+  variants: {
+    isMerged: {
+      true: {
+        color: "$successBase",
+      },
+      false: {
+        color: "$danger500",
+      },
+    },
   },
 
-  "&>div:nth-of-type(2)": {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
+  lineHeight: "$16",
+
+  "& svg": {
+    width: "$16",
+    height: "$16",
   },
 });
 
-export { StyledHeader, StyledLogo, TitleSection, FlexSection };
+const BoardCounter = styled("button", {
+  position: "absolute",
+  top: 0,
+  left: "50%",
+  transform: "translateX(-50%)",
+
+  display: "flex",
+  alignItems: "center",
+  gap: "$6",
+  justifyContent: "center",
+
+  padding: "$6 $12",
+  borderRadius: "0 0 $12 $12",
+  backgroundColor: "$infoLightest",
+  boxShadow: "none",
+  border: 0,
+
+  textAlign: "center",
+  fontSize: "$12",
+  lineHeight: "$16",
+  color: "$infoLight",
+
+  transition: "all 0.2s ease-in-out",
+  cursor: "pointer",
+
+  '&[data-state="open"],&:hover': {
+    backgroundColor: "$infoLighter",
+    color: "$infoDark",
+  },
+
+  "& svg": {
+    width: "$12",
+    height: "$12",
+  },
+});
+
+const StyledContent = styled(PopoverPrimitive.Content, {
+  borderRadius: "$12",
+  padding: "$20 0",
+  minWidth: 260,
+  color: "white",
+  backgroundColor: "$primary800",
+  boxShadow: "0px 4px 16px -4px rgba(18, 25, 34, 0.2)",
+});
+
+const StyledArrow = styled(PopoverPrimitive.Arrow, {
+  fill: "$primary800",
+});
+
+const StyledItem = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "$10",
+
+  padding: "$8 $16",
+
+  transition: "background-color 0.2s ease-in-out",
+  cursor: "default",
+
+  "&>p": {
+    flex: "1 1 auto",
+
+    margin: 0,
+
+    fontSize: "$14",
+    color: "white",
+  },
+
+  "> div": {
+    display: "flex",
+    alignItems: "center",
+    gap: "$6",
+
+    color: "$primary200",
+    fontSize: "$12",
+
+    div: {
+      lineHeight: "$12",
+    },
+
+    "& svg": {
+      width: "$12",
+      height: "$12",
+    },
+  },
+
+  "&:hover": {
+    backgroundColor: "$primary700",
+  },
+});
+
+export {
+  StyledHeader,
+  StyledLogo,
+  TitleSection,
+  MergeIconContainer,
+  BoardCounter,
+  StyledContent,
+  StyledArrow,
+  StyledItem,
+};

@@ -3,7 +3,7 @@ import { CSS } from "../../stitches.config";
 import Svg from "../Primitives/Svg";
 
 interface InfoIconProps {
-  size: "24" | "16" | "14";
+  size?: "24" | "16" | "14";
   css?: CSS;
 }
 
@@ -11,6 +11,7 @@ const InfoIcon: React.FC<InfoIconProps> = ({ size, css }) => {
   InfoIcon.defaultProps = {
     css: undefined,
   };
+
   if (size === "14") {
     return (
       <Svg
@@ -30,6 +31,7 @@ const InfoIcon: React.FC<InfoIconProps> = ({ size, css }) => {
       </Svg>
     );
   }
+
   if (size === "16") {
     return (
       <Svg
@@ -48,6 +50,7 @@ const InfoIcon: React.FC<InfoIconProps> = ({ size, css }) => {
       </Svg>
     );
   }
+
   return (
     <Svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
