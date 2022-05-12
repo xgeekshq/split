@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
 import SocketModule from '../socket/socket.module';
+import { VotesModule } from '../votes/votes.module';
 import {
   createCardApplication,
   createCardService,
@@ -17,7 +18,11 @@ import {
 import CardsController from './controller/cards.controller';
 
 @Module({
-  imports: [mongooseBoardModule, forwardRef(() => SocketModule)],
+  imports: [
+    mongooseBoardModule,
+    forwardRef(() => SocketModule),
+    forwardRef(() => VotesModule),
+  ],
   controllers: [CardsController],
   providers: [
     createCardService,

@@ -88,7 +88,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
                 p: "4px",
                 border: "1px solid $colors$primary400",
                 ml: "$12",
-                pointer: "cursor",
+                cursor: "pointer",
               }}
               onClick={handleLottery}
             >

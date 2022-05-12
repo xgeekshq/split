@@ -1,4 +1,5 @@
-import * as mongoose from 'mongoose';
+import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { ObjectId, SchemaTypes, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import User from '../../users/schemas/user.schema';
 import {
@@ -6,21 +7,26 @@ import {
   CommentSchema,
 } from '../../comments/schemas/comment.schema';
 
-export type CardItemDocument = CardItem & mongoose.Document;
+export type CardItemDocument = CardItem & Document;
 
 @Schema()
 export default class CardItem {
   @Prop({ nullable: false })
   text!: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  votes!: User[] | mongoose.Schema.Types.ObjectId[];
+  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }] })
+  votes!: User[] | ObjectId[];
 
   @Prop({ type: [CommentSchema] })
   comments!: CommentDocument[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', nullable: false })
-  createdBy!: User | mongoose.Schema.Types.ObjectId;
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
+  createdBy!: User | ObjectId;
+
+  @Prop()
+  createdByTeam!: string;
 }
 
 export const CardItemSchema = SchemaFactory.createForClass(CardItem);
+
+CardItemSchema.plugin(leanVirtualsPlugin);

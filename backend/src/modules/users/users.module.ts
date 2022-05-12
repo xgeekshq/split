@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { mongooseUserModule } from 'src/infrastructure/database/mongoose.module';
+import TeamsModule from '../teams/teams.module';
 import {
   createUserService,
   getUserService,
@@ -8,7 +9,7 @@ import {
 } from './users.providers';
 
 @Module({
-  imports: [mongooseUserModule],
+  imports: [mongooseUserModule, TeamsModule],
   providers: [
     createUserService,
     getUserService,

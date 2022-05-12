@@ -1,5 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import SocketGateway from '../../src/modules/socket/gateway/socket.gateway';
 import BoardsController from '../../src/modules/boards/controller/boards.controller';
 import {
@@ -13,9 +14,11 @@ import {
   updateBoardService,
 } from '../../src/modules/boards/boards.providers';
 import {
+  createTeamService,
   getTeamApplication,
   getTeamService,
 } from '../../src/modules/teams/providers';
+import { createSchedulesService } from '../../src/modules/schedules/schedules.providers';
 
 describe('BoardsController', () => {
   let controller: BoardsController;
@@ -24,6 +27,7 @@ describe('BoardsController', () => {
     const module = await Test.createTestingModule({
       controllers: [BoardsController],
       providers: [
+        SchedulerRegistry,
         SocketGateway,
         createBoardApplication,
         createBoardService,
@@ -35,6 +39,8 @@ describe('BoardsController', () => {
         updateBoardService,
         deleteBoardApplication,
         deleteBoardService,
+        createSchedulesService,
+        createTeamService,
         {
           provide: getModelToken('User'),
           useValue: {},
@@ -53,6 +59,10 @@ describe('BoardsController', () => {
         },
         {
           provide: getModelToken('TeamUser'),
+          useValue: {},
+        },
+        {
+          provide: getModelToken('Schedules'),
           useValue: {},
         },
       ],

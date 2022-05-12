@@ -49,7 +49,7 @@ export default class VotesController {
     );
 
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -69,7 +69,7 @@ export default class VotesController {
     );
 
     if (!board) throw new BadRequestException(INSERT_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -90,7 +90,7 @@ export default class VotesController {
     );
 
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }
@@ -110,7 +110,7 @@ export default class VotesController {
     );
 
     if (!board) throw new BadRequestException(DELETE_FAILED);
-    this.socketService.sendUpdatedBoard(board, socketId);
+    this.socketService.sendUpdatedBoard(boardId, socketId);
 
     return board;
   }

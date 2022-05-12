@@ -8,6 +8,9 @@ import TeamUser, {
   TeamUserSchema,
 } from '../../modules/teams/schemas/team.user.schema';
 import Team, { TeamSchema } from '../../modules/teams/schemas/teams.schema';
+import Schedules, {
+  SchedulesSchema,
+} from '../../modules/schedules/schemas/schedules.schema';
 
 export const mongooseBoardModule = MongooseModule.forFeature([
   { name: Board.name, schema: BoardSchema },
@@ -27,4 +30,8 @@ export const mongooseTeamModule = MongooseModule.forFeature([
 
 export const mongooseTeamUserModule = MongooseModule.forFeature([
   { name: TeamUser.name, schema: TeamUserSchema },
+]);
+
+export const mongooseSchedulesModule = MongooseModule.forFeature([
+  { name: Schedules.name, schema: SchedulesSchema },
 ]);
