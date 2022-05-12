@@ -6,6 +6,9 @@ import { BoardUser, BoardUserDto, BoardUserToAdd } from "./board.user";
 export interface GetBoardResponse {
   board: BoardType;
   mainBoardData: {
+    _id: string;
+    id: string;
+    title: string;
     team: Team;
     dividedBoards: {
       _id: string;
@@ -35,6 +38,20 @@ export default interface BoardType {
   postAnonymously: boolean;
   submitedByUser?: string;
   submitedAt?: Date;
+}
+
+export interface BoardInfoType {
+  board: BoardType;
+  mainBoardData?: {
+    _id: string;
+    id: string;
+    title: string;
+    team: Team;
+    dividedBoards: {
+      _id: string;
+      title: string;
+    };
+  };
 }
 
 export interface BoardToAdd
