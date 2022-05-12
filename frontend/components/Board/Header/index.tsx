@@ -36,15 +36,12 @@ const BoardHeader = () => {
 
   // Get Board Info
   const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } = boardData!.board;
-  // console.log(boardData!.board, session!.user.id);
 
   // Found sub-board
-  const getSubBoard = (): { id: string; title: string } => {
+  const getSubBoard = () => {
     const board = dividedBoards.filter((board: BoardType) =>
       board.users.filter((user) => user.user === session!.user.id)
     )[0];
-
-    console.log(board);
 
     return {
       id: board.id,
