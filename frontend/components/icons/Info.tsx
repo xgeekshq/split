@@ -9,6 +9,7 @@ interface InfoIconProps {
 
 const InfoIcon: React.FC<InfoIconProps> = ({ size, css }) => {
   InfoIcon.defaultProps = {
+    size: "24",
     css: undefined,
   };
   if (size === "14") {
