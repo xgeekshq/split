@@ -16,7 +16,7 @@ const ChevronRightIcon = ({ css }: CSSProps) => {
         fill="currentColor"
         fillRule="evenodd"
         clipRule="evenodd"
-      ></path>
+      />
     </Svg>
   );
 };

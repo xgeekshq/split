@@ -1,6 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useRecoilValue } from "recoil";
-import { boardState } from "../../../store/board/atoms/board.atom";
+import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
+import Link from "next/link";
+import { boardInfoState } from "../../../store/board/atoms/board.atom";
 import {
   BoardCounter,
   MergeIconContainer,
@@ -21,32 +23,36 @@ import Flex from "../../Primitives/Flex";
 import MergeIcon from "../../icons/Merge";
 import CardAvatars from "../../CardBoard/CardAvatars";
 import Separator from "../../Primitives/Separator";
-import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
 import InfoIcon from "../../icons/Info";
 import BoardType from "../../../types/board/board";
-import { BoardUser } from "../../../types/board/board.user";
+import { BoardUser, BoardUserNoPopulated } from "../../../types/board/board.user";
 import { BreadcrumbType } from "../../../types/board/Breadcrumb";
-import Link from "next/link";
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
 
-  //Atoms
-  const boardData = useRecoilValue(boardState);
+  // Atoms
+  const boardData = useRecoilValue(boardInfoState);
 
   // Get Board Info
   const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } = boardData!.board;
 
   // Found sub-board
-  const getSubBoard = () => {
-    const board = dividedBoards.find((board: BoardType) =>
-      board.users.find((user) => user.user === session!.user.id)
+  const getSubBoard = (): { id: string; title: string } | undefined => {
+    const boardInfo = dividedBoards.find((board: BoardType) =>
+      board.users.find(
+        (user) => (user as unknown as BoardUserNoPopulated).user === session!.user.id
+      )
     );
 
-    return {
-      id: board.id,
-      title: board.title,
-    };
+    if (boardInfo) {
+      return {
+        id: boardInfo._id,
+        title: boardInfo.title,
+      };
+    }
+
+    return undefined;
   };
 
   // Set breadcrumbs
@@ -58,7 +64,7 @@ const BoardHeader = () => {
   ];
 
   if (isSubBoard && !!boardData?.mainBoardData) {
-    const { title: mainTitle, id: mainId } = boardData?.mainBoardData;
+    const { title: mainTitle, id: mainId } = boardData.mainBoardData;
 
     breadcrumbItems.push(
       {
@@ -80,15 +86,14 @@ const BoardHeader = () => {
     <StyledHeader>
       <Flex align="center" justify="between" gap="20">
         <Flex direction="column">
-          <Flex gap={!isSubBoard ? 26 : undefined} align={"center"}>
+          <Flex gap={!isSubBoard ? 26 : undefined} align="center">
             <Breadcrumb items={breadcrumbItems} />
 
-            {!isSubBoard && (
-              <Flex align={"center"} gap={10}>
+            {!isSubBoard && !!getSubBoard() && (
+              <Flex align="center" gap={10}>
                 <Separator data-orientation="vertical" css={{ height: "$14 !important" }} />
-
-                <Link href={`/boards/${getSubBoard().id}`}>
-                  <StyledBoardLink>{getSubBoard().title.replace("team", "")}</StyledBoardLink>
+                <Link href={`/boards/${getSubBoard()?.id}`}>
+                  <StyledBoardLink>{getSubBoard()?.title.replace("team", "")}</StyledBoardLink>
                 </Link>
               </Flex>
             )}
@@ -143,7 +148,7 @@ const BoardHeader = () => {
                   listUsers={users}
                   responsible={false}
                   teamAdmins={false}
-                  stakeholders={true}
+                  stakeholders
                   userId={session!.user.id}
                 />
               </Flex>
@@ -156,13 +161,14 @@ const BoardHeader = () => {
         <Popover>
           <PopoverTrigger asChild>
             <BoardCounter>
-              <InfoIcon />{" "}
-              {dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length} of{" "}
-              {dividedBoards.length} sub-team boards merged
+              <InfoIcon />
+              {
+                dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length
+              } of {dividedBoards.length} sub-team boards merged
             </BoardCounter>
           </PopoverTrigger>
           <StyledPopoverContent>
-            <Flex direction={"column"}>
+            <Flex direction="column">
               {dividedBoards.map((board: BoardType) => (
                 <StyledPopoverItem key={board.title.toLowerCase().split(" ").join("-")}>
                   <p>{board.title}</p>

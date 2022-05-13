@@ -8,7 +8,7 @@ WORKDIR /app/frontend
 COPY ./package.json .
 
 # Install the packages (on the package.json)
-RUN yarn install
+RUN yarn
 
 # Copy all files
 COPY ./ .

@@ -6,6 +6,7 @@ import { io, Socket } from "socket.io-client";
 import { DragDropContext, DropResult } from "@react-forked/dnd";
 import Link from "next/link";
 import Select from "react-select";
+import { useSetRecoilState } from "recoil";
 import Flex from "../../components/Primitives/Flex";
 import { styled } from "../../stitches.config";
 import { NEXT_PUBLIC_BACKEND_URL } from "../../utils/constants";
@@ -22,8 +23,7 @@ import AlertCustomDialog from "../../components/Primitives/AlertCustomDialog";
 import { AlertDialogTrigger } from "../../components/Primitives/AlertDialog";
 import AlertBox from "../../components/Primitives/AlertBox";
 import BoardHeader from "../../components/Board/Header";
-import { useSetRecoilState } from "recoil";
-import { boardState } from "../../store/board/atoms/board.atom";
+import { boardInfoState } from "../../store/board/atoms/board.atom";
 
 const Container = styled(Flex, {
   alignItems: "flex-start",
@@ -80,8 +80,9 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
   const board = data?.board;
 
   // Set Recoil Atom
+  const setBoard = useSetRecoilState(boardInfoState);
+
   if (data) {
-    const setBoard = useSetRecoilState(boardState);
     setBoard(data);
   }
 
@@ -184,7 +185,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
   if (board && userId && socketId && filteredColumns) {
     return (
       <>
-        <BoardHeader board={board} />
+        <BoardHeader />
         <Container>
           <Flex css={{ width: "100%", px: "$36" }} direction="column">
             <Flex>
