@@ -2,15 +2,12 @@ import { useRecoilState } from "recoil";
 import * as React from "react";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { useRouter } from "next/router";
-import { styled, keyframes } from "../../stitches.config";
-import ErrorAlertIcon from "../icons/toast/ErrorAlert";
+import { keyframes, styled } from "../../stitches.config";
 import Text from "./Text";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
 import { toastState } from "../../store/toast/atom/toast.atom";
-import InfoAlertIcon from "../icons/toast/InfoAlert";
-import SuccessAlertIcon from "../icons/toast/SuccessAlert";
-import WarningAlertIcon from "../icons/toast/WarningAlert";
 import { ROUTES } from "../../utils/routes";
+import Icon from "../icons/Icon";
 
 const hide = keyframes({
   "0%": { opacity: 1 },
@@ -131,10 +128,18 @@ const Toast: React.FC = () => {
       }}
     >
       <ToastDescription>
-        {type === ToastStateEnum.ERROR && <ErrorAlertIcon />}
-        {type === ToastStateEnum.SUCCESS && <SuccessAlertIcon />}
-        {type === ToastStateEnum.WARNING && <WarningAlertIcon />}
-        {type === ToastStateEnum.INFO && <InfoAlertIcon />}
+        {type === ToastStateEnum.ERROR && (
+          <Icon name="blob-error" css={{ width: "31px", height: "$32" }} />
+        )}
+        {type === ToastStateEnum.SUCCESS && (
+          <Icon name="blob-success" css={{ width: "31px", height: "$32" }} />
+        )}
+        {type === ToastStateEnum.WARNING && (
+          <Icon name="blob-warning" css={{ width: "31px", height: "$32" }} />
+        )}
+        {type === ToastStateEnum.INFO && (
+          <Icon name="blob-info" css={{ width: "31px", height: "$32" }} />
+        )}
         <Text size="sm">{content}</Text>
       </ToastDescription>
       <ToastClose

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { SetterOrUpdater } from "recoil";
 import Text from "../../Primitives/Text";
-import MainBoardIcon from "../../icons/MainBoard";
 import Flex from "../../Primitives/Flex";
 import Tooltip from "../../Primitives/Tooltip";
 import { CreateBoardData } from "../../../store/createBoard/atoms/create-board.atom";
@@ -92,13 +91,7 @@ const MainBoardCard = React.memo(({ team }: { team: Team }) => {
           <Flex align="center" gap="8">
             <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
               <div>
-                <MainBoardIcon
-                  css={{
-                    zIndex: 1,
-                    color: "black",
-                    ":nth-child(2n)": { color: "white" },
-                  }}
-                />
+                <Icon css={{ width: "31px", height: "$32" }} name="blob-split" />
               </div>
             </Tooltip>
             <Text heading="6">{board.title}</Text>

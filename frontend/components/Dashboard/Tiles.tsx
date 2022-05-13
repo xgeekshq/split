@@ -2,8 +2,8 @@ import { styled } from "../../stitches.config";
 import Box from "../Primitives/Box";
 import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
-import ForwardArrowIcon from "../icons/ForwardArrow";
 import { HeaderInfo } from "../../types/dashboard/header.info";
+import Icon from "../icons/Icon";
 
 const HeaderCard = styled(Flex, Box, {
   borderRadius: "$12",
@@ -40,7 +40,7 @@ const Tiles: React.FC<TilesProps> = ({ data }) => {
           </Text>
         </Flex>
         <Flex css={{ justifySelf: "end", alignSelf: "end", mr: "$24", mb: "$24" }}>
-          <ForwardArrowIcon />
+          <Icon name="arrow-long-right" css={{ width: "$24", height: "$24" }} />
         </Flex>
       </HeaderCard>
       <HeaderCard
@@ -62,7 +62,7 @@ const Tiles: React.FC<TilesProps> = ({ data }) => {
           </Text>
         </Flex>
         <Flex css={{ justifySelf: "end", alignSelf: "end", mr: "$24", mb: "$24" }}>
-          <ForwardArrowIcon />
+          <Icon name="arrow-long-right" css={{ width: "$24", height: "$24" }} />
         </Flex>
       </HeaderCard>
       <HeaderCard
@@ -79,7 +79,7 @@ const Tiles: React.FC<TilesProps> = ({ data }) => {
           </Text>
         </Flex>
         <Flex css={{ justifySelf: "end", alignSelf: "end", mr: "$24", mb: "$24" }}>
-          <ForwardArrowIcon />
+          <Icon name="arrow-long-right" css={{ width: "$24", height: "$24" }} />
         </Flex>
       </HeaderCard>
     </Flex>

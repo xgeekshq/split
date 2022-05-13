@@ -15,7 +15,6 @@ import SchemaLoginForm from "../../schema/schemaLoginForm";
 import { DASHBOARD_ROUTE } from "../../utils/routes";
 import Input from "../Primitives/Input";
 import Button from "../Primitives/Button";
-import OrSeparator from "../icons/OrSeparator";
 import LogoIcon from "../icons/Logo";
 import {
   AUTH_SSO,
@@ -24,12 +23,11 @@ import {
   NEXT_PUBLIC_ENABLE_GOOGLE,
 } from "../../utils/constants";
 import useUser from "../../hooks/useUser";
-import MicrosoftIcon from "../icons/Microsoft";
-import GitHubIcon from "../icons/Github";
 import { transformLoginErrorCodes } from "../../utils/errorCodes";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
 import { getAuthError } from "../../errors/auth-messages";
 import { toastState } from "../../store/toast/atom/toast.atom";
+import Icon from "../icons/Icon";
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
@@ -172,22 +170,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                   mb: "$32",
                 }}
               >
-                <OrSeparator />
+                <Icon name="or-separator" />
               </Flex>
               <Flex gap="32">
                 {NEXT_PUBLIC_ENABLE_GIT && (
                   <StyledHoverIconFlex>
-                    <GitHubIcon />
+                    <Icon css={{ width: "$60", height: "$60" }} name="github" />
                   </StyledHoverIconFlex>
                 )}
                 {NEXT_PUBLIC_ENABLE_GOOGLE && (
                   <StyledHoverIconFlex>
-                    <GitHubIcon />
+                    <Icon css={{ width: "$60", height: "$60" }} name="github" />
                   </StyledHoverIconFlex>
                 )}
                 {NEXT_PUBLIC_ENABLE_AZURE && (
                   <StyledHoverIconFlex data-loading={loading.sso} onClick={handleLoginAzure}>
-                    <MicrosoftIcon />
+                    <Icon css={{ width: "$60", height: "$60" }} name="microsoft" />
                   </StyledHoverIconFlex>
                 )}
               </Flex>

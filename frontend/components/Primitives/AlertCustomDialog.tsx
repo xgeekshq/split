@@ -8,8 +8,8 @@ import {
 import Flex from "./Flex";
 import Text from "./Text";
 import Separator from "./Separator";
-import CrossIcon from "../icons/CrossIcon";
 import { CSS } from "../../stitches.config";
+import Icon from "../icons/Icon";
 
 interface BoardAlertDialog {
   defaultOpen: boolean;
@@ -49,7 +49,7 @@ const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
             onClick={handleClose}
           >
             <Flex css={{ "& svg": { color: "$primary400" } }}>
-              <CrossIcon size="24" />
+              <Icon name="close" css={{ width: "$24", height: "$24" }} />
             </Flex>
           </AlertDialogCancel>
         </Flex>

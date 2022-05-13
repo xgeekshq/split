@@ -20,7 +20,7 @@ const CreateBoardTipBar: React.FC = () => {
       }}
     >
       <Icon
-        name="bulb-idea"
+        name="blob-idea"
         css={{
           width: "47px",
           height: "$48",

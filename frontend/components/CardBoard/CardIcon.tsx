@@ -13,7 +13,7 @@ const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipati
       <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
         <div>
           <Icon
-            name="bulb-split"
+            name="blob-split"
             css={{
               width: "31px",
               height: "$32",
@@ -29,7 +29,7 @@ const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipati
   if (isDividedBoardsEmpty && team) {
     return (
       <Icon
-        name="bulb-team"
+        name="blob-team"
         css={{
           width: "31px",
           height: "$32",
@@ -44,7 +44,7 @@ const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipati
   if (isDividedBoardsEmpty && !team) {
     return (
       <Icon
-        name="bulb-personal"
+        name="blob-personal"
         css={{
           width: "31px",
           height: "$32",

@@ -6,14 +6,13 @@ import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import CardFooter from "./CardFooter";
 import CardItemList from "./CardItem/CardItemList";
-import MergedIcon from "../../icons/Merged";
 import Comments from "../Comment/Comments";
 import { getCommentsFromCardGroup } from "../../../helper/board/comments";
 import PopoverCardSettings from "./PopoverSettings";
 import AddCardOrComment from "../AddCardOrComment";
 import DeleteCard from "./DeleteCard";
 import { BoardUser } from "../../../types/board/board.user";
-import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
+import Icon from "../../icons/Icon";
 
 const Container = styled(Flex, {
   borderRadius: "$8",
@@ -112,7 +111,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   {isCardGroup && (
                     <Flex justify="between" css={{ py: "$8" }}>
                       <Flex gap="4" align="center">
-                        <MergedIcon />
+                        <Icon name="merge" css={{ width: "$14", height: "$14" }} />
                         <Text size="xxs" weight="medium">
                           {card.items.length} merged cards
                         </Text>
@@ -124,7 +123,9 @@ const CardBoard = React.memo<CardBoardProps>(
                       <Text size="md" css={{ wordBreak: "break-word" }}>
                         {card.text}
                       </Text>
-                      {isSubmited && <VerticalThreeDotsIcon />}
+                      {isSubmited && (
+                        <Icon name="menu-dots" css={{ width: "$20", height: "$20" }} />
+                      )}
                       {!isSubmited && (
                         <PopoverCardSettings
                           firstOne={false}

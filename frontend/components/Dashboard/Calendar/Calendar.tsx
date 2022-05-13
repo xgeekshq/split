@@ -3,11 +3,10 @@ import { CalendarTileProperties } from "react-calendar";
 import { useState } from "react";
 import { styled } from "../../../stitches.config";
 import Flex from "../../Primitives/Flex";
-import NextIcon from "../../icons/calendar/NextIcon";
-import PrevIcon from "../../icons/calendar/PrevIcon";
 import Text from "../../Primitives/Text";
 import NoMeetingsImage from "../../images/NoMeetings";
 import StyledCalendar from "./StyledCalendar";
+import Icon from "../../icons/Icon";
 
 const StyledContainer = styled(Flex, {
   height: "100%",
@@ -70,8 +69,8 @@ const CalendarBar = () => {
             ["Su", "Mo", "Th", "We", "Th", "Fr", "Sa"][date.getDay()]
           }
           minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
-          nextLabel={<NextIcon />}
-          prevLabel={<PrevIcon />}
+          nextLabel={<Icon name="arrow-right" />}
+          prevLabel={<Icon name="arrow-left" />}
           onChange={handleOnChange}
           value={currentValue}
           minDetail="year"

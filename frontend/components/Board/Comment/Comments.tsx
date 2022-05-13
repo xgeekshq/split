@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { CardItemType } from "../../../types/card/cardItem";
 import CommentType from "../../../types/comment/comment";
-import PlusIcon from "../../icons/PlusIcon";
 import Flex from "../../Primitives/Flex";
 import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
 import AddCardOrComment from "../AddCardOrComment";
 import Comment from "./Comment";
+import Icon from "../../icons/Icon";
 
 interface CommentsListProps {
   comments: CommentType[];
@@ -76,7 +76,7 @@ const Comments = React.memo(
             css={{ "@hover": { "&:hover": { cursor: "pointer" } } }}
             onClick={handleSetCreateComment}
           >
-            <PlusIcon size="16" css={{ color: "$primary400" }} />
+            <Icon name="plus" css={{ color: "$primary400", width: "$16", height: "$16" }} />
           </Flex>
         )}
       </Flex>
