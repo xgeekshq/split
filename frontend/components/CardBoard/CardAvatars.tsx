@@ -43,7 +43,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
         }
         return acc;
       }, []);
-    }, [listUsers, responsible, teamAdmins, userId]);
+    }, [listUsers, responsible, teamAdmins, stakeholders, userId]);
 
     const usersCount = data.length;
 
@@ -71,14 +71,14 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return col;
     }, [getRandomColor]);
 
-    const stakeholdersColors = {
-      border: true,
-      bg: "white",
-      fontColor: "$primary400",
-    };
-
     const renderAvatar = useCallback(
       (value: User | string, idx) => {
+        const stakeholdersColors = {
+          border: true,
+          bg: "white",
+          fontColor: "$primary400",
+        };
+
         if (typeof value === "string") {
           return (
             <Avatar
@@ -107,7 +107,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
           </Tooltip>
         );
       },
-      [colors]
+      [colors, stakeholders]
     );
 
     return (

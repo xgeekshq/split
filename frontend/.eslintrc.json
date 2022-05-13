@@ -17,13 +17,26 @@
     },
     "ecmaVersion": 12,
     "sourceType": "module",
-    "extraFileExtensions": [".css"],
+    "extraFileExtensions": [
+      ".css"
+    ],
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": [
+    "react",
+    "@typescript-eslint"
+  ],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
     "react/jsx-props-no-spreading": "off",
     "no-underscore-dangle": "off",
     "no-param-reassign": "off",
@@ -33,6 +46,7 @@
     "import/no-cycle": "off",
     "no-plusplus": "off",
     "no-useless-escape": "off",
-    "no-restricted-exports": "off"
+    "no-restricted-exports": "off",
+    "jsx-a11y/anchor-is-valid": "off"
   }
 }
