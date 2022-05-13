@@ -6,6 +6,7 @@ import { boardInfoState } from "../../../store/board/atoms/board.atom";
 import {
   BoardCounter,
   MergeIconContainer,
+  RecurrentIconContainer,
   StyledBoardLink,
   StyledHeader,
   StyledLogo,
@@ -14,7 +15,6 @@ import {
   StyledPopoverItem,
   TitleSection,
 } from "./styles";
-import RecurrentIcon from "../../icons/Recurrent";
 import Tooltip from "../../Primitives/Tooltip";
 import Text from "../../Primitives/Text";
 import LogoIcon from "../../icons/Logo";
@@ -105,9 +105,9 @@ const BoardHeader = () => {
 
             {recurrent && (
               <Tooltip content="Occurs every X week">
-                <div>
-                  <RecurrentIcon />
-                </div>
+                <RecurrentIconContainer>
+                  <Icon name="recurring" />
+                </RecurrentIconContainer>
               </Tooltip>
             )}
 

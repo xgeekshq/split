@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import BoardType from "../../../types/board/board";
-import CopyIcon from "../../icons/CopyIcon";
 import Flex from "../../Primitives/Flex";
 import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
@@ -8,6 +7,7 @@ import Tooltip from "../../Primitives/Tooltip";
 import CardAvatars from "../CardAvatars";
 import DeleteBoard from "../DeleteBoard";
 import CountCards from "./CountCards";
+import Icon from "../../icons/Icon";
 
 type CardEndProps = {
   board: BoardType;
@@ -91,7 +91,14 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
               />
               <Tooltip content="Duplicate board">
                 <Flex pointer onClick={() => console.log("DUPLICATE")}>
-                  <CopyIcon />
+                  <Icon
+                    name="copy"
+                    css={{
+                      color: "$primary400",
+                      width: "$20",
+                      height: "$20",
+                    }}
+                  />
                 </Flex>
               </Tooltip>
               <DeleteBoard boardId={id} boardName={title} />

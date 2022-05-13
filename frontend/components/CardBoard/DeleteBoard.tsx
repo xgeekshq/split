@@ -1,9 +1,9 @@
 import useBoard from "../../hooks/useBoard";
 import { AlertDialogTrigger } from "../Primitives/AlertDialog";
 import Flex from "../Primitives/Flex";
-import BinIcon from "../icons/BinIcon";
 import Tooltip from "../Primitives/Tooltip";
 import AlertCustomDialog from "../Primitives/AlertCustomDialog";
+import Icon from "../icons/Icon";
 
 type DeleteBoardProps = { boardId: string; boardName: string };
 
@@ -27,7 +27,14 @@ const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName }) => {
       <Tooltip content="Delete board">
         <AlertDialogTrigger asChild>
           <Flex pointer>
-            <BinIcon />
+            <Icon
+              name="trash-alt"
+              css={{
+                color: "$primary400",
+                width: "$20",
+                height: "$20",
+              }}
+            />
           </Flex>
         </AlertDialogTrigger>
       </Tooltip>

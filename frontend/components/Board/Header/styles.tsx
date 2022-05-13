@@ -156,6 +156,27 @@ const StyledBoardLink = styled("a", {
   },
 });
 
+const RecurrentIconContainer = styled("div", {
+  width: "$12",
+  height: "$12",
+
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  borderRadius: "$round",
+
+  backgroundColor: "$primary800",
+  color: "white",
+
+  cursor: "pointer",
+
+  svg: {
+    width: "$8",
+    height: "$8",
+  },
+});
+
 export {
   StyledHeader,
   StyledLogo,
@@ -166,4 +187,5 @@ export {
   StyledPopoverArrow,
   StyledPopoverItem,
   StyledBoardLink,
+  RecurrentIconContainer,
 };
