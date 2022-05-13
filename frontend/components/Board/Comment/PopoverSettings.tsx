@@ -1,9 +1,7 @@
 import React from "react";
 import Text from "../../Primitives/Text";
 import { Popover, PopoverContent, PopoverItem, PopoverTrigger } from "../../Primitives/Popover";
-import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
-import EditIcon from "../../icons/Edit";
-import BinIcon from "../../icons/BinIcon";
+import Icon from "../../icons/Icon";
 
 interface PopoverSettingsContentProps {
   setEditCard: () => void;
@@ -21,13 +19,25 @@ const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   return (
     <PopoverContent>
       <PopoverItem onClick={setEditCard} gap="8" align="center">
-        <EditIcon dropdown />
+        <Icon
+          name="edit"
+          css={{
+            width: "$20",
+            height: "$20",
+          }}
+        />
         <Text size="sm" weight="medium">
           Edit comment
         </Text>
       </PopoverItem>
       <PopoverItem gap="8" align="center" onClick={setDeleteCard}>
-        <BinIcon />
+        <Icon
+          name="trash-alt"
+          css={{
+            width: "$20",
+            height: "$20",
+          }}
+        />
         <Text size="sm" weight="medium">
           Delete comment
         </Text>
@@ -49,7 +59,7 @@ const PopoverCommentSettings: React.FC<PopoverSettingsProps> = React.memo(
     return (
       <Popover>
         <PopoverTrigger css={{ position: "relative" }}>
-          <VerticalThreeDotsIcon />
+          <Icon name="menu-dots" css={{ width: "$20", height: "$20" }} />
         </PopoverTrigger>
         <PopoverCommentSettingsContent
           setEditCard={handleEditing}

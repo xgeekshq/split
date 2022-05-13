@@ -4,7 +4,7 @@ import { styled } from "../../stitches.config";
 import isEmpty from "../../utils/isEmpty";
 import Flex from "./Flex";
 import Text from "./Text";
-import InfoIcon from "../icons/Info";
+import Icon from "../icons/Icon";
 
 const StyledTextArea = styled("textarea", {
   // Reset
@@ -183,7 +183,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
             },
           }}
         >
-          {currentState === "error" && <InfoIcon size="24" />}
+          {currentState === "error" && <Icon name="info" css={{ width: "$24", height: "$24" }} />}
           <Text
             css={{
               color: currentState === "error" ? "$dangerBase" : "$primary300",

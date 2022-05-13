@@ -19,7 +19,7 @@ const StyledArrow = styled(TooltipPrimitive.Arrow, { fill: "$primary800" });
 
 const Tooltip: React.FC<{ content: string; children: ReactNode }> = ({ children, content }) => {
   return (
-    <TooltipPrimitive.Root>
+    <TooltipPrimitive.Root delayDuration={200}>
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <StyledContent side="top" align="center">
         {content}

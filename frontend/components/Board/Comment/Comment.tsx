@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import useComments from "../../../hooks/useComments";
 import CommentType from "../../../types/comment/comment";
 import DeleteCommentDto from "../../../types/comment/deleteComment.dto";
-import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import AddCardOrComment from "../AddCardOrComment";
 import PopoverCommentSettings from "./PopoverSettings";
+import Icon from "../../icons/Icon";
 
 interface CommentProps {
   comment: CommentType;
@@ -54,7 +54,7 @@ const Comment: React.FC<CommentProps> = React.memo(
           <Flex direction="column">
             <Flex justify="between" css={{ width: "100%" }}>
               <Text size="xs">{comment.text}</Text>
-              {isSubmited && <VerticalThreeDotsIcon />}
+              {isSubmited && <Icon name="menu-dots" css={{ width: "$20", height: "$20" }} />}
               {!isSubmited && (
                 <PopoverCommentSettings
                   handleEditing={handleEditing}

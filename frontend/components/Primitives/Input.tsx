@@ -4,8 +4,7 @@ import Text from "./Text";
 import { styled } from "../../stitches.config";
 import Flex from "./Flex";
 import isEmpty from "../../utils/isEmpty";
-import EyeIcon from "../icons/Eye";
-import InfoIcon from "../icons/Info";
+import Icon from "../icons/Icon";
 
 const PlaceholderText = styled(Text, {
   color: "$primary300",
@@ -257,7 +256,15 @@ const Input: React.FC<InputProps> = ({
     >
       {!!icon && (
         <IconWrapper data-iconposition={iconPosition} data-type={type} onClick={handleOnClickIcon}>
-          {icon === "eye" && <EyeIcon />}
+          {icon === "eye" && (
+            <Icon
+              name="eye"
+              css={{
+                width: "$24",
+                height: "$24",
+              }}
+            />
+          )}
         </IconWrapper>
       )}
       <Flex>
@@ -284,7 +291,7 @@ const Input: React.FC<InputProps> = ({
       <Flex justify={!isHelperEmpty ? "between" : "end"}>
         {!isHelperEmpty && (
           <HelperTextWrapper gap="4" align="center" css={{ mt: "$8" }}>
-            {currentState === "error" && <InfoIcon size="24" />}
+            {currentState === "error" && <Icon name="info" css={{ width: "$24", height: "$24" }} />}
             <Text
               css={{
                 color: currentState === "error" ? "$dangerBase" : "$primary300",

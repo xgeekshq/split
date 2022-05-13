@@ -8,8 +8,8 @@ import Flex from "../Primitives/Flex";
 import LogoIcon from "../icons/Logo";
 import Input from "../Primitives/Input";
 import Text from "../Primitives/Text";
-import LeftArrowIcon from "../icons/LeftArrow";
 import { EmailUser } from "../../types/user/user";
+import Icon from "../icons/Icon";
 
 const MainContainer = styled("form", Flex, {
   width: "$500",
@@ -78,7 +78,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
           Recover password
         </Button>
         <GoBackWrapper gap="8" align="center" onClick={handleShowTrubleLogginIn}>
-          <LeftArrowIcon />
+          <Icon css={{ width: "$16", height: "$16" }} name="arrow-long-left" />
           <Text>Go back</Text>
         </GoBackWrapper>
       </FormProvider>

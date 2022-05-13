@@ -1,7 +1,7 @@
-import LampIcon from "../icons/LampIcon";
 import Flex from "../Primitives/Flex";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
+import Icon from "../icons/Icon";
 
 const TextWhite = styled(Text, { color: "white", mt: "$24" });
 const LiWhite = styled("li", Text, { color: "$primary100", fontSize: "$14", lineHeight: "$20" });
@@ -19,7 +19,13 @@ const CreateBoardTipBar: React.FC = () => {
         maxWidth: "$384",
       }}
     >
-      <LampIcon />
+      <Icon
+        name="blob-idea"
+        css={{
+          width: "47px",
+          height: "$48",
+        }}
+      />
       <TextWhite heading="6">Sub-teams</TextWhite>
       <UnorderedList>
         <LiWhite>The participants of the sub-teams are generated randomly.</LiWhite>

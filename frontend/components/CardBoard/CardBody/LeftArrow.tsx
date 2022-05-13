@@ -1,7 +1,6 @@
 import React from "react";
-import LateralUpArrow from "../../icons/LateralUpArrow";
-import StartArrow from "../../icons/StartArrow";
 import Flex from "../../Primitives/Flex";
+import Icon from "../../icons/Icon";
 
 type LeftArrowProps = {
   isDashboard: boolean;
@@ -13,13 +12,29 @@ const LeftArrow = ({ isDashboard, index }: LeftArrowProps) => {
     <Flex>
       <Flex css={{ position: "relative", size: 0 }}>
         {(isDashboard || index === 0) && (
-          <Flex css={{ mt: "$11", ml: "$8", mr: "$8" }}>
-            <LateralUpArrow />
+          <Flex css={{ mt: "$11", ml: "$8", mr: "$7" }}>
+            <Icon
+              name="arrow_long"
+              css={{
+                width: "$18",
+                height: "33px",
+                color: "$primary100",
+              }}
+            />
+            {/* <LateralUpArrow /> */}
           </Flex>
         )}
         {!isDashboard && index !== 0 && (
           <Flex css={{ mt: "$2", ml: "13px", mr: "$4", position: "relative", bottom: "42px" }}>
-            <StartArrow />
+            <Icon
+              name="line_long"
+              css={{
+                width: "13px",
+                height: "82px",
+                color: "$primary100",
+              }}
+            />
+            {/* <StartArrow /> */}
           </Flex>
         )}
       </Flex>

@@ -1,11 +1,12 @@
 import React from "react";
 import { useSetRecoilState } from "recoil";
-import PlusIcon from "../icons/PlusIcon";
 import { styled } from "../../stitches.config";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
 import { createBoardState } from "../../store/createBoard/atoms/create-board.atom";
+import Icon from "../icons/Icon";
+import CalendarBar from "../Dashboard/Calendar/Calendar";
 
 const AddNewBoardButton = styled(Button, {
   width: "fit-content",
@@ -40,13 +41,13 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
           {isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
           {isBoards && <Text heading="1">Boards</Text>}
           <AddNewBoardButton onClick={handleOnClickNewBoard} size={isDashboard ? "sm" : "md"}>
-            <PlusIcon css={{ color: "white" }} />
+            <Icon name="plus" css={{ color: "white" }} />
             Add new board
           </AddNewBoardButton>
         </Flex>
         {children}
       </Flex>
-      {/* {isDashboard && <CalendarBar />} */}
+      {isDashboard && <CalendarBar />}
     </Main>
   );
 };

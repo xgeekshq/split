@@ -4,8 +4,6 @@ import Flex from "../../Primitives/Flex";
 import { styled } from "../../../stitches.config";
 import Text from "../../Primitives/Text";
 import Box from "../../Primitives/Box";
-import RecurrentIcon from "../../icons/Recurrent";
-import Lock from "../../icons/Lock";
 import CardIcon from "../CardIcon";
 import CardAvatars from "../CardAvatars";
 import Tooltip from "../../Primitives/Tooltip";
@@ -16,11 +14,33 @@ import CardTitle from "./CardTitle";
 import SubBoards from "./SubBoards";
 import CountCards from "./CountCards";
 import CenterMainBoard from "./CenterMainBoard";
+import Icon from "../../icons/Icon";
 
 const InnerContainer = styled(Flex, Box, {
   px: "$24",
   backgroundColor: "$white",
   borderRadius: "$12",
+});
+
+const RecurrentIconContainer = styled("div", {
+  width: "$12",
+  height: "$12",
+
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  borderRadius: "$round",
+
+  backgroundColor: "$primary800",
+  color: "white",
+
+  cursor: "pointer",
+
+  svg: {
+    width: "$8",
+    height: "$8",
+  },
 });
 
 type CardBodyProps = {
@@ -106,12 +126,21 @@ const CardBody = React.memo<CardBodyProps>(
                       of {dividedBoardsCount}
                     </Text>
                   )}
-                  {!userIsParticipating && !isDashboard && <Lock />}
+                  {!userIsParticipating && !isDashboard && (
+                    <Icon
+                      name="lock"
+                      css={{
+                        color: "$primary300",
+                        width: "17px",
+                        height: "$16",
+                      }}
+                    />
+                  )}
                   {board.recurrent && (
                     <Tooltip content="Recurrs every X week">
-                      <div>
-                        <RecurrentIcon />
-                      </div>
+                      <RecurrentIconContainer>
+                        <Icon name="recurring" />
+                      </RecurrentIconContainer>
                     </Tooltip>
                   )}
                   {!isDashboard && isSubBoard && (

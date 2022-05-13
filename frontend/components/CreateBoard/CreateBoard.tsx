@@ -1,13 +1,13 @@
 import { useSetRecoilState } from "recoil";
 import { styled } from "../../stitches.config";
 import { createBoardState } from "../../store/createBoard/atoms/create-board.atom";
-import CrossIcon from "../icons/CrossIcon";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
 import CreateBoardContent from "./Content";
 import CreateBoardTipBar from "./TipBar";
+import Icon from "../icons/Icon";
 
 const MainContainter = styled(Flex, {
   backgroundColor: "white",
@@ -27,11 +27,22 @@ const CreateBoard: React.FC = () => {
       >
         <Text heading="3">Add new SPLIT board</Text>
         <Button
-          css={{ "& svg": { size: "$40 !important", color: "$primary800" } }}
+          css={{
+            "& svg": {
+              size: "$40 !important",
+              color: "$primary800",
+            },
+
+            transition: "background-color 0.2s ease-in-out",
+
+            "&:hover": {
+              backgroundColor: "$primaryLightest",
+            },
+          }}
           isIcon
           onClick={() => setCreateBoardState(false)}
         >
-          <CrossIcon size="24" />
+          <Icon name="close" />
         </Button>
       </Flex>
       <Separator orientation="horizontal" css={{ backgroundColor: "$primary100" }} />

@@ -1,8 +1,8 @@
 import { CardItemType } from "../../../../types/card/cardItem";
-import DoubleVerticalSeparatorIcon from "../../../icons/DoubleVerticalSeparator";
 import Flex from "../../../Primitives/Flex";
 import Separator from "../../../Primitives/Separator";
 import CardItem from "./CardItem";
+import Icon from "../../../icons/Icon";
 
 interface CardItemListProps {
   items: CardItemType[];
@@ -40,7 +40,10 @@ const CardItemList: React.FC<CardItemListProps> = ({
           {idx !== 0 && (
             <Flex css={{ width: "100%" }} align="center">
               <Separator orientation="horizontal" css={{ backgroundColor: "white" }} />
-              <DoubleVerticalSeparatorIcon css={{ borderRadius: "$round" }} />
+              <Icon
+                name="double-vertical-separator"
+                css={{ width: "$14", height: "$14", borderRadius: "$round" }}
+              />
               <Separator orientation="horizontal" css={{ backgroundColor: "white" }} />
             </Flex>
           )}

@@ -6,6 +6,7 @@ import { boardInfoState } from "../../../store/board/atoms/board.atom";
 import {
   BoardCounter,
   MergeIconContainer,
+  RecurrentIconContainer,
   StyledBoardLink,
   StyledHeader,
   StyledLogo,
@@ -14,19 +15,17 @@ import {
   StyledPopoverItem,
   TitleSection,
 } from "./styles";
-import RecurrentIcon from "../../icons/Recurrent";
 import Tooltip from "../../Primitives/Tooltip";
 import Text from "../../Primitives/Text";
 import LogoIcon from "../../icons/Logo";
 import Breadcrumb from "../../breadcrumb/Breadcrumb";
 import Flex from "../../Primitives/Flex";
-import MergeIcon from "../../icons/Merge";
 import CardAvatars from "../../CardBoard/CardAvatars";
 import Separator from "../../Primitives/Separator";
-import InfoIcon from "../../icons/Info";
 import BoardType from "../../../types/board/board";
 import { BoardUser, BoardUserNoPopulated } from "../../../types/board/board.user";
 import { BreadcrumbType } from "../../../types/board/Breadcrumb";
+import Icon from "../../icons/Icon";
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
@@ -106,16 +105,16 @@ const BoardHeader = () => {
 
             {recurrent && (
               <Tooltip content="Occurs every X week">
-                <div>
-                  <RecurrentIcon />
-                </div>
+                <RecurrentIconContainer>
+                  <Icon name="recurring" />
+                </RecurrentIconContainer>
               </Tooltip>
             )}
 
             {isSubBoard && !submitedAt && (
               <Tooltip content="Unmerged">
                 <MergeIconContainer isMerged={!!submitedAt}>
-                  <MergeIcon />
+                  <Icon name="merge" />
                 </MergeIconContainer>
               </Tooltip>
             )}
@@ -161,7 +160,7 @@ const BoardHeader = () => {
         <Popover>
           <PopoverTrigger asChild>
             <BoardCounter>
-              <InfoIcon />
+              <Icon name="info" />
               {
                 dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length
               } of {dividedBoards.length} sub-team boards merged
@@ -176,7 +175,7 @@ const BoardHeader = () => {
                   <div>
                     {board.submitedAt ? "Merged" : "Unmerged"}
                     <MergeIconContainer isMerged={!!board.submitedAt}>
-                      <MergeIcon />
+                      <Icon name="merge" />
                     </MergeIconContainer>{" "}
                   </div>
                 </StyledPopoverItem>

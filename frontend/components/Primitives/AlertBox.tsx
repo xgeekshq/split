@@ -1,9 +1,8 @@
 import * as React from "react";
 import Text from "./Text";
-import AlertIcon from "../icons/toast/ErrorAlert";
-import InfoAlertIcon from "../icons/toast/InfoAlert";
 import Flex from "./Flex";
 import { styled } from "../../stitches.config";
+import Icon from "../icons/Icon";
 
 interface AlertBoxProps {
   type: "warning" | "info";
@@ -45,7 +44,14 @@ const AlertBox: React.FC<AlertBoxProps> = ({ type, title, text, children }) => {
       }}
     >
       <Flex align="center">
-        <AlertIconStyle> {isWarning ? <AlertIcon /> : <InfoAlertIcon />}</AlertIconStyle>
+        <AlertIconStyle>
+          {" "}
+          {isWarning ? (
+            <Icon name="blob-error" css={{ width: "31px", height: "$32" }} />
+          ) : (
+            <Icon name="blob-info" css={{ width: "31px", height: "$32" }} />
+          )}
+        </AlertIconStyle>
         <AlertText direction="column">
           {!!title && <Text heading="5">{title}</Text>}
 

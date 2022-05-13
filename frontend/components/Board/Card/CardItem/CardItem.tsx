@@ -7,7 +7,7 @@ import CardFooter from "../CardFooter";
 import PopoverCardSettings from "../PopoverSettings";
 import AddCardOrComment from "../../AddCardOrComment";
 import DeleteCard from "../DeleteCard";
-import VerticalThreeDotsIcon from "../../../icons/VerticalThreeDots";
+import Icon from "../../../icons/Icon";
 
 interface CardItemProps {
   item: CardItemType;
@@ -66,7 +66,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
               <Text size="sm">{item.text}</Text>
               {isSubmited && (
                 <Flex css={{ position: "relative", top: firstOne ? "-35px" : 0 }}>
-                  <VerticalThreeDotsIcon />
+                  <Icon name="menu-dots" css={{ width: "$20", height: "$20" }} />
                 </Flex>
               )}
               {!isSubmited && (
