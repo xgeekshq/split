@@ -1,9 +1,6 @@
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { styled } from "../../../stitches.config";
 import { Team } from "../../../types/team/team";
-import CrossIcon from "../../icons/CrossIcon";
-import EditIcon from "../../icons/Edit";
-import InfoIcon from "../../icons/Info";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +13,7 @@ import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
 import useCreateBoard from "../../../hooks/useCreateBoard";
 import isEmpty from "../../../utils/isEmpty";
+import Icon from "../../icons/Icon";
 
 interface QuickEditSubTeamsProps {
   team: Team;
@@ -131,8 +129,28 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Flex align="center" justify="end" css={{ py: "$14", cursor: "pointer" }} gap="8">
-          <EditIcon dropdown={false} />
+        <Flex
+          align="center"
+          justify="end"
+          css={{
+            py: "$14",
+            cursor: "pointer",
+            transition: "text-decoration 0.2s ease-in-out",
+            "&:hover": {
+              "&>span": {
+                textDecoration: "underline",
+              },
+            },
+          }}
+          gap="8"
+        >
+          <Icon
+            css={{
+              width: "$16",
+              height: "$16",
+            }}
+            name="edit"
+          />
           <Text size="sm" weight="medium">
             Quick edit sub-teams configurations
           </Text>
@@ -142,8 +160,16 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
         <Flex justify="between" align="center" css={{ px: "$32", py: "$24" }}>
           <Text heading="4">Quick edit sub-teams configurations</Text>
           <AlertDialogCancel isIcon asChild css={{ p: 0, height: "$24" }}>
-            <Flex css={{ "& svg": { color: "$primary400" } }}>
-              <CrossIcon size="24" />
+            <Flex
+              css={{
+                "& svg": {
+                  color: "$primary400",
+                  width: "$24 !important",
+                  height: "$24 !important",
+                },
+              }}
+            >
+              <Icon name="close" />
             </Flex>
           </AlertDialogCancel>
         </Flex>
@@ -151,7 +177,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
         <Flex direction="column" css={{ pt: "$29", px: "$32", pb: "$32" }}>
           <Flex>
             <Flex css={{ position: "relative", top: "3px" }}>
-              <InfoIcon size="16" />
+              <Icon name="info" css={{ width: "$16", height: "$16", color: "$primary500" }} />
             </Flex>
             <Text css={{ pl: "$8" }} size="md" color="primary500">
               Note, if you change any of the two values below, the other value will adjust

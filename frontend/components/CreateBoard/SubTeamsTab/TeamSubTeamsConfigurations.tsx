@@ -6,7 +6,6 @@ import { getAllTeams } from "../../../api/teamService";
 import Flex from "../../Primitives/Flex";
 import Text from "../../Primitives/Text";
 import Box from "../../Primitives/Box";
-import InfoIcon from "../../icons/Info";
 import Tooltip from "../../Primitives/Tooltip";
 import MainBoardCard from "./MainBoardCard";
 import {
@@ -15,6 +14,7 @@ import {
 } from "../../../store/createBoard/atoms/create-board.atom";
 import QuickEditSubTeams from "./QuickEditSubTeams";
 import { getStakeholders } from "../../../api/boardService";
+import Icon from "../../icons/Icon";
 
 const StyledBox = styled(Flex, Box, { borderRadius: "$12", backgroundColor: "white" });
 
@@ -53,7 +53,14 @@ const TeamSubTeamsConfigurations = () => {
             </Text>
             <Tooltip content="All active members on the platform">
               <div>
-                <InfoIcon size="14" css={{ color: "$primary400" }} />
+                <Icon
+                  name="info"
+                  css={{
+                    width: "$14",
+                    height: "$14",
+                    color: "$primary400",
+                  }}
+                />
               </div>
             </Tooltip>
           </Flex>

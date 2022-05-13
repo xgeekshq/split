@@ -1,15 +1,8 @@
 import { SidebarContent } from "react-pro-sidebar";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
-import DashboardIcon from "../icons/sidebar/Dashboard";
-import BoardsIcon from "../icons/sidebar/Boards";
-import UsersIcon from "../icons/sidebar/Users";
-import TeamsIcon from "../icons/sidebar/Teams";
-import LogoutIcon from "../icons/sidebar/Logout";
-import AccountIcon from "../icons/sidebar/Account";
-import SettingsIcon from "../icons/sidebar/Settings";
 import { styled } from "../../stitches.config";
 import Text from "../Primitives/Text";
 import Flex from "../Primitives/Flex";
@@ -23,6 +16,7 @@ import {
   USERS_ROUTE,
 } from "../../utils/routes";
 import Separator from "./Separator";
+import Icon from "../icons/Icon";
 
 const StyledMenuItem = styled(Flex, {
   pl: "$22",
@@ -30,7 +24,10 @@ const StyledMenuItem = styled(Flex, {
   height: "$48",
   gap: "$14",
   alignItems: "center",
-  "& svg": { color: "$primary300" },
+  transition: "all 0.2s ease-in-out",
+
+  "& svg": { color: "$primary300", width: "$24", height: "$24" },
+
   "&[data-active='true']": {
     "& svg": { color: "$white" },
     "& span": { color: "$white", fontWeight: "$medium" },
@@ -76,38 +73,38 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
     <SidebarContent>
       <Link href={DASHBOARD_ROUTE}>
         <StyledMenuItem data-active={active === DASHBOARD_ROUTE} align="center">
-          <DashboardIcon />
+          <Icon name="dashboard" />
           <StyledText>Dashboard</StyledText>
         </StyledMenuItem>
       </Link>
       <Link href={BOARDS_ROUTE}>
         <StyledMenuItem data-active={active === BOARDS_ROUTE} align="center">
-          <BoardsIcon />
+          <Icon name="boards" />
           <StyledText>Boards</StyledText>
         </StyledMenuItem>
       </Link>
       <Link href={USERS_ROUTE}>
         <StyledMenuItem data-active={active === USERS_ROUTE} align="center">
-          <UsersIcon />
+          <Icon name="user" />
           <StyledText>Users</StyledText>
         </StyledMenuItem>
       </Link>
       <Link href={TEAMS_ROUTE}>
         <StyledMenuItem data-active={active === TEAMS_ROUTE} align="center">
-          <TeamsIcon />
+          <Icon name="team" />
           <StyledText>Teams</StyledText>
         </StyledMenuItem>
       </Link>
       <StyledSeparator />
       <Link href={ACCOUNT_ROUTE}>
         <StyledMenuItem data-active={active === ACCOUNT_ROUTE} align="center">
-          <AccountIcon />
+          <Icon name="user-circle" />
           <StyledText>Account</StyledText>
         </StyledMenuItem>
       </Link>
       <Link href={SETTINGS_ROUTE}>
         <StyledMenuItem css={{ mb: "$16" }} data-active={active === SETTINGS_ROUTE} align="center">
-          <SettingsIcon />
+          <Icon name="settings" />
           <StyledText>Settings</StyledText>
         </StyledMenuItem>
       </Link>
@@ -118,7 +115,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
         align="center"
         onClick={handleSignOut}
       >
-        <LogoutIcon />
+        <Icon name="log-out" />
         <StyledText>Log out</StyledText>
       </StyledMenuItem>
     </SidebarContent>

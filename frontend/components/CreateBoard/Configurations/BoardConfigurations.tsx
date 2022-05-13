@@ -1,11 +1,11 @@
 import { useFormContext } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { createBoardDataState } from "../../../store/createBoard/atoms/create-board.atom";
-import CheckIcon from "../../icons/Check";
 import Flex from "../../Primitives/Flex";
 import Input from "../../Primitives/Input";
 import { Switch, SwitchThumb } from "../../Primitives/Switch";
 import Text from "../../Primitives/Text";
+import Icon from "../../icons/Icon";
 
 const BoardConfigurations = () => {
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -70,7 +70,14 @@ const BoardConfigurations = () => {
           <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange}>
             <SwitchThumb>
               {board.hideCards && (
-                <CheckIcon css={{ size: "$10", color: "$successBase !important" }} />
+                <Icon
+                  name="check"
+                  css={{
+                    width: "$14",
+                    height: "$14",
+                    color: "$successBase",
+                  }}
+                />
               )}
             </SwitchThumb>
           </Switch>
@@ -87,7 +94,14 @@ const BoardConfigurations = () => {
           <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange}>
             <SwitchThumb>
               {board.hideVotes && (
-                <CheckIcon css={{ size: "$10", color: "$successBase !important" }} />
+                <Icon
+                  name="check"
+                  css={{
+                    width: "$14",
+                    height: "$14",
+                    color: "$successBase",
+                  }}
+                />
               )}
             </SwitchThumb>
           </Switch>
@@ -104,7 +118,14 @@ const BoardConfigurations = () => {
           <Switch checked={board.postAnonymously} onCheckedChange={handlePostAnonymouslyChange}>
             <SwitchThumb>
               {board.postAnonymously && (
-                <CheckIcon css={{ size: "$10", color: "$successBase !important" }} />
+                <Icon
+                  name="check"
+                  css={{
+                    width: "$14",
+                    height: "$14",
+                    color: "$successBase",
+                  }}
+                />
               )}
             </SwitchThumb>
           </Switch>
@@ -122,7 +143,14 @@ const BoardConfigurations = () => {
           <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange}>
             <SwitchThumb>
               {!!board.maxVotes && (
-                <CheckIcon css={{ size: "$10", color: "$successBase !important" }} />
+                <Icon
+                  name="check"
+                  css={{
+                    width: "$14",
+                    height: "$14",
+                    color: "$successBase",
+                  }}
+                />
               )}
             </SwitchThumb>
           </Switch>

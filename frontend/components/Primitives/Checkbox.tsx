@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { styled } from "@stitches/react";
-import CheckIcon from "../icons/Check";
 import Text from "./Text";
 import Flex from "./Flex";
-import IndeterminateIcon from "../icons/Indeterminate";
+import Icon from "../icons/Icon";
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: "unset",
@@ -91,7 +90,14 @@ const Checkbox: React.FC<{
   };
 
   return (
-    <Flex css={{ alignItems: "center", height: "$36", width: "100%", boxSizing: "border-box" }}>
+    <Flex
+      css={{
+        alignItems: "center",
+        height: "$36",
+        width: "100%",
+        boxSizing: "border-box",
+      }}
+    >
       <Flex>
         <StyledCheckbox
           variant={variant ?? "default"}
@@ -100,7 +106,7 @@ const Checkbox: React.FC<{
           checked={currentCheckValue}
           disabled={disabled}
           onCheckedChange={handleCheckedChange}
-          css={{ width: `$${size} !important`, height: `$${size} !important` }}
+          css={{ width: `$${size} !important`, height: `$${size} !important`, cursor: "pointer" }}
         >
           <CheckboxIndicator
             css={{
@@ -118,12 +124,17 @@ const Checkbox: React.FC<{
               },
             }}
           >
-            {currentCheckValue === true && <CheckIcon />}
-            {currentCheckValue === "indeterminate" && <IndeterminateIcon />}
+            {currentCheckValue === true && <Icon name="check" />}
+            {currentCheckValue === "indeterminate" && <Icon name="indeterminate" />}
           </CheckboxIndicator>
         </StyledCheckbox>
       </Flex>
-      <Text as="label" size="sm" css={{ paddingLeft: "$8", width: "100%" }} htmlFor={id}>
+      <Text
+        as="label"
+        size="sm"
+        css={{ paddingLeft: "$8", width: "100%", cursor: "pointer" }}
+        htmlFor={id}
+      >
         {label}
       </Text>
     </Flex>

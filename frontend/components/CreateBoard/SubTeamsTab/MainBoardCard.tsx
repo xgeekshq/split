@@ -4,8 +4,6 @@ import Text from "../../Primitives/Text";
 import MainBoardIcon from "../../icons/MainBoard";
 import Flex from "../../Primitives/Flex";
 import Tooltip from "../../Primitives/Tooltip";
-import MinusCircle from "../../icons/MinusCircle";
-import PlusCircle from "../../icons/PlusCircle";
 import { CreateBoardData } from "../../../store/createBoard/atoms/create-board.atom";
 import { BoardToAdd } from "../../../types/board/board";
 import Box from "../../Primitives/Box";
@@ -17,6 +15,7 @@ import SubCardBoard from "./SubCardBoard";
 import useCreateBoard from "../../../hooks/useCreateBoard";
 import Checkbox from "../../Primitives/Checkbox";
 import { BoardUserRoles } from "../../../utils/enums/board.user.roles";
+import Icon from "../../icons/Icon";
 
 const MainContainer = styled(Flex, Box, {
   backgroundColor: "white",
@@ -113,44 +112,59 @@ const MainBoardCard = React.memo(({ team }: { team: Team }) => {
               css={{ "&[data-orientation=vertical]": { height: "$12", width: 1 } }}
             />
             <Text css={{ ml: "$8" }}>{board.dividedBoards.length}</Text>
-            <Flex css={{ ml: "$12" }} onClick={handleRemoveTeam}>
-              <MinusCircle
+            <Flex css={{ ml: "$12" }} gap="4">
+              <Flex
+                onClick={handleRemoveTeam}
+                align="center"
+                justify="center"
                 css={{
-                  "& circle": {
-                    fill: "white",
-                    stroke: !canReduce ? "$primary200" : "$primary400",
-                  },
-                  "& path": {
-                    color: !canReduce ? "$primary200" : "$primary400",
-                  },
-                  "@hover": {
-                    "&:hover": {
-                      cursor: canReduce ? "pointer" : "default",
-                      "& circle": { fill: canReduce ? "$primary100" : "white" },
-                    },
+                  width: "$24",
+                  height: "$24",
+                  borderRadius: "$round",
+                  border: `1px solid ${!canReduce ? "$colors$primary200" : "$colors$primary400"}`,
+                  color: !canReduce ? "$colors$primary200" : "$colors$primary400",
+                  transition: "all 0.2s ease-in-out",
+
+                  "&:hover": {
+                    cursor: canReduce ? "pointer" : "default",
+                    backgroundColor: canReduce ? "$primary100" : "white",
                   },
                 }}
-              />
-            </Flex>
-            <Flex onClick={handleAddTeam}>
-              <PlusCircle
+              >
+                <Icon
+                  name="minus"
+                  css={{
+                    width: "$10",
+                    height: "$1",
+                  }}
+                />
+              </Flex>
+              <Flex
+                onClick={handleAddTeam}
+                align="center"
+                justify="center"
                 css={{
-                  ml: "$3",
-                  "& circle": {
-                    fill: "white",
-                    stroke: !canAdd ? "$primary200" : "$primary400",
-                  },
-                  "& path": {
-                    color: !canAdd ? "$primary200" : "$primary400",
-                  },
-                  "@hover": {
-                    "&:hover": {
-                      cursor: canAdd ? "pointer" : "default",
-                      "& circle": { fill: canAdd ? "$primary100" : "white" },
-                    },
+                  width: "$24",
+                  height: "$24",
+                  borderRadius: "$round",
+                  border: `1px solid ${!canAdd ? "$primary200" : "$primary400"}`,
+                  color: !canAdd ? "$primary200" : "$primary400",
+                  transition: "all 0.2s ease-in-out",
+
+                  "&:hover": {
+                    cursor: canAdd ? "pointer" : "default",
+                    backgroundColor: canAdd ? "$primary100" : "white",
                   },
                 }}
-              />
+              >
+                <Icon
+                  name="plus"
+                  css={{
+                    width: "$12",
+                    height: "$12",
+                  }}
+                />
+              </Flex>
             </Flex>
           </Flex>
         </Flex>

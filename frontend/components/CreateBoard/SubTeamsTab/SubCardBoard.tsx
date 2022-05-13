@@ -5,7 +5,6 @@ import { BoardToAdd } from "../../../types/board/board";
 import { BoardUserRoles } from "../../../utils/enums/board.user.roles";
 import CardAvatars from "../../CardBoard/CardAvatars";
 import LeftArrow from "../../CardBoard/CardBody/LeftArrow";
-import WandIcon from "../../icons/Wand";
 import Flex from "../../Primitives/Flex";
 import Separator from "../../Primitives/Separator";
 import Text from "../../Primitives/Text";
@@ -15,6 +14,7 @@ import Avatar from "../../Primitives/Avatar";
 import highlight2Colors from "../../../styles/colors/highlight2.colors";
 import { BoardUserToAdd } from "../../../types/board/board.user";
 import { CreateBoardData } from "../../../store/createBoard/atoms/create-board.atom";
+import Icon from "../../icons/Icon";
 
 interface SubCardBoardProps {
   index: number;
@@ -84,15 +84,31 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
             />
             <Flex
               css={{
+                height: "$24",
+                width: "$24",
                 borderRadius: "$round",
-                p: "4px",
                 border: "1px solid $colors$primary400",
                 ml: "$12",
                 cursor: "pointer",
+
+                transtion: "all 0.2s ease-in-out",
+
+                "&:hover": {
+                  backgroundColor: "$primary400",
+                  color: "white",
+                },
               }}
+              align="center"
+              justify="center"
               onClick={handleLottery}
             >
-              <WandIcon />
+              <Icon
+                name="wand"
+                css={{
+                  width: "$12",
+                  height: "$12",
+                }}
+              />
             </Flex>
             <Text size="sm" color="primary300" css={{ mx: "$8" }}>
               {responsible?.firstName} {responsible?.lastName}
