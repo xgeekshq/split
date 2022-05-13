@@ -7,13 +7,11 @@ import Button from "../../Primitives/Button";
 import Avatar from "../../Primitives/Avatar";
 import { getRandomColor } from "../../../utils/initialNames";
 import { CardItemType } from "../../../types/card/cardItem";
-import CommentIcon from "../../icons/Comment";
-import DownVoteIcon from "../../icons/DownVote";
-import UpVoteIcon from "../../icons/UpVote";
 import CommentType from "../../../types/comment/comment";
 import { BoardUser } from "../../../types/board/board.user";
 import { getCardVotes } from "../../../helper/board/votes";
 import useVotes from "../../../hooks/useVotes";
+import Icon from "../../icons/Icon";
 
 interface FooterProps {
   boardId: string;
@@ -38,7 +36,7 @@ const StyledButtonIcon = styled(Button, {
   height: "fit-content !important",
   backgroundColor: "transparent !important",
   "& svg": {
-    color: "$primary500 !important",
+    color: "$primary500",
   },
   "@hover": {
     "&:hover": {
@@ -47,6 +45,11 @@ const StyledButtonIcon = styled(Button, {
   },
   "&:active": {
     boxShadow: "none !important",
+  },
+  "&:disabled": {
+    svg: {
+      opacity: "0.2",
+    },
   },
 });
 
@@ -142,7 +145,7 @@ const CardFooter = React.memo<FooterProps>(
                 onClick={handleAddVote}
                 disabled={!isMainboard || actualBoardVotes === maxVotes}
               >
-                <UpVoteIcon disabled={!isMainboard || actualBoardVotes === maxVotes} />
+                <Icon name="thumbs-up" />
               </StyledButtonIcon>
               <Text
                 size="xs"
@@ -160,16 +163,18 @@ const CardFooter = React.memo<FooterProps>(
                 onClick={handleDeleteVote}
                 disabled={!isMainboard || votesOfUserInThisCard === 0}
               >
-                <DownVoteIcon disabled={!isMainboard || votesOfUserInThisCard === 0} />
+                <Icon name="thumbs-down" />
               </StyledButtonIcon>
             </Flex>
 
             <Flex align="center" gap="2">
               <StyledButtonIcon onClick={setOpenComments}>
-                <CommentIcon
-                  isSelected={
+                <Icon
+                  name={
                     !!comments?.find((comment) => comment.createdBy._id === userId) ||
                     !!isCommentsOpened
+                      ? "comment-filled"
+                      : "comment"
                   }
                 />
               </StyledButtonIcon>

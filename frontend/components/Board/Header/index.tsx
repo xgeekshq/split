@@ -20,13 +20,12 @@ import Text from "../../Primitives/Text";
 import LogoIcon from "../../icons/Logo";
 import Breadcrumb from "../../breadcrumb/Breadcrumb";
 import Flex from "../../Primitives/Flex";
-import MergeIcon from "../../icons/Merge";
 import CardAvatars from "../../CardBoard/CardAvatars";
 import Separator from "../../Primitives/Separator";
-import InfoIcon from "../../icons/Info";
 import BoardType from "../../../types/board/board";
 import { BoardUser, BoardUserNoPopulated } from "../../../types/board/board.user";
 import { BreadcrumbType } from "../../../types/board/Breadcrumb";
+import Icon from "../../icons/Icon";
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
@@ -115,7 +114,7 @@ const BoardHeader = () => {
             {isSubBoard && !submitedAt && (
               <Tooltip content="Unmerged">
                 <MergeIconContainer isMerged={!!submitedAt}>
-                  <MergeIcon />
+                  <Icon name="merge" />
                 </MergeIconContainer>
               </Tooltip>
             )}
@@ -161,7 +160,7 @@ const BoardHeader = () => {
         <Popover>
           <PopoverTrigger asChild>
             <BoardCounter>
-              <InfoIcon />
+              <Icon name="info" />
               {
                 dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length
               } of {dividedBoards.length} sub-team boards merged
@@ -176,7 +175,7 @@ const BoardHeader = () => {
                   <div>
                     {board.submitedAt ? "Merged" : "Unmerged"}
                     <MergeIconContainer isMerged={!!board.submitedAt}>
-                      <MergeIcon />
+                      <Icon name="merge" />
                     </MergeIconContainer>{" "}
                   </div>
                 </StyledPopoverItem>

@@ -2,9 +2,8 @@ import React from "react";
 import Svg from "../../Primitives/Svg";
 import { CSSProps } from "../../../stitches.config";
 
-type Props = {
+type Props = CSSProps & {
   name: string;
-  css?: CSSProps;
 };
 
 const Icon = ({ name, css, ...props }: Props) => {

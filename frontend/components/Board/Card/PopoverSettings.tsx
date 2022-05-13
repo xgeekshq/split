@@ -1,12 +1,9 @@
 import React from "react";
 import Text from "../../Primitives/Text";
 import { Popover, PopoverContent, PopoverItem, PopoverTrigger } from "../../Primitives/Popover";
-import VerticalThreeDotsIcon from "../../icons/VerticalThreeDots";
 import useCards from "../../../hooks/useCards";
-import EditIcon from "../../icons/Edit";
-import BinIcon from "../../icons/BinIcon";
-import ArrowLongRight from "../../icons/ArrowLongRight";
 import { styled } from "../../../stitches.config";
+import Icon from "../../icons/Icon";
 
 interface PopoverSettingsContentProps {
   isItem: boolean;
@@ -28,21 +25,21 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   return (
     <PopoverContent portalled={false}>
       <PopoverItem onClick={setEditCard} gap="8" align="center">
-        <EditIcon dropdown />
+        <Icon name="edit" />
         <Text size="sm" weight="medium">
           Edit
         </Text>
       </PopoverItem>
       {isItem && (
         <PopoverItem onClick={unmergeCard} gap="8" align="center">
-          <ArrowLongRight />
+          <Icon name="arrow-long-right" />
           <Text size="sm" weight="medium">
             Unmerge card
           </Text>
         </PopoverItem>
       )}
       <PopoverItem gap="8" align="center" onClick={setDeleteCard}>
-        <BinIcon />
+        <Icon name="trash-alt" />
         <Text size="sm" weight="medium">
           Delete card
         </Text>
@@ -67,14 +64,7 @@ interface PopoverSettingsProps {
 const PopoverTriggerStyled = styled(PopoverTrigger, {
   "&:hover": {
     backgroundColor: "$primary500",
-
-    "&>svg": {
-      fill: "white",
-
-      "&>*": {
-        fill: "white",
-      },
-    },
+    color: "white",
   },
 });
 
@@ -108,7 +98,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     return (
       <Popover>
         <PopoverTriggerStyled css={{ position: "relative", top: firstOne ? "-35px" : 0 }}>
-          <VerticalThreeDotsIcon />
+          <Icon name="menu-dots" css={{ width: "$20", height: "$20" }} />
         </PopoverTriggerStyled>
         <PopoverSettingsContent
           isItem={isItem}

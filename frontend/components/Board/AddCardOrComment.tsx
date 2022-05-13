@@ -9,15 +9,20 @@ import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import useCards from "../../hooks/useCards";
 import TextArea from "../Primitives/TextArea";
-import CrossIcon from "../icons/CrossIcon";
-import CheckIcon from "../icons/Check";
-import PlusIcon from "../icons/PlusIcon";
 import UpdateCardDto from "../../types/card/updateCard.dto";
 import useComments from "../../hooks/useComments";
 import AddCommentDto from "../../types/comment/addComment.dto";
 import UpdateCommentDto from "../../types/comment/updateComment.dto";
+import Icon from "../icons/Icon";
 
-const ActionButton = styled(Button, {});
+const ActionButton = styled(Button, {
+  padding: "$10 $14 !important",
+
+  svg: {
+    width: "$16",
+    height: "$16",
+  },
+});
 
 const StyledForm = styled("form", Flex, { width: "100%" });
 
@@ -144,10 +149,15 @@ const AddCard = React.memo<AddCardProps>(
 
     if (!isOpen)
       return (
-        <ActionButton css={{ display: "flex" }} onClick={() => setIsOpen(true)}>
-          <PlusIcon size="16" css={{ size: "$12", color: "white" }} />
+        <Button
+          css={{
+            display: "flex",
+          }}
+          onClick={() => setIsOpen(true)}
+        >
+          <Icon name="plus" />
           Add new card
-        </ActionButton>
+        </Button>
       );
 
     return (
@@ -188,7 +198,7 @@ const AddCard = React.memo<AddCardProps>(
               variant={!isUpdate && isCard ? "lightOutline" : "primaryOutline"}
               onClick={handleClear}
             >
-              <CrossIcon size="16" />
+              <Icon name="close" />
             </ActionButton>
             <ActionButton
               css={{ width: "$48", height: "$36" }}
@@ -196,7 +206,7 @@ const AddCard = React.memo<AddCardProps>(
               type="submit"
               variant="primary"
             >
-              <CheckIcon />
+              <Icon name="check" />
             </ActionButton>
           </Flex>
         </FormProvider>

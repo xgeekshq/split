@@ -42,11 +42,11 @@ const MergeIconContainer = styled("div", {
     },
   },
 
-  lineHeight: "$16",
+  lineHeight: "$20",
 
   "& svg": {
-    width: "$16",
-    height: "$16",
+    width: "$20",
+    height: "$20",
   },
 });
 
