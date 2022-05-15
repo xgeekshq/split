@@ -1,5 +1,5 @@
-import { createStitches } from "@stitches/react";
 import type * as Stitches from "@stitches/react";
+import { createStitches } from "@stitches/react";
 import dangerColors from "./styles/colors/danger.colors";
 import highlight1Colors from "./styles/colors/highlight1.colors";
 import highlight2Colors from "./styles/colors/highlight2.colors";
@@ -15,7 +15,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
   createStitches({
     theme: {
       colors: {
-        background: "#F8F8F8",
+        background: "#F4F7F8",
         surface: "#FFFFFF",
         transparent: "#FFFFFF 0%",
         black: "#000000",
