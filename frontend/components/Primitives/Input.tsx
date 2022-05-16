@@ -174,7 +174,7 @@ interface InputProps extends StyledInpupProps {
   state?: "default" | "error" | "valid";
   type: "text" | "password" | "email" | "number";
   placeholder: string;
-  icon?: "eye";
+  icon?: "eye" | "eyeclosed";
   helperText?: string;
   iconPosition?: "left" | "right";
   forceState?: boolean;

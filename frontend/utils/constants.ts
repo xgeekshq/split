@@ -19,5 +19,10 @@ export const NEXT_PUBLIC_ENABLE_GOOGLE = process.env.NEXT_PUBLIC_ENABLE_GOOGLE =
 export const AUTH_SSO =
   NEXT_PUBLIC_ENABLE_AZURE || NEXT_PUBLIC_ENABLE_GIT || NEXT_PUBLIC_ENABLE_GOOGLE;
 
-export const CURRENT_USER = "currentUser";
 export const REFRESH_TOKEN_ERROR = "REFRESH_TOKEN_ERROR";
+
+// -------------------------------
+
+
+
+

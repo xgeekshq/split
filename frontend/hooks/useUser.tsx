@@ -1,34 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
 import { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 import { RedirectableProviderType } from "next-auth/providers";
-import { useMutation } from "react-query";
-import { postUser } from "../api/authService";
-import { LoginUser, User, UseUserType } from "../types/user/user";
+import { useMutation, useQuery } from "react-query";
+import { checkUserExistsAD, registerNewUser, checkUserExists } from "../api/authService";
+import { RegisterUser, User, UseUserType } from "../types/user/user";
 import { DASHBOARD_ROUTE } from "../utils/routes";
 import { transformLoginErrorCodes } from "../utils/errorCodes";
+import { NEXT_PUBLIC_ENABLE_AZURE } from "../utils/constants";
 
-const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserType => {
+const useUser = (setErrorCode: Dispatch<SetStateAction<number>>): UseUserType => {
   const router = useRouter();
-  const [pw, setPw] = useState("");
-  const createUser = useMutation<User, AxiosError, User, unknown>((user: User) => postUser(user), {
-    mutationKey: "register",
-    onSuccess: async (user: User) => {
-      const credentials: LoginUser = { email: user.email, password: pw };
-      const response = await signIn<RedirectableProviderType>("credentials", {
-        ...credentials,
-        callbackUrl: DASHBOARD_ROUTE,
-        redirect: false,
-      });
-      setPw("");
-      if (response?.error) {
-        setLoginErrorCode(transformLoginErrorCodes(response.error));
-        return;
-      }
-      router.push(DASHBOARD_ROUTE);
-    },
-  });
 
   const loginAzure = async () => {
     const loginResult = await signIn<RedirectableProviderType>("azure-ad", {
@@ -36,13 +20,13 @@ const useUser = (setLoginErrorCode: Dispatch<SetStateAction<number>>): UseUserTy
       redirect: false,
     });
     if (loginResult?.error) {
-      setLoginErrorCode(transformLoginErrorCodes(loginResult.error));
+      setErrorCode(transformLoginErrorCodes(loginResult.error));
       return;
     }
     router.push(DASHBOARD_ROUTE);
   };
 
-  return { setPw, createUser, loginAzure };
+  return { loginAzure };
 };
 
 export default useUser;

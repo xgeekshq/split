@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import React, { Dispatch, useState } from "react";
 import { styled } from "@stitches/react";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import Text from "./Text";
 import Flex from "./Flex";
 import Icon from "../icons/Icon";
@@ -8,7 +8,7 @@ import Icon from "../icons/Icon";
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: "unset",
   backgroundColor: "white",
-  boxSizing: "box-sizing",
+  boxSizing: "border-box",
   borderRadius: "$2",
   border: "1px solid $primaryBase",
   display: "flex",
@@ -19,9 +19,7 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
       default: {
         borderColor: "$primaryBase",
         backgroundColor: "transparent",
-        '&[data-state="checked"]': {
-          backgroundColor: "$primaryBase",
-        },
+        '&[data-state="checked"]': {},
         "&:disabled": {
           borderColor: "$primary100",
           '&[data-state="checked"]': {
@@ -51,42 +49,39 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
     variant: "default",
   },
 });
-
 const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
   color: "$white",
 });
 
-// Exports
 export const CheckboxIndicator = StyledIndicator;
-
-const getIndeterminateSize = (boxSize: "12" | "14" | "16") => {
+const getIndeterminateSize = (boxSize: "12" | "16") => {
   if (boxSize === "12") return "8";
   return "10";
 };
-
 const Checkbox: React.FC<{
   label: string;
   id: string;
   variant?: "default" | "error";
   checked?: boolean | "indeterminate";
   disabled?: boolean;
-  size: "12" | "14" | "16";
+  size: "12" | "16";
+  setCheckedTerms: Dispatch<React.SetStateAction<boolean>>;
   handleChange?: (value: string) => void;
-}> = ({ id, label, variant, size, checked, disabled, handleChange }) => {
+}> = ({ id, label, variant, size, checked, disabled, handleChange, setCheckedTerms }) => {
   Checkbox.defaultProps = {
     variant: "default",
     checked: false,
     disabled: false,
-    handleChange: () => {},
+    handleChange: undefined,
   };
 
   const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | "indeterminate">(
     checked
   );
-
   const handleCheckedChange = (isChecked: boolean | "indeterminate") => {
     if (handleChange) handleChange(id);
     setCurrentCheckValue(isChecked);
+    setCheckedTerms(!!isChecked);
   };
 
   return (
@@ -113,8 +108,6 @@ const Checkbox: React.FC<{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              // width: `$${size} !important`,
-              // height: `$${size} !important`,
               "& svg": {
                 width:
                   currentCheckValue === "indeterminate"
@@ -140,5 +133,4 @@ const Checkbox: React.FC<{
     </Flex>
   );
 };
-
 export default Checkbox;

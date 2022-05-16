@@ -8,6 +8,11 @@ const Text = styled("span", {
   lineHeight: "$24",
   height: "fit-content",
   variants: {
+    fontWeight: {
+      medium: {
+        fontWeight: "$medium",
+      },
+    },
     display: {
       1: {
         fontWeight: "$bold",
