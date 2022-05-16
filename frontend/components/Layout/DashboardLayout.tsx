@@ -6,7 +6,6 @@ import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
 import { createBoardState } from "../../store/createBoard/atoms/create-board.atom";
 import Icon from "../icons/Icon";
-import CalendarBar from "../Dashboard/Calendar/Calendar";
 
 const AddNewBoardButton = styled(Button, {
   width: "fit-content",
@@ -47,7 +46,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
         </Flex>
         {children}
       </Flex>
-      {isDashboard && <CalendarBar />}
+      {/* {isDashboard && <CalendarBar />} */}
     </Main>
   );
 };
