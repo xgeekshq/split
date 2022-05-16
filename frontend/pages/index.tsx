@@ -1,11 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
-import LoginForm from "../components/auth/LoginForm";
+import Index from "../components/auth/LoginForm";
 import TroubleLogin from "../components/auth/TroubleLogin";
 import Banner from "../components/icons/Banner";
 import Flex from "../components/Primitives/Flex";
-import { TabsRoot, TabsList, TabsTrigger } from "../components/Primitives/Tab";
+import { TabsList, TabsRoot, TabsTrigger } from "../components/Primitives/Tab";
 import Text from "../components/Primitives/Text";
 import { styled } from "../stitches.config";
 import { DASHBOARD_ROUTE } from "../utils/routes";
@@ -23,7 +23,7 @@ const CenteredContainer = styled(Flex, {
 
 const MainContainer = styled(Flex, {
   height: "100vh",
-  width: "100vw",
+  width: "100%",
   position: "relative",
   backgroundColor: "$black",
   backgroundImage: "url(images/background.svg)",
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
                 <Text heading="4">Sign up</Text>
               </TabsTrigger>
             </TabsList>
-            <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
+            <Index setShowTroubleLogin={setShowTroubleLogin} />
           </TabsRoot>
         )}
         {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
