@@ -6,55 +6,33 @@ import { useSetRecoilState } from "recoil";
 import { FormProvider, useForm } from "react-hook-form";
 import { RedirectableProviderType } from "next-auth/providers";
 import { ThreeDots } from "react-loader-spinner";
-import { styled } from "../../stitches.config";
-import { LoginUser } from "../../types/user/user";
-import Flex from "../Primitives/Flex";
-import { TabsContent } from "../Primitives/Tab";
-import Text from "../Primitives/Text";
-import SchemaLoginForm from "../../schema/schemaLoginForm";
-import { DASHBOARD_ROUTE } from "../../utils/routes";
-import Input from "../Primitives/Input";
-import Button from "../Primitives/Button";
-import LogoIcon from "../icons/Logo";
+import { LoginUser } from "../../../types/user/user";
+import Flex from "../../Primitives/Flex";
+import { TabsContent } from "../../Primitives/Tab";
+import Text from "../../Primitives/Text";
+import SchemaLoginForm from "../../../schema/schemaLoginForm";
+import { DASHBOARD_ROUTE } from "../../../utils/routes";
+import Input from "../../Primitives/Input";
+import LogoIcon from "../../icons/Logo";
 import {
   AUTH_SSO,
   NEXT_PUBLIC_ENABLE_AZURE,
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
-} from "../../utils/constants";
-import useUser from "../../hooks/useUser";
-import { transformLoginErrorCodes } from "../../utils/errorCodes";
-import { ToastStateEnum } from "../../utils/enums/toast-types";
-import { getAuthError } from "../../errors/auth-messages";
-import { toastState } from "../../store/toast/atom/toast.atom";
-import Icon from "../icons/Icon";
-
-const StyledForm = styled("form", Flex, { width: "100%" });
-
-const LoginButton = styled(Button, {
-  fontWeight: "$medium",
-  "& svg": {
-    height: "$40 !important",
-    width: "$40 !important",
-  },
-});
-
-const StyledHoverIconFlex = styled("div", Flex, {
-  "&:hover": {
-    "&[data-loading='true']": {
-      cursor: "default",
-    },
-    "&[data-loading='false']": {
-      cursor: "pointer",
-    },
-  },
-});
+} from "../../../utils/constants";
+import useUser from "../../../hooks/useUser";
+import { transformLoginErrorCodes } from "../../../utils/errorCodes";
+import { ToastStateEnum } from "../../../utils/enums/toast-types";
+import { getAuthError } from "../../../errors/auth-messages";
+import { toastState } from "../../../store/toast/atom/toast.atom";
+import Icon from "../../icons/Icon";
+import { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex } from "./styles";
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
+const Index: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
   const setToastState = useSetRecoilState(toastState);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
@@ -170,7 +148,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                   mb: "$32",
                 }}
               >
-                <Icon name="or-separator" />
+                <OrSeparator>
+                  <hr />
+                  <Text size="sm" color="primary300" weight="medium">
+                    or
+                  </Text>
+                  <hr />
+                </OrSeparator>
               </Flex>
               <Flex gap="32">
                 {NEXT_PUBLIC_ENABLE_GIT && (
@@ -197,4 +181,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   );
 };
 
-export default LoginForm;
+export default Index;

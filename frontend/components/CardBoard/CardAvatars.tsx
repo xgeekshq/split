@@ -63,29 +63,32 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
     }, []);
 
+    const stakeholdersColors = useMemo(
+      () => ({
+        border: true,
+        bg: "white",
+        fontColor: "$primary400",
+      }),
+      []
+    );
+
     const colors = useMemo(() => {
       const col = [];
       for (let i = 0; i < 3; i++) {
-        col.push(getRandomColor());
+        col.push(stakeholders ? stakeholdersColors : getRandomColor());
       }
       return col;
-    }, [getRandomColor]);
+    }, [getRandomColor, stakeholdersColors, stakeholders]);
 
     const renderAvatar = useCallback(
       (value: User | string, idx) => {
-        const stakeholdersColors = {
-          border: true,
-          bg: "white",
-          fontColor: "$primary400",
-        };
-
         if (typeof value === "string") {
           return (
             <Avatar
               key={`${value}-${idx}-${Math.random()}`}
               css={{ position: "relative", ml: idx > 0 ? "-7px" : 0 }}
               size={32}
-              colors={stakeholders ? stakeholdersColors : colors[idx]}
+              colors={colors[idx]}
               fallbackText={value}
             />
           );
@@ -107,7 +110,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
           </Tooltip>
         );
       },
-      [colors, stakeholders]
+      [colors]
     );
 
     return (
