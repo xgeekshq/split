@@ -1,13 +1,12 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { TailSpin } from "react-loader-spinner";
 import { styled } from "../../stitches.config";
-import QueryError from "../Errors/QueryError";
 import Flex from "../Primitives/Flex";
 import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
 import BoardConfigurations from "./Configurations/BoardConfigurations";
 import TeamSubTeamsConfigurations from "./SubTeamsTab/TeamSubTeamsConfigurations";
+import QueryError from "../Errors/QueryError";
 
 const StyledTextTab = styled(Text, {
   pb: "$12 !important",
@@ -62,20 +61,24 @@ const Settings = () => {
         orientation="horizontal"
         css={{ position: "relative", top: "-1px", zIndex: "-1" }}
       />
-      {currentTab === 1 && (
-        <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
-          <QueryError>
-            <TeamSubTeamsConfigurations />
-          </QueryError>
-        </Suspense>
+      {currentTab === 1 ? (
+        // <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
+        <QueryError>
+          <TeamSubTeamsConfigurations />
+        </QueryError>
+      ) : (
+        // </Suspense>
+        <QueryError>
+          <BoardConfigurations />
+        </QueryError>
       )}
-      {currentTab === 2 && (
-        <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
-          <QueryError>
-            <BoardConfigurations />
-          </QueryError>
-        </Suspense>
-      )}
+      {/* {currentTab === 2 && ( */}
+      {/*  <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}> */}
+      {/*    <QueryError> */}
+      {/*      <BoardConfigurations /> */}
+      {/*    </QueryError> */}
+      {/*  </Suspense> */}
+      {/* )} */}
     </Flex>
   );
 };

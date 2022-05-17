@@ -5,7 +5,6 @@ import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
-import CreateBoardContent from "./Content";
 import CreateBoardTipBar from "./TipBar";
 import Icon from "../icons/Icon";
 
@@ -47,7 +46,7 @@ const CreateBoard: React.FC = () => {
       </Flex>
       <Separator orientation="horizontal" css={{ backgroundColor: "$primary100" }} />
       <Flex justify="between" css={{ overflow: "hidden", height: "100%" }}>
-        <CreateBoardContent setOpened={setCreateBoardState} />
+        {/* <CreateBoardContent setOpened={setCreateBoardState} /> */}
         <CreateBoardTipBar />
       </Flex>
     </MainContainter>

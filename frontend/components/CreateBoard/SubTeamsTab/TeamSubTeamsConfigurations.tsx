@@ -19,9 +19,11 @@ import Icon from "../../icons/Icon";
 const StyledBox = styled(Flex, Box, { borderRadius: "$12", backgroundColor: "white" });
 
 const TeamSubTeamsConfigurations = () => {
-  const { data } = useQuery("teams", () => getAllTeams());
+  const { data, isLoading } = useQuery("teams", () => getAllTeams(), { suspense: false });
 
-  const { data: stakeHolders } = useQuery("stakeholders", () => getStakeholders());
+  const { data: stakeHolders } = useQuery("stakeholders", () => getStakeholders(), {
+    suspense: false,
+  });
 
   const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 
@@ -34,7 +36,9 @@ const TeamSubTeamsConfigurations = () => {
 
   if (!data) return null;
   const team = data[0];
-  return (
+  return isLoading ? (
+    <h1>Loading</h1>
+  ) : (
     <Flex css={{ mt: "$32" }} direction="column">
       <Flex gap="22" justify="between" css={{ width: "100%" }}>
         <StyledBox
