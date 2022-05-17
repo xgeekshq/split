@@ -17,6 +17,7 @@ import Icon from "../../icons/Icon";
 
 interface QuickEditSubTeamsProps {
   team: Team;
+  stakeholders: string[];
 }
 
 const StyledInput = styled("input", {
@@ -46,9 +47,11 @@ const StyledInput = styled("input", {
   },
 });
 
-const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
-  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } =
-    useCreateBoard(team);
+const QuickEditSubTeams = ({ team, stakeholders }: QuickEditSubTeamsProps) => {
+  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard(
+    team,
+    stakeholders
+  );
 
   const {
     count: { teamsCount, maxUsersCount },

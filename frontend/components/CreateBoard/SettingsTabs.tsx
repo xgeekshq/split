@@ -6,7 +6,6 @@ import Separator from "../Primitives/Separator";
 import Text from "../Primitives/Text";
 import BoardConfigurations from "./Configurations/BoardConfigurations";
 import TeamSubTeamsConfigurations from "./SubTeamsTab/TeamSubTeamsConfigurations";
-import QueryError from "../Errors/QueryError";
 
 const StyledTextTab = styled(Text, {
   pb: "$12 !important",
@@ -63,14 +62,14 @@ const Settings = () => {
       />
       {currentTab === 1 ? (
         // <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
-        <QueryError>
-          <TeamSubTeamsConfigurations />
-        </QueryError>
+        // {/* <QueryError> */}
+        <TeamSubTeamsConfigurations />
       ) : (
+        // </QueryError>
         // </Suspense>
-        <QueryError>
-          <BoardConfigurations />
-        </QueryError>
+        // <QueryError>
+        <BoardConfigurations />
+        // </QueryError>
       )}
       {/* {currentTab === 2 && ( */}
       {/*  <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}> */}

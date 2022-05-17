@@ -3,6 +3,8 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { QueryClient, dehydrate } from "react-query";
 import {
   Container,
   ContentContainer,
@@ -23,6 +25,9 @@ import BoardName from "../../components/CreateBoard/BoardName";
 import { toastState } from "../../store/toast/atom/toast.atom";
 import { ToastStateEnum } from "../../utils/enums/toast-types";
 import SettingsTabs from "../../components/CreateBoard/SettingsTabs";
+import { getStakeholders } from "../../api/boardService";
+import { getAllTeams } from "../../api/teamService";
+import requireAuthentication from "../../components/HOC/requireAuthentication";
 
 const NewBoard = () => {
   const router = useRouter();
@@ -152,17 +157,16 @@ const NewBoard = () => {
 
 export default NewBoard;
 
-// export const getServerSideProps: GetServerSideProps = requireAuthentication(
-//   async (context: GetServerSidePropsContext) => {
-//     const queryClient = new QueryClient();
-//
-//     await queryClient.prefetchQuery("teams", () => getAllTeams());
-//     await queryClient.prefetchQuery("stakeholders", () => getStakeholders());
-//
-//     return {
-//       props: {
-//         dehydratedState: dehydrate(queryClient),
-//       },
-//     };
-//   }
-// );
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+  async (context: GetServerSidePropsContext) => {
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery("teams", () => getAllTeams(context));
+    await queryClient.prefetchQuery("stakeholders", () => getStakeholders(context));
+
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+);

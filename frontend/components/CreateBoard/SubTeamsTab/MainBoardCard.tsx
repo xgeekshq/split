@@ -30,6 +30,11 @@ interface SubBoardListProp {
   setBoard: SetterOrUpdater<CreateBoardData>;
 }
 
+interface MainBoardCardInterface {
+  team: Team;
+  stakeholders: string[];
+}
+
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => {
   return (
     <Flex css={{ mb: "$50" }} direction="column" gap="8">
@@ -40,7 +45,7 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
   );
 });
 
-const MainBoardCard = React.memo(({ team }: { team: Team }) => {
+const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface) => {
   const {
     handleAddTeam,
     handleRemoveTeam,
@@ -51,7 +56,7 @@ const MainBoardCard = React.memo(({ team }: { team: Team }) => {
     canReduce,
     teamMembers,
     stakeHolders,
-  } = useCreateBoard(team);
+  } = useCreateBoard(team, stakeholders);
 
   useEffect(() => {
     const teamMembersCount = teamMembers?.length ?? 0;

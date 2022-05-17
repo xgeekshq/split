@@ -18,10 +18,10 @@ import Icon from "../../icons/Icon";
 
 const StyledBox = styled(Flex, Box, { borderRadius: "$12", backgroundColor: "white" });
 
-const TeamSubTeamsConfigurations = () => {
-  const { data, isLoading } = useQuery("teams", () => getAllTeams(), { suspense: false });
+const TeamSubTeamsConfigurations: React.FC = () => {
+  const { data } = useQuery(["teams"], () => getAllTeams(), { suspense: false });
 
-  const { data: stakeHolders } = useQuery("stakeholders", () => getStakeholders(), {
+  const { data: stakeholders } = useQuery(["stakeholders"], () => getStakeholders(), {
     suspense: false,
   });
 
@@ -34,11 +34,9 @@ const TeamSubTeamsConfigurations = () => {
     }
   }, [data, setBoardData]);
 
-  if (!data) return null;
+  if (!data || !stakeholders) return null;
   const team = data[0];
-  return isLoading ? (
-    <h1>Loading</h1>
-  ) : (
+  return (
     <Flex css={{ mt: "$32" }} direction="column">
       <Flex gap="22" justify="between" css={{ width: "100%" }}>
         <StyledBox
@@ -80,15 +78,16 @@ const TeamSubTeamsConfigurations = () => {
           </Text>
           <Text size="md" css={{ wordBreak: "break-word" }}>
             {team.users
-              .filter((teamUser) => stakeHolders?.includes(teamUser.user.email))
+              .filter((teamUser) => stakeholders?.includes(teamUser.user.email))
               .map(
-                (stakeholders) => `${stakeholders.user.firstName} ${stakeholders.user.lastName}`
+                (stakeholderFound) =>
+                  `${stakeholderFound.user.firstName} ${stakeholderFound.user.lastName}`
               )}
           </Text>
         </StyledBox>
       </Flex>
-      <QuickEditSubTeams team={team} />
-      <MainBoardCard team={team} />
+      <QuickEditSubTeams team={team} stakeholders={stakeholders} />
+      <MainBoardCard team={team} stakeholders={stakeholders} />
     </Flex>
   );
 };

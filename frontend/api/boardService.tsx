@@ -30,8 +30,8 @@ export const getBoardRequest = (
   return fetchData<GetBoardResponse>(`/boards/${id}`, { context, serverSide: !!context });
 };
 
-export const getStakeholders = (): Promise<string[]> => {
-  return fetchData<string[]>(`/boards/stakeholders/all`);
+export const getStakeholders = (context?: GetServerSidePropsContext): Promise<string[]> => {
+  return fetchData<string[]>(`/boards/stakeholders/all`, { context, serverSide: !!context });
 };
 
 export const getDashboardBoardsRequest = (
