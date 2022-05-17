@@ -9,6 +9,7 @@ import { TabsList, TabsRoot, TabsTrigger } from "../components/Primitives/Tab";
 import Text from "../components/Primitives/Text";
 import { styled } from "../stitches.config";
 import { DASHBOARD_ROUTE } from "../utils/routes";
+import SignUpTabContent from "../components/auth/SignUp/SignUpTabContent";
 
 const CenteredContainer = styled(Flex, {
   position: "absolute",
@@ -51,6 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Home: NextPage = () => {
+  const [currentTab, setCurrentTab] = useState("login");
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);
   return (
     <MainContainer>
@@ -59,7 +61,11 @@ const Home: NextPage = () => {
       </BannerContainer>
       <CenteredContainer>
         {!showTroubleLogin && (
-          <TabsRoot defaultValue="login">
+          <TabsRoot
+            value={currentTab}
+            onValueChange={(value) => setCurrentTab(value)}
+            defaultValue="login"
+          >
             <TabsList aria-label="Login or register">
               <TabsTrigger value="login">
                 <Text heading="4">Log in</Text>
@@ -69,6 +75,7 @@ const Home: NextPage = () => {
               </TabsTrigger>
             </TabsList>
             <Index setShowTroubleLogin={setShowTroubleLogin} />
+            <SignUpTabContent setCurrentTab={setCurrentTab} />
           </TabsRoot>
         )}
         {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}

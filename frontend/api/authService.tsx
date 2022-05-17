@@ -2,15 +2,23 @@ import { GetServerSidePropsContext } from "next";
 import { HeaderInfo } from "../types/dashboard/header.info";
 import { Token } from "../types/token";
 import { CreateOrLogin } from "../types/user/create-login.user";
-import { User, LoginUser } from "../types/user/user";
+import { User, LoginUser, RegisterUser } from "../types/user/user";
 import fetchData from "../utils/fetchData";
 
-export const postUser = (newUser: User): Promise<User> => {
-  return fetchData(`/auth/register`, { method: "POST", data: newUser });
+export const registerNewUser = (newUser: RegisterUser): Promise<User> => {
+  return fetchData("/auth/register", { method: "POST", data: newUser, serverSide: true });
 };
 
 export const login = (credentials: LoginUser): Promise<User> => {
   return fetchData("/auth/login", { method: "POST", data: credentials, serverSide: true });
+};
+
+export const checkUserExistsAD = (email: string): Promise<"az" | "local" | false> => {
+  return fetchData(`/auth/checkUserEmailAD/${email}`);
+};
+
+export const checkUserExists = (email: string): Promise<"az" | "local" | boolean> => {
+  return fetchData(`/auth/checkUserEmail/${email}`);
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
