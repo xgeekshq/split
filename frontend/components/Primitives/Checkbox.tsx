@@ -65,7 +65,7 @@ const Checkbox: React.FC<{
   checked?: boolean | "indeterminate";
   disabled?: boolean;
   size: "12" | "16";
-  setCheckedTerms?: Dispatch<React.SetStateAction<boolean>>;
+  setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
   handleChange?: (value: string) => void;
 }> = ({ id, label, variant, size, checked, disabled, handleChange, setCheckedTerms }) => {
   Checkbox.defaultProps = {
@@ -73,7 +73,7 @@ const Checkbox: React.FC<{
     checked: false,
     disabled: false,
     handleChange: undefined,
-    setCheckedTerms: false,
+    setCheckedTerms: null,
   };
 
   const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | "indeterminate">(
