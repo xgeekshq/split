@@ -51,7 +51,7 @@ export default class AuthController {
   @Post('register')
   async register(@Body() registrationData: CreateUserDto) {
     try {
-      const { _id, firstName, lastName, email } =
+      const { _id, firstName, lastName, email, password } =
         await this.registerAuthApp.register(registrationData);
 
       return { _id, firstName, lastName, email };

@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import router from "next/router";
-import { useSetRecoilState } from "recoil";
 import { FormProvider, useForm } from "react-hook-form";
 import { RedirectableProviderType } from "next-auth/providers";
 import { ThreeDots } from "react-loader-spinner";
+import { useSetRecoilState } from "recoil";
 import { LoginUser } from "../../../types/user/user";
 import Flex from "../../Primitives/Flex";
 import { TabsContent } from "../../Primitives/Tab";
@@ -157,7 +157,7 @@ const Index: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
                 )}
                 {NEXT_PUBLIC_ENABLE_GOOGLE && (
                   <StyledHoverIconFlex>
-                    <Icon css={{ width: "$60", height: "$60" }} name="github" />
+                    <Icon css={{ width: "$60", height: "$60" }} name="google" />
                   </StyledHoverIconFlex>
                 )}
                 {NEXT_PUBLIC_ENABLE_AZURE && (
