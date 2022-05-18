@@ -85,7 +85,7 @@ export const ToastClose = StyledClose;
 const Toast: React.FC = () => {
   const [currentToastState, setToastState] = useRecoilState(toastState);
   const { open, type, content } = currentToastState;
-  const duration = [ToastStateEnum.SUCCESS, ToastStateEnum.INFO].includes(type) ? 20000 : undefined;
+  const duration = [ToastStateEnum.SUCCESS, ToastStateEnum.INFO].includes(type) ? 7000 : undefined;
 
   const router = useRouter();
   const VIEWPORT_PADDING = router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
