@@ -21,7 +21,7 @@ const Tooltip: React.FC<{ content: string; children: ReactNode }> = ({ children,
   return (
     <TooltipPrimitive.Root delayDuration={200}>
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-      <StyledContent side="top" align="center">
+      <StyledContent avoidCollisions side="top" align="center">
         {content}
         <StyledArrow width={16} height={5} />
       </StyledContent>

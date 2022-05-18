@@ -86,7 +86,9 @@ const TeamSubTeamsConfigurations: React.FC = () => {
           </Text>
         </StyledBox>
       </Flex>
-      <QuickEditSubTeams team={team} stakeholders={stakeholders} />
+      <Flex justify="end">
+        <QuickEditSubTeams team={team} stakeholders={stakeholders} />
+      </Flex>
       <MainBoardCard team={team} stakeholders={stakeholders} />
     </Flex>
   );

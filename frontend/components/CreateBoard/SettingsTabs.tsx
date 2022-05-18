@@ -60,24 +60,8 @@ const Settings = () => {
         orientation="horizontal"
         css={{ position: "relative", top: "-1px", zIndex: "-1" }}
       />
-      {currentTab === 1 ? (
-        // <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}>
-        // {/* <QueryError> */}
-        <TeamSubTeamsConfigurations />
-      ) : (
-        // </QueryError>
-        // </Suspense>
-        // <QueryError>
-        <BoardConfigurations />
-        // </QueryError>
-      )}
-      {/* {currentTab === 2 && ( */}
-      {/*  <Suspense fallback={<TailSpin height={80} width={80} color="#060D16" />}> */}
-      {/*    <QueryError> */}
-      {/*      <BoardConfigurations /> */}
-      {/*    </QueryError> */}
-      {/*  </Suspense> */}
-      {/* )} */}
+      {currentTab === 1 && <TeamSubTeamsConfigurations />}
+      {currentTab === 2 && <BoardConfigurations />}
     </Flex>
   );
 };

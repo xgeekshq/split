@@ -3,18 +3,18 @@ import Flex from "../../../components/Primitives/Flex";
 
 const Container = styled("main", {
   width: "100%",
-  height: "100vh",
-
-  // display: "flex",
-  // flexDirection: "column",
+  minHeight: "100vh",
 
   backgroundColor: "$primary50",
-  overflowY: "hidden",
 });
 
 const PageHeader = styled("header", {
   height: "$92",
   width: "100%",
+
+  position: "sticky",
+  top: 0,
+  zIndex: 1,
 
   display: "flex",
   alignItems: "center",
@@ -42,10 +42,7 @@ const ContentContainer = styled("section", {
   display: "flex",
 
   width: "100%",
-  height: "calc(100vh - $sizes$92)",
-  maxHeight: "calc(100vh - $sizes$92)",
-
-  overflowY: "hidden !important",
+  minHeight: "calc(100vh - $sizes$92)",
 });
 
 const InnerContent = styled(Flex, {
@@ -59,7 +56,6 @@ const InnerContent = styled(Flex, {
 
 const StyledForm = styled("form", Flex, {
   flex: "1 1 auto",
-  height: "calc(100vh - $sizes$92)",
 });
 
 export { Container, PageHeader, ContentContainer, StyledForm, InnerContent };

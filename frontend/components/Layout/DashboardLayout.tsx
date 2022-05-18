@@ -1,13 +1,12 @@
+import Link from "next/link";
 import React from "react";
-import { useSetRecoilState } from "recoil";
 import { styled } from "../../stitches.config";
 import Button from "../Primitives/Button";
 import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
-import { createBoardState } from "../../store/createBoard/atoms/create-board.atom";
 import Icon from "../icons/Icon";
 
-const AddNewBoardButton = styled(Button, {
+const AddNewBoardButton = styled(Button, "a", {
   width: "fit-content",
   display: "flex",
   position: "relative",
@@ -27,11 +26,6 @@ type DashboardLayoutProps = {
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
   const { children, firstName, isDashboard, isBoards } = props;
-  const setShowCreateBoard = useSetRecoilState(createBoardState);
-
-  const handleOnClickNewBoard = () => {
-    setShowCreateBoard(true);
-  };
 
   return (
     <Main justify="between" gap="36" css={{ mr: "$56" }}>
@@ -39,10 +33,12 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
         <Flex justify="between">
           {isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
           {isBoards && <Text heading="1">Boards</Text>}
-          <AddNewBoardButton onClick={handleOnClickNewBoard} size={isDashboard ? "sm" : "md"}>
-            <Icon name="plus" css={{ color: "white" }} />
-            Add new board
-          </AddNewBoardButton>
+          <Link href="/boards/new">
+            <AddNewBoardButton size={isDashboard ? "sm" : "md"}>
+              <Icon name="plus" css={{ color: "white" }} />
+              Add new board
+            </AddNewBoardButton>
+          </Link>
         </Flex>
         {children}
       </Flex>

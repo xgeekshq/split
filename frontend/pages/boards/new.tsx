@@ -4,14 +4,14 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { QueryClient, dehydrate } from "react-query";
+import { dehydrate, QueryClient } from "react-query";
 import {
   Container,
   ContentContainer,
   InnerContent,
   PageHeader,
   StyledForm,
-} from "../../styles/pages/boards/new";
+} from "../../styles/pages/boards/new.styles";
 import Text from "../../components/Primitives/Text";
 import Icon from "../../components/icons/Icon";
 import Button from "../../components/Primitives/Button";
@@ -68,8 +68,9 @@ const NewBoard = () => {
    * Go to previous route
    */
   const handleBack = useCallback(() => {
+    resetBoardState();
     router.back();
-  }, [router]);
+  }, [router, resetBoardState]);
 
   /**
    * Save board
@@ -143,7 +144,7 @@ const NewBoard = () => {
             </FormProvider>
           </InnerContent>
           <Flex justify="end" gap="24" css={{ backgroundColor: "white", py: "$16", pr: "$32" }}>
-            <Button variant="lightOutline" onClick={handleBack}>
+            <Button type="button" variant="lightOutline" onClick={handleBack}>
               Cancel
             </Button>
             <Button type="submit">Create board</Button>

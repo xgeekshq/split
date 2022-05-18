@@ -62,7 +62,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
     <Flex
       ref={scrollRef}
       onScroll={onScroll}
-      css={{ mt: "$24", height: "100%", overflow: "scroll", pr: "$20" }}
+      css={{ mt: "$24", height: "100%", pr: "$20" }}
       justify="start"
       direction="column"
       gap="24"
