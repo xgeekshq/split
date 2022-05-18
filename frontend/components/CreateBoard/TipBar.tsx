@@ -11,11 +11,12 @@ const CreateBoardTipBar: React.FC = () => {
   return (
     <Flex
       direction="column"
+      justify="center"
       css={{
+        Height: "calc(100vh - $sizes$92)",
+        overflowY: "auto",
         backgroundColor: "$primary800",
-        pt: "9.37%",
-        pl: "$32",
-        pr: "$36",
+        padding: "$32",
         maxWidth: "$384",
       }}
     >

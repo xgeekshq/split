@@ -1,6 +1,6 @@
 import { ReactElement, Suspense, useState } from "react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { QueryClient, dehydrate } from "react-query";
+import { dehydrate, QueryClient } from "react-query";
 import { useSession } from "next-auth/react";
 import { TailSpin } from "react-loader-spinner";
 import { styled } from "../../stitches.config";

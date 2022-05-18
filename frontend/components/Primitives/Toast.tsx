@@ -150,7 +150,7 @@ const Toast: React.FC = () => {
           },
         }}
       >
-        X
+        <Icon name="close" css={{ width: "$16", height: "$16", color: "$primary800" }} />
       </ToastClose>
     </ToastRoot>
   );

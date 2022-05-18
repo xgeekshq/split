@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
-import { SetterOrUpdater, useRecoilValue, useResetRecoilState } from "recoil";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import ClickEvent from "../../types/events/clickEvent";
 import Flex from "../Primitives/Flex";
 import { styled } from "../../stitches.config";
@@ -15,7 +15,7 @@ import { CreateBoardDto } from "../../types/board/board";
 
 const StyledForm = styled("form", Flex, {});
 
-const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({ setOpened }) => {
+const CreateBoardContent = () => {
   const boardState = useRecoilValue(createBoardDataState);
   const resetBoardState = useResetRecoilState(createBoardDataState);
   const {
@@ -39,7 +39,6 @@ const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({
 
   const handleOnClickSaveBoard = (e: ClickEvent<HTMLButtonElement, MouseEvent>) => {
     e?.preventDefault();
-    setOpened(false);
   };
 
   const saveBoard = (title: string, maxVotes: string) => {
@@ -69,10 +68,9 @@ const CreateBoardContent: React.FC<{ setOpened: SetterOrUpdater<boolean> }> = ({
 
   useEffect(() => {
     if (status === "success") {
-      setOpened(false);
       resetBoardState();
     }
-  }, [status, setOpened, resetBoardState]);
+  }, [status, resetBoardState]);
 
   return (
     <StyledForm

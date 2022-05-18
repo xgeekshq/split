@@ -1,19 +1,15 @@
 import { useCallback, useMemo } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
-import { useQuery } from "react-query";
 import { createBoardDataState } from "../store/createBoard/atoms/create-board.atom";
 import { BoardToAdd } from "../types/board/board";
 import { BoardUserToAdd } from "../types/board/board.user";
 import { Team } from "../types/team/team";
 import { BoardUserRoles } from "../utils/enums/board.user.roles";
 import { TeamUser } from "../types/team/team.user";
-import { getStakeholders } from "../api/boardService";
 
-const useCreateBoard = (team: Team) => {
+const useCreateBoard = (team: Team, stakeHolders: string[]) => {
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
   const resetBoardState = useResetRecoilState(createBoardDataState);
-
-  const { data: stakeHolders } = useQuery("/boards/stakeholders", () => getStakeholders());
 
   const { board } = createBoardData;
 

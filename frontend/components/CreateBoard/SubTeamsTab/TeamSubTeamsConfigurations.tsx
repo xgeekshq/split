@@ -18,10 +18,12 @@ import Icon from "../../icons/Icon";
 
 const StyledBox = styled(Flex, Box, { borderRadius: "$12", backgroundColor: "white" });
 
-const TeamSubTeamsConfigurations = () => {
-  const { data } = useQuery("teams", () => getAllTeams());
+const TeamSubTeamsConfigurations: React.FC = () => {
+  const { data } = useQuery(["teams"], () => getAllTeams(), { suspense: false });
 
-  const { data: stakeHolders } = useQuery("stakeholders", () => getStakeholders());
+  const { data: stakeholders } = useQuery(["stakeholders"], () => getStakeholders(), {
+    suspense: false,
+  });
 
   const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 
@@ -32,7 +34,7 @@ const TeamSubTeamsConfigurations = () => {
     }
   }, [data, setBoardData]);
 
-  if (!data) return null;
+  if (!data || !stakeholders) return null;
   const team = data[0];
   return (
     <Flex css={{ mt: "$32" }} direction="column">
@@ -76,15 +78,18 @@ const TeamSubTeamsConfigurations = () => {
           </Text>
           <Text size="md" css={{ wordBreak: "break-word" }}>
             {team.users
-              .filter((teamUser) => stakeHolders?.includes(teamUser.user.email))
+              .filter((teamUser) => stakeholders?.includes(teamUser.user.email))
               .map(
-                (stakeholders) => `${stakeholders.user.firstName} ${stakeholders.user.lastName}`
+                (stakeholderFound) =>
+                  `${stakeholderFound.user.firstName} ${stakeholderFound.user.lastName}`
               )}
           </Text>
         </StyledBox>
       </Flex>
-      <QuickEditSubTeams team={team} />
-      <MainBoardCard team={team} />
+      <Flex justify="end">
+        <QuickEditSubTeams team={team} stakeholders={stakeholders} />
+      </Flex>
+      <MainBoardCard team={team} stakeholders={stakeholders} />
     </Flex>
   );
 };

@@ -142,20 +142,13 @@ const Index: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           </Text>
           {AUTH_SSO && (
             <Flex justify="center" align="center" direction="column">
-              <Flex
-                css={{
-                  mt: "$24",
-                  mb: "$32",
-                }}
-              >
-                <OrSeparator>
-                  <hr />
-                  <Text size="sm" color="primary300" weight="medium">
-                    or
-                  </Text>
-                  <hr />
-                </OrSeparator>
-              </Flex>
+              <OrSeparator>
+                <hr />
+                <Text size="sm" color="primary300" weight="medium">
+                  or
+                </Text>
+                <hr />
+              </OrSeparator>
               <Flex gap="32">
                 {NEXT_PUBLIC_ENABLE_GIT && (
                   <StyledHoverIconFlex>
