@@ -134,62 +134,57 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 						forceState={loginErrorCode > 0}
 					/>
 
-					<LoginButton type="submit" disabled={loading.credentials} size="lg">
-						{loading.credentials && <DotsLoading color="primary800" size={10} />}
-						{!loading.credentials && 'Log in'}
-					</LoginButton>
-					<Text
-						size="sm"
-						css={{
-							alignSelf: 'center',
-							mt: '$16',
-							'&:hover': {
-								textDecorationLine: 'underline',
-								cursor: 'pointer'
-							}
-						}}
-						onClick={handleShowTroubleLogginIn}
-					>
-						Forgot password
-					</Text>
-					{AUTH_SSO && (
-						<Flex justify="center" align="center" direction="column">
-							<OrSeparator>
-								<hr />
-								<Text size="sm" color="primary300" weight="medium">
-									or
-								</Text>
-								<hr />
-							</OrSeparator>
-							<Flex gap="32">
-								{NEXT_PUBLIC_ENABLE_GIT && (
-									<StyledHoverIconFlex>
-										<Icon css={{ width: '$60', height: '$60' }} name="github" />
-									</StyledHoverIconFlex>
-								)}
-								{NEXT_PUBLIC_ENABLE_GOOGLE && (
-									<StyledHoverIconFlex>
-										<Icon css={{ width: '$60', height: '$60' }} name="google" />
-									</StyledHoverIconFlex>
-								)}
-								{NEXT_PUBLIC_ENABLE_AZURE && (
-									<StyledHoverIconFlex
-										data-loading={loading.sso}
-										onClick={handleLoginAzure}
-									>
-										<Icon
-											css={{ width: '$60', height: '$60' }}
-											name="microsoft"
-										/>
-									</StyledHoverIconFlex>
-								)}
-							</Flex>
-						</Flex>
-					)}
-				</StyledForm>
-			</FormProvider>
-		</TabsContent>
-	);
+          <LoginButton type="submit" disabled={loading.credentials} size="lg">
+            {loading.credentials && <ThreeDots color="black" height={80} width={80} />}
+            {!loading.credentials && "Log in"}
+          </LoginButton>
+          <Text
+            size="sm"
+            css={{
+              alignSelf: "center",
+              mt: "$16",
+              "&:hover": {
+                textDecorationLine: "underline",
+                cursor: "pointer",
+              },
+            }}
+            onClick={handleShowTroubleLogginIn}
+            data-testid="forgot-password-button"
+          >
+            Forgot password
+          </Text>
+          {AUTH_SSO && (
+            <Flex justify="center" align="center" direction="column">
+              <OrSeparator>
+                <hr />
+                <Text size="sm" color="primary300" weight="medium">
+                  or
+                </Text>
+                <hr />
+              </OrSeparator>
+              <Flex gap="32">
+                {NEXT_PUBLIC_ENABLE_GIT && (
+                  <StyledHoverIconFlex>
+                    <Icon css={{ width: "$60", height: "$60" }} name="github" />
+                  </StyledHoverIconFlex>
+                )}
+                {NEXT_PUBLIC_ENABLE_GOOGLE && (
+                  <StyledHoverIconFlex>
+                    <Icon css={{ width: "$60", height: "$60" }} name="google" />
+                  </StyledHoverIconFlex>
+                )}
+                {NEXT_PUBLIC_ENABLE_AZURE && (
+                  <StyledHoverIconFlex data-loading={loading.sso} onClick={handleLoginAzure}>
+                    <Icon css={{ width: "$60", height: "$60" }} name="microsoft" />
+                  </StyledHoverIconFlex>
+                )}
+              </Flex>
+            </Flex>
+          )}
+        </StyledForm>
+      </FormProvider>
+    </TabsContent>
+  );
 };
 
 export default LoginForm;

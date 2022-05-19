@@ -1,9 +1,14 @@
-import { GetServerSidePropsContext } from "next";
-import { HeaderInfo } from "../types/dashboard/header.info";
 import { Token } from "../types/token";
 import { CreateOrLogin } from "../types/user/create-login.user";
-import { User, LoginUser, RegisterUser } from "../types/user/user";
-import { User, LoginUser, EmailUser, ResetTokenResponse } from "../types/user/user";
+import {
+  User,
+  LoginUser,
+  EmailUser,
+  ResetTokenResponse,
+  ResetPasswordResponse,
+  RegisterUser,
+  NewPassword,
+} from "../types/user/user";
 import fetchData from "../utils/fetchData";
 
 export const registerNewUser = (newUser: RegisterUser): Promise<User> => {
@@ -38,6 +43,11 @@ export const refreshAccessToken = (token: string): Promise<Token> => {
 	return fetchData('/auth/refresh', { refreshToken: token, serverSide: true });
 };
 
+export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordResponse> => {
+  return fetchData("/auth/updatepassword", {
+    method: "POST",
+    data: params,
+  });
 export const getDashboardHeaderInfo = (
 	context?: GetServerSidePropsContext
 ): Promise<HeaderInfo> => {

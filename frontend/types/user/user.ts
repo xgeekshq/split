@@ -18,6 +18,7 @@ export interface User {
 export interface UseUserType {
   loginAzure: () => Promise<void>;
   resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
+  resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
 }
 
 export interface LoginUser {
@@ -40,4 +41,13 @@ export interface ResetTokenResponse {
   message: string;
 }
 
+export interface NewPassword {
+  password: string;
+  passwordConf: string;
+  token: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
 export type UserZod = "name" | "email" | "password" | "passwordConf";

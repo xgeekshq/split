@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import LoginForm from "../components/auth/LoginForm";
 import TroubleLogin from "../components/auth/ForgotPassword/TroubleLogin";
 import Index from "../components/auth/LoginForm";
@@ -11,6 +12,7 @@ import { TabsList, TabsRoot, TabsTrigger } from "../components/Primitives/Tab";
 import Text from "../components/Primitives/Text";
 import { styled } from "../stitches.config";
 import { DASHBOARD_ROUTE } from "../utils/routes";
+import ResetPassword from "../components/auth/ForgotPassword/ResetPassword";
 import SignUpTabContent from "../components/auth/SignUp/SignUpTabContent";
 
 import LoginForm from '../components/auth/LoginForm';

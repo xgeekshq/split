@@ -10,6 +10,16 @@ import { EmailUser, LoginUser, ResetTokenResponse, User, UseUserType } from "../
 import { useMutation, useQuery } from "react-query";
 import { checkUserExistsAD, registerNewUser, checkUserExists } from "../api/authService";
 import { RegisterUser, User, UseUserType } from "../types/user/user";
+import { postUser, resetTokenEmail, resetUserPassword } from "../api/authService";
+import {
+  EmailUser,
+  LoginUser,
+  NewPassword,
+  ResetPasswordResponse,
+  ResetTokenResponse,
+  User,
+  UseUserType,
+} from "../types/user/user";
 import { DASHBOARD_ROUTE } from "../utils/routes";
 import { transformLoginErrorCodes } from "../utils/errorCodes";
 import { NEXT_PUBLIC_ENABLE_AZURE } from "../utils/constants";
@@ -28,6 +38,17 @@ const useUser = (setLoginErrorCode?: Dispatch<SetStateAction<number>>): UseUserT
       },
     }
   );
+
+  const resetPassword = useMutation<ResetPasswordResponse, AxiosError, NewPassword>(
+    (data: NewPassword) => resetUserPassword(data),
+    {
+      mutationKey: "resetPassword",
+      onSuccess: async (response: ResetPasswordResponse) => {
+        return response.message;
+      },
+    }
+  );
+
   const createUser = useMutation<User, AxiosError, User>((user: User) => postUser(user), {
     mutationKey: "register",
     onSuccess: async (user: User) => {
@@ -58,7 +79,7 @@ const useUser = (setLoginErrorCode?: Dispatch<SetStateAction<number>>): UseUserT
     router.push(DASHBOARD_ROUTE);
   };
 
-  return { setPw, createUser, loginAzure, resetToken };
+  return { setPw, createUser, loginAzure, resetToken, resetPassword };
 };
 
 export default useUser;
