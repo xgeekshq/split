@@ -65,6 +65,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token, setUserToken }) =>
       content: "Password updated successfully",
     });
   };
+
   return (
     <MainContainer
       direction="column"
@@ -85,18 +86,22 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token, setUserToken }) =>
           id="newPassword"
           type="password"
           placeholder="Type password here"
+          icon="eye"
+          iconPosition="right"
+          helperText="Your Password must be at least 8 characters long"
         />
         <Input
-          css={{ mt: "$32" }}
           id="newPasswordConf"
           type="password"
           placeholder="Repeat password"
+          icon="eye"
+          iconPosition="right"
+          helperText="Your Password must be at least 8 characters long"
         />
         <Button
           type="submit"
           size="lg"
           css={{
-            mt: "$32",
             fontWeight: "$medium",
             fontSize: "$18",
           }}

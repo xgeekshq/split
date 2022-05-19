@@ -9,10 +9,10 @@ import Flex from "../../Primitives/Flex";
 import LogoIcon from "../../icons/Logo";
 import Input from "../../Primitives/Input";
 import Text from "../../Primitives/Text";
-import LeftArrowIcon from "../../icons/LeftArrow";
 import { EmailUser } from "../../../types/user/user";
 import EmailSent from "./EmailSent";
 import useUser from "../../../hooks/useUser";
+import Icon from "../../icons/Icon";
 import { ToastStateEnum } from "../../../utils/enums/toast-types";
 import { toastState } from "../../../store/toast/atom/toast.atom";
 
@@ -99,7 +99,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
           Recover password
         </Button>
         <GoBackWrapper gap="8" align="center" onClick={handleShowTroubleLogginIn}>
-          <LeftArrowIcon />
+          <Icon name="arrow-left" />
           <Text>Go back</Text>
         </GoBackWrapper>
       </FormProvider>
