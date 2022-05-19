@@ -8,6 +8,7 @@ import AddCardOrComment from "../AddCardOrComment";
 import CardsList from "./CardsList";
 import Box from "../../Primitives/Box";
 import Separator from "../../Sidebar/Separator";
+import { CardsContainer } from "./styles";
 
 const Container = styled(Flex, Box, {
   borderRadius: "$12",
@@ -21,6 +22,7 @@ const Container = styled(Flex, Box, {
 
 const OuterContainer = styled(Flex, {
   height: "fit-content",
+
   flex: "1",
   flexGrow: 1,
   flexShrink: 0,
@@ -69,7 +71,7 @@ const Column = React.memo<ColumnBoardType>(
                 </Text>
               </Flex>
               <Separator css={{ backgroundColor: "$primary100", mb: "$20" }} />
-              <Flex direction="column" css={{ px: "$20" }}>
+              <Flex direction="column" css={{}}>
                 {!isSubmited && (
                   <AddCardOrComment
                     isCard
@@ -80,9 +82,8 @@ const Column = React.memo<ColumnBoardType>(
                     defaultOpen={countAllCards === 0}
                   />
                 )}
-                <Flex
+                <CardsContainer
                   direction="column"
-                  css={{ mt: "$20" }}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
@@ -101,7 +102,7 @@ const Column = React.memo<ColumnBoardType>(
                     filter={filter}
                   />
                   {provided.placeholder}
-                </Flex>
+                </CardsContainer>
               </Flex>
             </Container>
           )}

@@ -3,6 +3,7 @@ import { styled } from "../../../stitches.config";
 
 const StyledHeader = styled("div", {
   width: "100%",
+  maxHeight: "108px",
 
   position: "relative",
 
