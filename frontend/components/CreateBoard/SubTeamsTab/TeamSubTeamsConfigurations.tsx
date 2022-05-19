@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useSetRecoilState } from "recoil";
+import { useRouter } from "next/router";
 import { styled } from "../../../stitches.config";
 import { getAllTeams } from "../../../api/teamService";
 import Flex from "../../Primitives/Flex";
@@ -15,27 +16,68 @@ import {
 import QuickEditSubTeams from "./QuickEditSubTeams";
 import { getStakeholders } from "../../../api/boardService";
 import Icon from "../../icons/Icon";
+import { Team } from "../../../types/team/team";
+import { toastState } from "../../../store/toast/atom/toast.atom";
+import { ToastStateEnum } from "../../../utils/enums/toast-types";
 
 const StyledBox = styled(Flex, Box, { borderRadius: "$12", backgroundColor: "white" });
 
 const TeamSubTeamsConfigurations: React.FC = () => {
-  const { data } = useQuery(["teams"], () => getAllTeams(), { suspense: false });
+  /**
+   * Router Hook
+   */
+  const router = useRouter();
 
-  const { data: stakeholders } = useQuery(["stakeholders"], () => getStakeholders(), {
+  /**
+   * Recoil Atoms and hooks
+   */
+  const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
+  const setToastState = useSetRecoilState(toastState);
+
+  /**
+   * States
+   */
+  const [team, setTeam] = useState<Team>();
+  // TODO: if stakeholders change type on future, it's necessary change the type of useStates
+  const [stakeholders, setStakeholders] = useState<string[]>([]);
+
+  /**
+   * Queries to retrive data
+   */
+  const { data } = useQuery(["teams"], () => getAllTeams(), { suspense: false });
+  const { data: dataStakeholders } = useQuery(["stakeholders"], () => getStakeholders(), {
     suspense: false,
   });
 
-  const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
-
+  /**
+   * Use Effect to validate if exist any team created
+   * If yes, save on state and on board data atom
+   * If no, redirect to previous router and show a toastr
+   */
   useEffect(() => {
-    const team = data ? data[0] : null;
-    if (team) {
-      setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: team?._id } }));
+    if (data && !data[0]) {
+      setToastState({
+        open: true,
+        content: "You don't have any team. Please create a team first!",
+        type: ToastStateEnum.ERROR,
+      });
+      router.back();
+    } else if (data && data[0]) {
+      setTeam(data[0]);
+      setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: data[0]._id } }));
     }
-  }, [data, setBoardData]);
+  }, [data, setBoardData, router, setToastState, team?._id]);
 
-  if (!data || !stakeholders) return null;
-  const team = data[0];
+  /**
+   * Use Effect to validate if staheolders return data
+   * If ues, save on state
+   */
+  useEffect(() => {
+    if (dataStakeholders) {
+      setStakeholders(dataStakeholders);
+    }
+  }, [dataStakeholders]);
+
   return (
     <Flex css={{ mt: "$32" }} direction="column">
       <Flex gap="22" justify="between" css={{ width: "100%" }}>
@@ -49,9 +91,9 @@ const TeamSubTeamsConfigurations: React.FC = () => {
             Team
           </Text>
           <Flex gap="8" align="center">
-            <Text size="md">{team.name}</Text>
+            <Text size="md">{team?.name}</Text>
             <Text size="md" color="primary300">
-              ({team.users.length} members)
+              ({team?.users.length} members)
             </Text>
             <Tooltip content="All active members on the platform">
               <div>
@@ -77,7 +119,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
             Stakeholders
           </Text>
           <Text size="md" css={{ wordBreak: "break-word" }}>
-            {team.users
+            {team?.users
               .filter((teamUser) => stakeholders?.includes(teamUser.user.email))
               .map(
                 (stakeholderFound) =>
@@ -86,10 +128,14 @@ const TeamSubTeamsConfigurations: React.FC = () => {
           </Text>
         </StyledBox>
       </Flex>
-      <Flex justify="end">
-        <QuickEditSubTeams team={team} stakeholders={stakeholders} />
-      </Flex>
-      <MainBoardCard team={team} stakeholders={stakeholders} />
+      {team && (
+        <>
+          <Flex justify="end">
+            <QuickEditSubTeams team={team} stakeholders={stakeholders} />
+          </Flex>
+          <MainBoardCard team={team} stakeholders={stakeholders} />
+        </>
+      )}
     </Flex>
   );
 };
