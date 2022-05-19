@@ -38,10 +38,6 @@ export const mongooseResetModule = MongooseModule.forFeature([
   { name: ResetPassword.name, schema: ResetPasswordSchema },
 ]);
 
-export const mongooseResetModule = MongooseModule.forFeature([
-  { name: ResetPassword.name, schema: ResetPasswordSchema },
-]);
-
 export const mongooseTeamModule = MongooseModule.forFeature([
   { name: Team.name, schema: TeamSchema },
 ]);
