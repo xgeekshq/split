@@ -9,6 +9,7 @@ export interface UpdateUserService {
   setPassword(
     userEmail: string,
     newPassword: string,
+    newPasswordConf: string,
   ): Promise<UserDocument | null>;
   checkEmail(token: string): Promise<string>;
 }

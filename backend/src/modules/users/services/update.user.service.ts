@@ -29,11 +29,22 @@ export default class updateUserServiceImpl implements UpdateUserService {
       .exec();
   }
 
-  async setPassword(userEmail: string, newPassword: string) {
+  async setPassword(
+    userEmail: string,
+    newPassword: string,
+    newPasswordConf: string,
+  ) {
     const password = await encrypt(newPassword);
-    return this.userModel
-      .findOneAndUpdate({ email: userEmail }, { $set: { password } })
-      .exec();
+    if (newPassword !== newPasswordConf)
+      throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
+    const user = await this.userModel.findOneAndUpdate(
+      { email: userEmail },
+      {
+        $set: { password },
+      },
+    );
+    if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+    return user;
   }
 
   async checkEmail(token: string) {

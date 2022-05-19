@@ -103,10 +103,16 @@ export default class AuthController {
 
   @Post('updatepassword')
   @HttpCode(HttpStatus.OK)
-  async setNewPassword(@Body() { token, newPassword }: ResetPasswordDto) {
+  async setNewPassword(
+    @Body() { token, newPassword, newPasswordConf }: ResetPasswordDto,
+  ) {
     const email = await this.updateUserService.checkEmail(token);
     if (!email) return { message: 'token not valid' };
-    return !!this.updateUserService.setPassword(email, newPassword);
+    return !!this.updateUserService.setPassword(
+      email,
+      newPassword,
+      newPasswordConf,
+    );
   }
 
   @UseGuards(JwtAuthenticationGuard)
