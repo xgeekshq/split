@@ -15,6 +15,8 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
   createStitches({
     theme: {
       colors: {
+        // background: "#F4F7F8",
+        // rgba(244, 247, 248, 1)
         background: "#F4F7F8",
         surface: "#FFFFFF",
         transparent: "#FFFFFF 0%",

@@ -4,7 +4,7 @@ const primaryColors = {
   primaryLight: "#434D5A",
   primaryLighter: "#A9B3BF",
   primaryLightest: "#EFF3F5",
-  primary50: "#EFF3F5",
+  primary50: "#F4F7F8",
   primary100: "#CBD2D9",
   primary200: "#A9B3BF",
   primary300: "#768291",
