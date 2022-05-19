@@ -8,7 +8,6 @@ import Link from "next/link";
 import Select from "react-select";
 import { useSetRecoilState } from "recoil";
 import Flex from "../../components/Primitives/Flex";
-import { styled } from "../../stitches.config";
 import { NEXT_PUBLIC_BACKEND_URL } from "../../utils/constants";
 import Column from "../../components/Board/Column/Column";
 import useBoard from "../../hooks/useBoard";
@@ -24,13 +23,7 @@ import { AlertDialogTrigger } from "../../components/Primitives/AlertDialog";
 import AlertBox from "../../components/Primitives/AlertBox";
 import BoardHeader from "../../components/Board/Header";
 import { boardInfoState } from "../../store/board/atoms/board.atom";
-
-const Container = styled(Flex, {
-  alignItems: "flex-start",
-  justifyContent: "center",
-  gap: "$8",
-  height: "100%",
-});
+import { Container } from "../../styles/pages/boards/board.styles";
 
 interface OptionType {
   value: string;

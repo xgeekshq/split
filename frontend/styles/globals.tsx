@@ -13,6 +13,7 @@ const globalStyles = globalCss({
   "*": {
     boxSizing: "border-box",
   },
+
   body: {
     bc: "$background",
     margin: 0,
@@ -21,6 +22,26 @@ const globalStyles = globalCss({
     fontSize: "$16",
     lineHeight: "$24",
     minHeight: "100vh",
+
+    "&::-webkit-scrollbar": {
+      width: "$8",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "$primary50",
+      borderRadius: "$pill",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: "$primary200",
+      borderRadius: "$pill",
+
+      "&:hover": {
+        background: "$primary400",
+      },
+    },
+
+    // custom scroll for firefox
+    scrollbarWidth: "thin",
+    scrollbarColor: "$primary200 $primary50",
   },
   "#__next": {
     minHeight: "100vh",

@@ -24,7 +24,7 @@ const ActionButton = styled(Button, {
   },
 });
 
-const StyledForm = styled("form", Flex, { width: "100%" });
+const StyledForm = styled("form", Flex, { width: "100%", px: "$20" });
 
 interface AddCardProps {
   isUpdate: boolean;
@@ -151,6 +151,7 @@ const AddCard = React.memo<AddCardProps>(
       return (
         <Button
           css={{
+            mx: "$20",
             display: "flex",
           }}
           onClick={() => setIsOpen(true)}
