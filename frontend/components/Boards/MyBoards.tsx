@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
 import { useInfiniteQuery } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { TailSpin } from "react-loader-spinner";
@@ -11,7 +11,6 @@ import Flex from "../Primitives/Flex";
 import Text from "../Primitives/Text";
 import TeamHeader from "./TeamHeader";
 import { Team } from "../../types/team/team";
-import FilterBoards from "./Filters/FilterBoards";
 
 interface MyBoardsProps {
   userId: string;
@@ -20,7 +19,7 @@ interface MyBoardsProps {
 
 const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const setToastState = useSetRecoilState(toastState);
-  const [filter, setFilter] = useState("all");
+  // const [filter, setFilter] = useState("all");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchBoards = useInfiniteQuery(
@@ -81,9 +80,9 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     }
   };
 
-  const teamNames = Array.from(dataByTeamAndDate.teams.values()).map((team) => {
-    return { value: team._id, label: team.name };
-  });
+  // const teamNames = Array.from(dataByTeamAndDate.teams.values()).map((team) => {
+  //   return { value: team._id, label: team.name };
+  // });
 
   return (
     <Flex
@@ -93,10 +92,10 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
       justify="start"
       direction="column"
     >
-      <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
+      {/* <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} /> */}
       {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
         const { users } = Array.from(boardsOfTeam)[0][1][0];
-        if (filter !== "all" && teamId !== filter) return null;
+        // if (filter !== "all" && teamId !== filter) return null;
         return (
           <Flex direction="column" key={teamId} css={{ mb: "$24" }}>
             <Flex
