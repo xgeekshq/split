@@ -1,11 +1,11 @@
 export default interface VoteDto {
-  cardId: string;
+	cardId: string;
 
-  cardItemId?: string;
+	cardItemId?: string;
 
-  boardId: string;
+	boardId: string;
 
-  socketId?: string;
+	socketId?: string;
 
-  isCardGroup: boolean;
+	isCardGroup: boolean;
 }

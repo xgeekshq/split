@@ -7,7 +7,7 @@ const StyledTextTab = styled(Text, {
 	'&:hover': {
 		cursor: 'pointer'
 	},
-	"&[data-activetab='true']": {
+	'&[data-activetab=\'true\']': {
 		boxSizing: 'border-box',
 		borderBottom: '2px solid $colors$primary800',
 		fontWeight: '$bold',

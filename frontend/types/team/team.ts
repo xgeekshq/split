@@ -1,7 +1,7 @@
-import { TeamUser } from "./team.user";
+import { TeamUser } from './team.user';
 
 export interface Team {
-  _id: string;
-  name: string;
-  users: TeamUser[];
+	_id: string;
+	name: string;
+	users: TeamUser[];
 }

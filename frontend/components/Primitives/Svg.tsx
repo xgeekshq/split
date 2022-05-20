@@ -1,5 +1,5 @@
-import { styled } from "../../stitches.config";
+import { styled } from '../../stitches.config';
 
-const Svg = styled("svg", {});
+const Svg = styled('svg', {});
 
 export default Svg;

@@ -1,6 +1,6 @@
-import BoardType from "./board";
+import BoardType from './board';
 
 export default interface UpdateBoardDto {
-  board: BoardType;
-  boardPage: boolean;
+	board: BoardType;
+	boardPage: boolean;
 }

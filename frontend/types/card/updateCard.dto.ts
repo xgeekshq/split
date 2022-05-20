@@ -1,13 +1,13 @@
 export default interface UpdateCardDto {
-  cardId: string;
+	cardId: string;
 
-  cardItemId: string;
+	cardItemId: string;
 
-  text: string;
+	text: string;
 
-  boardId: string;
+	boardId: string;
 
-  socketId?: string;
+	socketId?: string;
 
-  isCardGroup: boolean;
+	isCardGroup: boolean;
 }

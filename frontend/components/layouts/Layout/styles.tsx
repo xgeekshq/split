@@ -1,13 +1,13 @@
-import { styled } from "../../../stitches.config";
+import { styled } from '../../../stitches.config';
 
-const Container = styled("main", {
-  width: "calc(100vw - 256px)",
-  height: "100vh",
+const Container = styled('main', {
+	width: 'calc(100vw - 256px)',
+	height: '100vh',
 
-  padding: "$64 $48 $24 $48",
-  marginLeft: "auto",
+	padding: '$64 $48 $24 $48',
+	marginLeft: 'auto',
 
-  overflow: "hidden",
+	overflow: 'hidden'
 });
 
 export { Container };
