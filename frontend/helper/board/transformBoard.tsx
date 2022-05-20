@@ -4,7 +4,7 @@ import { addElementAtIndex, removeElementAtIndex } from '../../utils/array';
 
 export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPositionDto) => {
 	// avoid read only error
-	const boardData = JSON.parse(JSON.stringify(board));
+	const boardData: BoardType = JSON.parse(JSON.stringify(board));
 
 	const { targetColumnId, colIdOfCard, newPosition, cardPosition } = changes;
 	const colToRemove = boardData.columns.find((col) => col._id === colIdOfCard);

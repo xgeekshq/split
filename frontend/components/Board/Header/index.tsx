@@ -42,7 +42,7 @@ const BoardHeader = () => {
 	const getSubBoard = (): { id: string; title: string } | undefined => {
 		const boardInfo = dividedBoards.find((board: BoardType) =>
 			board.users.find(
-				(user) => (user as unknown as BoardUserNoPopulated).user === session!.user.id
+				(user) => (user as unknown as BoardUserNoPopulated).user === session?.user?.id
 			)
 		);
 
