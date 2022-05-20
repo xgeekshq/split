@@ -12,6 +12,7 @@ import { VotesModule } from './modules/votes/votes.module';
 import { configuration } from './infrastructure/config/configuration';
 import AzureModule from './modules/azure/azure.module';
 import TeamsModule from './modules/teams/teams.module';
+import EmailModule from './modules/mailer/mailer.module';
 
 const imports = [
   AppConfigModule,
@@ -23,12 +24,17 @@ const imports = [
   CardsModule,
   CommentsModule,
   VotesModule,
+  EmailModule,
   TeamsModule,
   ScheduleModule.forRoot(),
 ];
 
 if (configuration().azure.enabled) {
   imports.push(AzureModule);
+}
+
+if (configuration().smtp.enabled) {
+  imports.push(EmailModule);
 }
 
 @Module({

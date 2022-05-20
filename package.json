@@ -8,5 +8,9 @@
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "husky": "^7.0.4"
+  },
+  "dependencies": {
+    "@nestjs-modules/mailer": "^1.6.1",
+    "nodemailer": "^6.7.5"
   }
 }
