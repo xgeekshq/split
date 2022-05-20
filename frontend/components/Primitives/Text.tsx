@@ -95,9 +95,7 @@ const Text = styled("span", {
       medium: {
         fontWeight: "$medium",
       },
-      bold: {
-        fontWeight: "$bold",
-      },
+      bold: { fontWeight: "$bold" },
     },
     size: {
       xl: {

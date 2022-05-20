@@ -239,7 +239,12 @@ const Input: React.FC<InputProps> = ({
 
   const isHelperEmpty = isEmpty(helperText) && isEmpty(message);
 
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const handleVisibility = () => setIsVisible((prevState) => !prevState);
+
   const handleOnClickIcon = () => {
+    handleVisibility();
     if (type === "text") return;
     setType(currentType === "password" ? "text" : "password");
   };
@@ -258,7 +263,7 @@ const Input: React.FC<InputProps> = ({
         <IconWrapper data-iconposition={iconPosition} data-type={type} onClick={handleOnClickIcon}>
           {icon === "eye" && (
             <Icon
-              name="eye"
+              name={isVisible ? "eye" : "eye-slash"}
               css={{
                 width: "$24",
                 height: "$24",

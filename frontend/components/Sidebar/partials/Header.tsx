@@ -4,7 +4,8 @@ import Flex from "../../Primitives/Flex";
 import HeaderBannerIcon from "../../icons/HeaderBanner";
 import Text from "../../Primitives/Text";
 import Separator from "./Separator";
-import { styled } from "../../../stitches.config";
+import { styled } from "../../stitches.config";
+import Icon from "../icons/Icon";
 
 const StyledHeader = styled(SidebarHeader, Flex);
 
@@ -31,14 +32,26 @@ const Header: FC<{ firstName: string; lastName: string; email: string }> = ({
         }}
       >
         <Flex
+          css={{ width: "57px", height: "58px", position: "relative" }}
           align="center"
           justify="center"
-          css={{
-            size: "$58",
-            backgroundImage: "url(/icons/userIcon.svg)",
-          }}
         >
-          <Text heading="5">{initialLetters}</Text>
+          <Icon
+            name="userIcon"
+            css={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: "0",
+              bottom: "0",
+              zIndex: "0",
+              left: "0",
+              right: "0",
+            }}
+          />
+          <Text size="md" color="primary800" weight="bold" css={{ zIndex: 1 }}>
+            {initialLetters}
+          </Text>
         </Flex>
         <Flex direction="column">
           <Text css={{ color: "$white" }} weight="medium" size="sm">
