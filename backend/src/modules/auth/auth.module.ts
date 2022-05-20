@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { mongooseResetModule } from 'src/infrastructure/database/mongoose.module';
 import AuthController from './controller/auth.controller';
 import UsersModule from '../users/users.module';
 import LocalStrategy from './strategy/local.strategy';
@@ -8,6 +9,8 @@ import JwtStrategy from './strategy/jwt.strategy';
 import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 import {
   getTokenAuthService,
+  createResetTokenAuthService,
+  createResetTokenAuthApplication,
   registerAuthService,
   validateUserAuthService,
   getTokenAuthApplication,
@@ -25,6 +28,7 @@ import { JwtRegister } from '../../infrastructure/config/jwt.register';
     BoardsModule,
     PassportModule,
     ConfigModule,
+    mongooseResetModule,
   ],
   providers: [
     getTokenAuthService,
@@ -32,6 +36,8 @@ import { JwtRegister } from '../../infrastructure/config/jwt.register';
     validateUserAuthService,
     getTokenAuthApplication,
     registerAuthApplication,
+    createResetTokenAuthApplication,
+    createResetTokenAuthService,
     LocalStrategy,
     JwtStrategy,
     JwtRefreshTokenStrategy,

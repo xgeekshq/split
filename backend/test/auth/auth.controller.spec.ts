@@ -4,11 +4,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import EmailModule from '../../src/modules/mailer/mailer.module';
 import AuthController from '../../src/modules/auth/controller/auth.controller';
 import mockedUser from '../../src/libs/test-utils/mocks/user.mock';
 import jwtService from '../../src/libs/test-utils/mocks/jwtService.mock';
 import configService from '../../src/libs/test-utils/mocks/configService.mock';
 import {
+  createResetTokenAuthApplication,
+  createResetTokenAuthService,
   getTokenAuthApplication,
   getTokenAuthService,
   registerAuthApplication,
@@ -40,6 +43,7 @@ describe('AuthController', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EmailModule],
       controllers: [AuthController],
       providers: [
         registerAuthApplication,
@@ -52,6 +56,8 @@ describe('AuthController', () => {
         getBoardService,
         registerAuthService,
         updateUserService,
+        createResetTokenAuthApplication,
+        createResetTokenAuthService,
         createUserService,
         getUserApplication,
         getUserService,
@@ -75,6 +81,10 @@ describe('AuthController', () => {
         {
           provide: getModelToken('User'),
           useValue: usersRepository,
+        },
+        {
+          provide: getModelToken('ResetPassword'),
+          useValue: {},
         },
         {
           provide: getModelToken('Team'),
