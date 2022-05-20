@@ -6,7 +6,7 @@ const webpack = require('webpack');
 
 module.exports = {
 	reactStrictMode: true,
-	swcMinify: false,
+	swcMinify: true,
 	experimental: {
 		outputStandalone: true
 	},
