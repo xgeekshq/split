@@ -5,7 +5,7 @@ const CardsContainer = styled(Flex, {
 	mt: '$20',
 	px: '$20',
 	overflowY: 'auto',
-	maxHeight: '55vh',
+	maxHeight: 'calc(100vh - 450px)',
 
 	'&::-webkit-scrollbar': {
 		width: '$4'

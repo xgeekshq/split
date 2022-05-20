@@ -76,9 +76,11 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
 
-	if (data) {
-		setBoard(data);
-	}
+	useEffect(() => {
+		if (data) {
+			setBoard(data);
+		}
+	}, [data, setBoard]);
 
 	const isResponsible = board?.users.find(
 		(boardUser) => boardUser.role === 'responsible' && boardUser.user._id === userId

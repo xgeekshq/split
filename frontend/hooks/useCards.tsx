@@ -1,5 +1,6 @@
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
+
 import {
 	addCardRequest,
 	deleteCardRequest,
@@ -40,17 +41,24 @@ const useCards = () => {
 
 			const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
 			const board = prevData?.board;
+
 			if (board) {
 				const newBoard = handleUpdateCardPosition(board, data);
 
-				queryClient.setQueryData<BoardType | undefined>(query, (old: BoardType | undefined) => {
-					if (old)
-						return {
-							...old,
-							columns: newBoard.columns
-						};
-					return old;
-				});
+				queryClient.setQueryData<{ board: BoardType } | undefined>(
+					query,
+					(old: { board: BoardType } | undefined) => {
+						if (old)
+							return {
+								board: {
+									...old.board,
+									columns: newBoard.columns
+								}
+							};
+
+						return old;
+					}
+				);
 			}
 
 			return { previousBoard: board, data };
@@ -58,8 +66,7 @@ const useCards = () => {
 		onSettled: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 		},
-		onSuccess: () => {
-		},
+		onSuccess: () => {},
 		onError: (data, variables, context) => {
 			queryClient.setQueryData(
 				['board', { id: variables.boardId }],
