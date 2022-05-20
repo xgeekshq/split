@@ -1,5 +1,5 @@
 export interface HeaderInfo {
-  usersCount: number;
-  teamsCount: number;
-  boardsCount: number;
+	usersCount: number;
+	teamsCount: number;
+	boardsCount: number;
 }

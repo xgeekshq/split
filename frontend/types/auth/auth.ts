@@ -1,3 +1,3 @@
 export interface AuthEnabledComponentConfig {
-  authenticationEnabled: boolean;
+	authenticationEnabled: boolean;
 }

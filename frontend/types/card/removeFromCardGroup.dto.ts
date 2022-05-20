@@ -1,13 +1,13 @@
 export default interface RemoveFromCardGroupDto {
-  columnId: string;
+	columnId: string;
 
-  cardId: string;
+	cardId: string;
 
-  boardId: string;
+	boardId: string;
 
-  cardGroupId: string;
+	cardGroupId: string;
 
-  socketId: string;
+	socketId: string;
 
-  newPosition: number;
+	newPosition: number;
 }

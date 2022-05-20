@@ -1,3 +1,3 @@
-import { CardDragItem } from "./card";
+import { CardDragItem } from './card';
 
 export type DragItem = CardDragItem;
