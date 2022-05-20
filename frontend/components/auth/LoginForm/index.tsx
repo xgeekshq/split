@@ -32,7 +32,7 @@ interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const Index: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
   const setToastState = useSetRecoilState(toastState);
   const [loginErrorCode, setLoginErrorCode] = useState(-1);
@@ -174,4 +174,4 @@ const Index: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   );
 };
 
-export default Index;
+export default LoginForm;

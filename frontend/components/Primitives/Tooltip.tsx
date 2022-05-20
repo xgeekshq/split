@@ -6,7 +6,7 @@ const StyledContent = styled(TooltipPrimitive.Content, {
   backgroundColor: "$primary800",
   p: "$8",
   borderRadius: "$12",
-  maxWidth: "239px",
+  maxWidth: "260px",
   fontSize: "$12",
   lineHeight: "$16",
   textAlign: "center",
@@ -17,7 +17,10 @@ const StyledContent = styled(TooltipPrimitive.Content, {
 
 const StyledArrow = styled(TooltipPrimitive.Arrow, { fill: "$primary800" });
 
-const Tooltip: React.FC<{ content: string; children: ReactNode }> = ({ children, content }) => {
+const Tooltip: React.FC<{ content: string | ReactNode; children: ReactNode }> = ({
+  children,
+  content,
+}) => {
   return (
     <TooltipPrimitive.Root delayDuration={200}>
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>

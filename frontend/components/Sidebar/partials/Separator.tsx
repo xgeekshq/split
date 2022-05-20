@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import { styled } from "../../stitches.config";
+import { styled } from "../../../stitches.config";
 
 const StyledSeparator = styled("div", { height: "1px", backgroundColor: "$primary600" });
 

@@ -43,6 +43,23 @@ const globalStyles = globalCss({
     scrollbarWidth: "thin",
     scrollbarColor: "$primary200 $primary50",
   },
+
+  "::-webkit-scrollbar": {
+    width: "$8",
+  },
+  "::-webkit-scrollbar-track": {
+    background: "$primary50",
+    borderRadius: "$pill",
+  },
+  "::-webkit-scrollbar-thumb": {
+    background: "$primary200",
+    borderRadius: "$pill",
+
+    "&:hover": {
+      background: "$primary400",
+    },
+  },
+
   "#__next": {
     minHeight: "100vh",
   },

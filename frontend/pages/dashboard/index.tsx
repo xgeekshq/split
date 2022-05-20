@@ -1,16 +1,16 @@
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { dehydrate, QueryClient, useQuery } from "react-query";
 import React, { lazy, ReactElement, Suspense } from "react";
-import { TailSpin } from "react-loader-spinner";
 import { useSession } from "next-auth/react";
 import { styled } from "../../stitches.config";
 import Flex from "../../components/Primitives/Flex";
 import Text from "../../components/Primitives/Text";
 import { getDashboardBoardsRequest } from "../../api/boardService";
 import requireAuthentication from "../../components/HOC/requireAuthentication";
-import Layout from "../../components/Layout/Layout";
 import QueryError from "../../components/Errors/QueryError";
 import { getDashboardHeaderInfo } from "../../api/authService";
+import Layout from "../../components/layouts/Layout";
+import LoadingPage from "../../components/loadings/LoadingPage";
 
 const RecentRetros = lazy(() => import("../../components/Dashboard/RecentRetros/RecentRetros"));
 const Tiles = lazy(() => import("../../components/Dashboard/Tiles"));
@@ -42,12 +42,12 @@ const Dashboard = () => {
   if (!session || !data) return null;
   return (
     <InnerContainer direction="column">
-      <Suspense fallback={<TailSpin height={80} width={80} />}>
+      <Suspense fallback={<LoadingPage />}>
         <QueryError>
           <Tiles data={data} />
         </QueryError>
       </Suspense>
-      <Suspense fallback={<TailSpin height={80} width={80} />}>
+      <Suspense fallback={<LoadingPage />}>
         <QueryError>
           <Text css={{ mt: "$64" }} heading="4">
             My recent retros

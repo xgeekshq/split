@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { SidebarHeader } from "react-pro-sidebar";
-import Flex from "../Primitives/Flex";
-import HeaderBannerIcon from "../icons/HeaderBanner";
-import Text from "../Primitives/Text";
+import Flex from "../../Primitives/Flex";
+import HeaderBannerIcon from "../../icons/HeaderBanner";
+import Text from "../../Primitives/Text";
 import Separator from "./Separator";
-import { styled } from "../../stitches.config";
+import { styled } from "../../../stitches.config";
 
 const StyledHeader = styled(SidebarHeader, Flex);
 

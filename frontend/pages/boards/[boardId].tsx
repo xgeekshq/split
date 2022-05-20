@@ -15,7 +15,7 @@ import UpdateCardPositionDto from "../../types/card/updateCardPosition.dto";
 import { getBoardRequest } from "../../api/boardService";
 import useCards from "../../hooks/useCards";
 import MergeCardsDto from "../../types/board/mergeCard.dto";
-import SpinnerPage from "../../components/Loading/SpinnerPage";
+import SpinnerPage from "../../components/loadings/LoadingPage";
 import { countBoardCards } from "../../helper/board/countCards";
 import Button from "../../components/Primitives/Button";
 import AlertCustomDialog from "../../components/Primitives/AlertCustomDialog";

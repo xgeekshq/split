@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
-import Index from "../components/auth/LoginForm";
+import LoginForm from "../components/auth/LoginForm";
 import TroubleLogin from "../components/auth/TroubleLogin";
 import Banner from "../components/icons/Banner";
 import Flex from "../components/Primitives/Flex";
@@ -74,7 +74,7 @@ const Home: NextPage = () => {
                 <Text heading="4">Sign up</Text>
               </TabsTrigger>
             </TabsList>
-            <Index setShowTroubleLogin={setShowTroubleLogin} />
+            <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
             <SignUpTabContent setCurrentTab={setCurrentTab} />
           </TabsRoot>
         )}

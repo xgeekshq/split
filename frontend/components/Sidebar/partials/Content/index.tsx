@@ -3,9 +3,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
-import { styled } from "../../stitches.config";
-import Text from "../Primitives/Text";
-import Flex from "../Primitives/Flex";
 import {
   ACCOUNT_ROUTE,
   BOARDS_ROUTE,
@@ -14,37 +11,9 @@ import {
   START_PAGE_ROUTE,
   TEAMS_ROUTE,
   USERS_ROUTE,
-} from "../../utils/routes";
-import Separator from "./Separator";
-import Icon from "../icons/Icon";
-
-const StyledMenuItem = styled(Flex, {
-  pl: "$22",
-  py: "$12",
-  height: "$48",
-  gap: "$14",
-  alignItems: "center",
-  transition: "all 0.2s ease-in-out",
-
-  "& svg": { color: "$primary300", width: "$24", height: "$24" },
-
-  "&[data-active='true']": {
-    "& svg": { color: "$white" },
-    "& span": { color: "$white", fontWeight: "$medium" },
-    backgroundColor: "$primary600",
-  },
-  "&:hover": {
-    cursor: "pointer",
-  },
-});
-
-const StyledText = styled(Text, {
-  fontSize: "$14",
-  color: "$primary300",
-  lineHeight: "$20",
-});
-
-const StyledSeparator = styled(Separator, { marginTop: "$16", marginBottom: "$16" });
+} from "../../../../utils/routes";
+import Icon from "../../../icons/Icon";
+import { StyledMenuItem, StyledText, StyledSeparator } from "./styles";
 
 interface SidebarContentProps {
   strategy: string;

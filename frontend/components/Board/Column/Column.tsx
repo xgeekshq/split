@@ -7,7 +7,7 @@ import Text from "../../Primitives/Text";
 import AddCardOrComment from "../AddCardOrComment";
 import CardsList from "./CardsList";
 import Box from "../../Primitives/Box";
-import Separator from "../../Sidebar/Separator";
+import Separator from "../../Sidebar/partials/Separator";
 import { CardsContainer } from "./styles";
 
 const Container = styled(Flex, Box, {
