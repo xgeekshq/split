@@ -24,6 +24,14 @@ export interface GetBoardServiceInterface {
   getBoard(
     boardId: string,
     userId: string,
-  ): Promise<LeanDocument<BoardDocument> | null>;
+  ): Promise<
+    | { board: LeanDocument<BoardDocument> }
+    | null
+    | {
+        board: LeanDocument<BoardDocument>;
+        mainBoardData: LeanDocument<BoardDocument>;
+      }
+    | null
+  >;
   countBoards(userId: string): Promise<number>;
 }

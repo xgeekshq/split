@@ -14,7 +14,12 @@ export default class BoardUser {
   @Prop({
     nullable: false,
     type: String,
-    enum: [BoardRoles.RESPONSIBLE, BoardRoles.MEMBER, BoardRoles.OWNER],
+    enum: [
+      BoardRoles.RESPONSIBLE,
+      BoardRoles.MEMBER,
+      BoardRoles.OWNER,
+      BoardRoles.STAKEHOLDER,
+    ],
   })
   role!: string;
 

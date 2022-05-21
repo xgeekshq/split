@@ -38,18 +38,33 @@ const NODE_ENV = process.env.NODE_ENV;
         AZURE_CLIENT_ID: Joi.any().when('AZURE_ENABLE', {
           is: 'true',
           then: Joi.required(),
-          otherwise: Joi.optional(),
         }),
         AZURE_CLIENT_SECRET: Joi.any().when('AZURE_ENABLE', {
           is: 'true',
           then: Joi.required(),
-          otherwise: Joi.optional(),
         }),
         AZURE_TENANT_ID: Joi.any().when('AZURE_ENABLE', {
           is: 'true',
           then: Joi.required(),
-          otherwise: Joi.optional(),
         }),
+        SMTP_ENABLE: Joi.string().required(),
+        SMTP_HOST: Joi.any().when('SMTP_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+        }),
+        SMTP_PORT: Joi.any().when('SMTP_ENABLE', {
+          is: 'true',
+          then: Joi.string().required(),
+        }),
+        SMTP_USER: Joi.any().when('SMTP_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+        }),
+        SMTP_PASSWORD: Joi.any().when('SMTP_ENABLE', {
+          is: 'true',
+          then: Joi.required(),
+        }),
+        NEXT_PUBLIC_NEXTAUTH_URL: Joi.string().required(),
       }),
     }),
   ],

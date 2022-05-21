@@ -4,6 +4,7 @@ export default class UserDto {
   @IsNotEmpty()
   @IsMongoId()
   @IsString()
+  @IsMongoId()
   _id!: string;
 
   @IsNotEmpty()

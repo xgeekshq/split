@@ -7,4 +7,10 @@ export interface DeleteCardService {
     cardId: string,
     userId: string,
   ): Promise<LeanDocument<BoardDocument> | null>;
+  deleteFromCardGroup(
+    boardId: string,
+    cardId: string,
+    cardItemId: string,
+    userId: string,
+  ): Promise<LeanDocument<BoardDocument> | null>;
 }

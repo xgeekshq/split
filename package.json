@@ -10,7 +10,7 @@
     "husky": "^7.0.4"
   },
   "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "@nestjs-modules/mailer": "^1.6.1",
+    "nodemailer": "^6.7.5"
   }
 }

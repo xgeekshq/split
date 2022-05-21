@@ -1,17 +1,17 @@
 export default interface MergeCardsDto {
-  colIdOfCardGroup: string;
+	colIdOfCardGroup: string;
 
-  columnIdOfCard: string;
+	columnIdOfCard: string;
 
-  cardId: string;
+	cardId: string;
 
-  boardId: string;
+	boardId: string;
 
-  cardGroupId: string;
+	cardGroupId: string;
 
-  socketId: string;
+	socketId: string;
 
-  userId: string;
+	userId: string;
 
-  cardPosition: number;
+	cardPosition: number;
 }

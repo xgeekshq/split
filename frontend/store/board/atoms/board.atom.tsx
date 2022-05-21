@@ -1,6 +1,13 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
-export const boardState = atom({
-  key: "board",
-  default: {},
+import BoardType, { BoardInfoType } from '../../../types/board/board';
+
+export const boardState = atom<BoardType | undefined>({
+	key: 'board',
+	default: undefined
+});
+
+export const boardInfoState = atom<BoardInfoType | undefined>({
+	key: 'boardInfo',
+	default: undefined
 });

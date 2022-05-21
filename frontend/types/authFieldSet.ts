@@ -1,6 +1,8 @@
-export default interface AuthFieldSetProps {
-  label: string;
-  id: string;
-  inputType: string;
-  tabValue?: string;
+export interface AuthFieldSetType {
+	label: string;
+	id: string;
+	inputType: string;
+	tabValue?: string;
+	currentValue?: string;
+	setCurrentValue: (value: any) => void;
 }

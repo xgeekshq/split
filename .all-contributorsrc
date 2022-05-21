@@ -40,6 +40,36 @@
       ]
     },
     {
+      "login": "RubenMCCarreira",
+      "name": "Rúben Carreira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/75999036?v=4",
+      "profile": "https://github.com/RubenMCCarreira",
+      "contributions": [
+        "code",
+        "review"
+      ]
+    },
+    {
+      "login": "dsousa12",
+      "name": "Daniel Sousa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/104842894?v=4",
+      "profile": "https://daniel-sousa.com",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "f-morgado",
+      "name": "f-morgado",
+      "avatar_url": "https://avatars.githubusercontent.com/u/99803749?v=4",
+      "profile": "https://github.com/f-morgado",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
       "login": "r-dmatos",
       "name": "r-dmatos",
       "avatar_url": "https://avatars.githubusercontent.com/u/100219341?v=4",
@@ -48,7 +78,7 @@
         "code",
         "doc"
       ]
-    }
+     }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",

@@ -32,6 +32,7 @@ import { GetUserApplication } from '../../users/interfaces/applications/get.user
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import { GetBoardApplicationInterface } from '../../boards/interfaces/applications/get.board.application.interface';
 import { GetTeamApplicationInterface } from '../../teams/interfaces/applications/get.team.application.interface';
+import { CreateResetTokenAuthApplication } from '../interfaces/applications/create-reset-token.auth.application.interface';
 
 @Controller('auth')
 export default class AuthController {
@@ -46,12 +47,14 @@ export default class AuthController {
     private getTeamsApp: GetTeamApplicationInterface,
     @Inject(Boards.TYPES.applications.GetBoardApplication)
     private getBoardApp: GetBoardApplicationInterface,
+    @Inject(TYPES.applications.CreateResetTokenAuthApplication)
+    private createResetTokenAuthApp: CreateResetTokenAuthApplication,
   ) {}
 
   @Post('register')
   async register(@Body() registrationData: CreateUserDto) {
     try {
-      const { _id, firstName, lastName, email } =
+      const { _id, firstName, lastName, email, password } =
         await this.registerAuthApp.register(registrationData);
 
       return { _id, firstName, lastName, email };
@@ -86,6 +89,11 @@ export default class AuthController {
   @Get('checkUserEmail/:email')
   checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
     return this.getUserApp.getByEmail(email).then((user) => !!user);
+  }
+
+  @Post('recoverPassword')
+  forgot(@Body() { email }: EmailParam) {
+    return this.createResetTokenAuthApp.create(email);
   }
 
   @UseGuards(JwtAuthenticationGuard)

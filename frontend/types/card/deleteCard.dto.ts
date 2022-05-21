@@ -1,7 +1,11 @@
 export default interface DeleteCardDto {
-  cardId: string;
+	cardId: string;
 
-  boardId: string;
+	boardId: string;
 
-  socketId?: string;
+	socketId?: string;
+
+	isCardGroup: boolean;
+
+	cardItemId?: string;
 }

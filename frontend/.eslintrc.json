@@ -1,38 +1,54 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true
-  },
-  "extends": [
-    "plugin:react/recommended",
-    "airbnb",
-    "airbnb-typescript",
-    "prettier",
-    "airbnb-typescript-prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module",
-    "extraFileExtensions": [".css"],
-    "project": "./tsconfig.json"
-  },
-  "plugins": ["react", "@typescript-eslint"],
-  "rules": {
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-    "react/jsx-props-no-spreading": "off",
-    "no-underscore-dangle": "off",
-    "no-param-reassign": "off",
-    "react/function-component-definition": "off",
-    "@typescript-eslint/no-empty-interface": "off",
-    "import/prefer-default-export": "off",
-    "import/no-cycle": "off",
-    "no-plusplus": "off",
-    "no-useless-escape": "off",
-    "no-restricted-exports": "off"
-  }
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": [
+		"plugin:react/recommended",
+		"airbnb",
+		"airbnb-typescript",
+		"prettier",
+		"airbnb-typescript-prettier"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module",
+		"extraFileExtensions": [".css"],
+		"project": "./tsconfig.json"
+	},
+	"plugins": ["react", "@typescript-eslint", "simple-import-sort", "unused-imports", "prettier"],
+	"rules": {
+		"react/react-in-jsx-scope": "off",
+		"react/jsx-filename-extension": [
+			1,
+			{
+				"extensions": [".ts", ".tsx"]
+			}
+		],
+		"react/jsx-props-no-spreading": "off",
+		"no-underscore-dangle": "off",
+		"no-param-reassign": "off",
+		"react/function-component-definition": "off",
+		"@typescript-eslint/no-empty-interface": "off",
+		"import/prefer-default-export": "off",
+		"import/no-cycle": "off",
+		"no-plusplus": "off",
+		"no-useless-escape": "off",
+		"no-restricted-exports": "off",
+		"jsx-a11y/anchor-is-valid": [
+			"error",
+			{
+				"components": ["Link"],
+				"specialLink": ["hrefLeft", "hrefRight"],
+				"aspects": ["invalidHref", "preferButton"]
+			}
+		],
+		"simple-import-sort/imports": "error",
+		"simple-import-sort/exports": "error",
+		"prettier/prettier": ["warn", {}, { "usePrettierrc": true }]
+	}
 }

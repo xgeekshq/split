@@ -1,7 +1,8 @@
-import * as z from "zod";
+import * as z from 'zod';
 
 const SchemaCreateBoard = z.object({
-  title: z.string().max(15, "Maximum of 15 characters").nonempty("Please enter a title."),
+	text: z.string().nonempty('Please enter the board name.').max(30, 'Maximum of 30 characters'),
+	maxVotes: z.string().min(1, 'Please set the maximum number of votes.').optional()
 });
 
 export default SchemaCreateBoard;

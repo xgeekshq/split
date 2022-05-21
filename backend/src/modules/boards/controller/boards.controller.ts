@@ -29,6 +29,7 @@ import {
 } from '../../../libs/exceptions/messages';
 import { BaseParam } from '../../../libs/dto/param/base.param';
 import { PaginationParams } from '../../../libs/dto/param/pagination.params';
+import * as StakeholdersData from '../../../libs/utils/ignored_users.json';
 
 @Controller('boards')
 export default class BoardsController {
@@ -94,6 +95,12 @@ export default class BoardsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
+  @Get('/stakeholders/all')
+  getStakeholders() {
+    return StakeholdersData as unknown as string[];
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
   @Put(':boardId')
   async updateBoard(
     @Req() request: RequestWithUser,
@@ -119,6 +126,21 @@ export default class BoardsController {
   ) {
     const result = await this.deleteBoardApp.delete(boardId, request.user._id);
     if (!result) throw new BadRequestException(DELETE_FAILED);
+
+    return result;
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Put(':boardId/merge')
+  async mergeBoard(
+    @Param() { boardId }: BaseParam,
+    @Req() request: RequestWithUser,
+  ) {
+    const result = await this.updateBoardApp.mergeBoards(
+      boardId,
+      request.user._id,
+    );
+    if (!result) throw new BadRequestException(UPDATE_FAILED);
 
     return result;
   }

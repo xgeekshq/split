@@ -7,6 +7,7 @@ export class CreateCardDto extends BaseDto {
   @IsNotEmpty()
   @IsMongoId()
   @IsString()
+  @IsMongoId()
   colIdToAdd!: string;
 
   @IsNotEmpty()

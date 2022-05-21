@@ -4,11 +4,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import * as request from 'supertest';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import EmailModule from '../../src/modules/mailer/mailer.module';
 import AuthController from '../../src/modules/auth/controller/auth.controller';
 import mockedUser from '../../src/libs/test-utils/mocks/user.mock';
 import jwtService from '../../src/libs/test-utils/mocks/jwtService.mock';
 import configService from '../../src/libs/test-utils/mocks/configService.mock';
 import {
+  createResetTokenAuthApplication,
+  createResetTokenAuthService,
   getTokenAuthApplication,
   getTokenAuthService,
   registerAuthApplication,
@@ -21,6 +24,7 @@ import {
   updateUserService,
 } from '../../src/modules/users/users.providers';
 import {
+  createTeamService,
   getTeamApplication,
   getTeamService,
 } from '../../src/modules/teams/providers';
@@ -39,17 +43,21 @@ describe('AuthController', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [EmailModule],
       controllers: [AuthController],
       providers: [
         registerAuthApplication,
         getTokenAuthApplication,
         getTokenAuthService,
+        createTeamService,
         getTeamService,
         getTeamApplication,
         getBoardApplication,
         getBoardService,
         registerAuthService,
         updateUserService,
+        createResetTokenAuthApplication,
+        createResetTokenAuthService,
         createUserService,
         getUserApplication,
         getUserService,
@@ -75,6 +83,10 @@ describe('AuthController', () => {
           useValue: usersRepository,
         },
         {
+          provide: getModelToken('ResetPassword'),
+          useValue: {},
+        },
+        {
           provide: getModelToken('Team'),
           useValue: {},
         },
@@ -91,19 +103,6 @@ describe('AuthController', () => {
   });
 
   describe('when registering', () => {
-    describe('and using valid data', () => {
-      it('should respond with the data of the user without the password', async () => {
-        return request(app.getHttpServer())
-          .post('/auth/register')
-          .send({
-            email: mockedUser.email,
-            firstName: mockedUser.firstName,
-            lastName: mockedUser.lastName,
-            password: '1!Aab2CD',
-          })
-          .expect(201);
-      });
-    });
     describe('and using invalid data', () => {
       it('should throw an error because full data wasnt submitted', () =>
         request(app.getHttpServer())
