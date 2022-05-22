@@ -3,8 +3,8 @@ version: "3.9"
 services:
   backend:
     build:
-      context: .
-      dockerfile: backend/docker/prod/Dockerfile
+      context: backend
+      dockerfile: docker/prod/Dockerfile
 
     # set image name
     image: dc-backend
@@ -38,8 +38,8 @@ services:
       - mongo
   frontend:
     build:
-      context: .
-      dockerfile: frontend/docker/prod/Dockerfile
+      context: frontend
+      dockerfile: docker/prod/Dockerfile
       args:
         - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
         - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
