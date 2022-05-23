@@ -8,10 +8,10 @@ services:
       dockerfile: docker/dev/Dockerfile
 
     # image name
-    image: dc-backend
+    image: dc-dev-backend
 
     # container name
-    container_name: backend
+    container_name: dev-backend
 
     networks:
       - dc-network
@@ -26,6 +26,8 @@ services:
       DB_HOST: ${DB_HOST:-mongo}
       DB_PORT: ${DB_PORT:-27017}
       DB_REPLICA_SET: ${DB_REPLICA_SET:-dcrs}
+      SMTP_ENABLE: ${SMTP_ENABLE:-false}
+      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
       BACKEND_PORT: ${BACKEND_PORT:-3200}
       JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET:-backenddc2022}
       JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-900}
@@ -60,10 +62,10 @@ services:
         - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
 
     # set image name
-    image: dc-frontend
+    image: dc-dev-frontend
 
     # set container name
-    container_name: frontend
+    container_name: dev-frontend
 
     networks:
       - dc-network
