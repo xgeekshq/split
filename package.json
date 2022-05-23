@@ -1,9 +1,10 @@
 {
 	"private": true,
 	"scripts": {
-		"prepare": "concurrently 'cd ./backend && npm i' 'cd ./frontend && npm i'",
+		"prepare": "concurrently 'cd ./backend && npm i' 'cd ./frontend && npm i' && husky install",
 		"dev": "concurrently 'cd ./backend && npm run start:dev' 'cd ./frontend && npm run dev'",
-		"dev:yarn": "concurrently 'cd ./backend && yarn start:dev' 'cd ./frontend && yarn dev'"
+		"dev:yarn": "concurrently 'cd ./backend && yarn start:dev' 'cd ./frontend && yarn dev'",
+		"pre-commit": "concurrently 'cd ./backend && npm run pre-commit' 'cd ./frontend && npm run pre-commit'"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^16.2.3",
