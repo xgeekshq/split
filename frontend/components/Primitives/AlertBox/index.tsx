@@ -1,10 +1,10 @@
-import * as React from 'react';
+import { FC } from 'react';
 
-import { CSSProps } from '../../stitches.config';
-import Icon from '../icons/Icon';
-import { AlertIconStyle, AlertStyle, AlertText } from './AlertBox/styles';
-import Flex from './Flex';
-import Text from './Text';
+import { CSSProps } from '../../../stitches.config';
+import Icon from '../../icons/Icon';
+import Flex from '../Flex';
+import Text from '../Text';
+import { AlertIconStyle, AlertStyle, AlertText } from './styles';
 
 type AlertBoxProps = CSSProps & {
 	type: 'warning' | 'info' | 'error';
@@ -12,7 +12,7 @@ type AlertBoxProps = CSSProps & {
 	text: string;
 };
 
-const AlertBox: React.FC<AlertBoxProps> = ({ type, title, text, children, css }) => {
+const AlertBox: FC<AlertBoxProps> = ({ type, title, text, children, css }) => {
 	AlertBox.defaultProps = { title: undefined };
 
 	return (
