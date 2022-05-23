@@ -4,6 +4,8 @@ const StyledSidebar = styled('aside', {
 	width: '256px',
 	height: '100%',
 
+	overflowY: 'auto',
+
 	/**
 	 * Position fixed
 	 * avoiding problems with scrools

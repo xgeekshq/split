@@ -21,10 +21,11 @@ type CardAvatarProps = {
 	stakeholders?: boolean;
 	userId: string;
 	myBoards?: boolean;
+	haveError?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
-	({ listUsers, teamAdmins, stakeholders, userId, responsible, myBoards }) => {
+	({ listUsers, teamAdmins, stakeholders, userId, haveError, responsible, myBoards }) => {
 		const data = useMemo(() => {
 			if (responsible)
 				return listUsers
@@ -120,9 +121,13 @@ const CardAvatars = React.memo<CardAvatarProps>(
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
-				{(data.slice(0, !myBoards ? 3 : 1) as User[]).map((user: User, index: number) => {
-					return renderAvatar(getInitials(user, index), index);
-				})}
+				{haveError
+					? ['-', '-', '-'].map((value, index) => renderAvatar(value, index))
+					: (data.slice(0, !myBoards ? 3 : 1) as User[]).map(
+							(user: User, index: number) => {
+								return renderAvatar(getInitials(user, index), index);
+							}
+					  )}
 			</Flex>
 		);
 	}

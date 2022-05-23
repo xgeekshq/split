@@ -4,6 +4,11 @@ import { BoardToAdd } from '../../../types/board/board';
 import { BoardUserDto } from '../../../types/board/board.user';
 import { Team } from '../../../types/team/team';
 
+export const createBoardError = atom({
+	key: 'createBoardError',
+	default: false
+});
+
 export const createBoardState = atom({
 	key: 'showCreateBoard',
 	default: false

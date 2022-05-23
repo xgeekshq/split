@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient } from 'react-query';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 
 import { getStakeholders } from '../../api/boardService';
 import { getAllTeams } from '../../api/teamService';
@@ -13,19 +13,24 @@ import SettingsTabs from '../../components/CreateBoard/SettingsTabs';
 import TipBar from '../../components/CreateBoard/TipBar';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
 import Icon from '../../components/icons/Icon';
+import AlertBox from '../../components/Primitives/AlertBox';
 import Button from '../../components/Primitives/Button';
 import Flex from '../../components/Primitives/Flex';
 import Text from '../../components/Primitives/Text';
 import useBoard from '../../hooks/useBoard';
 import SchemaCreateBoard from '../../schema/schemaCreateBoardForm';
-import { createBoardDataState } from '../../store/createBoard/atoms/create-board.atom';
+import {
+	createBoardDataState,
+	createBoardError
+} from '../../store/createBoard/atoms/create-board.atom';
 import { toastState } from '../../store/toast/atom/toast.atom';
 import {
 	Container,
 	ContentContainer,
 	InnerContent,
 	PageHeader,
-	StyledForm
+	StyledForm,
+	SubContainer
 } from '../../styles/pages/boards/new.styles';
 import { CreateBoardDto } from '../../types/board/board';
 import { ToastStateEnum } from '../../utils/enums/toast-types';
@@ -39,6 +44,7 @@ const NewBoard = () => {
 	const setToastState = useSetRecoilState(toastState);
 	const boardState = useRecoilValue(createBoardDataState);
 	const resetBoardState = useResetRecoilState(createBoardDataState);
+	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
 	/**
 	 * User Board Hook
@@ -66,7 +72,12 @@ const NewBoard = () => {
 	});
 
 	/**
-	 * Go to previous route
+	 * Set Have error
+	 */
+	const handleError = useCallback(() => setHaveError(true), []);
+
+	/**
+	 * Handle back to previous route
 	 */
 	const handleBack = useCallback(() => {
 		resetBoardState();
@@ -118,9 +129,9 @@ const NewBoard = () => {
 	useEffect(() => {
 		if (status === 'success') {
 			resetBoardState();
-			handleBack();
+			handleError();
 		}
-	}, [status, resetBoardState, handleBack]);
+	}, [status, resetBoardState, handleError]);
 
 	return (
 		<Container>
@@ -134,29 +145,43 @@ const NewBoard = () => {
 				</Button>
 			</PageHeader>
 			<ContentContainer>
-				<StyledForm
-					direction="column"
-					onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
-						saveBoard(text, maxVotes);
-					})}
-				>
-					<InnerContent direction="column">
-						<FormProvider {...methods}>
-							<BoardName mainBoardName={mainBoardName} />
-							<SettingsTabs />
-						</FormProvider>
-					</InnerContent>
-					<Flex
-						justify="end"
-						gap="24"
-						css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}
+				<SubContainer>
+					{haveError && (
+						<AlertBox
+							css={{
+								marginTop: '$20'
+							}}
+							type="error"
+							title="No team yet!"
+							text="In order to create a divide & concern retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams."
+						/>
+					)}
+
+					<StyledForm
+						status={!haveError}
+						direction="column"
+						onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
+							saveBoard(text, maxVotes);
+						})}
 					>
-						<Button type="button" variant="lightOutline" onClick={handleBack}>
-							Cancel
-						</Button>
-						<Button type="submit">Create board</Button>
-					</Flex>
-				</StyledForm>
+						<InnerContent direction="column">
+							<FormProvider {...methods}>
+								<BoardName mainBoardName={mainBoardName} />
+								<SettingsTabs />
+							</FormProvider>
+						</InnerContent>
+						<Flex
+							justify="end"
+							gap="24"
+							css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}
+						>
+							<Button type="button" variant="lightOutline" onClick={handleBack}>
+								Cancel
+							</Button>
+							<Button type="submit">Create board</Button>
+						</Flex>
+					</StyledForm>
+				</SubContainer>
 				<TipBar />
 			</ContentContainer>
 		</Container>

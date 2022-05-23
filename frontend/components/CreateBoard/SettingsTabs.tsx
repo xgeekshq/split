@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useRecoilValue } from 'recoil';
 
 import { styled } from '../../stitches.config';
+import { createBoardError } from '../../store/createBoard/atoms/create-board.atom';
 import Flex from '../Primitives/Flex';
 import Separator from '../Primitives/Separator';
 import Text from '../Primitives/Text';
@@ -27,6 +29,11 @@ const StyledTextTab = styled(Text, {
 const Settings = () => {
 	const [currentTab, setCurrentTab] = useState(1);
 
+	/**
+	 * Recoil Atoms
+	 */
+	const haveError = useRecoilValue(createBoardError);
+
 	const {
 		formState: { errors }
 	} = useFormContext();
@@ -44,7 +51,7 @@ const Settings = () => {
 					data-activetab={currentTab === 1}
 					size="md"
 					color="primary300"
-					onClick={() => setCurrentTab(1)}
+					onClick={!haveError ? () => setCurrentTab(1) : undefined}
 				>
 					Team/-Sub-teams configurations
 				</StyledTextTab>
@@ -52,7 +59,7 @@ const Settings = () => {
 					data-activetab={currentTab === 2}
 					size="md"
 					color="primary300"
-					onClick={() => setCurrentTab(2)}
+					onClick={!haveError ? () => setCurrentTab(2) : undefined}
 				>
 					Configurations
 				</StyledTextTab>
