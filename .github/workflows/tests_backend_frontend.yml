@@ -41,13 +41,13 @@ jobs:
                       ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
             - name: npm ci and test
               run: |
-                  cp backend
+                  cp -R backend
                   cd backend
                   npm ci
                   npm test
             - name: npm ci and test frontend
               run: |
-                  cp frontend
+                  cp -R frontend
                   cd frontend
                   npm ci
                   npm run jest
