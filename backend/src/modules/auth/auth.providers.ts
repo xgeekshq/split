@@ -32,11 +32,6 @@ export const azureAuthService = {
   useClass: AzureAuthServiceImpl,
 };
 
-export const createResetTokenAuthService = {
-  provide: TYPES.services.CreateResetTokenAuthService,
-  useClass: CreateResetTokenAuthServiceImpl,
-};
-
 export const getTokenAuthApplication = {
   provide: TYPES.applications.GetTokenAuthApplication,
   useClass: GetTokenAuthApplicationImpl,
