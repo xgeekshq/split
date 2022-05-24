@@ -1,9 +1,15 @@
-import { useSetRecoilState } from 'recoil';
 import { useMutation, useQuery } from 'react-query';
-import BoardType from '../types/board/board';
-import { createBoardRequest, deleteBoardRequest, getBoardRequest, updateBoardRequest } from '../api/boardService';
-import UseBoardType from '../types/board/useBoard';
+import { useSetRecoilState } from 'recoil';
+
+import {
+	createBoardRequest,
+	deleteBoardRequest,
+	getBoardRequest,
+	updateBoardRequest
+} from '../api/boardService';
 import { boardState } from '../store/board/atoms/board.atom';
+import BoardType from '../types/board/board';
+import UseBoardType from '../types/board/useBoard';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 import useBoardUtils from './useBoardUtils';
 
@@ -21,7 +27,11 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 		enabled: autoFetchBoard,
 		refetchOnWindowFocus: false,
 		onError: () => {
-			setToastState({ open: true, content: 'Error getting the board', type: ToastStateEnum.ERROR });
+			setToastState({
+				open: true,
+				content: 'Error getting the board',
+				type: ToastStateEnum.ERROR
+			});
 		}
 	});
 

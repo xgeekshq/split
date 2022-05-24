@@ -98,7 +98,7 @@ const BoardHeader = () => {
 								/>
 								<Link href={`/boards/${getSubBoard()?.id}`}>
 									<StyledBoardLink>
-										{getSubBoard()?.title.replace('team', '')}
+										{getSubBoard()?.title.replace('team ', '')}
 									</StyledBoardLink>
 								</Link>
 							</Flex>

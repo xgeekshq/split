@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient } from 'react-query';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 
 import { getStakeholders } from '../../api/boardService';
 import { getAllTeams } from '../../api/teamService';
@@ -45,7 +45,7 @@ const NewBoard = () => {
 	const setToastState = useSetRecoilState(toastState);
 	const boardState = useRecoilValue(createBoardDataState);
 	const resetBoardState = useResetRecoilState(createBoardDataState);
-	const [haveError, setHaveError] = useRecoilState(createBoardError);
+	const haveError = useRecoilValue(createBoardError);
 
 	/**
 	 * User Board Hook
@@ -73,11 +73,6 @@ const NewBoard = () => {
 	});
 
 	/**
-	 * Set Have error
-	 */
-	const handleError = useCallback(() => setHaveError(true), [setHaveError]);
-
-	/**
 	 * Handle back to previous route
 	 */
 	const handleBack = useCallback(() => {
@@ -94,7 +89,6 @@ const NewBoard = () => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
-
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
 				newSubBoard.postAnonymously = boardState.board.postAnonymously;
@@ -119,20 +113,20 @@ const NewBoard = () => {
 			maxVotes,
 			maxUsers: boardState.count.maxUsersCount.toString()
 		});
-
-		setToastState({
-			open: true,
-			content: 'Board created with success!',
-			type: ToastStateEnum.SUCCESS
-		});
 	};
 
 	useEffect(() => {
 		if (status === 'success') {
+			setToastState({
+				open: true,
+				content: 'Board created with success!',
+				type: ToastStateEnum.SUCCESS
+			});
+
 			resetBoardState();
-			handleError();
+			handleBack();
 		}
-	}, [status, resetBoardState, handleError]);
+	}, [status, resetBoardState, handleBack, setToastState]);
 
 	return (
 		<Container>

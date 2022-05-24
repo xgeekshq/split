@@ -5,7 +5,7 @@ import { BoardUserDto } from '../../../types/board/board.user';
 import { Team } from '../../../types/team/team';
 
 export const createBoardError = atom({
-	key: 'createBoardError',
+	key: 'haveCreateBoardError',
 	default: false
 });
 
