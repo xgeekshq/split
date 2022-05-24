@@ -22,8 +22,6 @@ import {
 import TeamsModule from '../teams/teams.module';
 import BoardsModule from '../boards/boards.module';
 import { JwtRegister } from '../../infrastructure/config/jwt.register';
-import updateUserService from '../users/services/update.user.service';
-import { updateUserApplication } from '../users/users.providers';
 
 @Module({
   imports: [
@@ -44,8 +42,6 @@ import { updateUserApplication } from '../users/users.providers';
     registerAuthApplication,
     createResetTokenAuthApplication,
     createResetTokenAuthService,
-    updateUserApplication,
-    updateUserService,
     UsersModule,
     LocalStrategy,
     JwtStrategy,

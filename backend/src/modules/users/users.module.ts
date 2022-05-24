@@ -18,13 +18,14 @@ import {
     createUserService,
     getUserService,
     updateUserService,
-    getUserApplication,
     updateUserApplication,
+    getUserApplication,
   ],
   exports: [
     createUserService,
     getUserService,
     updateUserService,
+    updateUserApplication,
     getUserApplication,
   ],
 })
