@@ -9,6 +9,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState 
 import { getStakeholders } from '../../api/boardService';
 import { getAllTeams } from '../../api/teamService';
 import BoardName from '../../components/CreateBoard/BoardName';
+import FakeSettingsTabs from '../../components/CreateBoard/fake/FakeSettingsTabs';
 import SettingsTabs from '../../components/CreateBoard/SettingsTabs';
 import TipBar from '../../components/CreateBoard/TipBar';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
@@ -74,7 +75,7 @@ const NewBoard = () => {
 	/**
 	 * Set Have error
 	 */
-	const handleError = useCallback(() => setHaveError(true), []);
+	const handleError = useCallback(() => setHaveError(true), [setHaveError]);
 
 	/**
 	 * Handle back to previous route
@@ -153,21 +154,25 @@ const NewBoard = () => {
 							}}
 							type="error"
 							title="No team yet!"
-							text="In order to create a divide & concern retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams."
+							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
 						/>
 					)}
 
 					<StyledForm
 						status={!haveError}
 						direction="column"
-						onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
-							saveBoard(text, maxVotes);
-						})}
+						onSubmit={
+							!haveError
+								? methods.handleSubmit(({ text, maxVotes }) =>
+										saveBoard(text, maxVotes)
+								  )
+								: undefined
+						}
 					>
 						<InnerContent direction="column">
 							<FormProvider {...methods}>
 								<BoardName mainBoardName={mainBoardName} />
-								<SettingsTabs />
+								{haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
 							</FormProvider>
 						</InnerContent>
 						<Flex
