@@ -1,10 +1,18 @@
 import React from 'react';
+import { useRecoilValue } from 'recoil';
 
+import { createBoardError } from '../../store/createBoard/atoms/create-board.atom';
 import Input from '../Primitives/Input';
 import Text from '../Primitives/Text';
 
-const BoardName = (props: { mainBoardName: string }) => {
-	const { mainBoardName } = props;
+type Props = { mainBoardName: string };
+
+const BoardName = ({ mainBoardName }: Props) => {
+	/**
+	 * Recoil Atoms
+	 */
+	const haveError = useRecoilValue(createBoardError);
+
 	return (
 		<>
 			<Text heading="3">Main Board Name</Text>
@@ -12,6 +20,7 @@ const BoardName = (props: { mainBoardName: string }) => {
 				The main board is the board into which all sub-team boards will be merged.
 			</Text>
 			<Input
+				disabled={haveError}
 				state="default"
 				id="text"
 				type="text"

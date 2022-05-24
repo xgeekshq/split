@@ -9,23 +9,29 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { getStakeholders } from '../../api/boardService';
 import { getAllTeams } from '../../api/teamService';
 import BoardName from '../../components/CreateBoard/BoardName';
+import FakeSettingsTabs from '../../components/CreateBoard/fake/FakeSettingsTabs';
 import SettingsTabs from '../../components/CreateBoard/SettingsTabs';
 import TipBar from '../../components/CreateBoard/TipBar';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
 import Icon from '../../components/icons/Icon';
+import AlertBox from '../../components/Primitives/AlertBox';
 import Button from '../../components/Primitives/Button';
 import Flex from '../../components/Primitives/Flex';
 import Text from '../../components/Primitives/Text';
 import useBoard from '../../hooks/useBoard';
 import SchemaCreateBoard from '../../schema/schemaCreateBoardForm';
-import { createBoardDataState } from '../../store/createBoard/atoms/create-board.atom';
+import {
+	createBoardDataState,
+	createBoardError
+} from '../../store/createBoard/atoms/create-board.atom';
 import { toastState } from '../../store/toast/atom/toast.atom';
 import {
 	Container,
 	ContentContainer,
 	InnerContent,
 	PageHeader,
-	StyledForm
+	StyledForm,
+	SubContainer
 } from '../../styles/pages/boards/new.styles';
 import { CreateBoardDto } from '../../types/board/board';
 import { ToastStateEnum } from '../../utils/enums/toast-types';
@@ -39,6 +45,7 @@ const NewBoard = () => {
 	const setToastState = useSetRecoilState(toastState);
 	const boardState = useRecoilValue(createBoardDataState);
 	const resetBoardState = useResetRecoilState(createBoardDataState);
+	const haveError = useRecoilValue(createBoardError);
 
 	/**
 	 * User Board Hook
@@ -66,7 +73,7 @@ const NewBoard = () => {
 	});
 
 	/**
-	 * Go to previous route
+	 * Handle back to previous route
 	 */
 	const handleBack = useCallback(() => {
 		resetBoardState();
@@ -82,7 +89,6 @@ const NewBoard = () => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
-
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
 				newSubBoard.postAnonymously = boardState.board.postAnonymously;
@@ -107,20 +113,20 @@ const NewBoard = () => {
 			maxVotes,
 			maxUsers: boardState.count.maxUsersCount.toString()
 		});
-
-		setToastState({
-			open: true,
-			content: 'Board created with success!',
-			type: ToastStateEnum.SUCCESS
-		});
 	};
 
 	useEffect(() => {
 		if (status === 'success') {
+			setToastState({
+				open: true,
+				content: 'Board created with success!',
+				type: ToastStateEnum.SUCCESS
+			});
+
 			resetBoardState();
 			handleBack();
 		}
-	}, [status, resetBoardState, handleBack]);
+	}, [status, resetBoardState, handleBack, setToastState]);
 
 	return (
 		<Container>
@@ -134,29 +140,47 @@ const NewBoard = () => {
 				</Button>
 			</PageHeader>
 			<ContentContainer>
-				<StyledForm
-					direction="column"
-					onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
-						saveBoard(text, maxVotes);
-					})}
-				>
-					<InnerContent direction="column">
-						<FormProvider {...methods}>
-							<BoardName mainBoardName={mainBoardName} />
-							<SettingsTabs />
-						</FormProvider>
-					</InnerContent>
-					<Flex
-						justify="end"
-						gap="24"
-						css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}
+				<SubContainer>
+					{haveError && (
+						<AlertBox
+							css={{
+								marginTop: '$20'
+							}}
+							type="error"
+							title="No team yet!"
+							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+						/>
+					)}
+
+					<StyledForm
+						status={!haveError}
+						direction="column"
+						onSubmit={
+							!haveError
+								? methods.handleSubmit(({ text, maxVotes }) =>
+										saveBoard(text, maxVotes)
+								  )
+								: undefined
+						}
 					>
-						<Button type="button" variant="lightOutline" onClick={handleBack}>
-							Cancel
-						</Button>
-						<Button type="submit">Create board</Button>
-					</Flex>
-				</StyledForm>
+						<InnerContent direction="column">
+							<FormProvider {...methods}>
+								<BoardName mainBoardName={mainBoardName} />
+								{haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
+							</FormProvider>
+						</InnerContent>
+						<Flex
+							justify="end"
+							gap="24"
+							css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}
+						>
+							<Button type="button" variant="lightOutline" onClick={handleBack}>
+								Cancel
+							</Button>
+							<Button type="submit">Create board</Button>
+						</Flex>
+					</StyledForm>
+				</SubContainer>
 				<TipBar />
 			</ContentContainer>
 		</Container>

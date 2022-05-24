@@ -46,7 +46,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 	);
 
 	const { data, isLoading } = fetchBoards;
-
 	const currentDate = new Date().toDateString();
 
 	const dataByTeamAndDate = useMemo(() => {

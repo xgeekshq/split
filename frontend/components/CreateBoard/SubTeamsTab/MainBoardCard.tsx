@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 import useCreateBoard from '../../../hooks/useCreateBoard';
 import { styled } from '../../../stitches.config';
-import { CreateBoardData } from '../../../store/createBoard/atoms/create-board.atom';
+import {
+	CreateBoardData,
+	createBoardError
+} from '../../../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../../../types/board/board';
 import { Team } from '../../../types/team/team';
 import { BoardUserRoles } from '../../../utils/enums/board.user.roles';
@@ -52,6 +55,11 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 });
 
 const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface) => {
+	/**
+	 * Recoil Atoms
+	 */
+	const haveError = useRecoilValue(createBoardError);
+
 	const {
 		handleAddTeam,
 		handleRemoveTeam,
@@ -179,6 +187,7 @@ const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface
 						{team.name}
 					</Text>
 					<CardAvatars
+						haveError={haveError}
 						listUsers={team.users}
 						responsible={false}
 						teamAdmins={false}

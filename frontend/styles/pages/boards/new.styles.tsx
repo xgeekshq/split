@@ -1,5 +1,5 @@
-import { styled } from '../../../stitches.config';
 import Flex from '../../../components/Primitives/Flex';
+import { styled } from '../../../stitches.config';
 
 const Container = styled('main', {
 	width: '100%',
@@ -49,13 +49,41 @@ const InnerContent = styled(Flex, {
 	flex: '1 1 auto',
 	width: '100%',
 	height: '100%',
-	overflow: 'auto',
-
-	padding: '64px 92px 57px 152px'
+	overflow: 'auto'
 });
 
 const StyledForm = styled('form', Flex, {
+	variants: {
+		status: {
+			false: {
+				opacity: 0.5,
+				pointerEvents: 'none',
+
+				'&>div:first-child': {
+					padding: '$20 92px 57px 152px'
+				}
+			},
+			true: {
+				'&>div:first-child': {
+					padding: '64px 92px 57px 152px'
+				}
+			}
+		}
+	},
+
+	defaultVariants: {
+		status: true
+	},
+
 	flex: '1 1 auto'
 });
 
-export { Container, PageHeader, ContentContainer, StyledForm, InnerContent };
+const SubContainer = styled('div', {
+	display: 'flex',
+	gap: '$20',
+	flexDirection: 'column',
+	flex: '1 1 auto',
+	minHeight: 'calc(100vh - $sizes$92)'
+});
+
+export { Container, ContentContainer, InnerContent, PageHeader, StyledForm, SubContainer };

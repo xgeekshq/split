@@ -1,11 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
+
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
 import { Team } from '../types/team/team';
-import { BoardUserRoles } from '../utils/enums/board.user.roles';
 import { TeamUser } from '../types/team/team.user';
+import { BoardUserRoles } from '../utils/enums/board.user.roles';
 
 const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -20,7 +21,8 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 
 	const teamMembers = team.users.filter(
 		(teamUser) =>
-			!stakeHolders?.includes(teamUser.user.email) && new Date(teamUser.user.joinedAt).getTime() > 0
+			!stakeHolders?.includes(teamUser.user.email) &&
+			new Date(teamUser.user.joinedAt).getTime() > 0
 	);
 	const dividedBoardsCount = board.dividedBoards.length;
 
@@ -55,13 +57,15 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 
 	const generateSubBoards = useCallback(
 		(maxTeams: number, splitedUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
-			new Array(maxTeams).fill(0).forEach((_, i) => {
-				const newBoard = generateSubBoard(i + 1);
-				splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
-					BoardUserRoles.RESPONSIBLE;
-				newBoard.users = splitedUsers[i];
-				subBoards.push(newBoard);
-			});
+			if (splitedUsers) {
+				new Array(maxTeams).fill(0).forEach((_, i) => {
+					const newBoard = generateSubBoard(i + 1);
+					splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
+						BoardUserRoles.RESPONSIBLE;
+					newBoard.users = splitedUsers[i];
+					subBoards.push(newBoard);
+				});
+			}
 		},
 		[generateSubBoard]
 	);

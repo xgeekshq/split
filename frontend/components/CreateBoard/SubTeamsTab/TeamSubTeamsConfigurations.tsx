@@ -1,18 +1,17 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getStakeholders } from '../../../api/boardService';
 import { getAllTeams } from '../../../api/teamService';
 import { styled } from '../../../stitches.config';
 import {
 	CreateBoardData,
-	createBoardDataState
+	createBoardDataState,
+	createBoardError
 } from '../../../store/createBoard/atoms/create-board.atom';
 import { toastState } from '../../../store/toast/atom/toast.atom';
 import { Team } from '../../../types/team/team';
-import { ToastStateEnum } from '../../../utils/enums/toast-types';
 import Icon from '../../icons/Icon';
 import Box from '../../Primitives/Box';
 import Flex from '../../Primitives/Flex';
@@ -25,15 +24,11 @@ const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'whi
 
 const TeamSubTeamsConfigurations: React.FC = () => {
 	/**
-	 * Router Hook
-	 */
-	const router = useRouter();
-
-	/**
 	 * Recoil Atoms and hooks
 	 */
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 	const setToastState = useSetRecoilState(toastState);
+	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
 	/**
 	 * States
@@ -57,17 +52,12 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	 */
 	useEffect(() => {
 		if (data && !data[0]) {
-			setToastState({
-				open: true,
-				content: "You don't have any team. Please create a team first!",
-				type: ToastStateEnum.ERROR
-			});
-			router.back();
+			setHaveError(true);
 		} else if (data && data[0]) {
 			setTeam(data[0]);
 			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: data[0]._id } }));
 		}
-	}, [data, setBoardData, router, setToastState, team?._id]);
+	}, [data, setBoardData, setHaveError, setToastState]);
 
 	/**
 	 * Use Effect to validate if staheolders return data
@@ -92,9 +82,9 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 						Team
 					</Text>
 					<Flex gap="8" align="center">
-						<Text size="md">{team?.name}</Text>
+						<Text size="md">{haveError ? '' : team?.name}</Text>
 						<Text size="md" color="primary300">
-							({team?.users.length} members)
+							({haveError ? '--' : team?.users.length} members)
 						</Text>
 						<Tooltip content="All active members on the platform">
 							<div>
@@ -120,12 +110,16 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 						Stakeholders
 					</Text>
 					<Text size="md" css={{ wordBreak: 'break-word' }}>
-						{team?.users
-							.filter((teamUser) => stakeholders?.includes(teamUser.user.email))
-							.map(
-								(stakeholderFound) =>
-									`${stakeholderFound.user.firstName} ${stakeholderFound.user.lastName}`
-							)}
+						{haveError
+							? ''
+							: team?.users
+									.filter((teamUser) =>
+										stakeholders?.includes(teamUser.user.email)
+									)
+									.map(
+										(stakeholderFound) =>
+											`${stakeholderFound.user.firstName} ${stakeholderFound.user.lastName}`
+									)}
 					</Text>
 				</StyledBox>
 			</Flex>
