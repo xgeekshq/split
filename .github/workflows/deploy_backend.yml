@@ -18,7 +18,7 @@ jobs:
                   password: ${{ secrets.REGISTRY_PASSWORD }}
 
             - run: |
-                  docker build ./backend -f ./backennd/docker/prod/Dockerfile  -t divideandconquer.azurecr.io/backend:latest
+                  docker build ./backend -f ./backend/docker/prod/Dockerfile  -t divideandconquer.azurecr.io/backend:latest
                   docker push divideandconquer.azurecr.io/backend:latest
 
             - uses: azure/webapps-deploy@v2
