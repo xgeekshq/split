@@ -13,5 +13,6 @@ export const TYPES = {
     RegisterAuthApplication: 'RegisterAuthApplication',
     CreateResetTokenAuthApplication: 'CreateResetTokenAuthApplication',
     UpdatePasswordAuthApplication: 'UpdatePasswordAuthApplication',
+    UpdateUserApplication: 'UpdateUserApplication',
   },
 };

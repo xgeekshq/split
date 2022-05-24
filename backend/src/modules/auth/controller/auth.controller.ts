@@ -12,8 +12,8 @@ import {
   Param,
   HttpStatus,
 } from '@nestjs/common';
+import { UpdateUserApplication } from '../../users/interfaces/applications/update.user.service.interface';
 import { ResetPasswordDto } from '../../users/dto/reset-password.dto';
-import { UpdateUserService } from '../../users/interfaces/services/update.user.service.interface';
 import LocalAuthGuard from '../../../libs/guards/localAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
 import JwtRefreshGuard from '../../../libs/guards/jwtRefreshAuth.guard';
@@ -52,8 +52,8 @@ export default class AuthController {
     private getBoardApp: GetBoardApplicationInterface,
     @Inject(TYPES.applications.CreateResetTokenAuthApplication)
     private createResetTokenAuthApp: CreateResetTokenAuthApplication,
-    @Inject(TYPES.services.UpdateUserService)
-    private updateUserService: UpdateUserService,
+    @Inject(TYPES.applications.UpdateUserApplication)
+    private updateUserApp: UpdateUserApplication,
   ) {}
 
   @Post('register')
@@ -62,7 +62,7 @@ export default class AuthController {
       const { _id, firstName, lastName, email, password } =
         await this.registerAuthApp.register(registrationData);
 
-      return { _id, firstName, lastName, email };
+      return { _id, firstName, lastName, email, password };
     } catch (error) {
       if (error.code === uniqueViolation) {
         throw new BadRequestException(EMAIL_EXISTS);
@@ -106,9 +106,9 @@ export default class AuthController {
   async setNewPassword(
     @Body() { token, newPassword, newPasswordConf }: ResetPasswordDto,
   ) {
-    const email = await this.updateUserService.checkEmail(token);
+    const email = await this.updateUserApp.checkEmail(token);
     if (!email) return { message: 'token not valid' };
-    return !!this.updateUserService.setPassword(
+    return !!this.updateUserApp.setPassword(
       email,
       newPassword,
       newPasswordConf,

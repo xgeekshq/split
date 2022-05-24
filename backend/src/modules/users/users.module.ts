@@ -9,6 +9,7 @@ import {
   getUserService,
   updateUserService,
   getUserApplication,
+  updateUserApplication,
 } from './users.providers';
 
 @Module({
@@ -18,6 +19,7 @@ import {
     getUserService,
     updateUserService,
     getUserApplication,
+    updateUserApplication,
   ],
   exports: [
     createUserService,
