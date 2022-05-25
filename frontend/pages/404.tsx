@@ -1,13 +1,12 @@
 import Banner from '../components/icons/Banner';
 import LogoIcon from '../components/icons/Logo';
 import Text from '../components/Primitives/Text';
-import Button from '../components/Primitives/Button';
 import {
 	BannerContainer,
 	ContainerSection,
 	GoBackButton,
 	ImageBackground
-} from '../styles/pages/404.styles';
+} from '../styles/pages/error.styles';
 import Link from 'next/link';
 
 export default function Custom404() {
