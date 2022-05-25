@@ -8,6 +8,8 @@ import Input from '../../Primitives/Input';
 import { Switch, SwitchThumb } from '../../Primitives/Switch';
 import Text from '../../Primitives/Text';
 
+const DEFAULT_MAX_VOTES = '6';
+
 const BoardConfigurations = () => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
 
@@ -50,11 +52,12 @@ const BoardConfigurations = () => {
 			...prev,
 			board: {
 				...prev.board,
-				maxVotes: checked ? 6 : undefined
+				maxVotes: checked ? DEFAULT_MAX_VOTES : undefined
 			}
 		}));
+
 		if (checked) {
-			setValue('maxVotes', 6);
+			setValue('maxVotes', DEFAULT_MAX_VOTES);
 			register('maxVotes');
 		}
 		if (!checked) {
