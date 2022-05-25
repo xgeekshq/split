@@ -16,7 +16,6 @@ import requireAuthentication from '../../components/HOC/requireAuthentication';
 import Icon from '../../components/icons/Icon';
 import AlertBox from '../../components/Primitives/AlertBox';
 import Button from '../../components/Primitives/Button';
-import Flex from '../../components/Primitives/Flex';
 import Text from '../../components/Primitives/Text';
 import useBoard from '../../hooks/useBoard';
 import SchemaCreateBoard from '../../schema/schemaCreateBoardForm';
@@ -26,6 +25,7 @@ import {
 } from '../../store/createBoard/atoms/create-board.atom';
 import { toastState } from '../../store/toast/atom/toast.atom';
 import {
+	ButtonsContainer,
 	Container,
 	ContentContainer,
 	InnerContent,
@@ -124,9 +124,9 @@ const NewBoard = () => {
 			});
 
 			resetBoardState();
-			handleBack();
+			router.push('/boards');
 		}
-	}, [status, resetBoardState, handleBack, setToastState]);
+	}, [status, resetBoardState, router, setToastState]);
 
 	return (
 		<Container>
@@ -169,16 +169,12 @@ const NewBoard = () => {
 								{haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
 							</FormProvider>
 						</InnerContent>
-						<Flex
-							justify="end"
-							gap="24"
-							css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}
-						>
+						<ButtonsContainer justify="end" gap="24">
 							<Button type="button" variant="lightOutline" onClick={handleBack}>
 								Cancel
 							</Button>
 							<Button type="submit">Create board</Button>
-						</Flex>
+						</ButtonsContainer>
 					</StyledForm>
 				</SubContainer>
 				<TipBar />

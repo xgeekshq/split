@@ -7,17 +7,19 @@ const TextWhite = styled(Text, { color: 'white', mt: '$24' });
 const LiWhite = styled('li', Text, { color: '$primary100', fontSize: '$14', lineHeight: '$20' });
 const UnorderedList = styled('ul', { paddingInlineStart: '$26' });
 
-const CreateBoardTipBar: React.FC = () => {
+const CreateBoardTipBar = () => {
 	return (
 		<Flex
 			direction="column"
 			justify="center"
 			css={{
-				Height: 'calc(100vh - $sizes$92)',
-				overflowY: 'auto',
+				minHeight: 'calc(100vh - $sizes$92)',
+				// overflowY: 'auto',
 				backgroundColor: '$primary800',
 				padding: '$32',
-				maxWidth: '$384'
+				maxWidth: '$384',
+				position: 'fixed',
+				rigth: 0
 			}}
 		>
 			<Icon
