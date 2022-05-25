@@ -50,11 +50,13 @@ const BoardConfigurations = () => {
 			...prev,
 			board: {
 				...prev.board,
-				maxVotes: checked ? '6' : undefined
+				maxVotes: checked ? 6 : undefined
 			}
 		}));
-		setValue('maxVotes', checked ? '6' : '');
-		if (checked) register('maxVotes');
+		if (checked) {
+			setValue('maxVotes', 6);
+			register('maxVotes');
+		}
 		if (!checked) {
 			unregister('maxVotes');
 			clearErrors('maxVotes');

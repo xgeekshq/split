@@ -1,25 +1,18 @@
-import { FC } from 'react';
-import { SidebarHeader } from 'react-pro-sidebar';
+import HeaderBannerIcon from '../../../icons/HeaderBanner';
+import Icon from '../../../icons/Icon';
+import Flex from '../../../Primitives/Flex';
+import Text from '../../../Primitives/Text';
+import Separator from '../Separator';
+import { StyledHeader } from './styles';
 
-import { styled } from '../../../stitches.config';
-import HeaderBannerIcon from '../../icons/HeaderBanner';
-import Icon from '../../icons/Icon';
-import Flex from '../../Primitives/Flex';
-import Text from '../../Primitives/Text';
-import Separator from './Separator';
+type Props = { firstName: string; lastName: string; email: string };
 
-const StyledHeader = styled(SidebarHeader, Flex);
-
-const Header: FC<{ firstName: string; lastName: string; email: string }> = ({
-	firstName,
-	lastName,
-	email
-}) => {
+const Header = ({ firstName, lastName, email }: Props) => {
 	const initialLetters = firstName.charAt(0) + lastName.charAt(0);
 
 	return (
 		<StyledHeader direction="column">
-			<Flex css={{ p: '$40' }}>
+			<Flex css={{ p: '$40' }} align="center" justify="center">
 				<HeaderBannerIcon />
 			</Flex>
 			<Separator />

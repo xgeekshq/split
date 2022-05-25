@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { SidebarContent } from 'react-pro-sidebar';
 
 import {
 	ACCOUNT_ROUTE,
@@ -14,6 +13,7 @@ import {
 	USERS_ROUTE
 } from '../../../../utils/routes';
 import Icon from '../../../icons/Icon';
+import Flex from '../../../Primitives/Flex';
 import { StyledMenuItem, StyledSeparator, StyledText } from './styles';
 
 interface SidebarContentProps {
@@ -40,7 +40,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 	}, [router.asPath]);
 
 	return (
-		<SidebarContent>
+		<Flex direction="column">
 			<Link href={DASHBOARD_ROUTE}>
 				<StyledMenuItem data-active={active === DASHBOARD_ROUTE} align="center">
 					<Icon name="dashboard" />
@@ -92,7 +92,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 				<Icon name="log-out" />
 				<StyledText>Log out</StyledText>
 			</StyledMenuItem>
-		</SidebarContent>
+		</Flex>
 	);
 };
 
