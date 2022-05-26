@@ -79,11 +79,32 @@ const StyledForm = styled('form', Flex, {
 });
 
 const SubContainer = styled('div', {
+	width: 'calc(100vw - $sizes$384)', // remove space from tipbar
+	minHeight: 'calc(100vh - $sizes$92)', // remove size of header
+	marginRight: 'auto',
 	display: 'flex',
 	gap: '$20',
-	flexDirection: 'column',
-	flex: '1 1 auto',
-	minHeight: 'calc(100vh - $sizes$92)'
+	flexDirection: 'column'
 });
 
-export { Container, ContentContainer, InnerContent, PageHeader, StyledForm, SubContainer };
+const ButtonsContainer = styled(Flex, {
+	position: 'sticky',
+	bottom: 0,
+	left: 0,
+	right: 0,
+
+	py: '$16',
+	pr: '$32',
+
+	backgroundColor: 'white'
+});
+
+export {
+	ButtonsContainer,
+	Container,
+	ContentContainer,
+	InnerContent,
+	PageHeader,
+	StyledForm,
+	SubContainer
+};
