@@ -3,19 +3,21 @@ import AlertCustomDialog from '../../Primitives/AlertCustomDialog';
 
 interface DeleteProps {
 	cardId: string;
+	cardTitle: string;
 	boardId: string;
 	socketId: string | undefined;
 	cardItemId?: string;
 	handleClose: () => void;
 }
 
-const DeleteCard: React.FC<DeleteProps> = ({
+const DeleteCard = ({
 	cardId,
+	cardTitle,
 	boardId,
 	socketId,
 	handleClose,
 	cardItemId
-}) => {
+}: DeleteProps) => {
 	const { deleteCard } = useCards();
 
 	const handleDelete = () => {
@@ -34,12 +36,20 @@ const DeleteCard: React.FC<DeleteProps> = ({
 			confirmText="Delete card"
 			handleClose={handleClose}
 			handleConfirm={handleDelete}
-			title="Delete card"
+			title={
+				<>
+					Delete card <span>{cardTitle}</span>
+				</>
+			}
 			defaultOpen
+			variant="danger"
 			text="Do you really want to delete this card?"
-			css={{ left: '35%' }}
 		/>
 	);
+};
+
+DeleteCard.defaultProps = {
+	cardItemId: undefined
 };
 
 export default DeleteCard;

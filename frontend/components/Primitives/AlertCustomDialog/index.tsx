@@ -1,31 +1,33 @@
 import { AlertDialogDescription } from '@radix-ui/react-alert-dialog';
+import { ReactNode } from 'react';
 
-import { CSS } from '../../stitches.config';
-import Icon from '../icons/Icon';
+import { CSS } from '../../../stitches.config';
+import Icon from '../../icons/Icon';
 import {
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
 	AlertDialogContent
-} from './AlertDialog';
-import Flex from './Flex';
-import Separator from './Separator';
-import Text from './Text';
+} from '../AlertDialog';
+import Flex from '../Flex';
+import Separator from '../Separator';
+import Text from '../Text';
+import { DialogButtons, DialogText, StyledDialogTitle } from './styles';
 
 interface BoardAlertDialog {
 	defaultOpen: boolean;
-	text: string;
+	text: ReactNode;
 	cancelText: string;
 	confirmText: string;
 	handleConfirm: () => void;
-	title: string;
+	title: ReactNode;
 	handleClose?: () => void;
-	children?: React.ReactNode;
+	children?: ReactNode;
 	css?: CSS;
-	variant?: 'primary';
+	variant?: 'primary' | 'danger';
 }
 
-const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
+const AlertCustomDialog = ({
 	defaultOpen,
 	text,
 	handleClose,
@@ -36,13 +38,13 @@ const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
 	children,
 	css,
 	variant = 'primary'
-}) => {
+}: BoardAlertDialog) => {
 	return (
 		<AlertDialog defaultOpen={defaultOpen}>
 			{children}
 			<AlertDialogContent css={{ ...css }} handleClose={handleClose}>
 				<Flex justify="between" align="center" css={{ px: '$32', py: '$24' }}>
-					<Text heading="4">{title}</Text>
+					<StyledDialogTitle heading="4">{title}</StyledDialogTitle>
 					<AlertDialogCancel
 						isIcon
 						asChild
@@ -55,24 +57,31 @@ const AlertCustomDialog: React.FC<BoardAlertDialog> = ({
 					</AlertDialogCancel>
 				</Flex>
 				<Separator css={{ backgroundColor: '$primary100' }} />
-				<Flex direction="column" css={{ px: '$32', mt: '$24', mb: '$32' }}>
+				<DialogText direction="column">
 					<AlertDialogDescription>
 						<Text css={{ color: '$primary400' }} size="md">
 							{text}
 						</Text>
 					</AlertDialogDescription>
-					<Flex justify="end" gap="24">
-						<AlertDialogCancel variant="primaryOutline" onClick={handleClose}>
-							{cancelText}
-						</AlertDialogCancel>
-						<AlertDialogAction variant={variant || 'danger'} onClick={handleConfirm}>
-							{confirmText}
-						</AlertDialogAction>
-					</Flex>
-				</Flex>
+				</DialogText>
+				<DialogButtons justify="end" gap="24">
+					<AlertDialogCancel variant="primaryOutline" onClick={handleClose}>
+						{cancelText}
+					</AlertDialogCancel>
+					<AlertDialogAction variant={variant || 'danger'} onClick={handleConfirm}>
+						{confirmText}
+					</AlertDialogAction>
+				</DialogButtons>
 			</AlertDialogContent>
 		</AlertDialog>
 	);
+};
+
+AlertCustomDialog.defaultProps = {
+	handleClose: undefined,
+	children: undefined,
+	css: undefined,
+	variant: 'primary'
 };
 
 export default AlertCustomDialog;
