@@ -56,7 +56,13 @@ const Comment: React.FC<CommentProps> = React.memo(
 						<Flex justify="between" css={{ width: '100%' }}>
 							<Text size="xs">{comment.text}</Text>
 							{isSubmited && (
-								<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
+								<Icon
+									name="menu-dots"
+									css={{
+										width: '$20',
+										height: '$20'
+									}}
+								/>
 							)}
 							{!isSubmited && (
 								<PopoverCommentSettings

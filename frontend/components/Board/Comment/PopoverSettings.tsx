@@ -59,7 +59,15 @@ const PopoverCommentSettings: React.FC<PopoverSettingsProps> = React.memo(
 		};
 		return (
 			<Popover>
-				<PopoverTrigger css={{ position: 'relative' }}>
+				<PopoverTrigger
+					css={{
+						position: 'relative',
+						'&:hover': {
+							backgroundColor: '$primary500',
+							color: 'white'
+						}
+					}}
+				>
 					<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
 				</PopoverTrigger>
 				<PopoverCommentSettingsContent
