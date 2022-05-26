@@ -8,7 +8,7 @@ import {
 	ContainerSection,
 	GoBackButton,
 	ImageBackground
-} from '../styles/pages/404.styles';
+} from '../styles/pages/error.styles';
 
 export default function Custom404() {
 	return (
