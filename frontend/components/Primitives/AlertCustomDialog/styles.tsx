@@ -1,16 +1,22 @@
+import { AlertDialogDescription } from '@radix-ui/react-alert-dialog';
+
 import { styled } from '../../../stitches.config';
 import Flex from '../Flex';
 import Text from '../Text';
 
-const StyledDialogTitle = styled(Text, {
-	maxWidth: '85%',
-	overflow: 'hidden',
-	textOverflow: 'ellipsis',
-	fontWeight: '400 !important',
+const DialogTitleContainer = styled(Flex, {
+	px: '$32',
+	py: '$24'
+});
 
-	'&>span': {
-		fontWeight: '$bold'
-	}
+const StyledDialogTitle = styled('h4', Text, {
+	margin: 0
+});
+
+const StyledAlertDialogDescription = styled(AlertDialogDescription, {
+	color: '$primary400',
+	fontSize: '$16',
+	lineHeight: '$24'
 });
 
 const DialogText = styled(Flex, {
@@ -18,7 +24,19 @@ const DialogText = styled(Flex, {
 	pt: '$24',
 
 	'&>p': {
-		margin: 0
+		margin: 0,
+
+		'&>span': {
+			display: '-webkit-box',
+			'-webkit-line-clamp': 3 /* number of lines to show */,
+			lineClamp: 3,
+			'-webkit-box-orient': 'vertical',
+			textOverflow: 'ellipsis',
+			wordBreak: 'break-all',
+			overflow: 'hidden',
+
+			fontWeight: '$bold'
+		}
 	}
 });
 
@@ -27,4 +45,10 @@ const DialogButtons = styled(Flex, {
 	px: '$32'
 });
 
-export { DialogButtons, DialogText, StyledDialogTitle };
+export {
+	DialogButtons,
+	DialogText,
+	DialogTitleContainer,
+	StyledAlertDialogDescription,
+	StyledDialogTitle
+};

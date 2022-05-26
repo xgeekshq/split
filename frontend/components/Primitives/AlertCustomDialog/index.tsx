@@ -1,4 +1,3 @@
-import { AlertDialogDescription } from '@radix-ui/react-alert-dialog';
 import { ReactNode } from 'react';
 
 import { CSS } from '../../../stitches.config';
@@ -11,8 +10,13 @@ import {
 } from '../AlertDialog';
 import Flex from '../Flex';
 import Separator from '../Separator';
-import Text from '../Text';
-import { DialogButtons, DialogText, StyledDialogTitle } from './styles';
+import {
+	DialogButtons,
+	DialogText,
+	DialogTitleContainer,
+	StyledAlertDialogDescription,
+	StyledDialogTitle
+} from './styles';
 
 interface BoardAlertDialog {
 	defaultOpen: boolean;
@@ -43,7 +47,7 @@ const AlertCustomDialog = ({
 		<AlertDialog defaultOpen={defaultOpen}>
 			{children}
 			<AlertDialogContent css={{ ...css }} handleClose={handleClose}>
-				<Flex justify="between" align="center" css={{ px: '$32', py: '$24' }}>
+				<DialogTitleContainer justify="between" align="center">
 					<StyledDialogTitle heading="4">{title}</StyledDialogTitle>
 					<AlertDialogCancel
 						isIcon
@@ -55,14 +59,10 @@ const AlertCustomDialog = ({
 							<Icon name="close" css={{ width: '$24', height: '$24' }} />
 						</Flex>
 					</AlertDialogCancel>
-				</Flex>
+				</DialogTitleContainer>
 				<Separator css={{ backgroundColor: '$primary100' }} />
 				<DialogText direction="column">
-					<AlertDialogDescription>
-						<Text css={{ color: '$primary400' }} size="md">
-							{text}
-						</Text>
-					</AlertDialogDescription>
+					<StyledAlertDialogDescription>{text}</StyledAlertDialogDescription>
 				</DialogText>
 				<DialogButtons justify="end" gap="24">
 					<AlertDialogCancel variant="primaryOutline" onClick={handleClose}>

@@ -36,14 +36,14 @@ const DeleteCard = ({
 			confirmText="Delete card"
 			handleClose={handleClose}
 			handleConfirm={handleDelete}
-			title={
-				<>
-					Delete card <span>{cardTitle}</span>
-				</>
-			}
+			title="Delete card"
 			defaultOpen
 			variant="danger"
-			text="Do you really want to delete this card?"
+			text={
+				<>
+					Do you really want to delete <span>{cardTitle}</span> card?
+				</>
+			}
 		/>
 	);
 };
