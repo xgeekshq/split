@@ -14,12 +14,13 @@ const CreateBoardTipBar = () => {
 			justify="center"
 			css={{
 				minHeight: 'calc(100vh - $sizes$92)',
-				// overflowY: 'auto',
 				backgroundColor: '$primary800',
 				padding: '$32',
 				maxWidth: '$384',
 				position: 'fixed',
-				rigth: 0
+				right: 0,
+				top: 0,
+				bottom: 0
 			}}
 		>
 			<Icon
