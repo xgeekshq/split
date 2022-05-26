@@ -103,6 +103,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/f-morgado"><img src="https://avatars.githubusercontent.com/u/99803749?v=4?s=50" width="50px;" alt=""/><br /><sub><b>f-morgado</b></sub></a><br /><a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=f-morgado" title="Code">💻</a> <a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=f-morgado" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/r-dmatos"><img src="https://avatars.githubusercontent.com/u/100219341?v=4?s=50" width="50px;" alt=""/><br /><sub><b>r-dmatos</b></sub></a><br /><a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=r-dmatos" title="Code">💻</a> <a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=r-dmatos" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/CatiaBarroco-xgeeks"><img src="https://avatars.githubusercontent.com/u/104831678?v=4?s=50" width="50px;" alt=""/><br /><sub><b>CatiaBarroco-xgeeks</b></sub></a><br /><a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=CatiaBarroco-xgeeks" title="Code">💻</a> <a href="https://github.com/xgeekshq/divide-and-conquer/commits?author=CatiaBarroco-xgeeks" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

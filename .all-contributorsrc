@@ -78,7 +78,17 @@
         "code",
         "doc"
       ]
-     }
+    },
+    {
+      "login": "CatiaBarroco-xgeeks",
+      "name": "CatiaBarroco-xgeeks",
+      "avatar_url": "https://avatars.githubusercontent.com/u/104831678?v=4",
+      "profile": "https://github.com/CatiaBarroco-xgeeks",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "divide-and-conquer",
