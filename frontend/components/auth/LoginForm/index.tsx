@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 
@@ -60,6 +60,21 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 		loginAzure();
 	};
 
+	/**
+	 * Show error toast when change loginErrorCode
+	 * If this error is different of -1
+	 */
+	useEffect(() => {
+		if (loginErrorCode !== -1) {
+			setToastState({
+				open: true,
+				type: ToastStateEnum.ERROR,
+				content: getAuthError(loginErrorCode)
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loginErrorCode]);
+
 	const handleLogin = async (credentials: LoginUser) => {
 		setLoading((prevState) => ({ ...prevState, credentials: true }));
 		const result = await signIn<RedirectableProviderType>('credentials', {
@@ -72,13 +87,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 			router.push(DASHBOARD_ROUTE);
 			return;
 		}
-		setToastState({
-			open: true,
-			type: ToastStateEnum.ERROR,
-			content: getAuthError(loginErrorCode)
-		});
-		setLoading((prevState) => ({ ...prevState, credentials: false }));
 		setLoginErrorCode(transformLoginErrorCodes(result.error));
+
+		setLoading((prevState) => ({ ...prevState, credentials: false }));
 	};
 
 	const handleShowTroubleLogginIn = () => {
