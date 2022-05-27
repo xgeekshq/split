@@ -25,9 +25,9 @@ const ActionButton = styled(Button, {
 	}
 });
 
-const StyledForm = styled('form', Flex, { width: '100%', px: '$20' });
+const StyledForm = styled('form', Flex, { width: '100%' });
 
-interface AddCardProps {
+type AddCardProps = {
 	isUpdate: boolean;
 	isCard: boolean;
 	colId: string;
@@ -39,7 +39,7 @@ interface AddCardProps {
 	commentId?: string;
 	cancelUpdate?: () => void;
 	defaultOpen?: boolean;
-}
+};
 
 const AddCard = React.memo<AddCardProps>(
 	({
@@ -53,7 +53,8 @@ const AddCard = React.memo<AddCardProps>(
 		cancelUpdate,
 		isCard,
 		commentId,
-		defaultOpen
+		defaultOpen,
+		...props
 	}) => {
 		const { addCardInColumn, updateCard } = useCards();
 		const { addCommentInCard, updateComment } = useComments();
@@ -164,6 +165,7 @@ const AddCard = React.memo<AddCardProps>(
 
 		return (
 			<StyledForm
+				{...props}
 				direction="column"
 				align="center"
 				justify="center"

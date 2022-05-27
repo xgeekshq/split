@@ -74,14 +74,22 @@ const Column = React.memo<ColumnBoardType>(
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
 							<Flex direction="column" css={{}}>
 								{!isSubmited && (
-									<AddCardOrComment
-										isCard
-										colId={columnId}
-										boardId={boardId}
-										socketId={socketId}
-										isUpdate={false}
-										defaultOpen={countAllCards === 0}
-									/>
+									<Flex
+										css={{
+											'&>*': { flex: '1 1 auto' },
+											'&>form': { px: '$20' }
+										}}
+										align="center"
+									>
+										<AddCardOrComment
+											isCard
+											colId={columnId}
+											boardId={boardId}
+											socketId={socketId}
+											isUpdate={false}
+											defaultOpen={countAllCards === 0}
+										/>
+									</Flex>
 								)}
 								<CardsContainer
 									direction="column"
