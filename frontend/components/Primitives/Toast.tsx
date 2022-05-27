@@ -86,9 +86,6 @@ export const ToastClose = StyledClose;
 const Toast: React.FC = () => {
 	const [currentToastState, setToastState] = useRecoilState(toastState);
 	const { open, type, content } = currentToastState;
-	const duration = [ToastStateEnum.SUCCESS, ToastStateEnum.INFO].includes(type)
-		? 7000
-		: undefined;
 
 	const router = useRouter();
 	const VIEWPORT_PADDING = router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
@@ -107,7 +104,7 @@ const Toast: React.FC = () => {
 		<ToastRoot
 			open={open}
 			onOpenChange={(e) => setToastState({ open: e, type, content })}
-			duration={duration}
+			duration={7000}
 			type="foreground"
 			css={{
 				'@media (prefers-reduced-motion: no-preference)': {
