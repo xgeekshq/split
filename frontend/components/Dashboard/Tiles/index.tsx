@@ -1,7 +1,7 @@
 import { HeaderInfo } from '../../../types/dashboard/header.info';
 import Icon from '../../icons/Icon';
 import Text from '../../Primitives/Text';
-import { GridContainer, StyledTile, TileArrow } from './styles';
+import { GridContainer, StyledTile } from './styles';
 
 type TilesProps = {
 	data: HeaderInfo;
@@ -27,7 +27,6 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '$100'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
 			</StyledTile>
 			<StyledTile>
 				<Text size="md" color="white">
@@ -45,7 +44,6 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '$100'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
 			</StyledTile>
 			<StyledTile>
 				<Text size="md" color="white">
@@ -63,7 +61,6 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '76px'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
 			</StyledTile>
 		</GridContainer>
 	);
