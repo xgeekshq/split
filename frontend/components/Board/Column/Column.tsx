@@ -2,21 +2,13 @@ import { Droppable } from '@react-forked/dnd';
 import React, { useState } from 'react';
 
 import { ColumnBoardType } from '../../../types/column';
-import Icon from '../../icons/Icon';
 import Flex from '../../Primitives/Flex';
-import { Popover, PopoverContent } from '../../Primitives/Popover';
 import Text from '../../Primitives/Text';
 import Separator from '../../Sidebar/partials/Separator';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
-import {
-	CardsContainer,
-	Container,
-	OuterContainer,
-	PopoverItemStyled,
-	PopoverTriggerStyled,
-	Title
-} from './styles';
+import { SortMenu } from './partials/SortMenu';
+import { CardsContainer, Container, OuterContainer, Title } from './styles';
 
 const Column = React.memo<ColumnBoardType>(
 	({
@@ -80,28 +72,8 @@ const Column = React.memo<ColumnBoardType>(
 										{cards.length} cards
 									</Text>
 								</Flex>
-								<Popover>
-									<PopoverTriggerStyled>
-										<Icon name="sort" />
-									</PopoverTriggerStyled>
-									<PopoverContent>
-										<PopoverItemStyled onClick={() => setFilter('desc')}>
-											<Icon name="sort_desc" />
-											<Text size="sm">Sort by votes (desc)</Text>
-										</PopoverItemStyled>
-										<PopoverItemStyled onClick={() => setFilter('asc')}>
-											<Icon name="sort_asc" />
-											<Text size="sm">Sort by votes (asc)</Text>
-										</PopoverItemStyled>
-										<PopoverItemStyled
-											sorting={false}
-											onClick={() => setFilter(undefined)}
-										>
-											<Icon name="sort" />
-											<Text size="sm">No sorting</Text>
-										</PopoverItemStyled>
-									</PopoverContent>
-								</Popover>
+
+								<SortMenu setFilter={setFilter} />
 							</Flex>
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
 							<Flex direction="column" css={{}}>

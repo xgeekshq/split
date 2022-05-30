@@ -1,7 +1,6 @@
 import { styled } from '../../../stitches.config';
 import Box from '../../Primitives/Box';
 import Flex from '../../Primitives/Flex';
-import { PopoverItem, PopoverTrigger } from '../../Primitives/Popover';
 import Text from '../../Primitives/Text';
 
 const CardsContainer = styled(Flex, {
@@ -28,49 +27,6 @@ const CardsContainer = styled(Flex, {
 	}
 });
 
-const PopoverTriggerStyled = styled(PopoverTrigger, {
-	cursor: 'pointer',
-
-	'&:svg': {
-		size: '$24',
-		color: '$primary300'
-	},
-
-	'&:hover,&[data-state="open"]': {
-		backgroundColor: '$primary100',
-		color: '$primary300'
-	}
-});
-
-const PopoverItemStyled = styled(PopoverItem, {
-	variants: {
-		sorting: {
-			true: {
-				'&:hover': {
-					backgroundColor: '$primary50',
-					'&>*': { color: '$primary800 !important' }
-				}
-			},
-			false: {
-				'&>svg': { color: '$primary300' },
-
-				'&:hover': {
-					backgroundColor: '$primary50',
-					'&>span': { color: '$primary800 !important' },
-					'&>svg': { color: '$primary300 !important' }
-				}
-			}
-		}
-	},
-
-	defaultVariants: {
-		sorting: true
-	},
-
-	alignItems: 'center',
-	gap: '$8'
-});
-
 const Container = styled(Flex, Box, {
 	borderRadius: '$12',
 	flexShrink: 0,
@@ -94,11 +50,4 @@ const Title = styled(Text, {
 	px: '$8'
 });
 
-export {
-	CardsContainer,
-	Container,
-	OuterContainer,
-	PopoverItemStyled,
-	PopoverTriggerStyled,
-	Title
-};
+export { CardsContainer, Container, OuterContainer, Title };
