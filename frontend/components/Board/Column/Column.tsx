@@ -133,7 +133,6 @@ const Column = React.memo<ColumnBoardType>(
 										boardUser={boardUser}
 										maxVotes={maxVotes}
 										isSubmited={isSubmited}
-										filter={filter}
 									/>
 									{provided.placeholder}
 								</CardsContainer>

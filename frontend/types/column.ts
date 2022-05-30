@@ -42,7 +42,7 @@ export interface ColumnInnerList {
 	boardUser?: BoardUser;
 	maxVotes?: number;
 	isSubmited: boolean;
-	filter: string;
+	// filter: string;
 }
 
 export type ColumnDragItem = {
