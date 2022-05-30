@@ -5,24 +5,29 @@ import { PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 type Props = {
 	setFilter: (value: 'desc' | 'asc' | undefined) => void;
+	filter: 'desc' | 'asc' | undefined;
 };
 
-const SortMenu = ({ setFilter }: Props) => {
+const SortMenu = ({ setFilter, filter }: Props) => {
 	return (
 		<Popover>
 			<PopoverTriggerStyled>
 				<Icon name="sort" />
 			</PopoverTriggerStyled>
 			<PopoverContent>
-				<PopoverItemStyled onClick={() => setFilter('desc')}>
+				<PopoverItemStyled active={filter === 'desc'} onClick={() => setFilter('desc')}>
 					<Icon name="sort_desc" />
 					<Text size="sm">Sort by votes (desc)</Text>
 				</PopoverItemStyled>
-				<PopoverItemStyled onClick={() => setFilter('asc')}>
+				<PopoverItemStyled active={filter === 'asc'} onClick={() => setFilter('asc')}>
 					<Icon name="sort_asc" />
 					<Text size="sm">Sort by votes (asc)</Text>
 				</PopoverItemStyled>
-				<PopoverItemStyled sorting={false} onClick={() => setFilter(undefined)}>
+				<PopoverItemStyled
+					active={filter === undefined}
+					sorting={false}
+					onClick={() => setFilter(undefined)}
+				>
 					<Icon name="sort" />
 					<Text size="sm">No sorting</Text>
 				</PopoverItemStyled>

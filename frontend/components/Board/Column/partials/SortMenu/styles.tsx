@@ -17,6 +17,13 @@ const PopoverTriggerStyled = styled(PopoverTrigger, {
 
 const PopoverItemStyled = styled(PopoverItem, {
 	variants: {
+		active: {
+			true: {
+				backgroundColor: '$primary100',
+				color: '$primary800'
+			},
+			false: {}
+		},
 		sorting: {
 			true: {
 				'&:hover': {
@@ -37,7 +44,8 @@ const PopoverItemStyled = styled(PopoverItem, {
 	},
 
 	defaultVariants: {
-		sorting: true
+		sorting: true,
+		active: false
 	},
 
 	alignItems: 'center',
