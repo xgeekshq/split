@@ -1,8 +1,9 @@
 import { Droppable } from '@react-forked/dnd';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { styled } from '../../../stitches.config';
 import { ColumnBoardType } from '../../../types/column';
+import Icon from '../../icons/Icon';
 import Box from '../../Primitives/Box';
 import Flex from '../../Primitives/Flex';
 import Text from '../../Primitives/Text';
@@ -48,28 +49,52 @@ const Column = React.memo<ColumnBoardType>(
 		boardUser,
 		maxVotes,
 		countAllCards,
-		isSubmited,
-		filter
+		isSubmited
 	}) => {
+		const [isFiltered, setIsFiltered] = useState<'asc' | 'desc' | undefined>();
+
+		const handleFilterState = () =>
+			setIsFiltered((prevState) =>
+				[undefined, 'desc'].includes(prevState) ? 'asc' : 'desc'
+			);
+		const filteredCards = () => {
+			return [...cards].sort((a, b) => {
+				const votesA = a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
+				const votesB = b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
+				return isFiltered === 'desc' ? votesA - votesB : votesB - votesA;
+			});
+		};
+
 		return (
 			<OuterContainer>
 				<Droppable droppableId={columnId} type="CARD" isCombineEnabled>
 					{(provided) => (
 						<Container direction="column" elevation="2">
-							<Flex css={{ pl: '$16', pt: '$20', pb: '$16' }}>
-								<Title heading="4">{title}</Title>
-								<Text
-									size="xs"
-									color="primary400"
+							<Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
+								<Flex>
+									<Title heading="4">{title}</Title>
+									<Text
+										size="xs"
+										color="primary400"
+										css={{
+											borderRadius: '$4',
+											border: '1px solid $colors$primary100',
+											px: '$8',
+											py: '$2'
+										}}
+									>
+										{cards.length} cards
+									</Text>
+								</Flex>
+								<Icon
+									name="sort"
+									onClick={handleFilterState}
 									css={{
-										borderRadius: '$4',
-										border: '1px solid $colors$primary100',
-										px: '$8',
-										py: '$2'
+										color: !isFiltered ? '$primary300' : '$primary800',
+										size: '$24',
+										cursor: 'pointer'
 									}}
-								>
-									{cards.length} cards
-								</Text>
+								/>
 							</Flex>
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
 							<Flex direction="column" css={{}}>
@@ -97,7 +122,7 @@ const Column = React.memo<ColumnBoardType>(
 									{...provided.droppableProps}
 								>
 									<CardsList
-										cards={cards}
+										cards={isFiltered ? filteredCards() : cards}
 										color={color}
 										colId={columnId}
 										userId={userId}
@@ -120,5 +145,4 @@ const Column = React.memo<ColumnBoardType>(
 		);
 	}
 );
-
 export default Column;
