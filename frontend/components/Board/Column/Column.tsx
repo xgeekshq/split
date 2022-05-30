@@ -1,39 +1,22 @@
 import { Droppable } from '@react-forked/dnd';
 import React, { useState } from 'react';
 
-import { styled } from '../../../stitches.config';
 import { ColumnBoardType } from '../../../types/column';
 import Icon from '../../icons/Icon';
-import Box from '../../Primitives/Box';
 import Flex from '../../Primitives/Flex';
+import { Popover, PopoverContent } from '../../Primitives/Popover';
 import Text from '../../Primitives/Text';
 import Separator from '../../Sidebar/partials/Separator';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
-import { CardsContainer } from './styles';
-
-const Container = styled(Flex, Box, {
-	borderRadius: '$12',
-	flexShrink: 0,
-	flex: '1',
-	pb: '$24',
-	width: '100%',
-	boxShadow: '0px 2px 8px rgba(18, 25, 34, 0.05)',
-	backgroundColor: '$surface'
-});
-
-const OuterContainer = styled(Flex, {
-	height: 'fit-content',
-
-	flex: '1',
-	flexGrow: 1,
-	flexShrink: 0,
-	width: '100%'
-});
-
-const Title = styled(Text, {
-	px: '$8'
-});
+import {
+	CardsContainer,
+	Container,
+	OuterContainer,
+	PopoverItemStyled,
+	PopoverTriggerStyled,
+	Title
+} from './styles';
 
 const Column = React.memo<ColumnBoardType>(
 	({
@@ -51,18 +34,29 @@ const Column = React.memo<ColumnBoardType>(
 		countAllCards,
 		isSubmited
 	}) => {
-		const [isFiltered, setIsFiltered] = useState<'asc' | 'desc' | undefined>();
+		const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
 
-		const handleFilterState = () =>
-			setIsFiltered((prevState) =>
-				[undefined, 'desc'].includes(prevState) ? 'asc' : 'desc'
-			);
 		const filteredCards = () => {
-			return [...cards].sort((a, b) => {
-				const votesA = a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
-				const votesB = b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
-				return isFiltered === 'desc' ? votesA - votesB : votesB - votesA;
-			});
+			switch (filter) {
+				case 'desc':
+					return [...cards].sort((a, b) => {
+						const votesA =
+							a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
+						const votesB =
+							b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
+						return votesA - votesB;
+					});
+				case 'asc':
+					return [...cards].sort((a, b) => {
+						const votesA =
+							a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
+						const votesB =
+							b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
+						return votesB - votesA;
+					});
+				default:
+					return cards;
+			}
 		};
 
 		return (
@@ -86,15 +80,28 @@ const Column = React.memo<ColumnBoardType>(
 										{cards.length} cards
 									</Text>
 								</Flex>
-								<Icon
-									name="sort"
-									onClick={handleFilterState}
-									css={{
-										color: !isFiltered ? '$primary300' : '$primary800',
-										size: '$24',
-										cursor: 'pointer'
-									}}
-								/>
+								<Popover>
+									<PopoverTriggerStyled>
+										<Icon name="sort" />
+									</PopoverTriggerStyled>
+									<PopoverContent>
+										<PopoverItemStyled onClick={() => setFilter('desc')}>
+											<Icon name="sort_desc" />
+											<Text size="sm">Sort by votes (desc)</Text>
+										</PopoverItemStyled>
+										<PopoverItemStyled onClick={() => setFilter('asc')}>
+											<Icon name="sort_asc" />
+											<Text size="sm">Sort by votes (asc)</Text>
+										</PopoverItemStyled>
+										<PopoverItemStyled
+											sorting={false}
+											onClick={() => setFilter(undefined)}
+										>
+											<Icon name="sort" />
+											<Text size="sm">No sorting</Text>
+										</PopoverItemStyled>
+									</PopoverContent>
+								</Popover>
 							</Flex>
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
 							<Flex direction="column" css={{}}>
@@ -122,7 +129,7 @@ const Column = React.memo<ColumnBoardType>(
 									{...provided.droppableProps}
 								>
 									<CardsList
-										cards={isFiltered ? filteredCards() : cards}
+										cards={filter ? filteredCards() : cards}
 										color={color}
 										colId={columnId}
 										userId={userId}
