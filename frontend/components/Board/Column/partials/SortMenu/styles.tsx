@@ -3,10 +3,10 @@ import { PopoverItem, PopoverTrigger } from '../../../../Primitives/Popover';
 
 const PopoverTriggerStyled = styled(PopoverTrigger, {
 	cursor: 'pointer',
+	color: '$primary300',
 
 	'&:svg': {
-		size: '$24',
-		color: '$primary300'
+		size: '$24'
 	},
 
 	'&:hover,&[data-state="open"]': {
