@@ -5,11 +5,11 @@ const schemaRegisterForm = z
 		firstName: z
 			.string()
 			.nonempty('Please enter your name.')
-			.min(3, 'Your name must have more than 3 characters.'),
+			.min(1, 'Your name must have more than 1 character.'),
 		lastName: z
 			.string()
 			.nonempty('Please enter your name.')
-			.min(3, 'Your name must have more than 3 characters.'),
+			.min(1, 'Your name must have more than 1 character.'),
 		email: z.string().nonempty('Please insert your email.').email('This email is not valid.'),
 		password: z
 			.string()

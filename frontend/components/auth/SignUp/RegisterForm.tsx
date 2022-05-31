@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
@@ -15,7 +15,6 @@ import { SignUpEnum } from '../../../utils/signUp.enum';
 import Icon from '../../icons/Icon';
 import LogoIcon from '../../icons/Logo';
 import Button from '../../Primitives/Button';
-import CheckBox from '../../Primitives/Checkbox';
 import Flex from '../../Primitives/Flex';
 import Input from '../../Primitives/Input';
 import Text from '../../Primitives/Text';
@@ -45,7 +44,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 	setEmailName
 }) => {
 	const setToastState = useSetRecoilState(toastState);
-	const [checkedTerms, setCheckedTerms] = useState(false);
 	const methods = useForm<RegisterUser>({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
@@ -87,6 +85,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 	);
 
 	const handleRegister = async (user: RegisterUser) => {
+		user.email = user.email.toLowerCase();
 		createUser.mutate(user);
 	};
 
@@ -97,14 +96,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				direction="column"
 				style={{ width: '100%' }}
 				onSubmit={methods.handleSubmit((credentials: RegisterUser) => {
-					if (!checkedTerms) {
-						setToastState({
-							open: true,
-							type: ToastStateEnum.ERROR,
-							content: 'Confirm Terms of Service and Privacy Policy'
-						});
-						return;
-					}
 					handleRegister(credentials);
 				})}
 			>
@@ -133,6 +124,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					type="password"
 					icon="eye"
 					iconPosition="right"
+					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^)."
 				/>
 				<Input
 					id="passwordConf"
@@ -141,14 +133,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					icon="eye"
 					iconPosition="right"
 				/>
-				<Flex>
-					<CheckBox
-						id="checkbox"
-						label="I agree to the Terms of Service and the Privacy Policy."
-						size="16"
-						setCheckedTerms={setCheckedTerms}
-					/>
-				</Flex>
 				<Button
 					type="submit"
 					size="lg"
