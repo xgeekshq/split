@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require('fs');
 
 const folders = fs
@@ -25,7 +26,7 @@ module.exports = {
 		ecmaVersion: 12,
 		sourceType: 'module',
 		extraFileExtensions: ['.css'],
-		project: './tsconfig.json'
+		project: ['./tsconfig.json', './cypress/tsconfig.json']
 	},
 	plugins: [
 		'react',

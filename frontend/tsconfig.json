@@ -24,7 +24,8 @@
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"jest.config.js",
-		"jest.setup.js"
+		"jest.setup.js",
+		".eslintrc.js"
 	],
 	"exclude": ["node_modules", "cypress/integration/*"]
 }
