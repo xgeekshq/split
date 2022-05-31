@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import React, { Dispatch } from 'react';
+import router from 'next/router';
+import { RedirectableProviderType } from 'next-auth/providers';
+import { signIn } from 'next-auth/react';
+import React, { Dispatch, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
@@ -11,6 +14,8 @@ import { styled } from '../../../stitches.config';
 import { toastState } from '../../../store/toast/atom/toast.atom';
 import { RegisterUser, User } from '../../../types/user/user';
 import { ToastStateEnum } from '../../../utils/enums/toast-types';
+import isEmpty from '../../../utils/isEmpty';
+import { DASHBOARD_ROUTE } from '../../../utils/routes';
 import { SignUpEnum } from '../../../utils/signUp.enum';
 import Icon from '../../icons/Icon';
 import LogoIcon from '../../icons/Logo';
@@ -20,6 +25,8 @@ import Input from '../../Primitives/Input';
 import Text from '../../Primitives/Text';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
+const msgHelpertext =
+	'Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&).';
 
 const GoBackWrapper = styled(Flex, {
 	mt: '$24',
@@ -37,15 +44,11 @@ interface RegisterFormProps {
 	setEmailName: Dispatch<React.SetStateAction<{ email: string; goback: boolean }>>;
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
-	setShowSignUp,
-	emailName,
-	setCurrentTab,
-	setEmailName
-}) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, setEmailName }) => {
+	const [valueHelperText, setValueHelperText] = useState(msgHelpertext);
 	const setToastState = useSetRecoilState(toastState);
 	const methods = useForm<RegisterUser>({
-		mode: 'onChange',
+		mode: 'onBlur',
 		reValidateMode: 'onChange',
 		defaultValues: {
 			email: '',
@@ -55,6 +58,15 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 		},
 		resolver: zodResolver(SchemaRegisterForm)
 	});
+	// console.log("methods password field",methods.getFieldState('password'));
+	// console.log(methods.formState.errors.password);
+	if (methods.formState.errors.password === undefined) {
+		setValueHelperText('');
+	}
+	// console.log('methods=', methods);
+	// console.log("watch=",watch(['firstName']));
+	// setValueHelperText('');
+	//  despair();
 
 	const clearErrors = () => {
 		setToastState((prev) => ({ ...prev, open: false }));
@@ -64,6 +76,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 		setEmailName((prev) => ({ ...prev, goback: true }));
 		clearErrors();
 		setShowSignUp(SignUpEnum.SIGN_UP);
+	};
+	const handleLogin = async () => {
+		const result = await signIn<RedirectableProviderType>('credentials', {
+			...methods.getValues(),
+			callbackUrl: DASHBOARD_ROUTE,
+			redirect: false
+		});
+		if (!result?.error) {
+			console.log('passou');
+			// setToastState((prev) => ({ ...prev, open: false }));
+			router.push(DASHBOARD_ROUTE);
+			return;
+		}
+
+		console.log('deu erro');
 	};
 
 	const createUser = useMutation<User, AxiosError, RegisterUser, unknown>(
@@ -78,8 +105,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				});
 			},
 			onSuccess: () => {
-				setShowSignUp(SignUpEnum.SIGN_UP);
-				setCurrentTab('login');
+				handleLogin();
 			}
 		}
 	);
@@ -124,7 +150,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					type="password"
 					icon="eye"
 					iconPosition="right"
-					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^)."
+					helperText={isEmpty(valueHelperText) ? undefined : valueHelperText}
 				/>
 				<Input
 					id="passwordConf"
