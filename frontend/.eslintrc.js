@@ -26,7 +26,7 @@ module.exports = {
 		ecmaVersion: 12,
 		sourceType: 'module',
 		extraFileExtensions: ['.css'],
-		project: ['./tsconfig.json', './cypress/tsconfig.json']
+		project: './tsconfig.json'
 	},
 	plugins: [
 		'react',
