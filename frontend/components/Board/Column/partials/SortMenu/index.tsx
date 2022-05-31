@@ -9,10 +9,24 @@ type Props = {
 };
 
 const SortMenu = ({ setFilter, filter }: Props) => {
+	let icon;
+
+	switch (filter) {
+		case 'asc':
+			icon = 'sort_upvoted';
+			break;
+		case 'desc':
+			icon = 'sort_downvoted';
+			break;
+		default:
+			icon = 'sort';
+			break;
+	}
+
 	return (
 		<Popover>
 			<PopoverTriggerStyled>
-				<Icon name="sort" />
+				<Icon name={icon} />
 			</PopoverTriggerStyled>
 			<PopoverContent>
 				<PopoverItemStyled active={filter === 'desc'} onClick={() => setFilter('desc')}>

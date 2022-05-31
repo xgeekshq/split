@@ -19,17 +19,14 @@ const PopoverItemStyled = styled(PopoverItem, {
 	variants: {
 		active: {
 			true: {
-				backgroundColor: '$primary100',
-				color: '$primary800'
+				backgroundColor: '$primary50',
+				'&>*': { color: '$primary800' }
 			},
 			false: {}
 		},
 		sorting: {
 			true: {
-				'&:hover': {
-					backgroundColor: '$primary50',
-					'&>*': { color: '$primary800 !important' }
-				}
+				'&:hover': {}
 			},
 			false: {
 				'&>svg': { color: '$primary300' },
