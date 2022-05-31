@@ -9,6 +9,10 @@ type Props = {
 };
 
 const SortMenu = ({ setFilter, filter }: Props) => {
+	/**
+	 * Make a switch case to set icon
+	 * by current filter
+	 */
 	let icon;
 
 	switch (filter) {
