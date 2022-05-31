@@ -164,19 +164,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						{/* <Flex> */}
-						{/*	<Select */}
-						{/*		value={{ */}
-						{/*			value: filter, */}
-						{/*			label: `${filter.charAt(0).toUpperCase()}${filter.substring(1)}` */}
-						{/*		}} */}
-						{/*		options={[ */}
-						{/*			{ value: 'order', label: 'Order' }, */}
-						{/*			{ value: 'votes', label: 'Votes' } */}
-						{/*		]} */}
-						{/*		onChange={(option) => setFilter((option as OptionType)?.value)} */}
-						{/*	/> */}
-						{/* </Flex> */}
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
 								type="info"
