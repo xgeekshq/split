@@ -12,18 +12,24 @@ import Text from '../components/Primitives/Text';
 import { styled } from '../stitches.config';
 import { DASHBOARD_ROUTE } from '../utils/routes';
 
-const CenteredContainer = styled(Flex, {
+const CenteredContainer = styled('div', {
 	position: 'absolute',
-	top: '$202',
-	right: '$162',
-	boxSizing: 'border-box',
-	'@media (max-height: 1023px)': {
-		top: 'calc((100vh - 710px) / 2)'
-	},
-	'&:focus': { outline: 'none' }
+	top: '50%',
+	right: '150px',
+
+	transform: 'translateY(-50%)',
+
+	maxWidth: '500px',
+	height: 'fit-content',
+
+	display: 'flex',
+	flexDirection: 'column',
+
+	backgroundColor: '#ffffff',
+	borderRadius: '$12'
 });
 
-const MainContainer = styled(Flex, {
+const ImageBackground = styled(Flex, {
 	height: '100vh',
 	width: '100%',
 	position: 'relative',
@@ -34,9 +40,11 @@ const MainContainer = styled(Flex, {
 });
 
 const BannerContainer = styled(Flex, {
-	mt: '$72',
-	ml: '$112',
-	size: 'fit-content'
+	size: 'fit-content',
+
+	position: 'absolute',
+	left: '112px',
+	top: '72px'
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -56,7 +64,7 @@ const Home: NextPage = () => {
 	const [currentTab, setCurrentTab] = useState('login');
 	const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 	return (
-		<MainContainer>
+		<ImageBackground>
 			<BannerContainer>
 				<Banner />
 			</BannerContainer>
@@ -81,7 +89,7 @@ const Home: NextPage = () => {
 				)}
 				{showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
 			</CenteredContainer>
-		</MainContainer>
+		</ImageBackground>
 	);
 };
 

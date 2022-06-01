@@ -45,7 +45,6 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, setEmailName }) => {
-	// const [valueHelperText, setValueHelperText] = useState(msgHelpertext);
 	const valueHelperText = msgHelpertext;
 	const setToastState = useSetRecoilState(toastState);
 	const methods = useForm<RegisterUser>({
@@ -59,20 +58,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, s
 		},
 		resolver: zodResolver(SchemaRegisterForm)
 	});
-	// console.log("methods password field",methods.getFieldState('password'));
-	// console.log(methods.formState.errors.password);
-	// if (methods.formState.errors.password === undefined) {
-	// setValueHelperText('');
-	// useEffect(() => {
-	// 	console.log("teste=",methods.formState.errors.password);
-	// 	if (methods.formState.errors.password === undefined) {
-	// 		setValueHelperText('');
-	// 	}
-	// }, [methods.formState.errors.password]);
-	// console.log('methods=', methods);
-	// console.log("watch=",watch(['firstName']));
-	// setValueHelperText('');
-	//  despair();
 
 	const clearErrors = () => {
 		setToastState((prev) => ({ ...prev, open: false }));
@@ -90,13 +75,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, s
 			redirect: false
 		});
 		if (!result?.error) {
-			console.log('passou');
-			// setToastState((prev) => ({ ...prev, open: false }));
 			router.push(DASHBOARD_ROUTE);
-			return;
 		}
-
-		console.log('deu erro');
 	};
 
 	const createUser = useMutation<User, AxiosError, RegisterUser, unknown>(

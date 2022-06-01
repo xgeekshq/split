@@ -225,7 +225,6 @@ const Input: React.FC<InputProps> = ({
 	const message = errors[id]?.message;
 	const value = getValues()[id];
 	const isValueEmpty = isEmpty(value);
-	console.log('erros=', errors, 'touched', touchedFields);
 	const autoState = useMemo(() => {
 		if (message) return 'error';
 		if (isValueEmpty) return 'default';
@@ -299,36 +298,34 @@ const Input: React.FC<InputProps> = ({
 					{placeholder}
 				</PlaceholderText>
 			</Flex>
-			{currentState !== 'valid' && (
-				<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
-					{!isHelperEmpty && (
-						<HelperTextWrapper gap="4" align="center" css={{ mt: '$8' }}>
-							{currentState === 'error' && (
-								<Icon name="info" css={{ width: '$24', height: '$24' }} />
-							)}
-							<Text
-								css={{
-									color: currentState === 'error' ? '$dangerBase' : '$primary300'
-								}}
-								hint
-							>
-								{!isEmpty(helperText) ? helperText : message}
-							</Text>
-						</HelperTextWrapper>
-					)}
-					{!!currentValue && (
+			<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
+				{!isHelperEmpty && (
+					<HelperTextWrapper gap="4" align="center" css={{ mt: '$8' }}>
+						{currentState === 'error' && (
+							<Icon name="info" css={{ width: '$24', height: '$24' }} />
+						)}
 						<Text
 							css={{
-								color: currentState === 'error' ? '$dangerBase' : '$primary300',
-								mt: '$8'
+								color: currentState === 'error' ? '$dangerBase' : '$primary300'
 							}}
 							hint
 						>
-							{currentValue.length}/{maxChars}
+							{!isEmpty(helperText) ? helperText : message}
 						</Text>
-					)}
-				</Flex>
-			)}
+					</HelperTextWrapper>
+				)}
+				{!!currentValue && (
+					<Text
+						css={{
+							color: currentState === 'error' ? '$dangerBase' : '$primary300',
+							mt: '$8'
+						}}
+						hint
+					>
+						{currentValue.length}/{maxChars}
+					</Text>
+				)}
+			</Flex>
 		</Flex>
 	);
 };

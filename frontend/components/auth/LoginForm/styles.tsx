@@ -29,8 +29,8 @@ const OrSeparator = styled('div', {
 
 	width: '100%',
 
-	mt: '$24',
-	mb: '$32',
+	mt: '$26',
+	mb: '$34',
 
 	hr: {
 		flexGrow: 1,
