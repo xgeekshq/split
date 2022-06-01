@@ -52,7 +52,7 @@ const NewLabelIndicator = styled(Flex, {
 	justifyContent: 'center',
 	gap: '$4',
 
-	'&>span': {
+	span: {
 		fontSize: '$12',
 		lineHeight: '$16',
 		textTransform: 'uppercase',
