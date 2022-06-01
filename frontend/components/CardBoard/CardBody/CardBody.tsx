@@ -26,10 +26,16 @@ const InnerContainer = styled(Flex, Box, {
 });
 
 const NewCircleIndicator = styled('div', {
-	position: 'absolute',
-	left: '$12',
-	top: '50%',
-	transform: 'translateY(-50%)',
+	variants: {
+		position: {
+			absolute: {
+				position: 'absolute',
+				left: '$12',
+				top: '50%',
+				transform: 'translateY(-50%)'
+			}
+		}
+	},
 	width: '$8',
 	height: '$8',
 	borderRadius: '100%',
@@ -46,14 +52,7 @@ const NewLabelIndicator = styled(Flex, {
 	justifyContent: 'center',
 	gap: '$4',
 
-	'&>span:nth-of-type(1)': {
-		width: '$8',
-		height: '$8',
-		borderRadius: '100%',
-		backgroundColor: '$successBase'
-	},
-
-	'&>span:nth-of-type(2)': {
+	'&>span': {
 		fontSize: '$12',
 		lineHeight: '$16',
 		textTransform: 'uppercase',
@@ -153,7 +152,7 @@ const CardBody = React.memo<CardBodyProps>(
 							ml: isSubBoard ? '$40' : 0
 						}}
 					>
-						{isANewBoard && <NewCircleIndicator />}
+						{isANewBoard && <NewCircleIndicator position="absolute" />}
 						<Flex align="center">
 							<Flex gap="8" align="center">
 								{!isSubBoard && (
@@ -215,7 +214,7 @@ const CardBody = React.memo<CardBodyProps>(
 						</Flex>
 						{isANewBoard && (
 							<NewLabelIndicator>
-								<span />
+								<NewCircleIndicator />
 								<span>New Board</span>
 							</NewLabelIndicator>
 						)}
