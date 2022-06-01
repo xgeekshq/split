@@ -225,11 +225,12 @@ const Input: React.FC<InputProps> = ({
 	const message = errors[id]?.message;
 	const value = getValues()[id];
 	const isValueEmpty = isEmpty(value);
-
+	console.log('erros=', errors, 'touched', touchedFields);
 	const autoState = useMemo(() => {
 		if (message) return 'error';
 		if (isValueEmpty) return 'default';
-		return 'valid';
+		if (message === undefined && !isValueEmpty) return 'valid';
+		return undefined;
 	}, [message, isValueEmpty]);
 
 	const currentState = useMemo(() => {
@@ -256,7 +257,7 @@ const Input: React.FC<InputProps> = ({
 			css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto', ...css }}
 			onBlur={() => {
 				if (isValueEmpty) {
-					clearErrors();
+					clearErrors(id);
 				}
 			}}
 		>
@@ -298,34 +299,36 @@ const Input: React.FC<InputProps> = ({
 					{placeholder}
 				</PlaceholderText>
 			</Flex>
-			<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
-				{!isHelperEmpty && (
-					<HelperTextWrapper gap="4" align="center" css={{ mt: '$8' }}>
-						{currentState === 'error' && (
-							<Icon name="info" css={{ width: '$24', height: '$24' }} />
-						)}
+			{currentState !== 'valid' && (
+				<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
+					{!isHelperEmpty && (
+						<HelperTextWrapper gap="4" align="center" css={{ mt: '$8' }}>
+							{currentState === 'error' && (
+								<Icon name="info" css={{ width: '$24', height: '$24' }} />
+							)}
+							<Text
+								css={{
+									color: currentState === 'error' ? '$dangerBase' : '$primary300'
+								}}
+								hint
+							>
+								{!isEmpty(helperText) ? helperText : message}
+							</Text>
+						</HelperTextWrapper>
+					)}
+					{!!currentValue && (
 						<Text
 							css={{
-								color: currentState === 'error' ? '$dangerBase' : '$primary300'
+								color: currentState === 'error' ? '$dangerBase' : '$primary300',
+								mt: '$8'
 							}}
 							hint
 						>
-							{!isEmpty(helperText) ? helperText : message}
+							{currentValue.length}/{maxChars}
 						</Text>
-					</HelperTextWrapper>
-				)}
-				{!!currentValue && (
-					<Text
-						css={{
-							color: currentState === 'error' ? '$dangerBase' : '$primary300',
-							mt: '$8'
-						}}
-						hint
-					>
-						{currentValue.length}/{maxChars}
-					</Text>
-				)}
-			</Flex>
+					)}
+				</Flex>
+			)}
 		</Flex>
 	);
 };

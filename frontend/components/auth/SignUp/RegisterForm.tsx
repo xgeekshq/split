@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
@@ -45,11 +45,12 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, setEmailName }) => {
-	const [valueHelperText, setValueHelperText] = useState(msgHelpertext);
+	// const [valueHelperText, setValueHelperText] = useState(msgHelpertext);
+	const valueHelperText = msgHelpertext;
 	const setToastState = useSetRecoilState(toastState);
 	const methods = useForm<RegisterUser>({
 		mode: 'onBlur',
-		reValidateMode: 'onChange',
+		reValidateMode: 'onBlur',
 		defaultValues: {
 			email: '',
 			firstName: '',
@@ -60,9 +61,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, s
 	});
 	// console.log("methods password field",methods.getFieldState('password'));
 	// console.log(methods.formState.errors.password);
-	if (methods.formState.errors.password === undefined) {
-		setValueHelperText('');
-	}
+	// if (methods.formState.errors.password === undefined) {
+	// setValueHelperText('');
+	// useEffect(() => {
+	// 	console.log("teste=",methods.formState.errors.password);
+	// 	if (methods.formState.errors.password === undefined) {
+	// 		setValueHelperText('');
+	// 	}
+	// }, [methods.formState.errors.password]);
 	// console.log('methods=', methods);
 	// console.log("watch=",watch(['firstName']));
 	// setValueHelperText('');
