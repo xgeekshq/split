@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { dehydrate, QueryClient, useQueryClient } from 'react-query';
 import Select from 'react-select';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import { getBoardRequest } from '../../api/boardService';
@@ -20,7 +20,7 @@ import Flex from '../../components/Primitives/Flex';
 import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
 import useCards from '../../hooks/useCards';
-import { boardInfoState } from '../../store/board/atoms/board.atom';
+import { boardInfoState, newBoardState } from '../../store/board/atoms/board.atom';
 import { Container } from '../../styles/pages/boards/board.styles';
 import MergeCardsDto from '../../types/board/mergeCard.dto';
 import UpdateCardPositionDto from '../../types/card/updateCardPosition.dto';
@@ -72,6 +72,14 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	});
 	const { data } = fetchBoard;
 	const board = data?.board;
+
+	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
+
+	useEffect(() => {
+		if (data?.board._id === newBoard?._id) {
+			setNewBoard(undefined);
+		}
+	}, [newBoard, data, setNewBoard]);
 
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);

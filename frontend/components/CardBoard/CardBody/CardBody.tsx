@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { styled } from '../../../stitches.config';
+import { newBoardState } from '../../../store/board/atoms/board.atom';
 import BoardType from '../../../types/board/board';
 import ClickEvent from '../../../types/events/clickEvent';
 import Icon from '../../icons/Icon';
@@ -18,9 +20,45 @@ import LeftArrow from './LeftArrow';
 import SubBoards from './SubBoards';
 
 const InnerContainer = styled(Flex, Box, {
-	px: '$24',
+	px: '$32',
 	backgroundColor: '$white',
 	borderRadius: '$12'
+});
+
+const NewCircleIndicator = styled('div', {
+	position: 'absolute',
+	left: '$12',
+	top: '50%',
+	transform: 'translateY(-50%)',
+	width: '$8',
+	height: '$8',
+	borderRadius: '100%',
+	backgroundColor: '$successBase'
+});
+
+const NewLabelIndicator = styled(Flex, {
+	backgroundColor: '$successLightest',
+	border: '1px solid $colors$successBase',
+	borderRadius: '$pill',
+	px: '$8',
+	py: '$4',
+	alignItems: 'center',
+	justifyContent: 'center',
+	gap: '$4',
+
+	'&>span:nth-of-type(1)': {
+		width: '$8',
+		height: '$8',
+		borderRadius: '100%',
+		backgroundColor: '$successBase'
+	},
+
+	'&>span:nth-of-type(2)': {
+		fontSize: '$12',
+		lineHeight: '$16',
+		textTransform: 'uppercase',
+		color: '$successBase'
+	}
 });
 
 const RecurrentIconContainer = styled('div', {
@@ -60,6 +98,10 @@ const CardBody = React.memo<CardBodyProps>(
 		const countDividedBoards = dividedBoardsCount || dividedBoards.length;
 		const [openSubBoards, setSubBoardsOpen] = useState(true);
 
+		const newBoard = useRecoilValue(newBoardState);
+
+		const isANewBoard = newBoard?._id === board._id;
+
 		const userIsParticipating = useMemo(() => {
 			return !!users.find((user) => user.user._id === userId);
 		}, [users, userId]);
@@ -98,17 +140,20 @@ const CardBody = React.memo<CardBodyProps>(
 			<Flex direction="column" css={{ flex: '1 1 0' }} gap="12">
 				<Flex>
 					{isSubBoard && <LeftArrow isDashboard={isDashboard} index={index} />}
+
 					<InnerContainer
 						justify="between"
 						align="center"
 						elevation="1"
 						css={{
+							position: 'relative',
 							flex: '1 1 0',
 							py: !isSubBoard ? '$22' : '$16',
 							maxHeight: isSubBoard ? '$64' : '$76',
 							ml: isSubBoard ? '$40' : 0
 						}}
 					>
+						{isANewBoard && <NewCircleIndicator />}
 						<Flex align="center">
 							<Flex gap="8" align="center">
 								{!isSubBoard && (
@@ -148,6 +193,7 @@ const CardBody = React.memo<CardBodyProps>(
 											</RecurrentIconContainer>
 										</Tooltip>
 									)}
+
 									{!isDashboard && isSubBoard && (
 										<CardAvatars
 											listUsers={!team ? users : team.users}
@@ -167,6 +213,12 @@ const CardBody = React.memo<CardBodyProps>(
 							</Flex>
 							{isDashboard && <CountCards columns={columns} />}
 						</Flex>
+						{isANewBoard && (
+							<NewLabelIndicator>
+								<span />
+								<span>New Board</span>
+							</NewLabelIndicator>
+						)}
 						<CardEnd
 							board={board}
 							isDashboard={isDashboard}
