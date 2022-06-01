@@ -1,6 +1,5 @@
-import { Title } from '@radix-ui/react-dialog';
-
 import Tooltip from '../../../Primitives/Tooltip';
+import { Title } from './partials/Title';
 
 type CardTitleProps = {
 	userIsParticipating: boolean;
