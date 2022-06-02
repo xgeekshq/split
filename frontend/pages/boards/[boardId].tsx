@@ -11,6 +11,7 @@ import { io, Socket } from 'socket.io-client';
 import { getBoardRequest } from '../../api/boardService';
 import Column from '../../components/Board/Column/Column';
 import BoardHeader from '../../components/Board/Header';
+import Icon from '../../components/icons/Icon';
 import SpinnerPage from '../../components/loadings/LoadingPage';
 import AlertBox from '../../components/Primitives/AlertBox';
 import AlertCustomDialog from '../../components/Primitives/AlertCustomDialog';
@@ -20,6 +21,7 @@ import Flex from '../../components/Primitives/Flex';
 import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
 import useCards from '../../hooks/useCards';
+import { styled } from '../../stitches.config';
 import { boardInfoState } from '../../store/board/atoms/board.atom';
 import { Container } from '../../styles/pages/boards/board.styles';
 import MergeCardsDto from '../../types/board/mergeCard.dto';
@@ -51,6 +53,8 @@ interface BoardProps {
 	boardId: string;
 	mainBoardId?: string;
 }
+
+const ButaoSettings = styled(Button, { backgroundColor: '$danger700' });
 
 const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	Board.defaultProps = {
@@ -196,6 +200,11 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								]}
 								onChange={(option) => setFilter((option as OptionType)?.value)}
 							/>
+							<ButaoSettings variant="primaryOutline">
+								<Icon name="settings" />
+								Board settings
+								<Icon name="arrow-down" />
+							</ButaoSettings>
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
