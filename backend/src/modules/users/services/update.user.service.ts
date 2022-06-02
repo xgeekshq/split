@@ -63,10 +63,8 @@ export default class updateUserServiceImpl implements UpdateUserService {
   }
 
   public tokenValidator(updatedAt: Date) {
-    console.log(updatedAt);
     const isTokenValid =
       (new Date().getTime() - updatedAt.getTime()) / 1000 / 60 < 15;
-    console.log(isTokenValid);
     if (!isTokenValid) {
       throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
     }

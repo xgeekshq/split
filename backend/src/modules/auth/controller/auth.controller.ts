@@ -59,10 +59,10 @@ export default class AuthController {
   @Post('register')
   async register(@Body() registrationData: CreateUserDto) {
     try {
-      const { _id, firstName, lastName, email, password } =
+      const { _id, firstName, lastName, email } =
         await this.registerAuthApp.register(registrationData);
 
-      return { _id, firstName, lastName, email, password };
+      return { _id, firstName, lastName, email };
     } catch (error) {
       if (error.code === uniqueViolation) {
         throw new BadRequestException(EMAIL_EXISTS);
@@ -108,10 +108,15 @@ export default class AuthController {
   ) {
     const email = await this.updateUserApp.checkEmail(token);
     if (!email) return { message: 'token not valid' };
-    return !!this.updateUserApp.setPassword(
-      email,
-      newPassword,
-      newPasswordConf,
+    return (
+      (await this.updateUserApp.setPassword(
+        email,
+        newPassword,
+        newPasswordConf,
+      )) && {
+        status: 'ok',
+        message: 'Password updated successfully!',
+      }
     );
   }
 
