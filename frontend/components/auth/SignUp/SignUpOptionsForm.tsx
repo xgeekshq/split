@@ -30,15 +30,13 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 		return setShowSignUp(SignUpEnum.SIGN_UP);
 	};
 
-	// const [ShowLogIn, setShowLogIn] = useState(false);
 	return (
 		<Container direction="column">
 			<Text size="md">
 				The email
 				<Text size="md" fontWeight="medium">
-					{` ${emailName} `}
+					{emailName}
 				</Text>
-				{/* {`${textContent}`} */}
 				supports login with company SSO (Single Sign-on)
 			</Text>
 			<Button
@@ -46,7 +44,6 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 				size="lg"
 				css={{
 					mt: '$32',
-					mb: '$22',
 					fontWeight: '$medium',
 					fontSize: '$18',
 					'& svg': {
@@ -56,9 +53,9 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 				}}
 				onClick={loginAzure}
 			>
-				Log in
+				Log in with SSO
 			</Button>
-			<OrSeparator>
+			<OrSeparator css={{ mt: '$22', mb: '$22' }}>
 				<hr />
 				<Text size="sm" color="primary300" weight="medium">
 					or
@@ -71,7 +68,6 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 				underline="true"
 				css={{
 					alignSelf: 'center',
-					mt: '$22',
 					'&:hover': {
 						textDecorationLine: 'underline',
 						cursor: 'pointer'
