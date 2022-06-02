@@ -15,13 +15,13 @@ export default class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
+  @MinLength(2)
   @Transform(({ value }: TransformFnParams) => value.trim())
   firstName!: string;
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(1)
+  @MinLength(2)
   @Transform(({ value }: TransformFnParams) => value.trim())
   lastName!: string;
 
