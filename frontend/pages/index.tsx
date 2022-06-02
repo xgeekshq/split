@@ -1,9 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import { useState } from 'react';
 
-import ResetPassword from '../components/auth/ForgotPassword/ResetPassword';
 import TroubleLogin from '../components/auth/ForgotPassword/TroubleLogin';
 import Index from '../components/auth/LoginForm';
 import SignUpTabContent from '../components/auth/SignUp/SignUpTabContent';

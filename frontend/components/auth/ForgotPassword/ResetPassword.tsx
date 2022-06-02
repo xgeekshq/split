@@ -1,116 +1,113 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import { useRouter } from "next/router";
-import { Dispatch, SetStateAction } from "react";
-import SchemaResetPasswordForm from "../../../schema/schemaResetPasswordForm";
-import { styled } from "../../../stitches.config";
-import Button from "../../Primitives/Button";
-import Flex from "../../Primitives/Flex";
-import LogoIcon from "../../icons/Logo";
-import Input from "../../Primitives/Input";
-import Text from "../../Primitives/Text";
-import { NewPassword } from "../../../types/user/user";
-import useUser from "../../../hooks/useUser";
-import { ToastStateEnum } from "../../../utils/enums/toast-types";
-import { toastState } from "../../../store/toast/atom/toast.atom";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/router';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
 
-const MainContainer = styled("form", Flex, {
-  width: "$500",
-  backgroundColor: "$white",
-  boxShadow: "0px 4px 54px rgba(0, 0, 0, 0.5)",
-  borderRadius: "$12",
-  py: "$48",
-  px: "$32",
+import useUser from '../../../hooks/useUser';
+import SchemaResetPasswordForm from '../../../schema/schemaResetPasswordForm';
+import { styled } from '../../../stitches.config';
+import { toastState } from '../../../store/toast/atom/toast.atom';
+import { NewPassword } from '../../../types/user/user';
+import { ToastStateEnum } from '../../../utils/enums/toast-types';
+import LogoIcon from '../../icons/Logo';
+import Button from '../../Primitives/Button';
+import Flex from '../../Primitives/Flex';
+import Input from '../../Primitives/Input';
+import Text from '../../Primitives/Text';
+
+const MainContainer = styled('form', Flex, {
+	width: '$500',
+	backgroundColor: '$white',
+	boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
+	borderRadius: '$12',
+	py: '$48',
+	px: '$32'
 });
 
 interface ResetPasswordProps {
-  token: string;
-  setUserToken: Dispatch<SetStateAction<string | undefined>>;
+	token: string;
 }
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ token, setUserToken }) => {
-  const setToastState = useSetRecoilState(toastState);
-  const router = useRouter();
-  const methods = useForm<NewPassword>({
-    mode: "onSubmit",
-    reValidateMode: "onChange",
-    defaultValues: {
-      password: "",
-      passwordConf: "",
-    },
-    resolver: zodResolver(SchemaResetPasswordForm),
-  });
+const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
+	const setToastState = useSetRecoilState(toastState);
+	const router = useRouter();
+	const methods = useForm<NewPassword>({
+		mode: 'onBlur',
+		reValidateMode: 'onBlur',
+		defaultValues: {
+			password: '',
+			passwordConf: ''
+		},
+		resolver: zodResolver(SchemaResetPasswordForm)
+	});
 
-  const { resetPassword } = useUser();
+	const { resetPassword } = useUser();
 
-  const handleRecoverPassword = async (params: NewPassword) => {
-    params.token = token;
-    const res = await resetPassword.mutateAsync(params);
-    if (res.message) {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: "Something went wrong,please try again.",
-      });
-      return;
-    }
+	const handleRecoverPassword = async (params: NewPassword) => {
+		params.token = token;
+		const res = await resetPassword.mutateAsync({ ...params, token });
+		if (res.message) {
+			setToastState({
+				open: true,
+				type: ToastStateEnum.ERROR,
+				content: 'Something went wrong,please try again.'
+			});
+			return;
+		}
 
-    setUserToken(undefined);
+		router.push('/');
+		setToastState({
+			open: true,
+			type: ToastStateEnum.SUCCESS,
+			content: 'Password updated successfully'
+		});
+	};
 
-    router.push("/");
-    setToastState({
-      open: true,
-      type: ToastStateEnum.SUCCESS,
-      content: "Password updated successfully",
-    });
-  };
-
-  return (
-    <MainContainer
-      direction="column"
-      onSubmit={methods.handleSubmit((params) => {
-        handleRecoverPassword(params);
-      })}
-    >
-      <FormProvider {...methods}>
-        <LogoIcon />
-        <Text css={{ mt: "$24" }} heading="1">
-          Reset Password
-        </Text>
-        <Text size="md" css={{ mt: "$8", color: "$primary500" }}>
-          Enter your new password
-        </Text>
-        <Input
-          css={{ mt: "$32" }}
-          id="newPassword"
-          type="password"
-          placeholder="Type password here"
-          icon="eye"
-          iconPosition="right"
-          helperText="Your Password must be at least 8 characters long"
-        />
-        <Input
-          id="newPasswordConf"
-          type="password"
-          placeholder="Repeat password"
-          icon="eye"
-          iconPosition="right"
-          helperText="Your Password must be at least 8 characters long"
-        />
-        <Button
-          type="submit"
-          size="lg"
-          css={{
-            fontWeight: "$medium",
-            fontSize: "$18",
-          }}
-        >
-          Recover password
-        </Button>
-      </FormProvider>
-    </MainContainer>
-  );
+	return (
+		<MainContainer
+			direction="column"
+			onSubmit={methods.handleSubmit((params) => {
+				handleRecoverPassword(params);
+			})}
+		>
+			<FormProvider {...methods}>
+				<LogoIcon />
+				<Text css={{ mt: '$24' }} heading="1">
+					Reset Password
+				</Text>
+				<Text size="md" css={{ mt: '$8', color: '$primary500' }}>
+					Enter your new password
+				</Text>
+				<Input
+					css={{ mt: '$32' }}
+					id="newPassword"
+					type="password"
+					placeholder="Type password here"
+					icon="eye"
+					iconPosition="right"
+					helperText="Your Password must be at least 8 characters long"
+				/>
+				<Input
+					id="newPasswordConf"
+					type="password"
+					placeholder="Repeat password"
+					icon="eye"
+					iconPosition="right"
+					helperText="Your Password must be at least 8 characters long"
+				/>
+				<Button
+					type="submit"
+					size="lg"
+					css={{
+						fontWeight: '$medium',
+						fontSize: '$18'
+					}}
+				>
+					Recover password
+				</Button>
+			</FormProvider>
+		</MainContainer>
+	);
 };
 
 export default ResetPassword;
