@@ -46,7 +46,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
 	const handleRecoverPassword = async (params: NewPassword) => {
 		params.token = token;
 		const res = await resetPassword.mutateAsync({ ...params, token });
-		if (res.message) {
+		if (!res.message) {
 			setToastState({
 				open: true,
 				type: ToastStateEnum.ERROR,
