@@ -1,15 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import SchemaEmail from "../../schema/schemaEmail";
-import { styled } from "../../stitches.config";
-import Button from "../Primitives/Button";
-import Flex from "../Primitives/Flex";
-import LogoIcon from "../icons/Logo";
-import Input from "../Primitives/Input";
-import Text from "../Primitives/Text";
-import LeftArrowIcon from "../icons/LeftArrow";
-import { EmailUser } from "../../types/user/user";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dispatch, SetStateAction } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import SchemaEmail from '../../schema/schemaEmail';
 import { styled } from '../../stitches.config';
@@ -58,7 +49,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 	};
 
 	const handleRecoverPassword = (email: string) => {
-		console.log(email);
+		return email;
 	};
 
 	return (
