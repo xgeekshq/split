@@ -5,7 +5,7 @@ import useUser from '../../../hooks/useUser';
 import { styled } from '../../../stitches.config';
 import { toastState } from '../../../store/toast/atom/toast.atom';
 import { ToastStateEnum } from '../../../utils/enums/toast-types';
-import Envelope from '../../icons/Envelope';
+import Icon from '../../icons/Icon';
 import Button from '../../Primitives/Button';
 import Flex from '../../Primitives/Flex';
 import Separator from '../../Primitives/Separator';
@@ -53,7 +53,7 @@ const EmailSent: React.FC<EmailSentProps> = ({ userEmail }) => {
 
 	return (
 		<MainContainer direction="column">
-			<Envelope />
+			<Icon css={{ width: '54.74px', height: '52px' }} name="envelope" />
 			<Text css={{ mt: '$24' }} heading="1">
 				Check Your email
 			</Text>

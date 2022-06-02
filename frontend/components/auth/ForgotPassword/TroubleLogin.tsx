@@ -10,7 +10,6 @@ import { toastState } from '../../../store/toast/atom/toast.atom';
 import { EmailUser } from '../../../types/user/user';
 import { ToastStateEnum } from '../../../utils/enums/toast-types';
 import Icon from '../../icons/Icon';
-import LogoIcon from '../../icons/Logo';
 import Button from '../../Primitives/Button';
 import Flex from '../../Primitives/Flex';
 import Input from '../../Primitives/Input';
@@ -80,7 +79,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 			})}
 		>
 			<FormProvider {...methods}>
-				<LogoIcon />
+				<Icon name="logo" />
 				<Text css={{ mt: '$24' }} heading="1">
 					Trouble logging in?
 				</Text>
