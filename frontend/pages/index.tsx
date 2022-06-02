@@ -6,46 +6,10 @@ import LoginForm from '../components/auth/LoginForm';
 import SignUpTabContent from '../components/auth/SignUp/SignUpTabContent';
 import TroubleLogin from '../components/auth/TroubleLogin';
 import Banner from '../components/icons/Banner';
-import Flex from '../components/Primitives/Flex';
 import { TabsList, TabsRoot, TabsTrigger } from '../components/Primitives/Tab';
 import Text from '../components/Primitives/Text';
-import { styled } from '../stitches.config';
+import { BannerContainer, CenteredContainer, ImageBackground } from '../styles/pages/auth.styles';
 import { DASHBOARD_ROUTE } from '../utils/routes';
-
-const CenteredContainer = styled('div', {
-	position: 'absolute',
-	top: '50%',
-	right: '150px',
-
-	transform: 'translateY(-50%)',
-
-	maxWidth: '500px',
-	height: 'fit-content',
-
-	display: 'flex',
-	flexDirection: 'column',
-
-	backgroundColor: '#ffffff',
-	borderRadius: '$12'
-});
-
-const ImageBackground = styled(Flex, {
-	height: '100vh',
-	width: '100%',
-	position: 'relative',
-	backgroundColor: '$black',
-	backgroundImage: 'url(images/background.svg)',
-	backgroundSize: 'cover',
-	backgroundRepeat: 'no-repeat'
-});
-
-const BannerContainer = styled(Flex, {
-	size: 'fit-content',
-
-	position: 'absolute',
-	left: '112px',
-	top: '72px'
-});
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 	const session = await getSession(ctx);

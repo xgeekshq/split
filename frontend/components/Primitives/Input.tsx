@@ -43,10 +43,14 @@ const IconWrapper = styled(Flex, {
 
 const HelperTextWrapper = styled(Flex, {
 	'& svg': {
-		height: '$16 !important',
-		width: '$16 !important',
+		flex: '0 0 16px',
+		// transform: 'transformY(100%)',
+		// mt: '0px',
+		height: '$16 ',
+		width: '$16 ',
 		color: '$dangerBase'
-	}
+	},
+	'& *:not(svg)': { flex: '1 1 auto' }
 });
 
 const StyledInput = styled('input', {
@@ -226,9 +230,10 @@ const Input: React.FC<InputProps> = ({
 	const value = getValues()[id];
 	const isValueEmpty = isEmpty(value);
 	const autoState = useMemo(() => {
+		// console.log('!message=', !message);
 		if (message) return 'error';
 		if (isValueEmpty) return 'default';
-		if (message === undefined && !isValueEmpty) return 'valid';
+		if (!message && !isValueEmpty) return 'valid';
 		return undefined;
 	}, [message, isValueEmpty]);
 
@@ -300,7 +305,7 @@ const Input: React.FC<InputProps> = ({
 			</Flex>
 			<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
 				{!isHelperEmpty && (
-					<HelperTextWrapper gap="4" align="center" css={{ mt: '$8' }}>
+					<HelperTextWrapper gap="4" css={{ mt: '$8' }}>
 						{currentState === 'error' && (
 							<Icon name="info" css={{ width: '$24', height: '$24' }} />
 						)}

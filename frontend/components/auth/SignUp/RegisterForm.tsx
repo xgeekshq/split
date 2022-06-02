@@ -14,7 +14,6 @@ import { styled } from '../../../stitches.config';
 import { toastState } from '../../../store/toast/atom/toast.atom';
 import { RegisterUser, User } from '../../../types/user/user';
 import { ToastStateEnum } from '../../../utils/enums/toast-types';
-import isEmpty from '../../../utils/isEmpty';
 import { DASHBOARD_ROUTE } from '../../../utils/routes';
 import { SignUpEnum } from '../../../utils/signUp.enum';
 import Icon from '../../icons/Icon';
@@ -25,8 +24,6 @@ import Input from '../../Primitives/Input';
 import Text from '../../Primitives/Text';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
-const msgHelpertext =
-	'Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&).';
 
 const GoBackWrapper = styled(Flex, {
 	mt: '$24',
@@ -45,7 +42,6 @@ interface RegisterFormProps {
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, setEmailName }) => {
-	const valueHelperText = msgHelpertext;
 	const setToastState = useSetRecoilState(toastState);
 	const methods = useForm<RegisterUser>({
 		mode: 'onBlur',
@@ -136,7 +132,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ setShowSignUp, emailName, s
 					type="password"
 					icon="eye"
 					iconPosition="right"
-					helperText={isEmpty(valueHelperText) ? undefined : valueHelperText}
+					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
 				/>
 				<Input
 					id="passwordConf"

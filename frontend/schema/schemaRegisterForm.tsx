@@ -5,19 +5,18 @@ const schemaRegisterForm = z
 		firstName: z
 			.string()
 			.nonempty('Please enter your name.')
-			.min(1, 'Your name must have more than 1 character.'),
+			.min(2, 'Your name must have more than 2 characters.'),
 		lastName: z
 			.string()
 			.nonempty('Please enter your name.')
-			.min(1, 'Your name must have more than 1 character.'),
+			.min(2, 'Your name must have more than 2 characters.'),
 		email: z.string().nonempty('Please insert your email.').email('This email is not valid.'),
 		password: z
 			.string()
-			.regex(/.*[A-Z].*/, 'One uppercase character')
-			.regex(/.*[a-z].*/, 'One lowercase character')
-			.regex(/.*\d.*/, 'One number')
-			.regex(/.*[`~<>?,.\/!@#$%^&*()\-_+="'|{}\[\];:\\].*/, 'One special character')
-			.min(8, 'Password must be at least 8 characters.'),
+			.regex(
+				/^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
+				'Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&).'
+			),
 
 		passwordConf: z.string().nonempty('Please enter a valid password.')
 	})
