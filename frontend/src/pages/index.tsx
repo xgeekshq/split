@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 
-import { BannerContainer, CenteredContainer, MainContainer } from 'styles/pages/home.styles';
+import { BannerContainer, CenteredContainer, ImageBackground } from 'styles/pages/auth.styles';
 
 import LoginForm from 'components/auth/LoginForm';
 import SignUpTabContent from 'components/auth/SignUp/SignUpTabContent';
@@ -30,7 +30,7 @@ const Home: NextPage = () => {
 	const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 
 	return (
-		<MainContainer>
+		<ImageBackground>
 			<BannerContainer>
 				<Banner />
 			</BannerContainer>
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
 				)}
 				{showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
 			</CenteredContainer>
-		</MainContainer>
+		</ImageBackground>
 	);
 };
 
