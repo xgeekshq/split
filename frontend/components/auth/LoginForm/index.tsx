@@ -149,6 +149,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 							}
 						}}
 						onClick={handleShowTroubleLogginIn}
+						data-testid="forgot-password-button"
 					>
 						Forgot password
 					</Text>

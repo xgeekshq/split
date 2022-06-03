@@ -1,5 +1,7 @@
-import { Nullable } from '../common';
-import { AccessToken, RefreshToken } from '../token';
+import { AxiosError } from "axios";
+import { UseMutationResult } from "react-query/types/react/types";
+import { Nullable } from "../common";
+import { AccessToken, RefreshToken } from "../token";
 
 export interface User {
 	id?: string;
@@ -16,7 +18,9 @@ export interface User {
 }
 
 export interface UseUserType {
-	loginAzure: () => Promise<void>;
+  loginAzure: () => Promise<void>;
+  resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
+  resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
 }
 
 export interface LoginUser {
@@ -35,4 +39,17 @@ export interface RegisterUser {
 	password: string;
 }
 
-export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';
+export interface ResetTokenResponse {
+  message: string;
+}
+
+export interface NewPassword {
+  password: string;
+  passwordConf: string;
+  token: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+export type UserZod = "name" | "email" | "password" | "passwordConf";
