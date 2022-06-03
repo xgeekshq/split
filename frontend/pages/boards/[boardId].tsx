@@ -18,6 +18,7 @@ import AlertCustomDialog from '../../components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '../../components/Primitives/AlertDialog';
 import Button from '../../components/Primitives/Button';
 import Flex from '../../components/Primitives/Flex';
+import { Switch, SwitchThumb } from '../../components/Primitives/Switch';
 import Text from '../../components/Primitives/Text';
 import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
@@ -326,8 +327,153 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											{' '}
 											Board Name{' '}
 										</Text>
+										<Text heading="4" css={{ padding: '0 32px' }}>
+											{' '}
+											Board Settings{' '}
+										</Text>
+										<Text heading="5" css={{ padding: '18px 32px' }}>
+											{' '}
+											Configurations{' '}
+											<Icon
+												name="arrow-up"
+												css={{
+													width: '12.5px',
+													height: '7px',
+													color: '$primary'
+												}}
+											/>
+										</Text>
+										<Flex direction="column" css={{ padding: '25px 32px' }}>
+											<Flex gap="20">
+												<Switch
+													css={{
+														flex: '0 0 35px',
+														width: '35px',
+														height: '20px'
+													}}
+												>
+													<SwitchThumb
+														css={{ width: '17.5px', height: '17.5px' }}
+													>
+														<Icon
+															name="check"
+															css={{
+																width: '14px',
+																height: '14px',
+																color: '$successBase'
+															}}
+														/>
+													</SwitchThumb>
+												</Switch>
+												<Flex direction="column">
+													<Text size="md" weight="medium">
+														Hide votes from others
+													</Text>
+													<Text size="sm" color="primary500">
+														Participants can not see the votes from
+														other participants of this retrospective.
+													</Text>
+												</Flex>
+											</Flex>
+											<Flex gap="20">
+												<Switch
+													css={{
+														flex: '0 0 35px ',
+														width: '35px',
+														height: '20px'
+													}}
+												>
+													<SwitchThumb
+														css={{
+															width: '17.5px',
+															height: '17.5px'
+														}}
+													>
+														<Icon
+															name="check"
+															css={{
+																width: '14px',
+																height: '14px',
+																color: '$successBase'
+															}}
+														/>
+													</SwitchThumb>
+												</Switch>
+												<Flex direction="column">
+													<Text size="md" weight="medium">
+														Option to post cards anonymously
+													</Text>
+													<Text
+														size="sm"
+														color="primary500"
+														// maxWidth="400px"
+													>
+														Participants can decide to post cards
+														anonymously or publicly (Name on card is
+														disabled/enabled.)
+													</Text>
+												</Flex>
+											</Flex>
+											<Flex gap="20">
+												<Switch
+													css={{
+														flex: '0 0 35px ',
+														width: '35px',
+														height: '20px'
+													}}
+												>
+													<SwitchThumb
+														css={{ width: '17.5px', height: '17.5px' }}
+													>
+														<Icon
+															name="check"
+															css={{
+																width: '14px',
+																height: '14px',
+																color: '$successBase'
+															}}
+														/>
+													</SwitchThumb>
+												</Switch>
+												<Flex direction="column">
+													<Text size="md" weight="medium">
+														Limit votes
+													</Text>
+													<Text size="sm" color="primary500">
+														Make votes more significant by limiting
+														them.
+													</Text>
+												</Flex>
+											</Flex>
+											{/* <Switch>
+											<SwitchThumb>
+												<Icon
+													name="check"
+													css={{
+														width: '$14',
+														height: '$14',
+														color: '$successBase'
+													}}
+												/>
+											</SwitchThumb>
+										</Switch> */}
+										</Flex>
 									</Flex>
-									<Flex>
+									<Flex
+										css={{
+											borderTop: '1px solid black',
+											paddingTop: '$24',
+											justifyContent: 'flex-end'
+										}}
+									>
+										{/* <Input
+											css={{ mt: '$8' }}
+											id="maxVotes"
+											disabled
+											type="number"
+											placeholder="Max votes"
+										/> */}
+
 										<Button
 											onClick={() => setOpen(false)}
 											variant="primaryOutline"
