@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-const schemaRegisterForm = z
+const SchemaRegisterForm = z
 	.object({
 		firstName: z
 			.string()
@@ -25,4 +25,4 @@ const schemaRegisterForm = z
 		path: ['passwordConf']
 	});
 
-export default schemaRegisterForm;
+export default SchemaRegisterForm;

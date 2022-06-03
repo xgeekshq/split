@@ -312,17 +312,29 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 						</Flex>
 						{open && (
 							<Overlay>
-								<Content>
+								<Content css={{ position: 'relative', height: '100%' }}>
 									<Flex direction="column">
-										<Text
-											heading="4"
-											css={{
-												padding: '24px 32px',
-												borderBottom: '1px solid black'
-											}}
-										>
-											Board Settings{' '}
-										</Text>
+										<Flex css={{ borderBottom: '1px solid black' }}>
+											<Text
+												heading="4"
+												css={{
+													padding: '24px 32px'
+												}}
+											>
+												Board Settings{' '}
+											</Text>
+											<Icon
+												name="close"
+												css={{
+													margin: '24px 32px 0 auto',
+													// margin: '24px 0 0 auto',
+													// padding: '24px 32px',
+													width: '24px',
+													height: '24px',
+													color: '$primary'
+												}}
+											/>
+										</Flex>
 										<Text heading="4" css={{ padding: '24px 32px' }}>
 											{' '}
 											Board Name{' '}
@@ -337,8 +349,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											<Icon
 												name="arrow-up"
 												css={{
-													width: '12.5px',
-													height: '7px',
+													width: '24px',
+													height: '24px',
 													color: '$primary'
 												}}
 											/>
@@ -353,13 +365,16 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 													}}
 												>
 													<SwitchThumb
-														css={{ width: '17.5px', height: '17.5px' }}
+														css={{
+															width: '17.5px',
+															height: '17.5px'
+														}}
 													>
 														<Icon
 															name="check"
 															css={{
-																width: '14px',
-																height: '14px',
+																width: '10px',
+																height: '10px',
 																color: '$successBase'
 															}}
 														/>
@@ -392,8 +407,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 														<Icon
 															name="check"
 															css={{
-																width: '14px',
-																height: '14px',
+																width: '10px',
+																height: '10px',
 																color: '$successBase'
 															}}
 														/>
@@ -423,13 +438,16 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 													}}
 												>
 													<SwitchThumb
-														css={{ width: '17.5px', height: '17.5px' }}
+														css={{
+															width: '17.5px',
+															height: '17.5px'
+														}}
 													>
 														<Icon
 															name="check"
 															css={{
-																width: '14px',
-																height: '14px',
+																width: '10px',
+																height: '10px',
 																color: '$successBase'
 															}}
 														/>
@@ -460,10 +478,14 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 										</Flex>
 									</Flex>
 									<Flex
+										justify="end"
 										css={{
 											borderTop: '1px solid black',
-											paddingTop: '$24',
-											justifyContent: 'flex-end'
+											py: '$24',
+											position: 'absolute',
+											width: '100%',
+											bottom: 0,
+											right: 0
 										}}
 									>
 										{/* <Input

@@ -22,13 +22,15 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
 	alignItems: 'center',
 	width: 21,
 	height: 21,
+	top: '50%',
+	position: 'absolute',
 	backgroundColor: 'white',
 	borderRadius: '9999px',
 	transition: 'transform 100ms',
-	transform: 'translate(1.5px, 1.5px)',
+	transform: 'translate(5%, -50%)',
 	willChange: 'transform',
 	cursor: 'pointer',
-	'&[data-state="checked"]': { transform: 'translate(19px, 1.5px)' }
+	'&[data-state="checked"]': { transform: 'translate(90%, -50%)' }
 });
 
 export const Switch = StyledSwitch;
