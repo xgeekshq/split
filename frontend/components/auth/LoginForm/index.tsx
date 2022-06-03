@@ -20,9 +20,9 @@ import {
 import { ToastStateEnum } from '../../../utils/enums/toast-types';
 import { transformLoginErrorCodes } from '../../../utils/errorCodes';
 import { DASHBOARD_ROUTE } from '../../../utils/routes';
-import ThreeDotsIcon from '../../icons/calendar/ThreeDots';
 import Icon from '../../icons/Icon';
 import LogoIcon from '../../icons/Logo';
+import { DotsLoading } from '../../loadings/DotsLoading';
 import Flex from '../../Primitives/Flex';
 import Input from '../../Primitives/Input';
 import { TabsContent } from '../../Primitives/Tab';
@@ -135,7 +135,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 					/>
 
 					<LoginButton type="submit" disabled={loading.credentials} size="lg">
-						{loading.credentials && <ThreeDotsIcon />}
+						{loading.credentials && <DotsLoading color="primary800" size={10} />}
 						{!loading.credentials && 'Log in'}
 					</LoginButton>
 					<Text

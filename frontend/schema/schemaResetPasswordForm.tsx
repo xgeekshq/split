@@ -5,11 +5,10 @@ const SchemaResetPasswordForm = z
 		newPassword: z
 			.string()
 			.nonempty('Please enter your password.')
-			.regex(/.*[A-Z].*/, 'One uppercase character')
-			.regex(/.*[a-z].*/, 'One lowercase character')
-			.regex(/.*\d.*/, 'One number')
-			.regex(/.*[`~<>?,.\/!@#$%^&*()\-_+="'|{}\[\];:\\].*/, 'One special character')
-			.min(8, 'Password must be at least 8 characters.'),
+			.regex(
+				/^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
+				'Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&).'
+			),
 		newPasswordConf: z.string().nonempty('Please enter a valid password.')
 	})
 	.refine((data) => data.newPassword === data.newPasswordConf, {
