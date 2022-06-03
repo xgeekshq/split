@@ -56,12 +56,12 @@ const BoardConfigurations = () => {
 			}
 		}));
 
-		if (checked) {
-			setValue('maxVotes', DEFAULT_MAX_VOTES);
-			register('maxVotes');
-		} else {
+		if (!checked) {
 			unregister('maxVotes');
 			clearErrors('maxVotes');
+		} else {
+			setValue('maxVotes', DEFAULT_MAX_VOTES);
+			register('maxVotes');
 		}
 	};
 
