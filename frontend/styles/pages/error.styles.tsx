@@ -26,7 +26,7 @@ export const ImageBackground = styled(Flex, {
 	width: '100%',
 	position: 'relative',
 	backgroundColor: '$black',
-	backgroundImage: 'url(images/background.svg)',
+	backgroundImage: 'url(/images/background.svg)',
 	backgroundSize: 'cover',
 	backgroundRepeat: 'no-repeat'
 });

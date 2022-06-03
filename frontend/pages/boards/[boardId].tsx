@@ -18,6 +18,7 @@ import AlertCustomDialog from '../../components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '../../components/Primitives/AlertDialog';
 import Button from '../../components/Primitives/Button';
 import Flex from '../../components/Primitives/Flex';
+import Text from '../../components/Primitives/Text';
 import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
 import useCards from '../../hooks/useCards';
@@ -311,13 +312,37 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 						{open && (
 							<Overlay>
 								<Content>
-									<Button
-										onClick={() => setOpen(false)}
-										variant="primaryOutline"
-										css={{ margin: '0 0 0 auto' }}
-									>
-										Cancel
-									</Button>
+									<Flex direction="column">
+										<Text
+											heading="4"
+											css={{
+												padding: '24px 32px',
+												borderBottom: '1px solid black'
+											}}
+										>
+											Board Settings{' '}
+										</Text>
+										<Text heading="4" css={{ padding: '24px 32px' }}>
+											{' '}
+											Board Name{' '}
+										</Text>
+									</Flex>
+									<Flex>
+										<Button
+											onClick={() => setOpen(false)}
+											variant="primaryOutline"
+											css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+										>
+											Cancel
+										</Button>
+										<Button
+											onClick={() => setOpen(false)}
+											variant="primary"
+											css={{ marginRight: '$32', padding: '$16 $24' }}
+										>
+											Save
+										</Button>
+									</Flex>
 								</Content>
 							</Overlay>
 						)}
