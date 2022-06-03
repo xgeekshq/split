@@ -1,7 +1,7 @@
 import { LeanDocument } from 'mongoose';
 import { UserDocument } from '../../schemas/user.schema';
 
-export interface UpdateUserService {
+export interface UpdateUserApplication {
   setCurrentRefreshToken(
     refreshToken: string,
     userId: string,

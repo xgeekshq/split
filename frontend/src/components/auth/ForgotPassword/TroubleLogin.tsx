@@ -1,17 +1,21 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { styled } from 'styles/stitches/stitches.config';
 
 import Icon from 'components/icons/Icon';
-import LogoIcon from 'components/icons/Logo';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import Input from 'components/Primitives/Input';
 import Text from 'components/Primitives/Text';
+import useUser from 'hooks/useUser';
 import SchemaEmail from 'schema/schemaEmail';
+import { toastState } from 'store/toast/atom/toast.atom';
 import { EmailUser } from 'types/user/user';
+import { ToastStateEnum } from 'utils/enums/toast-types';
+import EmailSent from './EmailSent';
 
 const MainContainer = styled('form', Flex, {
 	width: '$500',
@@ -36,6 +40,9 @@ interface TroubleLoginProps {
 }
 
 const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
+	const setToastState = useSetRecoilState(toastState);
+	const [currentEmail, setCurrentEmail] = useState('');
+	const [showEmailSent, setShowEmailSent] = useState(false);
 	const methods = useForm<EmailUser>({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
@@ -45,14 +52,26 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 		resolver: zodResolver(SchemaEmail)
 	});
 
-	const handleShowTrubleLogginIn = () => {
+	const { resetToken } = useUser();
+
+	const handleShowTroubleLogginIn = () => {
 		setShowTroubleLogin(false);
 	};
 
-	const handleRecoverPassword = (email: string) => {
-		console.log(email);
+	const handleRecoverPassword = async (email: string) => {
+		const res = await resetToken.mutateAsync({ email });
+		if (res.message === 'EMAIL_SENDED_RECENTLY') {
+			setToastState({
+				open: true,
+				type: ToastStateEnum.ERROR,
+				content: 'Email was sent recently please wait 1 minute and try again'
+			});
+			return;
+		}
+		setShowEmailSent(true);
+		setCurrentEmail(email);
 	};
-
+	if (showEmailSent) return <EmailSent userEmail={currentEmail} />;
 	return (
 		<MainContainer
 			direction="column"
@@ -61,7 +80,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 			})}
 		>
 			<FormProvider {...methods}>
-				<LogoIcon />
+				<Icon name="logo" />
 				<Text css={{ mt: '$24' }} heading="1">
 					Trouble logging in?
 				</Text>
@@ -71,6 +90,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 				</Text>
 				<Input css={{ mt: '$32' }} id="email" type="text" placeholder="Email address" />
 				<Button
+					type="submit"
 					size="lg"
 					css={{
 						fontWeight: '$medium',
@@ -79,8 +99,8 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 				>
 					Recover password
 				</Button>
-				<GoBackWrapper gap="8" align="center" onClick={handleShowTrubleLogginIn}>
-					<Icon css={{ width: '$16', height: '$16' }} name="arrow-long-left" />
+				<GoBackWrapper gap="8" align="center" onClick={handleShowTroubleLogginIn}>
+					<Icon name="arrow-left" />
 					<Text>Go back</Text>
 				</GoBackWrapper>
 			</FormProvider>

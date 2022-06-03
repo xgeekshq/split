@@ -1,3 +1,6 @@
+import { UseMutationResult } from 'react-query/types/react/types';
+import { AxiosError } from 'axios';
+
 import { Nullable } from '../common';
 import { AccessToken, RefreshToken } from '../token';
 
@@ -17,6 +20,8 @@ export interface User {
 
 export interface UseUserType {
 	loginAzure: () => Promise<void>;
+	resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
+	resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
 }
 
 export interface LoginUser {
@@ -35,4 +40,17 @@ export interface RegisterUser {
 	password: string;
 }
 
+export interface ResetTokenResponse {
+	message: string;
+}
+
+export interface NewPassword {
+	password: string;
+	passwordConf: string;
+	token: string;
+}
+
+export interface ResetPasswordResponse {
+	message: string;
+}
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';

@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { mongooseResetModule } from 'src/infrastructure/database/mongoose.module';
+import {
+  mongooseResetModule,
+  mongooseUserModule,
+} from 'src/infrastructure/database/mongoose.module';
 import AuthController from './controller/auth.controller';
 import UsersModule from '../users/users.module';
 import LocalStrategy from './strategy/local.strategy';
@@ -29,6 +32,7 @@ import { JwtRegister } from '../../infrastructure/config/jwt.register';
     PassportModule,
     ConfigModule,
     mongooseResetModule,
+    mongooseUserModule,
   ],
   providers: [
     getTokenAuthService,
@@ -38,6 +42,7 @@ import { JwtRegister } from '../../infrastructure/config/jwt.register';
     registerAuthApplication,
     createResetTokenAuthApplication,
     createResetTokenAuthService,
+    UsersModule,
     LocalStrategy,
     JwtStrategy,
     JwtRefreshTokenStrategy,

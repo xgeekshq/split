@@ -4,9 +4,9 @@ import { getSession } from 'next-auth/react';
 
 import { BannerContainer, CenteredContainer, ImageBackground } from 'styles/pages/auth.styles';
 
+import TroubleLogin from 'components/auth/ForgotPassword/TroubleLogin';
 import LoginForm from 'components/auth/LoginForm';
 import SignUpTabContent from 'components/auth/SignUp/SignUpTabContent';
-import TroubleLogin from 'components/auth/TroubleLogin';
 import Banner from 'components/icons/Banner';
 import { TabsList, TabsRoot, TabsTrigger } from 'components/Primitives/Tab';
 import Text from 'components/Primitives/Text';
