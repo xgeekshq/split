@@ -37,9 +37,7 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 	});
 
 	const createBoard = useMutation(createBoardRequest, {
-		onSuccess: (data) => {
-			setNewBoard(data);
-		},
+		onSuccess: (data) => setNewBoard(data),
 		onError: () => {
 			setToastState({
 				open: true,
