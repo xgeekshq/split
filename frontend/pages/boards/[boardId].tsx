@@ -54,13 +54,30 @@ interface BoardProps {
 	mainBoardId?: string;
 }
 
-const ButaoSettings = styled(Button, { backgroundColor: '$danger700' });
+//--------------------------
+
+const Overlay = styled('div', {
+	position: 'fixed',
+	inset: '0',
+	background: 'rgba(80, 80, 89, 0.2) ',
+	backdropFilter: 'blur(3px)'
+});
+
+const Content = styled('div', {
+	backgroundColor: '$white',
+	width: '592px',
+	height: '100%',
+	margin: '0 0 0 auto'
+	// transform: 'translate(100%,50%)'
+});
+//-------------------------
 
 const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	Board.defaultProps = {
 		mainBoardId: undefined
 	};
 	const { data: session } = useSession({ required: true });
+	const [open, setOpen] = useState(true);
 
 	const queryClient = useQueryClient();
 	const userId = session?.user?.id;
@@ -200,11 +217,16 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								]}
 								onChange={(option) => setFilter((option as OptionType)?.value)}
 							/>
-							<ButaoSettings variant="primaryOutline">
+							<Button
+								onClick={() => setOpen(true)}
+								variant="primaryOutline"
+								css={{ margin: '0 0 0 auto' }}
+							>
 								<Icon name="settings" />
 								Board settings
 								<Icon name="arrow-down" />
-							</ButaoSettings>
+							</Button>
+							{console.log('open=', open)}
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
@@ -286,6 +308,19 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								})}
 							</DragDropContext>
 						</Flex>
+						{open && (
+							<Overlay>
+								<Content>
+									<Button
+										onClick={() => setOpen(false)}
+										variant="primaryOutline"
+										css={{ margin: '0 0 0 auto' }}
+									>
+										Cancel
+									</Button>
+								</Content>
+							</Overlay>
+						)}
 					</Flex>
 				</Container>
 			</>
