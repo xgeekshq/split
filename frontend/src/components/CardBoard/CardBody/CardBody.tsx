@@ -8,6 +8,7 @@ import Box from 'components/Primitives/Box';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import Tooltip from 'components/Primitives/Tooltip';
+import { newBoardState } from 'store/board/atoms/board.atom';
 import BoardType from 'types/board/board';
 import ClickEvent from 'types/events/clickEvent';
 import CardAvatars from '../CardAvatars';
