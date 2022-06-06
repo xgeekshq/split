@@ -197,6 +197,7 @@ const CardBoard = React.memo<CardBoardProps>(
 								<DeleteCard
 									boardId={boardId}
 									cardId={card._id}
+									cardTitle={card.text}
 									socketId={socketId}
 									handleClose={handleDeleting}
 								/>

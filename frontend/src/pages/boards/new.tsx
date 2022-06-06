@@ -59,7 +59,7 @@ const NewBoard = () => {
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
-			text: 'Main board -',
+			text: '',
 			maxVotes: String(boardState.board.maxVotes) ?? ''
 		},
 		resolver: zodResolver(SchemaCreateBoard)

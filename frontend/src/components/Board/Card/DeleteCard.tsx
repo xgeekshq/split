@@ -3,19 +3,21 @@ import useCards from 'hooks/useCards';
 
 interface DeleteProps {
 	cardId: string;
+	cardTitle: string;
 	boardId: string;
 	socketId: string | undefined;
 	cardItemId?: string;
 	handleClose: () => void;
 }
 
-const DeleteCard: React.FC<DeleteProps> = ({
+const DeleteCard = ({
 	cardId,
+	cardTitle,
 	boardId,
 	socketId,
 	handleClose,
 	cardItemId
-}) => {
+}: DeleteProps) => {
 	const { deleteCard } = useCards();
 
 	const handleDelete = () => {
@@ -36,10 +38,18 @@ const DeleteCard: React.FC<DeleteProps> = ({
 			handleConfirm={handleDelete}
 			title="Delete card"
 			defaultOpen
-			text="Do you really want to delete this card?"
-			css={{ left: '35%' }}
+			variant="danger"
+			text={
+				<>
+					Do you really want to delete <span>{cardTitle}</span> card?
+				</>
+			}
 		/>
 	);
+};
+
+DeleteCard.defaultProps = {
+	cardItemId: undefined
 };
 
 export default DeleteCard;
