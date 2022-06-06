@@ -37,5 +37,5 @@ yarn-error.log*
 .vercel
 
 #cypress
-/cypress/screenshots/
-/cypress/videos/
+/src/cypress/screenshots/
+/src/cypress/videos/
