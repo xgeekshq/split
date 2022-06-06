@@ -121,6 +121,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 				)}
 				{deleting && (
 					<DeleteCard
+						cardTitle={item.text}
 						boardId={boardId}
 						cardId={cardGroupId}
 						socketId={socketId}

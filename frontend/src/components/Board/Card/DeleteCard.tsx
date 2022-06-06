@@ -39,6 +39,7 @@ const DeleteCard = ({
 			title="Delete card"
 			defaultOpen
 			variant="danger"
+			addEllipsis={cardTitle.length > 100}
 			text={
 				<>
 					Do you really want to delete <span>{cardTitle}</span> card?
