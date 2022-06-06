@@ -1,28 +1,23 @@
-<h1 align="center">
-  Divide & Conquer
-</h1>
-<h3 align="center">
-  Large teams retrospectives
-</h3>
+<img src=".github/IMAGES/split-repo-img.png" alt="SPLIT" />
+<h4 align="center">The retrospective tool fro big teams</h4>
+
 <br>
+
+<div align="center">
 
 [![Released under the MIT license.](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![All Contributors][all-contributors-badge]](#contributors)
 [![PRs welcome!](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING)
 [![Code of Conduct][coc-badge]][coc]
 
+</div>
+
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [❗ Code of Conduct](#-code-of-conduct)
 - [🙌🏻 How to Contribute](#--how-to-contribute)
-- [🏃 How to Run - Dev mode](#--how-to-run---dev-mode)
-  - [Requirements](#requirements)
-  - [Env files](#env-files)
-  - [Database](#database)
-  - [Backend](#backend)
-  - [Frontend](#frontend)
-- [🏃 How to Run - with docker](#--how-to-run---with-docker)
+- [🏃 How to Run](https://github.com/xgeekshq/split/wiki/How-to-run)
+- [📃 Requirements](https://github.com/xgeekshq/split/wiki/Requirements)
 - [Usage](#usage)
 - [📝 License](#-license)
 - [Contributors ✨](#contributors-)
@@ -34,44 +29,6 @@ We expect everyone to abide by our [**Code of Conduct**](.github/CODE_OF_CONDUCT
 ## 🙌🏻 How to Contribute
 
 Check out our [**Contributing Guide**](.github/CONTRIBUTING.md) for information on contributing.
-
-## 🏃 How to Run - Dev mode
-
-To run the project you will need the requirements listed below and configure the env files as described in the example.
-In the next section [**How to run - with docker**](#--how-to-run---with-docker) you can find instructions on how to run the entire project with docker.
-
-### Requirements
-
-1. Node
-2. Docker
-3. Env files
-
-### Env files
-
-An `.env` file must be present in the project root folder.
-This file is already provisioned as an example (`.env.example`). In order to use the example, please remove the suffix `.example` from the file name.
-
-### Database
-
-In the dev mode the database is the only resource you need to build with docker.
-Before running the docker compose command you should edit the `rs-init.sh` file permissions. To do that you can run `chmod +x database/rs-init.sh` from the project's root folder. After this you should run the follow command `docker-compose up -d mongo mongo2` in the project's root folder.
-The mongo image is downloaded, two containers are built and a database is created with the name that is passed in the env file parameter called _DB_NAME_. After the containers have been built you should start the replica set by running the follow comand `docker exec mongo /scripts/rs-init.sh`. (It will take 30s to conclude the process - after the first _bye_ appears you should wait)
-
-### Dependencies
-
-Inside the project root's folder you should run `npm i` If an error is shown you can use the flag `--legacy-peer-deps`. After succesfully installed you should run `npx husky install`.
-
-### Backend
-
-Once you have installed the dependencies, simply run: `npm run start:dev`
-
-### Frontend
-
-Once you have installed the dependencies, simply run: `npm run dev`
-
-## 🏃 How to Run - with docker
-
-In order to run the whole project with docker you need to prepare the `.env.example` file that is present in the root folder of the project. As the app will be on the docker environment you should replace the `DB_HOST` value to `mongo`rom there run the following command: `docker-compose up -d`. After the containers have been built you should start the replica set by running the follow comand `docker exec mongo /scripts/rs-init.sh`. (It will take 30s to conclude the process - after the first _bye_ appears you should wait)
 
 ## Usage
 
@@ -123,7 +80,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 <p align="center">
   <a align="center" href="https://www.xgeeks.io/">
-    <img alt="xgeeks" src="https://github.com/xgeekshq/oss-template/blob/main/.github/IMAGES/xgeeks_Logo_Black.svg" width="100">
+    <img alt="xgeeks" src=".github/IMAGES/xgeeks_Logo_Black.svg" width="100">
   </a>
 </p>
 <h4 align="center">xgeeks Open Source</h4>

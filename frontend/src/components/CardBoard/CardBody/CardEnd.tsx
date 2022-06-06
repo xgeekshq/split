@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react';
 
-import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
-import Tooltip from 'components/Primitives/Tooltip';
 import BoardType from 'types/board/board';
 import CardAvatars from '../CardAvatars';
 import DeleteBoard from '../DeleteBoard';
@@ -94,18 +92,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 									height: '$24 !important'
 								}}
 							/>
-							<Tooltip content="Duplicate board">
-								<Flex pointer onClick={() => console.log('DUPLICATE')}>
-									<Icon
-										name="copy"
-										css={{
-											color: '$primary400',
-											width: '$20',
-											height: '$20'
-										}}
-									/>
-								</Flex>
-							</Tooltip>
+
 							<DeleteBoard boardId={id} boardName={title} />
 						</Flex>
 					)}
