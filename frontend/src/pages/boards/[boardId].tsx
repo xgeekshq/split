@@ -3,7 +3,7 @@ import { dehydrate, QueryClient, useQueryClient } from 'react-query';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult } from '@react-forked/dnd';
 import { io, Socket } from 'socket.io-client';
 
@@ -21,7 +21,7 @@ import Flex from 'components/Primitives/Flex';
 import { countBoardCards } from 'helper/board/countCards';
 import useBoard from 'hooks/useBoard';
 import useCards from 'hooks/useCards';
-import { boardInfoState } from 'store/board/atoms/board.atom';
+import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';

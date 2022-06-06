@@ -15,7 +15,7 @@ export default function Document() {
 				/>
 				<link
 					rel="shortcut icon"
-					href="/Users/danielsousa/Developer/open-source/divide-and-conquer/frontend/public/favicon.svg"
+					href="/favicon.svg"
 					type="image/svg+xml"
 				/>
 				<style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />

@@ -24,15 +24,26 @@ const DialogText = styled(Flex, {
 	px: '$32',
 	pt: '$24',
 
+	variants: {
+		ellipsis: {
+			true: {
+				'&>p': {
+					'&>span': {
+						display: '-webkit-box',
+						'-webkit-line-clamp': 3 /* number of lines to show */,
+						lineClamp: 3,
+						'-webkit-box-orient': 'vertical',
+						textOverflow: 'ellipsis'
+					}
+				}
+			}
+		}
+	},
+
 	'&>p': {
 		margin: 0,
 
 		'&>span': {
-			display: '-webkit-box',
-			'-webkit-line-clamp': 3 /* number of lines to show */,
-			lineClamp: 3,
-			'-webkit-box-orient': 'vertical',
-			textOverflow: 'ellipsis',
 			wordBreak: 'break-all',
 			overflow: 'hidden',
 

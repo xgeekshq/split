@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-
-import { CSSProps } from 'styles/stitches/stitches.config';
+import { CSS } from '@stitches/react/types/css-util';
 
 import Icon from 'components/icons/Icon';
 import {
@@ -28,8 +27,9 @@ interface BoardAlertDialog {
 	title: ReactNode;
 	handleClose?: () => void;
 	children?: ReactNode;
-	css?: CSSProps;
+	css?: CSS;
 	variant?: 'primary' | 'danger';
+	addEllipsis?: boolean;
 }
 
 const AlertCustomDialog = ({
@@ -42,6 +42,7 @@ const AlertCustomDialog = ({
 	confirmText,
 	children,
 	css,
+	addEllipsis,
 	variant = 'primary'
 }: BoardAlertDialog) => {
 	return (
@@ -62,7 +63,7 @@ const AlertCustomDialog = ({
 					</AlertDialogCancel>
 				</DialogTitleContainer>
 				<Separator css={{ backgroundColor: '$primary100' }} />
-				<DialogText direction="column">
+				<DialogText ellipsis={addEllipsis} direction="column">
 					<StyledAlertDialogDescription>{text}</StyledAlertDialogDescription>
 				</DialogText>
 				<DialogButtons justify="end" gap="24">
@@ -82,7 +83,8 @@ AlertCustomDialog.defaultProps = {
 	handleClose: undefined,
 	children: undefined,
 	css: undefined,
-	variant: 'primary'
+	variant: 'primary',
+	addEllipsis: false
 };
 
 export default AlertCustomDialog;
