@@ -13,6 +13,10 @@ import { configuration } from './infrastructure/config/configuration';
 import AzureModule from './modules/azure/azure.module';
 import TeamsModule from './modules/teams/teams.module';
 import EmailModule from './modules/mailer/mailer.module';
+import {
+  mongooseResetModule,
+  mongooseUserModule,
+} from './infrastructure/database/mongoose.module';
 
 const imports = [
   AppConfigModule,
@@ -26,6 +30,8 @@ const imports = [
   VotesModule,
   EmailModule,
   TeamsModule,
+  mongooseResetModule,
+  mongooseUserModule,
   ScheduleModule.forRoot(),
 ];
 

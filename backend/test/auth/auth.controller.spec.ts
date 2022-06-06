@@ -21,6 +21,7 @@ import {
   createUserService,
   getUserApplication,
   getUserService,
+  updateUserApplication,
   updateUserService,
 } from '../../src/modules/users/users.providers';
 import {
@@ -56,6 +57,7 @@ describe('AuthController', () => {
         getBoardService,
         registerAuthService,
         updateUserService,
+        updateUserApplication,
         createResetTokenAuthApplication,
         createResetTokenAuthService,
         createUserService,
