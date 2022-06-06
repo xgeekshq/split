@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
-
-import { CSSProps } from 'styles/stitches/stitches.config';
+import { CSS } from '@stitches/react/types/css-util';
 
 import Icon from 'components/icons/Icon';
 import {
@@ -28,7 +27,7 @@ interface BoardAlertDialog {
 	title: ReactNode;
 	handleClose?: () => void;
 	children?: ReactNode;
-	css?: CSSProps;
+	css?: CSS;
 	variant?: 'primary' | 'danger';
 	addEllipsis?: boolean;
 }
