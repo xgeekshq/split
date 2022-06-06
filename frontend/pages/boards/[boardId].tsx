@@ -1,8 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { DragDropContext, DropResult } from '@react-forked/dnd';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { dehydrate, QueryClient, useQueryClient } from 'react-query';
 import Select from 'react-select';
 import { useSetRecoilState } from 'recoil';
@@ -18,11 +20,13 @@ import AlertCustomDialog from '../../components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '../../components/Primitives/AlertDialog';
 import Button from '../../components/Primitives/Button';
 import Flex from '../../components/Primitives/Flex';
+import Input from '../../components/Primitives/Input';
 import { Switch, SwitchThumb } from '../../components/Primitives/Switch';
 import Text from '../../components/Primitives/Text';
 import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
 import useCards from '../../hooks/useCards';
+import SchemaCreateBoard from '../../schema/schemaCreateBoardForm';
 import { styled } from '../../stitches.config';
 import { boardInfoState } from '../../store/board/atoms/board.atom';
 import { Container } from '../../styles/pages/boards/board.styles';
@@ -59,22 +63,46 @@ interface BoardProps {
 //--------------------------
 
 const Overlay = styled('div', {
-	position: 'fixed',
+	position: 'absolute',
 	inset: '0',
 	background: 'rgba(80, 80, 89, 0.2) ',
-	backdropFilter: 'blur(3px)'
+	backdropFilter: 'blur(3px)',
+	width: '100%',
+	height: '100vh'
 });
 
 const Content = styled('div', {
+	position: 'absolute',
 	backgroundColor: '$white',
 	width: '592px',
-	height: '100%',
-	margin: '0 0 0 auto'
-	// transform: 'translate(100%,50%)'
+	height: '100vh',
+	right: '0'
 });
+
 //-------------------------
 
 const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
+	/// ////
+	const DEFAULT_MAX_VOTES = '6';
+	const methods = useForm({
+		mode: 'onBlur',
+		reValidateMode: 'onBlur',
+
+		resolver: zodResolver(SchemaCreateBoard)
+	});
+
+	const handleLimitVotesChange = (checked: boolean) => {
+		if (checked) {
+			setValue('maxVotes', DEFAULT_MAX_VOTES);
+			register('maxVotes');
+		}
+		if (!checked) {
+			unregister('maxVotes');
+			clearErrors('maxVotes');
+		}
+	};
+
+	/// ///
 	Board.defaultProps = {
 		mainBoardId: undefined
 	};
@@ -312,205 +340,204 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 						</Flex>
 						{open && (
 							<Overlay>
-								<Content css={{ position: 'relative', height: '100%' }}>
-									<Flex direction="column">
-										<Flex css={{ borderBottom: '1px solid black' }}>
-											<Text
-												heading="4"
+								<Content>
+									<FormProvider {...methods}>
+										<Flex direction="column">
+											<Flex
 												css={{
-													padding: '24px 32px'
+													borderBottom: '1px solid $colors$primary100'
 												}}
 											>
-												Board Settings{' '}
-											</Text>
-											<Icon
-												name="close"
-												css={{
-													margin: '24px 32px 0 auto',
-													// margin: '24px 0 0 auto',
-													// padding: '24px 32px',
-													width: '24px',
-													height: '24px',
-													color: '$primary'
-												}}
-											/>
-										</Flex>
-										<Text heading="4" css={{ padding: '24px 32px' }}>
-											{' '}
-											Board Name{' '}
-										</Text>
-										<Text heading="4" css={{ padding: '0 32px' }}>
-											{' '}
-											Board Settings{' '}
-										</Text>
-										<Text heading="5" css={{ padding: '18px 32px' }}>
-											{' '}
-											Configurations{' '}
-											<Icon
-												name="arrow-up"
-												css={{
-													width: '24px',
-													height: '24px',
-													color: '$primary'
-												}}
-											/>
-										</Text>
-										<Flex direction="column" css={{ padding: '25px 32px' }}>
-											<Flex gap="20">
-												<Switch
+												<Text
+													heading="4"
 													css={{
-														flex: '0 0 35px',
-														width: '35px',
-														height: '20px'
+														padding: '24px 32px'
 													}}
 												>
-													<SwitchThumb
-														css={{
-															width: '17.5px',
-															height: '17.5px'
-														}}
-													>
-														<Icon
-															name="check"
-															css={{
-																width: '10px',
-																height: '10px',
-																color: '$successBase'
-															}}
-														/>
-													</SwitchThumb>
-												</Switch>
-												<Flex direction="column">
-													<Text size="md" weight="medium">
-														Hide votes from others
-													</Text>
-													<Text size="sm" color="primary500">
-														Participants can not see the votes from
-														other participants of this retrospective.
-													</Text>
-												</Flex>
-											</Flex>
-											<Flex gap="20">
-												<Switch
-													css={{
-														flex: '0 0 35px ',
-														width: '35px',
-														height: '20px'
-													}}
-												>
-													<SwitchThumb
-														css={{
-															width: '17.5px',
-															height: '17.5px'
-														}}
-													>
-														<Icon
-															name="check"
-															css={{
-																width: '10px',
-																height: '10px',
-																color: '$successBase'
-															}}
-														/>
-													</SwitchThumb>
-												</Switch>
-												<Flex direction="column">
-													<Text size="md" weight="medium">
-														Option to post cards anonymously
-													</Text>
-													<Text
-														size="sm"
-														color="primary500"
-														// maxWidth="400px"
-													>
-														Participants can decide to post cards
-														anonymously or publicly (Name on card is
-														disabled/enabled.)
-													</Text>
-												</Flex>
-											</Flex>
-											<Flex gap="20">
-												<Switch
-													css={{
-														flex: '0 0 35px ',
-														width: '35px',
-														height: '20px'
-													}}
-												>
-													<SwitchThumb
-														css={{
-															width: '17.5px',
-															height: '17.5px'
-														}}
-													>
-														<Icon
-															name="check"
-															css={{
-																width: '10px',
-																height: '10px',
-																color: '$successBase'
-															}}
-														/>
-													</SwitchThumb>
-												</Switch>
-												<Flex direction="column">
-													<Text size="md" weight="medium">
-														Limit votes
-													</Text>
-													<Text size="sm" color="primary500">
-														Make votes more significant by limiting
-														them.
-													</Text>
-												</Flex>
-											</Flex>
-											{/* <Switch>
-											<SwitchThumb>
+													Board Settings{' '}
+												</Text>
 												<Icon
-													name="check"
+													name="close"
 													css={{
-														width: '$14',
-														height: '$14',
-														color: '$successBase'
+														margin: '24px 32px 0 auto',
+														// margin: '24px 0 0 auto',
+														// padding: '24px 32px',
+														width: '24px',
+														height: '24px',
+														color: '$primary'
 													}}
 												/>
-											</SwitchThumb>
-										</Switch> */}
-										</Flex>
-									</Flex>
-									<Flex
-										justify="end"
-										css={{
-											borderTop: '1px solid black',
-											py: '$24',
-											position: 'absolute',
-											width: '100%',
-											bottom: 0,
-											right: 0
-										}}
-									>
-										{/* <Input
-											css={{ mt: '$8' }}
-											id="maxVotes"
-											disabled
-											type="number"
-											placeholder="Max votes"
-										/> */}
+											</Flex>
+											<Text heading="4" css={{ padding: '24px 32px' }}>
+												{' '}
+												Board Name{' '}
+											</Text>
 
-										<Button
-											onClick={() => setOpen(false)}
-											variant="primaryOutline"
-											css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+											<Text heading="4" css={{ padding: '0 32px' }}>
+												{' '}
+												Board Settings{' '}
+											</Text>
+											<Text heading="5" css={{ padding: '18px 32px' }}>
+												{' '}
+												Configurations{' '}
+												<Icon
+													name="arrow-up"
+													css={{
+														width: '24px',
+														height: '24px',
+														color: '$primary'
+													}}
+												/>
+											</Text>
+											<Flex direction="column" css={{ padding: '25px 32px' }}>
+												<Flex gap="20">
+													<Switch
+														css={{
+															flex: '0 0 35px',
+															width: '35px',
+															height: '20px'
+														}}
+													>
+														<SwitchThumb
+															css={{
+																width: '17.5px',
+																height: '17.5px'
+															}}
+														>
+															<Icon
+																name="check"
+																css={{
+																	width: '10px',
+																	height: '10px',
+																	color: '$successBase'
+																}}
+															/>
+														</SwitchThumb>
+													</Switch>
+													<Flex direction="column">
+														<Text size="md" weight="medium">
+															Hide votes from others
+														</Text>
+														<Text size="sm" color="primary500">
+															Participants can not see the votes from
+															other participants of this
+															retrospective.
+														</Text>
+													</Flex>
+												</Flex>
+												<Flex gap="20">
+													<Switch
+														css={{
+															flex: '0 0 35px ',
+															width: '35px',
+															height: '20px'
+														}}
+													>
+														<SwitchThumb
+															css={{
+																width: '17.5px',
+																height: '17.5px'
+															}}
+														>
+															<Icon
+																name="check"
+																css={{
+																	width: '10px',
+																	height: '10px',
+																	color: '$successBase'
+																}}
+															/>
+														</SwitchThumb>
+													</Switch>
+													<Flex direction="column">
+														<Text size="md" weight="medium">
+															Option to post cards anonymously
+														</Text>
+														<Text
+															size="sm"
+															color="primary500"
+															// maxWidth="400px"
+														>
+															Participants can decide to post cards
+															anonymously or publicly (Name on card is
+															disabled/enabled.)
+														</Text>
+													</Flex>
+												</Flex>
+												<Flex gap="20">
+													<Switch
+														checked={!!board.maxVotes}
+														onCheckedChange={handleLimitVotesChange}
+														css={{
+															flex: '0 0 35px ',
+															width: '35px',
+															height: '20px'
+														}}
+													>
+														<SwitchThumb
+															css={{
+																width: '17.5px',
+																height: '17.5px'
+															}}
+														>
+															{!!board.maxVotes && (
+																<Icon
+																	name="check"
+																	css={{
+																		width: '$10',
+																		height: '$10',
+																		color: '$successBase'
+																	}}
+																/>
+															)}
+														</SwitchThumb>
+													</Switch>
+													<Flex direction="column">
+														<Text size="md" weight="medium">
+															Limit votes
+														</Text>
+														<Text size="sm" color="primary500">
+															Make votes more significant by limiting
+															them.
+														</Text>
+														<Input
+															css={{ mt: '$8' }}
+															id="maxVotes"
+															// disabled={!board.maxVotes}
+															type="number"
+															placeholder="Max votes"
+														/>
+													</Flex>
+												</Flex>
+											</Flex>
+										</Flex>
+										<Flex
+											justify="end"
+											css={{
+												borderTop: '1px solid $colors$primary100',
+												py: '$24',
+												position: 'absolute',
+												width: '100%',
+												bottom: 0,
+												right: 0
+											}}
 										>
-											Cancel
-										</Button>
-										<Button
-											onClick={() => setOpen(false)}
-											variant="primary"
-											css={{ marginRight: '$32', padding: '$16 $24' }}
-										>
-											Save
-										</Button>
-									</Flex>
+											<Button
+												onClick={() => setOpen(false)}
+												variant="primaryOutline"
+												css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+											>
+												Cancel
+											</Button>
+											<Button
+												onClick={() => setOpen(false)}
+												variant="primary"
+												css={{ marginRight: '$32', padding: '$16 $24' }}
+											>
+												Save
+											</Button>
+										</Flex>
+									</FormProvider>
 								</Content>
 							</Overlay>
 						)}
