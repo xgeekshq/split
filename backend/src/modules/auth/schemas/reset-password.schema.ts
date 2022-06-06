@@ -13,6 +13,9 @@ export default class ResetPassword {
 
   @Prop({ default: Date.now })
   updatedAt!: Date;
+
+  @Prop({ nullable: false })
+  newPassword?: string;
 }
 
 export const ResetPasswordSchema = SchemaFactory.createForClass(ResetPassword);

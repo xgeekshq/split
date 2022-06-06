@@ -1,25 +1,31 @@
 import { Module } from '@nestjs/common';
-import { mongooseUserModule } from 'src/infrastructure/database/mongoose.module';
+import {
+  mongooseResetModule,
+  mongooseUserModule,
+} from 'src/infrastructure/database/mongoose.module';
 import TeamsModule from '../teams/teams.module';
 import {
   createUserService,
   getUserService,
   updateUserService,
   getUserApplication,
+  updateUserApplication,
 } from './users.providers';
 
 @Module({
-  imports: [mongooseUserModule, TeamsModule],
+  imports: [mongooseUserModule, mongooseResetModule, TeamsModule],
   providers: [
     createUserService,
     getUserService,
     updateUserService,
+    updateUserApplication,
     getUserApplication,
   ],
   exports: [
     createUserService,
     getUserService,
     updateUserService,
+    updateUserApplication,
     getUserApplication,
   ],
 })

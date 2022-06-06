@@ -20,7 +20,9 @@ export default class CreateResetTokenAuthServiceImpl
   ) {}
 
   public async emailBody(token: string, emailAddress: string) {
-    const url = `${this.configService.get<string>('frontend.url')}?${token}`;
+    const url = `${this.configService.get<string>(
+      'frontend.url',
+    )}/reset-password/${token}`;
     const msg = 'please check your email';
     await this.mailerService.sendMail({
       to: emailAddress,
