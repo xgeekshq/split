@@ -1,22 +1,22 @@
 {
-	"tabWidth": 4,
-	"useTabs": true,
-	"singleQuote": true,
-	"printWidth": 100,
-	"semi": true,
-	"trailingComma": "none",
-	"overrides": [
-		{
-			"files": [
-				"*.yml",
-				"*.yaml",
-				"**/*.yml",
-				"**/*.yaml"
-			],
-			"options": {
-				"tabWidth": 2,
-				"useTabs": false
-			}
-		}
-	]
+  "tabWidth": 4,
+  "useTabs": true,
+  "singleQuote": true,
+  "printWidth": 100,
+  "semi": true,
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": [
+        "*.yml",
+        "*.yaml",
+        "**/*.yml",
+        "**/*.yaml"
+      ],
+      "options": {
+        "tabWidth": 2,
+        "useTabs": false
+      }
+    }
+  ]
 }
