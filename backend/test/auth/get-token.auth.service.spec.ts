@@ -27,6 +27,10 @@ describe('AuthService', () => {
           provide: getModelToken('User'),
           useValue: {},
         },
+        {
+          provide: getModelToken('ResetPassword'),
+          useValue: {},
+        },
       ],
     }).compile();
 

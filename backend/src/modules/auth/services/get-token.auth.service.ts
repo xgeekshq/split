@@ -34,6 +34,10 @@ export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
     };
   }
 
+  async getNewPassword(newPassword: string) {
+    return this.getNewPassword(newPassword);
+  }
+
   public getAccessToken(userId: string) {
     const token = this.jwtService.sign(
       { userId },
