@@ -59,10 +59,11 @@ const BoardConfigurations = () => {
 		if (!checked) {
 			unregister('maxVotes');
 			clearErrors('maxVotes');
-		} else {
-			setValue('maxVotes', DEFAULT_MAX_VOTES);
-			register('maxVotes');
+			return;
 		}
+
+		setValue('maxVotes', DEFAULT_MAX_VOTES);
+		register('maxVotes');
 	};
 
 	return (
