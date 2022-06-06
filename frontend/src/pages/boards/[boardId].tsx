@@ -67,6 +67,14 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	const { data } = fetchBoard;
 	const board = data?.board;
 
+	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
+
+	useEffect(() => {
+		if (data?.board._id === newBoard?._id) {
+			setNewBoard(undefined);
+		}
+	}, [newBoard, data, setNewBoard]);
+
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
 
