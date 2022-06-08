@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -33,10 +33,14 @@ const Content = styled('div', {
 	right: '0'
 });
 const DEFAULT_MAX_VOTES = '6';
-export default function BoardSettings() {
-	const [open, setOpen] = useState(true);
+
+type BoardSettingsProps = {
+	setOpenState: Dispatch<SetStateAction<boolean>>;
+	isOpen: boolean;
+};
+
+const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
-	const [value, setValue] = useState('6');
 	const haveError = useRecoilValue(createBoardError);
 
 	const { board } = createBoardData;
@@ -68,6 +72,7 @@ export default function BoardSettings() {
 	};
 
 	const handleLimitVotesChange = (checked: boolean) => {
+		const { register, unregister, setValue, clearErrors } = methods;
 		setCreateBoardData((prev) => ({
 			...prev,
 			board: {
@@ -75,26 +80,18 @@ export default function BoardSettings() {
 				maxVotes: checked ? DEFAULT_MAX_VOTES : undefined
 			}
 		}));
-		/// /estA MAL
-		// if (checked) {
-		// 	setValue('maxVotes', DEFAULT_MAX_VOTES);
-		// 	register('maxVotes');
-		// }
-		// if (!checked) {
-		// 	unregister('maxVotes');
-		// 	clearErrors('maxVotes');
-		// }
-		if (checked) {
-			setValue(DEFAULT_MAX_VOTES);
-		}
 		if (!checked) {
-			setValue('7');
-			console.log(value);
+			unregister('maxVotes');
+			clearErrors('maxVotes');
+			return;
 		}
+
+		setValue('maxVotes', DEFAULT_MAX_VOTES);
+		register('maxVotes');
 	};
 	return (
 		<>
-			{open && (
+			{isOpen && (
 				<Overlay>
 					<Content>
 						<FormProvider {...methods}>
@@ -114,7 +111,7 @@ export default function BoardSettings() {
 									</Text>
 
 									<Button
-										onClick={() => setOpen(false)}
+										onClick={() => setOpenState(false)}
 										isIcon="true"
 										css={{
 											display: 'flex',
@@ -277,14 +274,14 @@ export default function BoardSettings() {
 								}}
 							>
 								<Button
-									onClick={() => setOpen(false)}
+									onClick={() => setOpenState(false)}
 									variant="primaryOutline"
 									css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
 								>
 									Cancel
 								</Button>
 								<Button
-									onClick={() => setOpen(false)}
+									onClick={() => setOpenState(false)}
 									variant="primary"
 									css={{ marginRight: '$32', padding: '$16 $24' }}
 								>
@@ -298,4 +295,6 @@ export default function BoardSettings() {
 			;
 		</>
 	);
-}
+};
+
+export default BoardSettings;

@@ -59,7 +59,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		mainBoardId: undefined
 	};
 	const { data: session } = useSession({ required: true });
-	const [open, setOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(true);
 
 	const queryClient = useQueryClient();
 	const userId = session?.user?.id;
@@ -200,7 +200,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								onChange={(option) => setFilter((option as OptionType)?.value)}
 							/>
 							<Button
-								onClick={() => setOpen(true)}
+								onClick={() => setIsOpen(true)}
 								variant="primaryOutline"
 								css={{
 									display: 'flex',
@@ -213,7 +213,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								Board settings
 								<Icon name="arrow-down" />
 							</Button>
-							{console.log('open=', open)}
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
@@ -296,7 +295,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 							</DragDropContext>
 						</Flex>
 
-						<BoardSettings />
+						<BoardSettings setOpenState={setIsOpen} isOpen={isOpen} />
 					</Flex>
 				</Container>
 			</>
