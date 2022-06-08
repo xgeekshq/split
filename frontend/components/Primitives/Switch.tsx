@@ -5,8 +5,6 @@ import Flex from './Flex';
 
 const StyledSwitch = styled(SwitchPrimitive.Root, {
 	all: 'unset',
-	width: 42,
-	height: 24,
 	display: 'flex',
 	backgroundColor: '$primary200',
 	borderRadius: '9999px',
@@ -14,14 +12,25 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
 	cursor: 'pointer',
 	WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
 	'&[data-state="checked"]': { backgroundColor: '$successBase' },
-	boxSizing: 'border-box'
+	boxSizing: 'border-box',
+	variants: {
+		variant: {
+			sm: {
+				flex: '0 0 35px',
+				width: 35,
+				height: 20
+			},
+			md: { width: 42, height: 24 }
+		}
+	},
+	defaultVariants: {
+		variant: 'md'
+	}
 });
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
 	justifyContent: 'center',
 	alignItems: 'center',
-	width: 21,
-	height: 21,
 	top: '50%',
 	position: 'absolute',
 	backgroundColor: 'white',
@@ -30,7 +39,19 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
 	transform: 'translate(5%, -50%)',
 	willChange: 'transform',
 	cursor: 'pointer',
-	'&[data-state="checked"]': { transform: 'translate(90%, -50%)' }
+	'&[data-state="checked"]': { transform: 'translate(90%, -50%)' },
+	variants: {
+		variant: {
+			sm: {
+				width: 17.5,
+				height: 17.5
+			},
+			md: { width: 21, height: 21 }
+		}
+	},
+	defaultVariants: {
+		variant: 'md'
+	}
 });
 
 export const Switch = StyledSwitch;
