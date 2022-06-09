@@ -22,6 +22,7 @@ import { countBoardCards } from '../../helper/board/countCards';
 import useBoard from '../../hooks/useBoard';
 import useCards from '../../hooks/useCards';
 import { boardInfoState } from '../../store/board/atoms/board.atom';
+import { updateBoardDataState } from '../../store/updateBoard/atoms/update-board.atom';
 import { Container } from '../../styles/pages/boards/board.styles';
 import MergeCardsDto from '../../types/board/mergeCard.dto';
 import UpdateCardPositionDto from '../../types/card/updateCardPosition.dto';
@@ -58,6 +59,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	Board.defaultProps = {
 		mainBoardId: undefined
 	};
+
 	const { data: session } = useSession({ required: true });
 	const [isOpen, setIsOpen] = useState(true);
 
@@ -78,12 +80,29 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
+	const setUpdateBoard = useSetRecoilState(updateBoardDataState);
 
 	useEffect(() => {
 		if (data) {
 			setBoard(data);
 		}
 	}, [data, setBoard]);
+
+	useEffect(() => {
+		if (data && isOpen) {
+			const {
+				board: { title, maxVotes, hideVotes, postAnonymously }
+			} = data;
+			setUpdateBoard({
+				board: {
+					title,
+					maxVotes,
+					hideVotes,
+					postAnonymously
+				}
+			});
+		}
+	}, [data, setUpdateBoard, isOpen]);
 
 	const isResponsible = board?.users.find(
 		(boardUser) => boardUser.role === 'responsible' && boardUser.user._id === userId

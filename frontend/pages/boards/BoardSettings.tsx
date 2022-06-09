@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -9,12 +9,12 @@ import Flex from '../../components/Primitives/Flex';
 import Input from '../../components/Primitives/Input';
 import { Switch, SwitchThumb } from '../../components/Primitives/Switch';
 import Text from '../../components/Primitives/Text';
-import SchemaCreateBoard from '../../schema/schemaCreateBoardForm';
+import SchemaUpdateBoard from '../../schema/schemaUpdateBoardForm';
 import { styled } from '../../stitches.config';
 import {
-	createBoardDataState,
-	createBoardError
-} from '../../store/createBoard/atoms/create-board.atom';
+	updateBoardDataState,
+	updateBoardError
+} from '../../store/updateBoard/atoms/update-board.atom';
 
 const Overlay = styled('div', {
 	position: 'absolute',
@@ -40,19 +40,24 @@ type BoardSettingsProps = {
 };
 
 const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
-	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
-	const haveError = useRecoilValue(createBoardError);
+	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
+	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
 
-	const { board } = createBoardData;
+	const haveError = useRecoilValue(updateBoardError);
 
+	const { board } = updateBoardData;
 	const methods = useForm({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
-		resolver: zodResolver(SchemaCreateBoard)
+		resolver: zodResolver(SchemaUpdateBoard),
+		defaultValues: {
+			text: board.title,
+			maxVotes: board.maxVotes
+		}
 	});
 
 	const handleHideVotesChange = (checked: boolean) => {
-		setCreateBoardData((prev) => ({
+		setUpdateBoardData((prev) => ({
 			...prev,
 			board: {
 				...prev.board,
@@ -62,7 +67,7 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	};
 
 	const handlePostAnonymouslyChange = (checked: boolean) => {
-		setCreateBoardData((prev) => ({
+		setUpdateBoardData((prev) => ({
 			...prev,
 			board: {
 				...prev.board,
@@ -71,24 +76,42 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		}));
 	};
 
-	const handleLimitVotesChange = (checked: boolean) => {
+	useEffect(() => {
 		const { register, unregister, setValue, clearErrors } = methods;
-		setCreateBoardData((prev) => ({
+
+		if (!isMaxVotesChecked) {
+			unregister('maxVotes');
+			clearErrors('maxVotes');
+			setUpdateBoardData((prev) => ({
+				...prev,
+				board: {
+					...prev.board,
+					maxVotes: board.maxVotes
+				}
+			}));
+
+			return;
+		}
+		setValue('maxVotes', board.maxVotes ? DEFAULT_MAX_VOTES : board.maxVotes);
+		register('maxVotes');
+		setUpdateBoardData((prev) => ({
 			...prev,
 			board: {
 				...prev.board,
-				maxVotes: checked ? DEFAULT_MAX_VOTES : undefined
+				maxVotes: board.maxVotes ? DEFAULT_MAX_VOTES : board.maxVotes
 			}
 		}));
-		if (!checked) {
-			unregister('maxVotes');
-			clearErrors('maxVotes');
-			return;
-		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isMaxVotesChecked]);
 
-		setValue('maxVotes', DEFAULT_MAX_VOTES);
-		register('maxVotes');
-	};
+	useEffect(() => {
+		if (board.maxVotes !== 'undefined') {
+			methods.setValue('maxVotes', board.maxVotes);
+			// setIsMaxVotesChecked(true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	return (
 		<>
 			{isOpen && (
@@ -143,7 +166,6 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 										type="text"
 										placeholder="Board Name"
 										forceState
-										currentValue="teste"
 										maxChars="30"
 									/>
 								</Flex>
@@ -227,12 +249,14 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 									</Flex>
 									<Flex gap="20">
 										<Switch
-											checked={!!board.maxVotes}
-											onCheckedChange={handleLimitVotesChange}
+											checked={isMaxVotesChecked}
+											onCheckedChange={() =>
+												setIsMaxVotesChecked((prevState) => !prevState)
+											}
 											variant="sm"
 										>
 											<SwitchThumb variant="sm">
-												{!!board.maxVotes && (
+												{isMaxVotesChecked && (
 													<Icon
 														name="check"
 														css={{
@@ -252,10 +276,11 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 												Make votes more significant by limiting them.
 											</Text>
 											<Input
-												css={{ mt: '$8' }}
 												id="maxVotes"
-												disabled={!board.maxVotes}
+												name="maxVotes"
 												type="number"
+												css={{ mt: '$8' }}
+												disabled={!isMaxVotesChecked}
 												placeholder="Max votes"
 											/>
 										</Flex>
