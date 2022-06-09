@@ -35,6 +35,7 @@ export default interface BoardType {
 	maxVotes?: string;
 	hideCards: boolean;
 	hideVotes: boolean;
+	votes: string;
 	postAnonymously: boolean;
 	submitedByUser?: string;
 	submitedAt?: Date;

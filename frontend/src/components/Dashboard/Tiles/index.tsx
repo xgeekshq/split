@@ -39,7 +39,7 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 					css={{
 						position: 'absolute',
 						right: '-1px',
-						top: '-1px',
+						top: '-5px',
 						width: '126px',
 						height: '$100'
 					}}
