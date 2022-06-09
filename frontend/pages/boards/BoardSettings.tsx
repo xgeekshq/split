@@ -15,6 +15,7 @@ import {
 	updateBoardDataState,
 	updateBoardError
 } from '../../store/updateBoard/atoms/update-board.atom';
+import isEmpty from '../../utils/isEmpty';
 
 const Overlay = styled('div', {
 	position: 'absolute',
@@ -46,13 +47,13 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	const haveError = useRecoilValue(updateBoardError);
 
 	const { board } = updateBoardData;
-	const methods = useForm({
+	const methods = useForm<{ text: string; maxVotes: string | undefined }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		resolver: zodResolver(SchemaUpdateBoard),
 		defaultValues: {
 			text: board.title,
-			maxVotes: board.maxVotes
+			maxVotes: undefined
 		}
 	});
 
@@ -76,38 +77,58 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		}));
 	};
 
+	/**
+	 * Handle the max votes switch change
+	 */
 	useEffect(() => {
+		// Destructuring useForm hook
 		const { register, unregister, setValue, clearErrors } = methods;
 
+		/**
+		 * When not checked reset the
+		 * maxVotes value to undefined
+		 */
 		if (!isMaxVotesChecked) {
 			unregister('maxVotes');
 			clearErrors('maxVotes');
+			setValue('maxVotes', '');
 			setUpdateBoardData((prev) => ({
 				...prev,
 				board: {
 					...prev.board,
-					maxVotes: board.maxVotes
+					maxVotes: undefined
 				}
 			}));
 
 			return;
 		}
-		setValue('maxVotes', board.maxVotes ? DEFAULT_MAX_VOTES : board.maxVotes);
+
+		/**
+		 * If checked,
+		 * set with value from database
+		 * or with default value (6)
+		 */
+		setValue('maxVotes', !isEmpty(board.maxVotes) ? board.maxVotes : DEFAULT_MAX_VOTES);
 		register('maxVotes');
 		setUpdateBoardData((prev) => ({
 			...prev,
 			board: {
-				...prev.board,
-				maxVotes: board.maxVotes ? DEFAULT_MAX_VOTES : board.maxVotes
+				...prev.board
+				// maxVotes: board.maxVotes != undefined ? board.maxVotes : DEFAULT_MAX_VOTES
 			}
 		}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isMaxVotesChecked]);
 
+	/**
+	 * Use Effect to run once
+	 * and validate if the value is not undefined
+	 * if yes set the input with this value
+	 */
 	useEffect(() => {
-		if (board.maxVotes !== 'undefined') {
+		if (!isEmpty(board.maxVotes)) {
 			methods.setValue('maxVotes', board.maxVotes);
-			// setIsMaxVotesChecked(true);
+			setIsMaxVotesChecked(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
