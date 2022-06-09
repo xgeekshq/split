@@ -80,7 +80,8 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	/**
 	 * Handle the max votes switch change
 	 */
-	useEffect(() => {
+	const handleMaxVotes = (checked: boolean) => {
+		setIsMaxVotesChecked(checked);
 		// Destructuring useForm hook
 		const { register, unregister, setValue, clearErrors } = methods;
 
@@ -88,18 +89,10 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		 * When not checked reset the
 		 * maxVotes value to undefined
 		 */
-		if (!isMaxVotesChecked) {
+		if (!checked) {
 			unregister('maxVotes');
 			clearErrors('maxVotes');
 			setValue('maxVotes', '');
-			setUpdateBoardData((prev) => ({
-				...prev,
-				board: {
-					...prev.board,
-					maxVotes: undefined
-				}
-			}));
-
 			return;
 		}
 
@@ -108,17 +101,16 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		 * set with value from database
 		 * or with default value (6)
 		 */
-		setValue('maxVotes', !isEmpty(board.maxVotes) ? board.maxVotes : DEFAULT_MAX_VOTES);
 		register('maxVotes');
 		setUpdateBoardData((prev) => ({
 			...prev,
 			board: {
-				...prev.board
-				// maxVotes: board.maxVotes != undefined ? board.maxVotes : DEFAULT_MAX_VOTES
+				...prev.board,
+				maxVotes: isEmpty(board.maxVotes) ? DEFAULT_MAX_VOTES : board.maxVotes
 			}
 		}));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isMaxVotesChecked]);
+		setValue('maxVotes', isEmpty(board.maxVotes) ? DEFAULT_MAX_VOTES : board.maxVotes);
+	};
 
 	/**
 	 * Use Effect to run once
@@ -271,9 +263,7 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 									<Flex gap="20">
 										<Switch
 											checked={isMaxVotesChecked}
-											onCheckedChange={() =>
-												setIsMaxVotesChecked((prevState) => !prevState)
-											}
+											onCheckedChange={handleMaxVotes}
 											variant="sm"
 										>
 											<SwitchThumb variant="sm">
