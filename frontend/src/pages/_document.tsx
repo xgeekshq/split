@@ -6,6 +6,7 @@ export default function Document() {
 	return (
 		<Html>
 			<Head>
+				<title>SPLIT</title>
 				<link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="true" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
 				<link
@@ -13,11 +14,7 @@ export default function Document() {
 					rel="stylesheet"
 					crossOrigin="true"
 				/>
-				<link
-					rel="shortcut icon"
-					href="/Users/danielsousa/Developer/open-source/divide-and-conquer/frontend/public/favicon.svg"
-					type="image/svg+xml"
-				/>
+				<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
 				<style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText() }} />
 			</Head>
 			<body>
