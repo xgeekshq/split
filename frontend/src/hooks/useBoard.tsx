@@ -7,7 +7,7 @@ import {
 	getBoardRequest,
 	updateBoardRequest
 } from 'api/boardService';
-import { boardState } from 'store/board/atoms/board.atom';
+import { boardState, newBoardState } from 'store/board/atoms/board.atom';
 import BoardType from 'types/board/board';
 import UseBoardType from 'types/board/useBoard';
 import { ToastStateEnum } from 'utils/enums/toast-types';
@@ -21,6 +21,7 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 	const { boardId, queryClient, setToastState } = useBoardUtils();
 
 	const setBoard = useSetRecoilState(boardState);
+	const setNewBoard = useSetRecoilState(newBoardState);
 	// #region BOARD
 
 	const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
@@ -36,6 +37,7 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 	});
 
 	const createBoard = useMutation(createBoardRequest, {
+		onSuccess: (data) => setNewBoard(data),
 		onError: () => {
 			setToastState({
 				open: true,

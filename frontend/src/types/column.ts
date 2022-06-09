@@ -27,7 +27,6 @@ export interface ColumnBoardType {
 	maxVotes?: number;
 	countAllCards: number;
 	isSubmited: boolean;
-	filter: string;
 }
 
 export interface ColumnInnerList {
@@ -42,7 +41,6 @@ export interface ColumnInnerList {
 	boardUser?: BoardUser;
 	maxVotes?: number;
 	isSubmited: boolean;
-	filter: string;
 }
 
 export type ColumnDragItem = {

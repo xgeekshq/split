@@ -96,6 +96,12 @@ const useCards = () => {
 	const deleteCard = useMutation(deleteCardRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
+
+			setToastState({
+				open: true,
+				type: ToastStateEnum.SUCCESS,
+				content: 'Card deleted with success!'
+			});
 		},
 		onError: () => {
 			setToastState({
