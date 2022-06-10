@@ -13,7 +13,6 @@ const useVotes = () => {
 	const addVote = useMutation(addVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-			console.log('add DATA', data);
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
 			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
 			setToastState({
