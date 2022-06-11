@@ -23,6 +23,6 @@ jobs:
 
             - uses: azure/webapps-deploy@v2
               with:
-                  app-name: 'divideandconquer-be'
+                  app-name: 'split-be'
                   publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
                   images: 'split.azurecr.io/backend:latest'
