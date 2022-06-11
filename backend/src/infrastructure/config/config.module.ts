@@ -9,7 +9,7 @@ const NODE_ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:
-        !NODE_ENV || NODE_ENV === 'dev' ? '../.env' : `.env.${NODE_ENV}`,
+        !NODE_ENV || NODE_ENV === 'dev' ? '../.env' : `../.env.${NODE_ENV}`,
       load: [configuration],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
