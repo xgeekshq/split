@@ -31,7 +31,7 @@ const Custom500 = () => {
 				<Text size="md" color="primary500" css={{ mt: '$24' }}>
 					Try to refresh this page or feel free to contact us if the problem persists.
 				</Text>
-				<Link href="/Users/danielsousa/Developer/open-source/divide-and-conquer/frontend/src/pages">
+				<Link href="/">
 					<GoBackButton
 						variant="primary"
 						size="md"
