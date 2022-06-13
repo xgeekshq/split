@@ -33,7 +33,6 @@ const useVotes = () => {
 	const deleteVote = useMutation(deleteVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-			console.log(data);
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
 			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
 			setToastState({
