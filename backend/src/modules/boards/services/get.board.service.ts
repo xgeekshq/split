@@ -1,6 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
@@ -18,6 +19,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     private getTeamService: GetTeamServiceInterface,
   ) {}
 
+  private readonly logger = new Logger(GetBoardServiceImpl.name);
+
   getAllBoardsIdsOfUser(userId: string) {
     return this.boardUserModel
       .find({ user: userId })
@@ -32,7 +35,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       this.getAllBoardsIdsOfUser(userId),
       this.getTeamService.getTeamsOfUser(userId),
     ]);
-    return { boardIds, teamIds };
+    return { boardIds, teamIds: teamIds.map((team) => team._id) };
   }
 
   async getUserBoardsOfLast3Months(
@@ -73,6 +76,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(
       userId,
     );
+
     const query = {
       $and: [
         { isSubBoard: false },
@@ -86,50 +90,54 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     const count = await this.boardModel.find(query).countDocuments().exec();
     const hasNextPage =
       page + 1 < Math.ceil(count / (allBoards ? count : size));
-    const boards = await this.boardModel
-      .find(query)
-      .sort({ updatedAt: 'desc' })
-      .skip(allBoards ? 0 : page * size)
-      .limit(allBoards ? count : size)
-      .select('-__v -createdAt -id')
-      .populate({ path: 'createdBy', select: 'firstName lastName' })
-      .populate({
-        path: 'team',
-        select: 'name users _id',
-        populate: {
+    try {
+      const boards = await this.boardModel
+        .find(query)
+        .sort({ updatedAt: 'desc' })
+        .skip(allBoards ? 0 : page * size)
+        .limit(allBoards ? count : size)
+        .select('-__v -createdAt -id')
+        .populate({ path: 'createdBy', select: 'firstName lastName' })
+        .populate({
+          path: 'team',
+          select: 'name users _id',
+          populate: {
+            path: 'users',
+            select: 'user role',
+            populate: {
+              path: 'user',
+              select: 'firstName lastName joinedAt',
+            },
+          },
+        })
+        .populate({
+          path: 'dividedBoards',
+          select: '-__v -createdAt -id',
+          populate: {
+            path: 'users',
+            select: 'role user',
+            populate: {
+              path: 'user',
+              model: 'User',
+              select: 'firstName lastName joinedAt',
+            },
+          },
+        })
+        .populate({
           path: 'users',
-          select: 'user role',
+          select: 'user role -board',
           populate: {
             path: 'user',
             select: 'firstName lastName joinedAt',
           },
-        },
-      })
-      .populate({
-        path: 'dividedBoards',
-        select: '-__v -createdAt -id',
-        populate: {
-          path: 'users',
-          select: 'role user',
-          populate: {
-            path: 'user',
-            model: 'User',
-            select: 'firstName lastName joinedAt',
-          },
-        },
-      })
-      .populate({
-        path: 'users',
-        select: 'user role -board',
-        populate: {
-          path: 'user',
-          select: 'firstName lastName joinedAt',
-        },
-      })
-      .lean({ virtuals: true })
-      .exec();
-
-    return { boards, hasNextPage, page };
+        })
+        .lean({ virtuals: true })
+        .exec();
+      return { boards: boards ?? [], hasNextPage, page };
+    } catch (e) {
+      this.logger.error(BOARDS_NOT_FOUND);
+    }
+    return { boards: [], hasNextPage, page };
   }
 
   getBoardFromRepo(boardId: string) {
@@ -141,7 +149,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .findById(boardId)
       .populate({
         path: 'users',
-        select: 'user role votesCount -board',
+        select: 'user role -board votesCount',
         populate: { path: 'user', select: 'firstName lastName _id' },
       })
       .populate({

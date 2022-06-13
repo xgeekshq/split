@@ -32,7 +32,7 @@ export default function Custom404() {
 					The page you are looking for might have been removed or is temporarily
 					unavailable
 				</Text>
-				<Link href="/Users/danielsousa/Developer/open-source/divide-and-conquer/frontend/src/pages">
+				<Link href="/">
 					<GoBackButton
 						variant="primary"
 						size="md"
