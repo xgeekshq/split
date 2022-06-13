@@ -1,6 +1,5 @@
-import { styled } from '@stitches/react';
-
 import Flex from 'components/Primitives/Flex';
+import { styled } from '../stitches/stitches.config';
 
 const CenteredContainer = styled('div', {
 	position: 'absolute',
