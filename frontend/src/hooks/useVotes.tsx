@@ -1,8 +1,9 @@
 import { useMutation } from 'react-query';
 import { useSession } from 'next-auth/react';
 
-import { addVoteRequest, deleteVoteRequest } from '../api/boardService';
-import { ToastStateEnum } from '../utils/enums/toast-types';
+import { addVoteRequest, deleteVoteRequest } from 'api/boardService';
+import { ToastStateEnum } from 'utils/enums/toast-types';
+import isEmpty from 'utils/isEmpty';
 import useBoardUtils from './useBoardUtils';
 
 const useVotes = () => {
@@ -13,13 +14,16 @@ const useVotes = () => {
 	const addVote = useMutation(addVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
-			setToastState({
-				open: true,
-				content: `You have ${remainingVotes} votes left`,
-				type: ToastStateEnum.INFO
-			});
+
+			if (!isEmpty(data.maxVotes)) {
+				const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
+				const remainingVotes = parseInt(data.maxVotes, 10) - (votesByUser ?? 0);
+				setToastState({
+					open: true,
+					content: `You have ${remainingVotes} votes left`,
+					type: ToastStateEnum.INFO
+				});
+			}
 		},
 		onError: () => {
 			setToastState({
@@ -33,13 +37,16 @@ const useVotes = () => {
 	const deleteVote = useMutation(deleteVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
-			setToastState({
-				open: true,
-				content: `Vote removed. You have ${remainingVotes} votes left.`,
-				type: ToastStateEnum.INFO
-			});
+
+			if (!isEmpty(data.maxVotes)) {
+				const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
+				const remainingVotes = parseInt(data.maxVotes, 10) - (votesByUser ?? 0);
+				setToastState({
+					open: true,
+					content: `Vote removed. You have ${remainingVotes} votes left.`,
+					type: ToastStateEnum.INFO
+				});
+			}
 		},
 		onError: () => {
 			setToastState({

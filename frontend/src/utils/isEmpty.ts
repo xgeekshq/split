@@ -5,7 +5,7 @@ export type EmptyObject = Record<string, never>;
 export type Empty = None | false | 0 | '' | [] | EmptyObject;
 
 const isEmpty = (value: unknown): value is Empty => {
-	if (value === null || value === undefined) {
+	if (value === null || value === undefined || value === 'undefined') {
 		return true;
 	}
 
