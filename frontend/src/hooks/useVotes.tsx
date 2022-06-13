@@ -38,7 +38,7 @@ const useVotes = () => {
 			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
 			setToastState({
 				open: true,
-				content: `vote removed. You have ${remainingVotes} votes left`,
+				content: `Vote removed. You have ${remainingVotes} votes left.`,
 				type: ToastStateEnum.INFO
 			});
 		},
