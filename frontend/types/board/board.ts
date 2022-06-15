@@ -55,8 +55,10 @@ export interface BoardInfoType {
 }
 
 export interface BoardToAdd
-	extends Omit<BoardType,
-		'_id' | 'columns' | 'team' | 'createdBy' | 'updatedAt' | 'dividedBoards' | 'users'> {
+	extends Omit<
+		BoardType,
+		'_id' | 'columns' | 'team' | 'createdBy' | 'updatedAt' | 'dividedBoards' | 'users'
+	> {
 	columns: CreateColumn[];
 	team: string | null;
 	users: BoardUserToAdd[];

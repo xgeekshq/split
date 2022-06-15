@@ -9,6 +9,7 @@ import Flex from '../../components/Primitives/Flex';
 import Input from '../../components/Primitives/Input';
 import { Switch, SwitchThumb } from '../../components/Primitives/Switch';
 import Text from '../../components/Primitives/Text';
+import useBoard from '../../hooks/useBoard';
 import SchemaUpdateBoard from '../../schema/schemaUpdateBoardForm';
 import { styled } from '../../stitches.config';
 import {
@@ -33,6 +34,7 @@ const Content = styled('div', {
 	height: '100vh',
 	right: '0'
 });
+
 const DEFAULT_MAX_VOTES = '6';
 
 type BoardSettingsProps = {
@@ -45,6 +47,13 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
 
 	const haveError = useRecoilValue(updateBoardError);
+
+	/**
+	 * User Board Hook
+	 */
+	const {
+		updateBoard: { mutate }
+	} = useBoard({ autoFetchBoard: false });
 
 	const { board } = updateBoardData;
 	const methods = useForm<{ text: string; maxVotes: string | undefined }>({
@@ -125,205 +134,224 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	// TODO: change text by title (the name on type is title and not text)
+	const updateBoard = (text: string, maxVotes: string | undefined) => {
+		mutate({
+			board: {
+				...updateBoardData.board,
+				title: text,
+				maxVotes
+			}
+		});
+
+		setOpenState(false);
+	};
+
 	return (
 		<>
 			{isOpen && (
 				<Overlay>
 					<Content>
 						<FormProvider {...methods}>
-							<Flex direction="column">
-								<Flex
-									css={{
-										borderBottom: '1px solid $colors$primary100'
-									}}
-								>
-									<Text
-										heading="4"
+							<form
+								onSubmit={methods.handleSubmit(({ text, maxVotes }) =>
+									updateBoard(text, maxVotes)
+								)}
+							>
+								<Flex direction="column">
+									<Flex
 										css={{
-											padding: '$24 0 $24 $32'
+											borderBottom: '1px solid $colors$primary100'
 										}}
 									>
-										Board Settings{' '}
-									</Text>
-
-									<Button
-										onClick={() => setOpenState(false)}
-										isIcon="true"
-										css={{
-											display: 'flex',
-											position: 'absolute',
-											right: '$18',
-											top: '$10',
-											color: '$primary'
-										}}
-									>
-										<Icon
-											name="close"
+										<Text
+											heading="4"
 											css={{
-												width: '$24',
-												height: '$24'
+												padding: '$24 0 $24 $32'
+											}}
+										>
+											Board Settings
+										</Text>
+
+										<Button
+											onClick={() => setOpenState(false)}
+											isIcon="true"
+											css={{
+												display: 'flex',
+												position: 'absolute',
+												right: '$18',
+												top: '$10',
+												color: '$primary'
+											}}
+										>
+											<Icon
+												name="close"
+												css={{
+													width: '$24',
+													height: '$24'
+												}}
+											/>
+										</Button>
+									</Flex>
+									<Flex direction="column">
+										<Text heading="4" css={{ padding: '$24 $32 0' }}>
+											Board Name
+										</Text>
+										<Input
+											css={{ padding: '$16 $40 $56 $32' }}
+											disabled={haveError}
+											state="default"
+											id="text"
+											type="text"
+											placeholder="Board Name"
+											forceState
+											maxChars="30"
+										/>
+									</Flex>
+
+									<Text heading="4" css={{ padding: '0 32px' }}>
+										Board Settings
+									</Text>
+									<Text heading="5" css={{ padding: '18px 32px' }}>
+										Configurations
+										<Icon
+											name="arrow-up"
+											css={{
+												width: '24px',
+												height: '24px',
+												color: '$primary'
 											}}
 										/>
+									</Text>
+									<Flex direction="column" css={{ padding: '25px 32px' }}>
+										<Flex gap="20">
+											<Switch
+												checked={board.hideVotes}
+												onCheckedChange={handleHideVotesChange}
+												variant="sm"
+											>
+												<SwitchThumb variant="sm">
+													{board.hideVotes && (
+														<Icon
+															name="check"
+															css={{
+																width: '10px',
+																height: '10px',
+																color: '$successBase'
+															}}
+														/>
+													)}
+												</SwitchThumb>
+											</Switch>
+											<Flex direction="column">
+												<Text size="md" weight="medium">
+													Hide votes from others
+												</Text>
+												<Text size="sm" color="primary500">
+													Participants can not see the votes from other
+													participants of this retrospective.
+												</Text>
+											</Flex>
+										</Flex>
+										<Flex gap="20">
+											<Switch
+												checked={board.postAnonymously}
+												onCheckedChange={handlePostAnonymouslyChange}
+												variant="sm"
+											>
+												<SwitchThumb variant="sm">
+													{board.postAnonymously && (
+														<Icon
+															name="check"
+															css={{
+																width: '10px',
+																height: '10px',
+																color: '$successBase'
+															}}
+														/>
+													)}
+												</SwitchThumb>
+											</Switch>
+											<Flex direction="column">
+												<Text size="md" weight="medium">
+													Option to post cards anonymously
+												</Text>
+												<Text
+													size="sm"
+													color="primary500"
+													// maxWidth="400px"
+												>
+													Participants can decide to post cards
+													anonymously or publicly (Name on card is
+													disabled/enabled.)
+												</Text>
+											</Flex>
+										</Flex>
+										<Flex gap="20">
+											<Switch
+												checked={isMaxVotesChecked}
+												onCheckedChange={handleMaxVotes}
+												variant="sm"
+											>
+												<SwitchThumb variant="sm">
+													{isMaxVotesChecked && (
+														<Icon
+															name="check"
+															css={{
+																width: '$10',
+																height: '$10',
+																color: '$successBase'
+															}}
+														/>
+													)}
+												</SwitchThumb>
+											</Switch>
+											<Flex direction="column">
+												<Text size="md" weight="medium">
+													Limit votes
+												</Text>
+												<Text size="sm" color="primary500">
+													Make votes more significant by limiting them.
+												</Text>
+												<Input
+													id="maxVotes"
+													name="maxVotes"
+													type="number"
+													css={{ mt: '$8' }}
+													disabled={!isMaxVotesChecked}
+													placeholder="Max votes"
+												/>
+											</Flex>
+										</Flex>
+									</Flex>
+								</Flex>
+								<Flex
+									justify="end"
+									css={{
+										borderTop: '1px solid $colors$primary100',
+										py: '$24',
+										position: 'absolute',
+										width: '100%',
+										bottom: 0,
+										right: 0
+									}}
+								>
+									<Button
+										onClick={() => setOpenState(false)}
+										variant="primaryOutline"
+										css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+									>
+										Cancel
+									</Button>
+									<Button
+										type="submit"
+										variant="primary"
+										css={{ marginRight: '$32', padding: '$16 $24' }}
+									>
+										Save
 									</Button>
 								</Flex>
-								<Flex direction="column">
-									<Text heading="4" css={{ padding: '$24 $32 0' }}>
-										{' '}
-										Board Name{' '}
-									</Text>
-									<Input
-										css={{ padding: '$16 $40 $56 $32' }}
-										disabled={haveError}
-										state="default"
-										id="text"
-										type="text"
-										placeholder="Board Name"
-										forceState
-										maxChars="30"
-									/>
-								</Flex>
-
-								<Text heading="4" css={{ padding: '0 32px' }}>
-									Board Settings{' '}
-								</Text>
-								<Text heading="5" css={{ padding: '18px 32px' }}>
-									Configurations{' '}
-									<Icon
-										name="arrow-up"
-										css={{
-											width: '24px',
-											height: '24px',
-											color: '$primary'
-										}}
-									/>
-								</Text>
-								<Flex direction="column" css={{ padding: '25px 32px' }}>
-									<Flex gap="20">
-										<Switch
-											checked={board.hideVotes}
-											onCheckedChange={handleHideVotesChange}
-											variant="sm"
-										>
-											<SwitchThumb variant="sm">
-												{board.hideVotes && (
-													<Icon
-														name="check"
-														css={{
-															width: '10px',
-															height: '10px',
-															color: '$successBase'
-														}}
-													/>
-												)}
-											</SwitchThumb>
-										</Switch>
-										<Flex direction="column">
-											<Text size="md" weight="medium">
-												Hide votes from others
-											</Text>
-											<Text size="sm" color="primary500">
-												Participants can not see the votes from other
-												participants of this retrospective.
-											</Text>
-										</Flex>
-									</Flex>
-									<Flex gap="20">
-										<Switch
-											checked={board.postAnonymously}
-											onCheckedChange={handlePostAnonymouslyChange}
-											variant="sm"
-										>
-											<SwitchThumb variant="sm">
-												{board.postAnonymously && (
-													<Icon
-														name="check"
-														css={{
-															width: '10px',
-															height: '10px',
-															color: '$successBase'
-														}}
-													/>
-												)}
-											</SwitchThumb>
-										</Switch>
-										<Flex direction="column">
-											<Text size="md" weight="medium">
-												Option to post cards anonymously
-											</Text>
-											<Text
-												size="sm"
-												color="primary500"
-												// maxWidth="400px"
-											>
-												Participants can decide to post cards anonymously or
-												publicly (Name on card is disabled/enabled.)
-											</Text>
-										</Flex>
-									</Flex>
-									<Flex gap="20">
-										<Switch
-											checked={isMaxVotesChecked}
-											onCheckedChange={handleMaxVotes}
-											variant="sm"
-										>
-											<SwitchThumb variant="sm">
-												{isMaxVotesChecked && (
-													<Icon
-														name="check"
-														css={{
-															width: '$10',
-															height: '$10',
-															color: '$successBase'
-														}}
-													/>
-												)}
-											</SwitchThumb>
-										</Switch>
-										<Flex direction="column">
-											<Text size="md" weight="medium">
-												Limit votes
-											</Text>
-											<Text size="sm" color="primary500">
-												Make votes more significant by limiting them.
-											</Text>
-											<Input
-												id="maxVotes"
-												name="maxVotes"
-												type="number"
-												css={{ mt: '$8' }}
-												disabled={!isMaxVotesChecked}
-												placeholder="Max votes"
-											/>
-										</Flex>
-									</Flex>
-								</Flex>
-							</Flex>
-							<Flex
-								justify="end"
-								css={{
-									borderTop: '1px solid $colors$primary100',
-									py: '$24',
-									position: 'absolute',
-									width: '100%',
-									bottom: 0,
-									right: 0
-								}}
-							>
-								<Button
-									onClick={() => setOpenState(false)}
-									variant="primaryOutline"
-									css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-								>
-									Cancel
-								</Button>
-								<Button
-									onClick={() => setOpenState(false)}
-									variant="primary"
-									css={{ marginRight: '$32', padding: '$16 $24' }}
-								>
-									Save
-								</Button>
-							</Flex>
+							</form>
 						</FormProvider>
 					</Content>
 				</Overlay>
