@@ -4,14 +4,13 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { dehydrate, QueryClient, useQueryClient } from 'react-query';
-import Select from 'react-select';
 import { useSetRecoilState } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
 import { getBoardRequest } from '../../api/boardService';
 import Column from '../../components/Board/Column/Column';
 import BoardHeader from '../../components/Board/Header';
-import Icon from '../../components/icons/Icon';
+import { BoardSettings } from '../../components/Board/Settings';
 import SpinnerPage from '../../components/loadings/LoadingPage';
 import AlertBox from '../../components/Primitives/AlertBox';
 import AlertCustomDialog from '../../components/Primitives/AlertCustomDialog';
@@ -27,12 +26,6 @@ import { Container } from '../../styles/pages/boards/board.styles';
 import MergeCardsDto from '../../types/board/mergeCard.dto';
 import UpdateCardPositionDto from '../../types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from '../../utils/constants';
-import BoardSettings from './BoardSettings';
-
-interface OptionType {
-	value: string;
-	label: string;
-}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
@@ -61,7 +54,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	};
 
 	const { data: session } = useSession({ required: true });
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const queryClient = useQueryClient();
 	const userId = session?.user?.id;
@@ -70,7 +63,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	const socketId = socketClient?.current?.id;
 
 	const { updateCardPosition, mergeCards, mergeBoard } = useCards();
-	const [filter, setFilter] = useState('order');
+	const [filter] = useState('order');
 
 	const { fetchBoard } = useBoard({
 		autoFetchBoard: true
@@ -91,10 +84,11 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	useEffect(() => {
 		if (data && isOpen) {
 			const {
-				board: { title, maxVotes, hideVotes, postAnonymously }
+				board: { _id, title, maxVotes, hideVotes, postAnonymously }
 			} = data;
 			setUpdateBoard({
 				board: {
+					_id,
 					title,
 					maxVotes,
 					hideVotes,
@@ -206,32 +200,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						<Flex>
-							<Select
-								value={{
-									value: filter,
-									label: `${filter.charAt(0).toUpperCase()}${filter.substring(1)}`
-								}}
-								options={[
-									{ value: 'order', label: 'Order' },
-									{ value: 'votes', label: 'Votes' }
-								]}
-								onChange={(option) => setFilter((option as OptionType)?.value)}
-							/>
-							<Button
-								onClick={() => setIsOpen(true)}
-								variant="primaryOutline"
-								css={{
-									display: 'flex',
-									position: 'absolute',
-									top: '110px',
-									right: '$36'
-								}}
-							>
-								<Icon name="settings" />
-								Board settings
-								<Icon name="arrow-down" />
-							</Button>
+						<Flex justify="end">
+							<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
@@ -313,8 +283,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								})}
 							</DragDropContext>
 						</Flex>
-
-						<BoardSettings setOpenState={setIsOpen} isOpen={isOpen} />
 					</Flex>
 				</Container>
 			</>

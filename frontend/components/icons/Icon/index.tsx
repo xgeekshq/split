@@ -5,22 +5,19 @@ import Svg from '../../Primitives/Svg';
 
 type Props = CSSProps & {
 	name: string;
+	size?: 32 | 24 | 20 | 18 | 16;
 };
 
-const Icon = ({ name, css, ...props }: Props) => {
+const Icon = ({ name, size, css, ...props }: Props) => {
 	return (
-		<Svg
-			css={
-				css || {
-					width: '$24',
-					height: '$24'
-				}
-			}
-			{...props}
-		>
+		<Svg css={css} {...props}>
 			<use href={`#${name}`} />
 		</Svg>
 	);
+};
+
+Icon.defaultProps = {
+	size: undefined
 };
 
 export default Icon;

@@ -66,6 +66,7 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 	const updateBoard = useMutation(updateBoardRequest, {
 		onSuccess: (board: BoardType) => {
 			setBoard(board);
+			queryClient.invalidateQueries('board');
 		},
 		onError: () => {
 			setToastState({

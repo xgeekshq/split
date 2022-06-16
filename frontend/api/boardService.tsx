@@ -1,17 +1,18 @@
 import { GetServerSidePropsContext } from 'next';
-import fetchData from '../utils/fetchData';
+
 import BoardType, { CreateBoardDto, GetBoardResponse } from '../types/board/board';
-import UpdateCardPositionDto from '../types/card/updateCardPosition.dto';
+import MergeCardsDto from '../types/board/mergeCard.dto';
 import UpdateBoardDto from '../types/board/updateBoard';
 import AddCardDto from '../types/card/addCard.dto';
 import DeleteCardDto from '../types/card/deleteCard.dto';
+import RemoveFromCardGroupDto from '../types/card/removeFromCardGroup.dto';
 import UpdateCardDto from '../types/card/updateCard.dto';
+import UpdateCardPositionDto from '../types/card/updateCardPosition.dto';
 import AddCommentDto from '../types/comment/addComment.dto';
 import DeleteCommentDto from '../types/comment/deleteComment.dto';
 import UpdateCommentDto from '../types/comment/updateComment.dto';
 import VoteDto from '../types/vote/vote.dto';
-import MergeCardsDto from '../types/board/mergeCard.dto';
-import RemoveFromCardGroupDto from '../types/card/removeFromCardGroup.dto';
+import fetchData from '../utils/fetchData';
 
 // #region BOARD
 

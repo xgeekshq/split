@@ -1,52 +1,48 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Accordion } from '@radix-ui/react-accordion';
+import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import Icon from '../../components/icons/Icon';
-import Button from '../../components/Primitives/Button';
-import Flex from '../../components/Primitives/Flex';
-import Input from '../../components/Primitives/Input';
-import { Switch, SwitchThumb } from '../../components/Primitives/Switch';
-import Text from '../../components/Primitives/Text';
-import useBoard from '../../hooks/useBoard';
-import SchemaUpdateBoard from '../../schema/schemaUpdateBoardForm';
-import { styled } from '../../stitches.config';
+import useBoard from '../../../hooks/useBoard';
+import SchemaUpdateBoard from '../../../schema/schemaUpdateBoardForm';
 import {
 	updateBoardDataState,
 	updateBoardError
-} from '../../store/updateBoard/atoms/update-board.atom';
-import isEmpty from '../../utils/isEmpty';
-
-const Overlay = styled('div', {
-	position: 'absolute',
-	inset: '0',
-	background: 'rgba(80, 80, 89, 0.2) ',
-	backdropFilter: 'blur(3px)',
-	width: '100%',
-	height: '100vh'
-});
-
-const Content = styled('div', {
-	position: 'absolute',
-	backgroundColor: '$white',
-	width: '592px',
-	height: '100vh',
-	right: '0'
-});
+} from '../../../store/updateBoard/atoms/update-board.atom';
+import isEmpty from '../../../utils/isEmpty';
+import Icon from '../../icons/Icon';
+import Button from '../../Primitives/Button';
+import Flex from '../../Primitives/Flex';
+import Input from '../../Primitives/Input';
+import { Switch, SwitchThumb } from '../../Primitives/Switch';
+import Text from '../../Primitives/Text';
+import {
+	ButtonsContainer,
+	StyledAccordionContent,
+	StyledAccordionHeader,
+	StyledAccordionIcon,
+	StyledAccordionItem,
+	StyledAccordionTrigger,
+	StyledDialogCloseButton,
+	StyledDialogContent,
+	StyledDialogOverlay,
+	StyledDialogTitle
+} from './styles';
 
 const DEFAULT_MAX_VOTES = '6';
 
-type BoardSettingsProps = {
-	setOpenState: Dispatch<SetStateAction<boolean>>;
+type Props = {
+	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	isOpen: boolean;
 };
 
-const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
+const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
-	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
-
 	const haveError = useRecoilValue(updateBoardError);
+
+	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
 
 	/**
 	 * User Board Hook
@@ -54,14 +50,17 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 	const {
 		updateBoard: { mutate }
 	} = useBoard({ autoFetchBoard: false });
-
 	const { board } = updateBoardData;
-	const methods = useForm<{ text: string; maxVotes: string | undefined }>({
+
+	/**
+	 * Use Form Hook
+	 */
+	const methods = useForm<{ title: string; maxVotes: string | undefined }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		resolver: zodResolver(SchemaUpdateBoard),
 		defaultValues: {
-			text: board.title,
+			title: board.title,
 			maxVotes: undefined
 		}
 	});
@@ -134,97 +133,74 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	// TODO: change text by title (the name on type is title and not text)
-	const updateBoard = (text: string, maxVotes: string | undefined) => {
+	const updateBoard = (title: string, maxVotes: string | undefined) => {
 		mutate({
 			board: {
 				...updateBoardData.board,
-				title: text,
+				title,
 				maxVotes
 			}
 		});
 
-		setOpenState(false);
+		/**
+		 * Close
+		 */
+		setIsOpen(false);
 	};
 
 	return (
-		<>
-			{isOpen && (
-				<Overlay>
-					<Content>
-						<FormProvider {...methods}>
-							<form
-								onSubmit={methods.handleSubmit(({ text, maxVotes }) =>
-									updateBoard(text, maxVotes)
-								)}
-							>
-								<Flex direction="column">
-									<Flex
-										css={{
-											borderBottom: '1px solid $colors$primary100'
-										}}
-									>
-										<Text
-											heading="4"
-											css={{
-												padding: '$24 0 $24 $32'
-											}}
-										>
-											Board Settings
-										</Text>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
+			<DialogTrigger asChild>
+				<Button variant="primaryOutline">
+					<Icon name="settings" />
+					Board settings
+					<Icon name="arrow-down" />
+				</Button>
+			</DialogTrigger>
+			<StyledDialogOverlay />
+			<StyledDialogContent>
+				<StyledDialogTitle>
+					<h2>Board Settings</h2>
+					<DialogClose asChild>
+						<StyledDialogCloseButton size="lg" isIcon>
+							<Icon name="close" css={{ color: '$primary400' }} size={24} />
+						</StyledDialogCloseButton>
+					</DialogClose>
+				</StyledDialogTitle>
+				<FormProvider {...methods}>
+					<form
+						onSubmit={methods.handleSubmit(({ title, maxVotes }) =>
+							updateBoard(title, maxVotes)
+						)}
+					>
+						<Flex direction="column" gap={16} css={{ marginBottom: '$32' }}>
+							<Text heading="4">Board Name</Text>
+							<Input
+								disabled={haveError}
+								state="default"
+								id="title"
+								type="text"
+								placeholder="Board Name"
+								forceState
+								maxChars="30"
+							/>
+						</Flex>
 
-										<Button
-											onClick={() => setOpenState(false)}
-											isIcon="true"
-											css={{
-												display: 'flex',
-												position: 'absolute',
-												right: '$18',
-												top: '$10',
-												color: '$primary'
-											}}
-										>
-											<Icon
-												name="close"
-												css={{
-													width: '$24',
-													height: '$24'
-												}}
-											/>
-										</Button>
-									</Flex>
-									<Flex direction="column">
-										<Text heading="4" css={{ padding: '$24 $32 0' }}>
-											Board Name
-										</Text>
-										<Input
-											css={{ padding: '$16 $40 $56 $32' }}
-											disabled={haveError}
-											state="default"
-											id="text"
-											type="text"
-											placeholder="Board Name"
-											forceState
-											maxChars="30"
-										/>
-									</Flex>
+						<Text heading="4" css={{ display: 'block', mb: '$16' }}>
+							Board Settings
+						</Text>
 
-									<Text heading="4" css={{ padding: '0 32px' }}>
-										Board Settings
-									</Text>
-									<Text heading="5" css={{ padding: '18px 32px' }}>
-										Configurations
-										<Icon
-											name="arrow-up"
-											css={{
-												width: '24px',
-												height: '24px',
-												color: '$primary'
-											}}
-										/>
-									</Text>
-									<Flex direction="column" css={{ padding: '25px 32px' }}>
-										<Flex gap="20">
+						<Accordion type="single" defaultValue="configurations" collapsible>
+							<StyledAccordionItem value="configurations">
+								<StyledAccordionHeader>
+									<StyledAccordionTrigger>
+										<Text heading="5">Configurations</Text>
+										<StyledAccordionIcon name="arrow-down" />
+									</StyledAccordionTrigger>
+								</StyledAccordionHeader>
+								<StyledAccordionContent>
+									<Flex direction="column" gap={16}>
+										<Flex gap={20}>
 											<Switch
 												checked={board.hideVotes}
 												onCheckedChange={handleHideVotesChange}
@@ -253,7 +229,7 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 												</Text>
 											</Flex>
 										</Flex>
-										<Flex gap="20">
+										<Flex gap={20}>
 											<Switch
 												checked={board.postAnonymously}
 												onCheckedChange={handlePostAnonymouslyChange}
@@ -276,18 +252,14 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 												<Text size="md" weight="medium">
 													Option to post cards anonymously
 												</Text>
-												<Text
-													size="sm"
-													color="primary500"
-													// maxWidth="400px"
-												>
+												<Text size="sm" color="primary500">
 													Participants can decide to post cards
 													anonymously or publicly (Name on card is
 													disabled/enabled.)
 												</Text>
 											</Flex>
 										</Flex>
-										<Flex gap="20">
+										<Flex gap={20}>
 											<Switch
 												checked={isMaxVotesChecked}
 												onCheckedChange={handleMaxVotes}
@@ -324,41 +296,31 @@ const BoardSettings = ({ setOpenState, isOpen }: BoardSettingsProps) => {
 											</Flex>
 										</Flex>
 									</Flex>
-								</Flex>
-								<Flex
-									justify="end"
-									css={{
-										borderTop: '1px solid $colors$primary100',
-										py: '$24',
-										position: 'absolute',
-										width: '100%',
-										bottom: 0,
-										right: 0
-									}}
-								>
-									<Button
-										onClick={() => setOpenState(false)}
-										variant="primaryOutline"
-										css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-									>
-										Cancel
-									</Button>
-									<Button
-										type="submit"
-										variant="primary"
-										css={{ marginRight: '$32', padding: '$16 $24' }}
-									>
-										Save
-									</Button>
-								</Flex>
-							</form>
-						</FormProvider>
-					</Content>
-				</Overlay>
-			)}
-			;
-		</>
+								</StyledAccordionContent>
+							</StyledAccordionItem>
+						</Accordion>
+
+						<ButtonsContainer justify="end" gap={24}>
+							<Button
+								onClick={() => setIsOpen(false)}
+								variant="primaryOutline"
+								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+							>
+								Cancel
+							</Button>
+							<Button
+								type="submit"
+								variant="primary"
+								css={{ marginRight: '$32', padding: '$16 $24' }}
+							>
+								Save
+							</Button>
+						</ButtonsContainer>
+					</form>
+				</FormProvider>
+			</StyledDialogContent>
+		</Dialog>
 	);
 };
 
-export default BoardSettings;
+export { BoardSettings };
