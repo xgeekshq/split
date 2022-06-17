@@ -151,7 +151,12 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button variant="primaryOutline">
+				<Button
+					css={{
+						ml: 'auto'
+					}}
+					variant="primaryOutline"
+				>
 					<Icon name="settings" />
 					Board settings
 					<Icon name="arrow-down" />

@@ -200,8 +200,36 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						<Flex justify="end" css={{ py: '$32' }}>
-							<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
+						<Flex justify="between" align="center" css={{ py: '$32' }}>
+							{board.isSubBoard && !board.submitedByUser && isResponsible && (
+								<AlertCustomDialog
+									defaultOpen={false}
+									title="Merge board into main board"
+									text="If you merge your sub-teams’ board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
+									cancelText="Cancel"
+									confirmText="Merge into main board"
+									handleConfirm={() => {
+										mergeBoard.mutate(boardId);
+									}}
+									variant="primary"
+								>
+									<AlertDialogTrigger asChild>
+										<Button
+											variant="primaryOutline"
+											size="sm"
+											css={{
+												fontWeight: '$medium',
+												width: '206px'
+											}}
+										>
+											Merge into main board
+										</Button>
+									</AlertDialogTrigger>
+								</AlertCustomDialog>
+							)}
+							{!board.submitedByUser && !board.submitedAt && (
+								<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
+							)}
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
 							<AlertBox
@@ -223,34 +251,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 									<Button size="sm">Go to main board</Button>
 								</Link>
 							</AlertBox>
-						)}
-						{board.isSubBoard && !board.submitedByUser && isResponsible && (
-							<AlertCustomDialog
-								css={{ left: '37% !important' }}
-								defaultOpen={false}
-								title="Merge board into main board"
-								text="If you merge your sub-teams’ board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
-								cancelText="Cancel"
-								confirmText="Merge into main board"
-								handleConfirm={() => {
-									mergeBoard.mutate(boardId);
-								}}
-								variant="primary"
-							>
-								<AlertDialogTrigger asChild>
-									<Button
-										variant="primaryOutline"
-										size="sm"
-										css={{
-											fontWeight: '$medium',
-											my: '$20',
-											width: '206px'
-										}}
-									>
-										Merge into main board
-									</Button>
-								</AlertDialogTrigger>
-							</AlertCustomDialog>
 						)}
 
 						<Flex css={{ width: '100%' }} gap="24">
