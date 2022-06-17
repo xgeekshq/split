@@ -27,7 +27,7 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '$100'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
+				<TileArrow name="arrow-long-right" size={24} />
 			</StyledTile>
 			<StyledTile>
 				<Text size="md" color="white">
@@ -45,7 +45,7 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '$100'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
+				<TileArrow name="arrow-long-right" size={24} />
 			</StyledTile>
 			<StyledTile>
 				<Text size="md" color="white">
@@ -63,7 +63,7 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						height: '76px'
 					}}
 				/>
-				<TileArrow name="arrow-long-right" />
+				<TileArrow name="arrow-long-right" size={24} />
 			</StyledTile>
 		</GridContainer>
 	);
