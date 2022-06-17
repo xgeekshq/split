@@ -60,10 +60,27 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		reValidateMode: 'onBlur',
 		resolver: zodResolver(SchemaUpdateBoard),
 		defaultValues: {
-			title: board.title,
+			title: '',
 			maxVotes: undefined
 		}
 	});
+
+	/**
+	 * Use Effect to run when board change
+	 * to set title and validate if
+	 * the value of max votes is not undefined,
+	 * if yes set the input with this value
+	 */
+	useEffect(() => {
+		methods.setValue('title', board.title);
+
+		if (!isEmpty(board.maxVotes)) {
+			methods.setValue('maxVotes', board.maxVotes);
+			setIsMaxVotesChecked(true);
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [board]);
 
 	const handleHideVotesChange = (checked: boolean) => {
 		setUpdateBoardData((prev) => ({
@@ -120,32 +137,21 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		setValue('maxVotes', isEmpty(board.maxVotes) ? DEFAULT_MAX_VOTES : board.maxVotes);
 	};
 
-	/**
-	 * Use Effect to run once
-	 * and validate if the value is not undefined
-	 * if yes set the input with this value
-	 */
-	useEffect(() => {
-		if (!isEmpty(board.maxVotes)) {
-			methods.setValue('maxVotes', board.maxVotes);
-			setIsMaxVotesChecked(true);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const updateBoard = (title: string, maxVotes: string | undefined) => {
-		mutate({
-			board: {
-				...updateBoardData.board,
-				title,
-				maxVotes
+		mutate(
+			{
+				board: {
+					...updateBoardData.board,
+					title,
+					maxVotes
+				}
+			},
+			{
+				onSuccess: () => {
+					setIsOpen(false);
+				}
 			}
-		});
-
-		/**
-		 * Close
-		 */
-		setIsOpen(false);
+		);
 	};
 
 	return (

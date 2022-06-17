@@ -83,6 +83,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 
 	useEffect(() => {
 		if (data && isOpen) {
+			console.log(data);
 			const {
 				board: { _id, title, maxVotes, hideVotes, postAnonymously }
 			} = data;
@@ -96,7 +97,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 				}
 			});
 		}
-	}, [data, setUpdateBoard, isOpen]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isOpen]);
 
 	const isResponsible = board?.users.find(
 		(boardUser) => boardUser.role === 'responsible' && boardUser.user._id === userId
