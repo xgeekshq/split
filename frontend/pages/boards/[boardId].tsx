@@ -200,7 +200,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						<Flex justify="end">
+						<Flex justify="end" css={{ py: '$32' }}>
 							<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
 						</Flex>
 						{board.submitedByUser && board.submitedAt && (
@@ -253,7 +253,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 							</AlertCustomDialog>
 						)}
 
-						<Flex css={{ width: '100%', mt: '$32' }} gap="24">
+						<Flex css={{ width: '100%' }} gap="24">
 							<DragDropContext onDragEnd={onDragEnd}>
 								{filteredColumns()?.map((column, index) => {
 									return (
