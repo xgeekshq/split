@@ -18,7 +18,7 @@ const Icon = ({ name, size, css, ...props }: Props) => {
 };
 
 Icon.defaultProps = {
-	size: undefined
+	size: 24
 };
 
 export default Icon;
