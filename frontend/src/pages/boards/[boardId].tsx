@@ -92,7 +92,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 
 	useEffect(() => {
 		if (data && isOpen) {
-			console.log(data);
 			const {
 				board: { _id, title, maxVotes, hideVotes, postAnonymously }
 			} = data;
@@ -211,7 +210,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								<AlertCustomDialog
 									defaultOpen={false}
 									title="Merge board into main board"
-									text="If you merge your sub-teams’ board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
+									text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
 									cancelText="Cancel"
 									confirmText="Merge into main board"
 									handleConfirm={() => {
