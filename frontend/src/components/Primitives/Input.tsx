@@ -257,7 +257,7 @@ const Input: React.FC<InputProps> = ({
 			css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto', ...css }}
 			onBlur={() => {
 				if (isValueEmpty) {
-					clearErrors();
+					clearErrors(id);
 				}
 			}}
 		>

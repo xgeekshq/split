@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useSetRecoilState } from 'recoil';
@@ -45,10 +45,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 	setEmailName
 }) => {
 	const setToastState = useSetRecoilState(toastState);
-	const [checkedTerms, setCheckedTerms] = useState(false);
 	const methods = useForm<RegisterUser>({
-		mode: 'onChange',
-		reValidateMode: 'onChange',
+		mode: 'onBlur',
+		reValidateMode: 'onBlur',
 		defaultValues: {
 			email: '',
 			firstName: '',
@@ -97,14 +96,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				direction="column"
 				style={{ width: '100%' }}
 				onSubmit={methods.handleSubmit((credentials: RegisterUser) => {
-					if (!checkedTerms) {
-						setToastState({
-							open: true,
-							type: ToastStateEnum.ERROR,
-							content: 'Confirm Terms of Service and Privacy Policy'
-						});
-						return;
-					}
 					handleRegister(credentials);
 				})}
 			>
@@ -133,6 +124,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					type="password"
 					icon="eye"
 					iconPosition="right"
+					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
 				/>
 				<Input
 					id="passwordConf"
