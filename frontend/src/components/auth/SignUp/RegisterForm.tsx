@@ -11,7 +11,6 @@ import { registerNewUser } from 'api/authService';
 import Icon from 'components/icons/Icon';
 import LogoIcon from 'components/icons/Logo';
 import Button from 'components/Primitives/Button';
-import CheckBox from 'components/Primitives/Checkbox';
 import Flex from 'components/Primitives/Flex';
 import Input from 'components/Primitives/Input';
 import Text from 'components/Primitives/Text';
@@ -142,14 +141,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					icon="eye"
 					iconPosition="right"
 				/>
-				<Flex>
-					<CheckBox
-						id="checkbox"
-						label="I agree to the Terms of Service and the Privacy Policy."
-						size="16"
-						setCheckedTerms={setCheckedTerms}
-					/>
-				</Flex>
 				<Button
 					type="submit"
 					size="lg"
