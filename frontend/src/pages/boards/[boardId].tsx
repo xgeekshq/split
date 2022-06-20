@@ -27,6 +27,7 @@ import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom'
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
+import BoardType from '../../types/board/board';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
@@ -191,13 +192,21 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		}
 	};
 
+	/**
+	 * Confirm if any sub-board is merged or not
+	 */
+	const haveSubBoardsMerged =
+		!board?.isSubBoard &&
+		board?.dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length ===
+			0;
+
 	if (board && userId && socketId) {
 		return (
 			<>
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						<Flex justify="between" align="center" css={{ py: '$32' }}>
+						<Flex justify="between" align="center" css={{ py: '$32' }} gap={40}>
 							{board.isSubBoard && !board.submitedByUser && isResponsible && (
 								<AlertCustomDialog
 									defaultOpen={false}
@@ -224,6 +233,15 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 									</AlertDialogTrigger>
 								</AlertCustomDialog>
 							)}
+
+							{haveSubBoardsMerged && (
+								<AlertBox
+									css={{ flex: 1 }}
+									type="info"
+									title="No sub-team has merged into this main board yet."
+								/>
+							)}
+
 							{!board.submitedByUser && !board.submitedAt && (
 								<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
 							)}
