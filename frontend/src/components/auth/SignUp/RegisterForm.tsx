@@ -1,6 +1,9 @@
 import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import router from 'next/router';
+import { RedirectableProviderType } from 'next-auth/providers';
+import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
@@ -18,6 +21,7 @@ import SchemaRegisterForm from 'schema/schemaRegisterForm';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { RegisterUser, User } from 'types/user/user';
 import { ToastStateEnum } from 'utils/enums/toast-types';
+import { DASHBOARD_ROUTE } from 'utils/routes';
 import { SignUpEnum } from 'utils/signUp.enum';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
@@ -67,6 +71,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 		setShowSignUp(SignUpEnum.SIGN_UP);
 	};
 
+	const handleLogin = async () => {
+		const result = await signIn<RedirectableProviderType>('credentials', {
+			...methods.getValues(),
+			callbackUrl: DASHBOARD_ROUTE,
+			redirect: false
+		});
+		if (!result?.error) {
+			router.push(DASHBOARD_ROUTE);
+		}
+	};
+
 	const createUser = useMutation<User, AxiosError, RegisterUser, unknown>(
 		(user: RegisterUser) => registerNewUser(user),
 		{
@@ -81,11 +96,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 			onSuccess: () => {
 				setShowSignUp(SignUpEnum.SIGN_UP);
 				setCurrentTab('login');
+				handleLogin();
 			}
 		}
 	);
 
 	const handleRegister = async (user: RegisterUser) => {
+		user.email = user.email.toLowerCase();
 		createUser.mutate(user);
 	};
 

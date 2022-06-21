@@ -1,16 +1,21 @@
-import { styled } from '@stitches/react';
+import { styled } from 'styles/stitches/stitches.config';
 
 import Flex from 'components/Primitives/Flex';
 
 const CenteredContainer = styled('div', {
 	position: 'absolute',
-	top: '150px',
+	top: '50%',
 	right: '150px',
+
+	transform: 'translateY(-50%)',
+
 	maxWidth: '500px',
 	height: 'fit-content',
+
 	display: 'flex',
 	flexDirection: 'column',
-	backgroundColor: '#FFFFFF',
+
+	backgroundColor: '#ffffff',
 	borderRadius: '$12'
 });
 const ImageBackground = styled(Flex, {
@@ -18,12 +23,14 @@ const ImageBackground = styled(Flex, {
 	width: '100%',
 	position: 'relative',
 	backgroundColor: '$black',
-	backgroundImage: 'url(/images/background.svg)',
+	backgroundImage: 'url(images/background.svg)',
 	backgroundSize: 'cover',
 	backgroundRepeat: 'no-repeat'
 });
+
 const BannerContainer = styled(Flex, {
 	size: 'fit-content',
+
 	position: 'absolute',
 	left: '112px',
 	top: '72px'
