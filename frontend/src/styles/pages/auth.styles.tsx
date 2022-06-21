@@ -4,10 +4,8 @@ import Flex from 'components/Primitives/Flex';
 
 const CenteredContainer = styled('div', {
 	position: 'absolute',
-	top: '50%',
+	top: '150px',
 	right: '150px',
-
-	transform: 'translateY(-50%)',
 
 	maxWidth: '500px',
 	height: 'fit-content',
@@ -23,7 +21,7 @@ const ImageBackground = styled(Flex, {
 	width: '100%',
 	position: 'relative',
 	backgroundColor: '$black',
-	backgroundImage: 'url(images/background.svg)',
+	backgroundImage: 'url(/images/background.svg)',
 	backgroundSize: 'cover',
 	backgroundRepeat: 'no-repeat'
 });
