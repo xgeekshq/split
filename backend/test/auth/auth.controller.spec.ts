@@ -139,7 +139,7 @@ describe('AuthController', () => {
           });
 
         expect(res.body.message[0]).toBe(
-          'Password too weak. Must have 1 uppercase, 1 lowercase, 1 number and 1 special character',
+          'Use at least 8 characters, upper and lower case letters, numbers and symbols like !“?$%^&).',
         );
       });
     });
