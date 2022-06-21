@@ -15,13 +15,13 @@ export default class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
+  @MinLength(2)
   @Transform(({ value }: TransformFnParams) => value.trim())
   firstName!: string;
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
+  @MinLength(2)
   @Transform(({ value }: TransformFnParams) => value.trim())
   lastName!: string;
 
@@ -29,9 +29,9 @@ export default class CreateUserDto {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
   @MinLength(7)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.])(?=.{7,})/, {
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/, {
     message:
-      'Password too weak. Must have 1 uppercase, 1 lowercase, 1 number and 1 special character',
+      'Use at least 8 characters, upper and lower case letters, numbers and symbols like !“?$%^&).',
   })
   password!: string;
 }
