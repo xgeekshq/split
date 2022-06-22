@@ -1,6 +1,9 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import router from 'next/router';
+import { RedirectableProviderType } from 'next-auth/providers';
+import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
@@ -11,7 +14,6 @@ import { registerNewUser } from 'api/authService';
 import Icon from 'components/icons/Icon';
 import LogoIcon from 'components/icons/Logo';
 import Button from 'components/Primitives/Button';
-import CheckBox from 'components/Primitives/Checkbox';
 import Flex from 'components/Primitives/Flex';
 import Input from 'components/Primitives/Input';
 import Text from 'components/Primitives/Text';
@@ -19,6 +21,7 @@ import SchemaRegisterForm from 'schema/schemaRegisterForm';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { RegisterUser, User } from 'types/user/user';
 import { ToastStateEnum } from 'utils/enums/toast-types';
+import { DASHBOARD_ROUTE } from 'utils/routes';
 import { SignUpEnum } from 'utils/signUp.enum';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
@@ -46,10 +49,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 	setEmailName
 }) => {
 	const setToastState = useSetRecoilState(toastState);
-	const [checkedTerms, setCheckedTerms] = useState(false);
 	const methods = useForm<RegisterUser>({
-		mode: 'onChange',
-		reValidateMode: 'onChange',
+		mode: 'onBlur',
+		reValidateMode: 'onBlur',
 		defaultValues: {
 			email: '',
 			firstName: '',
@@ -69,6 +71,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 		setShowSignUp(SignUpEnum.SIGN_UP);
 	};
 
+	const handleLogin = async () => {
+		const result = await signIn<RedirectableProviderType>('credentials', {
+			...methods.getValues(),
+			callbackUrl: DASHBOARD_ROUTE,
+			redirect: false
+		});
+		if (!result?.error) {
+			router.push(DASHBOARD_ROUTE);
+		}
+	};
+
 	const createUser = useMutation<User, AxiosError, RegisterUser, unknown>(
 		(user: RegisterUser) => registerNewUser(user),
 		{
@@ -83,11 +96,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 			onSuccess: () => {
 				setShowSignUp(SignUpEnum.SIGN_UP);
 				setCurrentTab('login');
+				handleLogin();
 			}
 		}
 	);
 
 	const handleRegister = async (user: RegisterUser) => {
+		user.email = user.email.toLowerCase();
 		createUser.mutate(user);
 	};
 
@@ -98,14 +113,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				direction="column"
 				style={{ width: '100%' }}
 				onSubmit={methods.handleSubmit((credentials: RegisterUser) => {
-					if (!checkedTerms) {
-						setToastState({
-							open: true,
-							type: ToastStateEnum.ERROR,
-							content: 'Confirm Terms of Service and Privacy Policy'
-						});
-						return;
-					}
 					handleRegister(credentials);
 				})}
 			>
@@ -134,6 +141,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					type="password"
 					icon="eye"
 					iconPosition="right"
+					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
 				/>
 				<Input
 					id="passwordConf"
@@ -142,14 +150,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					icon="eye"
 					iconPosition="right"
 				/>
-				<Flex>
-					<CheckBox
-						id="checkbox"
-						label="I agree to the Terms of Service and the Privacy Policy."
-						size="16"
-						setCheckedTerms={setCheckedTerms}
-					/>
-				</Flex>
 				<Button
 					type="submit"
 					size="lg"
