@@ -16,9 +16,6 @@ const Icon = ({ name, size, css, ...props }: Props) => {
 		</Svg>
 	);
 };
-
-Icon.defaultProps = {
-	size: 24
-};
+Icon.defaultProps = { size: 24 };
 
 export default Icon;

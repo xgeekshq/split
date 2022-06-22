@@ -17,11 +17,11 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
 	variants: {
 		variant: {
 			sm: {
-				flex: '0 0 35px',
-				width: 35,
-				height: 20
+				flex: '0 0 $sizes$35',
+				width: '$35',
+				height: '$20'
 			},
-			md: { width: 42, height: 24 }
+			md: { flex: '0 0 $sizes$42', width: '$42', height: '$24' }
 		}
 	},
 	defaultVariants: {
@@ -44,10 +44,10 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
 	variants: {
 		variant: {
 			sm: {
-				width: 17.5,
-				height: 17.5
+				width: '$17',
+				height: '$17'
 			},
-			md: { width: 21, height: 21 }
+			md: { width: '$21', height: '$21' }
 		}
 	},
 	defaultVariants: {

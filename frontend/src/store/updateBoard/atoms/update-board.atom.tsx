@@ -5,11 +5,6 @@ export const updateBoardError = atom({
 	default: false
 });
 
-// export const createBoardState = atom({
-// 	key: 'showCreateBoard',
-// 	default: false
-// });
-
 export interface UpdateBoardData {
 	board: {
 		_id: string;

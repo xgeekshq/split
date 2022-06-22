@@ -24,10 +24,10 @@ import useBoard from 'hooks/useBoard';
 import useCards from 'hooks/useCards';
 import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom';
+import BoardType from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
-import BoardType from '../../types/board/board';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
@@ -196,8 +196,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	 */
 	const haveSubBoardsMerged =
 		!board?.isSubBoard &&
-		board?.dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length ===
-			0;
+		!!board?.dividedBoards.filter((dividedBoard: BoardType) => !dividedBoard.submitedAt).length;
+	console.log(haveSubBoardsMerged);
 
 	if (board && userId && socketId) {
 		return (
@@ -224,10 +224,10 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											size="sm"
 											css={{
 												fontWeight: '$medium',
-												width: '206px'
+												width: '$206'
 											}}
 										>
-											Merge into main board
+											Merge into main boards
 										</Button>
 									</AlertDialogTrigger>
 								</AlertCustomDialog>

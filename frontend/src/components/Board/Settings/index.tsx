@@ -219,8 +219,8 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 														<Icon
 															name="check"
 															css={{
-																width: '10px',
-																height: '10px',
+																width: '$10',
+																height: '$10',
 																color: '$successBase'
 															}}
 														/>
@@ -248,8 +248,8 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 														<Icon
 															name="check"
 															css={{
-																width: '10px',
-																height: '10px',
+																width: '$10',
+																height: '$10',
 																color: '$successBase'
 															}}
 														/>
