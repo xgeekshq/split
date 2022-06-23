@@ -45,12 +45,10 @@ services:
       - ./backend:/app/backend
       - /app/backend/node_modules
 
-    command: yarn start:debug
-
     ports:
       - 3200:3200
       # debugging port
-      - 9229:9229
+      # - 9229:9229
 
   frontend:
     build:
