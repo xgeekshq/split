@@ -41,7 +41,7 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 						right: '-1px',
 						top: '0px',
 						width: '126px',
-						height: '90px'
+						height: '$90'
 					}}
 				/>
 			</StyledTile>
