@@ -36,7 +36,7 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 			<Text size="md">
 				The email
 				<Text size="md" fontWeight="medium">
-					{emailName}
+					{''} {emailName} {''}
 				</Text>
 				supports login with company SSO (Single Sign-on)
 			</Text>
