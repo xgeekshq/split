@@ -39,9 +39,9 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 					css={{
 						position: 'absolute',
 						right: '-1px',
-						top: '-5px',
+						top: '0px',
 						width: '126px',
-						height: '$100'
+						height: '90px'
 					}}
 				/>
 			</StyledTile>
