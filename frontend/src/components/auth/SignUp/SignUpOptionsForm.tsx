@@ -34,9 +34,9 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 	return (
 		<Container direction="column">
 			<Text size="md">
-				The email
+				The email&nbsp;
 				<Text size="md" fontWeight="medium">
-					{''} {emailName} {''}
+					{emailName}&nbsp;
 				</Text>
 				supports login with company SSO (Single Sign-on)
 			</Text>
