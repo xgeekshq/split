@@ -19,6 +19,7 @@ export interface CreateBoardData {
 		teamsCount: number;
 		maxUsersCount: number;
 	};
+
 	board: BoardToAdd;
 	team: Team | null;
 	users: BoardUserDto[];

@@ -1,4 +1,6 @@
 {
+	"name": "split",
+	"version": "0.0.1",
 	"private": true,
 	"scripts": {
 		"prepare": "concurrently 'cd ./backend && npm i' 'cd ./frontend && npm i' && husky install",

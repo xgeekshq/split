@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, LeanDocument } from 'mongoose';
+import { UpdateBoardDto } from '../dto/update-board.dto';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Teams from '../../teams/interfaces/types';
-import BoardDto from '../dto/board.dto';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 
@@ -15,7 +15,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
     private getTeamService: GetTeamServiceInterface,
   ) {}
 
-  update(userId: string, boardId: string, boardData: BoardDto) {
+  update(userId: string, boardId: string, boardData: UpdateBoardDto) {
     return this.boardModel
       .findOneAndUpdate(
         {
