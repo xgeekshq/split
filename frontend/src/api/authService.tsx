@@ -21,7 +21,7 @@ export const getDashboardHeaderInfo = (
 };
 
 export const registerNewUser = (newUser: RegisterUser): Promise<User> => {
-	return fetchData('/auth/register', { method: 'POST', data: newUser, serverSide: true });
+	return fetchData('/auth/register', { method: 'POST', data: newUser, serverSide: false });
 };
 
 export const login = (credentials: LoginUser): Promise<User> => {
