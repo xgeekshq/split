@@ -5,29 +5,17 @@ import { CSSProps } from 'styles/stitches/stitches.config';
 import Svg from 'components/Primitives/Svg';
 
 type Props = CSSProps & {
-	onClick?: () => void;
 	name: string;
+	size?: 32 | 24 | 20 | 18 | 16 | 12;
 };
 
-const Icon = ({ name, onClick, css, ...props }: Props) => {
+const Icon = ({ name, size, css, ...props }: Props) => {
 	return (
-		<Svg
-			onClick={onClick}
-			css={
-				css || {
-					width: '$24',
-					height: '$24'
-				}
-			}
-			{...props}
-		>
+		<Svg size={size} css={css} {...props}>
 			<use href={`#${name}`} />
 		</Svg>
 	);
 };
-
-Icon.defaultProps = {
-	onClick: undefined
-};
+Icon.defaultProps = { size: 24 };
 
 export default Icon;
