@@ -15,6 +15,7 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	const { board } = createBoardData;
 
 	const minTeams = 2;
+	const minMembers = 4;
 
 	// const now = new Date();
 	// const last3Months = new Date().setMonth(now.getMonth() - 3);
@@ -57,9 +58,10 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 
 	const generateSubBoards = useCallback(
 		(maxTeams: number, splitedUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
-			if (splitedUsers) {
+			if (splitedUsers && team.users.length >= minMembers) {
 				new Array(maxTeams).fill(0).forEach((_, i) => {
 					const newBoard = generateSubBoard(i + 1);
+					console.log(splitedUsers);
 					splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
 						BoardUserRoles.RESPONSIBLE;
 					newBoard.users = splitedUsers[i];
