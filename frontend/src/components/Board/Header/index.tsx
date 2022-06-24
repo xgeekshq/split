@@ -96,10 +96,15 @@ const BoardHeader = () => {
 									data-orientation="vertical"
 									css={{ height: '$14 !important' }}
 								/>
-								<Link href={{
-									pathname: `[boardId]`,
-									query: { boardId: getSubBoard()?.id, mainBoardId: boardData?.board._id }
-								}}>
+								<Link
+									href={{
+										pathname: `[boardId]`,
+										query: {
+											boardId: getSubBoard()?.id,
+											mainBoardId: boardData?.board._id
+										}
+									}}
+								>
 									<StyledBoardLink>
 										{getSubBoard()?.title.replace('team ', '')}
 									</StyledBoardLink>
