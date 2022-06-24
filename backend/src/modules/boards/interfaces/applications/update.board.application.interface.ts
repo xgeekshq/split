@@ -1,12 +1,12 @@
 import { LeanDocument } from 'mongoose';
-import BoardDto from '../../dto/board.dto';
+import { UpdateBoardDto } from '../../dto/update-board.dto';
 import { BoardDocument } from '../../schemas/board.schema';
 
 export interface UpdateBoardApplicationInterface {
   update(
     userId: string,
     boardId: string,
-    boardData: BoardDto,
+    boardData: UpdateBoardDto,
   ): Promise<LeanDocument<BoardDocument> | null>;
   mergeBoards(
     subBoardId: string,

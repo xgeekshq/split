@@ -68,6 +68,14 @@ module.exports = {
 		'import/newline-after-import': 'error',
 		'import/no-duplicates': 'error',
 		'unused-imports/no-unused-imports': 'error',
+		'@typescript-eslint/naming-convention': [
+			'error',
+			{
+				selector: 'variableLike',
+				format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
+				leadingUnderscore: 'allow'
+			}
+		],
 		'prettier/prettier': ['error', { usePrettierrc: true }]
 	},
 	settings: {

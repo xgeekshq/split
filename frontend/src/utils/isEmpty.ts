@@ -5,7 +5,7 @@ export type EmptyObject = Record<string, never>;
 export type Empty = None | false | 0 | '' | [] | EmptyObject;
 
 const isEmpty = (value: unknown): value is Empty => {
-	if (value === null || value === undefined || value === 'undefined') {
+	if ([null, undefined, 'undefined'].includes(value as string | null | undefined)) {
 		return true;
 	}
 
@@ -17,7 +17,7 @@ const isEmpty = (value: unknown): value is Empty => {
 		return true;
 	}
 
-	if (value === '' || value === 0 || value === '0' || value === false) {
+	if (['', 0, '0', false].includes(value as string | number | boolean)) {
 		return true;
 	}
 

@@ -30,7 +30,7 @@ const SortMenu = ({ setFilter, filter }: Props) => {
 	return (
 		<Popover>
 			<PopoverTriggerStyled>
-				<Icon name={icon} />
+				<Icon name={icon} size={24} />
 			</PopoverTriggerStyled>
 			<PopoverContent>
 				<PopoverItemStyled active={filter === 'desc'} onClick={() => setFilter('desc')}>

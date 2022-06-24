@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-const schemaRegisterForm = z
+const SchemaRegisterForm = z
 	.object({
 		firstName: z.string().min(2, 'Your name must have more than 1 character.'),
 		lastName: z.string().min(2, 'Your name must have more than 1 character.'),
@@ -19,4 +19,4 @@ const schemaRegisterForm = z
 		path: ['passwordConf']
 	});
 
-export default schemaRegisterForm;
+export default SchemaRegisterForm;
