@@ -16,7 +16,7 @@ const useVotes = () => {
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
 			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
 			setToastState({
-				open: true,
+				open: isNaN(remainingVotes) ? false : true,
 				content: `You have ${remainingVotes} votes left`,
 				type: ToastStateEnum.INFO
 			});
@@ -36,7 +36,7 @@ const useVotes = () => {
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
 			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
 			setToastState({
-				open: true,
+				open: isNaN(remainingVotes) ? false : true,
 				content: `Vote removed. You have ${remainingVotes} votes left.`,
 				type: ToastStateEnum.INFO
 			});
