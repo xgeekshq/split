@@ -88,10 +88,20 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "joaosantos99",
+      "name": "João Santos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68588265?v=4",
+      "profile": "https://github.com/joaosantos99",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "divide-and-conquer",
+  "projectName": "split",
   "projectOwner": "xgeekshq",
   "repoType": "github",
   "repoHost": "https://github.com",
