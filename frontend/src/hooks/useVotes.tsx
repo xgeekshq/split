@@ -14,7 +14,7 @@ const useVotes = () => {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-			const remainingVotes = data.maxVotes - (votesByUser ?? 0);
+			const remainingVotes = Number(data.maxVotes) - (votesByUser ?? 0);
 			setToastState({
 				open: true,
 				content: `You have ${remainingVotes} votes left`,
@@ -34,7 +34,7 @@ const useVotes = () => {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 			const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-			const remainingVotes = data.maxVotes! - (votesByUser ?? 0);
+			const remainingVotes = Number(data.maxVotes) - (votesByUser ?? 0);
 			setToastState({
 				open: true,
 				content: `Vote removed. You have ${remainingVotes} votes left.`,

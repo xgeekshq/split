@@ -40,15 +40,10 @@ const useUser = (setErrorCode?: Dispatch<SetStateAction<number>>): UseUserType =
 	);
 
 	const loginAzure = async () => {
-		const loginResult = await signIn<RedirectableProviderType>('azure-ad', {
+		signIn<RedirectableProviderType>('azure-ad', {
 			callbackUrl: DASHBOARD_ROUTE,
-			redirect: false
+			redirect: true
 		});
-		if (loginResult?.error && setErrorCode) {
-			setErrorCode(transformLoginErrorCodes(loginResult.error));
-			return;
-		}
-		router.push(DASHBOARD_ROUTE);
 	};
 
 	return { loginAzure, resetToken, resetPassword };

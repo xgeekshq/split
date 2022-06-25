@@ -10,8 +10,6 @@ import { CronAzureService } from '../interfaces/services/cron.azure.service.inte
 
 @Injectable()
 export default class CronAzureServiceImpl implements CronAzureService {
-  private azureAccessToken: string | undefined = undefined;
-
   constructor(private readonly configService: ConfigService) {}
 
   getOAuthUrl(tenantId: string) {
