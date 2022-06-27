@@ -53,13 +53,13 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	 * If no, redirect to previous router and show a toastr
 	 */
 	useEffect(() => {
-		if ((data && !data[0]) || team?.users.length < MIN_MEMBERS) {
+		if ((data && !data[0]) || (team && team?.users.length < MIN_MEMBERS)) {
 			setHaveError(true);
 		} else if (data && data[0]) {
 			setTeam(data[0]);
 			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: data[0]._id } }));
 		}
-	}, [data, setBoardData, setHaveError, setToastState, team?.users.length]);
+	}, [data, setBoardData, setHaveError, setToastState, team?.users.length, team]);
 
 	/**
 	 * Use Effect to validate if staheolders return data
