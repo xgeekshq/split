@@ -53,7 +53,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	 * If no, redirect to previous router and show a toastr
 	 */
 	useEffect(() => {
-		if ((data && !data[0]) || team?.users.length < MIN_MEMBERS) {
+		if ((data && !data[0]) || (team?.users.length && team?.users.length < MIN_MEMBERS)) {
 			setHaveError(true);
 		} else if (data && data[0]) {
 			setTeam(data[0]);
