@@ -89,10 +89,20 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "dvpfran",
+      "name": "Luís Francisco",
+      "avatar_url": "https://avatars.githubusercontent.com/u/67462841?v=4",
+      "profile": "https://github.com/dvpfran",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "divide-and-conquer",
+  "projectName": "split",
   "projectOwner": "xgeekshq",
   "repoType": "github",
   "repoHost": "https://github.com",

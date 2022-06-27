@@ -76,7 +76,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 
     const { data } = await axios.get(queryUrl, {
       headers: {
-        Authorization: `Bearer ${this.cronAzureService.getToken()}`,
+        Authorization: `Bearer ${await this.cronAzureService.getAzureAccessToken()}`,
         ConsistencyLevel: 'eventual',
       },
     });
