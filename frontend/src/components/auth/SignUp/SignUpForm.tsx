@@ -2,7 +2,7 @@ import React, { Dispatch, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -69,7 +69,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 		defaultValues: {
 			email: emailName.email
 		},
-		resolver: zodResolver(SchemaEmail)
+		resolver: joiResolver(SchemaEmail)
 	});
 
 	const handleCheckUserExists = async (email: string) => {

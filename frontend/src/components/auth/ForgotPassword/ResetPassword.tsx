@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -39,7 +39,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
 			password: '',
 			passwordConf: ''
 		},
-		resolver: zodResolver(SchemaResetPasswordForm)
+		resolver: joiResolver(SchemaResetPasswordForm)
 	});
 
 	const { resetPassword } = useUser();
