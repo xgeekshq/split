@@ -91,7 +91,17 @@
       ]
     },
     {
-      "login": "dvpfran",
+      "login": "joaosantos99",
+      "name": "João Santos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68588265?v=4",
+      "profile": "https://github.com/joaosantos99",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+     "login": "dvpfran",
       "name": "Luís Francisco",
       "avatar_url": "https://avatars.githubusercontent.com/u/67462841?v=4",
       "profile": "https://github.com/dvpfran",
