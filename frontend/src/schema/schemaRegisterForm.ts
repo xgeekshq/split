@@ -13,10 +13,10 @@ const SchemaRegisterForm = Joi.object({
 	}),
 	email: Joi.string()
 		.required()
-		.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+		.email({ tlds: { allow: false } })
 		.messages({
 			'any.required': 'Please insert your email.',
-			'string.pattern.base': 'This email is not valid.'
+			'string.email': 'This email is not valid.'
 		}),
 	password: Joi.string()
 		.required()
