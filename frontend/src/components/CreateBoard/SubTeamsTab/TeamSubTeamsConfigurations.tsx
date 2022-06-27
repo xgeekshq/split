@@ -30,7 +30,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 	const setToastState = useSetRecoilState(toastState);
 	const [haveError, setHaveError] = useRecoilState(createBoardError);
-	const minMembers = 4;
+	const MIN_MEMBERS = 4;
 
 	/**
 	 * States
@@ -53,7 +53,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	 * If no, redirect to previous router and show a toastr
 	 */
 	useEffect(() => {
-		if ((data && !data[0]) || team?.users.length < minMembers) {
+		if ((data && !data[0]) || team?.users.length < MIN_MEMBERS) {
 			setHaveError(true);
 		} else if (data && data[0]) {
 			setTeam(data[0]);
