@@ -15,7 +15,6 @@ const useVotes = () => {
 	const addVote = useMutation(addVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-
 			if (!isEmpty(data.maxVotes)) {
 				setToastState({
 					open: true,
@@ -36,7 +35,6 @@ const useVotes = () => {
 	const deleteVote = useMutation(deleteVoteRequest, {
 		onSuccess: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
-
 			if (!isEmpty(data.maxVotes)) {
 				setToastState({
 					open: true,

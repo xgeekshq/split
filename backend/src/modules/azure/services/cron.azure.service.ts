@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import {
@@ -11,22 +10,7 @@ import { CronAzureService } from '../interfaces/services/cron.azure.service.inte
 
 @Injectable()
 export default class CronAzureServiceImpl implements CronAzureService {
-  private azureAccessToken: string | undefined = undefined;
-
-  constructor(private readonly configService: ConfigService) {
-    this.getAzureAccessToken().then((token) => {
-      this.azureAccessToken = token;
-    });
-  }
-
-  @Cron('0 45 * * * *')
-  async handleCron() {
-    await this.getAzureAccessToken();
-  }
-
-  public getToken() {
-    return this.azureAccessToken;
-  }
+  constructor(private readonly configService: ConfigService) {}
 
   getOAuthUrl(tenantId: string) {
     return `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
