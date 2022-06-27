@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { addVoteRequest, deleteVoteRequest } from 'api/boardService';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import isEmpty from 'utils/isEmpty';
+import { getRemainingVotes } from '../utils/getRemainingVotes';
 import useBoardUtils from './useBoardUtils';
 
 const useVotes = () => {
@@ -16,11 +17,9 @@ const useVotes = () => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 
 			if (!isEmpty(data.maxVotes)) {
-				const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-				const remainingVotes = parseInt(data.maxVotes, 10) - (votesByUser ?? 0);
 				setToastState({
 					open: true,
-					content: `You have ${remainingVotes} votes left`,
+					content: `You have ${getRemainingVotes(data, userId!)} votes left`,
 					type: ToastStateEnum.INFO
 				});
 			}
@@ -39,11 +38,12 @@ const useVotes = () => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 
 			if (!isEmpty(data.maxVotes)) {
-				const votesByUser = data.users.find((user) => user.user._id === userId)?.votesCount;
-				const remainingVotes = parseInt(data.maxVotes, 10) - (votesByUser ?? 0);
 				setToastState({
 					open: true,
-					content: `Vote removed. You have ${remainingVotes} votes left.`,
+					content: `Vote removed. You have ${getRemainingVotes(
+						data,
+						userId!
+					)} votes left.`,
 					type: ToastStateEnum.INFO
 				});
 			}
