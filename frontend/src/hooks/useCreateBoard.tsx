@@ -69,7 +69,7 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 				});
 			}
 		},
-		[generateSubBoard]
+		[generateSubBoard, team]
 	);
 
 	const handleSplitBoards = useCallback(
@@ -97,6 +97,10 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	);
 
 	const canAdd = useMemo(() => {
+		if (dividedBoardsCount === teamMembers.length) {
+			return false;
+		}
+
 		if (dividedBoardsCount === Math.floor(teamMembers.length / 2)) {
 			return false;
 		}
