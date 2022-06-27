@@ -49,10 +49,13 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
     const lastName =
       family_name ?? splitedName[splitedName.length - 1] ?? 'last';
 
-    const userExists = await this.checkUserExistsInActiveDirectory(email);
+    const emailOrUniqueName = email ?? unique_name;
+
+    const userExists = await this.checkUserExistsInActiveDirectory(
+      emailOrUniqueName,
+    );
     if (!userExists) return null;
 
-    const emailOrUniqueName = email ?? unique_name;
     const user = await this.getUserService.getByEmail(emailOrUniqueName);
     if (user) return signIn(user, this.getTokenService, 'azure');
 
