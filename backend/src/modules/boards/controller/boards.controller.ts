@@ -13,6 +13,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { UpdateBoardDto } from '../dto/update-board.dto';
 import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -105,7 +106,7 @@ export default class BoardsController {
   async updateBoard(
     @Req() request: RequestWithUser,
     @Param() { boardId }: BaseParam,
-    @Body() boardData: BoardDto,
+    @Body() boardData: UpdateBoardDto,
   ) {
     const board = await this.updateBoardApp.update(
       request.user._id,

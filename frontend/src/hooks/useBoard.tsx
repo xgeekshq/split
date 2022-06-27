@@ -68,6 +68,14 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 	const updateBoard = useMutation(updateBoardRequest, {
 		onSuccess: (board: BoardType) => {
 			setBoard(board);
+
+			queryClient.invalidateQueries('board');
+
+			setToastState({
+				open: true,
+				content: 'The board was successfully updated.',
+				type: ToastStateEnum.SUCCESS
+			});
 		},
 		onError: () => {
 			setToastState({

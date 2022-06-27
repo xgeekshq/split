@@ -7,7 +7,7 @@ type TilesProps = {
 	data: HeaderInfo;
 };
 
-const Index: React.FC<TilesProps> = ({ data }) => {
+const DashboardTiles = ({ data }: TilesProps) => {
 	return (
 		<GridContainer>
 			<StyledTile>
@@ -66,4 +66,4 @@ const Index: React.FC<TilesProps> = ({ data }) => {
 	);
 };
 
-export default Index;
+export default DashboardTiles;
