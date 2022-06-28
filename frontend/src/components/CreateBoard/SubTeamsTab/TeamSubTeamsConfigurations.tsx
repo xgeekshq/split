@@ -30,6 +30,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 	const setToastState = useSetRecoilState(toastState);
 	const [haveError, setHaveError] = useRecoilState(createBoardError);
+	const MIN_MEMBERS = 4;
 
 	/**
 	 * States
@@ -52,13 +53,13 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	 * If no, show a toast
 	 */
 	useEffect(() => {
-		if (data && !data[0]) {
+		if ((data && !data[0]) || (team && team?.users.length < MIN_MEMBERS)) {
 			setHaveError(true);
 		} else if (data && data[0]) {
 			setTeam(data[0]);
 			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: data[0]._id } }));
 		}
-	}, [data, setBoardData, setHaveError, setToastState]);
+	}, [data, setBoardData, setHaveError, setToastState, team?.users.length, team]);
 
 	/**
 	 * Use Effect to validate if stakeholders return data

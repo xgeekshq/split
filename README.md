@@ -62,6 +62,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/CatiaBarroco-xgeeks"><img src="https://avatars.githubusercontent.com/u/104831678?v=4?s=50" width="50px;" alt=""/><br /><sub><b>CatiaBarroco-xgeeks</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=CatiaBarroco-xgeeks" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=CatiaBarroco-xgeeks" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/joaosantos99"><img src="https://avatars.githubusercontent.com/u/68588265?v=4?s=50" width="50px;" alt=""/><br /><sub><b>João Santos</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=joaosantos99" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=joaosantos99" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/dvpfran"><img src="https://avatars.githubusercontent.com/u/67462841?v=4?s=50" width="50px;" alt=""/><br /><sub><b>Luís Francisco</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=dvpfran" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=dvpfran" title="Documentation">📖</a></td>
   </tr>
 </table>
