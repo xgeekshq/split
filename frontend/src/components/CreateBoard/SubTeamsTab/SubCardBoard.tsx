@@ -118,7 +118,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 									ml: '$12',
 									cursor: 'pointer',
 
-									transtion: 'all 0.2s ease-in-out',
+									transition: 'all 0.2s ease-in-out',
 
 									'&:hover': {
 										backgroundColor: '$primary400',
