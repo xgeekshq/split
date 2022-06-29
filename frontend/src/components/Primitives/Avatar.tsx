@@ -41,8 +41,8 @@ const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css, i
 		<AvatarRoot
 			css={{
 				size,
-				backgroundColor: colors.bg,
-				border: colors.border ? '1px solid $primary200' : undefined,
+				backgroundColor: colors?.bg,
+				border: colors?.border ? '1px solid $primary200' : undefined,
 				...css,
 				filter: 'drop-shadow(0px 1px 4px rgba(18, 25, 34, 0.05))'
 			}}
@@ -54,7 +54,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, size, colors, fallbackText, css, i
 					lineHeight: !isBoardPage ? '$16' : '$12',
 					fontWeight: !isBoardPage ? '$medium' : '$regular',
 					fontFamily: 'DM Sans',
-					color: colors.fontColor,
+					color: colors?.fontColor,
 					'& span': ''
 				}}
 			>

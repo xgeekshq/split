@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 
-import { bubbleColors } from 'styles/stitches/partials/colors/bubble.colors';
-
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
+import useAvatarColor from '../../hooks/useAvatarColor';
 
 type ListUsersType = {
 	user: User | string;
@@ -64,12 +63,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[usersCount]
 		);
 
-		const getRandomColor = useCallback(() => {
-			const keys = Object.keys(bubbleColors);
-			const value = Math.floor(Math.random() * keys.length);
-			return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
-		}, []);
-
 		const stakeholdersColors = useMemo(
 			() => ({
 				border: true,
@@ -79,55 +72,56 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[]
 		);
 
-		const colors = useMemo(() => {
-			const col = [];
-			for (let i = 0; i < 3; i++) {
-				col.push(stakeholders ? stakeholdersColors : getRandomColor());
-			}
-			return col;
-		}, [getRandomColor, stakeholdersColors, stakeholders]);
+		const GetAvatarColor = (value: User | string) =>
+			useAvatarColor(typeof value === 'string' ? value : value._id);
 
-		const renderAvatar = useCallback(
-			(value: User | string, idx) => {
-				if (typeof value === 'string') {
-					return (
+		const renderAvatar = useCallback((value: User | string, avatarColor, idx) => {
+			if (typeof value === 'string') {
+				return (
+					<Avatar
+						key={`${value}-${idx}-${Math.random()}`}
+						css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
+						size={32}
+						colors={avatarColor}
+						fallbackText={value}
+					/>
+				);
+			}
+			const initials = `${value.firstName[0]}${value.lastName[0]}`;
+			return (
+				<Tooltip
+					key={`${value}-${idx}-${Math.random()}`}
+					content={`${value.firstName} ${value.lastName}`}
+				>
+					<div>
 						<Avatar
-							key={`${value}-${idx}-${Math.random()}`}
 							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 							size={32}
-							colors={colors[idx]}
-							fallbackText={value}
+							colors={avatarColor}
+							fallbackText={initials}
 						/>
-					);
-				}
-				const initials = `${value.firstName[0]}${value.lastName[0]}`;
-				return (
-					<Tooltip
-						key={`${value}-${idx}-${Math.random()}`}
-						content={`${value.firstName} ${value.lastName}`}
-					>
-						<div>
-							<Avatar
-								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
-								size={32}
-								colors={colors[idx]}
-								fallbackText={initials}
-							/>
-						</div>
-					</Tooltip>
-				);
-			},
-			[colors]
-		);
+					</div>
+				</Tooltip>
+			);
+		}, []);
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
 				{haveError
-					? ['-', '-', '-'].map((value, index) => renderAvatar(value, index))
+					? ['-', '-', '-'].map((value, index) =>
+							renderAvatar(
+								value,
+								stakeholders ? stakeholdersColors : GetAvatarColor(value),
+								index
+							)
+					  )
 					: (data.slice(0, !myBoards ? 3 : 1) as User[]).map(
-							(user: User, index: number) => {
-								return renderAvatar(getInitials(user, index), index);
-							}
+							(user: User, index: number) =>
+								renderAvatar(
+									getInitials(user, index),
+									stakeholders ? stakeholdersColors : GetAvatarColor(user),
+									index
+								)
 					  )}
 			</Flex>
 		);
