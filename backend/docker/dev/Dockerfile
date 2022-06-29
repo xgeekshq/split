@@ -13,5 +13,8 @@ RUN yarn
 # Copy all files
 COPY ./ .
 
-# Run the build command
-RUN npm run build
+# Expose port
+EXPOSE 3200
+
+# Run in dev mode
+CMD ["yarn", "start:dev"]

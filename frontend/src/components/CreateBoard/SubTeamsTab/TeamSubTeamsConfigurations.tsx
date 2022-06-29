@@ -50,7 +50,7 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	/**
 	 * Use Effect to validate if exist any team created
 	 * If yes, save on state and on board data atom
-	 * If no, redirect to previous router and show a toastr
+	 * If no, show a toast
 	 */
 	useEffect(() => {
 		if ((data && !data[0]) || (team && team?.users.length < MIN_MEMBERS)) {
@@ -62,8 +62,8 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	}, [data, setBoardData, setHaveError, setToastState, team?.users.length, team]);
 
 	/**
-	 * Use Effect to validate if staheolders return data
-	 * If ues, save on state
+	 * Use Effect to validate if stakeholders return data
+	 * If yes, save on state
 	 */
 	useEffect(() => {
 		if (dataStakeholders) {
