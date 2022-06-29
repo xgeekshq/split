@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { bubbleColors } from 'styles/stitches/partials/colors/bubble.colors';
+import { getRandomColor } from 'utils/initialNames';
 
 type AvatarColor = {
 	bg: string;
 	fontColor: string;
 };
 
-const useAvatarColor = (userId: string, isDefaultColor: boolean): AvatarColor => {
+const useAvatarColor = (userId: string | undefined, isDefaultColor: boolean): AvatarColor => {
 	const [color, setColor] = useState<AvatarColor | undefined>(undefined);
 
 	// The userIcon sprite is filled with #F3FD58 color that correspond to secondaryBase
@@ -15,17 +15,11 @@ const useAvatarColor = (userId: string, isDefaultColor: boolean): AvatarColor =>
 		return { bg: `$secondaryBase`, fontColor: `$secondaryDarkest` };
 	}, []);
 
-	const getRandomColor = useCallback(() => {
-		const keys = Object.keys(bubbleColors);
-		const value = Math.floor(Math.random() * keys.length);
-		return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
-	}, []);
-
 	useEffect(() => {
 		const localStorageKey = `user_color_${userId}`;
 		const userStorage = localStorage.getItem(localStorageKey);
 
-		if (userStorage) {
+		if (userStorage !== null && userStorage !== 'undefined') {
 			const user = JSON.parse(userStorage);
 			setColor({
 				bg: user.bg,
@@ -36,7 +30,7 @@ const useAvatarColor = (userId: string, isDefaultColor: boolean): AvatarColor =>
 			localStorage.setItem(localStorageKey, JSON.stringify(newColor));
 			setColor(newColor);
 		}
-	}, [userId, isDefaultColor, getRandomColor, getDefaultColor]);
+	}, [userId, isDefaultColor, getDefaultColor]);
 
 	return color as AvatarColor;
 };
