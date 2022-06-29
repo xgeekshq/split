@@ -244,29 +244,30 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 							{!board.submitedByUser && !board.submitedAt && (
 								<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
 							)}
-						</Flex>
 
-						{board.submitedByUser && board.submitedAt && (
-							<AlertBox
-								type="info"
-								title={`Sub-team board successfully merged into main board ${new Date(
-									board.submitedAt
-								).toLocaleDateString()}, ${new Date(
-									board.submitedAt
-								).toLocaleTimeString()}`}
-								text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
-							>
-								<Link
-									key={mainBoardId}
-									href={{
-										pathname: `[boardId]`,
-										query: { boardId: mainBoardId }
-									}}
+							{board.submitedByUser && board.submitedAt && (
+								<AlertBox
+									css={{ flex: '1' }}
+									type="info"
+									title={`Sub-team board successfully merged into main board ${new Date(
+										board.submitedAt
+									).toLocaleDateString()}, ${new Date(
+										board.submitedAt
+									).toLocaleTimeString()}`}
+									text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
 								>
-									<Button size="sm">Go to main board</Button>
-								</Link>
-							</AlertBox>
-						)}
+									<Link
+										key={mainBoardId}
+										href={{
+											pathname: `[boardId]`,
+											query: { boardId: mainBoardId }
+										}}
+									>
+										<Button size="sm">Go to main board</Button>
+									</Link>
+								</AlertBox>
+							)}
+						</Flex>
 
 						<Flex css={{ width: '100%' }} gap="24">
 							<DragDropContext onDragEnd={onDragEnd}>
