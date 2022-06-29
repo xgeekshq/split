@@ -39,7 +39,7 @@ export default interface BoardType {
 	postAnonymously: boolean;
 	submitedByUser?: string;
 	submitedAt?: Date;
-	slackGroup: boolean;
+	slackGroup?: boolean;
 }
 
 export interface BoardInfoType {
