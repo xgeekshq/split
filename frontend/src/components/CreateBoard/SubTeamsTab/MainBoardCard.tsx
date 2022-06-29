@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -12,7 +12,11 @@ import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
 import Tooltip from 'components/Primitives/Tooltip';
 import useCreateBoard from 'hooks/useCreateBoard';
-import { CreateBoardData, createBoardError } from 'store/createBoard/atoms/create-board.atom';
+import {
+	CreateBoardData,
+	createBoardError,
+	slackGroup
+} from 'store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from 'types/board/board';
 import { Team } from 'types/team/team';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
@@ -56,6 +60,7 @@ const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface
 	/**
 	 * Recoil Atoms
 	 */
+	const [createSlackGroup, setCreateSlackGroup] = useRecoilState(slackGroup);
 	const haveError = useRecoilValue(createBoardError);
 
 	const {
@@ -194,7 +199,14 @@ const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface
 				</Flex>
 			</MainContainer>
 			<SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
-			<Checkbox id="slack" label="Create Slack group for each sub-team" size="16" />
+			<Box onClick={() => setCreateSlackGroup(!createSlackGroup)}>
+				<Checkbox
+					checked={createSlackGroup}
+					id="slack"
+					label="Create Slack group for each sub-team"
+					size="16"
+				/>
+			</Box>
 		</Flex>
 	);
 });

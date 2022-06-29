@@ -14,6 +14,11 @@ export const createBoardState = atom({
 	default: false
 });
 
+export const slackGroup = atom({
+	key: 'slackGroup',
+	default: false
+});
+
 export interface CreateBoardData {
 	count: {
 		teamsCount: number;
