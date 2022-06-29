@@ -7,8 +7,13 @@ type AvatarColor = {
 	fontColor: string;
 };
 
-const useAvatarColor = (userId: string): AvatarColor => {
+const useAvatarColor = (userId: string, isDefaultColor: boolean): AvatarColor => {
 	const [color, setColor] = useState<AvatarColor | undefined>(undefined);
+
+	// The userIcon sprite is filled with #F3FD58 color that correspond to secondaryBase
+	const getDefaultColor = useCallback(() => {
+		return { bg: `$secondaryBase`, fontColor: `$secondaryDarkest` };
+	}, []);
 
 	const getRandomColor = useCallback(() => {
 		const keys = Object.keys(bubbleColors);
@@ -27,11 +32,11 @@ const useAvatarColor = (userId: string): AvatarColor => {
 				fontColor: user.fontColor
 			});
 		} else {
-			const newColor = getRandomColor();
+			const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
 			localStorage.setItem(localStorageKey, JSON.stringify(newColor));
 			setColor(newColor);
 		}
-	}, [userId, getRandomColor]);
+	}, [userId, isDefaultColor, getRandomColor, getDefaultColor]);
 
 	return color as AvatarColor;
 };

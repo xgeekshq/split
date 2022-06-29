@@ -72,8 +72,10 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[]
 		);
 
-		const GetAvatarColor = (value: User | string) =>
-			useAvatarColor(typeof value === 'string' ? value : value._id);
+		const GetAvatarColor = (value: User | string) => {
+			const id = typeof value === 'string' ? value : value._id;
+			return useAvatarColor(id, id === userId);
+		};
 
 		const renderAvatar = useCallback((value: User | string, avatarColor, idx) => {
 			if (typeof value === 'string') {
