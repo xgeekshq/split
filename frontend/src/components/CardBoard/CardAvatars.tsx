@@ -6,7 +6,6 @@ import Tooltip from 'components/Primitives/Tooltip';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
-import useAvatarColor from '../../hooks/useAvatarColor';
 
 type ListUsersType = {
 	user: User | string;
@@ -72,58 +71,62 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[]
 		);
 
-		const GetAvatarColor = (value: User | string) => {
-			const id = typeof value === 'string' ? value : value._id;
-			return useAvatarColor(id, id === userId);
-		};
-
-		const renderAvatar = useCallback((value: User | string, avatarColor, idx) => {
-			if (typeof value === 'string') {
-				return (
-					<Avatar
-						key={`${value}-${idx}-${Math.random()}`}
-						css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
-						size={32}
-						colors={avatarColor}
-						fallbackText={value}
-					/>
-				);
-			}
-			const initials = `${value.firstName[0]}${value.lastName[0]}`;
-			return (
-				<Tooltip
-					key={`${value}-${idx}-${Math.random()}`}
-					content={`${value.firstName} ${value.lastName}`}
-				>
-					<div>
+		const renderAvatar = useCallback(
+			(value: User | string, avatarColor, idx) => {
+				if (typeof value === 'string') {
+					return (
 						<Avatar
+							key={`${value}-${idx}-${Math.random()}`}
 							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
-							size={32}
 							colors={avatarColor}
-							fallbackText={initials}
+							size={32}
+							fallbackText={value}
+							id={value}
+							isDefaultColor={value === userId}
 						/>
-					</div>
-				</Tooltip>
-			);
-		}, []);
+					);
+				}
+				const initials = `${value.firstName[0]}${value.lastName[0]}`;
+				return (
+					<Tooltip
+						key={`${value}-${idx}-${Math.random()}`}
+						content={`${value.firstName} ${value.lastName}`}
+					>
+						<div>
+							<Avatar
+								key={`${value}-${idx}-${Math.random()}`}
+								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
+								colors={avatarColor}
+								size={32}
+								fallbackText={initials}
+								id={value._id}
+								isDefaultColor={value._id === userId}
+							/>
+						</div>
+					</Tooltip>
+				);
+			},
+			[userId]
+		);
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
 				{haveError
-					? ['-', '-', '-'].map((value, index) =>
-							renderAvatar(
+					? ['-', '-', '-'].map((value, index) => {
+							return renderAvatar(
 								value,
-								stakeholders ? stakeholdersColors : GetAvatarColor(value),
+								stakeholders ? stakeholdersColors : undefined,
 								index
-							)
-					  )
+							);
+					  })
 					: (data.slice(0, !myBoards ? 3 : 1) as User[]).map(
-							(user: User, index: number) =>
-								renderAvatar(
+							(user: User, index: number) => {
+								return renderAvatar(
 									getInitials(user, index),
-									stakeholders ? stakeholdersColors : GetAvatarColor(user),
+									stakeholders ? stakeholdersColors : undefined,
 									index
-								)
+								);
+							}
 					  )}
 			</Flex>
 		);

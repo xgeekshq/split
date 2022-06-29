@@ -13,7 +13,6 @@ import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
 import { CardItemType } from 'types/card/cardItem';
 import CommentType from 'types/comment/comment';
-import useAvatarColor from '../../../hooks/useAvatarColor';
 
 interface FooterProps {
 	boardId: string;
@@ -121,19 +120,16 @@ const CardFooter = React.memo<FooterProps>(
 			});
 		};
 
-		const GetAvatarColor = (id: string | undefined) => {
-			return useAvatarColor(id, id === userId);
-		};
-
 		return (
 			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
 				{!anonymous && !teamName && (
 					<Flex gap="4" align="center">
 						<Avatar
 							size={20}
-							colors={GetAvatarColor(createdBy?._id)}
 							fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
 							isBoardPage
+							id={createdBy?._id}
+							isDefaultColor={createdBy?._id === userId}
 						/>
 						<Text size="xs">
 							{createdBy?.firstName} {createdBy?.lastName}
