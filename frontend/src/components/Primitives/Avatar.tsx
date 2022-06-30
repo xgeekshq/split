@@ -28,13 +28,13 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
 });
 
 type AvatarType = {
-	colors: { bg: string; fontColor: string; border?: boolean };
 	fallbackText: string;
+	colors?: { bg: string; fontColor: string; border?: boolean };
 	src?: string;
 	size?: number;
 	isBoardPage?: boolean;
 	id?: string;
-	isDefaultColor: boolean;
+	isDefaultColor?: boolean;
 };
 
 type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
