@@ -1,7 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 
-import { bubbleColors } from 'styles/stitches/partials/colors/bubble.colors';
-
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
@@ -64,12 +62,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[usersCount]
 		);
 
-		const getRandomColor = useCallback(() => {
-			const keys = Object.keys(bubbleColors);
-			const value = Math.floor(Math.random() * keys.length);
-			return { bg: `$${keys[value]}`, fontColor: `$${bubbleColors[keys[value]]}` };
-		}, []);
-
 		const stakeholdersColors = useMemo(
 			() => ({
 				border: true,
@@ -79,24 +71,18 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			[]
 		);
 
-		const colors = useMemo(() => {
-			const col = [];
-			for (let i = 0; i < 3; i++) {
-				col.push(stakeholders ? stakeholdersColors : getRandomColor());
-			}
-			return col;
-		}, [getRandomColor, stakeholdersColors, stakeholders]);
-
 		const renderAvatar = useCallback(
-			(value: User | string, idx) => {
+			(value: User | string, avatarColor, idx) => {
 				if (typeof value === 'string') {
 					return (
 						<Avatar
 							key={`${value}-${idx}-${Math.random()}`}
 							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
+							colors={avatarColor}
 							size={32}
-							colors={colors[idx]}
 							fallbackText={value}
+							id={value}
+							isDefaultColor={value === userId}
 						/>
 					);
 				}
@@ -108,25 +94,38 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					>
 						<div>
 							<Avatar
+								key={`${value}-${idx}-${Math.random()}`}
 								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
+								colors={avatarColor}
 								size={32}
-								colors={colors[idx]}
 								fallbackText={initials}
+								id={value._id}
+								isDefaultColor={value._id === userId}
 							/>
 						</div>
 					</Tooltip>
 				);
 			},
-			[colors]
+			[userId]
 		);
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
 				{haveError
-					? ['-', '-', '-'].map((value, index) => renderAvatar(value, index))
+					? ['-', '-', '-'].map((value, index) => {
+							return renderAvatar(
+								value,
+								stakeholders ? stakeholdersColors : undefined,
+								index
+							);
+					  })
 					: (data.slice(0, !myBoards ? 3 : 1) as User[]).map(
 							(user: User, index: number) => {
-								return renderAvatar(getInitials(user, index), index);
+								return renderAvatar(
+									getInitials(user, index),
+									stakeholders ? stakeholdersColors : undefined,
+									index
+								);
 							}
 					  )}
 			</Flex>
