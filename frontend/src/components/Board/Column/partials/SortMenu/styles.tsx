@@ -3,6 +3,16 @@ import { styled } from 'styles/stitches/stitches.config';
 import { PopoverItem, PopoverTrigger } from 'components/Primitives/Popover';
 
 const PopoverTriggerStyled = styled(PopoverTrigger, {
+	variants: {
+		disabled: {
+			true: {
+				cursor: 'not-allowed',
+				pointerEvents: 'none',
+				opacity: '0.5'
+			}
+		}
+	},
+
 	cursor: 'pointer',
 	color: '$primary300',
 

@@ -73,7 +73,11 @@ const Column = React.memo<ColumnBoardType>(
 									</Text>
 								</Flex>
 
-								<SortMenu setFilter={setFilter} filter={filter} />
+								<SortMenu
+									disabled={!isMainboard}
+									setFilter={setFilter}
+									filter={filter}
+								/>
 							</Flex>
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
 							<Flex direction="column" css={{}}>
