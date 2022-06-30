@@ -5,6 +5,7 @@ import { signOut } from 'next-auth/react';
 
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
+import Tooltip from 'components/Primitives/Tooltip';
 import {
 	ACCOUNT_ROUTE,
 	BOARDS_ROUTE,
@@ -53,27 +54,29 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 					<StyledText>Boards</StyledText>
 				</StyledMenuItem>
 			</Link>
-			<Link href={USERS_ROUTE}>
-				<StyledMenuItem data-active={active === USERS_ROUTE} align="center">
+			<Tooltip content="Coming Soon">
+				<StyledMenuItem disabled data-active={active === USERS_ROUTE} align="center">
 					<Icon name="user" />
 					<StyledText>Users</StyledText>
 				</StyledMenuItem>
-			</Link>
-			<Link href={TEAMS_ROUTE}>
-				<StyledMenuItem data-active={active === TEAMS_ROUTE} align="center">
+			</Tooltip>
+			<Tooltip content="Coming Soon">
+				<StyledMenuItem disabled data-active={active === TEAMS_ROUTE} align="center">
 					<Icon name="team" />
 					<StyledText>Teams</StyledText>
 				</StyledMenuItem>
-			</Link>
+			</Tooltip>
 			<StyledSeparator />
-			<Link href={ACCOUNT_ROUTE}>
-				<StyledMenuItem data-active={active === ACCOUNT_ROUTE} align="center">
+			<Tooltip content="Coming Soon">
+				<StyledMenuItem disabled data-active={active === ACCOUNT_ROUTE} align="center">
 					<Icon name="user-circle" />
 					<StyledText>Account</StyledText>
 				</StyledMenuItem>
-			</Link>
-			<Link href={SETTINGS_ROUTE}>
+			</Tooltip>
+
+			<Tooltip content="Coming Soon">
 				<StyledMenuItem
+					disabled
 					css={{ mb: '$16' }}
 					data-active={active === SETTINGS_ROUTE}
 					align="center"
@@ -81,7 +84,8 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 					<Icon name="settings" />
 					<StyledText>Settings</StyledText>
 				</StyledMenuItem>
-			</Link>
+			</Tooltip>
+
 			<StyledSeparator />
 			<StyledMenuItem
 				css={{ mt: '$16' }}

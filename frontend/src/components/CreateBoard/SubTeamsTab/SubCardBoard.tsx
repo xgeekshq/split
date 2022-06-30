@@ -36,6 +36,8 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 			role: BoardUserRoles.MEMBER
 		}));
 
+		if (cloneUsers.length <= 1) return;
+
 		let userFound: BoardUserToAdd | undefined;
 		do {
 			userFound = cloneUsers[Math.floor(Math.random() * cloneUsers.length)];
@@ -84,34 +86,59 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 							orientation="vertical"
 							css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
 						/>
-						<Flex
-							css={{
-								height: '$24',
-								width: '$24',
-								borderRadius: '$round',
-								border: '1px solid $colors$primary400',
-								ml: '$12',
-								cursor: 'pointer',
-
-								transtion: 'all 0.2s ease-in-out',
-
-								'&:hover': {
-									backgroundColor: '$primary400',
-									color: 'white'
-								}
-							}}
-							align="center"
-							justify="center"
-							onClick={handleLottery}
-						>
-							<Icon
-								name="wand"
+						{users.length <= 1 ? (
+							<Flex
 								css={{
-									width: '$12',
-									height: '$12'
+									height: '$24',
+									width: '$24',
+									borderRadius: '$round',
+									border: '1px solid $colors$primary400',
+									ml: '$12',
+									opacity: '0.2'
 								}}
-							/>
-						</Flex>
+								align="center"
+								justify="center"
+								onClick={handleLottery}
+							>
+								<Icon
+									name="wand"
+									css={{
+										width: '$12',
+										height: '$12'
+									}}
+								/>
+							</Flex>
+						) : (
+							<Flex
+								css={{
+									height: '$24',
+									width: '$24',
+									borderRadius: '$round',
+									border: '1px solid $colors$primary400',
+									ml: '$12',
+									cursor: 'pointer',
+
+									transition: 'all 0.2s ease-in-out',
+
+									'&:hover': {
+										backgroundColor: '$primary400',
+										color: 'white'
+									}
+								}}
+								align="center"
+								justify="center"
+								onClick={handleLottery}
+							>
+								<Icon
+									name="wand"
+									css={{
+										width: '$12',
+										height: '$12'
+									}}
+								/>
+							</Flex>
+						)}
+
 						<Text size="sm" color="primary300" css={{ mx: '$8' }}>
 							{responsible?.firstName} {responsible?.lastName}
 						</Text>

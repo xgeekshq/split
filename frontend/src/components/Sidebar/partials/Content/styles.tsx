@@ -5,6 +5,16 @@ import Text from 'components/Primitives/Text';
 import Separator from '../Separator';
 
 const StyledMenuItem = styled(Flex, {
+	variants: {
+		disabled: {
+			true: {
+				'&:hover': {
+					cursor: 'not-allowed'
+				}
+			}
+		}
+	},
+
 	pl: '$22',
 	py: '$12',
 	height: '$48',
