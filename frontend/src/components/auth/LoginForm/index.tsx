@@ -37,7 +37,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 	const [loading, setLoading] = useState({ credentials: false, sso: false });
 	const setToastState = useSetRecoilState(toastState);
 	const [loginErrorCode, setLoginErrorCode] = useState(-1);
-	const { loginAzure } = useUser(setLoginErrorCode);
+	const { loginAzure } = useUser();
 	const methods = useForm<LoginUser>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
