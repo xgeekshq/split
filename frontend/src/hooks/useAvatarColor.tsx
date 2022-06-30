@@ -7,7 +7,7 @@ type AvatarColor = {
 	fontColor: string;
 };
 
-const useAvatarColor = (userId: string | undefined, isDefaultColor: boolean): AvatarColor => {
+const useAvatarColor = (userId: string | undefined, isDefaultColor?: boolean): AvatarColor => {
 	const [color, setColor] = useState<AvatarColor | undefined>(undefined);
 
 	// The userIcon sprite is filled with #F3FD58 color that correspond to secondaryBase
