@@ -1,6 +1,7 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import User from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -144,7 +145,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     return this.boardModel.findById(boardId).lean().exec();
   }
 
-  async getBoard(boardId: string) {
+  async getBoard(boardId: string, userId: string) {
     const board = await this.boardModel
       .findById(boardId)
       .populate({
@@ -189,6 +190,50 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .exec();
 
     if (!board) return null;
+
+    if (board.hideCards) {
+      board.columns.forEach((column) =>
+        column.cards
+          .filter(
+            (card) =>
+              (card.createdBy as User)._id.toString() !== userId.toString(),
+          )
+          .forEach((card) => {
+            const cardUser = card.createdBy as User;
+
+            cardUser.firstName = cardUser.firstName
+              .replace(/[a-z0-9'#]/g, 'a')
+              .replace(/[A-Z]/g, 'A');
+            cardUser.lastName = cardUser.lastName
+              .replace(/[a-z0-9'#]/g, 'a')
+              .replace(/[A-Z]/g, 'A');
+
+            card.text = card.text
+              .replace(/[a-z0-9'#]/g, 'a')
+              .replace(/[A-Z]/g, 'A');
+
+            card.items
+              .filter(
+                (item) =>
+                  (item.createdBy as User)._id.toString() !== userId.toString(),
+              )
+              .forEach((item) => {
+                const cardItem = item.createdBy as User;
+
+                item.text = item.text
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+
+                cardItem.firstName = cardItem.firstName
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+                cardItem.lastName = cardItem.lastName
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+              });
+          }),
+      );
+    }
 
     if (board.isSubBoard) {
       const mainBoard = await this.boardModel

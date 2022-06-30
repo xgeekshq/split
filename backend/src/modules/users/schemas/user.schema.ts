@@ -9,6 +9,9 @@ export type UserDocument = User & mongoose.Document;
   },
 })
 export default class User {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id!: mongoose.Schema.Types.ObjectId;
+
   @Prop({ nullable: false })
   firstName!: string;
 
