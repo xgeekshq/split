@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -22,9 +22,7 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 	emailName,
 	setEmailName
 }) => {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [loginErrorCode, setLoginErrorCode] = useState(-1);
-	const { loginAzure } = useUser(setLoginErrorCode);
+	const { loginAzure } = useUser();
 
 	const handleEmailChange = () => {
 		setEmailName((prev) => ({ ...prev, goback: true }));
