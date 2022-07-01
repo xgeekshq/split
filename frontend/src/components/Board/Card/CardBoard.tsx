@@ -66,6 +66,7 @@ const CardBoard = React.memo<CardBoardProps>(
 		const [deleting, setDeleting] = useState(false);
 
 		const handleOpenComments = () => {
+			if (hideCards && card.createdBy?._id !== userId) return;
 			setOpenComments(!isCommentsOpened);
 		};
 
