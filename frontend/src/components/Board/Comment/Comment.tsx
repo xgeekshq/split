@@ -70,7 +70,7 @@ const Comment: React.FC<CommentProps> = React.memo(
 							>
 								{comment.text}
 							</Text>
-							{isSubmited && (
+							{isSubmited && userId === comment.createdBy._id && (
 								<Icon
 									name="menu-dots"
 									css={{
