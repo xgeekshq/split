@@ -28,6 +28,7 @@ interface FooterProps {
 	isCommentsOpened?: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;
+	hideCards: boolean;
 }
 
 const StyledButtonIcon = styled(Button, {
@@ -68,7 +69,8 @@ const CardFooter = React.memo<FooterProps>(
 		boardUser,
 		maxVotes,
 		setOpenComments,
-		isCommentsOpened
+		isCommentsOpened,
+		hideCards
 	}) => {
 		const { createdBy } = card;
 
@@ -123,7 +125,16 @@ const CardFooter = React.memo<FooterProps>(
 		return (
 			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
 				{!anonymous && !teamName && (
-					<Flex gap="4" align="center">
+					<Flex
+						gap="4"
+						align="center"
+						css={{
+							filter:
+								hideCards && card.createdBy?._id !== userId
+									? 'blur($sizes$6)'
+									: 'none'
+						}}
+					>
 						<Avatar
 							size={20}
 							fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}

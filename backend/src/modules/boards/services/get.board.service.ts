@@ -212,6 +212,27 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
               .replace(/[a-z0-9'#]/g, 'a')
               .replace(/[A-Z]/g, 'A');
 
+            card.comments
+              .filter(
+                (comment) =>
+                  (comment.createdBy as User)._id.toString() !==
+                  userId.toString(),
+              )
+              .forEach((comment) => {
+                const commentUser = comment.createdBy as User;
+
+                commentUser.firstName = commentUser.firstName
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+                commentUser.lastName = commentUser.lastName
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+
+                comment.text = comment.text
+                  .replace(/[a-z0-9'#]/g, 'a')
+                  .replace(/[A-Z]/g, 'A');
+              });
+
             card.items
               .filter(
                 (item) =>
@@ -230,6 +251,27 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
                 cardItem.lastName = cardItem.lastName
                   .replace(/[a-z0-9'#]/g, 'a')
                   .replace(/[A-Z]/g, 'A');
+
+                item.comments
+                  .filter(
+                    (comment) =>
+                      (comment.createdBy as User)._id.toString() !==
+                      userId.toString(),
+                  )
+                  .forEach((comment) => {
+                    const commentUserItem = comment.createdBy as User;
+
+                    commentUserItem.firstName = commentUserItem.firstName
+                      .replace(/[a-z0-9'#]/g, 'a')
+                      .replace(/[A-Z]/g, 'A');
+                    commentUserItem.lastName = commentUserItem.lastName
+                      .replace(/[a-z0-9'#]/g, 'a')
+                      .replace(/[A-Z]/g, 'A');
+
+                    comment.text = comment.text
+                      .replace(/[a-z0-9'#]/g, 'a')
+                      .replace(/[A-Z]/g, 'A');
+                  });
               });
           }),
       );

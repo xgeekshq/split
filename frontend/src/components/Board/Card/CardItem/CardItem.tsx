@@ -26,6 +26,7 @@ interface CardItemProps {
 	userId: string;
 	isMainboard: boolean;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 const Container = styled(Flex, {
@@ -48,7 +49,8 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 		anonymous,
 		userId,
 		isMainboard,
-		isSubmited
+		isSubmited,
+		hideCards
 	}) => {
 		const [editing, setEditing] = useState(false);
 		const [deleting, setDeleting] = useState(false);
@@ -70,7 +72,17 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 				{!editing && (
 					<Flex direction="column">
 						<Flex justify="between" css={{ '& > div': { zIndex: 2 } }}>
-							<Text size="sm">{item.text}</Text>
+							<Text
+								size="sm"
+								css={{
+									filter:
+										hideCards && item.createdBy?._id !== userId
+											? 'blur($sizes$6)'
+											: 'none'
+								}}
+							>
+								{item.text}
+							</Text>
 							{isSubmited && (
 								<Flex css={{ position: 'relative', top: firstOne ? '-35px' : 0 }}>
 									<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
@@ -102,6 +114,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 								userId={userId}
 								anonymous={anonymous}
 								isMainboard={isMainboard}
+								hideCards={hideCards}
 							/>
 						)}
 					</Flex>

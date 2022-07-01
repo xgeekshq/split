@@ -12,6 +12,7 @@ export interface UpdateBoardData {
 		title: string;
 		maxVotes: undefined | string;
 		postAnonymously: boolean;
+		hideCards: boolean;
 	};
 }
 
@@ -23,7 +24,8 @@ export const updateBoardDataState = atom<UpdateBoardData>({
 			title: '',
 			maxVotes: undefined,
 			hideVotes: false,
-			postAnonymously: false
+			postAnonymously: false,
+			hideCards: false
 		}
 	}
 });

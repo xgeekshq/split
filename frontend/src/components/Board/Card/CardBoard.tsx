@@ -35,6 +35,7 @@ interface CardBoardProps {
 	boardUser?: BoardUser;
 	maxVotes?: number;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -50,7 +51,8 @@ const CardBoard = React.memo<CardBoardProps>(
 		isMainboard,
 		boardUser,
 		maxVotes,
-		isSubmited
+		isSubmited,
+		hideCards
 	}) => {
 		const isCardGroup = card.items.length > 1;
 		const comments = useMemo(() => {
@@ -135,7 +137,16 @@ const CardBoard = React.memo<CardBoardProps>(
 											justify="between"
 											css={{ mb: '$8', '& > div': { zIndex: 2 } }}
 										>
-											<Text size="md" css={{ wordBreak: 'break-word' }}>
+											<Text
+												size="md"
+												css={{
+													wordBreak: 'break-word',
+													filter:
+														hideCards && card.createdBy?._id !== userId
+															? 'blur($sizes$6)'
+															: 'none'
+												}}
+											>
 												{card.text}
 											</Text>
 											{isSubmited && (
@@ -174,6 +185,7 @@ const CardBoard = React.memo<CardBoardProps>(
 											userId={userId}
 											isMainboard={isMainboard}
 											isSubmited={isSubmited}
+											hideCards={hideCards}
 										/>
 									)}
 									<CardFooter
@@ -190,6 +202,7 @@ const CardBoard = React.memo<CardBoardProps>(
 										isCommentsOpened={isCommentsOpened}
 										boardUser={boardUser}
 										maxVotes={maxVotes}
+										hideCards={hideCards}
 									/>
 								</Flex>
 							)}
@@ -211,6 +224,8 @@ const CardBoard = React.memo<CardBoardProps>(
 								socketId={socketId}
 								cardItems={card.items}
 								isSubmited={isSubmited}
+								hideCards={hideCards}
+								userId={userId}
 							/>
 						)}
 					</Flex>

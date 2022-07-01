@@ -93,7 +93,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	useEffect(() => {
 		if (data && isOpen) {
 			const {
-				board: { _id, title, maxVotes, hideVotes, postAnonymously }
+				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards }
 			} = data;
 			setUpdateBoard({
 				board: {
@@ -101,7 +101,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 					title,
 					maxVotes,
 					hideVotes,
-					postAnonymously
+					postAnonymously,
+					hideCards
 				}
 			});
 		}
@@ -197,7 +198,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	const haveSubBoardsMerged =
 		!board?.isSubBoard &&
 		!!board?.dividedBoards.filter((dividedBoard: BoardType) => !dividedBoard.submitedAt).length;
-	console.log(haveSubBoardsMerged);
 
 	if (board && userId && socketId) {
 		return (
@@ -284,6 +284,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											color={column.color}
 											socketId={socketId}
 											anonymous={board.postAnonymously}
+											hideCards={board.hideCards}
 											isMainboard={!board.isSubBoard}
 											boardUser={board.users.find(
 												(userFound) =>

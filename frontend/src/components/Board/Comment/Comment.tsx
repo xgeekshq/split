@@ -16,10 +16,12 @@ interface CommentProps {
 	boardId: string;
 	socketId: string;
 	isSubmited: boolean;
+	hideCards: boolean;
+	userId: string;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
-	({ comment, cardId, cardItemId, boardId, socketId, isSubmited }) => {
+	({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId }) => {
 		const { deleteComment } = useComments();
 
 		const [editing, setEditing] = useState(false);
@@ -54,7 +56,17 @@ const Comment: React.FC<CommentProps> = React.memo(
 				{!editing && (
 					<Flex direction="column">
 						<Flex justify="between" css={{ width: '100%' }}>
-							<Text size="xs">{comment.text}</Text>
+							<Text
+								size="xs"
+								css={{
+									filter:
+										hideCards && comment.createdBy._id !== userId
+											? 'blur($sizes$6)'
+											: 'none'
+								}}
+							>
+								{comment.text}
+							</Text>
 							{isSubmited && (
 								<Icon
 									name="menu-dots"
@@ -71,7 +83,16 @@ const Comment: React.FC<CommentProps> = React.memo(
 								/>
 							)}
 						</Flex>
-						<Text size="xs" weight="medium">
+						<Text
+							size="xs"
+							weight="medium"
+							css={{
+								filter:
+									hideCards && comment.createdBy._id !== userId
+										? 'blur($sizes$6)'
+										: 'none'
+							}}
+						>
 							{comment.createdBy.firstName} {comment.createdBy.lastName}
 						</Text>
 					</Flex>
