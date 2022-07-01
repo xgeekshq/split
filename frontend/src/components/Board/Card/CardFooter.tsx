@@ -154,7 +154,16 @@ const CardFooter = React.memo<FooterProps>(
 				)}
 				{!isItem && comments && (
 					<Flex gap="10" align="center">
-						<Flex align="center" gap="2">
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								filter:
+									hideCards && card.createdBy?._id !== userId
+										? 'blur($sizes$6)'
+										: 'none'
+							}}
+						>
 							<StyledButtonIcon
 								onClick={handleAddVote}
 								disabled={!isMainboard || actualBoardVotes === maxVotes}
@@ -172,7 +181,17 @@ const CardFooter = React.memo<FooterProps>(
 							</Text>
 						</Flex>
 
-						<Flex align="center" gap="2" css={{ mr: '$10' }}>
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								mr: '$10',
+								filter:
+									hideCards && card.createdBy?._id !== userId
+										? 'blur($sizes$6)'
+										: 'none'
+							}}
+						>
 							<StyledButtonIcon
 								onClick={handleDeleteVote}
 								disabled={!isMainboard || votesOfUserInThisCard === 0}
@@ -181,7 +200,16 @@ const CardFooter = React.memo<FooterProps>(
 							</StyledButtonIcon>
 						</Flex>
 
-						<Flex align="center" gap="2">
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								filter:
+									hideCards && card.createdBy?._id !== userId
+										? 'blur($sizes$6)'
+										: 'none'
+							}}
+						>
 							<StyledButtonIcon onClick={setOpenComments}>
 								<Icon
 									name={

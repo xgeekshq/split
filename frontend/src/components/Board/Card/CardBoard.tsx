@@ -167,6 +167,9 @@ const CardBoard = React.memo<CardBoardProps>(
 													newPosition={0}
 													handleEditing={handleEditing}
 													handleDeleteCard={handleDeleting}
+													hideCards={hideCards}
+													userId={userId}
+													item={card}
 												/>
 											)}
 										</Flex>

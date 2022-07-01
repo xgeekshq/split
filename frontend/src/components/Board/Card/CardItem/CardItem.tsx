@@ -84,8 +84,23 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 								{item.text}
 							</Text>
 							{isSubmited && (
-								<Flex css={{ position: 'relative', top: firstOne ? '-35px' : 0 }}>
-									<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
+								<Flex
+									css={{
+										position: 'relative',
+										top: firstOne ? '-35px' : 0,
+										filter:
+											hideCards && item.createdBy?._id !== userId
+												? 'blur($sizes$6)'
+												: 'none'
+									}}
+								>
+									<Icon
+										name="menu-dots"
+										css={{
+											width: '$20',
+											height: '$20'
+										}}
+									/>
 								</Flex>
 							)}
 							{!isSubmited && (
@@ -100,6 +115,9 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 									isItem
 									handleEditing={handleEditing}
 									handleDeleteCard={handleDeleting}
+									item={item}
+									hideCards={hideCards}
+									userId={userId}
 								/>
 							)}
 						</Flex>
