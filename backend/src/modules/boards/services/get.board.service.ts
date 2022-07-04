@@ -10,7 +10,6 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import { hideText } from '../../../libs/utils/hideText';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
