@@ -9,6 +9,7 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { replaceChar } from '../../../libs/utils/replaceChar';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -201,17 +202,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
           .forEach((card) => {
             const cardUser = card.createdBy as User;
 
-            cardUser.firstName = cardUser.firstName
-              .replace(/[a-z0-9'#]/g, 'a')
-              .replace(/[A-Z]/g, 'A');
-            cardUser.lastName = cardUser.lastName
-              .replace(/[a-z0-9'#]/g, 'a')
-              .replace(/[A-Z]/g, 'A');
-
-            card.text = card.text
-              .replace(/[a-z0-9'#]/g, 'a')
-              .replace(/[A-Z]/g, 'A');
-
+            cardUser.firstName = replaceChar(cardUser.firstName);
+            cardUser.lastName = replaceChar(cardUser.lastName);
+            card.text = replaceChar(card.text);
             card.comments
               .filter(
                 (comment) =>
@@ -221,16 +214,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
               .forEach((comment) => {
                 const commentUser = comment.createdBy as User;
 
-                commentUser.firstName = commentUser.firstName
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
-                commentUser.lastName = commentUser.lastName
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
+                commentUser.firstName = replaceChar(commentUser.firstName);
 
-                comment.text = comment.text
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
+                commentUser.lastName = replaceChar(commentUser.lastName);
+
+                comment.text = replaceChar(comment.text);
               });
 
             card.items
@@ -241,16 +229,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
               .forEach((item) => {
                 const cardItem = item.createdBy as User;
 
-                item.text = item.text
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
-
-                cardItem.firstName = cardItem.firstName
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
-                cardItem.lastName = cardItem.lastName
-                  .replace(/[a-z0-9'#]/g, 'a')
-                  .replace(/[A-Z]/g, 'A');
+                item.text = replaceChar(item.text);
+                cardItem.firstName = replaceChar(cardItem.firstName);
+                cardItem.lastName = replaceChar(cardItem.lastName);
 
                 item.comments
                   .filter(
@@ -261,16 +242,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
                   .forEach((comment) => {
                     const commentUserItem = comment.createdBy as User;
 
-                    commentUserItem.firstName = commentUserItem.firstName
-                      .replace(/[a-z0-9'#]/g, 'a')
-                      .replace(/[A-Z]/g, 'A');
-                    commentUserItem.lastName = commentUserItem.lastName
-                      .replace(/[a-z0-9'#]/g, 'a')
-                      .replace(/[A-Z]/g, 'A');
+                    commentUserItem.firstName = replaceChar(
+                      commentUserItem.firstName,
+                    );
+                    commentUserItem.lastName = replaceChar(
+                      commentUserItem.lastName,
+                    );
 
-                    comment.text = comment.text
-                      .replace(/[a-z0-9'#]/g, 'a')
-                      .replace(/[A-Z]/g, 'A');
+                    comment.text = replaceChar(comment.text);
                   });
               });
           }),
