@@ -105,16 +105,24 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	const handleMaxVotes = (checked: boolean) => {
 		setIsMaxVotesChecked(checked);
 		// Destructuring useForm hook
-		const { register, unregister, setValue, clearErrors } = methods;
+		const { register, setValue, clearErrors } = methods;
 
 		/**
 		 * When not checked reset the
 		 * maxVotes value to undefined
 		 */
 		if (!checked) {
-			unregister('maxVotes');
 			clearErrors('maxVotes');
-			setValue('maxVotes', '');
+			setValue('maxVotes', undefined);
+
+			setUpdateBoardData((prev) => ({
+				...prev,
+				board: {
+					...prev.board,
+					maxVotes: undefined
+				}
+			}));
+
 			return;
 		}
 
