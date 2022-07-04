@@ -89,16 +89,6 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		}));
 	};
 
-	const handlePostAnonymouslyChange = (checked: boolean) => {
-		setUpdateBoardData((prev) => ({
-			...prev,
-			board: {
-				...prev.board,
-				postAnonymously: checked
-			}
-		}));
-	};
-
 	/**
 	 * Handle the max votes switch change
 	 */
@@ -234,36 +224,6 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 												<Text size="sm" color="primary500">
 													Participants can not see the votes from other
 													participants of this retrospective.
-												</Text>
-											</Flex>
-										</Flex>
-										<Flex gap={20}>
-											<Switch
-												checked={board.postAnonymously}
-												onCheckedChange={handlePostAnonymouslyChange}
-												variant="sm"
-											>
-												<SwitchThumb variant="sm">
-													{board.postAnonymously && (
-														<Icon
-															name="check"
-															css={{
-																width: '$10',
-																height: '$10',
-																color: '$successBase'
-															}}
-														/>
-													)}
-												</SwitchThumb>
-											</Switch>
-											<Flex direction="column">
-												<Text size="md" weight="medium">
-													Option to post cards anonymously
-												</Text>
-												<Text size="sm" color="primary500">
-													Participants can decide to post cards
-													anonymously or publicly (Name on card is
-													disabled/enabled.)
 												</Text>
 											</Flex>
 										</Flex>
