@@ -73,10 +73,22 @@ interface PopoverSettingsProps {
 }
 
 const PopoverTriggerStyled = styled(PopoverTrigger, {
-	'&:hover': {
-		backgroundColor: '$primary500',
-		color: 'white'
-	}
+	variants: {
+		disabled: {
+			false: {
+				'&:hover': {
+					backgroundColor: '$primary500',
+					color: 'white'
+				}
+			},
+			true: {
+				'&:hover': {
+					backgroundColor: '$transparent'
+				}
+			}
+		}
+	},
+	defaultVariants: { disabled: false }
 });
 
 const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
@@ -111,7 +123,13 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
 		return (
 			<Popover>
-				<PopoverTriggerStyled css={{ position: 'relative', top: firstOne ? '-35px' : 0 }}>
+				<PopoverTriggerStyled
+					disabled={hideCards && item.createdBy?._id !== userId}
+					css={{
+						position: 'relative',
+						top: firstOne ? '-35px' : 0
+					}}
+				>
 					<Icon
 						name="menu-dots"
 						css={{
@@ -124,12 +142,15 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 						}}
 					/>
 				</PopoverTriggerStyled>
-				<PopoverSettingsContent
-					isItem={isItem}
-					unmergeCard={unmergeCard}
-					setEditCard={handleEditing}
-					setDeleteCard={handleDeleteCard}
-				/>
+
+				{item.createdBy?._id === userId && (
+					<PopoverSettingsContent
+						isItem={isItem}
+						unmergeCard={unmergeCard}
+						setEditCard={handleEditing}
+						setDeleteCard={handleDeleteCard}
+					/>
+				)}
 			</Popover>
 		);
 	}
