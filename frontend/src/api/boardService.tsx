@@ -32,7 +32,7 @@ export const getBoardRequest = (
 };
 
 export const getStakeholders = (context?: GetServerSidePropsContext): Promise<string[]> => {
-	return fetchData<string[]>(`/boards/stakeholders/all`, { context, serverSide: !!context });
+	return fetchData<string[]>(`/boards/stakeholders`, { context, serverSide: !!context });
 };
 
 export const getDashboardBoardsRequest = (
