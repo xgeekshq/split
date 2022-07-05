@@ -79,6 +79,16 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
 
+	const handleHideCardsChange = (checked: boolean) => {
+		setUpdateBoardData((prev) => ({
+			...prev,
+			board: {
+				...prev.board,
+				hideCards: checked
+			}
+		}));
+	};
+
 	const handleHideVotesChange = (checked: boolean) => {
 		setUpdateBoardData((prev) => ({
 			...prev,
@@ -206,6 +216,35 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 								</StyledAccordionHeader>
 								<StyledAccordionContent>
 									<Flex direction="column" gap={16}>
+										<Flex gap={20}>
+											<Switch
+												checked={board.hideCards}
+												onCheckedChange={handleHideCardsChange}
+												variant="sm"
+											>
+												<SwitchThumb variant="sm">
+													{board.hideCards && (
+														<Icon
+															name="check"
+															css={{
+																width: '$10',
+																height: '$10',
+																color: '$successBase'
+															}}
+														/>
+													)}
+												</SwitchThumb>
+											</Switch>
+											<Flex direction="column">
+												<Text size="md" weight="medium">
+													Hide cards from others
+												</Text>
+												<Text size="sm" color="primary500">
+													Participants can not see the cards from other
+													participants of this retrospective.
+												</Text>
+											</Flex>
+										</Flex>
 										<Flex gap={20}>
 											<Switch
 												checked={board.hideVotes}
