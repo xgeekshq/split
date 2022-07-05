@@ -70,11 +70,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	 */
 	useEffect(() => {
 		methods.setValue('title', board.title);
-
-		if (!isEmpty(board.maxVotes)) {
-			methods.setValue('maxVotes', board.maxVotes);
-			setIsMaxVotesChecked(true);
-		}
+		methods.setValue('maxVotes', board.maxVotes);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
@@ -103,13 +99,13 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		 */
 		if (!checked) {
 			clearErrors('maxVotes');
-			setValue('maxVotes', undefined);
+			setValue('maxVotes', 'undefined');
 
 			setUpdateBoardData((prev) => ({
 				...prev,
 				board: {
 					...prev.board,
-					maxVotes: undefined
+					maxVotes: 'undefined'
 				}
 			}));
 
