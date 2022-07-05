@@ -96,7 +96,7 @@ export default class BoardsController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
-  @Get('/stakeholders/all')
+  @Get('/stakeholders')
   getStakeholders() {
     return StakeholdersData as unknown as string[];
   }
