@@ -184,16 +184,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         path: 'columns.cards.items.createdBy',
         select: '_id firstName lastName',
       })
-      /* .populate({
-        path: 'columns.cards.votes',
-        // match: { _id: userId },
-        select: '_id',
-      })
-      .populate({
-        path: 'columns.cards.items.votes',
-        // match: { _id: userId },
-        select: '_id',
-      }) */
       .populate({
         path: 'columns.cards.items.comments.createdBy',
         select: '_id firstName lastName',
