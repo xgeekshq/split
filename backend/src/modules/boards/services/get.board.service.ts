@@ -202,7 +202,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     if (!board) return null;
 
     // keep votes only for one user by userId
-    if (board.hideVotes) {
+    if (board.hideVotes || board.hideCards) {
       board = this.cleanVotes(userId, board);
     }
 
@@ -252,15 +252,22 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     userId: string,
     input: LeanDocument<Board & Document<any, any, any> & { _id: any }>,
   ): LeanDocument<Board & Document<any, any, any> & { _id: any }> {
+    const { hideVotes } = input;
+
     const columns = input.columns.map((column) => {
       const cards = column.cards.map((card) => {
-        const votesFromCard = (card.votes as any[]).filter(
-          (cardVotes) => String(cardVotes._id) === String(userId),
-        );
+        const votesFromCard = hideVotes
+          ? (card.votes as any[]).filter(
+              (cardVotes) => String(cardVotes._id) === String(userId),
+            )
+          : card.votes;
+
         const items = card.items.map((item) => {
-          const votesFromItem = (item.votes as any[]).filter(
-            (itemVotes) => String(itemVotes._id) === String(userId),
-          );
+          const votesFromItem = hideVotes
+            ? (item.votes as any[]).filter(
+                (itemVotes) => String(itemVotes._id) === String(userId),
+              )
+            : item.votes;
 
           return {
             ...item,
