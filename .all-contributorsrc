@@ -110,6 +110,16 @@
         "doc"
       ]
     }
+    {
+     "login": "geomarb",
+      "name": "Geomar Bastiani",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33127565?v=4",
+      "profile": "https://github.com/geomarb",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "split",
