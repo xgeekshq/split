@@ -13,8 +13,7 @@ import {
 } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import User, { UserDocument } from '../../users/schemas/user.schema';
-import * as stakeHolders from '../../../libs/utils/ignored_users.json';
+import { UserDocument } from '../../users/schemas/user.schema';
 import TeamDto from '../../teams/dto/team.dto';
 import * as SchedulesType from '../../schedules/interfaces/types';
 import TeamUser, {
@@ -103,9 +102,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
       if (!usersIds.includes(user._id.toString())) {
         newUsers.push({
           user: user._id.toString(),
-          role: !stakeHolders.includes(user.email)
-            ? BoardRoles.MEMBER
-            : BoardRoles.STAKEHOLDER,
+          role: teamUser.role,
           votesCount: 0,
         });
       }
@@ -168,8 +165,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
     const teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
     const teamUsersWotStakeholders = teamUsers.filter(
-      (teamUser) =>
-        !stakeHolders?.includes((teamUser.user as User).email) ?? [],
+      (teamUser) => !(teamUser.role === 'stakeholder') ?? [],
     );
     const teamUsersWotStakeholdersCount = teamUsersWotStakeholders?.length ?? 0;
     const teamLength = teamUsersWotStakeholdersCount;
