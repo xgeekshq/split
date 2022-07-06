@@ -1,6 +1,6 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { LeanDocument, Model } from 'mongoose';
 import User from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
@@ -9,7 +9,7 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import { replaceChar } from '../../../libs/utils/replaceChar';
+import { hideText } from '../../../libs/utils/hideText';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -146,7 +146,69 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     return this.boardModel.findById(boardId).lean().exec();
   }
 
-  async getBoard(boardId: string, userId: string) {
+  hideInformation(board: LeanDocument<Board>, userId: string) {
+    return board.columns.forEach((column) =>
+      column.cards
+        .filter(
+          (card) =>
+            (card.createdBy as User)._id.toString() !== userId.toString(),
+        )
+        .forEach((card) => {
+          const cardUser = card.createdBy as User;
+
+          cardUser.firstName = hideText(cardUser.firstName);
+          cardUser.lastName = hideText(cardUser.lastName);
+          card.text = hideText(card.text);
+          card.comments
+            .filter(
+              (comment) =>
+                (comment.createdBy as User)._id.toString() !==
+                userId.toString(),
+            )
+            .forEach((comment) => {
+              const commentUser = comment.createdBy as User;
+
+              commentUser.firstName = hideText(commentUser.firstName);
+
+              commentUser.lastName = hideText(commentUser.lastName);
+
+              comment.text = hideText(comment.text);
+            });
+
+          card.items
+            .filter(
+              (item) =>
+                (item.createdBy as User)._id.toString() !== userId.toString(),
+            )
+            .forEach((item) => {
+              const cardItem = item.createdBy as User;
+
+              item.text = hideText(item.text);
+              cardItem.firstName = hideText(cardItem.firstName);
+              cardItem.lastName = hideText(cardItem.lastName);
+
+              item.comments
+                .filter(
+                  (comment) =>
+                    (comment.createdBy as User)._id.toString() !==
+                    userId.toString(),
+                )
+                .forEach((comment) => {
+                  const commentUserItem = comment.createdBy as User;
+
+                  commentUserItem.firstName = hideText(
+                    commentUserItem.firstName,
+                  );
+                  commentUserItem.lastName = hideText(commentUserItem.lastName);
+
+                  comment.text = hideText(comment.text);
+                });
+            });
+        }),
+    );
+  }
+
+  async getBoardData(boardId: string) {
     const board = await this.boardModel
       .findById(boardId)
       .populate({
@@ -190,94 +252,46 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .lean({ virtuals: true })
       .exec();
 
+    return board;
+  }
+
+  async getMainBoardData(boardId: string) {
+    const mainBoard = await this.boardModel
+      .findOne({ dividedBoards: { $in: boardId } })
+      .select('dividedBoards team title')
+      .populate({
+        path: 'dividedBoards',
+        select: '_id title',
+      })
+      .populate({
+        path: 'team',
+        select: 'name users _id',
+        populate: {
+          path: 'users',
+          select: 'user role',
+          populate: {
+            path: 'user',
+            select: 'firstName lastName joinedAt',
+          },
+        },
+      })
+      .lean({ virtuals: true })
+      .exec();
+
+    return mainBoard;
+  }
+
+  async getBoard(boardId: string, userId: string) {
+    const board = await this.getBoardData(boardId);
+
     if (!board) return null;
 
     if (board.hideCards) {
-      board.columns.forEach((column) =>
-        column.cards
-          .filter(
-            (card) =>
-              (card.createdBy as User)._id.toString() !== userId.toString(),
-          )
-          .forEach((card) => {
-            const cardUser = card.createdBy as User;
-
-            cardUser.firstName = replaceChar(cardUser.firstName);
-            cardUser.lastName = replaceChar(cardUser.lastName);
-            card.text = replaceChar(card.text);
-            card.comments
-              .filter(
-                (comment) =>
-                  (comment.createdBy as User)._id.toString() !==
-                  userId.toString(),
-              )
-              .forEach((comment) => {
-                const commentUser = comment.createdBy as User;
-
-                commentUser.firstName = replaceChar(commentUser.firstName);
-
-                commentUser.lastName = replaceChar(commentUser.lastName);
-
-                comment.text = replaceChar(comment.text);
-              });
-
-            card.items
-              .filter(
-                (item) =>
-                  (item.createdBy as User)._id.toString() !== userId.toString(),
-              )
-              .forEach((item) => {
-                const cardItem = item.createdBy as User;
-
-                item.text = replaceChar(item.text);
-                cardItem.firstName = replaceChar(cardItem.firstName);
-                cardItem.lastName = replaceChar(cardItem.lastName);
-
-                item.comments
-                  .filter(
-                    (comment) =>
-                      (comment.createdBy as User)._id.toString() !==
-                      userId.toString(),
-                  )
-                  .forEach((comment) => {
-                    const commentUserItem = comment.createdBy as User;
-
-                    commentUserItem.firstName = replaceChar(
-                      commentUserItem.firstName,
-                    );
-                    commentUserItem.lastName = replaceChar(
-                      commentUserItem.lastName,
-                    );
-
-                    comment.text = replaceChar(comment.text);
-                  });
-              });
-          }),
-      );
+      this.hideInformation(board, userId);
     }
 
     if (board.isSubBoard) {
-      const mainBoard = await this.boardModel
-        .findOne({ dividedBoards: { $in: boardId } })
-        .select('dividedBoards team title')
-        .populate({
-          path: 'dividedBoards',
-          select: '_id title',
-        })
-        .populate({
-          path: 'team',
-          select: 'name users _id',
-          populate: {
-            path: 'users',
-            select: 'user role',
-            populate: {
-              path: 'user',
-              select: 'firstName lastName joinedAt',
-            },
-          },
-        })
-        .lean({ virtuals: true })
-        .exec();
+      const mainBoard = await this.getMainBoardData(boardId);
       if (!mainBoard) return null;
       return { board, mainBoardData: mainBoard };
     }
