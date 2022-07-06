@@ -268,6 +268,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 													css={{ mt: '$8' }}
 													disabled={!isMaxVotesChecked}
 													placeholder="Max votes"
+													min={board.maxVotes}
 												/>
 											</Flex>
 										</Flex>
