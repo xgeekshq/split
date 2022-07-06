@@ -71,6 +71,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	useEffect(() => {
 		methods.setValue('title', board.title);
 		methods.setValue('maxVotes', board.maxVotes);
+		setIsMaxVotesChecked(!isEmpty(board.maxVotes));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
