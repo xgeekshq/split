@@ -4,11 +4,13 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Post,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { TeamParams } from 'src/libs/dto/param/team.params';
 import { INSERT_FAILED } from '../../../libs/exceptions/messages';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
@@ -47,6 +49,18 @@ export default class TeamsController {
   @Get()
   getAllTeams() {
     return this.getTeamApp.getAllTeams();
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Get(':teamId')
+  getTeam(@Param() { teamId }: TeamParams) {
+    return this.getTeamApp.getTeam(teamId);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Get(':teamId/stakeholders')
+  getTeamStakeholders(@Param() { teamId }: TeamParams) {
+    return this.getTeamApp.getTeamStakeholders(teamId);
   }
 
   @UseGuards(JwtAuthenticationGuard)

@@ -18,6 +18,14 @@ export class GetTeamApplication implements GetTeamApplicationInterface {
     return this.getTeamService.getAllTeams();
   }
 
+  getTeam(teamId: string) {
+    return this.getTeamService.getTeam(teamId);
+  }
+
+  getTeamStakeholders(teamId: string) {
+    return this.getTeamService.getTeamStakeholders(teamId);
+  }
+
   getTeamsOfUser(userId: string) {
     return this.getTeamService.getTeamsOfUser(userId);
   }

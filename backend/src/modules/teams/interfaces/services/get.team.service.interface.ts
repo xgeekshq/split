@@ -7,6 +7,9 @@ export interface GetTeamServiceInterface {
   countAllTeams(): Promise<number>;
   getTeamsOfUser(userId: string): Promise<LeanDocument<TeamDocument>[]>;
   getTeam(teamId: string): Promise<LeanDocument<TeamDocument> | null>;
+  getTeamStakeholders(
+    teamId: string,
+  ): Promise<LeanDocument<TeamDocument> | null>;
   getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]>;
   getTeamUser(
     userId: string,

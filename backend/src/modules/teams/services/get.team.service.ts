@@ -25,7 +25,34 @@ export default class GetTeamService implements GetTeamServiceInterface {
   }
 
   getTeam(teamId: string) {
-    return this.teamModel.findById(teamId).lean().exec();
+    return this.teamModel
+      .findById(teamId)
+      .populate({
+        path: 'users',
+        select: 'user role',
+        populate: {
+          path: 'user',
+          select: '_id firstName lastName email joinedAt',
+        },
+      })
+      .lean({ virtuals: true })
+      .exec();
+  }
+
+  getTeamStakeholders(teamId: string) {
+    return this.teamModel
+      .findById(teamId)
+      .populate({
+        path: 'users',
+        select: 'user role',
+        match: { role: { $eq: 'stakeholder' } },
+        populate: {
+          path: 'user',
+          select: '_id firstName lastName email joinedAt',
+        },
+      })
+      .lean({ virtuals: true })
+      .exec();
   }
 
   async getTeamsOfUser(userId: string) {
