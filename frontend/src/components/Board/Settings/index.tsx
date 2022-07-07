@@ -13,6 +13,7 @@ import { Switch, SwitchThumb } from 'components/Primitives/Switch';
 import Text from 'components/Primitives/Text';
 import useBoard from 'hooks/useBoard';
 import SchemaUpdateBoard from 'schema/schemaUpdateBoardForm';
+import { boardInfoState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState, updateBoardError } from 'store/updateBoard/atoms/update-board.atom';
 import isEmpty from 'utils/isEmpty';
 import {
@@ -40,6 +41,16 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	const haveError = useRecoilValue(updateBoardError);
 
 	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
+
+	/**
+	 * Atoms
+	 */
+	const boardData = useRecoilValue(boardInfoState);
+
+	/**
+	 * Get Board Info
+	 */
+	const { isSubBoard } = boardData!.board;
 
 	/**
 	 * User Board Hook
@@ -253,25 +264,29 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 											board.hideCards,
 											handleHideCardsChange
 										)}
-										{configurationSettings(
-											'Hide cards from others',
-											'Participants can not see the votes from other participants of this retrospective.',
-											board.hideVotes,
-											handleHideVotesChange
-										)}
-										{configurationSettings(
-											'Limit votes',
-											'Make votes more significant by limiting them.',
-											isMaxVotesChecked,
-											handleMaxVotes,
-											<Input
-												id="maxVotes"
-												name="maxVotes"
-												type="number"
-												css={{ mt: '$8' }}
-												disabled={!isMaxVotesChecked}
-												placeholder="Max votes"
-											/>
+										{!isSubBoard && (
+											<>
+												{configurationSettings(
+													'Hide cards from others',
+													'Participants can not see the votes from other participants of this retrospective.',
+													board.hideVotes,
+													handleHideVotesChange
+												)}
+												{configurationSettings(
+													'Limit votes',
+													'Make votes more significant by limiting them.',
+													isMaxVotesChecked,
+													handleMaxVotes,
+													<Input
+														id="maxVotes"
+														name="maxVotes"
+														type="number"
+														css={{ mt: '$8' }}
+														disabled={!isMaxVotesChecked}
+														placeholder="Max votes"
+													/>
+												)}
+											</>
 										)}
 									</Flex>
 								</StyledAccordionContent>
