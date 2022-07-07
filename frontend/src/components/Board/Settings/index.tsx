@@ -217,7 +217,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 								</StyledAccordionHeader>
 								<StyledAccordionContent>
 									<Flex direction="column" gap={16}>
-										{isSubBoard === false && (
+										{!isSubBoard && (
 											<>
 												<Flex gap={20}>
 													<Switch
