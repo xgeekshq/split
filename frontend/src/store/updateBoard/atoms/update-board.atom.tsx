@@ -8,6 +8,7 @@ export const updateBoardError = atom({
 export interface UpdateBoardData {
 	board: {
 		_id: string;
+		hideCards: boolean;
 		hideVotes: boolean;
 		title: string;
 		maxVotes: undefined | string;
@@ -21,8 +22,9 @@ export const updateBoardDataState = atom<UpdateBoardData>({
 		board: {
 			_id: '',
 			title: '',
-			maxVotes: undefined,
+			hideCards: false,
 			hideVotes: false,
+			maxVotes: undefined,
 			postAnonymously: false
 		}
 	}
