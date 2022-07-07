@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +13,7 @@ import { Switch, SwitchThumb } from 'components/Primitives/Switch';
 import Text from 'components/Primitives/Text';
 import useBoard from 'hooks/useBoard';
 import SchemaUpdateBoard from 'schema/schemaUpdateBoardForm';
+import { boardInfoState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState, updateBoardError } from 'store/updateBoard/atoms/update-board.atom';
 import isEmpty from 'utils/isEmpty';
 import {
@@ -40,6 +41,16 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	const haveError = useRecoilValue(updateBoardError);
 
 	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
+
+	/**
+	 * Atoms
+	 */
+	const boardData = useRecoilValue(boardInfoState);
+
+	/**
+	 * Get Board Info
+	 */
+	const { isSubBoard } = boardData!.board;
 
 	/**
 	 * User Board Hook
@@ -70,14 +81,21 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	 */
 	useEffect(() => {
 		methods.setValue('title', board.title);
-
-		if (!isEmpty(board.maxVotes)) {
-			methods.setValue('maxVotes', board.maxVotes);
-			setIsMaxVotesChecked(true);
-		}
+		methods.setValue('maxVotes', board.maxVotes);
+		setIsMaxVotesChecked(!isEmpty(board.maxVotes));
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
+
+	const handleHideCardsChange = (checked: boolean) => {
+		setUpdateBoardData((prev) => ({
+			...prev,
+			board: {
+				...prev.board,
+				hideCards: checked
+			}
+		}));
+	};
 
 	const handleHideVotesChange = (checked: boolean) => {
 		setUpdateBoardData((prev) => ({
@@ -103,13 +121,13 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		 */
 		if (!checked) {
 			clearErrors('maxVotes');
-			setValue('maxVotes', undefined);
+			setValue('maxVotes', 'undefined');
 
 			setUpdateBoardData((prev) => ({
 				...prev,
 				board: {
 					...prev.board,
-					maxVotes: undefined
+					maxVotes: 'undefined'
 				}
 			}));
 
@@ -148,6 +166,40 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 			}
 		);
 	};
+
+	const configurationSettings = (
+		title: string,
+		text: string,
+		isChecked: boolean,
+		handleCheckedChange: (checked: boolean) => void,
+		child?: ReactNode
+	) => (
+		<Flex gap={20}>
+			<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
+				<SwitchThumb variant="sm">
+					{isChecked && (
+						<Icon
+							name="check"
+							css={{
+								width: '$10',
+								height: '$10',
+								color: '$successBase'
+							}}
+						/>
+					)}
+				</SwitchThumb>
+			</Switch>
+			<Flex direction="column">
+				<Text size="md" weight="medium">
+					{title}
+				</Text>
+				<Text size="sm" color="primary500">
+					{text}
+				</Text>
+				{child}
+			</Flex>
+		</Flex>
+	);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -206,72 +258,37 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 								</StyledAccordionHeader>
 								<StyledAccordionContent>
 									<Flex direction="column" gap={16}>
-										<Flex gap={20}>
-											<Switch
-												checked={board.hideVotes}
-												onCheckedChange={handleHideVotesChange}
-												variant="sm"
-											>
-												<SwitchThumb variant="sm">
-													{board.hideVotes && (
-														<Icon
-															name="check"
-															css={{
-																width: '$10',
-																height: '$10',
-																color: '$successBase'
-															}}
-														/>
-													)}
-												</SwitchThumb>
-											</Switch>
-											<Flex direction="column">
-												<Text size="md" weight="medium">
-													Hide votes from others
-												</Text>
-												<Text size="sm" color="primary500">
-													Participants can not see the votes from other
-													participants of this retrospective.
-												</Text>
-											</Flex>
-										</Flex>
-										<Flex gap={20}>
-											<Switch
-												checked={isMaxVotesChecked}
-												onCheckedChange={handleMaxVotes}
-												variant="sm"
-											>
-												<SwitchThumb variant="sm">
-													{isMaxVotesChecked && (
-														<Icon
-															name="check"
-															css={{
-																width: '$10',
-																height: '$10',
-																color: '$successBase'
-															}}
-														/>
-													)}
-												</SwitchThumb>
-											</Switch>
-											<Flex direction="column">
-												<Text size="md" weight="medium">
-													Limit votes
-												</Text>
-												<Text size="sm" color="primary500">
-													Make votes more significant by limiting them.
-												</Text>
-												<Input
-													id="maxVotes"
-													name="maxVotes"
-													type="number"
-													css={{ mt: '$8' }}
-													disabled={!isMaxVotesChecked}
-													placeholder="Max votes"
-													min={board.maxVotes}
-												/>
-											</Flex>
-										</Flex>
+										{configurationSettings(
+											'Hide cards from others',
+											'Participants can not see the cards from other participants of this retrospective.',
+											board.hideCards,
+											handleHideCardsChange
+										)}
+										{!isSubBoard && (
+											<>
+												{configurationSettings(
+													'Hide cards from others',
+													'Participants can not see the votes from other participants of this retrospective.',
+													board.hideVotes,
+													handleHideVotesChange
+												)}
+												{configurationSettings(
+													'Limit votes',
+													'Make votes more significant by limiting them.',
+													isMaxVotesChecked,
+													handleMaxVotes,
+													<Input
+														id="maxVotes"
+														name="maxVotes"
+														type="number"
+														css={{ mt: '$8' }}
+														disabled={!isMaxVotesChecked}
+														placeholder="Max votes"
+														min={board.maxVotes}
+													/>
+												)}
+											</>
+										)}
 									</Flex>
 								</StyledAccordionContent>
 							</StyledAccordionItem>
