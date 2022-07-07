@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -163,11 +163,11 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 		title: string,
 		text: string,
 		isChecked: boolean,
-		handleCheckedChanage: any,
-		child?: any
+		handleCheckedChange: (checked: boolean) => void,
+		child?: ReactNode
 	) => (
 		<Flex gap={20}>
-			<Switch checked={isChecked} onCheckedChange={handleCheckedChanage} variant="sm">
+			<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
 				<SwitchThumb variant="sm">
 					{isChecked && (
 						<Icon
