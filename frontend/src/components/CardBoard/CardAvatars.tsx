@@ -28,15 +28,17 @@ const CardAvatars = React.memo<CardAvatarProps>(
 		const data = useMemo(() => {
 			if (responsible)
 				return listUsers
-					.filter((user) => user.role === 'responsible')
+					.filter((user) => user.role === BoardUserRoles.RESPONSIBLE)
 					.map((user) => user.user);
 
 			if (teamAdmins)
-				return listUsers.filter((user) => user.role === 'admin').map((user) => user.user);
+				return listUsers
+					.filter((user) => user.role === TeamUserRoles.ADMIN)
+					.map((user) => user.user);
 
 			if (stakeholders) {
 				return listUsers
-					.filter((user) => user.role === 'stakeholder')
+					.filter((user) => user.role === TeamUserRoles.STAKEHOLDER)
 					.map((user) => user.user);
 			}
 
