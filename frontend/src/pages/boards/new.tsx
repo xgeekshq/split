@@ -16,7 +16,6 @@ import {
 	SubContainer
 } from 'styles/pages/boards/new.styles';
 
-import { getStakeholders } from 'api/boardService';
 import { getAllTeams } from 'api/teamService';
 import BoardName from 'components/CreateBoard/BoardName';
 import FakeSettingsTabs from 'components/CreateBoard/fake/FakeSettingsTabs';
@@ -187,7 +186,6 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 	async (context: GetServerSidePropsContext) => {
 		const queryClient = new QueryClient();
 		await queryClient.prefetchQuery('teams', () => getAllTeams(context));
-		await queryClient.prefetchQuery('stakeholders', () => getStakeholders(context));
 
 		return {
 			props: {
