@@ -16,6 +16,7 @@ import { CreateBoardData, createBoardError } from 'store/createBoard/atoms/creat
 import { BoardToAdd } from 'types/board/board';
 import { Team } from 'types/team/team';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
+import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {
@@ -34,7 +35,6 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
 	team: Team;
-	stakeholders: string[];
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => {
@@ -52,7 +52,7 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 	);
 });
 
-const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 	/**
 	 * Recoil Atoms
 	 */
@@ -66,9 +66,8 @@ const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface
 		setCreateBoardData,
 		canAdd,
 		canReduce,
-		teamMembers,
-		stakeHolders
-	} = useCreateBoard(team, stakeholders);
+		teamMembers
+	} = useCreateBoard(team);
 
 	const slackGroupHandler = () => {
 		setCreateBoardData((prev) => ({
@@ -84,7 +83,7 @@ const MainBoardCard = React.memo(({ team, stakeholders }: MainBoardCardInterface
 		const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
 		const users = team.users.flatMap((teamUser) => {
-			if (!stakeHolders?.includes(teamUser.user.email)) return [];
+			if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
 			return [
 				{
 					user: teamUser.user._id,
