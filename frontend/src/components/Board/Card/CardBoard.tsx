@@ -144,7 +144,7 @@ const CardBoard = React.memo<CardBoardProps>(
 													css={{ width: '$20', height: '$20' }}
 												/>
 											)}
-											{!isSubmited && (
+											{!isSubmited && userId === card?.createdBy?._id && (
 												<PopoverCardSettings
 													firstOne={false}
 													isItem={false}
