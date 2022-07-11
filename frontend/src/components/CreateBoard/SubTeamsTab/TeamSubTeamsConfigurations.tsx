@@ -24,23 +24,16 @@ import QuickEditSubTeams from './QuickEditSubTeams';
 const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
 
 const TeamSubTeamsConfigurations: React.FC = () => {
-	const MIN_MEMBERS = 4;
 	const [stakeholders, setStakeholders] = useState<User[]>([]);
 	const [team, setTeam] = useState<Team | null>(null);
 
-	/**
-	 * Recoil Atoms and hooks
-	 */
+	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
-	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+	const MIN_MEMBERS = 4;
 
-	/**
-	 * Use Effect to validate if exist any team created
-	 * If yes, save on state and on board data atom
-	 * If no, show a toast
-	 */
 	useEffect(() => {
 		if (!Array.isArray(teams) || teams.length === 0 || teams[0].users?.length < MIN_MEMBERS) {
 			setHaveError(true);
