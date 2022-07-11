@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
-import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import useComments from 'hooks/useComments';
@@ -21,6 +21,8 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = React.memo(
 	({ comment, cardId, cardItemId, boardId, socketId, isSubmited }) => {
 		const { deleteComment } = useComments();
+		const { data: session } = useSession({ required: false });
+		const userId = session?.user.id;
 
 		const [editing, setEditing] = useState(false);
 
@@ -55,16 +57,7 @@ const Comment: React.FC<CommentProps> = React.memo(
 					<Flex direction="column">
 						<Flex justify="between" css={{ width: '100%' }}>
 							<Text size="xs">{comment.text}</Text>
-							{isSubmited && (
-								<Icon
-									name="menu-dots"
-									css={{
-										width: '$20',
-										height: '$20'
-									}}
-								/>
-							)}
-							{!isSubmited && (
+							{!isSubmited && userId === comment.createdBy._id && (
 								<PopoverCommentSettings
 									handleEditing={handleEditing}
 									handleDeleteComment={handleDeleteComment}
