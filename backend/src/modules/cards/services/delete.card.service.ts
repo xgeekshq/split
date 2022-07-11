@@ -34,38 +34,26 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
       : await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
     const countVotes = getCard?.votes?.length ?? 0;
     if (getCard && countVotes) {
-      for (
-        let indexVotes = 0;
-        indexVotes < getCard?.votes.length;
-        indexVotes++
-      ) {
-        const boardUser = this.deleteVoteService.decrementVoteUser(
+      getCard.votes.forEach(async (current) => {
+        const boardUser = await this.deleteVoteService.decrementVoteUser(
           boardId,
-          getCard.votes[indexVotes].valueOf().toString(),
+          current,
           session,
         );
         if (!boardUser) throw Error(UPDATE_FAILED);
-      }
+      });
     }
     if (getCard?.items) {
-      for (
-        let indexItems = 0;
-        indexItems < getCard?.items.length;
-        indexItems++
-      ) {
-        for (
-          let indexVotes = 0;
-          indexVotes < getCard.items[indexItems].votes.length;
-          indexVotes++
-        ) {
-          const boardUser = this.deleteVoteService.decrementVoteUser(
+      getCard.items.forEach(async (current) => {
+        current.votes.forEach(async (currentVote) => {
+          const boardUser = await this.deleteVoteService.decrementVoteUser(
             boardId,
-            getCard.items[indexItems].votes[indexVotes].valueOf().toString(),
+            currentVote,
             session,
           );
           if (!boardUser) throw Error(UPDATE_FAILED);
-        }
-      }
+        });
+      });
     }
   }
 
