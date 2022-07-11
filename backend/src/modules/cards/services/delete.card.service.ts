@@ -32,20 +32,41 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
     const getCard = !cardItemId
       ? await this.getCardService.getCardFromBoard(boardId, cardId)
       : await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
-    let countVotes = getCard?.votes?.length ?? 0;
-    countVotes +=
-      getCard?.items?.reduce((acc, curr) => {
-        if (acc) return acc + curr.votes.length;
-        return 0;
-      }, countVotes) ?? 0;
-
-    const boardUser = await this.deleteVoteService.decrementVoteUser(
-      boardId,
-      userId,
-      session,
-      countVotes,
-    );
-    if (!boardUser) throw Error(UPDATE_FAILED);
+    const countVotes = getCard?.votes?.length ?? 0;
+    if (getCard && countVotes) {
+      for (
+        let indexVotes = 0;
+        indexVotes < getCard?.votes.length;
+        indexVotes++
+      ) {
+        const boardUser = this.deleteVoteService.decrementVoteUser(
+          boardId,
+          getCard.votes[indexVotes].valueOf().toString(),
+          session,
+        );
+        if (!boardUser) throw Error(UPDATE_FAILED);
+      }
+    }
+    if (getCard?.items) {
+      for (
+        let indexItems = 0;
+        indexItems < getCard?.items.length;
+        indexItems++
+      ) {
+        for (
+          let indexVotes = 0;
+          indexVotes < getCard.items[indexItems].votes.length;
+          indexVotes++
+        ) {
+          const boardUser = this.deleteVoteService.decrementVoteUser(
+            boardId,
+            getCard.items[indexItems].votes[indexVotes].valueOf().toString(),
+            session,
+          );
+          if (!boardUser) throw Error(UPDATE_FAILED);
+        }
+      }
+    }
   }
 
   async delete(boardId: string, cardId: string, userId: string) {
