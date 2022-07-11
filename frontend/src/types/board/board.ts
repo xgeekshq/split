@@ -40,6 +40,7 @@ export default interface BoardType {
 	submitedByUser?: string;
 	submitedAt?: Date;
 	slackGroup?: boolean;
+	totalUsedVotes: number;
 }
 
 export interface BoardInfoType {

@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsBoolean,
   IsMongoId,
+  IsNumber,
   Validate,
 } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
@@ -85,4 +86,8 @@ export default class BoardDto {
   @IsNotEmpty()
   @IsBoolean()
   isSubBoard?: boolean;
+
+  @IsNotEmpty()
+  @IsNumber()
+  totalUsedVotes!: number;
 }
