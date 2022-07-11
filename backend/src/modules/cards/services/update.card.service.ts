@@ -80,6 +80,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
         {
           _id: boardId,
           'columns.cards._id': cardId,
+          'columns.cards.createdBy': userId,
         },
         {
           $set: {
