@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
-import { TeamFilterOptions } from '../../../libs/dto/param/team.filter.options';
+import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
@@ -19,8 +19,8 @@ export class GetTeamApplication implements GetTeamApplicationInterface {
     return this.getTeamService.getAllTeams();
   }
 
-  getTeam(teamId: string, teamFilterOptions?: TeamFilterOptions) {
-    return this.getTeamService.getTeam(teamId, teamFilterOptions);
+  getTeam(teamId: string, teamQueryParams?: TeamQueryParams) {
+    return this.getTeamService.getTeam(teamId, teamQueryParams);
   }
 
   getTeamsOfUser(userId: string) {

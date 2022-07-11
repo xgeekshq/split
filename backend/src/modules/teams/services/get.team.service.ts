@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
-import { TeamFilterOptions } from '../../../libs/dto/param/team.filter.options';
+import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -25,8 +25,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
     return this.teamModel.countDocuments().exec();
   }
 
-  getTeam(teamId: string, teamFilterOptions: TeamFilterOptions) {
-    const { loadUsers, teamUserRole } = teamFilterOptions;
+  getTeam(teamId: string, teamQueryParams: TeamQueryParams) {
+    const { loadUsers, teamUserRole } = teamQueryParams;
     const teamModel = this.teamModel.findById(teamId);
     let teamUserRoleFilter = {};
 
@@ -46,6 +46,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
           },
         })
         .lean({ virtuals: true });
+    } else {
+      teamModel.lean();
     }
 
     return teamModel.exec();

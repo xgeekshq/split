@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 
 import { TeamRoles } from 'src/libs/enum/team.roles';
 
-export class TeamFilterOptions {
+export class TeamQueryParams {
   @IsString()
   @IsOptional()
   @IsEnum(TeamRoles, { each: true })

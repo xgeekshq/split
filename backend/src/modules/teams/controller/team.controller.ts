@@ -13,11 +13,13 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { TeamParams } from 'src/libs/dto/param/team.params';
-import { TeamFilterOptions } from 'src/libs/dto/param/team.filter.options';
+
 import { INSERT_FAILED } from '../../../libs/exceptions/messages';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
 import RequestWithUser from '../../../libs/interfaces/requestWithUser.interface';
+import { TeamParams } from '../../../libs/dto/param/team.params';
+import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
+
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
@@ -60,8 +62,8 @@ export default class TeamsController {
   @UsePipes(new ValidationPipe({ transform: true }))
   getTeam(
     @Param() { teamId }: TeamParams,
-    @Query() teamFilterOptions?: TeamFilterOptions,
+    @Query() teamQueryParams?: TeamQueryParams,
   ) {
-    return this.getTeamApp.getTeam(teamId, teamFilterOptions);
+    return this.getTeamApp.getTeam(teamId, teamQueryParams);
   }
 }

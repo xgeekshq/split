@@ -1,6 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { TeamDocument } from '../../schemas/teams.schema';
-import { TeamFilterOptions } from '../../../../libs/dto/param/team.filter.options';
+import { TeamQueryParams } from '../../../../libs/dto/param/team.query.params';
 
 export interface GetTeamApplicationInterface {
   countTeams(userId: string): Promise<number>;
@@ -9,7 +9,7 @@ export interface GetTeamApplicationInterface {
 
   getTeam(
     teamId: string,
-    teamFilterOptions?: TeamFilterOptions,
+    teamQueryParams?: TeamQueryParams,
   ): Promise<LeanDocument<TeamDocument> | null>;
 
   getTeamsOfUser(userId: string): Promise<LeanDocument<TeamDocument>[]>;
