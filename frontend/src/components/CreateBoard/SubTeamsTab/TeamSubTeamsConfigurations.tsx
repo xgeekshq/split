@@ -16,6 +16,7 @@ import {
 	createBoardError
 } from 'store/createBoard/atoms/create-board.atom';
 import { Team } from 'types/team/team';
+import { TeamUser } from 'types/team/team.user';
 import { User } from 'types/user/user';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import MainBoardCard from './MainBoardCard';
@@ -35,16 +36,22 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 	const MIN_MEMBERS = 4;
 
 	useEffect(() => {
-		if (!Array.isArray(teams) || teams.length === 0 || teams[0].users?.length < MIN_MEMBERS) {
-			setHaveError(true);
+		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
+		const hasMinMembers = isTeamsValid && teams[0].users?.length >= MIN_MEMBERS;
+
+		if (isTeamsValid && hasMinMembers) {
+			const selectedTeam = teams[0];
+
+			const isStakeholder = (userTeam: TeamUser): boolean =>
+				userTeam.role === TeamUserRoles.STAKEHOLDER;
+			const getStakeholder = ({ user }: TeamUser): User => user;
+			const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
+
+			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
+			setStakeholders(stakeholdersFound);
+			setTeam(selectedTeam);
 		} else {
-			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: teams[0]._id } }));
-			setStakeholders(
-				teams[0].users
-					.filter((userTeam) => userTeam.role === TeamUserRoles.STAKEHOLDER)
-					.map((userTeam) => userTeam.user)
-			);
-			setTeam(teams[0]);
+			setHaveError(true);
 		}
 	}, [teams, setBoardData, setHaveError]);
 
