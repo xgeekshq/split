@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
+import { TeamFilterOptions } from '../../../libs/dto/param/team.filter.options';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -24,35 +25,30 @@ export default class GetTeamService implements GetTeamServiceInterface {
     return this.teamModel.countDocuments().exec();
   }
 
-  getTeam(teamId: string) {
-    return this.teamModel
-      .findById(teamId)
-      .populate({
-        path: 'users',
-        select: 'user role',
-        populate: {
-          path: 'user',
-          select: '_id firstName lastName email joinedAt',
-        },
-      })
-      .lean({ virtuals: true })
-      .exec();
-  }
+  getTeam(teamId: string, teamFilterOptions: TeamFilterOptions) {
+    const { loadUsers, teamUserRole } = teamFilterOptions;
+    const teamModel = this.teamModel.findById(teamId);
+    let teamUserRoleFilter = {};
 
-  getTeamStakeholders(teamId: string) {
-    return this.teamModel
-      .findById(teamId)
-      .populate({
-        path: 'users',
-        select: 'user role',
-        match: { role: { $eq: 'stakeholder' } },
-        populate: {
-          path: 'user',
-          select: '_id firstName lastName email joinedAt',
-        },
-      })
-      .lean({ virtuals: true })
-      .exec();
+    if (teamUserRole) {
+      teamUserRoleFilter = { match: { role: { $eq: teamUserRole } } };
+    }
+
+    if (loadUsers || teamUserRole) {
+      teamModel
+        .populate({
+          path: 'users',
+          select: 'user role',
+          ...teamUserRoleFilter,
+          populate: {
+            path: 'user',
+            select: '_id firstName lastName email joinedAt',
+          },
+        })
+        .lean({ virtuals: true });
+    }
+
+    return teamModel.exec();
   }
 
   async getTeamsOfUser(userId: string) {
