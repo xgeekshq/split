@@ -29,7 +29,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
         {
           hideVotes: boardData.hideVotes,
           maxVotes:
-            Number(boardData.maxVotes) < Number(currentVotes?.maxVotes)
+            Number(boardData.maxVotes) < Number(currentVotes?.maxVotes) &&
+            currentVotes?.totalUsedVotes !== 0
               ? currentVotes?.maxVotes
               : boardData.maxVotes,
           postAnonymously: boardData.postAnonymously,
