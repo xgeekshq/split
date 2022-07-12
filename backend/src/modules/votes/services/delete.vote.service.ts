@@ -83,6 +83,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
             $set: {
               'columns.$.cards.$[c].items.$[i].votes': votes,
             },
+            $inc: { totalUsedVotes: -1 },
           },
           {
             arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
