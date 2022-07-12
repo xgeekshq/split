@@ -201,7 +201,8 @@ const Input: React.FC<InputProps> = ({
 	forceState,
 	clearErrorCode,
 	currentValue,
-	maxChars
+	maxChars,
+	min
 }) => {
 	Input.defaultProps = {
 		state: undefined,
@@ -297,6 +298,7 @@ const Input: React.FC<InputProps> = ({
 					autoComplete="off"
 					onFocus={clearErrorCode}
 					data-iconposition={iconPosition}
+					min={min}
 				/>
 				<PlaceholderText as="label" htmlFor={id} data-iconposition={iconPosition}>
 					{placeholder}

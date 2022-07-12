@@ -47,6 +47,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
           $push: {
             'columns.$.cards.$[c].items.$[i].votes': userId,
           },
+          $inc: { totalUsedVotes: 1 },
         },
         {
           arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
