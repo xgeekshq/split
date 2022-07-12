@@ -37,7 +37,6 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
         { session: boardSession },
       )
       .exec();
-
     if (deletedCount <= 0) throw Error(DELETE_FAILED);
   }
 
@@ -59,7 +58,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 
   async delete(boardId: string, userId: string) {
     const boardSession = await this.boardModel.db.startSession();
+    const boardUserSession = await this.boardUserModel.db.startSession();
     boardSession.startTransaction();
+    boardUserSession.startTransaction();
 
     try {
       const { _id, dividedBoards } = await this.deleteBoard(
@@ -71,15 +72,18 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
       if (!isEmpty(dividedBoards)) {
         await this.deleteSubBoards(dividedBoards, boardSession);
 
-        await this.deleteBoardUsers(dividedBoards, boardSession, _id);
+        await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
       }
 
       await boardSession.commitTransaction();
+      await boardUserSession.commitTransaction();
       return true;
     } catch (e) {
       await boardSession.abortTransaction();
+      await boardUserSession.abortTransaction();
     } finally {
       await boardSession.endSession();
+      await boardUserSession.endSession();
     }
 
     return false;
