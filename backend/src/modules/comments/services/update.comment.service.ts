@@ -23,6 +23,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
         {
           _id: boardId,
           'columns.cards.items.comments._id': commentId,
+          'columns.cards.items.comments.createdBy': userId,
         },
         {
           $set: {

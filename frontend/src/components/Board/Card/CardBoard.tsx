@@ -157,7 +157,7 @@ const CardBoard = React.memo<CardBoardProps>(
 												/>
 											)}
 
-											{!isSubmited && (
+											{!isSubmited && userId === card?.createdBy?._id && (
 												<PopoverCardSettings
 													firstOne={false}
 													isItem={false}

@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { styled } from 'styles/stitches/stitches.config';
 
 import AddCardOrComment from 'components/Board/AddCardOrComment';
-import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { CardItemType } from 'types/card/cardItem';
 import CardFooter from '../CardFooter';
 import DeleteCard from '../DeleteCard';
 import PopoverCardSettings from '../PopoverSettings';
+import Icon from 'components/icons/Icon';
 
 interface CardItemProps {
 	item: CardItemType;
@@ -103,7 +103,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 									/>
 								</Flex>
 							)}
-							{!isSubmited && (
+							{!isSubmited && userId === item?.createdBy?._id && (
 								<PopoverCardSettings
 									firstOne={firstOne}
 									columnId={columnId}
