@@ -16,8 +16,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
   ) {}
 
   async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
-    const currentMaxVotes = await this.boardModel
-      .findById(boardId, 'maxVotes')
+    const currentVotes = await this.boardModel
+      .findById(boardId, 'maxVotes totalUsedVotes')
       .exec();
 
     return this.boardModel
@@ -29,8 +29,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
         {
           hideVotes: boardData.hideVotes,
           maxVotes:
-            Number(boardData.maxVotes) < Number(currentMaxVotes?.maxVotes)
-              ? currentMaxVotes?.maxVotes
+            Number(boardData.maxVotes) < Number(currentVotes?.maxVotes)
+              ? currentVotes?.maxVotes
               : boardData.maxVotes,
           postAnonymously: boardData.postAnonymously,
           title: boardData.title,
