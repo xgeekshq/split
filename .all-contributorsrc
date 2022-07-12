@@ -101,10 +101,20 @@
       ]
     },
     {
-     "login": "dvpfran",
+      "login": "dvpfran",
       "name": "Luís Francisco",
       "avatar_url": "https://avatars.githubusercontent.com/u/67462841?v=4",
       "profile": "https://github.com/dvpfran",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "geomarb",
+      "name": "Geomar Bastiani",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33127565?v=4",
+      "profile": "http://xgeeks.io",
       "contributions": [
         "code",
         "doc"

@@ -29,7 +29,7 @@ export default class CreateUserDto {
   @IsNotEmpty()
   @Transform(({ value }: TransformFnParams) => value.trim())
   @MinLength(7)
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/, {
+  @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/, {
     message:
       'Use at least 8 characters, upper and lower case letters, numbers and symbols like !“?$%^&).',
   })

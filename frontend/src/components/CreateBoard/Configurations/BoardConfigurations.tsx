@@ -37,16 +37,6 @@ const BoardConfigurations = () => {
 		}));
 	};
 
-	const handlePostAnonymouslyChange = (checked: boolean) => {
-		setCreateBoardData((prev) => ({
-			...prev,
-			board: {
-				...prev.board,
-				postAnonymously: checked
-			}
-		}));
-	};
-
 	const handleLimitVotesChange = (checked: boolean) => {
 		setCreateBoardData((prev) => ({
 			...prev,
@@ -119,34 +109,6 @@ const BoardConfigurations = () => {
 						<Text size="sm" color="primary500">
 							Participants can not see the votes from other participants of this
 							retrospective.
-						</Text>
-					</Flex>
-				</Flex>
-				<Flex gap="16">
-					<Switch
-						checked={board.postAnonymously}
-						onCheckedChange={handlePostAnonymouslyChange}
-					>
-						<SwitchThumb>
-							{board.postAnonymously && (
-								<Icon
-									name="check"
-									css={{
-										width: '$14',
-										height: '$14',
-										color: '$successBase'
-									}}
-								/>
-							)}
-						</SwitchThumb>
-					</Switch>
-					<Flex direction="column">
-						<Text size="md" weight="medium">
-							Option to post cards anonymously
-						</Text>
-						<Text size="sm" color="primary500">
-							Participants can decide to post cards anonymously or publicly (Name on
-							card is disabled/enabled.)
 						</Text>
 					</Flex>
 				</Flex>
