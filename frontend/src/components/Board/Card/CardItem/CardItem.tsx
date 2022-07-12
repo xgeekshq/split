@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { styled } from 'styles/stitches/stitches.config';
 
 import AddCardOrComment from 'components/Board/AddCardOrComment';
-import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { CardItemType } from 'types/card/cardItem';
@@ -71,12 +70,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 					<Flex direction="column">
 						<Flex justify="between" css={{ '& > div': { zIndex: 2 } }}>
 							<Text size="sm">{item.text}</Text>
-							{isSubmited && (
-								<Flex css={{ position: 'relative', top: firstOne ? '-35px' : 0 }}>
-									<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
-								</Flex>
-							)}
-							{!isSubmited && (
+							{!isSubmited && userId === item?.createdBy?._id && (
 								<PopoverCardSettings
 									firstOne={firstOne}
 									columnId={columnId}

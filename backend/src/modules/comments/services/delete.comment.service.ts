@@ -16,6 +16,7 @@ export default class DeleteCommentServiceImpl implements DeleteCommentService {
         {
           _id: boardId,
           'columns.cards.items.comments._id': commentId,
+          'columns.cards.items.comments.createdBy': userId,
         },
         {
           $pull: {

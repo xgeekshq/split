@@ -138,13 +138,7 @@ const CardBoard = React.memo<CardBoardProps>(
 											<Text size="md" css={{ wordBreak: 'break-word' }}>
 												{card.text}
 											</Text>
-											{isSubmited && (
-												<Icon
-													name="menu-dots"
-													css={{ width: '$20', height: '$20' }}
-												/>
-											)}
-											{!isSubmited && (
+											{!isSubmited && userId === card?.createdBy?._id && (
 												<PopoverCardSettings
 													firstOne={false}
 													isItem={false}
