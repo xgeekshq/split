@@ -1,6 +1,8 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import { Document, LeanDocument, Model } from 'mongoose';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -147,15 +149,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
   async getBoard(
     boardId: string,
     userId: string,
-  ): Promise<
-    | { board: LeanDocument<BoardDocument> }
-    | null
-    | {
-        board: LeanDocument<BoardDocument>;
-        mainBoardData: LeanDocument<BoardDocument>;
-      }
-    | null
-  > {
+  ): Promise<{
+    board: LeanDocument<BoardDocument>;
+    mainBoardData?: LeanDocument<BoardDocument>;
+  } | null> {
     let board = await this.boardModel
       .findById(boardId)
       .populate({
@@ -250,21 +247,21 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
   private cleanVotes(
     userId: string,
-    input: LeanDocument<Board & Document<any, any, any> & { _id: any }>,
-  ): LeanDocument<Board & Document<any, any, any> & { _id: any }> {
+    input: LeanDocument<Board & Document & { _id: ObjectId }>,
+  ): LeanDocument<Board & Document & { _id: ObjectId }> {
     const { hideVotes } = input;
 
     const columns = input.columns.map((column) => {
       const cards = column.cards.map((card) => {
         const votesFromCard = hideVotes
-          ? (card.votes as any[]).filter(
+          ? (card.votes as UserDocument[]).filter(
               (cardVotes) => String(cardVotes._id) === String(userId),
             )
           : card.votes;
 
         const items = card.items.map((item) => {
           const votesFromItem = hideVotes
-            ? (item.votes as any[]).filter(
+            ? (item.votes as UserDocument[]).filter(
                 (itemVotes) => String(itemVotes._id) === String(userId),
               )
             : item.votes;
