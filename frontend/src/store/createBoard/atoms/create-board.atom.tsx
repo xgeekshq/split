@@ -51,7 +51,8 @@ export const createBoardDataState = atom<CreateBoardData>({
 			hideCards: false,
 			hideVotes: false,
 			postAnonymously: false,
-			slackGroup: false
+			slackGroup: false,
+			totalUsedVotes: 0
 		}
 	}
 });
