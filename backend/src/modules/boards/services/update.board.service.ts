@@ -15,27 +15,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
     private getTeamService: GetTeamServiceInterface,
   ) {}
 
-  async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
-    const currentVotes = await this.boardModel
-      .findById(boardId, 'maxVotes totalUsedVotes')
-      .exec();
-
+  update(userId: string, boardId: string, boardData: UpdateBoardDto) {
     return this.boardModel
       .findOneAndUpdate(
         {
           _id: boardId,
           createdBy: userId,
         },
-        {
-          hideVotes: boardData.hideVotes,
-          maxVotes:
-            Number(boardData.maxVotes) < Number(currentVotes?.maxVotes) &&
-            currentVotes?.totalUsedVotes !== 0
-              ? currentVotes?.maxVotes
-              : boardData.maxVotes,
-          postAnonymously: boardData.postAnonymously,
-          title: boardData.title,
-        },
+        boardData,
         {
           new: true,
         },
