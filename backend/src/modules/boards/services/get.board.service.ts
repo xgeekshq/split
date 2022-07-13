@@ -1,7 +1,8 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
-import User from 'src/modules/users/schemas/user.schema';
+import { ObjectId } from 'mongodb';
+import { Document, LeanDocument, Model } from 'mongoose';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -146,69 +147,65 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     return this.boardModel.findById(boardId).lean().exec();
   }
 
-  hideInformation(board: LeanDocument<Board>, userId: string) {
-    return board.columns.forEach((column) =>
-      column.cards
-        .filter(
-          (card) =>
-            (card.createdBy as User)._id.toString() !== userId.toString(),
-        )
-        .forEach((card) => {
-          const cardUser = card.createdBy as User;
+  async getMainBoardData(boardId: string) {
+    const mainBoard = await this.boardModel
+      .findOne({ dividedBoards: { $in: boardId } })
+      .select('dividedBoards team title')
+      .populate({
+        path: 'dividedBoards',
+        select: '_id title',
+      })
+      .populate({
+        path: 'team',
+        select: 'name users _id',
+        populate: {
+          path: 'users',
+          select: 'user role',
+          populate: {
+            path: 'user',
+            select: 'firstName lastName joinedAt',
+          },
+        },
+      })
+      .lean({ virtuals: true })
+      .exec();
 
-          cardUser.firstName = hideText(cardUser.firstName);
-          cardUser.lastName = hideText(cardUser.lastName);
-          card.text = hideText(card.text);
-          card.comments
-            .filter(
-              (comment) =>
-                (comment.createdBy as User)._id.toString() !==
-                userId.toString(),
-            )
-            .forEach((comment) => {
-              const commentUser = comment.createdBy as User;
-
-              commentUser.firstName = hideText(commentUser.firstName);
-
-              commentUser.lastName = hideText(commentUser.lastName);
-
-              comment.text = hideText(comment.text);
-            });
-
-          card.items
-            .filter(
-              (item) =>
-                (item.createdBy as User)._id.toString() !== userId.toString(),
-            )
-            .forEach((item) => {
-              const cardItem = item.createdBy as User;
-
-              item.text = hideText(item.text);
-              cardItem.firstName = hideText(cardItem.firstName);
-              cardItem.lastName = hideText(cardItem.lastName);
-
-              item.comments
-                .filter(
-                  (comment) =>
-                    (comment.createdBy as User)._id.toString() !==
-                    userId.toString(),
-                )
-                .forEach((comment) => {
-                  const commentUserItem = comment.createdBy as User;
-
-                  commentUserItem.firstName = hideText(
-                    commentUserItem.firstName,
-                  );
-                  commentUserItem.lastName = hideText(commentUserItem.lastName);
-
-                  comment.text = hideText(comment.text);
-                });
-            });
-        }),
-    );
+    return mainBoard;
   }
 
-  async getBoardData(boardId: string) {
+  async getBoard(boardId: string, userId: string) {
+    let board = await this.getBoardData(boardId);
+
+    if (!board) return null;
+
+    // keep votes only for one user by userId
+    if (board.hideVotes || board.hideCards) {
+      board = this.cleanVotes(userId, board);
+    }
+
+    if (board.isSubBoard) {
+      const mainBoard = await this.getMainBoardData(boardId);
+      if (!mainBoard) return null;
+
+      return { board, mainBoardData: mainBoard };
+    }
+
+    return { board };
+  }
+
+  async countBoards(userId: string) {
+    const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(
+      userId,
+    );
+    return this.boardModel.countDocuments({
+      $and: [
+        { isSubBoard: false },
+        { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
+      ],
+    });
+  }
+
+  private async getBoardData(boardId: string) {
     const board = await this.boardModel
       .findById(boardId)
       .populate({
@@ -251,63 +248,49 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       })
       .lean({ virtuals: true })
       .exec();
-
     return board;
   }
 
-  async getMainBoardData(boardId: string) {
-    const mainBoard = await this.boardModel
-      .findOne({ dividedBoards: { $in: boardId } })
-      .select('dividedBoards team title')
-      .populate({
-        path: 'dividedBoards',
-        select: '_id title',
-      })
-      .populate({
-        path: 'team',
-        select: 'name users _id',
-        populate: {
-          path: 'users',
-          select: 'user role',
-          populate: {
-            path: 'user',
-            select: 'firstName lastName joinedAt',
-          },
-        },
-      })
-      .lean({ virtuals: true })
-      .exec();
+  private cleanVotes(
+    userId: string,
+    input: LeanDocument<Board & Document & { _id: ObjectId }>,
+  ): LeanDocument<Board & Document & { _id: ObjectId }> {
+    const { hideVotes } = input;
 
-    return mainBoard;
-  }
+    const columns = input.columns.map((column) => {
+      const cards = column.cards.map((card) => {
+        const votesFromCard = hideVotes
+          ? (card.votes as UserDocument[]).filter(
+              (cardVotes) => String(cardVotes._id) === String(userId),
+            )
+          : card.votes;
 
-  async getBoard(boardId: string, userId: string) {
-    const board = await this.getBoardData(boardId);
+        const items = card.items.map((item) => {
+          const votesFromItem = hideVotes
+            ? (item.votes as UserDocument[]).filter(
+                (itemVotes) => String(itemVotes._id) === String(userId),
+              )
+            : item.votes;
 
-    if (!board) return null;
+          return {
+            ...item,
+            votes: votesFromItem,
+          };
+        });
 
-    if (board.hideCards) {
-      this.hideInformation(board, userId);
-    }
+        return {
+          ...card,
+          items,
+          votes: votesFromCard,
+        };
+      });
 
-    if (board.isSubBoard) {
-      const mainBoard = await this.getMainBoardData(boardId);
-      if (!mainBoard) return null;
-      return { board, mainBoardData: mainBoard };
-    }
-
-    return { board };
-  }
-
-  async countBoards(userId: string) {
-    const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(
-      userId,
-    );
-    return this.boardModel.countDocuments({
-      $and: [
-        { isSubBoard: false },
-        { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
-      ],
+      return {
+        ...column,
+        cards,
+      };
     });
+
+    return { ...input, columns };
   }
 }
