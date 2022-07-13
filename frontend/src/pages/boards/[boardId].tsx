@@ -100,9 +100,9 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 					_id,
 					title,
 					maxVotes,
+					hideCards,
 					hideVotes,
-					postAnonymously,
-					hideCards
+					postAnonymously
 				}
 			});
 		}
