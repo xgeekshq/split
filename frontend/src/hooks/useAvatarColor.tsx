@@ -25,11 +25,12 @@ const useAvatarColor = (userId: string | undefined, isDefaultColor?: boolean): A
 				bg: user.bg,
 				fontColor: user.fontColor
 			});
-		} else {
-			const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
-			localStorage.setItem(localStorageKey, JSON.stringify(newColor));
-			setColor(newColor);
+                         return;
 		}
+		
+		const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
+		localStorage.setItem(localStorageKey, JSON.stringify(newColor));
+		setColor(newColor);
 	}, [userId, isDefaultColor, getDefaultColor]);
 
 	return color as AvatarColor;
