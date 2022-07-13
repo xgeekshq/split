@@ -1,6 +1,8 @@
 import { Inject, Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { Document, LeanDocument, Model } from 'mongoose';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -144,8 +146,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     return this.boardModel.findById(boardId).lean().exec();
   }
 
-  async getBoard(boardId: string) {
-    const board = await this.boardModel
+  async getBoard(
+    boardId: string,
+    userId: string,
+  ): Promise<{
+    board: LeanDocument<BoardDocument>;
+    mainBoardData?: LeanDocument<BoardDocument>;
+  } | null> {
+    let board = await this.boardModel
       .findById(boardId)
       .populate({
         path: 'users',
@@ -166,12 +174,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         select: '_id firstName lastName',
       })
       .populate({
-        path: 'columns.cards.items.createdBy',
-        select: '_id firstName lastName',
-      })
-      .populate({
         path: 'columns.cards.comments.createdBy',
         select: '_id  firstName lastName',
+      })
+      .populate({
+        path: 'columns.cards.items.createdBy',
+        select: '_id firstName lastName',
       })
       .populate({
         path: 'columns.cards.items.comments.createdBy',
@@ -189,6 +197,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .exec();
 
     if (!board) return null;
+
+    // keep votes only for one user by userId
+    if (board.hideVotes || board.hideCards) {
+      board = this.cleanVotes(userId, board);
+    }
 
     if (board.isSubBoard) {
       const mainBoard = await this.boardModel
@@ -213,6 +226,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         .lean({ virtuals: true })
         .exec();
       if (!mainBoard) return null;
+
       return { board, mainBoardData: mainBoard };
     }
 
@@ -229,5 +243,48 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         { $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] },
       ],
     });
+  }
+
+  private cleanVotes(
+    userId: string,
+    input: LeanDocument<Board & Document & { _id: ObjectId }>,
+  ): LeanDocument<Board & Document & { _id: ObjectId }> {
+    const { hideVotes } = input;
+
+    const columns = input.columns.map((column) => {
+      const cards = column.cards.map((card) => {
+        const votesFromCard = hideVotes
+          ? (card.votes as UserDocument[]).filter(
+              (cardVotes) => String(cardVotes._id) === String(userId),
+            )
+          : card.votes;
+
+        const items = card.items.map((item) => {
+          const votesFromItem = hideVotes
+            ? (item.votes as UserDocument[]).filter(
+                (itemVotes) => String(itemVotes._id) === String(userId),
+              )
+            : item.votes;
+
+          return {
+            ...item,
+            votes: votesFromItem,
+          };
+        });
+
+        return {
+          ...card,
+          items,
+          votes: votesFromCard,
+        };
+      });
+
+      return {
+        ...column,
+        cards,
+      };
+    });
+
+    return { ...input, columns };
   }
 }
