@@ -54,27 +54,27 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 					<StyledText>Boards</StyledText>
 				</StyledMenuItem>
 			</Link>
-			<Tooltip content="Coming Soon">
+			<Tooltip content="Coming Soon" color="primary100">
 				<StyledMenuItem disabled data-active={active === USERS_ROUTE} align="center">
 					<Icon name="user" />
 					<StyledText>Users</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
-			<Tooltip content="Coming Soon">
+			<Tooltip color="primary100" content="Coming Soon">
 				<StyledMenuItem disabled data-active={active === TEAMS_ROUTE} align="center">
 					<Icon name="team" />
 					<StyledText>Teams</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
 			<StyledSeparator />
-			<Tooltip content="Coming Soon">
+			<Tooltip content="Coming Soon" color="primary100">
 				<StyledMenuItem disabled data-active={active === ACCOUNT_ROUTE} align="center">
 					<Icon name="user-circle" />
 					<StyledText>Account</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
 
-			<Tooltip content="Coming Soon">
+			<Tooltip content="Coming Soon" color="primary100">
 				<StyledMenuItem
 					disabled
 					css={{ mb: '$16' }}

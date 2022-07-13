@@ -25,9 +25,9 @@ const useAvatarColor = (userId: string | undefined, isDefaultColor?: boolean): A
 				bg: user.bg,
 				fontColor: user.fontColor
 			});
-                         return;
+			return;
 		}
-		
+
 		const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
 		localStorage.setItem(localStorageKey, JSON.stringify(newColor));
 		setColor(newColor);

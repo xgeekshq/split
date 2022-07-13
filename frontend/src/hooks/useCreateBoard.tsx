@@ -45,7 +45,8 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 				maxVotes: undefined,
 				hideCards: false,
 				hideVotes: false,
-				postAnonymously: false
+				postAnonymously: false,
+				totalUsedVotes: 0
 			};
 		},
 		[]
@@ -61,7 +62,6 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 			if (splitedUsers && team.users.length >= MIN_MEMBERS) {
 				new Array(maxTeams).fill(0).forEach((_, i) => {
 					const newBoard = generateSubBoard(i + 1);
-					console.log(splitedUsers);
 					splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
 						BoardUserRoles.RESPONSIBLE;
 					newBoard.users = splitedUsers[i];

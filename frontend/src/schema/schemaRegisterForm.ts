@@ -20,7 +20,7 @@ const SchemaRegisterForm = Joi.object({
 		}),
 	password: Joi.string()
 		.required()
-		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/)
+		.regex(/^(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/)
 		.min(8)
 		.messages({
 			'string.min': 'Password must be at least 8 characters.',
