@@ -1,4 +1,19 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run pre-commit
+# Set root folder
+rootDir=$PWD
+
+# Set folders to run lint-staged
+folders=("backend" "frontend")
+
+# Loop on array of folders
+for folder in "${folders[@]}"
+do
+	# To improve the feedback, show the folder name
+	echo "\n━━━ ${folder} ━━━\n"
+	cd ${rootDir}/${folder}
+
+	# Note: this command needs to be present on scripts inside each package.json
+	npm run pre-commit
+done

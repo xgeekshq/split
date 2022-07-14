@@ -1,5 +1,22 @@
 {
-  "trailingComma": "all",
-  "tabWidth": 2,
-  "singleQuote": true
+  "tabWidth": 4,
+  "useTabs": true,
+  "singleQuote": true,
+  "printWidth": 100,
+  "semi": true,
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": [
+        "*.yml",
+        "*.yaml",
+        "**/*.yml",
+        "**/*.yaml"
+      ],
+      "options": {
+        "tabWidth": 2,
+        "useTabs": false
+      }
+    }
+  ]
 }

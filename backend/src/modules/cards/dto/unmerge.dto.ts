@@ -1,11 +1,12 @@
 import { IsMongoId, IsNumber, IsString } from 'class-validator';
-import { BaseDto } from '../../../libs/dto/base.dto';
+
+import { BaseDto } from 'libs/dto/base.dto';
 
 export default class UnmergeCardsDto extends BaseDto {
-  @IsMongoId()
-  @IsString()
-  columnId!: string;
+	@IsMongoId()
+	@IsString()
+	columnId!: string;
 
-  @IsNumber()
-  newPosition!: number;
+	@IsNumber()
+	newPosition!: number;
 }

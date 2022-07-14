@@ -1,11 +1,11 @@
-import { Configs } from '../../boards/interfaces/services/create.board.service.interface';
+import { Configs } from 'modules/boards/interfaces/services/create.board.service.interface';
 
 export class AddCronJobDto {
-  boardId!: string;
+	boardId!: string;
 
-  ownerId!: string;
+	ownerId!: string;
 
-  teamId!: string;
+	teamId!: string;
 
-  configs!: Configs;
+	configs!: Configs;
 }

@@ -1,5 +1,5 @@
 export interface CreateResetTokenAuthService {
-  create(emailAddress: string): Promise<{
-    message: string;
-  }>;
+	create(emailAddress: string): Promise<{
+		message: string;
+	}>;
 }
