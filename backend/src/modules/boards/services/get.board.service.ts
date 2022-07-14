@@ -371,12 +371,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
         select: '_id firstName lastName',
       })
       .populate({
-        path: 'columns.cards.items.createdBy',
-        select: '_id firstName lastName',
-      })
-      .populate({
         path: 'columns.cards.comments.createdBy',
         select: '_id  firstName lastName',
+      })
+      .populate({
+        path: 'columns.cards.items.createdBy',
+        select: '_id firstName lastName',
       })
       .populate({
         path: 'columns.cards.items.comments.createdBy',

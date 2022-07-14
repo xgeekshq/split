@@ -24,7 +24,6 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = React.memo(
 	({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId }) => {
 		const { deleteComment } = useComments();
-
 		const [editing, setEditing] = useState(false);
 
 		const handleDeleteComment = () => {
