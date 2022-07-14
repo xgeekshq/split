@@ -6,6 +6,7 @@ import { styled } from 'styles/stitches/stitches.config';
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { cardBlur } from 'helper/board/blurFilter';
 import { getCommentsFromCardGroup } from 'helper/board/comments';
 import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
@@ -142,10 +143,12 @@ const CardBoard = React.memo<CardBoardProps>(
 												size="md"
 												css={{
 													wordBreak: 'break-word',
-													filter:
-														hideCards && card.createdBy?._id !== userId
-															? 'blur($sizes$6)'
-															: 'none'
+
+													filter: cardBlur(
+														hideCards,
+														card as CardType,
+														userId
+													)
 												}}
 											>
 												{card.text}

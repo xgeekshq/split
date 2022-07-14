@@ -7,6 +7,7 @@ import Avatar from 'components/Primitives/Avatar';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { cardBlur } from 'helper/board/blurFilter';
 import { getCardVotes } from 'helper/board/votes';
 import useVotes from 'hooks/useVotes';
 import { BoardUser } from 'types/board/board.user';
@@ -131,10 +132,7 @@ const CardFooter = React.memo<FooterProps>(
 						gap="4"
 						align="center"
 						css={{
-							filter:
-								hideCards && card.createdBy?._id !== userId
-									? 'blur($sizes$6)'
-									: 'none'
+							filter: cardBlur(hideCards, card as CardType, userId)
 						}}
 					>
 						<Avatar
@@ -160,10 +158,7 @@ const CardFooter = React.memo<FooterProps>(
 							align="center"
 							gap="2"
 							css={{
-								filter:
-									hideCards && card.createdBy?._id !== userId
-										? 'blur($sizes$6)'
-										: 'none'
+								filter: cardBlur(hideCards, card as CardType, userId)
 							}}
 						>
 							<StyledButtonIcon
@@ -188,10 +183,7 @@ const CardFooter = React.memo<FooterProps>(
 							gap="2"
 							css={{
 								mr: '$10',
-								filter:
-									hideCards && card.createdBy?._id !== userId
-										? 'blur($sizes$6)'
-										: 'none'
+								filter: cardBlur(hideCards, card as CardType, userId)
 							}}
 						>
 							<StyledButtonIcon
@@ -206,10 +198,7 @@ const CardFooter = React.memo<FooterProps>(
 							align="center"
 							gap="2"
 							css={{
-								filter:
-									hideCards && card.createdBy?._id !== userId
-										? 'blur($sizes$6)'
-										: 'none'
+								filter: cardBlur(hideCards, card as CardType, userId)
 							}}
 						>
 							<StyledButtonIcon onClick={setOpenComments}>

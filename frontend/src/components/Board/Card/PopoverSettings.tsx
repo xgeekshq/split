@@ -10,6 +10,7 @@ import {
 	PopoverTrigger
 } from 'components/Primitives/Popover';
 import Text from 'components/Primitives/Text';
+import { cardItemBlur } from 'helper/board/blurFilter';
 import useCards from 'hooks/useCards';
 import { CardItemType } from 'types/card/cardItem';
 
@@ -135,10 +136,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 						css={{
 							width: '$20',
 							height: '$20',
-							filter:
-								hideCards && item.createdBy?._id !== userId
-									? 'blur($sizes$6)'
-									: 'none'
+							filter: cardItemBlur(hideCards, item as CardItemType, userId)
 						}}
 					/>
 				</PopoverTriggerStyled>
