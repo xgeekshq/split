@@ -4,7 +4,7 @@
 
 rootDir=${pwd}
 
-folders=("backend", "frontend")
+folders=("backend" "frontend")
 
 for folder in "${folders[@]}"
 do
