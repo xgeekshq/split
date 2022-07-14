@@ -1,8 +1,12 @@
-import { Inject, Logger, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
-import { Document, LeanDocument, Model } from 'mongoose';
+import { LeanDocument, Model } from 'mongoose';
 import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import { CardItemDocument } from 'src/modules/cards/schemas/card.item.schema';
+import { ObjectId } from 'mongodb';
+import { CommentDocument } from '../../comments/schemas/comment.schema';
+import { hideText } from '../../../libs/utils/hideText';
+import { CardDocument } from '../../cards/schemas/card.schema';
 import { BOARDS_NOT_FOUND } from '../../../libs/exceptions/messages';
 import { GetTeamServiceInterface } from '../../teams/interfaces/services/get.team.service.interface';
 import * as Team from '../../teams/interfaces/types';
@@ -177,10 +181,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
     if (!board) return null;
 
-    // keep votes only for one user by userId
-    if (board.hideVotes || board.hideCards) {
-      board = this.cleanVotes(userId, board);
-    }
+    board = this.cleanBoard(board, userId);
 
     if (board.isSubBoard) {
       const mainBoard = await this.getMainBoardData(boardId);
@@ -190,6 +191,150 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     }
 
     return { board };
+  }
+
+  /**
+   * Filter an array of votes and return only the votes from current user
+   * @param input Array of Votes
+   * @param userId Current Logged User
+   * @returns Array of Votes (filtered)
+   */
+  private replaceVotes(
+    input: LeanDocument<CardDocument | CardItemDocument>,
+    userId: string,
+  ) {
+    return (input.votes as UserDocument[]).filter(
+      (vote) => String(vote) === String(userId),
+    );
+  }
+
+  /**
+   * Replace user name (first and last) by "a"
+   * @param input Card or a Card Item
+   * @param userId current logged user
+   * @returns Created By User with first/last name replaced by "a"
+   */
+  private replaceUser(
+    input: UserDocument,
+    userId: string,
+  ): LeanDocument<UserDocument> {
+    if (input._id.toString() !== String(userId)) {
+      return {
+        ...input,
+        firstName: hideText(input.firstName),
+        lastName: hideText(input.lastName),
+      };
+    }
+
+    return input;
+  }
+
+  /**
+   * Replace comments from other users
+   * @param input array of comments
+   * @param userId current logged user
+   * @returns array of comments
+   */
+  private replaceComments(
+    input: LeanDocument<CommentDocument[]>,
+    userId: string,
+  ): LeanDocument<CommentDocument[]> {
+    return input
+      .filter(
+        (comment) =>
+          (comment.createdBy as UserDocument)._id.toString() !== String(userId),
+      )
+      .map((comment) => {
+        return {
+          ...comment,
+          createdBy: this.replaceUser(
+            comment.createdBy as UserDocument,
+            userId,
+          ),
+          text: hideText(comment.text),
+        };
+      });
+  }
+
+  /**
+   * Replace card from other users, using the methods created before
+   * @param input Card or a Card Item
+   * @param userId current logged user
+   * @param hideCards option from database
+   * @param hideVotes option from database
+   * @returns Card or a Card Item
+   */
+  private replaceCard(
+    input: LeanDocument<CardDocument | CardItemDocument>,
+    userId: string,
+    hideCards: boolean,
+    hideVotes: boolean,
+  ): LeanDocument<CardDocument | CardItemDocument> {
+    const createdBy = input.createdBy as UserDocument;
+    console.log(this.replaceVotes(input, userId));
+    return {
+      ...input,
+      text:
+        hideCards && String(createdBy._id) !== String(userId)
+          ? hideText(input.text)
+          : input.text,
+      votes: hideVotes ? this.replaceVotes(input, userId) : input.votes,
+      comments:
+        hideCards && String(createdBy._id) !== String(userId)
+          ? this.replaceComments(input.comments, String(userId))
+          : input.comments,
+      createdBy:
+        hideCards && String(createdBy._id) !== String(userId)
+          ? this.replaceUser(createdBy, userId)
+          : input.createdBy,
+    };
+  }
+
+  private cleanBoard(
+    input: LeanDocument<
+      Board & {
+        _id: ObjectId;
+      }
+    >,
+    userId: string,
+  ): LeanDocument<
+    Board & {
+      _id: ObjectId;
+    }
+  > {
+    const {
+      hideCards = false,
+      hideVotes = false,
+      columns: boardColumns,
+    } = input;
+
+    if (hideCards || hideVotes) {
+      // Columns
+      const columns = boardColumns.map((column) => {
+        const cards = column.cards.map((card) => {
+          const items = card.items.map((item) => {
+            return this.replaceCard(item, userId, hideCards, hideVotes);
+          });
+
+          return {
+            ...this.replaceCard(card, userId, hideCards, hideVotes),
+            items,
+          };
+        });
+
+        return {
+          ...column,
+          cards: hideCards ? cards : column.cards,
+        };
+      });
+
+      return {
+        ...input,
+        columns,
+      };
+    }
+
+    return input;
   }
 
   async countBoards(userId: string) {
@@ -248,48 +393,5 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       .lean({ virtuals: true })
       .exec();
     return board;
-  }
-
-  private cleanVotes(
-    userId: string,
-    input: LeanDocument<Board & Document & { _id: ObjectId }>,
-  ): LeanDocument<Board & Document & { _id: ObjectId }> {
-    const { hideVotes } = input;
-
-    const columns = input.columns.map((column) => {
-      const cards = column.cards.map((card) => {
-        const votesFromCard = hideVotes
-          ? (card.votes as UserDocument[]).filter(
-              (cardVotes) => String(cardVotes._id) === String(userId),
-            )
-          : card.votes;
-
-        const items = card.items.map((item) => {
-          const votesFromItem = hideVotes
-            ? (item.votes as UserDocument[]).filter(
-                (itemVotes) => String(itemVotes._id) === String(userId),
-              )
-            : item.votes;
-
-          return {
-            ...item,
-            votes: votesFromItem,
-          };
-        });
-
-        return {
-          ...card,
-          items,
-          votes: votesFromCard,
-        };
-      });
-
-      return {
-        ...column,
-        cards,
-      };
-    });
-
-    return { ...input, columns };
   }
 }

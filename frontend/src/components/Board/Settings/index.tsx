@@ -269,7 +269,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 										{!isSubBoard && (
 											<>
 												{configurationSettings(
-													'Hide cards from others',
+													'Hide votes from others',
 													'Participants can not see the votes from other participants of this retrospective.',
 													board.hideVotes,
 													handleHideVotesChange
