@@ -271,7 +271,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     hideVotes: boolean,
   ): LeanDocument<CardDocument | CardItemDocument> {
     const createdBy = input.createdBy as UserDocument;
-    console.log(this.replaceVotes(input, userId));
+
     return {
       ...input,
       text:
