@@ -12,7 +12,7 @@ folders=("backend" "frontend")
 for folder in "${folders[@]}"
 do
 	# To improve the feedback, show the folder name
-	echo "/n━━━ ${folder} ━━━/n"
+	echo -e "\n━━━ ${folder} ━━━\n"
 	cd ${rootDir}/${folder}
 
 	# Note: this command needs to be present on scripts inside each package.json
