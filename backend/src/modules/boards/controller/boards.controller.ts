@@ -13,6 +13,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import BoardDto from '../dto/board.dto';
 import JwtAuthenticationGuard from '../../../libs/guards/jwtAuth.guard';
@@ -43,6 +44,7 @@ export default class BoardsController {
     private updateBoardApp: UpdateBoardApplicationInterface,
     @Inject(TYPES.applications.DeleteBoardApplication)
     private deleteBoardApp: DeleteBoardApplicationInterface,
+    private socketService: SocketGateway,
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
@@ -115,6 +117,10 @@ export default class BoardsController {
     );
 
     if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+    if (boardData.socketId) {
+      this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+    }
 
     return board;
   }

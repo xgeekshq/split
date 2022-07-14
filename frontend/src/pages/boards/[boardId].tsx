@@ -243,7 +243,11 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 							)}
 
 							{!board.submitedByUser && !board.submitedAt && (
-								<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
+								<BoardSettings
+									isOpen={isOpen}
+									setIsOpen={setIsOpen}
+									socketId={socketId}
+								/>
 							)}
 
 							{board.submitedByUser && board.submitedAt && (

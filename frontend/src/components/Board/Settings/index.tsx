@@ -34,9 +34,10 @@ const DEFAULT_MAX_VOTES = '6';
 type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	isOpen: boolean;
+	socketId: string;
 };
 
-const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
+const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
 	const haveError = useRecoilValue(updateBoardError);
 
@@ -156,7 +157,8 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 				board: {
 					...updateBoardData.board,
 					title,
-					maxVotes
+					maxVotes,
+					socketId
 				}
 			},
 			{

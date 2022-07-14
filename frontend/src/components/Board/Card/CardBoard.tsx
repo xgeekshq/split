@@ -15,7 +15,6 @@ import CardFooter from './CardFooter';
 import CardItemList from './CardItem/CardItemList';
 import DeleteCard from './DeleteCard';
 import PopoverCardSettings from './PopoverSettings';
-import CardFooter from './CardFooter';
 
 const Container = styled(Flex, {
 	borderRadius: '$8',
