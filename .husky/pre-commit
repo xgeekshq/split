@@ -12,8 +12,10 @@ folders=("backend" "frontend")
 for folder in "${folders[@]}"
 do
 	# To improve the feedback, show the folder name
-	echo "━━━ ${folder} ━━━"
+	echo "/n━━━ ${folder} ━━━/n"
 	cd ${rootDir}/${folder}
+
+	# Note: this command needs to be present on scripts inside each package.json
 	npm run pre-commit
 done
 
