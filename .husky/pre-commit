@@ -2,14 +2,15 @@
 . "$(dirname "$0")/_/husky.sh"
 
 
-rootDir=${pwd}
+rootDir=$PWD
 
 folders=("backend" "frontend")
 
 for folder in "${folders[@]}"
 do
-	echo  "${pwd}${folder}"
-	echo "Running husky for ${folder}"
+	echo "-- ${folder} --"
+	cd ${rootDir}/${folder}
+	npm run pre-commit
 done
 
 # npm run pre-commit
