@@ -25,7 +25,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
     return this.teamModel.countDocuments().exec();
   }
 
-  getTeam(teamId: string, teamQueryParams: TeamQueryParams) {
+  getTeam(teamId: string, teamQueryParams: TeamQueryParams = {}) {
     const { loadUsers, teamUserRole } = teamQueryParams;
     const teamModel = this.teamModel.findById(teamId);
     let teamUserRoleFilter = {};
