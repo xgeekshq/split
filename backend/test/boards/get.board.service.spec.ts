@@ -91,7 +91,7 @@ describe('GetBoardServiceImpl', () => {
     const userId = 'any_id_1';
 
     // eslint-disable-next-line @typescript-eslint/dot-notation
-    const result = service['cleanVotes'](userId, boardGiven);
+    const result = service['cleanBoard'](boardGiven, userId);
 
     expect(result).toMatchObject({
       columns: [
