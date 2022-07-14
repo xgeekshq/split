@@ -204,7 +204,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     userId: string,
   ) {
     return (input.votes as UserDocument[]).filter(
-      (vote) => String(vote) === String(userId),
+      (vote) => String(vote._id) === String(userId),
     );
   }
 
@@ -281,7 +281,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
       votes: hideVotes ? this.replaceVotes(input, userId) : input.votes,
       comments:
         hideCards && String(createdBy._id) !== String(userId)
-          ? this.replaceComments(input.comments, String(userId))
+          ? this.replaceComments(input.comments, userId)
           : input.comments,
       createdBy:
         hideCards && String(createdBy._id) !== String(userId)
@@ -324,7 +324,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
         return {
           ...column,
-          cards: hideCards ? cards : column.cards,
+          cards,
         };
       });
 
