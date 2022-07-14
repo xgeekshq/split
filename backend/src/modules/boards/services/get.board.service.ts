@@ -270,25 +270,52 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
     hideCards: boolean,
     hideVotes: boolean,
   ): LeanDocument<CardDocument | CardItemDocument> {
-    const createdBy = input.createdBy as UserDocument;
+    let { text, comments, votes, createdBy } = input;
+    const createdByAsUserDocument = createdBy as UserDocument;
+
+    if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
+      text = hideText(input.text);
+      comments = this.replaceComments(input.comments, userId);
+      createdBy = this.replaceUser(createdByAsUserDocument, userId);
+    }
+
+    if (hideVotes) {
+      votes = this.replaceVotes(input, userId);
+    }
 
     return {
       ...input,
-      text:
-        hideCards && String(createdBy._id) !== String(userId)
-          ? hideText(input.text)
-          : input.text,
-      votes: hideVotes ? this.replaceVotes(input, userId) : input.votes,
-      comments:
-        hideCards && String(createdBy._id) !== String(userId)
-          ? this.replaceComments(input.comments, userId)
-          : input.comments,
-      createdBy:
-        hideCards && String(createdBy._id) !== String(userId)
-          ? this.replaceUser(createdBy, userId)
-          : input.createdBy,
+      text,
+      votes,
+      comments,
+      createdBy,
     };
   }
+  //   private replaceCard(
+  //     input: LeanDocument<CardDocument | CardItemDocument>,
+  //     userId: string,
+  //     hideCards: boolean,
+  //     hideVotes: boolean,
+  //   ): LeanDocument<CardDocument | CardItemDocument> {
+  //     const createdBy = input.createdBy as UserDocument;
+
+  //     return {
+  //       ...input,
+  //       text:
+  //         hideCards && String(createdBy._id) !== String(userId)
+  //           ? hideText(input.text)
+  //           : input.text,
+  //       votes: hideVotes ? this.replaceVotes(input, userId) : input.votes,
+  //       comments:
+  //         hideCards && String(createdBy._id) !== String(userId)
+  //           ? this.replaceComments(input.comments, userId)
+  //           : input.comments,
+  //       createdBy:
+  //         hideCards && String(createdBy._id) !== String(userId)
+  //           ? this.replaceUser(createdBy, userId)
+  //           : input.createdBy,
+  //     };
+  //   }
 
   private cleanBoard(
     input: LeanDocument<
