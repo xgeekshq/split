@@ -2,13 +2,17 @@
 . "$(dirname "$0")/_/husky.sh"
 
 
+# Set root folder
 rootDir=$PWD
 
+# Set folders to run lint-staged
 folders=("backend" "frontend")
 
+# Loop on array of folders
 for folder in "${folders[@]}"
 do
-	echo "-- ${folder} --"
+	# To improve the feedback, show the folder name
+	echo "━━━ ${folder} ━━━"
 	cd ${rootDir}/${folder}
 	npm run pre-commit
 done
