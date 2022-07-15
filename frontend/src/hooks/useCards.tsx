@@ -110,7 +110,7 @@ const useCards = () => {
 
 			return { previousBoard: prevBoardData, data };
 		},
-		onSuccess: (data) => {
+		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
@@ -137,7 +137,6 @@ const useCards = () => {
 		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
-		onSuccess: () => {},
 		onError: (data, variables, context) => {
 			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
@@ -159,7 +158,7 @@ const useCards = () => {
 
 			return { previousBoard: prevBoardData, data };
 		},
-		onSuccess: (data) => {
+		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
@@ -183,7 +182,7 @@ const useCards = () => {
 
 			return { previousBoard: prevBoardData, data };
 		},
-		onSuccess: (data) => {
+		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 
 			setToastState({
@@ -228,7 +227,7 @@ const useCards = () => {
 
 			return { previousBoard: prevBoardData, data };
 		},
-		onSuccess: (data) => {
+		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
@@ -253,7 +252,7 @@ const useCards = () => {
 
 			return { previousBoard: prevBoardData, data };
 		},
-		onSuccess: (data) => {
+		onSettled: (data) => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
