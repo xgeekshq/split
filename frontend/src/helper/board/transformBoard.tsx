@@ -1,12 +1,55 @@
 import BoardType from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
+import CardType from 'types/card/card';
+import DeleteCardDto from 'types/card/deleteCard.dto';
 import RemoveFromCardGroupDto from 'types/card/removeFromCardGroup.dto';
+import UpdateCardDto from 'types/card/updateCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { addElementAtIndex, removeElementAtIndex } from 'utils/array';
 
+// avoid read only error
+const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
+
+export const handleNewCard = (board: BoardType, colIdToAdd: string, newCard: CardType) => {
+	const boardData = removeReadOnly(board);
+
+	const column = boardData.columns.find((col) => col._id === colIdToAdd);
+	if (column) {
+		column.cards = addElementAtIndex(column.cards, 0, newCard);
+	}
+
+	return boardData;
+};
+
+export const handleDeleteCard = (board: BoardType, data: DeleteCardDto): BoardType => {
+	const boardData = removeReadOnly(board);
+
+	boardData.columns.forEach((column) => {
+		column.cards.forEach((card, index) => {
+			if (card._id === data.cardId) {
+				column.cards.splice(index, 1);
+			}
+		});
+	});
+
+	return boardData;
+};
+
+export const handleUpdateText = (board: BoardType, data: UpdateCardDto) => {
+	const boardData = removeReadOnly(board);
+
+	boardData.columns.forEach((col) => {
+		col.cards.forEach((card) => {
+			if (card._id === data.cardId) {
+				card.text = data.text;
+			}
+		});
+	});
+	return boardData;
+};
+
 export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPositionDto) => {
-	// avoid read only error
-	const boardData: BoardType = JSON.parse(JSON.stringify(board));
+	const boardData = removeReadOnly(board);
 
 	const { targetColumnId, colIdOfCard, newPosition, cardPosition } = changes;
 	const colToRemove = boardData.columns.find((col) => col._id === colIdOfCard);
@@ -21,61 +64,47 @@ export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPo
 };
 
 export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
-	const boardData: BoardType = JSON.parse(JSON.stringify(board));
+	const boardData = removeReadOnly(board);
 
 	const { cardGroupId, cardId, cardPosition, colIdOfCardGroup } = changes;
+	const column = boardData.columns.find((col) => col._id === colIdOfCardGroup);
+	const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
+	const selectedCard = column?.cards.find((card) => card._id === cardId);
 
-	boardData.columns.forEach((column) => {
-		if (column._id === colIdOfCardGroup) {
-			column.cards.forEach((card) => {
-				if (card._id === cardGroupId) {
-					const selectedCard = column.cards.find((findCard) => findCard._id === cardId);
-					if (selectedCard) {
-						card.items = addElementAtIndex(card.items, cardPosition, {
-							_id: selectedCard._id,
-							text: selectedCard.text,
-							comments: selectedCard.comments,
-							votes: selectedCard.votes,
-							createdBy: selectedCard.createdBy,
-							createdByTeam: selectedCard.createdByTeam
-						});
+	if (column && cardGroup && selectedCard) {
+		cardGroup.items = addElementAtIndex(cardGroup.items, cardPosition, {
+			_id: selectedCard._id,
+			text: selectedCard.text,
+			comments: selectedCard.comments,
+			votes: selectedCard.votes,
+			createdBy: selectedCard.createdBy,
+			createdByTeam: selectedCard.createdByTeam
+		});
 
-						const index = column.cards.findIndex((idxCard) => idxCard === selectedCard);
-						column.cards = removeElementAtIndex(column.cards, index);
-					}
-				}
-			});
-		}
-	});
+		const index = column.cards.findIndex((idxCard) => idxCard === selectedCard);
+		column.cards = removeElementAtIndex(column.cards, index);
+	}
 
 	return boardData;
 };
 
 export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroupDto) => {
-	const boardData: BoardType = JSON.parse(JSON.stringify(board));
+	const boardData = removeReadOnly(board);
 
 	const { columnId, cardGroupId, cardId } = changes;
-	boardData.columns.forEach((column) => {
-		if (column._id === columnId) {
-			column.cards.forEach((card, idxCard) => {
-				if (card._id === cardGroupId) {
-					card.items.forEach((cardItem) => {
-						if (cardItem._id === cardId) {
-							column.cards = addElementAtIndex(
-								column.cards,
-								column.cards.length - 1,
-								{
-									...cardItem,
-									items: [cardItem]
-								}
-							);
-							card.items = removeElementAtIndex(card.items, idxCard);
-						}
-					});
-				}
-			});
-		}
-	});
+	const column = boardData.columns.find((col) => col._id === columnId);
+	const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
+	const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
+
+	if (column && cardGroup && selectedCard) {
+		column.cards = addElementAtIndex(column.cards, 0, {
+			...selectedCard,
+			items: [selectedCard]
+		});
+
+		const index = column.cards.findIndex((idxCard) => idxCard === cardGroup);
+		cardGroup.items = removeElementAtIndex(cardGroup.items, index);
+	}
 
 	return boardData;
 };

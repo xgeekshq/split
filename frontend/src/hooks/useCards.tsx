@@ -3,18 +3,18 @@ import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 
 import {
+	handleDeleteCard,
 	handleMergeCard,
+	handleNewCard,
 	handleUnMergeCard,
-	handleUpdateCardPosition
+	handleUpdateCardPosition,
+	handleUpdateText
 } from 'helper/board/transformBoard';
 import { mergeCardState } from 'store/mergeCard/atoms/merge-card.atom';
 import BoardType from 'types/board/board';
 import AddCardDto from 'types/card/addCard.dto';
 import CardType from 'types/card/card';
-import DeleteCardDto from 'types/card/deleteCard.dto';
-import UpdateCardDto from 'types/card/updateCard.dto';
 import ColumnType from 'types/column';
-import { addElementAtIndex } from 'utils/array';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import {
 	addCardRequest,
@@ -36,6 +36,13 @@ const useCards = () => {
 	const setMergeCard = useSetRecoilState(mergeCardState);
 
 	const getBoardQuery = (id: string | undefined) => ['board', { id }];
+
+	const setPreviousBoardQuery = (id: string, context: any) => {
+		queryClient.setQueryData(
+			getBoardQuery(id),
+			(context as { previousBoard: BoardType }).previousBoard
+		);
+	};
 
 	const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
 		const query = getBoardQuery(id);
@@ -71,29 +78,6 @@ const useCards = () => {
 		return newCard;
 	};
 
-	const addNewCardToBoard = (prevBoardData: BoardType, newData: AddCardDto) => {
-		const boardData: BoardType = JSON.parse(JSON.stringify(prevBoardData));
-		boardData.columns.forEach((column) => {
-			if (column._id === newData.colIdToAdd) {
-				column.cards = addElementAtIndex(column.cards, 0, generateNewCard(newData));
-			}
-		});
-		return boardData;
-	};
-
-	const deleteCardFromBoard = (prevBoardData: BoardType, data: DeleteCardDto): BoardType => {
-		const boardData: BoardType = JSON.parse(JSON.stringify(prevBoardData));
-		boardData.columns.forEach((column) => {
-			column.cards.forEach((card, index) => {
-				if (card._id === data.cardId) {
-					column.cards.splice(index, 1);
-				}
-			});
-		});
-
-		return boardData;
-	};
-
 	const updateBoardColumns = (id: string, columns: ColumnType[]) => {
 		queryClient.setQueryData<{ board: BoardType } | undefined>(
 			getBoardQuery(id),
@@ -111,24 +95,16 @@ const useCards = () => {
 		);
 	};
 
-	const updateSelectedCardText = (prevBoardData: BoardType | undefined, data: UpdateCardDto) => {
-		const boardData: BoardType = JSON.parse(JSON.stringify(prevBoardData));
-		boardData.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				if (card._id === data.cardId) {
-					card.text = data.text;
-				}
-			});
-		});
-		return boardData;
-	};
-
 	const addCardInColumn = useMutation(addCardRequest, {
 		onMutate: async (data) => {
 			const prevBoardData = await getPrevData(data.boardId);
 
-			if (prevBoardData) {
-				const boardData = addNewCardToBoard(prevBoardData, data);
+			if (prevBoardData && user) {
+				const boardData = handleNewCard(
+					prevBoardData,
+					data.colIdToAdd,
+					generateNewCard(data)
+				);
 				updateBoardColumns(data.boardId, boardData.columns);
 			}
 
@@ -138,10 +114,7 @@ const useCards = () => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
 				open: true,
 				content: 'Error adding the card',
@@ -166,10 +139,7 @@ const useCards = () => {
 		},
 		onSuccess: () => {},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
 				open: true,
 				content: 'Error updating the card position',
@@ -183,7 +153,7 @@ const useCards = () => {
 			const prevBoardData = await getPrevData(data.boardId);
 
 			if (prevBoardData) {
-				const boardData = updateSelectedCardText(prevBoardData, data);
+				const boardData = handleUpdateText(prevBoardData, data);
 				updateBoardColumns(data.boardId, boardData.columns);
 			}
 
@@ -193,10 +163,7 @@ const useCards = () => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
 				open: true,
 				content: 'Error updating the card',
@@ -210,7 +177,7 @@ const useCards = () => {
 			const prevBoardData = await getPrevData(data.boardId);
 
 			if (prevBoardData) {
-				const boardData = deleteCardFromBoard(prevBoardData, data);
+				const boardData = handleDeleteCard(prevBoardData, data);
 				updateBoardColumns(data.boardId, boardData.columns);
 			}
 
@@ -226,10 +193,7 @@ const useCards = () => {
 			});
 		},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
 				open: true,
 				content: 'Error deleting the card',
@@ -268,10 +232,7 @@ const useCards = () => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setMergeCard(undefined);
 			setToastState({
 				open: true,
@@ -296,10 +257,7 @@ const useCards = () => {
 			queryClient.invalidateQueries(getBoardQuery(data?._id));
 		},
 		onError: (data, variables, context) => {
-			queryClient.setQueryData(
-				['board', { id: variables.boardId }],
-				(context as { previousBoard: BoardType }).previousBoard
-			);
+			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
 				open: true,
 				content: 'Error unmerge the card',
