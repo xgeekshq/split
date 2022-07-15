@@ -1,9 +1,10 @@
 module.exports = {
 	moduleFileExtensions: ['js', 'json', 'ts', 'tsx'],
 	rootDir: '.',
+	roots: ['<rootDir>/src'],
 	testRegex: '.spec.ts$',
 	transform: {
-		'^.+\\.(t|j)s$': 'ts-jest'
+		'^.+\\.ts?$': 'ts-jest'
 	},
 	collectCoverageFrom: ['**/*.(t|j)s'],
 	coverageDirectory: './src/test/coverage',
@@ -18,5 +19,7 @@ module.exports = {
 		'jest.config.ts',
 		'configuration.ts',
 		'src/test/coverage/'
-	]
+	],
+	modulePaths: ['<rootDir>/src']
+	// moduleDirectories: ['node_modules', 'src'],
 };
