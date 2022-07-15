@@ -15,11 +15,12 @@ import { UPDATE_FAILED } from '../../../libs/exceptions/messages';
 @Injectable()
 export default class DeleteVoteServiceImpl implements DeleteVoteService {
   constructor(
-    @InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-    @Inject(TYPES.services.GetCardService)
-    private getCardService: GetCardService,
+    @InjectModel(Board.name)
+    private boardModel: Model<BoardDocument>,
     @InjectModel(BoardUser.name)
     private boardUserModel: Model<BoardUserDocument>,
+    @Inject(TYPES.services.GetCardService)
+    private getCardService: GetCardService,
   ) {}
 
   async decrementVoteUser(
@@ -28,19 +29,16 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     session: ClientSession,
     count?: number,
   ) {
-    const boardUser = await this.boardUserModel
-      .findOneAndUpdate(
-        {
-          user: userId,
-          board: boardId,
-        },
-        {
-          $inc: { votesCount: !count ? -1 : -count },
-        },
-      )
-      .session(session)
-      .lean()
-      .exec();
+    const boardUser = await this.boardUserModel.findOneAndUpdate(
+      {
+        user: userId,
+        board: boardId,
+      },
+      {
+        $inc: { votesCount: !count ? -1 : -count },
+      },
+      { session },
+    );
     if (!boardUser) throw Error(UPDATE_FAILED);
     return boardUser;
   }
@@ -51,8 +49,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     userId: string,
     cardItemId: string,
   ) {
-    const session = await this.boardModel.startSession();
-    session.startTransaction();
+    const boardSession = await this.boardModel.db.startSession();
+    const boardUserSession = await this.boardUserModel.db.startSession();
+    boardSession.startTransaction();
+    boardUserSession.startTransaction();
+
     try {
       const card = await this.getCardService.getCardFromBoard(boardId, cardId);
       if (!card) return null;
@@ -72,39 +73,38 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
       votes.splice(voteIndex, 1);
 
-      await this.decrementVoteUser(boardId, userId, session);
-      const board = await this.boardModel
-        .findOneAndUpdate(
-          {
-            _id: boardId,
-            'columns.cards.items._id': cardItemId,
+      await this.decrementVoteUser(boardId, userId, boardUserSession);
+      const board = await this.boardModel.findOneAndUpdate(
+        {
+          _id: boardId,
+          'columns.cards.items._id': cardItemId,
+        },
+        {
+          $set: {
+            'columns.$.cards.$[c].items.$[i].votes': votes,
           },
-          {
-            $set: {
-              'columns.$.cards.$[c].items.$[i].votes': votes,
-            },
-            $inc: { totalUsedVotes: -1 },
-          },
-          {
-            arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-            new: true,
-          },
-        )
-        .populate({
-          path: 'users',
-          select: 'user role votesCount -board',
-          populate: { path: 'user', select: 'firstName lastName _id' },
-        })
-        .session(session)
-        .lean()
-        .exec();
+        },
+        {
+          arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+          new: true,
+          session: boardSession,
+        },
+      );
+
       if (!board) throw Error(UPDATE_FAILED);
-      await session.commitTransaction();
-      return board;
+      await boardSession.commitTransaction();
+      await boardUserSession.commitTransaction();
+      return await board.populate({
+        path: 'users',
+        select: 'user role votesCount -board',
+        populate: { path: 'user', select: 'firstName lastName _id' },
+      });
     } catch (e) {
-      await session.abortTransaction();
+      await boardSession.abortTransaction();
+      await boardUserSession.abortTransaction();
     } finally {
-      await session.endSession();
+      await boardSession.endSession();
+      await boardUserSession.endSession();
     }
     return null;
   }
@@ -114,8 +114,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
     cardId: string,
     userId: string,
   ) {
-    const session = await this.boardModel.startSession();
-    session.startTransaction();
+    const boardSession = await this.boardModel.db.startSession();
+    const boardUserSession = await this.boardUserModel.db.startSession();
+    boardSession.startTransaction();
+    boardUserSession.startTransaction();
+
     try {
       const card = await this.getCardService.getCardFromBoard(boardId, cardId);
       if (!card) return null;
@@ -138,7 +141,6 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
           userId,
           item._id.toString(),
         );
-        await session.commitTransaction();
 
         return boardUser;
       }
@@ -149,7 +151,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
       if (voteIndex === -1) return null;
       newVotes.splice(voteIndex, 1);
 
-      await this.decrementVoteUser(boardId, userId, session);
+      await this.decrementVoteUser(boardId, userId, boardUserSession);
       const board = await this.boardModel
         .findOneAndUpdate(
           {
@@ -166,16 +168,19 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
             new: true,
           },
         )
-        .session(session)
+        .session(boardSession)
         .lean()
         .exec();
       if (!board) throw Error(UPDATE_FAILED);
-      await session.commitTransaction();
+      await boardSession.commitTransaction();
+      await boardUserSession.commitTransaction();
       return board;
     } catch (e) {
-      await session.abortTransaction();
+      await boardSession.abortTransaction();
+      await boardUserSession.abortTransaction();
     } finally {
-      await session.endSession();
+      await boardSession.endSession();
+      await boardUserSession.endSession();
     }
     return null;
   }
