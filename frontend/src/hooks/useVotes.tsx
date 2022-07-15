@@ -60,14 +60,18 @@ const optimisticUpdateBoardData = (
 	return prevBoardData;
 };
 
+// work around to avoid read only error
+const getEditableBoardData = (board: BoardType): BoardType =>
+	JSON.parse(JSON.stringify({ ...board }));
+
 const getPreviousBoardData = async (
 	queryClient: QueryClient,
 	boardQueryKey: (string | { id: string })[]
 ) => {
 	await queryClient.cancelQueries(boardQueryKey);
 
-	const boardDataOnQuery: any = queryClient.getQueryData(boardQueryKey);
-	const prevBoardData: BoardType = JSON.parse(JSON.stringify({ ...boardDataOnQuery.board }));
+	const boardDataOnQuery = queryClient.getQueryData(boardQueryKey) as { board: BoardType };
+	const prevBoardData: BoardType = getEditableBoardData(boardDataOnQuery.board);
 
 	return prevBoardData;
 };
