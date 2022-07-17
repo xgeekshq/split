@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
 
+import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { commentBlur } from 'helper/board/blurFilter';
 import useComments from 'hooks/useComments';
 import CommentType from 'types/comment/comment';
 import DeleteCommentDto from 'types/comment/deleteComment.dto';
@@ -16,14 +17,13 @@ interface CommentProps {
 	boardId: string;
 	socketId: string;
 	isSubmited: boolean;
+	hideCards: boolean;
+	userId: string;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
-	({ comment, cardId, cardItemId, boardId, socketId, isSubmited }) => {
+	({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId }) => {
 		const { deleteComment } = useComments();
-		const { data: session } = useSession({ required: false });
-		const userId = session?.user.id;
-
 		const [editing, setEditing] = useState(false);
 
 		const handleDeleteComment = () => {
@@ -56,7 +56,23 @@ const Comment: React.FC<CommentProps> = React.memo(
 				{!editing && (
 					<Flex direction="column">
 						<Flex justify="between" css={{ width: '100%' }}>
-							<Text size="xs">{comment.text}</Text>
+							<Text
+								size="xs"
+								css={{
+									filter: commentBlur(hideCards, comment as CommentType, userId)
+								}}
+							>
+								{comment.text}
+							</Text>
+							{isSubmited && userId === comment.createdBy._id && (
+								<Icon
+									name="menu-dots"
+									css={{
+										width: '$20',
+										height: '$20'
+									}}
+								/>
+							)}
 							{!isSubmited && userId === comment.createdBy._id && (
 								<PopoverCommentSettings
 									handleEditing={handleEditing}
@@ -64,7 +80,13 @@ const Comment: React.FC<CommentProps> = React.memo(
 								/>
 							)}
 						</Flex>
-						<Text size="xs" weight="medium">
+						<Text
+							size="xs"
+							weight="medium"
+							css={{
+								filter: commentBlur(hideCards, comment as CommentType, userId)
+							}}
+						>
 							{comment.createdBy.firstName} {comment.createdBy.lastName}
 						</Text>
 					</Flex>

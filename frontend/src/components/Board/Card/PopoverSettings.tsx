@@ -10,7 +10,9 @@ import {
 	PopoverTrigger
 } from 'components/Primitives/Popover';
 import Text from 'components/Primitives/Text';
+import { cardItemBlur } from 'helper/board/blurFilter';
 import useCards from 'hooks/useCards';
+import { CardItemType } from 'types/card/cardItem';
 
 interface PopoverSettingsContentProps {
 	isItem: boolean;
@@ -64,15 +66,30 @@ interface PopoverSettingsProps {
 	socketId: string;
 	itemId: string;
 	newPosition: number;
+	hideCards: boolean;
+	userId: string;
+	item: CardItemType;
 	handleEditing: () => void;
 	handleDeleteCard?: () => void;
 }
 
 const PopoverTriggerStyled = styled(PopoverTrigger, {
-	'&:hover': {
-		backgroundColor: '$primary500',
-		color: 'white'
-	}
+	variants: {
+		disabled: {
+			false: {
+				'&:hover': {
+					backgroundColor: '$primary500',
+					color: 'white'
+				}
+			},
+			true: {
+				'&:hover': {
+					backgroundColor: '$transparent'
+				}
+			}
+		}
+	},
+	defaultVariants: { disabled: false }
 });
 
 const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
@@ -86,7 +103,10 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 		newPosition,
 		isItem,
 		handleEditing,
-		handleDeleteCard
+		handleDeleteCard,
+		item,
+		userId,
+		hideCards
 	}) => {
 		const { removeFromMergeCard } = useCards();
 
@@ -104,15 +124,31 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
 		return (
 			<Popover>
-				<PopoverTriggerStyled css={{ position: 'relative', top: firstOne ? '-35px' : 0 }}>
-					<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
+				<PopoverTriggerStyled
+					disabled={hideCards && item.createdBy?._id !== userId}
+					css={{
+						position: 'relative',
+						top: firstOne ? '-35px' : 0
+					}}
+				>
+					<Icon
+						name="menu-dots"
+						css={{
+							width: '$20',
+							height: '$20',
+							filter: cardItemBlur(hideCards, item as CardItemType, userId)
+						}}
+					/>
 				</PopoverTriggerStyled>
-				<PopoverSettingsContent
-					isItem={isItem}
-					unmergeCard={unmergeCard}
-					setEditCard={handleEditing}
-					setDeleteCard={handleDeleteCard}
-				/>
+
+				{item.createdBy?._id === userId && (
+					<PopoverSettingsContent
+						isItem={isItem}
+						unmergeCard={unmergeCard}
+						setEditCard={handleEditing}
+						setDeleteCard={handleDeleteCard}
+					/>
+				)}
 			</Popover>
 		);
 	}
