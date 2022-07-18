@@ -287,7 +287,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											title={column.title}
 											color={column.color}
 											socketId={socketId}
-											anonymous={board.postAnonymously}
 											hideCards={board.hideCards}
 											isMainboard={!board.isSubBoard}
 											boardUser={board.users.find(

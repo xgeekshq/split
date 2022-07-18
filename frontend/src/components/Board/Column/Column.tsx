@@ -19,7 +19,6 @@ const Column = React.memo<ColumnBoardType>(
 		title,
 		color,
 		socketId,
-		anonymous,
 		isMainboard,
 		boardUser,
 		maxVotes,
@@ -112,7 +111,6 @@ const Column = React.memo<ColumnBoardType>(
 										userId={userId}
 										boardId={boardId}
 										socketId={socketId}
-										anonymous={anonymous}
 										isMainboard={isMainboard}
 										boardUser={boardUser}
 										maxVotes={maxVotes}

@@ -21,7 +21,6 @@ export interface ColumnBoardType {
 	title: string;
 	color: string;
 	socketId: string;
-	anonymous: boolean;
 	isMainboard: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;
@@ -37,7 +36,6 @@ export interface ColumnInnerList {
 	boardId: string;
 	color: string;
 	socketId: string;
-	anonymous: boolean;
 	isMainboard: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;

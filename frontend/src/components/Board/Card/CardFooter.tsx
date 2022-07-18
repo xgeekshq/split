@@ -73,7 +73,13 @@ const CardFooter = React.memo<FooterProps>(
 		isCommentsOpened,
 		hideCards
 	}) => {
-		const { createdBy } = card;
+		const createdBy = useMemo(() => {
+			if (Object.hasOwnProperty.call(card, 'items')) {
+				const cardTyped = card as CardType;
+				return cardTyped.items[cardTyped.items.length - 1].createdBy;
+			}
+			return card.createdBy;
+		}, [card]);
 
 		const { addVote, deleteVote } = useVotes();
 		const actualBoardVotes = boardUser?.votesCount;

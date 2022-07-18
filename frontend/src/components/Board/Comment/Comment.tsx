@@ -93,6 +93,7 @@ const Comment: React.FC<CommentProps> = React.memo(
 				)}
 				{editing && (
 					<AddCardOrComment
+						isEditing
 						isUpdate
 						isCard={false}
 						colId="1"

@@ -76,6 +76,7 @@ const Comments = React.memo(
 				{isCreateCommentOpened && !isSubmited && (
 					<Flex css={{ width: '100%', px: '$16' }}>
 						<AddCardOrComment
+							isEditing
 							isCard={false}
 							isUpdate={false}
 							colId="1"
