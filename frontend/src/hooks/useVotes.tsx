@@ -2,6 +2,7 @@ import { QueryClient, useMutation } from 'react-query';
 import { useSession } from 'next-auth/react';
 
 import { addVoteRequest, deleteVoteRequest } from 'api/boardService';
+import { CardItemType } from 'types/card/cardItem';
 import voteDto from 'types/vote/vote.dto';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import isEmpty from 'utils/isEmpty';
@@ -9,101 +10,162 @@ import BoardType from '../types/board/board';
 import { getRemainingVotes } from '../utils/getRemainingVotes';
 import useBoardUtils from './useBoardUtils';
 
-type ActionType = 'add' | 'remove';
+enum Action {
+	Add = 'add',
+	Remove = 'remove'
+}
 
-const getNewOptimisticBoardData = (
-	action: ActionType,
-	prevBoardData: BoardType,
-	cardItemIndexes: number[],
-	userId: string
-) => {
-	const [colIdx, cardIdx, cardItemIdx] = cardItemIndexes;
-	if (action === 'add') {
-		prevBoardData.columns[colIdx].cards[cardIdx].items[cardItemIdx].votes.push(userId);
-	} else if (action === 'remove') {
-		prevBoardData.columns[colIdx].cards[cardIdx].items[cardItemIdx].votes.pop();
-	}
-	return prevBoardData;
+type QueryKeyType = (string | { id: string })[];
+
+type ToastStateType = {
+	open: boolean;
+	type: ToastStateEnum;
+	content: string;
 };
 
-const optimisticUpdateBoardData = (
-	action: ActionType,
-	prevBoardData: BoardType,
-	voteData: voteDto,
-	userId = ''
-) => {
-	let [colIdx, cardIdx, cardItemIdx] = [-1, -1, -1];
+const shallAddVote = (action: Action) => action === Action.Add;
 
-	const foundCordItem = prevBoardData.columns.some((column, idxCol) =>
-		column.cards.some(
-			(card, idxCard) =>
-				card._id === voteData.cardId &&
-				card.items.some((cardItem, idxCardItem) => {
-					if (cardItem._id === voteData.cardItemId) {
-						[colIdx, cardIdx, cardItemIdx] = [idxCol, idxCard, idxCardItem];
-						return true;
-					}
-					return false;
-				})
-		)
-	);
+const shallRemoveVote = (action: Action) => action === Action.Remove;
 
-	if (foundCordItem) {
-		return getNewOptimisticBoardData(
-			action,
-			prevBoardData,
-			[colIdx, cardIdx, cardItemIdx],
-			userId
-		);
-	}
+const getBoardQueryKey = (boardId = ''): QueryKeyType => ['board', { id: boardId }];
 
-	return prevBoardData;
-};
+const hasMaxVotesLimit = ({ maxVotes }: BoardType) => !isEmpty(maxVotes);
+
+const getFirstCardItemIndexWithVotes = (cardItems: CardItemType[]) =>
+	cardItems.findIndex((cardItem) => cardItem.votes.length > 0);
 
 // work around to avoid read only error
-const getEditableBoardData = (board: BoardType): BoardType =>
-	JSON.parse(JSON.stringify({ ...board }));
+const getEditableBoardData = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
 
-const getPreviousBoardData = async (
-	queryClient: QueryClient,
-	boardQueryKey: (string | { id: string })[]
+const getBoardDataQuery = (queryClient: QueryClient, boardQueryKey: QueryKeyType): BoardType =>
+	(queryClient.getQueryData(boardQueryKey) as { board: BoardType }).board;
+
+const getPreviousBoardData = (queryClient: QueryClient, boardQueryKey: QueryKeyType) =>
+	getEditableBoardData(getBoardDataQuery(queryClient, boardQueryKey));
+
+const getCardItemVotesOptimistic = (
+	action: Action,
+	prevBoardData: BoardType,
+	indexes: number[],
+	userId: string
 ) => {
-	await queryClient.cancelQueries(boardQueryKey);
+	const newBoardData = prevBoardData;
+	const [colIndex, cardIndex, cardItemIndex] = indexes;
 
-	const boardDataOnQuery = queryClient.getQueryData(boardQueryKey) as { board: BoardType };
-	const prevBoardData: BoardType = getEditableBoardData(boardDataOnQuery.board);
-
-	return prevBoardData;
-};
-
-const optimisticUpdateVote = async (
-	action: ActionType,
-	queryClient: QueryClient,
-	boardQueryKey: (string | { id: string })[],
-	voteData: voteDto,
-	userId: string | undefined
-) => {
-	const prevBoardData: BoardType = await getPreviousBoardData(queryClient, boardQueryKey);
-
-	const newBoardData = optimisticUpdateBoardData(action, prevBoardData, voteData, userId);
-
-	queryClient.setQueryData(boardQueryKey, { board: newBoardData });
+	if (shallAddVote(action)) {
+		newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.push(userId);
+	} else if (shallRemoveVote(action)) {
+		newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
+	}
 
 	return newBoardData;
 };
 
-const optimisticAddVote = async (
+const getCardsVotesOptimistic = (
+	action: Action,
+	prevBoardData: BoardType,
+	indexes: number[],
+	userId: string
+) => {
+	const newBoardData = prevBoardData;
+	const [colIndex, cardIndex] = indexes;
+	const hasVotesOnMergedCards = newBoardData.columns[colIndex].cards[cardIndex].votes.length > 0;
+
+	if (!hasVotesOnMergedCards) {
+		const cardItems = newBoardData.columns[colIndex].cards[cardIndex].items;
+		const cardItemIndex = getFirstCardItemIndexWithVotes(cardItems);
+		const newIndexes = [colIndex, cardIndex, cardItemIndex];
+
+		return getCardItemVotesOptimistic(action, prevBoardData, newIndexes, userId);
+	}
+
+	if (shallAddVote(action)) {
+		newBoardData.columns[colIndex].cards[cardIndex].votes.push(userId);
+	} else if (shallRemoveVote(action)) {
+		newBoardData.columns[colIndex].cards[cardIndex].votes.pop();
+	}
+
+	return newBoardData;
+};
+
+const getBoardDataOptimistic = (
+	action: Action,
+	prevBoardData: BoardType,
+	indexes: number[],
+	isCardGroup: boolean,
+	userId: string
+) => {
+	if (isCardGroup) return getCardsVotesOptimistic(action, prevBoardData, indexes, userId);
+
+	return getCardItemVotesOptimistic(action, prevBoardData, indexes, userId);
+};
+
+const updateBoardDataOptimistic = (
+	action: Action,
+	prevBoardData: BoardType,
+	voteData: voteDto,
+	userId = ''
+) => {
+	let [colIndex, cardIndex, cardItemIndex] = [-1, -1, -1];
+	const { cardId, cardItemId, isCardGroup } = voteData;
+
+	const foundCardItem = prevBoardData.columns.some((column, indexCol) =>
+		column.cards.some(
+			(card, indexCard) =>
+				card._id === cardId &&
+				card.items.some((cardItem, indexCardItem) => {
+					const cardItemFound = isCardGroup || cardItem._id === cardItemId;
+
+					if (cardItemFound) {
+						[colIndex, cardIndex, cardItemIndex] = [indexCol, indexCard, indexCardItem];
+					}
+
+					return cardItemFound;
+				})
+		)
+	);
+
+	if (foundCardItem) {
+		const indexes = [colIndex, cardIndex, cardItemIndex];
+
+		return getBoardDataOptimistic(action, prevBoardData, indexes, isCardGroup, userId);
+	}
+
+	return prevBoardData;
+};
+
+const updateVoteOptimistic = async (
+	action: Action,
 	queryClient: QueryClient,
-	boardQueryKey: (string | { id: string })[],
 	voteData: voteDto,
 	userId: string | undefined
-) => optimisticUpdateVote('add', queryClient, boardQueryKey, voteData, userId);
+) => {
+	const boardQueryKey = getBoardQueryKey(voteData.boardId);
 
-const optimisticRemoveVote = async (
+	await queryClient.cancelQueries(boardQueryKey);
+
+	const prevBoardData: BoardType = getPreviousBoardData(queryClient, boardQueryKey);
+
+	const newBoardData = updateBoardDataOptimistic(action, prevBoardData, voteData, userId);
+
+	queryClient.setQueryData(boardQueryKey, { board: newBoardData });
+
+	return { newBoardData, prevBoardData };
+};
+
+const addVoteOptimistic = async (
 	queryClient: QueryClient,
-	boardQueryKey: (string | { id: string })[],
-	voteData: voteDto
-) => optimisticUpdateVote('remove', queryClient, boardQueryKey, voteData, undefined);
+	voteData: voteDto,
+	userId: string | undefined
+) => updateVoteOptimistic(Action.Add, queryClient, voteData, userId);
+
+const removeVoteOptimistic = async (queryClient: QueryClient, voteData: voteDto) =>
+	updateVoteOptimistic(Action.Remove, queryClient, voteData, undefined);
+
+const buildToastMessage = (
+	toastMessage: string,
+	toastStateType: ToastStateEnum
+): ToastStateType => ({ open: true, content: toastMessage, type: toastStateType });
 
 const useVotes = () => {
 	const { queryClient, setToastState } = useBoardUtils();
@@ -111,73 +173,46 @@ const useVotes = () => {
 	const userId = session?.user?.id;
 
 	const addVote = useMutation(addVoteRequest, {
-		onMutate: async (voteData) => {
-			const boardQueryKey = ['board', { id: voteData.boardId }];
-
-			const prevBoardData: BoardType = await optimisticAddVote(
-				queryClient,
-				boardQueryKey,
-				voteData,
-				userId
-			);
-
-			return { prevBoardData };
-		},
+		onMutate: async (voteData) => addVoteOptimistic(queryClient, voteData, userId),
 		onSettled: (boardDataFromApi) => {
-			queryClient.invalidateQueries(['board', { id: boardDataFromApi?._id }]);
+			queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
 
-			if (boardDataFromApi && !isEmpty(boardDataFromApi.maxVotes)) {
-				setToastState({
-					open: true,
-					content: `You have ${getRemainingVotes(boardDataFromApi, userId!)} votes left`,
-					type: ToastStateEnum.INFO
-				});
+			if (boardDataFromApi && hasMaxVotesLimit(boardDataFromApi)) {
+				const remainingVotes = getRemainingVotes(boardDataFromApi, userId!);
+
+				const toastMessage = `You have ${remainingVotes} votes left`;
+
+				setToastState(buildToastMessage(toastMessage, ToastStateEnum.INFO));
 			}
 		},
 		onError: (_err, voteData, ctx) => {
-			queryClient.setQueryData(['board', { id: voteData.boardId }], ctx?.prevBoardData);
+			queryClient.setQueryData(getBoardQueryKey(voteData.boardId), ctx?.prevBoardData);
 
-			setToastState({
-				open: true,
-				content: 'Error adding the vote',
-				type: ToastStateEnum.ERROR
-			});
+			const toastMessage = 'Error adding the vote';
+
+			setToastState(buildToastMessage(toastMessage, ToastStateEnum.ERROR));
 		}
 	});
 
 	const deleteVote = useMutation(deleteVoteRequest, {
-		onMutate: async (voteData) => {
-			const boardQueryKey = ['board', { id: voteData.boardId }];
-
-			const prevBoardData: BoardType = await optimisticRemoveVote(
-				queryClient,
-				boardQueryKey,
-				voteData
-			);
-			return { prevBoardData };
-		},
+		onMutate: async (voteData) => removeVoteOptimistic(queryClient, voteData),
 		onSettled: (boardDataFromApi) => {
-			queryClient.invalidateQueries(['board', { id: boardDataFromApi?._id }]);
+			queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
 
-			if (boardDataFromApi && !isEmpty(boardDataFromApi.maxVotes)) {
-				setToastState({
-					open: true,
-					content: `Vote removed. You have ${getRemainingVotes(
-						boardDataFromApi,
-						userId!
-					)} votes left.`,
-					type: ToastStateEnum.INFO
-				});
+			if (boardDataFromApi && hasMaxVotesLimit(boardDataFromApi)) {
+				const remainingVotes = getRemainingVotes(boardDataFromApi, userId!);
+
+				const toastMessage = `Vote removed. You have ${remainingVotes} votes left.`;
+
+				setToastState(buildToastMessage(toastMessage, ToastStateEnum.INFO));
 			}
 		},
 		onError: (_err, voteData, ctx) => {
-			queryClient.setQueryData(['board', { id: voteData.boardId }], ctx?.prevBoardData);
+			queryClient.setQueryData(getBoardQueryKey(voteData.boardId), ctx?.prevBoardData);
 
-			setToastState({
-				open: true,
-				content: 'Error deleting the vote',
-				type: ToastStateEnum.ERROR
-			});
+			const toastMessage = 'Error deleting the vote';
+
+			setToastState(buildToastMessage(toastMessage, ToastStateEnum.ERROR));
 		}
 	});
 
