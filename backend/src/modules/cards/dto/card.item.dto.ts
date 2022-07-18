@@ -1,5 +1,12 @@
 import { Transform, TransformFnParams, Type } from 'class-transformer';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+	IsBoolean,
+	IsMongoId,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	ValidateNested
+} from 'class-validator';
 
 import CommentDto from '../../comments/dto/comment';
 
@@ -28,4 +35,8 @@ export default class CardItemDto {
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	votes!: string[];
+
+	@IsNotEmpty()
+	@IsBoolean()
+	anonymous!: boolean;
 }

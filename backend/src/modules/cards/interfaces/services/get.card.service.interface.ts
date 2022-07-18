@@ -1,5 +1,7 @@
 import { LeanDocument } from 'mongoose';
 
+import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
+
 import { CardDocument } from '../../schemas/card.schema';
 
 export interface GetCardService {
@@ -8,5 +10,5 @@ export interface GetCardService {
 	getCardItemFromGroup(
 		boardId: string,
 		cardItemId: string
-	): Promise<LeanDocument<CardDocument> | null>;
+	): Promise<LeanDocument<CardItemDocument | CardDocument> | null>;
 }

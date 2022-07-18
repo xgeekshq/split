@@ -6,6 +6,7 @@ import { LeanDocument, Model, Types } from 'mongoose';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
 
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { CardItemDocument } from '../schemas/card.item.schema';
 import { CardDocument } from '../schemas/card.schema';
 
 @Injectable()
@@ -93,6 +94,6 @@ export default class GetCardServiceImpl implements GetCardService {
 				}
 			}
 		]);
-		return !isEmpty(result) ? (result[0] as LeanDocument<CardDocument>) : null;
+		return !isEmpty(result) ? (result[0] as LeanDocument<CardItemDocument>) : null;
 	}
 }

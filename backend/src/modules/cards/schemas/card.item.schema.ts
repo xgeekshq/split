@@ -24,6 +24,9 @@ export default class CardItem {
 
 	@Prop()
 	createdByTeam!: string;
+
+	@Prop({ nullable: false, default: false })
+	anonymous!: boolean;
 }
 
 export const CardItemSchema = SchemaFactory.createForClass(CardItem);
