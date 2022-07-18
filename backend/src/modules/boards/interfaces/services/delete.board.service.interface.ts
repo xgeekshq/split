@@ -1,3 +1,3 @@
 export interface DeleteBoardService {
-  delete(boardId: string, userId: string): Promise<boolean>;
+	delete(boardId: string, userId: string): Promise<boolean>;
 }

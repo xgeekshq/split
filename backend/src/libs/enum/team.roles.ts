@@ -1,4 +1,4 @@
 export enum TeamRoles {
-  ADMIN = 'admin',
-  MEMBER = 'member',
+	ADMIN = 'admin',
+	MEMBER = 'member'
 }

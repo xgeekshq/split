@@ -1,5 +1,5 @@
 const jwtService = {
-  sign: () => '',
+	sign: () => ''
 };
 
 export default jwtService;

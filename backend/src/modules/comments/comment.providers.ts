@@ -7,31 +7,31 @@ import DeleteCommentServiceImpl from './services/delete.comment.service';
 import UpdateCommentServiceImpl from './services/update.comment.service';
 
 export const createCommentService = {
-  provide: TYPES.services.CreateCommentService,
-  useClass: CreateCommentServiceImpl,
+	provide: TYPES.services.CreateCommentService,
+	useClass: CreateCommentServiceImpl
 };
 
 export const updateCommentService = {
-  provide: TYPES.services.UpdateCommentService,
-  useClass: UpdateCommentServiceImpl,
+	provide: TYPES.services.UpdateCommentService,
+	useClass: UpdateCommentServiceImpl
 };
 
 export const deleteCommentService = {
-  provide: TYPES.services.DeleteCommentService,
-  useClass: DeleteCommentServiceImpl,
+	provide: TYPES.services.DeleteCommentService,
+	useClass: DeleteCommentServiceImpl
 };
 
 export const createCommentApplication = {
-  provide: TYPES.applications.CreateCommentApplication,
-  useClass: CreateCommentApplicationImpl,
+	provide: TYPES.applications.CreateCommentApplication,
+	useClass: CreateCommentApplicationImpl
 };
 
 export const updateCommentApplication = {
-  provide: TYPES.applications.UpdateCommentApplication,
-  useClass: UpdateCommentApplicationImpl,
+	provide: TYPES.applications.UpdateCommentApplication,
+	useClass: UpdateCommentApplicationImpl
 };
 
 export const deleteCommentApplication = {
-  provide: TYPES.applications.DeleteCommentApplication,
-  useClass: DeleteCommentApplicationImpl,
+	provide: TYPES.applications.DeleteCommentApplication,
+	useClass: DeleteCommentApplicationImpl
 };

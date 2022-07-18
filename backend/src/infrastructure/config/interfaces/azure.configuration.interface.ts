@@ -1,8 +1,8 @@
 export interface AzureConfiguration {
-  azure: {
-    clientId: string;
-    clientSecret: string;
-    tenantId: string;
-    enabled: boolean;
-  };
+	azure: {
+		clientId: string;
+		clientSecret: string;
+		tenantId: string;
+		enabled: boolean;
+	};
 }

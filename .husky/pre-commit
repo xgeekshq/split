@@ -18,5 +18,3 @@ do
 	# Note: this command needs to be present on scripts inside each package.json
 	npm run pre-commit
 done
-
-# npm run pre-commit

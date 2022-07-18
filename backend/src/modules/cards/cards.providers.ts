@@ -12,56 +12,56 @@ import { UnmergeCardServiceImpl } from './services/unmerge.card.service';
 import UpdateCardServiceImpl from './services/update.card.service';
 
 export const createCardService = {
-  provide: TYPES.services.CreateCardService,
-  useClass: CreateCardServiceImpl,
+	provide: TYPES.services.CreateCardService,
+	useClass: CreateCardServiceImpl
 };
 
 export const getCardService = {
-  provide: TYPES.services.GetCardService,
-  useClass: GetCardServiceImpl,
+	provide: TYPES.services.GetCardService,
+	useClass: GetCardServiceImpl
 };
 
 export const updateCardService = {
-  provide: TYPES.services.UpdateCardService,
-  useClass: UpdateCardServiceImpl,
+	provide: TYPES.services.UpdateCardService,
+	useClass: UpdateCardServiceImpl
 };
 
 export const deleteCardService = {
-  provide: TYPES.services.DeleteCardService,
-  useClass: DeleteCardServiceImpl,
+	provide: TYPES.services.DeleteCardService,
+	useClass: DeleteCardServiceImpl
 };
 
 export const mergeCardService = {
-  provide: TYPES.services.MergeCardService,
-  useClass: MergeCardServiceImpl,
+	provide: TYPES.services.MergeCardService,
+	useClass: MergeCardServiceImpl
 };
 
 export const unmergeCardService = {
-  provide: TYPES.services.UnmergeCardService,
-  useClass: UnmergeCardServiceImpl,
+	provide: TYPES.services.UnmergeCardService,
+	useClass: UnmergeCardServiceImpl
 };
 
 export const createCardApplication = {
-  provide: TYPES.applications.CreateCardApplication,
-  useClass: CreateCardApplicationImpl,
+	provide: TYPES.applications.CreateCardApplication,
+	useClass: CreateCardApplicationImpl
 };
 
 export const updateCardApplication = {
-  provide: TYPES.applications.UpdateCardApplication,
-  useClass: UpdateCardApplicationImpl,
+	provide: TYPES.applications.UpdateCardApplication,
+	useClass: UpdateCardApplicationImpl
 };
 
 export const deleteCardApplication = {
-  provide: TYPES.applications.DeleteCardApplication,
-  useClass: DeleteCardApplicationImpl,
+	provide: TYPES.applications.DeleteCardApplication,
+	useClass: DeleteCardApplicationImpl
 };
 
 export const mergeCardApplication = {
-  provide: TYPES.applications.MergeCardApplication,
-  useClass: MergeCardApplicationImpl,
+	provide: TYPES.applications.MergeCardApplication,
+	useClass: MergeCardApplicationImpl
 };
 
 export const unmergeCardApplication = {
-  provide: TYPES.applications.UnmergeCardApplication,
-  useClass: UnmergeCardApplicationImpl,
+	provide: TYPES.applications.UnmergeCardApplication,
+	useClass: UnmergeCardApplicationImpl
 };

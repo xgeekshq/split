@@ -6,7 +6,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "collectCoverageFrom": ["**/*.(t|j)s"],
-  "coverageDirectory": "./test/coverage",
+  "coverageDirectory": "./src/test/coverage",
   "testEnvironment": "node",
   "modulePathIgnorePatterns": [
     "<rootDir>/dist/",

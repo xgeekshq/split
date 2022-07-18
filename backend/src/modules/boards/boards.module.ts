@@ -1,42 +1,44 @@
 import { Module } from '@nestjs/common';
-import BoardsController from './controller/boards.controller';
-import UsersModule from '../users/users.module';
+
 import {
-  createBoardService,
-  updateBoardService,
-  deleteBoardService,
-  getBoardService,
-  createBoardApplication,
-  updateBoardApplication,
-  deleteBoardApplication,
-  getBoardApplication,
+	mongooseBoardModule,
+	mongooseBoardUserModule
+} from 'infrastructure/database/mongoose.module';
+import { SchedulesModule } from 'modules/schedules/schedules.module';
+import TeamsModule from 'modules/teams/teams.module';
+import UsersModule from 'modules/users/users.module';
+
+import {
+	createBoardApplication,
+	createBoardService,
+	deleteBoardApplication,
+	deleteBoardService,
+	getBoardApplication,
+	getBoardService,
+	updateBoardApplication,
+	updateBoardService
 } from './boards.providers';
-import {
-  mongooseBoardModule,
-  mongooseBoardUserModule,
-} from '../../infrastructure/database/mongoose.module';
-import TeamsModule from '../teams/teams.module';
-import { SchedulesModule } from '../schedules/schedules.module';
+import BoardsController from './controller/boards.controller';
 
 @Module({
-  imports: [
-    UsersModule,
-    TeamsModule,
-    SchedulesModule,
-    mongooseBoardModule,
-    mongooseBoardUserModule,
-  ],
-  providers: [
-    createBoardService,
-    updateBoardService,
-    deleteBoardService,
-    getBoardService,
-    createBoardApplication,
-    updateBoardApplication,
-    deleteBoardApplication,
-    getBoardApplication,
-  ],
-  controllers: [BoardsController],
-  exports: [getBoardApplication, createBoardService],
+	imports: [
+		UsersModule,
+		TeamsModule,
+		SchedulesModule,
+		mongooseBoardModule,
+		mongooseBoardUserModule
+	],
+	providers: [
+		createBoardService,
+		updateBoardService,
+		deleteBoardService,
+		getBoardService,
+		createBoardApplication,
+		updateBoardApplication,
+		deleteBoardApplication,
+		getBoardApplication
+	],
+	controllers: [BoardsController],
+	exports: [getBoardApplication, createBoardService]
 })
 export default class BoardsModule {}
