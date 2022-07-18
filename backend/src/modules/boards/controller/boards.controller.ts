@@ -25,6 +25,7 @@ import {
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import * as StakeholdersData from 'libs/utils/ignored_users.json';
+import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../dto/board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
@@ -44,7 +45,8 @@ export default class BoardsController {
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardApplication)
-		private deleteBoardApp: DeleteBoardApplicationInterface
+		private deleteBoardApp: DeleteBoardApplicationInterface,
+		private socketService: SocketGateway
 	) {}
 
 	@UseGuards(JwtAuthenticationGuard)
@@ -97,6 +99,10 @@ export default class BoardsController {
 		const board = await this.updateBoardApp.update(request.user._id, boardId, boardData);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+		if (boardData.socketId) {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		}
 
 		return board;
 	}

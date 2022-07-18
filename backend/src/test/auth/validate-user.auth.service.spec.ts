@@ -56,10 +56,7 @@ describe('The AuthenticationService', () => {
 	describe('when accessing the data of authenticating user', () => {
 		it('should attempt to get a user by email', async () => {
 			const getByEmailSpy = jest.spyOn(gUserService, 'getByEmail');
-			await authenticationService.validateUserWithCredentials(
-				'user@email.com',
-				'strongPassword'
-			);
+			await authenticationService.validateUserWithCredentials('user@email.com', 'strongPassword');
 			expect(getByEmailSpy).toBeCalledTimes(1);
 		});
 		describe('and the provided password is not valid', () => {
@@ -98,10 +95,7 @@ describe('The AuthenticationService', () => {
 				});
 				it('should throw an error', async () => {
 					await expect(
-						authenticationService.validateUserWithCredentials(
-							'user@email.com',
-							'strongPassword'
-						)
+						authenticationService.validateUserWithCredentials('user@email.com', 'strongPassword')
 					).resolves.toEqual(null);
 				});
 			});

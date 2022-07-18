@@ -6,7 +6,6 @@ export default function Document() {
 	return (
 		<Html>
 			<Head>
-				<title>SPLIT</title>
 				<link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="true" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
 				<link

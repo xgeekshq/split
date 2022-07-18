@@ -24,10 +24,7 @@ export const configuration = (): Configuration => {
 			},
 			refreshToken: {
 				secret: process.env.JWT_REFRESH_TOKEN_SECRET as string,
-				expirationTime: parseInt(
-					process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME as string,
-					10
-				)
+				expirationTime: parseInt(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME as string, 10)
 			}
 		},
 		azure: {

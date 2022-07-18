@@ -10,11 +10,7 @@ export interface GetBoardApplicationInterface {
 		size?: number
 	): Promise<BoardsAndPage | null>;
 
-	getSuperAdminBoards(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<BoardsAndPage | null>;
+	getSuperAdminBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
 
 	getUsersBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
 

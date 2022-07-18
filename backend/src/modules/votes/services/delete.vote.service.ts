@@ -23,12 +23,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 		private getCardService: GetCardService
 	) {}
 
-	async decrementVoteUser(
-		boardId: string,
-		userId: string,
-		session: ClientSession,
-		count?: number
-	) {
+	async decrementVoteUser(boardId: string, userId: string, session: ClientSession, count?: number) {
 		const boardUser = await this.boardUserModel.findOneAndUpdate(
 			{
 				user: userId,

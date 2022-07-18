@@ -62,10 +62,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 					}
 				},
 				{
-					arrayFilters: [
-						{ 'c._id': cardId },
-						{ 'com._id': commentId, 'com.createdBy': userId }
-					],
+					arrayFilters: [{ 'c._id': cardId }, { 'com._id': commentId, 'com.createdBy': userId }],
 					new: true
 				}
 			)

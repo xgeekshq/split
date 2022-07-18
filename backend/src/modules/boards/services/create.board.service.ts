@@ -42,9 +42,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		Promise.all(
-			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
-		);
+		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
 	}
 
 	async createDividedBoards(boards: BoardDto[], userId: string) {
@@ -61,9 +59,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			})
 		);
 
-		return newBoardsIds.flatMap((result) =>
-			result.status === 'fulfilled' ? [result.value] : []
-		);
+		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
 	}
 
 	async createBoard(boardData: BoardDto, userId: string, isSubBoard = false) {
@@ -95,9 +91,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			if (!usersIds.includes(user._id.toString())) {
 				newUsers.push({
 					user: user._id.toString(),
-					role: !stakeHolders.includes(user.email)
-						? BoardRoles.MEMBER
-						: BoardRoles.STAKEHOLDER,
+					role: !stakeHolders.includes(user.email) ? BoardRoles.MEMBER : BoardRoles.STAKEHOLDER,
 					votesCount: 0
 				});
 			}
@@ -172,8 +166,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return board._id.toString();
 	}
 
-	getRandomUser = (list: TeamUser[]) =>
-		list.splice(Math.floor(Math.random() * list.length), 1)[0];
+	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
 	handleSplitBoards = (maxTeams: number, teamMembers: LeanDocument<TeamUserDocument>[]) => {
 		const subBoards: BoardDto[] = [];

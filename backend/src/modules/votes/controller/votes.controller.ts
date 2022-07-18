@@ -39,12 +39,7 @@ export default class VotesController {
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, cardId, itemId } = params;
-		const board = await this.createVoteApp.addVoteToCard(
-			boardId,
-			cardId,
-			request.user._id,
-			itemId
-		);
+		const board = await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
@@ -60,11 +55,7 @@ export default class VotesController {
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, cardId } = params;
-		const board = await this.createVoteApp.addVoteToCardGroup(
-			boardId,
-			cardId,
-			request.user._id
-		);
+		const board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);

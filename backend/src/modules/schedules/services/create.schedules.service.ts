@@ -56,11 +56,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const day = getDay();
 			const month = getNextMonth();
 
-			const boardId = await this.createBoardService.splitBoardByTeam(
-				ownerId,
-				teamId,
-				configs
-			);
+			const boardId = await this.createBoardService.splitBoardByTeam(ownerId, teamId, configs);
 
 			const addCronJobDto: AddCronJobDto = {
 				ownerId,

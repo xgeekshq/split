@@ -37,11 +37,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		const countVotes = getCard?.votes?.length ?? 0;
 		if (getCard && countVotes) {
 			getCard.votes.forEach(async (current) => {
-				const boardUser = await this.deleteVoteService.decrementVoteUser(
-					boardId,
-					current,
-					session
-				);
+				const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, current, session);
 				if (!boardUser) throw Error(UPDATE_FAILED);
 			});
 		}
@@ -131,21 +127,10 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
-			if (
-				card &&
-				cardItems?.length === 1 &&
-				(card.votes.length > 0 || card.comments.length > 0)
-			) {
+			if (card && cardItems?.length === 1 && (card.votes.length > 0 || card.comments.length > 0)) {
 				const newVotes = [...card.votes, ...cardItems[0].votes];
 				const newComments = [...card.comments, ...cardItems[0].comments];
-				await this.refactorLastItem(
-					boardId,
-					cardId,
-					newVotes,
-					newComments,
-					cardItems,
-					session
-				);
+				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems, session);
 			}
 
 			const board = await this.boardModel

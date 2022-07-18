@@ -20,12 +20,7 @@ export class UpdateCardApplicationImpl implements UpdateCardApplication {
 		targetColumnId: string,
 		newPosition: number
 	): Promise<LeanDocument<BoardDocument> | null> {
-		return this.updateCardService.updateCardPosition(
-			boardId,
-			cardId,
-			targetColumnId,
-			newPosition
-		);
+		return this.updateCardService.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
 	}
 
 	updateCardText(

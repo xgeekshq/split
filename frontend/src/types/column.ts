@@ -27,6 +27,7 @@ export interface ColumnBoardType {
 	maxVotes?: number;
 	countAllCards: number;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 export interface ColumnInnerList {
@@ -41,6 +42,7 @@ export interface ColumnInnerList {
 	boardUser?: BoardUser;
 	maxVotes?: number;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 export type ColumnDragItem = {

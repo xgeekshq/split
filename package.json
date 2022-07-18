@@ -3,10 +3,13 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"prepare": "concurrently 'cd ./backend && npm i' 'cd ./frontend && npm i' && husky install",
-		"dev": "concurrently 'cd ./backend && npm run start:dev' 'cd ./frontend && npm run dev'",
-		"dev:yarn": "concurrently 'cd ./backend && yarn start:dev' 'cd ./frontend && yarn dev'",
-		"pre-commit": "concurrently 'cd ./backend && npm run pre-commit' 'cd ./frontend && npm run pre-commit'"
+		"prepare": "(cd backend && npm i) && (cd frontend && npm i) && husky install",
+		"dev": "concurrently \"npm:backend\" \"npm:frontend\"",
+		"frontend": "npm run dev --prefix frontend/",
+		"backend": "npm run start:dev --prefix backend",
+		"pre-commit": "concurrently \"npm:pre-commit:backend\" \"npm:pre-commit:frontend\"",
+		"pre-commit:backend": "npm run pre-commit --prefix backend",
+		"pre-commit:frontend": "npm run pre-commit --prefix frontend"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^16.2.3",

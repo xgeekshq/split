@@ -11,13 +11,7 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
 		private createCommentService: CreateCommentService
 	) {}
 
-	createItemComment(
-		boardId: string,
-		cardId: string,
-		itemId: string,
-		userId: string,
-		text: string
-	) {
+	createItemComment(boardId: string, cardId: string, itemId: string, userId: string, text: string) {
 		return this.createCommentService.createItemComment(boardId, cardId, itemId, userId, text);
 	}
 

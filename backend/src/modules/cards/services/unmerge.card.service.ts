@@ -34,10 +34,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 		session.startTransaction();
 
 		try {
-			const cardItemToMove = await this.cardService.getCardItemFromGroup(
-				boardId,
-				draggedCardId
-			);
+			const cardItemToMove = await this.cardService.getCardItemFromGroup(boardId, draggedCardId);
 
 			if (!cardItemToMove) return null;
 

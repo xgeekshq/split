@@ -17,6 +17,7 @@ interface CardItemListProps {
 	userId: string;
 	isMainboard: boolean;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -31,7 +32,8 @@ const CardItemList: React.FC<CardItemListProps> = ({
 	anonymous,
 	userId,
 	isMainboard,
-	isSubmited
+	isSubmited,
+	hideCards
 }) => {
 	return (
 		<Flex direction="column">
@@ -69,6 +71,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
 						userId={userId}
 						isMainboard={isMainboard}
 						isSubmited={isSubmited}
+						hideCards={hideCards}
 					/>
 				</Flex>
 			))}

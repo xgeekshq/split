@@ -21,10 +21,7 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(email: string, password: string): Promise<LeanDocument<UserDocument> | null> {
-		const user = await this.validateUserAuthService.validateUserWithCredentials(
-			email,
-			password
-		);
+		const user = await this.validateUserAuthService.validateUserWithCredentials(email, password);
 
 		if (!user) throw new UnauthorizedException(INVALID_CREDENTIALS);
 
