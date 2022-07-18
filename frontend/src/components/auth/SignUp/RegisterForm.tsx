@@ -5,7 +5,7 @@ import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { AxiosError } from 'axios';
 
 import { styled } from 'styles/stitches/stitches.config';
@@ -58,7 +58,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 			lastName: '',
 			password: ''
 		},
-		resolver: zodResolver(SchemaRegisterForm)
+		resolver: joiResolver(SchemaRegisterForm)
 	});
 
 	const clearErrors = () => {

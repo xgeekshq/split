@@ -1,7 +1,7 @@
 import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
@@ -67,7 +67,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 	const methods = useForm<{ title: string; maxVotes: string | undefined }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
-		resolver: zodResolver(SchemaUpdateBoard),
+		resolver: joiResolver(SchemaUpdateBoard),
 		defaultValues: {
 			title: '',
 			maxVotes: undefined
