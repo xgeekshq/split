@@ -4,11 +4,11 @@ import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
+import { CommentDocument } from 'modules/comments/schemas/comment.schema';
 import User from 'modules/users/schemas/user.schema';
+import { DeleteVoteService } from 'modules/votes/interfaces/services/delete.vote.service.interface';
+import * as Votes from 'modules/votes/interfaces/types';
 
-import { CommentDocument } from '../../comments/schemas/comment.schema';
-import { DeleteVoteService } from '../../votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from '../../votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
