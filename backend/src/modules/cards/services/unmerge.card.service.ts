@@ -1,13 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 import {
 	CARD_NOT_FOUND,
 	CARD_NOT_INSERTED,
 	CARD_NOT_REMOVED,
 	UPDATE_FAILED
-} from 'src/libs/exceptions/messages';
-
+} from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
 
 import { GetCardService } from '../interfaces/services/get.card.service.interface';

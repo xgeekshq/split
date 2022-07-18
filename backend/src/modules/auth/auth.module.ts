@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import {
-	mongooseResetModule,
-	mongooseUserModule
-} from 'src/infrastructure/database/mongoose.module';
+
+import { mongooseResetModule, mongooseUserModule } from 'infrastructure/database/mongoose.module';
 
 import { JwtRegister } from '../../infrastructure/config/jwt.register';
 import BoardsModule from '../boards/boards.module';

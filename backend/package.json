@@ -93,7 +93,7 @@
 	},
 	"lint-staged": {
 		"*.{js,ts,tsx}": [
-			"eslint"
+			"eslint --fix"
 		],
 		"*.md": [
 			"prettier --write"
