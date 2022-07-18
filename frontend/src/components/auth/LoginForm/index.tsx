@@ -4,7 +4,7 @@ import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import Icon from 'components/icons/Icon';
 import LogoIcon from 'components/icons/Logo';
@@ -45,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 			email: '',
 			password: ''
 		},
-		resolver: zodResolver(SchemaLoginForm)
+		resolver: joiResolver(SchemaLoginForm)
 	});
 
 	const clearErrors = () => {

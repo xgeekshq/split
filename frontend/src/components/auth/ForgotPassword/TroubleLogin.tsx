@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -49,7 +49,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 		defaultValues: {
 			email: ''
 		},
-		resolver: zodResolver(SchemaEmail)
+		resolver: joiResolver(SchemaEmail)
 	});
 
 	const { resetToken } = useUser();

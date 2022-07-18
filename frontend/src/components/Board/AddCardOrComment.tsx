@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -11,6 +10,7 @@ import Flex from 'components/Primitives/Flex';
 import TextArea from 'components/Primitives/TextArea';
 import useCards from 'hooks/useCards';
 import useComments from 'hooks/useComments';
+import { SchemaAddCommentForm } from 'schema/schemaAddCommentForm';
 import AddCardDto from 'types/card/addCard.dto';
 import { CardToAdd } from 'types/card/card';
 import UpdateCardDto from 'types/card/updateCard.dto';
@@ -67,7 +67,7 @@ const AddCard = React.memo<AddCardProps>(
 			defaultValues: {
 				text: cardText || ''
 			},
-			resolver: zodResolver(z.object({ text: z.string().min(1) }))
+			resolver: joiResolver(SchemaAddCommentForm)
 		});
 
 		const handleAddCard = (text: string) => {

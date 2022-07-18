@@ -4,7 +4,7 @@ import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import {
 	ButtonsContainer,
@@ -62,7 +62,7 @@ const NewBoard = () => {
 			text: '',
 			maxVotes: String(boardState.board.maxVotes) ?? ''
 		},
-		resolver: zodResolver(SchemaCreateBoard)
+		resolver: joiResolver(SchemaCreateBoard)
 	});
 
 	const mainBoardName = useWatch({
