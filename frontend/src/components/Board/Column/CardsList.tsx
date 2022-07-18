@@ -16,7 +16,8 @@ const CardsList = React.memo<ColumnInnerList>(
 		isMainboard,
 		boardUser,
 		maxVotes,
-		isSubmited
+		isSubmited,
+		hideCards
 	}) => {
 		return (
 			<>
@@ -36,6 +37,7 @@ const CardsList = React.memo<ColumnInnerList>(
 							boardUser={boardUser}
 							maxVotes={maxVotes}
 							isSubmited={isSubmited}
+							hideCards={hideCards}
 						/>
 					);
 				})}
