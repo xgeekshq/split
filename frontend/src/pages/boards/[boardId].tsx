@@ -240,7 +240,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{board?.createdBy === userId &&
+							{board?.createdBy._id === userId &&
 								!board.submitedByUser &&
 								!board.submitedAt && (
 									<BoardSettings

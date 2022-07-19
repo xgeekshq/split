@@ -363,6 +363,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				select: '_id firstName lastName'
 			})
 			.populate({
+				path: 'createdBy',
+				select: '_id firstName lastName isSAdmin joinedAt'
+			})
+			.populate({
 				path: 'dividedBoards',
 				select: '-__v -createdAt -id',
 				populate: {
