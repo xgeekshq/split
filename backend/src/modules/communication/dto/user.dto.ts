@@ -1,46 +1,46 @@
-import { UserType } from 'src/modules/communication/dto/types';
+import { UserType } from 'modules/communication/dto/types';
 
 export class UserDto {
-  id: string;
+	id: string;
 
-  email: string;
+	email: string;
 
-  firstName: string;
+	firstName: string;
 
-  lastName: string;
+	lastName: string;
 
-  responsible: boolean;
+	responsible: boolean;
 
-  boardId?: string;
+	boardId?: string;
 
-  slackId?: string;
+	slackId?: string;
 
-  constructor(
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    responsible = false,
-    boardId?: string,
-    slackId?: string,
-  ) {
-    this.id = id;
-    this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.responsible = responsible;
-    this.boardId = boardId;
-    this.slackId = slackId;
-  }
+	constructor(
+		id: string,
+		firstName: string,
+		lastName: string,
+		email: string,
+		responsible = false,
+		boardId?: string,
+		slackId?: string
+	) {
+		this.id = id;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.responsible = responsible;
+		this.boardId = boardId;
+		this.slackId = slackId;
+	}
 
-  public static FromUser(user: UserType, isResponsible: boolean) {
-    return new this(
-      user.id,
-      user.firstName,
-      user.lastName,
-      user.email || '',
-      isResponsible,
-      user.board,
-    );
-  }
+	public static FromUser(user: UserType, isResponsible: boolean) {
+		return new this(
+			user.id,
+			user.firstName,
+			user.lastName,
+			user.email || '',
+			isResponsible,
+			user.board
+		);
+	}
 }

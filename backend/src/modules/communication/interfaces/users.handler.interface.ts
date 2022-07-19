@@ -1,5 +1,5 @@
-import { ProfileType } from 'src/modules/communication/dto/types';
+import { ProfileType } from 'modules/communication/dto/types';
 
 export interface UsersHandlerInterface {
-  getProfilesByIds(usersIds: string[]): Promise<ProfileType[]>;
+	getProfilesByIds(usersIds: string[]): Promise<ProfileType[]>;
 }
