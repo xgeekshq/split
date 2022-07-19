@@ -28,12 +28,10 @@ const useVotes = () => {
 	const { data: session } = useSession({ required: true });
 	const userId = session?.user?.id || '';
 
-	const shallAddVote = (action: Action) => action === Action.Add;
-	const shallRemoveVote = (action: Action) => action === Action.Remove;
-	const getBoardQueryKey = (boardId = ''): QueryKeyType => ['board', { id: boardId }];
-	const hasMaxVotesLimit = ({ maxVotes }: BoardType) => !isEmpty(maxVotes);
 	// work around to avoid read only error
 	const getEditableBoardData = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
+
+	const getBoardQueryKey = (boardId = ''): QueryKeyType => ['board', { id: boardId }];
 
 	const getFirstCardItemIndexWithVotes = (cardItems: CardItemType[]) =>
 		cardItems.findIndex((cardItem) => cardItem.votes.length > 0);
@@ -44,68 +42,115 @@ const useVotes = () => {
 	const getPreviousBoardData = (boardQueryKey: QueryKeyType) =>
 		getEditableBoardData(getBoardDataQuery(boardQueryKey));
 
-	const getCardItemVotesOptimistic = (
-		action: Action,
+	const shallAddVote = (action: Action) => action === Action.Add;
+
+	const hasMaxVotesLimit = ({ maxVotes }: BoardType) => !isEmpty(maxVotes);
+
+	const addVoteToCardItemOptimistic = (
 		prevBoardData: BoardType,
 		indexes: number[]
-	) => {
+	): BoardType => {
 		const newBoardData = prevBoardData;
 		const [colIndex, cardIndex, cardItemIndex] = indexes;
 
-		if (shallAddVote(action)) {
-			newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.push(userId);
-		} else if (shallRemoveVote(action)) {
-			newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
+		newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.push(userId);
+
+		return newBoardData;
+	};
+
+	const removeVoteFromCardItemOptimistic = (prevBoardData: BoardType, indexes: number[]) => {
+		const newBoardData = prevBoardData;
+		const [colIndex, cardIndex, cardItemIndex] = indexes;
+
+		prevBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
+
+		return newBoardData;
+	};
+
+	const updateCardItemVoteOptimistic = (
+		prevBoardData: BoardType,
+		indexes: number[],
+		action: Action
+	) => {
+		if (shallAddVote(action)) return addVoteToCardItemOptimistic(prevBoardData, indexes);
+
+		return removeVoteFromCardItemOptimistic(prevBoardData, indexes);
+	};
+
+	const addVoteToCardsOptimistic = (
+		prevBoardData: BoardType,
+		indexes: number[],
+		hasVotesOnCards: boolean
+	): BoardType => {
+		const newBoardData = prevBoardData;
+		const [colIndex, cardIndex] = indexes;
+
+		if (hasVotesOnCards) {
+			newBoardData.columns[colIndex].cards[cardIndex].votes.push(userId);
+		} else {
+			newBoardData.columns[colIndex].cards[cardIndex].votes = [userId];
 		}
 
 		return newBoardData;
 	};
 
-	const getCardsVotesOptimistic = (
-		action: Action,
+	const removeVoteFromCardsOptimistic = (
 		prevBoardData: BoardType,
-		indexes: number[]
+		indexes: number[],
+		hasVotesOnCards: boolean
 	) => {
 		const newBoardData = prevBoardData;
 		const [colIndex, cardIndex] = indexes;
-		const hasVotesOnMergedCards =
-			newBoardData.columns[colIndex].cards[cardIndex].votes.length > 0;
 
-		if (!hasVotesOnMergedCards) {
-			const cardItems = newBoardData.columns[colIndex].cards[cardIndex].items;
-			const cardItemIndex = getFirstCardItemIndexWithVotes(cardItems);
-			const newIndexes = [colIndex, cardIndex, cardItemIndex];
-
-			return getCardItemVotesOptimistic(action, prevBoardData, newIndexes);
-		}
-
-		if (shallAddVote(action)) {
-			newBoardData.columns[colIndex].cards[cardIndex].votes.push(userId);
-		} else if (shallRemoveVote(action)) {
+		if (hasVotesOnCards) {
 			newBoardData.columns[colIndex].cards[cardIndex].votes.pop();
+
+			return newBoardData;
 		}
 
-		return newBoardData;
+		const cardItems = newBoardData.columns[colIndex].cards[cardIndex].items;
+		const cardItemIndex = getFirstCardItemIndexWithVotes(cardItems);
+		const newIndexes = [colIndex, cardIndex, cardItemIndex];
+
+		return updateCardItemVoteOptimistic(prevBoardData, newIndexes, Action.Remove);
 	};
 
-	const getBoardDataOptimistic = (
-		action: Action,
+	const updateCardsVotesOptimistic = (
 		prevBoardData: BoardType,
 		indexes: number[],
-		isCardGroup: boolean
+		action: Action
 	) => {
-		if (isCardGroup) return getCardsVotesOptimistic(action, prevBoardData, indexes);
+		const [colIndex, cardIndex] = indexes;
+		const { votes: cardVotes } = prevBoardData.columns[colIndex].cards[cardIndex];
+		const hasVotesOnCards = cardVotes && cardVotes.length > 0;
 
-		return getCardItemVotesOptimistic(action, prevBoardData, indexes);
+		if (shallAddVote(action)) {
+			return addVoteToCardsOptimistic(prevBoardData, indexes, hasVotesOnCards);
+		}
+
+		return removeVoteFromCardsOptimistic(prevBoardData, indexes, hasVotesOnCards);
+	};
+
+	const updateCardOrCardIndexVotesOptimistic = (
+		prevBoardData: BoardType,
+		indexes: number[],
+		isCardGroup: boolean,
+		action: Action
+	) => {
+		if (isCardGroup) return updateCardsVotesOptimistic(prevBoardData, indexes, action);
+
+		return updateCardItemVoteOptimistic(prevBoardData, indexes, action);
 	};
 
 	const updateBoardDataOptimistic = (
-		action: Action,
 		prevBoardData: BoardType,
-		voteData: voteDto
+		voteData: voteDto,
+		action: Action
 	) => {
-		let [colIndex, cardIndex, cardItemIndex] = [-1, -1, -1];
 		const { cardId, cardItemId, isCardGroup } = voteData;
+
+		const [colIndex, cardIndex, cardItemIndex] = [-1, -1, -1];
+		let indexes = [colIndex, cardIndex, cardItemIndex];
 
 		const foundCardItem = prevBoardData.columns.some((column, indexCol) =>
 			column.cards.some(
@@ -114,13 +159,7 @@ const useVotes = () => {
 					card.items.some((cardItem, indexCardItem) => {
 						const cardItemFound = isCardGroup || cardItem._id === cardItemId;
 
-						if (cardItemFound) {
-							[colIndex, cardIndex, cardItemIndex] = [
-								indexCol,
-								indexCard,
-								indexCardItem
-							];
-						}
+						if (cardItemFound) indexes = [indexCol, indexCard, indexCardItem];
 
 						return cardItemFound;
 					})
@@ -128,9 +167,12 @@ const useVotes = () => {
 		);
 
 		if (foundCardItem) {
-			const indexes = [colIndex, cardIndex, cardItemIndex];
-
-			return getBoardDataOptimistic(action, prevBoardData, indexes, isCardGroup);
+			return updateCardOrCardIndexVotesOptimistic(
+				prevBoardData,
+				indexes,
+				isCardGroup,
+				action
+			);
 		}
 
 		return prevBoardData;
@@ -143,7 +185,7 @@ const useVotes = () => {
 
 		const prevBoardData: BoardType = getPreviousBoardData(boardQueryKey);
 
-		const newBoardData = updateBoardDataOptimistic(action, prevBoardData, voteData);
+		const newBoardData = updateBoardDataOptimistic(prevBoardData, voteData, action);
 
 		queryClient.setQueryData(boardQueryKey, { board: newBoardData });
 
@@ -177,36 +219,40 @@ const useVotes = () => {
 			toastInfoMessage(`${message} You have ${remainingVotes} votes left.`);
 		}
 	};
+
 	const restoreBoardDataAndToastError = (
-		errorMessage: string,
+		prevBoardData: BoardType | undefined,
 		{ boardId }: voteDto,
-		prevBoardData: BoardType | undefined
+		errorMessage: string
 	) => {
 		queryClient.setQueryData(getBoardQueryKey(boardId), prevBoardData);
 
 		toastErrorMessage(errorMessage);
 	};
 
+	const invalidateQueriesAndToastMessage = (
+		boardDataFromApi: BoardType | undefined,
+		message: string
+	) => {
+		queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
+
+		toastRemainingVotesMessage(message, boardDataFromApi);
+	};
+
 	const addVote = useMutation(addVoteRequest, {
 		onMutate: async (voteData) => addVoteOptimistic(voteData),
-		onSettled: (boardDataFromApi) => {
-			queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
-
-			toastRemainingVotesMessage('Vote added.', boardDataFromApi);
-		},
+		onSettled: (boardDataFromApi) =>
+			invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote added.'),
 		onError: (_err, voteData, ctx) =>
-			restoreBoardDataAndToastError('Error adding the vote', voteData, ctx?.prevBoardData)
+			restoreBoardDataAndToastError(ctx?.prevBoardData, voteData, 'Error adding the vote')
 	});
 
 	const deleteVote = useMutation(deleteVoteRequest, {
 		onMutate: async (voteData) => removeVoteOptimistic(voteData),
-		onSettled: (boardDataFromApi) => {
-			queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
-
-			toastRemainingVotesMessage('Vote removed.', boardDataFromApi);
-		},
+		onSettled: (boardDataFromApi) =>
+			invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote removed.'),
 		onError: (_err, voteData, ctx) =>
-			restoreBoardDataAndToastError('Error deleting the vote', voteData, ctx?.prevBoardData)
+			restoreBoardDataAndToastError(ctx?.prevBoardData, voteData, 'Error deleting the vote')
 	});
 
 	return {
