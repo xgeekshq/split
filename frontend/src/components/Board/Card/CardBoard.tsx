@@ -31,7 +31,6 @@ interface CardBoardProps {
 	userId: string;
 	boardId: string;
 	socketId: string;
-	anonymous: boolean;
 	isMainboard: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;
@@ -48,7 +47,6 @@ const CardBoard = React.memo<CardBoardProps>(
 		socketId,
 		userId,
 		colId,
-		anonymous,
 		isMainboard,
 		boardUser,
 		maxVotes,
@@ -108,6 +106,7 @@ const CardBoard = React.memo<CardBoardProps>(
 						>
 							{editing && !isSubmited && (
 								<AddCardOrComment
+									isEditing
 									isCard
 									isUpdate
 									colId={colId}
@@ -137,7 +136,7 @@ const CardBoard = React.memo<CardBoardProps>(
 									{!isCardGroup && (
 										<Flex
 											justify="between"
-											css={{ mb: '$8', '& > div': { zIndex: 2 } }}
+											css={{ mb: '$14', '& > div': { zIndex: 2 } }}
 										>
 											<Text
 												size="md"
@@ -179,7 +178,7 @@ const CardBoard = React.memo<CardBoardProps>(
 											)}
 										</Flex>
 									)}
-									{card.items && card.items.length > 1 && (
+									{card.items && isCardGroup && (
 										<CardItemList
 											items={card.items}
 											color={color}
@@ -189,7 +188,6 @@ const CardBoard = React.memo<CardBoardProps>(
 											cardGroupId={card._id}
 											socketId={socketId}
 											cardGroupPosition={index}
-											anonymous={anonymous}
 											userId={userId}
 											isMainboard={isMainboard}
 											isSubmited={isSubmited}
@@ -200,7 +198,7 @@ const CardBoard = React.memo<CardBoardProps>(
 										boardId={boardId}
 										socketId={socketId}
 										userId={userId}
-										anonymous={anonymous}
+										anonymous={card.items[card.items.length - 1 || 0].anonymous}
 										card={card}
 										teamName={card?.createdByTeam}
 										isItem={false}

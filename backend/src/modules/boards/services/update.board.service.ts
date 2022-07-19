@@ -100,6 +100,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 						text: card.text,
 						createdBy: card.createdBy,
 						votes: card.votes,
+						anonymous: card.anonymous,
 						createdByTeam: subBoard.title.replace('board', ''),
 						comments: card.comments.map((comment) => {
 							return {
@@ -113,6 +114,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 								votes: cardItem.votes,
 								createdByTeam: subBoard.title,
 								createdBy: card.createdBy,
+								anonymous: cardItem.anonymous,
 								comments: cardItem.comments.map((comment) => {
 									return {
 										text: comment.text,

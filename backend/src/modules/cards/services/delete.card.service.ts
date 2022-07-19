@@ -4,15 +4,16 @@ import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
+import { CommentDocument } from 'modules/comments/schemas/comment.schema';
 import User from 'modules/users/schemas/user.schema';
+import { DeleteVoteService } from 'modules/votes/interfaces/services/delete.vote.service.interface';
+import * as Votes from 'modules/votes/interfaces/types';
 
-import { CommentDocument } from '../../comments/schemas/comment.schema';
-import { DeleteVoteService } from '../../votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from '../../votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { CardItemDocument } from '../schemas/card.item.schema';
+import { CardDocument } from '../schemas/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -31,27 +32,59 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		session: ClientSession,
 		cardItemId?: string
 	) {
-		const getCard = !cardItemId
-			? await this.getCardService.getCardFromBoard(boardId, cardId)
-			: await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
-		const countVotes = getCard?.votes?.length ?? 0;
-		if (getCard && countVotes) {
-			getCard.votes.forEach(async (current) => {
-				const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, current, session);
-				if (!boardUser) throw Error(UPDATE_FAILED);
-			});
+		let getCard: LeanDocument<CardDocument | CardItemDocument> | null;
+
+		/**
+		 * If have cardItemId, use card item method,
+		 * if not, use card method
+		 */
+		if (cardItemId) {
+			// Card Item
+			getCard = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
+		} else {
+			// Card
+			getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
 		}
-		if (getCard?.items) {
-			getCard.items.forEach(async (current) => {
-				current.votes.forEach(async (currentVote) => {
+
+		if (getCard) {
+			const countVotes = getCard?.votes?.length ?? 0;
+
+			if (countVotes) {
+				getCard.votes.forEach(async (current) => {
 					const boardUser = await this.deleteVoteService.decrementVoteUser(
 						boardId,
-						currentVote,
+						current,
 						session
 					);
+
 					if (!boardUser) throw Error(UPDATE_FAILED);
 				});
-			});
+			}
+
+			/**
+			 * If have items, getCard is a CardDocument (not a CardItemDocument)
+			 */
+			if (
+				Object.hasOwn(getCard, 'items') &&
+				(getCard as LeanDocument<CardDocument>).items.length > 0
+			) {
+				(getCard as LeanDocument<CardDocument>).items.forEach(async (current) => {
+					current.votes.forEach(async (currentVote) => {
+						const boardUser = await this.deleteVoteService.decrementVoteUser(
+							boardId,
+							currentVote,
+							session
+						);
+
+						if (!boardUser) throw Error(UPDATE_FAILED);
+					});
+				});
+			}
+		} else {
+			/**
+			 * If getCard is null returns UPDATE_FAILED
+			 */
+			throw Error(UPDATE_FAILED);
 		}
 	}
 

@@ -21,7 +21,8 @@ export default class CreateCardServiceImpl implements CreateCardService {
 				text: card.text,
 				createdBy: userId,
 				comments: [],
-				votes: []
+				votes: [],
+				anonymous: false
 			});
 		} else {
 			card.items[0].createdBy = userId;

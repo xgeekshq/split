@@ -16,6 +16,7 @@ export interface CardItemType {
 	votes: string[];
 	createdBy?: User;
 	createdByTeam?: string;
+	anonymous: boolean;
 }
 
 export interface CardItemToAdd extends Omit<CardItemType, '_id'> {

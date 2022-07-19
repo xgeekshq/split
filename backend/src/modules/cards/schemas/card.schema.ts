@@ -32,6 +32,9 @@ export default class Card {
 
 	@Prop()
 	createdByTeam!: string;
+
+	@Prop({ nullable: false, default: false })
+	anonymous!: boolean;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

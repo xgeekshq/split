@@ -13,7 +13,6 @@ interface CardItemListProps {
 	cardGroupId: string;
 	socketId: string;
 	cardGroupPosition: number;
-	anonymous: boolean;
 	userId: string;
 	isMainboard: boolean;
 	isSubmited: boolean;
@@ -29,7 +28,6 @@ const CardItemList: React.FC<CardItemListProps> = ({
 	cardGroupId,
 	socketId,
 	cardGroupPosition,
-	anonymous,
 	userId,
 	isMainboard,
 	isSubmited,
@@ -67,7 +65,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
 						cardGroupId={cardGroupId}
 						socketId={socketId}
 						cardGroupPosition={cardGroupPosition}
-						anonymous={anonymous}
+						anonymous={item.anonymous}
 						userId={userId}
 						isMainboard={isMainboard}
 						isSubmited={isSubmited}

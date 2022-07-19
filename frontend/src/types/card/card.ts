@@ -10,6 +10,7 @@ export default interface CardType {
 	items: CardItemType[];
 	createdBy?: User;
 	createdByTeam?: string;
+	anonymous: boolean;
 }
 
 export interface CardToAdd extends Omit<CardType, '_id' | 'items'> {

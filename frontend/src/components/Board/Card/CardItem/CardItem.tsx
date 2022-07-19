@@ -31,7 +31,8 @@ interface CardItemProps {
 }
 
 const Container = styled(Flex, {
-	py: '$12',
+	paddingTop: '$12',
+	paddingBottom: '$14',
 	wordBreak: 'breakWord'
 });
 
@@ -72,7 +73,10 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 			>
 				{!editing && (
 					<Flex direction="column">
-						<Flex justify="between" css={{ '& > div': { zIndex: 2 } }}>
+						<Flex
+							justify="between"
+							css={{ '& > div': { zIndex: 2 }, mb: lastOne ? 0 : '$12' }}
+						>
 							<Text
 								size="sm"
 								css={{
@@ -138,6 +142,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 				)}
 				{editing && !isSubmited && (
 					<AddCardOrComment
+						isEditing
 						isCard
 						isUpdate
 						colId={columnId}
