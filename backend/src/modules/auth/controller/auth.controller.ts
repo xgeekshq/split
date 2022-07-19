@@ -12,6 +12,17 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiBody,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { uniqueViolation } from 'infrastructure/database/errors/unique.user';
 import { EmailParam } from 'libs/dto/param/email.param';
@@ -20,6 +31,9 @@ import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
+import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
 import { GetBoardApplicationInterface } from 'modules/boards/interfaces/applications/get.board.application.interface';
 import * as Boards from 'modules/boards/interfaces/types';
 import { GetTeamApplicationInterface } from 'modules/teams/interfaces/applications/get.team.application.interface';
@@ -30,12 +44,15 @@ import { GetUserApplication } from 'modules/users/interfaces/applications/get.us
 import { UpdateUserApplication } from 'modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'modules/users/interfaces/types';
 
+import { LoginDto } from '../dto/login.dto';
 import { CreateResetTokenAuthApplication } from '../interfaces/applications/create-reset-token.auth.application.interface';
 import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';
 import { RegisterAuthApplication } from '../interfaces/applications/register.auth.application.interface';
 import { TYPES } from '../interfaces/types';
 import { signIn } from '../shared/login.auth';
+import { LoginResponse } from '../swagger/login.swagger';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export default class AuthController {
 	constructor(
@@ -55,6 +72,11 @@ export default class AuthController {
 		private updateUserApp: UpdateUserApplication
 	) {}
 
+	@ApiOperation({ summary: 'Create new user' })
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post('register')
 	async register(@Body() registrationData: CreateUserDto) {
 		try {
@@ -71,6 +93,29 @@ export default class AuthController {
 		}
 	}
 
+	@ApiOperation({
+		summary: 'Basic login to allow the user perform certain actions'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiOkResponse({
+		description: 'User logged successfully!',
+		type: LoginResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
+	@ApiBody({
+		type: LoginDto,
+		required: true
+	})
 	@HttpCode(200)
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
@@ -81,22 +126,59 @@ export default class AuthController {
 		return loggedUser;
 	}
 
+	@ApiOperation({ summary: 'Generate a new refresh token' })
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
+	@ApiBearerAuth('refresh-token')
+	@UseGuards(JwtRefreshGuard)
 	@UseGuards(JwtRefreshGuard)
 	@Get('refresh')
 	refresh(@Req() request: RequestWithUser) {
 		return this.getTokenAuthApp.getAccessToken(request.user._id);
 	}
 
+	@ApiParam({
+		type: String,
+		format: 'email',
+		required: true,
+		name: 'email'
+	})
+	@ApiOperation({ summary: 'Verify if user exists' })
+	@ApiOkResponse({
+		description: 'Return a boolean to indicate if the user exists or not'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get('checkUserEmail/:email')
 	checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
 		return this.getUserApp.getByEmail(email).then((user) => !!user);
 	}
 
+	@ApiOperation({ summary: 'Request a reset password link' })
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post('recoverPassword')
 	forgot(@Body() { email }: EmailParam) {
 		return this.createResetTokenAuthApp.create(email);
 	}
 
+	@ApiOperation({
+		summary: 'Change user password after a reset password request'
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post('updatepassword')
 	@HttpCode(HttpStatus.OK)
 	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
@@ -110,6 +192,15 @@ export default class AuthController {
 		);
 	}
 
+	@ApiOperation({
+		summary: 'Get statistics to show on dashboard',
+		description: 'This method return the number of users, teams and boards'
+	})
+	@ApiBearerAuth('access-token')
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@UseGuards(JwtAuthenticationGuard)
 	@Get('/dashboardStatistics')
 	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
