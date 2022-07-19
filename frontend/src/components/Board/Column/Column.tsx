@@ -19,12 +19,12 @@ const Column = React.memo<ColumnBoardType>(
 		title,
 		color,
 		socketId,
-		anonymous,
 		isMainboard,
 		boardUser,
 		maxVotes,
 		countAllCards,
-		isSubmited
+		isSubmited,
+		hideCards
 	}) => {
 		const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
 
@@ -111,11 +111,11 @@ const Column = React.memo<ColumnBoardType>(
 										userId={userId}
 										boardId={boardId}
 										socketId={socketId}
-										anonymous={anonymous}
 										isMainboard={isMainboard}
 										boardUser={boardUser}
 										maxVotes={maxVotes}
 										isSubmited={isSubmited}
+										hideCards={hideCards}
 									/>
 									{provided.placeholder}
 								</CardsContainer>

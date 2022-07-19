@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
 import Icon from 'components/icons/Icon';
 import Button from 'components/Primitives/Button';
+import Checkbox from 'components/Primitives/Checkbox';
 import Flex from 'components/Primitives/Flex';
 import TextArea from 'components/Primitives/TextArea';
 import useCards from 'hooks/useCards';
 import useComments from 'hooks/useComments';
+import { SchemaAddCommentForm } from 'schema/schemaAddCommentForm';
 import AddCardDto from 'types/card/addCard.dto';
 import { CardToAdd } from 'types/card/card';
 import UpdateCardDto from 'types/card/updateCard.dto';
@@ -40,6 +41,7 @@ type AddCardProps = {
 	commentId?: string;
 	cancelUpdate?: () => void;
 	defaultOpen?: boolean;
+	isEditing?: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -54,12 +56,14 @@ const AddCard = React.memo<AddCardProps>(
 		cancelUpdate,
 		isCard,
 		commentId,
+		isEditing = false,
 		defaultOpen,
 		...props
 	}) => {
 		const { addCardInColumn, updateCard } = useCards();
 		const { addCommentInCard, updateComment } = useComments();
 		const [isOpen, setIsOpen] = useState(!!isUpdate || !!cancelUpdate || defaultOpen);
+		const [isAnonymous, setIsAnonymous] = useState(false);
 
 		const methods = useForm<{ text: string }>({
 			mode: 'onSubmit',
@@ -67,7 +71,7 @@ const AddCard = React.memo<AddCardProps>(
 			defaultValues: {
 				text: cardText || ''
 			},
-			resolver: zodResolver(z.object({ text: z.string().min(1) }))
+			resolver: joiResolver(SchemaAddCommentForm)
 		});
 
 		const handleAddCard = (text: string) => {
@@ -76,12 +80,14 @@ const AddCard = React.memo<AddCardProps>(
 					{
 						text: text.trim(),
 						votes: [],
-						comments: []
+						comments: [],
+						anonymous: isAnonymous
 					}
 				],
 				text: text.trim(),
 				votes: [],
-				comments: []
+				comments: [],
+				anonymous: isAnonymous
 			};
 			const changes: AddCardDto = {
 				colIdToAdd: colId,
@@ -150,6 +156,11 @@ const AddCard = React.memo<AddCardProps>(
 			setIsOpen(false);
 		};
 
+		const handleIsAnonymous = () => {
+			if (isAnonymous === true) return setIsAnonymous(false);
+			return setIsAnonymous(true);
+		};
+
 		if (!isOpen)
 			return (
 				<Button
@@ -197,6 +208,14 @@ const AddCard = React.memo<AddCardProps>(
 						placeholder="Write your comment here..."
 					/>
 					<Flex justify="end" gap="4" css={{ width: '100%' }}>
+						{!isEditing && (
+							<Checkbox
+								setCheckedTerms={handleIsAnonymous}
+								id="anonymous"
+								label="Post anonymously"
+								size="16"
+							/>
+						)}
 						<ActionButton
 							size="sm"
 							css={{ width: '$48', height: '$36' }}

@@ -1,38 +1,40 @@
-import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
-import { ObjectId, SchemaTypes, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {
-  CommentDocument,
-  CommentSchema,
-} from '../../comments/schemas/comment.schema';
-import User from '../../users/schemas/user.schema';
+import { Document, ObjectId, SchemaTypes } from 'mongoose';
+import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+
+import User from 'modules/users/schemas/user.schema';
+
+import { CommentDocument, CommentSchema } from '../../comments/schemas/comment.schema';
 import { CardItemDocument, CardItemSchema } from './card.item.schema';
 
 export type CardDocument = Card & Document;
 
 @Schema({
-  toJSON: {
-    virtuals: true,
-  },
+	toJSON: {
+		virtuals: true
+	}
 })
 export default class Card {
-  @Prop({ nullable: false })
-  text!: string;
+	@Prop({ nullable: false })
+	text!: string;
 
-  @Prop({ nullable: false, type: [CardItemSchema] })
-  items!: CardItemDocument[];
+	@Prop({ nullable: false, type: [CardItemSchema] })
+	items!: CardItemDocument[];
 
-  @Prop({ type: [CommentSchema] })
-  comments!: CommentDocument[];
+	@Prop({ type: [CommentSchema] })
+	comments!: CommentDocument[];
 
-  @Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }] })
-  votes!: User[] | ObjectId[];
+	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }] })
+	votes!: User[] | ObjectId[];
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
-  createdBy!: User | ObjectId;
+	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
+	createdBy!: User | ObjectId;
 
-  @Prop()
-  createdByTeam!: string;
+	@Prop()
+	createdByTeam!: string;
+
+	@Prop({ nullable: false, default: false })
+	anonymous!: boolean;
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);

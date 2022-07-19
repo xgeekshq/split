@@ -71,6 +71,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	});
 	const { data } = fetchBoard;
 	const board = data?.board;
+	const boardOwner = board?.createdBy === userId;
 
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
@@ -93,7 +94,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	useEffect(() => {
 		if (data && isOpen) {
 			const {
-				board: { _id, title, maxVotes, hideCards, hideVotes, postAnonymously }
+				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards }
 			} = data;
 			setUpdateBoard({
 				board: {
@@ -241,8 +242,12 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{!board.submitedByUser && !board.submitedAt && (
-								<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} />
+							{boardOwner && !board.submitedByUser && !board.submitedAt && (
+								<BoardSettings
+									isOpen={isOpen}
+									setIsOpen={setIsOpen}
+									socketId={socketId}
+								/>
 							)}
 
 							{board.submitedByUser && board.submitedAt && (
@@ -283,7 +288,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 											title={column.title}
 											color={column.color}
 											socketId={socketId}
-											anonymous={board.postAnonymously}
+											hideCards={board.hideCards}
 											isMainboard={!board.isSubBoard}
 											boardUser={board.users.find(
 												(userFound) =>

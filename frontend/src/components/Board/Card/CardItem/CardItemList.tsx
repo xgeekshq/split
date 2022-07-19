@@ -13,10 +13,10 @@ interface CardItemListProps {
 	cardGroupId: string;
 	socketId: string;
 	cardGroupPosition: number;
-	anonymous: boolean;
 	userId: string;
 	isMainboard: boolean;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -28,10 +28,10 @@ const CardItemList: React.FC<CardItemListProps> = ({
 	cardGroupId,
 	socketId,
 	cardGroupPosition,
-	anonymous,
 	userId,
 	isMainboard,
-	isSubmited
+	isSubmited,
+	hideCards
 }) => {
 	return (
 		<Flex direction="column">
@@ -65,10 +65,11 @@ const CardItemList: React.FC<CardItemListProps> = ({
 						cardGroupId={cardGroupId}
 						socketId={socketId}
 						cardGroupPosition={cardGroupPosition}
-						anonymous={anonymous}
+						anonymous={item.anonymous}
 						userId={userId}
 						isMainboard={isMainboard}
 						isSubmited={isSubmited}
+						hideCards={hideCards}
 					/>
 				</Flex>
 			))}

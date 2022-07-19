@@ -6,6 +6,7 @@ import { styled } from 'styles/stitches/stitches.config';
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { cardBlur } from 'helper/board/blurFilter';
 import { getCommentsFromCardGroup } from 'helper/board/comments';
 import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
@@ -30,11 +31,11 @@ interface CardBoardProps {
 	userId: string;
 	boardId: string;
 	socketId: string;
-	anonymous: boolean;
 	isMainboard: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;
 	isSubmited: boolean;
+	hideCards: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -46,11 +47,11 @@ const CardBoard = React.memo<CardBoardProps>(
 		socketId,
 		userId,
 		colId,
-		anonymous,
 		isMainboard,
 		boardUser,
 		maxVotes,
-		isSubmited
+		isSubmited,
+		hideCards
 	}) => {
 		const isCardGroup = card.items.length > 1;
 		const comments = useMemo(() => {
@@ -64,6 +65,7 @@ const CardBoard = React.memo<CardBoardProps>(
 		const [deleting, setDeleting] = useState(false);
 
 		const handleOpenComments = () => {
+			if (hideCards && card.createdBy?._id !== userId) return;
 			setOpenComments(!isCommentsOpened);
 		};
 
@@ -104,6 +106,7 @@ const CardBoard = React.memo<CardBoardProps>(
 						>
 							{editing && !isSubmited && (
 								<AddCardOrComment
+									isEditing
 									isCard
 									isUpdate
 									colId={colId}
@@ -133,9 +136,20 @@ const CardBoard = React.memo<CardBoardProps>(
 									{!isCardGroup && (
 										<Flex
 											justify="between"
-											css={{ mb: '$8', '& > div': { zIndex: 2 } }}
+											css={{ mb: '$14', '& > div': { zIndex: 2 } }}
 										>
-											<Text size="md" css={{ wordBreak: 'break-word' }}>
+											<Text
+												size="md"
+												css={{
+													wordBreak: 'break-word',
+
+													filter: cardBlur(
+														hideCards,
+														card as CardType,
+														userId
+													)
+												}}
+											>
 												{card.text}
 											</Text>
 											{isSubmited && (
@@ -144,7 +158,8 @@ const CardBoard = React.memo<CardBoardProps>(
 													css={{ width: '$20', height: '$20' }}
 												/>
 											)}
-											{!isSubmited && (
+
+											{!isSubmited && userId === card?.createdBy?._id && (
 												<PopoverCardSettings
 													firstOne={false}
 													isItem={false}
@@ -156,11 +171,14 @@ const CardBoard = React.memo<CardBoardProps>(
 													newPosition={0}
 													handleEditing={handleEditing}
 													handleDeleteCard={handleDeleting}
+													hideCards={hideCards}
+													userId={userId}
+													item={card}
 												/>
 											)}
 										</Flex>
 									)}
-									{card.items && card.items.length > 1 && (
+									{card.items && isCardGroup && (
 										<CardItemList
 											items={card.items}
 											color={color}
@@ -170,17 +188,17 @@ const CardBoard = React.memo<CardBoardProps>(
 											cardGroupId={card._id}
 											socketId={socketId}
 											cardGroupPosition={index}
-											anonymous={anonymous}
 											userId={userId}
 											isMainboard={isMainboard}
 											isSubmited={isSubmited}
+											hideCards={hideCards}
 										/>
 									)}
 									<CardFooter
 										boardId={boardId}
 										socketId={socketId}
 										userId={userId}
-										anonymous={anonymous}
+										anonymous={card.items[card.items.length - 1 || 0].anonymous}
 										card={card}
 										teamName={card?.createdByTeam}
 										isItem={false}
@@ -190,6 +208,7 @@ const CardBoard = React.memo<CardBoardProps>(
 										isCommentsOpened={isCommentsOpened}
 										boardUser={boardUser}
 										maxVotes={maxVotes}
+										hideCards={hideCards}
 									/>
 								</Flex>
 							)}
@@ -211,6 +230,8 @@ const CardBoard = React.memo<CardBoardProps>(
 								socketId={socketId}
 								cardItems={card.items}
 								isSubmited={isSubmited}
+								hideCards={hideCards}
+								userId={userId}
 							/>
 						)}
 					</Flex>

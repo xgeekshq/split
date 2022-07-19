@@ -1,20 +1,21 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+
 import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { GetUserService } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class GetUserApplicationImpl implements GetUserApplication {
-  constructor(
-    @Inject(TYPES.services.GetUserService)
-    private getUserService: GetUserService,
-  ) {}
+	constructor(
+		@Inject(TYPES.services.GetUserService)
+		private getUserService: GetUserService
+	) {}
 
-  getByEmail(email: string) {
-    return this.getUserService.getByEmail(email);
-  }
+	getByEmail(email: string) {
+		return this.getUserService.getByEmail(email);
+	}
 
-  countUsers() {
-    return this.getUserService.countUsers();
-  }
+	countUsers() {
+		return this.getUserService.countUsers();
+	}
 }

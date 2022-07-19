@@ -7,6 +7,7 @@ import Avatar from 'components/Primitives/Avatar';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { cardBlur } from 'helper/board/blurFilter';
 import { getCardVotes } from 'helper/board/votes';
 import useVotes from 'hooks/useVotes';
 import { BoardUser } from 'types/board/board.user';
@@ -28,6 +29,7 @@ interface FooterProps {
 	isCommentsOpened?: boolean;
 	boardUser?: BoardUser;
 	maxVotes?: number;
+	hideCards: boolean;
 }
 
 const StyledButtonIcon = styled(Button, {
@@ -68,9 +70,16 @@ const CardFooter = React.memo<FooterProps>(
 		boardUser,
 		maxVotes,
 		setOpenComments,
-		isCommentsOpened
+		isCommentsOpened,
+		hideCards
 	}) => {
-		const { createdBy } = card;
+		const createdBy = useMemo(() => {
+			if (Object.hasOwnProperty.call(card, 'items')) {
+				const cardTyped = card as CardType;
+				return cardTyped.items[cardTyped.items.length - 1].createdBy;
+			}
+			return card.createdBy;
+		}, [card]);
 
 		const { addVote, deleteVote } = useVotes();
 		const actualBoardVotes = boardUser?.votesCount;
@@ -98,6 +107,7 @@ const CardFooter = React.memo<FooterProps>(
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
+			if (hideCards && card.createdBy?._id !== userId) return;
 			if (votesOfUserInThisCard <= 0) return;
 			deleteVote.mutate({
 				boardId,
@@ -110,6 +120,7 @@ const CardFooter = React.memo<FooterProps>(
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
+			if (hideCards && card.createdBy?._id !== userId) return;
 			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
 			addVote.mutate({
 				boardId,
@@ -123,7 +134,13 @@ const CardFooter = React.memo<FooterProps>(
 		return (
 			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
 				{!anonymous && !teamName && (
-					<Flex gap="4" align="center">
+					<Flex
+						gap="4"
+						align="center"
+						css={{
+							filter: cardBlur(hideCards, card as CardType, userId)
+						}}
+					>
 						<Avatar
 							size={20}
 							fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
@@ -143,7 +160,13 @@ const CardFooter = React.memo<FooterProps>(
 				)}
 				{!isItem && comments && (
 					<Flex gap="10" align="center">
-						<Flex align="center" gap="2">
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								filter: cardBlur(hideCards, card as CardType, userId)
+							}}
+						>
 							<StyledButtonIcon
 								onClick={handleAddVote}
 								disabled={!isMainboard || actualBoardVotes === maxVotes}
@@ -161,7 +184,14 @@ const CardFooter = React.memo<FooterProps>(
 							</Text>
 						</Flex>
 
-						<Flex align="center" gap="2" css={{ mr: '$10' }}>
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								mr: '$10',
+								filter: cardBlur(hideCards, card as CardType, userId)
+							}}
+						>
 							<StyledButtonIcon
 								onClick={handleDeleteVote}
 								disabled={!isMainboard || votesOfUserInThisCard === 0}
@@ -170,7 +200,13 @@ const CardFooter = React.memo<FooterProps>(
 							</StyledButtonIcon>
 						</Flex>
 
-						<Flex align="center" gap="2">
+						<Flex
+							align="center"
+							gap="2"
+							css={{
+								filter: cardBlur(hideCards, card as CardType, userId)
+							}}
+						>
 							<StyledButtonIcon onClick={setOpenComments}>
 								<Icon
 									name={

@@ -1,7 +1,7 @@
 import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
@@ -34,9 +34,10 @@ const DEFAULT_MAX_VOTES = '6';
 type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	isOpen: boolean;
+	socketId: string;
 };
 
-const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
+const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
 	const haveError = useRecoilValue(updateBoardError);
 
@@ -66,7 +67,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 	const methods = useForm<{ title: string; maxVotes: string | undefined }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
-		resolver: zodResolver(SchemaUpdateBoard),
+		resolver: joiResolver(SchemaUpdateBoard),
 		defaultValues: {
 			title: '',
 			maxVotes: undefined
@@ -156,7 +157,8 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 				board: {
 					...updateBoardData.board,
 					title,
-					maxVotes
+					maxVotes,
+					socketId
 				}
 			},
 			{
@@ -267,7 +269,7 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 										{!isSubBoard && (
 											<>
 												{configurationSettings(
-													'Hide cards from others',
+													'Hide votes from others',
 													'Participants can not see the votes from other participants of this retrospective.',
 													board.hideVotes,
 													handleHideVotesChange
@@ -284,6 +286,11 @@ const BoardSettings = ({ isOpen, setIsOpen }: Props) => {
 														css={{ mt: '$8' }}
 														disabled={!isMaxVotesChecked}
 														placeholder="Max votes"
+														min={
+															boardData!.board.totalUsedVotes === 0
+																? 0
+																: board.maxVotes
+														}
 													/>
 												)}
 											</>

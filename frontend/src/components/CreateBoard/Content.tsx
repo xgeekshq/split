@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -31,7 +31,7 @@ const CreateBoardContent = () => {
 			text: 'Main board -',
 			maxVotes: String(boardState.board.maxVotes) ?? ''
 		},
-		resolver: zodResolver(SchemaCreateBoard)
+		resolver: joiResolver(SchemaCreateBoard)
 	});
 
 	const mainBoardName = useWatch({

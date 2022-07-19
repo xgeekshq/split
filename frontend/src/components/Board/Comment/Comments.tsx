@@ -16,10 +16,21 @@ interface CommentsListProps {
 	boardId: string;
 	socketId: string;
 	isSubmited: boolean;
+	hideCards: boolean;
+	userId: string;
 }
 
 const Comments = React.memo(
-	({ comments, cardId, cardItems, boardId, socketId, isSubmited }: CommentsListProps) => {
+	({
+		comments,
+		cardId,
+		cardItems,
+		boardId,
+		socketId,
+		isSubmited,
+		hideCards,
+		userId
+	}: CommentsListProps) => {
 		const [isCreateCommentOpened, setCreateComment] = useState(false);
 
 		const handleSetCreateComment = () => {
@@ -57,12 +68,15 @@ const Comments = React.memo(
 							boardId={boardId}
 							socketId={socketId}
 							isSubmited={isSubmited}
+							hideCards={hideCards}
+							userId={userId}
 						/>
 					))}
 				</Flex>
 				{isCreateCommentOpened && !isSubmited && (
 					<Flex css={{ width: '100%', px: '$16' }}>
 						<AddCardOrComment
+							isEditing
 							isCard={false}
 							isUpdate={false}
 							colId="1"

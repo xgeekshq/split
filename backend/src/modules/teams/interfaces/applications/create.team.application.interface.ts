@@ -4,6 +4,7 @@ import { TeamUserDocument } from '../../schemas/team.user.schema';
 import { TeamDocument } from '../../schemas/teams.schema';
 
 export interface CreateTeamApplicationInterface {
-  createTeamUser(teamUser: TeamUserDto): Promise<TeamUserDocument>;
-  create(teamData: TeamDto, userId: string): Promise<TeamDocument>;
+	createTeamUser(teamUser: TeamUserDto): Promise<TeamUserDocument>;
+
+	create(teamData: TeamDto, userId: string): Promise<TeamDocument>;
 }
