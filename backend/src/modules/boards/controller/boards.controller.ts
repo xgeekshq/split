@@ -24,7 +24,6 @@ import {
 } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import * as StakeholdersData from 'libs/utils/ignored_users.json';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../dto/board.dto';
@@ -81,12 +80,6 @@ export default class BoardsController {
 		if (!board) throw new NotFoundException(BOARD_NOT_FOUND);
 
 		return board;
-	}
-
-	@UseGuards(JwtAuthenticationGuard)
-	@Get('/stakeholders/all')
-	getStakeholders() {
-		return StakeholdersData as unknown as string[];
 	}
 
 	@UseGuards(JwtAuthenticationGuard)

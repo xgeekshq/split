@@ -4,7 +4,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
-import { getStakeholders } from 'api/boardService';
 import { getAllTeams } from 'api/teamService';
 import Icon from 'components/icons/Icon';
 import Box from 'components/Primitives/Box';
@@ -16,60 +15,45 @@ import {
 	createBoardDataState,
 	createBoardError
 } from 'store/createBoard/atoms/create-board.atom';
-import { toastState } from 'store/toast/atom/toast.atom';
 import { Team } from 'types/team/team';
+import { TeamUser } from 'types/team/team.user';
+import { User } from 'types/user/user';
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import MainBoardCard from './MainBoardCard';
 import QuickEditSubTeams from './QuickEditSubTeams';
 
 const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
 
 const TeamSubTeamsConfigurations: React.FC = () => {
-	/**
-	 * Recoil Atoms and hooks
-	 */
+	const [stakeholders, setStakeholders] = useState<User[]>([]);
+	const [team, setTeam] = useState<Team | null>(null);
+
+	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
-	const setToastState = useSetRecoilState(toastState);
 	const [haveError, setHaveError] = useRecoilState(createBoardError);
+
 	const MIN_MEMBERS = 4;
 
-	/**
-	 * States
-	 */
-	const [team, setTeam] = useState<Team>();
-	// TODO: if stakeholders change type on future, it's necessary change the type of useStates
-	const [stakeholders, setStakeholders] = useState<string[]>([]);
-
-	/**
-	 * Queries to retrive data
-	 */
-	const { data } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
-	const { data: dataStakeholders } = useQuery(['stakeholders'], () => getStakeholders(), {
-		suspense: false
-	});
-
-	/**
-	 * Use Effect to validate if exist any team created
-	 * If yes, save on state and on board data atom
-	 * If no, show a toast
-	 */
 	useEffect(() => {
-		if ((data && !data[0]) || (team && team?.users.length < MIN_MEMBERS)) {
+		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
+		const hasMinMembers = isTeamsValid && teams[0].users?.length >= MIN_MEMBERS;
+
+		if (isTeamsValid && hasMinMembers) {
+			const selectedTeam = teams[0];
+
+			const isStakeholder = (userTeam: TeamUser): boolean =>
+				userTeam.role === TeamUserRoles.STAKEHOLDER;
+			const getStakeholder = ({ user }: TeamUser): User => user;
+			const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
+
+			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
+			setStakeholders(stakeholdersFound);
+			setTeam(selectedTeam);
+		} else {
 			setHaveError(true);
-		} else if (data && data[0]) {
-			setTeam(data[0]);
-			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: data[0]._id } }));
 		}
-	}, [data, setBoardData, setHaveError, setToastState, team?.users.length, team]);
-
-	/**
-	 * Use Effect to validate if stakeholders return data
-	 * If yes, save on state
-	 */
-	useEffect(() => {
-		if (dataStakeholders) {
-			setStakeholders(dataStakeholders);
-		}
-	}, [dataStakeholders]);
+	}, [teams, setBoardData, setHaveError]);
 
 	return (
 		<Flex css={{ mt: '$32' }} direction="column">
@@ -84,9 +68,9 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 						Team
 					</Text>
 					<Flex gap="8" align="center">
-						<Text size="md">{haveError ? '' : team?.name}</Text>
+						<Text size="md">{haveError || !team ? '' : team?.name}</Text>
 						<Text size="md" color="primary300">
-							({haveError ? '--' : team?.users.length} members)
+							({haveError || !team ? '--' : team?.users.length} members)
 						</Text>
 						<Tooltip content="All active members on the platform">
 							<div>
@@ -112,25 +96,20 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 						Stakeholders
 					</Text>
 					<Text size="md" css={{ wordBreak: 'break-word' }}>
-						{haveError
+						{haveError || !stakeholders
 							? ''
-							: team?.users
-									.filter((teamUser) =>
-										stakeholders?.includes(teamUser.user.email)
-									)
-									.map(
-										(stakeholderFound) =>
-											`${stakeholderFound.user.firstName} ${stakeholderFound.user.lastName}`
-									)}
+							: stakeholders.map(
+									({ firstName, lastName }) => `${firstName} ${lastName}`
+							  )}
 					</Text>
 				</StyledBox>
 			</Flex>
 			{team && (
 				<>
 					<Flex justify="end">
-						<QuickEditSubTeams team={team} stakeholders={stakeholders} />
+						<QuickEditSubTeams team={team} />
 					</Flex>
-					<MainBoardCard team={team} stakeholders={stakeholders} />
+					<MainBoardCard team={team} />
 				</>
 			)}
 		</Flex>

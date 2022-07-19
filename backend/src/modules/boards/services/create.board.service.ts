@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 
 import { BoardRoles } from 'libs/enum/board.roles';
+import { TeamRoles } from 'libs/enum/team.roles';
 import { getDay, getNextMonth } from 'libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'libs/utils/generateBoardData';
-import * as stakeHolders from 'libs/utils/ignored_users.json';
 import isEmpty from 'libs/utils/isEmpty';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service';
@@ -14,7 +14,7 @@ import TeamDto from 'modules/teams/dto/team.dto';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES } from 'modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
-import User, { UserDocument } from 'modules/users/schemas/user.schema';
+import { UserDocument } from 'modules/users/schemas/user.schema';
 
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
@@ -91,7 +91,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			if (!usersIds.includes(user._id.toString())) {
 				newUsers.push({
 					user: user._id.toString(),
-					role: !stakeHolders.includes(user.email) ? BoardRoles.MEMBER : BoardRoles.STAKEHOLDER,
+					role: teamUser.role,
 					votesCount: 0
 				});
 			}
@@ -143,7 +143,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
 		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => !stakeHolders?.includes((teamUser.user as User).email) ?? []
+			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
 		const teamUsersWotStakeholdersCount = teamUsersWotStakeholders?.length ?? 0;
 		const teamLength = teamUsersWotStakeholdersCount;
@@ -170,15 +170,15 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 	handleSplitBoards = (maxTeams: number, teamMembers: LeanDocument<TeamUserDocument>[]) => {
 		const subBoards: BoardDto[] = [];
-		const splitedUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
+		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		const availableUsers = [...teamMembers];
 
 		new Array(teamMembers.length).fill(0).reduce((j) => {
 			if (j >= maxTeams) j = 0;
 			const teamUser = this.getRandomUser(availableUsers);
-			splitedUsers[j] = [
-				...splitedUsers[j],
+			splitUsers[j] = [
+				...splitUsers[j],
 				{
 					user: (teamUser.user as LeanDocument<UserDocument>)._id.toString(),
 					role: BoardRoles.MEMBER,
@@ -188,17 +188,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			return ++j;
 		}, 0);
 
-		this.generateSubBoards(maxTeams, splitedUsers, subBoards);
+		this.generateSubBoards(maxTeams, splitUsers, subBoards);
 
 		return subBoards;
 	};
 
-	generateSubBoards(maxTeams: number, splitedUsers: BoardUserDto[][], subBoards: BoardDto[]) {
+	generateSubBoards(maxTeams: number, splitUsers: BoardUserDto[][], subBoards: BoardDto[]) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
-			splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
-				BoardRoles.RESPONSIBLE;
-			newBoard.users = splitedUsers[i];
+			splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role = BoardRoles.RESPONSIBLE;
+			newBoard.users = splitUsers[i];
 			subBoards.push(newBoard);
 		});
 	}

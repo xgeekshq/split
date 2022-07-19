@@ -15,6 +15,7 @@ import { boardInfoState } from 'store/board/atoms/board.atom';
 import BoardType from 'types/board/board';
 import { BoardUser, BoardUserNoPopulated } from 'types/board/board.user';
 import { BreadcrumbType } from 'types/board/Breadcrumb';
+import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import {
 	BoardCounter,
 	MergeIconContainer,
@@ -149,7 +150,7 @@ const BoardHeader = () => {
 					</Flex>
 
 					{(boardData!.board.users || users).filter(
-						(user: BoardUser) => user.role === 'stakeholder'
+						(user: BoardUser) => user.role === BoardUserRoles.STAKEHOLDER
 					).length > 0 && (
 						<>
 							<Separator

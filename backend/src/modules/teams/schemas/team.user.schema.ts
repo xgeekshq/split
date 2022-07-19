@@ -14,7 +14,7 @@ export default class TeamUser {
 	@Prop({
 		nullable: false,
 		type: String,
-		enum: [TeamRoles.ADMIN, TeamRoles.MEMBER]
+		enum: [TeamRoles.ADMIN, TeamRoles.MEMBER, TeamRoles.STAKEHOLDER]
 	})
 	role!: string;
 

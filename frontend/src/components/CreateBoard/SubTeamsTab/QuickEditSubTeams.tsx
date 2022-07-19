@@ -19,7 +19,6 @@ import isEmpty from 'utils/isEmpty';
 
 interface QuickEditSubTeamsProps {
 	team: Team;
-	stakeholders: string[];
 }
 
 const StyledInput = styled('input', {
@@ -50,11 +49,9 @@ const StyledInput = styled('input', {
 	}
 });
 
-const QuickEditSubTeams = ({ team, stakeholders }: QuickEditSubTeamsProps) => {
-	const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard(
-		team,
-		stakeholders
-	);
+const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
+	const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } =
+		useCreateBoard(team);
 
 	const {
 		count: { teamsCount, maxUsersCount }

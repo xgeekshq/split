@@ -4,12 +4,18 @@ import {
 	Controller,
 	Get,
 	Inject,
+	Param,
 	Post,
 	Put,
+	Query,
 	Req,
-	UseGuards
+	UseGuards,
+	UsePipes,
+	ValidationPipe
 } from '@nestjs/common';
 
+import { TeamParams } from 'libs/dto/param/team.params';
+import { TeamQueryParams } from 'libs/dto/param/team.query.params';
 import { INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
@@ -52,8 +58,9 @@ export default class TeamsController {
 	}
 
 	@UseGuards(JwtAuthenticationGuard)
-	@Get('/member')
-	getTeamsOfUser(@Req() request: RequestWithUser) {
-		return this.getTeamApp.getTeamsOfUser(request.user._id);
+	@Get(':teamId')
+	@UsePipes(new ValidationPipe({ transform: true }))
+	getTeam(@Param() { teamId }: TeamParams, @Query() teamQueryParams?: TeamQueryParams) {
+		return this.getTeamApp.getTeam(teamId, teamQueryParams);
 	}
 }

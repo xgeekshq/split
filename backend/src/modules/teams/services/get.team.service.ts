@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
@@ -25,8 +26,32 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return this.teamModel.countDocuments().exec();
 	}
 
-	getTeam(teamId: string) {
-		return this.teamModel.findById(teamId).lean().exec();
+	getTeam(teamId: string, teamQueryParams: TeamQueryParams = {}) {
+		const { loadUsers, teamUserRole } = teamQueryParams;
+		const teamModel = this.teamModel.findById(teamId);
+		let teamUserRoleFilter = {};
+
+		if (teamUserRole) {
+			teamUserRoleFilter = { match: { role: { $eq: teamUserRole } } };
+		}
+
+		if (loadUsers || teamUserRole) {
+			teamModel
+				.populate({
+					path: 'users',
+					select: 'user role',
+					...teamUserRoleFilter,
+					populate: {
+						path: 'user',
+						select: '_id firstName lastName email joinedAt'
+					}
+				})
+				.lean({ virtuals: true });
+		} else {
+			teamModel.lean();
+		}
+
+		return teamModel.exec();
 	}
 
 	async getTeamsOfUser(userId: string) {
