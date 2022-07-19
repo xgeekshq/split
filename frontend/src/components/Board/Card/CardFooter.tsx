@@ -129,10 +129,13 @@ const CardFooter = React.memo<FooterProps>(
 				cardItemId,
 				isCardGroup: cardItemId === undefined
 			});
+
+			console.log('handleAddVote after mutate');
 		};
 
 		return (
 			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
+				<Button data-testid="custom-element" onClick={handleAddVote} />
 				{!anonymous && !teamName && (
 					<Flex
 						gap="4"

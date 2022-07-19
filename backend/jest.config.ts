@@ -4,7 +4,7 @@ module.exports = {
 	roots: ['<rootDir>/src'],
 	testRegex: '.spec.ts$',
 	transform: {
-		'^.+\\.ts?$': 'ts-jest'
+		'^.+\\.ts?$': ['@swc/jest']
 	},
 	collectCoverageFrom: ['**/*.(t|j)s'],
 	coverageDirectory: './src/test/coverage',

@@ -10,7 +10,7 @@
 		"pre-commit": "lint-staged",
 		"cy:run": "cypress run",
 		"cy:ci": "start-server-and-test dev http-get://localhost:3000 cy:run",
-		"jest": "jest"
+		"test": "jest"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^2.8.8",
@@ -34,6 +34,7 @@
 		"@stitches/react": "^1.2.7",
 		"@testing-library/dom": "^8.13.0",
 		"@testing-library/react": "^12.1.5",
+		"@testing-library/user-event": "^14.3.0",
 		"axios": "^0.26.1",
 		"cypress": "^9.5.4",
 		"dotenv": "^16.0.0",
