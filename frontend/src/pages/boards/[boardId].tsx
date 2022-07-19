@@ -71,6 +71,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	});
 	const { data } = fetchBoard;
 	const board = data?.board;
+	const boardOwner = board?.createdBy === userId;
 
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
@@ -241,7 +242,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{!board.submitedByUser && !board.submitedAt && (
+							{boardOwner && !board.submitedByUser && !board.submitedAt && (
 								<BoardSettings
 									isOpen={isOpen}
 									setIsOpen={setIsOpen}
