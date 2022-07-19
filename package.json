@@ -3,7 +3,9 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"prepare": "(cd backend && npm i) && (cd frontend && npm i) && husky install",
+		"prepare": "concurrently \"npm:prepare:backend\" \"npm:prepare:frontend\" \"husky install\"",
+		"prepare:backend": "cd backend && npm i --legacy-peer-deps",
+		"prepare:frontend": "cd frontend && npm i",
 		"dev": "concurrently \"npm:backend\" \"npm:frontend\"",
 		"frontend": "npm run dev --prefix frontend/",
 		"backend": "npm run start:dev --prefix backend",
