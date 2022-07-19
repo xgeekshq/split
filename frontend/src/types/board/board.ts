@@ -1,3 +1,4 @@
+import { User } from 'types/user/user';
 import ColumnType, { CreateColumn } from '../column';
 import { Team } from '../team/team';
 import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
@@ -28,7 +29,7 @@ export default interface BoardType {
 	recurrent: boolean;
 	team: Team;
 	users: BoardUser[];
-	createdBy: string;
+	createdBy: User;
 	socketId?: string;
 	isSubBoard?: boolean;
 	maxVotes?: string;
