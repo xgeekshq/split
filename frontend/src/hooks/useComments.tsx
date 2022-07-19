@@ -64,7 +64,6 @@ const useComments = () => {
 		onSettled: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 		},
-		onSuccess: () => {},
 		onError: (data, variables, context) => {
 			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
@@ -89,7 +88,6 @@ const useComments = () => {
 		onSettled: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 		},
-		onSuccess: () => {},
 		onError: (data, variables, context) => {
 			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
@@ -114,7 +112,6 @@ const useComments = () => {
 		onSettled: (data) => {
 			queryClient.invalidateQueries(['board', { id: data?._id }]);
 		},
-		onSuccess: () => {},
 		onError: (data, variables, context) => {
 			setPreviousBoardQuery(variables.boardId, context);
 			setToastState({
