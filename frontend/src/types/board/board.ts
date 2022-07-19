@@ -1,6 +1,5 @@
 import ColumnType, { CreateColumn } from '../column';
 import { Team } from '../team/team';
-import { User } from '../user/user';
 import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
 
 export interface GetBoardResponse {
@@ -29,7 +28,7 @@ export default interface BoardType {
 	recurrent: boolean;
 	team: Team;
 	users: BoardUser[];
-	createdBy: User;
+	createdBy: string;
 	socketId?: string;
 	isSubBoard?: boolean;
 	maxVotes?: string;

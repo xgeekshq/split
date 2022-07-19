@@ -71,7 +71,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 	});
 	const { data } = fetchBoard;
 	const board = data?.board;
-	const boardOwner = board?.createdBy === userId;
 
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
@@ -192,7 +191,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 			updateCardPosition.mutate(changes);
 		}
 	};
-
 	/**
 	 * Confirm if any sub-board is merged or not
 	 */
@@ -242,13 +240,15 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{boardOwner && !board.submitedByUser && !board.submitedAt && (
-								<BoardSettings
-									isOpen={isOpen}
-									setIsOpen={setIsOpen}
-									socketId={socketId}
-								/>
-							)}
+							{board?.createdBy === userId &&
+								!board.submitedByUser &&
+								!board.submitedAt && (
+									<BoardSettings
+										isOpen={isOpen}
+										setIsOpen={setIsOpen}
+										socketId={socketId}
+									/>
+								)}
 
 							{board.submitedByUser && board.submitedAt && (
 								<AlertBox
