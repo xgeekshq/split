@@ -44,6 +44,9 @@ if (configuration().smtp.enabled) {
 if (configuration().slack.enable) {
 	imports.push(CommunicationModule);
 }
+if (configuration().slack.enable) {
+	imports.push(CommunicationModule);
+}
 
 @Module({
 	imports,
