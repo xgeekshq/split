@@ -8,6 +8,7 @@ import {
 	Inject,
 	NotFoundException,
 	Param,
+	Patch,
 	Post,
 	Req,
 	UseGuards
@@ -179,7 +180,7 @@ export default class AuthController {
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
-	@Post('updatepassword')
+	@Patch('password')
 	@HttpCode(HttpStatus.OK)
 	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
 		const email = await this.updateUserApp.checkEmail(token);

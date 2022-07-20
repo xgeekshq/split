@@ -53,8 +53,8 @@ export const refreshAccessToken = (token: string): Promise<Token> => {
 };
 
 export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordResponse> => {
-	return fetchData('/auth/updatepassword', {
-		method: 'POST',
+	return fetchData('/auth/password', {
+		method: 'PATCH',
 		data: params
 	});
 };
