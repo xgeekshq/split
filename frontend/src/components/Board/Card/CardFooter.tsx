@@ -130,12 +130,10 @@ const CardFooter = React.memo<FooterProps>(
 				isCardGroup: cardItemId === undefined
 			});
 
-			console.log('handleAddVote after mutate');
 		};
 
 		return (
 			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
-				<Button data-testid="custom-element" onClick={handleAddVote} />
 				{!anonymous && !teamName && (
 					<Flex
 						gap="4"
@@ -171,6 +169,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
+								data-testid="btn_addVote"
 								onClick={handleAddVote}
 								disabled={!isMainboard || actualBoardVotes === maxVotes}
 							>
@@ -196,6 +195,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
+								data-testid="btn_delVote"
 								onClick={handleDeleteVote}
 								disabled={!isMainboard || votesOfUserInThisCard === 0}
 							>
