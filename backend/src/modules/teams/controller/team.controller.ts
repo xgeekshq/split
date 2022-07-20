@@ -34,6 +34,7 @@ import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
 import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
 import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
 
+import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
@@ -53,7 +54,7 @@ export default class TeamsController {
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
-	@ApiCreatedResponse({ description: 'Team successfully created!' })
+	@ApiCreatedResponse({ description: 'Team successfully created!', type: TeamDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
@@ -67,7 +68,7 @@ export default class TeamsController {
 		type: InternalServerError
 	})
 	@Post()
-	async create(@Req() request: RequestWithUser, @Body() teamData: TeamDto) {
+	async create(@Req() request: RequestWithUser, @Body() teamData: CreateTeamDto) {
 		const team = await this.createTeamApp.create(teamData, request.user._id);
 		if (!team) throw new BadRequestException(INSERT_FAILED);
 		return team;

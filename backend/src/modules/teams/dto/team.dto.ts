@@ -1,23 +1,11 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString, Validate } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsMongoId, IsOptional } from 'class-validator';
 
-import { CheckUniqueUsers } from 'libs/validators/check-unique-users';
+import { CreateTeamDto } from './crate-team.dto';
 
-import TeamUserDto from './team.user.dto';
-
-export default class TeamDto {
+export default class TeamDto extends CreateTeamDto {
 	@ApiPropertyOptional()
 	@IsOptional()
 	@IsMongoId()
 	_id?: string;
-
-	@ApiProperty()
-	@IsString()
-	@IsNotEmpty()
-	name!: string;
-
-	@ApiProperty({ type: TeamUserDto, isArray: true })
-	@IsNotEmpty()
-	@Validate(CheckUniqueUsers)
-	users!: TeamUserDto[];
 }
