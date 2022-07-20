@@ -9,7 +9,16 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiBody,
+	ApiInternalServerErrorResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { VoteGroupParams } from 'libs/dto/param/vote.group.params';
 import { VoteItemParams } from 'libs/dto/param/vote.item.params';
@@ -17,6 +26,9 @@ import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
+import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
+import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
@@ -45,6 +57,18 @@ export default class VotesController {
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post(':boardId/card/:cardId/items/:itemId/vote')
 	async addVoteToCard(
 		@Req() request: RequestWithUser,
@@ -68,6 +92,18 @@ export default class VotesController {
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post(':boardId/card/:cardId/vote')
 	async addVoteToCardGroup(
 		@Req() request: RequestWithUser,
@@ -92,6 +128,18 @@ export default class VotesController {
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Delete(':boardId/card/:cardId/items/:itemId/vote')
 	async deleteVoteFromCard(
 		@Req() request: RequestWithUser,
@@ -120,6 +168,18 @@ export default class VotesController {
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Delete(':boardId/card/:cardId/vote')
 	async deleteVoteFromCardGroup(
 		@Req() request: RequestWithUser,

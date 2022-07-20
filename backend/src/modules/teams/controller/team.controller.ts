@@ -13,13 +13,26 @@ import {
 	UsePipes,
 	ValidationPipe
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { TeamParams } from 'libs/dto/param/team.params';
 import { TeamQueryParams } from 'libs/dto/param/team.query.params';
 import { INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
+import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
 
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
@@ -41,6 +54,18 @@ export default class TeamsController {
 
 	@ApiOperation({ summary: 'Create a new team' })
 	@ApiCreatedResponse({ description: 'Team successfully created!' })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post()
 	async create(@Req() request: RequestWithUser, @Body() teamData: TeamDto) {
 		const team = await this.createTeamApp.create(teamData, request.user._id);
@@ -49,7 +74,19 @@ export default class TeamsController {
 	}
 
 	@ApiOperation({ summary: 'Add a user to an existing team' })
-	@ApiCreatedResponse({ description: 'User successfully added to the team!' })
+	@ApiOkResponse({ description: 'User successfully added to the team!' })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Put()
 	async createTeamUser(@Body() teamData: TeamUserDto) {
 		const team = await this.createTeamApp.createTeamUser(teamData);
@@ -58,14 +95,39 @@ export default class TeamsController {
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
-	@ApiCreatedResponse({ description: 'Teams successfully retrieved!' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!' })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get()
 	getAllTeams() {
 		return this.getTeamApp.getAllTeams();
 	}
 
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
-	@ApiCreatedResponse({ description: 'User successfully retrieved!' })
+	@ApiOkResponse({ description: 'Team successfully retrieved!' })
+	@ApiParam({ name: 'teamId', type: String })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get(':teamId')
 	@UsePipes(new ValidationPipe({ transform: true }))
 	getTeam(@Param() { teamId }: TeamParams, @Query() teamQueryParams?: TeamQueryParams) {
