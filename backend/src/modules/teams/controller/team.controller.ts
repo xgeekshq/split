@@ -13,6 +13,7 @@ import {
 	UsePipes,
 	ValidationPipe
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { TeamParams } from 'libs/dto/param/team.params';
 import { TeamQueryParams } from 'libs/dto/param/team.query.params';
@@ -26,6 +27,9 @@ import { CreateTeamApplicationInterface } from '../interfaces/applications/creat
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Votes')
+@UseGuards(JwtAuthenticationGuard)
 @Controller('teams')
 export default class TeamsController {
 	constructor(
@@ -35,7 +39,8 @@ export default class TeamsController {
 		private getTeamApp: GetTeamApplicationInterface
 	) {}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Create a new team' })
+	@ApiCreatedResponse({ description: 'Team successfully created!' })
 	@Post()
 	async create(@Req() request: RequestWithUser, @Body() teamData: TeamDto) {
 		const team = await this.createTeamApp.create(teamData, request.user._id);
@@ -43,7 +48,8 @@ export default class TeamsController {
 		return team;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Add a user to an existing team' })
+	@ApiCreatedResponse({ description: 'User successfully added to the team!' })
 	@Put()
 	async createTeamUser(@Body() teamData: TeamUserDto) {
 		const team = await this.createTeamApp.createTeamUser(teamData);
@@ -51,13 +57,15 @@ export default class TeamsController {
 		return team;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
+	@ApiCreatedResponse({ description: 'Teams successfully retrieved!' })
 	@Get()
 	getAllTeams() {
 		return this.getTeamApp.getAllTeams();
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
+	@ApiCreatedResponse({ description: 'User successfully retrieved!' })
 	@Get(':teamId')
 	@UsePipes(new ValidationPipe({ transform: true }))
 	getTeam(@Param() { teamId }: TeamParams, @Query() teamQueryParams?: TeamQueryParams) {
