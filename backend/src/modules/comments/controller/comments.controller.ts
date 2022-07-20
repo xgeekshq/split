@@ -10,6 +10,7 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CardGroupParams } from 'libs/dto/param/card.group.params';
 import { CardItemParams } from 'libs/dto/param/card.item.params';
@@ -27,6 +28,8 @@ import { DeleteCommentApplication } from '../interfaces/applications/delete.comm
 import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Comments')
 @Controller('boards')
 export default class CommentsController {
 	constructor(

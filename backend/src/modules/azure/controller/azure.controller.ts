@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { EmailParam } from 'libs/dto/param/email.param';
 import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
@@ -8,6 +9,7 @@ import { AuthAzureApplication } from '../interfaces/applications/auth.azure.appl
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export default class AzureController {
 	constructor(

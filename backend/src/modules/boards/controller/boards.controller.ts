@@ -13,6 +13,7 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { BaseParam } from 'libs/dto/param/base.param';
 import { PaginationParams } from 'libs/dto/param/pagination.params';
@@ -34,6 +35,8 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Boards')
 @Controller('boards')
 export default class BoardsController {
 	constructor(

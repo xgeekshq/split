@@ -10,6 +10,7 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { BaseDto } from 'libs/dto/base.dto';
 import { BaseParam } from 'libs/dto/param/base.param';
@@ -34,6 +35,8 @@ import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Cards')
 @Controller('boards')
 export default class CardsController {
 	constructor(

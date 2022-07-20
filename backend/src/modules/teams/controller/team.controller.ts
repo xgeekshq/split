@@ -41,7 +41,7 @@ import { GetTeamApplicationInterface } from '../interfaces/applications/get.team
 import { TYPES } from '../interfaces/types';
 
 @ApiBearerAuth('access-token')
-@ApiTags('Votes')
+@ApiTags('Teams')
 @UseGuards(JwtAuthenticationGuard)
 @Controller('teams')
 export default class TeamsController {
