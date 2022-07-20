@@ -23,7 +23,10 @@ export default class CreateUserDto {
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	lastName!: string;
 
-	@ApiProperty()
+	@ApiProperty({
+		type: String,
+		pattern: String(/^(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/)
+	})
 	@IsString()
 	@IsNotEmpty()
 	@Transform(({ value }: TransformFnParams) => value.trim())
