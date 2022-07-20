@@ -39,7 +39,8 @@ export default class VotesController {
 	@ApiOperation({ summary: 'Add a vote to a specific card item' })
 	@ApiBody({
 		type: SocketIdDto,
-		required: true
+		required: false,
+		description: 'If you want real time updates, you need to pass the socket id.'
 	})
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
@@ -62,7 +63,8 @@ export default class VotesController {
 	@ApiOperation({ summary: 'Add a vote to a specific card' })
 	@ApiBody({
 		type: SocketIdDto,
-		required: true
+		required: false,
+		description: 'If you want real time updates, you need to pass the socket id.'
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
@@ -84,7 +86,8 @@ export default class VotesController {
 	@ApiOperation({ summary: 'Remove a vote from a specific card item' })
 	@ApiBody({
 		type: SocketIdDto,
-		required: true
+		required: false,
+		description: 'If you want real time updates, you need to pass the socket id.'
 	})
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
@@ -112,7 +115,8 @@ export default class VotesController {
 	@ApiOperation({ summary: 'Remove a vote from a specific card' })
 	@ApiBody({
 		type: SocketIdDto,
-		required: true
+		required: false,
+		description: 'If you want real time updates, you need to pass the socket id.'
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
