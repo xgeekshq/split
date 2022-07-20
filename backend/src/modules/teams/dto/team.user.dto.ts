@@ -4,7 +4,7 @@ import { IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-valid
 import { TeamRoles } from 'libs/enum/team.roles';
 
 export default class TeamUserDto {
-	@ApiProperty()
+	@ApiProperty({ description: 'User id' })
 	@IsString()
 	@IsNotEmpty()
 	@IsMongoId()
