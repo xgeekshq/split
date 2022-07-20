@@ -9,13 +9,14 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { VoteGroupParams } from 'libs/dto/param/vote.group.params';
 import { VoteItemParams } from 'libs/dto/param/vote.item.params';
 import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
@@ -36,6 +37,10 @@ export default class VotesController {
 	) {}
 
 	@ApiOperation({ summary: 'Add a vote to a specific card item' })
+	@ApiBody({
+		type: SocketIdDto,
+		required: true
+	})
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
@@ -55,6 +60,10 @@ export default class VotesController {
 	}
 
 	@ApiOperation({ summary: 'Add a vote to a specific card' })
+	@ApiBody({
+		type: SocketIdDto,
+		required: true
+	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@Post(':boardId/card/:cardId/vote')
@@ -73,6 +82,10 @@ export default class VotesController {
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card item' })
+	@ApiBody({
+		type: SocketIdDto,
+		required: true
+	})
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
@@ -97,6 +110,10 @@ export default class VotesController {
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card' })
+	@ApiBody({
+		type: SocketIdDto,
+		required: true
+	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@Delete(':boardId/card/:cardId/vote')

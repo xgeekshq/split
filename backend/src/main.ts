@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import packageJson from '../package.json';
 import AppModule from './app.module';
 
 async function bootstrap() {
@@ -20,7 +19,7 @@ async function bootstrap() {
 	const config = new DocumentBuilder()
 		.setTitle('SPLIT')
 		.setDescription('Backend documentation for SPLIT project')
-		.setVersion(packageJson.version)
+		.setVersion('0.0.1')
 		.setLicense('MIT', 'https://github.com/xgeekshq/split/blob/main/LICENSE')
 		.setExternalDoc('More about the project', 'https://github.com/xgeekshq/split')
 		.addBearerAuth(
