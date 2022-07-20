@@ -9,6 +9,7 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { VoteGroupParams } from 'libs/dto/param/vote.group.params';
 import { VoteItemParams } from 'libs/dto/param/vote.item.params';
@@ -21,6 +22,9 @@ import { CreateVoteApplication } from '../interfaces/applications/create.vote.ap
 import { DeleteVoteApplication } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Votes')
+@UseGuards(JwtAuthenticationGuard)
 @Controller('boards')
 export default class VotesController {
 	constructor(
@@ -31,7 +35,10 @@ export default class VotesController {
 		private socketService: SocketGateway
 	) {}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Add a vote to a specific card item' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
 	@Post(':boardId/card/:cardId/items/:itemId/vote')
 	async addVoteToCard(
 		@Req() request: RequestWithUser,
@@ -47,7 +54,9 @@ export default class VotesController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Add a vote to a specific card' })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
 	@Post(':boardId/card/:cardId/vote')
 	async addVoteToCardGroup(
 		@Req() request: RequestWithUser,
@@ -63,7 +72,10 @@ export default class VotesController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Remove a vote from a specific card item' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
 	@Delete(':boardId/card/:cardId/items/:itemId/vote')
 	async deleteVoteFromCard(
 		@Req() request: RequestWithUser,
@@ -84,7 +96,9 @@ export default class VotesController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Remove a vote from a specific card' })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
 	@Delete(':boardId/card/:cardId/vote')
 	async deleteVoteFromCardGroup(
 		@Req() request: RequestWithUser,
