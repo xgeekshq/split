@@ -8,7 +8,7 @@ import {
 	ValidateNested
 } from 'class-validator';
 
-import CommentDto from '../../comments/dto/comment';
+import CommentDto from 'modules/comments/dto/comment.dto';
 
 export default class CardItemDto {
 	@IsOptional()
