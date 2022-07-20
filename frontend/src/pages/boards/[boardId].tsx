@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	};
 };
-
+// apagar isto
 interface BoardProps {
 	boardId: string;
 	mainBoardId?: string;
