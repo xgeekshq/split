@@ -10,7 +10,7 @@
 		"pre-commit": "lint-staged",
 		"cy:run": "cypress run",
 		"cy:ci": "start-server-and-test dev http-get://localhost:3000 cy:run",
-		"test": "jest"
+		"test": "jest --verbose"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^2.8.8",

@@ -16,7 +16,10 @@ const customJestConfig = {
 	testEnvironment: 'jest-environment-jsdom',
 	moduleNameMapper: {
 		'\\.svg$': '<rootDir>/public/icons/'
-	}
+	},
+	collectCoverage: true,
+	collectCoverageFrom: ['src/**/*.tsx', '!src/**/*.spec.tsx'],
+	coverageReporters: ['lcov', 'json']
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
