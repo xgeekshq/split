@@ -129,7 +129,6 @@ const CardFooter = React.memo<FooterProps>(
 				cardItemId,
 				isCardGroup: cardItemId === undefined
 			});
-
 		};
 
 		return (
@@ -176,6 +175,7 @@ const CardFooter = React.memo<FooterProps>(
 								<Icon name="thumbs-up" />
 							</StyledButtonIcon>
 							<Text
+								data-testid="lbl_totalVotes"
 								size="xs"
 								css={{
 									visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
@@ -195,7 +195,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								data-testid="btn_delVote"
+								data-testid="btn_deleteVote"
 								onClick={handleDeleteVote}
 								disabled={!isMainboard || votesOfUserInThisCard === 0}
 							>
