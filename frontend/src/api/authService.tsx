@@ -45,7 +45,7 @@ export const createOrLoginUserAzure = (azureAccessToken: string): Promise<Create
 };
 
 export const resetTokenEmail = (email: EmailUser): Promise<ResetTokenResponse> => {
-	return fetchData(`/auth/recoverPassword`, { method: 'POST', data: email });
+	return fetchData(`/auth/password/reset`, { method: 'PATCH', data: email });
 };
 
 export const refreshAccessToken = (token: string): Promise<Token> => {

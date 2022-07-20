@@ -168,7 +168,7 @@ export default class AuthController {
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
-	@Post('recoverPassword')
+	@Patch('password/reset')
 	forgot(@Body() { email }: EmailParam) {
 		return this.createResetTokenAuthApp.create(email);
 	}
