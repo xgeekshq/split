@@ -17,7 +17,7 @@ import fetchData from 'utils/fetchData';
 export const getDashboardHeaderInfo = (
 	context?: GetServerSidePropsContext
 ): Promise<HeaderInfo> => {
-	return fetchData(`auth/dashboardStatistics`, { context, serverSide: !!context });
+	return fetchData(`auth/statistics`, { context, serverSide: !!context });
 };
 
 export const registerNewUser = (newUser: RegisterUser): Promise<User> => {

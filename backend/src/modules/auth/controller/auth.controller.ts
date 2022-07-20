@@ -203,7 +203,7 @@ export default class AuthController {
 		type: InternalServerError
 	})
 	@UseGuards(JwtAuthenticationGuard)
-	@Get('/dashboardStatistics')
+	@Get('/statistics')
 	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
 		const { _id: userId } = request.user;
 		const [usersCount, teamsCount, boardsCount] = await Promise.all([
