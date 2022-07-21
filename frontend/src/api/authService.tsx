@@ -28,12 +28,21 @@ export const login = (credentials: LoginUser): Promise<User> => {
 	return fetchData('/auth/login', { method: 'POST', data: credentials, serverSide: true });
 };
 
+<<<<<<< HEAD
 export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
 	return fetchData(`/auth/azure/user/${email}`, { method: 'HEAD' });
 };
 
 export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
 	return fetchData(`/auth/user/${email}`, { method: 'HEAD' });
+=======
+export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
+	return fetchData(`/auth/user/${email}`, { method: 'HEAD' });
+};
+
+export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
+	return fetchData(`/auth/azure/user/${email}`, { method: 'HEAD' });
+>>>>>>> c64241d (feat: change routes and req method for check email endpoint in frontend for azure)
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
