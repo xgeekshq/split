@@ -39,17 +39,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		return teamUser;
 	}
 
-	private async getTeamIdFromMainBoard(boardId) {
-		const board = await this.getBoardService.getMainBoardData(boardId);
-
-		if (!board) {
-			throw new NotFoundException('Board not found!');
-		}
-
-		return board;
-	}
-
-	private async getResponsible(userId: string) {
+	private async getResponsible(userId: string): Promise<LeanDocument<BoardUserDocument> | null> {
 		const user = await this.boardUserModel.findOne({ user: userId }).lean().exec();
 
 		if (!user) {
@@ -63,36 +53,24 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		return user;
 	}
 
-	// private async isSuperAdmin(userId: string) {
-	// 	// TODO: use User Service to see if user is super admin
-	// }
-
 	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
 		const board = await this.boardModel.findById(boardId).exec();
-
-		let mainBoard;
-		let teamUser;
-		let subBoardResponsible;
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
 
-		const { isSubBoard } = board;
+		const { isSubBoard, team, createdBy } = board;
 
-		if (isSubBoard) {
-			mainBoard = await this.getTeamIdFromMainBoard(boardId);
-
-			teamUser = await this.getTeamUser(userId, String(mainBoard.team));
-
-			subBoardResponsible = await this.getResponsible(userId);
-		}
+		const teamUser = await this.getTeamUser(userId, String(team));
 
 		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
 			teamUser.role as TeamRoles
 		);
 
-		const isOwner = userId === String(board.createdBy);
+		const subBoardResponsible = await this.getResponsible(userId);
+
+		const isOwner = String(userId) === String(createdBy);
 
 		if (isAdminOrStakeholder || isOwner || (isSubBoard && !!subBoardResponsible)) {
 			return this.boardModel
