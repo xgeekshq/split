@@ -26,6 +26,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		private getBoardService: GetBoardServiceInterface
 	) {}
 
+	/**
+	 * Me
+	 */
 	private async getTeamUser(
 		userId: string,
 		teamId: string
@@ -60,16 +63,21 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			throw new NotFoundException('Board not found!');
 		}
 
+		// Destructuring board variables
 		const { isSubBoard, team, createdBy } = board;
 
+		// Get Team User to see if is Admin or Stakeholder
 		const teamUser = await this.getTeamUser(userId, String(team));
 
+		// Role Validation
 		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
 			teamUser.role as TeamRoles
 		);
 
+		// Get user info to see if is responsible or not
 		const subBoardResponsible = await this.getResponsible(userId);
 
+		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
 		if (isAdminOrStakeholder || isOwner || (isSubBoard && !!subBoardResponsible)) {
