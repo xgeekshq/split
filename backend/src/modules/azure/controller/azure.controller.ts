@@ -10,7 +10,7 @@ import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
 
 @ApiTags('Authentication')
-@Controller('auth')
+@Controller('auth/azure')
 export default class AzureController {
 	constructor(
 		@Inject(TYPES.applications.AuthAzureApplication)
@@ -19,12 +19,12 @@ export default class AzureController {
 		private getUserApp: GetUserApplication
 	) {}
 
-	@Post('azure')
+	@Post('/')
 	loginOrRegisterAzureToken(@Body() azureToken: AzureToken) {
 		return this.authAzureApp.registerOrLogin(azureToken.token);
 	}
 
-	@Head('azure/user/:email')
+	@Head('user/:email')
 	async checkEmail(@Param() { email }: EmailParam) {
 		const existUserInAzure = await this.authAzureApp.checkUserExistsInActiveDirectory(email);
 		if (existUserInAzure) return 'az';
