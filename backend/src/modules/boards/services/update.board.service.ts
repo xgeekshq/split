@@ -3,13 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { TeamRoles } from 'libs/enum/team.roles';
-import * as Boards from 'modules/boards/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
-import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
@@ -21,9 +19,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
 		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
 	/**
