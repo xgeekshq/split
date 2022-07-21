@@ -80,7 +80,7 @@ export const updateCardPositionRequest = (
 	updateCardPosition: UpdateCardPositionDto
 ): Promise<BoardType> => {
 	return fetchData<BoardType>(
-		`/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/updateCardPosition`,
+		`/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/update-card-position`,
 		{ method: 'PUT', data: updateCardPosition }
 	);
 };

@@ -58,7 +58,7 @@ export default class CommentsController {
 		private socketService: SocketGateway
 	) {}
 
-	@ApiOperation({ summary: 'Add a comment to a card item' })
+	@ApiOperation({ summary: 'Add a new comment to a specific card item' })
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
@@ -101,7 +101,7 @@ export default class CommentsController {
 		return board;
 	}
 
-	@ApiOperation({ summary: 'Add a comment to a card' })
+	@ApiOperation({ summary: 'Add a new comment to a specific card' })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@ApiCreatedResponse({
@@ -222,7 +222,7 @@ export default class CommentsController {
 		return board;
 	}
 
-	@ApiOperation({ summary: 'Delete a card item comment' })
+	@ApiOperation({ summary: 'Delete a comment in a card item' })
 	@ApiParam({ name: 'commentId', type: String })
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
@@ -259,7 +259,7 @@ export default class CommentsController {
 		return board;
 	}
 
-	@ApiOperation({ summary: 'Delete a card comment' })
+	@ApiOperation({ summary: 'Delete a comment in a card' })
 	@ApiParam({ name: 'commentId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
