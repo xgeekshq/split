@@ -58,6 +58,7 @@ const useCards = () => {
 			text: newCardData.card.text,
 			votes: [],
 			comments: [],
+			anonymous: newCardData.card.anonymous,
 			createdBy: {
 				_id: user ? user.id : '',
 				firstName: user ? user.firstName : '',
@@ -71,7 +72,8 @@ const useCards = () => {
 					_id: idCard,
 					text: newCardData.card.text,
 					votes: [],
-					comments: []
+					comments: [],
+					anonymous: newCardData.card.anonymous
 				}
 			]
 		};
