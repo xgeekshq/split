@@ -1,3 +1,5 @@
+import { User } from 'next-auth';
+
 import BoardType from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import CardType from 'types/card/card';
@@ -81,7 +83,8 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
 			comments: selectedCard.comments,
 			votes: selectedCard.votes,
 			createdBy: selectedCard.createdBy,
-			createdByTeam: selectedCard.createdByTeam
+			createdByTeam: selectedCard.createdByTeam,
+			anonymous: selectedCard.anonymous
 		});
 
 		const index = column.cards.findIndex((idxCard) => idxCard === selectedCard);
@@ -109,7 +112,7 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
 	return boardData;
 };
 
-export const handleAddComments = (board: BoardType, changes: AddCommentDto, user: any) => {
+export const handleAddComments = (board: BoardType, changes: AddCommentDto, user: User) => {
 	// avoid read only error
 	const boardData: BoardType = JSON.parse(JSON.stringify(board));
 	const { cardId, cardItemId, text } = changes;
@@ -117,16 +120,16 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
 
 	boardData.columns.forEach((item, index) => {
 		if (item.cards.find((col) => col._id === cardId) !== undefined) {
-			return (columnIndex = index);
+			columnIndex = index;
 		}
 	});
 
-	const card = boardData.columns[columnIndex].cards.find((card) => card._id === cardId);
-	const cardItem = card!.items.find((cardItem) => cardItem._id === cardItemId);
+	const card = boardData.columns[columnIndex].cards.find((c) => c._id === cardId);
+	const cardItem = card!.items.find((c) => c._id === cardItemId);
 	const placehodlerId = (Math.random() + 1).toString(36).substring(7);
 
 	const commentObj = {
-		text: text,
+		text,
 		createdBy: {
 			_id: user.id,
 			firstName: user.firstName,
@@ -152,13 +155,13 @@ export const handleUpdateComments = (board: BoardType, changes: UpdateCommentDto
 
 	boardData.columns.forEach((item, index) => {
 		if (item.cards.find((col) => col._id === cardId) !== undefined) {
-			return (columnIndex = index);
+			columnIndex = index;
 		}
 	});
 
-	const card = boardData.columns[columnIndex].cards.find((card) => card._id === cardId);
-	const cardItem = card!.items.find((cardItem) => cardItem._id === cardItemId);
-	const comment = cardItem!.comments.find((comment) => comment._id === commentId);
+	const card = boardData.columns[columnIndex].cards.find((c) => c._id === cardId);
+	const cardItem = card!.items.find((c) => c._id === cardItemId);
+	const comment = cardItem!.comments.find((c) => c._id === commentId);
 
 	comment!.text = text;
 	return boardData;
@@ -172,13 +175,13 @@ export const handleDeleteComments = (board: BoardType, changes: DeleteCommentDto
 
 	boardData.columns.forEach((item, index) => {
 		if (item.cards.find((col) => col._id === cardId) !== undefined) {
-			return (columnIndex = index);
+			columnIndex = index;
 		}
 	});
 
-	const card = boardData.columns[columnIndex].cards.find((card) => card._id === cardId);
-	const cardItem = card!.items.find((cardItem) => cardItem._id === cardItemId);
-	const comment = cardItem!.comments.find((comment) => comment._id === commentId);
+	const card = boardData.columns[columnIndex].cards.find((c) => c._id === cardId);
+	const cardItem = card!.items.find((c) => c._id === cardItemId);
+	const comment = cardItem!.comments.find((c) => c._id === commentId);
 	const commentIndex = cardItem?.comments.indexOf(comment!, 0);
 
 	cardItem?.comments.splice(commentIndex!, 1);
