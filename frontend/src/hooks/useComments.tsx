@@ -1,4 +1,5 @@
 import { useMutation } from 'react-query';
+import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
 import {
@@ -51,7 +52,12 @@ const useComments = () => {
 
 	const addCommentInCard = useMutation(addCommentRequest, {
 		onMutate: async (data) => {
-			const user = session?.user;
+			const user = {
+				id: session?.id,
+				firstName: session?.firstName,
+				lastName: session?.lastName
+			} as User;
+
 			const board = await getPrevData(data.boardId);
 
 			if (board && user) {
