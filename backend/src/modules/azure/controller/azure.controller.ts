@@ -1,17 +1,22 @@
-import { Body, Controller, Head, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Head, HttpCode, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBody,
 	ApiInternalServerErrorResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
-	ApiTags
+	ApiTags,
+	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { EmailParam } from 'libs/dto/param/email.param';
+import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
 import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import AzureLoginDto from 'modules/azure/swagger/dto/azure-login.dto';
+import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { LoginDto } from 'modules/auth/dto/login.dto';
+import { LoginResponse } from 'modules/auth/swagger/login.swagger';
 import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
 import * as User from 'modules/users/interfaces/types';
 
@@ -29,26 +34,47 @@ export default class AzureController {
 		private getUserApp: GetUserApplication
 	) {}
 
-	@ApiOperation({ summary: 'Login or register the user with Azure' })
-	@ApiBody({
-		type: AzureLoginDto,
-		required: true
+	@ApiOperation({
+		summary: 'Register or Login a user through Azure service'
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
 	})
+	@ApiOkResponse({
+		description: 'User logged successfully!',
+		type: LoginResponse
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
+	@ApiBody({
+		type: LoginDto,
+		required: true
+	})
+	@HttpCode(200)
+	@UseGuards(LocalAuthGuard)
+	@Post('login')
 	@Post('/')
 	loginOrRegisterAzureToken(@Body() azureToken: AzureToken) {
 		return this.authAzureApp.registerOrLogin(azureToken.token);
 	}
 
-	@ApiOperation({ summary: 'Validate if user exists on Azure Active Directory' })
-	@ApiParam({ name: 'email', type: String, format: 'email' })
+	@ApiParam({
+		type: String,
+		format: 'email',
+		required: true,
+		name: 'email'
+	})
+	@ApiOperation({ summary: 'Verify if a user exists in Azure service' })
+	@ApiOkResponse({
+		description: 'Return a boolean to indicate if the user exists or not in Azure service'
+	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
