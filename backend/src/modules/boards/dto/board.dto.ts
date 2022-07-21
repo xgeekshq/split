@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
 	ArrayMinSize,
@@ -28,7 +29,7 @@ export default class BoardDto {
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	title!: string;
 
-	@ApiProperty
+	@ApiProperty({ type: ColumnDto, isArray: true })
 	@ArrayNotEmpty()
 	@ArrayMinSize(3)
 	@IsNotEmpty()
@@ -36,57 +37,70 @@ export default class BoardDto {
 	@Type(() => ColumnDto)
 	columns!: ColumnDto[];
 
+	@ApiProperty({ default: false })
 	@IsNotEmpty()
 	@IsBoolean()
 	isPublic!: boolean;
 
+	@ApiPropertyOptional()
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxVotes?: string | null;
 
+	@ApiPropertyOptional()
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxUsers?: string | null;
 
+	@ApiPropertyOptional()
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxTeams?: string | null;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@IsBoolean()
 	hideCards!: boolean;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@IsBoolean()
 	hideVotes!: boolean;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@IsBoolean()
 	postAnonymously!: boolean;
 
+	@ApiProperty({ type: BoardDto, isArray: true })
 	@IsOptional()
 	@ValidateNested({ each: true })
 	dividedBoards!: BoardDto[];
 
+	@ApiPropertyOptional()
 	@IsOptional()
 	@IsMongoId()
 	@IsString()
 	team?: string | null;
 
+	@ApiPropertyOptional()
 	@IsOptional()
 	socketId?: string;
 
+	@ApiPropertyOptional({ type: BoardUserDto, isArray: true })
 	@IsOptional()
 	@Validate(CheckUniqueUsers)
 	users!: BoardUserDto[];
 
+	@ApiPropertyOptional()
 	@IsNotEmpty()
 	@IsBoolean()
 	recurrent?: boolean;
 
+	@ApiPropertyOptional({ default: false })
 	@IsNotEmpty()
 	@IsBoolean()
 	isSubBoard?: boolean;
