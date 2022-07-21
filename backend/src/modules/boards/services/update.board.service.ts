@@ -3,20 +3,27 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { TeamRoles } from 'libs/enum/team.roles';
+import * as Boards from 'modules/boards/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
+import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(Teams.TYPES.services.GetTeamService)
-		private getTeamService: GetTeamServiceInterface
+		private getTeamService: GetTeamServiceInterface,
+		@InjectModel(BoardUser.name)
+		private boardUserModel: Model<BoardUserDocument>,
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
 	private async getTeamUser(
@@ -32,19 +39,62 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		return teamUser;
 	}
 
-	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
-		const board = await this.boardModel.findById(boardId).exec();
+	private async getTeamIdFromMainBoard(boardId) {
+		const board = await this.getBoardService.getMainBoardData(boardId);
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
 
-		const teamUser = await this.getTeamUser(userId, String(board.team));
+		return board;
+	}
 
-		if (
-			[TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(teamUser.role as TeamRoles) ||
-			userId === String(board.createdBy)
-		) {
+	private async getResponsible(userId: string) {
+		const user = await this.boardUserModel.findOne({ user: userId }).lean().exec();
+
+		if (!user) {
+			throw new NotFoundException('User not found!');
+		}
+
+		if (user.role !== 'responsible') {
+			return null;
+		}
+
+		return user;
+	}
+
+	// private async isSuperAdmin(userId: string) {
+	// 	// TODO: use User Service to see if user is super admin
+	// }
+
+	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
+		const board = await this.boardModel.findById(boardId).exec();
+
+		let mainBoard;
+		let teamUser;
+		let subBoardResponsible;
+
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+
+		const { isSubBoard } = board;
+
+		if (isSubBoard) {
+			mainBoard = await this.getTeamIdFromMainBoard(boardId);
+
+			teamUser = await this.getTeamUser(userId, String(mainBoard.team));
+
+			subBoardResponsible = await this.getResponsible(userId);
+		}
+
+		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
+			teamUser.role as TeamRoles
+		);
+
+		const isOwner = userId === String(board.createdBy);
+
+		if (isAdminOrStakeholder || isOwner || (isSubBoard && !!subBoardResponsible)) {
 			return this.boardModel
 				.findOneAndUpdate(
 					{

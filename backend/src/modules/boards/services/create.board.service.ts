@@ -45,11 +45,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
 	}
 
-	async createDividedBoards(boards: BoardDto[], userId: string) {
+	async createDividedBoards(boards: BoardDto[], userId: string, team: string) {
 		const newBoardsIds = await Promise.allSettled(
 			boards.map(async (board) => {
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true);
+				const { _id } = await this.createBoard({ ...board, team }, userId, true);
 
 				if (!isEmpty(users)) {
 					this.saveBoardUsers(users, _id);
@@ -67,7 +67,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return this.boardModel.create({
 			...boardData,
 			createdBy: userId,
-			dividedBoards: await this.createDividedBoards(dividedBoards, userId),
+			dividedBoards: await this.createDividedBoards(dividedBoards, userId, boardData.team!),
 			isSubBoard
 		});
 	}

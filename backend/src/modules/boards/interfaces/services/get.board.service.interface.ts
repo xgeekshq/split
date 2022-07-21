@@ -1,6 +1,6 @@
-import { LeanDocument } from 'mongoose';
+import { Document, LeanDocument } from 'mongoose';
 
-import { BoardDocument } from '../../schemas/board.schema';
+import Board, { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 
 export interface GetBoardServiceInterface {
@@ -28,6 +28,10 @@ export interface GetBoardServiceInterface {
 		  }
 		| null
 	>;
+
+	getMainBoardData(
+		boardId: string
+	): Promise<LeanDocument<Board & Document<any, any, any> & { _id: any }> | null>;
 
 	countBoards(userId: string): Promise<number>;
 }
