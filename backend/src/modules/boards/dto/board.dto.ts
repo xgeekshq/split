@@ -1,4 +1,3 @@
-import { ApiHideProperty } from '@nestjs/swagger';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
 	ArrayMinSize,
@@ -18,16 +17,18 @@ import BoardUserDto from './board.user.dto';
 import ColumnDto from './column/column.dto';
 
 export default class BoardDto {
-	@ApiHideProperty()
+	@ApiPropertyOptional()
 	@IsOptional()
 	@IsMongoId()
 	_id?: string;
 
+	@ApiProperty()
 	@IsString()
 	@IsNotEmpty()
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	title!: string;
 
+	@ApiProperty
 	@ArrayNotEmpty()
 	@ArrayMinSize(3)
 	@IsNotEmpty()
