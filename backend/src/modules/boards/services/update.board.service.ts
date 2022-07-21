@@ -27,7 +27,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	) {}
 
 	/**
-	 * Me
+	 * Method to retrieve user details from team.
+	 * This method is used to see if the user is Admin or a Stakeholder
+	 *
+	 * @param userId Current User Logged
+	 * @param teamId Team ID (team from board)
+	 * @returns Team User
 	 */
 	private async getTeamUser(
 		userId: string,
@@ -42,6 +47,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		return teamUser;
 	}
 
+	/**
+	 * Method to get user from board, if it's responsible
+	 * If not, return a null value
+	 *
+	 * @param userId Current User Logged
+	 * @returns Board User
+	 */
 	private async getResponsible(userId: string): Promise<LeanDocument<BoardUserDocument> | null> {
 		const user = await this.boardUserModel.findOne({ user: userId }).lean().exec();
 
