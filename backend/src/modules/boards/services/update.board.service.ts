@@ -1,9 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 
+import { TeamRoles } from 'libs/enum/team.roles';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
+import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
@@ -17,29 +19,53 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		private getTeamService: GetTeamServiceInterface
 	) {}
 
-	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
-		const currentVotes = await this.boardModel.findById(boardId, 'maxVotes totalUsedVotes').exec();
+	private async getTeamUser(
+		userId: string,
+		teamId: string
+	): Promise<LeanDocument<TeamUserDocument>> {
+		const teamUser = await this.getTeamService.getTeamUser(userId, teamId);
 
-		return this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					createdBy: userId
-				},
-				{
-					...boardData,
-					maxVotes:
-						Number(boardData.maxVotes) < Number(currentVotes?.maxVotes) &&
-						currentVotes?.totalUsedVotes !== 0
-							? currentVotes?.maxVotes
-							: boardData.maxVotes
-				},
-				{
-					new: true
-				}
-			)
-			.lean()
-			.exec();
+		if (!teamUser) {
+			throw new NotFoundException('User not found on this team!');
+		}
+
+		return teamUser;
+	}
+
+	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
+		const board = await this.boardModel.findById(boardId).exec();
+
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+
+		const teamUser = await this.getTeamUser(userId, String(board.team));
+
+		if (
+			[TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(teamUser.role as TeamRoles) ||
+			userId === String(board.createdBy)
+		) {
+			return this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId
+					},
+					{
+						...boardData,
+						maxVotes:
+							Number(boardData.maxVotes) < Number(board?.maxVotes) && board?.totalUsedVotes !== 0
+								? board?.maxVotes
+								: boardData.maxVotes
+					},
+					{
+						new: true
+					}
+				)
+				.lean()
+				.exec();
+		}
+
+		throw new ForbiddenException('You are not allowed to update this board!');
 	}
 
 	async mergeBoards(subBoardId: string, userId: string) {
