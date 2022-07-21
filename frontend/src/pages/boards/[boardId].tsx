@@ -60,6 +60,11 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 
 	const queryClient = useQueryClient();
 	const userId = session?.user?.id;
+	const isAdmin = session?.isSAdmin;
+	// const userRole = board.users.find(
+	// 	(userFound) => (userFound.user._id as unknown as string) === userId
+	// );
+	// user.role === BoardUserRoles.STAKEHOLDER;
 
 	const socketClient = useRef<Socket>();
 	const socketId = socketClient?.current?.id;
@@ -231,7 +236,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 									</AlertDialogTrigger>
 								</AlertCustomDialog>
 							)}
-
 							{haveSubBoardsMerged && (
 								<AlertBox
 									css={{ flex: 1 }}
@@ -239,8 +243,7 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 									title="No sub-team has merged into this main board yet."
 								/>
 							)}
-
-							{board?.createdBy._id === userId &&
+							{/* {board?.createdBy._id === userId &&
 								!board.submitedByUser &&
 								!board.submitedAt && (
 									<BoardSettings
@@ -248,8 +251,15 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 										setIsOpen={setIsOpen}
 										socketId={socketId}
 									/>
-								)}
-
+								)} */}
+							{/* const userId = session?.user?.id; */}
+							{(isAdmin || isResponsible) && (
+								<BoardSettings
+									isOpen={isOpen}
+									setIsOpen={setIsOpen}
+									socketId={socketId}
+								/>
+							)}
 							{board.submitedByUser && board.submitedAt && (
 								<AlertBox
 									css={{ flex: '1' }}
