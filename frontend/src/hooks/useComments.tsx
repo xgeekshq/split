@@ -17,6 +17,8 @@ const useComments = () => {
 	const { queryClient, setToastState } = useBoardUtils();
 	const { data: session } = useSession({ required: false });
 
+	const user = session?.user;
+
 	const getBoardQuery = (id: string | undefined) => ['board', { id }];
 
 	const setPreviousBoardQuery = (id: string, context: any) => {
@@ -52,16 +54,16 @@ const useComments = () => {
 
 	const addCommentInCard = useMutation(addCommentRequest, {
 		onMutate: async (data) => {
-			const user = {
-				id: session?.id,
-				firstName: session?.firstName,
-				lastName: session?.lastName
+			const newUser = {
+				id: user?.id,
+				firstName: user?.firstName,
+				lastName: user?.lastName
 			} as User;
 
 			const board = await getPrevData(data.boardId);
 
-			if (board && user) {
-				const boardData = handleAddComments(board, data, user);
+			if (board && newUser) {
+				const boardData = handleAddComments(board, data, newUser);
 				updateBoardColumns(data.boardId, boardData.columns);
 			}
 
