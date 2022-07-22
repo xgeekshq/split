@@ -74,7 +74,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 								Responsible
 							</Text>
 							<CardAvatars
-								listUsers={!team ? users : team.users}
+								listUsers={users}
 								responsible
 								teamAdmins={false}
 								userId={userId}
