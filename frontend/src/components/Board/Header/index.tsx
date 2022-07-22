@@ -120,7 +120,7 @@ const BoardHeader = () => {
 						<Text heading="2">{title}</Text>
 
 						{recurrent && (
-							<Tooltip content="Occurs every X week">
+							<Tooltip content="Occurs every month">
 								<RecurrentIconContainer>
 									<Icon name="recurring" />
 								</RecurrentIconContainer>
