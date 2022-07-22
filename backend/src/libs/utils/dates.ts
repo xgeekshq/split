@@ -1,27 +1,18 @@
-import moment from 'moment-business-days';
+import * as moment from 'moment-business-days';
 
-const lastDayOfNextMonth = () => moment().add(1, 'month').endOf('month');
+export const lastDayOfNextMonth = () => moment().add(1, 'month').endOf('month');
 
-const getDiffInDays = (date1, date2) => date1.diff(date2, 'days');
+export const getDiffInDays = (date1, date2) => date1.diff(date2, 'days');
 
-const getDayOfTheDate = (date) => date.format('D');
+export const getDayOfTheDate = (date) => date.format('D');
 
-const subtractWeekFromDate = (date) =>
+export const subtractWeekFromDate = (date) =>
 	moment(date).isBusinessDay()
 		? date.subtract(7, 'days')
 		: moment(date).prevBusinessDay().subtract(7, 'days');
 
-const getCurrentMonthAndYear = () => moment().format('MMMM-YYYY').toLowerCase();
+export const getCurrentMonthAndYear = () => moment().format('MMMM-YYYY').toLowerCase();
 
-const getNextMonth = () => Number(moment().add(1, 'month').format('MM'));
+export const getNextMonth = () => Number(moment().add(1, 'month').format('MM'));
 
-const getDay = () => Number(getDayOfTheDate(subtractWeekFromDate(lastDayOfNextMonth())));
-
-export {
-	getCurrentMonthAndYear,
-	getDay,
-	getDiffInDays,
-	getNextMonth,
-	lastDayOfNextMonth,
-	subtractWeekFromDate
-};
+export const getDay = () => Number(getDayOfTheDate(subtractWeekFromDate(lastDayOfNextMonth())));
