@@ -15,6 +15,7 @@ import {
 	ApiBody,
 	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
 	ApiTags,
@@ -98,6 +99,10 @@ export default class VotesController {
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Vote added successfully to a card item.'
+	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
@@ -134,6 +139,10 @@ export default class VotesController {
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Vote removed successfully from card item!'
+	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
@@ -174,6 +183,10 @@ export default class VotesController {
 	})
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Vote removed successfully from the card!'
+	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
