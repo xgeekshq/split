@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -18,6 +18,7 @@ import { Team } from 'types/team/team';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
+import { newBoardState } from 'store/createBoard/atoms/create-board.atom';
 
 const MainContainer = styled(Flex, Box, {
 	backgroundColor: 'white',
@@ -57,6 +58,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 	 * Recoil Atoms
 	 */
 	const haveError = useRecoilValue(createBoardError);
+	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
 	const {
 		handleAddTeam,
@@ -93,16 +95,20 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 			];
 		});
 
-		setCreateBoardData((prev) => ({
-			...prev,
-			users,
-			board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
-			count: {
-				...prev.count,
-				teamsCount,
-				maxUsersCount
-			}
-		}));
+		if (newBoard) {
+			setCreateBoardData((prev) => ({
+				...prev,
+				users,
+				board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+				count: {
+					...prev.count,
+					teamsCount,
+					maxUsersCount
+				}
+			}));
+		}
+
+		setNewBoard(false);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
