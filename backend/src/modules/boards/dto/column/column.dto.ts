@@ -1,22 +1,27 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import CardDto from 'modules/cards/dto/card.dto';
 
 export default class ColumnDto {
+	@ApiPropertyOptional()
 	@IsOptional()
 	@IsMongoId()
 	_id?: string;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@IsString()
 	@Transform(({ value }): string => value?.trim())
 	title!: string;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	color!: string;
 
+	@ApiProperty()
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	cards!: CardDto[];
