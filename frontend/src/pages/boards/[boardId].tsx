@@ -72,7 +72,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	});
 	const { data } = fetchBoard;
 
-	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
 
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
@@ -115,13 +114,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	/**
 	 * Board Settings permissions
 	 */
-	const isStakeholderOrAdmin = !board?.isSubBoard
-		? board?.team.users.find(
-				(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
-		  )
-		: mainBoard?.team.users.find(
-				(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
-		  );
+	const isStakeholderOrAdmin = board?.team.users.find(
+		(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
+	);
 
 	const isResponsible = board?.users.find(
 		(user) => user.role === 'responsible' && user.user._id === userId

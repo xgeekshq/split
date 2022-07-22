@@ -13,7 +13,7 @@ import Layout from 'components/layouts/Layout';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Text from 'components/Primitives/Text';
 
-const RecentRetros = lazy(() => import('components/Dashboard/RecentRetros/RecentRetros'));
+const RecentRetros = lazy(() => import('components/Dashboard/RecentRetros'));
 const Tiles = lazy(() => import('components/Dashboard/Tiles'));
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
