@@ -13,6 +13,7 @@ import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiBody,
+	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
 	ApiOperation,
 	ApiParam,
@@ -31,6 +32,7 @@ import { InternalServerError } from 'libs/swagger/errors/internal-server-error.s
 import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
+import BoardDto from '../../boards/dto/board.dto';
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
 import { DeleteVoteApplication } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
@@ -57,6 +59,10 @@ export default class VotesController {
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Vote added successfully to a card.'
+	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized

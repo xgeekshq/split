@@ -75,6 +75,10 @@ export default class AuthController {
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerError
@@ -129,12 +133,19 @@ export default class AuthController {
 	}
 
 	@ApiOperation({ summary: 'Generate a new refresh token' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
 	@ApiBearerAuth('refresh-token')
-	@UseGuards(JwtRefreshGuard)
 	@UseGuards(JwtRefreshGuard)
 	@Get('refresh')
 	refresh(@Req() request: RequestWithUser) {
@@ -165,6 +176,10 @@ export default class AuthController {
 	}
 
 	@ApiOperation({ summary: 'Request a reset password link' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerError
@@ -176,6 +191,10 @@ export default class AuthController {
 
 	@ApiOperation({
 		summary: 'Change user password after a reset password request'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -199,10 +218,19 @@ export default class AuthController {
 		description: 'This method return the number of users, teams and boards'
 	})
 	@ApiBearerAuth('access-token')
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
+	@ApiBearerAuth('access-token')
 	@UseGuards(JwtAuthenticationGuard)
 	@Get('/statistics')
 	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
