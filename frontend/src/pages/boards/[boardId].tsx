@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { dehydrate, QueryClient, useQueryClient } from 'react-query';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -44,17 +44,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	};
 };
-// apagar isto
-interface BoardProps {
+
+type Props = {
 	boardId: string;
 	mainBoardId?: string;
-}
+};
 
-const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
-	Board.defaultProps = {
-		mainBoardId: undefined
-	};
-
+const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const queryClient = useQueryClient();
@@ -334,6 +330,10 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		);
 	}
 	return <LoadingPage />;
+};
+
+Board.defaultProps = {
+	mainBoardId: undefined
 };
 
 export default Board;
