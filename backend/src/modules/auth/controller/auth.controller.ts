@@ -3,7 +3,6 @@ import {
 	Body,
 	Controller,
 	Get,
-	Head,
 	HttpCode,
 	HttpStatus,
 	Inject,
@@ -170,7 +169,7 @@ export default class AuthController {
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
-	@Head('user/:email')
+	@Get('users/:email')
 	checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
 		return this.getUserApp.getByEmail(email).then((user) => !!user);
 	}

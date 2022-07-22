@@ -29,11 +29,11 @@ export const login = (credentials: LoginUser): Promise<User> => {
 };
 
 export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
-	return fetchData(`/auth/azure/user/${email}`, { method: 'HEAD' });
+	return fetchData(`/auth/azure/users/${email}`);
 };
 
 export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
-	return fetchData(`/auth/user/${email}`, { method: 'HEAD' });
+	return fetchData(`/auth/users/${email}`);
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {

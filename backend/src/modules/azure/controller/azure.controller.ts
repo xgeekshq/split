@@ -1,4 +1,4 @@
-import { Body, Controller, Head, HttpCode, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBody,
@@ -83,7 +83,7 @@ export default class AzureController {
 		description: 'Internal Server Error',
 		type: InternalServerError
 	})
-	@Head('user/:email')
+	@Get('users/:email')
 	async checkEmail(@Param() { email }: EmailParam) {
 		const existUserInAzure = await this.authAzureApp.checkUserExistsInActiveDirectory(email);
 		if (existUserInAzure) return 'az';
