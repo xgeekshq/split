@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { dehydrate, QueryClient, useQueryClient } from 'react-query';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -45,21 +45,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	};
 };
 
-interface BoardProps {
+type Props = {
 	boardId: string;
 	mainBoardId?: string;
-}
+};
 
-const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
-	Board.defaultProps = {
-		mainBoardId: undefined
-	};
-
-	const { data: session } = useSession({ required: true });
+const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const queryClient = useQueryClient();
+
+	/**
+	 * Session
+	 */
+	const { data: session } = useSession({ required: true });
 	const userId = session?.user?.id;
+	const isSAdmin = session?.isSAdmin;
 
 	const socketClient = useRef<Socket>();
 	const socketId = socketClient?.current?.id;
@@ -70,6 +71,8 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		autoFetchBoard: true
 	});
 	const { data } = fetchBoard;
+
+	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
 
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
@@ -109,9 +112,31 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen]);
 
+	/**
+	 * Board Settings permissions
+	 */
+	const isStakeholderOrAdmin = !board?.isSubBoard
+		? board?.team.users.find(
+				(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
+		  )
+		: mainBoard?.team.users.find(
+				(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
+		  );
+
 	const isResponsible = board?.users.find(
-		(boardUser) => boardUser.role === 'responsible' && boardUser.user._id === userId
+		(user) => user.role === 'responsible' && user.user._id === userId
 	);
+
+	const isOwner = board?.createdBy._id === userId;
+
+	/**
+	 * Only the conditions below are allowed to edit the board settings:
+	 * - Is admin or a stakeholder
+	 * - Is responsible (if is a sub-board)
+	 * - If the user is the owner
+	 */
+	const BOARD_SETTINGS_CONDITION =
+		isStakeholderOrAdmin || (board?.isSubBoard && isResponsible) || isOwner || isSAdmin;
 
 	const countAllCards = useMemo(() => {
 		if (board?.columns) return countBoardCards(board?.columns);
@@ -231,7 +256,6 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 									</AlertDialogTrigger>
 								</AlertCustomDialog>
 							)}
-
 							{haveSubBoardsMerged && (
 								<AlertBox
 									css={{ flex: 1 }}
@@ -240,16 +264,13 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{board?.createdBy._id === userId &&
-								!board.submitedByUser &&
-								!board.submitedAt && (
-									<BoardSettings
-										isOpen={isOpen}
-										setIsOpen={setIsOpen}
-										socketId={socketId}
-									/>
-								)}
-
+							{BOARD_SETTINGS_CONDITION && (
+								<BoardSettings
+									isOpen={isOpen}
+									setIsOpen={setIsOpen}
+									socketId={socketId}
+								/>
+							)}
 							{board.submitedByUser && board.submitedAt && (
 								<AlertBox
 									css={{ flex: '1' }}
@@ -309,6 +330,10 @@ const Board: React.FC<BoardProps> = ({ boardId, mainBoardId }) => {
 		);
 	}
 	return <LoadingPage />;
+};
+
+Board.defaultProps = {
+	mainBoardId: undefined
 };
 
 export default Board;

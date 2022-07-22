@@ -102,22 +102,36 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 						select: 'user role',
 						populate: {
 							path: 'user',
-							select: 'firstName lastName joinedAt'
+							select: '_id firstName lastName joinedAt'
 						}
 					}
 				})
 				.populate({
 					path: 'dividedBoards',
 					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user',
-						populate: {
-							path: 'user',
-							model: 'User',
-							select: 'firstName lastName joinedAt'
+					populate: [
+						{
+							path: 'users',
+							select: 'role user',
+							populate: {
+								path: 'user',
+								model: 'User',
+								select: 'firstName lastName joinedAt'
+							}
+						},
+						{
+							path: 'team',
+							select: 'name users _id',
+							populate: {
+								path: 'users',
+								select: 'user role',
+								populate: {
+									path: 'user',
+									select: '_id firstName lastName joinedAt'
+								}
+							}
 						}
-					}
+					]
 				})
 				.populate({
 					path: 'users',

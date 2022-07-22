@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -38,6 +38,8 @@ type Props = {
 };
 
 const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
+	const submitBtnRef = useRef<HTMLButtonElement | null>(null);
+
 	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
 	const haveError = useRecoilValue(updateBoardError);
 
@@ -168,6 +170,29 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 			}
 		);
 	};
+
+	/**
+	 * Use Effect to submit the board settings form when press enter key
+	 * (Note: Radix Dialog close when pressing enter)
+	 */
+	useEffect(() => {
+		const keyDownHandler = (event: KeyboardEvent) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+
+				if (submitBtnRef.current) {
+					submitBtnRef.current.click();
+				}
+			}
+		};
+
+		document.addEventListener('keydown', keyDownHandler);
+
+		return () => {
+			document.removeEventListener('keydown', keyDownHandler);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const configurationSettings = (
 		title: string,
@@ -309,6 +334,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 								Cancel
 							</Button>
 							<Button
+								ref={submitBtnRef}
 								type="submit"
 								variant="primary"
 								css={{ marginRight: '$32', padding: '$16 $24' }}

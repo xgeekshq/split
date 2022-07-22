@@ -63,11 +63,17 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	async createBoard(boardData: BoardDto, userId: string, isSubBoard = false) {
-		const { dividedBoards = [] } = boardData;
+		const { dividedBoards = [], team } = boardData;
+
+		/**
+		 * Add in each divided board the team id (from main board)
+		 */
+		const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({ ...dividedBoard, team }));
+
 		return this.boardModel.create({
 			...boardData,
 			createdBy: userId,
-			dividedBoards: await this.createDividedBoards(dividedBoards, userId),
+			dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
 			isSubBoard
 		});
 	}

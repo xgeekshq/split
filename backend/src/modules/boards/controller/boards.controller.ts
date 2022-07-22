@@ -65,11 +65,12 @@ export default class BoardsController {
 
 	@UseGuards(JwtAuthenticationGuard)
 	@Get()
-	getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
+	async getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		const { _id: userId, isSAdmin } = request.user;
 		if (isSAdmin) {
 			return this.getBoardApp.getSuperAdminBoards(userId, page, size);
 		}
+
 		return this.getBoardApp.getUsersBoards(userId, page, size);
 	}
 
