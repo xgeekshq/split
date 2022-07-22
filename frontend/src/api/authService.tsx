@@ -29,15 +29,15 @@ export const login = (credentials: LoginUser): Promise<User> => {
 };
 
 export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
-	return fetchData(`/auth/checkUserEmailAD/${email}`);
+	return fetchData(`/auth/azure/user/${email}`, { method: 'HEAD' });
 };
 
 export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
-	return fetchData(`/auth/checkUserEmail/${email}`);
+	return fetchData(`/auth/user/${email}`, { method: 'HEAD' });
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
-	return fetchData(`/auth/signAzure`, {
+	return fetchData(`/auth/azure`, {
 		method: 'POST',
 		data: { token: azureAccessToken },
 		serverSide: true
