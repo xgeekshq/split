@@ -10,6 +10,7 @@
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"start": "nest start",
+		"queue": "ts-node -r tsconfig-paths/register src/queue.ts",
 		"start:dev": "NODE_ENV=dev nest start --watch",
 		"start:staging": "NODE_ENV=staging nest start --watch",
 		"start:debug": "nest start --debug --watch",
