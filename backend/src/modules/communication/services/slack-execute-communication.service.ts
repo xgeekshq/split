@@ -10,7 +10,7 @@ import { CommunicationProducerService } from 'queue/producers/communication.prod
 export class SlackExecuteCommunicationService {
 	constructor(
 		@Inject(CommunicationProducerService)
-		private readonly producer: CommunicationProducerService,
+		private readonly communicationProducerService: CommunicationProducerService,
 		@Inject(SlackExecuteCommunication)
 		private readonly application: ExecuteCommunicationInterface
 	) {}
@@ -20,6 +20,6 @@ export class SlackExecuteCommunicationService {
 	}
 
 	public async executeByQueue(board: BoardType): Promise<void> {
-		return this.producer.add(board);
+		return this.communicationProducerService.add(board);
 	}
 }

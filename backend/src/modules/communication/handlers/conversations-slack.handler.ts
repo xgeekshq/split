@@ -1,6 +1,6 @@
+import { UserDto } from 'modules/communication/dto/user.dto';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
-import { UserDto } from 'modules/communication/dto/user.dto';
 
 export class ConversationsSlackHandler implements ConversationsHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateInterface) {}

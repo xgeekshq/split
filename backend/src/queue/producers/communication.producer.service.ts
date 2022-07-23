@@ -6,9 +6,10 @@ import { Queue } from 'bull';
 export class CommunicationProducerService {
 	public static readonly QUEUE_NAME = 'slack-queue';
 
-	public static readonly COMMUNICATION_TO_QUEUE_JOB = 'communication-to-queue-job';
-
-	constructor(@InjectQueue(CommunicationProducerService.QUEUE_NAME) private queue: Queue) {}
+	constructor(
+		@InjectQueue(CommunicationProducerService.QUEUE_NAME)
+		private readonly queue: Queue
+	) {}
 
 	// Job Options https://docs.nestjs.com/techniques/queues#job-options
 	async add(data: any) {

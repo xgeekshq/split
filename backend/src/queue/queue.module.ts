@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-// import { CommunicationConsumer } from './consumers/communication.consumer';
 import { CommunicationProducerService } from './producers/communication.producer.service';
 
 @Module({
