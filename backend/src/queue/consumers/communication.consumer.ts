@@ -20,7 +20,7 @@ export class CommunicationConsumer {
 	@Process(CommunicationProducerService.COMMUNICATION_TO_QUEUE_JOB)
 	async consumeCommunicationFromQueue(job: Job<any>) {
 		try {
-			console.log(job);
+			this.logger.verbose('consumeCommunicationFromQueue');
 			return;
 		} catch (error) {
 			this.logger.error(error.message);

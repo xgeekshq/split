@@ -11,7 +11,9 @@ export class CommunicationProducerService {
 	constructor(@InjectQueue(CommunicationProducerService.QUEUE_NAME) private queue: Queue) {}
 
 	// Job Options https://docs.nestjs.com/techniques/queues#job-options
-	async sendToQueue(data: any) {
-		await this.queue.add(CommunicationProducerService.COMMUNICATION_TO_QUEUE_JOB, data);
+	async add(data: any) {
+		await this.queue.add(data, {
+			lifo: true
+		});
 	}
 }
