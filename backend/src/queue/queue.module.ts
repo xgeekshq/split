@@ -19,7 +19,7 @@ import { CommunicationProducerService } from './producers/communication.producer
 					port: configService.get('redis.port')
 				},
 				name: CommunicationProducerService.QUEUE_NAME,
-				processors: [join(__dirname, 'communication.consumer.processor')]
+				processors: [join(__dirname, 'consumers', 'communication.consumer.processor')]
 			}),
 			inject: [ConfigService]
 		})

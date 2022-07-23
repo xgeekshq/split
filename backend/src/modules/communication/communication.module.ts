@@ -9,9 +9,10 @@ import {
 	UsersHandler
 } from 'modules/communication/communication.providers';
 import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
+import { QueueModule } from 'queue/queue.module';
 
 @Module({
-	imports: [BoardsModule],
+	imports: [BoardsModule, QueueModule],
 	providers: [
 		SlackExecuteCommunicationService,
 		CommunicationGateAdapter,
