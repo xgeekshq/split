@@ -18,7 +18,6 @@ export class CommunicationProducerService {
 		const result = await this.queue.add(data, {
 			lifo: true
 		});
-		console.log('result after add to queue ', result.id);
 
 		return result;
 	}
