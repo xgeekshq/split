@@ -1,23 +1,28 @@
+import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
+	ChatMeMessageArguments,
 	ConversationsCreateArguments,
 	ConversationsInviteArguments,
 	ConversationsMembersArguments,
-	UsersProfileGetArguments,
-	ChatMeMessageArguments
+	UsersProfileGetArguments
 } from '@slack/web-api';
-import { faker } from '@faker-js/faker';
 import * as WebClientSlackApi from '@slack/web-api';
 
+import { FRONTEND_URL } from 'libs/constants/frontend';
+import {
+	SLACK_API_BOT_TOKEN,
+	SLACK_CHANNEL_PREFIX,
+	SLACK_MASTER_CHANNEL_ID
+} from 'libs/constants/slack';
 import configService from 'libs/test-utils/mocks/configService.mock';
 import { CreateChannelError } from 'modules/communication/errors/create-channel.error';
-import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
+import { GetProfileError } from 'modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'modules/communication/errors/get-users-from-channel.error';
+import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
+import { PostMessageError } from 'modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-import { GetProfileError } from 'modules/communication/errors/get-profile.error';
-import { PostMessageError } from 'modules/communication/errors/post-message.error';
 
 import { SlackCommunicationGateAdapter } from './slack-communication-gate.adapter';
 
@@ -125,6 +130,13 @@ jest.mock('@slack/web-api', () => ({
 	}
 }));
 
+const getConfiguration = () => ({
+	slackApiBotToken: configService.get(SLACK_API_BOT_TOKEN),
+	slackMasterChannelId: configService.get(SLACK_MASTER_CHANNEL_ID),
+	slackChannelPrefix: configService.get(SLACK_CHANNEL_PREFIX),
+	frontendUrl: configService.get(FRONTEND_URL)
+});
+
 describe('SlackCommunicationGateAdapter', () => {
 	let adapter: SlackCommunicationGateAdapter;
 
@@ -133,9 +145,7 @@ describe('SlackCommunicationGateAdapter', () => {
 		jest.spyOn(Logger.prototype, 'warn').mockImplementation(jest.fn);
 		jest.spyOn(Logger.prototype, 'verbose').mockImplementation(jest.fn);
 
-		adapter = new SlackCommunicationGateAdapter(
-			configService as unknown as ConfigService<Record<string, unknown>, false>
-		);
+		adapter = new SlackCommunicationGateAdapter(getConfiguration());
 	});
 
 	it('should be defined', () => {
@@ -248,9 +258,7 @@ describe('SlackCommunicationGateAdapter', () => {
 			jest.spyOn(Logger.prototype, 'error').mockImplementation(LoggerErrorMock);
 			jest.spyOn(Logger.prototype, 'verbose').mockImplementation(jest.fn);
 
-			adapterWithErrors = new SlackCommunicationGateAdapter(
-				configService as unknown as ConfigService<Record<string, unknown>, false>
-			);
+			adapterWithErrors = new SlackCommunicationGateAdapter(getConfiguration());
 		});
 
 		afterEach(() => {

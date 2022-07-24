@@ -1,26 +1,33 @@
+import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+	ChatMeMessageArguments,
 	ConversationsCreateArguments,
 	ConversationsInviteArguments,
 	ConversationsMembersArguments,
-	UsersProfileGetArguments,
-	ChatMeMessageArguments
+	UsersProfileGetArguments
 } from '@slack/web-api';
-import { faker } from '@faker-js/faker';
-// import * as WebClientSlackApi from '@slack/web-api';
 
+import { FRONTEND_URL } from 'libs/constants/frontend';
+import {
+	SLACK_API_BOT_TOKEN,
+	SLACK_CHANNEL_PREFIX,
+	SLACK_MASTER_CHANNEL_ID
+} from 'libs/constants/slack';
+// import * as WebClientSlackApi from '@slack/web-api';
 import configService from 'libs/test-utils/mocks/configService.mock';
-import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
 } from 'libs/utils/communication-helpers';
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
-import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
+import { CommunicationProducerService } from 'queue/producers/communication.producer.service';
 
 const slackUsersIds = [
 	'U023BECGF',
@@ -140,8 +147,15 @@ jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);
 jest.spyOn(Logger.prototype, 'warn').mockImplementation(jest.fn);
 jest.spyOn(Logger.prototype, 'verbose').mockImplementation(jest.fn);
 
+const getConfiguration = () => ({
+	slackApiBotToken: configService.get(SLACK_API_BOT_TOKEN),
+	slackMasterChannelId: configService.get(SLACK_MASTER_CHANNEL_ID),
+	slackChannelPrefix: configService.get(SLACK_CHANNEL_PREFIX),
+	frontendUrl: configService.get(FRONTEND_URL)
+});
+
 function MakeSlackCommunicationGateAdapterStub() {
-	return new SlackCommunicationGateAdapter(configService as unknown as ConfigService);
+	return new SlackCommunicationGateAdapter(getConfiguration());
 }
 
 describe('SlackExecuteCommunication', () => {
@@ -151,13 +165,17 @@ describe('SlackExecuteCommunication', () => {
 
 	beforeAll(async () => {
 		const application = new SlackExecuteCommunication(
-			configService as unknown as ConfigService,
+			getConfiguration(),
 			new ConversationsSlackHandler(communicationGateAdapterMocked),
 			new UsersSlackHandler(communicationGateAdapterMocked),
 			new ChatSlackHandler(communicationGateAdapterMocked)
 		);
 
-		service = new SlackExecuteCommunicationService(application);
+		service = new SlackExecuteCommunicationService(
+			configService as unknown as ConfigService,
+			{} as CommunicationProducerService,
+			application
+		);
 	});
 
 	it('should be defined', () => {
