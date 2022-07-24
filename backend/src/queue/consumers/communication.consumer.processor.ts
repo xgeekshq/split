@@ -8,13 +8,17 @@ import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.hand
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
 
+const logger = new Logger('CommunicationConsumerProcessor');
+
 // eslint-disable-next-line func-names
 export default async function (job: Job<JobType>, cb: DoneCallback) {
-	Logger.verbose(`${JSON.stringify(job.id)} (pid ${process.pid})`);
-
 	const data = job.data;
 	const board = data.board;
 	const config: ConfigurationType = data.config;
+
+	logger.verbose(
+		`execute communication for board with id: "${data.board.id}" and Job id: "${job.id}" (pid ${process.pid})`
+	);
 
 	const communicationGateAdapter = new SlackCommunicationGateAdapter(config);
 	const conversationsHandler = new ConversationsSlackHandler(communicationGateAdapter);
