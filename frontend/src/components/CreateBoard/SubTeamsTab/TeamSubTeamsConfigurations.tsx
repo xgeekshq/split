@@ -24,7 +24,7 @@ import QuickEditSubTeams from './QuickEditSubTeams';
 
 const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
 
-const TeamSubTeamsConfigurations: React.FC = () => {
+const TeamSubTeamsConfigurations = () => {
 	const [stakeholders, setStakeholders] = useState<User[]>([]);
 	const [team, setTeam] = useState<Team | null>(null);
 
@@ -37,7 +37,10 @@ const TeamSubTeamsConfigurations: React.FC = () => {
 
 	useEffect(() => {
 		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
-		const hasMinMembers = isTeamsValid && teams[0].users?.length >= MIN_MEMBERS;
+		const hasMinMembers =
+			isTeamsValid &&
+			teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+				MIN_MEMBERS;
 
 		if (isTeamsValid && hasMinMembers) {
 			const selectedTeam = teams[0];
