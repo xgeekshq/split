@@ -97,7 +97,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			if (!usersIds.includes(user._id.toString())) {
 				newUsers.push({
 					user: user._id.toString(),
-					role: teamUser.role,
+					role: teamUser.role === TeamRoles.ADMIN ? BoardRoles.MEMBER : teamUser.role,
 					votesCount: 0
 				});
 			}
