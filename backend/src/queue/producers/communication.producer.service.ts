@@ -1,6 +1,8 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Job, Queue } from 'bull';
+
+import { JobType } from 'modules/communication/dto/types';
 
 @Injectable()
 export class CommunicationProducerService {
@@ -12,9 +14,12 @@ export class CommunicationProducerService {
 	) {}
 
 	// Job Options https://docs.nestjs.com/techniques/queues#job-options
-	async add(data: any) {
-		await this.queue.add(data, {
+	async add(data: JobType): Promise<Job<JobType>> {
+		const result = await this.queue.add(data, {
 			lifo: true
 		});
+		console.log('result after add to queue ', result.id);
+
+		return result;
 	}
 }

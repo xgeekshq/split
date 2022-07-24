@@ -1,8 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { WebClient } from '@slack/web-api';
 
-import { SLACK_API_BOT_TOKEN } from 'libs/constants/slack';
+import { ConfigurationType } from 'modules/communication/dto/types';
 import { CreateChannelError } from 'modules/communication/errors/create-channel.error';
 import { GetProfileError } from 'modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'modules/communication/errors/get-users-from-channel.error';
@@ -17,8 +16,8 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 
 	private client: WebClient;
 
-	constructor(private readonly configService: ConfigService) {
-		this.client = new WebClient(this.configService.get(SLACK_API_BOT_TOKEN));
+	constructor(private readonly config: ConfigurationType) {
+		this.client = new WebClient(this.config.slackApiBotToken);
 
 		this.logger.verbose('@slack/web-api client created');
 	}
