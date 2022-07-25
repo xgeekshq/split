@@ -13,7 +13,20 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiBody,
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiQuery,
+	ApiTags,
+	ApiUnauthorizedResponse,
+	OmitType
+} from '@nestjs/swagger';
 
 import { BaseParam } from 'libs/dto/param/base.param';
 import { PaginationParams } from 'libs/dto/param/pagination.params';
@@ -25,6 +38,10 @@ import {
 } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
+import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BoardResponse } from 'modules/boards/swagger/board.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../dto/board.dto';
@@ -37,6 +54,7 @@ import { TYPES } from '../interfaces/types';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Boards')
+@UseGuards(JwtAuthenticationGuard)
 @Controller('boards')
 export default class BoardsController {
 	constructor(
@@ -51,7 +69,27 @@ export default class BoardsController {
 		private socketService: SocketGateway
 	) {}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Create a new board' })
+	@ApiBody({
+		type: OmitType(BoardDto, ['_id'] as const),
+		required: true
+	})
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Board created successfully.'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Post()
 	async createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
 		const board = await this.createBoardApp.create(boardData, request.user._id);
@@ -60,13 +98,41 @@ export default class BoardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Get Boards to show on dashboard' })
+	@ApiQuery({ type: Number, name: 'page' })
+	@ApiQuery({ type: Number, name: 'size' })
+	@ApiOkResponse({ type: BoardResponse, description: 'Boards' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get('/dashboard')
 	getDashboardBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		return this.getBoardApp.getUserBoardsOfLast3Months(request.user._id, page, size);
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Retrieve all boards from database' })
+	@ApiOkResponse({ type: BoardResponse, description: 'Boards' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get()
 	getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		const { _id: userId, isSAdmin } = request.user;
@@ -76,7 +142,21 @@ export default class BoardsController {
 		return this.getBoardApp.getUsersBoards(userId, page, size);
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Retrieve one board by id' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiOkResponse({ type: BoardDto, description: 'Board retrieved successfully!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Get(':boardId')
 	async getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
 		const board = await this.getBoardApp.getBoard(boardId, request.user._id);
@@ -85,7 +165,25 @@ export default class BoardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Update a specific board' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiBody({ type: BoardDto })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Board updated successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Put(':boardId')
 	async updateBoard(
 		@Req() request: RequestWithUser,
@@ -103,7 +201,21 @@ export default class BoardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Delete a specific board' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiOkResponse({ type: Boolean, description: 'Board successfully deleted!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Delete(':boardId')
 	async deleteBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
 		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
@@ -112,11 +224,30 @@ export default class BoardsController {
 		return result;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Merge sub-board into a main board' })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Board successfully merged!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerError
+	})
 	@Put(':boardId/merge')
 	async mergeBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
 		const result = await this.updateBoardApp.mergeBoards(boardId, request.user._id);
-		if (!result) throw new BadRequestException(UPDATE_FAILED);
+
+		if (!result) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
 
 		return result;
 	}

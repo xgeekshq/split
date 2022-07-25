@@ -16,7 +16,6 @@ import { CheckUniqueUsers } from 'libs/validators/check-unique-users';
 
 import BoardUserDto from './board.user.dto';
 import ColumnDto from './column/column.dto';
-import DividedBoardDto from './divided-board.dto';
 
 export default class BoardDto {
 	@ApiPropertyOptional()
@@ -43,45 +42,45 @@ export default class BoardDto {
 	@IsBoolean()
 	isPublic!: boolean;
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxVotes?: string | null;
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxUsers?: string | null;
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()
 	@IsString()
 	@IsOptional()
 	maxTeams?: string | null;
 
-	@ApiProperty()
+	@ApiProperty({ default: false })
 	@IsNotEmpty()
 	@IsBoolean()
 	hideCards!: boolean;
 
-	@ApiProperty()
+	@ApiProperty({ default: false })
 	@IsNotEmpty()
 	@IsBoolean()
 	hideVotes!: boolean;
 
-	@ApiProperty()
+	@ApiProperty({ default: false })
 	@IsNotEmpty()
 	@IsBoolean()
 	postAnonymously!: boolean;
 
-	@ApiProperty({ type: DividedBoardDto, isArray: true })
+	@ApiProperty({ type: BoardDto, isArray: true })
 	@IsOptional()
 	@ValidateNested({ each: true })
 	dividedBoards!: BoardDto[];
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ type: String })
 	@IsOptional()
 	@IsMongoId()
 	@IsString()
@@ -96,7 +95,7 @@ export default class BoardDto {
 	@Validate(CheckUniqueUsers)
 	users!: BoardUserDto[];
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ default: true })
 	@IsNotEmpty()
 	@IsBoolean()
 	recurrent?: boolean;

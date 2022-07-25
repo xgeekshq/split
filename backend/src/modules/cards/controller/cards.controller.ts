@@ -74,13 +74,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Card successfully created!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -109,13 +109,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Card successfully deleted!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -144,13 +144,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Card successfully delted!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -184,13 +184,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Card item successfully updated!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -226,13 +226,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Card successfully updated!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -271,13 +271,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'The position of card is successfully updated!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -312,13 +312,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Cards are successfully merged!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -345,13 +345,13 @@ export default class CardsController {
 		type: BoardDto,
 		description: 'Cards are successfully unmerged!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',

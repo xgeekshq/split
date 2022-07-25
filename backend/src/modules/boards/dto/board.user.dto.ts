@@ -9,7 +9,7 @@ export default class BoardUserDto {
 	@IsMongoId()
 	_id?: string;
 
-	@ApiProperty()
+	@ApiProperty({ type: String, enum: BoardRoles, enumName: 'Roles' })
 	@IsString()
 	@IsNotEmpty()
 	@IsEnum(BoardRoles, { each: true })
@@ -21,7 +21,7 @@ export default class BoardUserDto {
 	@IsNotEmpty()
 	user!: string;
 
-	@ApiPropertyOptional()
+	@ApiPropertyOptional({ default: 0 })
 	@IsOptional()
 	@IsNumber()
 	votesCount?: number;

@@ -21,7 +21,7 @@ export default class ColumnDto {
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	color!: string;
 
-	@ApiProperty()
+	@ApiProperty({ type: CardDto, isArray: true })
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	cards!: CardDto[];
