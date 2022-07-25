@@ -1,8 +1,19 @@
-import { Body, Controller, Get, HttpCode, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	Inject,
+	NotFoundException,
+	Param,
+	Post,
+	UseGuards
+} from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBody,
 	ApiInternalServerErrorResponse,
+	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
@@ -11,9 +22,11 @@ import {
 } from '@nestjs/swagger';
 
 import { EmailParam } from 'libs/dto/param/email.param';
+import { USER_NOT_FOUND } from 'libs/exceptions/messages';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 import { LoginResponse } from 'modules/auth/swagger/login.swagger';
@@ -73,12 +86,19 @@ export default class AzureController {
 	})
 	@ApiOperation({ summary: 'Verify if a user exists in Azure service' })
 	@ApiOkResponse({
-		description: 'Return a boolean to indicate if the user exists or not in Azure service'
+		description:
+			'Return "az" if user exists Active Directory or "local" if user exists on database.',
+		schema: {
+			type: 'string',
+			default: 'local',
+			examples: ['az', 'local']
+		}
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
 	})
+	@ApiNotFoundResponse({ description: 'User not found', type: NotFoundResponse })
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
@@ -86,11 +106,17 @@ export default class AzureController {
 	@Get('users/:email')
 	async checkEmail(@Param() { email }: EmailParam) {
 		const existUserInAzure = await this.authAzureApp.checkUserExistsInActiveDirectory(email);
-		if (existUserInAzure) return 'az';
+
+		if (existUserInAzure) {
+			return 'az';
+		}
 
 		const existUserInDB = await this.getUserApp.getByEmail(email);
-		if (existUserInDB) return 'local';
 
-		return false;
+		if (existUserInDB) {
+			return 'local';
+		}
+
+		throw new NotFoundException(USER_NOT_FOUND);
 	}
 }

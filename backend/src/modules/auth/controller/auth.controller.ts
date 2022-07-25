@@ -11,12 +11,14 @@ import {
 	Patch,
 	Post,
 	Req,
+	UnauthorizedException,
 	UseGuards
 } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiBody,
+	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
 	ApiNotFoundResponse,
 	ApiOkResponse,
@@ -28,7 +30,7 @@ import {
 
 import { uniqueViolation } from 'infrastructure/database/errors/unique.user';
 import { EmailParam } from 'libs/dto/param/email.param';
-import { EMAIL_EXISTS, USER_NOT_FOUND } from 'libs/exceptions/messages';
+import { EMAIL_EXISTS, UPDATE_FAILED, USER_NOT_FOUND } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
@@ -43,6 +45,7 @@ import { GetTeamApplicationInterface } from 'modules/teams/interfaces/applicatio
 import * as Teams from 'modules/teams/interfaces/types';
 import CreateUserDto from 'modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'modules/users/dto/reset-password.dto';
+import UserDto from 'modules/users/dto/user.dto';
 import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
 import { UpdateUserApplication } from 'modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'modules/users/interfaces/types';
@@ -76,6 +79,7 @@ export default class AuthController {
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })
+	@ApiCreatedResponse({ type: UserDto, description: 'User successfully created!' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
@@ -142,6 +146,21 @@ export default class AuthController {
 	}
 
 	@ApiOperation({ summary: 'Generate a new refresh token' })
+	@ApiOkResponse({
+		schema: {
+			type: 'object',
+			properties: {
+				expiresIn: {
+					type: 'number',
+					default: 3600
+				},
+				token: {
+					type: 'string'
+				}
+			}
+		},
+		description: 'Token successfully generated!'
+	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
@@ -169,7 +188,11 @@ export default class AuthController {
 	})
 	@ApiOperation({ summary: 'Verify if user exists' })
 	@ApiOkResponse({
-		description: 'Return a boolean to indicate if the user exists or not'
+		description: 'Return a boolean to indicate if the user exists or not',
+		schema: {
+			type: 'boolean',
+			default: false
+		}
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
@@ -185,6 +208,7 @@ export default class AuthController {
 	}
 
 	@ApiOperation({ summary: 'Request a reset password link' })
+	@ApiOkResponse({ description: 'Email with link to reset password send successfully!' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
@@ -201,9 +225,29 @@ export default class AuthController {
 	@ApiOperation({
 		summary: 'Change user password after a reset password request'
 	})
+	@ApiOkResponse({
+		description: 'User password successfully changed!',
+		schema: {
+			type: 'object',
+			properties: {
+				status: {
+					type: 'string',
+					default: 'ok'
+				},
+				message: {
+					type: 'string',
+					default: 'Password updated successfully!'
+				}
+			}
+		}
+	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		type: UnauthorizedResponse,
+		description: 'Invalid token'
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -213,14 +257,21 @@ export default class AuthController {
 	@HttpCode(HttpStatus.OK)
 	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
 		const email = await this.updateUserApp.checkEmail(token);
-		if (!email) return { message: 'token not valid' };
 
-		return (
-			(await this.updateUserApp.setPassword(email, newPassword, newPasswordConf)) && {
-				status: 'ok',
-				message: 'Password updated successfully!'
-			}
-		);
+		if (!email) {
+			throw new UnauthorizedException('Invalid token!');
+		}
+
+		const result = await this.updateUserApp.setPassword(email, newPassword, newPasswordConf);
+
+		if (!result) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return {
+			status: 'ok',
+			message: 'Password updated successfully!'
+		};
 	}
 
 	@ApiOperation({
@@ -228,6 +279,26 @@ export default class AuthController {
 		description: 'This method return the number of users, teams and boards'
 	})
 	@ApiBearerAuth('access-token')
+	@ApiOkResponse({
+		description: 'Statistics successfully retrieved!',
+		schema: {
+			type: 'object',
+			properties: {
+				usersCount: {
+					type: 'number',
+					example: 1
+				},
+				teamsCount: {
+					type: 'number',
+					example: 1
+				},
+				boardsCount: {
+					type: 'number',
+					example: 1
+				}
+			}
+		}
+	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
@@ -250,6 +321,7 @@ export default class AuthController {
 			this.getTeamsApp.countTeams(userId),
 			this.getBoardApp.countBoards(userId)
 		]);
+
 		return { usersCount, teamsCount, boardsCount };
 	}
 }

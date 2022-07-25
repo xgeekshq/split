@@ -46,15 +46,25 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 					setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
 					return;
 				}
+
 				if (data === false) {
 					setShowSignUp(SignUpEnum.REGISTER);
 					return;
 				}
+
 				setValueHelperText(' This email already exists');
 				setValueState(true);
 			},
 
-			onError: () => {
+			onError: (error: Error) => {
+				/**
+				 * When checkUserExistsAD returns 404, allow manual sign up
+				 */
+				if (error.message.includes('404')) {
+					setShowSignUp(SignUpEnum.REGISTER);
+					return;
+				}
+
 				setToastState({
 					open: true,
 					type: ToastStateEnum.ERROR,
