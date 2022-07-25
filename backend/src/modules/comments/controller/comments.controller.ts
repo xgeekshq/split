@@ -16,6 +16,7 @@ import {
 	ApiBody,
 	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
 	ApiTags,
@@ -66,13 +67,13 @@ export default class CommentsController {
 		type: BoardDto,
 		description: 'Comment added successfully!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -108,13 +109,13 @@ export default class CommentsController {
 		type: BoardDto,
 		description: 'Comment added successfully!'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -147,13 +148,17 @@ export default class CommentsController {
 	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment updated successfully'
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -177,8 +182,13 @@ export default class CommentsController {
 			text
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
@@ -187,13 +197,17 @@ export default class CommentsController {
 	@ApiParam({ name: 'commentId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment updated successfully'
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -216,8 +230,13 @@ export default class CommentsController {
 			text
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
@@ -228,13 +247,17 @@ export default class CommentsController {
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@ApiBody({ type: SocketIdDto, required: false })
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment deleted successfully from card item.'
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -247,14 +270,20 @@ export default class CommentsController {
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, commentId } = params;
+
 		const board = await this.deleteCommentApp.deleteItemComment(
 			boardId,
 			commentId,
 			request.user._id
 		);
 
-		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(DELETE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
@@ -264,13 +293,17 @@ export default class CommentsController {
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@ApiBody({ type: SocketIdDto, required: false })
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment deleted successfully from card.'
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequest
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: Unauthorized
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
@@ -290,9 +323,13 @@ export default class CommentsController {
 			request.user._id
 		);
 
-		if (!board) throw new BadRequestException(DELETE_FAILED);
+		if (!board) {
+			throw new BadRequestException(DELETE_FAILED);
+		}
 
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}

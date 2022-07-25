@@ -10,7 +10,7 @@ export class NotFound {
 	@ApiProperty({
 		type: String,
 		isArray: true,
-		default: ['NOT_FOUND']
+		examples: ['NOT_FOUND', 'BOARDS_NOT_FOUND', 'BOARD_NOT_FOUND', 'USER_NOT_FOUND']
 	})
 	message!: string[];
 

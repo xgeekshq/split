@@ -21,12 +21,14 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
+	ApiQuery,
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 
 import { TeamParams } from 'libs/dto/param/team.params';
 import { TeamQueryParams } from 'libs/dto/param/team.query.params';
+import { TeamRoles } from 'libs/enum/team.roles';
 import { INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
@@ -75,7 +77,7 @@ export default class TeamsController {
 	}
 
 	@ApiOperation({ summary: 'Add a user to an existing team' })
-	@ApiOkResponse({ description: 'User successfully added to the team!' })
+	@ApiOkResponse({ description: 'User successfully added to the team!', type: TeamUserDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
@@ -91,12 +93,16 @@ export default class TeamsController {
 	@Put()
 	async createTeamUser(@Body() teamData: TeamUserDto) {
 		const team = await this.createTeamApp.createTeamUser(teamData);
-		if (!team) throw new BadRequestException(INSERT_FAILED);
+
+		if (!team) {
+			throw new BadRequestException(INSERT_FAILED);
+		}
+
 		return team;
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
-	@ApiOkResponse({ description: 'Teams successfully retrieved!' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized
@@ -115,8 +121,19 @@ export default class TeamsController {
 	}
 
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
-	@ApiOkResponse({ description: 'Team successfully retrieved!' })
 	@ApiParam({ name: 'teamId', type: String })
+	@ApiQuery({
+		name: 'teamUserRole',
+		type: String,
+		enum: TeamRoles,
+		required: false
+	})
+	@ApiQuery({
+		name: 'loadUsers',
+		type: Boolean,
+		required: false
+	})
+	@ApiOkResponse({ description: 'Team successfully retrieved!', type: TeamDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: Unauthorized

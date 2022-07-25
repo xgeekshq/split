@@ -9,7 +9,8 @@ export class BadRequest {
 
 	@ApiProperty({
 		type: String,
-		isArray: true
+		isArray: true,
+		examples: ['INSERT_FAILED', 'DELETE_FAILED', 'UPDATE_FAILED']
 	})
 	message!: string[];
 
