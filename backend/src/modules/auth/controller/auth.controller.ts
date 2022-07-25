@@ -116,10 +116,6 @@ export default class AuthController {
 		description: 'Bad Request',
 		type: BadRequestResponse
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
 	@ApiNotFoundResponse({
 		type: NotFoundResponse,
 		description: 'User not found'
