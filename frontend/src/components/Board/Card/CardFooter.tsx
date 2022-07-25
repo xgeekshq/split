@@ -106,9 +106,12 @@ const CardFooter = React.memo<FooterProps>(
 		const { cardItemId, votesOfUserInThisCard, votesInThisCard } = votesData;
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+			if (maxVotes && actualBoardVotes && actualBoardVotes <= 0) return;
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (votesOfUserInThisCard <= 0) return;
+			if (votesOfUserInThisCard <= 0) {
+				return;
+			}
 			deleteVote.mutate({
 				boardId,
 				cardId: card._id,
@@ -121,7 +124,7 @@ const CardFooter = React.memo<FooterProps>(
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
+			if (maxVotes && actualBoardVotes && actualBoardVotes === maxVotes) return;
 			addVote.mutate({
 				boardId,
 				cardId: card._id,
