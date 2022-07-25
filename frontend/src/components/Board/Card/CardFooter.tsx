@@ -14,7 +14,6 @@ import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
 import { CardItemType } from 'types/card/cardItem';
 import CommentType from 'types/comment/comment';
-import isEmpty from 'utils/isEmpty';
 
 interface FooterProps {
 	boardId: string;
@@ -107,14 +106,10 @@ const CardFooter = React.memo<FooterProps>(
 		const { cardItemId, votesOfUserInThisCard, votesInThisCard } = votesData;
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-			console.log('inside handleDelete');
-			if (maxVotes && actualBoardVotes && actualBoardVotes === 0) return;
-			console.log('actualBoardVotes', actualBoardVotes);
-			console.log('votesOfUserInThisCard = ', votesOfUserInThisCard);
+			if (maxVotes && actualBoardVotes && actualBoardVotes <= 0) return;
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (votesOfUserInThisCard <= 0) {
-				console.log(' <= 0 votes', votesOfUserInThisCard);
 				return;
 			}
 			deleteVote.mutate({
@@ -128,15 +123,6 @@ const CardFooter = React.memo<FooterProps>(
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
-			if (!isEmpty(maxVotes)) {
-				console.log('maxVotes', Number(maxVotes));
-				const remainingVotes = Number(maxVotes) - votesOfUserInThisCard;
-				console.log('votesInThisCard', votesInThisCard, votesOfUserInThisCard);
-				console.log('Remaining votes for this user', remainingVotes);
-			} else {
-				console.log('maxvotes is undefined');
-			}
-
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (maxVotes && actualBoardVotes && actualBoardVotes === maxVotes) return;
 			addVote.mutate({
