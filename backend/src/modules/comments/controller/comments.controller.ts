@@ -31,9 +31,9 @@ import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/mes
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'modules/boards/dto/board.dto';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
@@ -69,15 +69,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post(':boardId/card/:cardId/items/:itemId/comments')
 	async addItemComment(
@@ -111,15 +111,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post(':boardId/card/:cardId/comments')
 	async addCardGroupComment(
@@ -154,15 +154,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/items/:itemId/comments/:commentId')
 	async updateCardItemComment(
@@ -203,15 +203,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/comments/:commentId')
 	async updateCardGroupComment(
@@ -253,15 +253,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId/comments/:commentId')
 	async deleteCardItemComment(
@@ -299,15 +299,15 @@ export default class CommentsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/comments/:commentId')
 	async deleteCardGroupComment(

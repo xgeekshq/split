@@ -31,9 +31,9 @@ import { UnmergeCardsParams } from 'libs/dto/param/unmerge.cards.params';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'modules/boards/dto/board.dto';
 
 import SocketGateway from '../../socket/gateway/socket.gateway';
@@ -76,15 +76,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post(':boardId/card')
 	async addCard(
@@ -111,15 +111,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId')
 	async deleteCard(
@@ -146,15 +146,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId')
 	async deleteCardItem(
@@ -186,15 +186,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/items/:itemId')
 	async updateCardText(
@@ -228,15 +228,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId')
 	async updateCardGroupText(
@@ -273,15 +273,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/update-card-position')
 	async updateCardPosition(
@@ -314,15 +314,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/merge/:targetCardId')
 	async mergeCards(@Param() params: MergeCardsParams, @Body() mergeCardsDto: BaseDto) {
@@ -347,15 +347,15 @@ export default class CardsController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/cardItem/:itemId/removeFromCardGroup')
 	async unmergeCards(

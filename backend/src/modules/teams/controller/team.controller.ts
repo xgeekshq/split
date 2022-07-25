@@ -32,9 +32,9 @@ import { TeamRoles } from 'libs/enum/team.roles';
 import { INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
@@ -59,15 +59,15 @@ export default class TeamsController {
 	@ApiCreatedResponse({ description: 'Team successfully created!', type: TeamDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post()
 	async create(@Req() request: RequestWithUser, @Body() teamData: CreateTeamDto) {
@@ -80,15 +80,15 @@ export default class TeamsController {
 	@ApiOkResponse({ description: 'User successfully added to the team!', type: TeamUserDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Put()
 	async createTeamUser(@Body() teamData: TeamUserDto) {
@@ -105,15 +105,15 @@ export default class TeamsController {
 	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Get()
 	getAllTeams() {
@@ -136,15 +136,15 @@ export default class TeamsController {
 	@ApiOkResponse({ description: 'Team successfully retrieved!', type: TeamDto })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Get(':teamId')
 	@UsePipes(new ValidationPipe({ transform: true }))

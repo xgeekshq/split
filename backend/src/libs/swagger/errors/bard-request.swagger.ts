@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BadRequest {
+export class BadRequestResponse {
 	@ApiProperty({
 		type: Number,
 		default: 400
@@ -10,7 +10,13 @@ export class BadRequest {
 	@ApiProperty({
 		type: String,
 		isArray: true,
-		examples: ['INSERT_FAILED', 'DELETE_FAILED', 'UPDATE_FAILED']
+		examples: [
+			'INSERT_FAILED',
+			'DELETE_FAILED',
+			'UPDATE_FAILED',
+			'EMAIL_EXISTS',
+			'EMAIL_DONT_MATCH'
+		]
 	})
 	message!: string[];
 

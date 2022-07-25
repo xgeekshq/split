@@ -12,9 +12,9 @@ import {
 
 import { EmailParam } from 'libs/dto/param/email.param';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import { LoginDto } from 'modules/auth/dto/login.dto';
 import { LoginResponse } from 'modules/auth/swagger/login.swagger';
 import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
@@ -39,11 +39,11 @@ export default class AzureController {
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiOkResponse({
 		description: 'User logged successfully!',
@@ -51,7 +51,7 @@ export default class AzureController {
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@ApiBody({
 		type: LoginDto,
@@ -77,11 +77,11 @@ export default class AzureController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Get('users/:email')
 	async checkEmail(@Param() { email }: EmailParam) {

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class Unauthorized {
+export class UnauthorizedResponse {
 	@ApiProperty({
 		type: Number,
 		default: 401

@@ -18,6 +18,7 @@ import {
 	ApiBearerAuth,
 	ApiBody,
 	ApiInternalServerErrorResponse,
+	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
@@ -32,9 +33,10 @@ import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import { GetBoardApplicationInterface } from 'modules/boards/interfaces/applications/get.board.application.interface';
 import * as Boards from 'modules/boards/interfaces/types';
 import { GetTeamApplicationInterface } from 'modules/teams/interfaces/applications/get.team.application.interface';
@@ -76,11 +78,11 @@ export default class AuthController {
 	@ApiOperation({ summary: 'Create new user' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post('register')
 	async register(@Body() registrationData: CreateUserDto) {
@@ -94,6 +96,7 @@ export default class AuthController {
 			if (error.code === uniqueViolation) {
 				throw new BadRequestException(EMAIL_EXISTS);
 			}
+
 			throw new BadRequestException(error.message);
 		}
 	}
@@ -101,21 +104,25 @@ export default class AuthController {
 	@ApiOperation({
 		summary: 'Basic login to allow the user perform certain actions'
 	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: Unauthorized
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequest
-	})
 	@ApiOkResponse({
 		description: 'User logged successfully!',
 		type: LoginResponse
 	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'User not found'
+	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@ApiBody({
 		type: LoginDto,
@@ -126,7 +133,10 @@ export default class AuthController {
 	@Post('login')
 	async login(@Req() request: RequestWithUser) {
 		const loggedUser = await signIn(request.user, this.getTokenAuthApp, 'local');
-		if (!loggedUser) throw new NotFoundException(USER_NOT_FOUND);
+
+		if (!loggedUser) {
+			throw new NotFoundException(USER_NOT_FOUND);
+		}
 
 		return loggedUser;
 	}
@@ -134,15 +144,15 @@ export default class AuthController {
 	@ApiOperation({ summary: 'Generate a new refresh token' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@ApiBearerAuth('refresh-token')
 	@UseGuards(JwtRefreshGuard)
@@ -163,11 +173,11 @@ export default class AuthController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Get('users/:email')
 	checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
@@ -177,11 +187,11 @@ export default class AuthController {
 	@ApiOperation({ summary: 'Request a reset password link' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Patch('password/reset')
 	forgot(@Body() { email }: EmailParam) {
@@ -193,17 +203,18 @@ export default class AuthController {
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Patch('password')
 	@HttpCode(HttpStatus.OK)
 	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
 		const email = await this.updateUserApp.checkEmail(token);
 		if (!email) return { message: 'token not valid' };
+
 		return (
 			(await this.updateUserApp.setPassword(email, newPassword, newPasswordConf)) && {
 				status: 'ok',
@@ -219,15 +230,15 @@ export default class AuthController {
 	@ApiBearerAuth('access-token')
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@ApiBearerAuth('access-token')
 	@UseGuards(JwtAuthenticationGuard)

@@ -28,9 +28,9 @@ import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
-import { BadRequest } from 'libs/swagger/errors/bard-request.swagger';
-import { InternalServerError } from 'libs/swagger/errors/internal-server-error.swagger';
-import { Unauthorized } from 'libs/swagger/errors/unauthorized.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../../boards/dto/board.dto';
@@ -66,15 +66,15 @@ export default class VotesController {
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post(':boardId/card/:cardId/items/:itemId/vote')
 	async addVoteToCard(
@@ -105,15 +105,15 @@ export default class VotesController {
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Post(':boardId/card/:cardId/vote')
 	async addVoteToCardGroup(
@@ -145,15 +145,15 @@ export default class VotesController {
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId/vote')
 	async deleteVoteFromCard(
@@ -189,15 +189,15 @@ export default class VotesController {
 	})
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
-		type: Unauthorized
+		type: UnauthorizedResponse
 	})
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
-		type: BadRequest
+		type: BadRequestResponse
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
-		type: InternalServerError
+		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/vote')
 	async deleteVoteFromCardGroup(

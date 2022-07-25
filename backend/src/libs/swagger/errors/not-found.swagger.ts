@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class NotFound {
+export class NotFoundResponse {
 	@ApiProperty({
 		type: Number,
 		default: 404

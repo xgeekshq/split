@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class InternalServerError {
+export class InternalServerErrorResponse {
 	@ApiProperty({
 		type: Number,
 		default: 500
