@@ -10,8 +10,9 @@ import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.ha
 
 const logger = new Logger('CommunicationConsumerProcessor');
 
-// eslint-disable-next-line func-names
-export default async function (job: Job<JobType>, cb: DoneCallback) {
+// If any error occurs the error will propagate and will be captured on queue's events
+// it is not necessary use the "cb" to deal with the Errors
+export default async function consumer(job: Job<JobType>, cb: DoneCallback) {
 	const data = job.data;
 	const board = data.board;
 	const config: ConfigurationType = data.config;
@@ -24,15 +25,12 @@ export default async function (job: Job<JobType>, cb: DoneCallback) {
 	const conversationsHandler = new ConversationsSlackHandler(communicationGateAdapter);
 	const usersHandler = new UsersSlackHandler(communicationGateAdapter);
 	const chatHandler = new ChatSlackHandler(communicationGateAdapter);
-
 	const application = new SlackExecuteCommunication(
 		config,
 		conversationsHandler,
 		usersHandler,
 		chatHandler
 	);
-
 	const result = await application.execute(board);
-
 	cb(null, result);
 }

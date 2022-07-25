@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-import { CommunicationProducerService } from './producers/communication.producer.service';
+import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
 
 @Module({
 	imports: [
@@ -18,7 +18,7 @@ import { CommunicationProducerService } from './producers/communication.producer
 					port: configService.get('redis.port')
 				},
 				name: CommunicationProducerService.QUEUE_NAME,
-				processors: [join(__dirname, 'consumers', 'communication.consumer.processor')]
+				processors: [join(__dirname, '..', 'modules', 'communication', 'consumers', 'processor')]
 			}),
 			inject: [ConfigService]
 		})

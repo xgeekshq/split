@@ -26,8 +26,8 @@ import { SlackExecuteCommunication } from 'modules/communication/applications/sl
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
+import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
 import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
-import { CommunicationProducerService } from 'queue/producers/communication.producer.service';
 
 const slackUsersIds = [
 	'U023BECGF',

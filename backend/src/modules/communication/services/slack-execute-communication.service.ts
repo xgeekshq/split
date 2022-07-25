@@ -11,7 +11,7 @@ import { SlackExecuteCommunication } from 'modules/communication/applications/sl
 import { TeamDto } from 'modules/communication/dto/team.dto';
 import { BoardType } from 'modules/communication/dto/types';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
-import { CommunicationProducerService } from 'queue/producers/communication.producer.service';
+import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
 
 @Injectable()
 export class SlackExecuteCommunicationService {

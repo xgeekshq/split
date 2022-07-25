@@ -21,17 +21,10 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 	public async execute(board: BoardType): Promise<TeamDto[]> {
 		let teams = this.makeTeams(board);
-
 		teams = await this.addSlackIdOnTeams(teams);
-
-		// create all channels
 		teams = await this.createAllChannels(teams);
-
-		// invite memebers for each channel
 		teams = await this.inviteAllMembers(teams);
-
 		await this.postMessageOnEachChannel(teams);
-
 		await this.postMessageOnMasterChannel(teams);
 
 		return teams;
