@@ -68,7 +68,7 @@ const CardFooter = React.memo<FooterProps>(
 		isMainboard,
 		comments,
 		boardUser,
-		maxVotes,
+		maxVotes = 6,
 		setOpenComments,
 		isCommentsOpened,
 		hideCards
