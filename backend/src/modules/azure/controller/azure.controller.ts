@@ -84,7 +84,7 @@ export default class AzureController {
 		required: true,
 		name: 'email'
 	})
-	@ApiOperation({ summary: 'Verify if a user exists in Azure service' })
+	@ApiOperation({ summary: 'Verify if an user exists in Azure service' })
 	@ApiOkResponse({
 		description:
 			'Return "az" if user exists Active Directory or "local" if user exists on database.',
