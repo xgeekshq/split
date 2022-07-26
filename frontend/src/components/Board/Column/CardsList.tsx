@@ -24,18 +24,18 @@ const CardsList = React.memo<ColumnInnerList>(
 					return (
 						<CardBoard
 							key={card._id}
-							card={card}
-							index={idx}
-							color={color}
-							colId={colId}
-							userId={userId}
 							boardId={boardId}
-							socketId={socketId}
-							isMainboard={isMainboard}
 							boardUser={boardUser}
-							maxVotes={maxVotes}
-							isSubmited={isSubmited}
+							card={card}
+							colId={colId}
+							color={color}
 							hideCards={hideCards}
+							index={idx}
+							isMainboard={isMainboard}
+							isSubmited={isSubmited}
+							maxVotes={maxVotes}
+							socketId={socketId}
+							userId={userId}
 						/>
 					);
 				})}

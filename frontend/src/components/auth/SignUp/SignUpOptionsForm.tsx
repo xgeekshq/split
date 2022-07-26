@@ -33,14 +33,14 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 		<Container direction="column">
 			<Text size="md">
 				The email&nbsp;
-				<Text size="md" fontWeight="medium">
+				<Text fontWeight="medium" size="md">
 					{emailName}
 				</Text>
 				&nbsp;supports login with company SSO (Single Sign-on)
 			</Text>
 			<Button
-				type="submit"
 				size="lg"
+				type="submit"
 				css={{
 					mt: '$32',
 					fontWeight: '$medium',
@@ -56,14 +56,14 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
 			</Button>
 			<OrSeparator css={{ mt: '$22', mb: '$22' }}>
 				<hr />
-				<Text size="sm" color="primary300" weight="medium">
+				<Text color="primary300" size="sm" weight="medium">
 					or
 				</Text>
 				<hr />
 			</OrSeparator>
 			<Text
-				size="sm"
 				fontWeight="medium"
+				size="sm"
 				underline="true"
 				css={{
 					alignSelf: 'center',

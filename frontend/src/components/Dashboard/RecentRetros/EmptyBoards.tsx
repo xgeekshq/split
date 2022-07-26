@@ -21,12 +21,12 @@ const EmptyBoardsText = styled(Text, {
 
 const EmptyBoards: React.FC = () => {
 	return (
-		<StyledBox elevation="1" justify="center" align="center" direction="column">
+		<StyledBox align="center" direction="column" elevation="1" justify="center">
 			<StyledImage />
-			<EmptyBoardsText size="md" css={{ mt: '$24', textAlign: 'center' }}>
+			<EmptyBoardsText css={{ mt: '$24', textAlign: 'center' }} size="md">
 				You have not participated in any retro yet.
 				<br />
-				<Text weight="medium" underline>
+				<Text underline weight="medium">
 					Add a new retro board
 				</Text>{' '}
 				now.

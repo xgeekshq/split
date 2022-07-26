@@ -49,24 +49,24 @@ const AlertCustomDialog = ({
 		<AlertDialog defaultOpen={defaultOpen}>
 			{children}
 			<AlertDialogContent css={{ ...css }} handleClose={handleClose}>
-				<DialogTitleContainer justify="between" align="center">
+				<DialogTitleContainer align="center" justify="between">
 					<StyledDialogTitle heading="4">{title}</StyledDialogTitle>
 					<AlertDialogCancel
-						isIcon
 						asChild
+						isIcon
 						css={{ '@hover': { '&:hover': { cursor: 'pointer' } } }}
 						onClick={handleClose}
 					>
 						<Flex css={{ '& svg': { color: '$primary400' } }}>
-							<Icon name="close" css={{ width: '$24', height: '$24' }} />
+							<Icon css={{ width: '$24', height: '$24' }} name="close" />
 						</Flex>
 					</AlertDialogCancel>
 				</DialogTitleContainer>
 				<Separator css={{ backgroundColor: '$primary100' }} />
-				<DialogText ellipsis={addEllipsis} direction="column">
+				<DialogText direction="column" ellipsis={addEllipsis}>
 					<StyledAlertDialogDescription>{text}</StyledAlertDialogDescription>
 				</DialogText>
-				<DialogButtons justify="end" gap="24">
+				<DialogButtons gap="24" justify="end">
 					<AlertDialogCancel variant="primaryOutline" onClick={handleClose}>
 						{cancelText}
 					</AlertDialogCancel>

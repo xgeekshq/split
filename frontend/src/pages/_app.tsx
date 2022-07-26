@@ -41,10 +41,10 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
 		<>
 			<Head>
 				<title>SPLIT</title>
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 			</Head>
 			<Sprite />
-			<SessionProvider session={session} refetchInterval={JWT_EXPIRATION_TIME - 5}>
+			<SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={session}>
 				<QueryClientProvider client={queryClient}>
 					<Hydrate state={pageProps.dehydratedState}>
 						<ToastProvider duration={100000}>

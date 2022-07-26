@@ -12,7 +12,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
 
 	return (
 		<StyledHeader direction="column">
-			<Flex css={{ p: '$40' }} align="center" justify="center">
+			<Flex align="center" css={{ p: '$40' }} justify="center">
 				<HeaderBannerIcon />
 			</Flex>
 			<Separator />
@@ -26,8 +26,8 @@ const Header = ({ firstName, lastName, email }: Props) => {
 				}}
 			>
 				<Flex
-					css={{ width: '57px', height: '58px', position: 'relative' }}
 					align="center"
+					css={{ width: '57px', height: '58px', position: 'relative' }}
 					justify="center"
 				>
 					<Icon
@@ -43,15 +43,15 @@ const Header = ({ firstName, lastName, email }: Props) => {
 							right: '0'
 						}}
 					/>
-					<Text size="md" color="primary800" weight="bold" css={{ zIndex: 1 }}>
+					<Text color="primary800" css={{ zIndex: 1 }} size="md" weight="bold">
 						{initialLetters}
 					</Text>
 				</Flex>
 				<Flex direction="column">
-					<Text css={{ color: '$white' }} weight="medium" size="sm">
+					<Text css={{ color: '$white' }} size="sm" weight="medium">
 						{`${firstName} ${lastName}`}
 					</Text>
-					<Text css={{ color: '$primary200' }} weight="medium" size="xs">
+					<Text css={{ color: '$primary200' }} size="xs" weight="medium">
 						{email}
 					</Text>
 				</Flex>

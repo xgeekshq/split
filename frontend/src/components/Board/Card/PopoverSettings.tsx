@@ -33,21 +33,21 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 
 	return (
 		<PopoverContent portalled={false}>
-			<PopoverItem onClick={setEditCard} gap="8" align="center">
+			<PopoverItem align="center" gap="8" onClick={setEditCard}>
 				<Icon name="edit" />
 				<Text size="sm" weight="medium">
 					Edit
 				</Text>
 			</PopoverItem>
 			{isItem && (
-				<PopoverItem onClick={unmergeCard} gap="8" align="center">
+				<PopoverItem align="center" gap="8" onClick={unmergeCard}>
 					<Icon name="arrow-long-right" />
 					<Text size="sm" weight="medium">
 						Unmerge card
 					</Text>
 				</PopoverItem>
 			)}
-			<PopoverItem gap="8" align="center" onClick={setDeleteCard}>
+			<PopoverItem align="center" gap="8" onClick={setDeleteCard}>
 				<Icon name="trash-alt" />
 				<Text size="sm" weight="medium">
 					Delete card
@@ -144,9 +144,9 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 				{item.createdBy?._id === userId && (
 					<PopoverSettingsContent
 						isItem={isItem}
-						unmergeCard={unmergeCard}
-						setEditCard={handleEditing}
 						setDeleteCard={handleDeleteCard}
+						setEditCard={handleEditing}
+						unmergeCard={unmergeCard}
 					/>
 				)}
 			</Popover>

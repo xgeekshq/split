@@ -78,8 +78,8 @@ const CreateBoardContent = () => {
 
 	return (
 		<StyledForm
-			direction="column"
 			css={{ width: '100%', height: '100%', backgroundColor: '$background' }}
+			direction="column"
 			onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
 				saveBoard(text, maxVotes);
 			})}
@@ -100,7 +100,7 @@ const CreateBoardContent = () => {
 					<SettingsTabs />
 				</FormProvider>
 			</Flex>
-			<Flex justify="end" gap="24" css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}>
+			<Flex css={{ backgroundColor: 'white', py: '$16', pr: '$32' }} gap="24" justify="end">
 				<Button variant="lightOutline" onClick={handleOnClickSaveBoard}>
 					Cancel
 				</Button>

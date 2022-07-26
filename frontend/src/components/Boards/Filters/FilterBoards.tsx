@@ -37,7 +37,7 @@ interface FilterBoardsProps {
 
 const FilterBoards: React.FC<FilterBoardsProps> = ({ setFilter, filter, teamNames }) => {
 	return (
-		<Flex justify="end" css={{ zIndex: '10' }}>
+		<Flex css={{ zIndex: '10' }} justify="end">
 			<StyledButton
 				css={{ borderRadius: '12px 0 0 12px' }}
 				data-active={filter === 'all'}
