@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
 	ChatMeMessageArguments,
 	ConversationsCreateArguments,
@@ -15,7 +14,6 @@ import {
 	SLACK_CHANNEL_PREFIX,
 	SLACK_MASTER_CHANNEL_ID
 } from 'libs/constants/slack';
-// import * as WebClientSlackApi from '@slack/web-api';
 import configService from 'libs/test-utils/mocks/configService.mock';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
@@ -26,8 +24,6 @@ import { SlackExecuteCommunication } from 'modules/communication/applications/sl
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
-import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
-import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 
 const slackUsersIds = [
 	'U023BECGF',
@@ -148,41 +144,30 @@ jest.spyOn(Logger.prototype, 'warn').mockImplementation(jest.fn);
 jest.spyOn(Logger.prototype, 'verbose').mockImplementation(jest.fn);
 
 const getConfiguration = () => ({
-	slackApiBotToken: configService.get(SLACK_API_BOT_TOKEN),
-	slackMasterChannelId: configService.get(SLACK_MASTER_CHANNEL_ID),
-	slackChannelPrefix: configService.get(SLACK_CHANNEL_PREFIX),
-	frontendUrl: configService.get(FRONTEND_URL)
+	slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
+	slackMasterChannelId: configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+	slackChannelPrefix: configService.getOrThrow(SLACK_CHANNEL_PREFIX),
+	frontendUrl: configService.getOrThrow(FRONTEND_URL)
 });
 
-function MakeSlackCommunicationGateAdapterStub() {
-	return new SlackCommunicationGateAdapter(getConfiguration());
-}
-
 describe('SlackExecuteCommunication', () => {
-	let service: SlackExecuteCommunicationService;
-
-	const communicationGateAdapterMocked = MakeSlackCommunicationGateAdapterStub();
+	let application: SlackExecuteCommunication;
+	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 
 	beforeAll(async () => {
-		const application = new SlackExecuteCommunication(
+		application = new SlackExecuteCommunication(
 			getConfiguration(),
 			new ConversationsSlackHandler(communicationGateAdapterMocked),
 			new UsersSlackHandler(communicationGateAdapterMocked),
 			new ChatSlackHandler(communicationGateAdapterMocked)
 		);
-
-		service = new SlackExecuteCommunicationService(
-			configService as unknown as ConfigService,
-			{} as CommunicationProducerService,
-			application
-		);
 	});
 
 	it('should be defined', () => {
-		expect(service).toBeDefined();
+		expect(application).toBeDefined();
 	});
 
-	it('shoult create channels, invite users, post messages into slack platfomr and returns all teams created', async () => {
+	it('shoult create channels, invite users, post messages into slack platform and returns all teams created', async () => {
 		let givenBoard: any = {
 			_id: 'main-board',
 			title: 'Main Board',
@@ -284,7 +269,7 @@ describe('SlackExecuteCommunication', () => {
 		givenBoard = translateBoard(givenBoard);
 		givenBoard = fillDividedBoardsUsersWithTeamUsers(givenBoard);
 
-		const result = await service.execute(givenBoard);
+		const result = await application.execute(givenBoard);
 
 		const expected = [
 			{

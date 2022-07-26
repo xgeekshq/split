@@ -8,7 +8,7 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'libs/constants/slack';
 import { BoardType } from 'modules/communication/dto/types';
-import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
+import { CommunicationProducerService } from 'modules/communication/producers/slack-communication.producer.service';
 
 @Injectable()
 export class SlackExecuteCommunicationService {

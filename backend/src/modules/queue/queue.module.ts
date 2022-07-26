@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
+import { CommunicationProducerService } from 'modules/communication/producers/slack-communication.producer.service';
 
 @Module({
 	imports: [
