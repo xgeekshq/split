@@ -15,7 +15,7 @@ export const configuration = (): Configuration => {
 			uri:
 				NODE_ENV === 'dev'
 					? `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin&replicaSet=${process.env.DB_REPLICA_SET}&readPreference=primary&directConnection=true`
-					: `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${process.env.DB_USER}@`
+					: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 		},
 		jwt: {
 			accessToken: {
@@ -39,6 +39,12 @@ export const configuration = (): Configuration => {
 			user: process.env.SMTP_USER as string,
 			password: process.env.SMTP_PASSWORD as string,
 			enabled: process.env.STMP_ENABLE === 'true'
+		},
+		slack: {
+			enable: process.env.SLACK_ENABLE === 'true',
+			botToken: process.env.SLACK_API_BOT_TOKEN as string,
+			masterChannelId: process.env.SLACK_MASTER_CHANNEL_ID as string,
+			channelPrefix: process.env.SLACK_CHANNEL_PREFIX as string
 		}
 	};
 
