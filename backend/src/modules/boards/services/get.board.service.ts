@@ -314,8 +314,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			...input,
 			columns
 		};
-
-		return input;
 	}
 
 	async countBoards(userId: string) {
