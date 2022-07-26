@@ -102,22 +102,36 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 						select: 'user role',
 						populate: {
 							path: 'user',
-							select: 'firstName lastName joinedAt'
+							select: '_id firstName lastName joinedAt'
 						}
 					}
 				})
 				.populate({
 					path: 'dividedBoards',
 					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user',
-						populate: {
-							path: 'user',
-							model: 'User',
-							select: 'firstName lastName joinedAt'
+					populate: [
+						{
+							path: 'users',
+							select: 'role user',
+							populate: {
+								path: 'user',
+								model: 'User',
+								select: 'firstName lastName joinedAt'
+							}
+						},
+						{
+							path: 'team',
+							select: 'name users _id',
+							populate: {
+								path: 'users',
+								select: 'user role',
+								populate: {
+									path: 'user',
+									select: '_id firstName lastName joinedAt'
+								}
+							}
 						}
-					}
+					]
 				})
 				.populate({
 					path: 'users',
@@ -197,18 +211,15 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * Replace user name (first and last) by "a"
 	 * @param input Card or a Card Item
 	 * @param userId current logged user
+	 * @param anonymous boolean to used when card is anonymous
 	 * @returns Created By User with first/last name replaced by "a"
 	 */
-	private replaceUser(input: UserDocument, userId: string): LeanDocument<UserDocument> {
-		if (input._id.toString() !== String(userId)) {
-			return {
-				...input,
-				firstName: hideText(input.firstName),
-				lastName: hideText(input.lastName)
-			};
-		}
-
-		return input;
+	private replaceUser(input: UserDocument): LeanDocument<UserDocument> {
+		return {
+			...input,
+			firstName: hideText(input.firstName),
+			lastName: hideText(input.lastName)
+		};
 	}
 
 	/**
@@ -226,7 +237,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			.map((comment) => {
 				return {
 					...comment,
-					createdBy: this.replaceUser(comment.createdBy as UserDocument, userId),
+					createdBy: this.replaceUser(comment.createdBy as UserDocument),
 					text: hideText(comment.text)
 				};
 			});
@@ -247,12 +258,17 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		hideVotes: boolean
 	): LeanDocument<CardDocument | CardItemDocument> {
 		let { text, comments, votes, createdBy } = input;
+		const { anonymous } = input;
 		const createdByAsUserDocument = createdBy as UserDocument;
 
 		if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 			text = hideText(input.text);
 			comments = this.replaceComments(input.comments, userId);
-			createdBy = this.replaceUser(createdByAsUserDocument, userId);
+			createdBy = this.replaceUser(createdByAsUserDocument);
+		}
+
+		if (anonymous) {
+			createdBy = this.replaceUser(createdByAsUserDocument);
 		}
 
 		if (hideVotes) {
@@ -268,6 +284,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		};
 	}
 
+	/**
+	 * Method to (if flags are true) replace cards/comments or hide votes
+	 * @param input Board
+	 * @param userId Current Logged User
+	 * @returns Board
+	 */
 	private cleanBoard(
 		input: LeanDocument<
 			Board & {
@@ -353,6 +375,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			.populate({
 				path: 'columns.cards.items.comments.createdBy',
 				select: '_id firstName lastName'
+			})
+			.populate({
+				path: 'createdBy',
+				select: '_id firstName lastName isSAdmin joinedAt'
 			})
 			.populate({
 				path: 'dividedBoards',

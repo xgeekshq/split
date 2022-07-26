@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -17,6 +18,10 @@ export class GetTeamApplication implements GetTeamApplicationInterface {
 
 	getAllTeams() {
 		return this.getTeamService.getAllTeams();
+	}
+
+	getTeam(teamId: string, teamQueryParams?: TeamQueryParams) {
+		return this.getTeamService.getTeam(teamId, teamQueryParams);
 	}
 
 	getTeamsOfUser(userId: string) {

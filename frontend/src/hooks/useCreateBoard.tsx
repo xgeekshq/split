@@ -7,8 +7,9 @@ import { BoardUserToAdd } from '../types/board/board.user';
 import { Team } from '../types/team/team';
 import { TeamUser } from '../types/team/team.user';
 import { BoardUserRoles } from '../utils/enums/board.user.roles';
+import { TeamUserRoles } from '../utils/enums/team.user.roles';
 
-const useCreateBoard = (team: Team, stakeHolders: string[]) => {
+const useCreateBoard = (team: Team) => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
 	const resetBoardState = useResetRecoilState(createBoardDataState);
 
@@ -17,12 +18,9 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	const minTeams = 2;
 	const MIN_MEMBERS = 4;
 
-	// const now = new Date();
-	// const last3Months = new Date().setMonth(now.getMonth() - 3);
-
 	const teamMembers = team.users.filter(
 		(teamUser) =>
-			!stakeHolders?.includes(teamUser.user.email) &&
+			teamUser.role !== TeamUserRoles.STAKEHOLDER &&
 			new Date(teamUser.user.joinedAt).getTime() > 0
 	);
 	const dividedBoardsCount = board.dividedBoards.length;
@@ -58,13 +56,14 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	);
 
 	const generateSubBoards = useCallback(
-		(maxTeams: number, splitedUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
-			if (splitedUsers && team.users.length >= MIN_MEMBERS) {
+		(maxTeams: number, splitUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
+			if (splitUsers && team.users.length >= MIN_MEMBERS) {
 				new Array(maxTeams).fill(0).forEach((_, i) => {
 					const newBoard = generateSubBoard(i + 1);
-					splitedUsers[i][Math.floor(Math.random() * splitedUsers[i].length)].role =
+
+					splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role =
 						BoardUserRoles.RESPONSIBLE;
-					newBoard.users = splitedUsers[i];
+					newBoard.users = splitUsers[i];
 					subBoards.push(newBoard);
 				});
 			}
@@ -75,21 +74,21 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 	const handleSplitBoards = useCallback(
 		(maxTeams: number) => {
 			const subBoards: BoardToAdd[] = [];
-			const splitedUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
+			const splitUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
 			const availableUsers = [...teamMembers];
 
 			new Array(teamMembers.length).fill(0).reduce((j) => {
 				if (j >= maxTeams) j = 0;
 				const teamUser = getRandomUser(availableUsers);
-				splitedUsers[j] = [
-					...splitedUsers[j],
+				splitUsers[j] = [
+					...splitUsers[j],
 					{ user: teamUser.user, role: BoardUserRoles.MEMBER, votesCount: 0 }
 				];
 				return ++j;
 			}, 0);
 
-			generateSubBoards(maxTeams, splitedUsers, subBoards);
+			generateSubBoards(maxTeams, splitUsers, subBoards);
 
 			return subBoards;
 		},
@@ -150,7 +149,6 @@ const useCreateBoard = (team: Team, stakeHolders: string[]) => {
 		generateSubBoard,
 		handleSplitBoards,
 		teamMembers,
-		stakeHolders,
 		resetBoardState
 	};
 };
