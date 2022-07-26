@@ -4,17 +4,24 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
+import { deepClone } from 'fast-json-patch';
+
+import { highlight2Colors } from 'styles/stitches/partials/colors/highlight2.colors';
 
 import Icon from 'components/icons/Icon';
+import Avatar from 'components/Primitives/Avatar';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import Input from 'components/Primitives/Input';
+import Separator from 'components/Primitives/Separator';
 import { Switch, SwitchThumb } from 'components/Primitives/Switch';
 import Text from 'components/Primitives/Text';
 import useBoard from 'hooks/useBoard';
 import SchemaUpdateBoard from 'schema/schemaUpdateBoardForm';
 import { boardInfoState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState, updateBoardError } from 'store/updateBoard/atoms/update-board.atom';
+import { BoardUser, BoardUserToAdd } from 'types/board/board.user';
+import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import isEmpty from 'utils/isEmpty';
 import {
 	ButtonsContainer,
@@ -31,19 +38,72 @@ import {
 
 const DEFAULT_MAX_VOTES = '6';
 
+type ConfigurationSettingsProps = {
+	title: string;
+	text: string;
+	isChecked: boolean;
+	handleCheckedChange: (checked: boolean) => void;
+	children?: ReactNode;
+};
+
+const ConfigurationSettings = ({
+	title,
+	text,
+	isChecked,
+	handleCheckedChange,
+	children
+}: ConfigurationSettingsProps) => (
+	<Flex gap={20}>
+		<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
+			<SwitchThumb variant="sm">
+				{isChecked && (
+					<Icon
+						name="check"
+						css={{
+							width: '$10',
+							height: '$10',
+							color: '$successBase'
+						}}
+					/>
+				)}
+			</SwitchThumb>
+		</Switch>
+		<Flex direction="column">
+			<Text size="md" weight="medium">
+				{title}
+			</Text>
+			<Text size="sm" color="primary500">
+				{text}
+			</Text>
+			{children}
+		</Flex>
+	</Flex>
+);
+
 type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	isOpen: boolean;
 	socketId: string;
+	isStakeholderOrAdmin?: boolean | undefined;
+	isOwner?: boolean | undefined;
+	isSAdmin?: boolean | undefined;
 };
 
-const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
+const BoardSettings = ({
+	isOpen,
+	setIsOpen,
+	socketId,
+	isStakeholderOrAdmin,
+	isOwner,
+	isSAdmin
+}: Props) => {
 	const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
 	const [updateBoardData, setUpdateBoardData] = useRecoilState(updateBoardDataState);
 	const haveError = useRecoilValue(updateBoardError);
 
 	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
+	const [isUsersChecked, setIsUsersChecked] = useState(false);
 
 	/**
 	 * Atoms
@@ -66,13 +126,14 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 	/**
 	 * Use Form Hook
 	 */
-	const methods = useForm<{ title: string; maxVotes: string | undefined }>({
+	const methods = useForm<{ title: string; maxVotes: string | undefined; users: BoardUser[] }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		resolver: joiResolver(SchemaUpdateBoard),
 		defaultValues: {
 			title: '',
-			maxVotes: undefined
+			maxVotes: undefined,
+			users: []
 		}
 	});
 
@@ -86,6 +147,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 		methods.setValue('title', board.title);
 		methods.setValue('maxVotes', board.maxVotes);
 		setIsMaxVotesChecked(!isEmpty(board.maxVotes));
+		methods.setValue('users', board.users);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
@@ -153,14 +215,15 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 		setValue('maxVotes', isEmpty(board.maxVotes) ? DEFAULT_MAX_VOTES : board.maxVotes);
 	};
 
-	const updateBoard = (title: string, maxVotes: string | undefined) => {
+	const updateBoard = (title: string, maxVotes: string | undefined, users: BoardUser[]) => {
 		mutate(
 			{
 				board: {
 					...updateBoardData.board,
 					title,
 					maxVotes,
-					socketId
+					socketId,
+					users
 				}
 			},
 			{
@@ -175,6 +238,39 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 	 * Use Effect to submit the board settings form when press enter key
 	 * (Note: Radix Dialog close when pressing enter)
 	 */
+
+	/** Team Responsible Change */
+	const { users } = board;
+	const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+	const handleUsers = (checked: boolean) => {
+		setIsUsersChecked(checked);
+	};
+	const handleLottery = () => {
+		if (isUsersChecked) {
+			const cloneUsers = [...deepClone(users)].map((user) => ({
+				...user,
+				role: BoardUserRoles.MEMBER
+			}));
+
+			// 	'update',
+			let userFound: BoardUserToAdd | undefined;
+			do {
+				userFound = cloneUsers[Math.floor(Math.random() * cloneUsers.length)];
+			} while (userFound?.user._id === responsible?._id);
+
+			if (!userFound) return;
+			userFound.role = BoardUserRoles.RESPONSIBLE;
+
+			setUpdateBoardData((prev) => ({
+				...prev,
+				board: {
+					...prev.board,
+					users: cloneUsers
+				}
+			}));
+		}
+	};
+
 	useEffect(() => {
 		const keyDownHandler = (event: KeyboardEvent) => {
 			if (event.key === 'Enter') {
@@ -193,40 +289,6 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const configurationSettings = (
-		title: string,
-		text: string,
-		isChecked: boolean,
-		handleCheckedChange: (checked: boolean) => void,
-		child?: ReactNode
-	) => (
-		<Flex gap={20}>
-			<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
-				<SwitchThumb variant="sm">
-					{isChecked && (
-						<Icon
-							name="check"
-							css={{
-								width: '$10',
-								height: '$10',
-								color: '$successBase'
-							}}
-						/>
-					)}
-				</SwitchThumb>
-			</Switch>
-			<Flex direction="column">
-				<Text size="md" weight="medium">
-					{title}
-				</Text>
-				<Text size="sm" color="primary500">
-					{text}
-				</Text>
-				{child}
-			</Flex>
-		</Flex>
-	);
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -254,11 +316,11 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 				</StyledDialogTitle>
 				<FormProvider {...methods}>
 					<form
-						onSubmit={methods.handleSubmit(({ title, maxVotes }) =>
-							updateBoard(title, maxVotes)
+						onSubmit={methods.handleSubmit(({ title, maxVotes, users: boardUsers }) =>
+							updateBoard(title, maxVotes, boardUsers)
 						)}
 					>
-						<Flex direction="column" gap={16} css={{ marginBottom: '$32' }}>
+						<Flex direction="column" gap={16} css={{ padding: '$24 $32 $40' }}>
 							<Text heading="4">Board Name</Text>
 							<Input
 								disabled={haveError}
@@ -270,14 +332,12 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 								maxChars="30"
 							/>
 						</Flex>
-
-						<Text heading="4" css={{ display: 'block', mb: '$16' }}>
+						<Text heading="4" css={{ display: 'block', px: '$32' }}>
 							Board Settings
 						</Text>
-
-						<Accordion type="single" defaultValue="configurations" collapsible>
-							<StyledAccordionItem value="configurations">
-								<StyledAccordionHeader>
+						<Accordion type="multiple">
+							<StyledAccordionItem value="configurations" variant="first">
+								<StyledAccordionHeader variant="first">
 									<StyledAccordionTrigger>
 										<Text heading="5">Configurations</Text>
 										<StyledAccordionIcon name="arrow-down" />
@@ -285,25 +345,27 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 								</StyledAccordionHeader>
 								<StyledAccordionContent>
 									<Flex direction="column" gap={16}>
-										{configurationSettings(
-											'Hide cards from others',
-											'Participants can not see the cards from other participants of this retrospective.',
-											board.hideCards,
-											handleHideCardsChange
-										)}
+										<ConfigurationSettings
+											text="Participants can not see the cards from other participants of this retrospective."
+											title="Hide cards from others"
+											isChecked={board.hideCards}
+											handleCheckedChange={handleHideCardsChange}
+										/>
+
 										{!isSubBoard && (
 											<>
-												{configurationSettings(
-													'Hide votes from others',
-													'Participants can not see the votes from other participants of this retrospective.',
-													board.hideVotes,
-													handleHideVotesChange
-												)}
-												{configurationSettings(
-													'Limit votes',
-													'Make votes more significant by limiting them.',
-													isMaxVotesChecked,
-													handleMaxVotes,
+												<ConfigurationSettings
+													text="Participants can not see the votes from other participants of this retrospective."
+													title="Hide votes from others"
+													isChecked={board.hideVotes}
+													handleCheckedChange={handleHideVotesChange}
+												/>
+												<ConfigurationSettings
+													text="Make votes more significant by limiting them."
+													title="Limit votes"
+													isChecked={isMaxVotesChecked}
+													handleCheckedChange={handleMaxVotes}
+												>
 													<Input
 														id="maxVotes"
 														name="maxVotes"
@@ -317,14 +379,103 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 																: board.maxVotes
 														}
 													/>
-												)}
+												</ConfigurationSettings>
 											</>
 										)}
 									</Flex>
 								</StyledAccordionContent>
 							</StyledAccordionItem>
-						</Accordion>
 
+							{isSubBoard && isStakeholderOrAdmin && isOwner && isSAdmin && (
+								<StyledAccordionItem value="responsible">
+									<StyledAccordionHeader>
+										<StyledAccordionTrigger>
+											<Text heading="5">Team Responsible</Text>
+											<StyledAccordionIcon name="arrow-down" />
+										</StyledAccordionTrigger>
+									</StyledAccordionHeader>
+									<StyledAccordionContent>
+										<Flex direction="column" gap={16}>
+											<ConfigurationSettings
+												text="Change responsible participant for this board."
+												title="Team Responsible"
+												isChecked={isUsersChecked}
+												handleCheckedChange={handleUsers}
+											>
+												<Flex align="center" css={{ mt: '$10' }}>
+													<Text
+														css={{
+															mr: '$8',
+															color: '$primary300'
+														}}
+													>
+														Responsible Lottery
+													</Text>
+													<Separator
+														orientation="vertical"
+														css={{
+															'&[data-orientation=vertical]': {
+																height: '$12',
+																width: 1
+															}
+														}}
+													/>
+
+													<Flex
+														css={{
+															height: '$24',
+															width: '$24',
+															borderRadius: '$round',
+															border: '1px solid $colors$primary400',
+															ml: '$12',
+															cursor: 'pointer',
+
+															transition: 'all 0.2s ease-in-out',
+
+															'&:hover': {
+																backgroundColor: '$primary400',
+																color: 'white'
+															}
+														}}
+														align="center"
+														justify="center"
+														onClick={handleLottery}
+													>
+														<Icon
+															name="wand"
+															css={{
+																width: '$12',
+																height: '$12'
+															}}
+														/>
+													</Flex>
+
+													<Text
+														size="sm"
+														color="primary800"
+														css={{ mx: '$8' }}
+													>
+														{responsible?.firstName}{' '}
+														{responsible?.lastName}
+													</Text>
+
+													<Avatar
+														css={{ position: 'relative' }}
+														size={32}
+														colors={{
+															bg: highlight2Colors.highlight2Lighter,
+															fontColor:
+																highlight2Colors.highlight2Dark
+														}}
+														fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
+													/>
+												</Flex>
+											</ConfigurationSettings>
+										</Flex>
+									</StyledAccordionContent>
+								</StyledAccordionItem>
+							)}
+						</Accordion>
 						<ButtonsContainer justify="end" gap={24}>
 							<Button
 								onClick={() => setIsOpen(false)}
@@ -347,6 +498,16 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 			</StyledDialogContent>
 		</Dialog>
 	);
+};
+
+BoardSettings.defaultProps = {
+	isOwner: false,
+	isStakeholderOrAdmin: false,
+	isSAdmin: false
+};
+
+ConfigurationSettings.defaultProps = {
+	children: undefined
 };
 
 export { BoardSettings };

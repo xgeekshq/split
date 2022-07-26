@@ -1,5 +1,7 @@
 import { atom } from 'recoil';
 
+import { BoardUser } from 'types/board/board.user';
+
 export const updateBoardError = atom({
 	key: 'haveUpdateBoardError',
 	default: false
@@ -13,6 +15,7 @@ export interface UpdateBoardData {
 		title: string;
 		maxVotes: undefined | string;
 		postAnonymously: boolean;
+		users: BoardUser[];
 	};
 }
 
@@ -25,7 +28,8 @@ export const updateBoardDataState = atom<UpdateBoardData>({
 			hideCards: false,
 			hideVotes: false,
 			maxVotes: undefined,
-			postAnonymously: false
+			postAnonymously: false,
+			users: []
 		}
 	}
 });

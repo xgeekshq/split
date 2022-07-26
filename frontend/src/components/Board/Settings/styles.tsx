@@ -50,11 +50,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
 		animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards`
 	},
 
-	'&:focus': { outline: 'none' },
-
-	'& form': {
-		padding: '$24 $32'
-	}
+	'&:focus': { outline: 'none' }
 });
 
 const StyledDialogTitle = styled('div', DialogPrimitive.Title, {
@@ -62,8 +58,7 @@ const StyledDialogTitle = styled('div', DialogPrimitive.Title, {
 	alignItems: 'center',
 	justifyContent: 'space-between',
 
-	px: '$32',
-	py: '$24',
+	padding: '$24 $32',
 
 	borderBottom: '1px solid $colors$primary100',
 
@@ -106,7 +101,22 @@ const slideUp = keyframes({
  */
 const StyledAccordionHeader = styled(AccordionPrimitive.Header, {
 	all: 'unset',
-	display: 'flex'
+	display: 'flex',
+
+	variants: {
+		variant: {
+			first: {
+				pt: '$16'
+			},
+			others: {
+				pt: '$40'
+			}
+		}
+	},
+
+	defaultVariants: {
+		variant: 'others'
+	}
 });
 
 const StyledAccordionTrigger = styled(AccordionPrimitive.Trigger, {
@@ -126,6 +136,9 @@ const StyledAccordionTrigger = styled(AccordionPrimitive.Trigger, {
 		svg: {
 			transform: 'rotate(180deg)'
 		}
+	},
+	'&:hover': {
+		textDecoration: 'underline'
 	}
 });
 
@@ -149,7 +162,23 @@ const StyledAccordionIcon = styled(Icon, {
 });
 
 const StyledAccordionItem = styled(AccordionPrimitive.Item, {
-	overflow: 'hidden'
+	overflow: 'hidden',
+	px: ' $32',
+	variants: {
+		variant: {
+			first: {
+				borderTop: 'none',
+				mb: '$40'
+			},
+			others: {
+				borderTop: '1px solid $colors$primary100'
+			}
+		}
+	},
+
+	defaultVariants: {
+		variant: 'others'
+	}
 });
 
 /**

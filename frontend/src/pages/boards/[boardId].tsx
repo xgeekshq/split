@@ -96,7 +96,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	useEffect(() => {
 		if (data && isOpen) {
 			const {
-				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards }
+				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards, users }
 			} = data;
 			setUpdateBoard({
 				board: {
@@ -105,7 +105,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 					maxVotes,
 					hideCards,
 					hideVotes,
-					postAnonymously
+					postAnonymously,
+					users
 				}
 			});
 		}
@@ -271,6 +272,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 									isOpen={isOpen}
 									setIsOpen={setIsOpen}
 									socketId={socketId}
+									isStakeholderOrAdmin={isStakeholderOrAdmin?.user._id === userId}
+									isOwner={isOwner}
+									isSAdmin={isSAdmin}
 								/>
 							)}
 							{board.submitedByUser && board.submitedAt && (
