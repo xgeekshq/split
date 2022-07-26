@@ -20,7 +20,7 @@ import useBoard from 'hooks/useBoard';
 import SchemaUpdateBoard from 'schema/schemaUpdateBoardForm';
 import { boardInfoState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState, updateBoardError } from 'store/updateBoard/atoms/update-board.atom';
-import { BoardUser, BoardUserToAdd } from 'types/board/board.user';
+import { BoardUserToAdd } from 'types/board/board.user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import isEmpty from 'utils/isEmpty';
 import {
@@ -126,14 +126,13 @@ const BoardSettings = ({
 	/**
 	 * Use Form Hook
 	 */
-	const methods = useForm<{ title: string; maxVotes: string | undefined; users: BoardUser[] }>({
+	const methods = useForm<{ title: string; maxVotes: string | undefined }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		resolver: joiResolver(SchemaUpdateBoard),
 		defaultValues: {
 			title: '',
-			maxVotes: undefined,
-			users: []
+			maxVotes: undefined
 		}
 	});
 
@@ -147,7 +146,6 @@ const BoardSettings = ({
 		methods.setValue('title', board.title);
 		methods.setValue('maxVotes', board.maxVotes);
 		setIsMaxVotesChecked(!isEmpty(board.maxVotes));
-		methods.setValue('users', board.users);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [board]);
@@ -215,23 +213,18 @@ const BoardSettings = ({
 		setValue('maxVotes', isEmpty(board.maxVotes) ? DEFAULT_MAX_VOTES : board.maxVotes);
 	};
 
-	const updateBoard = (title: string, maxVotes: string | undefined, users: BoardUser[]) => {
-		mutate(
-			{
-				board: {
-					...updateBoardData.board,
-					title,
-					maxVotes,
-					socketId,
-					users
-				}
-			},
-			{
-				onSuccess: () => {
-					setIsOpen(false);
-				}
+	const updateBoard = (title: string, maxVotes: string | undefined) => {
+		console.log('aqi', updateBoardData);
+		mutate({
+			board: {
+				...updateBoardData.board,
+				title,
+				maxVotes,
+				socketId
 			}
-		);
+		});
+		setIsOpen(false);
+		setIsUsersChecked(false);
 	};
 
 	/**
@@ -316,8 +309,8 @@ const BoardSettings = ({
 				</StyledDialogTitle>
 				<FormProvider {...methods}>
 					<form
-						onSubmit={methods.handleSubmit(({ title, maxVotes, users: boardUsers }) =>
-							updateBoard(title, maxVotes, boardUsers)
+						onSubmit={methods.handleSubmit(({ title, maxVotes }) =>
+							updateBoard(title, maxVotes)
 						)}
 					>
 						<Flex direction="column" gap={16} css={{ padding: '$24 $32 $40' }}>
@@ -386,7 +379,7 @@ const BoardSettings = ({
 								</StyledAccordionContent>
 							</StyledAccordionItem>
 
-							{isSubBoard && isStakeholderOrAdmin && isOwner && isSAdmin && (
+							{isSubBoard && (isStakeholderOrAdmin || isOwner || isSAdmin) && (
 								<StyledAccordionItem value="responsible">
 									<StyledAccordionHeader>
 										<StyledAccordionTrigger>
@@ -428,14 +421,19 @@ const BoardSettings = ({
 															borderRadius: '$round',
 															border: '1px solid $colors$primary400',
 															ml: '$12',
-															cursor: 'pointer',
+															cursor: isUsersChecked
+																? 'pointer'
+																: 'default',
 
 															transition: 'all 0.2s ease-in-out',
 
-															'&:hover': {
-																backgroundColor: '$primary400',
-																color: 'white'
-															}
+															'&:hover': isUsersChecked
+																? {
+																		backgroundColor:
+																			'$primary400',
+																		color: 'white'
+																  }
+																: 'none'
 														}}
 														align="center"
 														justify="center"
