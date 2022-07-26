@@ -22,10 +22,10 @@ export class CommunicationProducerService {
 			job.remove();
 		});
 		this.queue.on('error', (error: Error) => {
-			this.logger.error(`Error on queue: "${error}"`);
+			this.logger.error(`Error on queue: "${JSON.stringify(error)}"`);
 		});
 		this.queue.on('failed', (job: Job<JobType>, error) => {
-			this.logger.error(`Job id: "${job.id}" fails with error: "${error}"`);
+			this.logger.error(`Job id: "${job.id}" fails with error: "${JSON.stringify(error)}"`);
 		});
 	}
 

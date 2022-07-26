@@ -7,10 +7,7 @@ import {
 	SLACK_CHANNEL_PREFIX,
 	SLACK_MASTER_CHANNEL_ID
 } from 'libs/constants/slack';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
-import { TeamDto } from 'modules/communication/dto/team.dto';
 import { BoardType } from 'modules/communication/dto/types';
-import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import { CommunicationProducerService } from 'modules/communication/producers/producer.service';
 
 @Injectable()
@@ -18,16 +15,10 @@ export class SlackExecuteCommunicationService {
 	constructor(
 		private configService: ConfigService,
 		@Inject(CommunicationProducerService)
-		private readonly communicationProducerService: CommunicationProducerService,
-		@Inject(SlackExecuteCommunication)
-		private readonly application: ExecuteCommunicationInterface
+		private readonly communicationProducerService: CommunicationProducerService
 	) {}
 
-	public async execute(board: BoardType): Promise<TeamDto[]> {
-		return this.application.execute(board);
-	}
-
-	public async executeByQueue(board: BoardType): Promise<void> {
+	public async execute(board: BoardType): Promise<void> {
 		this.communicationProducerService.add({
 			board,
 			config: {
