@@ -205,8 +205,6 @@ const useVotes = () => {
 
 		const newBoardData = updateBoardDataOptimistic(prevBoardData, voteData, action);
 
-		console.log({ prevBoardData, newBoardData });
-
 		queryClient.setQueryData(boardQueryKey, { board: newBoardData });
 
 		return { newBoardData, prevBoardData };
