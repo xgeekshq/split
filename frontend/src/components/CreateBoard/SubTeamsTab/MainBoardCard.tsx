@@ -79,7 +79,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 	const teamMembersCount = teamMembers?.length ?? 0;
 
 	useEffect(() => {
-		if (teamMembersCount < 4 && board.dividedBoards.length !== 0) {
+		if (teamMembersCount < 4 && board.dividedBoards.length) {
 			setHaveError(true);
 			return;
 		}
