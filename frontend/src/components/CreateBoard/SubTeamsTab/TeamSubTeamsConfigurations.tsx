@@ -37,12 +37,12 @@ const TeamSubTeamsConfigurations = () => {
 
 	useEffect(() => {
 		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
-		const hasMinMembers =
+
+		if (
 			isTeamsValid &&
 			teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-				MIN_MEMBERS;
-
-		if (isTeamsValid && hasMinMembers) {
+				MIN_MEMBERS
+		) {
 			const selectedTeam = teams[0];
 
 			const isStakeholder = (userTeam: TeamUser): boolean =>
