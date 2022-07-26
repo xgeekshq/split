@@ -46,6 +46,24 @@ const useVotes = () => {
 
 	const hasMaxVotesLimit = ({ maxVotes }: BoardType) => !isEmpty(maxVotes);
 
+	const updateUserVotesCountAndGetBoard = (
+		newBoardData: BoardType,
+		action: Action
+	): BoardType => {
+		const userIndex = newBoardData.users.findIndex(({ _id }): boolean => _id === userId);
+
+		if (userIndex > -1) {
+			let { votesCount } = newBoardData.users[userIndex];
+
+			if (action === Action.Add) votesCount = votesCount ? votesCount + 1 : 1;
+			else if (action === Action.Remove) votesCount = votesCount ? votesCount - 1 : 0;
+
+			newBoardData.users[userIndex].votesCount = votesCount;
+		}
+
+		return newBoardData;
+	};
+
 	const addVoteToCardItemOptimistic = (
 		prevBoardData: BoardType,
 		indexes: number[]
@@ -55,16 +73,16 @@ const useVotes = () => {
 
 		newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.push(userId);
 
-		return newBoardData;
+		return updateUserVotesCountAndGetBoard(newBoardData, Action.Add);
 	};
 
 	const removeVoteFromCardItemOptimistic = (prevBoardData: BoardType, indexes: number[]) => {
 		const newBoardData = prevBoardData;
 		const [colIndex, cardIndex, cardItemIndex] = indexes;
 
-		prevBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
+		newBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
 
-		return newBoardData;
+		return updateUserVotesCountAndGetBoard(newBoardData, Action.Remove);
 	};
 
 	const updateCardItemVoteOptimistic = (
@@ -91,7 +109,7 @@ const useVotes = () => {
 			newBoardData.columns[colIndex].cards[cardIndex].votes = [userId];
 		}
 
-		return newBoardData;
+		return updateUserVotesCountAndGetBoard(newBoardData, Action.Add);
 	};
 
 	const removeVoteFromCardsOptimistic = (
@@ -105,7 +123,7 @@ const useVotes = () => {
 		if (hasVotesOnCards) {
 			newBoardData.columns[colIndex].cards[cardIndex].votes.pop();
 
-			return newBoardData;
+			return updateUserVotesCountAndGetBoard(newBoardData, Action.Remove);
 		}
 
 		const cardItems = newBoardData.columns[colIndex].cards[cardIndex].items;
@@ -186,6 +204,8 @@ const useVotes = () => {
 		const prevBoardData: BoardType = getPreviousBoardData(boardQueryKey);
 
 		const newBoardData = updateBoardDataOptimistic(prevBoardData, voteData, action);
+
+		console.log({ prevBoardData, newBoardData });
 
 		queryClient.setQueryData(boardQueryKey, { board: newBoardData });
 
