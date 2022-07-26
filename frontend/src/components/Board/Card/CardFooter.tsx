@@ -124,7 +124,7 @@ const CardFooter = React.memo<FooterProps>(
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (maxVotes && actualBoardVotes && actualBoardVotes === maxVotes) return;
+			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
 			addVote.mutate({
 				boardId,
 				cardId: card._id,
