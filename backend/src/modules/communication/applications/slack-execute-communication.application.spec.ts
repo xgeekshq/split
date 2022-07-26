@@ -254,7 +254,7 @@ describe('SlackExecuteCommunication', () => {
 						}
 					})),
 					{
-						role: 'stackholder',
+						role: 'stakeholder',
 						user: {
 							_id: 'any_id',
 							firstName: 'any_first_name',

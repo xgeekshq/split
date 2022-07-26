@@ -16,9 +16,11 @@ export class CommunicationProducerService {
 		private readonly queue: Queue
 	) {
 		// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		this.queue.on('completed', (job: Job<JobType>, data: TeamDto[]) => {
 			this.logger.verbose(`Completed Job id: "${job.id}"`);
-			console.log(data);
+			// TODO
+			// console.log(data);
 			job.remove();
 		});
 		this.queue.on('error', (error: Error) => {
