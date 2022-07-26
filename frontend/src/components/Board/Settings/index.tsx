@@ -476,7 +476,10 @@ const BoardSettings = ({
 						</Accordion>
 						<ButtonsContainer justify="end" gap={24}>
 							<Button
-								onClick={() => setIsOpen(false)}
+								onClick={() => {
+									setIsOpen(false);
+									setIsUsersChecked(false);
+								}}
 								variant="primaryOutline"
 								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
 							>
