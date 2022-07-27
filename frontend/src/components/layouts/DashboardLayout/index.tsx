@@ -1,12 +1,10 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
 
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { AddNewBoardButton, ContentSection } from './styles';
-import { newBoardState } from 'store/createBoard/atoms/create-board.atom';
 
 type DashboardLayoutProps = {
 	children: ReactNode;
@@ -16,7 +14,6 @@ type DashboardLayoutProps = {
 };
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
-	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 	const { children, firstName, isDashboard, isBoards } = props;
 
 	return (
@@ -25,7 +22,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 				<Flex justify="between">
 					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
 					{isBoards && <Text heading="1">Boards</Text>}
-					<Link onClick={setNewBoard(true)} href="/boards/new">
+					<Link href="/boards/new">
 						<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
 							<Icon name="plus" css={{ color: 'white' }} />
 							Add new board

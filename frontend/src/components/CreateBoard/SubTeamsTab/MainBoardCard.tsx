@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -18,7 +18,6 @@ import { Team } from 'types/team/team';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
-import { newBoardState } from 'store/createBoard/atoms/create-board.atom';
 
 const MainContainer = styled(Flex, Box, {
 	backgroundColor: 'white',
@@ -36,6 +35,7 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
 	team: Team;
+	timesOpen: number;
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => {
@@ -53,12 +53,11 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 	);
 });
 
-const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) => {
 	/**
 	 * Recoil Atoms
 	 */
 	const haveError = useRecoilValue(createBoardError);
-	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
 	const {
 		handleAddTeam,
@@ -95,7 +94,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 			];
 		});
 
-		if (newBoard) {
+		if (timesOpen < 2) {
 			setCreateBoardData((prev) => ({
 				...prev,
 				users,
@@ -107,8 +106,6 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 				}
 			}));
 		}
-
-		setNewBoard(false);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

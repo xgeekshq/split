@@ -14,11 +14,6 @@ export const createBoardState = atom({
 	default: false
 });
 
-export const newBoardState = atom({
-	key: 'newBoard',
-	default: true
-});
-
 export interface CreateBoardData {
 	count: {
 		teamsCount: number;
