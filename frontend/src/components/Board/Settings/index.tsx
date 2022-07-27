@@ -101,7 +101,7 @@ const BoardSettings = ({
 	const haveError = useRecoilValue(updateBoardError);
 
 	const [isMaxVotesChecked, setIsMaxVotesChecked] = useState(false);
-	const [isUsersChecked, setIsUsersChecked] = useState(false);
+	const [isResponsibleChecked, setIsResponsibleChecked] = useState(false);
 
 	/**
 	 * Atoms
@@ -121,6 +121,8 @@ const BoardSettings = ({
 	} = useBoard({ autoFetchBoard: false });
 	const { board } = updateBoardData;
 
+	const { users } = board;
+	const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
 	/**
 	 * Use Form Hook
 	 */
@@ -222,17 +224,17 @@ const BoardSettings = ({
 			}
 		});
 		setIsOpen(false);
-		setIsUsersChecked(false);
+		setIsResponsibleChecked(false);
 	};
 
 	/** Team Responsible Change */
-	const { users } = board;
-	const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
-	const handleUsers = (checked: boolean) => {
-		setIsUsersChecked(checked);
+
+	const handleResponsibleChange = (checked: boolean) => {
+		setIsResponsibleChecked(checked);
 	};
+
 	const handleLottery = () => {
-		if (isUsersChecked) {
+		if (isResponsibleChecked) {
 			const cloneUsers = [...deepClone(users)].map((user) => ({
 				...user,
 				role: BoardUserRoles.MEMBER
@@ -390,15 +392,17 @@ const BoardSettings = ({
 											<ConfigurationSettings
 												text="Change responsible participant for this board."
 												title="Team Responsible"
-												isChecked={isUsersChecked}
-												handleCheckedChange={handleUsers}
+												isChecked={isResponsibleChecked}
+												handleCheckedChange={handleResponsibleChange}
 											>
 												<Flex
 													align="center"
 													css={{
 														mt: '$10',
-														opacity: !isUsersChecked ? '40%' : 'unset',
-														pointerEvents: !isUsersChecked
+														opacity: !isResponsibleChecked
+															? '40%'
+															: 'unset',
+														pointerEvents: !isResponsibleChecked
 															? 'none'
 															: 'unset',
 														transition: 'all 0.25s ease-in-out'
@@ -429,13 +433,13 @@ const BoardSettings = ({
 															borderRadius: '$round',
 															border: '1px solid $colors$primary400',
 															ml: '$12',
-															cursor: isUsersChecked
+															cursor: isResponsibleChecked
 																? 'pointer'
 																: 'default',
 
 															transition: 'all 0.2s ease-in-out',
 
-															'&:hover': isUsersChecked
+															'&:hover': isResponsibleChecked
 																? {
 																		backgroundColor:
 																			'$primary400',
@@ -485,7 +489,7 @@ const BoardSettings = ({
 							<Button
 								onClick={() => {
 									setIsOpen(false);
-									setIsUsersChecked(false);
+									setIsResponsibleChecked(false);
 								}}
 								variant="primaryOutline"
 								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
