@@ -6,8 +6,6 @@ import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 import { deepClone } from 'fast-json-patch';
 
-import { highlight2Colors } from 'styles/stitches/partials/colors/highlight2.colors';
-
 import Icon from 'components/icons/Icon';
 import Avatar from 'components/Primitives/Avatar';
 import Button from 'components/Primitives/Button';
@@ -227,11 +225,6 @@ const BoardSettings = ({
 		setIsUsersChecked(false);
 	};
 
-	/**
-	 * Use Effect to submit the board settings form when press enter key
-	 * (Note: Radix Dialog close when pressing enter)
-	 */
-
 	/** Team Responsible Change */
 	const { users } = board;
 	const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
@@ -263,6 +256,11 @@ const BoardSettings = ({
 			}));
 		}
 	};
+
+	/**
+	 * Use Effect to submit the board settings form when press enter key
+	 * (Note: Radix Dialog close when pressing enter)
+	 */
 
 	useEffect(() => {
 		const keyDownHandler = (event: KeyboardEvent) => {
@@ -395,7 +393,17 @@ const BoardSettings = ({
 												isChecked={isUsersChecked}
 												handleCheckedChange={handleUsers}
 											>
-												<Flex align="center" css={{ mt: '$10' }}>
+												<Flex
+													align="center"
+													css={{
+														mt: '$10',
+														opacity: !isUsersChecked ? '40%' : 'unset',
+														pointerEvents: !isUsersChecked
+															? 'none'
+															: 'unset',
+														transition: 'all 0.25s ease-in-out'
+													}}
+												>
 													<Text
 														css={{
 															mr: '$8',
@@ -461,9 +469,8 @@ const BoardSettings = ({
 														css={{ position: 'relative' }}
 														size={32}
 														colors={{
-															bg: highlight2Colors.highlight2Lighter,
-															fontColor:
-																highlight2Colors.highlight2Dark
+															bg: '$highlight2Lighter',
+															fontColor: '$highlight2Dark'
 														}}
 														fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
 													/>
