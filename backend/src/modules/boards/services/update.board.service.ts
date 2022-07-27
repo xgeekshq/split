@@ -1,11 +1,21 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+	BadRequestException,
+	ForbiddenException,
+	Inject,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 
+import { BoardRoles } from 'libs/enum/board.roles';
 import { TeamRoles } from 'libs/enum/team.roles';
+import { UPDATE_FAILED } from 'libs/exceptions/messages';
+import { replaceAll } from 'libs/utils/replace-all';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
+import { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
@@ -64,6 +74,18 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		return user;
 	}
 
+	/**
+	 * Method to get current responsible to a specific board
+	 * @param boardId String
+	 * @return Board User
+	 * @private
+	 */
+	private async getBoardResponsible(boardId: string): Promise<BoardUser | undefined> {
+		const users = await this.boardUserModel.find({ board: boardId }).exec();
+
+		return users.find((user) => user.role === BoardRoles.RESPONSIBLE);
+	}
+
 	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
 		const board = await this.boardModel.findById(boardId).exec();
 
@@ -89,6 +111,36 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		const isOwner = String(userId) === String(createdBy);
 
 		if (isAdminOrStakeholder || isOwner || (isSubBoard && !!subBoardResponsible)) {
+			if (boardData.users && isSubBoard) {
+				const currentResponsible = await this.getBoardResponsible(boardId);
+				const newResponsible = boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE);
+
+				boardData.users
+					.filter((boardUser) =>
+						[
+							replaceAll(String(currentResponsible?.user), ['"', '(', ')', 'ObjectId'], ''),
+							(newResponsible?.user as unknown as LeanDocument<BoardUserDocument>)._id
+						].includes((boardUser.user as unknown as LeanDocument<UserDocument>)._id)
+					)
+					.map(async (boardUser) => {
+						const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
+
+						try {
+							await this.boardUserModel.findOneAndUpdate(
+								{
+									user: typedBoardUser._id,
+									board: boardId
+								},
+								{
+									role: boardUser.role
+								}
+							);
+						} catch {
+							throw new BadRequestException(UPDATE_FAILED);
+						}
+					});
+			}
+
 			return this.boardModel
 				.findOneAndUpdate(
 					{
