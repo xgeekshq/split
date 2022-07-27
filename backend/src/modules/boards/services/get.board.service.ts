@@ -257,10 +257,18 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		userId: string,
 		hideCards: boolean,
 		hideVotes: boolean
+		// votesId: string
 	): LeanDocument<CardDocument | CardItemDocument> {
 		let { text, comments, votes, createdBy } = input;
 		const { anonymous } = input;
 		const createdByAsUserDocument = createdBy as UserDocument;
+
+		// if (String(createdByAsUserDocument._id) !== String(userId))
+		votes.forEach((vote) => {
+			console.log('voteId to replace', String(vote));
+			vote = hideText(String(vote));
+			console.log('voteId replaced', String(vote));
+		});
 
 		if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 			text = hideText(input.text);
@@ -276,6 +284,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			votes = this.replaceVotes(input, userId);
 		}
 
+		// teste
+		//  createdBy = this.replaceUser(createdByAsUserDo∏cument, userId);
+		votes = this.replaceAllVotes(input, userId);
+
 		return {
 			...input,
 			text,
@@ -283,6 +295,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			comments,
 			createdBy
 		};
+	}
+
+	//-----------------------------
+	private replaceAllVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
+		return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 	}
 
 	/**
