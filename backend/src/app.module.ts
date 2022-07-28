@@ -10,6 +10,7 @@ import AzureModule from 'modules/azure/azure.module';
 import BoardsModule from 'modules/boards/boards.module';
 import { CardsModule } from 'modules/cards/cards.module';
 import { CommentsModule } from 'modules/comments/comments.module';
+import { CommunicationModule } from 'modules/communication/communication.module';
 import EmailModule from 'modules/mailer/mailer.module';
 import SocketModule from 'modules/socket/socket.module';
 import TeamsModule from 'modules/teams/teams.module';
@@ -40,6 +41,12 @@ if (configuration().azure.enabled) {
 
 if (configuration().smtp.enabled) {
 	imports.push(EmailModule);
+}
+if (configuration().slack.enable) {
+	imports.push(CommunicationModule);
+}
+if (configuration().slack.enable) {
+	imports.push(CommunicationModule);
 }
 
 @Module({

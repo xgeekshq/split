@@ -214,9 +214,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * @param anonymous boolean to used when card is anonymous
 	 * @returns Created By User with first/last name replaced by "a"
 	 */
-	private replaceUser(input: UserDocument): LeanDocument<UserDocument> {
+	private replaceUser(input: UserDocument, userId: string): LeanDocument<UserDocument> {
 		return {
 			...input,
+			_id: String(userId) === String(input._id) ? input._id : undefined,
 			firstName: hideText(input.firstName),
 			lastName: hideText(input.lastName)
 		};
@@ -237,7 +238,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			.map((comment) => {
 				return {
 					...comment,
-					createdBy: this.replaceUser(comment.createdBy as UserDocument),
+					createdBy: this.replaceUser(comment.createdBy as UserDocument, userId),
 					text: hideText(comment.text)
 				};
 			});
@@ -264,11 +265,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 			text = hideText(input.text);
 			comments = this.replaceComments(input.comments, userId);
-			createdBy = this.replaceUser(createdByAsUserDocument);
+			createdBy = this.replaceUser(createdByAsUserDocument, userId);
 		}
 
 		if (anonymous) {
-			createdBy = this.replaceUser(createdByAsUserDocument);
+			createdBy = this.replaceUser(createdByAsUserDocument, userId);
 		}
 
 		if (hideVotes) {
@@ -304,33 +305,29 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
 
-		if (hideCards || hideVotes) {
-			// Columns
-			const columns = boardColumns.map((column) => {
-				const cards = column.cards.map((card) => {
-					const items = card.items.map((item) => {
-						return this.replaceCard(item, userId, hideCards, hideVotes);
-					});
-
-					return {
-						...this.replaceCard(card, userId, hideCards, hideVotes),
-						items
-					};
+		// Columns
+		const columns = boardColumns.map((column) => {
+			const cards = column.cards.map((card) => {
+				const items = card.items.map((item) => {
+					return this.replaceCard(item, userId, hideCards, hideVotes);
 				});
 
 				return {
-					...column,
-					cards
+					...this.replaceCard(card, userId, hideCards, hideVotes),
+					items
 				};
 			});
 
 			return {
-				...input,
-				columns
+				...column,
+				cards
 			};
-		}
+		});
 
-		return input;
+		return {
+			...input,
+			columns
+		};
 	}
 
 	async countBoards(userId: string) {
@@ -357,7 +354,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				populate: {
 					path: 'users',
 					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName joinedAt' }
+					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
 				}
 			})
 			.populate({
