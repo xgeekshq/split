@@ -321,30 +321,50 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
-
-		// Columns
+		if (hideCards || hideVotes) {
+			// Columns
+			const columns = boardColumns.map((column) => {
+				const cards = column.cards.map((card) => {
+					const items = card.items.map((item) => {
+						return this.replaceCard(item, userId, hideCards, hideVotes);
+					});
+					return {
+						...this.replaceCard(card, userId, hideCards, hideVotes),
+						items
+					};
+				});
+				return {
+					...column,
+					cards
+				};
+			});
+			return {
+				...input,
+				columns
+			};
+		}
 		const columns = boardColumns.map((column) => {
 			const cards = column.cards.map((card) => {
 				const items = card.items.map((item) => {
-					return this.replaceCard(item, userId, hideCards, hideVotes);
+					const votes = item.votes.map((vote) => {
+						if (String(userId) !== String(vote)) {
+							return { vote: hideText(String(vote)) };
+						}
+						return vote;
+					});
+					return { ...item, votes };
 				});
-
-				return {
-					...this.replaceCard(card, userId, hideCards, hideVotes),
-					items
-				};
+				const votes = card.votes.map((vote) => {
+					if (String(userId) !== String(vote)) {
+						return { vote: hideText(String(vote)) };
+					}
+					return { ...vote };
+				});
+				return { ...card, items, votes };
 			});
-
-			return {
-				...column,
-				cards
-			};
+			return { ...column, cards };
 		});
-
-		return {
-			...input,
-			columns
-		};
+		return { ...input, columns };
 	}
 
 	async countBoards(userId: string) {
