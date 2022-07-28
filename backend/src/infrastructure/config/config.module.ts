@@ -9,7 +9,7 @@ const NODE_ENV = process.env.NODE_ENV;
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: !NODE_ENV || NODE_ENV === 'dev' ? '../.env' : `../.env.${NODE_ENV}`,
+			envFilePath: !NODE_ENV || NODE_ENV === 'dev' ? '../.env' : `.env.${NODE_ENV}`,
 			load: [configuration],
 			validationSchema: Joi.object({
 				NODE_ENV: Joi.string().valid('dev', 'prod', 'test', 'staging').default('dev'),
@@ -62,7 +62,23 @@ const NODE_ENV = process.env.NODE_ENV;
 					is: 'true',
 					then: Joi.required()
 				}),
-				NEXT_PUBLIC_NEXTAUTH_URL: Joi.string().required()
+				NEXT_PUBLIC_NEXTAUTH_URL: Joi.string().required(),
+				SLACK_ENABLE: Joi.string().required(),
+				SLACK_API_BOT_TOKEN: Joi.string().when('SLACK_ENABLE', {
+					is: 'true',
+					then: Joi.required(),
+					otherwise: Joi.optional()
+				}),
+				SLACK_MASTER_CHANNEL_ID: Joi.string().when('SLACK_ENABLE', {
+					is: 'true',
+					then: Joi.required(),
+					otherwise: Joi.optional()
+				}),
+				SLACK_CHANNEL_PREFIX: Joi.string().when('SLACK_ENABLE', {
+					is: 'true',
+					then: Joi.required(),
+					otherwise: Joi.optional()
+				})
 			})
 		})
 	],

@@ -24,10 +24,10 @@ import useBoard from 'hooks/useBoard';
 import useCards from 'hooks/useCards';
 import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom';
-import BoardType from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
+import isEmpty from 'utils/isEmpty';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
@@ -216,7 +216,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	 */
 	const haveSubBoardsMerged =
 		!board?.isSubBoard &&
-		!!board?.dividedBoards.filter((dividedBoard: BoardType) => !dividedBoard.submitedAt).length;
+		board?.dividedBoards &&
+		board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+			0;
 
 	if (board && userId && socketId) {
 		return (
@@ -246,7 +248,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 												width: '$206'
 											}}
 										>
-											Merge into main boards
+											Merge into main board
 										</Button>
 									</AlertDialogTrigger>
 								</AlertCustomDialog>
