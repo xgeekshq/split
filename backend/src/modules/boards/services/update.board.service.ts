@@ -134,7 +134,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			 * - is a sub-board
 			 * - and the logged user isn't the current responsible
 			 */
-			// TODO: validate !isSubBoardResponsible
 			if (boardData.users && isSubBoard && !isSubBoardResponsible) {
 				const currentResponsibleId = await this.getBoardResponsibleId(boardId);
 				const newResponsibleId = boardData.users.find(
