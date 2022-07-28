@@ -80,10 +80,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	 * @return Board User
 	 * @private
 	 */
-	private async getBoardResponsible(boardId: string): Promise<BoardUser | undefined> {
-		const users = await this.boardUserModel.find({ board: boardId }).exec();
+	private async getBoardResponsible(boardId: string): Promise<LeanDocument<BoardUserDocument>> {
+		const user = await this.boardUserModel
+			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
+			.exec();
 
-		return users.find((user) => user.role === BoardRoles.RESPONSIBLE);
+		if (!user) {
+			throw new NotFoundException('Responsible not found!');
+		}
+
+		return user;
 	}
 
 	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
