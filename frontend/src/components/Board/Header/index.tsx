@@ -15,7 +15,10 @@ import { boardInfoState } from 'store/board/atoms/board.atom';
 import BoardType from 'types/board/board';
 import { BoardUser, BoardUserNoPopulated } from 'types/board/board.user';
 import { BreadcrumbType } from 'types/board/Breadcrumb';
+import { TeamUser } from 'types/team/team.user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
+import isEmpty from 'utils/isEmpty';
 import {
 	BoardCounter,
 	MergeIconContainer,
@@ -38,6 +41,10 @@ const BoardHeader = () => {
 	// Get Board Info
 	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } =
 		boardData!.board;
+
+	// Get Team users
+
+	const teamUsers = team.users ?? [];
 
 	// Found sub-board
 	const getSubBoard = (): { id: string; title: string } | undefined => {
@@ -120,7 +127,7 @@ const BoardHeader = () => {
 						<Text heading="2">{title}</Text>
 
 						{recurrent && (
-							<Tooltip content="Occurs every X week">
+							<Tooltip content="Occurs every month">
 								<RecurrentIconContainer>
 									<Icon name="recurring" />
 								</RecurrentIconContainer>
@@ -148,10 +155,33 @@ const BoardHeader = () => {
 							userId={session!.user.id}
 						/>
 					</Flex>
+					{!isEmpty(
+						teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)
+					) && (
+						<>
+							<Separator
+								data-orientation="vertical"
+								css={{ height: '$24 !important' }}
+							/>
 
-					{(boardData!.board.users || users).filter(
-						(user: BoardUser) => user.role === BoardUserRoles.STAKEHOLDER
-					).length > 0 && (
+							<Flex align="center" gap="10">
+								<Text color="primary300" size="sm">
+									Team admins
+								</Text>
+								<CardAvatars
+									listUsers={teamUsers}
+									teamAdmins
+									userId={session!.user.id}
+									responsible={false}
+								/>
+							</Flex>
+						</>
+					)}
+					{!isEmpty(
+						(boardData!.board.users || users).filter(
+							(user: BoardUser) => user.role === BoardUserRoles.STAKEHOLDER
+						)
+					) && (
 						<>
 							<Separator
 								data-orientation="vertical"
