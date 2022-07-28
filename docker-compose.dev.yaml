@@ -37,10 +37,6 @@ services:
     build:
       context: frontend # to start on frontend folder
       dockerfile: docker/dev/Dockerfile # path to dev Dockerfile
-      args:
-        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
-        - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
-        - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
 
     # set image name
     image: dc-dev-frontend
