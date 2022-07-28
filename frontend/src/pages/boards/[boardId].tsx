@@ -78,10 +78,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
 
 	useEffect(() => {
-		if (data?.board._id === newBoard?._id) {
+		if (board?._id === newBoard?._id || mainBoard?._id === newBoard?._id) {
 			setNewBoard(undefined);
 		}
-	}, [newBoard, data, setNewBoard]);
+	}, [newBoard, board, mainBoard, setNewBoard]);
 
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
