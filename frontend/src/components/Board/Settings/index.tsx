@@ -214,7 +214,6 @@ const BoardSettings = ({
 	};
 
 	const updateBoard = (title: string, maxVotes: string | undefined) => {
-		console.log('aqi', updateBoardData);
 		mutate({
 			board: {
 				...updateBoardData.board,
@@ -366,11 +365,6 @@ const BoardSettings = ({
 														css={{ mt: '$8' }}
 														disabled={!isMaxVotesChecked}
 														placeholder="Max votes"
-														min={
-															boardData!.board.totalUsedVotes === 0
-																? 0
-																: board.maxVotes
-														}
 													/>
 												</ConfigurationSettings>
 											</>
