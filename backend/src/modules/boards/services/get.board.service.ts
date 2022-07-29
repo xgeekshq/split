@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import { LeanDocument, Model } from 'mongoose';
 
 import { BOARDS_NOT_FOUND } from 'libs/exceptions/messages';
-import { hideBoardVo } from 'libs/utils/hideBoardVotes';
+import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
 import { hideText } from 'libs/utils/hideText';
 import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
 import { CardDocument } from 'modules/cards/schemas/card.schema';
@@ -336,7 +336,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			};
 		}
 		// hideBoardVotes(input, userId);
-		return hideBoardVo(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
+		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 
 	async countBoards(userId: string) {
