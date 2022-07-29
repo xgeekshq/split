@@ -15,7 +15,7 @@ import { VoteItemParams } from 'libs/dto/param/vote.item.params';
 import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { hideBoardVotes } from 'libs/utils/hideBoardVotes';
+import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
@@ -45,7 +45,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return hideBoardVotes(board, request.user._id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@UseGuards(JwtAuthenticationGuard)
@@ -61,7 +61,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return hideBoardVotes(board, request.user._id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@UseGuards(JwtAuthenticationGuard)
@@ -82,7 +82,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return hideBoardVotes(board, request.user._id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@UseGuards(JwtAuthenticationGuard)
@@ -102,6 +102,6 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return hideBoardVotes(board, request.user._id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 }
