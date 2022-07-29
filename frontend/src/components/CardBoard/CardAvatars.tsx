@@ -88,6 +88,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 						/>
 					);
 				}
+
 				const initials = `${value.firstName[0]}${value.lastName[0]}`;
 				return (
 					<Tooltip

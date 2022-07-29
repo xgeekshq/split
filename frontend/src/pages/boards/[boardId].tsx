@@ -23,7 +23,6 @@ import { countBoardCards } from 'helper/board/countCards';
 import useBoard from 'hooks/useBoard';
 import useCards from 'hooks/useCards';
 import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
-import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
@@ -67,10 +66,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	const { updateCardPosition, mergeCards, mergeBoard } = useCards();
 
-	const { fetchBoard } = useBoard({
+	const {
+		fetchBoard: { data }
+	} = useBoard({
 		autoFetchBoard: true
 	});
-	const { data } = fetchBoard;
 
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
@@ -85,7 +85,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
-	const setUpdateBoard = useSetRecoilState(updateBoardDataState);
 
 	useEffect(() => {
 		if (data) {
@@ -93,29 +92,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		}
 	}, [data, setBoard]);
 
-	useEffect(() => {
-		if (data && isOpen) {
-			const {
-				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards, users }
-			} = data;
-			setUpdateBoard({
-				board: {
-					_id,
-					title,
-					maxVotes,
-					hideCards,
-					hideVotes,
-					postAnonymously,
-					users
-				}
-			});
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isOpen]);
-
-	/**
-	 * Board Settings permissions
-	 */
+	// Board Settings permissions
 	const isStakeholderOrAdmin = !board?.isSubBoard
 		? board?.team.users.find(
 				(user) => ['stakeholder', 'admin'].includes(user.role) && user.user._id === userId
@@ -136,7 +113,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	 * - Is responsible (if is a sub-board)
 	 * - If the user is the owner
 	 */
-	const BOARD_SETTINGS_CONDITION =
+	const havePermissionsToEdit =
 		isStakeholderOrAdmin || (board?.isSubBoard && isResponsible) || isOwner || isSAdmin;
 
 	const countAllCards = useMemo(() => {
@@ -267,7 +244,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 								/>
 							)}
 
-							{BOARD_SETTINGS_CONDITION && (
+							{havePermissionsToEdit && (
 								<BoardSettings
 									isOpen={isOpen}
 									setIsOpen={setIsOpen}

@@ -77,13 +77,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	 * @return Board User
 	 * @private
 	 */
-	private async getBoardResponsibleId(boardId: string): Promise<string> {
+	private async getBoardResponsibleId(boardId: string): Promise<string | undefined> {
 		const user = await this.boardUserModel
 			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
 			.exec();
 
 		if (!user) {
-			throw new NotFoundException('Responsible not found!');
+			return undefined;
 		}
 
 		return String(user.user);
@@ -134,11 +134,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			 * - is a sub-board
 			 * - and the logged user isn't the current responsible
 			 */
-			if (boardData.users && isSubBoard && !isSubBoardResponsible) {
+			if (boardData.users && isSubBoard) {
 				const currentResponsibleId = await this.getBoardResponsibleId(boardId);
-				const newResponsibleId = boardData.users.find(
-					(user) => user.role === BoardRoles.RESPONSIBLE
-				)?._id;
+				const newResponsibleId = (
+					boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE)
+						?.user as unknown as LeanDocument<BoardUserDocument>
+				)._id;
 
 				boardData.users
 					.filter((boardUser) =>
@@ -164,6 +165,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 							throw new BadRequestException(UPDATE_FAILED);
 						}
 					});
+			} else {
+				throw new ForbiddenException(
+					"You are the currently responsible, you don't have permissions to change."
+				);
 			}
 
 			/**
