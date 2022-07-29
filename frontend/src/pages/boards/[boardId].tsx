@@ -1,33 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { dehydrate, QueryClient, useQueryClient } from 'react-query';
+import React, { useEffect, useMemo, useState } from 'react';
+import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult } from '@react-forked/dnd';
-import { io, Socket } from 'socket.io-client';
 
 import { Container } from 'styles/pages/boards/board.styles';
 
 import { getBoardRequest } from 'api/boardService';
-import Column from 'components/Board/Column/Column';
+import DragDropArea from 'components/Board/DragDropArea';
 import BoardHeader from 'components/Board/Header';
+import MergeIntoMainButton from 'components/Board/MergeIntoMainButton';
 import { BoardSettings } from 'components/Board/Settings';
 import LoadingPage from 'components/loadings/LoadingPage';
 import AlertBox from 'components/Primitives/AlertBox';
-import AlertCustomDialog from 'components/Primitives/AlertCustomDialog';
-import { AlertDialogTrigger } from 'components/Primitives/AlertDialog';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
-import { countBoardCards } from 'helper/board/countCards';
 import useBoard from 'hooks/useBoard';
-import useCards from 'hooks/useCards';
+import { useSocketIO } from 'hooks/useSocketIO';
 import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom';
-import BoardType from 'types/board/board';
-import MergeCardsDto from 'types/board/mergeCard.dto';
-import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
-import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import isEmpty from 'utils/isEmpty';
@@ -53,127 +45,6 @@ type Props = {
 	mainBoardId?: string;
 };
 
-type DragDropAreaProps = {
-	userId: string;
-	board: BoardType;
-	socketId: any;
-};
-const DragDropArea: React.FC<DragDropAreaProps> = ({ userId, board, socketId }) => {
-	const { updateCardPosition, mergeCards } = useCards();
-
-	const countAllCards = useMemo(() => {
-		return board.columns ? countBoardCards(board.columns) : 0;
-	}, [board]);
-
-	const onDragEnd = ({ destination, source, combine, draggableId }: DropResult) => {
-		if (!source || (!combine && !destination) || !board?._id || !socketId) {
-			return;
-		}
-		const { droppableId: sourceDroppableId, index: sourceIndex } = source;
-
-		if (combine && userId) {
-			const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
-
-			const changes: MergeCardsDto = {
-				columnIdOfCard: sourceDroppableId,
-				colIdOfCardGroup: combineDroppableId,
-				cardId: draggableId,
-				boardId: board._id,
-				cardGroupId: combineDraggableId,
-				socketId,
-				userId,
-				cardPosition: sourceIndex
-			};
-
-			mergeCards.mutate(changes);
-		}
-
-		if (!combine && destination) {
-			const { droppableId: destinationDroppableId, index: destinationIndex } = destination;
-
-			if (destinationDroppableId === sourceDroppableId && destinationIndex === sourceIndex) {
-				return;
-			}
-
-			const changes: UpdateCardPositionDto = {
-				colIdOfCard: source.droppableId,
-				targetColumnId: destinationDroppableId,
-				newPosition: destinationIndex,
-				cardPosition: sourceIndex,
-				cardId: draggableId,
-				boardId: board?._id,
-				socketId
-			};
-
-			updateCardPosition.mutate(changes);
-		}
-	};
-
-	return (
-		<Flex css={{ width: '100%', backgroundColor: 'Yellow' }} gap="24">
-			<DragDropContext onDragEnd={onDragEnd}>
-				{board.columns.map((column, index) => {
-					return (
-						<Column
-							key={column._id}
-							cards={column.cards}
-							columnId={column._id}
-							index={index}
-							userId={userId}
-							boardId={board._id}
-							title={column.title}
-							color={column.color}
-							socketId={socketId}
-							hideCards={board.hideCards}
-							isMainboard={!board.isSubBoard}
-							boardUser={board.users.find(
-								(boardUser) => boardUser.user._id === userId
-							)}
-							maxVotes={Number(board.maxVotes)}
-							countAllCards={countAllCards}
-							isSubmited={!!board.submitedByUser}
-						/>
-					);
-				})}
-			</DragDropContext>
-		</Flex>
-	);
-};
-
-type MergeIntoMainButtonProps = {
-	boardId: string;
-};
-const MergeIntoMainButton: React.FC<MergeIntoMainButtonProps> = ({ boardId }) => {
-	const { mergeBoard } = useCards();
-
-	return (
-		<AlertCustomDialog
-			defaultOpen={false}
-			title="Merge board into main board"
-			text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
-			cancelText="Cancel"
-			confirmText="Merge into main board"
-			handleConfirm={() => {
-				mergeBoard.mutate(boardId);
-			}}
-			variant="primary"
-		>
-			<AlertDialogTrigger asChild>
-				<Button
-					variant="primaryOutline"
-					size="sm"
-					css={{
-						fontWeight: '$medium',
-						width: '$206'
-					}}
-				>
-					Merge into main board
-				</Button>
-			</AlertDialogTrigger>
-		</AlertCustomDialog>
-	);
-};
-
 const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession({ required: true });
@@ -185,8 +56,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	} = useBoard({
 		autoFetchBoard: true
 	});
-	// const { data } = fetchBoard;
-
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
 
@@ -229,7 +98,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Board Settings permissions
 	const isStakeholderOrAdmin = useMemo(() => {
-		return !!(!board?.isSubBoard ? board : mainBoard)?.team.users.find(
+		return (!board?.isSubBoard ? board : mainBoard)?.team.users.some(
 			(boardUser) =>
 				[TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
 				boardUser.user._id === userId
@@ -238,7 +107,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [isResponsible, isOwner] = useMemo(() => {
 		return board
 			? [
-					!!board.users.find(
+					board.users.some(
 						(boardUser) =>
 							boardUser.role === BoardUserRoles.RESPONSIBLE &&
 							boardUser.user._id === userId
@@ -249,36 +118,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [board, userId]);
 
 	// Only the conditions below are allowed to edit the board settings:
-	const boardSettingsCondition =
+	const isUserAllowedToEditBoardSettings =
 		isStakeholderOrAdmin || (board?.isSubBoard && isResponsible) || isOwner || isSAdmin;
 
 	// Socket IO
-	const queryClient = useQueryClient();
-	const socketClient = useRef<Socket>();
-	const socketId = socketClient?.current?.id;
-	useEffect(() => {
-		const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? 'http://127.0.0.1:3200', {
-			transports: ['polling']
-		});
-
-		newSocket.on('connect', () => {
-			newSocket.emit('join', { boardId });
-		});
-
-		newSocket.on('updateAllBoard', () => {
-			queryClient.invalidateQueries(['board', { id: boardId }]);
-		});
-		socketClient.current = newSocket;
-	}, [boardId, queryClient]);
-	useEffect(
-		() => () => {
-			if (socketClient.current) {
-				socketClient.current.close();
-			}
-			socketClient.current = undefined;
-		},
-		[]
-	);
+	const [socketId, cleanSocket] = useSocketIO(boardId);
+	useEffect(() => cleanSocket, [cleanSocket]);
 
 	// Confirm if any sub-board is merged or not
 	const haveSubBoardsMerged =
@@ -291,13 +136,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		<>
 			<BoardHeader />
 			<Container direction="column">
-				<Flex
-					justify="between"
-					align="center"
-					css={{ py: '$32', width: '100%', backgroundColor: 'Blue' }}
-					gap={40}
-				>
-					{/* TODO check !board.submitedByUser ? */}
+				<Flex justify="between" align="center" css={{ py: '$32', width: '100%' }} gap={40}>
 					{board.isSubBoard && !board.submitedByUser && isResponsible ? (
 						<MergeIntoMainButton boardId={boardId} />
 					) : null}
@@ -310,11 +149,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{boardSettingsCondition ? (
+					{isUserAllowedToEditBoardSettings ? (
 						<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} socketId={socketId} />
 					) : null}
 
-					{/* TODO check !board.submitedByUser ? */}
 					{board.submitedByUser && board.submitedAt ? (
 						<AlertBox
 							css={{ flex: '1' }}
