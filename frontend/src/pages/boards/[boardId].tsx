@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, NextPage } from 'next';
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { Container } from 'styles/pages/boards/board.styles';
 
 import { getBoardRequest } from 'api/boardService';
+import AlertGoToMainBoard from 'components/Board/AlertGoToMainBoard';
+import AlertMergeIntoMain from 'components/Board/AlertMergeIntoMain';
 import DragDropArea from 'components/Board/DragDropArea';
 import BoardHeader from 'components/Board/Header';
-import MergeIntoMainButton from 'components/Board/MergeIntoMainButton';
 import { BoardSettings } from 'components/Board/Settings';
 import LoadingPage from 'components/loadings/LoadingPage';
 import AlertBox from 'components/Primitives/AlertBox';
-import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import useBoard from 'hooks/useBoard';
 import { useSocketIO } from 'hooks/useSocketIO';
@@ -49,7 +48,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { data: session } = useSession({ required: true });
 	const userId = session?.user?.id;
-	const isSAdmin = session?.isSAdmin;
 
 	const {
 		fetchBoard: { data }
@@ -70,7 +68,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	// Set Recoil Atom
 	const setBoard = useSetRecoilState(boardInfoState);
 	const setUpdateBoard = useSetRecoilState(updateBoardDataState);
-
 	useEffect(() => {
 		if (data) {
 			setBoard(data);
@@ -117,31 +114,38 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 			: [false, false];
 	}, [board, userId]);
 
-	// Only the conditions below are allowed to edit the board settings:
-	const isUserAllowedToEditBoardSettings =
-		isStakeholderOrAdmin || (board?.isSubBoard && isResponsible) || isOwner || isSAdmin;
-
 	// Socket IO
 	const [socketId, cleanSocket] = useSocketIO(boardId);
 	useEffect(() => cleanSocket, [cleanSocket]);
 
-	// Confirm if any sub-board is merged or not
-	const haveSubBoardsMerged =
+	// Show button in sub boards to merge into main
+	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
+
+	// Show board settings button if current user is allowed to edit
+	const showBoardSettings =
+		isStakeholderOrAdmin ||
+		(board?.isSubBoard && isResponsible) ||
+		isOwner ||
+		session?.isSAdmin;
+
+	// Show Alert message if any sub-board wansn't merged
+	const showMessageHaveSubBoardsMerged =
 		!board?.isSubBoard &&
 		board?.dividedBoards &&
 		board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
 			0;
+
+	// Show Alert message if sub board was merged
+	const showMessageIfMerged = !!(board?.submitedByUser && board.submitedAt && mainBoardId);
 
 	return board && userId && socketId ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
 				<Flex justify="between" align="center" css={{ py: '$32', width: '100%' }} gap={40}>
-					{board.isSubBoard && !board.submitedByUser && isResponsible ? (
-						<MergeIntoMainButton boardId={boardId} />
-					) : null}
+					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
 
-					{haveSubBoardsMerged ? (
+					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox
 							css={{ flex: 1 }}
 							type="info"
@@ -149,31 +153,15 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{isUserAllowedToEditBoardSettings ? (
+					{showBoardSettings ? (
 						<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} socketId={socketId} />
 					) : null}
 
-					{board.submitedByUser && board.submitedAt ? (
-						<AlertBox
-							css={{ flex: '1' }}
-							type="info"
-							title={`Sub-team board successfully merged into main board ${new Date(
-								board.submitedAt
-							).toLocaleDateString()}, ${new Date(
-								board.submitedAt
-							).toLocaleTimeString()}`}
-							text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
-						>
-							<Link
-								key={mainBoardId}
-								href={{
-									pathname: `[boardId]`,
-									query: { boardId: mainBoardId }
-								}}
-							>
-								<Button size="sm">Go to main board</Button>
-							</Link>
-						</AlertBox>
+					{showMessageIfMerged ? (
+						<AlertGoToMainBoard
+							submitedAt={board.submitedAt as Date}
+							mainBoardId={mainBoardId}
+						/>
 					) : null}
 				</Flex>
 

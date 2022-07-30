@@ -6,7 +6,7 @@ import useCards from 'hooks/useCards';
 type Props = {
 	boardId: string;
 };
-const MergeIntoMainButton: React.FC<Props> = ({ boardId }) => {
+const AlertMergeIntoMain: React.FC<Props> = ({ boardId }) => {
 	const { mergeBoard } = useCards();
 
 	return (
@@ -37,4 +37,4 @@ const MergeIntoMainButton: React.FC<Props> = ({ boardId }) => {
 	);
 };
 
-export default MergeIntoMainButton;
+export default AlertMergeIntoMain;
