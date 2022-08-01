@@ -62,7 +62,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	 * @param boardId Board Id
 	 * @returns Board User
 	 */
-	private async checkIfUserIsResponsible(userId: string, boardId: string): Promise<boolean> {
+	private async isUserResponsible(userId: string, boardId: string): Promise<boolean> {
 		const user = await this.boardUserModel
 			.findOne({ user: userId, board: boardId, role: BoardRoles.RESPONSIBLE })
 			.lean()
@@ -122,7 +122,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		);
 
 		// Get user info to see if is responsible or not
-		const isSubBoardResponsible = await this.checkIfUserIsResponsible(userId, boardId);
+		const isSubBoardResponsible = await this.isUserResponsible(userId, boardId);
 
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
