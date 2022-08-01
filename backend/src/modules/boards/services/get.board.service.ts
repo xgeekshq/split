@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { LeanDocument, Model } from 'mongoose';
 
 import { BOARDS_NOT_FOUND } from 'libs/exceptions/messages';
+import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
 import { hideText } from 'libs/utils/hideText';
 import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
 import { CardDocument } from 'modules/cards/schemas/card.schema';
@@ -257,6 +258,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		userId: string,
 		hideCards: boolean,
 		hideVotes: boolean
+		// votesId: string
 	): LeanDocument<CardDocument | CardItemDocument> {
 		let { text, comments, votes, createdBy } = input;
 		const { anonymous } = input;
@@ -276,6 +278,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			votes = this.replaceVotes(input, userId);
 		}
 
+		votes = this.replaceAllVotes(input, userId);
+
 		return {
 			...input,
 			text,
@@ -283,6 +287,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			comments,
 			createdBy
 		};
+	}
+
+	//-----------------------------
+	private replaceAllVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
+		return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 	}
 
 	/**
@@ -304,30 +313,30 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
-
-		// Columns
-		const columns = boardColumns.map((column) => {
-			const cards = column.cards.map((card) => {
-				const items = card.items.map((item) => {
-					return this.replaceCard(item, userId, hideCards, hideVotes);
+		if (hideCards || hideVotes) {
+			// Columns
+			const columns = boardColumns.map((column) => {
+				const cards = column.cards.map((card) => {
+					const items = card.items.map((item) => {
+						return this.replaceCard(item, userId, hideCards, hideVotes);
+					});
+					return {
+						...this.replaceCard(card, userId, hideCards, hideVotes),
+						items
+					};
 				});
-
 				return {
-					...this.replaceCard(card, userId, hideCards, hideVotes),
-					items
+					...column,
+					cards
 				};
 			});
-
 			return {
-				...column,
-				cards
+				...input,
+				columns
 			};
-		});
-
-		return {
-			...input,
-			columns
-		};
+		}
+		// hideBoardVotes(input, userId);
+		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 
 	async countBoards(userId: string) {
