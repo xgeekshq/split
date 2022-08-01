@@ -44,7 +44,7 @@ const BoardHeader = () => {
 
 	// Get Team users
 
-	const teamUsers = team.users ?? [];
+	const teamUsers = team.users ? team.users : [];
 
 	// Found sub-board
 	const getSubBoard = (): { id: string; title: string } | undefined => {

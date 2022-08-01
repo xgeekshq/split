@@ -5,7 +5,11 @@ export type EmptyObject = Record<string, never>;
 export type Empty = None | false | 0 | '' | [] | EmptyObject;
 
 const isEmpty = (value: unknown): value is Empty => {
-	if (value === null || value === undefined) {
+	if (
+		[null, undefined, 'undefined', '', 0, '0', false].includes(
+			value as string | number | null | undefined | false
+		)
+	) {
 		return true;
 	}
 
@@ -14,10 +18,6 @@ const isEmpty = (value: unknown): value is Empty => {
 	}
 
 	if (typeof value === 'object' && Object.keys(value || {}).length === 0) {
-		return true;
-	}
-
-	if (value === '' || value === 0 || value === '0' || value === false) {
 		return true;
 	}
 

@@ -8,7 +8,7 @@ import { Switch, SwitchThumb } from 'components/Primitives/Switch';
 import Text from 'components/Primitives/Text';
 import { createBoardDataState } from 'store/createBoard/atoms/create-board.atom';
 
-const DEFAULT_MAX_VOTES = '6';
+const DEFAULT_MAX_VOTES = 6;
 
 const BoardConfigurations = () => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);

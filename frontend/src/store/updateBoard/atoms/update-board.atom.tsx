@@ -1,22 +1,13 @@
 import { atom } from 'recoil';
 
+import { UpdateBoardType } from 'types/board/board';
+
 export const updateBoardError = atom({
 	key: 'haveUpdateBoardError',
 	default: false
 });
 
-export interface UpdateBoardData {
-	board: {
-		_id: string;
-		hideCards: boolean;
-		hideVotes: boolean;
-		title: string;
-		maxVotes: undefined | string;
-		postAnonymously: boolean;
-	};
-}
-
-export const updateBoardDataState = atom<UpdateBoardData>({
+export const updateBoardDataState = atom<{ board: UpdateBoardType }>({
 	key: 'updateBoardData',
 	default: {
 		board: {
@@ -25,7 +16,7 @@ export const updateBoardDataState = atom<UpdateBoardData>({
 			hideCards: false,
 			hideVotes: false,
 			maxVotes: undefined,
-			postAnonymously: false
+			users: []
 		}
 	}
 });

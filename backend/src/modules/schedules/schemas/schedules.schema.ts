@@ -26,8 +26,8 @@ export default class Schedules {
 	@Prop({ type: Boolean, default: false })
 	recurrent!: boolean;
 
-	@Prop({ type: String, nullable: true, default: null })
-	maxVotes?: string;
+	@Prop({ type: Number, nullable: true, default: null })
+	maxVotes?: number;
 
 	@Prop({ type: Boolean, nullable: false, default: false })
 	hideCards?: boolean;

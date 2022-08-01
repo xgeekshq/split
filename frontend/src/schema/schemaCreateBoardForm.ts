@@ -6,12 +6,9 @@ const SchemaCreateBoard = Joi.object({
 		'string.empty': 'Please enter the board name',
 		'string.max': 'Maximum of 30 characters'
 	}),
-	maxVotes: Joi.string()
-		.pattern(/^([1-9]\d*)|(undefined)$/)
-		.optional()
-		.messages({
-			'string.pattern.base': 'Please insert a number greater than zero.'
-		})
+	maxVotes: Joi.number().min(1).optional().messages({
+		'number.min': 'Please insert a number greater than zero.'
+	})
 });
 
 export default SchemaCreateBoard;
