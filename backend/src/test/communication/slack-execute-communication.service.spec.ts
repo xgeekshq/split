@@ -8,18 +8,19 @@ import {
 	ConversationsMembersArguments,
 	UsersProfileGetArguments
 } from '@slack/web-api';
+
 // import * as WebClientSlackApi from '@slack/web-api';
-import configService from 'src/libs/test-utils/mocks/configService.mock';
+import configService from 'libs/test-utils/mocks/configService.mock';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
-} from 'src/libs/utils/communication-helpers';
-import { SlackCommunicationGateAdapter } from 'src/modules/communication/adapters/slack-communication-gate.adapter';
-import { SlackExecuteCommunication } from 'src/modules/communication/applications/slack-execute-communication.application';
-import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
-import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
-import { UsersSlackHandler } from 'src/modules/communication/handlers/users-slack.handler';
-import { SlackExecuteCommunicationService } from 'src/modules/communication/services/slack-execute-communication.service';
+} from 'libs/utils/communication-helpers';
+import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
+import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
+import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
+import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 
 const slackUsersIds = [
 	'U023BECGF',
