@@ -15,7 +15,10 @@ import { CommunicationProducerService } from 'modules/communication/producers/sl
 					username: configService.get('redis.user'),
 					password: configService.get('redis.password'),
 					host: configService.get('redis.host'),
-					port: configService.get('redis.port')
+					port: configService.get('redis.port'),
+					tls: {
+						host: configService.get('redis.host')
+					}
 				},
 				name: CommunicationProducerService.QUEUE_NAME,
 				processors: [join(__dirname, '..', 'communication', 'consumers', 'processor')]
