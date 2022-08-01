@@ -187,7 +187,7 @@ const CardBody = React.memo<CardBodyProps>(
 										/>
 									)}
 									{board.recurrent && (
-										<Tooltip content="Recurrs every X week">
+										<Tooltip content="Recurrs every month">
 											<RecurrentIconContainer>
 												<Icon name="recurring" />
 											</RecurrentIconContainer>

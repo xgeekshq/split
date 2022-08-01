@@ -253,7 +253,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 												width: '$206'
 											}}
 										>
-											Merge into main boards
+											Merge into main board
 										</Button>
 									</AlertDialogTrigger>
 								</AlertCustomDialog>

@@ -25,13 +25,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		private deleteVoteService: DeleteVoteService
 	) {}
 
-	async countDeletedVotes(
-		boardId: string,
-		cardId: string,
-		userId: string,
-		session: ClientSession,
-		cardItemId?: string
-	) {
+	async countDeletedVotes(boardId: string, cardId: string, cardItemId?: string) {
 		let getCard: LeanDocument<CardDocument | CardItemDocument> | null;
 
 		/**
@@ -51,11 +45,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 			if (countVotes) {
 				getCard.votes.forEach(async (current) => {
-					const boardUser = await this.deleteVoteService.decrementVoteUser(
-						boardId,
-						current,
-						session
-					);
+					const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, current);
 
 					if (!boardUser) throw Error(UPDATE_FAILED);
 				});
@@ -70,11 +60,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 			) {
 				(getCard as LeanDocument<CardDocument>).items.forEach(async (current) => {
 					current.votes.forEach(async (currentVote) => {
-						const boardUser = await this.deleteVoteService.decrementVoteUser(
-							boardId,
-							currentVote,
-							session
-						);
+						const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, currentVote);
 
 						if (!boardUser) throw Error(UPDATE_FAILED);
 					});
@@ -92,7 +78,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.countDeletedVotes(boardId, cardId, userId, session);
+			await this.countDeletedVotes(boardId, cardId, userId);
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -156,7 +142,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.countDeletedVotes(boardId, cardId, userId, session, cardItemId);
+			await this.countDeletedVotes(boardId, cardId, cardItemId);
 
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);

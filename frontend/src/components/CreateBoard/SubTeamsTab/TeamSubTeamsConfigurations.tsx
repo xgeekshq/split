@@ -24,7 +24,15 @@ import QuickEditSubTeams from './QuickEditSubTeams';
 
 const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
 
-const TeamSubTeamsConfigurations = () => {
+type TeamSubTeamsInterface = {
+	timesOpen: number;
+	setTimesOpen: () => void;
+};
+
+const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
+	timesOpen,
+	setTimesOpen
+}) => {
 	const [stakeholders, setStakeholders] = useState<User[]>([]);
 	const [team, setTeam] = useState<Team | null>(null);
 
@@ -57,6 +65,14 @@ const TeamSubTeamsConfigurations = () => {
 			setHaveError(true);
 		}
 	}, [teams, setBoardData, setHaveError]);
+
+	useEffect(() => {
+		if (timesOpen < 2) {
+			setTimesOpen();
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<Flex css={{ mt: '$32' }} direction="column">
@@ -112,7 +128,7 @@ const TeamSubTeamsConfigurations = () => {
 					<Flex justify="end">
 						<QuickEditSubTeams team={team} />
 					</Flex>
-					<MainBoardCard team={team} />
+					<MainBoardCard timesOpen={timesOpen} team={team} />
 				</>
 			)}
 		</Flex>
