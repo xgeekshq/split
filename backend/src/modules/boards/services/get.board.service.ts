@@ -204,7 +204,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * @param userId Current Logged User
 	 * @returns Array of Votes (filtered)
 	 */
-	private replaceVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
+	private filterVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
 		return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 	}
 
@@ -275,10 +275,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 
 		if (hideVotes) {
-			votes = this.replaceVotes(input, userId);
+			votes = this.filterVotes(input, userId);
 		}
-
-		votes = this.replaceAllVotes(input, userId);
 
 		return {
 			...input,
@@ -287,11 +285,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			comments,
 			createdBy
 		};
-	}
-
-	//-----------------------------
-	private replaceAllVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
-		return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 	}
 
 	/**
@@ -314,7 +307,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
 		if (hideCards || hideVotes) {
-			// Columns
 			const columns = boardColumns.map((column) => {
 				const cards = column.cards.map((card) => {
 					const items = card.items.map((item) => {
@@ -335,7 +327,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				columns
 			};
 		}
-		// hideBoardVotes(input, userId);
+
 		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 

@@ -36,7 +36,6 @@ export const boardVotesIdHidden = (
 				if (String(userId) !== String(vote)) {
 					vote = hideText(String(vote));
 				}
-				// return { ...vote };
 				return vote;
 			});
 			return { ...card, items, votes };
