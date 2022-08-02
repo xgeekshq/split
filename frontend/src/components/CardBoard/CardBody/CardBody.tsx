@@ -196,7 +196,7 @@ const CardBody = React.memo<CardBodyProps>(
 
 									{!isDashboard && isSubBoard && (
 										<CardAvatars
-											listUsers={!team ? users : team.users}
+											listUsers={isSubBoard ? users : team.users}
 											responsible={false}
 											teamAdmins={false}
 											userId={userId}

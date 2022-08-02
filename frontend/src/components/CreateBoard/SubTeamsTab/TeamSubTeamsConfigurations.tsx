@@ -45,9 +45,12 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 
 	useEffect(() => {
 		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
-		const hasMinMembers = isTeamsValid && teams[0].users?.length >= MIN_MEMBERS;
 
-		if (isTeamsValid && hasMinMembers) {
+		if (
+			isTeamsValid &&
+			teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+				MIN_MEMBERS
+		) {
 			const selectedTeam = teams[0];
 
 			const isStakeholder = (userTeam: TeamUser): boolean =>

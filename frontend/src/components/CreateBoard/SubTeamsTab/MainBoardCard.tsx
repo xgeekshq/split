@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -57,7 +57,7 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 	/**
 	 * Recoil Atoms
 	 */
-	const haveError = useRecoilValue(createBoardError);
+	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
 	const {
 		handleAddTeam,
@@ -77,9 +77,14 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 		}));
 	};
 
+	const teamMembersCount = teamMembers?.length ?? 0;
+
 	useEffect(() => {
-		const teamMembersCount = teamMembers?.length ?? 0;
-		if (teamMembersCount < 4 && board.dividedBoards.length !== 0) return;
+		if (teamMembersCount < 4 && board.dividedBoards.length) {
+			setHaveError(true);
+			return;
+		}
+
 		const maxUsersCount = Math.ceil(teamMembersCount / 2);
 		const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
