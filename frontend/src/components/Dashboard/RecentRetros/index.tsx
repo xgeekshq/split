@@ -41,10 +41,10 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
 	if (!data || isEmpty(data?.pages[0].boards)) return <EmptyBoards />;
 	return (
 		<ListOfCards
-			userId={userId}
 			data={data}
-			isLoading={isFetching}
 			fetchBoards={fetchDashboardBoards}
+			isLoading={isFetching}
+			userId={userId}
 		/>
 	);
 });

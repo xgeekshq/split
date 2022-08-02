@@ -21,22 +21,22 @@ const Custom500 = () => {
 			<ContainerSection>
 				<LogoIcon />
 
-				<Text size="xl" css={{ mt: '$29', fontSize: '$48' }} heading="1">
+				<Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
 					500
 				</Text>
 
 				<Text css={{ mt: '$10' }} heading="2" weight="medium">
 					Server Error
 				</Text>
-				<Text size="md" color="primary500" css={{ mt: '$24' }}>
+				<Text color="primary500" css={{ mt: '$24' }} size="md">
 					Try to refresh this page or feel free to contact us if the problem persists.
 				</Text>
 				<Link href="/">
 					<GoBackButton
-						variant="primary"
-						size="md"
 						css={{ mt: '$26' }}
+						size="md"
 						style={{ width: '100%' }}
+						variant="primary"
 					>
 						Go to Home
 					</GoBackButton>

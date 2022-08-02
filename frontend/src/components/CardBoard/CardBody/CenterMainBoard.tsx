@@ -16,16 +16,16 @@ const CenterMainBoard = ({
 }: CenterMainBoardProps) => {
 	return (
 		<Flex css={{ ml: '$40', display: 'flex', alignItems: 'center' }}>
-			<Text size="sm" color="primary300">
+			<Text color="primary300" size="sm">
 				Sub-team boards{' '}
 			</Text>
 			<Separator
-				orientation="vertical"
 				css={{ ml: '$8', backgroundColor: '$primary300', height: '$12 !important' }}
+				orientation="vertical"
 			/>
-			<Text size="md" color="primary800" css={{ display: 'flex', ml: '$8' }}>
+			<Text color="primary800" css={{ display: 'flex', ml: '$8' }} size="md">
 				{countDividedBoards}{' '}
-				<Flex onClick={handleOpenSubBoards} css={{ ml: '$8', cursor: 'pointer' }}>
+				<Flex css={{ ml: '$8', cursor: 'pointer' }} onClick={handleOpenSubBoards}>
 					<Icon
 						name={`arrow-${!openSubBoards ? 'down' : 'up'}`}
 						css={{

@@ -15,7 +15,7 @@ type AlertBoxProps = CSSProps & {
 
 const AlertBox: FC<AlertBoxProps> = ({ type, title, text, children, css }) => {
 	return (
-		<AlertStyle css={css} align="center" justify="between" type={type}>
+		<AlertStyle align="center" css={css} justify="between" type={type}>
 			<Flex align="center">
 				<AlertIconStyle>
 					<Icon name={['warning', 'error'].includes(type) ? 'blob-error' : 'blob-info'} />

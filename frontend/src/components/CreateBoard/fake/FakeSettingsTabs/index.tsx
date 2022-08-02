@@ -8,17 +8,17 @@ import { StyledTextTab } from './styles';
 const FakeSettingsTabs = () => {
 	return (
 		<Flex direction="column">
-			<Flex gap="24" css={{ width: '100%' }}>
-				<StyledTextTab data-activetab size="md" color="primary300">
+			<Flex css={{ width: '100%' }} gap="24">
+				<StyledTextTab data-activetab color="primary300" size="md">
 					Team/-Sub-teams configurations
 				</StyledTextTab>
-				<StyledTextTab size="md" color="primary300">
+				<StyledTextTab color="primary300" size="md">
 					Configurations
 				</StyledTextTab>
 			</Flex>
 			<Separator
-				orientation="horizontal"
 				css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
+				orientation="horizontal"
 			/>
 			<FakeTeamTab />
 		</Flex>

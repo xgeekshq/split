@@ -226,23 +226,23 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 				<BoardHeader />
 				<Container>
 					<Flex css={{ width: '100%', px: '$36' }} direction="column">
-						<Flex justify="between" align="center" css={{ py: '$32' }} gap={40}>
+						<Flex align="center" css={{ py: '$32' }} gap={40} justify="between">
 							{board.isSubBoard && !board.submitedByUser && isResponsible && (
 								<AlertCustomDialog
-									defaultOpen={false}
-									title="Merge board into main board"
-									text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
 									cancelText="Cancel"
 									confirmText="Merge into main board"
+									defaultOpen={false}
+									text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
+									title="Merge board into main board"
+									variant="primary"
 									handleConfirm={() => {
 										mergeBoard.mutate(boardId);
 									}}
-									variant="primary"
 								>
 									<AlertDialogTrigger asChild>
 										<Button
-											variant="primaryOutline"
 											size="sm"
+											variant="primaryOutline"
 											css={{
 												fontWeight: '$medium',
 												width: '$206'
@@ -256,8 +256,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 							{haveSubBoardsMerged && (
 								<AlertBox
 									css={{ flex: 1 }}
-									type="info"
 									title="No sub-team has merged into this main board yet."
+									type="info"
 								/>
 							)}
 
@@ -271,13 +271,13 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 							{board.submitedByUser && board.submitedAt && (
 								<AlertBox
 									css={{ flex: '1' }}
+									text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
 									type="info"
 									title={`Sub-team board successfully merged into main board ${new Date(
 										board.submitedAt
 									).toLocaleDateString()}, ${new Date(
 										board.submitedAt
 									).toLocaleTimeString()}`}
-									text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
 								>
 									<Link
 										key={mainBoardId}
@@ -298,24 +298,24 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 									return (
 										<Column
 											key={column._id}
-											cards={column.cards}
-											columnId={column._id}
-											index={index}
-											userId={userId}
 											boardId={boardId}
-											title={column.title}
+											cards={column.cards}
 											color={column.color}
-											socketId={socketId}
+											columnId={column._id}
+											countAllCards={countAllCards}
 											hideCards={board.hideCards}
+											index={index}
 											isMainboard={!board.isSubBoard}
+											isSubmited={!!board.submitedByUser}
+											maxVotes={Number(board.maxVotes)}
+											socketId={socketId}
+											title={column.title}
+											userId={userId}
 											boardUser={board.users.find(
 												(userFound) =>
 													(userFound.user._id as unknown as string) ===
 													userId
 											)}
-											maxVotes={Number(board.maxVotes)}
-											countAllCards={countAllCards}
-											isSubmited={!!board.submitedByUser}
 										/>
 									);
 								})}

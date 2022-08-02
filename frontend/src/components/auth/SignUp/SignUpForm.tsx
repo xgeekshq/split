@@ -107,21 +107,21 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 				<Text css={{ mt: '$24' }} heading="1">
 					Sign up
 				</Text>
-				<Text size="md" css={{ mt: '$8', color: '$primary500' }}>
+				<Text css={{ mt: '$8', color: '$primary500' }} size="md">
 					Enter your email address to proceed further
 				</Text>
 				<Input
 					css={{ mt: '$32' }}
-					id="email"
-					type="text"
-					placeholder="Email address"
 					helperText={isEmpty(valueHelperText) ? undefined : valueHelperText}
+					id="email"
+					placeholder="Email address"
 					state={!valueState ? 'default' : 'error'}
+					type="text"
 				/>
 
 				<Button
-					type="submit"
 					size="lg"
+					type="submit"
 					css={{
 						fontWeight: '$medium',
 						fontSize: '$18',

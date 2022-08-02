@@ -62,11 +62,11 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
 	return (
 		<Flex css={{ flex: '1 1 0', width: '100%' }}>
-			<LeftArrow isDashboard={false} index={index} />
+			<LeftArrow index={index} isDashboard={false} />
 
 			<Container
-				elevation="1"
 				align="center"
+				elevation="1"
 				justify="between"
 				css={{
 					backgroundColor: 'white',
@@ -83,11 +83,13 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 					<Flex align="center">
 						<Text css={{ ml: '$40', mr: '$8' }}>Responsible Lottery</Text>
 						<Separator
-							orientation="vertical"
 							css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
+							orientation="vertical"
 						/>
 						{users.length <= 1 ? (
 							<Flex
+								align="center"
+								justify="center"
 								css={{
 									height: '$24',
 									width: '$24',
@@ -96,8 +98,6 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 									ml: '$12',
 									opacity: '0.2'
 								}}
-								align="center"
-								justify="center"
 								onClick={handleLottery}
 							>
 								<Icon
@@ -110,6 +110,8 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 							</Flex>
 						) : (
 							<Flex
+								align="center"
+								justify="center"
 								css={{
 									height: '$24',
 									width: '$24',
@@ -125,8 +127,6 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 										color: 'white'
 									}
 								}}
-								align="center"
-								justify="center"
 								onClick={handleLottery}
 							>
 								<Icon
@@ -139,17 +139,17 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 							</Flex>
 						)}
 
-						<Text size="sm" color="primary300" css={{ mx: '$8' }}>
+						<Text color="primary300" css={{ mx: '$8' }} size="sm">
 							{responsible?.firstName} {responsible?.lastName}
 						</Text>
 						<Avatar
 							css={{ position: 'relative' }}
+							fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
 							size={32}
 							colors={{
 								bg: highlight2Colors.highlight2Lighter,
 								fontColor: highlight2Colors.highlight2Dark
 							}}
-							fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
 						/>
 					</Flex>
 				</Flex>

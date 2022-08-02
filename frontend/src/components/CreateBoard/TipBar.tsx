@@ -53,7 +53,7 @@ const CreateBoardTipBar = () => {
 					retrospective.
 				</LiWhite>
 			</UnorderedList>
-			<TextWhite heading="6" css={{ mb: '$8' }}>
+			<TextWhite css={{ mb: '$8' }} heading="6">
 				Stakeholder
 			</TextWhite>
 			<LiWhite as="span">The stakeholder will not be assigned to any sub-team.</LiWhite>

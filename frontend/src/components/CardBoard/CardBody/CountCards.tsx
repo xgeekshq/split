@@ -10,7 +10,7 @@ const CountCards = ({ columns }: CounCardsProps) => {
 	const countCards = countBoardCards(columns);
 
 	return (
-		<Text size="sm" weight="medium" css={{ ml: '$40' }}>
+		<Text css={{ ml: '$40' }} size="sm" weight="medium">
 			{columns.length} columns, {countCards} cards
 		</Text>
 	);

@@ -24,7 +24,7 @@ const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 
 	return (
 		<PopoverContent>
-			<PopoverItem onClick={setEditCard} gap="8" align="center">
+			<PopoverItem align="center" gap="8" onClick={setEditCard}>
 				<Icon
 					name="edit"
 					css={{
@@ -36,7 +36,7 @@ const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 					Edit comment
 				</Text>
 			</PopoverItem>
-			<PopoverItem gap="8" align="center" onClick={setDeleteCard}>
+			<PopoverItem align="center" gap="8" onClick={setDeleteCard}>
 				<Icon
 					name="trash-alt"
 					css={{
@@ -73,11 +73,11 @@ const PopoverCommentSettings: React.FC<PopoverSettingsProps> = React.memo(
 						}
 					}}
 				>
-					<Icon name="menu-dots" css={{ width: '$20', height: '$20' }} />
+					<Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
 				</PopoverTrigger>
 				<PopoverCommentSettingsContent
-					setEditCard={handleEditing}
 					setDeleteCard={handleDeleteComment}
+					setEditCard={handleEditing}
 				/>
 			</Popover>
 		);

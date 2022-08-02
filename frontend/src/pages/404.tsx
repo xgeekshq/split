@@ -21,23 +21,23 @@ export default function Custom404() {
 			<ContainerSection>
 				<LogoIcon />
 
-				<Text size="xl" css={{ mt: '$29', fontSize: '$48' }} heading="1">
+				<Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
 					404
 				</Text>
 
 				<Text css={{ mt: '$10' }} heading="2" weight="medium">
 					Page Not Found
 				</Text>
-				<Text size="md" color="primary500" css={{ mt: '$24' }}>
+				<Text color="primary500" css={{ mt: '$24' }} size="md">
 					The page you are looking for might have been removed or is temporarily
 					unavailable
 				</Text>
 				<Link href="/">
 					<GoBackButton
-						variant="primary"
-						size="md"
 						css={{ mt: '$26' }}
+						size="md"
 						style={{ width: '100%' }}
+						variant="primary"
 					>
 						Go to Home
 					</GoBackButton>

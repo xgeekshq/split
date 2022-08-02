@@ -19,7 +19,7 @@ const Boards = () => {
 		<Flex direction="column">
 			<Suspense fallback={<LoadingPage />}>
 				<QueryError>
-					<MyBoards userId={session.user.id} isSuperAdmin={session.isSAdmin} />
+					<MyBoards isSuperAdmin={session.isSAdmin} userId={session.user.id} />
 				</QueryError>
 			</Suspense>
 		</Flex>

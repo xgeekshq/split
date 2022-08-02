@@ -53,30 +53,30 @@ const CalendarBar = () => {
 			</Text>
 			{!hasMeetings && (
 				<Flex
-					justify="center"
 					align="center"
-					direction="column"
 					css={{ mt: '$40', textAlign: 'center' }}
+					direction="column"
 					gap="24"
+					justify="center"
 				>
 					<StyledNoMeetings />
-					<Text size="md" color="primary400" css={{ mx: '$41' }}>
+					<Text color="primary400" css={{ mx: '$41' }} size="md">
 						Your have no upcoming <br /> retrospectives any time soon.
 					</Text>
 				</Flex>
 			)}
 			{hasMeetings && (
 				<StyledCalendar
+					minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
+					minDetail="year"
+					nextLabel={<Icon name="arrow-right" />}
+					prevLabel={<Icon name="arrow-left" />}
+					tileContent={tileContent}
+					value={currentValue}
 					formatShortWeekday={(locale: string, date: Date) =>
 						['Su', 'Mo', 'Th', 'We', 'Th', 'Fr', 'Sa'][date.getDay()]
 					}
-					minDate={new Date(new Date().getFullYear(), new Date().getMonth(), 1)}
-					nextLabel={<Icon name="arrow-right" />}
-					prevLabel={<Icon name="arrow-left" />}
 					onChange={handleOnChange}
-					value={currentValue}
-					minDetail="year"
-					tileContent={tileContent}
 				/>
 			)}
 		</StyledContainer>

@@ -97,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 	};
 
 	return (
-		<TabsContent value="login" css={{ justifyContent: 'center' }}>
+		<TabsContent css={{ justifyContent: 'center' }} value="login">
 			<FormProvider {...methods}>
 				<StyledForm
 					autoComplete="off"
@@ -111,34 +111,35 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 					<Text css={{ mt: '$24' }} heading="1">
 						Log In
 					</Text>
-					<Text size="md" css={{ mt: '$8', color: '$primary500' }}>
+					<Text css={{ mt: '$8', color: '$primary500' }} size="md">
 						Enter your email and password to log in.
 					</Text>
 					<Input
 						clearErrorCode={clearErrors}
-						state={loginErrorCode > 0 ? 'error' : undefined}
 						css={{ mt: '$32' }}
-						id="email"
-						type="text"
-						placeholder="Email address"
 						forceState={loginErrorCode > 0}
+						id="email"
+						placeholder="Email address"
+						state={loginErrorCode > 0 ? 'error' : undefined}
+						type="text"
 					/>
 					<Input
 						clearErrorCode={clearErrors}
-						state={loginErrorCode > 0 ? 'error' : undefined}
-						id="password"
-						type="password"
-						placeholder="Password"
+						forceState={loginErrorCode > 0}
 						icon="eye"
 						iconPosition="right"
-						forceState={loginErrorCode > 0}
+						id="password"
+						placeholder="Password"
+						state={loginErrorCode > 0 ? 'error' : undefined}
+						type="password"
 					/>
 
-					<LoginButton type="submit" disabled={loading.credentials} size="lg">
+					<LoginButton disabled={loading.credentials} size="lg" type="submit">
 						{loading.credentials && <DotsLoading color="primary800" size={10} />}
 						{!loading.credentials && 'Log in'}
 					</LoginButton>
 					<Text
+						data-testid="forgot-password-button"
 						size="sm"
 						css={{
 							alignSelf: 'center',
@@ -149,15 +150,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 							}
 						}}
 						onClick={handleShowTroubleLogginIn}
-						data-testid="forgot-password-button"
 					>
 						Forgot password
 					</Text>
 					{AUTH_SSO && (
-						<Flex justify="center" align="center" direction="column">
+						<Flex align="center" direction="column" justify="center">
 							<OrSeparator>
 								<hr />
-								<Text size="sm" color="primary300" weight="medium">
+								<Text color="primary300" size="sm" weight="medium">
 									or
 								</Text>
 								<hr />
