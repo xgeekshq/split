@@ -20,7 +20,7 @@ import { SlackExecuteCommunicationService } from 'modules/communication/services
 			name: CommunicationProducerService.QUEUE_NAME,
 			useFactory: async () => ({
 				name: CommunicationProducerService.QUEUE_NAME,
-				processors: [join(__dirname, '..', 'communication', 'consumers', 'processor')]
+				processors: [join(__dirname, 'consumers', 'processor')]
 			})
 		})
 	],
