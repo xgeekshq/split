@@ -304,7 +304,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
-
 		// Columns
 		const columns = boardColumns.map((column) => {
 			const cards = column.cards.map((card) => {
