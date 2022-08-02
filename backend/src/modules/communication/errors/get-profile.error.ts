@@ -1,5 +1,5 @@
 export class GetProfileError extends Error {
-  constructor() {
-    super('Get profile fails');
-  }
+	constructor() {
+		super('Get profile fails');
+	}
 }

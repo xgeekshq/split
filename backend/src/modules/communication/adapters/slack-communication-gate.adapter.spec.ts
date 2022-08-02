@@ -1,23 +1,23 @@
+import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+	ChatMeMessageArguments,
 	ConversationsCreateArguments,
 	ConversationsInviteArguments,
 	ConversationsMembersArguments,
-	UsersProfileGetArguments,
-	ChatMeMessageArguments
+	UsersProfileGetArguments
 } from '@slack/web-api';
-import { faker } from '@faker-js/faker';
 import * as WebClientSlackApi from '@slack/web-api';
 
 import configService from 'libs/test-utils/mocks/configService.mock';
 import { CreateChannelError } from 'modules/communication/errors/create-channel.error';
-import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
+import { GetProfileError } from 'modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'modules/communication/errors/get-users-from-channel.error';
+import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
+import { PostMessageError } from 'modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-import { GetProfileError } from 'modules/communication/errors/get-profile.error';
-import { PostMessageError } from 'modules/communication/errors/post-message.error';
 
 import { SlackCommunicationGateAdapter } from './slack-communication-gate.adapter';
 

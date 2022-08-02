@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+
 import { CommunicationModule } from 'modules/communication/communication.module';
 
 import AppConfigModule from './infrastructure/config/config.module';

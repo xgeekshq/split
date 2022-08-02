@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
-import { BoardType } from 'modules/communication/dto/types';
-import { TeamDto } from 'modules/communication/dto/team.dto';
 import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { TeamDto } from 'modules/communication/dto/team.dto';
+import { BoardType } from 'modules/communication/dto/types';
+import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 
 @Injectable()
 export class SlackExecuteCommunicationService {

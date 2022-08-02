@@ -1,16 +1,16 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { SLACK_CHANNEL_PREFIX, SLACK_MASTER_CHANNEL_ID } from 'libs/constants/slack';
 import { FRONTEND_URL } from 'libs/constants/frontend';
+import { SLACK_CHANNEL_PREFIX, SLACK_MASTER_CHANNEL_ID } from 'libs/constants/slack';
 import { TeamDto } from 'modules/communication/dto/team.dto';
 import { BoardRoles, BoardType } from 'modules/communication/dto/types';
 import { UserDto } from 'modules/communication/dto/user.dto';
 import { BoardNotValidError } from 'modules/communication/errors/board-not-valid.error';
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
-import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
+import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
 
 export class SlackExecuteCommunication implements ExecuteCommunicationInterface {
 	private logger = new Logger(SlackExecuteCommunication.name);

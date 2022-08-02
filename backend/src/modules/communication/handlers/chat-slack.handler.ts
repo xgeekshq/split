@@ -1,5 +1,5 @@
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
+import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 
 export class ChatSlackHandler implements ChatHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateInterface) {}

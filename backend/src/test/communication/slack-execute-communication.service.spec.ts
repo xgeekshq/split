@@ -1,26 +1,26 @@
+import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+	ChatMeMessageArguments,
 	ConversationsCreateArguments,
 	ConversationsInviteArguments,
 	ConversationsMembersArguments,
-	UsersProfileGetArguments,
-	ChatMeMessageArguments
+	UsersProfileGetArguments
 } from '@slack/web-api';
-import { faker } from '@faker-js/faker';
-// import * as WebClientSlackApi from '@slack/web-api';
 
+// import * as WebClientSlackApi from '@slack/web-api';
 import configService from 'libs/test-utils/mocks/configService.mock';
-import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
 } from 'libs/utils/communication-helpers';
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
-import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 
 const slackUsersIds = [
 	'U023BECGF',

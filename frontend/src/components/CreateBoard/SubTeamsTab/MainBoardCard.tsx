@@ -35,6 +35,7 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
 	team: Team;
+	timesOpen: number;
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => {
@@ -52,7 +53,7 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 	);
 });
 
-const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) => {
 	/**
 	 * Recoil Atoms
 	 */
@@ -93,16 +94,18 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 			];
 		});
 
-		setCreateBoardData((prev) => ({
-			...prev,
-			users,
-			board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
-			count: {
-				...prev.count,
-				teamsCount,
-				maxUsersCount
-			}
-		}));
+		if (timesOpen < 2) {
+			setCreateBoardData((prev) => ({
+				...prev,
+				users,
+				board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+				count: {
+					...prev.count,
+					teamsCount,
+					maxUsersCount
+				}
+			}));
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

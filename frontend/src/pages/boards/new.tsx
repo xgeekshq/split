@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient } from 'react-query';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -33,7 +33,7 @@ import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 
-const NewBoard = () => {
+const NewBoard: NextPage = () => {
 	const router = useRouter();
 
 	/**
