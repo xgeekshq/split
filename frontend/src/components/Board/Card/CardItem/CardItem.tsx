@@ -64,6 +64,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 		const handleEditing = () => {
 			setEditing(!editing);
 		};
+
 		return (
 			<Container
 				gap="10"

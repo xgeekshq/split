@@ -21,6 +21,11 @@ const DeleteCard = ({
 	const { deleteCard } = useCards();
 
 	const handleDelete = () => {
+		/*
+		 * In some way this component or it's children is updating on an unmounted component.
+		 * To fix, this component must be closed before operate the async action.
+		 */
+		handleClose();
 		deleteCard.mutate({
 			cardId,
 			boardId,
