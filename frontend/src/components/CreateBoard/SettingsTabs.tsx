@@ -29,6 +29,7 @@ const StyledTextTab = styled(Text, {
 
 const Settings = () => {
 	const [currentTab, setCurrentTab] = useState(1);
+	const [timesOpen, setTimesOpen] = useState<number>(0);
 
 	/**
 	 * Recoil Atoms
@@ -69,7 +70,12 @@ const Settings = () => {
 				orientation="horizontal"
 				css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
 			/>
-			{currentTab === 1 && <TeamSubTeamsConfigurations />}
+			{currentTab === 1 && (
+				<TeamSubTeamsConfigurations
+					timesOpen={timesOpen}
+					setTimesOpen={() => setTimesOpen(timesOpen + 1)}
+				/>
+			)}
 			{currentTab === 2 && <BoardConfigurations />}
 		</Flex>
 	);

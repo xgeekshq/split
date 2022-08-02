@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 
 import BoardsModule from 'modules/boards/boards.module';
 import {
-	CommunicationGateAdapter,
 	ChatHandler,
+	CommunicationGateAdapter,
 	ConversationsHandler,
-	UsersHandler,
-	ExecuteCommunication
+	ExecuteCommunication,
+	UsersHandler
 } from 'modules/communication/communication.providers';
 import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 

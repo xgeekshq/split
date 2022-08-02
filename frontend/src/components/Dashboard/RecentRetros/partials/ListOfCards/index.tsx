@@ -1,21 +1,11 @@
 import React, { useMemo, useRef } from 'react';
 import { InfiniteData, UseInfiniteQueryResult } from 'react-query';
 
-import { styled } from 'styles/stitches/stitches.config';
-
 import CardBody from 'components/CardBoard/CardBody/CardBody';
 import { DotsLoading } from 'components/loadings/DotsLoading';
 import Flex from 'components/Primitives/Flex';
-import Text from 'components/Primitives/Text';
 import BoardType from 'types/board/board';
-
-const LastUpdatedText = styled(Text, {
-	position: 'sticky',
-	zIndex: '5',
-	top: '-0.2px',
-	height: '$24',
-	backgroundColor: '$background'
-});
+import { LastUpdatedText } from './styles';
 
 type ListOfCardsProp = {
 	data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }>;

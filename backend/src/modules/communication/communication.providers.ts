@@ -1,14 +1,14 @@
 import { ConfigService } from '@nestjs/config';
 
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
-import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
-import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
 
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,

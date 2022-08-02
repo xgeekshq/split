@@ -1,5 +1,5 @@
 export class ProfileWithoutEmailError extends Error {
-  constructor() {
-    super('Profile without email.');
-  }
+	constructor() {
+		super('Profile without email.');
+	}
 }
