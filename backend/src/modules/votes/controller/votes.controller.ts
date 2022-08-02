@@ -28,7 +28,7 @@ import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
-import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';

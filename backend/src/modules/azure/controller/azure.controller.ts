@@ -24,7 +24,7 @@ import {
 import { EmailParam } from 'libs/dto/param/email.param';
 import { USER_NOT_FOUND } from 'libs/exceptions/messages';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
-import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';

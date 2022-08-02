@@ -31,7 +31,7 @@ import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/mes
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
 import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
-import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'modules/boards/dto/board.dto';

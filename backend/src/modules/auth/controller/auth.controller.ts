@@ -35,7 +35,7 @@ import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';

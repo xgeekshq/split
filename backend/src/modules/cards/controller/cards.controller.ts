@@ -31,7 +31,7 @@ import { UnmergeCardsParams } from 'libs/dto/param/unmerge.cards.params';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bard-request.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'modules/boards/dto/board.dto';
@@ -283,7 +283,7 @@ export default class CardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Put(':boardId/card/:cardId/update-card-position')
+	@Put(':boardId/card/:cardId/position')
 	async updateCardPosition(
 		@Param() params: CardGroupParams,
 		@Body() boardData: UpdateCardPositionDto
