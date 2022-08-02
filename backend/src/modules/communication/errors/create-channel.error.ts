@@ -1,5 +1,5 @@
 export class CreateChannelError extends Error {
-  constructor() {
-    super('Create channel fails.');
-  }
+	constructor() {
+		super('Create channel fails.');
+	}
 }
