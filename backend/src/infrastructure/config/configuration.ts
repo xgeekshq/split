@@ -45,6 +45,12 @@ export const configuration = (): Configuration => {
 			botToken: process.env.SLACK_API_BOT_TOKEN as string,
 			masterChannelId: process.env.SLACK_MASTER_CHANNEL_ID as string,
 			channelPrefix: process.env.SLACK_CHANNEL_PREFIX as string
+		},
+		redis: {
+			user: process.env.REDIS_USER as string,
+			password: process.env.REDIS_PASSWORD as string,
+			host: process.env.REDIS_HOST as string,
+			port: parseInt(process.env.REDIS_PORT as string, 10)
 		}
 	};
 

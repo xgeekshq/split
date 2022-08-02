@@ -34,3 +34,15 @@ export type BoardType = {
 	} | null;
 	users: UserRoleType[];
 };
+
+export type ConfigurationType = {
+	slackApiBotToken: string;
+	slackMasterChannelId: string;
+	slackChannelPrefix: string;
+	frontendUrl: string;
+};
+
+export type JobType = {
+	board: BoardType;
+	config: ConfigurationType;
+};

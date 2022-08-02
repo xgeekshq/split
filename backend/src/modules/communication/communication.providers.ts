@@ -1,5 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 
+import { FRONTEND_URL } from 'libs/constants/frontend';
+import {
+	SLACK_API_BOT_TOKEN,
+	SLACK_CHANNEL_PREFIX,
+	SLACK_MASTER_CHANNEL_ID
+} from 'libs/constants/slack';
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
 import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
@@ -13,7 +19,12 @@ import { UsersHandlerInterface } from 'modules/communication/interfaces/users.ha
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,
 	useFactory: (configService: ConfigService) => {
-		return new SlackCommunicationGateAdapter(configService);
+		return new SlackCommunicationGateAdapter({
+			slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
+			slackMasterChannelId: configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+			slackChannelPrefix: configService.getOrThrow(SLACK_CHANNEL_PREFIX),
+			frontendUrl: configService.getOrThrow(FRONTEND_URL)
+		});
 	},
 	inject: [ConfigService]
 };
@@ -51,7 +62,12 @@ export const ExecuteCommunication = {
 		chatHandler: ChatHandlerInterface
 	) => {
 		return new SlackExecuteCommunication(
-			configService,
+			{
+				slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
+				slackMasterChannelId: configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+				slackChannelPrefix: configService.getOrThrow(SLACK_CHANNEL_PREFIX),
+				frontendUrl: configService.getOrThrow(FRONTEND_URL)
+			},
 			conversationsHandler,
 			usersHandler,
 			chatHandler
