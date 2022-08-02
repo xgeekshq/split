@@ -17,14 +17,14 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 	const { children, firstName, isDashboard, isBoards } = props;
 
 	return (
-		<ContentSection justify="between" gap="36">
-			<Flex direction="column" gap="40" css={{ width: '100%' }}>
+		<ContentSection gap="36" justify="between">
+			<Flex css={{ width: '100%' }} direction="column" gap="40">
 				<Flex justify="between">
 					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
 					{isBoards && <Text heading="1">Boards</Text>}
 					<Link href="/boards/new">
 						<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-							<Icon name="plus" css={{ color: 'white' }} />
+							<Icon css={{ color: 'white' }} name="plus" />
 							Add new board
 						</AddNewBoardButton>
 					</Link>

@@ -257,8 +257,8 @@ const Input: React.FC<InputProps> = ({
 
 	return (
 		<Flex
-			direction="column"
 			css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto', ...css }}
+			direction="column"
 			onBlur={() => {
 				if (isValueEmpty) {
 					clearErrors(id);
@@ -285,36 +285,36 @@ const Input: React.FC<InputProps> = ({
 			<Flex>
 				<StyledInput
 					{...rest}
+					autoComplete="off"
+					data-iconposition={iconPosition}
+					data-state={currentState}
+					disabled={disabled}
+					id={id}
+					min={min}
+					placeholder=" "
+					type={currentType}
+					variant={currentState}
 					ref={(e) => {
 						ref(e);
 						inputRef.current = e;
 					}}
-					id={id}
-					placeholder=" "
-					disabled={disabled}
-					type={currentType}
-					variant={currentState}
-					data-state={currentState}
-					autoComplete="off"
 					onFocus={clearErrorCode}
-					data-iconposition={iconPosition}
-					min={min}
 				/>
-				<PlaceholderText as="label" htmlFor={id} data-iconposition={iconPosition}>
+				<PlaceholderText as="label" data-iconposition={iconPosition} htmlFor={id}>
 					{placeholder}
 				</PlaceholderText>
 			</Flex>
 			<Flex justify={!isHelperEmpty ? 'between' : 'end'}>
 				{!isHelperEmpty && (
-					<HelperTextWrapper gap="4" css={{ mt: '$8' }}>
+					<HelperTextWrapper css={{ mt: '$8' }} gap="4">
 						{currentState === 'error' && (
-							<Icon name="info" css={{ width: '$24', height: '$24' }} />
+							<Icon css={{ width: '$24', height: '$24' }} name="info" />
 						)}
 						<Text
+							hint
 							css={{
 								color: currentState === 'error' ? '$dangerBase' : '$primary300'
 							}}
-							hint
 						>
 							{!isEmpty(helperText) ? helperText : message}
 						</Text>
@@ -322,11 +322,11 @@ const Input: React.FC<InputProps> = ({
 				)}
 				{!!currentValue && (
 					<Text
+						hint
 						css={{
 							color: currentState === 'error' ? '$dangerBase' : '$primary300',
 							mt: '$8'
 						}}
-						hint
 					>
 						{currentValue.length}/{maxChars}
 					</Text>

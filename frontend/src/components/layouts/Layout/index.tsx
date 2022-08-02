@@ -26,8 +26,8 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 		return (
 			<DashboardLayout
 				firstName={session.user.firstName}
-				isDashboard={isDashboard}
 				isBoards={isBoards}
+				isDashboard={isDashboard}
 			>
 				{children}
 			</DashboardLayout>
@@ -40,9 +40,9 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 		<>
 			<Container>
 				<Sidebar
+					email={session.user.email}
 					firstName={session.user.firstName}
 					lastName={session.user.lastName}
-					email={session.user.email}
 					strategy={session.strategy}
 				/>
 				{renderMain}

@@ -49,10 +49,10 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 		if (isDashboard) {
 			return (
 				<Flex align="center" css={{ justifySelf: 'end' }}>
-					<Text size="sm" color="primary300">
+					<Text color="primary300" size="sm">
 						{boardTypeCaption} |
 					</Text>
-					<Text css={{ mx: '$8' }} size="sm" weight="medium" color="primary800">
+					<Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
 						{boardOwnerName}
 					</Text>
 					<CardAvatars
@@ -70,12 +70,12 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 				<Flex css={{ alignItems: 'center' }}>
 					{isSubBoard && (
 						<Flex align="center" gap="8">
-							<Text size="sm" color="primary300">
+							<Text color="primary300" size="sm">
 								Responsible
 							</Text>
 							<CardAvatars
-								listUsers={users}
 								responsible
+								listUsers={users}
 								teamAdmins={false}
 								userId={userId}
 							/>
@@ -83,7 +83,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 					)}
 					<CountCards columns={columns} />
 					{(userIsAdmin || userSAdmin) && !isSubBoard && (
-						<Flex css={{ ml: '$24' }} gap="24" align="center">
+						<Flex align="center" css={{ ml: '$24' }} gap="24">
 							<Separator
 								orientation="vertical"
 								css={{

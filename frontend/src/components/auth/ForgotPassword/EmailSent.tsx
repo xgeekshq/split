@@ -67,7 +67,7 @@ const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
 				}}
 			>
 				A link to reset your password has been sent to{' '}
-				<Text size="md" css={{ mt: '$16', color: '$primary500', fontWeight: '500' }}>
+				<Text css={{ mt: '$16', color: '$primary500', fontWeight: '500' }} size="md">
 					{userEmail}
 					<Text
 						size="md"
@@ -98,14 +98,14 @@ const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
 				social, or other folders.
 			</Text>
 			<Button
-				type="button"
-				onClick={() => {
-					handleRecoverPassword(userEmail);
-				}}
 				size="lg"
+				type="button"
 				css={{
 					fontWeight: '$medium',
 					fontSize: '$18'
+				}}
+				onClick={() => {
+					handleRecoverPassword(userEmail);
 				}}
 			>
 				Resend email with reset link

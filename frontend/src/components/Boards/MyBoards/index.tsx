@@ -89,13 +89,13 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 	// });
 
 	return (
-		<ScrollableContent ref={scrollRef} onScroll={onScroll} justify="start" direction="column">
+		<ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
 			{/* <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} /> */}
 			{Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
 				const { users } = Array.from(boardsOfTeam)[0][1][0];
 				// if (filter !== "all" && teamId !== filter) return null;
 				return (
-					<Flex direction="column" key={teamId} css={{ mb: '$24' }}>
+					<Flex key={teamId} css={{ mb: '$24' }} direction="column">
 						<Flex
 							direction="column"
 							css={{
@@ -107,11 +107,11 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 						>
 							<TeamHeader
 								team={dataByTeamAndDate.teams.get(teamId)}
-								users={users}
 								userId={userId}
+								users={users}
 							/>
 						</Flex>
-						<Flex direction="column" gap="16" css={{ zIndex: '1' }}>
+						<Flex css={{ zIndex: '1' }} direction="column" gap="16">
 							{Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
 								const formatedDate = new Date(date).toLocaleDateString('en-US', {
 									weekday: 'long',
@@ -120,10 +120,10 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 									day: 'numeric'
 								});
 								return (
-									<Flex direction="column" key={date}>
+									<Flex key={date} direction="column">
 										<Text
-											size="xs"
 											color="primary300"
+											size="xs"
 											css={{
 												position: 'sticky',
 												zIndex: '5',
@@ -168,15 +168,15 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
                         </Text>
                       </Flex>
                     </Flex> */}
-										<Flex gap="20" direction="column">
+										<Flex direction="column" gap="20">
 											{boardsOfDay.map((board: BoardType) => (
 												<CardBody
 													key={board._id}
-													userId={userId}
 													board={board}
-													isDashboard={false}
 													dividedBoardsCount={board.dividedBoards.length}
+													isDashboard={false}
 													isSAdmin={isSuperAdmin}
+													userId={userId}
 												/>
 											))}
 										</Flex>

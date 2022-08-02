@@ -178,10 +178,10 @@ const AddCard = React.memo<AddCardProps>(
 		return (
 			<StyledForm
 				{...props}
-				direction="column"
 				align="center"
-				justify="center"
+				direction="column"
 				gap="8"
+				justify="center"
 				tabIndex={0}
 				onSubmit={methods.handleSubmit(({ text }) => {
 					if (isCard) {
@@ -202,23 +202,23 @@ const AddCard = React.memo<AddCardProps>(
 			>
 				<FormProvider {...methods}>
 					<TextArea
-						id="text"
-						// variant={!isEmpty(cardText) ? default : undefined} }
 						floatPlaceholder={false}
+						// variant={!isEmpty(cardText) ? default : undefined} }
+						id="text"
 						placeholder="Write your comment here..."
 					/>
-					<Flex justify="end" gap="4" css={{ width: '100%' }}>
+					<Flex css={{ width: '100%' }} gap="4" justify="end">
 						{!isEditing && (
 							<Checkbox
-								setCheckedTerms={handleIsAnonymous}
 								id="anonymous"
 								label="Post anonymously"
+								setCheckedTerms={handleIsAnonymous}
 								size="16"
 							/>
 						)}
 						<ActionButton
-							size="sm"
 							css={{ width: '$48', height: '$36' }}
+							size="sm"
 							variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
 							onClick={handleClear}
 						>

@@ -43,43 +43,43 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 	return (
 		<Flex direction="column">
 			<Link href={DASHBOARD_ROUTE}>
-				<StyledMenuItem data-active={active === DASHBOARD_ROUTE} align="center">
+				<StyledMenuItem align="center" data-active={active === DASHBOARD_ROUTE}>
 					<Icon name="dashboard" />
 					<StyledText>Dashboard</StyledText>
 				</StyledMenuItem>
 			</Link>
 			<Link href={BOARDS_ROUTE}>
-				<StyledMenuItem data-active={active === BOARDS_ROUTE} align="center">
+				<StyledMenuItem align="center" data-active={active === BOARDS_ROUTE}>
 					<Icon name="boards" />
 					<StyledText>Boards</StyledText>
 				</StyledMenuItem>
 			</Link>
-			<Tooltip content="Coming Soon" color="primary100">
-				<StyledMenuItem disabled data-active={active === USERS_ROUTE} align="center">
+			<Tooltip color="primary100" content="Coming Soon">
+				<StyledMenuItem disabled align="center" data-active={active === USERS_ROUTE}>
 					<Icon name="user" />
 					<StyledText>Users</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
 			<Tooltip color="primary100" content="Coming Soon">
-				<StyledMenuItem disabled data-active={active === TEAMS_ROUTE} align="center">
+				<StyledMenuItem disabled align="center" data-active={active === TEAMS_ROUTE}>
 					<Icon name="team" />
 					<StyledText>Teams</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
 			<StyledSeparator />
-			<Tooltip content="Coming Soon" color="primary100">
-				<StyledMenuItem disabled data-active={active === ACCOUNT_ROUTE} align="center">
+			<Tooltip color="primary100" content="Coming Soon">
+				<StyledMenuItem disabled align="center" data-active={active === ACCOUNT_ROUTE}>
 					<Icon name="user-circle" />
 					<StyledText>Account</StyledText>
 				</StyledMenuItem>
 			</Tooltip>
 
-			<Tooltip content="Coming Soon" color="primary100">
+			<Tooltip color="primary100" content="Coming Soon">
 				<StyledMenuItem
 					disabled
+					align="center"
 					css={{ mb: '$16' }}
 					data-active={active === SETTINGS_ROUTE}
-					align="center"
 				>
 					<Icon name="settings" />
 					<StyledText>Settings</StyledText>
@@ -88,9 +88,9 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
 
 			<StyledSeparator />
 			<StyledMenuItem
+				align="center"
 				css={{ mt: '$16' }}
 				data-active={active === TEAMS_ROUTE}
-				align="center"
 				onClick={handleSignOut}
 			>
 				<Icon name="log-out" />

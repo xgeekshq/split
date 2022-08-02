@@ -134,6 +134,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 			<AlertDialogTrigger asChild>
 				<Flex
 					align="center"
+					gap="8"
 					justify="end"
 					css={{
 						py: '$14',
@@ -145,14 +146,13 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 							}
 						}
 					}}
-					gap="8"
 				>
 					<Icon
+						name="edit"
 						css={{
 							width: '$16',
 							height: '$16'
 						}}
-						name="edit"
 					/>
 					<Text size="sm" weight="medium">
 						Quick edit sub-teams configurations
@@ -162,9 +162,9 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 			<AlertDialogContent
 				css={{ left: '35% !important', top: '200px', flexDirection: 'column' }}
 			>
-				<Flex justify="between" align="center" css={{ px: '$32', py: '$24' }}>
+				<Flex align="center" css={{ px: '$32', py: '$24' }} justify="between">
 					<Text heading="4">Quick edit sub-teams configurations</Text>
-					<AlertDialogCancel isIcon asChild css={{ p: 0, height: '$24' }}>
+					<AlertDialogCancel asChild isIcon css={{ p: 0, height: '$24' }}>
 						<Flex
 							css={{
 								'& svg': {
@@ -179,31 +179,31 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 					</AlertDialogCancel>
 				</Flex>
 				<Separator css={{ backgroundColor: '$primary100' }} />
-				<Flex direction="column" css={{ pt: '$29', px: '$32', pb: '$32' }}>
+				<Flex css={{ pt: '$29', px: '$32', pb: '$32' }} direction="column">
 					<Flex>
 						<Flex css={{ position: 'relative', top: '3px' }}>
 							<Icon
-								name="info"
 								css={{ width: '$16', height: '$16', color: '$primary500' }}
+								name="info"
 							/>
 						</Flex>
-						<Text css={{ pl: '$8' }} size="md" color="primary500">
+						<Text color="primary500" css={{ pl: '$8' }} size="md">
 							Note, if you change any of the two values below, the other value will
 							adjust accordingly.
 						</Text>
 					</Flex>
 					<Flex css={{ mt: '$24', width: '100%' }} gap="24">
-						<Flex gap="8" direction="column" css={{ width: '100%' }}>
+						<Flex css={{ width: '100%' }} direction="column" gap="8">
 							<Text label>Sub-teams count</Text>
 							<StyledInput
-								type="number"
-								min={minTeams}
+								css={{ mb: 0 }}
+								id="teamsCount"
 								max={maxTeams}
+								min={minTeams}
+								placeholder=" "
+								type="number"
 								value={values.teamsCount}
 								onChange={handleChangeCountTeams}
-								id="teamsCount"
-								placeholder=" "
-								css={{ mb: 0 }}
 							/>
 							<Flex>
 								<Text hint css={{ color: '$primary800' }}>
@@ -214,17 +214,17 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 								</Text>
 							</Flex>
 						</Flex>
-						<Flex gap="8" direction="column" css={{ width: '100%' }}>
+						<Flex css={{ width: '100%' }} direction="column" gap="8">
 							<Text label>Max sub-team members count</Text>
 							<StyledInput
+								css={{ mb: 0 }}
+								id="maxUsers"
+								max={maxUsers}
+								min={minUsers}
+								placeholder=" "
 								type="number"
 								value={values.maxUsersCount}
-								min={minUsers}
-								max={maxUsers}
 								onChange={handleMaxMembers}
-								id="maxUsers"
-								placeholder=" "
-								css={{ mb: 0 }}
 							/>
 							<Flex>
 								<Text hint css={{ color: '$primary800' }}>
@@ -236,7 +236,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 							</Flex>
 						</Flex>
 					</Flex>
-					<Flex css={{ mt: '$32' }} justify="end" gap="24">
+					<Flex css={{ mt: '$32' }} gap="24" justify="end">
 						<AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
 						<AlertDialogAction onClick={handleSaveConfigs}>
 							Save configurations

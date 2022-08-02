@@ -53,15 +53,15 @@ const Column = React.memo<ColumnBoardType>(
 
 		return (
 			<OuterContainer>
-				<Droppable droppableId={columnId} type="CARD" isCombineEnabled>
+				<Droppable isCombineEnabled droppableId={columnId} type="CARD">
 					{(provided) => (
 						<Container direction="column" elevation="2">
 							<Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
 								<Flex>
 									<Title heading="4">{title}</Title>
 									<Text
-										size="xs"
 										color="primary400"
+										size="xs"
 										css={{
 											borderRadius: '$4',
 											border: '1px solid $colors$primary100',
@@ -75,27 +75,27 @@ const Column = React.memo<ColumnBoardType>(
 
 								<SortMenu
 									disabled={!isMainboard}
-									setFilter={setFilter}
 									filter={filter}
+									setFilter={setFilter}
 								/>
 							</Flex>
 							<Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
-							<Flex direction="column" css={{}}>
+							<Flex css={{}} direction="column">
 								{!isSubmited && (
 									<Flex
+										align="center"
 										css={{
 											'&>*': { flex: '1 1 auto' },
 											'&>form': { px: '$20' }
 										}}
-										align="center"
 									>
 										<AddCardOrComment
 											isCard
-											colId={columnId}
 											boardId={boardId}
-											socketId={socketId}
-											isUpdate={false}
+											colId={columnId}
 											defaultOpen={countAllCards === 0}
+											isUpdate={false}
+											socketId={socketId}
 										/>
 									</Flex>
 								)}
@@ -105,17 +105,17 @@ const Column = React.memo<ColumnBoardType>(
 									{...provided.droppableProps}
 								>
 									<CardsList
-										cards={filter ? filteredCards() : cards}
-										color={color}
-										colId={columnId}
-										userId={userId}
 										boardId={boardId}
-										socketId={socketId}
-										isMainboard={isMainboard}
 										boardUser={boardUser}
-										maxVotes={maxVotes}
-										isSubmited={isSubmited}
+										cards={filter ? filteredCards() : cards}
+										colId={columnId}
+										color={color}
 										hideCards={hideCards}
+										isMainboard={isMainboard}
+										isSubmited={isSubmited}
+										maxVotes={maxVotes}
+										socketId={socketId}
+										userId={userId}
 									/>
 									{provided.placeholder}
 								</CardsContainer>

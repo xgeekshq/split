@@ -11,7 +11,7 @@ const DashboardTiles = ({ data }: TilesProps) => {
 	return (
 		<GridContainer>
 			<StyledTile>
-				<Text size="md" color="white">
+				<Text color="white" size="md">
 					Your boards
 				</Text>
 				<h3>{data.boardsCount}</h3>
@@ -29,7 +29,7 @@ const DashboardTiles = ({ data }: TilesProps) => {
 				/>
 			</StyledTile>
 			<StyledTile>
-				<Text size="md" color="white">
+				<Text color="white" size="md">
 					Your teams
 				</Text>
 				<h3>{data?.teamsCount}</h3>
@@ -46,7 +46,7 @@ const DashboardTiles = ({ data }: TilesProps) => {
 				/>
 			</StyledTile>
 			<StyledTile>
-				<Text size="md" color="white">
+				<Text color="white" size="md">
 					Active Members
 				</Text>
 				<h3>{data?.usersCount}</h3>

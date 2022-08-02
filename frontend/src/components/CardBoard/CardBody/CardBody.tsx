@@ -125,11 +125,11 @@ const CardBody = React.memo<CardBodyProps>(
 					<CardBody
 						key={subBoard._id}
 						board={subBoard}
-						userId={userId}
+						dividedBoardsCount={countDividedBoards}
 						index={idx}
 						isDashboard={isDashboard}
-						dividedBoardsCount={countDividedBoards}
 						mainBoardId={board._id}
+						userId={userId}
 					/>
 				);
 			},
@@ -137,14 +137,14 @@ const CardBody = React.memo<CardBodyProps>(
 		);
 
 		return (
-			<Flex direction="column" css={{ flex: '1 1 0' }} gap="12">
+			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
 				<Flex>
-					{isSubBoard && <LeftArrow isDashboard={isDashboard} index={index} />}
+					{isSubBoard && <LeftArrow index={index} isDashboard={isDashboard} />}
 
 					<InnerContainer
-						justify="between"
 						align="center"
 						elevation="1"
+						justify="between"
 						css={{
 							position: 'relative',
 							flex: '1 1 0',
@@ -155,7 +155,7 @@ const CardBody = React.memo<CardBodyProps>(
 					>
 						{isANewBoard && <NewCircleIndicator position="absolute" />}
 						<Flex align="center">
-							<Flex gap="8" align="center">
+							<Flex align="center" gap="8">
 								{!isSubBoard && (
 									<CardIcon
 										board={board}
@@ -165,14 +165,14 @@ const CardBody = React.memo<CardBodyProps>(
 								)}
 								<Flex align="center" gap="8">
 									<CardTitle
-										userIsParticipating={userIsParticipating}
 										boardId={id}
-										title={board.title}
 										isSubBoard={isSubBoard}
 										mainBoardId={mainBoardId}
+										title={board.title}
+										userIsParticipating={userIsParticipating}
 									/>
 									{isSubBoard && (
-										<Text size="xs" color="primary300">
+										<Text color="primary300" size="xs">
 											of {dividedBoardsCount}
 										</Text>
 									)}
@@ -221,22 +221,22 @@ const CardBody = React.memo<CardBodyProps>(
 						)}
 						<CardEnd
 							board={board}
+							index={index}
 							isDashboard={isDashboard}
 							isSubBoard={isSubBoard}
-							index={index}
-							userIsAdmin={userIsAdmin}
 							userId={userId}
+							userIsAdmin={userIsAdmin}
 							userSAdmin={isSAdmin}
 						/>
 					</InnerContainer>
 				</Flex>
 				{(openSubBoards || isDashboard) && (
 					<SubBoards
+						dividedBoards={dividedBoards}
 						isDashboard={isDashboard}
 						isSubBoard={isSubBoard}
-						dividedBoards={dividedBoards}
-						userId={userId}
 						renderCardBody={renderCardBody}
+						userId={userId}
 					/>
 				)}
 			</Flex>

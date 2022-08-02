@@ -20,14 +20,14 @@ const BoardName = ({ mainBoardName }: Props) => {
 				The main board is the board into which all sub-team boards will be merged.
 			</Text>
 			<Input
-				disabled={haveError}
-				state="default"
-				id="text"
-				type="text"
-				placeholder="Main board name"
 				forceState
 				currentValue={mainBoardName}
+				disabled={haveError}
+				id="text"
 				maxChars="30"
+				placeholder="Main board name"
+				state="default"
+				type="text"
 			/>
 		</>
 	);

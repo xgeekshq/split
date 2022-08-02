@@ -18,8 +18,8 @@ const Breadcrumb = ({ items }: Props) => {
 						// If not the first item, show the chevron icon
 						key !== 0 && (
 							<Icon
-								name="arrow-right"
 								css={{ color: '$primary300', width: '$14', height: '$14' }}
+								name="arrow-right"
 							/>
 						)
 					}

@@ -4,13 +4,13 @@ import { EmptyBoardsText, StyledBox, StyledImage, StyledNewBoardLink } from './s
 
 const EmptyBoards: React.FC = () => {
 	return (
-		<StyledBox elevation="1" justify="center" align="center" direction="column">
+		<StyledBox align="center" direction="column" elevation="1" justify="center">
 			<StyledImage />
-			<EmptyBoardsText size="md" css={{ mt: '$24', textAlign: 'center' }}>
+			<EmptyBoardsText css={{ mt: '$24', textAlign: 'center' }} size="md">
 				You have not participated in any retro yet.
 				<br />
 				<Link href="/boards/new">
-					<StyledNewBoardLink weight="medium" underline>
+					<StyledNewBoardLink underline weight="medium">
 						Add a new retro board
 					</StyledNewBoardLink>
 				</Link>{' '}

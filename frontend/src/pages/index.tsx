@@ -37,9 +37,9 @@ const Home: NextPage = () => {
 			<CenteredContainer>
 				{!showTroubleLogin && (
 					<TabsRoot
+						defaultValue="login"
 						value={currentTab}
 						onValueChange={(value) => setCurrentTab(value)}
-						defaultValue="login"
 					>
 						<TabsList aria-label="Login or register">
 							<TabsTrigger value="login">
