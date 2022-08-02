@@ -22,7 +22,6 @@ const imports = [
 	DatabaseModule,
 	UsersModule,
 	AuthModule,
-	AzureModule,
 	BoardsModule,
 	SocketModule,
 	CardsModule,
