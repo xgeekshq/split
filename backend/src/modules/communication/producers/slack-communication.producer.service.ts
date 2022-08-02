@@ -2,7 +2,6 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 
-import { TeamDto } from 'modules/communication/dto/team.dto';
 import { JobType } from 'modules/communication/dto/types';
 
 @Injectable()
@@ -16,11 +15,8 @@ export class CommunicationProducerService {
 		private readonly queue: Queue
 	) {
 		// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		this.queue.on('completed', (job: Job<JobType>, data: TeamDto[]) => {
+		this.queue.on('completed', (job: Job<JobType>) => {
 			this.logger.verbose(`Completed Job id: "${job.id}"`);
-			// TODO
-			// console.log(data);
 			job.remove();
 		});
 		this.queue.on('error', (error: Error) => {
