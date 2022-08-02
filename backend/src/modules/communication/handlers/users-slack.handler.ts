@@ -1,6 +1,6 @@
+import { ProfileType } from 'modules/communication/dto/types';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
-import { ProfileType } from 'modules/communication/dto/types';
 
 export class UsersSlackHandler implements UsersHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateInterface) {}
