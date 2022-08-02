@@ -65,12 +65,14 @@ export default class CreateResetTokenAuthServiceImpl implements CreateResetToken
 				this.tokenValidator(passwordModel.updatedAt);
 			}
 			const { token } = await this.tokenGenerator(emailAddress, session);
-			if (token) {
-				const res = await this.emailBody(token, emailAddress);
-				await session.commitTransaction();
-				return res;
+
+			if (!token) {
+				throw new InternalServerErrorException();
 			}
-			throw new InternalServerErrorException();
+
+			const res = await this.emailBody(token, emailAddress);
+			await session.commitTransaction();
+			return res;
 		} catch (e) {
 			await session.abortTransaction();
 			return { message: e.message };

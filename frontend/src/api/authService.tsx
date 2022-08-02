@@ -17,7 +17,7 @@ import fetchData from 'utils/fetchData';
 export const getDashboardHeaderInfo = (
 	context?: GetServerSidePropsContext
 ): Promise<HeaderInfo> => {
-	return fetchData(`auth/dashboardStatistics`, { context, serverSide: !!context });
+	return fetchData(`auth/statistics`, { context, serverSide: !!context });
 };
 
 export const registerNewUser = (newUser: RegisterUser): Promise<User> => {
@@ -29,15 +29,15 @@ export const login = (credentials: LoginUser): Promise<User> => {
 };
 
 export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
-	return fetchData(`/auth/checkUserEmailAD/${email}`);
+	return fetchData(`/auth/azure/users/${email}`);
 };
 
 export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
-	return fetchData(`/auth/checkUserEmail/${email}`);
+	return fetchData(`/auth/users/${email}`);
 };
 
 export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
-	return fetchData(`/auth/signAzure`, {
+	return fetchData(`/auth/azure`, {
 		method: 'POST',
 		data: { token: azureAccessToken },
 		serverSide: true
@@ -45,7 +45,7 @@ export const createOrLoginUserAzure = (azureAccessToken: string): Promise<Create
 };
 
 export const resetTokenEmail = (email: EmailUser): Promise<ResetTokenResponse> => {
-	return fetchData(`/auth/recoverPassword`, { method: 'POST', data: email });
+	return fetchData(`/auth/password/reset`, { method: 'PATCH', data: email });
 };
 
 export const refreshAccessToken = (token: string): Promise<Token> => {
@@ -53,8 +53,8 @@ export const refreshAccessToken = (token: string): Promise<Token> => {
 };
 
 export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordResponse> => {
-	return fetchData('/auth/updatepassword', {
-		method: 'POST',
+	return fetchData('/auth/password', {
+		method: 'PATCH',
 		data: params
 	});
 };
