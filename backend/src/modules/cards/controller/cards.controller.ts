@@ -338,7 +338,7 @@ export default class CardsController {
 	}
 
 	@ApiOperation({ summary: 'Remove a card item from a group' })
-	@ApiParam({ name: 'targetCardId', type: String })
+	@ApiParam({ name: 'itemId', type: String })
 	@ApiParam({ name: 'cardId', type: String })
 	@ApiParam({ name: 'boardId', type: String })
 	@ApiOkResponse({
