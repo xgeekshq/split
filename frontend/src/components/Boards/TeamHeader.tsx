@@ -19,8 +19,8 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
 				<Text heading="5">{hasTeam ? team.name : 'My boards'}</Text>
 				{hasTeam && (
 					<Flex align="center" css={{ ml: '$24' }} gap="12">
-						<Flex gap="8" align="center">
-							<Text size="sm" color="primary300">
+						<Flex align="center" gap="8">
+							<Text color="primary300" size="sm">
 								Members
 							</Text>
 							<CardAvatars
@@ -31,16 +31,16 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
 							/>
 						</Flex>
 						<Separator
-							orientation="vertical"
 							css={{ backgroundColor: '$primary300', height: '$12 !important' }}
+							orientation="vertical"
 						/>
-						<Text size="sm" color="primary300">
+						<Text color="primary300" size="sm">
 							Team admin
 						</Text>
 						<CardAvatars
+							teamAdmins
 							listUsers={team.users}
 							responsible={false}
-							teamAdmins
 							userId={userId}
 						/>
 					</Flex>
@@ -48,11 +48,11 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
 				{!hasTeam && users && (
 					<Flex css={{ ml: '$12' }}>
 						<CardAvatars
+							myBoards
 							listUsers={users}
 							responsible={false}
 							teamAdmins={false}
 							userId={userId}
-							myBoards
 						/>
 					</Flex>
 				)}

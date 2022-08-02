@@ -136,18 +136,18 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
 
 	return (
 		<Flex
-			ref={flexRef}
-			direction="column"
 			css={{ position: 'relative', width: '100%', height: 'auto' }}
+			direction="column"
+			ref={flexRef}
 		>
 			<Flex>
 				{floatPlaceholder && (
 					<Flex>
 						<StyledTextArea
 							{...rest}
+							disabled={disabled}
 							id={id}
 							placeholder=" "
-							disabled={disabled}
 							variant={currentState}
 							ref={(e) => {
 								if (ref) ref(e);
@@ -162,20 +162,20 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
 			</Flex>
 			<StyledTextArea
 				{...rest}
+				css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
+				disabled={disabled}
 				id={id}
 				placeholder={placeholder}
-				disabled={disabled}
 				variant={currentState}
 				ref={(e) => {
 					if (ref) ref(e);
 					textareaRef.current = e;
 				}}
-				css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
 			/>
 			{floatPlaceholder && (
 				<Flex
-					gap="4"
 					align="center"
+					gap="4"
 					css={{
 						mt: '$8',
 						'& svg': {
@@ -186,13 +186,13 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
 					}}
 				>
 					{currentState === 'error' && (
-						<Icon name="info" css={{ width: '$24', height: '$24' }} />
+						<Icon css={{ width: '$24', height: '$24' }} name="info" />
 					)}
 					<Text
+						hint
 						css={{
 							color: currentState === 'error' ? '$dangerBase' : '$primary300'
 						}}
-						hint
 					>
 						{!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
 					</Text>

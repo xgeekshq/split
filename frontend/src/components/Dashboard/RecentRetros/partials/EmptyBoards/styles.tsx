@@ -6,6 +6,7 @@ import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 
 const StyledImage = styled(EmptyBoardsImage, Flex, Box, { '& svg': { zIndex: '-1' } });
+
 const StyledBox = styled(Flex, Box, {
 	position: 'relative',
 	width: '100%',

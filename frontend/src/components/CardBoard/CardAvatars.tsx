@@ -79,12 +79,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					return (
 						<Avatar
 							key={`${value}-${idx}-${Math.random()}`}
-							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 							colors={avatarColor}
-							size={32}
+							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 							fallbackText={value}
 							id={value}
 							isDefaultColor={value === userId}
+							size={32}
 						/>
 					);
 				}
@@ -97,12 +97,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
 						<div>
 							<Avatar
 								key={`${value}-${idx}-${Math.random()}`}
-								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 								colors={avatarColor}
-								size={32}
+								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 								fallbackText={initials}
 								id={value._id}
 								isDefaultColor={value._id === userId}
+								size={32}
 							/>
 						</div>
 					</Tooltip>

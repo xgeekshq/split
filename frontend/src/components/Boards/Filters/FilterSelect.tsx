@@ -20,9 +20,9 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter 
 	const isSelected = filter !== 'all' && filter !== 'personal';
 	return (
 		<StyledSelect
-			options={options}
 			className="react-select-container"
 			classNamePrefix="react-select"
+			options={options}
 			value={
 				!isSelected
 					? { label: 'Select', value: '' }

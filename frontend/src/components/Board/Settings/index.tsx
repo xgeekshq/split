@@ -202,7 +202,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 		child?: ReactNode
 	) => (
 		<Flex gap={20}>
-			<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
+			<Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange}>
 				<SwitchThumb variant="sm">
 					{isChecked && (
 						<Icon
@@ -220,7 +220,7 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 				<Text size="md" weight="medium">
 					{title}
 				</Text>
-				<Text size="sm" color="primary500">
+				<Text color="primary500" size="sm">
 					{text}
 				</Text>
 				{child}
@@ -232,10 +232,10 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button
+					variant="primaryOutline"
 					css={{
 						ml: 'auto'
 					}}
-					variant="primaryOutline"
 				>
 					<Icon name="settings" />
 					Board settings
@@ -247,8 +247,8 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 				<StyledDialogTitle>
 					<h2>Board Settings</h2>
 					<DialogClose asChild>
-						<StyledDialogCloseButton size="lg" isIcon>
-							<Icon name="close" css={{ color: '$primary400' }} size={24} />
+						<StyledDialogCloseButton isIcon size="lg">
+							<Icon css={{ color: '$primary400' }} name="close" size={24} />
 						</StyledDialogCloseButton>
 					</DialogClose>
 				</StyledDialogTitle>
@@ -258,24 +258,24 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 							updateBoard(title, maxVotes)
 						)}
 					>
-						<Flex direction="column" gap={16} css={{ marginBottom: '$32' }}>
+						<Flex css={{ marginBottom: '$32' }} direction="column" gap={16}>
 							<Text heading="4">Board Name</Text>
 							<Input
-								disabled={haveError}
-								state="default"
-								id="title"
-								type="text"
-								placeholder="Board Name"
 								forceState
+								disabled={haveError}
+								id="title"
 								maxChars="30"
+								placeholder="Board Name"
+								state="default"
+								type="text"
 							/>
 						</Flex>
 
-						<Text heading="4" css={{ display: 'block', mb: '$16' }}>
+						<Text css={{ display: 'block', mb: '$16' }} heading="4">
 							Board Settings
 						</Text>
 
-						<Accordion type="single" defaultValue="configurations" collapsible>
+						<Accordion collapsible defaultValue="configurations" type="single">
 							<StyledAccordionItem value="configurations">
 								<StyledAccordionHeader>
 									<StyledAccordionTrigger>
@@ -305,12 +305,12 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 													isMaxVotesChecked,
 													handleMaxVotes,
 													<Input
-														id="maxVotes"
-														name="maxVotes"
-														type="number"
 														css={{ mt: '$8' }}
 														disabled={!isMaxVotesChecked}
+														id="maxVotes"
+														name="maxVotes"
 														placeholder="Max votes"
+														type="number"
 														min={
 															boardData!.board.totalUsedVotes === 0
 																? 0
@@ -325,19 +325,19 @@ const BoardSettings = ({ isOpen, setIsOpen, socketId }: Props) => {
 							</StyledAccordionItem>
 						</Accordion>
 
-						<ButtonsContainer justify="end" gap={24}>
+						<ButtonsContainer gap={24} justify="end">
 							<Button
-								onClick={() => setIsOpen(false)}
-								variant="primaryOutline"
 								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+								variant="primaryOutline"
+								onClick={() => setIsOpen(false)}
 							>
 								Cancel
 							</Button>
 							<Button
+								css={{ marginRight: '$32', padding: '$16 $24' }}
 								ref={submitBtnRef}
 								type="submit"
 								variant="primary"
-								css={{ marginRight: '$32', padding: '$16 $24' }}
 							>
 								Save
 							</Button>

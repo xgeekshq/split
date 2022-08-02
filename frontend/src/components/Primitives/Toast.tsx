@@ -103,9 +103,8 @@ const Toast: React.FC = () => {
 
 	return (
 		<ToastRoot
-			open={open}
-			onOpenChange={(e) => setToastState({ open: e, type, content })}
 			duration={7000}
+			open={open}
 			type="foreground"
 			css={{
 				'@media (prefers-reduced-motion: no-preference)': {
@@ -127,19 +126,20 @@ const Toast: React.FC = () => {
 					}
 				}
 			}}
+			onOpenChange={(e) => setToastState({ open: e, type, content })}
 		>
 			<ToastDescription>
 				{type === ToastStateEnum.ERROR && (
-					<Icon name="blob-error" css={{ width: '31px', height: '$32' }} />
+					<Icon css={{ width: '31px', height: '$32' }} name="blob-error" />
 				)}
 				{type === ToastStateEnum.SUCCESS && (
-					<Icon name="blob-success" css={{ width: '31px', height: '$32' }} />
+					<Icon css={{ width: '31px', height: '$32' }} name="blob-success" />
 				)}
 				{type === ToastStateEnum.WARNING && (
-					<Icon name="blob-warning" css={{ width: '31px', height: '$32' }} />
+					<Icon css={{ width: '31px', height: '$32' }} name="blob-warning" />
 				)}
 				{type === ToastStateEnum.INFO && (
-					<Icon name="blob-info" css={{ width: '31px', height: '$32' }} />
+					<Icon css={{ width: '31px', height: '$32' }} name="blob-info" />
 				)}
 				<Text size="sm">{content}</Text>
 			</ToastDescription>
@@ -151,7 +151,7 @@ const Toast: React.FC = () => {
 					}
 				}}
 			>
-				<Icon name="close" css={{ width: '$16', height: '$16', color: '$primary800' }} />
+				<Icon css={{ width: '$16', height: '$16', color: '$primary800' }} name="close" />
 			</ToastClose>
 		</ToastRoot>
 	);

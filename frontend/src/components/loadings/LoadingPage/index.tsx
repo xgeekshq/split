@@ -9,7 +9,7 @@ type Props = CSSProps & {
 
 const LoadingPage = ({ size, css, ...props }: Props) => {
 	return (
-		<Overlay align="center" justify="center" css={css} {...props}>
+		<Overlay align="center" css={css} justify="center" {...props}>
 			<Loading color="white" size={size} />
 		</Overlay>
 	);

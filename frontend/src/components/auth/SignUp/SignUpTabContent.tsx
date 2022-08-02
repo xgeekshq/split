@@ -17,25 +17,25 @@ const SignUpTabContent: React.FC<SignUpTabContentProps> = ({ setCurrentTab }) =>
 		if (showSignUp === SignUpEnum.SIGN_UP)
 			return (
 				<SignUpForm
-					setShowSignUp={setShowSignUp}
-					setEmailName={setEmailName}
 					emailName={emailName}
+					setEmailName={setEmailName}
+					setShowSignUp={setShowSignUp}
 				/>
 			);
 		if (showSignUp === SignUpEnum.SIGN_UP_OPTIONS)
 			return (
 				<SignUpOptionsForm
-					setShowSignUp={setShowSignUp}
-					setEmailName={setEmailName}
 					emailName={emailName.email}
+					setEmailName={setEmailName}
+					setShowSignUp={setShowSignUp}
 				/>
 			);
 		return (
 			<RegisterForm
 				emailName={emailName}
-				setShowSignUp={setShowSignUp}
 				setCurrentTab={setCurrentTab}
 				setEmailName={setEmailName}
+				setShowSignUp={setShowSignUp}
 			/>
 		);
 	};

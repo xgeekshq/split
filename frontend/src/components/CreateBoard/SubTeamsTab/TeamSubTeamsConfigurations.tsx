@@ -45,9 +45,12 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 
 	useEffect(() => {
 		const isTeamsValid = Array.isArray(teams) && teams.length > 0;
-		const hasMinMembers = isTeamsValid && teams[0].users?.length >= MIN_MEMBERS;
 
-		if (isTeamsValid && hasMinMembers) {
+		if (
+			isTeamsValid &&
+			teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+				MIN_MEMBERS
+		) {
 			const selectedTeam = teams[0];
 
 			const isStakeholder = (userTeam: TeamUser): boolean =>
@@ -73,19 +76,19 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 
 	return (
 		<Flex css={{ mt: '$32' }} direction="column">
-			<Flex gap="22" justify="between" css={{ width: '100%' }}>
+			<Flex css={{ width: '100%' }} gap="22" justify="between">
 				<StyledBox
-					elevation="1"
-					direction="column"
-					gap="2"
 					css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
+					direction="column"
+					elevation="1"
+					gap="2"
 				>
-					<Text size="xs" color="primary300">
+					<Text color="primary300" size="xs">
 						Team
 					</Text>
-					<Flex gap="8" align="center">
+					<Flex align="center" gap="8">
 						<Text size="md">{haveError || !team ? '' : team?.name}</Text>
-						<Text size="md" color="primary300">
+						<Text color="primary300" size="md">
 							({haveError || !team ? '--' : team?.users.length} members)
 						</Text>
 						<Tooltip content="All active members on the platform">
@@ -103,15 +106,15 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 					</Flex>
 				</StyledBox>
 				<StyledBox
-					elevation="1"
-					direction="column"
-					gap="2"
 					css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
+					direction="column"
+					elevation="1"
+					gap="2"
 				>
-					<Text size="xs" color="primary300">
+					<Text color="primary300" size="xs">
 						Stakeholders
 					</Text>
-					<Text size="md" css={{ wordBreak: 'break-word' }}>
+					<Text css={{ wordBreak: 'break-word' }} size="md">
 						{haveError || !stakeholders
 							? ''
 							: stakeholders.map(
@@ -125,7 +128,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 					<Flex justify="end">
 						<QuickEditSubTeams team={team} />
 					</Flex>
-					<MainBoardCard timesOpen={timesOpen} team={team} />
+					<MainBoardCard team={team} timesOpen={timesOpen} />
 				</>
 			)}
 		</Flex>

@@ -18,11 +18,11 @@ const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName }) => {
 		<AlertCustomDialog
 			cancelText="Cancel"
 			confirmText="Delete"
-			handleConfirm={handleDelete}
-			title="Delete board"
-			defaultOpen={false}
-			text={`Do you really want to delete the board “${boardName}”?`}
 			css={undefined}
+			defaultOpen={false}
+			handleConfirm={handleDelete}
+			text={`Do you really want to delete the board “${boardName}”?`}
+			title="Delete board"
 		>
 			<Tooltip content="Delete board">
 				<AlertDialogTrigger asChild>
