@@ -11,8 +11,8 @@ import { LeanDocument, Model, ObjectId } from 'mongoose';
 import { BoardRoles } from 'libs/enum/board.roles';
 import { TeamRoles } from 'libs/enum/team.roles';
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
+import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
 import isEmpty from 'libs/utils/isEmpty';
-import { replaceAll } from 'libs/utils/replace-all';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
@@ -143,10 +143,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 
 				boardData.users
 					.filter((boardUser) =>
-						[
-							replaceAll(String(currentResponsibleId), ['"', '(', ')', 'ObjectId'], ''),
-							newResponsibleId
-						].includes((boardUser.user as unknown as LeanDocument<UserDocument>)._id)
+						[getIdFromObjectId(String(currentResponsibleId)), newResponsibleId].includes(
+							(boardUser.user as unknown as LeanDocument<UserDocument>)._id
+						)
 					)
 					.map(async (boardUser) => {
 						const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
