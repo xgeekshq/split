@@ -306,28 +306,22 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
-		if (hideCards || hideVotes) {
-			const columns = boardColumns.map((column) => {
-				const cards = column.cards.map((card) => {
-					const items = card.items.map((item) => {
-						return this.replaceCard(item, userId, hideCards, hideVotes);
-					});
-					return {
-						...this.replaceCard(card, userId, hideCards, hideVotes),
-						items
-					};
+
+		input.columns = boardColumns.map((column) => {
+			const cards = column.cards.map((card) => {
+				const items = card.items.map((item) => {
+					return this.replaceCard(item, userId, hideCards, hideVotes);
 				});
 				return {
-					...column,
-					cards
+					...this.replaceCard(card, userId, hideCards, hideVotes),
+					items
 				};
 			});
 			return {
-				...input,
-				columns
+				...column,
+				cards
 			};
-		}
-
+		});
 		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 
