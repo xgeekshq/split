@@ -129,9 +129,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 			session?.isSAdmin) &&
 		board?.submitedAt === null;
 
-	console.log(board);
-	console.log(board?.submitedAt);
-	console.log(board?.submitedAt === null);
 	// Show Alert message if any sub-board wansn't merged
 	const showMessageHaveSubBoardsMerged =
 		!board?.isSubBoard &&
