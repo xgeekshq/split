@@ -64,18 +64,19 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 		const handleEditing = () => {
 			setEditing(!editing);
 		};
+
 		return (
 			<Container
-				gap="10"
-				direction="column"
 				css={{ backgroundColor: color }}
+				direction="column"
+				gap="10"
 				justify="between"
 			>
 				{!editing && (
 					<Flex direction="column">
 						<Flex
-							justify="between"
 							css={{ '& > div': { zIndex: 2 }, mb: lastOne ? 0 : '$12' }}
+							justify="between"
 						>
 							<Text
 								size="sm"
@@ -108,18 +109,18 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 							)}
 							{!isSubmited && userId === item?.createdBy?._id && (
 								<PopoverCardSettings
-									firstOne={firstOne}
-									columnId={columnId}
+									isItem
 									boardId={boardId}
 									cardGroupId={cardGroupId}
-									socketId={socketId}
+									columnId={columnId}
+									firstOne={firstOne}
+									handleDeleteCard={handleDeleting}
+									handleEditing={handleEditing}
+									hideCards={hideCards}
+									item={item}
 									itemId={item._id}
 									newPosition={cardGroupPosition}
-									isItem
-									handleEditing={handleEditing}
-									handleDeleteCard={handleDeleting}
-									item={item}
-									hideCards={hideCards}
+									socketId={socketId}
 									userId={userId}
 								/>
 							)}
@@ -127,41 +128,41 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 
 						{!lastOne && (
 							<CardFooter
-								card={item}
-								teamName={teamName}
 								isItem
-								boardId={boardId}
-								socketId={socketId}
-								userId={userId}
 								anonymous={anonymous}
-								isMainboard={isMainboard}
+								boardId={boardId}
+								card={item}
 								hideCards={hideCards}
+								isMainboard={isMainboard}
+								socketId={socketId}
+								teamName={teamName}
+								userId={userId}
 							/>
 						)}
 					</Flex>
 				)}
 				{editing && !isSubmited && (
 					<AddCardOrComment
-						isEditing
 						isCard
+						isEditing
 						isUpdate
-						colId={columnId}
 						boardId={boardId}
-						socketId={socketId}
+						cancelUpdate={handleEditing}
 						cardId={cardGroupId}
 						cardItemId={item._id}
 						cardText={item.text}
-						cancelUpdate={handleEditing}
+						colId={columnId}
+						socketId={socketId}
 					/>
 				)}
 				{deleting && (
 					<DeleteCard
-						cardTitle={item.text}
 						boardId={boardId}
 						cardId={cardGroupId}
-						socketId={socketId}
 						cardItemId={item._id}
+						cardTitle={item.text}
 						handleClose={handleDeleting}
+						socketId={socketId}
 					/>
 				)}
 			</Container>

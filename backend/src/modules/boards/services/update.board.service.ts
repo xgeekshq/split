@@ -134,7 +134,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			 * - is a sub-board
 			 * - and the logged user isn't the current responsible
 			 */
-			if (boardData.users && isSubBoard) {
+			if (isSubBoard && boardData.users) {
 				const currentResponsibleId = await this.getBoardResponsibleId(boardId);
 				const newResponsibleId = (
 					boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE)
@@ -165,10 +165,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 							throw new BadRequestException(UPDATE_FAILED);
 						}
 					});
-			} else {
-				throw new ForbiddenException(
-					"You are the currently responsible, you don't have permissions to change."
-				);
 			}
 
 			/**
@@ -276,7 +272,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 								text: cardItem.text,
 								votes: cardItem.votes,
 								createdByTeam: subBoard.title,
-								createdBy: card.createdBy,
+								createdBy: cardItem.createdBy,
 								anonymous: cardItem.anonymous,
 								comments: cardItem.comments.map((comment) => {
 									return {

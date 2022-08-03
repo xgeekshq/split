@@ -1,21 +1,11 @@
 import React, { useMemo, useRef } from 'react';
 import { InfiniteData, UseInfiniteQueryResult } from 'react-query';
 
-import { styled } from 'styles/stitches/stitches.config';
-
 import CardBody from 'components/CardBoard/CardBody/CardBody';
-import LoadingPage from 'components/loadings/LoadingPage';
+import { DotsLoading } from 'components/loadings/DotsLoading';
 import Flex from 'components/Primitives/Flex';
-import Text from 'components/Primitives/Text';
 import BoardType from 'types/board/board';
-
-const LastUpdatedText = styled(Text, {
-	position: 'sticky',
-	zIndex: '5',
-	top: '-0.2px',
-	height: '$24',
-	backgroundColor: '$background'
-});
+import { LastUpdatedText } from './styles';
 
 type ListOfCardsProp = {
 	data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }>;
@@ -62,12 +52,12 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 
 	return (
 		<Flex
-			ref={scrollRef}
-			onScroll={onScroll}
 			css={{ mt: '$24', height: 'calc(100vh - 450px)', overflow: 'auto', pr: '$10' }}
-			justify="start"
 			direction="column"
 			gap="24"
+			justify="start"
+			ref={scrollRef}
+			onScroll={onScroll}
 		>
 			{Array.from(boardsSplitedByDay).map(([date, splitedBoard]) => {
 				const formatedDate = new Date(date).toLocaleDateString('en-US', {
@@ -78,18 +68,18 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 				});
 				return (
 					<Flex key={date} direction="column" gap="8">
-						<LastUpdatedText size="xs" color="primary300">
+						<LastUpdatedText color="primary300" size="xs">
 							Last updated -{' '}
 							{date === currentDate ? `Today, ${formatedDate}` : formatedDate}
 						</LastUpdatedText>
-						<Flex gap="20" direction="column">
+						<Flex direction="column" gap="20">
 							{splitedBoard.map((board: BoardType) => (
 								<CardBody
-									userId={userId}
 									key={board._id}
-									board={board}
 									isDashboard
+									board={board}
 									dividedBoardsCount={board.dividedBoards.length}
+									userId={userId}
 								/>
 							))}
 						</Flex>
@@ -97,7 +87,11 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 				);
 			})}
 
-			{isLoading && <LoadingPage />}
+			{isLoading && (
+				<Flex justify="center">
+					<DotsLoading />
+				</Flex>
+			)}
 		</Flex>
 	);
 });

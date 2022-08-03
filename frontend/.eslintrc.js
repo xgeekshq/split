@@ -45,6 +45,15 @@ module.exports = {
 			}
 		],
 		'react/jsx-props-no-spreading': 'off',
+		'react/jsx-sort-props': [
+			'error',
+			{
+				callbacksLast: true,
+				shorthandFirst: true,
+				reservedFirst: ['key'],
+				multiline: 'last'
+			}
+		],
 		'no-underscore-dangle': 'off',
 		'no-param-reassign': 'off',
 		'react/require-default-props': 'off',

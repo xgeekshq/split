@@ -29,6 +29,7 @@ const StyledTextTab = styled(Text, {
 
 const Settings = () => {
 	const [currentTab, setCurrentTab] = useState(1);
+	const [timesOpen, setTimesOpen] = useState<number>(0);
 
 	/**
 	 * Recoil Atoms
@@ -47,29 +48,34 @@ const Settings = () => {
 
 	return (
 		<Flex direction="column">
-			<Flex gap="24" css={{ width: '100%' }}>
+			<Flex css={{ width: '100%' }} gap="24">
 				<StyledTextTab
+					color="primary300"
 					data-activetab={currentTab === 1}
 					size="md"
-					color="primary300"
 					onClick={!haveError ? () => setCurrentTab(1) : undefined}
 				>
 					Team/-Sub-teams configurations
 				</StyledTextTab>
 				<StyledTextTab
+					color="primary300"
 					data-activetab={currentTab === 2}
 					size="md"
-					color="primary300"
 					onClick={!haveError ? () => setCurrentTab(2) : undefined}
 				>
 					Configurations
 				</StyledTextTab>
 			</Flex>
 			<Separator
-				orientation="horizontal"
 				css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
+				orientation="horizontal"
 			/>
-			{currentTab === 1 && <TeamSubTeamsConfigurations />}
+			{currentTab === 1 && (
+				<TeamSubTeamsConfigurations
+					setTimesOpen={() => setTimesOpen(timesOpen + 1)}
+					timesOpen={timesOpen}
+				/>
+			)}
 			{currentTab === 2 && <BoardConfigurations />}
 		</Flex>
 	);

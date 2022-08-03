@@ -13,9 +13,9 @@ const Tooltip = ({ children, content, color }: Props) => {
 	return (
 		<TooltipPrimitive.Root delayDuration={200}>
 			<TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-			<StyledContent color={color} avoidCollisions side="top" align="center">
+			<StyledContent avoidCollisions align="center" color={color} side="top">
 				{content}
-				<StyledArrow color={color} width={16} height={5} />
+				<StyledArrow color={color} height={5} width={16} />
 			</StyledContent>
 		</TooltipPrimitive.Root>
 	);

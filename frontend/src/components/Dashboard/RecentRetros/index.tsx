@@ -6,8 +6,8 @@ import { getDashboardBoardsRequest } from 'api/boardService';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import isEmpty from 'utils/isEmpty';
-import EmptyBoards from './EmptyBoards';
-import ListOfCards from './ListOfCards';
+import EmptyBoards from './partials/EmptyBoards';
+import ListOfCards from './partials/ListOfCards';
 
 type RecentRetrosProp = {
 	userId: string;
@@ -41,10 +41,10 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
 	if (!data || isEmpty(data?.pages[0].boards)) return <EmptyBoards />;
 	return (
 		<ListOfCards
-			userId={userId}
 			data={data}
-			isLoading={isFetching}
 			fetchBoards={fetchDashboardBoards}
+			isLoading={isFetching}
+			userId={userId}
 		/>
 	);
 });

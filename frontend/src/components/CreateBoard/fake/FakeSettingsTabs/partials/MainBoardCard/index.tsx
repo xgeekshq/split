@@ -15,8 +15,8 @@ import { Container, MainContainer } from './styles';
 
 const FakeMainBoardCard = () => {
 	return (
-		<Flex direction="column" gap="8" css={{ width: '100%', height: '100%' }}>
-			<MainContainer elevation="1" justify="between" align="center">
+		<Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
+			<MainContainer align="center" elevation="1" justify="between">
 				<Flex>
 					<Flex align="center" gap="8">
 						<Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
@@ -26,13 +26,13 @@ const FakeMainBoardCard = () => {
 						</Tooltip>
 						<Text heading="6">Main Board -</Text>
 					</Flex>
-					<Flex css={{ ml: '$40' }} align="center">
-						<Text size="sm" color="primary300" css={{ mr: '$8' }}>
+					<Flex align="center" css={{ ml: '$40' }}>
+						<Text color="primary300" css={{ mr: '$8' }} size="sm">
 							Sub-teams/-boards
 						</Text>
 						<Separator
-							orientation="vertical"
 							css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
+							orientation="vertical"
 						/>
 						<Text css={{ ml: '$8' }}>2</Text>
 						<Flex css={{ ml: '$12' }} gap="4">
@@ -89,8 +89,8 @@ const FakeMainBoardCard = () => {
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex gap="8" align="center">
-					<Text weight="medium" size="sm">
+				<Flex align="center" gap="8">
+					<Text size="sm" weight="medium">
 						-----
 					</Text>
 					<FakeCardAvatars />
@@ -98,11 +98,11 @@ const FakeMainBoardCard = () => {
 			</MainContainer>
 			<Flex css={{ mb: '$50' }} direction="column" gap="8">
 				<Flex css={{ flex: '1 1 0', width: '100%' }}>
-					<LeftArrow isDashboard={false} index={0} />
+					<LeftArrow index={0} isDashboard={false} />
 
 					<Container
-						elevation="1"
 						align="center"
+						elevation="1"
 						justify="between"
 						css={{
 							backgroundColor: 'white',
@@ -125,6 +125,8 @@ const FakeMainBoardCard = () => {
 									}}
 								/>
 								<Flex
+									align="center"
+									justify="center"
 									css={{
 										height: '$24',
 										width: '$24',
@@ -140,8 +142,6 @@ const FakeMainBoardCard = () => {
 											color: 'white'
 										}
 									}}
-									align="center"
-									justify="center"
 								>
 									<Icon
 										name="wand"
@@ -151,17 +151,17 @@ const FakeMainBoardCard = () => {
 										}}
 									/>
 								</Flex>
-								<Text size="sm" color="primary300" css={{ mx: '$8' }}>
+								<Text color="primary300" css={{ mx: '$8' }} size="sm">
 									-----
 								</Text>
 								<Avatar
 									css={{ position: 'relative' }}
+									fallbackText="-"
 									size={32}
 									colors={{
 										bg: highlight2Colors.highlight2Lighter,
 										fontColor: highlight2Colors.highlight2Dark
 									}}
-									fallbackText="-"
 								/>
 							</Flex>
 						</Flex>
@@ -172,11 +172,11 @@ const FakeMainBoardCard = () => {
 					</Container>
 				</Flex>
 				<Flex css={{ flex: '1 1 0', width: '100%' }}>
-					<LeftArrow isDashboard={false} index={1} />
+					<LeftArrow index={1} isDashboard={false} />
 
 					<Container
-						elevation="1"
 						align="center"
+						elevation="1"
 						justify="between"
 						css={{
 							backgroundColor: 'white',
@@ -199,6 +199,8 @@ const FakeMainBoardCard = () => {
 									}}
 								/>
 								<Flex
+									align="center"
+									justify="center"
 									css={{
 										height: '$24',
 										width: '$24',
@@ -214,8 +216,6 @@ const FakeMainBoardCard = () => {
 											color: 'white'
 										}
 									}}
-									align="center"
-									justify="center"
 								>
 									<Icon
 										name="wand"
@@ -225,17 +225,17 @@ const FakeMainBoardCard = () => {
 										}}
 									/>
 								</Flex>
-								<Text size="sm" color="primary300" css={{ mx: '$8' }}>
+								<Text color="primary300" css={{ mx: '$8' }} size="sm">
 									-----
 								</Text>
 								<Avatar
 									css={{ position: 'relative' }}
+									fallbackText="-"
 									size={32}
 									colors={{
 										bg: highlight2Colors.highlight2Lighter,
 										fontColor: highlight2Colors.highlight2Dark
 									}}
-									fallbackText="-"
 								/>
 							</Flex>
 						</Flex>

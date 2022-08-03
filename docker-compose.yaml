@@ -14,25 +14,10 @@ services:
 
     ports:
       - 3200:3200
-    environment:
-      NODE_ENV: ${NODE_ENV}
-      DB_USER: ${DB_USER:-backend}
-      DB_PASSWORD: ${DB_PASSWORD:-password}
-      DB_NAME: ${DB_NAME:-dc}
-      DB_HOST: ${DB_HOST:-mongo}
-      DB_PORT: ${DB_PORT:-27017}
-      DB_REPLICA_SET: ${DB_REPLICA_SET:-dcrs}
-      SMTP_ENABLE: ${SMTP_ENABLE:-false}
-      BACKEND_PORT: ${BACKEND_PORT:-3200}
-      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
-      JWT_ACCESS_TOKEN_SECRET: ${JWT_ACCESS_TOKEN_SECRET:-backenddc2022}
-      JWT_ACCESS_TOKEN_EXPIRATION_TIME: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-900}
-      JWT_REFRESH_TOKEN_SECRET: ${JWT_REFRESH_TOKEN_SECRET:-backenddc2022refresh}
-      JWT_REFRESH_TOKEN_EXPIRATION_TIME: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME:-1}
-      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
-      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
-      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
-      AZURE_ENABLE: ${AZURE_ENABLE}
+
+    env_file:
+      - ./backend/.env
+
     restart: unless-stopped
     networks:
       - dc-network
@@ -55,17 +40,10 @@ services:
 
     ports:
       - 3000:3000
-    environment:
-      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
-      BACKEND_URL: ${BACKEND_URL:-http://backend:3200}
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
-      NEXT_PUBLIC_NEXTAUTH_URL: ${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
-      SECRET: ${SECRET:-56e9169e3383d4a73fef9e0b4a3ff4e2}
-      NEXT_PUBLIC_EXPIRATION_TIME: ${NEXT_PUBLIC_EXPIRATION_TIME:-900}
-      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID}
-      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET}
-      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
-      NEXT_PUBLIC_ENABLE_AZURE: ${NEXT_PUBLIC_ENABLE_AZURE}
+
+    env_file:
+      - ./frontend/.env
+
     restart: unless-stopped
     networks:
       - dc-network
@@ -79,14 +57,11 @@ services:
       - dc-network
     ports:
       - "27018:27017"
-    entrypoint:  "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
-      MONGO_BACKEND_USER: ${DB_USER:-backend}
-      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
-      MONGO_REPLICA_NAME: ${DB_REPLICA_SET:-dcrs}
+    entrypoint: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
+
+    env_file:
+      - ./database/.env
+
   mongo:
     image: mongo
     restart: always
@@ -100,13 +75,9 @@ services:
     links:
       - mongo2
     command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${DB_NAME:-dc}
-      MONGO_BACKEND_USER: ${DB_USER:-backend}
-      MONGO_BACKEND_PASSWORD: ${DB_PASSWORD:-password}
-      MONGO_REPLICA_NAME: ${DB_REPLICA_SET:-dcrs}
+
+    env_file:
+      - ./database/.env
 networks:
   dc-network:
     driver: bridge

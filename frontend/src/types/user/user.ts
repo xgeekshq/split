@@ -53,4 +53,5 @@ export interface NewPassword {
 export interface ResetPasswordResponse {
 	message: string;
 }
+
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';

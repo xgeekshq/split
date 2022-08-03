@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 
+import { CommunicationModule } from 'modules/communication/communication.module';
+
 import AppConfigModule from './infrastructure/config/config.module';
 import { configuration } from './infrastructure/config/configuration';
 import DatabaseModule from './infrastructure/database/database.module';
@@ -39,6 +41,12 @@ if (configuration().azure.enabled) {
 
 if (configuration().smtp.enabled) {
 	imports.push(EmailModule);
+}
+if (configuration().slack.enable) {
+	imports.push(CommunicationModule);
+}
+if (configuration().slack.enable) {
+	imports.push(CommunicationModule);
 }
 
 @Module({

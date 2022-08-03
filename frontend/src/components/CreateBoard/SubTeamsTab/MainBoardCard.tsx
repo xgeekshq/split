@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -35,6 +35,7 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
 	team: Team;
+	timesOpen: number;
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => {
@@ -43,8 +44,8 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 			{dividedBoards.map((subBoard, index) => (
 				<SubCardBoard
 					key={subBoard.title}
-					index={index}
 					board={subBoard}
+					index={index}
 					setBoard={setBoard}
 				/>
 			))}
@@ -52,11 +53,11 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
 	);
 });
 
-const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) => {
 	/**
 	 * Recoil Atoms
 	 */
-	const haveError = useRecoilValue(createBoardError);
+	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
 	const {
 		handleAddTeam,
@@ -76,9 +77,14 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 		}));
 	};
 
+	const teamMembersCount = teamMembers?.length ?? 0;
+
 	useEffect(() => {
-		const teamMembersCount = teamMembers?.length ?? 0;
-		if (teamMembersCount < 4 && board.dividedBoards.length !== 0) return;
+		if (teamMembersCount < 4 && board.dividedBoards.length) {
+			setHaveError(true);
+			return;
+		}
+
 		const maxUsersCount = Math.ceil(teamMembersCount / 2);
 		const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
@@ -93,23 +99,25 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 			];
 		});
 
-		setCreateBoardData((prev) => ({
-			...prev,
-			users,
-			board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
-			count: {
-				...prev.count,
-				teamsCount,
-				maxUsersCount
-			}
-		}));
+		if (timesOpen < 2) {
+			setCreateBoardData((prev) => ({
+				...prev,
+				users,
+				board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+				count: {
+					...prev.count,
+					teamsCount,
+					maxUsersCount
+				}
+			}));
+		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
-		<Flex direction="column" gap="8" css={{ width: '100%', height: '100%' }}>
-			<MainContainer elevation="1" justify="between" align="center">
+		<Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
+			<MainContainer align="center" elevation="1" justify="between">
 				<Flex>
 					<Flex align="center" gap="8">
 						<Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
@@ -119,18 +127,17 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 						</Tooltip>
 						<Text heading="6">{board.title}</Text>
 					</Flex>
-					<Flex css={{ ml: '$40' }} align="center">
-						<Text size="sm" color="primary300" css={{ mr: '$8' }}>
+					<Flex align="center" css={{ ml: '$40' }}>
+						<Text color="primary300" css={{ mr: '$8' }} size="sm">
 							Sub-teams/-boards
 						</Text>
 						<Separator
-							orientation="vertical"
 							css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
+							orientation="vertical"
 						/>
 						<Text css={{ ml: '$8' }}>{board.dividedBoards.length}</Text>
 						<Flex css={{ ml: '$12' }} gap="4">
 							<Flex
-								onClick={handleRemoveTeam}
 								align="center"
 								justify="center"
 								css={{
@@ -148,6 +155,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 										backgroundColor: canReduce ? '$primary100' : 'white'
 									}
 								}}
+								onClick={handleRemoveTeam}
 							>
 								<Icon
 									name="minus"
@@ -158,7 +166,6 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 								/>
 							</Flex>
 							<Flex
-								onClick={handleAddTeam}
 								align="center"
 								justify="center"
 								css={{
@@ -174,6 +181,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 										backgroundColor: canAdd ? '$primary100' : 'white'
 									}
 								}}
+								onClick={handleAddTeam}
 							>
 								<Icon
 									name="plus"
@@ -186,8 +194,8 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
 						</Flex>
 					</Flex>
 				</Flex>
-				<Flex gap="8" align="center">
-					<Text weight="medium" size="sm">
+				<Flex align="center" gap="8">
+					<Text size="sm" weight="medium">
 						{team.name}
 					</Text>
 					<CardAvatars

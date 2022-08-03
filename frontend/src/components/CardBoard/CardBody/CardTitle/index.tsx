@@ -19,20 +19,20 @@ const CardTitle: React.FC<CardTitleProps> = ({
 	return isSubBoard ? (
 		<Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
 			<Title
-				userIsParticipating={userIsParticipating}
 				boardId={boardId}
-				title={title}
 				isSubBoard={isSubBoard}
 				mainBoardId={mainBoardId}
+				title={title}
+				userIsParticipating={userIsParticipating}
 			/>
 		</Tooltip>
 	) : (
 		<Title
-			userIsParticipating={userIsParticipating}
 			boardId={boardId}
-			title={title}
 			isSubBoard={isSubBoard}
 			mainBoardId={mainBoardId}
+			title={title}
+			userIsParticipating={userIsParticipating}
 		/>
 	);
 };

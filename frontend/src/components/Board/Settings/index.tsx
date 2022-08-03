@@ -241,10 +241,10 @@ const BoardSettings = ({
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<Button
+					variant="primaryOutline"
 					css={{
 						ml: 'auto'
 					}}
-					variant="primaryOutline"
 				>
 					<Icon name="settings" />
 					Board settings
@@ -256,8 +256,8 @@ const BoardSettings = ({
 				<StyledDialogTitle>
 					<h2>Board Settings</h2>
 					<DialogClose asChild>
-						<StyledDialogCloseButton size="lg" isIcon>
-							<Icon name="close" css={{ color: '$primary400' }} size={24} />
+						<StyledDialogCloseButton isIcon size="lg">
+							<Icon css={{ color: '$primary400' }} name="close" size={24} />
 						</StyledDialogCloseButton>
 					</DialogClose>
 				</StyledDialogTitle>
@@ -267,19 +267,20 @@ const BoardSettings = ({
 							updateBoard(title, maxVotes)
 						)}
 					>
-						<Flex direction="column" gap={16} css={{ padding: '$24 $32 $40' }}>
+						<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
 							<Text heading="4">Board Name</Text>
 							<Input
-								disabled={haveError}
-								state="default"
-								id="title"
-								type="text"
-								placeholder="Board Name"
 								forceState
+								disabled={haveError}
+								id="title"
 								maxChars="30"
+								placeholder="Board Name"
+								state="default"
+								type="text"
 							/>
 						</Flex>
-						<Text heading="4" css={{ display: 'block', px: '$32' }}>
+
+						<Text css={{ display: 'block', px: '$32' }} heading="4">
 							Board Settings
 						</Text>
 						<Accordion type="multiple">
@@ -293,33 +294,33 @@ const BoardSettings = ({
 								<StyledAccordionContent>
 									<Flex direction="column" gap={16}>
 										<ConfigurationSettings
+											handleCheckedChange={handleHideCardsChange}
+											isChecked={data.hideCards}
 											text="Participants can not see the cards from other participants of this retrospective."
 											title="Hide cards from others"
-											isChecked={data.hideCards}
-											handleCheckedChange={handleHideCardsChange}
 										/>
 
 										{!board.isSubBoard && (
 											<>
 												<ConfigurationSettings
+													handleCheckedChange={handleHideVotesChange}
+													isChecked={data.hideVotes}
 													text="Participants can not see the votes from other participants of this retrospective."
 													title="Hide votes from others"
-													isChecked={data.hideVotes}
-													handleCheckedChange={handleHideVotesChange}
 												/>
 												<ConfigurationSettings
+													handleCheckedChange={handleMaxVotesChange}
+													isChecked={switchesState.maxVotes}
 													text="Make votes more significant by limiting them."
 													title="Limit votes"
-													isChecked={switchesState.maxVotes}
-													handleCheckedChange={handleMaxVotesChange}
 												>
 													<Input
-														id="maxVotes"
-														name="maxVotes"
-														type="number"
 														css={{ mt: '$8' }}
 														disabled={!switchesState.maxVotes}
+														id="maxVotes"
+														name="maxVotes"
 														placeholder="Max votes"
+														type="number"
 													/>
 												</ConfigurationSettings>
 											</>
@@ -339,10 +340,10 @@ const BoardSettings = ({
 									<StyledAccordionContent>
 										<Flex direction="column" gap={16}>
 											<ConfigurationSettings
+												handleCheckedChange={handleResponsibleChange}
+												isChecked={switchesState.responsible}
 												text="Change responsible participant for this board."
 												title="Team Responsible"
-												isChecked={switchesState.responsible}
-												handleCheckedChange={handleResponsibleChange}
 											>
 												<Flex
 													align="center"
@@ -376,6 +377,8 @@ const BoardSettings = ({
 													/>
 
 													<Flex
+														align="center"
+														justify="center"
 														css={{
 															height: '$24',
 															width: '$24',
@@ -396,8 +399,6 @@ const BoardSettings = ({
 																  }
 																: 'none'
 														}}
-														align="center"
-														justify="center"
 														onClick={handleRandomResponsible}
 													>
 														<Icon
@@ -410,9 +411,9 @@ const BoardSettings = ({
 													</Flex>
 
 													<Text
-														size="sm"
 														color="primary800"
 														css={{ mx: '$8' }}
+														size="sm"
 													>
 														{!responsible
 															? 'Responsible not found!'
@@ -438,19 +439,19 @@ const BoardSettings = ({
 								</StyledAccordionItem>
 							)}
 						</Accordion>
-						<ButtonsContainer justify="end" gap={24}>
+						<ButtonsContainer gap={24} justify="end">
 							<Button
-								onClick={handleClose}
-								variant="primaryOutline"
 								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+								variant="primaryOutline"
+								onClick={handleClose}
 							>
 								Cancel
 							</Button>
 							<Button
+								css={{ marginRight: '$32', padding: '$16 $24' }}
 								ref={submitBtnRef}
 								type="submit"
 								variant="primary"
-								css={{ marginRight: '$32', padding: '$16 $24' }}
 							>
 								Save
 							</Button>

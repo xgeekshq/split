@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient } from 'react-query';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -33,7 +33,7 @@ import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 
-const NewBoard = () => {
+const NewBoard: NextPage = () => {
 	const router = useRouter();
 
 	/**
@@ -126,7 +126,7 @@ const NewBoard = () => {
 	return (
 		<Container>
 			<PageHeader>
-				<Text heading={3} weight="bold" color="primary800">
+				<Text color="primary800" heading={3} weight="bold">
 					Add new SPLIT board
 				</Text>
 
@@ -138,18 +138,18 @@ const NewBoard = () => {
 				<SubContainer>
 					{haveError && (
 						<AlertBox
+							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+							title="No team yet!"
+							type="error"
 							css={{
 								marginTop: '$20'
 							}}
-							type="error"
-							title="No team yet!"
-							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
 						/>
 					)}
 
 					<StyledForm
-						status={!haveError}
 						direction="column"
+						status={!haveError}
 						onSubmit={
 							!haveError
 								? methods.handleSubmit(({ text, maxVotes }) =>
@@ -164,7 +164,7 @@ const NewBoard = () => {
 								{haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
 							</FormProvider>
 						</InnerContent>
-						<ButtonsContainer justify="end" gap="24">
+						<ButtonsContainer gap="24" justify="end">
 							<Button type="button" variant="lightOutline" onClick={handleBack}>
 								Cancel
 							</Button>

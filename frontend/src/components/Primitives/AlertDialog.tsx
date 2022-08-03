@@ -51,7 +51,7 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props 
 	return (
 		<AlertDialogPrimitive.Portal>
 			<StyledOverlay />
-			<StyledContent onCloseAutoFocus={handleClose} css={css} {...props}>
+			<StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
 				{children}
 			</StyledContent>
 		</AlertDialogPrimitive.Portal>

@@ -11,13 +11,13 @@ const QueryError: React.FC = ({ children }) => {
 		<QueryErrorResetBoundary>
 			{({ reset }) => (
 				<ErrorBoundary
-					onReset={reset}
 					fallbackRender={({ resetErrorBoundary }) => (
 						<Flex css={{ my: '$24' }} direction="column" gap="12">
 							<Text color="dangerBase">There was an error fetching the data! </Text>
 							<Button onClick={resetErrorBoundary}>Try again</Button>
 						</Flex>
 					)}
+					onReset={reset}
 				>
 					{children}
 				</ErrorBoundary>

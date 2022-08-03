@@ -13,7 +13,7 @@ type SideBarProps = {
 const Sidebar = ({ firstName, lastName, email, strategy }: SideBarProps) => {
 	return (
 		<StyledSidebar>
-			<Header firstName={firstName} lastName={lastName} email={email} />
+			<Header email={email} firstName={firstName} lastName={lastName} />
 			<SideBarContent strategy={strategy} />
 		</StyledSidebar>
 	);
