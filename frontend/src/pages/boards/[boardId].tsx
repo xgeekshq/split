@@ -123,10 +123,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Show board settings button if current user is allowed to edit
 	const showBoardSettings =
-		isStakeholderOrAdmin ||
-		(board?.isSubBoard && isResponsible) ||
-		isOwner ||
-		session?.isSAdmin;
+		(isStakeholderOrAdmin ||
+			(board?.isSubBoard && isResponsible) ||
+			isOwner ||
+			session?.isSAdmin) &&
+		board?.submitedAt === null;
 
 	// Show Alert message if any sub-board wansn't merged
 	const showMessageHaveSubBoardsMerged =
@@ -142,14 +143,14 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		<>
 			<BoardHeader />
 			<Container direction="column">
-				<Flex justify="between" align="center" css={{ py: '$32', width: '100%' }} gap={40}>
+				<Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
 					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
 
 					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox
 							css={{ flex: 1 }}
-							type="info"
 							title="No sub-team has merged into this main board yet."
+							type="info"
 						/>
 					) : null}
 
@@ -159,13 +160,13 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 					{showMessageIfMerged ? (
 						<AlertGoToMainBoard
-							submitedAt={board.submitedAt as Date}
 							mainBoardId={mainBoardId}
+							submitedAt={board.submitedAt as Date}
 						/>
 					) : null}
 				</Flex>
 
-				<DragDropArea userId={userId} board={board} socketId={socketId} />
+				<DragDropArea board={board} socketId={socketId} userId={userId} />
 			</Container>
 		</>
 	) : (
