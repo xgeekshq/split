@@ -105,8 +105,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	async create(boardData: BoardDto, userId: string) {
-		const { team, recurrent, maxVotes, postAnonymously, hideCards, hideVotes, maxUsers } =
-			boardData;
+		const { team, recurrent, maxVotes, hideCards, hideVotes, maxUsers } = boardData;
 		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId);
@@ -127,8 +126,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 					recurrent,
 					maxVotes,
 					hideCards,
-					hideVotes,
-					anonymously: postAnonymously
+					hideVotes
 				}
 			};
 
@@ -163,8 +161,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
 			hideCards: configs.hideCards ?? false,
-			hideVotes: configs.hideVotes ?? false,
-			postAnonymously: configs.anonymously
+			hideVotes: configs.hideVotes ?? false
 		};
 
 		const board = await this.create(boardData, ownerId);

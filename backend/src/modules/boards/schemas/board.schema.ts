@@ -60,9 +60,6 @@ export default class Board {
 	@Prop({ type: Boolean, nullable: false, default: false })
 	hideVotes?: boolean;
 
-	@Prop({ type: Boolean, nullable: false, default: false })
-	postAnonymously?: boolean;
-
 	@Prop({ type: Number, nullable: false, default: 0 })
 	totalUsedVotes?: Number;
 }

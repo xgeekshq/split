@@ -60,10 +60,6 @@ export default class BoardDto {
 	@IsBoolean()
 	hideVotes!: boolean;
 
-	@IsNotEmpty()
-	@IsBoolean()
-	postAnonymously!: boolean;
-
 	@IsOptional()
 	@ValidateNested({ each: true })
 	dividedBoards!: BoardDto[];

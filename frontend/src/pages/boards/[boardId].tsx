@@ -77,7 +77,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	useEffect(() => {
 		if (data && isOpen) {
 			const {
-				board: { _id, title, maxVotes, hideVotes, postAnonymously, hideCards }
+				board: { _id, title, maxVotes, hideVotes, hideCards }
 			} = data;
 
 			setUpdateBoard({
@@ -86,8 +86,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 					title,
 					maxVotes,
 					hideCards,
-					hideVotes,
-					postAnonymously
+					hideVotes
 				}
 			});
 		}
@@ -142,14 +141,14 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		<>
 			<BoardHeader />
 			<Container direction="column">
-				<Flex justify="between" align="center" css={{ py: '$32', width: '100%' }} gap={40}>
+				<Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
 					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
 
 					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox
 							css={{ flex: 1 }}
-							type="info"
 							title="No sub-team has merged into this main board yet."
+							type="info"
 						/>
 					) : null}
 
@@ -159,13 +158,13 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 					{showMessageIfMerged ? (
 						<AlertGoToMainBoard
-							submitedAt={board.submitedAt as Date}
 							mainBoardId={mainBoardId}
+							submitedAt={board.submitedAt as Date}
 						/>
 					) : null}
 				</Flex>
 
-				<DragDropArea userId={userId} board={board} socketId={socketId} />
+				<DragDropArea board={board} socketId={socketId} userId={userId} />
 			</Container>
 		</>
 	) : (

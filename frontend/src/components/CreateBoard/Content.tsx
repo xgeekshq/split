@@ -49,7 +49,6 @@ const CreateBoardContent = () => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
-				newSubBoard.postAnonymously = boardState.board.postAnonymously;
 				newSubBoard.maxVotes = maxVotes;
 				const users = subBoard.users.map((boardUser) => ({
 					user: boardUser.user._id,
