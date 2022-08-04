@@ -72,22 +72,22 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
 					return (
 						<Column
 							key={column._id}
-							cards={column.cards}
-							columnId={column._id}
-							index={index}
-							userId={userId}
 							boardId={board._id}
-							title={column.title}
+							cards={column.cards}
 							color={column.color}
-							socketId={socketId}
+							columnId={column._id}
+							countAllCards={countAllCards}
 							hideCards={board.hideCards}
+							index={index}
 							isMainboard={!board.isSubBoard}
+							isSubmited={!!board.submitedByUser}
+							maxVotes={Number(board.maxVotes)}
+							socketId={socketId}
+							title={column.title}
+							userId={userId}
 							boardUser={board.users.find(
 								(boardUser) => boardUser.user._id === userId
 							)}
-							maxVotes={Number(board.maxVotes)}
-							countAllCards={countAllCards}
-							isSubmited={!!board.submitedByUser}
 						/>
 					);
 				})}
