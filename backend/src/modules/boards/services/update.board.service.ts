@@ -177,7 +177,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
 			if (!isEmpty(boardData.maxVotes) && highestVotes > Number(boardData.maxVotes)) {
 				throw new BadRequestException(
-					`You can't set a lower value to max votes. Please insert a value higher than ${board.maxVotes}!`
+					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
 				);
 			}
 
