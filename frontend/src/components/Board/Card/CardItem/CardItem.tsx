@@ -81,6 +81,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 							<Text
 								size="sm"
 								css={{
+									whiteSpace: 'pre',
 									filter: cardItemBlur(hideCards, item as CardItemType, userId)
 								}}
 							>
