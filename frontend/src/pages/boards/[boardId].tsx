@@ -122,10 +122,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Show board settings button if current user is allowed to edit
 	const showBoardSettings =
-		isStakeholderOrAdmin ||
-		(board?.isSubBoard && isResponsible) ||
-		isOwner ||
-		session?.isSAdmin;
+		(isStakeholderOrAdmin ||
+			(board?.isSubBoard && isResponsible) ||
+			isOwner ||
+			session?.isSAdmin) &&
+		board?.submitedAt === null;
 
 	// Show Alert message if any sub-board wansn't merged
 	const showMessageHaveSubBoardsMerged =
