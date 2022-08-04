@@ -23,6 +23,10 @@ const contentShow = keyframes({
 /**
  * Dialog Styles
  */
+const StyledDialogContainer = styled('span', {
+	marginLeft: 'auto'
+});
+
 const StyledDialogOverlay = styled(DialogPrimitive.Overlay, {
 	backgroundColor: 'rgba(0,0,0,0.75)',
 	position: 'fixed',
@@ -206,6 +210,7 @@ export {
 	StyledAccordionItem,
 	StyledAccordionTrigger,
 	StyledDialogCloseButton,
+	StyledDialogContainer,
 	StyledDialogContent,
 	StyledDialogOverlay,
 	StyledDialogTitle

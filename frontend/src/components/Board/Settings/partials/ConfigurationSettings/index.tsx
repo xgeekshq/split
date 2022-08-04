@@ -21,7 +21,7 @@ const ConfigurationSettings = ({
 	children
 }: Props) => (
 	<Flex gap={20}>
-		<Switch checked={isChecked} onCheckedChange={handleCheckedChange} variant="sm">
+		<Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange}>
 			<SwitchThumb variant="sm">
 				{isChecked && (
 					<Icon
@@ -39,7 +39,7 @@ const ConfigurationSettings = ({
 			<Text size="md" weight="medium">
 				{title}
 			</Text>
-			<Text size="sm" color="primary500">
+			<Text color="primary500" size="sm">
 				{text}
 			</Text>
 			{children}
