@@ -11,20 +11,20 @@ const AlertMergeIntoMain: React.FC<Props> = ({ boardId }) => {
 
 	return (
 		<AlertCustomDialog
-			defaultOpen={false}
-			title="Merge board into main board"
-			text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
 			cancelText="Cancel"
 			confirmText="Merge into main board"
+			defaultOpen={false}
+			text="If you merge your sub-team's board into the main board it can not be edited anymore afterwards. Are you sure you want to merge it?"
+			title="Merge board into main board"
+			variant="primary"
 			handleConfirm={() => {
 				mergeBoard.mutate(boardId);
 			}}
-			variant="primary"
 		>
 			<AlertDialogTrigger asChild>
 				<Button
-					variant="primaryOutline"
 					size="sm"
+					variant="primaryOutline"
 					css={{
 						fontWeight: '$medium',
 						width: '$206'
