@@ -142,6 +142,7 @@ const CardBoard = React.memo<CardBoardProps>(
 												size="md"
 												css={{
 													wordBreak: 'break-word',
+													whiteSpace: 'pre',
 
 													filter: cardBlur(
 														hideCards,
