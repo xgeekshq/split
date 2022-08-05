@@ -16,7 +16,6 @@ import Text from 'components/Primitives/Text';
 import useBoard from 'hooks/useBoard';
 import SchemaUpdateBoard from 'schema/schemaUpdateBoardForm';
 import { boardInfoState } from 'store/board/atoms/board.atom';
-import { updateBoardError } from 'store/updateBoard/atoms/update-board.atom';
 import { UpdateBoardType } from 'types/board/board';
 import { BoardUserToAdd } from 'types/board/board.user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
@@ -72,8 +71,6 @@ const BoardSettings = ({
 	// References
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
 	const submitBtnRef = useRef<HTMLButtonElement | null>(null);
-
-	const haveError = useRecoilValue(updateBoardError);
 
 	// Unique state to handle the switches change
 	const [switchesState, setSwitchesState] = useState<{ maxVotes: boolean; responsible: boolean }>(
@@ -271,7 +268,6 @@ const BoardSettings = ({
 								<Text heading="4">Board Name</Text>
 								<Input
 									forceState
-									disabled={haveError}
 									id="title"
 									maxChars="30"
 									placeholder="Board Name"

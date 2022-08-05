@@ -88,7 +88,6 @@ const NewBoard: NextPage = () => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
-				newSubBoard.postAnonymously = boardState.board.postAnonymously;
 				newSubBoard.maxVotes = maxVotes;
 
 				newSubBoard.users = subBoard.users.map((boardUser) => ({

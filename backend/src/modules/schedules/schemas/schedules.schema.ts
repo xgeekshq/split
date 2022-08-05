@@ -35,9 +35,6 @@ export default class Schedules {
 	@Prop({ type: Boolean, nullable: false, default: false })
 	hideVotes?: boolean;
 
-	@Prop({ type: Boolean, nullable: false, default: false })
-	postAnonymously?: boolean;
-
 	@Prop({ type: Date, nullable: false, default: false })
 	willRunAt!: Date;
 }

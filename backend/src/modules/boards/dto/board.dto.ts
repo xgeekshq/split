@@ -71,11 +71,6 @@ export default class BoardDto {
 	@IsBoolean()
 	hideVotes!: boolean;
 
-	@ApiProperty({ default: false })
-	@IsNotEmpty()
-	@IsBoolean()
-	postAnonymously!: boolean;
-
 	@ApiProperty({ type: BoardDto, isArray: true })
 	@IsOptional()
 	@ValidateNested({ each: true })

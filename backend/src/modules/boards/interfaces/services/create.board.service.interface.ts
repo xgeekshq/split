@@ -7,7 +7,6 @@ export interface Configs {
 	votes?: string | null;
 	hideCards?: boolean;
 	hideVotes?: boolean;
-	anonymously: boolean;
 	maxUsers: number;
 }
 

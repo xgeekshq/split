@@ -36,7 +36,6 @@ export default interface BoardType {
 	hideCards: boolean;
 	hideVotes: boolean;
 	votes?: string;
-	postAnonymously: boolean;
 	submitedByUser?: string;
 	submitedAt?: Date;
 	slackGroup?: boolean;
