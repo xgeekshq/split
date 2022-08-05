@@ -24,12 +24,12 @@ const CreateBoardContent = () => {
 		createBoard: { status, mutate }
 	} = useBoard({ autoFetchBoard: false });
 
-	const methods = useForm<{ text: string; maxVotes: string }>({
+	const methods = useForm<{ text: string; maxVotes?: number }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
 			text: 'Main board -',
-			maxVotes: String(boardState.board.maxVotes) ?? ''
+			maxVotes: boardState.board.maxVotes
 		},
 		resolver: joiResolver(SchemaCreateBoard)
 	});
@@ -43,7 +43,7 @@ const CreateBoardContent = () => {
 		e?.preventDefault();
 	};
 
-	const saveBoard = (title: string, maxVotes: string) => {
+	const saveBoard = (title: string, maxVotes?: number) => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };

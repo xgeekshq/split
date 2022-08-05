@@ -168,7 +168,9 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={!isMainboard || actualBoardVotes === maxVotes}
+								disabled={
+									!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
+								}
 								onClick={handleAddVote}
 							>
 								<Icon name="thumbs-up" />
