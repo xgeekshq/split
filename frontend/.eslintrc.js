@@ -56,6 +56,7 @@ module.exports = {
 		],
 		'no-underscore-dangle': 'off',
 		'no-param-reassign': 'off',
+		'react/require-default-props': 'off',
 		'react/function-component-definition': 'off',
 		'@typescript-eslint/no-empty-interface': 'off',
 		'import/prefer-default-export': 'off',
@@ -103,11 +104,9 @@ module.exports = {
 					'error',
 					{
 						groups: [
-							// Packages. `react` related packages come first.
-							// Things that start with a letter (or digit or underscore), or `@` followed by a letter.
-							['^react', '^next', '^recoil', '^@?\\w'], // Absolute imports and Relative imports.
+							['^react', '^next', '^recoil', '^@?\\w'],
 							['^styles'],
-							[`^(${folders.join('|')})(/.*|$)`, '^\\.'], // for scss imports.
+							[`^(${folders.join('|')})(/.*|$)`, '^\\.'],
 							['^[^.]']
 						]
 					}

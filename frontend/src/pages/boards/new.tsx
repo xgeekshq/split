@@ -54,12 +54,12 @@ const NewBoard: NextPage = () => {
 	/**
 	 * React Hook Form
 	 */
-	const methods = useForm<{ text: string; maxVotes: string }>({
+	const methods = useForm<{ text: string; maxVotes?: number }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
 			text: '',
-			maxVotes: String(boardState.board.maxVotes) ?? ''
+			maxVotes: boardState.board.maxVotes
 		},
 		resolver: joiResolver(SchemaCreateBoard)
 	});
@@ -82,7 +82,7 @@ const NewBoard: NextPage = () => {
 	 * @param title Board Title
 	 * @param maxVotes Maxium number of votes allowed
 	 */
-	const saveBoard = (title: string, maxVotes: string) => {
+	const saveBoard = (title: string, maxVotes?: number) => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -90,12 +90,10 @@ const NewBoard: NextPage = () => {
 				newSubBoard.hideVotes = boardState.board.hideVotes;
 				newSubBoard.maxVotes = maxVotes;
 
-				const users = subBoard.users.map((boardUser) => ({
+				newSubBoard.users = subBoard.users.map((boardUser) => ({
 					user: boardUser.user._id,
 					role: boardUser.role
 				}));
-
-				newSubBoard.users = users;
 
 				return newSubBoard;
 			}

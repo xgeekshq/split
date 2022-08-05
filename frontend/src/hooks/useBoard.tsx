@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
+import { AxiosError } from 'axios';
 
 import {
 	createBoardRequest,
@@ -77,10 +78,14 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 				type: ToastStateEnum.SUCCESS
 			});
 		},
-		onError: () => {
+		onError: (error: AxiosError) => {
+			const errorMessage = error.response?.data.message.includes('max votes')
+				? error.response?.data.message
+				: 'Error updating the board';
+
 			setToastState({
 				open: true,
-				content: 'Error updating the board',
+				content: errorMessage,
 				type: ToastStateEnum.ERROR
 			});
 		}

@@ -6,6 +6,7 @@ import {
 	IsBoolean,
 	IsMongoId,
 	IsNotEmpty,
+	IsNumber,
 	IsOptional,
 	IsString,
 	Validate,
@@ -44,9 +45,9 @@ export default class BoardDto {
 
 	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()
-	@IsString()
+	@IsNumber()
 	@IsOptional()
-	maxVotes?: string | null;
+	maxVotes?: number | null;
 
 	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()

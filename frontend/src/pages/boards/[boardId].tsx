@@ -18,7 +18,6 @@ import Flex from 'components/Primitives/Flex';
 import useBoard from 'hooks/useBoard';
 import { useSocketIO } from 'hooks/useSocketIO';
 import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
-import { updateBoardDataState } from 'store/updateBoard/atoms/update-board.atom';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import isEmpty from 'utils/isEmpty';
@@ -45,10 +44,19 @@ type Props = {
 };
 
 const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
+	// States
+	// State or open and close Board Settings Dialog
 	const [isOpen, setIsOpen] = useState(false);
+
+	// Recoil States
+	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
+	const setBoard = useSetRecoilState(boardInfoState);
+
+	// Session Details
 	const { data: session } = useSession({ required: true });
 	const userId = session?.user?.id;
 
+	// Hooks
 	const {
 		fetchBoard: { data }
 	} = useBoard({
@@ -57,40 +65,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
 
-	const [newBoard, setNewBoard] = useRecoilState(newBoardState);
-
-	useEffect(() => {
-		if (data?.board?._id === newBoard?._id) {
-			setNewBoard(undefined);
-		}
-	}, [newBoard, data, setNewBoard]);
-
-	// Set Recoil Atom
-	const setBoard = useSetRecoilState(boardInfoState);
-	const setUpdateBoard = useSetRecoilState(updateBoardDataState);
-	useEffect(() => {
-		if (data) {
-			setBoard(data);
-		}
-	}, [data, setBoard]);
-
-	useEffect(() => {
-		if (data && isOpen) {
-			const {
-				board: { _id, title, maxVotes, hideVotes, hideCards }
-			} = data;
-
-			setUpdateBoard({
-				board: {
-					_id,
-					title,
-					maxVotes,
-					hideCards,
-					hideVotes
-				}
-			});
-		}
-	}, [data, isOpen, setUpdateBoard]);
+	// Socket IO Hook
+	const [socketId, cleanSocket] = useSocketIO(boardId);
 
 	// Board Settings permissions
 	const isStakeholderOrAdmin = useMemo(() => {
@@ -100,6 +76,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 				boardUser.user._id === userId
 		);
 	}, [board, mainBoard, userId]);
+
 	const [isResponsible, isOwner] = useMemo(() => {
 		return board
 			? [
@@ -113,22 +90,18 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 			: [false, false];
 	}, [board, userId]);
 
-	// Socket IO
-	const [socketId, cleanSocket] = useSocketIO(boardId);
-	useEffect(() => cleanSocket, [cleanSocket]);
-
 	// Show button in sub boards to merge into main
 	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
 
 	// Show board settings button if current user is allowed to edit
-	const showBoardSettings =
+	const havePermissionsToEditBoardSettings =
 		(isStakeholderOrAdmin ||
 			(board?.isSubBoard && isResponsible) ||
 			isOwner ||
 			session?.isSAdmin) &&
 		board?.submitedAt === null;
 
-	// Show Alert message if any sub-board wansn't merged
+	// Show Alert message if any sub-board wasn't merged
 	const showMessageHaveSubBoardsMerged =
 		!board?.isSubBoard &&
 		board?.dividedBoards &&
@@ -137,6 +110,23 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Show Alert message if sub board was merged
 	const showMessageIfMerged = !!(board?.submitedByUser && board.submitedAt && mainBoardId);
+
+	// Use effect to set recoil state using data from API
+	useEffect(() => {
+		if (data) {
+			setBoard(data);
+		}
+	}, [data, setBoard]);
+
+	// Use effect to remove "New Board" indicator
+	useEffect(() => {
+		if (data?.board?._id === newBoard?._id || mainBoard?._id === newBoard?._id) {
+			setNewBoard(undefined);
+		}
+	}, [newBoard, data, setNewBoard, mainBoard?._id]);
+
+	// Socket IO
+	useEffect(() => cleanSocket, [cleanSocket]);
 
 	return board && userId && socketId ? (
 		<>
@@ -153,8 +143,15 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{showBoardSettings ? (
-						<BoardSettings isOpen={isOpen} setIsOpen={setIsOpen} socketId={socketId} />
+					{havePermissionsToEditBoardSettings ? (
+						<BoardSettings
+							isOpen={isOpen}
+							isOwner={isOwner}
+							isSAdmin={session?.isSAdmin}
+							isStakeholderOrAdmin={isStakeholderOrAdmin}
+							setIsOpen={setIsOpen}
+							socketId={socketId}
+						/>
 					) : null}
 
 					{showMessageIfMerged ? (
