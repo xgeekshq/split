@@ -5,6 +5,7 @@ import {
 	Delete,
 	Inject,
 	Param,
+	Patch,
 	Post,
 	Put,
 	Req,
@@ -283,7 +284,7 @@ export default class CardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Put(':boardId/card/:cardId/position')
+	@Patch(':boardId/card/:cardId/position')
 	async updateCardPosition(
 		@Param() params: CardGroupParams,
 		@Body() boardData: UpdateCardPositionDto
