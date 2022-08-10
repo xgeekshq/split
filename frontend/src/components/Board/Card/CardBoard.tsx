@@ -129,7 +129,11 @@ const CardBoard = React.memo<CardBoardProps>(
 													css={{ width: '$14', height: '$14' }}
 													name="merge"
 												/>
-												<Text size="xxs" weight="medium">
+												<Text
+													data-testid="cardCount"
+													size="xxs"
+													weight="medium"
+												>
 													{card.items.length} merged cards
 												</Text>
 											</Flex>
@@ -141,6 +145,7 @@ const CardBoard = React.memo<CardBoardProps>(
 											justify="between"
 										>
 											<Text
+												data-testid="cardTitle"
 												size="md"
 												css={{
 													wordBreak: 'break-word',
