@@ -76,6 +76,7 @@ const CardBoard = React.memo<CardBoardProps>(
 		const handleDeleting = () => {
 			setDeleting(!deleting);
 		};
+
 		return (
 			<Draggable
 				key={card._id}
@@ -88,6 +89,7 @@ const CardBoard = React.memo<CardBoardProps>(
 						ref={provided.innerRef}
 						{...provided.dragHandleProps}
 						{...provided.draggableProps}
+						data-testid={`card${index + 1}`}
 						direction="column"
 						css={{
 							backgroundColor: color,
