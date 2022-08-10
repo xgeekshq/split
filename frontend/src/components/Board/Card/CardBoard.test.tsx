@@ -4,7 +4,9 @@ import { useRouter } from 'next/router';
 import { DragDropContext, Droppable } from '@react-forked/dnd';
 import { render } from '@testing-library/react';
 
+import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
+import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { CardsContainer } from '../Column/styles';
 import CardBoard from './CardBoard';
 
@@ -21,10 +23,10 @@ const isMainboard = false;
 const isSubmited = false;
 const maxVotes = 6;
 const socketId = 'J8AW864LR3ZIy5rxAAAb';
-const boardUser = {
+const boardUser: BoardUser = {
 	id: '62f12917c81c816dd0cf77da',
 	_id: '62f12917c81c816dd0cf77da',
-	role: 'responsible',
+	role: BoardUserRoles.MEMBER,
 	user: {
 		_id: '62f104ffc81c816dd0cf7765',
 		firstName: 'FirstName',
