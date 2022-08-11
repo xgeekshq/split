@@ -44,7 +44,7 @@ const BoardHeader = () => {
 
 	// Get Team users
 
-	const teamUsers = team.users ?? [];
+	const teamUsers = team.users ? team.users : [];
 
 	// Found sub-board
 	const getSubBoard = (): { id: string; title: string } | undefined => {
@@ -93,16 +93,16 @@ const BoardHeader = () => {
 	}
 	return (
 		<StyledHeader>
-			<Flex align="center" justify="between" gap="20">
+			<Flex align="center" gap="20" justify="between">
 				<Flex direction="column">
-					<Flex gap={!isSubBoard ? 26 : undefined} align="center">
+					<Flex align="center" gap={!isSubBoard ? 26 : undefined}>
 						<Breadcrumb items={breadcrumbItems} />
 
 						{!isSubBoard && !!getSubBoard() && (
 							<Flex align="center" gap={10}>
 								<Separator
-									data-orientation="vertical"
 									css={{ height: '$14 !important' }}
+									data-orientation="vertical"
 								/>
 								<Link
 									href={{
@@ -145,7 +145,7 @@ const BoardHeader = () => {
 				</Flex>
 				<Flex align="center" gap="24">
 					<Flex align="center" gap="10">
-						<Text color="primary800" size="sm" css={{ fontWeight: 500 }}>
+						<Text color="primary800" css={{ fontWeight: 500 }} size="sm">
 							{isSubBoard ? title.replace('board', '') : team.name}
 						</Text>
 						<CardAvatars
@@ -160,8 +160,8 @@ const BoardHeader = () => {
 					) && (
 						<>
 							<Separator
-								data-orientation="vertical"
 								css={{ height: '$24 !important' }}
+								data-orientation="vertical"
 							/>
 
 							<Flex align="center" gap="10">
@@ -169,10 +169,10 @@ const BoardHeader = () => {
 									Team admins
 								</Text>
 								<CardAvatars
-									listUsers={teamUsers}
 									teamAdmins
-									userId={session!.user.id}
+									listUsers={teamUsers}
 									responsible={false}
+									userId={session!.user.id}
 								/>
 							</Flex>
 						</>
@@ -184,8 +184,8 @@ const BoardHeader = () => {
 					) && (
 						<>
 							<Separator
-								data-orientation="vertical"
 								css={{ height: '$24 !important' }}
+								data-orientation="vertical"
 							/>
 
 							<Flex align="center" gap="10">
@@ -193,10 +193,10 @@ const BoardHeader = () => {
 									Stakeholders
 								</Text>
 								<CardAvatars
+									stakeholders
 									listUsers={users}
 									responsible={false}
 									teamAdmins={false}
-									stakeholders
 									userId={session!.user.id}
 								/>
 							</Flex>

@@ -132,21 +132,21 @@ const CardFooter = React.memo<FooterProps>(
 		};
 
 		return (
-			<Flex align="center" justify={!anonymous ? 'between' : 'end'} gap="6">
+			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
 				{!anonymous && !teamName && (
 					<Flex
-						gap="4"
 						align="center"
+						gap="4"
 						css={{
 							filter: cardBlur(hideCards, card as CardType, userId)
 						}}
 					>
 						<Avatar
-							size={20}
-							fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
 							isBoardPage
+							fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
 							id={createdBy?._id}
 							isDefaultColor={createdBy?._id === userId}
+							size={20}
 						/>
 						<Text size="xs">
 							{createdBy?.firstName} {createdBy?.lastName}
@@ -159,7 +159,7 @@ const CardFooter = React.memo<FooterProps>(
 					</Text>
 				)}
 				{!isItem && comments && (
-					<Flex gap="10" align="center">
+					<Flex align="center" gap="10">
 						<Flex
 							align="center"
 							gap="2"
@@ -168,8 +168,10 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
+								disabled={
+									!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
+								}
 								onClick={handleAddVote}
-								disabled={!isMainboard || actualBoardVotes === maxVotes}
 							>
 								<Icon name="thumbs-up" />
 							</StyledButtonIcon>
@@ -193,8 +195,8 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								onClick={handleDeleteVote}
 								disabled={!isMainboard || votesOfUserInThisCard === 0}
+								onClick={handleDeleteVote}
 							>
 								<Icon name="thumbs-down" />
 							</StyledButtonIcon>
@@ -219,8 +221,8 @@ const CardFooter = React.memo<FooterProps>(
 								/>
 							</StyledButtonIcon>
 							<Text
-								size="xs"
 								css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }}
+								size="xs"
 							>
 								{comments.length}
 							</Text>

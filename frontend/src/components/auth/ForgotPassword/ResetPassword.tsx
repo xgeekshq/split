@@ -76,29 +76,29 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
 				<Text css={{ mt: '$24' }} heading="1">
 					Reset Password
 				</Text>
-				<Text size="md" css={{ mt: '$8', color: '$primary500' }}>
+				<Text css={{ mt: '$8', color: '$primary500' }} size="md">
 					Enter your new password
 				</Text>
 				<Input
 					css={{ mt: '$32' }}
-					id="newPassword"
-					type="password"
-					placeholder="Type password here"
+					helperText="Your Password must be at least 8 characters long"
 					icon="eye"
 					iconPosition="right"
-					helperText="Your Password must be at least 8 characters long"
+					id="newPassword"
+					placeholder="Type password here"
+					type="password"
 				/>
 				<Input
-					id="newPasswordConf"
-					type="password"
-					placeholder="Repeat password"
+					helperText="Your Password must be at least 8 characters long"
 					icon="eye"
 					iconPosition="right"
-					helperText="Your Password must be at least 8 characters long"
+					id="newPasswordConf"
+					placeholder="Repeat password"
+					type="password"
 				/>
 				<Button
-					type="submit"
 					size="lg"
+					type="submit"
 					css={{
 						fontWeight: '$medium',
 						fontSize: '$18'

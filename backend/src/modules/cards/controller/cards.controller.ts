@@ -5,11 +5,23 @@ import {
 	Delete,
 	Inject,
 	Param,
+	Patch,
 	Post,
 	Put,
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { BaseDto } from 'libs/dto/base.dto';
 import { BaseParam } from 'libs/dto/param/base.param';
@@ -20,6 +32,10 @@ import { UnmergeCardsParams } from 'libs/dto/param/unmerge.cards.params';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
+import BoardDto from 'modules/boards/dto/board.dto';
 
 import SocketGateway from '../../socket/gateway/socket.gateway';
 import { CreateCardDto } from '../dto/create.card.dto';
@@ -34,6 +50,9 @@ import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Cards')
+@UseGuards(JwtAuthenticationGuard)
 @Controller('boards')
 export default class CardsController {
 	constructor(
@@ -50,7 +69,24 @@ export default class CardsController {
 		private socketService: SocketGateway
 	) {}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Create a new card' })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Card successfully created!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Post(':boardId/card')
 	async addCard(
 		@Req() request: RequestWithUser,
@@ -67,7 +103,25 @@ export default class CardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Delete a specific card' })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Card successfully deleted!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Delete(':boardId/card/:cardId')
 	async deleteCard(
 		@Req() request: RequestWithUser,
@@ -83,7 +137,26 @@ export default class CardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Delete a specific card item' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Card successfully delted!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Delete(':boardId/card/:cardId/items/:itemId')
 	async deleteCardItem(
 		@Req() request: RequestWithUser,
@@ -104,7 +177,26 @@ export default class CardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Update a specific card item' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Card item successfully updated!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Put(':boardId/card/:cardId/items/:itemId')
 	async updateCardText(
 		@Req() request: RequestWithUser,
@@ -128,7 +220,25 @@ export default class CardsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
+	@ApiOperation({ summary: 'Update a specific card' })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Card successfully updated!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Put(':boardId/card/:cardId')
 	async updateCardGroupText(
 		@Req() request: RequestWithUser,
@@ -151,7 +261,30 @@ export default class CardsController {
 		return board;
 	}
 
-	@Put(':boardId/card/:cardId/updateCardPosition')
+	@ApiOperation({
+		summary: 'Change the card position',
+		description:
+			'This method is used to move card(s) between columns or change the position inside the actual column'
+	})
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'The position of card is successfully updated!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Patch(':boardId/card/:cardId/position')
 	async updateCardPosition(
 		@Param() params: CardGroupParams,
 		@Body() boardData: UpdateCardPositionDto
@@ -172,6 +305,26 @@ export default class CardsController {
 		return board;
 	}
 
+	@ApiOperation({ summary: 'Merge two cards together' })
+	@ApiParam({ name: 'targetCardId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Cards are successfully merged!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Put(':boardId/card/:cardId/merge/:targetCardId')
 	async mergeCards(@Param() params: MergeCardsParams, @Body() mergeCardsDto: BaseDto) {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
@@ -185,6 +338,26 @@ export default class CardsController {
 		return board;
 	}
 
+	@ApiOperation({ summary: 'Remove a card item from a group' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Cards are successfully unmerged!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
 	@Put(':boardId/card/:cardId/cardItem/:itemId/removeFromCardGroup')
 	async unmergeCards(
 		@Param() params: UnmergeCardsParams,
@@ -202,6 +375,7 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
+
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
 		return board;

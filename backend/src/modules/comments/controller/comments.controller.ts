@@ -10,6 +10,18 @@ import {
 	Req,
 	UseGuards
 } from '@nestjs/common';
+import {
+	ApiBadRequestResponse,
+	ApiBearerAuth,
+	ApiBody,
+	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiOperation,
+	ApiParam,
+	ApiTags,
+	ApiUnauthorizedResponse
+} from '@nestjs/swagger';
 
 import { CardGroupParams } from 'libs/dto/param/card.group.params';
 import { CardItemParams } from 'libs/dto/param/card.item.params';
@@ -18,6 +30,11 @@ import { CommentItemParams } from 'libs/dto/param/comment.item.params';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
 import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
 import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
+import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
+import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
+import BoardDto from 'modules/boards/dto/board.dto';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import CreateCommentDto from '../dto/create.comment.dto';
@@ -27,6 +44,9 @@ import { DeleteCommentApplication } from '../interfaces/applications/delete.comm
 import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
 import { TYPES } from '../interfaces/types';
 
+@ApiBearerAuth('access-token')
+@ApiTags('Comments')
+@UseGuards(JwtAuthenticationGuard)
 @Controller('boards')
 export default class CommentsController {
 	constructor(
@@ -39,8 +59,27 @@ export default class CommentsController {
 		private socketService: SocketGateway
 	) {}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Post(':boardId/card/:cardId/items/:itemId/comment')
+	@ApiOperation({ summary: 'Add a new comment to a specific card item' })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Comment added successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Post(':boardId/card/:cardId/items/:itemId/comments')
 	async addItemComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CardItemParams,
@@ -63,8 +102,26 @@ export default class CommentsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Post(':boardId/card/:cardId/comment')
+	@ApiOperation({ summary: 'Add a new comment to a specific card' })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Comment added successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Post(':boardId/card/:cardId/comments')
 	async addCardGroupComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CardGroupParams,
@@ -86,8 +143,28 @@ export default class CommentsController {
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Put(':boardId/card/:cardId/items/:itemId/comment/:commentId')
+	@ApiOperation({ summary: 'Update a card item comment' })
+	@ApiParam({ name: 'commentId', type: String })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment updated successfully'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Put(':boardId/card/:cardId/items/:itemId/comments/:commentId')
 	async updateCardItemComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CommentItemParams,
@@ -105,14 +182,38 @@ export default class CommentsController {
 			text
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Put(':boardId/card/:cardId/comment/:commentId')
+	@ApiOperation({ summary: 'Update a card comment' })
+	@ApiParam({ name: 'commentId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment updated successfully'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Put(':boardId/card/:cardId/comments/:commentId')
 	async updateCardGroupComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CommentGroupParams,
@@ -129,34 +230,86 @@ export default class CommentsController {
 			text
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Delete(':boardId/card/:cardId/items/:itemId/comment/:commentId')
+	@ApiOperation({ summary: 'Delete a comment in a card item' })
+	@ApiParam({ name: 'commentId', type: String })
+	@ApiParam({ name: 'itemId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiBody({ type: SocketIdDto, required: false })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment deleted successfully from card item.'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Delete(':boardId/card/:cardId/items/:itemId/comments/:commentId')
 	async deleteCardItemComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CommentItemParams,
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, commentId } = params;
+
 		const board = await this.deleteCommentApp.deleteItemComment(
 			boardId,
 			commentId,
 			request.user._id
 		);
 
-		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(DELETE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}
 
-	@UseGuards(JwtAuthenticationGuard)
-	@Delete(':boardId/card/:cardId/comment/:commentId')
+	@ApiOperation({ summary: 'Delete a comment in a card' })
+	@ApiParam({ name: 'commentId', type: String })
+	@ApiParam({ name: 'cardId', type: String })
+	@ApiParam({ name: 'boardId', type: String })
+	@ApiBody({ type: SocketIdDto, required: false })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Comment deleted successfully from card.'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Delete(':boardId/card/:cardId/comments/:commentId')
 	async deleteCardGroupComment(
 		@Req() request: RequestWithUser,
 		@Param() params: CommentGroupParams,
@@ -170,8 +323,13 @@ export default class CommentsController {
 			request.user._id
 		);
 
-		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		if (!board) {
+			throw new BadRequestException(DELETE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return board;
 	}

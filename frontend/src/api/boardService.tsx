@@ -1,8 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 
-import BoardType, { CreateBoardDto, GetBoardResponse } from 'types/board/board';
+import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
-import UpdateBoardDto from 'types/board/updateBoard';
 import AddCardDto from 'types/card/addCard.dto';
 import DeleteCardDto from 'types/card/deleteCard.dto';
 import RemoveFromCardGroupDto from 'types/card/removeFromCardGroup.dto';
@@ -20,7 +19,9 @@ export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType>
 	return fetchData(`/boards`, { method: 'POST', data: newBoard });
 };
 
-export const updateBoardRequest = ({ board }: UpdateBoardDto): Promise<BoardType> => {
+export const updateBoardRequest = (
+	board: UpdateBoardType & { socketId: string }
+): Promise<BoardType> => {
 	return fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
 };
 
@@ -80,8 +81,8 @@ export const updateCardPositionRequest = (
 	updateCardPosition: UpdateCardPositionDto
 ): Promise<BoardType> => {
 	return fetchData<BoardType>(
-		`/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/updateCardPosition`,
-		{ method: 'PUT', data: updateCardPosition }
+		`/boards/${updateCardPosition.boardId}/card/${updateCardPosition.cardId}/position`,
+		{ method: 'PATCH', data: updateCardPosition }
 	);
 };
 
@@ -122,8 +123,8 @@ export const removeFromMergeRequest = (
 export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardType> => {
 	return fetchData<BoardType>(
 		addCommentDto.isCardGroup
-			? `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/comment`
-			: `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/items/${addCommentDto.cardItemId}/comment`,
+			? `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/comments`
+			: `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/items/${addCommentDto.cardItemId}/comments`,
 		{ method: 'POST', data: addCommentDto }
 	);
 };
@@ -131,8 +132,8 @@ export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardTy
 export const updateCommentRequest = (updateCommentDto: UpdateCommentDto): Promise<BoardType> => {
 	return fetchData<BoardType>(
 		updateCommentDto.isCardGroup
-			? `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/comment/${updateCommentDto.commentId}`
-			: `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/items/${updateCommentDto.cardItemId}/comment/${updateCommentDto.commentId}`,
+			? `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/comments/${updateCommentDto.commentId}`
+			: `/boards/${updateCommentDto.boardId}/card/${updateCommentDto.cardId}/items/${updateCommentDto.cardItemId}/comments/${updateCommentDto.commentId}`,
 		{ method: 'PUT', data: updateCommentDto }
 	);
 };
@@ -141,7 +142,7 @@ export const deleteCommentRequest = (deleteCommentDto: DeleteCommentDto): Promis
 	return fetchData<BoardType>(
 		deleteCommentDto.isCardGroup
 			? `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/comment/${deleteCommentDto.commentId}`
-			: `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/items/${deleteCommentDto.cardItemId}/comment/${deleteCommentDto.commentId}`,
+			: `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/items/${deleteCommentDto.cardItemId}/comments/${deleteCommentDto.commentId}`,
 		{ method: 'DELETE', data: deleteCommentDto }
 	);
 };

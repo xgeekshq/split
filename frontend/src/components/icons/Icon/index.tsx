@@ -11,7 +11,7 @@ type Props = CSSProps & {
 
 const Icon = ({ name, size, css, ...props }: Props) => {
 	return (
-		<Svg size={size} css={css} {...props}>
+		<Svg css={css} size={size} {...props}>
 			<use href={`#${name}`} />
 		</Svg>
 	);

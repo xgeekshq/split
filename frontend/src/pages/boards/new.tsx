@@ -54,12 +54,12 @@ const NewBoard: NextPage = () => {
 	/**
 	 * React Hook Form
 	 */
-	const methods = useForm<{ text: string; maxVotes: string }>({
+	const methods = useForm<{ text: string; maxVotes?: number }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
 			text: '',
-			maxVotes: String(boardState.board.maxVotes) ?? ''
+			maxVotes: boardState.board.maxVotes
 		},
 		resolver: joiResolver(SchemaCreateBoard)
 	});
@@ -82,21 +82,18 @@ const NewBoard: NextPage = () => {
 	 * @param title Board Title
 	 * @param maxVotes Maxium number of votes allowed
 	 */
-	const saveBoard = (title: string, maxVotes: string) => {
+	const saveBoard = (title: string, maxVotes?: number) => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
-				newSubBoard.postAnonymously = boardState.board.postAnonymously;
 				newSubBoard.maxVotes = maxVotes;
 
-				const users = subBoard.users.map((boardUser) => ({
+				newSubBoard.users = subBoard.users.map((boardUser) => ({
 					user: boardUser.user._id,
 					role: boardUser.role
 				}));
-
-				newSubBoard.users = users;
 
 				return newSubBoard;
 			}
@@ -128,7 +125,7 @@ const NewBoard: NextPage = () => {
 	return (
 		<Container>
 			<PageHeader>
-				<Text heading={3} weight="bold" color="primary800">
+				<Text color="primary800" heading={3} weight="bold">
 					Add new SPLIT board
 				</Text>
 
@@ -140,18 +137,18 @@ const NewBoard: NextPage = () => {
 				<SubContainer>
 					{haveError && (
 						<AlertBox
+							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+							title="No team yet!"
+							type="error"
 							css={{
 								marginTop: '$20'
 							}}
-							type="error"
-							title="No team yet!"
-							text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
 						/>
 					)}
 
 					<StyledForm
-						status={!haveError}
 						direction="column"
+						status={!haveError}
 						onSubmit={
 							!haveError
 								? methods.handleSubmit(({ text, maxVotes }) =>
@@ -166,7 +163,7 @@ const NewBoard: NextPage = () => {
 								{haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
 							</FormProvider>
 						</InnerContent>
-						<ButtonsContainer justify="end" gap="24">
+						<ButtonsContainer gap="24" justify="end">
 							<Button type="button" variant="lightOutline" onClick={handleBack}>
 								Cancel
 							</Button>

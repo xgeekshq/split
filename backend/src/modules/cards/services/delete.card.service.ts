@@ -4,6 +4,7 @@ import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
+import { BoardUserDocument } from 'modules/boards/schemas/board.user.schema';
 import { CommentDocument } from 'modules/comments/schemas/comment.schema';
 import User from 'modules/users/schemas/user.schema';
 import { DeleteVoteService } from 'modules/votes/interfaces/services/delete.vote.service.interface';
@@ -13,7 +14,6 @@ import { DeleteCardService } from '../interfaces/services/delete.card.service.in
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { CardItemDocument } from '../schemas/card.item.schema';
-import { CardDocument } from '../schemas/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -25,52 +25,58 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		private deleteVoteService: DeleteVoteService
 	) {}
 
-	async countDeletedVotes(boardId: string, cardId: string, cardItemId?: string) {
-		let getCard: LeanDocument<CardDocument | CardItemDocument> | null;
+	async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
+		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
 
-		/**
-		 * If have cardItemId, use card item method,
-		 * if not, use card method
-		 */
-		if (cardItemId) {
-			// Card Item
-			getCard = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
-		} else {
-			// Card
-			getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
+		if (!getCardItem) {
+			throw Error(UPDATE_FAILED);
 		}
 
-		if (getCard) {
-			const countVotes = getCard?.votes?.length ?? 0;
+		if (getCardItem.votes?.length) {
+			const promises = getCardItem.votes.map((voteUserId) => {
+				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
+			});
 
-			if (countVotes) {
-				getCard.votes.forEach(async (current) => {
-					const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, current);
+			const results = await Promise.all(promises);
 
-					if (!boardUser) throw Error(UPDATE_FAILED);
-				});
+			if (results.some((i) => i === null)) {
+				throw Error(UPDATE_FAILED);
 			}
+		}
+	}
 
-			/**
-			 * If have items, getCard is a CardDocument (not a CardItemDocument)
-			 */
-			if (
-				Object.hasOwn(getCard, 'items') &&
-				(getCard as LeanDocument<CardDocument>).items.length > 0
-			) {
-				(getCard as LeanDocument<CardDocument>).items.forEach(async (current) => {
-					current.votes.forEach(async (currentVote) => {
-						const boardUser = await this.deleteVoteService.decrementVoteUser(boardId, currentVote);
+	async deletedVotesFromCard(boardId: string, cardId: string) {
+		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
 
-						if (!boardUser) throw Error(UPDATE_FAILED);
-					});
-				});
-			}
-		} else {
-			/**
-			 * If getCard is null returns UPDATE_FAILED
-			 */
+		if (!getCard) {
 			throw Error(UPDATE_FAILED);
+		}
+
+		if (getCard.votes?.length) {
+			const promises = getCard.votes.map((voteUserId) => {
+				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
+			});
+
+			const results = await Promise.all(promises);
+
+			if (results.some((i) => i === null)) {
+				throw Error(UPDATE_FAILED);
+			}
+		}
+
+		if (Array.isArray(getCard.items)) {
+			const promises: Promise<LeanDocument<BoardUserDocument> | null>[] = [];
+			getCard.items.forEach(async (current) => {
+				current.votes.forEach(async (currentVote) => {
+					promises.push(this.deleteVoteService.decrementVoteUser(boardId, currentVote));
+				});
+			});
+
+			const results = await Promise.all(promises);
+
+			if (results.some((i) => i === null)) {
+				throw Error(UPDATE_FAILED);
+			}
 		}
 	}
 
@@ -78,7 +84,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.countDeletedVotes(boardId, cardId, userId);
+			await this.deletedVotesFromCard(boardId, cardId);
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -142,7 +148,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.countDeletedVotes(boardId, cardId, cardItemId);
+			await this.deletedVotesFromCardItem(boardId, cardItemId);
 
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);

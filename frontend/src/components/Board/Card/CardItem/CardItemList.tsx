@@ -38,38 +38,38 @@ const CardItemList: React.FC<CardItemListProps> = ({
 			{items.map((item, idx) => (
 				<Flex key={item._id} css={{ width: '100%' }} direction="column">
 					{idx !== 0 && (
-						<Flex css={{ width: '100%' }} align="center">
+						<Flex align="center" css={{ width: '100%' }}>
 							<Separator
-								orientation="horizontal"
 								css={{ backgroundColor: 'white' }}
+								orientation="horizontal"
 							/>
 							<Icon
-								name="double-vertical-separator"
 								css={{ width: '$14', height: '$14', borderRadius: '$round' }}
+								name="double-vertical-separator"
 							/>
 							<Separator
-								orientation="horizontal"
 								css={{ backgroundColor: 'white' }}
+								orientation="horizontal"
 							/>
 						</Flex>
 					)}
 					<CardItem
 						key={item._id}
-						item={item}
-						color={color}
-						teamName={submitedByTeam}
-						lastOne={idx + 1 === items.length}
-						firstOne={idx === 0}
-						columnId={columnId}
+						anonymous={item.anonymous}
 						boardId={boardId}
 						cardGroupId={cardGroupId}
-						socketId={socketId}
 						cardGroupPosition={cardGroupPosition}
-						anonymous={item.anonymous}
-						userId={userId}
+						color={color}
+						columnId={columnId}
+						firstOne={idx === 0}
+						hideCards={hideCards}
 						isMainboard={isMainboard}
 						isSubmited={isSubmited}
-						hideCards={hideCards}
+						item={item}
+						lastOne={idx + 1 === items.length}
+						socketId={socketId}
+						teamName={submitedByTeam}
+						userId={userId}
 					/>
 				</Flex>
 			))}

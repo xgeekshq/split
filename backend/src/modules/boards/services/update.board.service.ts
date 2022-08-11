@@ -1,11 +1,22 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+	BadRequestException,
+	ForbiddenException,
+	Inject,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 
+import { BoardRoles } from 'libs/enum/board.roles';
 import { TeamRoles } from 'libs/enum/team.roles';
+import { UPDATE_FAILED } from 'libs/exceptions/messages';
+import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
+import isEmpty from 'libs/utils/isEmpty';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
+import { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
@@ -48,20 +59,48 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	 * If not, return a null value
 	 *
 	 * @param userId Current User Logged
+	 * @param boardId Board Id
 	 * @returns Board User
 	 */
-	private async getResponsible(userId: string): Promise<LeanDocument<BoardUserDocument> | null> {
-		const user = await this.boardUserModel.findOne({ user: userId }).lean().exec();
+	private async isUserResponsible(userId: string, boardId: string): Promise<boolean> {
+		const user = await this.boardUserModel
+			.findOne({ user: userId, board: boardId, role: BoardRoles.RESPONSIBLE })
+			.lean()
+			.exec();
+
+		return !!user;
+	}
+
+	/**
+	 * Method to get current responsible to a specific board
+	 * @param boardId String
+	 * @return Board User
+	 * @private
+	 */
+	private async getBoardResponsibleId(boardId: string): Promise<string | undefined> {
+		const user = await this.boardUserModel
+			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
+			.exec();
 
 		if (!user) {
-			throw new NotFoundException('User not found!');
+			return undefined;
 		}
 
-		if (user.role !== 'responsible') {
-			return null;
-		}
+		return String(user.user);
+	}
 
-		return user;
+	/**
+	 * Method to get the highest value of votesCount on Board Users
+	 * @param boardId String
+	 * @return number
+	 */
+	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
+		return this.boardUserModel
+			.find({ board: boardId })
+			.select('votesCount')
+			.limit(1)
+			.sort({ votesCount: -1 })
+			.then((doc) => doc[0].votesCount);
 	}
 
 	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
@@ -83,23 +122,72 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		);
 
 		// Get user info to see if is responsible or not
-		const subBoardResponsible = await this.getResponsible(userId);
+		const isSubBoardResponsible = await this.isUserResponsible(userId, boardId);
 
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
-		if (isAdminOrStakeholder || isOwner || (isSubBoard && !!subBoardResponsible)) {
+		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
+			/**
+			 * Validate if:
+			 * - have users on request
+			 * - is a sub-board
+			 * - and the logged user isn't the current responsible
+			 */
+			if (isSubBoard && boardData.users) {
+				const currentResponsibleId = await this.getBoardResponsibleId(boardId);
+				const newResponsibleId = (
+					boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE)
+						?.user as unknown as LeanDocument<BoardUserDocument>
+				)._id;
+
+				boardData.users
+					.filter((boardUser) =>
+						[getIdFromObjectId(String(currentResponsibleId)), newResponsibleId].includes(
+							(boardUser.user as unknown as LeanDocument<UserDocument>)._id
+						)
+					)
+					.map(async (boardUser) => {
+						const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
+
+						try {
+							await this.boardUserModel.findOneAndUpdate(
+								{
+									user: typedBoardUser._id,
+									board: boardId
+								},
+								{
+									role: boardUser.role
+								}
+							);
+						} catch {
+							throw new BadRequestException(UPDATE_FAILED);
+						}
+					});
+			}
+
+			/**
+			 * Only can change the maxVotes if:
+			 * - new maxVotes not empty
+			 * - current highest votes equals to zero
+			 * - or current highest votes lower than new maxVotes
+			 */
+			const highestVotes = await this.getHighestVotesOnBoard(boardId);
+
+			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
+			if (!isEmpty(boardData.maxVotes) && highestVotes > Number(boardData.maxVotes)) {
+				throw new BadRequestException(
+					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
+				);
+			}
+
 			return this.boardModel
 				.findOneAndUpdate(
 					{
 						_id: boardId
 					},
 					{
-						...boardData,
-						maxVotes:
-							Number(boardData.maxVotes) < Number(board?.maxVotes) && board?.totalUsedVotes !== 0
-								? board?.maxVotes
-								: boardData.maxVotes
+						...boardData
 					},
 					{
 						new: true

@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { TeamRoles } from 'libs/enum/team.roles';
 import isEmpty from 'libs/utils/isEmpty';
 
-import TeamDto from '../dto/team.dto';
+import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
@@ -32,7 +32,7 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		return this.teamModel.create({ name });
 	}
 
-	async create(teamData: TeamDto, userId: string) {
+	async create(teamData: CreateTeamDto, userId: string) {
 		const { users, name } = teamData;
 		const newTeam = await this.teamModel.create({
 			name

@@ -9,7 +9,7 @@ type Props = CSSProps & {
 
 const DotsLoading = ({ css, size, color, ...props }: Props) => {
 	return (
-		<Dots {...props} css={css} size={size} color={color}>
+		<Dots {...props} color={color} css={css} size={size}>
 			<span />
 			<span />
 			<span />

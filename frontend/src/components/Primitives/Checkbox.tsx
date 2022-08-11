@@ -97,17 +97,17 @@ const Checkbox: React.FC<{
 		>
 			<Flex>
 				<StyledCheckbox
-					variant={variant ?? 'default'}
-					name={id}
-					id={id}
 					checked={currentCheckValue}
 					disabled={disabled}
-					onCheckedChange={handleCheckedChange}
+					id={id}
+					name={id}
+					variant={variant ?? 'default'}
 					css={{
 						width: `$${size} !important`,
 						height: `$${size} !important`,
 						cursor: 'pointer'
 					}}
+					onCheckedChange={handleCheckedChange}
 				>
 					<CheckboxIndicator
 						css={{
@@ -130,9 +130,9 @@ const Checkbox: React.FC<{
 			</Flex>
 			<Text
 				as="label"
-				size="sm"
 				css={{ paddingLeft: '$8', width: '100%', cursor: 'pointer' }}
 				htmlFor={id}
+				size="sm"
 			>
 				{label}
 			</Text>

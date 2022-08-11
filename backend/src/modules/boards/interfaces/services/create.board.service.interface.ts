@@ -3,11 +3,10 @@ import { BoardDocument } from '../../schemas/board.schema';
 
 export interface Configs {
 	recurrent: boolean;
-	maxVotes?: string | null;
+	maxVotes?: number | null;
 	votes?: string | null;
 	hideCards?: boolean;
 	hideVotes?: boolean;
-	anonymously: boolean;
 	maxUsers: number;
 }
 

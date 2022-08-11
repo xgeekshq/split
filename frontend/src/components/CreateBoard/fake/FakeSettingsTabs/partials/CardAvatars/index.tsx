@@ -25,10 +25,10 @@ const FakeCardAvatars = () => {
 			return (
 				<Avatar
 					key={`${value}-${idx}-${Math.random()}`}
-					css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
-					size={32}
 					colors={colors[idx]}
+					css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
 					fallbackText={value}
+					size={32}
 				/>
 			);
 		},

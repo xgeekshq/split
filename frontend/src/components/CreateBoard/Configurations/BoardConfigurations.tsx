@@ -8,7 +8,7 @@ import { Switch, SwitchThumb } from 'components/Primitives/Switch';
 import Text from 'components/Primitives/Text';
 import { createBoardDataState } from 'store/createBoard/atoms/create-board.atom';
 
-const DEFAULT_MAX_VOTES = '6';
+const DEFAULT_MAX_VOTES = 6;
 
 const BoardConfigurations = () => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -81,7 +81,7 @@ const BoardConfigurations = () => {
 						<Text size="md" weight="medium">
 							Hide cards from others
 						</Text>
-						<Text size="sm" color="primary500">
+						<Text color="primary500" size="sm">
 							Participants can not see the cards from other participants of this
 							retrospective.
 						</Text>
@@ -106,7 +106,7 @@ const BoardConfigurations = () => {
 						<Text size="md" weight="medium">
 							Hide votes from others
 						</Text>
-						<Text size="sm" color="primary500">
+						<Text color="primary500" size="sm">
 							Participants can not see the votes from other participants of this
 							retrospective.
 						</Text>
@@ -131,15 +131,15 @@ const BoardConfigurations = () => {
 						<Text size="md" weight="medium">
 							Limit votes
 						</Text>
-						<Text size="sm" color="primary500">
+						<Text color="primary500" size="sm">
 							Make votes more significant by limiting them.
 						</Text>
 						<Input
 							css={{ mt: '$8' }}
-							id="maxVotes"
 							disabled={!board.maxVotes}
-							type="number"
+							id="maxVotes"
 							placeholder="Max votes"
+							type="number"
 						/>
 					</Flex>
 				</Flex>

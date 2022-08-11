@@ -38,24 +38,29 @@ const Comments = React.memo(
 		};
 
 		return (
-			<Flex css={{ width: '100%', pb: '$16' }} direction="column" align="center">
-				<Flex gap="4" align="center" css={{ width: '100%', mb: '$12' }}>
+			<Flex align="center" css={{ width: '100%', pb: '$16' }} direction="column">
+				<Flex align="center" css={{ width: '100%', mb: '$12' }} gap="4">
 					<Separator
-						orientation="horizontal"
 						css={{ backgroundColor: 'black', width: '$8 !important' }}
+						orientation="horizontal"
 					/>
 					<Text size="xxs">Comments</Text>
 					<Separator
-						orientation="horizontal"
 						css={{ backgroundColor: 'black', width: '100% !important' }}
+						orientation="horizontal"
 					/>
 				</Flex>
-				<Flex direction="column" gap="8" css={{ px: '$16', mb: '$12', width: '100%' }}>
+				<Flex css={{ px: '$16', mb: '$12', width: '100%' }} direction="column" gap="8">
 					{comments.map((comment) => (
 						<Comment
 							key={comment._id}
-							comment={comment}
+							boardId={boardId}
 							cardId={cardId}
+							comment={comment}
+							hideCards={hideCards}
+							isSubmited={isSubmited}
+							socketId={socketId}
+							userId={userId}
 							cardItemId={
 								cardItems.find((item) => {
 									if (item && item.comments)
@@ -65,11 +70,6 @@ const Comments = React.memo(
 									return null;
 								})?._id
 							}
-							boardId={boardId}
-							socketId={socketId}
-							isSubmited={isSubmited}
-							hideCards={hideCards}
-							userId={userId}
 						/>
 					))}
 				</Flex>
@@ -77,14 +77,14 @@ const Comments = React.memo(
 					<Flex css={{ width: '100%', px: '$16' }}>
 						<AddCardOrComment
 							isEditing
-							isCard={false}
-							isUpdate={false}
-							colId="1"
 							boardId={boardId}
-							socketId={socketId}
+							cancelUpdate={handleSetCreateComment}
 							cardId={cardId}
 							cardItemId={cardItems.length === 1 ? cardItems[0]._id : undefined}
-							cancelUpdate={handleSetCreateComment}
+							colId="1"
+							isCard={false}
+							isUpdate={false}
+							socketId={socketId}
 						/>
 					</Flex>
 				)}
@@ -94,8 +94,8 @@ const Comments = React.memo(
 						onClick={handleSetCreateComment}
 					>
 						<Icon
-							name="plus"
 							css={{ color: '$primary400', width: '$16', height: '$16' }}
+							name="plus"
 						/>
 					</Flex>
 				)}

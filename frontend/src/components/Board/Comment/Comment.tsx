@@ -45,17 +45,17 @@ const Comment: React.FC<CommentProps> = React.memo(
 
 		return (
 			<Flex
+				direction="column"
 				css={{
 					border: '1px solid $colors$primaryBase',
 					width: '100%',
 					borderRadius: '16px 16px 0px 16px',
 					p: '$12'
 				}}
-				direction="column"
 			>
 				{!editing && (
 					<Flex direction="column">
-						<Flex justify="between" css={{ width: '100%' }}>
+						<Flex css={{ width: '100%' }} justify="between">
 							<Text
 								size="xs"
 								css={{
@@ -75,8 +75,8 @@ const Comment: React.FC<CommentProps> = React.memo(
 							)}
 							{!isSubmited && userId === comment.createdBy._id && (
 								<PopoverCommentSettings
-									handleEditing={handleEditing}
 									handleDeleteComment={handleDeleteComment}
+									handleEditing={handleEditing}
 								/>
 							)}
 						</Flex>
@@ -95,15 +95,15 @@ const Comment: React.FC<CommentProps> = React.memo(
 					<AddCardOrComment
 						isEditing
 						isUpdate
-						isCard={false}
-						colId="1"
 						boardId={boardId}
-						socketId={socketId}
-						commentId={comment._id}
-						cardText={comment.text}
-						cardItemId={cardItemId}
-						cardId={cardId}
 						cancelUpdate={handleEditing}
+						cardId={cardId}
+						cardItemId={cardItemId}
+						cardText={comment.text}
+						colId="1"
+						commentId={comment._id}
+						isCard={false}
+						socketId={socketId}
 					/>
 				)}
 			</Flex>

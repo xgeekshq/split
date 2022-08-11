@@ -9,7 +9,8 @@ const Container = styled(Flex, {
 
 	alignItems: 'flex-start',
 	justifyContent: 'center',
-	gap: '$8'
+	/* 	gap: '$8', */
+	px: '$36'
 });
 
 export { Container };

@@ -120,39 +120,39 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				<Text css={{ mt: '$24' }} heading="1">
 					Sign up
 				</Text>
-				<Text size="md" css={{ mt: '$8', mb: '$16', color: '$primary500' }}>
+				<Text css={{ mt: '$8', mb: '$16', color: '$primary500' }} size="md">
 					Put in your credentials or ask your admin to add your email to the companys’
 					azure database.
 				</Text>
 				<Input
 					disabled
-					type="text"
 					id="email"
 					placeholder="Email address"
 					state="default"
+					type="text"
 				/>
 				<Flex direction="row" gap="16">
-					<Input id="firstName" type="text" placeholder="First Name" />
-					<Input id="lastName" type="text" placeholder="Last Name" />
+					<Input id="firstName" placeholder="First Name" type="text" />
+					<Input id="lastName" placeholder="Last Name" type="text" />
 				</Flex>
 				<Input
+					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
+					icon="eye"
+					iconPosition="right"
 					id="password"
 					placeholder="Password"
 					type="password"
-					icon="eye"
-					iconPosition="right"
-					helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
 				/>
 				<Input
+					icon="eye"
+					iconPosition="right"
 					id="passwordConf"
 					placeholder="Confirm Password"
 					type="password"
-					icon="eye"
-					iconPosition="right"
 				/>
 				<Button
-					type="submit"
 					size="lg"
+					type="submit"
 					css={{
 						mt: '$24',
 						fontWeight: '$medium',
@@ -165,7 +165,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 				>
 					Sign up
 				</Button>
-				<GoBackWrapper gap="8" align="center" onClick={handleShowSignUp}>
+				<GoBackWrapper align="center" gap="8" onClick={handleShowSignUp}>
 					<Icon css={{ width: '$20', height: '$20' }} name="arrow-long-left" />
 					<Text>Go back</Text>
 				</GoBackWrapper>

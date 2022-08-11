@@ -52,12 +52,12 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 
 	return (
 		<Flex
-			ref={scrollRef}
-			onScroll={onScroll}
 			css={{ mt: '$24', height: 'calc(100vh - 450px)', overflow: 'auto', pr: '$10' }}
-			justify="start"
 			direction="column"
 			gap="24"
+			justify="start"
+			ref={scrollRef}
+			onScroll={onScroll}
 		>
 			{Array.from(boardsSplitedByDay).map(([date, splitedBoard]) => {
 				const formatedDate = new Date(date).toLocaleDateString('en-US', {
@@ -68,18 +68,18 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 				});
 				return (
 					<Flex key={date} direction="column" gap="8">
-						<LastUpdatedText size="xs" color="primary300">
+						<LastUpdatedText color="primary300" size="xs">
 							Last updated -{' '}
 							{date === currentDate ? `Today, ${formatedDate}` : formatedDate}
 						</LastUpdatedText>
-						<Flex gap="20" direction="column">
+						<Flex direction="column" gap="20">
 							{splitedBoard.map((board: BoardType) => (
 								<CardBody
-									userId={userId}
 									key={board._id}
-									board={board}
 									isDashboard
+									board={board}
 									dividedBoardsCount={board.dividedBoards.length}
+									userId={userId}
 								/>
 							))}
 						</Flex>

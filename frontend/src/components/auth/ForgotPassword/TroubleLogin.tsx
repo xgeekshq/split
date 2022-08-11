@@ -84,14 +84,14 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 				<Text css={{ mt: '$24' }} heading="1">
 					Trouble logging in?
 				</Text>
-				<Text size="md" css={{ mt: '$8', color: '$primary500' }}>
+				<Text css={{ mt: '$8', color: '$primary500' }} size="md">
 					Enter your email address below, well email you instructions on how to change
 					your password.
 				</Text>
-				<Input css={{ mt: '$32' }} id="email" type="text" placeholder="Email address" />
+				<Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
 				<Button
-					type="submit"
 					size="lg"
+					type="submit"
 					css={{
 						fontWeight: '$medium',
 						fontSize: '$18'
@@ -99,7 +99,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
 				>
 					Recover password
 				</Button>
-				<GoBackWrapper gap="8" align="center" onClick={handleShowTroubleLogginIn}>
+				<GoBackWrapper align="center" gap="8" onClick={handleShowTroubleLogginIn}>
 					<Icon name="arrow-left" />
 					<Text>Go back</Text>
 				</GoBackWrapper>

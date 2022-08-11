@@ -24,12 +24,12 @@ const CreateBoardContent = () => {
 		createBoard: { status, mutate }
 	} = useBoard({ autoFetchBoard: false });
 
-	const methods = useForm<{ text: string; maxVotes: string }>({
+	const methods = useForm<{ text: string; maxVotes?: number }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
 			text: 'Main board -',
-			maxVotes: String(boardState.board.maxVotes) ?? ''
+			maxVotes: boardState.board.maxVotes
 		},
 		resolver: joiResolver(SchemaCreateBoard)
 	});
@@ -43,13 +43,12 @@ const CreateBoardContent = () => {
 		e?.preventDefault();
 	};
 
-	const saveBoard = (title: string, maxVotes: string) => {
+	const saveBoard = (title: string, maxVotes?: number) => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
 				newSubBoard.hideCards = boardState.board.hideCards;
 				newSubBoard.hideVotes = boardState.board.hideVotes;
-				newSubBoard.postAnonymously = boardState.board.postAnonymously;
 				newSubBoard.maxVotes = maxVotes;
 				const users = subBoard.users.map((boardUser) => ({
 					user: boardUser.user._id,
@@ -78,8 +77,8 @@ const CreateBoardContent = () => {
 
 	return (
 		<StyledForm
-			direction="column"
 			css={{ width: '100%', height: '100%', backgroundColor: '$background' }}
+			direction="column"
 			onSubmit={methods.handleSubmit(({ text, maxVotes }) => {
 				saveBoard(text, maxVotes);
 			})}
@@ -100,7 +99,7 @@ const CreateBoardContent = () => {
 					<SettingsTabs />
 				</FormProvider>
 			</Flex>
-			<Flex justify="end" gap="24" css={{ backgroundColor: 'white', py: '$16', pr: '$32' }}>
+			<Flex css={{ backgroundColor: 'white', py: '$16', pr: '$32' }} gap="24" justify="end">
 				<Button variant="lightOutline" onClick={handleOnClickSaveBoard}>
 					Cancel
 				</Button>

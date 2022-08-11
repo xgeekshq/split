@@ -106,26 +106,26 @@ const CardBoard = React.memo<CardBoardProps>(
 						>
 							{editing && !isSubmited && (
 								<AddCardOrComment
-									isEditing
 									isCard
+									isEditing
 									isUpdate
-									colId={colId}
 									boardId={boardId}
-									socketId={socketId}
+									cancelUpdate={handleEditing}
 									cardId={card._id}
 									cardItemId={card.items[0]._id}
 									cardText={card.text}
-									cancelUpdate={handleEditing}
+									colId={colId}
+									socketId={socketId}
 								/>
 							)}
 							{!editing && (
 								<Flex direction="column">
 									{isCardGroup && (
-										<Flex justify="between" css={{ py: '$8' }}>
-											<Flex gap="4" align="center">
+										<Flex css={{ py: '$8' }} justify="between">
+											<Flex align="center" gap="4">
 												<Icon
-													name="merge"
 													css={{ width: '$14', height: '$14' }}
+													name="merge"
 												/>
 												<Text size="xxs" weight="medium">
 													{card.items.length} merged cards
@@ -135,13 +135,14 @@ const CardBoard = React.memo<CardBoardProps>(
 									)}
 									{!isCardGroup && (
 										<Flex
-											justify="between"
 											css={{ mb: '$14', '& > div': { zIndex: 2 } }}
+											justify="between"
 										>
 											<Text
 												size="md"
 												css={{
 													wordBreak: 'break-word',
+													whiteSpace: 'pre',
 
 													filter: cardBlur(
 														hideCards,
@@ -154,61 +155,61 @@ const CardBoard = React.memo<CardBoardProps>(
 											</Text>
 											{isSubmited && (
 												<Icon
-													name="menu-dots"
 													css={{ width: '$20', height: '$20' }}
+													name="menu-dots"
 												/>
 											)}
 
 											{!isSubmited && userId === card?.createdBy?._id && (
 												<PopoverCardSettings
-													firstOne={false}
-													isItem={false}
-													columnId={colId}
 													boardId={boardId}
-													socketId={socketId}
 													cardGroupId={card._id}
+													columnId={colId}
+													firstOne={false}
+													handleDeleteCard={handleDeleting}
+													handleEditing={handleEditing}
+													hideCards={hideCards}
+													isItem={false}
+													item={card}
 													itemId={card.items[0]._id}
 													newPosition={0}
-													handleEditing={handleEditing}
-													handleDeleteCard={handleDeleting}
-													hideCards={hideCards}
+													socketId={socketId}
 													userId={userId}
-													item={card}
 												/>
 											)}
 										</Flex>
 									)}
 									{card.items && isCardGroup && (
 										<CardItemList
-											items={card.items}
-											color={color}
-											submitedByTeam={card?.createdByTeam}
-											columnId={colId}
 											boardId={boardId}
 											cardGroupId={card._id}
-											socketId={socketId}
 											cardGroupPosition={index}
-											userId={userId}
+											color={color}
+											columnId={colId}
+											hideCards={hideCards}
 											isMainboard={isMainboard}
 											isSubmited={isSubmited}
-											hideCards={hideCards}
+											items={card.items}
+											socketId={socketId}
+											submitedByTeam={card?.createdByTeam}
+											userId={userId}
 										/>
 									)}
 									<CardFooter
-										boardId={boardId}
-										socketId={socketId}
-										userId={userId}
 										anonymous={card.items[card.items.length - 1 || 0].anonymous}
+										boardId={boardId}
+										boardUser={boardUser}
 										card={card}
-										teamName={card?.createdByTeam}
+										comments={comments}
+										hideCards={hideCards}
+										isCommentsOpened={isCommentsOpened}
 										isItem={false}
 										isMainboard={isMainboard}
-										comments={comments}
-										setOpenComments={handleOpenComments}
-										isCommentsOpened={isCommentsOpened}
-										boardUser={boardUser}
 										maxVotes={maxVotes}
-										hideCards={hideCards}
+										setOpenComments={handleOpenComments}
+										socketId={socketId}
+										teamName={card?.createdByTeam}
+										userId={userId}
 									/>
 								</Flex>
 							)}
@@ -217,20 +218,20 @@ const CardBoard = React.memo<CardBoardProps>(
 									boardId={boardId}
 									cardId={card._id}
 									cardTitle={card.text}
-									socketId={socketId}
 									handleClose={handleDeleting}
+									socketId={socketId}
 								/>
 							)}
 						</Container>
 						{isCommentsOpened && (
 							<Comments
-								comments={comments}
-								cardId={card._id}
 								boardId={boardId}
-								socketId={socketId}
+								cardId={card._id}
 								cardItems={card.items}
-								isSubmited={isSubmited}
+								comments={comments}
 								hideCards={hideCards}
+								isSubmited={isSubmited}
+								socketId={socketId}
 								userId={userId}
 							/>
 						)}
