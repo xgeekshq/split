@@ -12,9 +12,13 @@ import { ConfigService } from '@nestjs/config';
 					password: configService.get('redis.password'),
 					host: configService.get('redis.host'),
 					port: configService.get('redis.port'),
-					tls: {
-						host: configService.get('redis.host')
-					}
+					...(process.env.NODE_ENV === 'prod'
+						? {
+								tls: {
+									host: configService.get('redis.host')
+								}
+						  }
+						: null)
 				}
 			})
 		})
