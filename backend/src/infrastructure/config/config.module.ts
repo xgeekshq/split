@@ -78,7 +78,11 @@ const NODE_ENV = process.env.NODE_ENV;
 					is: 'true',
 					then: Joi.required(),
 					otherwise: Joi.optional()
-				})
+				}),
+				REDIS_USER: Joi.string(),
+				REDIS_PASSWORD: Joi.string(),
+				REDIS_HOST: Joi.string().required(),
+				REDIS_PORT: Joi.number().required()
 			})
 		})
 	],

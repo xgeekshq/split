@@ -30,4 +30,10 @@ export interface Configuration extends AzureConfiguration {
 		masterChannelId: string;
 		channelPrefix: string;
 	};
+	redis: {
+		user?: string;
+		password?: string;
+		host: string;
+		port: number;
+	};
 }

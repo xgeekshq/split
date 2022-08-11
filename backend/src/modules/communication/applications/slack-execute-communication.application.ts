@@ -1,10 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { FRONTEND_URL } from 'libs/constants/frontend';
-import { SLACK_CHANNEL_PREFIX, SLACK_MASTER_CHANNEL_ID } from 'libs/constants/slack';
 import { TeamDto } from 'modules/communication/dto/team.dto';
-import { BoardRoles, BoardType } from 'modules/communication/dto/types';
+import { BoardRoles, BoardType, ConfigurationType } from 'modules/communication/dto/types';
 import { UserDto } from 'modules/communication/dto/user.dto';
 import { BoardNotValidError } from 'modules/communication/errors/board-not-valid.error';
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
@@ -16,7 +13,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 	private logger = new Logger(SlackExecuteCommunication.name);
 
 	constructor(
-		private readonly configService: ConfigService,
+		private readonly config: ConfigurationType,
 		private readonly conversationsHandler: ConversationsHandlerInterface,
 		private readonly usersHandler: UsersHandlerInterface,
 		private readonly chatHandler: ChatHandlerInterface
@@ -24,17 +21,10 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 	public async execute(board: BoardType): Promise<TeamDto[]> {
 		let teams = this.makeTeams(board);
-
 		teams = await this.addSlackIdOnTeams(teams);
-
-		// create all channels
 		teams = await this.createAllChannels(teams);
-
-		// invite memebers for each channel
 		teams = await this.inviteAllMembers(teams);
-
 		await this.postMessageOnEachChannel(teams);
-
 		await this.postMessageOnMasterChannel(teams);
 
 		return teams;
@@ -68,10 +58,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
     (Note: currently, retrobot does not check if the chosen responsibles joined xgeeks less than 3 months ago, so, if that happens, you have to decide who will take that role in the team. In the future, retrobot will automatically validate this rule.)\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
 
-		await this.chatHandler.postMessage(
-			this.configService.get(SLACK_MASTER_CHANNEL_ID) as string,
-			generalText
-		);
+		await this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);
 	}
 
 	private async postMessageOnEachChannel(teams: TeamDto[]): Promise<void> {
@@ -79,12 +66,12 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 			member: (
 				boardId: string
 			) => `<!channel> In order to proceed with the retro of this month, here is the board link: \n\n
-      ${this.configService.get(FRONTEND_URL)}/boards/${boardId}
+      ${this.config.frontendUrl}/boards/${boardId}
       `,
 			responsible: (
 				boardId: string
 			) => `<!channel> In order to proceed with the retro of this month, here is the main board link: \n\n
-      ${this.configService.get(FRONTEND_URL)}/boards/${boardId}
+      ${this.config.frontendUrl}/boards/${boardId}
       `
 		};
 
@@ -149,7 +136,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 	private async addSlackIdOnTeams(teams: TeamDto[]): Promise<TeamDto[]> {
 		const usersIdsOnSlack = await this.conversationsHandler.getUsersFromChannelSlowly(
-			this.configService.get(SLACK_MASTER_CHANNEL_ID) as string
+			this.config.slackMasterChannelId as string
 		);
 		const usersProfiles = await this.usersHandler.getProfilesByIds(usersIdsOnSlack);
 
@@ -180,9 +167,9 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 		const normalizeName = (name: string) => {
 			// only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less
-			const fullName = `${
-				process.env.NODE_ENV === 'dev' ? new Date().getTime() : ''
-			}${this.configService.get(SLACK_CHANNEL_PREFIX)}${name}`;
+			const fullName = `${process.env.NODE_ENV === 'dev' ? new Date().getTime() : ''}${
+				this.config.slackChannelPrefix
+			}${name}`;
 			return fullName
 				.replace(/\s/, '_')
 				.replace(/[^a-zA-Z0-9-_]/g, '')
