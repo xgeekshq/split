@@ -6,8 +6,7 @@ import {
 	Inject,
 	NotFoundException,
 	Param,
-	Post,
-	UseGuards
+	Post
 } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
@@ -23,12 +22,10 @@ import {
 
 import { EmailParam } from 'libs/dto/param/email.param';
 import { USER_NOT_FOUND } from 'libs/exceptions/messages';
-import LocalAuthGuard from 'libs/guards/localAuth.guard';
 import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import { LoginDto } from 'modules/auth/dto/login.dto';
 import { LoginResponse } from 'modules/auth/swagger/login.swagger';
 import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
 import * as User from 'modules/users/interfaces/types';
@@ -67,14 +64,20 @@ export default class AzureController {
 		type: InternalServerErrorResponse
 	})
 	@ApiBody({
-		type: LoginDto,
+		schema: {
+			type: 'object',
+			properties: {
+				token: {
+					type: 'string'
+				}
+			}
+		},
 		required: true
 	})
 	@HttpCode(200)
-	@UseGuards(LocalAuthGuard)
-	@Post('login')
 	@Post('/')
-	loginOrRegisterAzureToken(@Body() azureToken: AzureToken) {
+	loginOrRegistetruerAzureToken(@Body() azureToken: AzureToken) {
+		console.log('AZURE', azureToken);
 		return this.authAzureApp.registerOrLogin(azureToken.token);
 	}
 

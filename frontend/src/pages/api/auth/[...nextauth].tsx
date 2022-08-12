@@ -78,7 +78,9 @@ export default NextAuth({
 		async signIn({ account, user }) {
 			if (account.provider === 'azure-ad') {
 				const { access_token: azureAccessToken } = account;
+
 				const data = await createOrLoginUserAzure(azureAccessToken ?? '');
+
 				if (!data) return false;
 				const { firstName, lastName, accessToken, refreshToken, email, id, isSAdmin } =
 					data;
