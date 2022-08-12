@@ -77,7 +77,6 @@ export default class AzureController {
 	@HttpCode(200)
 	@Post('/')
 	loginOrRegistetruerAzureToken(@Body() azureToken: AzureToken) {
-		console.log('AZURE', azureToken);
 		return this.authAzureApp.registerOrLogin(azureToken.token);
 	}
 

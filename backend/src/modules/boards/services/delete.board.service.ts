@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, Model, ObjectId } from 'mongoose';
+import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 
+import { TeamRoles } from 'libs/enum/team.roles';
 import { DELETE_FAILED } from 'libs/exceptions/messages';
 import isEmpty from 'libs/utils/isEmpty';
+import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
+import * as Teams from 'modules/teams/interfaces/types';
+import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
@@ -13,9 +17,22 @@ import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
+		@Inject(Teams.TYPES.services.GetTeamService)
+		private getTeamService: GetTeamServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
+
+	private async getTeamUser(
+		userId: string,
+		teamId: string
+	): Promise<LeanDocument<TeamUserDocument>> {
+		const teamUser = await this.getTeamService.getTeamUser(userId, teamId);
+		if (!teamUser) {
+			throw new NotFoundException('User not found on this team!');
+		}
+		return teamUser;
+	}
 
 	async deleteSubBoards(dividedBoards: Board[] | ObjectId[], boardSession: ClientSession) {
 		const { deletedCount } = await this.boardModel
@@ -37,6 +54,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	}
 
 	async deleteBoard(boardId: string, userId: string, boardSession: ClientSession) {
+		// console.log('deleteBoard', boardId, userId);
+
 		const result = await this.boardModel.findOneAndRemove(
 			{
 				_id: boardId
@@ -50,6 +69,28 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 
 	async delete(boardId: string, userId: string) {
 		const boardSession = await this.boardModel.db.startSession();
+		// console.log('boardModel', this.boardModel);
+		// const boardTest = await this.boardModel.findOne({
+		// 	_id: boardId
+		// });
+		// console.log('boardTest', boardTest);
+		const board = await this.boardModel.findById(boardId).exec();
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+		const { team, createdBy } = board;
+		const teamUser = await this.getTeamUser(userId, String(team));
+		console.log('teamuser', teamUser.role);
+		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
+			teamUser.role as TeamRoles
+		);
+		console.log(isAdminOrStakeholder);
+
+		// Validate if the logged user are the owner
+		const isOwner = String(userId) === String(createdBy);
+
+		console.log('isOwner', isOwner);
+
 		const boardUserSession = await this.boardUserModel.db.startSession();
 		boardSession.startTransaction();
 		boardUserSession.startTransaction();
