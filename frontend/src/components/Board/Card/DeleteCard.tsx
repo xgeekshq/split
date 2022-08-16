@@ -50,6 +50,7 @@ const DeleteCard = ({
 					Do you really want to delete <span>{cardTitle}</span> card?
 				</>
 			}
+			testid="cardTitle"
 		/>
 	);
 };

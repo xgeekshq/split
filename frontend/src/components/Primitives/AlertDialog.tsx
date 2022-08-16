@@ -7,6 +7,7 @@ import { overlayShow } from 'animations/DialogShow';
 import Box from './Box';
 import Button from './Button';
 import Flex from './Flex';
+import { bool } from 'joi';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
 	backdropFilter: 'blur(3px)',
@@ -40,9 +41,9 @@ export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {
 });
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 
-type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void };
+type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void; testid?: String };
 
-const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props }) => {
+const Content: React.FC<ContentProps> = ({ children, css, handleClose, testid, ...props }) => {
 	Content.defaultProps = {
 		css: undefined,
 		children: undefined,
@@ -51,7 +52,7 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props 
 	return (
 		<AlertDialogPrimitive.Portal>
 			<StyledOverlay />
-			<StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
+			<StyledContent data-testid={testid} css={css} onCloseAutoFocus={handleClose} {...props}>
 				{children}
 			</StyledContent>
 		</AlertDialogPrimitive.Portal>

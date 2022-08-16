@@ -30,6 +30,7 @@ interface BoardAlertDialog {
 	css?: CSS;
 	variant?: 'primary' | 'danger';
 	addEllipsis?: boolean;
+	testid?: String;
 }
 
 const AlertCustomDialog = ({
@@ -43,12 +44,13 @@ const AlertCustomDialog = ({
 	children,
 	css,
 	addEllipsis,
+	testid,
 	variant = 'primary'
 }: BoardAlertDialog) => {
 	return (
 		<AlertDialog defaultOpen={defaultOpen}>
 			{children}
-			<AlertDialogContent css={{ ...css }} handleClose={handleClose}>
+			<AlertDialogContent testid={testid} css={{ ...css }} handleClose={handleClose}>
 				<DialogTitleContainer align="center" justify="between">
 					<StyledDialogTitle heading="4">{title}</StyledDialogTitle>
 					<AlertDialogCancel
