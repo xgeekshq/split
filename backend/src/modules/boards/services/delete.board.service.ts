@@ -43,7 +43,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			(user) => String((user.user as UserDocument)?._id) === String(userId)
 		);
 		const isUserSAdmin = (myUser?.user as UserDocument).isSAdmin;
-		return isUserSAdmin;
+
+		return Boolean(isUserSAdmin);
 	}
 
 	private async getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]> {
@@ -97,7 +98,6 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		const users = await this.getUsersOfTeam(String(team));
 
 		const userIsSAdmin = await this.isUserSAdmin(userId, users);
-		console.log('userIsAdmin', userIsSAdmin);
 
 		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
 			teamUser.role as TeamRoles
@@ -106,32 +106,38 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
-		if (!(isOwner || isAdminOrStakeholder || userIsSAdmin)) {
-			console.log('  NAO PODES ALTERAR');
-			throw Error(DELETE_FAILED);
-		}
+		console.log(
+			'isOwner',
+			isOwner,
+			'isAdminOrStakeholder',
+			isAdminOrStakeholder,
+			'userIsSAdmin',
+			userIsSAdmin
+		);
+		console.log(isOwner || isAdminOrStakeholder || userIsSAdmin);
+		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
+			console.log('PODES ALTERAR');
+			const boardUserSession = await this.boardUserModel.db.startSession();
+			boardSession.startTransaction();
+			boardUserSession.startTransaction();
+			try {
+				const { _id, dividedBoards } = await this.deleteBoard(boardId, userId, boardSession);
 
-		const boardUserSession = await this.boardUserModel.db.startSession();
-		boardSession.startTransaction();
-		boardUserSession.startTransaction();
-		try {
-			const { _id, dividedBoards } = await this.deleteBoard(boardId, userId, boardSession);
+				if (!isEmpty(dividedBoards)) {
+					await this.deleteSubBoards(dividedBoards, boardSession);
 
-			if (!isEmpty(dividedBoards)) {
-				await this.deleteSubBoards(dividedBoards, boardSession);
-
-				await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
+					await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
+				}
+				await boardSession.commitTransaction();
+				await boardUserSession.commitTransaction();
+				return true;
+			} catch (e) {
+				await boardSession.abortTransaction();
+				await boardUserSession.abortTransaction();
+			} finally {
+				await boardSession.endSession();
+				await boardUserSession.endSession();
 			}
-
-			await boardSession.commitTransaction();
-			await boardUserSession.commitTransaction();
-			return true;
-		} catch (e) {
-			await boardSession.abortTransaction();
-			await boardUserSession.abortTransaction();
-		} finally {
-			await boardSession.endSession();
-			await boardUserSession.endSession();
 		}
 
 		return false;
