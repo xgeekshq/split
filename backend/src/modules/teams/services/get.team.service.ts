@@ -88,7 +88,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.find({ team: teamId })
 			.populate({
 				path: 'user',
-				select: '_id firstName lastName email'
+				select: '_id firstName lastName email isSAdmin'
 			})
 			.lean()
 			.exec();
