@@ -148,7 +148,7 @@ const CardFooter = React.memo<FooterProps>(
 							isDefaultColor={createdBy?._id === userId}
 							size={20}
 						/>
-						<Text size="xs">
+						<Text data-testid="createdByName" size="xs">
 							{createdBy?.firstName} {createdBy?.lastName}
 						</Text>
 					</Flex>
@@ -222,6 +222,7 @@ const CardFooter = React.memo<FooterProps>(
 							</StyledButtonIcon>
 							<Text
 								css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }}
+								data-testid="commentsLength"
 								size="xs"
 							>
 								{comments.length}
