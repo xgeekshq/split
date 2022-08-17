@@ -43,8 +43,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			(user) => String((user.user as UserDocument)?._id) === String(userId)
 		);
 		const isUserSAdmin = (myUser?.user as UserDocument).isSAdmin;
-
-		return Boolean(isUserSAdmin);
+		return isUserSAdmin;
 	}
 
 	private async getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]> {
@@ -106,17 +105,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
-		console.log(
-			'isOwner',
-			isOwner,
-			'isAdminOrStakeholder',
-			isAdminOrStakeholder,
-			'userIsSAdmin',
-			userIsSAdmin
-		);
-		console.log(isOwner || isAdminOrStakeholder || userIsSAdmin);
 		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
-			console.log('PODES ALTERAR');
 			const boardUserSession = await this.boardUserModel.db.startSession();
 			boardSession.startTransaction();
 			boardUserSession.startTransaction();
