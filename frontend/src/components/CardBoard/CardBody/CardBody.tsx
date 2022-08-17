@@ -106,13 +106,20 @@ const CardBody = React.memo<CardBodyProps>(
 			return !!users.find((user) => user.user._id === userId);
 		}, [users, userId]);
 
-		const userIsAdmin = useMemo(() => {
-			if (isSAdmin) return true;
-			if (team) {
-				return !!team.users.find((user) => user.role === 'admin');
+		const userIsAdminOrStakeholder = useMemo(() => {
+			if (isSAdmin) {
+				return true;
+			}
+			const myUser = team.users.find((user) => String(user.user._id) === String(userId));
+			const myUserIsOwner = board.createdBy._id === userId;
+			if (
+				team &&
+				(myUser?.role === 'admin' || myUser?.role === 'stakeholder' || myUserIsOwner)
+			) {
+				return true;
 			}
 			return !!users.find((user) => user.role === 'owner');
-		}, [isSAdmin, team, users]);
+		}, [isSAdmin, team, board.createdBy._id, userId, users]);
 
 		const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
 			e.preventDefault();
@@ -225,7 +232,8 @@ const CardBody = React.memo<CardBodyProps>(
 							isDashboard={isDashboard}
 							isSubBoard={isSubBoard}
 							userId={userId}
-							userIsAdmin={userIsAdmin}
+							userIsAdminOrStakeholder={userIsAdminOrStakeholder}
+							userIsParticipating={userIsParticipating}
 							userSAdmin={isSAdmin}
 						/>
 					</InnerContainer>
