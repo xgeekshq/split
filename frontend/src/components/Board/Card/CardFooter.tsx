@@ -122,7 +122,7 @@ const CardFooter = React.memo<FooterProps>(
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			// if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
+			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
 			addVote.mutate({
 				boardId,
 				cardId: card._id,
@@ -169,9 +169,9 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								// disabled={
-								// 	!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
-								// }
+								disabled={
+									!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
+								}
 								onClick={handleAddVote}
 							>
 								<Icon name="thumbs-up" />

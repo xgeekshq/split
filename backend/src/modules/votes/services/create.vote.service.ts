@@ -22,6 +22,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 			throw new NotFoundException('Board not found!');
 		}
 		const maxVotes = board?.maxVotes as Number;
+
 		// myUser
 		const myUser = await this.boardUserModel.find({ board: boardId, user: userId });
 		const voteAllowed = myUser[0].votesCount + 1 <= maxVotes;
@@ -30,7 +31,6 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 	}
 
 	async incrementVoteUser(boardId: string, userId: string) {
-		// const podeVotarCondicao = await this.podeVotarCondicao(boardId, userId);
 		const boardUser = this.boardUserModel
 			.findOneAndUpdate(
 				{
