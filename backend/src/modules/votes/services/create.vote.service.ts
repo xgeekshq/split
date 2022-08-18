@@ -16,7 +16,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	private async podeVotarCondicao(boardId: string, userId: string): Promise<boolean> {
+	private async voteEnable(boardId: string, userId: string): Promise<boolean> {
 		const board = await this.boardModel.findById(boardId).exec();
 		if (!board) {
 			throw new NotFoundException('Board not found!');
@@ -24,10 +24,9 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const maxVotes = board?.maxVotes as Number;
 		// myUser
 		const myUser = await this.boardUserModel.find({ board: boardId, user: userId });
-		const podeVotar = myUser[0].votesCount <= maxVotes;
-		const superTeste = maxVotes === null || podeVotar;
-		console.log('condicao', superTeste, 'podevotar', podeVotar, myUser[0].votesCount, maxVotes);
-		return superTeste;
+		const voteAllowed = myUser[0].votesCount + 1 <= maxVotes;
+		const userCanVote = maxVotes === null || voteAllowed;
+		return userCanVote;
 	}
 
 	async incrementVoteUser(boardId: string, userId: string) {
@@ -48,39 +47,10 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		return boardUser;
 	}
 
-	// addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-	// 	this.incrementVoteUser(boardId, userId);
-	// 	return this.boardModel
-	// 		.findOneAndUpdate(
-	// 			{
-	// 				_id: boardId,
-	// 				'columns.cards.items._id': cardItemId
-	// 			},
-	// 			{
-	// 				$push: {
-	// 					'columns.$.cards.$[c].items.$[i].votes': userId
-	// 				},
-	// 				$inc: { totalUsedVotes: 1 }
-	// 			},
-	// 			{
-	// 				arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-	// 				new: true
-	// 			}
-	// 		)
-	// 		.populate({
-	// 			path: 'users',
-	// 			select: 'user role votesCount -board',
-	// 			populate: { path: 'user', select: 'firstName lastName _id' }
-	// 		})
-	// 		.lean()
-	// 		.exec();
-	// }
-
 	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		const podeVotarCondicao = await this.podeVotarCondicao(boardId, userId);
-		if (podeVotarCondicao) {
+		const voteEnable = await this.voteEnable(boardId, userId);
+		if (voteEnable) {
 			await this.incrementVoteUser(boardId, userId);
-			console.log('PASSOU2');
 			return this.boardModel
 				.findOneAndUpdate(
 					{
@@ -106,7 +76,32 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 				.lean()
 				.exec();
 		}
-		console.log('PAROU2');
-		throw new NotFoundException('Vote not found!');
+		return null;
+	}
+
+	async addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
+		const voteEnable = await this.voteEnable(boardId, userId);
+		if (voteEnable) {
+			await this.incrementVoteUser(boardId, userId);
+			return this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards._id': cardId
+					},
+					{
+						$push: {
+							'columns.$.cards.$[c].votes': userId
+						}
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }],
+						new: true
+					}
+				)
+				.lean()
+				.exec();
+		}
+		return null;
 	}
 }
