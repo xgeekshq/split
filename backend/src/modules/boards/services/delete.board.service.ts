@@ -17,7 +17,8 @@ import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
+		@InjectModel(Board.name)
+		private boardModel: Model<BoardDocument>,
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
 		@InjectModel(BoardUser.name)
@@ -37,9 +38,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 
 	private async isUserSAdmin(
 		userId: string,
-		quantidadeUsers: LeanDocument<TeamUserDocument>[]
+		teamUsers: LeanDocument<TeamUserDocument>[]
 	): Promise<boolean> {
-		const myUser = quantidadeUsers.find(
+		const myUser = teamUsers.find(
 			(user) => String((user.user as UserDocument)?._id) === String(userId)
 		);
 		const isUserSAdmin = (myUser?.user as UserDocument).isSAdmin;
