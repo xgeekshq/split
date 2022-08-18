@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'modules/boards/schemas/board.user.schema';
 
@@ -29,8 +30,9 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		return superTeste;
 	}
 
-	incrementVoteUser(boardId: string, userId: string) {
-		return this.boardUserModel
+	async incrementVoteUser(boardId: string, userId: string) {
+		// const podeVotarCondicao = await this.podeVotarCondicao(boardId, userId);
+		const boardUser = this.boardUserModel
 			.findOneAndUpdate(
 				{
 					user: userId,
@@ -42,55 +44,69 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 			)
 			.lean()
 			.exec();
+		if (!boardUser) throw Error(UPDATE_FAILED);
+		return boardUser;
 	}
 
-	addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		this.incrementVoteUser(boardId, userId);
-		return this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards.items._id': cardItemId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].items.$[i].votes': userId
+	// addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
+	// 	this.incrementVoteUser(boardId, userId);
+	// 	return this.boardModel
+	// 		.findOneAndUpdate(
+	// 			{
+	// 				_id: boardId,
+	// 				'columns.cards.items._id': cardItemId
+	// 			},
+	// 			{
+	// 				$push: {
+	// 					'columns.$.cards.$[c].items.$[i].votes': userId
+	// 				},
+	// 				$inc: { totalUsedVotes: 1 }
+	// 			},
+	// 			{
+	// 				arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+	// 				new: true
+	// 			}
+	// 		)
+	// 		.populate({
+	// 			path: 'users',
+	// 			select: 'user role votesCount -board',
+	// 			populate: { path: 'user', select: 'firstName lastName _id' }
+	// 		})
+	// 		.lean()
+	// 		.exec();
+	// }
+
+	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
+		const podeVotarCondicao = await this.podeVotarCondicao(boardId, userId);
+		if (podeVotarCondicao) {
+			await this.incrementVoteUser(boardId, userId);
+			console.log('PASSOU2');
+			return this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards.items._id': cardItemId
 					},
-					$inc: { totalUsedVotes: 1 }
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-					new: true
-				}
-			)
-			.populate({
-				path: 'users',
-				select: 'user role votesCount -board',
-				populate: { path: 'user', select: 'firstName lastName _id' }
-			})
-			.lean()
-			.exec();
-	}
-
-	addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
-		this.incrementVoteUser(boardId, userId);
-		return this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].votes': userId
+					{
+						$push: {
+							'columns.$.cards.$[c].items.$[i].votes': userId
+						},
+						$inc: { totalUsedVotes: 1 }
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+						new: true
 					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }],
-					new: true
-				}
-			)
-			.lean()
-			.exec();
+				)
+				.populate({
+					path: 'users',
+					select: 'user role votesCount -board',
+					populate: { path: 'user', select: 'firstName lastName _id' }
+				})
+				.lean()
+				.exec();
+		}
+		console.log('PAROU2');
+		throw new NotFoundException('Vote not found!');
 	}
 }
