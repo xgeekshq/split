@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -14,6 +14,20 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
+
+	private async podeVotarCondicao(boardId: string, userId: string): Promise<boolean> {
+		const board = await this.boardModel.findById(boardId).exec();
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+		const maxVotes = board?.maxVotes as Number;
+		// myUser
+		const myUser = await this.boardUserModel.find({ board: boardId, user: userId });
+		const podeVotar = myUser[0].votesCount <= maxVotes;
+		const superTeste = maxVotes === null || podeVotar;
+		console.log('condicao', superTeste, 'podevotar', podeVotar, myUser[0].votesCount, maxVotes);
+		return superTeste;
+	}
 
 	incrementVoteUser(boardId: string, userId: string) {
 		return this.boardUserModel
