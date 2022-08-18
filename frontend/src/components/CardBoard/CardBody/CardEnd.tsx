@@ -13,13 +13,22 @@ type CardEndProps = {
 	isDashboard: boolean;
 	isSubBoard: boolean | undefined;
 	index: number | undefined;
-	userIsAdmin: boolean;
+	userIsAdminOrStakeholder: boolean;
 	userId: string;
 	userSAdmin?: boolean;
+	userIsParticipating: boolean;
 };
 
 const CardEnd: React.FC<CardEndProps> = React.memo(
-	({ board, isDashboard, isSubBoard, index, userIsAdmin, userId, userSAdmin = undefined }) => {
+	({
+		board,
+		isDashboard,
+		isSubBoard,
+		index,
+		userIsAdminOrStakeholder,
+		userId,
+		userSAdmin = undefined
+	}) => {
 		CardEnd.defaultProps = {
 			userSAdmin: undefined
 		};
@@ -82,7 +91,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 						</Flex>
 					)}
 					<CountCards columns={columns} />
-					{(userIsAdmin || userSAdmin) && !isSubBoard && (
+					{(userIsAdminOrStakeholder || userSAdmin) && !isSubBoard && (
 						<Flex align="center" css={{ ml: '$24' }} gap="24">
 							<Separator
 								orientation="vertical"
