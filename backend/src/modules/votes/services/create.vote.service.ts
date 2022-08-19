@@ -23,9 +23,10 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		}
 		const maxVotes = board?.maxVotes as Number;
 
-		// myUser
-		const myUser = await this.boardUserModel.find({ board: boardId, user: userId });
-		const voteAllowed = myUser[0].votesCount + 1 <= maxVotes;
+		// userFound
+		const userFound = await this.boardUserModel.find({ board: boardId, user: userId });
+		console.log('userFound', userFound);
+		const voteAllowed = userFound[0].votesCount + 1 <= maxVotes;
 		const userCanVote = maxVotes === null || voteAllowed;
 		return userCanVote;
 	}
