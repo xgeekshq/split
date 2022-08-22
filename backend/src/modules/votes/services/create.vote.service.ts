@@ -50,7 +50,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const canUserVote = await this.canUserVote(boardId, userId);
 		if (canUserVote) {
 			await this.incrementVoteUser(boardId, userId);
-			return this.boardModel
+			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
 						_id: boardId,
@@ -74,6 +74,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 				})
 				.lean()
 				.exec();
+			return board;
 		}
 		throw new BadRequestException('Error adding a vote');
 	}
@@ -82,7 +83,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const canUserVote = await this.canUserVote(boardId, userId);
 		if (canUserVote) {
 			await this.incrementVoteUser(boardId, userId);
-			return this.boardModel
+			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
 						_id: boardId,
@@ -100,6 +101,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 				)
 				.lean()
 				.exec();
+			return board;
 		}
 		throw new BadRequestException('Error adding a vote');
 	}
