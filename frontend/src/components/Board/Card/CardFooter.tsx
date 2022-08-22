@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo } from 'react';
 
 import { styled } from 'styles/stitches/stitches.config';

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -16,21 +16,20 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	private async voteEnable(boardId: string, userId: string): Promise<boolean> {
+	private async canUserVote(boardId: string, userId: string): Promise<boolean> {
 		const board = await this.boardModel.findById(boardId).exec();
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
-		const maxVotes = board?.maxVotes as Number;
+		const maxVotes = Number(board?.maxVotes);
 
 		// userFound
 		const userFound = await this.boardUserModel.find({ board: boardId, user: userId });
 		const voteAllowed = userFound[0].votesCount + 1 <= maxVotes;
-		const userCanVote = maxVotes === null || voteAllowed;
-		return userCanVote;
+		return maxVotes === null || voteAllowed;
 	}
 
-	async incrementVoteUser(boardId: string, userId: string) {
+	private async incrementVoteUser(boardId: string, userId: string) {
 		const boardUser = this.boardUserModel
 			.findOneAndUpdate(
 				{
@@ -48,8 +47,8 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 	}
 
 	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		const voteEnable = await this.voteEnable(boardId, userId);
-		if (voteEnable) {
+		const canUserVote = await this.canUserVote(boardId, userId);
+		if (canUserVote) {
 			await this.incrementVoteUser(boardId, userId);
 			return this.boardModel
 				.findOneAndUpdate(
@@ -76,12 +75,12 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 				.lean()
 				.exec();
 		}
-		return null;
+		throw new BadRequestException('Error adding a vote');
 	}
 
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
-		const voteEnable = await this.voteEnable(boardId, userId);
-		if (voteEnable) {
+		const canUserVote = await this.canUserVote(boardId, userId);
+		if (canUserVote) {
 			await this.incrementVoteUser(boardId, userId);
 			return this.boardModel
 				.findOneAndUpdate(
@@ -102,6 +101,6 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 				.lean()
 				.exec();
 		}
-		return null;
+		throw new BadRequestException('Error adding a vote');
 	}
 }
