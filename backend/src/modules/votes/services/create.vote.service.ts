@@ -42,7 +42,7 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 			)
 			.lean()
 			.exec();
-		if (!boardUser) throw Error(UPDATE_FAILED);
+		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
 		return boardUser;
 	}
 
