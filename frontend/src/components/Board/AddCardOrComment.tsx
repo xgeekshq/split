@@ -210,7 +210,7 @@ const AddCard = React.memo<AddCardProps>(
 					<Flex css={{ width: '100%' }} gap="4" justify="end">
 						{!isEditing && (
 							<Checkbox
-								id="anonymous"
+								id={colId}
 								label="Post anonymously"
 								setCheckedTerms={handleIsAnonymous}
 								size="16"
