@@ -132,6 +132,7 @@ const AddCard = React.memo<AddCardProps>(
 
 		const handleUpdateComment = (text: string) => {
 			if (!cardId || !cancelUpdate || !commentId) return;
+			if (text.trim().length === 0) return;
 			const updateCommentDto: UpdateCommentDto = {
 				cardId,
 				cardItemId,
