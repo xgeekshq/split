@@ -28,6 +28,8 @@ const Column = React.memo<ColumnBoardType>(
 	}) => {
 		const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
 
+		console.log(cards);
+
 		const filteredCards = () => {
 			switch (filter) {
 				case 'desc':
@@ -116,6 +118,7 @@ const Column = React.memo<ColumnBoardType>(
 										maxVotes={maxVotes}
 										socketId={socketId}
 										userId={userId}
+										data-testid="cardList"
 									/>
 									{provided.placeholder}
 								</CardsContainer>

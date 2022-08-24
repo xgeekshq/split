@@ -30,12 +30,16 @@ const SortMenu = ({ setFilter, filter, disabled }: Props) => {
 
 	return (
 		<Popover>
-			<PopoverTriggerStyled disabled={disabled}>
+			<PopoverTriggerStyled disabled={disabled} data-testid="filterBtn">
 				<Icon name={icon} size={24} />
 			</PopoverTriggerStyled>
 			{!disabled && (
 				<PopoverContent>
-					<PopoverItemStyled active={filter === 'desc'} onClick={() => setFilter('desc')}>
+					<PopoverItemStyled
+						active={filter === 'desc'}
+						onClick={() => setFilter('desc')}
+						data-testid="filterBtnDesc"
+					>
 						<Icon name="sort_desc" />
 						<Text size="sm">Sort by votes (desc)</Text>
 					</PopoverItemStyled>
