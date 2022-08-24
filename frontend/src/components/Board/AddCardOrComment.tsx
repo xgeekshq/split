@@ -135,7 +135,7 @@ const AddCard = React.memo<AddCardProps>(
 			const updateCommentDto: UpdateCommentDto = {
 				cardId,
 				cardItemId,
-				text,
+				text: text.trim(),
 				boardId,
 				socketId,
 				isCardGroup: !cardItemId,
