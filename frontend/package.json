@@ -32,7 +32,6 @@
 		"@radix-ui/react-tooltip": "^0.1.7",
 		"@react-forked/dnd": "^14.0.2",
 		"@stitches/react": "^1.2.7",
-		"@testing-library/dom": "^8.13.0",
 		"@testing-library/react": "^12.1.5",
 		"axios": "^0.26.1",
 		"cypress": "^9.5.4",
@@ -54,7 +53,9 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.17.9",
+		"@testing-library/dom": "^8.17.1",
 		"@testing-library/jest-dom": "^5.16.4",
+		"@testing-library/user-event": "^14.4.3",
 		"@types/jest": "^27.4.1",
 		"@types/react": "17.0.44",
 		"@types/react-calendar": "^3.5.0",
