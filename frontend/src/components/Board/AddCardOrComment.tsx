@@ -75,6 +75,7 @@ const AddCard = React.memo<AddCardProps>(
 		});
 
 		const handleAddCard = (text: string) => {
+			if (text.trim().length === 0) return;
 			const newCard: CardToAdd = {
 				items: [
 					{
@@ -102,6 +103,7 @@ const AddCard = React.memo<AddCardProps>(
 
 		const handleUpdateCard = (text: string) => {
 			if (!cardId || !cancelUpdate) return;
+			if (text.trim().length === 0) return;
 			const cardUpdated: UpdateCardDto = {
 				cardId,
 				cardItemId: cardItemId ?? '',
@@ -117,6 +119,7 @@ const AddCard = React.memo<AddCardProps>(
 
 		const handleAddComment = (text: string) => {
 			if (!cardId || !cancelUpdate) return;
+			if (text.trim().length === 0) return;
 			const commentDto: AddCommentDto = {
 				cardId,
 				cardItemId,
