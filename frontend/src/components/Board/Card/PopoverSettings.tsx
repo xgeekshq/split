@@ -33,14 +33,6 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 		setDeleteCard: undefined
 	};
 
-	const handleUnmergeCard = () => {
-		if (unmergeClickLock) {
-			unmergeCard();
-		}
-
-		setUnmergeClickLock(false);
-	};
-
 	return (
 		<PopoverContent portalled={false}>
 			<PopoverItem align="center" gap="8" onClick={setEditCard}>
@@ -50,7 +42,18 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 				</Text>
 			</PopoverItem>
 			{isItem && (
-				<PopoverItem align="center" gap="8" onClick={handleUnmergeCard}>
+				<PopoverItem
+					align="center"
+					gap="8"
+					onClick={
+						unmergeClickLock
+							? () => {
+									unmergeCard();
+									setUnmergeClickLock(false);
+							  }
+							: () => null
+					}
+				>
 					<Icon name="arrow-long-right" />
 					<Text size="sm" weight="medium">
 						Unmerge card
