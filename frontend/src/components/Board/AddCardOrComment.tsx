@@ -74,6 +74,9 @@ const AddCard = React.memo<AddCardProps>(
 			resolver: joiResolver(SchemaAddCommentForm)
 		});
 
+		const watchCardTextInput = methods.watch();
+		const disabledButton = watchCardTextInput.text?.trim().length === 0;
+
 		const handleAddCard = (text: string) => {
 			const newCard: CardToAdd = {
 				items: [
@@ -227,6 +230,7 @@ const AddCard = React.memo<AddCardProps>(
 						</ActionButton>
 						<ActionButton
 							css={{ width: '$48', height: '$36' }}
+							disabled={disabledButton}
 							size="sm"
 							type="submit"
 							variant="primary"
