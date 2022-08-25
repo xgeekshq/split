@@ -21,16 +21,19 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
-		const maxVotes = Number(board?.maxVotes);
+		if (board.maxVotes === null || board.maxVotes === undefined) {
+			return true;
+		}
+		const maxVotes = Number(board.maxVotes);
 
-		// userFound
-		const userFound = await this.boardUserModel.find({ board: boardId, user: userId });
-		const voteAllowed = userFound[0].votesCount + 1 <= maxVotes;
-		return maxVotes === null || voteAllowed;
+		const boardUserFound = await this.boardUserModel
+			.findOne({ board: boardId, user: userId })
+			.exec();
+		return boardUserFound?.votesCount ? boardUserFound.votesCount + 1 <= maxVotes : false;
 	}
 
 	private async incrementVoteUser(boardId: string, userId: string) {
-		const boardUser = this.boardUserModel
+		const boardUser = await this.boardUserModel
 			.findOneAndUpdate(
 				{
 					user: userId,
