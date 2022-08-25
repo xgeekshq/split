@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -27,6 +27,8 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 	setEditCard,
 	setDeleteCard
 }) => {
+	const [unmergeClickLock, setUnmergeClickLock] = useState(true);
+
 	PopoverSettingsContent.defaultProps = {
 		setDeleteCard: undefined
 	};
@@ -40,7 +42,18 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 				</Text>
 			</PopoverItem>
 			{isItem && (
-				<PopoverItem align="center" gap="8" onClick={unmergeCard}>
+				<PopoverItem
+					align="center"
+					gap="8"
+					onClick={
+						unmergeClickLock
+							? () => {
+									unmergeCard();
+									setUnmergeClickLock(false);
+							  }
+							: () => null
+					}
+				>
 					<Icon name="arrow-long-right" />
 					<Text size="sm" weight="medium">
 						Unmerge card
