@@ -29,7 +29,9 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const boardUserFound = await this.boardUserModel
 			.findOne({ board: boardId, user: userId })
 			.exec();
-		return boardUserFound?.votesCount ? boardUserFound.votesCount + 1 <= maxVotes : false;
+
+		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
+		return userCanVote ? boardUserFound.votesCount + 1 <= maxVotes : false;
 	}
 
 	private async incrementVoteUser(boardId: string, userId: string) {
