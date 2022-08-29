@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -23,6 +23,19 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 		private getCardService: GetCardService
 	) {}
 
+	private async canUserVote(boardId: string, userId: string): Promise<boolean> {
+		const board = await this.boardModel.findById(boardId).exec();
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+
+		const boardUserFound = await this.boardUserModel
+			.findOne({ board: boardId, user: userId })
+			.exec();
+
+		return boardUserFound?.votesCount ? boardUserFound.votesCount > 0 : false;
+	}
+
 	async decrementVoteUser(boardId: string, userId: string, count?: number) {
 		const boardUser = await this.boardUserModel.findOneAndUpdate(
 			{
@@ -33,93 +46,127 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 				$inc: { votesCount: !count ? -1 : -count }
 			}
 		);
-		if (!boardUser) throw Error(UPDATE_FAILED);
+		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
 		return boardUser;
 	}
 
 	async deleteVoteFromCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-		if (!card) return null;
+		const canUserVote = await this.canUserVote(boardId, userId);
+		if (canUserVote) {
+			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+			if (!card) return null;
 
-		const cardItem = card.items.find((item) => item._id.toString() === cardItemId);
-		if (!cardItem) return null;
+			const cardItem = card.items.find((item) => item._id.toString() === cardItemId);
+			if (!cardItem) return null;
 
-		const votes = cardItem.votes as unknown as string[];
+			const votes = cardItem.votes as unknown as string[];
 
-		const voteIndex = votes.findIndex((vote) => vote.toString() === userId.toString());
+			const voteIndex = votes.findIndex((vote) => vote.toString() === userId.toString());
 
-		if (voteIndex === -1) return null;
+			if (voteIndex === -1) return null;
 
-		votes.splice(voteIndex, 1);
+			votes.splice(voteIndex, 1);
 
-		await this.decrementVoteUser(boardId, userId);
-		const board = await this.boardModel.findOneAndUpdate(
-			{
-				_id: boardId,
-				'columns.cards.items._id': cardItemId
-			},
-			{
-				$set: {
-					'columns.$.cards.$[c].items.$[i].votes': votes
-				}
-			},
-			{
-				arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-				new: true
+			const dbSession = await this.boardModel.db.startSession();
+			dbSession.startTransaction();
+			try {
+				await this.decrementVoteUser(boardId, userId);
+				const board = await this.boardModel.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards.items._id': cardItemId
+					},
+					{
+						$set: {
+							'columns.$.cards.$[c].items.$[i].votes': votes
+						}
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+						new: true,
+						session: dbSession
+					}
+				);
+				if (!board) throw Error(UPDATE_FAILED);
+				await dbSession.commitTransaction();
+				return await board.populate({
+					path: 'users',
+					select: 'user role votesCount -board',
+					populate: { path: 'user', select: 'firstName lastName _id' }
+				});
+			} catch (error) {
+				await dbSession.abortTransaction();
+				throw error;
+			} finally {
+				await dbSession.endSession();
 			}
-		);
-
-		if (!board) throw Error(UPDATE_FAILED);
-		return board.populate({
-			path: 'users',
-			select: 'user role votesCount -board',
-			populate: { path: 'user', select: 'firstName lastName _id' }
-		});
+		}
+		throw new BadRequestException('Error removing a vote');
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string) {
-		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-		if (!card) return null;
+		const canUserVote = await this.canUserVote(boardId, userId);
+		if (canUserVote) {
+			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+			if (!card) return null;
 
-		const { votes } = card;
-		const newVotes = arrayIdToString(votes as unknown as string[]);
+			const { votes } = card;
+			const newVotes = arrayIdToString(votes as unknown as string[]);
 
-		if (isEmpty(votes.length)) {
-			const item = card.items.find(({ votes: itemVotes }) =>
-				arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
-			);
+			if (isEmpty(votes.length)) {
+				const item = card.items.find(({ votes: itemVotes }) =>
+					arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
+				);
 
-			if (!item) return null;
+				if (!item) return null;
 
-			const boardUser = await this.deleteVoteFromCard(boardId, cardId, userId, item._id.toString());
+				const boardUser = await this.deleteVoteFromCard(
+					boardId,
+					cardId,
+					userId,
+					item._id.toString()
+				);
 
-			return boardUser;
+				return boardUser;
+			}
+
+			const voteIndex = newVotes.findIndex((vote) => vote.toString() === userId.toString());
+			if (voteIndex === -1) return null;
+			newVotes.splice(voteIndex, 1);
+
+			const dbSession = await this.boardModel.db.startSession();
+			dbSession.startTransaction();
+			try {
+				await this.decrementVoteUser(boardId, userId);
+				const board = await this.boardModel
+					.findOneAndUpdate(
+						{
+							_id: boardId,
+							'columns.cards._id': cardId
+						},
+						{
+							$set: {
+								'columns.$.cards.$[c].votes': newVotes
+							}
+						},
+						{
+							arrayFilters: [{ 'c._id': cardId }],
+							new: true
+						}
+					)
+					.lean()
+					.exec();
+
+				if (!board) throw Error(UPDATE_FAILED);
+				await dbSession.commitTransaction();
+				return board;
+			} catch (error) {
+				await dbSession.abortTransaction();
+				throw error;
+			} finally {
+				await dbSession.endSession();
+			}
 		}
-
-		const voteIndex = newVotes.findIndex((vote) => vote.toString() === userId.toString());
-		if (voteIndex === -1) return null;
-		newVotes.splice(voteIndex, 1);
-
-		await this.decrementVoteUser(boardId, userId);
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$set: {
-						'columns.$.cards.$[c].votes': newVotes
-					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }],
-					new: true
-				}
-			)
-			.lean()
-			.exec();
-		if (!board) throw Error(UPDATE_FAILED);
-		return board;
+		throw new BadRequestException('Error removing a vote');
 	}
 }
