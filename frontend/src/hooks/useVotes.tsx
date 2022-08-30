@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query';
 import { useSession } from 'next-auth/react';
 
-import { addVoteRequest, deleteVoteRequest } from 'api/boardService';
+import { addVoteRequest, deleteVoteRequest, handleVotes } from 'api/boardService';
 import { CardItemType } from 'types/card/cardItem';
 import voteDto from 'types/vote/vote.dto';
 import { ToastStateEnum } from 'utils/enums/toast-types';
@@ -239,6 +239,20 @@ const useVotes = () => {
 		toastRemainingVotesMessage(message, boardDataFromApi);
 	};
 
+	const handleVote = useMutation(handleVotes, {
+		onSuccess: (voteData) => {
+			queryClient.invalidateQueries(['board', { id: voteData?._id }]);
+		},
+		onError: (error, variables) => {
+			queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+			setToastState({
+				open: true,
+				content: 'Error adding the vote',
+				type: ToastStateEnum.ERROR
+			});
+		}
+	});
+
 	const addVote = useMutation(addVoteRequest, {
 		onMutate: async (voteData) => addVoteOptimistic(voteData),
 		onSettled: (boardDataFromApi) =>
@@ -257,7 +271,8 @@ const useVotes = () => {
 
 	return {
 		addVote,
-		deleteVote
+		deleteVote,
+		handleVote
 	};
 };
 
