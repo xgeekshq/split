@@ -29,7 +29,9 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const boardUserFound = await this.boardUserModel
 			.findOne({ board: boardId, user: userId })
 			.exec();
-		return boardUserFound?.votesCount ? boardUserFound.votesCount + 1 <= maxVotes : false;
+
+		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
+		return userCanVote ? boardUserFound.votesCount + 1 <= maxVotes : false;
 	}
 
 	private async incrementVoteUser(boardId: string, userId: string) {
@@ -52,32 +54,43 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
 		const canUserVote = await this.canUserVote(boardId, userId);
 		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards.items._id': cardItemId
-					},
-					{
-						$push: {
-							'columns.$.cards.$[c].items.$[i].votes': userId
+			const dbSession = await this.boardModel.db.startSession();
+			dbSession.startTransaction();
+			try {
+				await this.incrementVoteUser(boardId, userId);
+				const board = await this.boardModel
+					.findOneAndUpdate(
+						{
+							_id: boardId,
+							'columns.cards.items._id': cardItemId
 						},
-						$inc: { totalUsedVotes: 1 }
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-						new: true
-					}
-				)
-				.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				})
-				.lean()
-				.exec();
-			return board;
+						{
+							$push: {
+								'columns.$.cards.$[c].items.$[i].votes': userId
+							},
+							$inc: { totalUsedVotes: 1 }
+						},
+						{
+							arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+							new: true
+						}
+					)
+					.populate({
+						path: 'users',
+						select: 'user role votesCount -board',
+						populate: { path: 'user', select: 'firstName lastName _id' }
+					})
+					.lean()
+					.exec();
+
+				if (!board) throw Error(UPDATE_FAILED);
+				await dbSession.commitTransaction();
+				return board;
+			} catch (error) {
+				await dbSession.abortTransaction();
+			} finally {
+				await dbSession.endSession();
+			}
 		}
 		throw new BadRequestException('Error adding a vote');
 	}
@@ -85,26 +98,37 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
 		const canUserVote = await this.canUserVote(boardId, userId);
 		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$push: {
-							'columns.$.cards.$[c].votes': userId
+			const dbSession = await this.boardModel.db.startSession();
+			dbSession.startTransaction();
+			try {
+				await this.incrementVoteUser(boardId, userId);
+				const board = await this.boardModel
+					.findOneAndUpdate(
+						{
+							_id: boardId,
+							'columns.cards._id': cardId
+						},
+						{
+							$push: {
+								'columns.$.cards.$[c].votes': userId
+							}
+						},
+						{
+							arrayFilters: [{ 'c._id': cardId }],
+							new: true
 						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }],
-						new: true
-					}
-				)
-				.lean()
-				.exec();
-			return board;
+					)
+					.lean()
+					.exec();
+
+				await dbSession.commitTransaction();
+				return board;
+			} catch (error) {
+				await dbSession.abortTransaction();
+				throw error;
+			} finally {
+				await dbSession.endSession();
+			}
 		}
 		throw new BadRequestException('Error adding a vote');
 	}
