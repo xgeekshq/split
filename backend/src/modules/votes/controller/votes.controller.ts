@@ -31,6 +31,7 @@ import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
 import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
+import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../../boards/dto/board.dto';
@@ -88,7 +89,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return board;
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Add a vote to a specific card' })
@@ -127,7 +128,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return board;
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card item' })
@@ -172,7 +173,7 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return board;
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card' })
@@ -215,6 +216,6 @@ export default class VotesController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return board;
+		return boardVotesIdHidden(board, request.user._id);
 	}
 }

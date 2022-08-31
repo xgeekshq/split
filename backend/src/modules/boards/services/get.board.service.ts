@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { LeanDocument, Model } from 'mongoose';
 
 import { BOARDS_NOT_FOUND } from 'libs/exceptions/messages';
+import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
 import { hideText } from 'libs/utils/hideText';
 import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
 import { CardDocument } from 'modules/cards/schemas/card.schema';
@@ -203,7 +204,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * @param userId Current Logged User
 	 * @returns Array of Votes (filtered)
 	 */
-	private replaceVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
+	private filterVotes(input: LeanDocument<CardDocument | CardItemDocument>, userId: string) {
 		return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 	}
 
@@ -273,7 +274,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 
 		if (hideVotes) {
-			votes = this.replaceVotes(input, userId);
+			votes = this.filterVotes(input, userId);
 		}
 
 		return {
@@ -305,28 +306,23 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	> {
 		const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
 		// Columns
-		const columns = boardColumns.map((column) => {
+		input.columns = boardColumns.map((column) => {
 			const cards = column.cards.map((card) => {
 				const items = card.items.map((item) => {
 					return this.replaceCard(item, userId, hideCards, hideVotes);
 				});
-
 				return {
 					...this.replaceCard(card, userId, hideCards, hideVotes),
 					items
 				};
 			});
-
 			return {
 				...column,
 				cards
 			};
 		});
 
-		return {
-			...input,
-			columns
-		};
+		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 
 	async countBoards(userId: string) {
