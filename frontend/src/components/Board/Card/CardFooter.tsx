@@ -210,15 +210,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon onClick={setOpenComments}>
-								<Icon
-									name={
-										!!comments?.find(
-											(comment) => comment.createdBy._id === userId
-										) || !!isCommentsOpened
-											? 'comment-filled'
-											: 'comment'
-									}
-								/>
+								<Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
 							</StyledButtonIcon>
 							<Text
 								css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }}
