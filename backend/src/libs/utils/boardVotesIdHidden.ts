@@ -26,7 +26,7 @@ export const boardVotesIdHidden = (
 			const items = card.items.map((item) => {
 				const votes = item.votes.map((vote) => {
 					if (String(userId) !== String(vote)) {
-						vote = hideText(String(vote));
+						return hideText(String(vote));
 					}
 					return vote;
 				});
@@ -34,7 +34,7 @@ export const boardVotesIdHidden = (
 			});
 			const votes = card.votes.map((vote) => {
 				if (String(userId) !== String(vote)) {
-					vote = hideText(String(vote));
+					return hideText(String(vote));
 				}
 				return vote;
 			});
