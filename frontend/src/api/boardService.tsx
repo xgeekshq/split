@@ -182,7 +182,10 @@ export const handleVotes = (voteDto: {
 	count: number;
 }) => {
 	return fetchData<BoardType>(
-		`/boards/${voteDto.boardId}/card/${voteDto.cardId}/items/${voteDto.cardItemId}/vote`,
+		voteDto.isCardGroup
+			? `/boards/${voteDto.boardId}/card/${voteDto.cardId}/vote`
+			: `/boards/${voteDto.boardId}/card/${voteDto.cardId}/items/${voteDto.cardItemId}/vote`,
+
 		{ method: 'PUT', data: voteDto }
 	);
 };

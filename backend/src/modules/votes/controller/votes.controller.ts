@@ -251,4 +251,31 @@ export default class VotesController {
 
 		return board;
 	}
+
+	@Put(':boardId/card/:cardId/vote')
+	async handleVoteGroup(
+		@Req() request: RequestWithUser,
+		@Param() params: VoteGroupParams,
+		@Body() data: VoteDto
+	) {
+		const { boardId, cardId } = params;
+
+		const { count, socketId } = data;
+
+		let board;
+		for (let i = 0; i < Math.abs(count); i++) {
+			if (count < 0) {
+				// eslint-disable-next-line no-await-in-loop
+				board = await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id);
+			} else {
+				// eslint-disable-next-line no-await-in-loop
+				board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id);
+			}
+		}
+
+		if (!board) throw new BadRequestException(DELETE_FAILED);
+		this.socketService.sendUpdatedBoard(boardId, socketId);
+
+		return board;
+	}
 }
