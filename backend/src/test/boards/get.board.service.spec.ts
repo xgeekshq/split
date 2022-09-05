@@ -52,16 +52,10 @@ describe('GetBoardServiceImpl', () => {
 						{
 							items: [
 								{
-									votes: [
-										{ _id: 'any_id_1' },
-										{ _id: 'any_id_1' },
-										{ _id: 'any_id_2' },
-										{ _id: 'any_id_2' },
-										{ _id: 'any_id_3' }
-									]
+									votes: ['any_id_1', 'any_id_2']
 								}
 							],
-							votes: [{ _id: 'any_id_1' }, { _id: 'any_id_2' }]
+							votes: ['any_id_1']
 						}
 					]
 				},
@@ -98,10 +92,10 @@ describe('GetBoardServiceImpl', () => {
 						{
 							items: [
 								{
-									votes: [{ _id: 'any_id_1' }, { _id: 'any_id_1' }]
+									votes: []
 								}
 							],
-							votes: [{ _id: 'any_id_1' }]
+							votes: []
 						}
 					]
 				},
