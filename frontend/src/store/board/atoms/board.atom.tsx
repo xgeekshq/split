@@ -16,3 +16,8 @@ export const newBoardState = atom<BoardType | undefined>({
 	key: 'newBoard',
 	default: undefined
 });
+
+export const actualBoardVotesState = atom({
+	key: 'actualBoardVotes',
+	default: 0
+});

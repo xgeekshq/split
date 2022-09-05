@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -14,6 +15,7 @@ import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
 import { CardItemType } from 'types/card/cardItem';
 import CommentType from 'types/comment/comment';
+import { actualBoardVotesState } from '../../../store/board/atoms/board.atom';
 
 interface FooterProps {
 	boardId: string;
@@ -82,7 +84,9 @@ const CardFooter = React.memo<FooterProps>(
 		}, [card]);
 
 		const { handleVote } = useVotes();
-		const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
+		const actualBoardVotes = useRecoilValue(actualBoardVotesState);
+		const setActualBoardVotes = useSetRecoilState(actualBoardVotesState);
+		//const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
 
 		const votesData = useMemo(() => {
 			if (Object.hasOwnProperty.call(card, 'items')) {
@@ -168,6 +172,12 @@ const CardFooter = React.memo<FooterProps>(
 			setVotesInCard(votesInCard + 1);
 			setActualBoardVotes(actualBoardVotes + 1);
 		};
+
+		useEffect(() => {
+			setActualBoardVotes(boardUser?.votesCount ?? 0);
+		}, []);
+
+		console.log(actualBoardVotes);
 
 		return (
 			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
