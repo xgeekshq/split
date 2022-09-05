@@ -15,7 +15,7 @@ import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
 import { CardItemType } from 'types/card/cardItem';
 import CommentType from 'types/comment/comment';
-import { actualBoardVotesState } from '../../../store/board/atoms/board.atom';
+import { actualBoardVotesState, votesInCardState } from '../../../store/board/atoms/board.atom';
 
 interface FooterProps {
 	boardId: string;
@@ -132,7 +132,7 @@ const CardFooter = React.memo<FooterProps>(
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;
-			}, 3000);
+			}, 200);
 
 			// eslint-disable-next-line consistent-return
 			return () => clearTimeout(delayDebounceFn);
@@ -174,7 +174,9 @@ const CardFooter = React.memo<FooterProps>(
 		};
 
 		useEffect(() => {
-			setActualBoardVotes(boardUser?.votesCount ?? 0);
+			if (boardUser?.votesCount !== undefined) {
+				setActualBoardVotes(boardUser?.votesCount ?? 0);
+			}
 		}, []);
 
 		console.log(actualBoardVotes);
