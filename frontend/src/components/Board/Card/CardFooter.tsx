@@ -84,7 +84,7 @@ const CardFooter = React.memo<FooterProps>(
 		const { handleVote } = useVotes();
 		// const actualBoardVotes = useRecoilValue(actualBoardVotesState);
 		// const setActualBoardVotes = useSetRecoilState(actualBoardVotesState);
-		const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
+		// const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
 
 		const user = boardUser;
 		const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
@@ -155,13 +155,13 @@ const CardFooter = React.memo<FooterProps>(
 
 			setCountVotes(countVotes - 1);
 			// setVotesInCard(votesInCard - 1);
-			setActualBoardVotes(actualBoardVotes - 1);
+			// setActualBoardVotes(actualBoardVotes - 1);
 		};
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
+			if (maxVotes && user && user.votesCount >= maxVotes) return;
 			// addVote.mutate({
 			// 	boardId,
 			// 	cardId: card._id,
@@ -172,7 +172,7 @@ const CardFooter = React.memo<FooterProps>(
 
 			setCountVotes(countVotes + 1);
 			// setVotesInCard(votesInCard + 1);
-			setActualBoardVotes(actualBoardVotes + 1);
+			// setActualBoardVotes(actualBoardVotes + 1);
 		};
 
 		// useEffect(() => {
@@ -218,9 +218,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={
-									!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
-								}
+								disabled={!isMainboard || !!disableVotes}
 								onClick={handleAddVote}
 							>
 								<Icon name="thumbs-up" />
