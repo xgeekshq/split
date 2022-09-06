@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -15,7 +14,6 @@ import { BoardUser } from 'types/board/board.user';
 import CardType from 'types/card/card';
 import { CardItemType } from 'types/card/cardItem';
 import CommentType from 'types/comment/comment';
-import { actualBoardVotesState, votesInCardState } from '../../../store/board/atoms/board.atom';
 
 interface FooterProps {
 	boardId: string;
@@ -84,11 +82,15 @@ const CardFooter = React.memo<FooterProps>(
 		}, [card]);
 
 		const { handleVote } = useVotes();
-		const actualBoardVotes = useRecoilValue(actualBoardVotesState);
-		const setActualBoardVotes = useSetRecoilState(actualBoardVotesState);
-		//const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
+		// const actualBoardVotes = useRecoilValue(actualBoardVotesState);
+		// const setActualBoardVotes = useSetRecoilState(actualBoardVotesState);
+		const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
 
-		const votesData = useMemo(() => {
+		const user = boardUser;
+		const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
+		console.log(disableVotes);
+
+		const calculateVotes = () => {
 			if (Object.hasOwnProperty.call(card, 'items')) {
 				const cardTyped = card as CardType;
 				const cardItemId =
@@ -105,12 +107,14 @@ const CardFooter = React.memo<FooterProps>(
 				return { cardItemId, votesOfUserInThisCard, votesInThisCard };
 			}
 			return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
-		}, [card, userId]);
+		};
+
+		const votesData = calculateVotes();
 
 		const { cardItemId, votesInThisCard } = votesData;
 
 		const [countVotes, setCountVotes] = useState(0);
-		const [votesInCard, setVotesInCard] = useState(votesInThisCard.length);
+		// const [votesInCard, setVotesInCard] = useState(votesInThisCard.length);
 
 		const firstUpdate = useRef(true);
 		useEffect(() => {
@@ -120,8 +124,6 @@ const CardFooter = React.memo<FooterProps>(
 			}
 
 			const delayDebounceFn = setTimeout(() => {
-				console.log(countVotes);
-
 				handleVote.mutate({
 					boardId,
 					cardId: card._id,
@@ -152,7 +154,7 @@ const CardFooter = React.memo<FooterProps>(
 			// });
 
 			setCountVotes(countVotes - 1);
-			setVotesInCard(votesInCard - 1);
+			// setVotesInCard(votesInCard - 1);
 			setActualBoardVotes(actualBoardVotes - 1);
 		};
 
@@ -169,17 +171,15 @@ const CardFooter = React.memo<FooterProps>(
 			// });
 
 			setCountVotes(countVotes + 1);
-			setVotesInCard(votesInCard + 1);
+			// setVotesInCard(votesInCard + 1);
 			setActualBoardVotes(actualBoardVotes + 1);
 		};
 
-		useEffect(() => {
-			if (boardUser?.votesCount !== undefined) {
-				setActualBoardVotes(boardUser?.votesCount ?? 0);
-			}
-		}, []);
-
-		console.log(actualBoardVotes);
+		// useEffect(() => {
+		// 	if (boardUser?.votesCount !== undefined) {
+		// 		setActualBoardVotes(boardUser?.votesCount ?? 0);
+		// 	}
+		// }, []);
 
 		return (
 			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
@@ -228,11 +228,11 @@ const CardFooter = React.memo<FooterProps>(
 							<Text
 								size="xs"
 								css={{
-									visibility: votesInCard > 0 ? 'visible' : 'hidden',
+									visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
 									width: '10px'
 								}}
 							>
-								{votesInCard}
+								{votesInThisCard.length}
 							</Text>
 						</Flex>
 
@@ -245,7 +245,7 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={!isMainboard || votesInCard === 0}
+								disabled={!isMainboard || votesInThisCard.length === 0}
 								onClick={handleDeleteVote}
 							>
 								<Icon name="thumbs-down" />
