@@ -82,13 +82,9 @@ const CardFooter = React.memo<FooterProps>(
 		}, [card]);
 
 		const { handleVote } = useVotes();
-		// const actualBoardVotes = useRecoilValue(actualBoardVotesState);
-		// const setActualBoardVotes = useSetRecoilState(actualBoardVotesState);
-		// const [actualBoardVotes, setActualBoardVotes] = useState(boardUser?.votesCount ?? 0);
 
 		const user = boardUser;
 		const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
-		console.log(disableVotes);
 
 		const calculateVotes = () => {
 			if (Object.hasOwnProperty.call(card, 'items')) {
@@ -108,13 +104,11 @@ const CardFooter = React.memo<FooterProps>(
 			}
 			return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
 		};
-
 		const votesData = calculateVotes();
 
 		const { cardItemId, votesInThisCard } = votesData;
 
 		const [countVotes, setCountVotes] = useState(0);
-		// const [votesInCard, setVotesInCard] = useState(votesInThisCard.length);
 
 		const firstUpdate = useRef(true);
 		useEffect(() => {
@@ -144,42 +138,15 @@ const CardFooter = React.memo<FooterProps>(
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			// if (votesOfUserInThisCard <= 0) return;
-			// deleteVote.mutate({
-			// 	boardId,
-			// 	cardId: card._id,
-			// 	socketId,
-			// 	cardItemId,
-			// 	isCardGroup: cardItemId === undefined
-			// });
-
 			setCountVotes(countVotes - 1);
-			// setVotesInCard(votesInCard - 1);
-			// setActualBoardVotes(actualBoardVotes - 1);
 		};
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (maxVotes && user && user.votesCount >= maxVotes) return;
-			// addVote.mutate({
-			// 	boardId,
-			// 	cardId: card._id,
-			// 	socketId,
-			// 	cardItemId,
-			// 	isCardGroup: cardItemId === undefined
-			// });
-
 			setCountVotes(countVotes + 1);
-			// setVotesInCard(votesInCard + 1);
-			// setActualBoardVotes(actualBoardVotes + 1);
 		};
-
-		// useEffect(() => {
-		// 	if (boardUser?.votesCount !== undefined) {
-		// 		setActualBoardVotes(boardUser?.votesCount ?? 0);
-		// 	}
-		// }, []);
 
 		return (
 			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
