@@ -241,7 +241,6 @@ const useVotes = () => {
 
 	// const handleVote = useMutation(handleVotes, {
 	// 	onSuccess: (voteData, variables) => {
-	// 		console.log(variables)
 	// 		queryClient.invalidateQueries(['board', { id: voteData?._id }]);
 	// 	},
 	// 	onError: (error, variables) => {
@@ -291,22 +290,6 @@ const useVotes = () => {
 			}
 		}
 	});
-	// console.log(handleVote)
-
-	// const addVote = useMutation(addVoteRequest, {
-	//  onMutate: async (voteData) => addVoteOptimistic(voteData),
-	//  onSettled: (boardDataFromApi) =>
-	//      invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote added.'),
-	//  onError: (_err, voteData, ctx) =>
-	//      restoreBoardDataAndToastError(ctx?.prevBoardData, voteData, 'Error adding the vote')
-	// });
-	// const deleteVote = useMutation(deleteVoteRequest, {
-	//  onMutate: async (voteData) => removeVoteOptimistic(voteData),
-	//  onSettled: (boardDataFromApi) =>
-	//      invalidateQueriesAndToastMessage(boardDataFromApi, ‘Vote removed.’),
-	//  onError: (_err, voteData, ctx) =>
-	//      restoreBoardDataAndToastError(ctx?.prevBoardData, voteData, ‘Error deleting the vote’)
-	// });
 
 	return {
 		handleVote

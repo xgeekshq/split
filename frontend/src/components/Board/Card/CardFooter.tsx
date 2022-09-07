@@ -128,7 +128,7 @@ const CardFooter = React.memo<FooterProps>(
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;
-			}, 500);
+			}, 1000);
 
 			// eslint-disable-next-line consistent-return
 			return () => clearTimeout(delayDebounceFn);
@@ -139,14 +139,6 @@ const CardFooter = React.memo<FooterProps>(
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (user && user.votesCount + countVotes <= 0) return;
-			// console.log(
-			// 		'partiu',
-			// 		countVotes,
-			// 		'+',
-			// 		user.votesCount,
-			// 		'=',
-			// 		user.votesCount + countVotes
-			// 	)
 			setCountVotes(countVotes - 1);
 		};
 
@@ -155,15 +147,7 @@ const CardFooter = React.memo<FooterProps>(
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (maxVotes && user && user.votesCount >= maxVotes) return;
 			if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
-			// 	 console.log(
-			// 		'partiu',
-			// 		countVotes,
-			// 		'+',
-			// 		user.votesCount,
-			// 		'=',
-			// 		user.votesCount + countVotes
-			// 	);
-			// console.log('passou');
+
 			setCountVotes(countVotes + 1);
 		};
 
@@ -204,7 +188,11 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={!isMainboard || !!disableVotes}
+								disabled={
+									!isMainboard ||
+									!!disableVotes ||
+									!!(user && maxVotes && user.votesCount + countVotes >= maxVotes)
+								}
 								onClick={handleAddVote}
 							>
 								<Icon name="thumbs-up" />
@@ -229,7 +217,11 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={!isMainboard || votesInThisCard.length === 0}
+								disabled={
+									!isMainboard ||
+									votesInThisCard.length === 0 ||
+									!!(user && maxVotes && user.votesCount + countVotes <= 0)
+								}
 								onClick={handleDeleteVote}
 							>
 								<Icon name="thumbs-down" />
