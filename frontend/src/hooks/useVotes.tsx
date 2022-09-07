@@ -239,57 +239,57 @@ const useVotes = () => {
 		toastRemainingVotesMessage(message, boardDataFromApi);
 	};
 
-	// const handleVote = useMutation(handleVotes, {
-	// 	onSuccess: (voteData, variables) => {
-	// 		queryClient.invalidateQueries(['board', { id: voteData?._id }]);
-	// 	},
-	// 	onError: (error, variables) => {
-	// 		queryClient.invalidateQueries(['board', { id: variables.boardId }]);
-	// 		setToastState({
-	// 			open: true,
-	// 			content: 'Error adding the vote',
-	// 			type: ToastStateEnum.ERROR
-	// 		});
-	// 	}
-	// });
-
 	const handleVote = useMutation(handleVotes, {
-		// eslint-disable-next-line consistent-return
-		onMutate: async (voteData) => {
-			if (voteData.count > 0) {
-				return addVoteOptimistic(voteData);
-			}
-			if (voteData.count < 0) {
-				return removeVoteOptimistic(voteData);
-			}
+		onSuccess: (voteData, variables) => {
+			queryClient.invalidateQueries(['board', { id: voteData?._id }]);
 		},
-		// eslint-disable-next-line consistent-return
-		onSettled: (boardDataFromApi, _err, voteData) => {
-			if (voteData.count > 0) {
-				return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote added.');
-			}
-			if (voteData.count < 0) {
-				return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote removed.');
-			}
-		},
-		// eslint-disable-next-line consistent-return
-		onError: (_err, voteData, ctx) => {
-			if (voteData.count > 0) {
-				return restoreBoardDataAndToastError(
-					ctx?.prevBoardData,
-					voteData,
-					'Error adding the vote'
-				);
-			}
-			if (voteData.count < 0) {
-				return restoreBoardDataAndToastError(
-					ctx?.prevBoardData,
-					voteData,
-					'Error deleting the vote'
-				);
-			}
+		onError: (error, variables) => {
+			queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+			setToastState({
+				open: true,
+				content: 'Error adding the vote',
+				type: ToastStateEnum.ERROR
+			});
 		}
 	});
+
+	// const handleVote = useMutation(handleVotes, {
+	// 	// eslint-disable-next-line consistent-return
+	// 	onMutate: async (voteData) => {
+	// 		if (voteData.count > 0) {
+	// 			return addVoteOptimistic(voteData);
+	// 		}
+	// 		if (voteData.count < 0) {
+	// 			return removeVoteOptimistic(voteData);
+	// 		}
+	// 	},
+	// 	// eslint-disable-next-line consistent-return
+	// 	onSettled: (boardDataFromApi, _err, voteData) => {
+	// 		if (voteData.count > 0) {
+	// 			return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote added.');
+	// 		}
+	// 		if (voteData.count < 0) {
+	// 			return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote removed.');
+	// 		}
+	// 	},
+	// 	// eslint-disable-next-line consistent-return
+	// 	onError: (_err, voteData, ctx) => {
+	// 		if (voteData.count > 0) {
+	// 			return restoreBoardDataAndToastError(
+	// 				ctx?.prevBoardData,
+	// 				voteData,
+	// 				'Error adding the vote'
+	// 			);
+	// 		}
+	// 		if (voteData.count < 0) {
+	// 			return restoreBoardDataAndToastError(
+	// 				ctx?.prevBoardData,
+	// 				voteData,
+	// 				'Error deleting the vote'
+	// 			);
+	// 		}
+	// 	}
+	// });
 
 	return {
 		handleVote
