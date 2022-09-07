@@ -128,7 +128,7 @@ const CardFooter = React.memo<FooterProps>(
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;
-			}, 200);
+			}, 500);
 
 			// eslint-disable-next-line consistent-return
 			return () => clearTimeout(delayDebounceFn);
@@ -138,6 +138,15 @@ const CardFooter = React.memo<FooterProps>(
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
+			if (user && user.votesCount + countVotes <= 0) return;
+			// console.log(
+			// 		'partiu',
+			// 		countVotes,
+			// 		'+',
+			// 		user.votesCount,
+			// 		'=',
+			// 		user.votesCount + countVotes
+			// 	)
 			setCountVotes(countVotes - 1);
 		};
 
@@ -145,6 +154,16 @@ const CardFooter = React.memo<FooterProps>(
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (maxVotes && user && user.votesCount >= maxVotes) return;
+			if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
+			// 	 console.log(
+			// 		'partiu',
+			// 		countVotes,
+			// 		'+',
+			// 		user.votesCount,
+			// 		'=',
+			// 		user.votesCount + countVotes
+			// 	);
+			// console.log('passou');
 			setCountVotes(countVotes + 1);
 		};
 
