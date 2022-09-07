@@ -108,7 +108,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 									/>
 								</Flex>
 							)}
-							{!isSubmited && userId === item?.createdBy?._id && (
+							{!isSubmited && (
 								<PopoverCardSettings
 									isItem
 									boardId={boardId}
