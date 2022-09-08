@@ -7,7 +7,7 @@ import Avatar from 'components/Primitives/Avatar';
 import Button from 'components/Primitives/Button';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import { cardBlur } from 'helper/board/blurFilter';
+import { cardFooterBlur } from 'helper/board/blurFilter';
 import { getCardVotes } from 'helper/board/votes';
 import useVotes from 'hooks/useVotes';
 import { BoardUser } from 'types/board/board.user';
@@ -138,7 +138,7 @@ const CardFooter = React.memo<FooterProps>(
 						align="center"
 						gap="4"
 						css={{
-							filter: cardBlur(hideCards, card as CardType, userId)
+							filter: cardFooterBlur(hideCards, createdBy, userId)
 						}}
 					>
 						<Avatar
@@ -164,7 +164,7 @@ const CardFooter = React.memo<FooterProps>(
 							align="center"
 							gap="2"
 							css={{
-								filter: cardBlur(hideCards, card as CardType, userId)
+								filter: cardFooterBlur(hideCards, createdBy, userId)
 							}}
 						>
 							<StyledButtonIcon
@@ -191,7 +191,7 @@ const CardFooter = React.memo<FooterProps>(
 							gap="2"
 							css={{
 								mr: '$10',
-								filter: cardBlur(hideCards, card as CardType, userId)
+								filter: cardFooterBlur(hideCards, createdBy, userId)
 							}}
 						>
 							<StyledButtonIcon
@@ -206,7 +206,7 @@ const CardFooter = React.memo<FooterProps>(
 							align="center"
 							gap="2"
 							css={{
-								filter: cardBlur(hideCards, card as CardType, userId)
+								filter: cardFooterBlur(hideCards, createdBy, userId)
 							}}
 						>
 							<StyledButtonIcon onClick={setOpenComments}>
