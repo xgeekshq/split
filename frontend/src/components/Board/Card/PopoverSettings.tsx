@@ -16,6 +16,7 @@ import { CardItemType } from 'types/card/cardItem';
 
 interface PopoverSettingsContentProps {
 	isItem: boolean;
+	isOwner: boolean;
 	unmergeCard: () => void;
 	setEditCard: () => void;
 	setDeleteCard?: () => void;
@@ -23,6 +24,7 @@ interface PopoverSettingsContentProps {
 
 const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 	isItem,
+	isOwner,
 	unmergeCard,
 	setEditCard,
 	setDeleteCard
@@ -35,12 +37,14 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 
 	return (
 		<PopoverContent portalled={false}>
-			<PopoverItem align="center" gap="8" onClick={setEditCard}>
-				<Icon name="edit" />
-				<Text size="sm" weight="medium">
-					Edit
-				</Text>
-			</PopoverItem>
+			{isOwner && (
+				<PopoverItem align="center" gap="8" onClick={setEditCard}>
+					<Icon name="edit" />
+					<Text size="sm" weight="medium">
+						Edit
+					</Text>
+				</PopoverItem>
+			)}
 			{isItem && (
 				<PopoverItem
 					align="center"
@@ -60,12 +64,14 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
 					</Text>
 				</PopoverItem>
 			)}
-			<PopoverItem align="center" gap="8" onClick={setDeleteCard}>
-				<Icon name="trash-alt" />
-				<Text size="sm" weight="medium">
-					Delete card
-				</Text>
-			</PopoverItem>
+			{isOwner && (
+				<PopoverItem align="center" gap="8" onClick={setDeleteCard}>
+					<Icon name="trash-alt" />
+					<Text size="sm" weight="medium">
+						Delete card
+					</Text>
+				</PopoverItem>
+			)}
 		</PopoverContent>
 	);
 };
@@ -154,14 +160,13 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 					/>
 				</PopoverTriggerStyled>
 
-				{item.createdBy?._id === userId && (
-					<PopoverSettingsContent
-						isItem={isItem}
-						setDeleteCard={handleDeleteCard}
-						setEditCard={handleEditing}
-						unmergeCard={unmergeCard}
-					/>
-				)}
+				<PopoverSettingsContent
+					isItem={isItem}
+					isOwner={item.createdBy?._id === userId}
+					setDeleteCard={handleDeleteCard}
+					setEditCard={handleEditing}
+					unmergeCard={unmergeCard}
+				/>
 			</Popover>
 		);
 	}
