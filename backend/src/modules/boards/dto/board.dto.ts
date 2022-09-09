@@ -100,4 +100,9 @@ export default class BoardDto {
 	@IsNotEmpty()
 	@IsBoolean()
 	isSubBoard?: boolean;
+
+	@ApiPropertyOptional({ default: false })
+	@IsOptional()
+	@IsBoolean()
+	createSlackCommunication?: boolean;
 }

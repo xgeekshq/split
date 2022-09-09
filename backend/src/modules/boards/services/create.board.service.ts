@@ -133,6 +133,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			this.createFirstCronJob(addCronJobDto);
 		}
 
+		// if (boardData.createSlackCommunication) {
+		// 	console.log('create slack communication');
+		// }
+
 		return newBoard;
 	}
 
