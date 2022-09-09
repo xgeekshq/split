@@ -4,9 +4,15 @@ import { LeanDocument, Model } from 'mongoose';
 
 import { BoardRoles } from 'libs/enum/board.roles';
 import { TeamRoles } from 'libs/enum/team.roles';
+import {
+	fillDividedBoardsUsersWithTeamUsers,
+	translateBoard
+} from 'libs/utils/communication-helpers';
 import { getDay, getNextMonth } from 'libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'libs/utils/generateBoardData';
 import isEmpty from 'libs/utils/isEmpty';
+import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
+import { TYPES } from 'modules/boards/interfaces/types';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
@@ -14,7 +20,7 @@ import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/se
 import * as SchedulesType from 'modules/schedules/interfaces/types';
 import TeamDto from 'modules/teams/dto/team.dto';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
-import { TYPES } from 'modules/teams/interfaces/types';
+import { TYPES as TeamType } from 'modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 import { UserDocument } from 'modules/users/schemas/user.schema';
 
@@ -39,8 +45,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(TYPES.services.GetTeamService)
+		@Inject(TeamType.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.ExecuteCommunicationInterface)
@@ -139,13 +147,18 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			this.createFirstCronJob(addCronJobDto);
 		}
 
-		console.log(
-			`Call Slack Communication Service for board id: "${newBoard._id}"`,
-			boardData.slackEnable
-		);
+		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 		if (boardData.slackEnable) {
-			this.logger.verbose(`Call Slack Communication Service for board id: "${newBoard._id}"`);
-			this.slackCommunicationService.execute(newBoard);
+			const result = await this.getBoardService.getBoard(newBoard._id, userId);
+			if (result?.board) {
+				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
+				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(result.board));
+				this.slackCommunicationService.execute(board);
+			} else {
+				this.logger.error(
+					`Call Slack Communication Service for board id "${newBoard._id}" fails. Board not found.`
+				);
+			}
 		}
 
 		return newBoard;
