@@ -1,6 +1,6 @@
+import { AxiosError } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
-import { AxiosError } from 'axios';
 
 import {
 	createBoardRequest,

@@ -8,6 +8,9 @@ const SchemaCreateBoard = Joi.object({
 	}),
 	maxVotes: Joi.number().min(1).optional().messages({
 		'number.min': 'Please insert a number greater than zero.'
+	}),
+	slackEnable: Joi.boolean().required().messages({
+		'boolean.required': 'Please enterm the value for slack enable.'
 	})
 });
 
