@@ -104,5 +104,5 @@ export default class BoardDto {
 	@ApiPropertyOptional({ default: false })
 	@IsOptional()
 	@IsBoolean()
-	createSlackCommunication?: boolean;
+	slackEnable?: boolean;
 }

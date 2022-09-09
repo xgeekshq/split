@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 
@@ -7,6 +7,8 @@ import { TeamRoles } from 'libs/enum/team.roles';
 import { getDay, getNextMonth } from 'libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'libs/utils/generateBoardData';
 import isEmpty from 'libs/utils/isEmpty';
+import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
+import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service';
 import * as SchedulesType from 'modules/schedules/interfaces/types';
@@ -31,6 +33,8 @@ export interface CreateBoardDto {
 
 @Injectable()
 export default class CreateBoardServiceImpl implements CreateBoardService {
+	private logger = new Logger(CreateBoardServiceImpl.name);
+
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
@@ -38,7 +42,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
-		private createSchedulesService: CreateSchedulesServiceInterface
+		private createSchedulesService: CreateSchedulesServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.ExecuteCommunicationInterface)
+		private slackCommunicationService: ExecuteCommunicationInterface
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
@@ -133,9 +139,14 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			this.createFirstCronJob(addCronJobDto);
 		}
 
-		// if (boardData.createSlackCommunication) {
-		// 	console.log('create slack communication');
-		// }
+		console.log(
+			`Call Slack Communication Service for board id: "${newBoard._id}"`,
+			boardData.slackEnable
+		);
+		if (boardData.slackEnable) {
+			this.logger.verbose(`Call Slack Communication Service for board id: "${newBoard._id}"`);
+			this.slackCommunicationService.execute(newBoard);
+		}
 
 		return newBoard;
 	}
