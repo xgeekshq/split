@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -81,10 +81,12 @@ const CardFooter = React.memo<FooterProps>(
 			return card.createdBy;
 		}, [card]);
 
-		const { addVote, deleteVote } = useVotes();
-		const actualBoardVotes = boardUser?.votesCount;
+		const { handleVote } = useVotes();
 
-		const votesData = useMemo(() => {
+		const user = boardUser;
+		const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
+
+		const calculateVotes = () => {
 			if (Object.hasOwnProperty.call(card, 'items')) {
 				const cardTyped = card as CardType;
 				const cardItemId =
@@ -101,34 +103,52 @@ const CardFooter = React.memo<FooterProps>(
 				return { cardItemId, votesOfUserInThisCard, votesInThisCard };
 			}
 			return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
-		}, [card, userId]);
+		};
+		const votesData = calculateVotes();
 
-		const { cardItemId, votesOfUserInThisCard, votesInThisCard } = votesData;
+		const { cardItemId, votesInThisCard } = votesData;
+
+		const [countVotes, setCountVotes] = useState(0);
+
+		const firstUpdate = useRef(true);
+		useEffect(() => {
+			if (firstUpdate.current) {
+				firstUpdate.current = false;
+				return;
+			}
+
+			const delayDebounceFn = setTimeout(() => {
+				handleVote.mutate({
+					boardId,
+					cardId: card._id,
+					socketId,
+					cardItemId,
+					isCardGroup: cardItemId === undefined,
+					count: countVotes
+				});
+				setCountVotes(0);
+				firstUpdate.current = true;
+			}, 100);
+
+			// eslint-disable-next-line consistent-return
+			return () => clearTimeout(delayDebounceFn);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [countVotes, firstUpdate]);
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (votesOfUserInThisCard <= 0) return;
-			deleteVote.mutate({
-				boardId,
-				cardId: card._id,
-				socketId,
-				cardItemId,
-				isCardGroup: cardItemId === undefined
-			});
+			if (user && user.votesCount + countVotes <= 0) return;
+			setCountVotes(countVotes - 1);
 		};
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
-			if (maxVotes && actualBoardVotes && actualBoardVotes >= maxVotes) return;
-			addVote.mutate({
-				boardId,
-				cardId: card._id,
-				socketId,
-				cardItemId,
-				isCardGroup: cardItemId === undefined
-			});
+			if (maxVotes && user && user.votesCount >= maxVotes) return;
+			if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
+
+			setCountVotes(countVotes + 1);
 		};
 
 		return (
@@ -169,7 +189,9 @@ const CardFooter = React.memo<FooterProps>(
 						>
 							<StyledButtonIcon
 								disabled={
-									!isMainboard || (!!maxVotes && actualBoardVotes === maxVotes)
+									!isMainboard ||
+									!!disableVotes ||
+									!!(user && maxVotes && user.votesCount + countVotes >= maxVotes)
 								}
 								onClick={handleAddVote}
 							>
@@ -195,7 +217,11 @@ const CardFooter = React.memo<FooterProps>(
 							}}
 						>
 							<StyledButtonIcon
-								disabled={!isMainboard || votesOfUserInThisCard === 0}
+								disabled={
+									!isMainboard ||
+									votesInThisCard.length === 0 ||
+									!!(user && maxVotes && user.votesCount + countVotes <= 0)
+								}
 								onClick={handleDeleteVote}
 							>
 								<Icon name="thumbs-down" />

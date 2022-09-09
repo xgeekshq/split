@@ -167,4 +167,26 @@ export const deleteVoteRequest = (voteDto: VoteDto): Promise<BoardType> => {
 		{ method: 'DELETE', data: voteDto }
 	);
 };
+
+export const handleVotes = (voteDto: {
+	cardId: string;
+
+	cardItemId?: string;
+
+	boardId: string;
+
+	socketId?: string;
+
+	isCardGroup: boolean;
+
+	count: number;
+}) => {
+	return fetchData<BoardType>(
+		voteDto.isCardGroup
+			? `/boards/${voteDto.boardId}/card/${voteDto.cardId}/vote`
+			: `/boards/${voteDto.boardId}/card/${voteDto.cardId}/items/${voteDto.cardItemId}/vote`,
+
+		{ method: 'PUT', data: voteDto }
+	);
+};
 // #endregion
