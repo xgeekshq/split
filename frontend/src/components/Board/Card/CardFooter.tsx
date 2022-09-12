@@ -110,7 +110,7 @@ const CardFooter = React.memo<FooterProps>(
 
 		const [countVotes, setCountVotes] = useState(0);
 
-		const [disableButton, setDisableButton] = useState(false);
+		const [disableVoteButton, setDisableVoteButton] = useState(false);
 
 		const firstUpdate = useRef(true);
 		useEffect(() => {
@@ -141,7 +141,7 @@ const CardFooter = React.memo<FooterProps>(
 			event.stopPropagation();
 			if (hideCards && card.createdBy?._id !== userId) return;
 			if (user && user.votesCount + countVotes <= 0) return;
-			setDisableButton(true);
+			setDisableVoteButton(true);
 			setCountVotes(countVotes - 1);
 		};
 
@@ -151,12 +151,12 @@ const CardFooter = React.memo<FooterProps>(
 			if (maxVotes && user && user.votesCount >= maxVotes) return;
 			if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
 
-			setDisableButton(true);
+			setDisableVoteButton(true);
 			setCountVotes(countVotes + 1);
 		};
 
 		useEffect(() => {
-			setDisableButton(false);
+			setDisableVoteButton(false);
 		}, [card]);
 
 		return (
@@ -197,7 +197,7 @@ const CardFooter = React.memo<FooterProps>(
 						>
 							<StyledButtonIcon
 								disabled={
-									disableButton ||
+									disableVoteButton ||
 									!isMainboard ||
 									!!disableVotes ||
 									!!(user && maxVotes && user.votesCount + countVotes >= maxVotes)
@@ -227,7 +227,7 @@ const CardFooter = React.memo<FooterProps>(
 						>
 							<StyledButtonIcon
 								disabled={
-									disableButton ||
+									disableVoteButton ||
 									!isMainboard ||
 									votesInThisCard.length === 0 ||
 									!!(user && maxVotes && user.votesCount + countVotes <= 0)
