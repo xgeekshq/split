@@ -1,5 +1,5 @@
 export const TYPES = {
 	services: {
-		ExecuteCommunicationInterface: 'ExecuteCommunicationInterface'
+		ExecuteCommunication: 'ExecuteCommunication'
 	}
 };

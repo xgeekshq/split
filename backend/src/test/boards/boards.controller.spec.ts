@@ -13,6 +13,7 @@ import {
 	updateBoardService
 } from 'modules/boards/boards.providers';
 import BoardsController from 'modules/boards/controller/boards.controller';
+import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { createSchedulesService } from 'modules/schedules/schedules.providers';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 import { createTeamService, getTeamApplication, getTeamService } from 'modules/teams/providers';
@@ -61,6 +62,12 @@ describe('BoardsController', () => {
 				{
 					provide: getModelToken('Schedules'),
 					useValue: {}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.ExecuteCommunication,
+					useValue: {
+						execute: jest.fn()
+					}
 				}
 			]
 		}).compile();
