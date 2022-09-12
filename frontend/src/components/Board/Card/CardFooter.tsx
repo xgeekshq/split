@@ -106,7 +106,7 @@ const CardFooter = React.memo<FooterProps>(
 		};
 		const votesData = calculateVotes();
 
-		const { cardItemId, votesInThisCard } = votesData;
+		const { cardItemId, votesInThisCard, votesOfUserInThisCard } = votesData;
 
 		const [countVotes, setCountVotes] = useState(0);
 
@@ -230,7 +230,8 @@ const CardFooter = React.memo<FooterProps>(
 									disableVoteButton ||
 									!isMainboard ||
 									votesInThisCard.length === 0 ||
-									!!(user && maxVotes && user.votesCount + countVotes <= 0)
+									!!(user && maxVotes && user.votesCount + countVotes <= 0) ||
+									votesOfUserInThisCard === 0
 								}
 								onClick={handleDeleteVote}
 							>
