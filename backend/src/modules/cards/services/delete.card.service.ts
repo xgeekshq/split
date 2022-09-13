@@ -107,41 +107,32 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		newComments: LeanDocument<CommentDocument>[],
 		cardItems: LeanDocument<CardItemDocument>[]
 	) {
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
-		const { text, createdBy } = cardItems[0];
-		try {
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$set: {
-							'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
-							'columns.$.cards.$[card].votes': [],
-							'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
-							'columns.$.cards.$[card].comments': [],
-							'columns.$.cards.$[card].text': text,
-							'columns.$.cards.$[card].createdBy': createdBy
-						}
-					},
-					{
-						arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
-						new: true
+		const [{ text, createdBy }] = cardItems;
+
+		const board = await this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns.cards._id': cardId
+				},
+				{
+					$set: {
+						'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
+						'columns.$.cards.$[card].votes': [],
+						'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
+						'columns.$.cards.$[card].comments': [],
+						'columns.$.cards.$[card].text': text,
+						'columns.$.cards.$[card].createdBy': createdBy
 					}
-				)
-				.session(session)
-				.lean()
-				.exec();
-			if (!board) throw Error(UPDATE_FAILED);
-			await session.commitTransaction();
-		} catch (e) {
-			await session.abortTransaction();
-		} finally {
-			await session.endSession();
-		}
+				},
+				{
+					arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
+					new: true
+				}
+			)
+			.lean()
+			.exec();
+		if (!board) throw Error(UPDATE_FAILED);
 	}
 
 	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string, userId: string) {
