@@ -11,6 +11,7 @@ type CardTitleProps = {
 	title: string;
 	isSubBoard: boolean | undefined;
 	mainBoardId?: string;
+	havePermissions: boolean;
 };
 
 const StyledBoardTitle = styled(Text, {
@@ -32,13 +33,14 @@ const StyledBoardTitle = styled(Text, {
 
 const CardTitle: React.FC<CardTitleProps> = ({
 	userIsParticipating,
+	havePermissions,
 	boardId,
 	title,
 	isSubBoard,
 	mainBoardId
 }) => {
 	const getTitle = () => {
-		if (userIsParticipating) {
+		if (userIsParticipating || havePermissions) {
 			return (
 				<Link
 					key={boardId}
@@ -47,14 +49,18 @@ const CardTitle: React.FC<CardTitleProps> = ({
 						query: isSubBoard ? { boardId, mainBoardId } : { boardId }
 					}}
 				>
-					<StyledBoardTitle data-disabled={!userIsParticipating}>
+					<StyledBoardTitle data-disabled={!userIsParticipating && !havePermissions}>
 						{title}
 					</StyledBoardTitle>
 				</Link>
 			);
 		}
 
-		return <StyledBoardTitle data-disabled={!userIsParticipating}>{title}</StyledBoardTitle>;
+		return (
+			<StyledBoardTitle data-disabled={!userIsParticipating && !havePermissions}>
+				{title}
+			</StyledBoardTitle>
+		);
 	};
 
 	if (isSubBoard) {

@@ -3,9 +3,19 @@ import Tooltip from 'components/Primitives/Tooltip';
 import BoardType from 'types/board/board';
 import isEmpty from 'utils/isEmpty';
 
-type CardIconProps = { board: BoardType; toAdd: boolean; isParticipating: boolean };
+type CardIconProps = {
+	board: BoardType;
+	toAdd: boolean;
+	isParticipating: boolean;
+	havePermissions: boolean;
+};
 
-const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipating = false }) => {
+const CardIcon: React.FC<CardIconProps> = ({
+	board,
+	toAdd = false,
+	isParticipating = false,
+	havePermissions = false
+}) => {
 	const { team, dividedBoards } = board;
 	const isDividedBoardsEmpty = isEmpty(dividedBoards);
 	if (!isDividedBoardsEmpty || toAdd) {
@@ -18,7 +28,7 @@ const CardIcon: React.FC<CardIconProps> = ({ board, toAdd = false, isParticipati
 							width: '31px',
 							height: '$32',
 							zIndex: 1,
-							opacity: isParticipating ? 1 : 0.4
+							opacity: isParticipating || havePermissions ? 1 : 0.4
 						}}
 					/>
 				</div>
