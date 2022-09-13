@@ -111,7 +111,6 @@ const CardBody = React.memo<CardBodyProps>(
 				return true;
 			}
 			const myUser = team.users.find((user) => String(user.user._id) === String(userId));
-			console.log(myUser);
 			const myUserIsOwner = board.createdBy._id === userId;
 			if (
 				team &&
@@ -143,7 +142,6 @@ const CardBody = React.memo<CardBodyProps>(
 			},
 			[board._id, countDividedBoards, isDashboard, userId]
 		);
-		console.log(havePermissions);
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
 				<Flex>
