@@ -85,6 +85,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		session.startTransaction();
 		try {
 			await this.deletedVotesFromCard(boardId, cardId);
+
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -119,6 +120,8 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		cardItems: LeanDocument<CardItemDocument>[],
 		session: ClientSession
 	) {
+		const [{ text, createdBy }] = cardItems;
+		console.log('session2', session);
 		const board = await this.boardModel
 			.findOneAndUpdate(
 				{
@@ -130,7 +133,9 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 						'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
 						'columns.$.cards.$[card].votes': [],
 						'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
-						'columns.$.cards.$[card].comments': []
+						'columns.$.cards.$[card].comments': [],
+						'columns.$.cards.$[card].text': text,
+						'columns.$.cards.$[card].createdBy': createdBy
 					}
 				},
 				{
@@ -138,26 +143,33 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					new: true
 				}
 			)
-			.session(session)
+			// .session(session)
 			.lean()
 			.exec();
+
 		if (!board) throw Error(UPDATE_FAILED);
+		return board;
 	}
 
 	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string, userId: string) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
+
 		try {
+			console.log('session1', session);
 			await this.deletedVotesFromCardItem(boardId, cardItemId);
 
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
-			if (card && cardItems?.length === 1 && (card.votes.length > 0 || card.comments.length > 0)) {
+			if (
+				card &&
+				cardItems?.length === 1 &&
+				(card.votes.length >= 0 || card.comments.length >= 0)
+			) {
 				const newVotes = [...card.votes, ...cardItems[0].votes];
 				const newComments = [...card.comments, ...cardItems[0].comments];
 				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems, session);
 			}
-
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
