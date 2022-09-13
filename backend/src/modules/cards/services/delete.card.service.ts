@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
+import { LeanDocument, Model, ObjectId } from 'mongoose';
 
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
@@ -27,18 +27,14 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 	async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
-
 		if (!getCardItem) {
 			throw Error(UPDATE_FAILED);
 		}
-
 		if (getCardItem.votes?.length) {
 			const promises = getCardItem.votes.map((voteUserId) => {
 				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
 			});
-
 			const results = await Promise.all(promises);
-
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
@@ -47,23 +43,18 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 	async deletedVotesFromCard(boardId: string, cardId: string) {
 		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
-
 		if (!getCard) {
 			throw Error(UPDATE_FAILED);
 		}
-
 		if (getCard.votes?.length) {
 			const promises = getCard.votes.map((voteUserId) => {
 				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
 			});
-
 			const results = await Promise.all(promises);
-
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
 		}
-
 		if (Array.isArray(getCard.items)) {
 			const promises: Promise<LeanDocument<BoardUserDocument> | null>[] = [];
 			getCard.items.forEach(async (current) => {
@@ -71,9 +62,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					promises.push(this.deleteVoteService.decrementVoteUser(boardId, currentVote));
 				});
 			});
-
 			const results = await Promise.all(promises);
-
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
@@ -85,7 +74,6 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		session.startTransaction();
 		try {
 			await this.deletedVotesFromCard(boardId, cardId);
-
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -117,48 +105,50 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		cardId: string,
 		newVotes: (LeanDocument<User> | LeanDocument<ObjectId>)[],
 		newComments: LeanDocument<CommentDocument>[],
-		cardItems: LeanDocument<CardItemDocument>[],
-		session: ClientSession
+		cardItems: LeanDocument<CardItemDocument>[]
 	) {
-		const [{ text, createdBy }] = cardItems;
-		console.log('session2', session);
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$set: {
-						'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
-						'columns.$.cards.$[card].votes': [],
-						'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
-						'columns.$.cards.$[card].comments': [],
-						'columns.$.cards.$[card].text': text,
-						'columns.$.cards.$[card].createdBy': createdBy
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		const { text, createdBy } = cardItems[0];
+		try {
+			const board = await this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards._id': cardId
+					},
+					{
+						$set: {
+							'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
+							'columns.$.cards.$[card].votes': [],
+							'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
+							'columns.$.cards.$[card].comments': [],
+							'columns.$.cards.$[card].text': text,
+							'columns.$.cards.$[card].createdBy': createdBy
+						}
+					},
+					{
+						arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
+						new: true
 					}
-				},
-				{
-					arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
-					new: true
-				}
-			)
-			// .session(session)
-			.lean()
-			.exec();
-
-		if (!board) throw Error(UPDATE_FAILED);
-		return board;
+				)
+				.session(session)
+				.lean()
+				.exec();
+			if (!board) throw Error(UPDATE_FAILED);
+			await session.commitTransaction();
+		} catch (e) {
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+		}
 	}
 
 	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string, userId: string) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
-
 		try {
-			console.log('session1', session);
 			await this.deletedVotesFromCardItem(boardId, cardItemId);
-
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
 			if (
@@ -168,7 +158,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 			) {
 				const newVotes = [...card.votes, ...cardItems[0].votes];
 				const newComments = [...card.comments, ...cardItems[0].comments];
-				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems, session);
+				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems);
 			}
 			const board = await this.boardModel
 				.findOneAndUpdate(
