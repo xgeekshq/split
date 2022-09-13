@@ -79,6 +79,6 @@ export const ExecuteCommunication = {
 };
 
 export const ExecuteCommunicationService = {
-	provide: TYPES.services.ExecuteCommunicationInterface,
+	provide: TYPES.services.ExecuteCommunication,
 	useClass: SlackExecuteCommunicationService
 };
