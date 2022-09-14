@@ -111,7 +111,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 	private async createAllChannels(teams: TeamDto[]): Promise<TeamDto[]> {
 		const today = new Date();
 		const year = today.getFullYear();
-		const month = today.toLocaleString('default', { month: 'long' });
+		const month = today.toLocaleString('default', { month: 'long' }).toLowerCase();
 		const createChannelsPromises = teams.map((i) =>
 			this.conversationsHandler.createChannel(
 				`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}-${month}-${year}`
