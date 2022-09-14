@@ -17,7 +17,7 @@ export default class CreateCardServiceImpl implements CreateCardService {
 		card.createdBy = userId;
 
 		if (isEmpty(card.items)) {
-			card.items.push({
+			(card.items as any[]).push({
 				text: card.text,
 				createdBy: userId,
 				comments: [],
