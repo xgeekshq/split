@@ -106,7 +106,7 @@ const CardBody = React.memo<CardBodyProps>(
 			return !!users.find((user) => user.user._id === userId);
 		}, [users, userId]);
 
-		const userIsAdminOrStakeholder = useMemo(() => {
+		const havePermissions = useMemo(() => {
 			if (isSAdmin) {
 				return true;
 			}
@@ -142,7 +142,6 @@ const CardBody = React.memo<CardBodyProps>(
 			},
 			[board._id, countDividedBoards, isDashboard, userId]
 		);
-
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
 				<Flex>
@@ -166,6 +165,7 @@ const CardBody = React.memo<CardBodyProps>(
 								{!isSubBoard && (
 									<CardIcon
 										board={board}
+										havePermissions={havePermissions}
 										isParticipating={userIsParticipating}
 										toAdd={false}
 									/>
@@ -173,6 +173,7 @@ const CardBody = React.memo<CardBodyProps>(
 								<Flex align="center" gap="8">
 									<CardTitle
 										boardId={id}
+										havePermissions={havePermissions}
 										isSubBoard={isSubBoard}
 										mainBoardId={mainBoardId}
 										title={board.title}
@@ -183,16 +184,17 @@ const CardBody = React.memo<CardBodyProps>(
 											of {dividedBoardsCount}
 										</Text>
 									)}
-									{!userIsParticipating && !isDashboard && (
-										<Icon
-											name="lock"
-											css={{
-												color: '$primary300',
-												width: '17px',
-												height: '$16'
-											}}
-										/>
-									)}
+									{!userIsParticipating ||
+										(!havePermissions && !isDashboard && (
+											<Icon
+												name="lock"
+												css={{
+													color: '$primary300',
+													width: '17px',
+													height: '$16'
+												}}
+											/>
+										))}
 									{board.recurrent && (
 										<Tooltip content="Recurrs every month">
 											<RecurrentIconContainer>
@@ -228,11 +230,11 @@ const CardBody = React.memo<CardBodyProps>(
 						)}
 						<CardEnd
 							board={board}
+							havePermissions={havePermissions}
 							index={index}
 							isDashboard={isDashboard}
 							isSubBoard={isSubBoard}
 							userId={userId}
-							userIsAdminOrStakeholder={userIsAdminOrStakeholder}
 							userIsParticipating={userIsParticipating}
 							userSAdmin={isSAdmin}
 						/>
