@@ -141,7 +141,7 @@ export const updateCommentRequest = (updateCommentDto: UpdateCommentDto): Promis
 export const deleteCommentRequest = (deleteCommentDto: DeleteCommentDto): Promise<BoardType> => {
 	return fetchData<BoardType>(
 		deleteCommentDto.isCardGroup
-			? `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/comment/${deleteCommentDto.commentId}`
+			? `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/comments/${deleteCommentDto.commentId}`
 			: `/boards/${deleteCommentDto.boardId}/card/${deleteCommentDto.cardId}/items/${deleteCommentDto.cardItemId}/comments/${deleteCommentDto.commentId}`,
 		{ method: 'DELETE', data: deleteCommentDto }
 	);

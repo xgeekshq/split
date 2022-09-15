@@ -2,11 +2,7 @@ import { useMutation } from 'react-query';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
-import {
-	handleAddComments,
-	handleDeleteComments,
-	handleUpdateComments
-} from 'helper/board/transformBoard';
+import { handleAddComments } from 'helper/board/transformBoard';
 import BoardType from 'types/board/board';
 import ColumnType from 'types/column';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
@@ -87,8 +83,8 @@ const useComments = () => {
 			const board = await getPrevData(data.boardId);
 
 			if (board) {
-				const boardData = handleDeleteComments(board, data);
-				updateBoardColumns(data.boardId, boardData.columns);
+				// const boardData = handleDeleteComments(board, data);
+				updateBoardColumns(data.boardId, board.columns);
 			}
 
 			return { previousBoard: board, data };
@@ -111,8 +107,8 @@ const useComments = () => {
 			const board = await getPrevData(data.boardId);
 
 			if (board) {
-				const boardData = handleUpdateComments(board, data);
-				updateBoardColumns(data.boardId, boardData.columns);
+				// const boardData = handleUpdateComments(board, data);
+				updateBoardColumns(data.boardId, board.columns);
 			}
 
 			return { previousBoard: board, data };
