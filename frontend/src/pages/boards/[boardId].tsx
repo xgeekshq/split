@@ -147,6 +147,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						<BoardSettings
 							isOpen={isOpen}
 							isOwner={isOwner}
+							isResponsible={isResponsible}
 							isSAdmin={session?.isSAdmin}
 							isStakeholderOrAdmin={isStakeholderOrAdmin}
 							setIsOpen={setIsOpen}
