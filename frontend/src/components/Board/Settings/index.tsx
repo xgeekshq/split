@@ -45,6 +45,7 @@ type Props = {
 	isStakeholderOrAdmin?: boolean | undefined;
 	isOwner?: boolean | undefined;
 	isSAdmin?: boolean | undefined;
+	isResponsible: boolean;
 };
 
 const BoardSettings = ({
@@ -53,7 +54,8 @@ const BoardSettings = ({
 	socketId,
 	isStakeholderOrAdmin,
 	isOwner,
-	isSAdmin
+	isSAdmin,
+	isResponsible
 }: Props) => {
 	// Recoil State used on [boardId].tsx
 	const { board } = useRecoilValue(boardInfoState);
@@ -325,116 +327,125 @@ const BoardSettings = ({
 									</StyledAccordionContent>
 								</StyledAccordionItem>
 
-								{board.isSubBoard && (isStakeholderOrAdmin || isOwner || isSAdmin) && (
-									<StyledAccordionItem value="responsible">
-										<StyledAccordionHeader>
-											<StyledAccordionTrigger>
-												<Text heading="5">Team Responsible</Text>
-												<StyledAccordionIcon name="arrow-down" />
-											</StyledAccordionTrigger>
-										</StyledAccordionHeader>
-										<StyledAccordionContent>
-											<Flex direction="column" gap={16}>
-												<ConfigurationSettings
-													handleCheckedChange={handleResponsibleChange}
-													isChecked={switchesState.responsible}
-													text="Change responsible participant for this board."
-													title="Team Responsible"
-												>
-													<Flex
-														align="center"
-														css={{
-															mt: '$10',
-															opacity: !switchesState.responsible
-																? '40%'
-																: 'unset',
-															pointerEvents:
-																!switchesState.responsible
-																	? 'none'
-																	: 'unset',
-															transition: 'all 0.25s ease-in-out'
-														}}
+								{board.isSubBoard &&
+									(isStakeholderOrAdmin ||
+										isOwner ||
+										isSAdmin ||
+										isResponsible) && (
+										<StyledAccordionItem value="responsible">
+											<StyledAccordionHeader>
+												<StyledAccordionTrigger>
+													<Text heading="5">Team Responsible</Text>
+													<StyledAccordionIcon name="arrow-down" />
+												</StyledAccordionTrigger>
+											</StyledAccordionHeader>
+											<StyledAccordionContent>
+												<Flex direction="column" gap={16}>
+													<ConfigurationSettings
+														isChecked={switchesState.responsible}
+														text="Change responsible participant for this board."
+														title="Team Responsible"
+														handleCheckedChange={
+															handleResponsibleChange
+														}
 													>
-														<Text
-															css={{
-																mr: '$8',
-																color: '$primary300'
-															}}
-														>
-															Responsible Lottery
-														</Text>
-														<Separator
-															orientation="vertical"
-															css={{
-																'&[data-orientation=vertical]': {
-																	height: '$12',
-																	width: 1
-																}
-															}}
-														/>
-
 														<Flex
 															align="center"
-															justify="center"
 															css={{
-																height: '$24',
-																width: '$24',
-																borderRadius: '$round',
-																border: '1px solid $colors$primary400',
-																ml: '$12',
-																cursor: switchesState.responsible
-																	? 'pointer'
-																	: 'default',
-
-																transition: 'all 0.2s ease-in-out',
-
-																'&:hover': switchesState.responsible
-																	? {
-																			backgroundColor:
-																				'$primary400',
-																			color: 'white'
-																	  }
-																	: 'none'
+																mt: '$10',
+																opacity: !switchesState.responsible
+																	? '40%'
+																	: 'unset',
+																pointerEvents:
+																	!switchesState.responsible
+																		? 'none'
+																		: 'unset',
+																transition: 'all 0.25s ease-in-out'
 															}}
-															onClick={handleRandomResponsible}
 														>
-															<Icon
-																name="wand"
+															<Text
 																css={{
-																	width: '$12',
-																	height: '$12'
+																	mr: '$8',
+																	color: '$primary300'
+																}}
+															>
+																Responsible Lottery
+															</Text>
+															<Separator
+																orientation="vertical"
+																css={{
+																	'&[data-orientation=vertical]':
+																		{
+																			height: '$12',
+																			width: 1
+																		}
 																}}
 															/>
+
+															<Flex
+																align="center"
+																justify="center"
+																css={{
+																	height: '$24',
+																	width: '$24',
+																	borderRadius: '$round',
+																	border: '1px solid $colors$primary400',
+																	ml: '$12',
+																	cursor: switchesState.responsible
+																		? 'pointer'
+																		: 'default',
+
+																	transition:
+																		'all 0.2s ease-in-out',
+
+																	'&:hover':
+																		switchesState.responsible
+																			? {
+																					backgroundColor:
+																						'$primary400',
+																					color: 'white'
+																			  }
+																			: 'none'
+																}}
+																onClick={handleRandomResponsible}
+															>
+																<Icon
+																	name="wand"
+																	css={{
+																		width: '$12',
+																		height: '$12'
+																	}}
+																/>
+															</Flex>
+
+															<Text
+																color="primary800"
+																css={{ mx: '$8' }}
+																size="sm"
+															>
+																{!responsible
+																	? 'Responsible not found!'
+																	: `${responsible?.firstName} ${responsible?.lastName}`}
+															</Text>
+
+															<Avatar
+																css={{ position: 'relative' }}
+																size={32}
+																colors={{
+																	bg: '$highlight2Lighter',
+																	fontColor: '$highlight2Dark'
+																}}
+																fallbackText={getInitials(
+																	responsible?.firstName ?? '-',
+																	responsible?.lastName ?? '-'
+																)}
+															/>
 														</Flex>
-
-														<Text
-															color="primary800"
-															css={{ mx: '$8' }}
-															size="sm"
-														>
-															{!responsible
-																? 'Responsible not found!'
-																: `${responsible?.firstName} ${responsible?.lastName}`}
-														</Text>
-
-														<Avatar
-															css={{ position: 'relative' }}
-															size={32}
-															colors={{
-																bg: '$highlight2Lighter',
-																fontColor: '$highlight2Dark'
-															}}
-															fallbackText={getInitials(
-																responsible?.firstName ?? '-',
-																responsible?.lastName ?? '-'
-															)}
-														/>
-													</Flex>
-												</ConfigurationSettings>
-											</Flex>
-										</StyledAccordionContent>
-									</StyledAccordionItem>
-								)}
+													</ConfigurationSettings>
+												</Flex>
+											</StyledAccordionContent>
+										</StyledAccordionItem>
+									)}
 							</Accordion>
 							<ButtonsContainer gap={24} justify="end">
 								<Button
