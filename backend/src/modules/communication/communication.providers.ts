@@ -14,7 +14,9 @@ import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.ha
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
+import { TYPES } from 'modules/communication/interfaces/types';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
+import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,
@@ -74,4 +76,9 @@ export const ExecuteCommunication = {
 		);
 	},
 	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
+};
+
+export const ExecuteCommunicationService = {
+	provide: TYPES.services.ExecuteCommunication,
+	useClass: SlackExecuteCommunicationService
 };

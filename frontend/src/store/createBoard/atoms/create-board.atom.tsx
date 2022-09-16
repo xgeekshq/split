@@ -50,7 +50,7 @@ export const createBoardDataState = atom<CreateBoardData>({
 			isSubBoard: false,
 			hideCards: false,
 			hideVotes: false,
-			slackGroup: false,
+			slackEnable: false,
 			totalUsedVotes: 0
 		}
 	}

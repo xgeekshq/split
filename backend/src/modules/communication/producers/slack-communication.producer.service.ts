@@ -1,6 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
+import { createWriteStream } from 'fs';
 
 import { JobType } from 'modules/communication/dto/types';
 
@@ -15,8 +16,9 @@ export class CommunicationProducerService {
 		private readonly queue: Queue
 	) {
 		// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
-		this.queue.on('completed', (job: Job<JobType>) => {
+		this.queue.on('completed', (job: Job<JobType>, result: any) => {
 			this.logger.verbose(`Completed Job id: "${job.id}"`);
+			this.saveLog(result);
 			job.remove();
 		});
 		this.queue.on('error', (error: Error) => {
@@ -36,5 +38,15 @@ export class CommunicationProducerService {
 		);
 
 		return job;
+	}
+
+	saveLog(data: any) {
+		try {
+			const stream = createWriteStream('slackLog.txt', { flags: 'a' });
+			stream.write(`${JSON.stringify(data)}\n`);
+			stream.end();
+		} catch (error) {
+			this.logger.error(error);
+		}
 	}
 }

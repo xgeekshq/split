@@ -1,10 +1,10 @@
+import { joiResolver } from '@hookform/resolvers/joi';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient } from 'react-query';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { joiResolver } from '@hookform/resolvers/joi';
 
 import {
 	ButtonsContainer,
@@ -54,12 +54,13 @@ const NewBoard: NextPage = () => {
 	/**
 	 * React Hook Form
 	 */
-	const methods = useForm<{ text: string; maxVotes?: number }>({
+	const methods = useForm<{ text: string; maxVotes?: number; slackEnable?: boolean }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
 		defaultValues: {
 			text: '',
-			maxVotes: boardState.board.maxVotes
+			maxVotes: boardState.board.maxVotes,
+			slackEnable: false
 		},
 		resolver: joiResolver(SchemaCreateBoard)
 	});
@@ -82,7 +83,7 @@ const NewBoard: NextPage = () => {
 	 * @param title Board Title
 	 * @param maxVotes Maxium number of votes allowed
 	 */
-	const saveBoard = (title: string, maxVotes?: number) => {
+	const saveBoard = (title: string, maxVotes?: number, slackEnable?: boolean) => {
 		const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map(
 			(subBoard) => {
 				const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -105,6 +106,7 @@ const NewBoard: NextPage = () => {
 			title,
 			dividedBoards: newDividedBoards,
 			maxVotes,
+			slackEnable,
 			maxUsers: boardState.count.maxUsersCount.toString()
 		});
 	};
@@ -151,9 +153,9 @@ const NewBoard: NextPage = () => {
 						status={!haveError}
 						onSubmit={
 							!haveError
-								? methods.handleSubmit(({ text, maxVotes }) =>
-										saveBoard(text, maxVotes)
-								  )
+								? methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+										saveBoard(text, maxVotes, slackEnable);
+								  })
 								: undefined
 						}
 					>

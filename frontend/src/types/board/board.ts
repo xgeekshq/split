@@ -38,7 +38,7 @@ export default interface BoardType {
 	votes?: string;
 	submitedByUser?: string;
 	submitedAt?: Date;
-	slackGroup?: boolean;
+	slackEnable?: boolean;
 	totalUsedVotes: number;
 }
 

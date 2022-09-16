@@ -70,13 +70,6 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 		teamMembers
 	} = useCreateBoard(team);
 
-	const slackGroupHandler = () => {
-		setCreateBoardData((prev) => ({
-			...prev,
-			board: { ...prev.board, slackGroup: !board.slackGroup }
-		}));
-	};
-
 	const teamMembersCount = teamMembers?.length ?? 0;
 
 	useEffect(() => {
@@ -208,10 +201,11 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 				</Flex>
 			</MainContainer>
 			<SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
-			<Box onClick={slackGroupHandler}>
+			<Box>
+				{/* onClick={slackEnableHandler} */}
 				<Checkbox
-					checked={board.slackGroup}
-					id="slack"
+					// checked={board.slackEnable}
+					id="slackEnable"
 					label="Create Slack group for each sub-team"
 					size="16"
 				/>

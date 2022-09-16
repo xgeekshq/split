@@ -109,9 +109,12 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 	}
 
 	private async createAllChannels(teams: TeamDto[]): Promise<TeamDto[]> {
+		const today = new Date();
+		const year = today.getFullYear();
+		const month = today.toLocaleString('default', { month: 'long' }).toLowerCase();
 		const createChannelsPromises = teams.map((i) =>
 			this.conversationsHandler.createChannel(
-				`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}`
+				`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}-${month}-${year}`
 			)
 		);
 
@@ -121,10 +124,10 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 		errors.forEach((i) => this.logger.warn(i));
 
 		success.forEach(({ id: channelId, name: channelName }) => {
-			const board = teams.find(
-				(i) =>
-					channelName ===
+			const board = teams.find((i) =>
+				channelName.includes(
 					`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}`
+				)
 			);
 			if (board) {
 				board.channelId = channelId;

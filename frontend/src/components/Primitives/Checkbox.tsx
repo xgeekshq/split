@@ -1,6 +1,7 @@
-import React, { Dispatch, useState } from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
+import React, { Dispatch, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Icon from 'components/icons/Icon';
 import Flex from './Flex';
@@ -77,6 +78,8 @@ const Checkbox: React.FC<{
 		setCheckedTerms: null
 	};
 
+	const { setValue } = useFormContext();
+
 	const [currentCheckValue, setCurrentCheckValue] = useState<
 		boolean | undefined | 'indeterminate'
 	>(checked);
@@ -84,6 +87,8 @@ const Checkbox: React.FC<{
 		if (handleChange) handleChange(id);
 		setCurrentCheckValue(isChecked);
 		if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
+
+		setValue('slackEnable', !!isChecked);
 	};
 
 	return (

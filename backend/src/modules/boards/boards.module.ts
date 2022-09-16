@@ -4,6 +4,7 @@ import {
 	mongooseBoardModule,
 	mongooseBoardUserModule
 } from 'infrastructure/database/mongoose.module';
+import { CommunicationModule } from 'modules/communication/communication.module';
 import { SchedulesModule } from 'modules/schedules/schedules.module';
 import TeamsModule from 'modules/teams/teams.module';
 import UsersModule from 'modules/users/users.module';
@@ -25,6 +26,7 @@ import BoardsController from './controller/boards.controller';
 		UsersModule,
 		TeamsModule,
 		SchedulesModule,
+		CommunicationModule,
 		mongooseBoardModule,
 		mongooseBoardUserModule
 	],

@@ -45,3 +45,6 @@ lerna-debug.log*
 .env.staging
 
 .vscode
+
+# Log file for slack
+slackLog.txt
