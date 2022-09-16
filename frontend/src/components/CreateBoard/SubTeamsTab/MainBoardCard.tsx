@@ -70,16 +70,6 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 		teamMembers
 	} = useCreateBoard(team);
 
-	// const slackEnableHandler = () => {
-	// 	setCreateBoardData((prev) => {
-	// 		console.log('slackEnableHandler', { ...prev.board, slackEnable: board.slackEnable });
-	// 		return {
-	// 			...prev,
-	// 			board: { ...prev.board, slackEnable: !board.slackEnable }
-	// 		};
-	// 	});
-	// };
-
 	const teamMembersCount = teamMembers?.length ?? 0;
 
 	useEffect(() => {

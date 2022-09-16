@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 import { deepClone } from 'fast-json-patch';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useRecoilValue } from 'recoil';
 
 import Icon from 'components/icons/Icon';
 import Avatar from 'components/Primitives/Avatar';
@@ -223,7 +223,6 @@ const BoardSettings = ({
 
 		const keyDownHandler = (event: KeyboardEvent) => {
 			if (event.key === 'Enter') {
-				console.log('---');
 				event.preventDefault();
 
 				if (submitBtnRef.current) {

@@ -18,11 +18,7 @@ export class CommunicationProducerService {
 		// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
 		this.queue.on('completed', (job: Job<JobType>, result: any) => {
 			this.logger.verbose(`Completed Job id: "${job.id}"`);
-
-			console.log(result);
-
 			this.saveLog(result);
-
 			job.remove();
 		});
 		this.queue.on('error', (error: Error) => {

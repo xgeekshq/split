@@ -154,11 +154,6 @@ const NewBoard: NextPage = () => {
 						onSubmit={
 							!haveError
 								? methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-										console.log('methods.handleSubmit', {
-											text,
-											maxVotes,
-											slackEnable
-										});
 										saveBoard(text, maxVotes, slackEnable);
 								  })
 								: undefined
