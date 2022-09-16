@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports */
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
 import React, { Dispatch, useState } from 'react';

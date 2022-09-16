@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports */
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
