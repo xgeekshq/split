@@ -1,11 +1,10 @@
-/* eslint-disable simple-import-sort/imports */
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 import { deepClone } from 'fast-json-patch';
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useRecoilValue } from 'recoil';
 
 import Icon from 'components/icons/Icon';
 import Avatar from 'components/Primitives/Avatar';

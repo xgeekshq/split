@@ -1,8 +1,7 @@
-/* eslint-disable simple-import-sort/imports */
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { styled } from '@stitches/react';
 import React, { Dispatch, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { styled } from '@stitches/react';
 
 import Icon from 'components/icons/Icon';
 import Flex from './Flex';
