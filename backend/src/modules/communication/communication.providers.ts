@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 
+import { configuration } from 'infrastructure/config/configuration';
 import { FRONTEND_URL } from 'libs/constants/frontend';
 import {
 	SLACK_API_BOT_TOKEN,
@@ -16,6 +17,7 @@ import { CommunicationGateInterface } from 'modules/communication/interfaces/com
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
 import { TYPES } from 'modules/communication/interfaces/types';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
+import { SlackDisabledCommunicationService } from 'modules/communication/services/slack-disabled-communication.service';
 import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
 
 export const CommunicationGateAdapter = {
@@ -80,5 +82,7 @@ export const ExecuteCommunication = {
 
 export const ExecuteCommunicationService = {
 	provide: TYPES.services.ExecuteCommunication,
-	useClass: SlackExecuteCommunicationService
+	useClass: configuration().slack.enable
+		? SlackExecuteCommunicationService
+		: SlackDisabledCommunicationService
 };

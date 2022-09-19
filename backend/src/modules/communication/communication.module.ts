@@ -2,6 +2,7 @@ import { BullModule } from '@nestjs/bull';
 import { forwardRef, Module } from '@nestjs/common';
 import { join } from 'path';
 
+import { configuration } from 'infrastructure/config/configuration';
 import BoardsModule from 'modules/boards/boards.module';
 import {
 	ChatHandler,
@@ -16,22 +17,30 @@ import { CommunicationProducerService } from 'modules/communication/producers/sl
 @Module({
 	imports: [
 		forwardRef(() => BoardsModule),
-		BullModule.registerQueueAsync({
-			name: CommunicationProducerService.QUEUE_NAME,
-			useFactory: async () => ({
-				name: CommunicationProducerService.QUEUE_NAME,
-				processors: [join(__dirname, 'consumers', 'slack-consumer.processor')]
-			})
-		})
+		...(configuration().slack.enable
+			? [
+					BullModule.registerQueueAsync({
+						name: CommunicationProducerService.QUEUE_NAME,
+						useFactory: async () => ({
+							name: CommunicationProducerService.QUEUE_NAME,
+							processors: [join(__dirname, 'consumers', 'slack-consumer.processor')]
+						})
+					})
+			  ]
+			: [])
 	],
 	providers: [
 		ExecuteCommunicationService,
-		CommunicationGateAdapter,
-		ChatHandler,
-		ConversationsHandler,
-		UsersHandler,
-		ExecuteCommunication,
-		CommunicationProducerService
+		...(configuration().slack.enable
+			? [
+					CommunicationGateAdapter,
+					ChatHandler,
+					ConversationsHandler,
+					UsersHandler,
+					ExecuteCommunication,
+					CommunicationProducerService
+			  ]
+			: [])
 	],
 	exports: [ExecuteCommunicationService]
 })
