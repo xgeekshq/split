@@ -32,7 +32,8 @@ const imports = [
 	TeamsModule,
 	mongooseResetModule,
 	mongooseUserModule,
-	ScheduleModule.forRoot()
+	ScheduleModule.forRoot(),
+	QueueModule
 ];
 
 if (configuration().azure.enabled) {
@@ -44,7 +45,6 @@ if (configuration().smtp.enabled) {
 }
 
 if (configuration().slack.enable) {
-	imports.push(QueueModule);
 	imports.push(CommunicationModule);
 }
 
