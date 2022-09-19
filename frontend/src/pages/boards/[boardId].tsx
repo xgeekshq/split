@@ -128,7 +128,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	// Socket IO
 	useEffect(() => cleanSocket, [cleanSocket]);
 
-	return board && userId && socketId ? (
+	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+
+	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
