@@ -69,13 +69,25 @@ const Checkbox: React.FC<{
 	size: '12' | '16';
 	setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
 	handleChange?: (value: string) => void;
-}> = ({ id, label, variant, size, checked, disabled, handleChange, setCheckedTerms }) => {
+	shouldUseForm?: boolean;
+}> = ({
+	id,
+	label,
+	variant,
+	size,
+	checked,
+	disabled,
+	handleChange,
+	shouldUseForm,
+	setCheckedTerms
+}) => {
 	Checkbox.defaultProps = {
 		variant: 'default',
 		checked: false,
 		disabled: false,
 		handleChange: undefined,
-		setCheckedTerms: null
+		setCheckedTerms: null,
+		shouldUseForm: false
 	};
 
 	const { setValue } = useFormContext();
@@ -88,7 +100,9 @@ const Checkbox: React.FC<{
 		setCurrentCheckValue(isChecked);
 		if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
 
-		setValue('slackEnable', !!isChecked);
+		if (shouldUseForm) {
+			setValue('slackEnable', !!isChecked);
+		}
 	};
 
 	return (
