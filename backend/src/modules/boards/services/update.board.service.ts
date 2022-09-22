@@ -95,12 +95,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	 * @return number
 	 */
 	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		return this.boardUserModel
-			.find({ board: boardId })
-			.select('votesCount')
-			.limit(1)
-			.sort({ votesCount: -1 })
-			.then((doc) => doc[0].votesCount);
+		const votesCount = await this.boardUserModel.find({ board: boardId }, ['votesCount']);
+
+		return votesCount.reduce(
+			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
+			0
+		);
 	}
 
 	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
@@ -172,13 +172,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			 * - current highest votes equals to zero
 			 * - or current highest votes lower than new maxVotes
 			 */
-			const highestVotes = await this.getHighestVotesOnBoard(boardId);
 
-			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
-			if (!isEmpty(boardData.maxVotes) && highestVotes > Number(boardData.maxVotes)) {
-				throw new BadRequestException(
-					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
-				);
+			if (!isEmpty(boardData.maxVotes)) {
+				const highestVotes = await this.getHighestVotesOnBoard(boardId);
+
+				// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
+				if (highestVotes > Number(boardData.maxVotes)) {
+					throw new BadRequestException(
+						`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
+					);
+				}
 			}
 
 			return this.boardModel
