@@ -205,6 +205,7 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
 				{/* onClick={slackEnableHandler} */}
 				<Checkbox
 					// checked={board.slackEnable}
+					shouldUseForm
 					id="slackEnable"
 					label="Create Slack group for each sub-team"
 					size="16"

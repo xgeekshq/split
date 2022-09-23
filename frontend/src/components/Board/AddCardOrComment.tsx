@@ -163,11 +163,6 @@ const AddCard = React.memo<AddCardProps>(
 			setIsOpen(false);
 		};
 
-		const handleIsAnonymous = () => {
-			if (isAnonymous === true) return setIsAnonymous(false);
-			return setIsAnonymous(true);
-		};
-
 		if (!isOpen)
 			return (
 				<Button
@@ -219,8 +214,10 @@ const AddCard = React.memo<AddCardProps>(
 							<Checkbox
 								id={colId}
 								label="Post anonymously"
-								setCheckedTerms={handleIsAnonymous}
 								size="16"
+								setCheckedTerms={() => {
+									setIsAnonymous(!isAnonymous);
+								}}
 							/>
 						)}
 						<ActionButton
