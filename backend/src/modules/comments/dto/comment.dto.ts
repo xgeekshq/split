@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export default class CommentDto {
 	@ApiProperty()
@@ -14,4 +14,8 @@ export default class CommentDto {
 	@IsString()
 	@IsMongoId()
 	createdBy?: string;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	anonymous!: boolean;
 }

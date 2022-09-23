@@ -10,7 +10,14 @@ import { CreateCommentService } from '../interfaces/services/create.comment.serv
 export default class CreateCommentServiceImpl implements CreateCommentService {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
-	createItemComment(boardId: string, cardId: string, itemId: string, userId: string, text: string) {
+	createItemComment(
+		boardId: string,
+		cardId: string,
+		itemId: string,
+		userId: string,
+		text: string,
+		anonymous: boolean
+	) {
 		return this.boardModel
 			.findOneAndUpdate(
 				{
@@ -21,7 +28,8 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 					$push: {
 						'columns.$.cards.$[c].items.$[i].comments': {
 							text,
-							createdBy: userId
+							createdBy: userId,
+							anonymous
 						}
 					}
 				},
