@@ -191,7 +191,6 @@ const CardBoard = React.memo<CardBoardProps>(
 											isSubmited={isSubmited}
 											items={card.items}
 											socketId={socketId}
-											submitedByTeam={card?.createdByTeam}
 											userId={userId}
 										/>
 									)}
@@ -208,7 +207,6 @@ const CardBoard = React.memo<CardBoardProps>(
 										maxVotes={maxVotes}
 										setOpenComments={handleOpenComments}
 										socketId={socketId}
-										teamName={card?.createdByTeam}
 										userId={userId}
 									/>
 								</Flex>
