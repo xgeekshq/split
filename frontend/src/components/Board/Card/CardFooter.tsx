@@ -166,7 +166,7 @@ const CardFooter = React.memo<FooterProps>(
 		}, [card]);
 
 		return (
-			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
+			<Flex align="center" gap="6" justify="between">
 				{!anonymous && !createdByTeam && (
 					<Flex
 						align="center"
