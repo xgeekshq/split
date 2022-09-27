@@ -66,7 +66,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const board = data?.board;
 
 	// Socket IO Hook
-	const [socketId, cleanSocket] = useSocketIO(boardId);
+	const socketId = useSocketIO(boardId);
 
 	// Board Settings permissions
 	const isStakeholderOrAdmin = useMemo(() => {
@@ -124,9 +124,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 			setNewBoard(undefined);
 		}
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
-
-	// Socket IO
-	useEffect(() => cleanSocket, [cleanSocket]);
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
 

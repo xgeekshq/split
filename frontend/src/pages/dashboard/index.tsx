@@ -23,6 +23,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 		await queryClient.prefetchInfiniteQuery('boards/dashboard', ({ pageParam = 0 }) =>
 			getDashboardBoardsRequest(pageParam, context)
 		);
+
 		return {
 			props: {
 				dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
