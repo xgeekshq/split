@@ -5,4 +5,5 @@ export default interface CommentType {
 	text: string;
 	createdBy: User;
 	isNested?: boolean;
+	anonymous: boolean;
 }

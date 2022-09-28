@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable simple-import-sort/imports */
 import React, { Dispatch, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
 
@@ -90,7 +92,7 @@ const Checkbox: React.FC<{
 		shouldUseForm: false
 	};
 
-	const { setValue } = useFormContext();
+	// const { setValue } = useFormContext();
 
 	const [currentCheckValue, setCurrentCheckValue] = useState<
 		boolean | undefined | 'indeterminate'
@@ -100,9 +102,9 @@ const Checkbox: React.FC<{
 		setCurrentCheckValue(isChecked);
 		if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
 
-		if (shouldUseForm) {
-			setValue('slackEnable', !!isChecked);
-		}
+		// if (shouldUseForm) {
+		// 	setValue('slackEnable', !!isChecked);
+		// }
 	};
 
 	return (
