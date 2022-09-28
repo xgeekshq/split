@@ -27,7 +27,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
 		}
 		const { droppableId: sourceDroppableId, index: sourceIndex } = source;
 
-		if (combine && userId) {
+		if (combine && userId && board.hideCards === false) {
 			const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
 
 			const changes: MergeCardsDto = {
