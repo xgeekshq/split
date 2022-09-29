@@ -131,7 +131,7 @@ const AddCard = React.memo<AddCardProps>(
 				boardId,
 				socketId,
 				isCardGroup: !cardItemId,
-				anonymous: isAnonymous
+				anonymous: isCommentAnonymous
 			};
 
 			addCommentInCard.mutate(commentDto);
@@ -148,8 +148,7 @@ const AddCard = React.memo<AddCardProps>(
 				boardId,
 				socketId,
 				isCardGroup: !cardItemId,
-				commentId,
-				anonymous: isAnonymous
+				commentId
 			};
 
 			updateComment.mutate(updateCommentDto);
