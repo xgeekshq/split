@@ -273,7 +273,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 							return {
 								text: cardItem.text,
 								votes: cardItem.votes,
-								createdByTeam: subBoard.title.replace('board', ''),
+								createdByTeam: subBoard.title.replace('board ', ''),
 								createdBy: cardItem.createdBy,
 								anonymous: cardItem.anonymous,
 								comments: cardItem.comments.map((comment) => {
