@@ -139,7 +139,7 @@ const CardFooter = React.memo<FooterProps>(
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
-			if (hideCards && card.createdBy?._id !== userId) return;
+			if (hideCards && createdBy?._id !== userId) return;
 			if (user && user.votesCount + countVotes <= 0) return;
 			setDisableVoteButton(true);
 			setCountVotes(countVotes - 1);
@@ -147,7 +147,7 @@ const CardFooter = React.memo<FooterProps>(
 
 		const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
-			if (hideCards && card.createdBy?._id !== userId) return;
+			if (hideCards && createdBy?._id !== userId) return;
 			if (maxVotes && user && user.votesCount >= maxVotes) return;
 			if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
 
@@ -200,7 +200,12 @@ const CardFooter = React.memo<FooterProps>(
 									disableVoteButton ||
 									!isMainboard ||
 									!!disableVotes ||
-									!!(user && maxVotes && user.votesCount + countVotes >= maxVotes)
+									!!(
+										user &&
+										maxVotes &&
+										user.votesCount + countVotes >= maxVotes
+									) ||
+									(hideCards && createdBy?._id !== userId)
 								}
 								onClick={handleAddVote}
 							>
@@ -231,7 +236,8 @@ const CardFooter = React.memo<FooterProps>(
 									!isMainboard ||
 									votesInThisCard.length === 0 ||
 									!!(user && maxVotes && user.votesCount + countVotes <= 0) ||
-									votesOfUserInThisCard === 0
+									votesOfUserInThisCard === 0 ||
+									(hideCards && createdBy?._id !== userId)
 								}
 								onClick={handleDeleteVote}
 							>
@@ -246,7 +252,10 @@ const CardFooter = React.memo<FooterProps>(
 								filter: cardFooterBlur(hideCards, createdBy, userId)
 							}}
 						>
-							<StyledButtonIcon onClick={setOpenComments}>
+							<StyledButtonIcon
+								disabled={hideCards && createdBy?._id !== userId}
+								onClick={setOpenComments}
+							>
 								<Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
 							</StyledButtonIcon>
 							<Text
