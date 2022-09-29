@@ -80,7 +80,7 @@ const Comment: React.FC<CommentProps> = React.memo(
 								/>
 							)}
 						</Flex>
-						<Flex align="center" css={{ minHeight: '24px' }}>
+						<Flex align="center" css={{ minHeight: '$24' }}>
 							{!comment.anonymous && (
 								<Text
 									size="xs"

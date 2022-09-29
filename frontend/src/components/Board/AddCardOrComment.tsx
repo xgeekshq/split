@@ -133,7 +133,6 @@ const AddCard = React.memo<AddCardProps>(
 				isCardGroup: !cardItemId,
 				anonymous: isCommentAnonymous
 			};
-			console.log(commentDto);
 			addCommentInCard.mutate(commentDto);
 			cancelUpdate();
 		};
@@ -213,7 +212,7 @@ const AddCard = React.memo<AddCardProps>(
 					/>
 					{!isCard && (
 						<Checkbox
-							id="teste"
+							id={colId + cardId}
 							label="Add anonymously"
 							size="16"
 							setCheckedTerms={() => {
