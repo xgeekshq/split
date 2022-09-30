@@ -337,40 +337,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
 	}
 
-	// private commentsClean(
-	// 	input: LeanDocument<
-	// 		Board & {
-	// 			_id: ObjectId;
-	// 		}
-	// 	>,
-	// 	userId: string
-	// ): LeanDocument<
-	// 	Board & {
-	// 		_id: ObjectId;
-	// 	}
-	// > {
-	// 	const { columns: boardColumns } = input;
-	// 	// Columns
-	// 	input.columns = boardColumns.map((column) => {
-	// 		const cards = column.cards.map((card) => {
-	// 			const comments = card.comments.map((comment) => {
-	// 				// if (comment.) return hideText(String(comment.createdBy));
-	// 				// return this.replaceCard(item, userId, hideCards, hideVotes);
-	// 			});
-	// 			return {
-	// 				// ...this.replaceCard(card, userId, hideCards, hideVotes),
-	// 				comments
-	// 			};
-	// 		});
-	// 		return {
-	// 			...column,
-	// 			cards
-	// 		};
-	// 	});
-
-	// 	return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
-	// }
-
 	async countBoards(userId: string) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 		return this.boardModel.countDocuments({
