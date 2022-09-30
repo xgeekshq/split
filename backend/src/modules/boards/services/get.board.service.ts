@@ -280,7 +280,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			createdBy = this.replaceUser(createdByAsUserDocument, userId);
 		}
 
-		if (comments.length > 0) {
+		if (comments?.length > 0) {
 			comments = this.replaceComments(hideCards, createdByAsUserDocument, input.comments, userId);
 		}
 
