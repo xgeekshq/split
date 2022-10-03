@@ -5,4 +5,5 @@ export default interface AddCommentDto {
 	isCardGroup: boolean;
 	socketId?: string;
 	text: string;
+	anonymous: boolean;
 }

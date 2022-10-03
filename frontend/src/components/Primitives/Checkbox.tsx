@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable simple-import-sort/imports */
 import React, { Dispatch, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
 
 import Icon from 'components/icons/Icon';
+import { useFormContext } from 'react-hook-form';
 import Flex from './Flex';
 import Text from './Text';
 

@@ -11,11 +11,37 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
 		private createCommentService: CreateCommentService
 	) {}
 
-	createItemComment(boardId: string, cardId: string, itemId: string, userId: string, text: string) {
-		return this.createCommentService.createItemComment(boardId, cardId, itemId, userId, text);
+	createItemComment(
+		boardId: string,
+		cardId: string,
+		itemId: string,
+		userId: string,
+		text: string,
+		anonymous: boolean
+	) {
+		return this.createCommentService.createItemComment(
+			boardId,
+			cardId,
+			itemId,
+			userId,
+			text,
+			anonymous
+		);
 	}
 
-	createCardGroupComment(boardId: string, cardId: string, userId: string, text: string) {
-		return this.createCommentService.createCardGroupComment(boardId, cardId, userId, text);
+	createCardGroupComment(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		text: string,
+		anonymous: boolean
+	) {
+		return this.createCommentService.createCardGroupComment(
+			boardId,
+			cardId,
+			userId,
+			text,
+			anonymous
+		);
 	}
 }

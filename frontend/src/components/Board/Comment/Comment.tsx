@@ -80,15 +80,23 @@ const Comment: React.FC<CommentProps> = React.memo(
 								/>
 							)}
 						</Flex>
-						<Text
-							size="xs"
-							weight="medium"
-							css={{
-								filter: commentBlur(hideCards, comment as CommentType, userId)
-							}}
-						>
-							{comment.createdBy.firstName} {comment.createdBy.lastName}
-						</Text>
+						<Flex align="center" css={{ minHeight: '$24' }}>
+							{!comment.anonymous && (
+								<Text
+									size="xs"
+									weight="medium"
+									css={{
+										filter: commentBlur(
+											hideCards,
+											comment as CommentType,
+											userId
+										)
+									}}
+								>
+									{comment.createdBy.firstName} {comment.createdBy.lastName}
+								</Text>
+							)}
+						</Flex>
 					</Flex>
 				)}
 				{editing && (

@@ -12,6 +12,9 @@ export default class Comment {
 
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
 	createdBy!: User | mongoose.Schema.Types.ObjectId;
+
+	@Prop({ nullable: false })
+	anonymous!: boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

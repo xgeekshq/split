@@ -266,7 +266,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 						comments: card.comments.map((comment) => {
 							return {
 								text: comment.text,
-								createdBy: comment.createdBy
+								createdBy: comment.createdBy,
+								anonymous: comment.anonymous
 							};
 						}),
 						items: card.items.map((cardItem) => {
@@ -279,7 +280,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 								comments: cardItem.comments.map((comment) => {
 									return {
 										text: comment.text,
-										createdBy: comment.createdBy
+										createdBy: comment.createdBy,
+										anonymous: comment.anonymous
 									};
 								})
 							};

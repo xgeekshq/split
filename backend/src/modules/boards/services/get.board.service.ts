@@ -186,6 +186,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		if (!board) return null;
 
+		// board1 = this.commentsClean(b)
 		board = this.cleanBoard(board, userId);
 
 		if (board.isSubBoard) {
@@ -231,18 +232,29 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * @returns array of comments
 	 */
 	private replaceComments(
+		hideCards: boolean,
+		createdByAsUserDocument: UserDocument,
 		input: LeanDocument<CommentDocument[]>,
 		userId: string
 	): LeanDocument<CommentDocument[]> {
-		return input
-			.filter((comment) => (comment.createdBy as UserDocument)._id.toString() !== String(userId))
-			.map((comment) => {
+		return input.map((comment) => {
+			const { anonymous, text } = comment;
+			if (anonymous) {
+				return {
+					...comment,
+					createdBy: this.replaceUser(comment.createdBy as UserDocument, userId)
+				};
+			}
+
+			if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 				return {
 					...comment,
 					createdBy: this.replaceUser(comment.createdBy as UserDocument, userId),
-					text: hideText(comment.text)
+					text: hideText(text)
 				};
-			});
+			}
+			return { ...comment };
+		});
 	}
 
 	/**
@@ -265,8 +277,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 			text = hideText(input.text);
-			comments = this.replaceComments(input.comments, userId);
 			createdBy = this.replaceUser(createdByAsUserDocument, userId);
+		}
+
+		if (comments?.length > 0) {
+			comments = this.replaceComments(hideCards, createdByAsUserDocument, input.comments, userId);
 		}
 
 		if (anonymous) {

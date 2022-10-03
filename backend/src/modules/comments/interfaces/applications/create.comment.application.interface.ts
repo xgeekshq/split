@@ -8,13 +8,15 @@ export interface CreateCommentApplication {
 		cardId: string,
 		itemId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
 
 	createCardGroupComment(
 		boardId: string,
 		cardId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
 }

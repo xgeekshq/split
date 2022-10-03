@@ -86,14 +86,15 @@ export default class CommentsController {
 		@Body() createCommentDto: CreateCommentDto
 	) {
 		const { boardId, cardId, itemId } = params;
-		const { text } = createCommentDto;
+		const { text, anonymous } = createCommentDto;
 
 		const board = await this.createCommentApp.createItemComment(
 			boardId,
 			cardId,
 			itemId,
 			request.user._id,
-			text
+			text,
+			anonymous
 		);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
@@ -128,13 +129,14 @@ export default class CommentsController {
 		@Body() createCommentDto: CreateCommentDto
 	) {
 		const { boardId, cardId } = params;
-		const { text, socketId } = createCommentDto;
+		const { text, socketId, anonymous } = createCommentDto;
 
 		const board = await this.createCommentApp.createCardGroupComment(
 			boardId,
 			cardId,
 			request.user._id,
-			text
+			text,
+			anonymous
 		);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);

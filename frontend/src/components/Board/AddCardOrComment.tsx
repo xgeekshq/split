@@ -64,6 +64,7 @@ const AddCard = React.memo<AddCardProps>(
 		const { addCommentInCard, updateComment } = useComments();
 		const [isOpen, setIsOpen] = useState(!!isUpdate || !!cancelUpdate || defaultOpen);
 		const [isAnonymous, setIsAnonymous] = useState(false);
+		const [isCommentAnonymous, setIsCommentAnonymous] = useState(false);
 
 		const methods = useForm<{ text: string }>({
 			mode: 'onSubmit',
@@ -129,9 +130,9 @@ const AddCard = React.memo<AddCardProps>(
 				text,
 				boardId,
 				socketId,
-				isCardGroup: !cardItemId
+				isCardGroup: !cardItemId,
+				anonymous: isCommentAnonymous
 			};
-
 			addCommentInCard.mutate(commentDto);
 			cancelUpdate();
 		};
@@ -209,6 +210,16 @@ const AddCard = React.memo<AddCardProps>(
 						id="text"
 						placeholder="Write your comment here..."
 					/>
+					{!isCard && (
+						<Checkbox
+							id={colId + cardId}
+							label="Add anonymously"
+							size="16"
+							setCheckedTerms={() => {
+								setIsCommentAnonymous(!isCommentAnonymous);
+							}}
+						/>
+					)}
 					<Flex css={{ width: '100%' }} gap="4" justify="end">
 						{!isEditing && (
 							<Checkbox
