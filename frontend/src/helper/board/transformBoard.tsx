@@ -138,6 +138,7 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
 			isSAdmin: false,
 			joinedAt: ''
 		},
+		anonymous: false,
 		_id: placehodlerId,
 		id: placehodlerId
 	};
