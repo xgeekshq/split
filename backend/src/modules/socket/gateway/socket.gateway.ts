@@ -20,6 +20,11 @@ export default class SocketGateway
 
 	private logger: Logger = new Logger('AppGateway');
 
+	sendUpdatedBoards(excludedClient: string) {
+		console.log('aqui')
+		this.server.except(excludedClient).emit('updateBoardList');
+	}
+
 	sendUpdatedBoard(newBoardId: string, excludedClient: string) {
 		this.server.to(newBoardId.toString()).except(excludedClient).emit('updateAllBoard', newBoardId);
 	}

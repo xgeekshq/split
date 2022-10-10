@@ -49,8 +49,14 @@ export const getBoardsRequest = (
 	return fetchData(`/boards?page=${pageParam ?? 0}&size=10`, { context, serverSide: !!context });
 };
 
-export const deleteBoardRequest = async (id: string): Promise<BoardType> => {
-	return fetchData(`/boards/${id}`, { method: 'DELETE' });
+export const deleteBoardRequest = async ({
+	id,
+	socketId
+}: {
+	id: string;
+	socketId?: string;
+}): Promise<BoardType> => {
+	return fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId } });
 };
 
 // #endregion
