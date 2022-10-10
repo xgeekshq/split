@@ -59,7 +59,20 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 			const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
 
 			setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
-			setStakeholders(stakeholdersFound);
+
+			const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
+				...stakeholderList,
+				firstName: stakeholderList.firstName
+					.split(' ')
+					.concat(stakeholderList.lastName.split(' '))[0],
+				lastName: stakeholderList.firstName
+					.split(' ')
+					.concat(stakeholderList.lastName.split(' '))[
+					stakeholderList.firstName.split(' ').concat(stakeholderList.lastName.split(' '))
+						.length - 1
+				]
+			}));
+			setStakeholders(stakeholdersNames);
 			setTeam(selectedTeam);
 		} else {
 			setHaveError(true);
@@ -115,11 +128,16 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 						Stakeholders
 					</Text>
 					<Text css={{ wordBreak: 'break-word' }} size="md">
-						{haveError || !stakeholders
-							? ''
-							: stakeholders.map(
+						{!haveError && stakeholders && stakeholders.length === 1
+							? stakeholders.map(
 									({ firstName, lastName }) => `${firstName} ${lastName}`
-							  )}
+							  )
+							: ''}
+						{!haveError && stakeholders && stakeholders.length !== 1
+							? stakeholders.map(
+									({ firstName, lastName }) => `${firstName} ${lastName}, `
+							  )
+							: ''}
 					</Text>
 				</StyledBox>
 			</Flex>
