@@ -9,6 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+import JoinPayload from '../interfaces/joinPayload.interface';
 import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
 
 @WebSocketGateway({ cors: true })
@@ -21,7 +22,7 @@ export default class SocketGateway
 	private logger: Logger = new Logger('AppGateway');
 
 	sendUpdatedBoards(excludedClient: string) {
-		console.log('aqui')
+		console.log('aqui');
 		this.server.except(excludedClient).emit('updateBoardList');
 	}
 
@@ -47,6 +48,11 @@ export default class SocketGateway
 
 	handleConnection(client: Socket) {
 		this.logger.log(`Client connected: ${client.id}`);
+	}
+
+	@SubscribeMessage('joinBoards')
+	handleJoinBoards(client: Socket, payload: JoinPayloadBoards) {
+		client.join(payload.boards);
 	}
 
 	@SubscribeMessage('joinBoards')

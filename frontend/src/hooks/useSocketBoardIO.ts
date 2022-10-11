@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
 
-export const useSocketIO = (boardId: string): string | undefined => {
+export const useSocketBoardIO = (boards: string | undefined): string | undefined => {
 	const queryClient = useQueryClient();
 	const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -14,19 +14,19 @@ export const useSocketIO = (boardId: string): string | undefined => {
 		});
 
 		newSocket.on('connect', () => {
-			newSocket.emit('join', { boardId });
+			newSocket.emit('join', { boards: 'listBoards' });
 			setSocket(newSocket);
 		});
 
-		newSocket.on('updateAllBoard', () => {
-			queryClient.invalidateQueries(['board', { id: boardId }]);
+		newSocket.on('updateBoardList', () => {
+			queryClient.invalidateQueries('boards');
 		});
 
 		return () => {
 			newSocket.disconnect();
 			setSocket(null);
 		};
-	}, [boardId, queryClient, setSocket]);
+	}, [boards, queryClient, setSocket]);
 
 	return socket?.id;
 };

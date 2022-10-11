@@ -17,6 +17,7 @@ type CardEndProps = {
 	userId: string;
 	userSAdmin?: boolean;
 	userIsParticipating: boolean;
+	socketId: string | undefined;
 };
 
 const CardEnd: React.FC<CardEndProps> = React.memo(
@@ -27,7 +28,8 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 		index,
 		havePermissions,
 		userId,
-		userSAdmin = undefined
+		userSAdmin = undefined,
+		socketId
 	}) => {
 		CardEnd.defaultProps = {
 			userSAdmin: undefined
@@ -102,7 +104,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 								}}
 							/>
 
-							<DeleteBoard boardId={id} boardName={title} />
+							<DeleteBoard boardId={id} boardName={title} socketId={socketId} />
 						</Flex>
 					)}
 				</Flex>
