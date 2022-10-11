@@ -17,8 +17,6 @@ const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId 
 		deleteBoard.mutate({ id: boardId, socketId });
 	};
 
-	console.log(deleteBoard);
-
 	return (
 		<AlertCustomDialog
 			cancelText="Cancel"
