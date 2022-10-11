@@ -48,9 +48,14 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
 	const { data, isLoading } = fetchBoards;
 
-	const boardIdTest = data?.pages[0].boards[0]?._id;
-	const socketId = useSocketBoardIO(boardIdTest);
-	console.log('socketid', socketId);
+	let boardsListIds = '';
+	data?.pages[0].boards.map((boardsList) => {
+		boardsListIds = boardsListIds.concat(boardsList._id);
+		return boardsListIds;
+	});
+
+	// socketId
+	const socketId = useSocketBoardIO(boardsListIds);
 
 	const currentDate = new Date().toDateString();
 

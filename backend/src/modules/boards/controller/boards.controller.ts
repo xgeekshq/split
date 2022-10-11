@@ -247,7 +247,6 @@ export default class BoardsController {
 		if (!result) throw new BadRequestException(DELETE_FAILED);
 
 		if (socketId) {
-			console.log('dentro', socketId);
 			this.socketService.sendUpdatedBoards(socketId);
 			this.socketService.sendUpdatedBoard(boardId, socketId);
 		}
