@@ -21,13 +21,23 @@ import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import isEmpty from 'utils/isEmpty';
+import Router, { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
 	const queryClient = new QueryClient();
-	await queryClient.prefetchQuery(['board', { id: boardId }], () =>
-		getBoardRequest(boardId as string, context)
-	);
+	try {
+		await queryClient.fetchQuery(['board', { id: boardId }], () =>
+			getBoardRequest(boardId as string, context)
+		);
+	} catch (e) {
+		return {
+			redirect: {
+				permanent: false,
+				destination: '/dashboard'
+			}
+		};
+	}
 	return {
 		props: {
 			key: context.query.boardId,
@@ -64,6 +74,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	});
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
+	const route = useRouter();
 
 	// Socket IO Hook
 	const socketId = useSocketIO(boardId);
@@ -126,6 +137,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+
+	useEffect(() => {
+		if (data === null) {
+			route.push('/board-deleted');
+		}
+	}, [data]);
 
 	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
 		<>

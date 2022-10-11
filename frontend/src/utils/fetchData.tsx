@@ -53,10 +53,14 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
 		};
 	}
 
-	const { data } = !serverSide
-		? await instance(instanceOptions)
-		: await serverSideInstance(instanceOptions);
-	return data;
+	try {
+		const { data } = !serverSide
+			? await instance(instanceOptions)
+			: await serverSideInstance(instanceOptions);
+		return data;
+	} catch {
+		return null as any;
+	}
 };
 
 export default fetchData;
