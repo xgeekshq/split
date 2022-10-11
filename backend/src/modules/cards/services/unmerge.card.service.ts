@@ -49,7 +49,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			const items = cardGroup.items.filter((item) => item._id.toString() !== draggedCardId);
 
 			if (items.length === 1) {
-				const [{ text, comments, votes: itemVotes, createdBy }] = items;
+				const [{ text, comments, votes: itemVotes, createdBy, createdByTeam }] = items;
 				const newComments = cardGroup.comments.concat(comments);
 
 				const newVotes = (cardGroup.votes as unknown as string[]).concat(
@@ -69,7 +69,8 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 								'columns.$.cards.$[c].votes': [],
 								'columns.$.cards.$[c].items.0.comments': newComments,
 								'columns.$.cards.$[c].items.0.votes': newVotes,
-								'columns.$.cards.$[c].createdBy': createdBy
+								'columns.$.cards.$[c].createdBy': createdBy,
+								'columns.$.cards.$[c].createdByTeam': createdByTeam
 							}
 						},
 						{

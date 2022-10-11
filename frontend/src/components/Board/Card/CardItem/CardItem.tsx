@@ -15,7 +15,6 @@ import PopoverCardSettings from '../PopoverSettings';
 interface CardItemProps {
 	item: CardItemType;
 	color: string;
-	teamName?: string;
 	lastOne?: boolean;
 	firstOne: boolean;
 	columnId: string;
@@ -40,7 +39,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 	({
 		item,
 		color,
-		teamName,
 		firstOne,
 		lastOne,
 		columnId,
@@ -56,7 +54,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 	}) => {
 		const [editing, setEditing] = useState(false);
 		const [deleting, setDeleting] = useState(false);
-
 		const handleDeleting = () => {
 			setDeleting(!deleting);
 		};
@@ -136,7 +133,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
 								hideCards={hideCards}
 								isMainboard={isMainboard}
 								socketId={socketId}
-								teamName={teamName}
 								userId={userId}
 							/>
 						)}
