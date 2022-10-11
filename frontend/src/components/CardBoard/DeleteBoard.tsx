@@ -5,19 +5,19 @@ import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
 import useBoard from 'hooks/useBoard';
 
-import { useSocketIO } from 'hooks/useSocketIO';
+type DeleteBoardProps = { boardId: string; boardName: string; socketId: string | undefined };
 
-type DeleteBoardProps = { boardId: string; boardName: string };
-
-const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName }) => {
+const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId }) => {
 	const { deleteBoard } = useBoard({ autoFetchBoard: false });
 
 	// Socket IO Hook
-	const socketId = useSocketIO(boardId);
+	// const socketId = useSocketIO(boardId);
 
 	const handleDelete = () => {
 		deleteBoard.mutate({ id: boardId, socketId });
 	};
+
+	console.log(deleteBoard);
 
 	return (
 		<AlertCustomDialog

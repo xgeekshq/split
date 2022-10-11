@@ -30,7 +30,7 @@ import {
 	OmitType
 } from '@nestjs/swagger';
 
-import { BaseParam, BaseParamWSocket } from 'libs/dto/param/base.param';
+import { BaseParam } from 'libs/dto/param/base.param';
 import { PaginationParams } from 'libs/dto/param/pagination.params';
 import {
 	BOARD_NOT_FOUND,
@@ -49,7 +49,6 @@ import { BoardResponse } from 'modules/boards/swagger/board.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
 import BoardDto from '../dto/board.dto';
-import { DeleteBoardDto } from '../dto/delete-board-dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
@@ -241,8 +240,7 @@ export default class BoardsController {
 	async deleteBoard(
 		@Param() { boardId }: BaseParam,
 		@Query() { socketId }: { socketId?: string },
-		@Req() request: RequestWithUser,
-
+		@Req() request: RequestWithUser
 	) {
 		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
 
@@ -251,6 +249,7 @@ export default class BoardsController {
 		if (socketId) {
 			console.log('dentro', socketId);
 			this.socketService.sendUpdatedBoards(socketId);
+			this.socketService.sendUpdatedBoard(boardId, socketId);
 		}
 
 		return result;

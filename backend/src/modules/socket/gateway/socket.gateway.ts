@@ -10,6 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 
 import JoinPayload from '../interfaces/joinPayload.interface';
+import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
 
 @WebSocketGateway({ cors: true })
 export default class SocketGateway
@@ -21,7 +22,7 @@ export default class SocketGateway
 	private logger: Logger = new Logger('AppGateway');
 
 	sendUpdatedBoards(excludedClient: string) {
-		console.log('aqui')
+		console.log('aqui');
 		this.server.except(excludedClient).emit('updateBoardList');
 	}
 
@@ -44,5 +45,10 @@ export default class SocketGateway
 	@SubscribeMessage('join')
 	handleJoin(client: Socket, payload: JoinPayload) {
 		client.join(payload.boardId);
+	}
+
+	@SubscribeMessage('joinBoards')
+	handleJoinBoards(client: Socket, payload: JoinPayloadBoards) {
+		client.join(payload.boards);
 	}
 }

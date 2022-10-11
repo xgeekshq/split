@@ -7,6 +7,7 @@ import CardBody from 'components/CardBoard/CardBody/CardBody';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { useSocketBoardIO } from 'hooks/useSocketBoardIO';
 import { toastState } from 'store/toast/atom/toast.atom';
 import BoardType from 'types/board/board';
 import { Team } from 'types/team/team';
@@ -46,6 +47,11 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 	);
 
 	const { data, isLoading } = fetchBoards;
+
+	const boardIdTest = data?.pages[0].boards[0]?._id;
+	const socketId = useSocketBoardIO(boardIdTest);
+	console.log('socketid', socketId);
+
 	const currentDate = new Date().toDateString();
 
 	const dataByTeamAndDate = useMemo(() => {
@@ -176,6 +182,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 													dividedBoardsCount={board.dividedBoards.length}
 													isDashboard={false}
 													isSAdmin={isSuperAdmin}
+													socketId={socketId}
 													userId={userId}
 												/>
 											))}
