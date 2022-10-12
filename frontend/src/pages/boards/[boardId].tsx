@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -21,7 +22,6 @@ import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import isEmpty from 'utils/isEmpty';
-import Router, { useRouter } from 'next/router';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { boardId } = context.query;
@@ -142,7 +142,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		if (data === null) {
 			route.push('/board-deleted');
 		}
-	}, [data]);
+	}, [data, route]);
 
 	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
 		<>
