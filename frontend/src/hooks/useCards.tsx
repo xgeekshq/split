@@ -48,6 +48,7 @@ const useCards = () => {
 		const query = getBoardQuery(id);
 		await queryClient.cancelQueries(query);
 		const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
+
 		return prevData?.board;
 	};
 

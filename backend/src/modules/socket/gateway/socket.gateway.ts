@@ -21,8 +21,8 @@ export default class SocketGateway
 
 	private logger: Logger = new Logger('AppGateway');
 
-	sendUpdatedBoards(excludedClient: string) {
-		this.server.except(excludedClient).emit('updateBoardList');
+	sendUpdatedBoards(excludedClient: string, teamId: string) {
+		this.server.to(teamId).except(excludedClient).emit('updateBoardList');
 	}
 
 	sendUpdatedBoard(newBoardId: string, excludedClient: string) {
@@ -56,6 +56,6 @@ export default class SocketGateway
 
 	@SubscribeMessage('joinBoards')
 	handleJoinBoards(client: Socket, payload: JoinPayloadBoards) {
-		client.join(payload.boards);
+		client.join(payload.teamId);
 	}
 }
