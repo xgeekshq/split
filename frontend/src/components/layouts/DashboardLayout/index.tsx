@@ -11,10 +11,11 @@ type DashboardLayoutProps = {
 	firstName: string;
 	isDashboard: boolean;
 	isBoards: boolean;
+	isTeams: boolean;
 };
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
-	const { children, firstName, isDashboard, isBoards } = props;
+	const { children, firstName, isDashboard, isBoards, isTeams } = props;
 
 	return (
 		<ContentSection gap="36" justify="between">
@@ -22,10 +23,12 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 				<Flex justify="between">
 					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
 					{isBoards && <Text heading="1">Boards</Text>}
+					{isTeams && <Text heading="1">Teams</Text>}
 					<Link href="/boards/new">
 						<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
 							<Icon css={{ color: 'white' }} name="plus" />
-							Add new board
+							{(isDashboard || isBoards) && 'Add new board'}
+							{isTeams && 'Create new team'}
 						</AddNewBoardButton>
 					</Link>
 				</Flex>
