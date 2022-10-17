@@ -29,8 +29,6 @@ const Column = React.memo<ColumnBoardType>(
 	}) => {
 		const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
 
-		console.log(cards);
-
 		const filteredCards = () => {
 			switch (filter) {
 				case 'desc':
