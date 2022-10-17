@@ -1,10 +1,7 @@
-import React, { useMemo, useRef } from 'react';
-import { InfiniteData, UseInfiniteQueryResult } from 'react-query';
+import React from 'react';
 
 import { DotsLoading } from 'components/loadings/DotsLoading';
 import Flex from 'components/Primitives/Flex';
-import BoardType from 'types/board/board';
-import { LastUpdatedText } from './styles';
 import { Team } from 'types/team/team';
 import CardBody from '../CardTeam/CardBody';
 

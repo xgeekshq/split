@@ -1,11 +1,7 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import Flex from 'components/Primitives/Flex';
 import Separator from 'components/Primitives/Separator';
-import Text from 'components/Primitives/Text';
-import BoardType from 'types/board/board';
-import CardAvatars from 'components/CardBoard/CardAvatars';
-
 import { Team } from 'types/team/team';
 import DeleteTeam from './DeleteTeam';
 

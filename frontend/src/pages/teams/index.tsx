@@ -7,7 +7,7 @@ import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import MyTeams from 'components/Teams/MyTeams';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { ReactElement, Suspense } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 
@@ -28,8 +28,11 @@ const Teams = () => {
 
 Teams.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-	async (context: GetServerSidePropsContext) => {
+export const getServerSideProps: GetServerSideProps = async (
+	context: GetServerSidePropsContext
+) => {
+	const session = await getSession(context);
+	if (session) {
 		const queryClient = new QueryClient();
 		await queryClient.prefetchQuery('teams', () => getAllTeams(context));
 		await queryClient.prefetchQuery('dashboardInfo', () => getDashboardHeaderInfo(context));
@@ -40,6 +43,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 			}
 		};
 	}
-);
+	return { props: {} };
+};
 
 export default Teams;

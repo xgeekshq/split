@@ -1,13 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-
+import React, { useMemo } from 'react';
 import { styled } from 'styles/stitches/stitches.config';
-
 import Icon from 'components/icons/Icon';
 import Box from 'components/Primitives/Box';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-
 import { Team } from 'types/team/team';
 import CardTitle from './CardTitle';
 import CardAvatars from 'components/CardBoard/CardAvatars';
