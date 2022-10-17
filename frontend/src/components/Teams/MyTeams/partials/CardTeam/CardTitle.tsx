@@ -1,9 +1,6 @@
 import Link from 'next/link';
-
 import { styled } from 'styles/stitches/stitches.config';
-
 import Text from 'components/Primitives/Text';
-import { Title } from '@radix-ui/react-alert-dialog';
 
 type CardTitleProps = {
 	title: string;
@@ -37,7 +34,7 @@ const CardTitle: React.FC<CardTitleProps> = ({ teamId, title }) => {
 					//query: isSubBoard ? { boardId, mainBoardId } : { boardId }
 				}}
 			>
-				<StyledBoardTitle>{Title}</StyledBoardTitle>
+				<StyledBoardTitle>{title}</StyledBoardTitle>
 			</Link>
 		);
 	};

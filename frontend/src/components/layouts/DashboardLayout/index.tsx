@@ -24,13 +24,22 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
 					{isBoards && <Text heading="1">Boards</Text>}
 					{isTeams && <Text heading="1">Teams</Text>}
-					<Link href="/boards/new">
-						<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-							<Icon css={{ color: 'white' }} name="plus" />
-							{(isDashboard || isBoards) && 'Add new board'}
-							{isTeams && 'Create new team'}
-						</AddNewBoardButton>
-					</Link>
+					{(isDashboard || isBoards) && (
+						<Link href="/boards/new">
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+								<Icon css={{ color: 'white' }} name="plus" />
+								Add new board
+							</AddNewBoardButton>
+						</Link>
+					)}
+					{isTeams && (
+						<Link href="/">
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+								<Icon css={{ color: 'white' }} name="plus" />
+								Create new team
+							</AddNewBoardButton>
+						</Link>
+					)}
 				</Flex>
 				{children}
 			</Flex>

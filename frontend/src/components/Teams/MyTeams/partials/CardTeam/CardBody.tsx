@@ -7,77 +7,19 @@ import Icon from 'components/icons/Icon';
 import Box from 'components/Primitives/Box';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import Tooltip from 'components/Primitives/Tooltip';
-import { newBoardState } from 'store/board/atoms/board.atom';
-import BoardType from 'types/board/board';
-import ClickEvent from 'types/events/clickEvent';
+
 import { Team } from 'types/team/team';
 import CardTitle from './CardTitle';
 import CardAvatars from 'components/CardBoard/CardAvatars';
 import Separator from 'components/Primitives/Separator';
 import CardEnd from './CardEnd';
 import { useSession } from 'next-auth/react';
+import BoardsInfo from './BoardsInfo';
 
 const InnerContainer = styled(Flex, Box, {
 	px: '$32',
 	backgroundColor: '$white',
 	borderRadius: '$12'
-});
-
-const NewCircleIndicator = styled('div', {
-	variants: {
-		position: {
-			absolute: {
-				position: 'absolute',
-				left: '$12',
-				top: '50%',
-				transform: 'translateY(-50%)'
-			}
-		}
-	},
-	width: '$8',
-	height: '$8',
-	borderRadius: '100%',
-	backgroundColor: '$successBase'
-});
-
-const NewLabelIndicator = styled(Flex, {
-	backgroundColor: '$successLightest',
-	border: '1px solid $colors$successBase',
-	borderRadius: '$pill',
-	px: '$8',
-	py: '$4',
-	alignItems: 'center',
-	justifyContent: 'center',
-	gap: '$4',
-
-	span: {
-		fontSize: '$12',
-		lineHeight: '$16',
-		textTransform: 'uppercase',
-		color: '$successBase'
-	}
-});
-
-const RecurrentIconContainer = styled('div', {
-	width: '$12',
-	height: '$12',
-
-	display: 'inline-flex',
-	alignItems: 'center',
-	justifyContent: 'center',
-
-	borderRadius: '$round',
-
-	backgroundColor: '$primary800',
-	color: 'white',
-
-	cursor: 'pointer',
-
-	svg: {
-		width: '$8',
-		height: '$8'
-	}
 });
 
 type CardBodyProps = {
@@ -130,65 +72,68 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 				>
 					<Flex align="center">
 						<Flex align="center" gap="8">
+							<Icon
+								name="blob-team"
+								css={{
+									width: '32px',
+									height: '$32',
+									zIndex: 1
+								}}
+							/>
+
 							<Flex align="center" gap="8">
 								<CardTitle teamId={id} title={team.name} />
-
-								<Text color="primary300" size="sm">
-									Members
-								</Text>
-
-								<CardAvatars
-									listUsers={team.users}
-									responsible={false}
-									teamAdmins={false}
-									userId={userId}
-								/>
-
-								<Separator
-									orientation="vertical"
-									css={{
-										ml: '$8',
-										backgroundColor: '$primary100',
-										height: '$24 !important'
-									}}
-								/>
-
-								<Text color="primary300" size="sm">
-									Team admin
-								</Text>
-
-								<CardAvatars
-									listUsers={team.users}
-									responsible={false}
-									teamAdmins={false}
-									userId={userId}
-								/>
-
-								<Separator
-									orientation="vertical"
-									css={{
-										ml: '$8',
-										backgroundColor: '$primary100',
-										height: '$24 !important'
-									}}
-								/>
-
-								{/* {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
-									<CenterMainBoard
-										countDividedBoards={countDividedBoards}
-										handleOpenSubBoards={handleOpenSubBoards}
-										openSubBoards={openSubBoards}
-									/>
-								)} */}
 							</Flex>
 						</Flex>
+					</Flex>
+
+					<Flex align="center" gap="8">
+						<Text color="primary300" size="sm">
+							Members
+						</Text>
+
+						<CardAvatars
+							listUsers={team.users}
+							responsible={false}
+							teamAdmins={false}
+							userId={userId}
+						/>
+
+						<Separator
+							orientation="vertical"
+							css={{
+								ml: '$40',
+								backgroundColor: '$primary100',
+								height: '$24 !important'
+							}}
+						/>
+
+						<Flex css={{ ml: '$40', display: 'flex', alignItems: 'center' }}>
+							<Text color="primary300" size="sm">
+								Team admin
+							</Text>
+
+							<CardAvatars
+								listUsers={team.users}
+								responsible={false}
+								teamAdmins={false}
+								userId={userId}
+							/>
+							<Separator
+								orientation="vertical"
+								css={{
+									ml: '$40',
+									backgroundColor: '$primary100',
+									height: '$24 !important'
+								}}
+							/>
+						</Flex>
+						<BoardsInfo userSAdmin={isSAdmin} />
 					</Flex>
 					<CardEnd
 						team={team}
 						havePermissions={havePermissions}
 						index={index}
-						isTeam={true}
-						isMember={false}
 						userId={userId}
 						userIsParticipating={userIsParticipating}
 						userSAdmin={isSAdmin}

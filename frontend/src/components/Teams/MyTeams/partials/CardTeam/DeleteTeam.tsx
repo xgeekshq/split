@@ -22,7 +22,7 @@ const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamId, teamName }) => {
 			defaultOpen={false}
 			handleConfirm={handleDelete}
 			text={`Do you really want to delete the team “${teamName}”?`}
-			title="Delete board"
+			title="Delete Team"
 		>
 			<Tooltip content="Delete Team">
 				<AlertDialogTrigger asChild>

@@ -5,13 +5,12 @@ import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
 import BoardType from 'types/board/board';
 import CardAvatars from 'components/CardBoard/CardAvatars';
-import DeleteTeam from './DeleteBoard';
+
 import { Team } from 'types/team/team';
+import DeleteTeam from './DeleteTeam';
 
 type CardEndProps = {
 	team: Team;
-	isTeam: boolean;
-	isMember: boolean | undefined;
 	index: number | undefined;
 	havePermissions: boolean;
 	userId: string;
@@ -20,56 +19,20 @@ type CardEndProps = {
 };
 
 const CardEnd: React.FC<CardEndProps> = React.memo(
-	({ team, isTeam, isMember, index, havePermissions, userId, userSAdmin = undefined }) => {
+	({ team, index, havePermissions, userId, userSAdmin = undefined }) => {
 		CardEnd.defaultProps = {
 			userSAdmin: undefined
 		};
 		const { _id: id, users, name } = team;
 
-		// const boardTypeCaption = useMemo(() => {
-		// 	if (isSubBoard && !isDashboard) return 'Responsible';
-		// 	if (isSubBoard && !team && isDashboard) return 'Team';
-		// 	if (team) return 'Team';
-		// 	return 'Personal';
-		// }, [isDashboard, isSubBoard, team]);
-
-		// const boardOwnerName = useMemo(() => {
-		// 	if (team) {
-		// 		return team?.name;
-		// 	}
-		// 	if (isSubBoard && isDashboard && index !== undefined) {
-		// 		return `sub-team ${index + 1}`;
-		// 	}
-		// 	if (isSubBoard && !isDashboard) {
-		// 		return users.find((user) => user.role === 'responsible')?.user.firstName;
-		// 	}
-
-		// 	return createdBy?.firstName;
-		// }, [team, isSubBoard, isDashboard, createdBy?.firstName, index, users]);
-
-		if (isMember) {
-			return (
-				<Flex align="center" css={{ justifySelf: 'end' }}>
-					{/* <Text color="primary300" size="sm">
-						{boardTypeCaption} |
-					</Text>
-					<Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
-						{boardOwnerName}
-					</Text>
-					<CardAvatars
-						listUsers={!team ? users : team.users}
-						responsible={false}
-						teamAdmins={false}
-						userId={userId}
-					/> */}
-				</Flex>
-			);
+		if (!userSAdmin) {
+			return <Flex></Flex>;
 		}
 
-		if (!isMember) {
+		if (!userSAdmin) {
 			return (
 				<Flex css={{ alignItems: 'center' }}>
-					{(havePermissions || userSAdmin) && !isMember && (
+					{(havePermissions || userSAdmin) && (
 						<Flex align="center" css={{ ml: '$24' }} gap="24">
 							<Separator
 								orientation="vertical"
