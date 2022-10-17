@@ -112,7 +112,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 							<CardAvatars
 								listUsers={team.users}
 								responsible={false}
-								teamAdmins={false}
+								teamAdmins={true}
 								userId={userId}
 							/>
 							<Separator

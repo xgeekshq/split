@@ -27,6 +27,8 @@ const MyTeams = ({ userId }: MyTeamsProps) => {
 		}
 	});
 
+	console.log(data);
+
 	if (!data) return <EmptyTeams />;
 
 	return <ListOfCards teams={data} isLoading={isFetching} userId={userId} />;
