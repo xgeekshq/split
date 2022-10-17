@@ -39,16 +39,13 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 		if (isSAdmin) {
 			return true;
 		}
-		return false;
+
 		const myUser = team.users.find((user) => String(user.user._id) === String(userId));
-		//const myUserIsOwner = board.createdBy._id === userId;
-		// if (
-		//     team &&
-		//     (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || myUserIsOwner)
-		// ) {
-		//     return true;
-		// }
-		//return !!users.find((user) => user.role === 'owner');
+
+		if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder')) {
+			return true;
+		}
+		return false;
 	}, [isSAdmin, team, userId, users]);
 
 	return (
@@ -124,7 +121,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 								}}
 							/>
 						</Flex>
-						<BoardsInfo userSAdmin={isSAdmin} />
+						<BoardsInfo userSAdmin={isSAdmin} teamAdmin={havePermissions} />
 					</Flex>
 					<CardEnd
 						team={team}
