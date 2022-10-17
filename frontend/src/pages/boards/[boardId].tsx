@@ -94,12 +94,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
 
 	// Show board settings button if current user is allowed to edit
-	const havePermissionsToEditBoardSettings =
-		(isStakeholderOrAdmin ||
-			(board?.isSubBoard && isResponsible) ||
-			isOwner ||
-			session?.isSAdmin) &&
-		board?.submitedAt === null;
+	const isResponsibleInSubBoard = board?.isSubBoard && isResponsible;
+	const hasAdminRole =
+		isStakeholderOrAdmin || session?.isSAdmin || isOwner || isResponsibleInSubBoard;
 
 	// Show Alert message if any sub-board wasn't merged
 	const showMessageHaveSubBoardsMerged =
@@ -127,7 +124,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
 
-	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
+	if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
+
+	return board && userId && socketId ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
@@ -142,7 +141,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{havePermissionsToEditBoardSettings ? (
+					{hasAdminRole && !board?.submitedAt ? (
 						<BoardSettings
 							isOpen={isOpen}
 							isOwner={isOwner}
