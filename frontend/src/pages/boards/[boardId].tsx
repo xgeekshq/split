@@ -12,6 +12,7 @@ import AlertMergeIntoMain from 'components/Board/AlertMergeIntoMain';
 import DragDropArea from 'components/Board/DragDropArea';
 import BoardHeader from 'components/Board/Header';
 import { BoardSettings } from 'components/Board/Settings';
+import BoardNotAuthorized from 'components/layouts/not-authorizedLayout/BoardNotAuthorized';
 import LoadingPage from 'components/loadings/LoadingPage';
 import AlertBox from 'components/Primitives/AlertBox';
 import Flex from 'components/Primitives/Flex';
@@ -94,12 +95,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
 
 	// Show board settings button if current user is allowed to edit
-	const havePermissionsToEditBoardSettings =
-		(isStakeholderOrAdmin ||
-			(board?.isSubBoard && isResponsible) ||
-			isOwner ||
-			session?.isSAdmin) &&
-		board?.submitedAt === null;
+	const isResponsibleInSubBoard = board?.isSubBoard && isResponsible;
+	const hasAdminRole =
+		isStakeholderOrAdmin || session?.isSAdmin || isOwner || isResponsibleInSubBoard;
 
 	// Show Alert message if any sub-board wasn't merged
 	const showMessageHaveSubBoardsMerged =
@@ -126,8 +124,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+	if (!userIsInBoard && !hasAdminRole) return <BoardNotAuthorized />;
 
-	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
+	return board && userId && socketId ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
@@ -142,7 +141,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{havePermissionsToEditBoardSettings ? (
+					{hasAdminRole && !board?.submitedAt ? (
 						<BoardSettings
 							isOpen={isOpen}
 							isOwner={isOwner}
