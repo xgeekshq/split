@@ -126,7 +126,6 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 					<CardEnd
 						team={team}
 						havePermissions={havePermissions}
-						index={index}
 						userId={userId}
 						userIsParticipating={userIsParticipating}
 						userSAdmin={isSAdmin}

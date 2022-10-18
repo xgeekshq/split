@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
-mongosh <<EOF
+
+mongo <<EOF
 var config = {
     "_id": "$MONGO_REPLICA_NAME",
     "version": 1,
@@ -23,7 +23,7 @@ EOF
 
 sleep 30
 
-mongosh <<EOF
+mongo <<EOF
    use admin;
    admin = db.getSiblingDB("admin");
    admin.createUser(
