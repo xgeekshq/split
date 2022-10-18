@@ -5,4 +5,5 @@ export interface TeamUser {
 	user: User;
 	role: TeamUserRoles;
 	_id: string;
+	team: string;
 }
