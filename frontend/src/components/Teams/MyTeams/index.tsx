@@ -1,8 +1,8 @@
-import { getAllTeams, getTeamsOfUser } from 'api/teamService';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
+import { getAllTeams } from 'api/teamService';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import EmptyTeams from './partials/EmptyTeams';
@@ -29,7 +29,7 @@ const MyTeams = ({ userId }: MyTeamsProps) => {
 
 	if (!data) return <EmptyTeams />;
 
-	return <ListOfCards teams={data} isLoading={isFetching} userId={userId} />;
+	return <ListOfCards isLoading={isFetching} teams={data} userId={userId} />;
 };
 
 export default MyTeams;

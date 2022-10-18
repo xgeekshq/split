@@ -1,16 +1,18 @@
 import React, { useMemo } from 'react';
+import { useSession } from 'next-auth/react';
+
 import { styled } from 'styles/stitches/stitches.config';
+
+import CardAvatars from 'components/CardBoard/CardAvatars';
 import Icon from 'components/icons/Icon';
 import Box from 'components/Primitives/Box';
 import Flex from 'components/Primitives/Flex';
+import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
 import { Team } from 'types/team/team';
-import CardTitle from './CardTitle';
-import CardAvatars from 'components/CardBoard/CardAvatars';
-import Separator from 'components/Primitives/Separator';
-import CardEnd from './CardEnd';
-import { useSession } from 'next-auth/react';
 import BoardsInfo from './BoardsInfo';
+import CardEnd from './CardEnd';
+import CardTitle from './CardTitle';
 
 const InnerContainer = styled(Flex, Box, {
 	px: '$32',
@@ -24,12 +26,12 @@ type CardBodyProps = {
 	index?: number;
 };
 
-const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
+const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 	const { data: session } = useSession();
 
 	const isSAdmin = session?.isSAdmin;
 
-	const { _id: id, name, users } = team;
+	const { _id: id, users } = team;
 
 	const userIsParticipating = useMemo(() => {
 		return !!users.find((user) => user.user._id === userId);
@@ -46,7 +48,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 			return true;
 		}
 		return false;
-	}, [isSAdmin, team, userId, users]);
+	}, [isSAdmin, team, userId]);
 
 	return (
 		<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
@@ -107,9 +109,9 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 							</Text>
 
 							<CardAvatars
+								teamAdmins
 								listUsers={team.users}
 								responsible={false}
-								teamAdmins={true}
 								userId={userId}
 							/>
 							<Separator
@@ -121,11 +123,11 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, index }) => {
 								}}
 							/>
 						</Flex>
-						<BoardsInfo userSAdmin={isSAdmin} teamAdmin={havePermissions} />
+						<BoardsInfo teamAdmin={havePermissions} userSAdmin={isSAdmin} />
 					</Flex>
 					<CardEnd
-						team={team}
 						havePermissions={havePermissions}
+						team={team}
 						userId={userId}
 						userIsParticipating={userIsParticipating}
 						userSAdmin={isSAdmin}
