@@ -4,12 +4,12 @@ import { Droppable } from '@react-forked/dnd';
 import Flex from 'components/Primitives/Flex';
 import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
+import { getCardVotes } from 'helper/board/votes';
 import { ColumnBoardType } from 'types/column';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
-import { getCardVotes } from 'helper/board/votes';
 
 const Column = React.memo<ColumnBoardType>(
 	({
