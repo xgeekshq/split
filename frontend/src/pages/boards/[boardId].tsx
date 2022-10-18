@@ -132,7 +132,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 			<BoardHeader />
 			<Container direction="column">
 				<Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
-					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
+					{showButtonToMerge ? (
+						<AlertMergeIntoMain boardId={boardId} socketId={socketId} />
+					) : null}
 
 					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox
