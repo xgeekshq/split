@@ -6,10 +6,15 @@ import { getSession, useSession } from 'next-auth/react';
 import { getDashboardHeaderInfo } from 'api/authService';
 import { getAllTeams } from 'api/teamService';
 import QueryError from 'components/Errors/QueryError';
+
 import Layout from 'components/layouts/Layout';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import MyTeams from 'components/Teams/MyTeams';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+import { ReactElement, Suspense } from 'react';
+import { dehydrate, QueryClient } from 'react-query';
 
 const Teams = () => {
 	const { data: session } = useSession({ required: true });
