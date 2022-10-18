@@ -23,7 +23,7 @@ interface BoardAlertDialog {
 	text: ReactNode;
 	cancelText: string;
 	confirmText: string;
-	handleConfirm: () => void;
+	handleConfirm?: () => void;
 	title: ReactNode;
 	handleClose?: () => void;
 	children?: ReactNode;

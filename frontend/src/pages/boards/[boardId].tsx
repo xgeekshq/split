@@ -127,6 +127,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
 
 	return board && userId && socketId ? (
+
 		<>
 			<BoardHeader />
 			<Container direction="column">
