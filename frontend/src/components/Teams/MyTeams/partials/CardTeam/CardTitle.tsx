@@ -1,5 +1,7 @@
 import Link from 'next/link';
+
 import { styled } from 'styles/stitches/stitches.config';
+
 import Text from 'components/Primitives/Text';
 
 type CardTitleProps = {
@@ -31,7 +33,7 @@ const CardTitle: React.FC<CardTitleProps> = ({ teamId, title }) => {
 				key={teamId}
 				href={{
 					pathname: `teams/[teamId]`
-					//query: isSubBoard ? { boardId, mainBoardId } : { boardId }
+					// query: isSubBoard ? { boardId, mainBoardId } : { boardId }
 				}}
 			>
 				<StyledBoardTitle>{title}</StyledBoardTitle>

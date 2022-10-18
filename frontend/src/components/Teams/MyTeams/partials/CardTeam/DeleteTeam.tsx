@@ -4,9 +4,9 @@ import { AlertDialogTrigger } from 'components/Primitives/AlertDialog';
 import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
 
-type DeleteTeamProps = { teamId: string; teamName: string };
+type DeleteTeamProps = { teamName: string };
 
-const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamId, teamName }) => {
+const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName }) => {
 	return (
 		<AlertCustomDialog
 			cancelText="Cancel"

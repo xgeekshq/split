@@ -1,10 +1,10 @@
+import { useQuery } from 'react-query';
+import Link from 'next/link';
+
 import { getDashboardHeaderInfo } from 'api/authService';
-import { StyledBoardTitle } from 'components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import Link from 'next/link';
-import { useQuery } from 'react-query';
 
 type BoardsInfoProps = {
 	userSAdmin: boolean | undefined;
@@ -25,12 +25,12 @@ const BoardsInfo = ({ userSAdmin, teamAdmin }: BoardsInfoProps) => {
 						<a style={{ textDecoration: 'none' }}>
 							<Flex css={{ alignItems: 'center' }}>
 								<Icon
+									name="plus"
 									css={{
 										width: '16px',
 										height: '$32',
 										marginRight: '$10'
 									}}
-									name="plus"
 								/>
 								<Text css={{ ml: '$14' }} size="sm" weight="medium">
 									{' '}
