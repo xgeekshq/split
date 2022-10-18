@@ -126,7 +126,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
-
+	//
 	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
 		<>
 			<BoardHeader />

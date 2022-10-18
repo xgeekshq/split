@@ -34,7 +34,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 				{children}
 			</DashboardLayout>
 		);
-	}, [children, isBoards, isDashboard, session]);
+	}, [children, isBoards, isDashboard, session, isTeams]);
 
 	if (!session) return <LoadingPage />;
 
