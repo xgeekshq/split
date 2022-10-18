@@ -73,8 +73,17 @@ export const updateCardRequest = (updateCard: UpdateCardDto): Promise<BoardType>
 	);
 };
 
-export const mergeBoardRequest = (subBoardId: string): Promise<BoardType> => {
-	return fetchData<BoardType>(`/boards/${subBoardId}/merge`, { method: 'PUT' });
+export const mergeBoardRequest = async ({
+	subBoardId,
+	socketId
+}: {
+	subBoardId: string;
+	socketId?: string;
+}): Promise<BoardType> => {
+	return fetchData<BoardType>(`/boards/${subBoardId}/merge`, {
+		method: 'PUT',
+		params: { socketId }
+	});
 };
 
 export const updateCardPositionRequest = (
