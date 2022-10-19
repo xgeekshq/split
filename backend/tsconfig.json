@@ -21,6 +21,6 @@
 		"outDir": "./dist",
 		"baseUrl": "./src"
 	},
-	"include": ["./src", "jest.config.ts"],
+	"include": ["./src", "jest.config.ts", ".eslintrc.cjs"],
 	"exclude": ["node_modules"]
 }

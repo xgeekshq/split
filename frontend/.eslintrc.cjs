@@ -2,7 +2,7 @@
 const fs = require('fs');
 
 const folders = fs
-	.readdirSync('src', { withFileTypes: true })
+	.readdirSync('./src', { withFileTypes: true })
 	.filter((dirent) => dirent.isDirectory())
 	.map((dirent) => !['styles'].includes(dirent.name) && dirent.name);
 
@@ -37,6 +37,7 @@ module.exports = {
 		'prettier'
 	],
 	rules: {
+		'no-console': 'error',
 		'react/react-in-jsx-scope': 'off',
 		'react/jsx-filename-extension': [
 			1,
