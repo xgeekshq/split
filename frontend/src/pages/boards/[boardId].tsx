@@ -124,14 +124,18 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+  
 	if (!userIsInBoard && !hasAdminRole) return <BoardNotAuthorized />;
+	if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
 
 	return board && userId && socketId ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
 				<Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
-					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
+					{showButtonToMerge ? (
+						<AlertMergeIntoMain boardId={boardId} socketId={socketId} />
+					) : null}
 
 					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox

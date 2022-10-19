@@ -205,7 +205,7 @@ const useCards = () => {
 
 	const mergeBoard = useMutation(mergeBoardRequest, {
 		onSuccess: (data, variables) => {
-			queryClient.invalidateQueries(getBoardQuery(variables));
+			queryClient.invalidateQueries(getBoardQuery(variables.subBoardId));
 		},
 		onError: () => {
 			setToastState({

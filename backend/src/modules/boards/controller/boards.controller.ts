@@ -32,6 +32,7 @@ import {
 
 import { BaseParam } from 'libs/dto/param/base.param';
 import { PaginationParams } from 'libs/dto/param/pagination.params';
+import { BaseParamWSocket } from 'libs/dto/param/socket.param';
 import {
 	BOARD_NOT_FOUND,
 	DELETE_FAILED,
@@ -262,11 +263,19 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/merge')
-	async mergeBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
+	async mergeBoard(
+		@Param() { boardId }: BaseParam,
+		@Query() { socketId }: BaseParamWSocket,
+		@Req() request: RequestWithUser
+	) {
 		const result = await this.updateBoardApp.mergeBoards(boardId, request.user._id);
 
 		if (!result) {
 			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedAllBoard(socketId);
 		}
 
 		return result;

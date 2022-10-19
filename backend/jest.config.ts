@@ -14,7 +14,7 @@ module.exports = {
 		'<rootDir>/coverage/',
 		'.module.ts',
 		'main.ts',
-		'.eslintrc.js',
+		'.eslintrc.cjs',
 		'jest.config.js',
 		'jest.config.ts',
 		'configuration.ts',
