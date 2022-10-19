@@ -6,7 +6,9 @@ type Props = { teamName: string };
 const TeamName = ({ teamName }: Props) => {
 	return (
 		<>
-			<Text heading="3">Team Name</Text>
+			<Text css={{ mb: '$16' }} heading="3">
+				Team Name
+			</Text>
 
 			<Input
 				forceState
