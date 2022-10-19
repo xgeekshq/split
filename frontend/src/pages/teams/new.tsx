@@ -44,7 +44,7 @@ const NewTeam: NextPage = () => {
 		<Container>
 			<PageHeader>
 				<Text color="primary800" heading={3} weight="bold">
-					Add new SPLIT board
+					Create new team
 				</Text>
 
 				<Button isIcon onClick={handleBack}>
