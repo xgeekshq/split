@@ -1,3 +1,5 @@
+/* eslint react/no-unknown-property: 0 */
+
 const Sprite = () => (
 	<svg
 		focusable="false"
