@@ -33,7 +33,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 						</Link>
 					)}
 					{isTeams && (
-						<Link href="/">
+						<Link href="/teams/new">
 							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
 								<Icon css={{ color: 'white' }} name="plus" />
 								Create new team
