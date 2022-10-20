@@ -11,6 +11,7 @@ type Props = {
 	isChecked: boolean;
 	handleCheckedChange: (checked: boolean) => void;
 	children?: ReactNode;
+	color?: string;
 };
 
 const ConfigurationSettings = ({
@@ -18,7 +19,8 @@ const ConfigurationSettings = ({
 	text,
 	isChecked,
 	handleCheckedChange,
-	children
+	children,
+	color
 }: Props) => (
 	<Flex gap={20}>
 		<Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange}>
@@ -29,7 +31,7 @@ const ConfigurationSettings = ({
 						css={{
 							width: '$10',
 							height: '$10',
-							color: '$successBase'
+							color: color || '$successBase'
 						}}
 					/>
 				)}

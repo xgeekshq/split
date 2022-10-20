@@ -7,7 +7,7 @@ import { joiResolver } from '@hookform/resolvers/joi/dist/joi';
 import Icon from '../../components/icons/Icon';
 import Button from '../../components/Primitives/Button';
 import Text from '../../components/Primitives/Text';
-import TeamsMembersList from '../../components/Teams/CreateTeam/ListOfCards/TeamsMembersList';
+import TeamsMembersList from '../../components/Teams/CreateTeam/ListCardsMembers';
 import TeamName from '../../components/Teams/CreateTeam/TeamName';
 import TipBar from '../../components/Teams/CreateTeam/TipBar';
 import SchemaCreateTeam from '../../schema/schemaCreateTeamForm';

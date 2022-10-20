@@ -3,8 +3,8 @@ import { useSession } from 'next-auth/react';
 
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import AddMember from '../AddMember';
-import CardMember from '../CardMember/CardMember';
+import AddMemberBtn from '../AddMemberBtn';
+import CardMember from '../CardMember';
 
 const TeamMembersList = () => {
 	const { data: session } = useSession();
@@ -16,7 +16,7 @@ const TeamMembersList = () => {
 					Team Members
 				</Text>
 				<CardMember userId={session?.user.id} userSAdmin={session?.isSAdmin} />
-				<AddMember />
+				<AddMemberBtn />
 			</Flex>
 		);
 	}
