@@ -7,6 +7,7 @@ import { joiResolver } from '@hookform/resolvers/joi/dist/joi';
 import Icon from '../../components/icons/Icon';
 import Button from '../../components/Primitives/Button';
 import Text from '../../components/Primitives/Text';
+import TeamsMembersList from '../../components/Teams/CreateTeam/ListOfCards/TeamsMembersList';
 import TeamName from '../../components/Teams/CreateTeam/TeamName';
 import TipBar from '../../components/Teams/CreateTeam/TipBar';
 import SchemaCreateTeam from '../../schema/schemaCreateTeamForm';
@@ -44,7 +45,7 @@ const NewTeam: NextPage = () => {
 		<Container>
 			<PageHeader>
 				<Text color="primary800" heading={3} weight="bold">
-					Add new SPLIT board
+					Create New Tem
 				</Text>
 
 				<Button isIcon onClick={handleBack}>
@@ -57,6 +58,7 @@ const NewTeam: NextPage = () => {
 						<InnerContent direction="column">
 							<FormProvider {...methods}>
 								<TeamName teamName={teamName} />
+								<TeamsMembersList />
 							</FormProvider>
 						</InnerContent>
 					</StyledForm>
