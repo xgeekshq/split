@@ -49,6 +49,7 @@ import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 import { BoardResponse } from 'modules/boards/swagger/board.swagger';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 
+import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import BoardDto from '../dto/board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
@@ -238,9 +239,19 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId')
-	async deleteBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
+	async deleteBoard(
+		@Param() { boardId }: BaseParam,
+		@Query() { teamId }: TeamParamOptional,
+		@Query() { socketId }: BaseParamWSocket,
+		@Req() request: RequestWithUser
+	) {
 		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
 		if (!result) throw new BadRequestException(DELETE_FAILED);
+
+		if (socketId && teamId) {
+			this.socketService.sendUpdatedBoards(socketId, teamId);
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+		}
 
 		return result;
 	}

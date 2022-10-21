@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
@@ -7,6 +7,7 @@ import CardBody from 'components/CardBoard/CardBody/CardBody';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import { useSocketBoardIO } from 'hooks/useSocketBoardIO';
 import { toastState } from 'store/toast/atom/toast.atom';
 import BoardType from 'types/board/board';
 import { Team } from 'types/team/team';
@@ -46,6 +47,19 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 	);
 
 	const { data, isLoading } = fetchBoards;
+
+	const teamSocketId = data?.pages[0].boards[0] ? data?.pages[0].boards[0].team._id : undefined;
+
+	// socketId
+	const { socket, queryClient } = useSocketBoardIO(teamSocketId);
+
+	useEffect(() => {
+		if (!socket) return;
+		socket.on('teamId', () => {
+			queryClient.invalidateQueries('boards');
+		});
+	}, [socket, queryClient]);
+
 	const currentDate = new Date().toDateString();
 
 	const dataByTeamAndDate = useMemo(() => {
@@ -83,10 +97,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 			}
 		}
 	};
-
-	// const teamNames = Array.from(dataByTeamAndDate.teams.values()).map((team) => {
-	//   return { value: team._id, label: team.name };
-	// });
 
 	return (
 		<ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
@@ -176,6 +186,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 													dividedBoardsCount={board.dividedBoards.length}
 													isDashboard={false}
 													isSAdmin={isSuperAdmin}
+													socketId={socket?.id}
 													userId={userId}
 												/>
 											))}
