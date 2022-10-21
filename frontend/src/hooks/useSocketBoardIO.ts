@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import { QueryClient, useQueryClient } from 'react-query';
 import { io, Socket } from 'socket.io-client';
 
 import { NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
 
-export const useSocketBoardIO = (teamId: string | undefined): string | undefined => {
+type UseSocketBoardInterface = {
+	socket: Socket | null;
+	queryClient: QueryClient;
+};
+
+export const useSocketBoardIO = (teamId: string | undefined): UseSocketBoardInterface => {
 	const queryClient = useQueryClient();
 	const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -14,13 +19,14 @@ export const useSocketBoardIO = (teamId: string | undefined): string | undefined
 		});
 
 		newSocket.on('connect', () => {
-			newSocket.emit('joinBoards', { teamId: 'teamId' });
+			newSocket.emit('joinBoards', { teamId });
 			setSocket(newSocket);
 		});
 
-		newSocket.on('teamId', () => {
-			queryClient.invalidateQueries('boards');
-		});
+		// newSocket.on('teamId', () => {
+		// 	queryClient.invalidateQueries('boards');
+		// 	// queryClient.invalidateQueries();
+		// });
 
 		return () => {
 			newSocket.disconnect();
@@ -28,5 +34,6 @@ export const useSocketBoardIO = (teamId: string | undefined): string | undefined
 		};
 	}, [teamId, queryClient, setSocket]);
 
-	return socket?.id;
+	// return socket?.id;
+	return { socket, queryClient };
 };

@@ -50,6 +50,7 @@ const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
 
 	const deleteBoard = useMutation(deleteBoardRequest, {
 		onSuccess: () => {
+			console.log('passou');
 			queryClient.invalidateQueries('boards');
 			setToastState({
 				open: true,
