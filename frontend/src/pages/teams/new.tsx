@@ -2,11 +2,12 @@ import { useCallback } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { joiResolver } from '@hookform/resolvers/joi/dist/joi';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import Icon from '../../components/icons/Icon';
 import Button from '../../components/Primitives/Button';
 import Text from '../../components/Primitives/Text';
+import TeamsMembersList from '../../components/Teams/CreateTeam/ListCardsMembers';
 import TeamName from '../../components/Teams/CreateTeam/TeamName';
 import TipBar from '../../components/Teams/CreateTeam/TipBar';
 import SchemaCreateTeam from '../../schema/schemaCreateTeamForm';
@@ -44,7 +45,7 @@ const NewTeam: NextPage = () => {
 		<Container>
 			<PageHeader>
 				<Text color="primary800" heading={3} weight="bold">
-					Create new team
+					Create New Tem
 				</Text>
 
 				<Button isIcon onClick={handleBack}>
@@ -57,6 +58,7 @@ const NewTeam: NextPage = () => {
 						<InnerContent direction="column">
 							<FormProvider {...methods}>
 								<TeamName teamName={teamName} />
+								<TeamsMembersList />
 							</FormProvider>
 						</InnerContent>
 					</StyledForm>

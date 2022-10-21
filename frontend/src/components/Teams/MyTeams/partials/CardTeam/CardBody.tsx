@@ -100,7 +100,11 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 							}}
 						/>
 
-						<Flex css={{ ml: '$40', display: 'flex', alignItems: 'center' }}>
+						<Flex
+							align="center"
+							css={{ ml: '$40', display: 'flex', alignItems: 'center' }}
+							gap="8"
+						>
 							<Text color="primary300" size="sm">
 								Team admin
 							</Text>
@@ -119,7 +123,6 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 									height: '$24 !important'
 								}}
 							/>
-
 							<BoardsInfo teamAdmin={havePermissions} userSAdmin={isSAdmin} />
 						</Flex>
 					</Flex>

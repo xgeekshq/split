@@ -1,25 +1,21 @@
-import { styled } from 'styles/stitches/stitches.config';
-
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
-import Text from 'components/Primitives/Text';
-
-const TextWhite = styled(Text, { color: 'white', mt: '$24' });
-const LiWhite = styled('li', Text, { color: '$primary100', fontSize: '$14', lineHeight: '$20' });
+import { LiWhite, TextWhite } from './styles';
 
 const CreateTeamTipBar = () => {
 	return (
 		<Flex
 			direction="column"
-			justify="center"
+			justify="start"
 			css={{
 				minHeight: 'calc(100vh - $sizes$92)',
 				backgroundColor: '$primary800',
 				padding: '$32',
+				paddingTop: '$100',
 				maxWidth: '$384',
 				position: 'fixed',
 				right: 0,
-				top: 0,
+				top: '$220',
 				bottom: 0
 			}}
 		>
