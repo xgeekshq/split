@@ -4,6 +4,7 @@ import { Droppable } from '@react-forked/dnd';
 import Flex from 'components/Primitives/Flex';
 import Separator from 'components/Primitives/Separator';
 import Text from 'components/Primitives/Text';
+import { getCardVotes } from 'helper/board/votes';
 import { ColumnBoardType } from 'types/column';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
@@ -33,17 +34,17 @@ const Column = React.memo<ColumnBoardType>(
 				case 'desc':
 					return [...cards].sort((a, b) => {
 						const votesA =
-							a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
+							a.items.length === 1 ? a.items[0].votes.length : getCardVotes(a).length;
 						const votesB =
-							b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
+							b.items.length === 1 ? b.items[0].votes.length : getCardVotes(b).length;
 						return votesA - votesB;
 					});
 				case 'asc':
 					return [...cards].sort((a, b) => {
 						const votesA =
-							a.items.length === 1 ? a.items[0].votes.length : a.votes.length;
+							a.items.length === 1 ? a.items[0].votes.length : getCardVotes(a).length;
 						const votesB =
-							b.items.length === 1 ? b.items[0].votes.length : b.votes.length;
+							b.items.length === 1 ? b.items[0].votes.length : getCardVotes(b).length;
 						return votesB - votesA;
 					});
 				default:

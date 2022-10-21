@@ -275,11 +275,19 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/merge')
-	async mergeBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
+	async mergeBoard(
+		@Param() { boardId }: BaseParam,
+		@Query() { socketId }: BaseParamWSocket,
+		@Req() request: RequestWithUser
+	) {
 		const result = await this.updateBoardApp.mergeBoards(boardId, request.user._id);
 
 		if (!result) {
 			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		if (socketId) {
+			this.socketService.sendUpdatedAllBoard(socketId);
 		}
 
 		return result;
