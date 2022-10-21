@@ -8,7 +8,6 @@ import {
 	WebSocketServer
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
 import JoinPayload from '../interfaces/joinPayload.interface';
 import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
 
@@ -29,6 +28,14 @@ export default class SocketGateway
 		this.server.to(newBoardId.toString()).except(excludedClient).emit('updateAllBoard', newBoardId);
 	}
 
+	sendUpdatedBoards(excludedClient: string) {
+		this.server.except(excludedClient).emit('updateBoardList');
+	}
+
+	sendUpdatedAllBoard(excludedClient: string) {
+		this.server.except(excludedClient).emit('updateAllBoard');
+	}
+
 	afterInit() {
 		this.logger.log('Init');
 	}
@@ -41,9 +48,9 @@ export default class SocketGateway
 		this.logger.log(`Client connected: ${client.id}`);
 	}
 
-	@SubscribeMessage('join')
-	handleJoin(client: Socket, payload: JoinPayload) {
-		client.join(payload.boardId);
+	@SubscribeMessage('joinBoards')
+	handleJoinBoards(client: Socket, payload: JoinPayloadBoards) {
+		client.join(payload.boards);
 	}
 
 	@SubscribeMessage('joinBoards')

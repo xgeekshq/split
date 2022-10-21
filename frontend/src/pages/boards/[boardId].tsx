@@ -105,12 +105,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
 
 	// Show board settings button if current user is allowed to edit
-	const havePermissionsToEditBoardSettings =
-		(isStakeholderOrAdmin ||
-			(board?.isSubBoard && isResponsible) ||
-			isOwner ||
-			session?.isSAdmin) &&
-		board?.submitedAt === null;
+	const isResponsibleInSubBoard = board?.isSubBoard && isResponsible;
+	const hasAdminRole =
+		isStakeholderOrAdmin || session?.isSAdmin || isOwner || isResponsibleInSubBoard;
 
 	// Show Alert message if any sub-board wasn't merged
 	const showMessageHaveSubBoardsMerged =
@@ -138,18 +135,23 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
 
+
 	useEffect(() => {
 		if (data === null) {
 			route.push('/board-deleted');
 		}
 	}, [data, route]);
 
-	return board && userId && socketId && (userIsInBoard || havePermissionsToEditBoardSettings) ? (
+	if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
+
+	return board && userId && socketId ? (
 		<>
 			<BoardHeader />
 			<Container direction="column">
 				<Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
-					{showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} /> : null}
+					{showButtonToMerge ? (
+						<AlertMergeIntoMain boardId={boardId} socketId={socketId} />
+					) : null}
 
 					{showMessageHaveSubBoardsMerged ? (
 						<AlertBox
@@ -159,7 +161,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 						/>
 					) : null}
 
-					{havePermissionsToEditBoardSettings ? (
+					{hasAdminRole && !board?.submitedAt ? (
 						<BoardSettings
 							isOpen={isOpen}
 							isOwner={isOwner}

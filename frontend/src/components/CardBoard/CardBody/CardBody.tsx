@@ -121,15 +121,15 @@ const CardBody = React.memo<CardBodyProps>(
 				return true;
 			}
 			const myUser = team.users.find((user) => String(user.user._id) === String(userId));
-			const myUserIsOwner = board.createdBy._id === userId;
-			if (
-				team &&
-				(myUser?.role === 'admin' || myUser?.role === 'stakeholder' || myUserIsOwner)
-			) {
+			const myUserIsOwnerMainBoard = board.createdBy._id === userId;
+			const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
+			const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
+			if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner)) {
 				return true;
 			}
+
 			return !!users.find((user) => user.role === 'owner');
-		}, [isSAdmin, team, board.createdBy._id, userId, users]);
+		}, [isSAdmin, team, userId, users, board.createdBy]);
 
 		const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
 			e.preventDefault();
@@ -153,6 +153,10 @@ const CardBody = React.memo<CardBodyProps>(
 			},
 			[board._id, countDividedBoards, isDashboard, userId, socketId]
 		);
+
+		const iconLockConditions =
+			board.isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
+
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
 				<Flex>
@@ -195,17 +199,16 @@ const CardBody = React.memo<CardBodyProps>(
 											of {dividedBoardsCount}
 										</Text>
 									)}
-									{!userIsParticipating ||
-										(!havePermissions && !isDashboard && (
-											<Icon
-												name="lock"
-												css={{
-													color: '$primary300',
-													width: '17px',
-													height: '$16'
-												}}
-											/>
-										))}
+									{iconLockConditions && (
+										<Icon
+											name="lock"
+											css={{
+												color: '$primary300',
+												width: '17px',
+												height: '$16'
+											}}
+										/>
+									)}
 									{board.recurrent && (
 										<Tooltip content="Recurrs every month">
 											<RecurrentIconContainer>

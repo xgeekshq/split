@@ -1,8 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require('fs');
 
 const folders = fs
-	.readdirSync('src', { withFileTypes: true })
+	.readdirSync('./src', { withFileTypes: true })
 	.filter((dirent) => dirent.isDirectory())
 	.map((dirent) => dirent.name);
 
@@ -27,8 +26,8 @@ module.exports = {
 		jest: true,
 		es2021: true
 	},
-	ignorePatterns: ['.eslintrc.js'],
 	rules: {
+		'no-console': 'error',
 		'no-underscore-dangle': 'off',
 		'class-methods-use-this': 'off',
 		'no-param-reassign': 'off',

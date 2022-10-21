@@ -7,7 +7,6 @@ import CardItem from './CardItem';
 interface CardItemListProps {
 	items: CardItemType[];
 	color: string;
-	submitedByTeam?: string;
 	columnId: string;
 	boardId: string;
 	cardGroupId: string;
@@ -22,7 +21,6 @@ interface CardItemListProps {
 const CardItemList: React.FC<CardItemListProps> = ({
 	items,
 	color,
-	submitedByTeam,
 	columnId,
 	boardId,
 	cardGroupId,
@@ -68,7 +66,6 @@ const CardItemList: React.FC<CardItemListProps> = ({
 						item={item}
 						lastOne={idx + 1 === items.length}
 						socketId={socketId}
-						teamName={submitedByTeam}
 						userId={userId}
 					/>
 				</Flex>

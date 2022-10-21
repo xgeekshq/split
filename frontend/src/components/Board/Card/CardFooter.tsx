@@ -22,7 +22,6 @@ interface FooterProps {
 	card: CardType | CardItemType;
 	anonymous: boolean;
 	isItem: boolean;
-	teamName?: string;
 	isMainboard: boolean;
 	setOpenComments?: () => void;
 	comments?: CommentType[];
@@ -63,7 +62,6 @@ const CardFooter = React.memo<FooterProps>(
 		socketId,
 		card,
 		anonymous,
-		teamName,
 		isItem,
 		isMainboard,
 		comments,
@@ -79,6 +77,14 @@ const CardFooter = React.memo<FooterProps>(
 				return cardTyped.items[cardTyped.items.length - 1].createdBy;
 			}
 			return card.createdBy;
+		}, [card]);
+
+		const createdByTeam = useMemo(() => {
+			if (Object.hasOwnProperty.call(card, 'items')) {
+				const cardTyped = card as CardType;
+				return cardTyped.items[cardTyped.items.length - 1].createdByTeam;
+			}
+			return card.createdByTeam;
 		}, [card]);
 
 		const { handleVote } = useVotes();
@@ -160,8 +166,8 @@ const CardFooter = React.memo<FooterProps>(
 		}, [card]);
 
 		return (
-			<Flex align="center" gap="6" justify={!anonymous ? 'between' : 'end'}>
-				{!anonymous && !teamName && (
+			<Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
+				{!anonymous && !createdByTeam && (
 					<Flex
 						align="center"
 						gap="4"
@@ -181,9 +187,9 @@ const CardFooter = React.memo<FooterProps>(
 						</Text>
 					</Flex>
 				)}
-				{teamName && (
+				{createdByTeam && (
 					<Text size="xs" weight="medium">
-						{teamName}
+						{createdByTeam}
 					</Text>
 				)}
 				{!isItem && comments && (

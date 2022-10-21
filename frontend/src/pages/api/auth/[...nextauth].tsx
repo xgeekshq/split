@@ -50,6 +50,7 @@ export default NextAuth({
 					password: credentials?.password
 				};
 				const data: User = await login(loginUser);
+
 				if (data) {
 					const token = {
 						firstName: data.firstName,

@@ -3,7 +3,7 @@ import Joi from 'joi';
 const SchemaResetPasswordForm = Joi.object({
 	newPassword: Joi.string()
 		.required()
-		.regex(/^(?=.*[A-Z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/)
+		.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^A-Za-z0-9]).{8,}$/)
 		.min(8)
 		.messages({
 			'string.min': 'Password must be at least 8 characters.',

@@ -5,8 +5,9 @@ import useCards from 'hooks/useCards';
 
 type Props = {
 	boardId: string;
+	socketId?: string;
 };
-const AlertMergeIntoMain: React.FC<Props> = ({ boardId }) => {
+const AlertMergeIntoMain: React.FC<Props> = ({ boardId, socketId }) => {
 	const { mergeBoard } = useCards();
 
 	return (
@@ -18,7 +19,7 @@ const AlertMergeIntoMain: React.FC<Props> = ({ boardId }) => {
 			title="Merge board into main board"
 			variant="primary"
 			handleConfirm={() => {
-				mergeBoard.mutate(boardId);
+				mergeBoard.mutate({ subBoardId: boardId, socketId });
 			}}
 		>
 			<AlertDialogTrigger asChild>
