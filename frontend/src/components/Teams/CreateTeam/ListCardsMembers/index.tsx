@@ -10,7 +10,7 @@ const TeamMembersList = () => {
 	const { data: session } = useSession();
 
 	return session ? (
-		<Flex css={{ mt: '$56' }} direction="column">
+		<Flex css={{ mt: '$48' }} direction="column">
 			<Text css={{ mb: '$16' }} heading="3">
 				Team Members
 			</Text>
