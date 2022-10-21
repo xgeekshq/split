@@ -12,6 +12,7 @@ const TeamName = ({ teamName }: Props) => {
 
 			<Input
 				forceState
+				showCount
 				currentValue={teamName}
 				id="text"
 				maxChars="40"
