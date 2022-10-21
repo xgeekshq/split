@@ -140,6 +140,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		}
 	}, [route, data]);
 
+	useEffect(() => {
+		if (data === null) {
+			route.push('/board-deleted');
+		}
+	}, [data, route]);
+
 	if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
 
 	return board && userId && socketId ? (
