@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
@@ -48,10 +48,18 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
 	const { data, isLoading } = fetchBoards;
 
+	console.log(data);
 	const teamSocketId = data?.pages[0].boards[0].team._id;
 
 	// socketId
-	const socketId = useSocketBoardIO(teamSocketId);
+	const { socket, queryClient } = useSocketBoardIO(teamSocketId);
+
+	useEffect(() => {
+		if (!socket) return;
+		socket.on('teamId', () => {
+			queryClient.invalidateQueries('boards');
+		});
+	}, [socket, queryClient]);
 
 	const currentDate = new Date().toDateString();
 
@@ -183,7 +191,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 													dividedBoardsCount={board.dividedBoards.length}
 													isDashboard={false}
 													isSAdmin={isSuperAdmin}
-													socketId={socketId}
+													socketId={socket?.id}
 													userId={userId}
 												/>
 											))}

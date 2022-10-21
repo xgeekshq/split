@@ -5,16 +5,23 @@ import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
 import useBoard from 'hooks/useBoard';
 
-type DeleteBoardProps = { boardId: string; boardName: string; socketId: string | undefined };
+type DeleteBoardProps = {
+	boardId: string;
+	boardName: string;
+	socketId?: string;
+	teamId: string;
+};
 
-const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId }) => {
+const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId, teamId }) => {
 	const { deleteBoard } = useBoard({ autoFetchBoard: false });
 
 	// Socket IO Hook
 	// const socketId = useSocketIO(boardId);
 
 	const handleDelete = () => {
-		deleteBoard.mutate({ id: boardId, socketId });
+		console.log('before mutate', boardId, socketId, teamId);
+		deleteBoard.mutate({ id: boardId, socketId, teamId });
+		console.log('vars', deleteBoard.variables);
 	};
 
 	return (

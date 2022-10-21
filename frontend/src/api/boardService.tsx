@@ -51,12 +51,14 @@ export const getBoardsRequest = (
 
 export const deleteBoardRequest = async ({
 	id,
-	socketId
+	socketId,
+	teamId
 }: {
 	id: string;
 	socketId?: string;
+	teamId: string;
 }): Promise<BoardType> => {
-	return fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId } });
+	return fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId, teamId } });
 };
 
 // #endregion

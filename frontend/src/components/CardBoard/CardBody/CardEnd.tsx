@@ -103,8 +103,13 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 									height: '$24 !important'
 								}}
 							/>
-
-							<DeleteBoard boardId={id} boardName={title} socketId={socketId} />
+							{console.log('here', typeof team._id, socketId)}
+							<DeleteBoard
+								boardId={id}
+								boardName={title}
+								socketId={socketId}
+								teamId={team._id}
+							/>
 						</Flex>
 					)}
 				</Flex>
