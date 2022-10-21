@@ -28,9 +28,8 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 				</Flex>
 			);
 		}
-		// TODO
-		// eslint-disable-next-line react/self-closing-comp
-		return <Flex></Flex>;
+
+		return null;
 	}
 );
 
