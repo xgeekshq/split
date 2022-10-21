@@ -33,7 +33,7 @@ import {
 import { BaseParam } from 'libs/dto/param/base.param';
 import { PaginationParams } from 'libs/dto/param/pagination.params';
 import { BaseParamWSocket } from 'libs/dto/param/socket.param';
-import { TeamParam } from 'libs/dto/param/team.paramop';
+import { TeamParamOptional } from 'libs/dto/param/team.param.optional';
 import {
 	BOARD_NOT_FOUND,
 	DELETE_FAILED,
@@ -241,7 +241,7 @@ export default class BoardsController {
 	@Delete(':boardId')
 	async deleteBoard(
 		@Param() { boardId }: BaseParam,
-		@Query() { teamId }: TeamParam,
+		@Query() { teamId }: TeamParamOptional,
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {

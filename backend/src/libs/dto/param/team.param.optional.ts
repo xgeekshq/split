@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 
-export class TeamParam {
+export class TeamParamOptional {
 	@IsOptional()
 	teamId?: string;
 }
