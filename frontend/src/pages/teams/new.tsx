@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { joiResolver } from '@hookform/resolvers/joi/dist/joi';
+import { joiResolver } from '@hookform/resolvers/joi';
 
 import Icon from '../../components/icons/Icon';
 import Button from '../../components/Primitives/Button';
