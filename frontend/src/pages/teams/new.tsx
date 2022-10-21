@@ -12,6 +12,7 @@ import TeamName from '../../components/Teams/CreateTeam/TeamName';
 import TipBar from '../../components/Teams/CreateTeam/TipBar';
 import SchemaCreateTeam from '../../schema/schemaCreateTeamForm';
 import {
+	ButtonsContainer,
 	Container,
 	ContentContainer,
 	InnerContent,
@@ -61,6 +62,12 @@ const NewTeam: NextPage = () => {
 								<TeamsMembersList />
 							</FormProvider>
 						</InnerContent>
+						<ButtonsContainer gap="24" justify="end">
+							<Button type="button" variant="lightOutline" onClick={handleBack}>
+								Cancel
+							</Button>
+							<Button type="submit">Create team</Button>
+						</ButtonsContainer>
 					</StyledForm>
 				</SubContainer>
 				<TipBar />
