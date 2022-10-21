@@ -48,7 +48,6 @@ export default class SocketGateway
 
 	@SubscribeMessage('joinBoards')
 	handleJoinBoards(client: Socket, payload: JoinPayloadBoards) {
-		console.log('used');
 		client.join(payload.teamId);
 	}
 }
