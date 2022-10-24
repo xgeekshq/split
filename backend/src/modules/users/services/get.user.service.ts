@@ -35,4 +35,8 @@ export default class GetUserServiceImpl implements GetUserService {
 	countUsers() {
 		return this.userModel.countDocuments().exec();
 	}
+
+	getAllUsers() {
+		return this.userModel.find().select(['-password -currentHashedRefreshToken']).lean().exec();
+	}
 }
