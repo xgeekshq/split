@@ -28,7 +28,6 @@ export default class UsersController {
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })
-	// @ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: UnauthorizedResponse
