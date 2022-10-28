@@ -3,6 +3,7 @@ import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiInternalServerErrorResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiTags,
 	ApiUnauthorizedResponse
@@ -13,7 +14,7 @@ import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 
-// import TeamDto from '../dto/team.dto';
+import UserDto from '../dto/user.dto';
 import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { TYPES } from '../interfaces/types';
 
@@ -28,6 +29,7 @@ export default class UsersController {
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })
+	@ApiOkResponse({ description: 'Users successfully retrieved!', type: UserDto, isArray: true })
 	@ApiUnauthorizedResponse({
 		description: 'Unauthorized',
 		type: UnauthorizedResponse
