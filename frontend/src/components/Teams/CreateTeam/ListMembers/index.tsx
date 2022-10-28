@@ -182,7 +182,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							variant="primary"
 							onClick={saveMembers}
 						>
-							Save
+							Add
 						</Button>
 					</ButtonsContainer>
 				</StyledDialogContent>
