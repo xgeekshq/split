@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -61,14 +61,15 @@ const BoardSettings = ({
 	const { board } = useRecoilValue(boardInfoState);
 
 	// State used to change values
-	const [data, setData] = useState<UpdateBoardType>({
+	const initialData: UpdateBoardType = {
 		_id: board?._id,
 		hideCards: board?.hideCards,
 		hideVotes: board?.hideVotes,
 		title: board?.title,
 		maxVotes: board?.maxVotes,
 		users: board?.users
-	});
+	};
+	const [data, setData] = useState<UpdateBoardType>(initialData);
 
 	// References
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
@@ -87,10 +88,8 @@ const BoardSettings = ({
 		updateBoard: { mutate }
 	} = useBoard({ autoFetchBoard: false });
 
-	const responsible = useMemo(
-		() => data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user,
-		[data]
-	);
+	const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+
 	// Use Form Hook
 	const methods = useForm<{ title: string; maxVotes?: number | null }>({
 		mode: 'onBlur',
@@ -105,6 +104,7 @@ const BoardSettings = ({
 	// Method to close dialog and reset switches state
 	const handleClose = () => {
 		setIsOpen(false);
+		setData(initialData);
 		setSwitchesState({
 			maxVotes: false,
 			responsible: false
