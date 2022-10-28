@@ -37,6 +37,6 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	getAllUsers() {
-		return this.userModel.find().select(['-password -currentHashedRefreshToken']).lean().exec();
+		return this.userModel.find().select('-password -currentHashedRefreshToken').lean().exec();
 	}
 }
