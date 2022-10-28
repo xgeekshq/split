@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { mongooseResetModule, mongooseUserModule } from 'infrastructure/database/mongoose.module';
 import TeamsModule from 'modules/teams/teams.module';
 
+import UsersController from './controller/users.controller';
 import {
 	createUserService,
 	getUserApplication,
@@ -20,6 +21,7 @@ import {
 		updateUserApplication,
 		getUserApplication
 	],
+	controllers: [UsersController],
 	exports: [
 		createUserService,
 		getUserService,
