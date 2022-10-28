@@ -33,6 +33,10 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 		setIsOpen(false);
 	};
 
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchMember(event.target.value);
+	};
+
 	/**
 	 * Use Effect to submit the board settings form when press enter key
 	 * (Note: Radix Dialog close when pressing enter)
@@ -88,13 +92,11 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 					<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
 						<InputSearch
 							currentValue={searchMember}
+							handleChange={handleSearchChange}
 							icon="search"
 							iconPosition="left"
 							id="search"
 							placeholder="Search member"
-							handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-								setSearchMember(event.target.value)
-							}
 						/>
 					</Flex>
 					<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
