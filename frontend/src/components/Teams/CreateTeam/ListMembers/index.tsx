@@ -44,6 +44,10 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		setIsOpen(false);
 	};
 
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchMember(event.target.value);
+	};
+
 	const handleChecked = (id: string) => {
 		let updateIdList = [...checked];
 
@@ -131,13 +135,11 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 					<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
 						<InputSearch
 							currentValue={searchMember}
+							handleChange={handleSearchChange}
 							icon="search"
 							iconPosition="left"
 							id="search"
 							placeholder="Search member"
-							handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-								setSearchMember(event.target.value)
-							}
 						/>
 					</Flex>
 					<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
