@@ -139,12 +139,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							gap={16}
 						>
 							{users?.map((user) => (
-								<Flex
-									key={user._id}
-									align="center"
-									css={{ padding: '$5 $24', flex: '1 1' }}
-									justify="between"
-								>
+								<Flex key={user._id} align="center" justify="between">
 									<Checkbox
 										handleChange={handleChecked}
 										id={user._id}
