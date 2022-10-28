@@ -1,83 +1,42 @@
-import { useCallback, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { joiResolver } from '@hookform/resolvers/joi';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useSetRecoilState } from 'recoil';
 
-import Icon from '../../components/icons/Icon';
-import Button from '../../components/Primitives/Button';
-import Text from '../../components/Primitives/Text';
-import TeamsMembersList from '../../components/Teams/CreateTeam/ListCardsMembers';
-import { ListMembers } from '../../components/Teams/CreateTeam/ListMembers';
-import TeamName from '../../components/Teams/CreateTeam/TeamName';
-import TipBar from '../../components/Teams/CreateTeam/TipBar';
-import SchemaCreateTeam from '../../schema/schemaCreateTeamForm';
-import {
-	ButtonsContainer,
-	Container,
-	ContentContainer,
-	InnerContent,
-	PageHeader,
-	StyledForm,
-	SubContainer
-} from '../../styles/pages/boards/new.styles';
+import { getAllUsers } from '../../api/userService';
+import requireAuthentication from '../../components/HOC/requireAuthentication';
+import CreateTeam from '../../components/Teams/CreateTeam';
+import { toastState } from '../../store/toast/atom/toast.atom';
+import { ToastStateEnum } from '../../utils/enums/toast-types';
 
 const NewTeam: NextPage = () => {
-	const router = useRouter();
+	const setToastState = useSetRecoilState(toastState);
 
-	const [isOpen, setIsOpen] = useState(false);
-
-	const methods = useForm<{ text: string }>({
-		mode: 'onBlur',
-		reValidateMode: 'onBlur',
-		defaultValues: {
-			text: ''
-		},
-		resolver: joiResolver(SchemaCreateTeam)
+	const { data } = useQuery(['users'], () => getAllUsers(), {
+		enabled: true,
+		refetchOnWindowFocus: false,
+		onError: () => {
+			setToastState({
+				open: true,
+				content: 'Error getting the users',
+				type: ToastStateEnum.ERROR
+			});
+		}
 	});
 
-	const teamName = useWatch({
-		control: methods.control,
-		name: 'text'
-	});
-
-	const handleBack = useCallback(() => {
-		router.back();
-	}, [router]);
-
-	return (
-		<Container>
-			<PageHeader>
-				<Text color="primary800" heading={3} weight="bold">
-					Create New Tem
-				</Text>
-
-				<Button isIcon onClick={handleBack}>
-					<Icon name="close" />
-				</Button>
-			</PageHeader>
-			<ContentContainer>
-				<SubContainer>
-					<StyledForm direction="column">
-						<InnerContent direction="column">
-							<FormProvider {...methods}>
-								<TeamName teamName={teamName} />
-								<TeamsMembersList />
-								<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
-							</FormProvider>
-						</InnerContent>
-						<ButtonsContainer gap="24" justify="end">
-							<Button type="button" variant="lightOutline" onClick={handleBack}>
-								Cancel
-							</Button>
-							<Button type="submit">Create team</Button>
-						</ButtonsContainer>
-					</StyledForm>
-				</SubContainer>
-				<TipBar />
-			</ContentContainer>
-		</Container>
-	);
+	return <CreateTeam usersList={data} />;
 };
 
 export default NewTeam;
+
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+	async (context: GetServerSidePropsContext) => {
+		const queryClient = new QueryClient();
+		await queryClient.prefetchQuery('users', () => getAllUsers(context));
+
+		return {
+			props: {
+				dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
+			}
+		};
+	}
+);
