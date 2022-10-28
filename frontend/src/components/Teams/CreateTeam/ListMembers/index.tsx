@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
+import { toastState } from '../../../../store/toast/atom/toast.atom';
 import { User } from '../../../../types/user/user';
+import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
 	ButtonsContainer,
 	StyledDialogCloseButton,
@@ -27,6 +30,8 @@ type Props = {
 const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	const [checked, setChecked] = useState<string[]>([]);
 	const [searchMember, setSearchMember] = useState<string>('');
+
+	const setToastState = useSetRecoilState(toastState);
 
 	// References
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -53,13 +58,19 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		setChecked(updateIdList);
 	};
 
-	const submitMembers = () => {
+	const saveMembers = () => {
 		const listOfUsers: User[] | undefined = [];
 
 		checked.forEach((id) => {
 			const userFound = users?.find((user) => user._id === id);
 
 			if (userFound) listOfUsers.push(userFound);
+		});
+
+		setToastState({
+			open: true,
+			content: 'Team member/s successfully added',
+			type: ToastStateEnum.SUCCESS
 		});
 
 		setIsOpen(false);
@@ -169,7 +180,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 						<Button
 							css={{ marginRight: '$32', padding: '$16 $24' }}
 							variant="primary"
-							onClick={submitMembers}
+							onClick={saveMembers}
 						>
 							Save
 						</Button>
