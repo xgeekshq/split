@@ -178,7 +178,7 @@ interface InputProps extends StyledInpupProps {
 	state?: 'default' | 'error' | 'valid';
 	type: 'text' | 'password' | 'email' | 'number';
 	placeholder: string;
-	icon?: 'eye' | 'eyeclosed';
+	icon?: 'eye' | 'eyeclosed' | 'search';
 	helperText?: string;
 	iconPosition?: 'left' | 'right';
 	forceState?: boolean;
@@ -230,6 +230,7 @@ const Input: React.FC<InputProps> = ({
 	const { ref, ...rest } = register(id);
 
 	const message = errors[id]?.message;
+
 	const value = getValues()[id];
 	const isValueEmpty = isEmpty(value);
 
@@ -277,6 +278,15 @@ const Input: React.FC<InputProps> = ({
 					{icon === 'eye' && (
 						<Icon
 							name={isVisible ? 'eye' : 'eye-slash'}
+							css={{
+								width: '$24',
+								height: '$24'
+							}}
+						/>
+					)}
+					{icon === 'search' && (
+						<Icon
+							name="search"
 							css={{
 								width: '$24',
 								height: '$24'
