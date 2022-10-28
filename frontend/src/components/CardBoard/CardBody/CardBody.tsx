@@ -113,7 +113,7 @@ const CardBody = React.memo<CardBodyProps>(
 		const isANewBoard = newBoard?._id === board._id;
 
 		const userIsParticipating = useMemo(() => {
-			return !!users.find((user) => user.user._id === userId);
+			return !!users.find((user) => user.user?._id === userId);
 		}, [users, userId]);
 
 		const havePermissions = useMemo(() => {
@@ -121,7 +121,7 @@ const CardBody = React.memo<CardBodyProps>(
 				return true;
 			}
 			const myUser = team.users.find((user) => String(user.user._id) === String(userId));
-			const myUserIsOwnerMainBoard = board.createdBy._id === userId;
+			const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
 			const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
 			const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
 			if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner)) {

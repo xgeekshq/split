@@ -23,18 +23,6 @@ export default class Schedules {
 	@Prop({ type: Number, default: false })
 	maxUsers!: number;
 
-	@Prop({ type: Boolean, default: false })
-	recurrent!: boolean;
-
-	@Prop({ type: Number, nullable: true, default: null })
-	maxVotes?: number;
-
-	@Prop({ type: Boolean, nullable: false, default: false })
-	hideCards?: boolean;
-
-	@Prop({ type: Boolean, nullable: false, default: false })
-	hideVotes?: boolean;
-
 	@Prop({ type: Date, nullable: false, default: false })
 	willRunAt!: Date;
 }

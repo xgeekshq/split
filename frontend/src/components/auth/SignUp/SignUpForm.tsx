@@ -42,12 +42,18 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 			enabled: !!emailName.email && !emailName.goback,
 			suspense: false,
 			onSuccess: (data) => {
+				console.log(data)
 				if (data === 'az') {
 					setShowSignUp(SignUpEnum.SIGN_UP_OPTIONS);
 					return;
 				}
 
 				if (data === false) {
+					setShowSignUp(SignUpEnum.REGISTER);
+					return;
+				}
+
+				if (!data) {
 					setShowSignUp(SignUpEnum.REGISTER);
 					return;
 				}
@@ -60,6 +66,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 				/**
 				 * When checkUserExistsAD returns 404, allow manual sign up
 				 */
+				console.log("AAA", error);
+				
 				if (error.message.includes('404')) {
 					setShowSignUp(SignUpEnum.REGISTER);
 					return;

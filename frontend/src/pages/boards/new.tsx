@@ -95,6 +95,7 @@ const NewBoard: NextPage = () => {
 					user: boardUser.user._id,
 					role: boardUser.role
 				}));
+				
 
 				return newSubBoard;
 			}
@@ -107,7 +108,8 @@ const NewBoard: NextPage = () => {
 			dividedBoards: newDividedBoards,
 			maxVotes,
 			slackEnable,
-			maxUsers: boardState.count.maxUsersCount.toString()
+			
+			maxUsers: boardState.count.maxUsersCount
 		});
 	};
 

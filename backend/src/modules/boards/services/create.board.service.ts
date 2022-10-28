@@ -53,7 +53,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
 		private slackCommunicationService: ExecuteCommunicationInterface
-	) {}
+	) { }
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
 		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
@@ -118,8 +118,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		});
 	}
 
-	async create(boardData: BoardDto, userId: string) {
-		const { team, recurrent, maxVotes, hideCards, hideVotes, maxUsers } = boardData;
+	async create(boardData: BoardDto, userId: string, fromSchedule: boolean = false) {
+		const { team, recurrent, maxVotes, hideCards, hideVotes, maxUsers, slackEnable } = boardData;
+		console.log("MAXUSERS", maxUsers)
 		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId);
@@ -135,20 +136,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				boardId: newBoard._id.toString(),
 				ownerId: userId,
 				teamId: team,
-				configs: {
-					maxUsers: Number(maxUsers),
-					recurrent,
-					maxVotes,
-					hideCards,
-					hideVotes
-				}
+				maxUsersPerTeam: maxUsers
 			};
 
-			this.createFirstCronJob(addCronJobDto);
+			if (!fromSchedule) {
+				this.createFirstCronJob(addCronJobDto);
+			}
 		}
 
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
-		if (boardData.slackEnable) {
+		if (slackEnable) {
 			const result = await this.getBoardService.getBoard(newBoard._id, userId);
 			if (result?.board) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
@@ -170,8 +167,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(dayToRun, getNextMonth(), addCronJobDto);
 	}
 
-	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs) {
-		const { maxUsers } = configs;
+	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null> {
+		const { maxUsersPerTeam } = configs
+
+		if (maxUsersPerTeam < 2) {
+			return null
+		}
 
 		const teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
 		const teamUsersWotStakeholders = teamUsers.filter(
@@ -179,7 +180,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		);
 		const teamUsersWotStakeholdersCount = teamUsersWotStakeholders?.length ?? 0;
 		const teamLength = teamUsersWotStakeholdersCount;
-		const maxTeams = Math.ceil(teamLength / maxUsers);
+		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
+
+		console.log(maxTeams)
+		if (maxTeams < 2) {
+			return null
+		}
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData().board,
@@ -189,12 +195,28 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
 			hideCards: configs.hideCards ?? false,
-			hideVotes: configs.hideVotes ?? false
+			hideVotes: configs.hideVotes ?? false,
+			maxUsers: configs.maxUsersPerTeam,
+			slackEnable: configs.slackEnable
 		};
 
-		const board = await this.create(boardData, ownerId);
+		console.log(boardData)
+
+		const board = await this.create(boardData, ownerId, true);
 		if (!board) return null;
 		return board._id.toString();
+	}
+
+	findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
+		let maxTeams = Math.ceil(teamLength / maxUsersPerTeam)
+		while ((teamLength / maxUsersPerTeam) < 2 ) {
+			maxUsersPerTeam -= 1
+			maxTeams = Math.ceil(teamLength / maxUsersPerTeam)
+			if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
+				return 0
+			}
+		}
+		return Math.ceil(teamLength / maxUsersPerTeam)
 	}
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
@@ -204,7 +226,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		const availableUsers = [...teamMembers];
-
+		console.log(availableUsers)
 		new Array(teamMembers.length).fill(0).reduce((j) => {
 			if (j >= maxTeams) j = 0;
 			const teamUser = this.getRandomUser(availableUsers);
