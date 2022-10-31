@@ -18,9 +18,8 @@ import {
 import Button from '../../../Primitives/Button';
 import Checkbox from '../../../Primitives/Checkbox';
 import Flex from '../../../Primitives/Flex';
-import InputSearch from './InputSearch';
+import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
-
 
 type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +32,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	const [searchMember, setSearchMember] = useState<string>('');
 
 	const setToastState = useSetRecoilState(toastState);
-
 
 	// References
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -81,7 +79,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 
 		setIsOpen(false);
 	};
-
 
 	/**
 	 * Use Effect to submit the board settings form when press enter key
@@ -134,9 +131,8 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							</StyledDialogCloseButton>
 						</DialogClose>
 					</StyledDialogTitle>
-
 					<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-						<InputSearch
+						<SearchInput
 							currentValue={searchMember}
 							handleChange={handleSearchChange}
 							icon="search"
@@ -148,7 +144,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 					<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
 						Teams
 					</Text>
-
 					<ScrollableContent direction="column" justify="start" ref={scrollRef}>
 						<Flex
 							css={{ flex: '1 1', pb: '$24', px: '$32', width: '80%' }}
@@ -175,7 +170,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							))}
 						</Flex>
 					</ScrollableContent>
-
 					<ButtonsContainer gap={24} justify="end">
 						<Button
 							css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}

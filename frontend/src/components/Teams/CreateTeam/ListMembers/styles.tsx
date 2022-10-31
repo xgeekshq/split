@@ -24,7 +24,6 @@ const ScrollableContent = styled(Flex, {
 	pb: '$10'
 });
 
-
 const PlaceholderText = styled(Text, {
 	color: '$primary300',
 	position: 'absolute',
@@ -178,6 +177,4 @@ const StyledInput = styled('input', {
 	}
 });
 
-
 export { ButtonAddMember, IconWrapper, PlaceholderText, ScrollableContent, StyledInput };
-
