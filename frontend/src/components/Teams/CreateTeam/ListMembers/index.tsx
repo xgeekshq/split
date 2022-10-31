@@ -92,6 +92,20 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		});
 	}, [checked, users]);
 
+	const filteredUsers = useMemo(() => {
+		const searchString = searchMember.toLowerCase();
+
+		return users?.filter((user) => {
+			const firstName = user.firstName.toLowerCase();
+			const lastName = user.lastName.toLowerCase();
+			return (
+				firstName.includes(searchString) ||
+				lastName.includes(searchString) ||
+				searchMember === ''
+			);
+		});
+	}, [searchMember, users]);
+
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
