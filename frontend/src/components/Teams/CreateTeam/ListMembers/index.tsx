@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
@@ -36,7 +36,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	// References
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
-	const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
 	// Method to close dialog and reset switches state
 	const handleClose = () => {
@@ -79,29 +78,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 
 		setIsOpen(false);
 	};
-
-	/**
-	 * Use Effect to submit the board settings form when press enter key
-	 * (Note: Radix Dialog close when pressing enter)
-	 */
-	useEffect(() => {
-		const element = dialogContainerRef?.current;
-
-		const keyDownHandler = (event: KeyboardEvent) => {
-			if (event.key === 'Enter') {
-				event.preventDefault();
-
-				if (submitBtnRef.current) {
-					submitBtnRef.current.click();
-				}
-			}
-		};
-
-		element?.addEventListener('keydown', keyDownHandler);
-
-		return () => element?.removeEventListener('keydown', keyDownHandler);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
