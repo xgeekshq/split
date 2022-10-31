@@ -8,6 +8,7 @@ export interface Configs {
 	hideVotes?: boolean;
 	maxUsersPerTeam: number
 	slackEnable?: boolean
+	date?: Date
 }
 
 export interface CreateBoardService {

@@ -29,6 +29,7 @@ import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { config } from 'dotenv';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -169,24 +170,18 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null> {
 		const { maxUsersPerTeam } = configs
 
-		if (maxUsersPerTeam < 2) {
-			return null
-		}
-
-		const teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
-		const teamUsersWotStakeholders = teamUsers.filter(
+		const teamUsersWotStakeholders = (await this.getTeamService.getUsersOfTeam(teamId)).filter(
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
-		const teamUsersWotStakeholdersCount = teamUsersWotStakeholders?.length ?? 0;
-		const teamLength = teamUsersWotStakeholdersCount;
+		const teamLength = teamUsersWotStakeholders.length;
 		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
 
-		if (maxTeams < 2) {
+		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null
 		}
 
 		const boardData: BoardDto = {
-			...generateBoardDtoData().board,
+			...generateBoardDtoData(`xgeeks-retro-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', { month: 'long'}).format(configs.date)}-${configs.date?.getFullYear()}`).board,
 			users: [],
 			team: teamId,
 			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders),
@@ -203,19 +198,19 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return board._id.toString();
 	}
 
-	findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
+	private findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
 		let maxTeams = 0
 		do {
-			maxTeams = Math.ceil(teamLength / maxUsersPerTeam)
+			maxTeams = teamLength / maxUsersPerTeam
 			if  (maxTeams < 2) {
 				maxUsersPerTeam -= 1
 				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
 					return 0
 				}
-			}
+			} 
 		} while (maxTeams < 2)
 
-		return maxTeams
+		return Math.floor(maxTeams)
 	}
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];

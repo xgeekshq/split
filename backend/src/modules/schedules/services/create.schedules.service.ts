@@ -57,6 +57,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	}
 
 	async addCronJob(day: number, month: number, addCronJobDto: AddCronJobDto) {
+		console.log("ADD CRON JOB")
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
 		try {
 			const cronJobDoc = await this.schedulesModel.create({
@@ -78,6 +79,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	}
 
 	async handleComplete(ownerId: string, teamId: string, oldBoardId: string) {
+		console.log("COMPLETE")
 		try {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(oldBoardId)
 			const board = await this.getBoardService.getBoardFromRepo(oldBoardId);
@@ -104,10 +106,16 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			hideCards: board.hideCards,
 			hideVotes: board.hideVotes,
 			maxUsersPerTeam: deletedSchedule.maxUsers,
-			slackEnable: board.slackEnable ?? false
+			slackEnable: board.slackEnable ?? false,
+			date: new Date(new Date().getFullYear(), month - 1, day, 10)
 		}
 
 		const boardId = await this.createBoardService.splitBoardByTeam(ownerId, teamId, configs);
+		if (!boardId) {
+			await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId)
+			return
+		}
+
 		const addCronJobDto: AddCronJobDto = {
 			ownerId,
 			teamId,
