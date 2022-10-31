@@ -13,6 +13,7 @@ import {
 	StyledForm,
 	SubContainer
 } from '../../../styles/pages/boards/new.styles';
+import { User } from '../../../types/user/user';
 import Icon from '../../icons/Icon';
 import Button from '../../Primitives/Button';
 import Text from '../../Primitives/Text';
@@ -21,7 +22,11 @@ import { ListMembers } from './ListMembers';
 import TeamName from './TeamName';
 import TipBar from './TipBar';
 
-const CreateTeam = () => {
+type CreateTeamProps = {
+	usersList?: User[];
+};
+
+const CreateTeam = ({ usersList }: CreateTeamProps) => {
 	const router = useRouter();
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +53,7 @@ const CreateTeam = () => {
 		<Container>
 			<PageHeader>
 				<Text color="primary800" heading={3} weight="bold">
-					Create New Tem
+					Create New Team
 				</Text>
 
 				<Button isIcon onClick={handleBack}>
@@ -62,7 +67,11 @@ const CreateTeam = () => {
 							<FormProvider {...methods}>
 								<TeamName teamName={teamName} />
 								<TeamMembersList />
-								<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+								<ListMembers
+									isOpen={isOpen}
+									setIsOpen={setIsOpen}
+									users={usersList}
+								/>
 							</FormProvider>
 						</InnerContent>
 						<ButtonsContainer gap="24" justify="end">

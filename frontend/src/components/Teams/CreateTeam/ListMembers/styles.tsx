@@ -16,6 +16,14 @@ const ButtonAddMember = styled('button', {
 	marginTop: '10px'
 });
 
+const ScrollableContent = styled(Flex, {
+	mt: '$24',
+	height: 'calc(100vh - 400px)',
+	overflowY: 'auto',
+	pr: '$10',
+	pb: '$10'
+});
+
 const PlaceholderText = styled(Text, {
 	color: '$primary300',
 	position: 'absolute',
@@ -169,4 +177,4 @@ const StyledInput = styled('input', {
 	}
 });
 
-export { ButtonAddMember, IconWrapper, PlaceholderText, StyledInput };
+export { ButtonAddMember, IconWrapper, PlaceholderText, ScrollableContent, StyledInput };
