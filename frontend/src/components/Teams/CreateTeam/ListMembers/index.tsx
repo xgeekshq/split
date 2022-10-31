@@ -1,11 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
-import SchemaAddMemberForm from '../../../../schema/schemaAddMemberForm';
 import {
 	ButtonsContainer,
 	StyledDialogCloseButton,
@@ -16,7 +13,7 @@ import {
 } from '../../../Board/Settings/styles';
 import Button from '../../../Primitives/Button';
 import Flex from '../../../Primitives/Flex';
-import Input from '../../../Primitives/Input';
+import InputSearch from './SearchInput';
 import { ButtonAddMember } from './styles';
 
 type Props = {
@@ -25,6 +22,8 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen }: Props) => {
+	const [searchMember, setSearchMember] = useState<string>('');
+
 	// References
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
 	const submitBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -34,19 +33,9 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 		setIsOpen(false);
 	};
 
-	const methods = useForm<{ search: string }>({
-		mode: 'onBlur',
-		reValidateMode: 'onBlur',
-		defaultValues: {
-			search: ''
-		},
-		resolver: joiResolver(SchemaAddMemberForm)
-	});
-
-	const searchMember = useWatch({
-		control: methods.control,
-		name: 'search'
-	});
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchMember(event.target.value);
+	};
 
 	/**
 	 * Use Effect to submit the board settings form when press enter key
@@ -99,40 +88,32 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 							</StyledDialogCloseButton>
 						</DialogClose>
 					</StyledDialogTitle>
-					<FormProvider {...methods}>
-						<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-							<Input
-								currentValue={searchMember}
-								icon="search"
-								iconPosition="left"
-								id="search"
-								maxChars="30"
-								placeholder="Search member"
-								state="default"
-								type="text"
-							/>
-						</Flex>
-						<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-							Teams
-						</Text>
-						<ButtonsContainer gap={24} justify="end">
-							<Button
-								css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-								variant="primaryOutline"
-								onClick={handleClose}
-							>
-								Cancel
-							</Button>
-							<Button
-								css={{ marginRight: '$32', padding: '$16 $24' }}
-								ref={submitBtnRef}
-								type="submit"
-								variant="primary"
-							>
-								Save
-							</Button>
-						</ButtonsContainer>
-					</FormProvider>
+
+					<Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+						<InputSearch
+							currentValue={searchMember}
+							handleChange={handleSearchChange}
+							icon="search"
+							iconPosition="left"
+							id="search"
+							placeholder="Search member"
+						/>
+					</Flex>
+					<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+						Teams
+					</Text>
+					<ButtonsContainer gap={24} justify="end">
+						<Button
+							css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+							variant="primaryOutline"
+							onClick={handleClose}
+						>
+							Cancel
+						</Button>
+						<Button css={{ marginRight: '$32', padding: '$16 $24' }} variant="primary">
+							Save
+						</Button>
+					</ButtonsContainer>
 				</StyledDialogContent>
 			</Dialog>
 		</StyledDialogContainer>
