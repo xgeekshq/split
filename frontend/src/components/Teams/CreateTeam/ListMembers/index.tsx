@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
@@ -37,9 +37,8 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
-	// Method to close dialog and reset switches state
+	// Method to close dialog
 	const handleClose = () => {
-		setChecked([]);
 		setIsOpen(false);
 	};
 
@@ -78,6 +77,20 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 
 		setIsOpen(false);
 	};
+
+	const usersList = useMemo(() => {
+		const list = users?.map((user) => {
+			return { ...user, isChecked: false };
+		});
+
+		return list?.map((user) => {
+			const userFound = checked.find((id) => user._id === id);
+
+			if (userFound) return { ...user, isChecked: true };
+
+			return user;
+		});
+	}, [checked, users]);
 
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
@@ -126,9 +139,10 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							direction="column"
 							gap={16}
 						>
-							{users?.map((user) => (
+							{usersList?.map((user) => (
 								<Flex key={user._id} align="center" justify="between">
 									<Checkbox
+										checked={user.isChecked}
 										handleChange={handleChecked}
 										id={user._id}
 										label={`${user.firstName} ${user.lastName}`}
