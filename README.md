@@ -18,7 +18,7 @@
 - [🙌🏻 How to Contribute](#--how-to-contribute)
 - [🏃 How to Run](https://github.com/xgeekshq/split/wiki/How-to-run)
 - [📃 Requirements](https://github.com/xgeekshq/split/wiki/Requirements)
-- [Usage](#usage)
+- [:computer: Usage](#usage)
 - [📝 License](#-license)
 - [Contributors ✨](#contributors-)
 
@@ -35,9 +35,8 @@ Check out our [**Contributing Guide**](.github/CONTRIBUTING.md) for information 
 The backend will run on `http://localhost:BACKEND_PORT` and the frontend on `http://localhost:3000`.
 
 - `/dashboard`: dashboard
+- `/boards`: boards list
 - `/boards/[boardId]`: board page
-
-You must register to access the dashboard page.
 
 ## 📝 License
 
