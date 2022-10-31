@@ -119,6 +119,17 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "CatiaAntunes96",
+      "name": "Cátia Antunes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59372326?v=4",
+      "profile": "https://github.com/CatiaAntunes96",
+      "contributions": [
+        "code",
+        "doc",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -126,5 +137,6 @@
   "projectOwner": "xgeekshq",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": false
+  "skipCi": false,
+  "commitConvention": "angular"
 }
