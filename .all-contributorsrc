@@ -130,6 +130,18 @@
         "doc",
         "review"
       ]
+    },
+    {
+      "login": "miguel-felix1",
+      "name": "Miguel Félix",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87712174?v=4",
+      "profile": "https://github.com/miguel-felix1",
+      "contributions": [
+        "code",
+        "bug",
+        "review",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
