@@ -91,15 +91,16 @@ services:
       - ./database/.env
    
   redis:
-    image: docker.io/bitnami/redis:7.0
+    image: redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"     
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
+      # - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     ports:
       - '6379:6379'
-    volumes:
-      - 'redis_data:/bitnami/redis/data'
+    env_file:
+      - ./database/redis/.env
 
 volumes:
   redis_data:

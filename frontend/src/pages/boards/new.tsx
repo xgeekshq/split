@@ -108,7 +108,6 @@ const NewBoard: NextPage = () => {
 			dividedBoards: newDividedBoards,
 			maxVotes,
 			slackEnable,
-			
 			maxUsers: boardState.count.maxUsersCount
 		});
 	};

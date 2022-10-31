@@ -23,8 +23,8 @@ export default class Schedules {
 	@Prop({ type: Number, default: false })
 	maxUsers!: number;
 
-	@Prop({ type: Date, nullable: false, default: false })
-	willRunAt!: Date;
+	@Prop({ type: String, nullable: false, default: false })
+	willRunAt!: string;
 }
 
 export const SchedulesSchema = SchemaFactory.createForClass(Schedules);

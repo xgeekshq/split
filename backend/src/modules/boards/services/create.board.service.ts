@@ -119,8 +119,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule: boolean = false) {
-		const { team, recurrent, maxVotes, hideCards, hideVotes, maxUsers, slackEnable } = boardData;
-		console.log("MAXUSERS", maxUsers)
+		const { team, recurrent, maxUsers, slackEnable } = boardData;
 		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId);
@@ -182,7 +181,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const teamLength = teamUsersWotStakeholdersCount;
 		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
 
-		console.log(maxTeams)
 		if (maxTeams < 2) {
 			return null
 		}
@@ -200,23 +198,24 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			slackEnable: configs.slackEnable
 		};
 
-		console.log(boardData)
-
 		const board = await this.create(boardData, ownerId, true);
 		if (!board) return null;
 		return board._id.toString();
 	}
 
 	findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
-		let maxTeams = Math.ceil(teamLength / maxUsersPerTeam)
-		while ((teamLength / maxUsersPerTeam) < 2 ) {
-			maxUsersPerTeam -= 1
+		let maxTeams = 0
+		do {
 			maxTeams = Math.ceil(teamLength / maxUsersPerTeam)
-			if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
-				return 0
+			if  (maxTeams < 2) {
+				maxUsersPerTeam -= 1
+				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
+					return 0
+				}
 			}
-		}
-		return Math.ceil(teamLength / maxUsersPerTeam)
+		} while (maxTeams < 2)
+
+		return maxTeams
 	}
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
@@ -226,7 +225,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		const availableUsers = [...teamMembers];
-		console.log(availableUsers)
 		new Array(teamMembers.length).fill(0).reduce((j) => {
 			if (j >= maxTeams) j = 0;
 			const teamUser = this.getRandomUser(availableUsers);
