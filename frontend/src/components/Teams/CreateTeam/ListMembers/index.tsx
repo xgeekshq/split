@@ -60,6 +60,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		setChecked(updateIdList);
 	};
 
+
 	const filteredList = useMemo(() => {
 		const searchString = searchMember.toLowerCase();
 
