@@ -14,7 +14,7 @@ interface InputProps {
 	handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputSearch: React.FC<InputProps> = ({
+const SearchInput: React.FC<InputProps> = ({
 	id,
 	placeholder,
 	icon,
@@ -23,7 +23,7 @@ const InputSearch: React.FC<InputProps> = ({
 	currentValue,
 	handleChange
 }) => {
-	InputSearch.defaultProps = {
+	SearchInput.defaultProps = {
 		iconPosition: undefined,
 		icon: undefined,
 		disabled: false,
@@ -68,4 +68,4 @@ const InputSearch: React.FC<InputProps> = ({
 	);
 };
 
-export default InputSearch;
+export default SearchInput;
