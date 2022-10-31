@@ -4,8 +4,11 @@ import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
+import { membersListState } from '../../../../store/team/atom/team.atom';
 import { toastState } from '../../../../store/toast/atom/toast.atom';
+import { CreateTeamUser } from '../../../../types/team/team.user';
 import { User } from '../../../../types/user/user';
+import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
 	ButtonsContainer,
@@ -32,6 +35,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	const [searchMember, setSearchMember] = useState<string>('');
 
 	const setToastState = useSetRecoilState(toastState);
+	const setMembersListState = useSetRecoilState(membersListState);
 
 	// References
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -60,7 +64,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		setChecked(updateIdList);
 	};
 
-
 	const filteredList = useMemo(() => {
 		const searchString = searchMember.toLowerCase();
 
@@ -88,10 +91,10 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	}, [checked, users, searchMember]);
 
 	const saveMembers = () => {
-		const listOfUsers: User[] | undefined = [];
+		const listOfUsers: CreateTeamUser[] | undefined = [];
 
 		filteredList?.forEach((user) => {
-			if (user.isChecked) listOfUsers.push(user);
+			if (user.isChecked) listOfUsers.push({ user: user._id, role: TeamUserRoles.MEMBER });
 		});
 
 		setToastState({
@@ -99,6 +102,8 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 			content: 'Team member/s successfully added',
 			type: ToastStateEnum.SUCCESS
 		});
+
+		setMembersListState(listOfUsers);
 
 		setIsOpen(false);
 	};

@@ -7,3 +7,8 @@ export interface TeamUser {
 	_id: string;
 	team: string;
 }
+
+export interface CreateTeamUser {
+	user: string; // user._id
+	role: TeamUserRoles;
+}
