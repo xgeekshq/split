@@ -130,6 +130,17 @@
         "doc",
         "review"
       ]
+    },
+    {
+      "login": "mourabraz",
+      "name": "mourabraz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7543719?v=4",
+      "profile": "https://www.linkedin.com/in/moura-braz",
+      "contributions": [
+        "code",
+        "doc",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
