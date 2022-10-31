@@ -22,11 +22,13 @@ import { ListMembers } from './ListMembers';
 import TeamName from './TeamName';
 import TipBar from './TipBar';
 
+
 type CreateTeamProps = {
 	usersList?: User[];
 };
 
 const CreateTeam = ({ usersList }: CreateTeamProps) => {
+
 	const router = useRouter();
 
 	const [isOpen, setIsOpen] = useState(false);
