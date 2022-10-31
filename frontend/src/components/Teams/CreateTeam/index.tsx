@@ -53,7 +53,7 @@ const CreateTeam = ({ usersList }: CreateTeamProps) => {
 		<Container>
 			<PageHeader>
 				<Text color="primary800" heading={3} weight="bold">
-					Create New Tem
+					Create New Team
 				</Text>
 
 				<Button isIcon onClick={handleBack}>
