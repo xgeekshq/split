@@ -60,13 +60,37 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 		setChecked(updateIdList);
 	};
 
+	const filteredList = useMemo(() => {
+		const searchString = searchMember.toLowerCase();
+
+		const usersList = users?.map((user) => {
+			return { ...user, isChecked: false };
+		});
+
+		return usersList
+			?.map((user) => {
+				const userFound = checked.find((id) => user._id === id);
+
+				if (userFound) return { ...user, isChecked: true };
+
+				return user;
+			})
+			.filter((user) => {
+				const firstName = user.firstName.toLowerCase();
+				const lastName = user.lastName.toLowerCase();
+				return (
+					firstName.includes(searchString) ||
+					lastName.includes(searchString) ||
+					searchMember === ''
+				);
+			});
+	}, [checked, users, searchMember]);
+
 	const saveMembers = () => {
 		const listOfUsers: User[] | undefined = [];
 
-		checked.forEach((id) => {
-			const userFound = users?.find((user) => user._id === id);
-
-			if (userFound) listOfUsers.push(userFound);
+		filteredList?.forEach((user) => {
+			if (user.isChecked) listOfUsers.push(user);
 		});
 
 		setToastState({
@@ -77,34 +101,6 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 
 		setIsOpen(false);
 	};
-
-	const usersList = useMemo(() => {
-		const list = users?.map((user) => {
-			return { ...user, isChecked: false };
-		});
-
-		return list?.map((user) => {
-			const userFound = checked.find((id) => user._id === id);
-
-			if (userFound) return { ...user, isChecked: true };
-
-			return user;
-		});
-	}, [checked, users]);
-
-	const filteredUsers = useMemo(() => {
-		const searchString = searchMember.toLowerCase();
-
-		return users?.filter((user) => {
-			const firstName = user.firstName.toLowerCase();
-			const lastName = user.lastName.toLowerCase();
-			return (
-				firstName.includes(searchString) ||
-				lastName.includes(searchString) ||
-				searchMember === ''
-			);
-		});
-	}, [searchMember, users]);
 
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
@@ -153,7 +149,7 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 							direction="column"
 							gap={16}
 						>
-							{usersList?.map((user) => (
+							{filteredList?.map((user) => (
 								<Flex key={user._id} align="center" justify="between">
 									<Checkbox
 										checked={user.isChecked}
