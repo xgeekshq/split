@@ -36,6 +36,7 @@ import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 
+import { UserParams } from '../../../libs/dto/param/user.params';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
@@ -118,6 +119,25 @@ export default class TeamsController {
 	@Get()
 	getAllTeams() {
 		return this.getTeamApp.getAllTeams();
+	}
+
+	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get(':userId')
+	getTeamsOfUser(@Param() { userId }: UserParams) {
+		return this.getTeamApp.getTeamsOfUser(userId);
 	}
 
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
