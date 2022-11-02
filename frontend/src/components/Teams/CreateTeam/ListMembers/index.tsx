@@ -73,9 +73,9 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 
 		return usersList
 			?.map((user) => {
-				const userFound = checked.find((id) => user._id === id);
+				const userFound = checked.some((id) => user._id === id);
 
-				if (userFound) return { ...user, isChecked: true };
+				if (userFound) return { ...user, isChecked: userFound };
 
 				return user;
 			})
