@@ -16,7 +16,7 @@ import { TYPES } from 'modules/boards/interfaces/types';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
-import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service';
+import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'modules/schedules/interfaces/types';
 import TeamDto from 'modules/teams/dto/team.dto';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
@@ -29,7 +29,6 @@ import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import { config } from 'dotenv';
 
 export interface CreateBoardDto {
 	maxUsers: number;

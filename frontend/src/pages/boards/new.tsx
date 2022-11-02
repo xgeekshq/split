@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import {
@@ -32,17 +32,20 @@ import { createBoardDataState, createBoardError } from 'store/createBoard/atoms/
 import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
 import { ToastStateEnum } from 'utils/enums/toast-types';
+import { useSession } from 'next-auth/react';
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
 
 const NewBoard: NextPage = () => {
 	const router = useRouter();
-
+	const { data: session } = useSession({ required: true });
+	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
 	/**
 	 * Recoil Atoms and Hooks
 	 */
 	const setToastState = useSetRecoilState(toastState);
 	const boardState = useRecoilValue(createBoardDataState);
 	const resetBoardState = useResetRecoilState(createBoardDataState);
-	const haveError = useRecoilValue(createBoardError);
+	const [haveError, setHaveError] = useRecoilState(createBoardError);
 
 	/**
 	 * User Board Hook
@@ -113,6 +116,11 @@ const NewBoard: NextPage = () => {
 	};
 
 	useEffect(() => {
+		const isAdminOrStakeHolder = teams ? teams[0].users.find((teamUser) => teamUser.user._id == session?.user.id && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role)) || session?.isSAdmin : false
+		if (!isAdminOrStakeHolder && !haveError) {
+			setHaveError(!isAdminOrStakeHolder)
+		}
+
 		if (status === 'success') {
 			setToastState({
 				open: true,
@@ -123,7 +131,7 @@ const NewBoard: NextPage = () => {
 			resetBoardState();
 			router.push('/boards');
 		}
-	}, [status, resetBoardState, router, setToastState]);
+	}, [status, resetBoardState, router, setToastState, session, haveError, teams]);
 
 	return (
 		<Container>

@@ -14,7 +14,7 @@ import { UserDocument } from 'modules/users/schemas/user.schema';
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import { DeleteSchedulesServiceInterface } from 'modules/schedules/interfaces/services/delete.schedules.service';
+import { DeleteSchedulesServiceInterface } from 'modules/schedules/interfaces/services/delete.schedules.service.interface';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardService {

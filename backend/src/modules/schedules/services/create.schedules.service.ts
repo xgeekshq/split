@@ -14,11 +14,11 @@ import * as BoardTypes from 'modules/boards/interfaces/types';
 import { TYPES } from "../interfaces/types"
 
 import { AddCronJobDto } from '../dto/add.cronjob.dto';
-import { CreateSchedulesServiceInterface } from '../interfaces/services/create.schedules.service';
+import { CreateSchedulesServiceInterface } from '../interfaces/services/create.schedules.service.interface';
 import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
 import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
 import { BoardDocument } from 'modules/boards/schemas/board.schema';
-import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service';
+import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -36,7 +36,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		this.createInitialJobs()
 	}
 
-	async createInitialJobs() {
+	private async createInitialJobs() {
 		const schedules = await this.schedulesModel.find()
 		schedules.forEach(async (schedule) => {
 			let date = new Date(schedule.willRunAt)
@@ -69,8 +69,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			});
 			console.log(day, month, new Date(new Date().getFullYear(), month - 1, day, 10))
 			if (!cronJobDoc) throw Error('CronJob not created');
-			// const job = new CronJob(`0 10 ${day} ${month} *`, () => {
-			const job = new CronJob(`10 * * * * *`, () => this.handleComplete(ownerId, teamId, cronJobDoc.board.toString()));
+			const job = new CronJob(`0 10 ${day} ${month} *`, () => this.handleComplete(ownerId, teamId, cronJobDoc.board.toString()));
 			this.schedulerRegistry.addCronJob(boardId, job);
 			job.start();
 		} catch (e) {
@@ -79,34 +78,33 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	}
 
 	async handleComplete(ownerId: string, teamId: string, oldBoardId: string) {
-		console.log("COMPLETE")
 		try {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(oldBoardId)
-			const board = await this.getBoardService.getBoardFromRepo(oldBoardId);
-			if (!board) {
+			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
+			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId)
 				return
 			}
 
 			if (!deletedSchedule) return
 
-			this.createSchedule(board, deletedSchedule, ownerId, teamId, oldBoardId)
+			this.createSchedule(oldBoard, deletedSchedule, ownerId, teamId, oldBoardId)
 		} catch (e) {
 			throw Error(DELETE_FAILED);
 		}
 	}
 
-	async createSchedule(board: LeanDocument<BoardDocument>, deletedSchedule: SchedulesDocument, ownerId: string, teamId: string, oldBoardId: string) {
+	async createSchedule(oldBoard: LeanDocument<BoardDocument>, deletedSchedule: SchedulesDocument, ownerId: string, teamId: string, oldBoardId: string) {
 		const day = getDay();
 		const month = getNextMonth();
 
 		const configs: Configs = {
-			recurrent: board.recurrent,
-			maxVotes: board.maxVotes,
-			hideCards: board.hideCards,
-			hideVotes: board.hideVotes,
+			recurrent: oldBoard.recurrent,
+			maxVotes: oldBoard.maxVotes,
+			hideCards: oldBoard.hideCards,
+			hideVotes: oldBoard.hideVotes,
 			maxUsersPerTeam: deletedSchedule.maxUsers,
-			slackEnable: board.slackEnable ?? false,
+			slackEnable: oldBoard.slackEnable ?? false,
 			date: new Date(new Date().getFullYear(), month - 1, day, 10)
 		}
 
