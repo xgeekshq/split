@@ -13,7 +13,6 @@ import {
 	StyledForm,
 	SubContainer
 } from '../../../styles/pages/boards/new.styles';
-import { User } from '../../../types/user/user';
 import Icon from '../../icons/Icon';
 import Button from '../../Primitives/Button';
 import Text from '../../Primitives/Text';
@@ -22,11 +21,7 @@ import { ListMembers } from './ListMembers';
 import TeamName from './TeamName';
 import TipBar from './TipBar';
 
-type CreateTeamProps = {
-	usersList?: User[];
-};
-
-const CreateTeam = ({ usersList }: CreateTeamProps) => {
+const CreateTeam = () => {
 	const router = useRouter();
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -67,11 +62,7 @@ const CreateTeam = ({ usersList }: CreateTeamProps) => {
 							<FormProvider {...methods}>
 								<TeamName teamName={teamName} />
 								<TeamMembersList />
-								<ListMembers
-									isOpen={isOpen}
-									setIsOpen={setIsOpen}
-									users={usersList}
-								/>
+								<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
 							</FormProvider>
 						</InnerContent>
 						<ButtonsContainer gap="24" justify="end">
