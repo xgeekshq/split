@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useSetRecoilState } from 'recoil';
@@ -5,6 +6,7 @@ import { useSetRecoilState } from 'recoil';
 import { getAllUsers } from '../../api/userService';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
 import CreateTeam from '../../components/Teams/CreateTeam';
+import { usersListState } from '../../store/team/atom/team.atom';
 import { toastState } from '../../store/toast/atom/toast.atom';
 import { ToastStateEnum } from '../../utils/enums/toast-types';
 
@@ -23,7 +25,17 @@ const NewTeam: NextPage = () => {
 		}
 	});
 
-	return <CreateTeam usersList={data} />;
+	const setUsersListState = useSetRecoilState(usersListState);
+
+	useEffect(() => {
+		const usersWithChecked = data?.map((user) => {
+			return { ...user, isChecked: false };
+		});
+
+		setUsersListState(usersWithChecked);
+	}, [data, setUsersListState]);
+
+	return <CreateTeam />;
 };
 
 export default NewTeam;

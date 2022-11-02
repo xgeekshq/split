@@ -1,11 +1,13 @@
 import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
+import { membersListState, usersListState } from '../../../../store/team/atom/team.atom';
 import { toastState } from '../../../../store/toast/atom/toast.atom';
-import { User } from '../../../../types/user/user';
+import { CreateTeamUser } from '../../../../types/team/team.user';
+import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
 	ButtonsContainer,
@@ -24,14 +26,16 @@ import { ButtonAddMember, ScrollableContent } from './styles';
 type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 	isOpen: boolean;
-	users?: User[];
 };
 
-const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
-	const [checked, setChecked] = useState<string[]>([]);
+const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	const [searchMember, setSearchMember] = useState<string>('');
 
+	const usersList = useRecoilValue(usersListState);
+
 	const setToastState = useSetRecoilState(toastState);
+	const setMembersListState = useSetRecoilState(membersListState);
+	const setUsersListState = useSetRecoilState(usersListState);
 
 	// References
 	const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,51 +51,34 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 	};
 
 	const handleChecked = (id: string) => {
-		let updateIdList = [...checked];
+		const updateCheckedUser = usersList?.map((user) => {
+			if (user._id === id) return { ...user, isChecked: !user.isChecked };
 
-		const isUserChecked = checked.some((value) => value === id);
+			return user;
+		});
 
-		if (!isUserChecked) {
-			updateIdList = [...checked, id];
-		} else {
-			updateIdList.splice(checked.indexOf(id), 1);
-		}
-
-		setChecked(updateIdList);
+		setUsersListState(updateCheckedUser);
 	};
-
 
 	const filteredList = useMemo(() => {
 		const searchString = searchMember.toLowerCase();
 
-		const usersList = users?.map((user) => {
-			return { ...user, isChecked: false };
+		return usersList?.filter((user) => {
+			const firstName = user.firstName.toLowerCase();
+			const lastName = user.lastName.toLowerCase();
+			return (
+				firstName.includes(searchString) ||
+				lastName.includes(searchString) ||
+				searchMember === ''
+			);
 		});
-
-		return usersList
-			?.map((user) => {
-				const userFound = checked.find((id) => user._id === id);
-
-				if (userFound) return { ...user, isChecked: true };
-
-				return user;
-			})
-			.filter((user) => {
-				const firstName = user.firstName.toLowerCase();
-				const lastName = user.lastName.toLowerCase();
-				return (
-					firstName.includes(searchString) ||
-					lastName.includes(searchString) ||
-					searchMember === ''
-				);
-			});
-	}, [checked, users, searchMember]);
+	}, [searchMember, usersList]);
 
 	const saveMembers = () => {
-		const listOfUsers: User[] | undefined = [];
+		const listOfUsers: CreateTeamUser[] | undefined = [];
 
-		filteredList?.forEach((user) => {
-			if (user.isChecked) listOfUsers.push(user);
+		usersList?.forEach((user) => {
+			if (user.isChecked) listOfUsers.push({ user: user._id, role: TeamUserRoles.MEMBER });
 		});
 
 		setToastState({
@@ -99,6 +86,8 @@ const ListMembers = ({ isOpen, setIsOpen, users }: Props) => {
 			content: 'Team member/s successfully added',
 			type: ToastStateEnum.SUCCESS
 		});
+
+		setMembersListState(listOfUsers);
 
 		setIsOpen(false);
 	};
