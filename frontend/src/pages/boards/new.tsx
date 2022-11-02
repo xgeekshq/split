@@ -3,6 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
@@ -31,9 +32,8 @@ import SchemaCreateBoard from 'schema/schemaCreateBoardForm';
 import { createBoardDataState, createBoardError } from 'store/createBoard/atoms/create-board.atom';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
-import { ToastStateEnum } from 'utils/enums/toast-types';
-import { useSession } from 'next-auth/react';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
+import { ToastStateEnum } from 'utils/enums/toast-types';
 
 const NewBoard: NextPage = () => {
 	const router = useRouter();
@@ -98,7 +98,6 @@ const NewBoard: NextPage = () => {
 					user: boardUser.user._id,
 					role: boardUser.role
 				}));
-				
 
 				return newSubBoard;
 			}
@@ -116,9 +115,15 @@ const NewBoard: NextPage = () => {
 	};
 
 	useEffect(() => {
-		const isAdminOrStakeHolder = teams ? teams[0].users.find((teamUser) => teamUser.user._id == session?.user.id && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role)) || session?.isSAdmin : false
+		const isAdminOrStakeHolder = teams
+			? teams[0].users.find(
+					(teamUser) =>
+						teamUser.user._id === session?.user.id &&
+						[TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role)
+			  ) || session?.isSAdmin
+			: false;
 		if (!isAdminOrStakeHolder && !haveError) {
-			setHaveError(!isAdminOrStakeHolder)
+			setHaveError(!isAdminOrStakeHolder);
 		}
 
 		if (status === 'success') {
@@ -131,7 +136,7 @@ const NewBoard: NextPage = () => {
 			resetBoardState();
 			router.push('/boards');
 		}
-	}, [status, resetBoardState, router, setToastState, session, haveError, teams]);
+	}, [status, resetBoardState, router, setToastState, session, haveError, teams, setHaveError]);
 
 	return (
 		<Container>
