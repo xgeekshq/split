@@ -15,7 +15,7 @@ type MyTeamsProps = {
 const MyTeams = ({ userId }: MyTeamsProps) => {
 	const setToastState = useSetRecoilState(toastState);
 
-	const { data, isFetching } = useQuery(['teams', userId], () => getTeamsOfUser(userId), {
+	const { data, isFetching } = useQuery(['teams'], () => getTeamsOfUser(), {
 		enabled: true,
 		refetchOnWindowFocus: false,
 		onError: () => {

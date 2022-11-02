@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (
 	const session = await getSession(context);
 	if (session) {
 		const queryClient = new QueryClient();
-		await queryClient.prefetchQuery('teams', () => getTeamsOfUser(session.user.id, context));
+		await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
 		await queryClient.prefetchQuery('dashboardInfo', () => getDashboardHeaderInfo(context));
 
 		return {
