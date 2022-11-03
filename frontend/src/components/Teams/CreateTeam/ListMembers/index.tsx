@@ -51,11 +51,9 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	};
 
 	const handleChecked = (id: string) => {
-		const updateCheckedUser = usersList?.map((user) => {
-			if (user._id === id) return { ...user, isChecked: !user.isChecked };
-
-			return user;
-		});
+		const updateCheckedUser = usersList?.map((user) =>
+			user._id === id ? { ...user, isChecked: !user.isChecked } : user
+		);
 
 		setUsersListState(updateCheckedUser);
 	};

@@ -120,6 +120,25 @@ export default class TeamsController {
 		return this.getTeamApp.getAllTeams();
 	}
 
+	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('user')
+	getTeamsOfUser(@Req() request: RequestWithUser) {
+		return this.getTeamApp.getTeamsOfUser(request.user._id);
+	}
+
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
 	@ApiParam({ name: 'teamId', type: String })
 	@ApiQuery({

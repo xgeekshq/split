@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
-import { getAllTeams } from 'api/teamService';
+import { getTeamsOfUser } from 'api/teamService';
 import { toastState } from 'store/toast/atom/toast.atom';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import EmptyTeams from './partials/EmptyTeams';
@@ -15,7 +15,7 @@ type MyTeamsProps = {
 const MyTeams = ({ userId }: MyTeamsProps) => {
 	const setToastState = useSetRecoilState(toastState);
 
-	const { data, isFetching } = useQuery(['teams'], () => getAllTeams(), {
+	const { data, isFetching } = useQuery(['teams'], () => getTeamsOfUser(), {
 		enabled: true,
 		refetchOnWindowFocus: false,
 		onError: () => {
