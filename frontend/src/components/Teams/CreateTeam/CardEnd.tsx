@@ -4,13 +4,12 @@ import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 
 type CardEndProps = {
-	userSAdmin?: boolean;
 	role: string;
 };
 
-export const CardEnd: React.FC<CardEndProps> = React.memo(({ role }) => {
+const CardEnd = ({ role }: CardEndProps) => {
 	return (
-		<Flex align="center" css={{ justifySelf: 'end' }}>
+		<Flex align="center" css={{ width: '23%' }} justify="end">
 			<Text color="primary200" size="sm">
 				Role |
 			</Text>
@@ -19,4 +18,6 @@ export const CardEnd: React.FC<CardEndProps> = React.memo(({ role }) => {
 			</Text>
 		</Flex>
 	);
-});
+};
+
+export default CardEnd;
