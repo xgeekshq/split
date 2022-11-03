@@ -2,20 +2,20 @@ import React from 'react';
 
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
-import { Team } from 'types/team/team';
+import { User } from '../../../../types/user/user';
 import { ConfigurationSettings } from '../../../Board/Settings/partials/ConfigurationSettings';
 import { CardEnd } from '../CardEnd';
 import { InnerContainer, StyledMemberTitle } from './styles';
 
 type CardBodyProps = {
-	userId: string;
-	userSAdmin: boolean;
-	team?: Team;
+	userSAdmin: boolean | undefined;
+	member: User;
+	role: string;
 };
 
-const CardMember = React.memo<CardBodyProps>(({ userId, userSAdmin }) => {
+const CardMember = React.memo<CardBodyProps>(({ member, role, userSAdmin }) => {
 	return (
-		<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
+		<Flex css={{ flex: '1 1 0', marginBottom: '$10' }} direction="column" gap="12">
 			<Flex>
 				<InnerContainer
 					align="center"
@@ -41,7 +41,9 @@ const CardMember = React.memo<CardBodyProps>(({ userId, userSAdmin }) => {
 							/>
 
 							<Flex align="center" gap="8">
-								<StyledMemberTitle>Cátia Antunes</StyledMemberTitle>
+								<StyledMemberTitle>
+									{`${member.firstName} ${member.lastName}`}
+								</StyledMemberTitle>
 							</Flex>
 						</Flex>
 					</Flex>
@@ -54,7 +56,7 @@ const CardMember = React.memo<CardBodyProps>(({ userId, userSAdmin }) => {
 							title="Newbee"
 						/>
 					</Flex>
-					<CardEnd userId={userId} userSAdmin={userSAdmin} />
+					<CardEnd role={role} userSAdmin={userSAdmin} />
 				</InnerContainer>
 			</Flex>
 		</Flex>
