@@ -1,16 +1,20 @@
 import { useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 
 import { getAllUsers } from '../../api/userService';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
 import CreateTeam from '../../components/Teams/CreateTeam';
-import { usersListState } from '../../store/team/atom/team.atom';
+import { membersListState, usersListState } from '../../store/team/atom/team.atom';
 import { toastState } from '../../store/toast/atom/toast.atom';
+import { TeamUser } from '../../types/team/team.user';
+import { TeamUserRoles } from '../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../utils/enums/toast-types';
 
 const NewTeam: NextPage = () => {
+	const { data: session } = useSession({ required: true });
 	const setToastState = useSetRecoilState(toastState);
 
 	const { data } = useQuery(['users'], () => getAllUsers(), {
@@ -26,14 +30,24 @@ const NewTeam: NextPage = () => {
 	});
 
 	const setUsersListState = useSetRecoilState(usersListState);
+	const setMembersListState = useSetRecoilState(membersListState);
 
 	useEffect(() => {
+		const listMembers: TeamUser[] | undefined = [];
 		const usersWithChecked = data?.map((user) => {
-			return { ...user, isChecked: false };
+			if (user._id === session?.user.id) {
+				listMembers.push({
+					user,
+					role: TeamUserRoles.ADMIN
+				});
+			}
+			return { ...user, isChecked: user._id === session?.user.id };
 		});
 
 		setUsersListState(usersWithChecked);
-	}, [data, setUsersListState]);
+
+		setMembersListState(listMembers);
+	}, [data, session?.user.id, setMembersListState, setUsersListState]);
 
 	return <CreateTeam />;
 };

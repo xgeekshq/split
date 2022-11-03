@@ -1,11 +1,11 @@
 import { atom } from 'recoil';
 
-import { CreateTeamUser } from '../../../types/team/team.user';
+import { TeamUser } from '../../../types/team/team.user';
 import { UserList } from '../../../types/team/userList';
 
-export const membersListState = atom<CreateTeamUser[] | undefined>({
+export const membersListState = atom<TeamUser[]>({
 	key: 'membersList',
-	default: undefined
+	default: []
 });
 
 export const usersListState = atom<UserList[] | undefined>({
