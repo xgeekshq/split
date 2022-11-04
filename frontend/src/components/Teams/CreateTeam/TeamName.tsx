@@ -6,7 +6,7 @@ type Props = { teamName: string };
 const TeamName = ({ teamName }: Props) => {
 	return (
 		<>
-			<Text css={{ mb: '$16' }} heading="3">
+			<Text css={{ mb: '$12' }} heading="3">
 				Team Name
 			</Text>
 

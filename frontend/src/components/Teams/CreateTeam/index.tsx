@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -17,14 +17,11 @@ import Icon from '../../icons/Icon';
 import Button from '../../Primitives/Button';
 import Text from '../../Primitives/Text';
 import TeamMembersList from './ListCardsMembers';
-import { ListMembers } from './ListMembers';
 import TeamName from './TeamName';
 import TipBar from './TipBar';
 
 const CreateTeam = () => {
 	const router = useRouter();
-
-	const [isOpen, setIsOpen] = useState(false);
 
 	const methods = useForm<{ text: string }>({
 		mode: 'onBlur',
@@ -50,7 +47,6 @@ const CreateTeam = () => {
 				<Text color="primary800" heading={3} weight="bold">
 					Create New Team
 				</Text>
-
 				<Button isIcon onClick={handleBack}>
 					<Icon name="close" />
 				</Button>
@@ -62,7 +58,6 @@ const CreateTeam = () => {
 							<FormProvider {...methods}>
 								<TeamName teamName={teamName} />
 								<TeamMembersList />
-								<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
 							</FormProvider>
 						</InnerContent>
 						<ButtonsContainer gap="24" justify="end">
