@@ -8,12 +8,12 @@ import CardEnd from '../CardEnd';
 import { InnerContainer, StyledMemberTitle } from './styles';
 
 type CardBodyProps = {
-	userSAdmin: boolean | undefined;
 	member: User;
 	role: string;
+	isTeamCreator?: boolean;
 };
 
-const CardMember = React.memo<CardBodyProps>(({ member, role }) => {
+const CardMember = React.memo<CardBodyProps>(({ member, role, isTeamCreator }) => {
 	return (
 		<Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
 			<Flex>
@@ -54,7 +54,7 @@ const CardMember = React.memo<CardBodyProps>(({ member, role }) => {
 							title="Newbee"
 						/>
 					</Flex>
-					<CardEnd role={role} />
+					<CardEnd isTeamCreator={isTeamCreator} role={role} userId={member._id} />
 				</InnerContainer>
 			</Flex>
 		</Flex>

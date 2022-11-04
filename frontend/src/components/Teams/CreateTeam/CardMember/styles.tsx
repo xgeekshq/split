@@ -1,6 +1,7 @@
 import { styled } from '../../../../styles/stitches/stitches.config';
 import Box from '../../../Primitives/Box';
 import Flex from '../../../Primitives/Flex';
+import { PopoverTrigger } from '../../../Primitives/Popover';
 import Text from '../../../Primitives/Text';
 
 const InnerContainer = styled(Flex, Box, {
@@ -16,4 +17,23 @@ const StyledMemberTitle = styled(Text, {
 	'&[data-disabled="true"]': { opacity: 0.4 }
 });
 
-export { InnerContainer, StyledMemberTitle };
+const PopoverTriggerStyled = styled(PopoverTrigger, {
+	variants: {
+		disabled: {
+			false: {
+				'&:hover': {
+					backgroundColor: '$primary500',
+					color: 'white'
+				}
+			},
+			true: {
+				'&:hover': {
+					backgroundColor: '$transparent'
+				}
+			}
+		}
+	},
+	defaultVariants: { disabled: false }
+});
+
+export { InnerContainer, PopoverTriggerStyled, StyledMemberTitle };

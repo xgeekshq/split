@@ -41,9 +41,9 @@ const TeamMembersList = () => {
 				{membersList?.map((member) => (
 					<CardMember
 						key={member.user._id}
+						isTeamCreator={member.user._id === session?.user.id}
 						member={member.user}
 						role={member.role}
-						userSAdmin={session?.isSAdmin}
 					/>
 				))}
 				<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
