@@ -4,8 +4,8 @@ import { User } from '../user/user';
 export interface TeamUser {
 	user: User;
 	role: TeamUserRoles;
-	_id: string;
-	team: string;
+	_id?: string;
+	team?: string;
 }
 
 export interface CreateTeamUser {

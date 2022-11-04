@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
@@ -6,7 +7,7 @@ import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
 import { membersListState, usersListState } from '../../../../store/team/atom/team.atom';
 import { toastState } from '../../../../store/toast/atom/toast.atom';
-import { CreateTeamUser } from '../../../../types/team/team.user';
+import { TeamUser } from '../../../../types/team/team.user';
 import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
@@ -29,9 +30,11 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen }: Props) => {
+	const { data: session } = useSession({ required: true });
 	const [searchMember, setSearchMember] = useState<string>('');
 
 	const usersList = useRecoilValue(usersListState);
+	const membersList = useRecoilValue(membersListState);
 
 	const setToastState = useSetRecoilState(toastState);
 	const setMembersListState = useSetRecoilState(membersListState);
@@ -73,10 +76,17 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	}, [searchMember, usersList]);
 
 	const saveMembers = () => {
-		const listOfUsers: CreateTeamUser[] | undefined = [];
+		const listOfUsers: TeamUser[] | undefined = [];
 
-		usersList?.forEach((user) => {
-			if (user.isChecked) listOfUsers.push({ user: user._id, role: TeamUserRoles.MEMBER });
+		listOfUsers.push(membersList[0]);
+
+		usersList?.forEach((member) => {
+			if (member.isChecked && member._id !== session?.user.id) {
+				listOfUsers.push({
+					user: member,
+					role: TeamUserRoles.MEMBER
+				});
+			}
 		});
 
 		setToastState({
@@ -141,6 +151,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 								<Flex key={user._id} align="center" justify="between">
 									<Checkbox
 										checked={user.isChecked}
+										disabled={user._id === session?.user.id}
 										handleChange={handleChecked}
 										id={user._id}
 										label={`${user.firstName} ${user.lastName}`}
