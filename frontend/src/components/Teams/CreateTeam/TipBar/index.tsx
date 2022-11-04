@@ -1,8 +1,12 @@
+import { useRecoilValue } from 'recoil';
+
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
+import { membersListState } from '../../../../store/team/atom/team.atom';
 import { LiWhite, TextWhite } from './styles';
 
 const CreateTeamTipBar = () => {
+	const listMembers = useRecoilValue(membersListState);
 	return (
 		<Flex
 			direction="column"
@@ -40,6 +44,16 @@ const CreateTeamTipBar = () => {
 				If you select the role <b>stakeholder</b>, this person will not be included in
 				sub-team retros later on when you create a SPLIT retrospective.
 			</LiWhite>
+			{listMembers.length > 1 && (
+				<>
+					<TextWhite css={{ mb: '$8' }} heading="6">
+						Newbee
+					</TextWhite>
+					<LiWhite as="span">
+						The newbee will not be selected as a responsible for the SPLIT sub-teams.
+					</LiWhite>
+				</>
+			)}
 		</Flex>
 	);
 };
