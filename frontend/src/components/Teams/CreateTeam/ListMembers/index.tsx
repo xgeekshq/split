@@ -111,7 +111,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 								ml: '$10',
 								fontSize: '$14',
 								lineHeight: '$18',
-								fontWeight: '700'
+								fontWeight: '500'
 							}}
 						>
 							Add new member
