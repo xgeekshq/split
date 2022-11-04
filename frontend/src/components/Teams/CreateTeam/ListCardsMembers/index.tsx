@@ -11,18 +11,33 @@ import { ScrollableContent } from './styles';
 
 const TeamMembersList = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [containerHeight, setContainerHeight] = useState<number | null | undefined>(null);
 
 	const { data: session } = useSession({ required: true });
 	const membersList = useRecoilValue(membersListState);
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 
+	const handleScroll = () => {
+		setContainerHeight(scrollRef.current?.scrollHeight);
+	};
+
 	return (
 		<Flex css={{ mt: '$38' }} direction="column">
-			<Text css={{ mb: '$16' }} heading="3">
-				Team Members
-			</Text>
-			<ScrollableContent direction="column" justify="start" ref={scrollRef}>
+			<Flex>
+				<Text css={{ mb: '$16' }} heading="3">
+					Team Members
+				</Text>
+				{containerHeight && containerHeight > window.innerHeight - 500 ? (
+					<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+				) : null}
+			</Flex>
+			<ScrollableContent
+				direction="column"
+				justify="start"
+				ref={scrollRef}
+				onScroll={handleScroll}
+			>
 				{membersList?.map((member) => (
 					<CardMember
 						key={member.user._id}
