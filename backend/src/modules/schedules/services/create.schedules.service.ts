@@ -44,7 +44,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			job.start();
 		} catch (e) {
 			await this.schedulesModel.deleteOne({ board: boardId });
-			this.schedulerRegistry.deleteCronJob(boardId);
 		}
 	}
 

@@ -128,16 +128,14 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 						Stakeholders
 					</Text>
 					<Text css={{ wordBreak: 'break-word' }} size="md">
-						{!haveError && stakeholders && stakeholders.length === 1
-							? stakeholders.map(
-									({ firstName, lastName }) => `${firstName} ${lastName}`
-							  )
-							: ''}
-						{!haveError && stakeholders && stakeholders.length !== 1
-							? stakeholders.map(
-									({ firstName, lastName }) => `${firstName} ${lastName}, `
-							  )
-							: ''}
+						{!haveError &&
+							stakeholders &&
+							stakeholders.length > 0 &&
+							stakeholders.map((value, index) => {
+								return index < stakeholders.length - 1
+									? `${value.firstName} ${value.lastName}, `
+									: `${value.firstName} ${value.lastName}`;
+							})}
 					</Text>
 				</StyledBox>
 			</Flex>
