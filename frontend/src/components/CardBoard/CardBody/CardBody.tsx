@@ -113,7 +113,7 @@ const CardBody = React.memo<CardBodyProps>(
 		const isANewBoard = newBoard?._id === board._id;
 
 		const userIsParticipating = useMemo(() => {
-			return !!users.find((user) => user.user._id === userId);
+			return !!users.find((user) => user.user?._id === userId);
 		}, [users, userId]);
 
 		const havePermissions = useMemo(() => {

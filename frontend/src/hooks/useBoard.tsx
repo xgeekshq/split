@@ -18,7 +18,7 @@ interface AutoFetchProps {
 	autoFetchBoard: boolean;
 }
 
-const useBoard = ({ autoFetchBoard }: AutoFetchProps): UseBoardType => {
+const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 	const { boardId, queryClient, setToastState } = useBoardUtils();
 
 	const setBoard = useSetRecoilState(boardState);
