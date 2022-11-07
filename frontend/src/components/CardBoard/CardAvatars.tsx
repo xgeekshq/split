@@ -60,7 +60,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			}
 
 			return listUsers.reduce((acc: User[], userFound: ListUsersType) => {
-				if ((userFound.user as User)._id === userId) {
+				if ((userFound.user as User)?._id === userId) {
 					acc.unshift(userFound.user as User);
 				} else {
 					acc.push(userFound.user as User);
