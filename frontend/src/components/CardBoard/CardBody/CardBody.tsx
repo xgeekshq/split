@@ -106,7 +106,7 @@ const CardBody = React.memo<CardBodyProps>(
 	}) => {
 		const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
 		const countDividedBoards = dividedBoardsCount || dividedBoards.length;
-		const [openSubBoards, setSubBoardsOpen] = useState(true);
+		const [openSubBoards, setSubBoardsOpen] = useState(false);
 
 		const newBoard = useRecoilValue(newBoardState);
 
