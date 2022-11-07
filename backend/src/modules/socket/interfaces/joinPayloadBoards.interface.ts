@@ -1,3 +1,3 @@
 export default interface JoinPayloadBoards {
-	boards: string;
+	teamId: string;
 }

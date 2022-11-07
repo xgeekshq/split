@@ -10,6 +10,11 @@ export default interface UseBoardType {
 		UpdateBoardType & { socketId: string },
 		unknown
 	>;
-	deleteBoard: UseMutationResult<BoardType, unknown, string, unknown>;
+	deleteBoard: UseMutationResult<
+		BoardType,
+		unknown,
+		{ id: string; socketId?: string; teamId: string },
+		unknown
+	>;
 	fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
 }

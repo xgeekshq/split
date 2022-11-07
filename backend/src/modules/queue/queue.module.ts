@@ -8,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
 			inject: [ConfigService],
 			useFactory: (configService: ConfigService) => ({
 				redis: {
-					username: configService.get('redis.user'),
 					password: configService.get('redis.password'),
 					host: configService.get('redis.host'),
 					port: configService.get('redis.port'),

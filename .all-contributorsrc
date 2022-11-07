@@ -119,6 +119,40 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "CatiaAntunes96",
+      "name": "Cátia Antunes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59372326?v=4",
+      "profile": "https://github.com/CatiaAntunes96",
+      "contributions": [
+        "code",
+        "doc",
+        "review"
+      ]
+    },
+    {
+      "login": "mourabraz",
+      "name": "mourabraz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7543719?v=4",
+      "profile": "https://www.linkedin.com/in/moura-braz",
+      "contributions": [
+        "code",
+        "doc",
+        "review"
+      ]
+    },
+    {
+      "login": "miguel-felix1",
+      "name": "Miguel Félix",
+      "avatar_url": "https://avatars.githubusercontent.com/u/87712174?v=4",
+      "profile": "https://github.com/miguel-felix1",
+      "contributions": [
+        "code",
+        "bug",
+        "review",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -126,5 +160,6 @@
   "projectOwner": "xgeekshq",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": false
+  "skipCi": false,
+  "commitConvention": "angular"
 }

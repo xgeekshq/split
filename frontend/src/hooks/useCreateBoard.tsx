@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
 import { Team } from '../types/team/team';
 import { TeamUser } from '../types/team/team.user';
 import { BoardUserRoles } from '../utils/enums/board.user.roles';
-import { TeamUserRoles } from '../utils/enums/team.user.roles';
 
 const useCreateBoard = (team: Team) => {
 	const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -19,10 +19,9 @@ const useCreateBoard = (team: Team) => {
 	const MIN_MEMBERS = 4;
 
 	const teamMembers = team.users.filter(
-		(teamUser) =>
-			teamUser.role !== TeamUserRoles.STAKEHOLDER &&
-			new Date(teamUser.user.joinedAt).getTime() > 0
+		(teamUser) => teamUser.role !== TeamUserRoles.STAKEHOLDER
 	);
+
 	const dividedBoardsCount = board.dividedBoards.length;
 
 	const generateSubBoard = useCallback(

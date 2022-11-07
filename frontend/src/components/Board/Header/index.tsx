@@ -149,6 +149,7 @@ const BoardHeader = () => {
 							{isSubBoard ? title.replace('board', '') : team.name}
 						</Text>
 						<CardAvatars
+							isBoardsPage
 							listUsers={users}
 							responsible={false}
 							teamAdmins={false}
