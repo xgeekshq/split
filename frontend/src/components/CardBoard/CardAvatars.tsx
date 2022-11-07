@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
@@ -6,6 +6,7 @@ import Tooltip from 'components/Primitives/Tooltip';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
+import { IconButton } from './styles';
 
 type ListUsersType = {
 	user: User | string;
@@ -21,10 +22,26 @@ type CardAvatarProps = {
 	userId: string;
 	myBoards?: boolean;
 	haveError?: boolean;
+	isBoardsPage?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
-	({ listUsers, teamAdmins, stakeholders, userId, haveError, responsible, myBoards }) => {
+	({
+		listUsers,
+		teamAdmins,
+		stakeholders,
+		userId,
+		haveError,
+		responsible,
+		myBoards,
+		isBoardsPage
+	}) => {
+		const [viewAllUsers, setViewAllUsers] = useState(false);
+
+		const handleViewAllUsers = useCallback(() => {
+			setViewAllUsers(!viewAllUsers);
+		}, [viewAllUsers]);
+
 		const data = useMemo(() => {
 			if (responsible)
 				return listUsers
@@ -56,12 +73,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
 
 		const getInitials = useCallback(
 			(user: User | undefined, index) => {
-				if (usersCount - 1 > index && index > 1) {
+				if (!viewAllUsers && usersCount - 1 > index && index > 1) {
 					return `+${usersCount - 2}`;
 				}
 				return user ?? '--';
 			},
-			[usersCount]
+			[usersCount, viewAllUsers]
 		);
 
 		const stakeholdersColors = useMemo(
@@ -77,15 +94,30 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			(value: User | string, avatarColor, idx) => {
 				if (typeof value === 'string') {
 					return (
-						<Avatar
+						<IconButton
 							key={`${value}-${idx}-${Math.random()}`}
-							colors={avatarColor}
-							css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
-							fallbackText={value}
-							id={value}
-							isDefaultColor={value === userId}
-							size={32}
-						/>
+							aria-hidden="true"
+							disabled={!isBoardsPage}
+							type="button"
+							css={{
+								'&:hover': isBoardsPage
+									? {
+											cursor: 'pointer'
+									  }
+									: 'none'
+							}}
+							onClick={handleViewAllUsers}
+						>
+							<Avatar
+								key={`${value}-${idx}-${Math.random()}`}
+								colors={avatarColor}
+								css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
+								fallbackText={value}
+								id={value}
+								isDefaultColor={value === userId}
+								size={32}
+							/>
+						</IconButton>
 					);
 				}
 
@@ -95,7 +127,19 @@ const CardAvatars = React.memo<CardAvatarProps>(
 						key={`${value}-${idx}-${Math.random()}`}
 						content={`${value.firstName} ${value.lastName}`}
 					>
-						<div>
+						<IconButton
+							aria-hidden="true"
+							disabled={!isBoardsPage}
+							type="button"
+							css={{
+								'&:hover': isBoardsPage
+									? {
+											cursor: 'pointer'
+									  }
+									: 'none'
+							}}
+							onClick={handleViewAllUsers}
+						>
 							<Avatar
 								key={`${value}-${idx}-${Math.random()}`}
 								colors={avatarColor}
@@ -105,12 +149,20 @@ const CardAvatars = React.memo<CardAvatarProps>(
 								isDefaultColor={value._id === userId}
 								size={32}
 							/>
-						</div>
+						</IconButton>
 					</Tooltip>
 				);
 			},
-			[userId]
+			[handleViewAllUsers, userId, isBoardsPage]
 		);
+
+		const numberOfAvatars = useMemo(() => {
+			if (!myBoards) {
+				return viewAllUsers && isBoardsPage ? data.length : 3;
+			}
+
+			return 1;
+		}, [data.length, isBoardsPage, myBoards, viewAllUsers]);
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
@@ -122,7 +174,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 								index
 							);
 					  })
-					: (data.slice(0, !myBoards ? 3 : 1) as User[]).map(
+					: (data.slice(0, numberOfAvatars) as User[]).map(
 							(user: User, index: number) => {
 								return renderAvatar(
 									getInitials(user, index),
