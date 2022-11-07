@@ -158,12 +158,11 @@ const CardAvatars = React.memo<CardAvatarProps>(
 
 		const numberOfAvatars = useMemo(() => {
 			if (!myBoards) {
-				if (viewAllUsers && isBoardsPage) return usersCount;
-				return 3;
+				return viewAllUsers && isBoardsPage ? data.length : 3;
 			}
 
 			return 1;
-		}, [isBoardsPage, myBoards, usersCount, viewAllUsers]);
+		}, [data.length, isBoardsPage, myBoards, viewAllUsers]);
 
 		return (
 			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
