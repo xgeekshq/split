@@ -52,7 +52,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 
 	return (
 		<Flex
-			css={{ mt: '$24', height: 'calc(100vh - 450px)', overflow: 'auto', pr: '$10' }}
+			css={{ mt: '$24', height: 'calc(100vh - 410px)', overflow: 'auto', pr: '$10' }}
 			direction="column"
 			gap="24"
 			justify="start"
