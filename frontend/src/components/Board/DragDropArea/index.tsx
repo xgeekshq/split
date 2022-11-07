@@ -1,13 +1,16 @@
 import React from 'react';
+import { useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult } from '@react-forked/dnd';
 
 import Column from 'components/Board/Column/Column';
 import Flex from 'components/Primitives/Flex';
 import { countBoardCards } from 'helper/board/countCards';
 import useCards from 'hooks/useCards';
+import { toastState } from 'store/toast/atom/toast.atom';
 import BoardType from 'types/board/board';
 import MergeCardsDto from 'types/board/mergeCard.dto';
 import UpdateCardPositionDto from 'types/card/updateCardPosition.dto';
+import { ToastStateEnum } from 'utils/enums/toast-types';
 
 type Props = {
 	userId: string;
@@ -16,20 +19,20 @@ type Props = {
 };
 const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
 	const { updateCardPosition, mergeCards } = useCards();
+	const setToastState = useSetRecoilState(toastState);
 
 	const countAllCards = React.useMemo(() => {
 		return board.columns ? countBoardCards(board.columns) : 0;
 	}, [board]);
 
-	const onDragEnd = ({ destination, source, combine, draggableId }: DropResult) => {
-		if (!source || (!combine && !destination) || !board?._id || !socketId) {
-			return;
-		}
-		const { droppableId: sourceDroppableId, index: sourceIndex } = source;
-
-		if (combine && userId && board.hideCards === false) {
-			const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
-
+	const handleCombine = (
+		combineDroppableId: string,
+		combineDraggableId: string,
+		sourceDroppableId: string,
+		draggableId: string,
+		sourceIndex: number
+	) => {
+		if (!board.hideCards) {
 			const changes: MergeCardsDto = {
 				columnIdOfCard: sourceDroppableId,
 				colIdOfCardGroup: combineDroppableId,
@@ -42,6 +45,31 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
 			};
 
 			mergeCards.mutate(changes);
+		} else if (board.hideCards) {
+			setToastState({
+				open: true,
+				type: ToastStateEnum.INFO,
+				content: 'The merge is not possible. The cards are hidden'
+			});
+		}
+	};
+
+	const onDragEnd = ({ destination, source, combine, draggableId }: DropResult) => {
+		if (!source || (!combine && !destination) || !board?._id || !socketId) {
+			return;
+		}
+		const { droppableId: sourceDroppableId, index: sourceIndex } = source;
+
+		if (combine && userId) {
+			const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
+
+			handleCombine(
+				combineDroppableId,
+				combineDraggableId,
+				sourceDroppableId,
+				draggableId,
+				sourceIndex
+			);
 		}
 
 		if (!combine && destination) {

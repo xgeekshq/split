@@ -197,6 +197,8 @@ export const handleVotes = (voteDto: {
 	isCardGroup: boolean;
 
 	count: number;
+
+	votesOfUserInThisCard: number;
 }) => {
 	return fetchData<BoardType>(
 		voteDto.isCardGroup

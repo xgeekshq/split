@@ -132,7 +132,8 @@ const CardFooter = React.memo<FooterProps>(
 					socketId,
 					cardItemId,
 					isCardGroup: cardItemId === undefined,
-					count: countVotes
+					count: countVotes,
+					votesOfUserInThisCard: votesOfUserInThisCard + countVotes
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;

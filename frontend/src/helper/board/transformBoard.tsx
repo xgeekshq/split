@@ -103,6 +103,7 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
 	const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
 
 	if (column && cardGroup && selectedCard) {
+		cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
 		column.cards = addElementAtIndex(column.cards, column.cards.length, {
 			...selectedCard,
 			items: [selectedCard]
