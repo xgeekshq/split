@@ -36,7 +36,10 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 	const [stakeholders, setStakeholders] = useState<User[]>([]);
 	const [team, setTeam] = useState<Team | null>(null);
 
-	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+	const { data: teams } = useQuery(['teams'], () => getAllTeams(), {
+		suspense: false,
+		refetchOnWindowFocus: false
+	});
 
 	const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
 	const [haveError, setHaveError] = useRecoilState(createBoardError);
