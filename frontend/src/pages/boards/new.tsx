@@ -34,6 +34,7 @@ import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import { ToastStateEnum } from 'utils/enums/toast-types';
+import { BOARDS_ROUTE } from '../../utils/routes';
 
 const NewBoard: NextPage = () => {
 	const router = useRouter();
@@ -74,11 +75,11 @@ const NewBoard: NextPage = () => {
 	});
 
 	/**
-	 * Handle back to previous route
+	 * Handle back to boards list page
 	 */
 	const handleBack = useCallback(() => {
 		resetBoardState();
-		router.back();
+		router.push(BOARDS_ROUTE);
 	}, [router, resetBoardState]);
 
 	/**

@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil';
 
 import { getBoardsRequest } from 'api/boardService';
 import CardBody from 'components/CardBoard/CardBody/CardBody';
+import EmptyBoards from 'components/Dashboard/RecentRetros/partials/EmptyBoards';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
@@ -12,10 +13,9 @@ import { toastState } from 'store/toast/atom/toast.atom';
 import BoardType from 'types/board/board';
 import { Team } from 'types/team/team';
 import { ToastStateEnum } from 'utils/enums/toast-types';
+import isEmpty from 'utils/isEmpty';
 import TeamHeader from '../TeamHeader';
 import { ScrollableContent } from './styles';
-import isEmpty from 'utils/isEmpty';
-import EmptyBoards from 'components/Dashboard/RecentRetros/partials/EmptyBoards';
 
 interface MyBoardsProps {
 	userId: string;
@@ -101,8 +101,8 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 	};
 
 	if (isEmpty(dataByTeamAndDate.boardsTeamAndDate.size)) {
-		return <EmptyBoards />
-	} 
+		return <EmptyBoards />;
+	}
 
 	return (
 		<ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
