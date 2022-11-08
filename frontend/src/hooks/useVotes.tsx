@@ -243,13 +243,7 @@ const useVotes = () => {
 	const handleVote = useMutation(handleVotes, {
 		onSuccess: (voteData, variables) => {
 			if (voteData.maxVotes) {
-				setToastState({
-					open: true,
-					content: `You have ${
-						voteData.maxVotes - variables.votesOfUserInThisCard
-					} remaining votes`,
-					type: ToastStateEnum.INFO
-				});
+				toastRemainingVotesMessage('', voteData);
 			}
 			queryClient.invalidateQueries(['board', { id: voteData?._id }]);
 		},

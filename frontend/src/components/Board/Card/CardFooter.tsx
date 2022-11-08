@@ -132,12 +132,11 @@ const CardFooter = React.memo<FooterProps>(
 					socketId,
 					cardItemId,
 					isCardGroup: cardItemId === undefined,
-					count: countVotes,
-					votesOfUserInThisCard: votesOfUserInThisCard + countVotes
+					count: countVotes
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;
-			}, 100);
+			}, 50);
 
 			// eslint-disable-next-line consistent-return
 			return () => clearTimeout(delayDebounceFn);
