@@ -7,12 +7,14 @@ import { DELETE_FAILED } from 'libs/exceptions/messages';
 import isEmpty from 'libs/utils/isEmpty';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
+import * as Schedules from 'modules/schedules/interfaces/types'
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 import { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { DeleteSchedulesServiceInterface } from 'modules/schedules/interfaces/services/delete.schedules.service.interface';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardService {
@@ -21,6 +23,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		private boardModel: Model<BoardDocument>,
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
+		private deleteSheduleService: DeleteSchedulesServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -112,6 +116,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			boardUserSession.startTransaction();
 			try {
 				const { _id, dividedBoards } = await this.deleteBoard(boardId, userId, boardSession);
+				this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId)
 
 				if (!isEmpty(dividedBoards)) {
 					await this.deleteSubBoards(dividedBoards, boardSession);

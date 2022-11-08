@@ -307,7 +307,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'U111BAXFL'
 					}
 				],
-				channelId: 'CU0HPXP8E'
+				channelId: 'CU0HPXP8E',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 1',
@@ -344,7 +345,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W012A3CDE'
 					}
 				],
-				channelId: 'CSJR4G3R0'
+				channelId: 'CSJR4G3R0',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 2',
@@ -381,7 +383,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W013A3CEF'
 					}
 				],
-				channelId: 'C7JQHTRWT'
+				channelId: 'C7JQHTRWT',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 3',
@@ -418,7 +421,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W058A3SDQ'
 					}
 				],
-				channelId: 'CCP7ISR08'
+				channelId: 'CCP7ISR08',
+				participantsNotInvited: undefined
 			}
 		];
 
@@ -426,7 +430,8 @@ describe('SlackExecuteCommunication', () => {
 			expect(i).toEqual(
 				expect.objectContaining({
 					...expected[idx],
-					channelId: expect.stringContaining('C')
+					channelId: expected[idx].channelId?.includes('C') ? i.channelId : '',
+					normalName: expected[idx].normalName.includes('any_prefix') ? i.normalName : ''
 				})
 			);
 		});

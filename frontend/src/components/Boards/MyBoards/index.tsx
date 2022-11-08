@@ -14,6 +14,8 @@ import { Team } from 'types/team/team';
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import TeamHeader from '../TeamHeader';
 import { ScrollableContent } from './styles';
+import isEmpty from 'utils/isEmpty';
+import EmptyBoards from 'components/Dashboard/RecentRetros/partials/EmptyBoards';
 
 interface MyBoardsProps {
 	userId: string;
@@ -97,6 +99,10 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 			}
 		}
 	};
+
+	if (isEmpty(dataByTeamAndDate.boardsTeamAndDate.size)) {
+		return <EmptyBoards />
+	} 
 
 	return (
 		<ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>

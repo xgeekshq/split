@@ -70,7 +70,7 @@ export interface BoardToAdd
 export interface CreateBoardDto extends Omit<BoardToAdd, 'dividedBoards' | 'users'> {
 	dividedBoards: CreateBoardDto[];
 	users: BoardUserDto[];
-	maxUsers?: string;
+	maxUsers?: number;
 }
 
 export type UpdateBoardType = {

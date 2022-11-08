@@ -62,6 +62,9 @@ export default class Board {
 
 	@Prop({ type: Number, nullable: false, default: 0 })
 	totalUsedVotes?: Number;
+
+	@Prop({ type: Boolean, nullable: false, default: false })
+	slackEnable!: boolean
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

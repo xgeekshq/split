@@ -89,6 +89,20 @@ services:
     command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
     env_file:
       - ./database/.env
+   
+  redis:
+    image: redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"     
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    env_file:
+      - ./database/redis/.env
+
+volumes:
+  redis_data:
+    driver: local
 
 # Networks
 networks:

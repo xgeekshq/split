@@ -16,7 +16,7 @@ import { TYPES } from 'modules/boards/interfaces/types';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
-import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service';
+import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'modules/schedules/interfaces/types';
 import TeamDto from 'modules/teams/dto/team.dto';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
@@ -53,7 +53,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
 		private slackCommunicationService: ExecuteCommunicationInterface
-	) {}
+	) { }
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
 		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
@@ -118,8 +118,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		});
 	}
 
-	async create(boardData: BoardDto, userId: string) {
-		const { team, recurrent, maxVotes, hideCards, hideVotes, maxUsers } = boardData;
+	async create(boardData: BoardDto, userId: string, fromSchedule: boolean = false) {
+		const { team, recurrent, maxUsers, slackEnable } = boardData;
 		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId);
@@ -135,20 +135,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				boardId: newBoard._id.toString(),
 				ownerId: userId,
 				teamId: team,
-				configs: {
-					maxUsers: Number(maxUsers),
-					recurrent,
-					maxVotes,
-					hideCards,
-					hideVotes
-				}
+				maxUsersPerTeam: maxUsers
 			};
 
-			this.createFirstCronJob(addCronJobDto);
+			if (!fromSchedule) {
+				this.createFirstCronJob(addCronJobDto);
+			}
 		}
 
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
-		if (boardData.slackEnable) {
+		if (slackEnable) {
 			const result = await this.getBoardService.getBoard(newBoard._id, userId);
 			if (result?.board) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
@@ -170,31 +166,50 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(dayToRun, getNextMonth(), addCronJobDto);
 	}
 
-	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs) {
-		const { maxUsers } = configs;
+	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null> {
+		const { maxUsersPerTeam } = configs
 
-		const teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
-		const teamUsersWotStakeholders = teamUsers.filter(
+		const teamUsersWotStakeholders = (await this.getTeamService.getUsersOfTeam(teamId)).filter(
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
-		const teamUsersWotStakeholdersCount = teamUsersWotStakeholders?.length ?? 0;
-		const teamLength = teamUsersWotStakeholdersCount;
-		const maxTeams = Math.ceil(teamLength / maxUsers);
+		const teamLength = teamUsersWotStakeholders.length;
+		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
+
+		if (maxTeams < 2 || maxUsersPerTeam < 2) {
+			return null
+		}
 
 		const boardData: BoardDto = {
-			...generateBoardDtoData().board,
+			...generateBoardDtoData(`xgeeks-retro-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', { month: 'long'}).format(configs.date)}-${configs.date?.getFullYear()}`).board,
 			users: [],
 			team: teamId,
 			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders),
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
 			hideCards: configs.hideCards ?? false,
-			hideVotes: configs.hideVotes ?? false
+			hideVotes: configs.hideVotes ?? false,
+			maxUsers: configs.maxUsersPerTeam,
+			slackEnable: configs.slackEnable
 		};
 
-		const board = await this.create(boardData, ownerId);
+		const board = await this.create(boardData, ownerId, true);
 		if (!board) return null;
 		return board._id.toString();
+	}
+
+	private findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
+		let maxTeams = 0
+		do {
+			maxTeams = teamLength / maxUsersPerTeam
+			if  (maxTeams < 2) {
+				maxUsersPerTeam -= 1
+				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
+					return 0
+				}
+			} 
+		} while (maxTeams < 2)
+
+		return Math.floor(maxTeams)
 	}
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
@@ -204,7 +219,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		const availableUsers = [...teamMembers];
-
 		new Array(teamMembers.length).fill(0).reduce((j) => {
 			if (j >= maxTeams) j = 0;
 			const teamUser = this.getRandomUser(availableUsers);

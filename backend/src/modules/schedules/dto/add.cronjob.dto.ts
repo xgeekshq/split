@@ -7,5 +7,5 @@ export class AddCronJobDto {
 
 	teamId!: string;
 
-	configs!: Configs;
+	maxUsersPerTeam!: number
 }

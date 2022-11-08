@@ -8,7 +8,7 @@ const ContentSection = styled('section', Flex, {
 	height: '100%'
 });
 
-const AddNewBoardButton = styled('a', Button, {
+const AddNewBoardButton = styled('button', Button, {
 	width: 'fit-content',
 	display: 'flex',
 	position: 'relative',

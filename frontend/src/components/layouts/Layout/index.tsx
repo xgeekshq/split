@@ -9,7 +9,7 @@ import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE } from 'utils/routes';
 import DashboardLayout from '../DashboardLayout';
 import { Container } from './styles';
 
-const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
+const Layout: React.FC<{ children: ReactNode, canAddBoard?: boolean }> = ({ children, canAddBoard }) => {
 	const { data: session } = useSession({ required: true });
 
 	const router = useRouter();
@@ -30,6 +30,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
 				isBoards={isBoards}
 				isDashboard={isDashboard}
 				isTeams={isTeams}
+				canAddBoard
 			>
 				{children}
 			</DashboardLayout>

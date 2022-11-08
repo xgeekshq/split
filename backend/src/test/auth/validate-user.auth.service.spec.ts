@@ -13,6 +13,8 @@ import { TYPES } from 'modules/users/interfaces/types';
 import { getUserService } from 'modules/users/users.providers';
 
 jest.mock('bcrypt');
+jest.mock('modules/schedules/services/create.schedules.service.ts');
+jest.mock('modules/schedules/services/delete.schedules.service.ts');
 
 describe('The AuthenticationService', () => {
 	let authenticationService: ValidateUserAuthServiceImpl;

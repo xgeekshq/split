@@ -12,10 +12,11 @@ type DashboardLayoutProps = {
 	isDashboard: boolean;
 	isBoards: boolean;
 	isTeams: boolean;
+	canAddBoard: boolean;
 };
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
-	const { children, firstName, isDashboard, isBoards, isTeams } = props;
+	const { children, firstName, isDashboard, isBoards, isTeams, canAddBoard } = props;
 
 	return (
 		<ContentSection gap="36" justify="between">
@@ -26,7 +27,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					{isTeams && <Text heading="1">Teams</Text>}
 					{(isDashboard || isBoards) && (
 						<Link href="/boards/new">
-							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}  >
 								<Icon css={{ color: 'white' }} name="plus" />
 								Add new board
 							</AddNewBoardButton>
@@ -34,7 +35,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					)}
 					{isTeams && (
 						<Link href="/">
-							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'} disabled={!canAddBoard}>
 								<Icon css={{ color: 'white' }} name="plus" />
 								Create new team
 							</AddNewBoardButton>

@@ -22,13 +22,13 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 	};
 };
 
-export const generateBoardDtoData = (): CreateBoardDto => {
+export const generateBoardDtoData = (title: string): CreateBoardDto => {
 	return {
 		users: [],
 		team: null,
 		maxUsers: 2,
 		board: {
-			title: 'Main Board -',
+			title,
 			columns: [
 				{ title: 'Went well', color: '$highlight1Light', cards: [] },
 				{ title: 'To improve', color: '$highlight4Light', cards: [] },

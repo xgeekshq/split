@@ -1,5 +1,6 @@
 export const TYPES = {
 	services: {
-		CreateSchedulesService: 'CreateSchedulesService'
+		CreateSchedulesService: 'CreateSchedulesService',
+		DeleteSchedulesService: 'DeleteSchedulesService'
 	}
 };
