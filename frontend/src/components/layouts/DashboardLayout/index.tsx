@@ -27,7 +27,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					{isTeams && <Text heading="1">Teams</Text>}
 					{(isDashboard || isBoards) && (
 						<Link href="/boards/new">
-							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}  >
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
 								<Icon css={{ color: 'white' }} name="plus" />
 								Add new board
 							</AddNewBoardButton>
@@ -35,7 +35,10 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					)}
 					{isTeams && (
 						<Link href="/">
-							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'} disabled={!canAddBoard}>
+							<AddNewBoardButton
+								disabled={!canAddBoard}
+								size={isDashboard ? 'sm' : 'md'}
+							>
 								<Icon css={{ color: 'white' }} name="plus" />
 								Create new team
 							</AddNewBoardButton>
