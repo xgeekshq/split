@@ -26,7 +26,6 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 		teams = await this.inviteAllMembers(teams);
 		await this.postMessageOnEachChannel(teams);
 		await this.postMessageOnMasterChannel(teams);
-
 		return teams;
 	}
 
@@ -79,7 +78,13 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 			this.chatHandler.postMessage(i.channelId as string, generalText[i.for](i.boardId))
 		);
 
-		await this.resolvePromises(postMessagePromises);
+		const [success] = await this.resolvePromises(postMessagePromises);
+		success.forEach((result) => {
+			const teamFound = teams.find((team) => team.channelId === result.channel);
+			if (teamFound) {
+				teamFound.mainThreadTimeStamp = result.ts;
+			}
+		});
 	}
 
 	private async inviteAllMembers(teams: TeamDto[]): Promise<TeamDto[]> {
@@ -170,7 +175,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 		const normalizeName = (name: string) => {
 			// only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less
-			const fullName = `${process.env.NODE_ENV === 'dev' ? new Date().getTime() : ''}${
+			const fullName = `${process.env.NODE_ENV === 'dev' ? new Date().getMilliseconds() : ''}${
 				this.config.slackChannelPrefix
 			}${name}`;
 			return fullName
@@ -256,7 +261,6 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 	private async resolvePromises(promises: Promise<any>[]): Promise<[any[], any[]]> {
 		const results = await Promise.allSettled(promises);
-
 		const success = results
 			.filter((i) => i.status === 'fulfilled')
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment

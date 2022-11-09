@@ -5,6 +5,9 @@ import { CommunicationGateInterface } from 'modules/communication/interfaces/com
 
 const MakeSlackCommunicationGateAdapterStub = () => {
 	class SlackCommunicationGateAdapterStub implements CommunicationGateInterface {
+		getEmailByPlatformUserId(email: string): Promise<string> {
+			throw new Error('Method not implemented.');
+		}
 		addChannel(name: string): Promise<{ id: string; name: string }> {
 			throw new Error('Method not implemented.');
 		}

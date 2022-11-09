@@ -28,4 +28,8 @@ export class UsersSlackHandler implements UsersHandlerInterface {
 			return null;
 		}
 	}
+
+	async getSlackUserIdByEmail(email: string): Promise<string> {
+		return this.communicationGateAdapter.getEmailByPlatformUserId(email);
+	}
 }

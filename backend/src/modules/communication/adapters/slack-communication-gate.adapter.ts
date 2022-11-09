@@ -11,6 +11,8 @@ import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-f
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 
+import { ProfileWithoutIdError } from '../errors/profile-without-id.error';
+
 export class SlackCommunicationGateAdapter implements CommunicationGateInterface {
 	private logger = new Logger(SlackCommunicationGateAdapter.name);
 
@@ -117,15 +119,44 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 		}
 	}
 
-	public async addMessageToChannel(channelId: string, message: string): Promise<boolean> {
+	public async getEmailByPlatformUserId(email: string): Promise<string> {
+		try {
+			// https://api.slack.com/methods/users.profile.get (!! 100+ per minute)
+			const { user } = await this.getClient().users.lookupByEmail({ email });
+
+			if (!user) {
+				throw new ProfileNotFoundError();
+			}
+
+			if (!user.id) {
+				throw new ProfileWithoutIdError();
+			}
+
+			return user.id;
+		} catch (error) {
+			this.logger.error(error);
+			if (error instanceof ProfileNotFoundError || error instanceof ProfileWithoutEmailError) {
+				throw error;
+			}
+
+			throw new GetProfileError();
+		}
+	}
+
+	public async addMessageToChannel(
+		channelId: string,
+		message: string,
+		timeStamp?: string
+	): Promise<{ ok: boolean; ts?: string }> {
 		try {
 			// https://api.slack.com/methods/chat.postMessage
-			const { ok } = await this.getClient().chat.postMessage({
+			const { ok, ts } = await this.getClient().chat.postMessage({
 				channel: channelId,
-				text: message
+				text: message,
+				thread_ts: timeStamp
 			});
 
-			return ok;
+			return { ok, ts };
 		} catch (error) {
 			this.logger.error(error);
 			throw new PostMessageError();

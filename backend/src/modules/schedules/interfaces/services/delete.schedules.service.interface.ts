@@ -1,6 +1,6 @@
-import { SchedulesDocument } from "modules/schedules/schemas/schedules.schema";
+import { SchedulesDocument } from 'modules/schedules/schemas/schedules.schema';
 
 export interface DeleteSchedulesServiceInterface {
-    findAndDeleteScheduleByBoardId(boardId: string): Promise<SchedulesDocument | null>;
+	findAndDeleteScheduleByBoardId(boardId: string): Promise<SchedulesDocument | null>;
 	deleteScheduleByBoardId(boardId: string): Promise<void>;
 }

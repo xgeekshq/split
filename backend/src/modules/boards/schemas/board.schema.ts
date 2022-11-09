@@ -64,7 +64,13 @@ export default class Board {
 	totalUsedVotes?: Number;
 
 	@Prop({ type: Boolean, nullable: false, default: false })
-	slackEnable!: boolean
+	slackEnable!: boolean;
+
+	@Prop({ type: String, nullable: true, default: null })
+	slackChannelId?: string;
+
+	@Prop({ type: String, nullable: true, default: null })
+	threadTimeStamp?: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

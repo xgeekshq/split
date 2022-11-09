@@ -1,6 +1,5 @@
 import { BullModule } from '@nestjs/bull';
 import { forwardRef, Module } from '@nestjs/common';
-import { join } from 'path';
 
 import { configuration } from 'infrastructure/config/configuration';
 import BoardsModule from 'modules/boards/boards.module';
@@ -10,22 +9,29 @@ import {
 	ConversationsHandler,
 	ExecuteCommunication,
 	ExecuteCommunicationService,
+	ResponsibleExecuteCommunication,
 	UsersHandler
 } from 'modules/communication/communication.providers';
-import { CommunicationProducerService } from 'modules/communication/producers/slack-communication.producer.service';
+import { SlackCommunicationConsumer } from 'modules/communication/consumers/slack-communication.consumer';
+import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
 
 @Module({
 	imports: [
 		forwardRef(() => BoardsModule),
 		...(configuration().slack.enable
 			? [
-					BullModule.registerQueueAsync({
-						name: CommunicationProducerService.QUEUE_NAME,
-						useFactory: async () => ({
-							name: CommunicationProducerService.QUEUE_NAME,
-							processors: [join(__dirname, 'consumers', 'slack-consumer.processor')]
-						})
+					BullModule.registerQueue({
+						name: SlackCommunicationProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackCommunicationProducer.ATTEMPTS,
+							backoff: SlackCommunicationProducer.BACKOFF,
+							delay: SlackCommunicationProducer.DELAY,
+							removeOnFail: SlackCommunicationProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackCommunicationProducer.REMOVE_ON_COMPLETE,
+							priority: SlackCommunicationProducer.PRIORITY
+						}
 					})
+					// nova queue
 			  ]
 			: [])
 	],
@@ -38,7 +44,9 @@ import { CommunicationProducerService } from 'modules/communication/producers/sl
 					ConversationsHandler,
 					UsersHandler,
 					ExecuteCommunication,
-					CommunicationProducerService
+					ResponsibleExecuteCommunication,
+					SlackCommunicationProducer,
+					SlackCommunicationConsumer
 			  ]
 			: [])
 	],

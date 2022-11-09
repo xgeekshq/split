@@ -13,22 +13,27 @@ import { TeamRoles } from 'libs/enum/team.roles';
 import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
 import isEmpty from 'libs/utils/isEmpty';
+import { TeamDto } from 'modules/communication/dto/team.dto';
+import { ResponsibleExecuteCommunicationInterface } from 'modules/communication/interfaces/responsible-execute-communication.interface';
+import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 import { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
-import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
+import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 
 @Injectable()
-export default class UpdateBoardServiceImpl implements UpdateBoardService {
+export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
+		private slackCommunicationService: ResponsibleExecuteCommunicationInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -127,6 +132,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
+		const currentResponsibleId = await this.getBoardResponsibleId(boardId);
+		const newResponsible = { id: currentResponsibleId, email: '' };
+
 		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
 			/**
 			 * Validate if:
@@ -135,15 +143,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			 * - and the logged user isn't the current responsible
 			 */
 			if (isSubBoard && boardData.users) {
-				const currentResponsibleId = await this.getBoardResponsibleId(boardId);
-				const newResponsibleId = (
+				const { id, email } = (
 					boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE)
 						?.user as unknown as LeanDocument<BoardUserDocument>
 				)._id;
+				newResponsible.email = email;
+				newResponsible.id = id;
 
 				boardData.users
 					.filter((boardUser) =>
-						[getIdFromObjectId(String(currentResponsibleId)), newResponsibleId].includes(
+						[getIdFromObjectId(String(currentResponsibleId)), newResponsible.id].includes(
 							(boardUser.user as unknown as LeanDocument<UserDocument>)._id
 						)
 					)
@@ -184,7 +193,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 				}
 			}
 
-			return this.boardModel
+			const updatedBoard = await this.boardModel
 				.findOneAndUpdate(
 					{
 						_id: boardId
@@ -198,6 +207,20 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 				)
 				.lean()
 				.exec();
+
+			if (updatedBoard && currentResponsibleId !== newResponsible.id && board.slackChannelId) {
+				this.slackCommunicationService.execute({
+					subTeamChannelId: board.slackChannelId,
+					responsiblesChannelId: (
+						await this.boardModel.findOne({ dividedBoards: { $in: [board._id] } })
+					)?._id,
+					teamNumber: Number(board.title[board.title.length - 1]),
+					threadTimeStamp: board.threadTimeStamp,
+					email: newResponsible.email
+				});
+			}
+
+			return updatedBoard;
 		}
 
 		throw new ForbiddenException('You are not allowed to update this board!');
@@ -251,7 +274,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			.exec();
 	}
 
-	generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {
+	private generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {
 		return [...subBoard.columns].map((column) => {
 			const newColumn = {
 				title: column.title,
@@ -292,5 +315,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardService {
 			};
 			return newColumn;
 		});
+	}
+
+	async updateChannelId(teams: TeamDto[]) {
+		await Promise.all(
+			teams.map((team) =>
+				this.boardModel.updateOne(
+					{ _id: team.boardId },
+					{ slackChannelId: team.channelId, threadTimeStamp: team.mainThreadTimeStamp }
+				)
+			)
+		);
 	}
 }

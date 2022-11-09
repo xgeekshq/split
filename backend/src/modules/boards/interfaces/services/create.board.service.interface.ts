@@ -6,9 +6,9 @@ export interface Configs {
 	maxVotes?: number | null;
 	hideCards?: boolean;
 	hideVotes?: boolean;
-	maxUsersPerTeam: number
-	slackEnable?: boolean
-	date?: Date
+	maxUsersPerTeam: number;
+	slackEnable?: boolean;
+	date?: Date;
 }
 
 export interface CreateBoardService {

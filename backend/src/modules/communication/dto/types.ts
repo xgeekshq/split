@@ -1,3 +1,5 @@
+import { ChangeResponsibleDto } from './changeResponsible.dto';
+
 export enum BoardRoles {
 	MEMBER = 'member',
 	RESPONSIBLE = 'responsible'
@@ -42,7 +44,7 @@ export type ConfigurationType = {
 	frontendUrl: string;
 };
 
-export type JobType = {
-	board: BoardType;
+export type JobResponsibleType = {
+	changeResponsibleDto: ChangeResponsibleDto;
 	config: ConfigurationType;
 };

@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { UpdateBoardService } from '../interfaces/services/update.board.service.interface';
+import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateBoardService)
-		private updateBoardService: UpdateBoardService
+		private updateBoardService: UpdateBoardServiceInterface
 	) {}
 
 	update(userId: string, boardId: string, boardData: UpdateBoardDto) {

@@ -17,8 +17,10 @@ import { CommunicationGateInterface } from 'modules/communication/interfaces/com
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
 import { TYPES } from 'modules/communication/interfaces/types';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
+import { SlackCommunicationService } from 'modules/communication/services/slack-communication.service';
 import { SlackDisabledCommunicationService } from 'modules/communication/services/slack-disabled-communication.service';
-import { SlackExecuteCommunicationService } from 'modules/communication/services/slack-execute-communication.service';
+
+import { SlackResponsibleExecuteCommunication } from './applications/slack-responsible-execute-communication.application';
 
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,
@@ -80,9 +82,17 @@ export const ExecuteCommunication = {
 	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
 };
 
+export const ResponsibleExecuteCommunication = {
+	provide: SlackResponsibleExecuteCommunication,
+	useFactory: (usersHandler: UsersHandlerInterface, chatHandler: ChatHandlerInterface) => {
+		return new SlackResponsibleExecuteCommunication(chatHandler, usersHandler);
+	},
+	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
+};
+
 export const ExecuteCommunicationService = {
 	provide: TYPES.services.ExecuteCommunication,
 	useClass: configuration().slack.enable
-		? SlackExecuteCommunicationService
+		? SlackCommunicationService
 		: SlackDisabledCommunicationService
 };

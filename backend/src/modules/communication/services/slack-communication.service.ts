@@ -8,19 +8,27 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'libs/constants/slack';
 import { BoardType } from 'modules/communication/dto/types';
-import { CommunicationProducerService } from 'modules/communication/producers/slack-communication.producer.service';
+import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
+
+import { ChangeResponsibleDto } from '../dto/changeResponsible.dto';
 
 @Injectable()
-export class SlackExecuteCommunicationService {
+export class SlackCommunicationService {
 	constructor(
 		private configService: ConfigService,
-		@Inject(CommunicationProducerService)
-		private readonly communicationProducerService: CommunicationProducerService
+		@Inject(SlackCommunicationProducer)
+		private readonly slackCommunicationProducer: SlackCommunicationProducer
 	) {}
 
 	public async execute(board: BoardType): Promise<void> {
-		this.communicationProducerService.add({
-			board,
+		this.slackCommunicationProducer.add(board);
+	}
+
+	// criar novo producer
+	public async executeResponsibleChange(changeResponsibleDto: ChangeResponsibleDto) {
+		changeResponsibleDto.mainChannelId = this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID);
+		this.slackCommunicationProducer.addResponsibleJob({
+			changeResponsibleDto,
 			config: {
 				slackApiBotToken: this.configService.getOrThrow(SLACK_API_BOT_TOKEN),
 				slackMasterChannelId: this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),

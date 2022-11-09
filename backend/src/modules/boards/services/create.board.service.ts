@@ -13,12 +13,12 @@ import { generateBoardDtoData, generateSubBoardDtoData } from 'libs/utils/genera
 import isEmpty from 'libs/utils/isEmpty';
 import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
 import { TYPES } from 'modules/boards/interfaces/types';
+import { TeamDto } from 'modules/communication/dto/team.dto';
 import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'modules/schedules/interfaces/types';
-import TeamDto from 'modules/teams/dto/team.dto';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
@@ -53,7 +53,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
 		private slackCommunicationService: ExecuteCommunicationInterface
-	) { }
+	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
 		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
@@ -118,7 +118,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		});
 	}
 
-	async create(boardData: BoardDto, userId: string, fromSchedule: boolean = false) {
+	async create(boardData: BoardDto, userId: string, fromSchedule = false) {
 		const { team, recurrent, maxUsers, slackEnable } = boardData;
 		const newUsers = [];
 
@@ -149,7 +149,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			if (result?.board) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
 				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(result.board));
-				this.slackCommunicationService.execute(board);
+				await this.slackCommunicationService.execute(board);
 			} else {
 				this.logger.error(
 					`Call Slack Communication Service for board id "${newBoard._id}" fails. Board not found.`
@@ -161,13 +161,15 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	createFirstCronJob(addCronJobDto: AddCronJobDto) {
-		const dayToRun = getDay();
-
-		this.createSchedulesService.addCronJob(dayToRun, getNextMonth(), addCronJobDto);
+		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
 	}
 
-	async splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null> {
-		const { maxUsersPerTeam } = configs
+	async splitBoardByTeam(
+		ownerId: string,
+		teamId: string,
+		configs: Configs
+	): Promise<string | null> {
+		const { maxUsersPerTeam } = configs;
 
 		const teamUsersWotStakeholders = (await this.getTeamService.getUsersOfTeam(teamId)).filter(
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
@@ -176,11 +178,15 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
-			return null
+			return null;
 		}
 
 		const boardData: BoardDto = {
-			...generateBoardDtoData(`xgeeks-retro-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', { month: 'long'}).format(configs.date)}-${configs.date?.getFullYear()}`).board,
+			...generateBoardDtoData(
+				`xgeeks-retro-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
+					month: 'long'
+				}).format(configs.date)}-${configs.date?.getFullYear()}`
+			).board,
 			users: [],
 			team: teamId,
 			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders),
@@ -198,19 +204,19 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	private findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
-		let maxTeams = 0
+		let maxTeams = 0;
 		do {
-			maxTeams = teamLength / maxUsersPerTeam
-			if  (maxTeams < 2) {
-				maxUsersPerTeam -= 1
+			maxTeams = teamLength / maxUsersPerTeam;
+			if (maxTeams < 2) {
+				maxUsersPerTeam -= 1;
 				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
-					return 0
+					return 0;
 				}
-			} 
-		} while (maxTeams < 2)
+			}
+		} while (maxTeams < 2);
 
-		return Math.floor(maxTeams)
-	}
+		return Math.floor(maxTeams);
+	};
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
