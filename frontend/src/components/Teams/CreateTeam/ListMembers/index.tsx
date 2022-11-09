@@ -7,7 +7,6 @@ import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
 import { membersListState, usersListState } from '../../../../store/team/atom/team.atom';
 import { toastState } from '../../../../store/toast/atom/toast.atom';
-import { TeamUser } from '../../../../types/team/team.user';
 import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
@@ -76,17 +75,29 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	}, [searchMember, usersList]);
 
 	const saveMembers = () => {
-		const listOfUsers: TeamUser[] | undefined = [];
+		const listOfUsers = [...membersList];
 
-		listOfUsers.push(membersList[0]);
+		const addedUsers = usersList.filter((user) => user.isChecked);
 
-		usersList?.forEach((member) => {
-			if (member.isChecked && member._id !== session?.user.id) {
-				listOfUsers.push({
-					user: member,
-					role: TeamUserRoles.MEMBER
-				});
-			}
+		const updatedListWithAdded = addedUsers.map((user) => {
+			return (
+				listOfUsers.find((member) => member.user._id === user._id) || {
+					user,
+					role: TeamUserRoles.MEMBER,
+					isNewbee: false
+				}
+			);
+		});
+
+		const userAdmin = updatedListWithAdded.find(
+			(member) => member.user._id === session?.user.id
+		);
+
+		// the sort insures that the team creator stays always in first
+		const sortedList = updatedListWithAdded.sort((x, y) => {
+			if (x === userAdmin) return -1;
+			if (y === userAdmin) return 1;
+			return 0;
 		});
 
 		setToastState({
@@ -95,7 +106,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 			type: ToastStateEnum.SUCCESS
 		});
 
-		setMembersListState(listOfUsers);
+		setMembersListState(sortedList);
 
 		setIsOpen(false);
 	};

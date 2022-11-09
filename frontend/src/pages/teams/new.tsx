@@ -33,20 +33,24 @@ const NewTeam: NextPage = () => {
 	const setMembersListState = useSetRecoilState(membersListState);
 
 	useEffect(() => {
-		const listMembers: TeamUser[] | undefined = [];
-		const usersWithChecked = data?.map((user) => {
-			if (user._id === session?.user.id) {
-				listMembers.push({
-					user,
-					role: TeamUserRoles.ADMIN
-				});
-			}
-			return { ...user, isChecked: user._id === session?.user.id };
-		});
+		const listMembers: TeamUser[] = [];
 
-		setUsersListState(usersWithChecked);
+		if (data) {
+			const usersWithChecked = data?.map((user) => {
+				if (user._id === session?.user.id) {
+					listMembers.push({
+						user,
+						role: TeamUserRoles.ADMIN,
+						isNewbee: false
+					});
+				}
+				return { ...user, isChecked: user._id === session?.user.id };
+			});
 
-		setMembersListState(listMembers);
+			setUsersListState(usersWithChecked);
+
+			setMembersListState(listMembers);
+		}
 	}, [data, session?.user.id, setMembersListState, setUsersListState]);
 
 	return <CreateTeam />;
