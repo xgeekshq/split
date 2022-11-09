@@ -41,8 +41,10 @@ const TeamMembersList = () => {
 				{membersList?.map((member) => (
 					<CardMember
 						key={member.user._id}
+						isNewbee={member.isNewbee}
 						isTeamCreator={member.user._id === session?.user.id}
 						member={member.user}
+						membersList={membersList}
 						role={member.role}
 					/>
 				))}
