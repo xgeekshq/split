@@ -146,7 +146,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			 * - is a sub-board
 			 * - and the logged user isn't the current responsible
 			 */
-			if (isSubBoard && boardData.users) {
+			if (boardNumber !== 0 && boardData.users) {
 				const boardUserFound = boardData.users.find(
 					(userFound) => userFound.role === BoardRoles.RESPONSIBLE
 				) as unknown as LeanDocument<BoardUserDocument>;
@@ -299,12 +299,27 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				mainChannelId: '',
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,
-
-
+				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id)
 			});
 		}
 
 		return result;
+	}
+
+	private async checkIfIsLastBoardToMerge(mainBoardId: string): Promise<boolean> {
+		const board = await this.boardModel.findById(mainBoardId).populate({ path: 'dividedBoards' });
+		if (!board) return false;
+
+		const count = (board.dividedBoards as Board[]).reduce((prev, currentValue) => {
+			if (currentValue.submitedByUser) {
+				prev -= 1;
+				return prev;
+			}
+
+			return prev;
+		}, board?.dividedBoards.length ?? 0);
+
+		return count === 1;
 	}
 
 	private generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {

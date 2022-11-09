@@ -104,7 +104,8 @@ const CardBody = React.memo<CardBodyProps>(
 		isSAdmin,
 		socketId
 	}) => {
-		const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
+		const { _id: id, columns, users, team, dividedBoards, boardNumber } = board;
+		const isSubBoard = boardNumber !== 0;
 		const countDividedBoards = dividedBoardsCount || dividedBoards.length;
 		const [openSubBoards, setSubBoardsOpen] = useState(false);
 
@@ -155,7 +156,7 @@ const CardBody = React.memo<CardBodyProps>(
 		);
 
 		const iconLockConditions =
-			board.isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
+			isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
 
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">

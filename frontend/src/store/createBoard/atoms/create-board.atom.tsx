@@ -47,7 +47,7 @@ export const createBoardDataState = atom<CreateBoardData>({
 			recurrent: true,
 			users: [],
 			team: null,
-			isSubBoard: false,
+			boardNumber: 0,
 			hideCards: false,
 			hideVotes: false,
 			slackEnable: false,

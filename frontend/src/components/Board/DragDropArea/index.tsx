@@ -107,7 +107,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
 							countAllCards={countAllCards}
 							hideCards={board.hideCards}
 							index={index}
-							isMainboard={!board.isSubBoard}
+							isMainboard={board.boardNumber === 0}
 							isSubmited={!!board.submitedByUser}
 							maxVotes={Number(board.maxVotes)}
 							socketId={socketId}

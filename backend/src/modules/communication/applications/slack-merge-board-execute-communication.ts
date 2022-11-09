@@ -18,7 +18,7 @@ export class SlackMergeBoardExecuteCommunication
 		const message = `<!channel>, The board of team ${teamNumber} is ready`;
 		this.chatHandler.postMessage(responsiblesChannelId, message);
 		if (isLastSubBoard) {
-			const responsiblesMessage = `<!channel>, The merged board is ready to receive your votes until X day`;
+			const responsiblesMessage = `All boards are merged`;
 			this.chatHandler.postMessage(mainChannelId, responsiblesMessage);
 		}
 		return data;

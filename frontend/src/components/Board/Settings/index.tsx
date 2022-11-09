@@ -239,6 +239,8 @@ const BoardSettings = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const isSubBoard = board.boardNumber !== 0;
+
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -297,7 +299,7 @@ const BoardSettings = ({
 												title="Hide cards from others"
 											/>
 
-											{!board.isSubBoard && (
+											{!isSubBoard && (
 												<>
 													<ConfigurationSettings
 														handleCheckedChange={handleHideVotesChange}
@@ -326,7 +328,7 @@ const BoardSettings = ({
 									</StyledAccordionContent>
 								</StyledAccordionItem>
 
-								{board.isSubBoard &&
+								{isSubBoard &&
 									(isStakeholderOrAdmin ||
 										isOwner ||
 										isSAdmin ||
