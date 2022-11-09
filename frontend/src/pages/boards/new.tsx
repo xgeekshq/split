@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
@@ -34,12 +34,13 @@ import { toastState } from 'store/toast/atom/toast.atom';
 import { CreateBoardDto } from 'types/board/board';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import { ToastStateEnum } from 'utils/enums/toast-types';
-import { BOARDS_ROUTE } from '../../utils/routes';
 
 const NewBoard: NextPage = () => {
 	const router = useRouter();
 	const { data: session } = useSession({ required: true });
 	const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+	const [isBackButtonDisable, setBackButtonState] = useState(false);
+
 	/**
 	 * Recoil Atoms and Hooks
 	 */
@@ -79,7 +80,8 @@ const NewBoard: NextPage = () => {
 	 */
 	const handleBack = useCallback(() => {
 		resetBoardState();
-		router.push(BOARDS_ROUTE);
+		setBackButtonState(true);
+		router.back();
 	}, [router, resetBoardState]);
 
 	/**
@@ -146,7 +148,7 @@ const NewBoard: NextPage = () => {
 					Add new SPLIT board
 				</Text>
 
-				<Button isIcon onClick={handleBack}>
+				<Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
 					<Icon name="close" />
 				</Button>
 			</PageHeader>
@@ -181,7 +183,12 @@ const NewBoard: NextPage = () => {
 							</FormProvider>
 						</InnerContent>
 						<ButtonsContainer gap="24" justify="end">
-							<Button type="button" variant="lightOutline" onClick={handleBack}>
+							<Button
+								disabled={isBackButtonDisable}
+								type="button"
+								variant="lightOutline"
+								onClick={handleBack}
+							>
 								Cancel
 							</Button>
 							<Button type="submit">Create board</Button>

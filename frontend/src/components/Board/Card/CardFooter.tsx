@@ -136,7 +136,7 @@ const CardFooter = React.memo<FooterProps>(
 				});
 				setCountVotes(0);
 				firstUpdate.current = true;
-			}, 100);
+			}, 50);
 
 			// eslint-disable-next-line consistent-return
 			return () => clearTimeout(delayDebounceFn);
