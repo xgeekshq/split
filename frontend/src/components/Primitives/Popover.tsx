@@ -82,9 +82,11 @@ const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
 });
 
 const StyledRootPopover = styled(PopoverPrimitive.Root);
+const StyledClosePopover = styled(PopoverPrimitive.Close);
 
 // Exports
 export const Popover = StyledRootPopover;
 export const PopoverTrigger = StyledPopoverTrigger;
 export const PopoverContent = StyledContent;
 export const PopoverItem = StyledPopoverItem;
+export const PopoverClose = StyledClosePopover;

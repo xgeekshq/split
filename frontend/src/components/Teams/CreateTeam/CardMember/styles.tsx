@@ -1,7 +1,7 @@
 import { styled } from '../../../../styles/stitches/stitches.config';
 import Box from '../../../Primitives/Box';
 import Flex from '../../../Primitives/Flex';
-import { PopoverTrigger } from '../../../Primitives/Popover';
+import { PopoverClose, PopoverTrigger } from '../../../Primitives/Popover';
 import Text from '../../../Primitives/Text';
 
 const InnerContainer = styled(Flex, Box, {
@@ -36,4 +36,9 @@ const PopoverTriggerStyled = styled(PopoverTrigger, {
 	defaultVariants: { disabled: false }
 });
 
-export { InnerContainer, PopoverTriggerStyled, StyledMemberTitle };
+const PopoverCloseStyled = styled(PopoverClose, {
+	border: 'none',
+	backgroundColor: 'transparent'
+});
+
+export { InnerContainer, PopoverCloseStyled, PopoverTriggerStyled, StyledMemberTitle };
