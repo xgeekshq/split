@@ -96,10 +96,10 @@ export default class BoardDto {
 	@IsBoolean()
 	recurrent?: boolean;
 
-	@ApiPropertyOptional({ default: false })
+	@ApiPropertyOptional({ default: 0 })
 	@IsNotEmpty()
-	@IsBoolean()
-	isSubBoard?: boolean;
+	@IsNumber()
+	boardNumber?: number;
 
 	@ApiPropertyOptional({ default: false })
 	@IsOptional()

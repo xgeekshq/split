@@ -15,7 +15,7 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 		recurrent: false,
 		users,
 		team: null,
-		isSubBoard: true,
+		boardNumber: index,
 		maxVotes: undefined,
 		hideCards: false,
 		hideVotes: false
@@ -40,7 +40,7 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 			recurrent: true,
 			users: [],
 			team: null,
-			isSubBoard: false,
+			boardNumber: 0,
 			hideCards: false,
 			hideVotes: false
 		}

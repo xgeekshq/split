@@ -9,13 +9,16 @@ import {
 	ConversationsHandler,
 	ExecuteCommunication,
 	ExecuteCommunicationService,
+	MergeBoardExecuteCommunication,
 	ResponsibleExecuteCommunication,
 	UsersHandler
 } from 'modules/communication/communication.providers';
 import { SlackCommunicationConsumer } from 'modules/communication/consumers/slack-communication.consumer';
 import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
 
+import { SlackMergeBoardCommunicationConsumer } from './consumers/slack-merge-board-communication.consumer';
 import { SlackResponsibleCommunicationConsumer } from './consumers/slack-responsible-communication.consumer';
+import { SlackMergeBoardCommunicationProducer } from './producers/slack-merge-board-communication.producer';
 import { SlackResponsibleCommunicationProducer } from './producers/slack-responsible-communication.producer';
 
 @Module({
@@ -44,6 +47,17 @@ import { SlackResponsibleCommunicationProducer } from './producers/slack-respons
 							removeOnComplete: SlackResponsibleCommunicationProducer.REMOVE_ON_COMPLETE,
 							priority: SlackResponsibleCommunicationProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackMergeBoardCommunicationProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackMergeBoardCommunicationProducer.ATTEMPTS,
+							backoff: SlackMergeBoardCommunicationProducer.BACKOFF,
+							delay: SlackMergeBoardCommunicationProducer.DELAY,
+							removeOnFail: SlackMergeBoardCommunicationProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackMergeBoardCommunicationProducer.REMOVE_ON_COMPLETE,
+							priority: SlackMergeBoardCommunicationProducer.PRIORITY
+						}
 					})
 			  ]
 			: [])
@@ -58,10 +72,13 @@ import { SlackResponsibleCommunicationProducer } from './producers/slack-respons
 					UsersHandler,
 					ExecuteCommunication,
 					ResponsibleExecuteCommunication,
+					MergeBoardExecuteCommunication,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
 					SlackResponsibleCommunicationProducer,
-					SlackResponsibleCommunicationConsumer
+					SlackResponsibleCommunicationConsumer,
+					SlackMergeBoardCommunicationProducer,
+					SlackMergeBoardCommunicationConsumer
 			  ]
 			: [])
 	],

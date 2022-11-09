@@ -22,6 +22,7 @@ import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
 import User, { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
@@ -82,9 +83,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @return Board User
 	 * @private
 	 */
-	private async getBoardResponsibleInfo(
-		boardId: string
-	): Promise<{ id: string | undefined; email: string } | undefined> {
+	private async getBoardResponsibleInfo(boardId: string): Promise<ResponsibleType | undefined> {
 		const boardUser = await this.boardUserModel
 			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
 			.populate({ path: 'user' })
@@ -121,7 +120,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 
 		// Destructuring board variables
-		const { isSubBoard, team, createdBy } = board;
+		const { boardNumber, team, createdBy } = board;
 
 		// Get Team User to see if is Admin or Stakeholder
 		const teamUser = await this.getTeamUser(userId, String(team));
@@ -138,9 +137,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const isOwner = String(userId) === String(createdBy);
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
-		const newResponsible = { id: currentResponsible?.id, email: '' };
+		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
 
-		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
+		if (isAdminOrStakeholder || isOwner || (boardNumber !== 0 && isSubBoardResponsible)) {
 			/**
 			 * Validate if:
 			 * - have users on request
@@ -212,17 +211,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.exec();
 
 			if (updatedBoard && currentResponsible?.id !== newResponsible.id && board.slackChannelId) {
-				this.slackCommunicationService.executeResponsibleChange({
-					newResponsibleEmail: newResponsible.email,
-					previousResponsibleEmail: currentResponsible?.email ?? '',
-					subTeamChannelId: board.slackChannelId,
-					responsiblesChannelId: (
-						await this.boardModel.findOne({ dividedBoards: { $in: [board._id] } })
-					)?.slackChannelId,
-					teamNumber: Number(board.title[board.title.length - 1]),
-					threadTimeStamp: board.threadTimeStamp,
-					email: newResponsible.email
-				});
+				this.handleResponsibleSlackMessage(
+					newResponsible,
+					currentResponsible,
+					board._id,
+					board.title,
+					board.slackChannelId,
+					board.threadTimeStamp
+				);
 			}
 
 			return updatedBoard;
@@ -231,19 +227,25 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		throw new ForbiddenException('You are not allowed to update this board!');
 	}
 
-	// private async handleResponsibleSlackMessage(newResponsible: User) {
-	// 	this.slackCommunicationService.executeResponsibleChange({
-	// 		newResponsibleEmail: newResponsible.email,
-	// 		previousResponsibleEmail: currentResponsible?.email ?? '',
-	// 		subTeamChannelId: board.slackChannelId,
-	// 		responsiblesChannelId: (
-	// 			await this.boardModel.findOne({ dividedBoards: { $in: [board._id] } })
-	// 		)?.slackChannelId,
-	// 		teamNumber: Number(board.title[board.title.length - 1]),
-	// 		threadTimeStamp: board.threadTimeStamp,
-	// 		email: newResponsible.email
-	// 	});
-	// }
+	private async handleResponsibleSlackMessage(
+		newResponsible: ResponsibleType,
+		currentResponsible: ResponsibleType | undefined,
+		boardId: string,
+		boardTitle: string,
+		slackChannelId: string,
+		threadTimeStamp?: string
+	) {
+		this.slackCommunicationService.executeResponsibleChange({
+			newResponsibleEmail: newResponsible.email,
+			previousResponsibleEmail: currentResponsible?.email ?? '',
+			subTeamChannelId: slackChannelId,
+			responsiblesChannelId: (await this.boardModel.findOne({ dividedBoards: { $in: [boardId] } }))
+				?.slackChannelId,
+			teamNumber: Number(boardTitle[boardTitle.length - 1]),
+			threadTimeStamp,
+			email: newResponsible.email
+		});
+	}
 
 	async mergeBoards(subBoardId: string, userId: string) {
 		const [subBoard, board] = await Promise.all([
@@ -279,7 +281,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
-		return this.boardModel
+		const result = this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: board._id
@@ -291,6 +293,18 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			)
 			.lean()
 			.exec();
+
+		if (board.slackChannelId) {
+			this.slackCommunicationService.executeMergeBoardNotification({
+				mainChannelId: '',
+				responsiblesChannelId: board.slackChannelId,
+				teamNumber: subBoard.boardNumber,
+
+
+			});
+		}
+
+		return result;
 	}
 
 	private generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {

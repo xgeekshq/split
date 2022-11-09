@@ -56,4 +56,6 @@ export type ChangeResponsibleType = {
 export type MergeBoardCommunicationType = {
 	teamNumber: number;
 	responsiblesChannelId: string;
+	isLastSubBoard: boolean;
+	mainChannelId: string;
 };

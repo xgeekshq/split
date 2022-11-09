@@ -20,6 +20,7 @@ import { SlackCommunicationService } from 'modules/communication/services/slack-
 import { SlackDisabledCommunicationService } from 'modules/communication/services/slack-disabled-communication.service';
 
 import { SlackResponsibleExecuteCommunication } from './applications/slack-execute-responsible-communication.application';
+import { SlackMergeBoardExecuteCommunication } from './applications/slack-merge-board-execute-communication';
 import { UsersSlackHandler } from './handlers/users-slack.handler';
 
 export const CommunicationGateAdapter = {
@@ -94,6 +95,18 @@ export const ResponsibleExecuteCommunication = {
 			usersHandler,
 			conversationsHandler
 		);
+	},
+	inject: [UsersSlackHandler, ChatSlackHandler, ConversationsSlackHandler]
+};
+
+export const MergeBoardExecuteCommunication = {
+	provide: SlackMergeBoardExecuteCommunication,
+	useFactory: (
+		usersHandler: UsersHandlerInterface,
+		chatHandler: ChatHandlerInterface,
+		conversationsHandler: ConversationsHandlerInterface
+	) => {
+		return new SlackMergeBoardExecuteCommunication(chatHandler, usersHandler, conversationsHandler);
 	},
 	inject: [UsersSlackHandler, ChatSlackHandler, ConversationsSlackHandler]
 };
