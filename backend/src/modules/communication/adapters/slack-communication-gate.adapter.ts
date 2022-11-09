@@ -11,6 +11,7 @@ import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-f
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 
+import { KickUserError } from '../errors/kick-user.error';
 import { ProfileWithoutIdError } from '../errors/profile-without-id.error';
 
 export class SlackCommunicationGateAdapter implements CommunicationGateInterface {
@@ -53,17 +54,22 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 			// https://api.slack.com/methods/conversations.invite (!! 50+ per minute)
 			const { ok } = await this.getClient().conversations.invite({
 				channel: channelId,
-				users: usersIds.join(',')
+				users: usersIds.length > 1 ? usersIds.join(',') : usersIds[0]
 			});
 
 			return { ok };
 		} catch (error) {
 			if (typeof error.data?.ok === 'boolean' && !error.data?.ok) {
 				this.logger.warn(error);
+				if (error.data.error === 'already_in_channel') {
+					return { ok: true };
+				}
+
 				const failUsersIds = error.data.errors.map((i) => i.user);
 
 				return { ok: error.data.ok, fails: failUsersIds };
 			}
+
 			this.logger.error(error);
 			throw new InviteUsersError();
 		}
@@ -123,7 +129,6 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 		try {
 			// https://api.slack.com/methods/users.profile.get (!! 100+ per minute)
 			const { user } = await this.getClient().users.lookupByEmail({ email });
-
 			if (!user) {
 				throw new ProfileNotFoundError();
 			}
@@ -160,6 +165,20 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 		} catch (error) {
 			this.logger.error(error);
 			throw new PostMessageError();
+		}
+	}
+
+	async kickUserFromChannel(userId: string, channelId: string): Promise<boolean> {
+		try {
+			const { ok } = await this.getClient().conversations.kick({
+				user: userId,
+				channel: channelId
+			});
+
+			return ok;
+		} catch (error) {
+			this.logger.error(error);
+			throw new KickUserError();
 		}
 	}
 }

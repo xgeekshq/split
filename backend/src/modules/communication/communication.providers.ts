@@ -11,7 +11,6 @@ import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/sl
 import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
-import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
 import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
@@ -20,7 +19,8 @@ import { UsersHandlerInterface } from 'modules/communication/interfaces/users.ha
 import { SlackCommunicationService } from 'modules/communication/services/slack-communication.service';
 import { SlackDisabledCommunicationService } from 'modules/communication/services/slack-disabled-communication.service';
 
-import { SlackResponsibleExecuteCommunication } from './applications/slack-responsible-execute-communication.application';
+import { SlackResponsibleExecuteCommunication } from './applications/slack-execute-responsible-communication.application';
+import { UsersSlackHandler } from './handlers/users-slack.handler';
 
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,
@@ -84,10 +84,18 @@ export const ExecuteCommunication = {
 
 export const ResponsibleExecuteCommunication = {
 	provide: SlackResponsibleExecuteCommunication,
-	useFactory: (usersHandler: UsersHandlerInterface, chatHandler: ChatHandlerInterface) => {
-		return new SlackResponsibleExecuteCommunication(chatHandler, usersHandler);
+	useFactory: (
+		usersHandler: UsersHandlerInterface,
+		chatHandler: ChatHandlerInterface,
+		conversationsHandler: ConversationsHandlerInterface
+	) => {
+		return new SlackResponsibleExecuteCommunication(
+			chatHandler,
+			usersHandler,
+			conversationsHandler
+		);
 	},
-	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
+	inject: [UsersSlackHandler, ChatSlackHandler, ConversationsSlackHandler]
 };
 
 export const ExecuteCommunicationService = {

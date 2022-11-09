@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 
-import { BoardType, JobResponsibleType } from 'modules/communication/dto/types';
+import { BoardType } from 'modules/communication/dto/types';
 
 @Injectable()
 export class SlackCommunicationProducer {
@@ -32,18 +32,6 @@ export class SlackCommunicationProducer {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(`Add board with id: "${data.id}" to queue with Job id: "${job.id}"`);
-
-		return job;
-	}
-
-	async addResponsibleJob(data: JobResponsibleType): Promise<Job<BoardType>> {
-		const job = await this.queue.add(data);
-
-		this.logger.verbose(
-			`Change responsible of team "${data.changeResponsibleDto.teamNumber}" in ${
-				data.changeResponsibleDto.threadTimeStamp ? 'main' : 'sub board'
-			} channel added to queue with Job id: "${job.id}"`
-		);
 
 		return job;
 	}

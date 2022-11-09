@@ -15,6 +15,9 @@ import {
 import { SlackCommunicationConsumer } from 'modules/communication/consumers/slack-communication.consumer';
 import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
 
+import { SlackResponsibleCommunicationConsumer } from './consumers/slack-responsible-communication.consumer';
+import { SlackResponsibleCommunicationProducer } from './producers/slack-responsible-communication.producer';
+
 @Module({
 	imports: [
 		forwardRef(() => BoardsModule),
@@ -30,8 +33,18 @@ import { SlackCommunicationProducer } from 'modules/communication/producers/slac
 							removeOnComplete: SlackCommunicationProducer.REMOVE_ON_COMPLETE,
 							priority: SlackCommunicationProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackResponsibleCommunicationProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackResponsibleCommunicationProducer.ATTEMPTS,
+							backoff: SlackResponsibleCommunicationProducer.BACKOFF,
+							delay: SlackResponsibleCommunicationProducer.DELAY,
+							removeOnFail: SlackResponsibleCommunicationProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackResponsibleCommunicationProducer.REMOVE_ON_COMPLETE,
+							priority: SlackResponsibleCommunicationProducer.PRIORITY
+						}
 					})
-					// nova queue
 			  ]
 			: [])
 	],
@@ -46,10 +59,12 @@ import { SlackCommunicationProducer } from 'modules/communication/producers/slac
 					ExecuteCommunication,
 					ResponsibleExecuteCommunication,
 					SlackCommunicationProducer,
-					SlackCommunicationConsumer
+					SlackCommunicationConsumer,
+					SlackResponsibleCommunicationProducer,
+					SlackResponsibleCommunicationConsumer
 			  ]
 			: [])
 	],
-	exports: [ExecuteCommunicationService]
+	exports: [ExecuteCommunicationService, ResponsibleExecuteCommunication]
 })
 export class CommunicationModule {}

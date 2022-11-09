@@ -1,5 +1,3 @@
-import { ChangeResponsibleDto } from './changeResponsible.dto';
-
 export enum BoardRoles {
 	MEMBER = 'member',
 	RESPONSIBLE = 'responsible'
@@ -44,7 +42,18 @@ export type ConfigurationType = {
 	frontendUrl: string;
 };
 
-export type JobResponsibleType = {
-	changeResponsibleDto: ChangeResponsibleDto;
-	config: ConfigurationType;
+export type ChangeResponsibleType = {
+	newResponsibleEmail: string;
+	previousResponsibleEmail: string;
+	subTeamChannelId: string;
+	email: string;
+	teamNumber: number;
+	responsiblesChannelId?: string;
+	mainChannelId?: string;
+	threadTimeStamp?: string;
+};
+
+export type MergeBoardCommunicationType = {
+	teamNumber: number;
+	responsiblesChannelId: string;
 };

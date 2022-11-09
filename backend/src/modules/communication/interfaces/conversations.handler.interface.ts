@@ -7,6 +7,11 @@ export interface ConversationsHandlerInterface {
 		channelId: string,
 		users: UserDto[]
 	): Promise<{ ok: boolean; channelId: string; fails?: string[] }>;
+	inviteUserToChannel(
+		channelId: string,
+		userId: string
+	): Promise<{ ok: boolean; channelId: string; fails?: string[] }>;
+	kickUserFromChannel(userId: string, channelId: string): Promise<boolean>;
 
 	getUsersFromChannelSlowly(channelId: string): Promise<string[]>;
 }

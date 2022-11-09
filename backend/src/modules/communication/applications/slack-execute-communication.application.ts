@@ -57,7 +57,14 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
     (Note: currently, retrobot does not check if the chosen responsibles joined xgeeks less than 3 months ago, so, if that happens, you have to decide who will take that role in the team. In the future, retrobot will automatically validate this rule.)\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
 
-		await this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);
+		const [success] = await this.resolvePromises([
+			this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText)
+		]);
+		success.forEach((result) => {
+			teams.forEach((team) => {
+				team.mainThreadTimeStamp = result.ts;
+			});
+		});
 	}
 
 	private async postMessageOnEachChannel(teams: TeamDto[]): Promise<void> {
@@ -78,13 +85,13 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 			this.chatHandler.postMessage(i.channelId as string, generalText[i.for](i.boardId))
 		);
 
-		const [success] = await this.resolvePromises(postMessagePromises);
-		success.forEach((result) => {
-			const teamFound = teams.find((team) => team.channelId === result.channel);
-			if (teamFound) {
-				teamFound.mainThreadTimeStamp = result.ts;
-			}
-		});
+		await this.resolvePromises(postMessagePromises);
+		// success.forEach((result) => {
+		// 	const teamFound = teams.find((team) => team.channelId === result.channel);
+		// 	if (teamFound) {
+		// 		teamFound.mainThreadTimeStamp = result.ts;
+		// 	}
+		// });
 	}
 
 	private async inviteAllMembers(teams: TeamDto[]): Promise<TeamDto[]> {

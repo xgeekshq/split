@@ -73,7 +73,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.find()
 			.populate({
 				path: 'users',
-				select: 'user role',
+				select: 'user role email',
 				populate: {
 					path: 'user',
 					select: '_id firstName lastName email joinedAt'

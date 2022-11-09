@@ -79,6 +79,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	// Socket IO Hook
 	const socketId = useSocketIO(boardId);
 
+	console.log('BOARD USERS', board?.users);
+
 	// Board Settings permissions
 	const isStakeholderOrAdmin = useMemo(() => {
 		return (!board?.isSubBoard ? board : mainBoard)?.team.users.some(

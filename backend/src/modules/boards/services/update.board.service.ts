@@ -14,12 +14,12 @@ import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
 import isEmpty from 'libs/utils/isEmpty';
 import { TeamDto } from 'modules/communication/dto/team.dto';
-import { ResponsibleExecuteCommunicationInterface } from 'modules/communication/interfaces/responsible-execute-communication.interface';
+import { SlackCommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'modules/users/schemas/user.schema';
+import User, { UserDocument } from 'modules/users/schemas/user.schema';
 
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
@@ -33,7 +33,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
-		private slackCommunicationService: ResponsibleExecuteCommunicationInterface,
+		private slackCommunicationService: SlackCommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -82,16 +82,21 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @return Board User
 	 * @private
 	 */
-	private async getBoardResponsibleId(boardId: string): Promise<string | undefined> {
-		const user = await this.boardUserModel
+	private async getBoardResponsibleInfo(
+		boardId: string
+	): Promise<{ id: string | undefined; email: string } | undefined> {
+		const boardUser = await this.boardUserModel
 			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
+			.populate({ path: 'user' })
 			.exec();
 
-		if (!user) {
+		if (!boardUser) {
 			return undefined;
 		}
 
-		return String(user.user);
+		const user = boardUser?.user as UserDocument;
+
+		return { id: user._id, email: user.email };
 	}
 
 	/**
@@ -132,8 +137,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
-		const currentResponsibleId = await this.getBoardResponsibleId(boardId);
-		const newResponsible = { id: currentResponsibleId, email: '' };
+		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
+		const newResponsible = { id: currentResponsible?.id, email: '' };
 
 		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
 			/**
@@ -143,22 +148,20 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			 * - and the logged user isn't the current responsible
 			 */
 			if (isSubBoard && boardData.users) {
-				const { id, email } = (
-					boardData.users.find((user) => user.role === BoardRoles.RESPONSIBLE)
-						?.user as unknown as LeanDocument<BoardUserDocument>
-				)._id;
-				newResponsible.email = email;
-				newResponsible.id = id;
+				const boardUserFound = boardData.users.find(
+					(userFound) => userFound.role === BoardRoles.RESPONSIBLE
+				) as unknown as LeanDocument<BoardUserDocument>;
+				newResponsible.email = (boardUserFound.user as User).email;
+				newResponsible.id = (boardUserFound.user as unknown as LeanDocument<BoardUserDocument>)._id;
 
 				boardData.users
 					.filter((boardUser) =>
-						[getIdFromObjectId(String(currentResponsibleId)), newResponsible.id].includes(
+						[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
 							(boardUser.user as unknown as LeanDocument<UserDocument>)._id
 						)
 					)
 					.map(async (boardUser) => {
 						const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
-
 						try {
 							await this.boardUserModel.findOneAndUpdate(
 								{
@@ -208,12 +211,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.lean()
 				.exec();
 
-			if (updatedBoard && currentResponsibleId !== newResponsible.id && board.slackChannelId) {
-				this.slackCommunicationService.execute({
+			if (updatedBoard && currentResponsible?.id !== newResponsible.id && board.slackChannelId) {
+				this.slackCommunicationService.executeResponsibleChange({
+					newResponsibleEmail: newResponsible.email,
+					previousResponsibleEmail: currentResponsible?.email ?? '',
 					subTeamChannelId: board.slackChannelId,
 					responsiblesChannelId: (
 						await this.boardModel.findOne({ dividedBoards: { $in: [board._id] } })
-					)?._id,
+					)?.slackChannelId,
 					teamNumber: Number(board.title[board.title.length - 1]),
 					threadTimeStamp: board.threadTimeStamp,
 					email: newResponsible.email
@@ -225,6 +230,20 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		throw new ForbiddenException('You are not allowed to update this board!');
 	}
+
+	// private async handleResponsibleSlackMessage(newResponsible: User) {
+	// 	this.slackCommunicationService.executeResponsibleChange({
+	// 		newResponsibleEmail: newResponsible.email,
+	// 		previousResponsibleEmail: currentResponsible?.email ?? '',
+	// 		subTeamChannelId: board.slackChannelId,
+	// 		responsiblesChannelId: (
+	// 			await this.boardModel.findOne({ dividedBoards: { $in: [board._id] } })
+	// 		)?.slackChannelId,
+	// 		teamNumber: Number(board.title[board.title.length - 1]),
+	// 		threadTimeStamp: board.threadTimeStamp,
+	// 		email: newResponsible.email
+	// 	});
+	// }
 
 	async mergeBoards(subBoardId: string, userId: string) {
 		const [subBoard, board] = await Promise.all([

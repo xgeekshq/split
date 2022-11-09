@@ -25,7 +25,22 @@ export class ConversationsSlackHandler implements ConversationsHandlerInterface 
 		return { ok, channelId, fails };
 	}
 
+	async inviteUserToChannel(
+		channelId: string,
+		userId: string
+	): Promise<{ ok: boolean; channelId: string; fails?: string[] }> {
+		const { ok, fails } = await this.communicationGateAdapter.addUsersToChannel(channelId, [
+			userId
+		]);
+
+		return { ok, channelId, fails };
+	}
+
 	async getUsersFromChannelSlowly(channelId: string): Promise<string[]> {
 		return this.communicationGateAdapter.getAllUsersByChannel(channelId);
+	}
+
+	async kickUserFromChannel(userSlackId: string, channelId: string): Promise<boolean> {
+		return this.communicationGateAdapter.kickUserFromChannel(userSlackId, channelId);
 	}
 }
