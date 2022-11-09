@@ -18,7 +18,7 @@ const ButtonAddMember = styled('button', {
 
 const ScrollableContent = styled(Flex, {
 	mt: '$24',
-	height: 'calc(100vh - 400px)',
+	height: 'calc(100vh - 390px)',
 	overflowY: 'auto',
 	pr: '$10',
 	pb: '$10'

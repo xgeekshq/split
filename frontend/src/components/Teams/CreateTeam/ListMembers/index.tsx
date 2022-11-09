@@ -143,7 +143,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 					</Text>
 					<ScrollableContent direction="column" justify="start" ref={scrollRef}>
 						<Flex
-							css={{ flex: '1 1', pb: '$24', px: '$32', width: '80%' }}
+							css={{ flex: '1 1', px: '$32', width: '80%' }}
 							direction="column"
 							gap={16}
 						>
