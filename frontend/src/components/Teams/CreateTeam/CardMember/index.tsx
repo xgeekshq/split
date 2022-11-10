@@ -61,7 +61,6 @@ const CardMember = React.memo<CardBodyProps>(
 								</StyledMemberTitle>
 							</Flex>
 						</Flex>
-
 						<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
 							<ConfigurationSettings
 								handleCheckedChange={handleIsNewbie}
