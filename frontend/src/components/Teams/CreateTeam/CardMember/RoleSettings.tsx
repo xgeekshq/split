@@ -2,12 +2,12 @@ import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Popover } from '@radix-ui/react-popover';
 
-import { PopoverContent, PopoverItem } from 'components/Primitives/Popover';
+import { PopoverContent } from 'components/Primitives/Popover';
 import Text from 'components/Primitives/Text';
 import { membersListState } from '../../../../store/team/atom/team.atom';
 import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import Icon from '../../../icons/Icon';
-import { PopoverCloseStyled, PopoverTriggerStyled } from './styles';
+import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
 	userId: string;
@@ -43,13 +43,11 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 				/>
 			</PopoverTriggerStyled>
 
-			<PopoverContent portalled css={{ width: '$360', height: '$300' }}>
+			<PopoverContent portalled css={{ width: '$360', height: '$316' }}>
 				<PopoverCloseStyled>
-					<PopoverItem
+					<PopoverItemStyled
 						align="end"
-						css={{ px: '$16' }}
 						direction="column"
-						gap="8"
 						onClick={() => selectRole(TeamUserRoles.MEMBER)}
 					>
 						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
@@ -59,14 +57,12 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 						<Text css={{ fontWeight: 400, textAlign: 'end' }} size="sm">
 							The team member can create boards and can create teams.
 						</Text>
-					</PopoverItem>
+					</PopoverItemStyled>
 				</PopoverCloseStyled>
 				<PopoverCloseStyled>
-					<PopoverItem
+					<PopoverItemStyled
 						align="end"
-						css={{ px: '$16' }}
 						direction="column"
-						gap="8"
 						onClick={() => selectRole(TeamUserRoles.ADMIN)}
 					>
 						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
@@ -76,14 +72,12 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 							The team admin can nominate team admins / stakeholder and can
 							create/delete/edit team boards.
 						</Text>
-					</PopoverItem>
+					</PopoverItemStyled>
 				</PopoverCloseStyled>
 				<PopoverCloseStyled>
-					<PopoverItem
+					<PopoverItemStyled
 						align="end"
-						css={{ px: '$16' }}
 						direction="column"
-						gap="8"
 						onClick={() => selectRole(TeamUserRoles.STAKEHOLDER)}
 					>
 						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
@@ -92,7 +86,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 						<Text css={{ fontWeight: 400, textAlign: 'end' }} size="sm">
 							Stakeholders will not be included in sub-team SPLIT retrospectives.
 						</Text>
-					</PopoverItem>
+					</PopoverItemStyled>
 				</PopoverCloseStyled>
 			</PopoverContent>
 		</Popover>

@@ -18,10 +18,9 @@ const CardEnd = ({ role, isTeamCreator, userId }: CardEndProps) => {
 				Role |
 			</Text>
 			<Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
-				{role === TeamUserRoles.STAKEHOLDER &&
-					role.substring(0, 1).toUpperCase() + role.substring(1, role.length)}
+				{role === TeamUserRoles.STAKEHOLDER && role[0].toUpperCase() + role.substring(1)}
 				{(role === TeamUserRoles.ADMIN || role === TeamUserRoles.MEMBER) &&
-					`Team ${role.substring(0, 1).toUpperCase()}${role.substring(1, role.length)}`}
+					`Team ${role[0].toUpperCase()}${role.substring(1)}`}
 			</Text>
 			{!isTeamCreator && <PopoverRoleSettings userId={userId} />}
 		</Flex>
