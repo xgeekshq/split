@@ -24,7 +24,7 @@ const MakeSlackCommunicationGateAdapterStub = () => {
 		getEmailByUserId(userId: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}
-		addMessageToChannel(channelId: string, message: string): Promise<boolean> {
+		addMessageToChannel(channelId: string, message: string): Promise<{ ok: boolean }> {
 			throw new Error('Method not implemented.');
 		}
 	}
