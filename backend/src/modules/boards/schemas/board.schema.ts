@@ -48,8 +48,8 @@ export default class Board {
 	@Prop({ type: Boolean, default: false })
 	recurrent!: boolean;
 
-	// @Prop({ type: Boolean, default: false })
-	// isSubBoard!: boolean;
+	@Prop({ type: Boolean, default: false })
+	isSubBoard!: boolean;
 
 	@Prop({ type: Number, default: 0 })
 	boardNumber!: number;

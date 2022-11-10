@@ -39,8 +39,4 @@ export class ConversationsSlackHandler implements ConversationsHandlerInterface 
 	async getUsersFromChannelSlowly(channelId: string): Promise<string[]> {
 		return this.communicationGateAdapter.getAllUsersByChannel(channelId);
 	}
-
-	async kickUserFromChannel(userSlackId: string, channelId: string): Promise<boolean> {
-		return this.communicationGateAdapter.kickUserFromChannel(userSlackId, channelId);
-	}
 }

@@ -31,6 +31,7 @@ export default interface BoardType {
 	users: BoardUser[];
 	createdBy: User;
 	socketId?: string;
+	isSubBoard?: boolean;
 	boardNumber: number;
 	maxVotes?: number;
 	hideCards: boolean;

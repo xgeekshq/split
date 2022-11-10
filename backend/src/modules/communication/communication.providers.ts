@@ -101,14 +101,13 @@ export const ResponsibleExecuteCommunication = {
 
 export const MergeBoardExecuteCommunication = {
 	provide: SlackMergeBoardExecuteCommunication,
-	useFactory: (
-		usersHandler: UsersHandlerInterface,
-		chatHandler: ChatHandlerInterface,
-		conversationsHandler: ConversationsHandlerInterface
-	) => {
-		return new SlackMergeBoardExecuteCommunication(chatHandler, usersHandler, conversationsHandler);
+	useFactory: (configService: ConfigService, chatHandler: ChatHandlerInterface) => {
+		return new SlackMergeBoardExecuteCommunication(
+			chatHandler,
+			configService.getOrThrow(FRONTEND_URL)
+		);
 	},
-	inject: [UsersSlackHandler, ChatSlackHandler, ConversationsSlackHandler]
+	inject: [ConfigService, ChatSlackHandler]
 };
 
 export const ExecuteCommunicationService = {

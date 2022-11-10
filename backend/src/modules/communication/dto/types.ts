@@ -57,5 +57,5 @@ export type MergeBoardCommunicationType = {
 	teamNumber: number;
 	responsiblesChannelId: string;
 	isLastSubBoard: boolean;
-	mainChannelId: string;
+	boardId: string;
 };

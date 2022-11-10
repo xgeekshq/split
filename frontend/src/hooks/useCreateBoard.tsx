@@ -38,6 +38,7 @@ const useCreateBoard = (team: Team) => {
 				recurrent: false,
 				users,
 				team: null,
+				isSubBoard: false,
 				boardNumber: index,
 				maxVotes: undefined,
 				hideCards: false,

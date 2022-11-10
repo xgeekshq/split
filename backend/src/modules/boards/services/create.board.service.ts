@@ -149,7 +149,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			if (result?.board) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
 				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(result.board));
-				await this.slackCommunicationService.execute(board);
+				this.slackCommunicationService.execute(board);
 			} else {
 				this.logger.error(
 					`Call Slack Communication Service for board id "${newBoard._id}" fails. Board not found.`

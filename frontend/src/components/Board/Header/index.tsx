@@ -39,10 +39,8 @@ const BoardHeader = () => {
 	const boardData = useRecoilValue(boardInfoState);
 
 	// Get Board Info
-	const { title, recurrent, users, team, dividedBoards, boardNumber, submitedAt } =
+	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } =
 		boardData!.board;
-
-	const isSubBoard = boardNumber !== 0;
 
 	// Get Team users
 

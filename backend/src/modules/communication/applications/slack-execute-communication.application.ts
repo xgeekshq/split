@@ -86,12 +86,6 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 		);
 
 		await this.resolvePromises(postMessagePromises);
-		// success.forEach((result) => {
-		// 	const teamFound = teams.find((team) => team.channelId === result.channel);
-		// 	if (teamFound) {
-		// 		teamFound.mainThreadTimeStamp = result.ts;
-		// 	}
-		// });
 	}
 
 	private async inviteAllMembers(teams: TeamDto[]): Promise<TeamDto[]> {

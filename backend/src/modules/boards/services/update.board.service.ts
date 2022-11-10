@@ -120,7 +120,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 
 		// Destructuring board variables
-		const { boardNumber, team, createdBy } = board;
+		const { team, createdBy, isSubBoard } = board;
 
 		// Get Team User to see if is Admin or Stakeholder
 		const teamUser = await this.getTeamUser(userId, String(team));
@@ -139,14 +139,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
 		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
 
-		if (isAdminOrStakeholder || isOwner || (boardNumber !== 0 && isSubBoardResponsible)) {
+		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
 			/**
 			 * Validate if:
 			 * - have users on request
 			 * - is a sub-board
 			 * - and the logged user isn't the current responsible
 			 */
-			if (boardNumber !== 0 && boardData.users) {
+			if (isSubBoard && boardData.users) {
 				const boardUserFound = boardData.users.find(
 					(userFound) => userFound.role === BoardRoles.RESPONSIBLE
 				) as unknown as LeanDocument<BoardUserDocument>;
@@ -296,10 +296,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		if (board.slackChannelId) {
 			this.slackCommunicationService.executeMergeBoardNotification({
-				mainChannelId: '',
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id)
+				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id),
+				boardId: board._id
 			});
 		}
 
@@ -319,7 +319,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			return prev;
 		}, board?.dividedBoards.length ?? 0);
 
-		return count === 1;
+		return count === 0;
 	}
 
 	private generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {
@@ -365,8 +365,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		});
 	}
 
-	async updateChannelId(teams: TeamDto[]) {
-		await Promise.all(
+	updateChannelId(teams: TeamDto[]) {
+		Promise.all(
 			teams.map((team) =>
 				this.boardModel.updateOne(
 					{ _id: team.boardId },

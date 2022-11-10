@@ -24,9 +24,6 @@ export class SlackResponsibleExecuteCommunication
 		} = data;
 
 		const newResponsibleId = await this.usersHandler.getSlackUserIdByEmail(newResponsibleEmail);
-		// const previousResponsibleId = await this.usersHandler.getSlackUserIdByEmail(
-		// 	previousResponsibleEmail
-		// );
 
 		const message = `<!channel>, <@${newResponsibleId}> is the new responsible for the team ${teamNumber}`;
 		if (mainChannelId) {
@@ -34,10 +31,6 @@ export class SlackResponsibleExecuteCommunication
 		}
 
 		if (responsiblesChannelId) {
-			// await this.conversationsHandler.kickUserFromChannel(
-			// 	previousResponsibleId,
-			// 	responsiblesChannelId
-			// );
 			await this.conversationsHandler.inviteUserToChannel(responsiblesChannelId, newResponsibleId);
 			await this.chatHandler.postMessage(responsiblesChannelId, message);
 		}

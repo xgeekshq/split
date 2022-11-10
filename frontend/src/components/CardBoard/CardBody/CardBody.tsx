@@ -104,8 +104,7 @@ const CardBody = React.memo<CardBodyProps>(
 		isSAdmin,
 		socketId
 	}) => {
-		const { _id: id, columns, users, team, dividedBoards, boardNumber } = board;
-		const isSubBoard = boardNumber !== 0;
+		const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
 		const countDividedBoards = dividedBoardsCount || dividedBoards.length;
 		const [openSubBoards, setSubBoardsOpen] = useState(false);
 

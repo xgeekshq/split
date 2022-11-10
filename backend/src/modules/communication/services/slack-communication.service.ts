@@ -35,7 +35,6 @@ export class SlackCommunicationService implements SlackCommunicationServiceInter
 	}
 
 	public async executeMergeBoardNotification(mergeBoard: MergeBoardCommunicationType) {
-		mergeBoard.mainChannelId = this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID);
 		this.slackMergeBoardCommunicationProducer.add(mergeBoard);
 	}
 }

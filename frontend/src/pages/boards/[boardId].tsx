@@ -74,7 +74,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	});
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
-	const isSubBoard = board?.boardNumber !== 0;
+	const isSubBoard = board?.isSubBoard;
 	const route = useRouter();
 
 	// Socket IO Hook
