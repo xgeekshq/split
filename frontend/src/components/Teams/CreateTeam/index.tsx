@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -23,6 +23,8 @@ import TipBar from './TipBar';
 const CreateTeam = () => {
 	const router = useRouter();
 
+	const [isBackButtonDisable, setBackButtonState] = useState(false);
+
 	const methods = useForm<{ text: string }>({
 		mode: 'onBlur',
 		reValidateMode: 'onBlur',
@@ -38,6 +40,7 @@ const CreateTeam = () => {
 	});
 
 	const handleBack = useCallback(() => {
+		setBackButtonState(true);
 		router.back();
 	}, [router]);
 
@@ -47,7 +50,7 @@ const CreateTeam = () => {
 				<Text color="primary800" heading={3} weight="bold">
 					Create New Team
 				</Text>
-				<Button isIcon onClick={handleBack}>
+				<Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
 					<Icon name="close" />
 				</Button>
 			</PageHeader>
@@ -61,7 +64,12 @@ const CreateTeam = () => {
 							</FormProvider>
 						</InnerContent>
 						<ButtonsContainer gap="24" justify="end">
-							<Button type="button" variant="lightOutline" onClick={handleBack}>
+							<Button
+								disabled={isBackButtonDisable}
+								type="button"
+								variant="lightOutline"
+								onClick={handleBack}
+							>
 								Cancel
 							</Button>
 							<Button type="submit">Create team</Button>

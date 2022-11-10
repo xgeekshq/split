@@ -59,7 +59,14 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return this.teamModel
 			.find({ _id: { $in: teams } })
 			.select('_id name')
-			.populate({ path: 'users', select: '_id user role' })
+			.populate({
+				path: 'users',
+				select: 'user role',
+				populate: {
+					path: 'user',
+					select: '_id firstName lastName email joinedAt'
+				}
+			})
 			.lean()
 			.exec();
 	}
