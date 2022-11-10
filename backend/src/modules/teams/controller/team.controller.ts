@@ -70,8 +70,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Post()
-	async create(@Req() request: RequestWithUser, @Body() teamData: CreateTeamDto) {
-		const team = await this.createTeamApp.create(teamData, request.user._id);
+	async create(@Body() teamData: CreateTeamDto) {
+		const team = await this.createTeamApp.create(teamData);
 		if (!team) throw new BadRequestException(INSERT_FAILED);
 		return team;
 	}
