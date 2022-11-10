@@ -15,9 +15,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 	) {}
 
 	async countTeams(userId: string) {
-		const teams = await this.teamUserModel.find({ user: userId }).distinct('team');
-
-		return teams.length;
+		return this.teamUserModel.find({ user: userId }).distinct('team').count();
 	}
 
 	countAllTeams() {
