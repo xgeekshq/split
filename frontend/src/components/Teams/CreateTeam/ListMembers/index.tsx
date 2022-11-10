@@ -84,7 +84,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 				listOfUsers.find((member) => member.user._id === user._id) || {
 					user,
 					role: TeamUserRoles.MEMBER,
-					isNewbee: false
+					isNewbie: false
 				}
 			);
 		});

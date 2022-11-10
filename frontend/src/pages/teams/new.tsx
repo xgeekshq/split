@@ -41,7 +41,7 @@ const NewTeam: NextPage = () => {
 					listMembers.push({
 						user,
 						role: TeamUserRoles.ADMIN,
-						isNewbee: false
+						isNewbie: false
 					});
 				}
 				return { ...user, isChecked: user._id === session?.user.id };
