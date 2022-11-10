@@ -148,15 +148,13 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 
 	public async addMessageToChannel(
 		channelId: string,
-		message: string,
-		timeStamp?: string
+		message: string
 	): Promise<{ ok: boolean; ts?: string }> {
 		try {
 			// https://api.slack.com/methods/chat.postMessage
 			const { ok, ts } = await this.getClient().chat.postMessage({
 				channel: channelId,
-				text: message,
-				thread_ts: timeStamp
+				text: message
 			});
 
 			return { ok, ts };

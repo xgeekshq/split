@@ -71,9 +71,6 @@ export default class Board {
 
 	@Prop({ type: String, nullable: true, default: null })
 	slackChannelId?: string;
-
-	@Prop({ type: String, nullable: true, default: null })
-	threadTimeStamp?: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

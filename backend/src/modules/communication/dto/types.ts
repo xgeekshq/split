@@ -50,7 +50,6 @@ export type ChangeResponsibleType = {
 	teamNumber: number;
 	responsiblesChannelId?: string;
 	mainChannelId?: string;
-	threadTimeStamp?: string;
 };
 
 export type MergeBoardCommunicationType = {

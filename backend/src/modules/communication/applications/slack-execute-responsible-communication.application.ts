@@ -19,7 +19,6 @@ export class SlackResponsibleExecuteCommunication
 			mainChannelId,
 			responsiblesChannelId,
 			subTeamChannelId,
-			threadTimeStamp,
 			teamNumber
 		} = data;
 
@@ -27,7 +26,7 @@ export class SlackResponsibleExecuteCommunication
 
 		const message = `<!channel>, <@${newResponsibleId}> is the new responsible for the team ${teamNumber}`;
 		if (mainChannelId) {
-			await this.chatHandler.postMessage(mainChannelId, message, threadTimeStamp);
+			await this.chatHandler.postMessage(mainChannelId, message);
 		}
 
 		if (responsiblesChannelId) {

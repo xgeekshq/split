@@ -57,14 +57,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
     (Note: currently, retrobot does not check if the chosen responsibles joined xgeeks less than 3 months ago, so, if that happens, you have to decide who will take that role in the team. In the future, retrobot will automatically validate this rule.)\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
 
-		const [success] = await this.resolvePromises([
-			this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText)
-		]);
-		success.forEach((result) => {
-			teams.forEach((team) => {
-				team.mainThreadTimeStamp = result.ts;
-			});
-		});
+		this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);
 	}
 
 	private async postMessageOnEachChannel(teams: TeamDto[]): Promise<void> {

@@ -17,6 +17,4 @@ export class TeamDto {
 	participants!: UserDto[];
 
 	participantsNotInvited?: string[];
-
-	mainThreadTimeStamp?: string;
 }

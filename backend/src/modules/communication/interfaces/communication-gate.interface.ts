@@ -12,9 +12,5 @@ export interface CommunicationGateInterface {
 	getEmailByPlatformUserId(email: string): Promise<string>;
 
 	// messages
-	addMessageToChannel(
-		channelId: string,
-		message: string,
-		timeStamp?: string
-	): Promise<{ ok: boolean; ts?: string }>;
+	addMessageToChannel(channelId: string, message: string): Promise<{ ok: boolean }>;
 }
