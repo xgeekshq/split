@@ -89,16 +89,13 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 			);
 		});
 
-		const userAdmin = updatedListWithAdded.find(
+		// this insures that the team creator stays always in first
+
+		const userAdminIndex = updatedListWithAdded.findIndex(
 			(member) => member.user._id === session?.user.id
 		);
 
-		// the sort insures that the team creator stays always in first
-		const sortedList = updatedListWithAdded.sort((x, y) => {
-			if (x === userAdmin) return -1;
-			if (y === userAdmin) return 1;
-			return 0;
-		});
+		updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
 		setToastState({
 			open: true,
@@ -106,7 +103,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 			type: ToastStateEnum.SUCCESS
 		});
 
-		setMembersListState(sortedList);
+		setMembersListState(updatedListWithAdded);
 
 		setIsOpen(false);
 	};
