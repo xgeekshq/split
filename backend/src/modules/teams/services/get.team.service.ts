@@ -14,12 +14,10 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
 	) {}
 
-	countTeams(userId: string) {
-		return this.teamModel
-			.countDocuments({
-				users: { $elemMatch: { user: userId } }
-			})
-			.exec();
+	async countTeams(userId: string) {
+		const teams = await this.teamUserModel.find({ user: userId }).distinct('team');
+
+		return teams.length;
 	}
 
 	countAllTeams() {
