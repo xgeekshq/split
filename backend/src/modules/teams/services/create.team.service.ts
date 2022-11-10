@@ -42,7 +42,8 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 			...users,
 			{
 				user: userId,
-				role: TeamRoles.ADMIN
+				role: TeamRoles.ADMIN,
+				isNewbie: false
 			}
 		];
 
