@@ -34,7 +34,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 	const { _id: id, users } = team;
 
 	const userIsParticipating = useMemo(() => {
-		return !!users.find((user) => user.user._id === userId);
+		return users.some((user) => user.user._id === userId);
 	}, [users, userId]);
 
 	const havePermissions = useMemo(() => {
@@ -44,10 +44,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 
 		const myUser = team.users.find((user) => String(user.user._id) === String(userId));
 
-		if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder')) {
-			return true;
-		}
-		return false;
+		return team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder');
 	}, [isSAdmin, team, userId]);
 
 	return (

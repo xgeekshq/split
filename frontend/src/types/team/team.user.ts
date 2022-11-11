@@ -4,7 +4,7 @@ import { User } from '../user/user';
 export interface TeamUser {
 	user: User;
 	role: TeamUserRoles;
-	isNewbie?: boolean;
+	isNewJoiner?: boolean;
 	_id?: string;
 	team?: string;
 }
