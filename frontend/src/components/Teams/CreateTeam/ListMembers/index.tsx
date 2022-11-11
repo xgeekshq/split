@@ -63,7 +63,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	const filteredList = useMemo(() => {
 		const searchString = searchMember.toLowerCase();
 
-		return usersList?.filter((user) => {
+		return usersList.filter((user) => {
 			const firstName = user.firstName.toLowerCase();
 			const lastName = user.lastName.toLowerCase();
 			return (
