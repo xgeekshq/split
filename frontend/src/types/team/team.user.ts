@@ -12,4 +12,5 @@ export interface TeamUser {
 export interface CreateTeamUser {
 	user: string; // user._id
 	role: TeamUserRoles;
+	isNewJoiner?: boolean;
 }
