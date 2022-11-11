@@ -42,7 +42,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 			return true;
 		}
 
-		const myUser = team.users.find((user) => String(user.user._id) === String(userId));
+		const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
 		return team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder');
 	}, [isSAdmin, team, userId]);
