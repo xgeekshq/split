@@ -7,7 +7,6 @@ import Icon from 'components/icons/Icon';
 import Text from 'components/Primitives/Text';
 import { membersListState, usersListState } from '../../../../store/team/atom/team.atom';
 import { toastState } from '../../../../store/toast/atom/toast.atom';
-import { TeamUser } from '../../../../types/team/team.user';
 import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import { ToastStateEnum } from '../../../../utils/enums/toast-types';
 import {
@@ -76,18 +75,27 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 	}, [searchMember, usersList]);
 
 	const saveMembers = () => {
-		const listOfUsers: TeamUser[] | undefined = [];
+		const listOfUsers = [...membersList];
 
-		listOfUsers.push(membersList[0]);
+		const addedUsers = usersList.filter((user) => user.isChecked);
 
-		usersList?.forEach((member) => {
-			if (member.isChecked && member._id !== session?.user.id) {
-				listOfUsers.push({
-					user: member,
-					role: TeamUserRoles.MEMBER
-				});
-			}
+		const updatedListWithAdded = addedUsers.map((user) => {
+			return (
+				listOfUsers.find((member) => member.user._id === user._id) || {
+					user,
+					role: TeamUserRoles.MEMBER,
+					isNewJoiner: false
+				}
+			);
 		});
+
+		// this insures that the team creator stays always in first
+
+		const userAdminIndex = updatedListWithAdded.findIndex(
+			(member) => member.user._id === session?.user.id
+		);
+
+		updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
 		setToastState({
 			open: true,
@@ -95,7 +103,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 			type: ToastStateEnum.SUCCESS
 		});
 
-		setMembersListState(listOfUsers);
+		setMembersListState(updatedListWithAdded);
 
 		setIsOpen(false);
 	};

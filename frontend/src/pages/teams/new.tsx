@@ -34,13 +34,18 @@ const NewTeam: NextPage = () => {
 
 	useEffect(() => {
 		const listMembers: TeamUser[] | undefined = [];
-		const usersWithChecked = data?.map((user) => {
+
+		data?.forEach((user) => {
 			if (user._id === session?.user.id) {
 				listMembers.push({
 					user,
-					role: TeamUserRoles.ADMIN
+					role: TeamUserRoles.ADMIN,
+					isNewJoiner: false
 				});
 			}
+		});
+
+		const usersWithChecked = data?.map((user) => {
 			return { ...user, isChecked: user._id === session?.user.id };
 		});
 

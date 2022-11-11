@@ -8,7 +8,7 @@ export const membersListState = atom<TeamUser[]>({
 	default: []
 });
 
-export const usersListState = atom<UserList[] | undefined>({
+export const usersListState = atom<UserList[]>({
 	key: 'usersList',
-	default: undefined
+	default: []
 });
