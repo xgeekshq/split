@@ -102,8 +102,8 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 						css={{ ml: '$40', display: 'flex', alignItems: 'center' }}
 						gap="8"
 					>
-						<Flex align="center" css={{ width: '127px' }} justify="between">
-							<Text color="primary300" size="sm">
+						<Flex align="center" css={{ width: '127px' }}>
+							<Text color="primary300" css={{ mr: '2px' }} size="sm">
 								Team admin
 							</Text>
 

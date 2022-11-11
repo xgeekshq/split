@@ -24,10 +24,10 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
 									css={{
 										width: '16px',
 										height: '$32',
-										marginRight: '$10'
+										marginRight: '5px'
 									}}
 								/>
-								<Text css={{ ml: '$14' }} size="sm" weight="medium">
+								<Text css={{ ml: '5px' }} size="sm" weight="medium">
 									{' '}
 									Create first team board
 								</Text>
