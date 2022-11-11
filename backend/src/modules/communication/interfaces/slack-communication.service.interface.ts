@@ -1,7 +1,7 @@
-import { BoardType, ChangeResponsibleType, MergeBoardCommunicationType } from '../dto/types';
+import { BoardType, ChangeResponsibleType, MergeBoardType } from '../dto/types';
 
-export interface SlackCommunicationServiceInterface {
+export interface CommunicationServiceInterface {
 	execute(board: BoardType): Promise<void>;
-	executeResponsibleChange(changeResponsibleDto: ChangeResponsibleType);
-	executeMergeBoardNotification(mergeBoard: MergeBoardCommunicationType);
+	executeResponsibleChange(changeResponsibleDto: ChangeResponsibleType): Promise<void>;
+	executeMergeBoardNotification(mergeBoard: MergeBoardType): Promise<void>;
 }

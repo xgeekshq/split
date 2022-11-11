@@ -1,4 +1,4 @@
-export interface CommunicationGateInterface {
+export interface CommunicationGateAdapterInterface {
 	// channels
 	addChannel(name: string): Promise<{ id: string; name: string }>;
 

@@ -20,7 +20,7 @@ import {
 	translateBoard
 } from 'libs/utils/communication-helpers';
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { SlackCommunicationApplication } from 'modules/communication/applications/slack-communication.application';
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
@@ -150,12 +150,12 @@ const getConfiguration = () => ({
 	frontendUrl: configService.getOrThrow(FRONTEND_URL)
 });
 
-describe('SlackExecuteCommunication', () => {
-	let application: SlackExecuteCommunication;
+describe('SlackCommunicationApplication', () => {
+	let application: SlackCommunicationApplication;
 	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 
 	beforeAll(async () => {
-		application = new SlackExecuteCommunication(
+		application = new SlackCommunicationApplication(
 			getConfiguration(),
 			new ConversationsSlackHandler(communicationGateAdapterMocked),
 			new UsersSlackHandler(communicationGateAdapterMocked),

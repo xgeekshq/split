@@ -3,10 +3,11 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
 import { UpdateBoardServiceInterface } from 'modules/boards/interfaces/services/update.board.service.interface';
-import { TYPES } from 'modules/boards/interfaces/types';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { TYPES as BOARD_TYPES } from 'modules/boards/interfaces/types';
 import { TeamDto } from 'modules/communication/dto/team.dto';
 import { BoardType } from 'modules/communication/dto/types';
+import { CommunicationApplicationInterface } from 'modules/communication/interfaces/communication.application.interface';
+import { TYPES } from 'modules/communication/interfaces/types';
 import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
 
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
@@ -17,8 +18,9 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 	TeamDto
 > {
 	constructor(
-		private readonly application: SlackExecuteCommunication,
-		@Inject(TYPES.services.UpdateBoardService)
+		@Inject(TYPES.application.SlackCommunicationApplication)
+		private readonly application: CommunicationApplicationInterface,
+		@Inject(BOARD_TYPES.services.UpdateBoardService)
 		private updateBoardService: UpdateBoardServiceInterface
 	) {
 		const logger = new Logger(SlackCommunicationConsumer.name);

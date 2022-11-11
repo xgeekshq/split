@@ -9,11 +9,11 @@ import { InviteUsersError } from 'modules/communication/errors/invite-users.erro
 import { PostMessageError } from 'modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
+import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
 
 import { ProfileWithoutIdError } from '../errors/profile-without-id.error';
 
-export class SlackCommunicationGateAdapter implements CommunicationGateInterface {
+export class SlackCommunicationGateAdapter implements CommunicationGateAdapterInterface {
 	private logger = new Logger(SlackCommunicationGateAdapter.name);
 
 	private client: WebClient;

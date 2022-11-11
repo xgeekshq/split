@@ -5,21 +5,21 @@ import { configuration } from 'infrastructure/config/configuration';
 import BoardsModule from 'modules/boards/boards.module';
 import {
 	ChatHandler,
+	CommunicationApplication,
 	CommunicationGateAdapter,
+	CommunicationService,
 	ConversationsHandler,
-	ExecuteCommunication,
-	ExecuteCommunicationService,
-	MergeBoardExecuteCommunication,
-	ResponsibleExecuteCommunication,
+	MergeBoardApplication,
+	ResponsibleApplication,
 	UsersHandler
 } from 'modules/communication/communication.providers';
 import { SlackCommunicationConsumer } from 'modules/communication/consumers/slack-communication.consumer';
 import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
 
-import { SlackMergeBoardCommunicationConsumer } from './consumers/slack-merge-board-communication.consumer';
-import { SlackResponsibleCommunicationConsumer } from './consumers/slack-responsible-communication.consumer';
-import { SlackMergeBoardCommunicationProducer } from './producers/slack-merge-board-communication.producer';
-import { SlackResponsibleCommunicationProducer } from './producers/slack-responsible-communication.producer';
+import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
+import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
+import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';
+import { SlackResponsibleProducer } from './producers/slack-responsible.producer';
 
 @Module({
 	imports: [
@@ -38,50 +38,50 @@ import { SlackResponsibleCommunicationProducer } from './producers/slack-respons
 						}
 					}),
 					BullModule.registerQueue({
-						name: SlackResponsibleCommunicationProducer.QUEUE_NAME,
+						name: SlackResponsibleProducer.QUEUE_NAME,
 						defaultJobOptions: {
-							attempts: SlackResponsibleCommunicationProducer.ATTEMPTS,
-							backoff: SlackResponsibleCommunicationProducer.BACKOFF,
-							delay: SlackResponsibleCommunicationProducer.DELAY,
-							removeOnFail: SlackResponsibleCommunicationProducer.REMOVE_ON_FAIL,
-							removeOnComplete: SlackResponsibleCommunicationProducer.REMOVE_ON_COMPLETE,
-							priority: SlackResponsibleCommunicationProducer.PRIORITY
+							attempts: SlackResponsibleProducer.ATTEMPTS,
+							backoff: SlackResponsibleProducer.BACKOFF,
+							delay: SlackResponsibleProducer.DELAY,
+							removeOnFail: SlackResponsibleProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackResponsibleProducer.REMOVE_ON_COMPLETE,
+							priority: SlackResponsibleProducer.PRIORITY
 						}
 					}),
 					BullModule.registerQueue({
-						name: SlackMergeBoardCommunicationProducer.QUEUE_NAME,
+						name: SlackMergeBoardProducer.QUEUE_NAME,
 						defaultJobOptions: {
-							attempts: SlackMergeBoardCommunicationProducer.ATTEMPTS,
-							backoff: SlackMergeBoardCommunicationProducer.BACKOFF,
-							delay: SlackMergeBoardCommunicationProducer.DELAY,
-							removeOnFail: SlackMergeBoardCommunicationProducer.REMOVE_ON_FAIL,
-							removeOnComplete: SlackMergeBoardCommunicationProducer.REMOVE_ON_COMPLETE,
-							priority: SlackMergeBoardCommunicationProducer.PRIORITY
+							attempts: SlackMergeBoardProducer.ATTEMPTS,
+							backoff: SlackMergeBoardProducer.BACKOFF,
+							delay: SlackMergeBoardProducer.DELAY,
+							removeOnFail: SlackMergeBoardProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackMergeBoardProducer.REMOVE_ON_COMPLETE,
+							priority: SlackMergeBoardProducer.PRIORITY
 						}
 					})
 			  ]
 			: [])
 	],
 	providers: [
-		ExecuteCommunicationService,
+		CommunicationService,
 		...(configuration().slack.enable
 			? [
 					CommunicationGateAdapter,
 					ChatHandler,
 					ConversationsHandler,
 					UsersHandler,
-					ExecuteCommunication,
-					ResponsibleExecuteCommunication,
-					MergeBoardExecuteCommunication,
+					CommunicationApplication,
+					ResponsibleApplication,
+					MergeBoardApplication,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
-					SlackResponsibleCommunicationProducer,
-					SlackResponsibleCommunicationConsumer,
-					SlackMergeBoardCommunicationProducer,
-					SlackMergeBoardCommunicationConsumer
+					SlackResponsibleProducer,
+					SlackResponsibleConsumer,
+					SlackMergeBoardProducer,
+					SlackMergeBoardConsumer
 			  ]
 			: [])
 	],
-	exports: [ExecuteCommunicationService, ResponsibleExecuteCommunication]
+	exports: [CommunicationService]
 })
 export class CommunicationModule {}

@@ -52,7 +52,7 @@ export type ChangeResponsibleType = {
 	mainChannelId?: string;
 };
 
-export type MergeBoardCommunicationType = {
+export type MergeBoardType = {
 	teamNumber: number;
 	responsiblesChannelId: string;
 	isLastSubBoard: boolean;

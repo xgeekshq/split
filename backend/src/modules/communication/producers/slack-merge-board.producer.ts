@@ -2,13 +2,13 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 
-import { MergeBoardCommunicationType } from 'modules/communication/dto/types';
+import { MergeBoardType } from 'modules/communication/dto/types';
 
 @Injectable()
-export class SlackMergeBoardCommunicationProducer {
-	private logger = new Logger(SlackMergeBoardCommunicationProducer.name);
+export class SlackMergeBoardProducer {
+	private logger = new Logger(SlackMergeBoardProducer.name);
 
-	public static readonly QUEUE_NAME = 'SlackMergeBoardCommunicationProducer';
+	public static readonly QUEUE_NAME = 'SlackMergeBoardProducer';
 
 	public static readonly ATTEMPTS = 3;
 
@@ -23,11 +23,11 @@ export class SlackMergeBoardCommunicationProducer {
 	public static readonly PRIORITY = 2;
 
 	constructor(
-		@InjectQueue(SlackMergeBoardCommunicationProducer.QUEUE_NAME)
+		@InjectQueue(SlackMergeBoardProducer.QUEUE_NAME)
 		private readonly queue: Queue
 	) {}
 
-	async add(data: MergeBoardCommunicationType): Promise<Job<MergeBoardCommunicationType>> {
+	async add(data: MergeBoardType): Promise<Job<MergeBoardType>> {
 		const job = await this.queue.add(data);
 
 		this.logger.verbose(

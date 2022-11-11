@@ -1,17 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import {
-	BoardType,
-	ChangeResponsibleType,
-	MergeBoardCommunicationType
-} from 'modules/communication/dto/types';
-import { SlackCommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
+import { BoardType, ChangeResponsibleType, MergeBoardType } from 'modules/communication/dto/types';
+import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
 
 @Injectable()
-export class SlackDisabledCommunicationService implements SlackCommunicationServiceInterface {
+export class SlackDisabledCommunicationService implements CommunicationServiceInterface {
 	private logger = new Logger(SlackDisabledCommunicationService.name);
 
-	public async executeResponsibleChange(changeResponsibleDto: ChangeResponsibleType) {
+	public async executeResponsibleChange(
+		changeResponsibleDto: ChangeResponsibleType
+	): Promise<void> {
 		this.logger.warn(
 			`Call "executeResponsibleChange" method with SLACK_ENABLE "false" with: "${JSON.stringify(
 				changeResponsibleDto
@@ -19,7 +17,7 @@ export class SlackDisabledCommunicationService implements SlackCommunicationServ
 		);
 	}
 
-	public async executeMergeBoardNotification(mergeBoard: MergeBoardCommunicationType) {
+	public async executeMergeBoardNotification(mergeBoard: MergeBoardType): Promise<void> {
 		this.logger.warn(
 			`Call "executeMergeBoardNotification" method with SLACK_ENABLE "false" with: "${JSON.stringify(
 				mergeBoard

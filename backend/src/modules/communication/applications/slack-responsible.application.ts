@@ -1,12 +1,10 @@
 import { ChangeResponsibleType } from '../dto/types';
 import { ChatHandlerInterface } from '../interfaces/chat.handler.interface';
 import { ConversationsHandlerInterface } from '../interfaces/conversations.handler.interface';
-import { ResponsibleExecuteCommunicationInterface } from '../interfaces/responsible-execute-communication.interface';
+import { ResponsibleApplicationInterface } from '../interfaces/responsible.application.interface';
 import { UsersHandlerInterface } from '../interfaces/users.handler.interface';
 
-export class SlackResponsibleExecuteCommunication
-	implements ResponsibleExecuteCommunicationInterface
-{
+export class SlackResponsibleApplication implements ResponsibleApplicationInterface {
 	constructor(
 		private readonly chatHandler: ChatHandlerInterface,
 		private readonly usersHandler: UsersHandlerInterface,

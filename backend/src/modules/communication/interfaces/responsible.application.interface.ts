@@ -1,5 +1,5 @@
 import { ChangeResponsibleType } from '../dto/types';
 
-export interface ResponsibleExecuteCommunicationInterface {
+export interface ResponsibleApplicationInterface {
 	execute(data: ChangeResponsibleType): Promise<ChangeResponsibleType | null>;
 }

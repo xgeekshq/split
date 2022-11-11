@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import { UserDto } from 'modules/communication/dto/user.dto';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
+import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
 
 const MakeSlackCommunicationGateAdapterStub = () => {
-	class SlackCommunicationGateAdapterStub implements CommunicationGateInterface {
+	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
 		getEmailByPlatformUserId(email: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}

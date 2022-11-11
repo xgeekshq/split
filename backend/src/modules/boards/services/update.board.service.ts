@@ -14,7 +14,7 @@ import { UPDATE_FAILED } from 'libs/exceptions/messages';
 import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
 import isEmpty from 'libs/utils/isEmpty';
 import { TeamDto } from 'modules/communication/dto/team.dto';
-import { SlackCommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
+import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
@@ -33,8 +33,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(Teams.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
-		private slackCommunicationService: SlackCommunicationServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
+		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}

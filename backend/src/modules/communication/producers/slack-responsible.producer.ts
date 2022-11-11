@@ -5,10 +5,10 @@ import { Job, Queue } from 'bull';
 import { ChangeResponsibleType } from 'modules/communication/dto/types';
 
 @Injectable()
-export class SlackResponsibleCommunicationProducer {
-	private logger = new Logger(SlackResponsibleCommunicationProducer.name);
+export class SlackResponsibleProducer {
+	private logger = new Logger(SlackResponsibleProducer.name);
 
-	public static readonly QUEUE_NAME = 'SlackChangeResponsibleCommunicationProducer';
+	public static readonly QUEUE_NAME = 'SlackResponsibleProducer';
 
 	public static readonly ATTEMPTS = 3;
 
@@ -23,7 +23,7 @@ export class SlackResponsibleCommunicationProducer {
 	public static readonly PRIORITY = 2;
 
 	constructor(
-		@InjectQueue(SlackResponsibleCommunicationProducer.QUEUE_NAME)
+		@InjectQueue(SlackResponsibleProducer.QUEUE_NAME)
 		private readonly queue: Queue
 	) {}
 

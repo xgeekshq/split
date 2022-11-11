@@ -14,7 +14,7 @@ import isEmpty from 'libs/utils/isEmpty';
 import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
 import { TYPES } from 'modules/boards/interfaces/types';
 import { TeamDto } from 'modules/communication/dto/team.dto';
-import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
+import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
 import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service.interface';
@@ -51,8 +51,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private getBoardService: GetBoardServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
-		@Inject(CommunicationsType.TYPES.services.ExecuteCommunication)
-		private slackCommunicationService: ExecuteCommunicationInterface
+		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
+		private slackCommunicationService: CommunicationServiceInterface
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
