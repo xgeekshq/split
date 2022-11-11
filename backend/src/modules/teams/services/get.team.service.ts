@@ -14,12 +14,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
 	) {}
 
-	countTeams(userId: string) {
-		return this.teamModel
-			.countDocuments({
-				users: { $elemMatch: { user: userId } }
-			})
-			.exec();
+	async countTeams(userId: string) {
+		return this.teamUserModel.find({ user: userId }).distinct('team').count();
 	}
 
 	countAllTeams() {
