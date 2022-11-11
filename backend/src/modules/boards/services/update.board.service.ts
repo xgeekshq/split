@@ -1,6 +1,7 @@
 import {
 	BadRequestException,
 	ForbiddenException,
+	forwardRef,
 	Inject,
 	Injectable,
 	NotFoundException
@@ -27,7 +28,7 @@ import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 export default class UpdateBoardServiceImpl implements UpdateBoardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-		@Inject(Teams.TYPES.services.GetTeamService)
+		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>

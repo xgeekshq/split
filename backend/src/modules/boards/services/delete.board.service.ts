@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 
@@ -19,7 +19,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	constructor(
 		@InjectModel(Board.name)
 		private boardModel: Model<BoardDocument>,
-		@Inject(Teams.TYPES.services.GetTeamService)
+		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>

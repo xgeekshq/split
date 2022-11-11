@@ -8,8 +8,4 @@ export default class TeamDto extends CreateTeamDto {
 	@IsOptional()
 	@IsMongoId()
 	_id?: string;
-
-	@ApiPropertyOptional()
-	@IsOptional()
-	boardsCount?: number;
 }

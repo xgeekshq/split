@@ -3,14 +3,14 @@ import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'libs/dto/param/team.query.params';
 
 import { TeamUserDocument } from '../../schemas/team.user.schema';
-import { TeamDocument } from '../../schemas/teams.schema';
+import Team, { TeamDocument } from '../../schemas/teams.schema';
 
 export interface GetTeamServiceInterface {
 	countTeams(userId: string): Promise<number>;
 
 	countAllTeams(): Promise<number>;
 
-	getTeamsOfUser(userId: string): Promise<LeanDocument<TeamDocument>[]>;
+	getTeamsOfUser(userId: string): Promise<Team[]>;
 
 	getTeam(
 		teamId: string,
