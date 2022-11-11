@@ -35,23 +35,25 @@ const NewTeam: NextPage = () => {
 	useEffect(() => {
 		const listMembers: TeamUser[] | undefined = [];
 
-		data?.forEach((user) => {
-			if (user._id === session?.user.id) {
-				listMembers.push({
-					user,
-					role: TeamUserRoles.ADMIN,
-					isNewJoiner: false
-				});
-			}
-		});
+		if (data) {
+			data?.forEach((user) => {
+				if (user._id === session?.user.id) {
+					listMembers.push({
+						user,
+						role: TeamUserRoles.ADMIN,
+						isNewJoiner: false
+					});
+				}
+			});
 
-		const usersWithChecked = data?.map((user) => {
-			return { ...user, isChecked: user._id === session?.user.id };
-		});
+			const usersWithChecked = data?.map((user) => {
+				return { ...user, isChecked: user._id === session?.user.id };
+			});
 
-		setUsersListState(usersWithChecked);
+			setUsersListState(usersWithChecked);
 
-		setMembersListState(listMembers);
+			setMembersListState(listMembers);
+		}
 	}, [data, session?.user.id, setMembersListState, setUsersListState]);
 
 	return <CreateTeam />;
