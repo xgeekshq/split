@@ -12,6 +12,9 @@ export type TeamDocument = Team & Document;
 export default class Team {
 	@Prop({ nullable: false })
 	name!: string;
+
+	@Prop({ nullable: true, type: Number })
+	boardsCount?: number;
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);

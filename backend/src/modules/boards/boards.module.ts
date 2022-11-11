@@ -41,6 +41,6 @@ import BoardsController from './controller/boards.controller';
 		getBoardApplication
 	],
 	controllers: [BoardsController],
-	exports: [getBoardApplication, createBoardService]
+	exports: [getBoardApplication, createBoardService, getBoardService]
 })
 export default class BoardsModule {}

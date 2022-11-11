@@ -28,4 +28,8 @@ export interface GetBoardApplicationInterface {
 	>;
 
 	countBoards(userId: string): Promise<number>;
+
+	getAllBoardIdsAndTeamIdsOfUser(
+		userId: string
+	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
 }

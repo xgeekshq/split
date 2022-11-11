@@ -11,7 +11,7 @@ import Team, { TeamDocument } from '../schemas/teams.schema';
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
 		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
+		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument> // @Inject(BoardTypes.TYPES.services.GetBoardService) // private getBoardService: GetBoardServiceInterface
 	) {}
 
 	async countTeams(userId: string) {
@@ -51,6 +51,11 @@ export default class GetTeamService implements GetTeamServiceInterface {
 	}
 
 	async getTeamsOfUser(userId: string) {
+		// const { boardIds } = await this.getBoardService.getAllBoardIdsAndTeamIdsOfUser(userId);
+		//
+		// const countBoards = boardIds.length;
+		// console.log(countBoards);
+
 		const teams = await this.teamUserModel.find({ user: userId }).distinct('team');
 		return this.teamModel
 			.find({ _id: { $in: teams } })
