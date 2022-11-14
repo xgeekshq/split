@@ -117,7 +117,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 							populate: {
 								path: 'user',
 								model: 'User',
-								select: 'firstName lastName joinedAt'
+								select: 'firstName email lastName joinedAt'
 							}
 						},
 						{
@@ -139,7 +139,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					select: 'user role -board',
 					populate: {
 						path: 'user',
-						select: 'firstName lastName joinedAt'
+						select: 'firstName email lastName joinedAt'
 					}
 				})
 				.lean({ virtuals: true })
@@ -171,7 +171,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					select: 'user role',
 					populate: {
 						path: 'user',
-						select: 'firstName lastName joinedAt'
+						select: 'firstName email lastName joinedAt'
 					}
 				}
 			})
@@ -356,7 +356,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			.populate({
 				path: 'users',
 				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName lastName _id' }
+				populate: { path: 'user', select: 'firstName email lastName _id' }
 			})
 			.populate({
 				path: 'team',

@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
@@ -22,6 +22,8 @@ import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
+	private logger = new Logger(CreateSchedulesService.name);
+
 	constructor(
 		@InjectModel(Schedules.name)
 		private schedulesModel: Model<SchedulesDocument>,
@@ -41,7 +43,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		schedules.forEach(async (schedule) => {
 			const date = new Date(schedule.willRunAt);
 			const day = date.getUTCDate();
-			const month = date.getUTCMonth() + 1;
+			const month = date.getUTCMonth();
 			await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(String(schedule.board));
 			await this.addCronJob(day, month, this.mapScheduleDocumentToDto(schedule));
 		});
@@ -60,20 +62,20 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
 		try {
 			const cronJobDoc = await this.schedulesModel.create({
-				board: boardId,
-				team: teamId,
-				owner: ownerId,
+				board: String(boardId),
+				team: String(teamId),
+				owner: String(ownerId),
 				maxUsers: maxUsersPerTeam,
-				willRunAt: new Date(new Date().getFullYear(), month - 1, day, 10).toISOString()
+				willRunAt: new Date(new Date().getFullYear(), month, day, 10).toISOString()
 			});
-
 			if (!cronJobDoc) throw Error('CronJob not created');
 			const job = new CronJob(`0 10 ${day} ${month} *`, () =>
-				this.handleComplete(ownerId, teamId, cronJobDoc.board.toString())
+				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
 			);
-			this.schedulerRegistry.addCronJob(boardId, job);
+			this.schedulerRegistry.addCronJob(String(boardId), job);
 			job.start();
 		} catch (e) {
+			this.logger.log(e);
 			await this.schedulesModel.deleteOne({ board: boardId });
 		}
 	}
@@ -130,6 +132,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			maxUsersPerTeam: deletedSchedule.maxUsers
 		};
 
-		this.addCronJob(day, month, addCronJobDto);
+		this.addCronJob(day, month - 1, addCronJobDto);
 	}
 }

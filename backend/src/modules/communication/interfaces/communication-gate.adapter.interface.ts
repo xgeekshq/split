@@ -1,4 +1,4 @@
-export interface CommunicationGateInterface {
+export interface CommunicationGateAdapterInterface {
 	// channels
 	addChannel(name: string): Promise<{ id: string; name: string }>;
 
@@ -9,7 +9,8 @@ export interface CommunicationGateInterface {
 	): Promise<{ ok: boolean; fails?: string[] }>;
 	getAllUsersByChannel(channelId: string): Promise<string[]>;
 	getEmailByUserId(userId: string): Promise<string>;
+	getEmailByPlatformUserId(email: string): Promise<string>;
 
 	// messages
-	addMessageToChannel(channelId: string, message: string): Promise<boolean>;
+	addMessageToChannel(channelId: string, message: string): Promise<{ ok: boolean }>;
 }

@@ -155,7 +155,7 @@ const CardBody = React.memo<CardBodyProps>(
 		);
 
 		const iconLockConditions =
-			board.isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
+			isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
 
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">

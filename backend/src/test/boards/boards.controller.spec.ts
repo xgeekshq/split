@@ -70,7 +70,7 @@ describe('BoardsController', () => {
 					}
 				},
 				{
-					provide: CommunicationsType.TYPES.services.ExecuteCommunication,
+					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
 					useValue: {
 						execute: jest.fn()
 					}

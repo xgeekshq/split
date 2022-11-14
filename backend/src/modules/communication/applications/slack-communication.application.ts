@@ -5,12 +5,12 @@ import { BoardRoles, BoardType, ConfigurationType } from 'modules/communication/
 import { UserDto } from 'modules/communication/dto/user.dto';
 import { BoardNotValidError } from 'modules/communication/errors/board-not-valid.error';
 import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
+import { CommunicationApplicationInterface } from 'modules/communication/interfaces/communication.application.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
-import { ExecuteCommunicationInterface } from 'modules/communication/interfaces/execute-communication.interface';
 import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
 
-export class SlackExecuteCommunication implements ExecuteCommunicationInterface {
-	private logger = new Logger(SlackExecuteCommunication.name);
+export class SlackCommunicationApplication implements CommunicationApplicationInterface {
+	private logger = new Logger(SlackCommunicationApplication.name);
 
 	constructor(
 		private readonly config: ConfigurationType,
@@ -26,7 +26,6 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 		teams = await this.inviteAllMembers(teams);
 		await this.postMessageOnEachChannel(teams);
 		await this.postMessageOnMasterChannel(teams);
-
 		return teams;
 	}
 
@@ -58,7 +57,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
     (Note: currently, retrobot does not check if the chosen responsibles joined xgeeks less than 3 months ago, so, if that happens, you have to decide who will take that role in the team. In the future, retrobot will automatically validate this rule.)\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
 
-		await this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);
+		this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);
 	}
 
 	private async postMessageOnEachChannel(teams: TeamDto[]): Promise<void> {
@@ -170,9 +169,7 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 		const normalizeName = (name: string) => {
 			// only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less
-			const fullName = `${process.env.NODE_ENV === 'dev' ? new Date().getTime() : ''}${
-				this.config.slackChannelPrefix
-			}${name}`;
+			const fullName = `${this.config.slackChannelPrefix}${name}`;
 			return fullName
 				.replace(/\s/, '_')
 				.replace(/[^a-zA-Z0-9-_]/g, '')
@@ -256,7 +253,6 @@ export class SlackExecuteCommunication implements ExecuteCommunicationInterface 
 
 	private async resolvePromises(promises: Promise<any>[]): Promise<[any[], any[]]> {
 		const results = await Promise.allSettled(promises);
-
 		const success = results
 			.filter((i) => i.status === 'fulfilled')
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment

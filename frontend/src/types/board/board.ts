@@ -32,6 +32,7 @@ export default interface BoardType {
 	createdBy: User;
 	socketId?: string;
 	isSubBoard?: boolean;
+	boardNumber: number;
 	maxVotes?: number;
 	hideCards: boolean;
 	hideVotes: boolean;

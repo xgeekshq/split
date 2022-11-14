@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Logger } from '@nestjs/common';
+import * as WebClientSlackApi from '@slack/web-api';
 import {
 	ChatMeMessageArguments,
 	ConversationsCreateArguments,
@@ -7,7 +8,6 @@ import {
 	ConversationsMembersArguments,
 	UsersProfileGetArguments
 } from '@slack/web-api';
-import * as WebClientSlackApi from '@slack/web-api';
 
 import { FRONTEND_URL } from 'libs/constants/frontend';
 import {
@@ -212,7 +212,7 @@ describe('SlackCommunicationGateAdapter', () => {
 
 		const result = await adapter.addMessageToChannel(channelId, message);
 
-		expect(result).toBe(true);
+		expect(result).toMatchObject({ ok: true, ts: undefined });
 	});
 
 	describe('- throw Errors if "@slack/web-api" throws error', () => {

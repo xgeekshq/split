@@ -101,6 +101,11 @@ export default class BoardDto {
 	@IsBoolean()
 	isSubBoard?: boolean;
 
+	@ApiPropertyOptional({ default: 0 })
+	@IsNotEmpty()
+	@IsNumber()
+	boardNumber?: number;
+
 	@ApiPropertyOptional({ default: false })
 	@IsOptional()
 	@IsBoolean()

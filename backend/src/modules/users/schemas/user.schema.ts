@@ -31,8 +31,8 @@ export default class User {
 	@Prop({ nullable: true, default: false })
 	isSAdmin!: boolean;
 
-	@Prop({ nullable: false, default: false})
-	isDeleted!: boolean	
+	@Prop({ nullable: false, default: false })
+	isDeleted!: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

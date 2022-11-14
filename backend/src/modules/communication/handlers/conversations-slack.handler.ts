@@ -1,9 +1,9 @@
 import { UserDto } from 'modules/communication/dto/user.dto';
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
+import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
 import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
 
 export class ConversationsSlackHandler implements ConversationsHandlerInterface {
-	constructor(private readonly communicationGateAdapter: CommunicationGateInterface) {}
+	constructor(private readonly communicationGateAdapter: CommunicationGateAdapterInterface) {}
 
 	async createChannel(name: string): Promise<{ name: string; id: string }> {
 		return this.communicationGateAdapter.addChannel(name);
@@ -21,6 +21,17 @@ export class ConversationsSlackHandler implements ConversationsHandlerInterface 
 			channelId,
 			usersIds
 		);
+
+		return { ok, channelId, fails };
+	}
+
+	async inviteUserToChannel(
+		channelId: string,
+		userId: string
+	): Promise<{ ok: boolean; channelId: string; fails?: string[] }> {
+		const { ok, fails } = await this.communicationGateAdapter.addUsersToChannel(channelId, [
+			userId
+		]);
 
 		return { ok, channelId, fails };
 	}
