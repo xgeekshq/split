@@ -169,9 +169,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 
 		const normalizeName = (name: string) => {
 			// only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less
-			const fullName = `${process.env.NODE_ENV === 'dev' ? new Date().getMilliseconds() : ''}${
-				this.config.slackChannelPrefix
-			}${name}`;
+			const fullName = `${this.config.slackChannelPrefix}${name}`;
 			return fullName
 				.replace(/\s/, '_')
 				.replace(/[^a-zA-Z0-9-_]/g, '')

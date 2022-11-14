@@ -28,7 +28,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 		return this.client;
 	}
 
-	public async addChannel(name: string): Promise<{ id: string; name: string }> {
+	public async addChannel(name: string, errorCount = 0): Promise<{ id: string; name: string }> {
 		try {
 			// https://api.slack.com/methods/conversations.create  (!! 20+ per minute)
 			const { channel } = await this.getClient().conversations.create({
@@ -41,8 +41,24 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			};
 		} catch (error) {
 			this.logger.error(error);
+			if (error.data?.error === 'name_taken') {
+				return this.handleCreateChannelError(name, errorCount);
+			}
 			throw new CreateChannelError();
 		}
+	}
+
+	private handleCreateChannelError(name: string, errorCount: number) {
+		errorCount += 1;
+		let newName = name;
+		if (newName[newName.length - 2] === '-') {
+			const cipherChars = [...newName];
+			cipherChars[cipherChars.length - 1] = `${Number(cipherChars[cipherChars.length - 1]) + 1}`;
+			newName = cipherChars.join('');
+		} else {
+			newName = `${name}-${errorCount}`;
+		}
+		return this.addChannel(`${newName}`, errorCount);
 	}
 
 	public async addUsersToChannel(

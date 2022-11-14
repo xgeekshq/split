@@ -183,7 +183,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
-				`xgeeks-retro-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
+				`xgeeks-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
 					month: 'long'
 				}).format(configs.date)}-${configs.date?.getFullYear()}`
 			).board,
