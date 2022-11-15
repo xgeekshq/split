@@ -25,7 +25,6 @@ import {
 	NEXT_PUBLIC_ENABLE_GOOGLE
 } from 'utils/constants';
 import { ToastStateEnum } from 'utils/enums/toast-types';
-import { transformLoginErrorCodes } from 'utils/errorCodes';
 import { DASHBOARD_ROUTE } from 'utils/routes';
 import { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 
@@ -87,7 +86,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 			router.push(DASHBOARD_ROUTE);
 			return;
 		}
-		setLoginErrorCode(transformLoginErrorCodes(result.error));
+
+		setLoginErrorCode(result.status);
 
 		setLoading((prevState) => ({ ...prevState, credentials: false }));
 	};
