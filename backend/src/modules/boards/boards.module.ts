@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 
 import {
 	mongooseBoardModule,
@@ -24,7 +24,7 @@ import BoardsController from './controller/boards.controller';
 @Module({
 	imports: [
 		UsersModule,
-		TeamsModule,
+		forwardRef(() => TeamsModule),
 		SchedulesModule,
 		CommunicationModule,
 		mongooseBoardModule,
@@ -41,6 +41,6 @@ import BoardsController from './controller/boards.controller';
 		getBoardApplication
 	],
 	controllers: [BoardsController],
-	exports: [getBoardApplication, createBoardService]
+	exports: [getBoardApplication, createBoardService, getBoardService]
 })
 export default class BoardsModule {}

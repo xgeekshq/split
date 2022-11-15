@@ -35,4 +35,8 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 	countBoards(userId: string) {
 		return this.getBoardService.countBoards(userId);
 	}
+
+	getAllBoardIdsAndTeamIdsOfUser(userId: string) {
+		return this.getBoardService.getAllBoardIdsAndTeamIdsOfUser(userId);
+	}
 }

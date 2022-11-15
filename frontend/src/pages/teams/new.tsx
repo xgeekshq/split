@@ -35,7 +35,10 @@ const NewTeam: NextPage = () => {
 	useEffect(() => {
 		const listMembers: TeamUser[] | undefined = [];
 
-		data?.forEach((user) => {
+		if (!data) {
+			return;
+		}
+		data.forEach((user) => {
 			if (user._id === session?.user.id) {
 				listMembers.push({
 					user,
@@ -45,7 +48,7 @@ const NewTeam: NextPage = () => {
 			}
 		});
 
-		const usersWithChecked = data?.map((user) => {
+		const usersWithChecked = data.map((user) => {
 			return { ...user, isChecked: user._id === session?.user.id };
 		});
 
