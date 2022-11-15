@@ -3,7 +3,6 @@ import { Document } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 
 import Board from '../../boards/schemas/board.schema';
-import TeamUser from './team.user.schema';
 
 export type TeamDocument = Team & Document;
 
@@ -15,10 +14,6 @@ export type TeamDocument = Team & Document;
 export default class Team {
 	@Prop({ nullable: false })
 	name!: string;
-
-	boardsCount?: number;
-
-	users?: TeamUser[];
 
 	boards?: Board[];
 }

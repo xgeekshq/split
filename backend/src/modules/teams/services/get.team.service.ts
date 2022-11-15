@@ -55,7 +55,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return teamModel.exec();
 	}
 
-	async getTeamsOfUser(userId: string): Promise<Team[]> {
+	async getTeamsOfUser(userId: string) {
 		const teamsUser = await this.teamUserModel.find({ user: userId }).distinct('team');
 
 		const teams: LeanDocument<TeamDocument>[] = await this.teamModel
