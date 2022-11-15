@@ -22,12 +22,12 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
 								<Icon
 									name="plus"
 									css={{
-										width: '16px',
+										width: '$16',
 										height: '$32',
-										marginRight: '5px'
+										marginRight: '$5'
 									}}
 								/>
-								<Text css={{ ml: '5px' }} size="sm" weight="medium">
+								<Text css={{ ml: '$8' }} size="sm" weight="medium">
 									{' '}
 									Create first team board
 								</Text>

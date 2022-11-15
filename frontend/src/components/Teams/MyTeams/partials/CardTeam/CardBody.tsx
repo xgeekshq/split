@@ -64,7 +64,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 					<Icon
 						name="blob-team"
 						css={{
-							width: '32px',
+							width: '$32',
 							height: '$32',
 							zIndex: 1
 						}}
@@ -75,8 +75,8 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 					</Flex>
 				</Flex>
 
-				<Flex align="center" css={{ justifyContent: 'start', width: '683' }} gap="8">
-					<Flex align="center" css={{ width: '147px' }}>
+				<Flex align="center" css={{ justifyContent: 'start', width: '$683' }} gap="8">
+					<Flex align="center" css={{ width: '$147' }}>
 						<Text color="primary300" size="sm">
 							Members
 						</Text>
@@ -97,13 +97,9 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 						}}
 					/>
 
-					<Flex
-						align="center"
-						css={{ ml: '$40', display: 'flex', alignItems: 'center' }}
-						gap="8"
-					>
-						<Flex align="center" css={{ width: '127px' }}>
-							<Text color="primary300" css={{ mr: '2px' }} size="sm">
+					<Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
+						<Flex align="center" css={{ width: '$127' }}>
+							<Text color="primary300" css={{ mr: '$2' }} size="sm">
 								Team admin
 							</Text>
 
@@ -123,7 +119,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 							}}
 						/>
 
-						<Flex align="center" css={{ width: '237px' }} justify="start">
+						<Flex align="center" css={{ width: '$237' }} justify="start">
 							<BoardsInfo
 								team={team}
 								teamAdmin={havePermissions}
