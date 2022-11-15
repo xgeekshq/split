@@ -1,8 +1,7 @@
 import { ReactElement, Suspense } from 'react';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
-import { useSetRecoilState } from 'recoil';
 
 import { getDashboardHeaderInfo } from 'api/authService';
 import { getTeamsOfUser } from 'api/teamService';
@@ -11,25 +10,14 @@ import Layout from 'components/layouts/Layout';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
 import MyTeams from 'components/Teams/MyTeams';
-import { toastState } from '../../store/toast/atom/toast.atom';
-import { ToastStateEnum } from '../../utils/enums/toast-types';
+import useTeam from '../../hooks/useTeam';
 
 const Teams = () => {
 	const { data: session } = useSession({ required: true });
 
-	const setToastState = useSetRecoilState(toastState);
-
-	const { data, isFetching } = useQuery(['teams'], () => getTeamsOfUser(), {
-		enabled: true,
-		refetchOnWindowFocus: false,
-		onError: () => {
-			setToastState({
-				open: true,
-				content: 'Error getting the teams',
-				type: ToastStateEnum.ERROR
-			});
-		}
-	});
+	const {
+		fetchTeamsOfUser: { data, isFetching }
+	} = useTeam({ autoFetchTeam: false });
 
 	if (!session || !data) return null;
 	return (

@@ -26,5 +26,5 @@ export default class TeamUserDto {
 	@IsOptional()
 	@IsBoolean()
 	@IsMongoId()
-	isNewbie?: boolean;
+	isNewJoiner?: boolean;
 }
