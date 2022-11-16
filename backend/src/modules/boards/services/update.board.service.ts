@@ -210,7 +210,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.lean()
 				.exec();
 
-			if (updatedBoard && currentResponsible?.id !== newResponsible.id && board.slackChannelId) {
+			if (
+				updatedBoard &&
+				String(currentResponsible?.id) !== newResponsible.id &&
+				board.slackChannelId
+			) {
 				this.handleResponsibleSlackMessage(
 					newResponsible,
 					currentResponsible,
