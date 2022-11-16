@@ -16,10 +16,11 @@ type CardBodyProps = {
 	isTeamCreator?: boolean;
 	isNewJoiner?: boolean;
 	membersList: TeamUser[];
+	isTeamMember?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-	({ member, role, isTeamCreator, isNewJoiner, membersList }) => {
+	({ member, role, isTeamCreator, isNewJoiner, membersList, isTeamMember }) => {
 		const setMembersList = useSetRecoilState(membersListState);
 
 		const handleIsNewJoiner = (checked: boolean) => {
@@ -61,14 +62,18 @@ const CardMember = React.memo<CardBodyProps>(
 								</StyledMemberTitle>
 							</Flex>
 						</Flex>
-						<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
-							<ConfigurationSettings
-								handleCheckedChange={handleIsNewJoiner}
-								isChecked={isNewJoiner || false}
-								text=""
-								title="New Joiner"
-							/>
-						</Flex>
+						{isTeamMember ? (
+							'member'
+						) : (
+							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
+								<ConfigurationSettings
+									handleCheckedChange={handleIsNewJoiner}
+									isChecked={isNewJoiner || false}
+									text=""
+									title="New Joiner"
+								/>
+							</Flex>
+						)}
 						<CardEnd isTeamCreator={isTeamCreator} role={role} userId={member._id} />
 					</InnerContainer>
 				</Flex>

@@ -40,7 +40,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			teamModel
 				.populate({
 					path: 'users',
-					select: 'user role',
+					select: 'user role isNewJoiner',
 					...teamUserRoleFilter,
 					populate: {
 						path: 'user',
@@ -56,7 +56,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.select('_id name')
 			.populate({
 				path: 'users',
-				select: 'user role',
+				select: 'user role isNewJoiner',
 				populate: {
 					path: 'user',
 					select: '_id firstName lastName email joinedAt'

@@ -14,3 +14,7 @@ export const getTeamsOfUser = (context?: GetServerSidePropsContext): Promise<Tea
 export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> => {
 	return fetchData(`/teams`, { method: 'POST', data: newTeam });
 };
+
+export const getTeamRequest = (id: string, context?: GetServerSidePropsContext): Promise<Team> => {
+	return fetchData(`/teams/${id}`, { context, serverSide: !!context });
+};

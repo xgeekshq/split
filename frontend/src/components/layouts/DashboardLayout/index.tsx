@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import TeamHeader from '../../Teams/Team/Header';
 import { AddNewBoardButton, ContentSection } from './styles';
 
 type DashboardLayoutProps = {
@@ -13,11 +12,10 @@ type DashboardLayoutProps = {
 	isDashboard: boolean;
 	isBoards: boolean;
 	isTeams: boolean;
-	isTeamPage: boolean;
 };
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
-	const { children, firstName, isDashboard, isBoards, isTeams, isTeamPage } = props;
+	const { children, firstName, isDashboard, isBoards, isTeams } = props;
 
 	return (
 		<ContentSection gap="36" justify="between">
@@ -44,19 +42,12 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 									</AddNewBoardButton>
 								</Link>
 							)}
-							{isTeamPage && <TeamHeader title="Dev Split" />}
 						</Flex>
 						{children}
 					</Flex>
 					{/* {isDashboard && <CalendarBar />} */}
 				</>
 			) : null}
-			{isTeamPage && (
-				<Flex css={{ width: '100%' }} direction="column">
-					<Flex justify="between">{isTeamPage && <TeamHeader title="Dev Split" />}</Flex>
-					{children}
-				</Flex>
-			)}
 		</ContentSection>
 	);
 };
