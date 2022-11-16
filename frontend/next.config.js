@@ -6,10 +6,8 @@ const webpack = require('webpack');
 
 module.exports = {
 	reactStrictMode: true,
+	output: 'standalone',
 	swcMinify: true,
-	experimental: {
-		outputStandalone: true
-	},
 	webpackDevMiddleware: (config) => {
 		config.watchOptions = {
 			poll: 1000,

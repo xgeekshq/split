@@ -40,7 +40,7 @@ const BoardHeader = () => {
 
 	// Get Board Info
 	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } =
-		boardData!.board;
+		boardData.board;
 
 	// Get Team users
 
@@ -145,7 +145,16 @@ const BoardHeader = () => {
 				</Flex>
 				<Flex align="center" gap="24">
 					<Flex align="center" gap="10">
-						<Text color="primary800" css={{ fontWeight: 500 }} size="sm">
+						<Text
+							color="primary800"
+							size="sm"
+							css={{
+								fontWeight: 500,
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+								overflow: 'hidden'
+							}}
+						>
 							{isSubBoard ? title.replace('board', '') : team.name}
 						</Text>
 						<CardAvatars

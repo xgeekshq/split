@@ -39,8 +39,10 @@ const CardAvatars = React.memo<CardAvatarProps>(
 		const [viewAllUsers, setViewAllUsers] = useState(false);
 
 		const handleViewAllUsers = useCallback(() => {
-			setViewAllUsers(!viewAllUsers);
-		}, [viewAllUsers]);
+			if (isBoardsPage) {
+				setViewAllUsers(!viewAllUsers);
+			}
+		}, [isBoardsPage, viewAllUsers]);
 
 		const data = useMemo(() => {
 			if (responsible)
@@ -97,7 +99,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
 						<IconButton
 							key={`${value}-${idx}-${Math.random()}`}
 							aria-hidden="true"
-							disabled={!isBoardsPage}
 							type="button"
 							css={{
 								'&:hover': isBoardsPage
@@ -129,7 +130,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					>
 						<IconButton
 							aria-hidden="true"
-							disabled={!isBoardsPage}
 							type="button"
 							css={{
 								'&:hover': isBoardsPage

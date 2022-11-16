@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import Link from 'next/link';
 
 import { styled } from 'styles/stitches/stitches.config';
@@ -39,11 +40,12 @@ const CardTitle: React.FC<CardTitleProps> = ({
 	isSubBoard,
 	mainBoardId
 }) => {
-	const getTitle = () => {
+	const getTitle = useCallback(() => {
 		if (userIsParticipating || havePermissions) {
 			return (
 				<Link
 					key={boardId}
+					legacyBehavior={false}
 					href={{
 						pathname: `boards/[boardId]`,
 						query: isSubBoard ? { boardId, mainBoardId } : { boardId }
@@ -61,7 +63,7 @@ const CardTitle: React.FC<CardTitleProps> = ({
 				{title}
 			</StyledBoardTitle>
 		);
-	};
+	}, [boardId, havePermissions, isSubBoard, mainBoardId, title, userIsParticipating]);
 
 	if (isSubBoard) {
 		return (
