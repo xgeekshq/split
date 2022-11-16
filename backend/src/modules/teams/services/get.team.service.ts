@@ -52,7 +52,18 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			teamModel.lean();
 		}
 
-		return teamModel.exec();
+		return teamModel
+			.select('_id name')
+			.populate({
+				path: 'users',
+				select: 'user role',
+				populate: {
+					path: 'user',
+					select: '_id firstName lastName email joinedAt'
+				}
+			})
+			.lean()
+			.exec();
 	}
 
 	async getTeamsOfUser(userId: string) {
