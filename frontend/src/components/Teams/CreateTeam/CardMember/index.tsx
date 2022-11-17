@@ -1,27 +1,39 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
+import Text from 'components/Primitives/Text';
 import { membersListState } from '../../../../store/team/atom/team.atom';
-import { TeamUser } from '../../../../types/team/team.user';
 import { User } from '../../../../types/user/user';
 import { ConfigurationSettings } from '../../../Board/Settings/partials/ConfigurationSettings';
-import CardEnd from '../CardEnd';
-import { InnerContainer, StyledMemberTitle } from './styles';
+import Tooltip from '../../../Primitives/Tooltip';
+import CardEndTeam from '../../Team/CardEnd';
+import CardEndCreateTeam from '../CardEnd';
+import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 
 type CardBodyProps = {
 	member: User;
 	role: string;
 	isTeamCreator?: boolean;
 	isNewJoiner?: boolean;
-	membersList: TeamUser[];
-	isTeamMember?: boolean;
+	isTeamMemberOrStakeholder?: boolean;
+	isNewTeamPage?: boolean;
+	isTeamPage?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-	({ member, role, isTeamCreator, isNewJoiner, membersList, isTeamMember }) => {
+	({
+		isNewTeamPage,
+		isTeamPage,
+		member,
+		role,
+		isTeamCreator,
+		isNewJoiner,
+		isTeamMemberOrStakeholder
+	}) => {
 		const setMembersList = useSetRecoilState(membersListState);
+		const membersList = useRecoilValue(membersListState);
 
 		const handleIsNewJoiner = (checked: boolean) => {
 			const listUsersMembers = membersList.map((user) => {
@@ -62,8 +74,29 @@ const CardMember = React.memo<CardBodyProps>(
 								</StyledMemberTitle>
 							</Flex>
 						</Flex>
-						{isTeamMember ? (
-							'member'
+						{isTeamMemberOrStakeholder ? (
+							<Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
+								<Text css={{ fontWeight: 500 }} size="sm">
+									New Joiner
+								</Text>
+								<Tooltip
+									content={
+										<Text color="white" css={{ fontWeight: 400 }} size="sm">
+											The new joiner will not be selected as a responsible for
+											the TEAM sub-teams.
+										</Text>
+									}
+								>
+									<IconButton>
+										<Icon
+											name="info"
+											css={{
+												'&:hover': { cursor: 'pointer' }
+											}}
+										/>
+									</IconButton>
+								</Tooltip>
+							</Flex>
 						) : (
 							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
 								<ConfigurationSettings
@@ -74,7 +107,21 @@ const CardMember = React.memo<CardBodyProps>(
 								/>
 							</Flex>
 						)}
-						<CardEnd isTeamCreator={isTeamCreator} role={role} userId={member._id} />
+						{isNewTeamPage && (
+							<CardEndCreateTeam
+								isTeamCreator={isTeamCreator}
+								role={role}
+								userId={member._id}
+							/>
+						)}
+						{isTeamPage && (
+							<CardEndTeam
+								isTeamCreator={isTeamCreator}
+								isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
+								role={role}
+								userId={member._id}
+							/>
+						)}
 					</InnerContainer>
 				</Flex>
 			</Flex>
