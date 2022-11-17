@@ -2,6 +2,13 @@ import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
 import { styled } from 'styles/stitches/stitches.config';
 
+import {
+	slideDownAndFade,
+	slideLeftAndFade,
+	slideRightAndFade,
+	slideUpAndFade
+} from '../../../animations/Slide';
+
 const StyledContent = styled(TooltipPrimitive.Content, {
 	variants: {
 		color: {
@@ -39,7 +46,17 @@ const StyledContent = styled(TooltipPrimitive.Content, {
 	lineHeight: '$16',
 	textAlign: 'center',
 	border: 'none',
-	minWidth: '141px'
+	minWidth: '141px',
+	userSelect: 'none',
+	animationDuration: '400ms',
+	animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	willChange: 'transform, opacity',
+	'&[data-state="delayed-open"]': {
+		'&[data-side="top"]': { animationName: slideDownAndFade },
+		'&[data-side="right"]': { animationName: slideLeftAndFade },
+		'&[data-side="bottom"]': { animationName: slideUpAndFade },
+		'&[data-side="left"]': { animationName: slideRightAndFade }
+	}
 });
 
 const StyledArrow = styled(TooltipPrimitive.Arrow, {
