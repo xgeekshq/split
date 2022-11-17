@@ -1,8 +1,8 @@
-name: Deploy frontend
+name: Deploy frontend dev
 
 on:
     push:
-        branches: [dev]
+        branches: [ dev ]
 
 jobs:
     build:
@@ -18,7 +18,7 @@ jobs:
                   password: ${{ secrets.REGISTRY_PASSWORD }}
 
             - run: |
-                  docker build ./frontend -f ./frontend/docker/prod/Dockerfile --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_DEV_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_DEV_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t split.azurecr.io/frontend-dev:latest
+                  docker build ./frontend -f ./frontend/docker/dev/Dockerfile --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_DEV_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_DEV_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_DEV_ENABLE_AZURE}} -t split.azurecr.io/frontend-dev:latest
                   docker push split.azurecr.io/frontend-dev:latest
 
             - uses: azure/webapps-deploy@v2

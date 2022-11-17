@@ -7,7 +7,7 @@ services:
       dockerfile: docker/prod/Dockerfile
 
     # set image name
-    image: dc-backend
+    image: split-backend
 
     # set container name
     container_name: backend
@@ -20,7 +20,7 @@ services:
 
     restart: unless-stopped
     networks:
-      - dc-network
+      - split-network
     depends_on:
       - mongo
   frontend:
@@ -33,7 +33,7 @@ services:
         - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
 
     # set image name
-    image: dc-frontend
+    image: split-frontend
 
     # set container name
     container_name: frontend
@@ -46,7 +46,7 @@ services:
 
     restart: unless-stopped
     networks:
-      - dc-network
+      - split-network
     depends_on:
       - backend
   mongo2:
@@ -54,7 +54,7 @@ services:
     restart: always
     container_name: mongo2
     networks:
-      - dc-network
+      - split-network
     ports:
       - "27018:27017"
     entrypoint: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
@@ -71,13 +71,23 @@ services:
     volumes:
       - ./database/rs-init.sh:/scripts/rs-init.sh
     networks:
-      - dc-network
+      - split-network
     links:
       - mongo2
     command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
 
     env_file:
       - ./database/.env
+  
+  redis:
+    image: redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"     
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    env_file:
+      - ./database/redis/.env
 networks:
-  dc-network:
+  split-network:
     driver: bridge

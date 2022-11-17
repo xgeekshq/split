@@ -1,20 +1,35 @@
-# Dev Environment
-FROM node:16-alpine AS development
+FROM node:16-alpine
 
-# Container Dir
-WORKDIR /app/backend
+ENV NODE_ENV build
 
-# Copy package.json (to install all packages)
-COPY package.json ./
+WORKDIR /backend
 
-# Install the packages (on the package.json)
-RUN yarn
+COPY package*.json ./
 
-# Copy all files
-COPY ./ .
+RUN npm ci
 
-# Expose port
+COPY ./ ./
+
+RUN npm run build
+
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV}
+
 EXPOSE 3200
+ENV PORT 3200
 
-# Run in dev mode
-CMD ["yarn", "start:dev"]
+CMD ["node", "dist/src/main.js"]
+
+# ---
+
+# FROM node:16-alpine
+
+
+# USER node
+# WORKDIR /backend
+
+# COPY --from=builder ./package*.json /backend/
+# COPY --from=builder ./node_modules /backend/node_modules/
+# COPY --from=builder ./dist /backend/dist
+
+# CMD ["node", "dist/src/main.js"]
