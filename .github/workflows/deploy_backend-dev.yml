@@ -2,7 +2,7 @@ name: Deploy backend
 
 on:
     push:
-        branches: [ dev ]
+        branches: [ main ]
 
 jobs:
     build:
@@ -18,11 +18,11 @@ jobs:
                   password: ${{ secrets.REGISTRY_PASSWORD }}
 
             - run: |
-                  docker build ./backend -f ./backend/docker/prod/Dockerfile  -t split.azurecr.io/backend:latest
-                  docker push split.azurecr.io/backend:latest
+                  docker build ./backend -f ./backend/docker/prod/Dockerfile  -t split.azurecr.io/backend-dev:latest
+                  docker push split.azurecr.io/backend-dev:latest
 
             - uses: azure/webapps-deploy@v2
               with:
-                  app-name: 'split-be'
-                  publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
-                  images: 'split.azurecr.io/backend:latest'
+                  app-name: 'split-dev-be'
+                  publish-profile: ${{ secrets.AZURE_BACKEND_DEV_PUBLISH_PROFILE }}
+                  images: 'split.azurecr.io/backend-dev:latest'
