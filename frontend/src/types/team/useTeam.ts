@@ -6,4 +6,5 @@ export default interface UseTeamType {
 	createTeam: UseMutationResult<Team, unknown, CreateTeamDto, unknown>;
 	fetchAllTeams: UseQueryResult<Team[] | null, unknown>;
 	fetchTeamsOfUser: UseQueryResult<Team[] | null, unknown>;
+	fetchTeam: UseQueryResult<Team | null, unknown>;
 }
