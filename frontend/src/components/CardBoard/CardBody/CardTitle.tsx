@@ -45,7 +45,6 @@ const CardTitle: React.FC<CardTitleProps> = ({
 			return (
 				<Link
 					key={boardId}
-					legacyBehavior={false}
 					href={{
 						pathname: `boards/[boardId]`,
 						query: isSubBoard ? { boardId, mainBoardId } : { boardId }

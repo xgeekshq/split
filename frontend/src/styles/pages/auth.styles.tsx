@@ -14,9 +14,7 @@ const CenteredContainer = styled('div', {
 	flexDirection: 'column',
 
 	backgroundColor: '#ffffff',
-	borderRadius: '$12',
-
-	'@lgh': { top: '$150', right: '$150' }
+	borderRadius: '$12'
 });
 const ImageBackground = styled(Flex, {
 	height: '100vh',
@@ -25,12 +23,12 @@ const ImageBackground = styled(Flex, {
 	backgroundColor: '$black',
 	backgroundImage: 'url(/images/background.svg)',
 	backgroundSize: 'cover',
-	backgroundRepeat: 'no-repeat'
+	backgroundRepeat: 'no-repeat',
+	overflow: 'auto'
 });
 
 const BannerContainer = styled(Flex, {
 	size: 'fit-content',
-
 	position: 'absolute',
 	left: '112px',
 	top: '72px'

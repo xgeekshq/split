@@ -39,7 +39,7 @@ const BoardHeader = () => {
 	const boardData = useRecoilValue(boardInfoState);
 
 	// Get Board Info
-	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } =
+	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt, boardNumber } =
 		boardData.board;
 
 	// Get Team users
@@ -155,7 +155,7 @@ const BoardHeader = () => {
 								overflow: 'hidden'
 							}}
 						>
-							{isSubBoard ? title.replace('board', '') : team.name}
+							{isSubBoard ? `Sub-team ${boardNumber}` : team.name}
 						</Text>
 						<CardAvatars
 							isBoardsPage

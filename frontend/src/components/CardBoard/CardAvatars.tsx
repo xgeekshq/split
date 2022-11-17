@@ -127,6 +127,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					<Tooltip
 						key={`${value}-${idx}-${Math.random()}`}
 						content={`${value.firstName} ${value.lastName}`}
+						isLast={usersCount - 1 === idx}
 					>
 						<IconButton
 							aria-hidden="true"
@@ -153,7 +154,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					</Tooltip>
 				);
 			},
-			[handleViewAllUsers, userId, isBoardsPage]
+			[usersCount, isBoardsPage, handleViewAllUsers, userId]
 		);
 
 		const numberOfAvatars = useMemo(() => {
