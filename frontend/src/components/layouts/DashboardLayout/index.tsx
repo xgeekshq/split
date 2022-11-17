@@ -19,34 +19,31 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 
 	return (
 		<ContentSection gap="36" justify="between">
-			<>
-				<Flex css={{ width: '100%' }} direction="column" gap="40">
-					<Flex justify="between">
-						{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
-						{isBoards && <Text heading="1">Boards</Text>}
-						{isTeams && <Text heading="1">Teams</Text>}
-						{(isDashboard || isBoards) && (
-							<Link href="/boards/new">
-								<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-									<Icon css={{ color: 'white' }} name="plus" />
-									Add new board
-								</AddNewBoardButton>
-							</Link>
-						)}
-						{isTeams && (
-							<Link href="/teams/new">
-								<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-									<Icon css={{ color: 'white' }} name="plus" />
-									Create new team
-								</AddNewBoardButton>
-							</Link>
-						)}
-					</Flex>
-					{children}
+			<Flex css={{ width: '100%' }} direction="column" gap="40">
+				<Flex justify="between">
+					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
+					{isBoards && <Text heading="1">Boards</Text>}
+					{isTeams && <Text heading="1">Teams</Text>}
+					{(isDashboard || isBoards) && (
+						<Link href="/boards/new">
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+								<Icon css={{ color: 'white' }} name="plus" />
+								Add new board
+							</AddNewBoardButton>
+						</Link>
+					)}
+					{isTeams && (
+						<Link href="/teams/new">
+							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
+								<Icon css={{ color: 'white' }} name="plus" />
+								Create new team
+							</AddNewBoardButton>
+						</Link>
+					)}
 				</Flex>
-				{/* {isDashboard && <CalendarBar />} */}
-			</>
-			)
+				{children}
+			</Flex>
+			{/* {isDashboard && <CalendarBar />} */}
 		</ContentSection>
 	);
 };
