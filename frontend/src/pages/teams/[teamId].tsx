@@ -36,21 +36,6 @@ const Team = () => {
 		if (!data) {
 			return;
 		}
-		// data.forEach((user) => {
-		// 	if (user._id === session?.user.id) {
-		// 		listMembers.push({
-		// 			user,
-		// 			role: TeamUserRoles.ADMIN,
-		// 			isNewJoiner: false
-		// 		});
-		// 	}
-		// });
-		//
-		// const usersWithChecked = data.map((user) => {
-		// 	return { ...user, isChecked: user._id === session?.user.id };
-		// });
-		//
-		// setUsersListState(usersWithChecked);
 
 		setMembersListState(data.users);
 	}, [data, session?.user.id, setMembersListState, setUsersListState]);
