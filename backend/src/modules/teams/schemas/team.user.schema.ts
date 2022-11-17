@@ -22,7 +22,7 @@ export default class TeamUser {
 		type: Boolean,
 		nullable: false
 	})
-	isNewbie!: boolean;
+	isNewJoiner!: boolean;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	user!: User | ObjectId;

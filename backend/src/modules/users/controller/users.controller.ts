@@ -43,7 +43,7 @@ export default class UsersController {
 		type: InternalServerErrorResponse
 	})
 	@Get()
-	getAllTeams() {
+	getAllUsers() {
 		return this.getUserApp.getAllUsers();
 	}
 }
