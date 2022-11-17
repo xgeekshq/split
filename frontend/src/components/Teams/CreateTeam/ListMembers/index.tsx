@@ -150,29 +150,28 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 						Teams
 					</Text>
 					<ScrollableContent direction="column" justify="start" ref={scrollRef}>
-						<Flex
-							css={{ flex: '1 1', px: '$32', width: '80%' }}
-							direction="column"
-							gap={16}
-						>
+						<Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
 							{filteredList?.map((user) => (
 								<Flex key={user._id} align="center" justify="between">
-									<Checkbox
-										checked={user.isChecked}
-										disabled={user._id === session?.user.id}
-										handleChange={handleChecked}
-										id={user._id}
-										label={`${user.firstName} ${user.lastName}`}
-										size="16"
-									/>
-
-									<Text
-										color="primary300"
-										css={{ textAlign: 'left', width: '50%' }}
-										size="sm"
-									>
-										{user.email}
-									</Text>
+									<Flex css={{ width: '50%' }}>
+										<Checkbox
+											checked={user.isChecked}
+											disabled={user._id === session?.user.id}
+											handleChange={handleChecked}
+											id={user._id}
+											label={`${user.firstName} ${user.lastName}`}
+											size="16"
+										/>
+									</Flex>
+									<Flex css={{ width: '50%' }}>
+										<Text
+											color="primary300"
+											css={{ textAlign: 'left', width: '50%' }}
+											size="sm"
+										>
+											{user.email}
+										</Text>
+									</Flex>
 								</Flex>
 							))}
 						</Flex>
