@@ -134,7 +134,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		}
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
-	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+	const userIsInBoard = useMemo(() => {
+		return board?.users.find((user) => user.user._id === userId);
+	}, [board?.users, userId]);
 
 	useEffect(() => {
 		if (data === null) {
