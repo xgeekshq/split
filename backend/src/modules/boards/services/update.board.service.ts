@@ -300,7 +300,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,
 				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id),
-				boardId: board._id
+				boardId: subBoardId,
+				mainBoardId: board._id
 			});
 		}
 

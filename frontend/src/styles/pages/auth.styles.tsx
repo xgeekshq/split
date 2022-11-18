@@ -4,8 +4,8 @@ import Flex from 'components/Primitives/Flex';
 
 const CenteredContainer = styled('div', {
 	position: 'absolute',
-	top: '150px',
-	right: '150px',
+	top: '5%',
+	right: '$150',
 
 	maxWidth: '500px',
 	height: 'fit-content',
@@ -23,12 +23,12 @@ const ImageBackground = styled(Flex, {
 	backgroundColor: '$black',
 	backgroundImage: 'url(/images/background.svg)',
 	backgroundSize: 'cover',
-	backgroundRepeat: 'no-repeat'
+	backgroundRepeat: 'no-repeat',
+	overflow: 'auto'
 });
 
 const BannerContainer = styled(Flex, {
 	size: 'fit-content',
-
 	position: 'absolute',
 	left: '112px',
 	top: '72px'

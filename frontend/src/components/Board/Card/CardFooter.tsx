@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { styled } from 'styles/stitches/stitches.config';
 
@@ -118,30 +118,20 @@ const CardFooter = React.memo<FooterProps>(
 
 		const [disableVoteButton, setDisableVoteButton] = useState(false);
 
-		const firstUpdate = useRef(true);
 		useEffect(() => {
-			if (firstUpdate.current) {
-				firstUpdate.current = false;
-				return;
-			}
+			if (countVotes === 0) return;
 
-			const delayDebounceFn = setTimeout(() => {
-				handleVote.mutate({
-					boardId,
-					cardId: card._id,
-					socketId,
-					cardItemId,
-					isCardGroup: cardItemId === undefined,
-					count: countVotes
-				});
-				setCountVotes(0);
-				firstUpdate.current = true;
-			}, 50);
-
-			// eslint-disable-next-line consistent-return
-			return () => clearTimeout(delayDebounceFn);
+			handleVote.mutate({
+				boardId,
+				cardId: card._id,
+				socketId,
+				cardItemId,
+				isCardGroup: cardItemId === undefined,
+				count: countVotes
+			});
+			setCountVotes(0);
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [countVotes, firstUpdate]);
+		}, [countVotes]);
 
 		const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			event.stopPropagation();
