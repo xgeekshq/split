@@ -153,6 +153,16 @@
         "review",
         "userTesting"
       ]
+    },
+    {
+      "login": "RafaelSBatista97",
+      "name": "Rafael Batista",
+      "avatar_url": "https://avatars.githubusercontent.com/u/118206043?v=4",
+      "profile": "https://github.com/RafaelSBatista97",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
