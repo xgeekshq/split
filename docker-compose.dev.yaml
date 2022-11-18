@@ -4,8 +4,8 @@ services:
   backend:
     build:
       context: backend # starts on backend folder instead on root
-      target: local # choose development part from Dockerfile
-      dockerfile: docker/local/Dockerfile
+      target: dev # choose development part from Dockerfile
+      dockerfile: docker/dev/Dockerfile
 
     # image name
     image: split-dev-backend
@@ -36,7 +36,7 @@ services:
   frontend:
     build:
       context: frontend # to start on frontend folder
-      dockerfile: docker/local/Dockerfile # path to dev Dockerfile
+      dockerfile: docker/dev/Dockerfile # path to dev Dockerfile
 
     # set image name
     image: split-dev-frontend
@@ -102,7 +102,7 @@ services:
 
 volumes:
   redis_data:
-    driver: local
+    driver: dev
 
 # Networks
 networks:
