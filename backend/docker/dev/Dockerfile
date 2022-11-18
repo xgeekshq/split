@@ -1,5 +1,5 @@
 # Dev Environment
-FROM node:16-alpine AS development
+FROM node:16-alpine AS dev
 
 # Container Dir
 WORKDIR /app/backend
