@@ -40,7 +40,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
 	return (
 		<>
 			<Head>
-				<title>SPLIT</title>
+				<title>SPLIT dev</title>
 				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 			</Head>
 			<Sprite />

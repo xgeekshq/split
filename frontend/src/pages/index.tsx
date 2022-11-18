@@ -43,7 +43,7 @@ const Home: NextPage = () => {
 					>
 						<TabsList aria-label="Login or register">
 							<TabsTrigger value="login">
-								<Text heading="4">Log in dev</Text>
+								<Text heading="4">Log in</Text>
 							</TabsTrigger>
 							<TabsTrigger value="register">
 								<Text heading="4">Sign up</Text>
