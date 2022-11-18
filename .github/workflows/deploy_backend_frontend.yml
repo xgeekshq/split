@@ -2,7 +2,7 @@ name: Deploy
 
 on:
     push:
-        branches: 
+        branches:
             - main
             - dev
 
@@ -10,7 +10,7 @@ jobs:
     build_backend:
         runs-on: ubuntu-latest
         environment: ${{ github.ref_name == 'dev' && 'dev' || 'prod' }}
-        
+
         steps:
             - uses: actions/checkout@v2
             - uses: azure/docker-login@v1
@@ -41,11 +41,11 @@ jobs:
                   username: ${{ secrets.REGISTRY_USERNAME }}
                   password: ${{ secrets.REGISTRY_PASSWORD }}
             - run: |
-                        docker build ./frontend -f ./frontend/docker/prod/Dockerfile --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t split.azurecr.io/frontend${{ github.ref_name == 'dev' && '-dev' || '' }}:latest
-                        docker push split.azurecr.io/frontend${{ github.ref_name == 'dev' && '-dev' || '' }}:latest
+                  docker build ./frontend -f ./frontend/docker/prod/Dockerfile --build-arg NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}} --build-arg NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}} --build-arg NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}} --build-arg NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}} -t split.azurecr.io/frontend${{ github.ref_name == 'dev' && '-dev' || '' }}:latest
+                  docker push split.azurecr.io/frontend${{ github.ref_name == 'dev' && '-dev' || '' }}:latest
 
             - uses: azure/webapps-deploy@v2
               with:
-                app-name: ${{ github.ref_name == 'dev' && 'split-fe-dev' || 'split-fe' }}
-                publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
-                images: ${{ github.ref_name == 'dev' && 'split.azurecr.io/frontend-dev:latest' || 'split.azurecr.io/frontend:latest' }}
+                  app-name: ${{ github.ref_name == 'dev' && 'split-fe-dev' || 'split-fe' }}
+                  publish-profile: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+                  images: ${{ github.ref_name == 'dev' && 'split.azurecr.io/frontend-dev:latest' || 'split.azurecr.io/frontend:latest' }}
