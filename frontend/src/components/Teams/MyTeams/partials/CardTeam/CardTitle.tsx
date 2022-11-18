@@ -32,8 +32,8 @@ const CardTitle: React.FC<CardTitleProps> = ({ teamId, title }) => {
 			<Link
 				key={teamId}
 				href={{
-					pathname: `teams/[teamId]`
-					// query: isSubBoard ? { boardId, mainBoardId } : { boardId }
+					pathname: `teams/[teamId]`,
+					query: { teamId }
 				}}
 			>
 				<StyledBoardTitle>{title}</StyledBoardTitle>

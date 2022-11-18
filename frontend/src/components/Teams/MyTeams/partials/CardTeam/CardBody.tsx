@@ -44,7 +44,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 
 		const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
-		return team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder');
+		return team && myUser?.role === 'admin';
 	}, [isSAdmin, team, userId]);
 
 	return (
@@ -98,7 +98,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 					/>
 
 					<Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
-						<Flex align="center" css={{ width: '$127' }}>
+						<Flex align="center" css={{ width: '$147' }}>
 							<Text color="primary300" css={{ mr: '$2' }} size="sm">
 								Team admin
 							</Text>
