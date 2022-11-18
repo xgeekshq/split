@@ -8,7 +8,7 @@ WORKDIR /app/backend
 COPY package.json ./
 
 # Install the packages (on the package.json)
-RUN yarn
+RUN npm i
 
 # Copy all files
 COPY ./ .
@@ -17,4 +17,4 @@ COPY ./ .
 EXPOSE 3200
 
 # Run in dev mode
-CMD ["yarn", "start:dev"]
+CMD ["npm", "start:dev"]
