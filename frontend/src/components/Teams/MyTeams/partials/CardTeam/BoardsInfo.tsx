@@ -25,7 +25,6 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
 							}}
 						/>
 						<Text css={{ ml: '$8' }} size="sm" weight="medium">
-							{' '}
 							Create first team board
 						</Text>
 					</Flex>
