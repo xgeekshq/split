@@ -4,6 +4,7 @@ export const DEFAULT_SERVER_PORT = 3200;
 
 export const configuration = (): Configuration => {
 	const NODE_ENV = process.env.NODE_ENV;
+	console.log(NODE_ENV)
 	const defaultConfiguration = {
 		server: {
 			port: parseInt(process.env.BACKEND_PORT as string, 10) || DEFAULT_SERVER_PORT
