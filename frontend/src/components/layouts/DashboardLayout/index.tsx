@@ -13,10 +13,11 @@ type DashboardLayoutProps = {
 	isBoards: boolean;
 	isTeams: boolean;
 	canAddBoard: boolean;
+	isUsers: boolean;
 };
 
 const DashboardLayout = (props: DashboardLayoutProps) => {
-	const { children, firstName, isDashboard, isBoards, isTeams, canAddBoard } = props;
+	const { children, firstName, isDashboard, isBoards, isTeams, canAddBoard, isUsers } = props;
 
 	return (
 		<ContentSection gap="36" justify="between">
@@ -25,6 +26,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
 					{isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
 					{isBoards && <Text heading="1">Boards</Text>}
 					{isTeams && <Text heading="1">Teams</Text>}
+					{isUsers && <Text heading="1">Users</Text>}
 					{(isDashboard || isBoards) && (
 						<Link href="/boards/new">
 							<AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>

@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import LoadingPage from 'components/loadings/LoadingPage';
 import { Sidebar } from 'components/Sidebar';
 import { REFRESH_TOKEN_ERROR } from 'utils/constants';
-import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE } from 'utils/routes';
+import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from 'utils/routes';
 import DashboardLayout from '../DashboardLayout';
 import { Container } from './styles';
 
@@ -20,6 +20,7 @@ const Layout: React.FC<{ children: ReactNode; canAddBoard?: boolean }> = ({
 	const isDashboard = router.pathname === DASHBOARD_ROUTE;
 	const isBoards = router.pathname === BOARDS_ROUTE;
 	const isTeams = router.pathname === TEAMS_ROUTE;
+	const isUsers = router.pathname === USERS_ROUTE;
 
 	if (session?.error === REFRESH_TOKEN_ERROR) {
 		signOut({ callbackUrl: '/' });
@@ -34,11 +35,12 @@ const Layout: React.FC<{ children: ReactNode; canAddBoard?: boolean }> = ({
 				isBoards={isBoards}
 				isDashboard={isDashboard}
 				isTeams={isTeams}
+				isUsers={isUsers}
 			>
 				{children}
 			</DashboardLayout>
 		);
-	}, [children, isBoards, isDashboard, session, isTeams, canAddBoard]);
+	}, [children, isBoards, isDashboard, session, isTeams, canAddBoard, isUsers]);
 
 	if (!session) return <LoadingPage />;
 
