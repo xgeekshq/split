@@ -1,17 +1,17 @@
 import { useMutation, useQuery } from 'react-query';
-import { useSetRecoilState } from 'recoil';
 
 import { ToastStateEnum } from 'utils/enums/toast-types';
-import { createTeamRequest, getAllTeams, getTeamsOfUser } from '../api/teamService';
-import { toastState } from '../store/toast/atom/toast.atom';
+import { createTeamRequest, getAllTeams, getTeamRequest, getTeamsOfUser } from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
+import useTeamUtils from './useTeamUtils';
 
 interface AutoFetchProps {
 	autoFetchTeam: boolean;
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-	const setToastState = useSetRecoilState(toastState);
+	const { teamId, setToastState } = useTeamUtils();
+
 	const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
 		enabled: autoFetchTeam,
 		refetchOnWindowFocus: false,
@@ -23,6 +23,25 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 			});
 		}
 	});
+
+	const fetchTeam = useQuery(
+		['team', teamId],
+		() => {
+			if (typeof teamId === 'string') return getTeamRequest(teamId);
+			return undefined;
+		},
+		{
+			enabled: autoFetchTeam,
+			refetchOnWindowFocus: false,
+			onError: () => {
+				setToastState({
+					open: true,
+					content: 'Error getting the team',
+					type: ToastStateEnum.ERROR
+				});
+			}
+		}
+	);
 
 	const fetchTeamsOfUser = useQuery(['teams'], () => getTeamsOfUser(), {
 		enabled: autoFetchTeam,
@@ -56,7 +75,8 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 	return {
 		fetchAllTeams,
 		fetchTeamsOfUser,
-		createTeam
+		createTeam,
+		fetchTeam
 	};
 };
 

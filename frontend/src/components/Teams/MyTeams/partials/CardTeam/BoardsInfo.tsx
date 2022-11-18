@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
@@ -16,24 +14,21 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
 		return (
 			<Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
 				{(userSAdmin || teamAdmin) && (
-					<Link href="/boards/new">
-						<a style={{ textDecoration: 'none' }}>
-							<Flex css={{ alignItems: 'center' }}>
-								<Icon
-									name="plus"
-									css={{
-										width: '$16',
-										height: '$32',
-										marginRight: '$5'
-									}}
-								/>
-								<Text css={{ ml: '$8' }} size="sm" weight="medium">
-									{' '}
-									Create first team board
-								</Text>
-							</Flex>
-						</a>
-					</Link>
+					// <Link href="/boards/new">
+					<Flex css={{ alignItems: 'center' }}>
+						<Icon
+							name="plus"
+							css={{
+								width: '$16',
+								height: '$32',
+								marginRight: '$5'
+							}}
+						/>
+						<Text css={{ ml: '$8' }} size="sm" weight="medium">
+							Create first team board
+						</Text>
+					</Flex>
+					// </Link>
 				)}
 				{!teamAdmin && (
 					<Text css={{ ml: '$14' }} size="sm" weight="medium">
@@ -46,11 +41,11 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
 
 	return (
 		<Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
-			<Link href="boards/">
-				<Text css={{ ml: '$14' }} size="sm" weight="medium">
-					{team.boardsCount} team boards
-				</Text>
-			</Link>
+			{/* <Link href="boards/"> */}
+			<Text css={{ ml: '$14' }} size="sm" weight="medium">
+				{team.boardsCount} team boards
+			</Text>
+			{/* </Link> */}
 		</Flex>
 	);
 };
