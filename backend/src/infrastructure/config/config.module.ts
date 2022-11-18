@@ -12,18 +12,18 @@ const NODE_ENV = process.env.NODE_ENV;
 			envFilePath: !NODE_ENV || NODE_ENV === 'dev' ? '.env' : `.env.${NODE_ENV}`,
 			load: [configuration],
 			validationSchema: Joi.object({
-				NODE_ENV: Joi.string().valid('dev', 'prod', 'test', 'staging').default('dev'),
+				NODE_ENV: Joi.string().valid('dev', 'prod', 'test', 'staging', 'local').default('local'),
 				DB_HOST: Joi.string().required(),
 				DB_USER: Joi.string().required(),
 				DB_PASSWORD: Joi.string().required(),
 				DB_NAME: Joi.string().required(),
 				DB_PORT: Joi.any().when('NODE_ENV', {
-					is: 'dev',
+					is: 'local',
 					then: Joi.required(),
 					otherwise: Joi.optional()
 				}),
 				DB_REPLICA_SET: Joi.any().when('NODE_ENV', {
-					is: 'dev',
+					is: 'local',
 					then: Joi.required(),
 					otherwise: Joi.optional()
 				}),
