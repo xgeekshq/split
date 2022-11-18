@@ -69,6 +69,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center"><a href="https://www.linkedin.com/in/moura-braz"><img src="https://avatars.githubusercontent.com/u/7543719?v=4?s=50" width="50px;" alt="mourabraz"/><br /><sub><b>mourabraz</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=mourabraz" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=mourabraz" title="Documentation">📖</a> <a href="https://github.com/xgeekshq/split/pulls?q=is%3Apr+reviewed-by%3Amourabraz" title="Reviewed Pull Requests">👀</a></td>
       <td align="center"><a href="https://github.com/miguel-felix1"><img src="https://avatars.githubusercontent.com/u/87712174?v=4?s=50" width="50px;" alt="Miguel Félix"/><br /><sub><b>Miguel Félix</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=miguel-felix1" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/issues?q=author%3Amiguel-felix1" title="Bug reports">🐛</a> <a href="https://github.com/xgeekshq/split/pulls?q=is%3Apr+reviewed-by%3Amiguel-felix1" title="Reviewed Pull Requests">👀</a> <a href="#userTesting-miguel-felix1" title="User Testing">📓</a></td>
     </tr>
+    <tr>
+      <td align="center"><a href="https://github.com/GuiSanto"><img src="https://avatars.githubusercontent.com/u/99729373?v=4?s=50" width="50px;" alt="GuiSanto"/><br /><sub><b>GuiSanto</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=GuiSanto" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=GuiSanto" title="Documentation">📖</a></td>
+    </tr>
   </tbody>
 </table>
 
