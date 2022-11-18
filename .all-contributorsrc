@@ -153,6 +153,16 @@
         "review",
         "userTesting"
       ]
+    },
+    {
+      "login": "GuiSanto",
+      "name": "GuiSanto",
+      "avatar_url": "https://avatars.githubusercontent.com/u/99729373?v=4",
+      "profile": "https://github.com/GuiSanto",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
