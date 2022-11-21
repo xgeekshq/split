@@ -72,6 +72,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center"><a href="https://github.com/RafaelSBatista97"><img src="https://avatars.githubusercontent.com/u/118206043?v=4?s=50" width="50px;" alt="Rafael Batista"/><br /><sub><b>Rafael Batista</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=RafaelSBatista97" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=RafaelSBatista97" title="Documentation">📖</a></td>
       <td align="center"><a href="https://github.com/GuiSanto"><img src="https://avatars.githubusercontent.com/u/99729373?v=4?s=50" width="50px;" alt="GuiSanto"/><br /><sub><b>GuiSanto</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=GuiSanto" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=GuiSanto" title="Documentation">📖</a></td>
+      <td align="center"><a href="https://github.com/patricia-mdias"><img src="https://avatars.githubusercontent.com/u/116013814?v=4?s=50" width="50px;" alt="Patrícia Dias"/><br /><sub><b>Patrícia Dias</b></sub></a><br /><a href="https://github.com/xgeekshq/split/commits?author=patricia-mdias" title="Code">💻</a> <a href="https://github.com/xgeekshq/split/commits?author=patricia-mdias" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
