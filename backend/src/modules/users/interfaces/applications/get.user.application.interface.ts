@@ -6,4 +6,6 @@ export interface GetUserApplication {
 	getByEmail(email: string): Promise<LeanDocument<UserDocument> | null>;
 
 	countUsers(): Promise<number>;
+
+	getAllUsers(): Promise<LeanDocument<UserDocument>[]>;
 }
