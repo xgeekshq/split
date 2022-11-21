@@ -12,15 +12,11 @@ type FilterBoardMembersType = {
 
 const FilterBoardMembers = ({ title, users }: FilterBoardMembersType) => {
 	return (
-		<>
+		<Flex align="start" css={{ pb: '$20' }} direction="column">
 			<Text css={{ display: 'block', px: '$32', py: '$10', pt: '$20' }} heading="4">
 				{title}
 			</Text>
-			<Flex
-				css={{ flex: '1 1', px: '$32', width: '80%', pt: '$20' }}
-				direction="column"
-				gap={16}
-			>
+			<Flex css={{ px: '$32', py: '$10' }} direction="column" gap={16}>
 				{users.map((member) => (
 					<Flex key={member._id} align="center">
 						<Avatar
@@ -36,7 +32,7 @@ const FilterBoardMembers = ({ title, users }: FilterBoardMembersType) => {
 					</Flex>
 				))}
 			</Flex>
-		</>
+		</Flex>
 	);
 };
 

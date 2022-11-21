@@ -180,6 +180,7 @@ const BoardHeader = () => {
 										Team admins
 									</Text>
 									<CardAvatars
+										isBoardsPage
 										teamAdmins
 										listUsers={isSubBoard ? users : teamUsers}
 										responsible={false}
@@ -204,6 +205,7 @@ const BoardHeader = () => {
 									Stakeholders
 								</Text>
 								<CardAvatars
+									isBoardsPage
 									stakeholders
 									listUsers={isSubBoard ? users : teamUsers}
 									responsible={false}
@@ -225,6 +227,7 @@ const BoardHeader = () => {
 									Responsible
 								</Text>
 								<CardAvatars
+									isBoardsPage
 									responsible
 									listUsers={users}
 									teamAdmins={false}
