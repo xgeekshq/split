@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useRef } from 'react';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 
-import { ListUsersType } from 'components/CardBoard/CardAvatars';
 import Icon from 'components/icons/Icon';
+import Avatar from 'components/Primitives/Avatar';
 import Text from 'components/Primitives/Text';
+import { User } from 'types/user/user';
+import { BoardUserRoles } from 'utils/enums/board.user.roles';
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import {
 	StyledDialogCloseButton,
 	StyledDialogContainer,
@@ -13,6 +16,12 @@ import {
 } from '../../../Board/Settings/styles';
 import Flex from '../../../Primitives/Flex';
 import { ScrollableContent } from './styles';
+
+type ListUsersType = {
+	user: User;
+	role: TeamUserRoles | BoardUserRoles;
+	_id?: string;
+};
 
 type ListBoardMembersProps = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -43,27 +52,21 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 							Team Members
 						</Text>
 						<Flex
-							css={{ flex: '1 1', px: '$32', width: '80%' }}
+							css={{ flex: '1 1', px: '$32', width: '80%', pt: '$20' }}
 							direction="column"
 							gap={16}
 						>
 							{boardMembers.map((member) => (
-								<Flex key={member._id} align="center" justify="between">
-									<Text
-										color="primary300"
-										css={{ textAlign: 'left', width: '50%' }}
-										size="sm"
-									>
-										{typeof member.user === 'object' &&
-											`${member.user.firstName} ${member.user.lastName}`}
-									</Text>
-
-									<Text
-										color="primary300"
-										css={{ textAlign: 'left', width: '50%' }}
-										size="sm"
-									>
-										{typeof member.user === 'object' && member.user.email}
+								<Flex key={member._id} align="center">
+									<Avatar
+										key={`${member}-${member._id}-${Math.random()}`}
+										colors={undefined}
+										css={{ position: 'relative', mr: '$10' }}
+										fallbackText={`${member.user.firstName[0]}${member.user.lastName[0]}`}
+										size={32}
+									/>
+									<Text color="primary800" size="sm">
+										{`${member.user.firstName} ${member.user.lastName}`}
 									</Text>
 								</Flex>
 							))}

@@ -9,7 +9,7 @@ import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import { IconButton } from './styles';
 
-export type ListUsersType = {
+type ListUsersType = {
 	user: User | string;
 	role: TeamUserRoles | BoardUserRoles;
 	_id?: string;
@@ -170,10 +170,19 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			return 1;
 		}, [myBoards]);
 
+		const boardMembers = useMemo(() => {
+			return listUsers.map((member) => {
+				return {
+					...member,
+					user: member.user as User
+				};
+			});
+		}, [listUsers]);
+
 		return (
 			<>
 				<ListBoardMembers
-					boardMembers={listUsers}
+					boardMembers={boardMembers}
 					isOpen={dialogIsOpen}
 					setIsOpen={setDialogIsOpen}
 				/>
