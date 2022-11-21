@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction, useRef } from 'react';
 import { Dialog, DialogClose } from '@radix-ui/react-dialog';
 
 import Icon from 'components/icons/Icon';
-import Avatar from 'components/Primitives/Avatar';
 import Text from 'components/Primitives/Text';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
@@ -14,7 +13,7 @@ import {
 	StyledDialogOverlay,
 	StyledDialogTitle
 } from '../../../Board/Settings/styles';
-import Flex from '../../../Primitives/Flex';
+import { FilterBoardMembers } from './FilterBoardMembers';
 import { ScrollableContent } from './styles';
 
 type ListUsersType = {
@@ -34,6 +33,18 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
+	const responsible: User[] = boardMembers
+		.filter((user) => user.role === BoardUserRoles.RESPONSIBLE)
+		.map((user) => user.user);
+
+	const members = boardMembers
+		.filter((user) => user.role === BoardUserRoles.MEMBER)
+		.map((user) => user.user);
+
+	const stakeholders = boardMembers
+		.filter((user) => user.role === BoardUserRoles.STAKEHOLDER)
+		.map((user) => user.user);
+
 	return (
 		<StyledDialogContainer ref={dialogContainerRef}>
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -48,7 +59,7 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 						</DialogClose>
 					</StyledDialogTitle>
 					<ScrollableContent direction="column" justify="start" ref={scrollRef}>
-						<Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+						{/* <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
 							Team Members
 						</Text>
 						<Flex
@@ -70,7 +81,18 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 									</Text>
 								</Flex>
 							))}
-						</Flex>
+						</Flex> */}
+						<FilterBoardMembers
+							isResponsible
+							role={BoardUserRoles.RESPONSIBLE}
+							users={responsible}
+						/>
+						<FilterBoardMembers isMember role={BoardUserRoles.MEMBER} users={members} />
+						<FilterBoardMembers
+							isStakeholder
+							role={BoardUserRoles.STAKEHOLDER}
+							users={stakeholders}
+						/>
 					</ScrollableContent>
 				</StyledDialogContent>
 			</Dialog>
