@@ -33,7 +33,11 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
-	const responsible: User[] = boardMembers
+	const admin = boardMembers
+		.filter((user) => user.role === TeamUserRoles.ADMIN)
+		.map((user) => user.user);
+
+	const responsible = boardMembers
 		.filter((user) => user.role === BoardUserRoles.RESPONSIBLE)
 		.map((user) => user.user);
 
@@ -93,6 +97,7 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 							role={BoardUserRoles.STAKEHOLDER}
 							users={stakeholders}
 						/>
+						<FilterBoardMembers isAdmin role={TeamUserRoles.ADMIN} users={admin} />
 					</ScrollableContent>
 				</StyledDialogContent>
 			</Dialog>

@@ -5,13 +5,15 @@ import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
+import { TeamUserRoles } from 'utils/enums/team.user.roles';
 
 type FilterBoardMembersType = {
-	role: BoardUserRoles;
+	role: BoardUserRoles | TeamUserRoles;
 	users: User[];
 	isStakeholder?: boolean;
 	isMember?: boolean;
 	isResponsible?: boolean;
+	isAdmin?: boolean;
 };
 
 const FilterBoardMembers = ({
@@ -19,15 +21,16 @@ const FilterBoardMembers = ({
 	users,
 	isMember,
 	isStakeholder,
-	isResponsible
+	isResponsible,
+	isAdmin
 }: FilterBoardMembersType) => {
 	const isPluralStakeholderOrResponsible = useMemo(() => {
-		return (isStakeholder || isResponsible) && users.length > 1;
-	}, [isStakeholder, isResponsible, users.length]);
+		return (isStakeholder || isResponsible || isAdmin) && users.length > 1;
+	}, [isStakeholder, isResponsible, users.length, isAdmin]);
 
 	const isSingularStakeholderOrResponsible = useMemo(() => {
-		return (isStakeholder || isResponsible) && users.length === 1;
-	}, [isStakeholder, isResponsible, users.length]);
+		return (isStakeholder || isResponsible || isAdmin) && users.length === 1;
+	}, [isStakeholder, isResponsible, users.length, isAdmin]);
 
 	return (
 		<>
