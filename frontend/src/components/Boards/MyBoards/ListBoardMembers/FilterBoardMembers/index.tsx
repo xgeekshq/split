@@ -1,46 +1,20 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { User } from 'types/user/user';
-import { BoardUserRoles } from 'utils/enums/board.user.roles';
-import { TeamUserRoles } from 'utils/enums/team.user.roles';
 
 type FilterBoardMembersType = {
-	role: BoardUserRoles | TeamUserRoles;
+	title: string;
 	users: User[];
-	isStakeholder?: boolean;
-	isMember?: boolean;
-	isResponsible?: boolean;
-	isAdmin?: boolean;
 };
 
-const FilterBoardMembers = ({
-	role,
-	users,
-	isMember,
-	isStakeholder,
-	isResponsible,
-	isAdmin
-}: FilterBoardMembersType) => {
-	const isPluralStakeholderOrResponsible = useMemo(() => {
-		return (isStakeholder || isResponsible || isAdmin) && users.length > 1;
-	}, [isStakeholder, isResponsible, users.length, isAdmin]);
-
-	const isSingularStakeholderOrResponsible = useMemo(() => {
-		return (isStakeholder || isResponsible || isAdmin) && users.length === 1;
-	}, [isStakeholder, isResponsible, users.length, isAdmin]);
-
+const FilterBoardMembers = ({ title, users }: FilterBoardMembersType) => {
 	return (
 		<>
 			<Text css={{ display: 'block', px: '$32', py: '$10', pt: '$20' }} heading="4">
-				{isMember && `Team Members`}
-				{isPluralStakeholderOrResponsible &&
-					`${role[0].toUpperCase()}${role.substring(1, role.length)}s`}
-				{isSingularStakeholderOrResponsible &&
-					`${role[0].toUpperCase()}${role.substring(1, role.length)}`}
-				{/* {role === 'member' && `Team ${role[0].toUpperCase()}${role.substring(1, role.length)}s`} */}
+				{title}
 			</Text>
 			<Flex
 				css={{ flex: '1 1', px: '$32', width: '80%', pt: '$20' }}

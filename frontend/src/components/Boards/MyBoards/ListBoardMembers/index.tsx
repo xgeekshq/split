@@ -6,6 +6,7 @@ import Text from 'components/Primitives/Text';
 import { User } from 'types/user/user';
 import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
+import isEmpty from 'utils/isEmpty';
 import {
 	StyledDialogCloseButton,
 	StyledDialogContainer,
@@ -63,41 +64,22 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
 						</DialogClose>
 					</StyledDialogTitle>
 					<ScrollableContent direction="column" justify="start" ref={scrollRef}>
-						{/* <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-							Team Members
-						</Text>
-						<Flex
-							css={{ flex: '1 1', px: '$32', width: '80%', pt: '$20' }}
-							direction="column"
-							gap={16}
-						>
-							{boardMembers.map((member) => (
-								<Flex key={member._id} align="center">
-									<Avatar
-										key={`${member}-${member._id}-${Math.random()}`}
-										colors={undefined}
-										css={{ position: 'relative', mr: '$10' }}
-										fallbackText={`${member.user.firstName[0]}${member.user.lastName[0]}`}
-										size={32}
-									/>
-									<Text color="primary800" size="sm">
-										{`${member.user.firstName} ${member.user.lastName}`}
-									</Text>
-								</Flex>
-							))}
-						</Flex> */}
-						<FilterBoardMembers
-							isResponsible
-							role={BoardUserRoles.RESPONSIBLE}
-							users={responsible}
-						/>
-						<FilterBoardMembers isMember role={BoardUserRoles.MEMBER} users={members} />
-						<FilterBoardMembers
-							isStakeholder
-							role={BoardUserRoles.STAKEHOLDER}
-							users={stakeholders}
-						/>
-						<FilterBoardMembers isAdmin role={TeamUserRoles.ADMIN} users={admin} />
+						<FilterBoardMembers title="Team Members" users={members} />
+						{!isEmpty(responsible) && (
+							<FilterBoardMembers title="Responsible" users={responsible} />
+						)}
+						{!isEmpty(stakeholders) && (
+							<FilterBoardMembers
+								title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}
+								users={stakeholders}
+							/>
+						)}
+						{!isEmpty(admin) && (
+							<FilterBoardMembers
+								title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
+								users={admin}
+							/>
+						)}
 					</ScrollableContent>
 				</StyledDialogContent>
 			</Dialog>
