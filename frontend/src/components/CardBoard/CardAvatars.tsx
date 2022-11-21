@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { ListMembers } from 'components/Boards/MyBoards/ListMembers';
+import { ListBoardMembers } from 'components/Boards/MyBoards/ListBoardMembers';
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
@@ -9,7 +9,7 @@ import { BoardUserRoles } from 'utils/enums/board.user.roles';
 import { TeamUserRoles } from 'utils/enums/team.user.roles';
 import { IconButton } from './styles';
 
-type ListUsersType = {
+export type ListUsersType = {
 	user: User | string;
 	role: TeamUserRoles | BoardUserRoles;
 	_id?: string;
@@ -44,7 +44,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
 			setViewAllUsers(!viewAllUsers);
 		}, [viewAllUsers]);
 
-		// TODO: React Hook useCallback has a missing dependency
 		const handleOpenDialog = useCallback(() => {
 			setDialogIsOpen(!dialogIsOpen);
 		}, [dialogIsOpen]);
@@ -165,15 +164,19 @@ const CardAvatars = React.memo<CardAvatarProps>(
 
 		const numberOfAvatars = useMemo(() => {
 			if (!myBoards) {
-				return viewAllUsers && isBoardsPage ? data.length : 3;
+				return 3;
 			}
 
 			return 1;
-		}, [data.length, isBoardsPage, myBoards, viewAllUsers]);
+		}, [myBoards]);
 
 		return (
 			<>
-				<ListMembers isOpen={dialogIsOpen} setIsOpen={setDialogIsOpen} />
+				<ListBoardMembers
+					boardMembers={listUsers}
+					isOpen={dialogIsOpen}
+					setIsOpen={setDialogIsOpen}
+				/>
 				<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
 					{haveError
 						? ['-', '-', '-'].map((value, index) => {
