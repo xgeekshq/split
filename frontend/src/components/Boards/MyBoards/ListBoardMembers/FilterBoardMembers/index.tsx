@@ -5,12 +5,12 @@ import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import { User } from 'types/user/user';
 
-type FilterBoardMembersType = {
+type FilterBoardMembersProps = {
 	title: string;
 	users: User[];
 };
 
-const FilterBoardMembers = ({ title, users }: FilterBoardMembersType) => {
+const FilterBoardMembers = ({ title, users }: FilterBoardMembersProps) => {
 	return (
 		<Flex align="start" css={{ pb: '$20' }} direction="column">
 			<Text css={{ display: 'block', px: '$32', py: '$10', pt: '$20' }} heading="4">
