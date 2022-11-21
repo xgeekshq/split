@@ -16,7 +16,9 @@ const TeamMembersList = () => {
 
 	const user = membersList.find((member) => member.user._id === session?.user.id);
 
-	const userRole = user?.role;
+	let userRole: TeamUserRoles;
+
+	if (user) userRole = user.role;
 
 	return (
 		<Flex css={{ mt: '$32' }} direction="column">
@@ -29,10 +31,10 @@ const TeamMembersList = () => {
 						isTeamCreator={member.user._id === session?.user.id}
 						member={member.user}
 						role={member.role}
-						isTeamMemberOrStakeholder={
-							userRole === TeamUserRoles.MEMBER ||
-							userRole === TeamUserRoles.STAKEHOLDER
-						}
+						isTeamMemberOrStakeholder={[
+							TeamUserRoles.MEMBER,
+							TeamUserRoles.STAKEHOLDER
+						].includes(userRole)}
 					/>
 				))}
 			</ScrollableContent>

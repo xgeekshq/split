@@ -18,8 +18,6 @@ import useTeam from '../../hooks/useTeam';
 import { membersListState, usersListState } from '../../store/team/atom/team.atom';
 
 const Team = () => {
-	// Recoil States
-
 	// Session Details
 	const { data: session } = useSession({ required: true });
 	// const userId = session?.user?.id;
@@ -29,6 +27,7 @@ const Team = () => {
 		fetchTeam: { data }
 	} = useTeam({ autoFetchTeam: false });
 
+	// Recoil States
 	const setUsersListState = useSetRecoilState(usersListState);
 	const setMembersListState = useSetRecoilState(membersListState);
 

@@ -76,12 +76,12 @@ const CardMember = React.memo<CardBodyProps>(
 						</Flex>
 						{isTeamMemberOrStakeholder ? (
 							<Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
-								<Text css={{ fontWeight: 500 }} size="sm">
+								<Text size="sm" weight="medium">
 									New Joiner
 								</Text>
 								<Tooltip
 									content={
-										<Text color="white" css={{ fontWeight: 400 }} size="sm">
+										<Text color="white" size="sm">
 											The new joiner will not be selected as a responsible for
 											the TEAM sub-teams.
 										</Text>

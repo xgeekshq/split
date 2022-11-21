@@ -9,7 +9,7 @@ import QueryError from 'components/Errors/QueryError';
 import Layout from 'components/layouts/Layout';
 import LoadingPage from 'components/loadings/LoadingPage';
 import Flex from 'components/Primitives/Flex';
-import MyTeams from 'components/Teams/MyTeams';
+import TeamsList from 'components/Teams/TeamsList';
 import useTeam from '../../hooks/useTeam';
 
 const Teams = () => {
@@ -24,7 +24,7 @@ const Teams = () => {
 		<Flex direction="column">
 			<Suspense fallback={<LoadingPage />}>
 				<QueryError>
-					<MyTeams isFetching={isFetching} teams={data} userId={session.user.id} />
+					<TeamsList isFetching={isFetching} teams={data} userId={session.user.id} />
 				</QueryError>
 			</Suspense>
 		</Flex>
