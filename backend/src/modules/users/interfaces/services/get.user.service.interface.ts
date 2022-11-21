@@ -13,4 +13,6 @@ export interface GetUserService {
 	): Promise<LeanDocument<UserDocument> | false>;
 
 	countUsers(): Promise<number>;
+
+	getAllUsers(): Promise<LeanDocument<UserDocument>[]>;
 }
