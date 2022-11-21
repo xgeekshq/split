@@ -48,7 +48,22 @@ const PopoverItemStyled = styled(PopoverItem, {
 	height: '$100'
 });
 
+const IconButton = styled('button', {
+	all: 'unset',
+	fontFamily: 'inherit',
+	borderRadius: '100%',
+	height: 25,
+	width: 25,
+	display: 'inline-flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	color: '$primaryBase',
+	backgroundColor: 'white',
+	boxShadow: `0 2px 10px $primaryBase`
+});
+
 export {
+	IconButton,
 	InnerContainer,
 	PopoverCloseStyled,
 	PopoverItemStyled,

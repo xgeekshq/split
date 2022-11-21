@@ -50,11 +50,11 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 						direction="column"
 						onClick={() => selectRole(TeamUserRoles.MEMBER)}
 					>
-						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
 							Team Member
 						</Text>
 
-						<Text css={{ fontWeight: 400, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm">
 							The team member can create boards and can create teams.
 						</Text>
 					</PopoverItemStyled>
@@ -65,10 +65,10 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 						direction="column"
 						onClick={() => selectRole(TeamUserRoles.ADMIN)}
 					>
-						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
 							Team Admin
 						</Text>
-						<Text css={{ fontWeight: 400, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm">
 							The team admin can nominate team admins / stakeholder and can
 							create/delete/edit team boards.
 						</Text>
@@ -80,10 +80,10 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(({ us
 						direction="column"
 						onClick={() => selectRole(TeamUserRoles.STAKEHOLDER)}
 					>
-						<Text css={{ fontWeight: 500, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
 							Stakeholder
 						</Text>
-						<Text css={{ fontWeight: 400, textAlign: 'end' }} size="sm">
+						<Text css={{ textAlign: 'end' }} size="sm">
 							Stakeholders will not be included in sub-team SPLIT retrospectives.
 						</Text>
 					</PopoverItemStyled>

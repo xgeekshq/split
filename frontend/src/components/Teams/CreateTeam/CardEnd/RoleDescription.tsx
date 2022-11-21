@@ -1,19 +1,15 @@
 import React from 'react';
 
-import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
-import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
-import PopoverRoleSettings from './CardMember/RoleSettings';
+import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 
-type CardEndProps = {
+type RoleDescriptionProps = {
 	role: string;
-	isTeamCreator?: boolean;
-	userId: string;
 };
 
-const CardEnd = ({ role, isTeamCreator, userId }: CardEndProps) => {
+const RoleDescription = ({ role }: RoleDescriptionProps) => {
 	return (
-		<Flex align="center" css={{ width: '23%' }} justify="end">
+		<>
 			<Text color="primary200" size="sm">
 				Role |
 			</Text>
@@ -22,9 +18,8 @@ const CardEnd = ({ role, isTeamCreator, userId }: CardEndProps) => {
 				{(role === TeamUserRoles.ADMIN || role === TeamUserRoles.MEMBER) &&
 					`Team ${role[0].toUpperCase()}${role.substring(1)}`}
 			</Text>
-			{!isTeamCreator && <PopoverRoleSettings userId={userId} />}
-		</Flex>
+		</>
 	);
 };
 
-export default CardEnd;
+export default RoleDescription;

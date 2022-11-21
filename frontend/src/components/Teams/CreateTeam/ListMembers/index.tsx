@@ -115,11 +115,11 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 					<ButtonAddMember>
 						<Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
 						<Text
+							weight="medium"
 							css={{
 								ml: '$10',
 								fontSize: '$14',
-								lineHeight: '$18',
-								fontWeight: '500'
+								lineHeight: '$18'
 							}}
 						>
 							Add new member

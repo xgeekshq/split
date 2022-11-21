@@ -9,9 +9,7 @@ const AddMemberBtn = () => {
 			<Flex align="center" css={{ justifyContent: 'end' }}>
 				<ButtonAddMember>
 					<Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-					<Text
-						css={{ ml: '$10', fontSize: '$14', lineHeight: '$18', fontWeight: '700' }}
-					>
+					<Text css={{ ml: '$10', fontSize: '$14', lineHeight: '$18' }} weight="bold">
 						Add new member
 					</Text>
 				</ButtonAddMember>
