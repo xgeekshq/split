@@ -18,6 +18,12 @@ export default class TeamUser {
 	})
 	role!: string;
 
+	@Prop({
+		type: Boolean,
+		nullable: false
+	})
+	isNewJoiner!: boolean;
+
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	user!: User | ObjectId;
 

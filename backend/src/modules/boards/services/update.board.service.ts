@@ -1,6 +1,7 @@
 import {
 	BadRequestException,
 	ForbiddenException,
+	forwardRef,
 	Inject,
 	Injectable,
 	NotFoundException
@@ -31,7 +32,7 @@ import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-		@Inject(Teams.TYPES.services.GetTeamService)
+		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,

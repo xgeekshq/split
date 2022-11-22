@@ -47,7 +47,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
 					return;
 				}
 
-				if (data === false) {
+				if (!data) {
 					setShowSignUp(SignUpEnum.REGISTER);
 					return;
 				}

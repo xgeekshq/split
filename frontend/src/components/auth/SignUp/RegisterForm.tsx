@@ -121,7 +121,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 					Sign up
 				</Text>
 				<Text css={{ mt: '$8', mb: '$16', color: '$primary500' }} size="md">
-					Put in your credentials or ask your admin to add your email to the companys’
+					Put in your credentials or ask your admin to add your email to the company’s
 					azure database.
 				</Text>
 				<Input

@@ -178,7 +178,7 @@ interface InputProps extends StyledInpupProps {
 	state?: 'default' | 'error' | 'valid';
 	type: 'text' | 'password' | 'email' | 'number';
 	placeholder: string;
-	icon?: 'eye' | 'eyeclosed';
+	icon?: 'eye' | 'eyeclosed' | 'search';
 	helperText?: string;
 	iconPosition?: 'left' | 'right';
 	forceState?: boolean;
@@ -186,6 +186,7 @@ interface InputProps extends StyledInpupProps {
 	clearErrorCode?: () => void;
 	currentValue?: string;
 	maxChars?: string;
+	showCount?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -202,7 +203,8 @@ const Input: React.FC<InputProps> = ({
 	clearErrorCode,
 	currentValue,
 	maxChars,
-	min
+	min,
+	showCount
 }) => {
 	Input.defaultProps = {
 		state: undefined,
@@ -213,7 +215,8 @@ const Input: React.FC<InputProps> = ({
 		clearErrorCode: undefined,
 		currentValue: undefined,
 		maxChars: undefined,
-		forceState: false
+		forceState: false,
+		showCount: false
 	};
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [currentType, setType] = useState(type);
@@ -227,6 +230,7 @@ const Input: React.FC<InputProps> = ({
 	const { ref, ...rest } = register(id);
 
 	const message = errors[id]?.message;
+
 	const value = getValues()[id];
 	const isValueEmpty = isEmpty(value);
 
@@ -280,6 +284,15 @@ const Input: React.FC<InputProps> = ({
 							}}
 						/>
 					)}
+					{icon === 'search' && (
+						<Icon
+							name="search"
+							css={{
+								width: '$24',
+								height: '$24'
+							}}
+						/>
+					)}
 				</IconWrapper>
 			)}
 			<Flex>
@@ -320,7 +333,7 @@ const Input: React.FC<InputProps> = ({
 						</Text>
 					</HelperTextWrapper>
 				)}
-				{!!currentValue && (
+				{(!!currentValue || !currentValue) && (
 					<Text
 						hint
 						css={{
@@ -328,7 +341,8 @@ const Input: React.FC<InputProps> = ({
 							mt: '$8'
 						}}
 					>
-						{currentValue.length}/{maxChars}
+						{showCount && !currentValue && `0/${maxChars}`}
+						{!!currentValue && `${currentValue.length}/${maxChars}`}
 					</Text>
 				)}
 			</Flex>

@@ -8,7 +8,7 @@ const EmptyTeams: React.FC = () => {
 			<StyledImage />
 			<EmptyBoardsText css={{ mt: '$24', textAlign: 'center' }} size="md">
 				<br />
-				<Link href="/boards/new">
+				<Link href="/teams/new">
 					<StyledNewTeamLink underline weight="medium">
 						Create your first team
 					</StyledNewTeamLink>

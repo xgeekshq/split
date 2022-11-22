@@ -10,4 +10,12 @@ const Container = styled('main', {
 	overflow: 'hidden'
 });
 
-export { Container };
+const ContainerTeamPage = styled('main', {
+	width: 'calc(100vw - 256px)',
+	height: '100vh',
+	padding: '$32 $48 $24 $48',
+	marginLeft: 'auto',
+	overflow: 'hidden'
+});
+
+export { Container, ContainerTeamPage };

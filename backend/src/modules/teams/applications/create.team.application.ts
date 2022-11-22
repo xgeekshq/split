@@ -17,7 +17,7 @@ export class CreateTeamApplication implements CreateTeamApplicationInterface {
 		return this.createTeamService.createTeamUser(teamUser);
 	}
 
-	create(teamData: TeamDto, userId: string) {
-		return this.createTeamService.create(teamData, userId);
+	create(teamData: TeamDto) {
+		return this.createTeamService.create(teamData);
 	}
 }

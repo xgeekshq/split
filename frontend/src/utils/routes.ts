@@ -16,6 +16,7 @@ export const ROUTES = {
 	Token: RESET_PASSWORD_ROUTE,
 	TokenPage: (tokenId: string): string => `/reset-password/${tokenId}`,
 	Teams: TEAMS_ROUTE,
+	TeamPage: (teamId: string): string => `/teams/${teamId}`,
 	Users: USERS_ROUTE
 };
 

@@ -4,6 +4,13 @@ import { User } from '../user/user';
 export interface TeamUser {
 	user: User;
 	role: TeamUserRoles;
-	_id: string;
-	team: string;
+	isNewJoiner?: boolean;
+	_id?: string;
+	team?: string;
+}
+
+export interface CreateTeamUser {
+	user: string; // user._id
+	role: TeamUserRoles;
+	isNewJoiner?: boolean;
 }
