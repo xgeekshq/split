@@ -3,7 +3,7 @@ import { LeanDocument } from 'mongoose';
 import TeamUserDto from '../../dto/team.user.dto';
 import { TeamUserDocument } from '../../schemas/team.user.schema';
 
-export interface UpdateTeamServiceInterface {
+export interface UpdateTeamApplicationInterface {
 	updateTeamUser(
 		userId: string,
 		teamId: string,
