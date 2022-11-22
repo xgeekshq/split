@@ -1,7 +1,14 @@
 import { useMutation, useQuery } from 'react-query';
+import { AxiosError } from 'axios';
 
 import { ToastStateEnum } from 'utils/enums/toast-types';
-import { createTeamRequest, getAllTeams, getTeamRequest, getTeamsOfUser } from '../api/teamService';
+import {
+	createTeamRequest,
+	getAllTeams,
+	getTeamRequest,
+	getTeamsOfUser,
+	updateTeamUserRequest
+} from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
 
@@ -72,11 +79,35 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 		}
 	});
 
+	const updateTeamUser = useMutation(updateTeamUserRequest, {
+		onSuccess: () => {
+			// queryClient.invalidateQueries('team');
+
+			setToastState({
+				open: true,
+				content: 'The team user was successfully updated.',
+				type: ToastStateEnum.SUCCESS
+			});
+		},
+		onError: (error: AxiosError) => {
+			const errorMessage = error.response?.data.message.includes('max votes')
+				? error.response?.data.message
+				: 'Error updating the board';
+
+			setToastState({
+				open: true,
+				content: errorMessage,
+				type: ToastStateEnum.ERROR
+			});
+		}
+	});
+
 	return {
 		fetchAllTeams,
 		fetchTeamsOfUser,
 		createTeam,
-		fetchTeam
+		fetchTeam,
+		updateTeamUser
 	};
 };
 

@@ -116,6 +116,7 @@ const CardMember = React.memo<CardBodyProps>(
 						)}
 						{isTeamPage && (
 							<CardEndTeam
+								isTeamPage
 								isTeamCreator={isTeamCreator}
 								isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
 								role={role}
