@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { BACKEND_URL, NEXT_PUBLIC_BACKEND_URL } from './constants';
+import { NEXT_PUBLIC_BACKEND_URL } from './constants';
 
 export const instance = axios.create({
 	baseURL: NEXT_PUBLIC_BACKEND_URL,
@@ -26,7 +26,7 @@ instance.interceptors.request.use(async (config) => {
 });
 
 export const serverSideInstance = axios.create({
-	baseURL: BACKEND_URL,
+	baseURL: NEXT_PUBLIC_BACKEND_URL,
 	headers: {
 		'Content-Type': 'application/json'
 	}

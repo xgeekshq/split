@@ -10,6 +10,11 @@ export const Wrapper: React.FC = ({ children }) => (
 	<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
+jest.mock('next/config', () => () => ({
+	publicRuntimeConfig: {},
+	serverRuntimeConfig: {}
+}));
+
 describe('Landing page', () => {
 	it('renders a div', () => {
 		render(

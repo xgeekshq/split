@@ -13,6 +13,10 @@ on:
         required: false
         type: string
         default: ''
+      ROOT:
+        required: false
+        type: string
+        default: '.'
 
 env:
   REGISTRY: split.azurecr.io
@@ -36,10 +40,11 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           endpoint: builders
-      
-      - uses: azure/docker-login@v1
+
+      - name: Login to docker with ACR
+        uses: docker/login-action@v2
         with:
-          login-server: ${{ env.REGISTRY }}
+          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       
@@ -55,7 +60,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ${{ inputs.ROOT }}
           file: ${{ inputs.DOCKERFILE }}
           push: true
           target: production
