@@ -23,11 +23,6 @@ jobs:
     with:
       DOCKERFILE: ./frontend/docker/prod/Dockerfile
       REPOSITORY: frontend
-      BUILD_ARGS: |
-        NEXT_PUBLIC_BACKEND_URL=${{secrets.NEXT_PUBLIC_BACKEND_URL}}
-        NEXT_PUBLIC_NEXTAUTH_URL=${{secrets.NEXT_PUBLIC_NEXTAUTH_URL}}
-        NEXT_PUBLIC_EXPIRATION_TIME=${{secrets.NEXT_PUBLIC_EXPIRATION_TIME}}
-        NEXT_PUBLIC_ENABLE_AZURE=${{secrets.NEXT_PUBLIC_ENABLE_AZURE}}
 
   deploy_backend_dev:
     name: Deploy backend DEV
@@ -68,18 +63,6 @@ jobs:
       APP_NAME: split-fe
       PUBLISH_PROFILE: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
       REPOSITORY: frontend
-
-  update_release_draft:
-    name: Release Drafter
-    runs-on: ubuntu-latest
-    needs:
-      - deploy_backend_dev
-      - deploy_frontend_dev
-    steps:
-      - name: Update release draft
-        uses: release-drafter/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   pre_release:
     name: Create Pre Release

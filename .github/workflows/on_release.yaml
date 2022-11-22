@@ -14,6 +14,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Update package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+
+      - name: Update frontend package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+          path: ./frontend
+
+      - name: Update backend package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+          path: ./backend
+
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
         with:
