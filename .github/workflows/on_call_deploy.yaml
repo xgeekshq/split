@@ -9,12 +9,12 @@ on:
       APP_NAME:
         required: true
         type: string
-      PUBLISH_PROFILE:
-        required: true
-        type: string
       REPOSITORY:
         required: true
         type: string
+    secrets:
+      PUBLISH_PROFILE:
+        required: true
 
 env:
   TAG: ${{ github.sha }}
@@ -27,5 +27,5 @@ jobs:
       - uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ inputs.APP_NAME }}
-          publish-profile: ${{ inputs.PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           images: split.azurecr.io/${{ inputs.REPOSITORY }}:${{ env.TAG }}
