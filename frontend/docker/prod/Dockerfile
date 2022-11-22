@@ -41,4 +41,8 @@ COPY --from=builder /app/node_modules ./node_modules
 
 USER nextjs
 
-CMD ["yarn", "start"]
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD npm run start
