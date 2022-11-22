@@ -4,17 +4,17 @@ services:
   backend:
     build:
       context: backend # starts on backend folder instead on root
-      target: development # choose development part from Dockerfile
-      dockerfile: docker/dev/Dockerfile
+      target: local # choose development part from Dockerfile
+      dockerfile: docker/local/Dockerfile
 
     # image name
-    image: dc-dev-backend
+    image: split-dev-backend
 
     # container name
     container_name: dev-backend
 
     networks:
-      - dc-network
+      - split-network
     depends_on:
       - mongo
 
@@ -36,16 +36,16 @@ services:
   frontend:
     build:
       context: frontend # to start on frontend folder
-      dockerfile: docker/dev/Dockerfile # path to dev Dockerfile
+      dockerfile: docker/local/Dockerfile # path to dev Dockerfile
 
     # set image name
-    image: dc-dev-frontend
+    image: split-dev-frontend
 
     # set container name
     container_name: dev-frontend
 
     networks:
-      - dc-network
+      - split-network
     depends_on:
       - backend
 
@@ -68,7 +68,7 @@ services:
     restart: always
     container_name: mongo2
     networks:
-      - dc-network
+      - split-network
     ports:
       - "27018:27017"
     entrypoint: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
@@ -83,7 +83,7 @@ services:
     volumes:
       - ./database/rs-init.sh:/scripts/rs-init.sh
     networks:
-      - dc-network
+      - split-network
     links:
       - mongo2
     command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
@@ -106,5 +106,5 @@ volumes:
 
 # Networks
 networks:
-  dc-network:
+  split-network:
     driver: bridge

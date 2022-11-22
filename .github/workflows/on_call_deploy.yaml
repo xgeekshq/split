@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT: 
+        required: true
+        type: string
+      APP_NAME:
+        required: true
+        type: string
+      PUBLISH_PROFILE:
+        required: true
+        type: string
+      REPOSITORY:
+        required: true
+        type: string
+
+env:
+  TAG: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ inputs.APP_NAME }}
+          publish-profile: ${{ inputs.PUBLISH_PROFILE }}
+          images: split.azurecr.io/${{ inputs.REPOSITORY }}:${{ env.TAG }}
