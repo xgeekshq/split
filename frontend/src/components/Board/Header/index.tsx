@@ -159,7 +159,7 @@ const BoardHeader = () => {
 						</Text>
 						<CardAvatars
 							isBoardsPage
-							listUsers={users}
+							listUsers={isSubBoard ? users : teamUsers}
 							responsible={false}
 							teamAdmins={false}
 							userId={session!.user.id}
@@ -167,26 +167,28 @@ const BoardHeader = () => {
 					</Flex>
 					{!isEmpty(
 						teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)
-					) && (
-						<>
-							<Separator
-								css={{ height: '$24 !important' }}
-								data-orientation="vertical"
-							/>
-
-							<Flex align="center" gap="10">
-								<Text color="primary300" size="sm">
-									Team admins
-								</Text>
-								<CardAvatars
-									teamAdmins
-									listUsers={teamUsers}
-									responsible={false}
-									userId={session!.user.id}
+					) &&
+						!isSubBoard && (
+							<>
+								<Separator
+									css={{ height: '$24 !important' }}
+									data-orientation="vertical"
 								/>
-							</Flex>
-						</>
-					)}
+
+								<Flex align="center" gap="10">
+									<Text color="primary300" size="sm">
+										Team admins
+									</Text>
+									<CardAvatars
+										isBoardsPage
+										teamAdmins
+										listUsers={isSubBoard ? users : teamUsers}
+										responsible={false}
+										userId={session!.user.id}
+									/>
+								</Flex>
+							</>
+						)}
 					{!isEmpty(
 						(boardData!.board.users || users).filter(
 							(user: BoardUser) => user.role === BoardUserRoles.STAKEHOLDER
@@ -203,9 +205,31 @@ const BoardHeader = () => {
 									Stakeholders
 								</Text>
 								<CardAvatars
+									isBoardsPage
 									stakeholders
-									listUsers={users}
+									listUsers={isSubBoard ? users : teamUsers}
 									responsible={false}
+									teamAdmins={false}
+									userId={session!.user.id}
+								/>
+							</Flex>
+						</>
+					)}
+					{isSubBoard && (
+						<>
+							<Separator
+								css={{ height: '$24 !important' }}
+								data-orientation="vertical"
+							/>
+
+							<Flex align="center" gap="10">
+								<Text color="primary300" size="sm">
+									Responsible
+								</Text>
+								<CardAvatars
+									isBoardsPage
+									responsible
+									listUsers={users}
 									teamAdmins={false}
 									userId={session!.user.id}
 								/>
