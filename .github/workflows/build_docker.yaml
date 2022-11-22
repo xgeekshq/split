@@ -1,0 +1,68 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      DOCKERFILE:
+        required: true
+        type: string
+      REPOSITORY:
+        required: true
+        type: string
+      BUILD_ARGS:
+        required: false
+        type: string
+        default: ''
+
+env:
+  REGISTRY: split.azurecr.io
+  TAG: ${{ github.sha }}
+
+jobs:
+  build_docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Context for Buildx
+        run: |
+          docker context create builders
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          endpoint: builders
+      
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.REGISTRY }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      
+      - name: Setup Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ inputs.REPOSITORY }}
+          tags: |
+            type=raw,value=${{ env.TAG }}
+            type=raw,value=cache
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ${{ inputs.DOCKERFILE }}
+          push: true
+          target: production
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            type=registry,ref=${{ env.REGISTRY }}/${{ inputs.REPOSITORY }}:${{ env.TAG }}
+            type=registry,ref=${{ env.REGISTRY }}/${{ inputs.REPOSITORY }}:cache
+          cache-to: type=inline
+          build-args: ${{ inputs.BUILD_ARGS }}
