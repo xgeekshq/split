@@ -39,8 +39,8 @@ const BoardHeader = () => {
 	const boardData = useRecoilValue(boardInfoState);
 
 	// Get Board Info
-	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt } =
-		boardData!.board;
+	const { title, recurrent, users, team, dividedBoards, isSubBoard, submitedAt, boardNumber } =
+		boardData.board;
 
 	// Get Team users
 
@@ -145,8 +145,17 @@ const BoardHeader = () => {
 				</Flex>
 				<Flex align="center" gap="24">
 					<Flex align="center" gap="10">
-						<Text color="primary800" css={{ fontWeight: 500 }} size="sm">
-							{isSubBoard ? title.replace('board', '') : team.name}
+						<Text
+							color="primary800"
+							size="sm"
+							css={{
+								fontWeight: 500,
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+								overflow: 'hidden'
+							}}
+						>
+							{isSubBoard ? `Sub-team ${boardNumber}` : team.name}
 						</Text>
 						<CardAvatars
 							isBoardsPage

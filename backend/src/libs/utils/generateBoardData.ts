@@ -15,20 +15,20 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 		recurrent: false,
 		users,
 		team: null,
-		isSubBoard: true,
+		boardNumber: index,
 		maxVotes: undefined,
 		hideCards: false,
 		hideVotes: false
 	};
 };
 
-export const generateBoardDtoData = (): CreateBoardDto => {
+export const generateBoardDtoData = (title: string): CreateBoardDto => {
 	return {
 		users: [],
 		team: null,
 		maxUsers: 2,
 		board: {
-			title: 'Main Board -',
+			title,
 			columns: [
 				{ title: 'Went well', color: '$highlight1Light', cards: [] },
 				{ title: 'To improve', color: '$highlight4Light', cards: [] },
@@ -40,7 +40,7 @@ export const generateBoardDtoData = (): CreateBoardDto => {
 			recurrent: true,
 			users: [],
 			team: null,
-			isSubBoard: false,
+			boardNumber: 0,
 			hideCards: false,
 			hideVotes: false
 		}

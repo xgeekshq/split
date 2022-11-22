@@ -121,7 +121,7 @@ const CardBody = React.memo<CardBodyProps>(
 				return true;
 			}
 			const myUser = team.users.find((user) => String(user.user._id) === String(userId));
-			const myUserIsOwnerMainBoard = board.createdBy._id === userId;
+			const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
 			const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
 			const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
 			if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner)) {
@@ -155,7 +155,7 @@ const CardBody = React.memo<CardBodyProps>(
 		);
 
 		const iconLockConditions =
-			board.isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
+			isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
 
 		return (
 			<Flex css={{ flex: '1 1 0' }} direction="column" gap="12">

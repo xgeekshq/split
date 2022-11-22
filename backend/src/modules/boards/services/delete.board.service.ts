@@ -5,6 +5,8 @@ import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 import { TeamRoles } from 'libs/enum/team.roles';
 import { DELETE_FAILED } from 'libs/exceptions/messages';
 import isEmpty from 'libs/utils/isEmpty';
+import { DeleteSchedulesServiceInterface } from 'modules/schedules/interfaces/services/delete.schedules.service.interface';
+import * as Schedules from 'modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'modules/teams/interfaces/types';
 import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
@@ -21,6 +23,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		private boardModel: Model<BoardDocument>,
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
+		private deleteSheduleService: DeleteSchedulesServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -112,6 +116,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			boardUserSession.startTransaction();
 			try {
 				const { _id, dividedBoards } = await this.deleteBoard(boardId, userId, boardSession);
+				this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
 
 				if (!isEmpty(dividedBoards)) {
 					await this.deleteSubBoards(dividedBoards, boardSession);

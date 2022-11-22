@@ -7,6 +7,7 @@ import { InnerContainer } from 'styles/pages/dashboard.styles';
 
 import { getDashboardHeaderInfo } from 'api/authService';
 import { getDashboardBoardsRequest } from 'api/boardService';
+import { getTeamsOfUser } from 'api/teamService';
 import QueryError from 'components/Errors/QueryError';
 import requireAuthentication from 'components/HOC/requireAuthentication';
 import Layout from 'components/layouts/Layout';
@@ -23,6 +24,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 		await queryClient.prefetchInfiniteQuery('boards/dashboard', ({ pageParam = 0 }) =>
 			getDashboardBoardsRequest(pageParam, context)
 		);
+		await queryClient.prefetchQuery('team', () => getTeamsOfUser);
 
 		return {
 			props: {

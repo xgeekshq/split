@@ -4,14 +4,15 @@ import { BoardDocument } from '../../schemas/board.schema';
 export interface Configs {
 	recurrent: boolean;
 	maxVotes?: number | null;
-	votes?: string | null;
 	hideCards?: boolean;
 	hideVotes?: boolean;
-	maxUsers: number;
+	maxUsersPerTeam: number;
+	slackEnable?: boolean;
+	date?: Date;
 }
 
 export interface CreateBoardService {
 	create(boardData: BoardDto, userId: string): Promise<BoardDocument>;
 
-	splitBoardByTeam(ownerId: string, teamId: string, configs: Configs);
+	splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null>;
 }

@@ -42,7 +42,20 @@ export type ConfigurationType = {
 	frontendUrl: string;
 };
 
-export type JobType = {
-	board: BoardType;
-	config: ConfigurationType;
+export type ChangeResponsibleType = {
+	newResponsibleEmail: string;
+	previousResponsibleEmail: string;
+	subTeamChannelId: string;
+	email: string;
+	teamNumber: number;
+	responsiblesChannelId?: string;
+	mainChannelId?: string;
+};
+
+export type MergeBoardType = {
+	teamNumber: number;
+	responsiblesChannelId: string;
+	isLastSubBoard: boolean;
+	boardId: string;
+	mainBoardId: string;
 };

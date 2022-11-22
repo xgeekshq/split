@@ -20,7 +20,7 @@ import {
 	translateBoard
 } from 'libs/utils/communication-helpers';
 import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
-import { SlackExecuteCommunication } from 'modules/communication/applications/slack-execute-communication.application';
+import { SlackCommunicationApplication } from 'modules/communication/applications/slack-communication.application';
 import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
@@ -150,12 +150,12 @@ const getConfiguration = () => ({
 	frontendUrl: configService.getOrThrow(FRONTEND_URL)
 });
 
-describe('SlackExecuteCommunication', () => {
-	let application: SlackExecuteCommunication;
+describe('SlackCommunicationApplication', () => {
+	let application: SlackCommunicationApplication;
 	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 
 	beforeAll(async () => {
-		application = new SlackExecuteCommunication(
+		application = new SlackCommunicationApplication(
 			getConfiguration(),
 			new ConversationsSlackHandler(communicationGateAdapterMocked),
 			new UsersSlackHandler(communicationGateAdapterMocked),
@@ -307,7 +307,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'U111BAXFL'
 					}
 				],
-				channelId: 'CU0HPXP8E'
+				channelId: 'CU0HPXP8E',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 1',
@@ -344,7 +345,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W012A3CDE'
 					}
 				],
-				channelId: 'CSJR4G3R0'
+				channelId: 'CSJR4G3R0',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 2',
@@ -381,7 +383,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W013A3CEF'
 					}
 				],
-				channelId: 'C7JQHTRWT'
+				channelId: 'C7JQHTRWT',
+				participantsNotInvited: undefined
 			},
 			{
 				name: 'Sub-team board 3',
@@ -418,7 +421,8 @@ describe('SlackExecuteCommunication', () => {
 						slackId: 'W058A3SDQ'
 					}
 				],
-				channelId: 'CCP7ISR08'
+				channelId: 'CCP7ISR08',
+				participantsNotInvited: undefined
 			}
 		];
 
@@ -426,7 +430,8 @@ describe('SlackExecuteCommunication', () => {
 			expect(i).toEqual(
 				expect.objectContaining({
 					...expected[idx],
-					channelId: expect.stringContaining('C')
+					channelId: expected[idx].channelId?.includes('C') ? i.channelId : '',
+					normalName: expected[idx].normalName.includes('any_prefix') ? i.normalName : ''
 				})
 			);
 		});

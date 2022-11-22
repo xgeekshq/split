@@ -2,10 +2,13 @@
 /* eslint-disable @typescript-eslint/lines-between-class-members */
 import { UserDto } from 'modules/communication/dto/user.dto';
 import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
+import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
 
 const MakeSlackCommunicationGateAdapterStub = () => {
-	class SlackCommunicationGateAdapterStub implements CommunicationGateInterface {
+	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
+		getEmailByPlatformUserId(email: string): Promise<string> {
+			throw new Error('Method not implemented.');
+		}
 		addChannel(name: string): Promise<{ id: string; name: string }> {
 			return Promise.resolve({ id: 'any_id', name });
 		}
@@ -21,7 +24,7 @@ const MakeSlackCommunicationGateAdapterStub = () => {
 		getEmailByUserId(userId: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}
-		addMessageToChannel(channelId: string, message: string): Promise<boolean> {
+		addMessageToChannel(channelId: string, message: string): Promise<{ ok: boolean }> {
 			throw new Error('Method not implemented.');
 		}
 	}

@@ -14,7 +14,10 @@ import {
 } from 'modules/boards/boards.providers';
 import BoardsController from 'modules/boards/controller/boards.controller';
 import * as CommunicationsType from 'modules/communication/interfaces/types';
-import { createSchedulesService } from 'modules/schedules/schedules.providers';
+import {
+	createSchedulesService,
+	deleteSchedulesService
+} from 'modules/schedules/schedules.providers';
 import SocketGateway from 'modules/socket/gateway/socket.gateway';
 import { createTeamService, getTeamApplication, getTeamService } from 'modules/teams/providers';
 
@@ -37,8 +40,9 @@ describe('BoardsController', () => {
 				updateBoardService,
 				deleteBoardApplication,
 				deleteBoardService,
-				createSchedulesService,
 				createTeamService,
+				createSchedulesService,
+				deleteSchedulesService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
@@ -61,10 +65,12 @@ describe('BoardsController', () => {
 				},
 				{
 					provide: getModelToken('Schedules'),
-					useValue: {}
+					useValue: {
+						find: jest.fn().mockResolvedValue([])
+					}
 				},
 				{
-					provide: CommunicationsType.TYPES.services.ExecuteCommunication,
+					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
 					useValue: {
 						execute: jest.fn()
 					}

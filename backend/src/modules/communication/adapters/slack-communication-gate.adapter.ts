@@ -9,9 +9,11 @@ import { InviteUsersError } from 'modules/communication/errors/invite-users.erro
 import { PostMessageError } from 'modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-import { CommunicationGateInterface } from 'modules/communication/interfaces/communication-gate.interface';
+import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
 
-export class SlackCommunicationGateAdapter implements CommunicationGateInterface {
+import { ProfileWithoutIdError } from '../errors/profile-without-id.error';
+
+export class SlackCommunicationGateAdapter implements CommunicationGateAdapterInterface {
 	private logger = new Logger(SlackCommunicationGateAdapter.name);
 
 	private client: WebClient;
@@ -26,7 +28,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 		return this.client;
 	}
 
-	public async addChannel(name: string): Promise<{ id: string; name: string }> {
+	public async addChannel(name: string, errorCount = 0): Promise<{ id: string; name: string }> {
 		try {
 			// https://api.slack.com/methods/conversations.create  (!! 20+ per minute)
 			const { channel } = await this.getClient().conversations.create({
@@ -39,8 +41,24 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 			};
 		} catch (error) {
 			this.logger.error(error);
+			if (error.data?.error === 'name_taken') {
+				return this.handleCreateChannelError(name, errorCount);
+			}
 			throw new CreateChannelError();
 		}
+	}
+
+	private handleCreateChannelError(name: string, errorCount: number) {
+		errorCount += 1;
+		let newName = name;
+		if (newName[newName.length - 2] === '-') {
+			const cipherChars = [...newName];
+			cipherChars[cipherChars.length - 1] = `${Number(cipherChars[cipherChars.length - 1]) + 1}`;
+			newName = cipherChars.join('');
+		} else {
+			newName = `${name}-${errorCount}`;
+		}
+		return this.addChannel(`${newName}`, errorCount);
 	}
 
 	public async addUsersToChannel(
@@ -51,17 +69,22 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 			// https://api.slack.com/methods/conversations.invite (!! 50+ per minute)
 			const { ok } = await this.getClient().conversations.invite({
 				channel: channelId,
-				users: usersIds.join(',')
+				users: usersIds.length > 1 ? usersIds.join(',') : usersIds[0]
 			});
 
 			return { ok };
 		} catch (error) {
 			if (typeof error.data?.ok === 'boolean' && !error.data?.ok) {
 				this.logger.warn(error);
+				if (error.data.error === 'already_in_channel') {
+					return { ok: true };
+				}
+
 				const failUsersIds = error.data.errors.map((i) => i.user);
 
 				return { ok: error.data.ok, fails: failUsersIds };
 			}
+
 			this.logger.error(error);
 			throw new InviteUsersError();
 		}
@@ -117,15 +140,40 @@ export class SlackCommunicationGateAdapter implements CommunicationGateInterface
 		}
 	}
 
-	public async addMessageToChannel(channelId: string, message: string): Promise<boolean> {
+	public async getEmailByPlatformUserId(email: string): Promise<string> {
+		try {
+			const { user } = await this.getClient().users.lookupByEmail({ email });
+			if (!user) {
+				throw new ProfileNotFoundError();
+			}
+
+			if (!user.id) {
+				throw new ProfileWithoutIdError();
+			}
+
+			return user.id;
+		} catch (error) {
+			this.logger.error(error);
+			if (error instanceof ProfileNotFoundError || error instanceof ProfileWithoutEmailError) {
+				throw error;
+			}
+
+			throw new GetProfileError();
+		}
+	}
+
+	public async addMessageToChannel(
+		channelId: string,
+		message: string
+	): Promise<{ ok: boolean; ts?: string }> {
 		try {
 			// https://api.slack.com/methods/chat.postMessage
-			const { ok } = await this.getClient().chat.postMessage({
+			const { ok, ts } = await this.getClient().chat.postMessage({
 				channel: channelId,
 				text: message
 			});
 
-			return ok;
+			return { ok, ts };
 		} catch (error) {
 			this.logger.error(error);
 			throw new PostMessageError();

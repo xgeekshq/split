@@ -242,6 +242,9 @@ const useVotes = () => {
 
 	const handleVote = useMutation(handleVotes, {
 		onSuccess: (voteData, variables) => {
+			if (voteData.maxVotes) {
+				toastRemainingVotesMessage('', voteData);
+			}
 			queryClient.invalidateQueries(['board', { id: voteData?._id }]);
 		},
 		onError: (error, variables) => {

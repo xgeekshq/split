@@ -74,6 +74,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	});
 	const mainBoard = data?.mainBoardData;
 	const board = data?.board;
+	const isSubBoard = board?.isSubBoard;
 	const route = useRouter();
 
 	// Socket IO Hook
@@ -81,12 +82,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
 	// Board Settings permissions
 	const isStakeholderOrAdmin = useMemo(() => {
-		return (!board?.isSubBoard ? board : mainBoard)?.team.users.some(
+		return (!isSubBoard ? board : mainBoard)?.team.users.some(
 			(boardUser) =>
 				[TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
 				boardUser.user._id === userId
 		);
-	}, [board, mainBoard, userId]);
+	}, [board, isSubBoard, mainBoard, userId]);
 
 	const [isResponsible, isOwner] = useMemo(() => {
 		return board
@@ -102,16 +103,16 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 	}, [board, userId]);
 
 	// Show button in sub boards to merge into main
-	const showButtonToMerge = !!(board?.isSubBoard && !board.submitedByUser && isResponsible);
+	const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && isResponsible);
 
 	// Show board settings button if current user is allowed to edit
-	const isResponsibleInSubBoard = board?.isSubBoard && isResponsible;
+	const isResponsibleInSubBoard = isSubBoard && isResponsible;
 	const hasAdminRole =
 		isStakeholderOrAdmin || session?.isSAdmin || isOwner || isResponsibleInSubBoard;
 
 	// Show Alert message if any sub-board wasn't merged
 	const showMessageHaveSubBoardsMerged =
-		!board?.isSubBoard &&
+		!isSubBoard &&
 		board?.dividedBoards &&
 		board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
 			0;
@@ -133,7 +134,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 		}
 	}, [newBoard, data, setNewBoard, mainBoard?._id]);
 
-	const userIsInBoard = board?.users.find((user) => user.user._id === userId);
+	const userIsInBoard = useMemo(() => {
+		return board?.users.find((user) => user.user._id === userId);
+	}, [board?.users, userId]);
 
 	useEffect(() => {
 		if (data === null) {

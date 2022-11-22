@@ -49,11 +49,11 @@ export default class BoardDto {
 	@IsOptional()
 	maxVotes?: number | null;
 
-	@ApiPropertyOptional({ type: String })
+	@ApiPropertyOptional({ type: Number })
 	@IsNotEmpty()
-	@IsString()
+	@IsNumber()
 	@IsOptional()
-	maxUsers?: string | null;
+	maxUsers?: number;
 
 	@ApiPropertyOptional({ type: String })
 	@IsNotEmpty()
@@ -100,6 +100,11 @@ export default class BoardDto {
 	@IsNotEmpty()
 	@IsBoolean()
 	isSubBoard?: boolean;
+
+	@ApiPropertyOptional({ default: 0 })
+	@IsNotEmpty()
+	@IsNumber()
+	boardNumber?: number;
 
 	@ApiPropertyOptional({ default: false })
 	@IsOptional()

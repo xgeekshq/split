@@ -242,8 +242,8 @@ const Input: React.FC<InputProps> = ({
 	}, [message, isValueEmpty]);
 
 	const currentState = useMemo(() => {
-		if (disabled && !touchedFields[id]) return 'default';
-		if (state && forceState && !touchedFields[id]) return state;
+		if (disabled && !touchedFields[id] && !forceState) return 'default';
+		if (state && forceState && !touchedFields[id]) return autoState;
 		return autoState;
 	}, [autoState, disabled, forceState, id, state, touchedFields]);
 

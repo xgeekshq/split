@@ -32,6 +32,7 @@ export default interface BoardType {
 	createdBy: User;
 	socketId?: string;
 	isSubBoard?: boolean;
+	boardNumber: number;
 	maxVotes?: number;
 	hideCards: boolean;
 	hideVotes: boolean;
@@ -70,7 +71,7 @@ export interface BoardToAdd
 export interface CreateBoardDto extends Omit<BoardToAdd, 'dividedBoards' | 'users'> {
 	dividedBoards: CreateBoardDto[];
 	users: BoardUserDto[];
-	maxUsers?: string;
+	maxUsers?: number;
 }
 
 export type UpdateBoardType = {
