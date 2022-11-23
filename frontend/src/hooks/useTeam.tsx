@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from 'react-query';
-import { AxiosError } from 'axios';
 
 import { ToastStateEnum } from 'utils/enums/toast-types';
 import {
@@ -17,7 +16,7 @@ interface AutoFetchProps {
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-	const { teamId, setToastState } = useTeamUtils();
+	const { teamId, setToastState, membersList, setMembersList, queryClient } = useTeamUtils();
 
 	const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
 		enabled: autoFetchTeam,
@@ -80,8 +79,18 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 	});
 
 	const updateTeamUser = useMutation(updateTeamUserRequest, {
-		onSuccess: () => {
-			// queryClient.invalidateQueries('team');
+		onSuccess: (data) => {
+			queryClient.invalidateQueries('team');
+
+			// updates the membersList recoil
+			const members = membersList.map((member) => {
+				if (member.user._id === data.user) {
+					return { ...member, role: data.role, isNewJoiner: data.isNewJoiner };
+				}
+				return member;
+			});
+
+			setMembersList(members);
 
 			setToastState({
 				open: true,
@@ -89,14 +98,10 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 				type: ToastStateEnum.SUCCESS
 			});
 		},
-		onError: (error: AxiosError) => {
-			const errorMessage = error.response?.data.message.includes('max votes')
-				? error.response?.data.message
-				: 'Error updating the board';
-
+		onError: () => {
 			setToastState({
 				open: true,
-				content: errorMessage,
+				content: 'Error while updating the team user role',
 				type: ToastStateEnum.ERROR
 			});
 		}
