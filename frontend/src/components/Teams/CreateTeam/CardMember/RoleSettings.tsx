@@ -27,10 +27,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
 		const selectRole = (value: TeamUserRoles) => {
 			const members = membersList.map((member) => {
-				if (member.user._id === userId) {
-					return { ...member, role: value };
-				}
-				return member;
+				return member.user._id === userId ? { ...member, role: value } : member;
 			});
 
 			setMembersList(members);
