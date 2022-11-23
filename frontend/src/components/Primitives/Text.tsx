@@ -92,10 +92,19 @@ const Text = styled('span', {
 			}
 		},
 		weight: {
+			regular: {
+				fontWeight: '$regular'
+			},
 			medium: {
 				fontWeight: '$medium'
 			},
-			bold: { fontWeight: '$bold' }
+			bold: { fontWeight: '$bold' },
+			semiBold: {
+				fontWeight: '$semiBold'
+			},
+			extraBold: {
+				fontWeight: '$extrabold'
+			}
 		},
 		size: {
 			xl: {
@@ -149,6 +158,9 @@ const Text = styled('span', {
 			},
 			dangerBase: {
 				color: '$dangerBase'
+			},
+			primary200: {
+				color: '$primary200'
 			},
 			primary300: {
 				color: '$primary300'

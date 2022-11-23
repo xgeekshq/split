@@ -1,0 +1,45 @@
+name: Update Changelog
+
+on:
+  release:
+    types: 
+      - published
+
+jobs:
+  update:
+    name: Update Changelog
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+
+      - name: Update frontend package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+          path: ./frontend
+
+      - name: Update backend package.json version
+        uses: jaywcjlove/github-action-package@main
+        with:
+          version: ${{ github.event.release.name }}
+          path: ./backend
+
+      - name: Update Changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          release-notes: ${{ github.event.release.body }}
+          latest-version: ${{ github.event.release.name }}
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          commit_message: 'ci: update version to ${{ github.event.release.name }} [skip ci]'
+          push_options: --force

@@ -15,7 +15,9 @@ export const ROUTES = {
 	BoardPage: (boardId: string): string => `/boards/${boardId}`,
 	Token: RESET_PASSWORD_ROUTE,
 	TokenPage: (tokenId: string): string => `/reset-password/${tokenId}`,
-	Teams: TEAMS_ROUTE
+	Teams: TEAMS_ROUTE,
+	TeamPage: (teamId: string): string => `/teams/${teamId}`,
+	Users: USERS_ROUTE
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined => {

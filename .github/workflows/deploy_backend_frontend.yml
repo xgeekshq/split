@@ -1,0 +1,105 @@
+name: Build and Deploy
+
+on:   
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build_backend:
+    name: Build backend
+    uses: ./.github/workflows/build_docker.yaml
+    with:
+      DOCKERFILE: ./backend/docker/prod/Dockerfile
+      REPOSITORY: backend
+      ROOT: ./backend
+    secrets: inherit
+
+  build_frontend:
+    name: Build frontend
+    uses: ./.github/workflows/build_docker.yaml
+    with:
+      DOCKERFILE: ./frontend/docker/prod/Dockerfile
+      REPOSITORY: frontend
+      ROOT: ./frontend
+    secrets: inherit
+
+  deploy_backend_dev:
+    name: Deploy backend DEV
+    needs: build_backend
+    uses: ./.github/workflows/on_call_deploy.yaml
+    with:
+      ENVIRONMENT: dev
+      APP_NAME: split-be-dev
+      REPOSITORY: backend
+    secrets:
+      PUBLISH_PROFILE: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+
+  deploy_frontend_dev:
+    name: Deploy frontend DEV
+    needs: build_frontend
+    uses: ./.github/workflows/on_call_deploy.yaml
+    with:
+      ENVIRONMENT: dev
+      APP_NAME: split-fe-dev
+      REPOSITORY: frontend
+    secrets:
+      PUBLISH_PROFILE: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+
+  deploy_backend_prod:
+    name: Deploy backend PROD
+    needs: deploy_backend_dev
+    uses: ./.github/workflows/on_call_deploy.yaml
+    with:
+      ENVIRONMENT: prod
+      APP_NAME: split-be
+      REPOSITORY: backend
+    secrets:
+      PUBLISH_PROFILE: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
+
+  deploy_frontend_prod:
+    name: Deploy frontend PROD
+    needs: deploy_frontend_dev
+    uses: ./.github/workflows/on_call_deploy.yaml
+    with:
+      ENVIRONMENT: prod
+      APP_NAME: split-fe
+      REPOSITORY: frontend
+    secrets:
+      PUBLISH_PROFILE: ${{ secrets.AZURE_FRONTEND_PUBLISH_PROFILE }}
+
+  pre_release:
+    name: Create Pre Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - deploy_backend_dev
+      - deploy_frontend_dev
+    steps:
+      - name: Update release draft
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: true
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - deploy_backend_prod
+      - deploy_frontend_prod
+    steps:
+      - name: Update release draft
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          publish: true

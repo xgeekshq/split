@@ -1,35 +1,26 @@
-FROM node:16-alpine
+ARG TAG=18.12.1-alpine
 
-ENV NODE_ENV build
+FROM node:$TAG AS builder
 
-WORKDIR /backend
-
-COPY package*.json ./
+WORKDIR /app
+COPY . .
 
 RUN npm ci
-
-COPY ./ ./
-
 RUN npm run build
+RUN npm prune --production
 
-ARG NODE_ENV
-ENV NODE_ENV=${NODE_ENV}
+# ---
+
+FROM node:$TAG AS production
+
+WORKDIR /app
+
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3200
 ENV PORT 3200
 
-CMD ["node", "dist/src/main.js"]
-
-# ---
-
-# FROM node:16-alpine
-
-
-# USER node
-# WORKDIR /backend
-
-# COPY --from=builder ./package*.json /backend/
-# COPY --from=builder ./node_modules /backend/node_modules/
-# COPY --from=builder ./dist /backend/dist
-
-# CMD ["node", "dist/src/main.js"]
+CMD npm run start:prod

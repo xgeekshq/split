@@ -1,5 +1,3 @@
-import { Configs } from 'modules/boards/interfaces/services/create.board.service.interface';
-
 export class AddCronJobDto {
 	boardId!: string;
 
@@ -7,5 +5,5 @@ export class AddCronJobDto {
 
 	teamId!: string;
 
-	maxUsersPerTeam!: number
+	maxUsersPerTeam!: number;
 }

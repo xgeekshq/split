@@ -70,8 +70,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Post()
-	async create(@Req() request: RequestWithUser, @Body() teamData: CreateTeamDto) {
-		const team = await this.createTeamApp.create(teamData, request.user._id);
+	async create(@Body() teamData: CreateTeamDto) {
+		const team = await this.createTeamApp.create(teamData);
 		if (!team) throw new BadRequestException(INSERT_FAILED);
 		return team;
 	}
@@ -118,6 +118,25 @@ export default class TeamsController {
 	@Get()
 	getAllTeams() {
 		return this.getTeamApp.getAllTeams();
+	}
+
+	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('user')
+	getTeamsOfUser(@Req() request: RequestWithUser) {
+		return this.getTeamApp.getTeamsOfUser(request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })

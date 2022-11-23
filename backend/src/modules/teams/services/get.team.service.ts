@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { LeanDocument, Model } from 'mongoose';
+
+import * as BoardTypes from 'modules/boards/interfaces/types';
 
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
+import { GetBoardServiceInterface } from '../../boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
@@ -11,15 +14,13 @@ import Team, { TeamDocument } from '../schemas/teams.schema';
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
 		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
+		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
+		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
-	countTeams(userId: string) {
-		return this.teamModel
-			.countDocuments({
-				users: { $elemMatch: { user: userId } }
-			})
-			.exec();
+	async countTeams(userId: string) {
+		return this.teamUserModel.find({ user: userId }).distinct('team').count();
 	}
 
 	countAllTeams() {
@@ -39,7 +40,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			teamModel
 				.populate({
 					path: 'users',
-					select: 'user role',
+					select: 'user role isNewJoiner',
 					...teamUserRoleFilter,
 					populate: {
 						path: 'user',
@@ -51,17 +52,44 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			teamModel.lean();
 		}
 
-		return teamModel.exec();
+		return teamModel
+			.select('_id name')
+			.populate({
+				path: 'users',
+				select: 'user role isNewJoiner',
+				populate: {
+					path: 'user',
+					select: '_id firstName lastName email joinedAt'
+				}
+			})
+			.lean()
+			.exec();
 	}
 
 	async getTeamsOfUser(userId: string) {
-		const teams = await this.teamUserModel.find({ user: userId }).distinct('team');
-		return this.teamModel
-			.find({ _id: { $in: teams } })
+		const teamsUser = await this.teamUserModel.find({ user: userId }).distinct('team');
+
+		const teams: LeanDocument<TeamDocument>[] = await this.teamModel
+			.find({ _id: { $in: teamsUser } })
 			.select('_id name')
-			.populate({ path: 'users', select: '_id user role' })
+			.populate({
+				path: 'users',
+				select: 'user role',
+				populate: {
+					path: 'user',
+					select: '_id firstName lastName email joinedAt'
+				}
+			})
+			.populate({
+				path: 'boards',
+				select: '_id'
+			})
 			.lean()
 			.exec();
+
+		return teams.map((team) => {
+			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
+		});
 	}
 
 	getTeamUser(userId: string, teamId: string) {

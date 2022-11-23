@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
+import { ListBoardMembers } from 'components/Boards/MyBoards/ListBoardMembers';
 import Avatar from 'components/Primitives/Avatar';
 import Flex from 'components/Primitives/Flex';
 import Tooltip from 'components/Primitives/Tooltip';
@@ -36,13 +37,16 @@ const CardAvatars = React.memo<CardAvatarProps>(
 		myBoards,
 		isBoardsPage
 	}) => {
+		const [dialogIsOpen, setDialogIsOpen] = useState(false);
 		const [viewAllUsers, setViewAllUsers] = useState(false);
 
 		const handleViewAllUsers = useCallback(() => {
-			if (isBoardsPage) {
-				setViewAllUsers(!viewAllUsers);
-			}
-		}, [isBoardsPage, viewAllUsers]);
+			setViewAllUsers(!viewAllUsers);
+		}, [viewAllUsers]);
+
+		const handleOpenDialog = useCallback(() => {
+			setDialogIsOpen(!dialogIsOpen);
+		}, [dialogIsOpen]);
 
 		const data = useMemo(() => {
 			if (responsible)
@@ -99,6 +103,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 						<IconButton
 							key={`${value}-${idx}-${Math.random()}`}
 							aria-hidden="true"
+							disabled={!isBoardsPage}
 							type="button"
 							css={{
 								'&:hover': isBoardsPage
@@ -107,7 +112,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 									  }
 									: 'none'
 							}}
-							onClick={handleViewAllUsers}
+							onClick={isBoardsPage ? handleOpenDialog : handleViewAllUsers}
 						>
 							<Avatar
 								key={`${value}-${idx}-${Math.random()}`}
@@ -127,10 +132,10 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					<Tooltip
 						key={`${value}-${idx}-${Math.random()}`}
 						content={`${value.firstName} ${value.lastName}`}
-						isLast={usersCount - 1 === idx}
 					>
 						<IconButton
 							aria-hidden="true"
+							disabled={!isBoardsPage}
 							type="button"
 							css={{
 								'&:hover': isBoardsPage
@@ -139,7 +144,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
 									  }
 									: 'none'
 							}}
-							onClick={handleViewAllUsers}
+							onClick={isBoardsPage ? handleOpenDialog : handleViewAllUsers}
 						>
 							<Avatar
 								key={`${value}-${idx}-${Math.random()}`}
@@ -154,37 +159,53 @@ const CardAvatars = React.memo<CardAvatarProps>(
 					</Tooltip>
 				);
 			},
-			[usersCount, isBoardsPage, handleViewAllUsers, userId]
+			[handleViewAllUsers, handleOpenDialog, userId, isBoardsPage]
 		);
 
 		const numberOfAvatars = useMemo(() => {
 			if (!myBoards) {
-				return viewAllUsers && isBoardsPage ? data.length : 3;
+				return 3;
 			}
 
 			return 1;
-		}, [data.length, isBoardsPage, myBoards, viewAllUsers]);
+		}, [myBoards]);
+
+		const boardMembers = useMemo(() => {
+			return listUsers.map((member) => {
+				return {
+					...member,
+					user: member.user as User
+				};
+			});
+		}, [listUsers]);
 
 		return (
-			<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
-				{haveError
-					? ['-', '-', '-'].map((value, index) => {
-							return renderAvatar(
-								value,
-								stakeholders ? stakeholdersColors : undefined,
-								index
-							);
-					  })
-					: (data.slice(0, numberOfAvatars) as User[]).map(
-							(user: User, index: number) => {
+			<>
+				<ListBoardMembers
+					boardMembers={boardMembers}
+					isOpen={dialogIsOpen}
+					setIsOpen={setDialogIsOpen}
+				/>
+				<Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
+					{haveError
+						? ['-', '-', '-'].map((value, index) => {
 								return renderAvatar(
-									getInitials(user, index),
+									value,
 									stakeholders ? stakeholdersColors : undefined,
 									index
 								);
-							}
-					  )}
-			</Flex>
+						  })
+						: (data.slice(0, numberOfAvatars) as User[]).map(
+								(user: User, index: number) => {
+									return renderAvatar(
+										getInitials(user, index),
+										stakeholders ? stakeholdersColors : undefined,
+										index
+									);
+								}
+						  )}
+				</Flex>
+			</>
 		);
 	}
 );

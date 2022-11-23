@@ -2,7 +2,7 @@ import { ReactElement, ReactNode } from 'react';
 import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { NextPage } from 'next';
-import { AppProps } from 'next/app';
+import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
@@ -12,7 +12,7 @@ import globalStyles from 'styles/globals';
 
 import Sprite from 'components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from 'components/Primitives/Toast';
-import { JWT_EXPIRATION_TIME } from 'utils/constants';
+import { JWT_EXPIRATION_TIME, NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
 import { ROUTES } from 'utils/routes';
 
 type NextPageWithLayout = NextPage & {
@@ -23,7 +23,10 @@ type AppPropsWithLayout = AppProps & {
 	Component: NextPageWithLayout;
 };
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLayout): JSX.Element {
+function Root({
+	Component,
+	pageProps: { session, ...pageProps }
+}: AppPropsWithLayout): JSX.Element {
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {
@@ -32,6 +35,9 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
 			}
 		}
 	});
+
+	// eslint-disable-next-line no-console
+	console.log(NEXT_PUBLIC_BACKEND_URL);
 
 	const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -67,4 +73,10 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppPropsWithLa
 	);
 }
 
-export default App;
+Root.getInitialProps = async (appContext: AppContext) => {
+	const appProps = await App.getInitialProps(appContext);
+
+	return { ...appProps };
+};
+
+export default Root;

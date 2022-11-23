@@ -16,7 +16,7 @@ const PageHeader = styled('header', {
 	position: 'sticky',
 	top: 0,
 	zIndex: 1,
-
+	borderBottom: '0.8px solid $primary200',
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'space-between',
@@ -93,7 +93,7 @@ const ButtonsContainer = styled(Flex, {
 	bottom: 0,
 	left: 0,
 	right: 0,
-
+	borderTop: '0.8px solid $primary200',
 	py: '$16',
 	pr: '$32',
 

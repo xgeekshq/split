@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { LeanDocument, Model } from 'mongoose';
@@ -24,7 +24,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(Team.TYPES.services.GetTeamService)
+		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface
 	) {}
 

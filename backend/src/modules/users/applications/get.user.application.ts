@@ -18,4 +18,8 @@ export class GetUserApplicationImpl implements GetUserApplication {
 	countUsers() {
 		return this.getUserService.countUsers();
 	}
+
+	getAllUsers() {
+		return this.getUserService.getAllUsers();
+	}
 }

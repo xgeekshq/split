@@ -43,6 +43,7 @@ const StyledContent = styled(PopoverPrimitive.Content, {
 const StyledPopoverItem = styled(Flex, {
 	pl: '$16',
 	py: '$8',
+	backgroundColor: '$primary50',
 	'& svg': {
 		color: '$primary400',
 		size: '$16'
@@ -82,9 +83,11 @@ const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
 });
 
 const StyledRootPopover = styled(PopoverPrimitive.Root);
+const StyledClosePopover = styled(PopoverPrimitive.Close);
 
 // Exports
 export const Popover = StyledRootPopover;
 export const PopoverTrigger = StyledPopoverTrigger;
 export const PopoverContent = StyledContent;
 export const PopoverItem = StyledPopoverItem;
+export const PopoverClose = StyledClosePopover;
