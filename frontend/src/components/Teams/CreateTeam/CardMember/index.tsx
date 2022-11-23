@@ -98,7 +98,7 @@ const CardMember = React.memo<CardBodyProps>(
 								</Tooltip>
 							</Flex>
 						) : (
-							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
+							<Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
 								<ConfigurationSettings
 									handleCheckedChange={handleIsNewJoiner}
 									isChecked={isNewJoiner || false}
