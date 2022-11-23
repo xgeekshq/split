@@ -18,26 +18,26 @@ interface PopoverRoleSettingsProps {
 
 const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 	({ userId, isTeamPage }) => {
-		const listMembers = useRecoilValue(membersListState);
-		const setListMembers = useSetRecoilState(membersListState);
+		const membersList = useRecoilValue(membersListState);
+		const setMembersList = useSetRecoilState(membersListState);
 
 		const {
 			updateTeamUser: { mutate }
 		} = useTeam({ autoFetchTeam: false });
 
 		const selectRole = (value: TeamUserRoles) => {
-			const members = listMembers.map((member) => {
+			const members = membersList.map((member) => {
 				if (member.user._id === userId) {
 					return { ...member, role: value };
 				}
 				return member;
 			});
 
-			setListMembers(members);
+			setMembersList(members);
 		};
 
 		const updateUserRole = (value: TeamUserRoles) => {
-			const userFound = listMembers.find((member) => member.user._id === userId);
+			const userFound = membersList.find((member) => member.user._id === userId);
 
 			if (userFound && userFound.team) {
 				const updateTeamUser: TeamUserUpdate = {
@@ -48,8 +48,6 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 				};
 
 				mutate(updateTeamUser);
-
-				selectRole(value);
 			}
 		};
 
