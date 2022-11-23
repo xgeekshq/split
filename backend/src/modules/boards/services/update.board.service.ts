@@ -214,7 +214,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			if (
 				updatedBoard &&
 				String(currentResponsible?.id) !== newResponsible.id &&
-				board.slackChannelId
+				board.slackChannelId &&
+				updatedBoard.slackEnable
 			) {
 				this.handleResponsibleSlackMessage(
 					newResponsible,
@@ -296,7 +297,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
-		if (board.slackChannelId) {
+		if (board.slackChannelId && board.slackEnable) {
 			this.slackCommunicationService.executeMergeBoardNotification({
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,

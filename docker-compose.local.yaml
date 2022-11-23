@@ -106,20 +106,6 @@ volumes:
   redis_data:
     driver: local
 
-  redis:
-    image: redis
-    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
-    environment:
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    ports:
-      - "6379:6379"
-    env_file:
-      - ./database/redis/.env
-
-volumes:
-  redis_data:
-    driver: local
-
 # Networks
 networks:
   split-network:
