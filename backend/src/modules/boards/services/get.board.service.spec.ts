@@ -9,6 +9,8 @@ import Board from 'modules/boards/schemas/board.schema';
 import GetBoardServiceImpl from 'modules/boards/services/get.board.service';
 import { getTeamService } from 'modules/teams/providers';
 
+import { getBoardService } from '../boards.providers';
+
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
 
@@ -16,6 +18,7 @@ describe('GetBoardServiceImpl', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				getTeamService,
+				getBoardService,
 				{
 					provide: getModelToken('Team'),
 					useValue: {}
