@@ -4,12 +4,11 @@ import * as Joi from 'joi';
 
 import { configuration } from './configuration';
 
-const NODE_ENV = process.env.NODE_ENV;
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: !NODE_ENV || NODE_ENV === 'dev' ? '.env' : `.env.${NODE_ENV}`,
+			envFilePath: '.env',
 			load: [configuration],
 			validationSchema: Joi.object({
 				NODE_ENV: Joi.string().valid('dev', 'prod', 'test', 'staging', 'local').default('local'),
