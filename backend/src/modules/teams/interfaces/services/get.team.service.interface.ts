@@ -19,7 +19,7 @@ export interface GetTeamServiceInterface {
 
 	getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]>;
 
-	getTeamUser(userId: string, boardId: string): Promise<LeanDocument<TeamUserDocument> | null>;
+	getTeamUser(userId: string, teamId: string): Promise<LeanDocument<TeamUserDocument> | null>;
 
 	getAllTeams(): Promise<LeanDocument<TeamDocument>[]>;
 }

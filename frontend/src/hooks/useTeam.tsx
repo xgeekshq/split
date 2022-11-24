@@ -1,7 +1,13 @@
 import { useMutation, useQuery } from 'react-query';
 
 import { ToastStateEnum } from 'utils/enums/toast-types';
-import { createTeamRequest, getAllTeams, getTeamRequest, getTeamsOfUser } from '../api/teamService';
+import {
+	createTeamRequest,
+	getAllTeams,
+	getTeamRequest,
+	getTeamsOfUser,
+	updateTeamUserRequest
+} from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
 
@@ -10,7 +16,7 @@ interface AutoFetchProps {
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-	const { teamId, setToastState } = useTeamUtils();
+	const { teamId, setToastState, membersList, setMembersList, queryClient } = useTeamUtils();
 
 	const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
 		enabled: autoFetchTeam,
@@ -72,11 +78,40 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 		}
 	});
 
+	const updateTeamUser = useMutation(updateTeamUserRequest, {
+		onSuccess: (data) => {
+			queryClient.invalidateQueries('team');
+
+			// updates the membersList recoil
+			const members = membersList.map((member) => {
+				return member.user._id === data.user
+					? { ...member, role: data.role, isNewJoiner: data.isNewJoiner }
+					: member;
+			});
+
+			setMembersList(members);
+
+			setToastState({
+				open: true,
+				content: 'The team user was successfully updated.',
+				type: ToastStateEnum.SUCCESS
+			});
+		},
+		onError: () => {
+			setToastState({
+				open: true,
+				content: 'Error while updating the team user role',
+				type: ToastStateEnum.ERROR
+			});
+		}
+	});
+
 	return {
 		fetchAllTeams,
 		fetchTeamsOfUser,
 		createTeam,
-		fetchTeam
+		fetchTeam,
+		updateTeamUser
 	};
 };
 
