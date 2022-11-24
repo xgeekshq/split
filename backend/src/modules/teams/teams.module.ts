@@ -10,6 +10,8 @@ import TeamsController from './controller/team.controller';
 import {
 	createTeamApplication,
 	createTeamService,
+	deleteTeamApplication,
+	deleteTeamService,
 	getTeamApplication,
 	getTeamService,
 	updateTeamApplication,
@@ -24,7 +26,9 @@ import {
 		getTeamService,
 		getTeamApplication,
 		updateTeamService,
-		updateTeamApplication
+		updateTeamApplication,
+		deleteTeamApplication,
+		deleteTeamService
 	],
 	controllers: [TeamsController],
 	exports: [getTeamApplication, getTeamService, createTeamService, updateTeamService]
