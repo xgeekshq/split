@@ -48,6 +48,10 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 			}
 		};
 
+		const handleSelectFunction = (role: TeamUserRoles) => {
+			return isTeamPage ? updateUserRole(role) : selectRole(role);
+		};
+
 		return (
 			<Popover>
 				<PopoverTriggerStyled
@@ -70,8 +74,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 							align="end"
 							direction="column"
 							onClick={() => {
-								if (isTeamPage) updateUserRole(TeamUserRoles.MEMBER);
-								else selectRole(TeamUserRoles.MEMBER);
+								handleSelectFunction(TeamUserRoles.MEMBER);
 							}}
 						>
 							<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
@@ -88,8 +91,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 							align="end"
 							direction="column"
 							onClick={() => {
-								if (isTeamPage) updateUserRole(TeamUserRoles.ADMIN);
-								else selectRole(TeamUserRoles.ADMIN);
+								handleSelectFunction(TeamUserRoles.ADMIN);
 							}}
 						>
 							<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
@@ -106,8 +108,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 							align="end"
 							direction="column"
 							onClick={() => {
-								if (isTeamPage) updateUserRole(TeamUserRoles.STAKEHOLDER);
-								else selectRole(TeamUserRoles.STAKEHOLDER);
+								handleSelectFunction(TeamUserRoles.STAKEHOLDER);
 							}}
 						>
 							<Text css={{ textAlign: 'end' }} size="sm" weight="medium">
