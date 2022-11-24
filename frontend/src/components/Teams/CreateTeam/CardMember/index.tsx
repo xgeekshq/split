@@ -4,6 +4,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
+import useTeam from 'hooks/useTeam';
+import { TeamUserUpdate } from 'types/team/team.user';
 import { membersListState } from '../../../../store/team/atom/team.atom';
 import { User } from '../../../../types/user/user';
 import { ConfigurationSettings } from '../../../Board/Settings/partials/ConfigurationSettings';
@@ -35,12 +37,35 @@ const CardMember = React.memo<CardBodyProps>(
 		const setMembersList = useSetRecoilState(membersListState);
 		const membersList = useRecoilValue(membersListState);
 
+		const {
+			updateTeamUser: { mutate }
+		} = useTeam({ autoFetchTeam: false });
+
 		const handleIsNewJoiner = (checked: boolean) => {
 			const listUsersMembers = membersList.map((user) => {
 				return user.user._id === member._id ? { ...user, isNewJoiner: checked } : user;
 			});
 
 			setMembersList(listUsersMembers);
+		};
+
+		const updateIsNewJoinerStatus = (checked: boolean) => {
+			const userFound = membersList.find((teamUser) => teamUser.user._id === member._id);
+
+			if (userFound && userFound.team && userFound.role) {
+				const updateTeamUser: TeamUserUpdate = {
+					team: userFound.team,
+					user: member._id,
+					role: userFound.role,
+					isNewJoiner: checked
+				};
+
+				mutate(updateTeamUser);
+			}
+		};
+
+		const handleSelectFunction = (checked: boolean) => {
+			return isTeamPage ? updateIsNewJoinerStatus(checked) : handleIsNewJoiner(checked);
 		};
 
 		return (
@@ -101,7 +126,7 @@ const CardMember = React.memo<CardBodyProps>(
 						{!isTeamMemberOrStakeholder && (
 							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
 								<ConfigurationSettings
-									handleCheckedChange={handleIsNewJoiner}
+									handleCheckedChange={handleSelectFunction}
 									isChecked={isNewJoiner || false}
 									text=""
 									title="New Joiner"
