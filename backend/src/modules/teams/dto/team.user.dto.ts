@@ -25,6 +25,5 @@ export default class TeamUserDto {
 	@ApiPropertyOptional()
 	@IsOptional()
 	@IsBoolean()
-	@IsMongoId()
 	isNewJoiner?: boolean;
 }

@@ -1,13 +1,14 @@
 export const TYPES = {
 	services: {
 		CreateTeamService: 'CreateTeamService',
-		GetTeamService: 'GetTeamService'
+		GetTeamService: 'GetTeamService',
+		UpdateTeamService: 'UpdateTeamService'
 		//   DeleteTeamService: 'DeleteTeamService',
-		//   UpdateTeamService: 'UpdateTeamService',
 	},
 	applications: {
 		CreateTeamApplication: 'CreateTeamApplication',
-		GetTeamApplication: 'GetTeamApplication'
+		GetTeamApplication: 'GetTeamApplication',
+		UpdateTeamApplication: 'UpdateTeamApplication'
 		//   DeleteBoardApplication: 'DeleteBoardApplication',
 		//   UpdateBoardApplication: 'UpdateBoardApplication',
 	}
