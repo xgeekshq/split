@@ -9,6 +9,7 @@ import {
 	Put,
 	Query,
 	Req,
+	SetMetadata,
 	UseGuards,
 	UsePipes,
 	ValidationPipe
@@ -39,6 +40,7 @@ import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
 
+import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { UpdateTeamApplication } from '../applications/update.team.application';
@@ -48,6 +50,8 @@ import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
+
+const TeamUser = (permission: string) => SetMetadata('permission', permission);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Teams')
@@ -206,13 +210,11 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@TeamUser('admin')
+	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
-	async updateTeamUser(
-		@Req() request: RequestWithUser,
-		@Param() { teamId }: TeamParams,
-		@Body() teamData: TeamUserDto
-	) {
-		const teamUser = await this.updateTeamApp.updateTeamUser(request.user._id, teamId, teamData);
+	async updateTeamUser(@Body() teamData: TeamUserDto) {
+		const teamUser = await this.updateTeamApp.updateTeamUser(teamData);
 
 		if (!teamUser) throw new BadRequestException(UPDATE_FAILED);
 
