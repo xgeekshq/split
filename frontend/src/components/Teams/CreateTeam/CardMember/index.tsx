@@ -74,7 +74,7 @@ const CardMember = React.memo<CardBodyProps>(
 								</StyledMemberTitle>
 							</Flex>
 						</Flex>
-						{isTeamMemberOrStakeholder ? (
+						{isTeamMemberOrStakeholder && isNewJoiner && (
 							<Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
 								<Text size="sm" weight="medium">
 									New Joiner
@@ -97,7 +97,8 @@ const CardMember = React.memo<CardBodyProps>(
 									</IconButton>
 								</Tooltip>
 							</Flex>
-						) : (
+						)}
+						{!isTeamMemberOrStakeholder && (
 							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
 								<ConfigurationSettings
 									handleCheckedChange={handleIsNewJoiner}
