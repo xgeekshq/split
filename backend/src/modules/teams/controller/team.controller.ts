@@ -210,7 +210,7 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@TeamUser('admin')
+	@TeamUser(TeamRoles.ADMIN)
 	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
 	async updateTeamUser(@Body() teamData: TeamUserDto) {
