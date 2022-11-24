@@ -1,39 +1,40 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getRandomColor } from 'utils/initialNames';
+import { getRandomColor } from '@/utils/initialNames';
 
 type AvatarColor = {
-	bg: string;
-	fontColor: string;
+  bg: string;
+  fontColor: string;
 };
 
 const useAvatarColor = (userId: string | undefined, isDefaultColor?: boolean): AvatarColor => {
-	const [color, setColor] = useState<AvatarColor | undefined>(undefined);
+  const [color, setColor] = useState<AvatarColor | undefined>(undefined);
 
-	// The userIcon sprite is filled with #F3FD58 color that correspond to secondaryBase
-	const getDefaultColor = useCallback(() => {
-		return { bg: `$secondaryBase`, fontColor: `$secondaryDarkest` };
-	}, []);
+  // The userIcon sprite is filled with #F3FD58 color that correspond to secondaryBase
+  const getDefaultColor = useCallback(
+    () => ({ bg: `$secondaryBase`, fontColor: `$secondaryDarkest` }),
+    [],
+  );
 
-	useEffect(() => {
-		const localStorageKey = `user_color_${userId}`;
-		const userStorage = localStorage.getItem(localStorageKey);
+  useEffect(() => {
+    const localStorageKey = `user_color_${userId}`;
+    const userStorage = localStorage.getItem(localStorageKey);
 
-		if (userStorage !== null && userStorage !== 'undefined') {
-			const user = JSON.parse(userStorage);
-			setColor({
-				bg: user.bg,
-				fontColor: user.fontColor
-			});
-			return;
-		}
+    if (userStorage !== null && userStorage !== 'undefined') {
+      const user = JSON.parse(userStorage);
+      setColor({
+        bg: user.bg,
+        fontColor: user.fontColor,
+      });
+      return;
+    }
 
-		const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
-		localStorage.setItem(localStorageKey, JSON.stringify(newColor));
-		setColor(newColor);
-	}, [userId, isDefaultColor, getDefaultColor]);
+    const newColor = isDefaultColor ? getDefaultColor : getRandomColor();
+    localStorage.setItem(localStorageKey, JSON.stringify(newColor));
+    setColor(newColor);
+  }, [userId, isDefaultColor, getDefaultColor]);
 
-	return color as AvatarColor;
+  return color as AvatarColor;
 };
 
 export default useAvatarColor;

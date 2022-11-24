@@ -3,112 +3,112 @@ import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from 'styles/stitches/stitches.config';
+import { styled } from '@/styles/stitches/stitches.config';
 
-import LogoIcon from 'components/icons/Logo';
-import Button from 'components/Primitives/Button';
-import Flex from 'components/Primitives/Flex';
-import Input from 'components/Primitives/Input';
-import Text from 'components/Primitives/Text';
+import LogoIcon from '@/components/icons/Logo';
+import Button from '@/components/Primitives/Button';
+import Flex from '@/components/Primitives/Flex';
+import Input from '@/components/Primitives/Input';
+import Text from '@/components/Primitives/Text';
 import useUser from 'hooks/useUser';
 import SchemaResetPasswordForm from 'schema/schemaResetPasswordForm';
 import { toastState } from 'store/toast/atom/toast.atom';
-import { NewPassword } from 'types/user/user';
-import { ToastStateEnum } from 'utils/enums/toast-types';
+import { NewPassword } from '@/types/user/user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const MainContainer = styled('form', Flex, {
-	width: '$500',
-	backgroundColor: '$white',
-	boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
-	borderRadius: '$12',
-	py: '$48',
-	px: '$32'
+  width: '$500',
+  backgroundColor: '$white',
+  boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
+  borderRadius: '$12',
+  py: '$48',
+  px: '$32',
 });
 
 interface ResetPasswordProps {
-	token: string;
+  token: string;
 }
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
-	const setToastState = useSetRecoilState(toastState);
-	const router = useRouter();
-	const methods = useForm<NewPassword>({
-		mode: 'onBlur',
-		reValidateMode: 'onBlur',
-		defaultValues: {
-			password: '',
-			passwordConf: ''
-		},
-		resolver: joiResolver(SchemaResetPasswordForm)
-	});
+  const setToastState = useSetRecoilState(toastState);
+  const router = useRouter();
+  const methods = useForm<NewPassword>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      password: '',
+      passwordConf: '',
+    },
+    resolver: joiResolver(SchemaResetPasswordForm),
+  });
 
-	const { resetPassword } = useUser();
+  const { resetPassword } = useUser();
 
-	const handleRecoverPassword = async (params: NewPassword) => {
-		params.token = token;
-		const res = await resetPassword.mutateAsync({ ...params, token });
-		if (!res.message) {
-			setToastState({
-				open: true,
-				type: ToastStateEnum.ERROR,
-				content: 'Something went wrong,please try again.'
-			});
-			return;
-		}
+  const handleRecoverPassword = async (params: NewPassword) => {
+    params.token = token;
+    const res = await resetPassword.mutateAsync({ ...params, token });
+    if (!res.message) {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Something went wrong,please try again.',
+      });
+      return;
+    }
 
-		router.push('/');
-		setToastState({
-			open: true,
-			type: ToastStateEnum.SUCCESS,
-			content: 'Password updated successfully'
-		});
-	};
+    router.push('/');
+    setToastState({
+      open: true,
+      type: ToastStateEnum.SUCCESS,
+      content: 'Password updated successfully',
+    });
+  };
 
-	return (
-		<MainContainer
-			direction="column"
-			onSubmit={methods.handleSubmit((params) => {
-				handleRecoverPassword(params);
-			})}
-		>
-			<FormProvider {...methods}>
-				<LogoIcon />
-				<Text css={{ mt: '$24' }} heading="1">
-					Reset Password
-				</Text>
-				<Text css={{ mt: '$8', color: '$primary500' }} size="md">
-					Enter your new password
-				</Text>
-				<Input
-					css={{ mt: '$32' }}
-					helperText="Your Password must be at least 8 characters long"
-					icon="eye"
-					iconPosition="right"
-					id="newPassword"
-					placeholder="Type password here"
-					type="password"
-				/>
-				<Input
-					helperText="Your Password must be at least 8 characters long"
-					icon="eye"
-					iconPosition="right"
-					id="newPasswordConf"
-					placeholder="Repeat password"
-					type="password"
-				/>
-				<Button
-					size="lg"
-					type="submit"
-					css={{
-						fontWeight: '$medium',
-						fontSize: '$18'
-					}}
-				>
-					Recover password
-				</Button>
-			</FormProvider>
-		</MainContainer>
-	);
+  return (
+    <MainContainer
+      direction="column"
+      onSubmit={methods.handleSubmit((params) => {
+        handleRecoverPassword(params);
+      })}
+    >
+      <FormProvider {...methods}>
+        <LogoIcon />
+        <Text css={{ mt: '$24' }} heading="1">
+          Reset Password
+        </Text>
+        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+          Enter your new password
+        </Text>
+        <Input
+          css={{ mt: '$32' }}
+          helperText="Your Password must be at least 8 characters long"
+          icon="eye"
+          iconPosition="right"
+          id="newPassword"
+          placeholder="Type password here"
+          type="password"
+        />
+        <Input
+          helperText="Your Password must be at least 8 characters long"
+          icon="eye"
+          iconPosition="right"
+          id="newPasswordConf"
+          placeholder="Repeat password"
+          type="password"
+        />
+        <Button
+          size="lg"
+          type="submit"
+          css={{
+            fontWeight: '$medium',
+            fontSize: '$18',
+          }}
+        >
+          Recover password
+        </Button>
+      </FormProvider>
+    </MainContainer>
+  );
 };
 
 export default ResetPassword;

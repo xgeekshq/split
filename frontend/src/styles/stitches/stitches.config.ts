@@ -10,17 +10,17 @@ import { spaces } from './partials/spaces';
 import { utils } from './partials/utils';
 
 export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } =
-	createStitches({
-		theme: {
-			colors,
-			...fontsSettings,
-			space: spaces,
-			sizes,
-			radii: borderRadius
-		},
-		media: mediaQueries,
-		utils
-	});
+  createStitches({
+    theme: {
+      colors,
+      ...fontsSettings,
+      space: spaces,
+      sizes,
+      radii: borderRadius,
+    },
+    media: mediaQueries,
+    utils,
+  });
 
 export type CSS = Stitches.CSS<typeof config>;
 
