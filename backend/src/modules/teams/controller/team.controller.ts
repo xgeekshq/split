@@ -2,6 +2,7 @@ import {
 	BadRequestException,
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Inject,
 	Param,
@@ -32,7 +33,7 @@ import {
 import { TeamParams } from 'src/libs/dto/param/team.params';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -41,6 +42,7 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
+import { DeleteTeamApplication } from '../applications/delete.team.application';
 import { UpdateTeamApplication } from '../applications/update.team.application';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
@@ -62,7 +64,9 @@ export default class TeamsController {
 		@Inject(TYPES.applications.GetTeamApplication)
 		private getTeamApp: GetTeamApplicationInterface,
 		@Inject(TYPES.applications.UpdateTeamApplication)
-		private updateTeamApp: UpdateTeamApplication
+		private updateTeamApp: UpdateTeamApplication,
+		@Inject(TYPES.applications.DeleteTeamApplication)
+		private deleteTeamApp: DeleteTeamApplication
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -219,5 +223,35 @@ export default class TeamsController {
 		if (!teamUser) throw new BadRequestException(UPDATE_FAILED);
 
 		return teamUser;
+	}
+
+	@ApiOperation({ summary: 'Delete a specific team' })
+	@ApiParam({ type: String, name: 'teamId', required: true })
+	@ApiOkResponse({ type: Boolean, description: 'Team successfully deleted!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@TeamUser(TeamRoles.ADMIN)
+	@UseGuards(TeamUserGuard)
+	@Delete(':teamId')
+	async deleteTeam(@Param() { teamId }: TeamParams) {
+		const result = await this.deleteTeamApp.delete(teamId);
+
+		if (!result) throw new BadRequestException(DELETE_FAILED);
+
+		return result;
 	}
 }

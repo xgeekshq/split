@@ -1,8 +1,10 @@
 import { CreateTeamApplication } from './applications/create.team.application';
+import { DeleteTeamApplication } from './applications/delete.team.application';
 import { GetTeamApplication } from './applications/get.team.application';
 import { UpdateTeamApplication } from './applications/update.team.application';
 import { TYPES } from './interfaces/types';
 import CreateTeamService from './services/create.team.service';
+import DeleteTeamService from './services/delete.team.service';
 import GetTeamService from './services/get.team.service';
 import UpdateTeamService from './services/update.team.service';
 
@@ -34,4 +36,14 @@ export const updateTeamService = {
 export const updateTeamApplication = {
 	provide: TYPES.applications.UpdateTeamApplication,
 	useClass: UpdateTeamApplication
+};
+
+export const deleteTeamService = {
+	provide: TYPES.services.DeleteTeamService,
+	useClass: DeleteTeamService
+};
+
+export const deleteTeamApplication = {
+	provide: TYPES.applications.DeleteTeamApplication,
+	useClass: DeleteTeamApplication
 };
