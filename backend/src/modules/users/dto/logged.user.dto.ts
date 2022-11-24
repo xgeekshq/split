@@ -1,6 +1,5 @@
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
-
-import { Token } from 'libs/interfaces/jwt/token.interface';
+import { Token } from 'src/libs/interfaces/jwt/token.interface';
 
 export default class LoggedUserDto {
 	@IsNotEmpty()

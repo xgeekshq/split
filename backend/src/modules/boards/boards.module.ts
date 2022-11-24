@@ -1,14 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
-
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
 	mongooseBoardUserModule
-} from 'infrastructure/database/mongoose.module';
-import { CommunicationModule } from 'modules/communication/communication.module';
-import { SchedulesModule } from 'modules/schedules/schedules.module';
-import TeamsModule from 'modules/teams/teams.module';
-import UsersModule from 'modules/users/users.module';
-
+} from 'src/infrastructure/database/mongoose.module';
+import { CommunicationModule } from 'src/modules/communication/communication.module';
+import { SchedulesModule } from 'src/modules/schedules/schedules.module';
+import TeamsModule from 'src/modules/teams/teams.module';
+import UsersModule from 'src/modules/users/users.module';
 import {
 	createBoardApplication,
 	createBoardService,

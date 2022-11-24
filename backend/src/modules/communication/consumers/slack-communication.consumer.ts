@@ -1,15 +1,13 @@
 import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
-
-import { UpdateBoardServiceInterface } from 'modules/boards/interfaces/services/update.board.service.interface';
-import { TYPES as BOARD_TYPES } from 'modules/boards/interfaces/types';
-import { TeamDto } from 'modules/communication/dto/team.dto';
-import { BoardType } from 'modules/communication/dto/types';
-import { CommunicationApplicationInterface } from 'modules/communication/interfaces/communication.application.interface';
-import { TYPES } from 'modules/communication/interfaces/types';
-import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
-
+import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
+import { TYPES as BOARD_TYPES } from 'src/modules/boards/interfaces/types';
+import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { BoardType } from 'src/modules/communication/dto/types';
+import { CommunicationApplicationInterface } from 'src/modules/communication/interfaces/communication.application.interface';
+import { TYPES } from 'src/modules/communication/interfaces/types';
+import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 
 @Processor(SlackCommunicationProducer.QUEUE_NAME)

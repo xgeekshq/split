@@ -1,10 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import { CARD_NOT_FOUND, CARD_NOT_REMOVED, UPDATE_FAILED } from 'libs/exceptions/messages';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import { CARD_NOT_FOUND, CARD_NOT_REMOVED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { MergeCardService } from '../interfaces/services/merge.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -73,6 +71,7 @@ export class MergeCardServiceImpl implements MergeCardService {
 		} finally {
 			await session.endSession();
 		}
+
 		return null;
 	}
 }

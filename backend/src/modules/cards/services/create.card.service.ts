@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import isEmpty from 'libs/utils/isEmpty';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import isEmpty from 'src/libs/utils/isEmpty';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
 import { pushCardIntoPosition } from '../shared/push.card';
@@ -27,6 +25,7 @@ export default class CreateCardServiceImpl implements CreateCardService {
 		} else {
 			card.items[0].createdBy = userId;
 		}
+
 		return pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
 	}
 }

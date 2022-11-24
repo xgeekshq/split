@@ -1,7 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
-
-import { TeamRoles } from 'libs/enum/team.roles';
+import { TeamRoles } from 'src/libs/enum/team.roles';
 
 export class TeamQueryParams {
 	@IsString()

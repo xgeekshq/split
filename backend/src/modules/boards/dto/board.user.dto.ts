@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-
-import { BoardRoles } from 'libs/enum/board.roles';
+import { BoardRoles } from 'src/libs/enum/board.roles';
 
 export default class BoardUserDto {
 	@ApiPropertyOptional()

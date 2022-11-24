@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import {
-	BOARD_NOT_FOUND,
 	BOARDS_NOT_FOUND,
+	BOARD_NOT_FOUND,
 	NOT_FOUND,
 	USER_NOT_FOUND
-} from 'libs/exceptions/messages';
+} from 'src/libs/exceptions/messages';
 
 export class NotFoundResponse {
 	@ApiProperty({

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
 import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
 import { TYPES } from '../interfaces/types';

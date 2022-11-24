@@ -12,10 +12,12 @@ export class SlackMergeBoardApplication implements MergeBoardApplicationInterfac
 		const { responsiblesChannelId, teamNumber, isLastSubBoard } = data;
 		const message = `<!channel>, The board of team ${teamNumber} is ready. Link: ${this.frontendUrl}/boards/${data.boardId}`;
 		this.chatHandler.postMessage(responsiblesChannelId, message);
+
 		if (isLastSubBoard) {
 			const responsiblesMessage = `All sub-boards merged! Here's the complete board: ${this.frontendUrl}/boards/${data.mainBoardId}`;
 			this.chatHandler.postMessage(responsiblesChannelId, responsiblesMessage);
 		}
+
 		return data;
 	}
 }

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { MergeCardApplication } from '../interfaces/applications/merge.card.application.interface';
 import { MergeCardService } from '../interfaces/services/merge.card.service.interface';
 import { TYPES } from '../interfaces/types';

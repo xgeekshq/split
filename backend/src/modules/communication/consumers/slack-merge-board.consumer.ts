@@ -1,11 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
-
-import { MergeBoardType } from 'modules/communication/dto/types';
-import { MergeBoardApplicationInterface } from 'modules/communication/interfaces/merge-board.application.interface';
-import { TYPES } from 'modules/communication/interfaces/types';
-
+import { MergeBoardType } from 'src/modules/communication/dto/types';
+import { MergeBoardApplicationInterface } from 'src/modules/communication/interfaces/merge-board.application.interface';
+import { TYPES } from 'src/modules/communication/interfaces/types';
 import { SlackMergeBoardProducer } from '../producers/slack-merge-board.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 

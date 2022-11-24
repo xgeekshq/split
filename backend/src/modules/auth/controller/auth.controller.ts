@@ -27,29 +27,27 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import { uniqueViolation } from 'infrastructure/database/errors/unique.user';
-import { EmailParam } from 'libs/dto/param/email.param';
-import { EMAIL_EXISTS, UPDATE_FAILED, USER_NOT_FOUND } from 'libs/exceptions/messages';
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import JwtRefreshGuard from 'libs/guards/jwtRefreshAuth.guard';
-import LocalAuthGuard from 'libs/guards/localAuth.guard';
-import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import { GetBoardApplicationInterface } from 'modules/boards/interfaces/applications/get.board.application.interface';
-import * as Boards from 'modules/boards/interfaces/types';
-import { GetTeamApplicationInterface } from 'modules/teams/interfaces/applications/get.team.application.interface';
-import * as Teams from 'modules/teams/interfaces/types';
-import CreateUserDto from 'modules/users/dto/create.user.dto';
-import { ResetPasswordDto } from 'modules/users/dto/reset-password.dto';
-import UserDto from 'modules/users/dto/user.dto';
-import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
-import { UpdateUserApplication } from 'modules/users/interfaces/applications/update.user.service.interface';
-import * as User from 'modules/users/interfaces/types';
-
+import { uniqueViolation } from 'src/infrastructure/database/errors/unique.user';
+import { EmailParam } from 'src/libs/dto/param/email.param';
+import { EMAIL_EXISTS, UPDATE_FAILED, USER_NOT_FOUND } from 'src/libs/exceptions/messages';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import JwtRefreshGuard from 'src/libs/guards/jwtRefreshAuth.guard';
+import LocalAuthGuard from 'src/libs/guards/localAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import { GetBoardApplicationInterface } from 'src/modules/boards/interfaces/applications/get.board.application.interface';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import { GetTeamApplicationInterface } from 'src/modules/teams/interfaces/applications/get.team.application.interface';
+import * as Teams from 'src/modules/teams/interfaces/types';
+import CreateUserDto from 'src/modules/users/dto/create.user.dto';
+import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
+import UserDto from 'src/modules/users/dto/user.dto';
+import { GetUserApplication } from 'src/modules/users/interfaces/applications/get.user.application.interface';
+import { UpdateUserApplication } from 'src/modules/users/interfaces/applications/update.user.service.interface';
+import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
 import { CreateResetTokenAuthApplication } from '../interfaces/applications/create-reset-token.auth.application.interface';
 import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';

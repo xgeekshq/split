@@ -1,8 +1,6 @@
 import { LeanDocument } from 'mongoose';
-
-import UserDto from 'modules/users/dto/user.dto';
-import { UserDocument } from 'modules/users/schemas/user.schema';
-
+import UserDto from 'src/modules/users/dto/user.dto';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';
 import { GetTokenAuthService } from '../interfaces/services/get-token.auth.service.interface';
 
