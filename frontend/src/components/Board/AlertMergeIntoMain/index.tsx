@@ -1,7 +1,7 @@
 import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '@/components/Primitives/AlertDialog';
 import Button from '@/components/Primitives/Button';
-import useCards from 'hooks/useCards';
+import useCards from '@/hooks/useCards';
 
 type Props = {
   boardId: string;

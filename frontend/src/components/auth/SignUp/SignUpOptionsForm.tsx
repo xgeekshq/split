@@ -5,7 +5,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import useUser from 'hooks/useUser';
+import useUser from '@/hooks/useUser';
 import { SignUpEnum } from '@/utils/signUp.enum';
 import { OrSeparator } from '../LoginForm/styles';
 

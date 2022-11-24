@@ -10,15 +10,15 @@ import { AxiosError } from 'axios';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import { registerNewUser } from 'api/authService';
+import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/icons/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
-import SchemaRegisterForm from 'schema/schemaRegisterForm';
-import { toastState } from 'store/toast/atom/toast.atom';
+import SchemaRegisterForm from '@/schema/schemaRegisterForm';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { RegisterUser, User } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';

@@ -8,8 +8,8 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import useUser from 'hooks/useUser';
-import { toastState } from 'store/toast/atom/toast.atom';
+import useUser from '@/hooks/useUser';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const MainContainer = styled('form', Flex, {

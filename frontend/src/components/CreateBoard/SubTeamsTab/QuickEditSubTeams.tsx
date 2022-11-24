@@ -13,7 +13,7 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import useCreateBoard from 'hooks/useCreateBoard';
+import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 

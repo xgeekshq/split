@@ -6,7 +6,7 @@ import AddCardOrComment from '@/components/Board/AddCardOrComment';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { cardItemBlur } from 'helper/board/blurFilter';
+import { cardItemBlur } from '@/helper/board/blurFilter';
 import { CardItemType } from '@/types/card/cardItem';
 import CardFooter from '../CardFooter';
 import DeleteCard from '../DeleteCard';

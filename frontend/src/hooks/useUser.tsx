@@ -3,7 +3,7 @@ import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
 
-import { resetTokenEmail, resetUserPassword } from 'api/authService';
+import { resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
   EmailUser,
   NewPassword,

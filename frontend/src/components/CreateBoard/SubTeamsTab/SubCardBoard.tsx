@@ -13,7 +13,7 @@ import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import { CreateBoardData } from 'store/createBoard/atoms/create-board.atom';
+import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';

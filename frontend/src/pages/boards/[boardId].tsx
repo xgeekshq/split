@@ -7,7 +7,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
-import { getBoardRequest } from 'api/boardService';
+import { getBoardRequest } from '@/api/boardService';
 import AlertGoToMainBoard from '@/components/Board/AlertGoToMainBoard';
 import AlertMergeIntoMain from '@/components/Board/AlertMergeIntoMain';
 import DragDropArea from '@/components/Board/DragDropArea';
@@ -16,9 +16,9 @@ import { BoardSettings } from '@/components/Board/Settings';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Flex from '@/components/Primitives/Flex';
-import useBoard from 'hooks/useBoard';
-import { useSocketIO } from 'hooks/useSocketIO';
-import { boardInfoState, newBoardState } from 'store/board/atoms/board.atom';
+import useBoard from '@/hooks/useBoard';
+import { useSocketIO } from '@/hooks/useSocketIO';
+import { boardInfoState, newBoardState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';

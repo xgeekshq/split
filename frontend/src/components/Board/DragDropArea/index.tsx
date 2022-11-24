@@ -4,9 +4,9 @@ import { DragDropContext, DropResult } from '@react-forked/dnd';
 
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Flex';
-import { countBoardCards } from 'helper/board/countCards';
-import useCards from 'hooks/useCards';
-import { toastState } from 'store/toast/atom/toast.atom';
+import { countBoardCards } from '@/helper/board/countCards';
+import useCards from '@/hooks/useCards';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';

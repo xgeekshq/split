@@ -11,7 +11,7 @@ import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
-import { boardInfoState } from 'store/board/atoms/board.atom';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import { BoardUser, BoardUserNoPopulated } from '@/types/board/board.user';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';

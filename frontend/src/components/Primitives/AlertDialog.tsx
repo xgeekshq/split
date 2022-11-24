@@ -3,7 +3,7 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 
 import { CSS, styled } from '@/styles/stitches/stitches.config';
 
-import { overlayShow } from 'animations/DialogShow';
+import { overlayShow } from '@/animations/DialogShow';
 import Box from './Box';
 import Button from './Button';
 import Flex from './Flex';

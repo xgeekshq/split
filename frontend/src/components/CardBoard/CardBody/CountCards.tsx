@@ -1,5 +1,5 @@
 import Text from '@/components/Primitives/Text';
-import { countBoardCards } from 'helper/board/countCards';
+import { countBoardCards } from '@/helper/board/countCards';
 import ColumnType from '@/types/column';
 
 type CounCardsProps = {

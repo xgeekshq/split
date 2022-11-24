@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 
-import { getBoardsRequest } from 'api/boardService';
+import { getBoardsRequest } from '@/api/boardService';
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { useSocketBoardIO } from 'hooks/useSocketBoardIO';
-import { toastState } from 'store/toast/atom/toast.atom';
+import { useSocketBoardIO } from '@/hooks/useSocketBoardIO';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

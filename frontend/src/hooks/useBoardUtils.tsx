@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 
-import { toastState } from 'store/toast/atom/toast.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 const useBoardUtils = () => {
   const router = useRouter();

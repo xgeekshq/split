@@ -2,7 +2,7 @@ import { useMutation } from 'react-query';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
-import { handleAddComments } from 'helper/board/transformBoard';
+import { handleAddComments } from '@/helper/board/transformBoard';
 import BoardType from '@/types/board/board';
 import ColumnType from '@/types/column';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';

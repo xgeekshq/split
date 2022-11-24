@@ -3,7 +3,7 @@ import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 
-import { getBoardsRequest } from 'api/boardService';
+import { getBoardsRequest } from '@/api/boardService';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';

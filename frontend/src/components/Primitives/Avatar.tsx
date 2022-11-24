@@ -2,7 +2,7 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import useAvatarColor from 'hooks/useAvatarColor';
+import useAvatarColor from '@/hooks/useAvatarColor';
 import Flex from './Flex';
 
 const AvatarRoot = styled(AvatarPrimitive.Root, Flex, {

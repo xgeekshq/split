@@ -6,7 +6,7 @@ import * as ToastPrimitive from '@radix-ui/react-toast';
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/icons/Icon';
-import { toastState } from 'store/toast/atom/toast.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
 import Text from './Text';

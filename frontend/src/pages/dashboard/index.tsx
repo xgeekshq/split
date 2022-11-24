@@ -5,9 +5,9 @@ import { useSession } from 'next-auth/react';
 
 import { InnerContainer } from '@/styles/pages/dashboard.styles';
 
-import { getDashboardHeaderInfo } from 'api/authService';
-import { getDashboardBoardsRequest } from 'api/boardService';
-import { getTeamsOfUser } from 'api/teamService';
+import { getDashboardHeaderInfo } from '@/api/authService';
+import { getDashboardBoardsRequest } from '@/api/boardService';
+import { getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';

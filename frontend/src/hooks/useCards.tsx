@@ -9,8 +9,8 @@ import {
   handleUnMergeCard,
   handleUpdateCardPosition,
   handleUpdateText,
-} from 'helper/board/transformBoard';
-import { mergeCardState } from 'store/mergeCard/atoms/merge-card.atom';
+} from '@/helper/board/transformBoard';
+import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
 import BoardType from '@/types/board/board';
 import AddCardDto from '@/types/card/addCard.dto';
 import CardType from '@/types/card/card';

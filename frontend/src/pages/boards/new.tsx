@@ -17,7 +17,7 @@ import {
   SubContainer,
 } from '@/styles/pages/boards/new.styles';
 
-import { getAllTeams } from 'api/teamService';
+import { getAllTeams } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName';
 import FakeSettingsTabs from '@/components/CreateBoard/fake/FakeSettingsTabs';
 import SettingsTabs from '@/components/CreateBoard/SettingsTabs';
@@ -27,10 +27,13 @@ import Icon from '@/components/icons/Icon';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
-import useBoard from 'hooks/useBoard';
-import SchemaCreateBoard from 'schema/schemaCreateBoardForm';
-import { createBoardDataState, createBoardError } from 'store/createBoard/atoms/create-board.atom';
-import { toastState } from 'store/toast/atom/toast.atom';
+import useBoard from '@/hooks/useBoard';
+import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
+import {
+  createBoardDataState,
+  createBoardError,
+} from '@/store/createBoard/atoms/create-board.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

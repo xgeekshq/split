@@ -13,10 +13,10 @@ import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import { TabsContent } from '@/components/Primitives/Tab';
 import Text from '@/components/Primitives/Text';
-import { getAuthError } from 'errors/auth-messages';
-import useUser from 'hooks/useUser';
-import SchemaLoginForm from 'schema/schemaLoginForm';
-import { toastState } from 'store/toast/atom/toast.atom';
+import { getAuthError } from '@/errors/auth-messages';
+import useUser from '@/hooks/useUser';
+import SchemaLoginForm from '@/schema/schemaLoginForm';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { LoginUser } from '@/types/user/user';
 import {
   AUTH_SSO,

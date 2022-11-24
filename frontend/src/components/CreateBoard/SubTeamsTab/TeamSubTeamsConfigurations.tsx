@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import { getAllTeams } from 'api/teamService';
+import { getAllTeams } from '@/api/teamService';
 import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
@@ -14,7 +14,7 @@ import {
   CreateBoardData,
   createBoardDataState,
   createBoardError,
-} from 'store/createBoard/atoms/create-board.atom';
+} from '@/store/createBoard/atoms/create-board.atom';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';

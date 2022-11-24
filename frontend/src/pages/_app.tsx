@@ -12,7 +12,7 @@ import globalStyles from '@/styles/globals';
 
 import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
-import { JWT_EXPIRATION_TIME, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
+import { JWT_EXPIRATION_TIME } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 
 type NextPageWithLayout = NextPage & {
@@ -35,9 +35,6 @@ function Root({
       },
     },
   });
-
-  // eslint-disable-next-line no-console
-  console.log(NEXT_PUBLIC_BACKEND_URL);
 
   const getLayout = Component.getLayout ?? ((page) => page);
 

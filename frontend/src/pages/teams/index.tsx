@@ -3,8 +3,8 @@ import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 
-import { getDashboardHeaderInfo } from 'api/authService';
-import { getTeamsOfUser } from 'api/teamService';
+import { getDashboardHeaderInfo } from '@/api/authService';
+import { getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';

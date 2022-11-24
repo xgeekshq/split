@@ -10,9 +10,9 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
-import useUser from 'hooks/useUser';
-import SchemaResetPasswordForm from 'schema/schemaResetPasswordForm';
-import { toastState } from 'store/toast/atom/toast.atom';
+import useUser from '@/hooks/useUser';
+import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { NewPassword } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 

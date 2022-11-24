@@ -2,7 +2,7 @@
 import { useMutation } from 'react-query';
 import { useSession } from 'next-auth/react';
 
-import { handleVotes } from 'api/boardService';
+import { handleVotes } from '@/api/boardService';
 import { CardItemType } from '@/types/card/cardItem';
 import voteDto from '@/types/vote/vote.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

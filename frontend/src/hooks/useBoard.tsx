@@ -7,8 +7,8 @@ import {
   deleteBoardRequest,
   getBoardRequest,
   updateBoardRequest,
-} from 'api/boardService';
-import { boardState, newBoardState } from 'store/board/atoms/board.atom';
+} from '@/api/boardService';
+import { boardState, newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

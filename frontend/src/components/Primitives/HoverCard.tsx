@@ -7,7 +7,7 @@ import {
   slideLeftAndFade,
   slideRightAndFade,
   slideUpAndFade,
-} from 'animations/Slide';
+} from '@/animations/Slide';
 
 const StyledContent = styled(HoverCardPrimitive.Content, {
   borderRadius: 6,

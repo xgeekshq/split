@@ -3,7 +3,7 @@ import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '@/components/Primitives/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
-import useBoard from 'hooks/useBoard';
+import useBoard from '@/hooks/useBoard';
 
 type DeleteBoardProps = {
   boardId: string;

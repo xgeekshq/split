@@ -1,5 +1,5 @@
 import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
-import useCards from 'hooks/useCards';
+import useCards from '@/hooks/useCards';
 
 interface DeleteProps {
   cardId: string;

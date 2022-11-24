@@ -10,8 +10,8 @@ import {
   PopoverTrigger,
 } from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
-import { cardItemBlur } from 'helper/board/blurFilter';
-import useCards from 'hooks/useCards';
+import { cardItemBlur } from '@/helper/board/blurFilter';
+import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
 
 interface PopoverSettingsContentProps {
