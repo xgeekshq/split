@@ -4,9 +4,5 @@ import TeamUserDto from '../../dto/team.user.dto';
 import { TeamUserDocument } from '../../schemas/team.user.schema';
 
 export interface UpdateTeamServiceInterface {
-	updateTeamUser(
-		userId: string,
-		teamId: string,
-		teamData: TeamUserDto
-	): Promise<LeanDocument<TeamUserDocument> | null>;
+	updateTeamUser(teamData: TeamUserDto): Promise<LeanDocument<TeamUserDocument> | null>;
 }

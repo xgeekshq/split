@@ -12,7 +12,7 @@ export class UpdateTeamApplication implements UpdateTeamApplicationInterface {
 		private updateTeamService: UpdateTeamServiceInterface
 	) {}
 
-	updateTeamUser(userId: string, teamId: string, teamData: TeamUserDto) {
-		return this.updateTeamService.updateTeamUser(userId, teamId, teamData);
+	updateTeamUser(teamData: TeamUserDto) {
+		return this.updateTeamService.updateTeamUser(teamData);
 	}
 }
