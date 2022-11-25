@@ -1,7 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
-
 import {
 	createBoardApplication,
 	createBoardService,
@@ -11,15 +10,15 @@ import {
 	getBoardService,
 	updateBoardApplication,
 	updateBoardService
-} from 'modules/boards/boards.providers';
-import BoardsController from 'modules/boards/controller/boards.controller';
-import * as CommunicationsType from 'modules/communication/interfaces/types';
+} from 'src/modules/boards/boards.providers';
+import BoardsController from 'src/modules/boards/controller/boards.controller';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
 	deleteSchedulesService
-} from 'modules/schedules/schedules.providers';
-import SocketGateway from 'modules/socket/gateway/socket.gateway';
-import { createTeamService, getTeamApplication, getTeamService } from 'modules/teams/providers';
+} from 'src/modules/schedules/schedules.providers';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { createTeamService, getTeamApplication, getTeamService } from 'src/modules/teams/providers';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;

@@ -1,4 +1,4 @@
-import { UserType } from 'modules/communication/dto/types';
+import { UserType } from 'src/modules/communication/dto/types';
 
 export class UserDto {
 	id: string;

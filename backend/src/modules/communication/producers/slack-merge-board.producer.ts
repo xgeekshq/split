@@ -1,8 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
-
-import { MergeBoardType } from 'modules/communication/dto/types';
+import { MergeBoardType } from 'src/modules/communication/dto/types';
 
 @Injectable()
 export class SlackMergeBoardProducer {

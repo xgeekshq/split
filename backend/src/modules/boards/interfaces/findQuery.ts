@@ -1,6 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { TeamDocument } from 'modules/teams/schemas/teams.schema';
+import { TeamDocument } from 'src/modules/teams/schemas/teams.schema';
 
 export type QueryType = {
 	$and: (
@@ -15,7 +14,7 @@ export type QueryType = {
 				$or: (
 					| {
 							_id: {
-								$in: LeanDocument<any>[];
+								$in: LeanDocument<unknown>[];
 							};
 							team?: undefined;
 					  }

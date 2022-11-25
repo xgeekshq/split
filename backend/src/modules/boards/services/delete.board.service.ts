@@ -1,17 +1,15 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
-
-import { TeamRoles } from 'libs/enum/team.roles';
-import { DELETE_FAILED } from 'libs/exceptions/messages';
-import isEmpty from 'libs/utils/isEmpty';
-import { DeleteSchedulesServiceInterface } from 'modules/schedules/interfaces/services/delete.schedules.service.interface';
-import * as Schedules from 'modules/schedules/interfaces/types';
-import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
-import * as Teams from 'modules/teams/interfaces/types';
-import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'modules/users/schemas/user.schema';
-
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import { DELETE_FAILED } from 'src/libs/exceptions/messages';
+import isEmpty from 'src/libs/utils/isEmpty';
+import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
+import * as Schedules from 'src/modules/schedules/interfaces/types';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import * as Teams from 'src/modules/teams/interfaces/types';
+import { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
@@ -34,9 +32,11 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		teamId: string
 	): Promise<LeanDocument<TeamUserDocument>> {
 		const teamUser = await this.getTeamService.getTeamUser(userId, teamId);
+
 		if (!teamUser) {
 			throw new NotFoundException('User not found on this team!');
 		}
+
 		return teamUser;
 	}
 
@@ -48,11 +48,13 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			(user) => String((user.user as UserDocument)?._id) === String(userId)
 		);
 		const isUserSAdmin = (myUser?.user as UserDocument).isSAdmin;
+
 		return isUserSAdmin;
 	}
 
 	private async getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]> {
 		const users = await this.getTeamService.getUsersOfTeam(teamId);
+
 		if (!users) {
 			throw new NotFoundException('User not found list of users!');
 		}
@@ -76,6 +78,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		const { deletedCount } = await this.boardUserModel
 			.deleteMany({ board: { $in: [...dividedBoards, boardId] } }, { session: boardSession })
 			.exec();
+
 		if (deletedCount <= 0) throw Error(DELETE_FAILED);
 	}
 
@@ -88,12 +91,14 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		);
 
 		if (!result) throw Error(DELETE_FAILED);
+
 		return { dividedBoards: result.dividedBoards, _id: result._id };
 	}
 
 	async delete(boardId: string, userId: string) {
 		const boardSession = await this.boardModel.db.startSession();
 		const board = await this.boardModel.findById(boardId).exec();
+
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
@@ -125,6 +130,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 				}
 				await boardSession.commitTransaction();
 				await boardUserSession.commitTransaction();
+
 				return true;
 			} catch (e) {
 				await boardSession.abortTransaction();

@@ -1,7 +1,6 @@
 import { UpdateResult } from 'mongodb';
 import { ClientSession, Model } from 'mongoose';
-
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 
 export const pullCard = (
 	boardId: string,

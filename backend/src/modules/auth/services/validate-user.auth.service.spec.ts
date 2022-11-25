@@ -3,18 +3,17 @@ import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-
-import configService from 'libs/test-utils/mocks/configService.mock';
-import jwtService from 'libs/test-utils/mocks/jwtService.mock';
-import mockedUser from 'libs/test-utils/mocks/user.mock';
-import ValidateUserAuthServiceImpl from 'modules/auth/services/validate-user.auth.service';
-import { GetUserService } from 'modules/users/interfaces/services/get.user.service.interface';
-import { TYPES } from 'modules/users/interfaces/types';
-import { getUserService } from 'modules/users/users.providers';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import mockedUser from 'src/libs/test-utils/mocks/user.mock';
+import ValidateUserAuthServiceImpl from 'src/modules/auth/services/validate-user.auth.service';
+import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
+import { TYPES } from 'src/modules/users/interfaces/types';
+import { getUserService } from 'src/modules/users/users.providers';
 
 jest.mock('bcrypt');
-jest.mock('modules/schedules/services/create.schedules.service.ts');
-jest.mock('modules/schedules/services/delete.schedules.service.ts');
+jest.mock('src/modules/schedules/services/create.schedules.service.ts');
+jest.mock('src/modules/schedules/services/delete.schedules.service.ts');
 
 describe('The AuthenticationService', () => {
 	let authenticationService: ValidateUserAuthServiceImpl;

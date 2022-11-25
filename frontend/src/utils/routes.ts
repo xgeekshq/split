@@ -9,17 +9,16 @@ export const SETTINGS_ROUTE = '/settings';
 export const ERROR_500_PAGE = '/500';
 
 export const ROUTES = {
-	START_PAGE_ROUTE,
-	Dashboard: DASHBOARD_ROUTE,
-	Boards: BOARDS_ROUTE,
-	BoardPage: (boardId: string): string => `/boards/${boardId}`,
-	Token: RESET_PASSWORD_ROUTE,
-	TokenPage: (tokenId: string): string => `/reset-password/${tokenId}`,
-	Teams: TEAMS_ROUTE,
-	TeamPage: (teamId: string): string => `/teams/${teamId}`,
-	Users: USERS_ROUTE
+  START_PAGE_ROUTE,
+  Dashboard: DASHBOARD_ROUTE,
+  Boards: BOARDS_ROUTE,
+  BoardPage: (boardId: string): string => `/boards/${boardId}`,
+  Token: RESET_PASSWORD_ROUTE,
+  TokenPage: (tokenId: string): string => `/reset-password/${tokenId}`,
+  Teams: TEAMS_ROUTE,
+  TeamPage: (teamId: string): string => `/teams/${teamId}`,
+  Users: USERS_ROUTE,
 };
 
-export const GetPageTitleByUrl = (url: string): string | undefined => {
-	return Object.keys(ROUTES).find((key) => ROUTES[key as keyof typeof ROUTES] === url);
-};
+export const GetPageTitleByUrl = (url: string): string | undefined =>
+  Object.keys(ROUTES).find((key) => ROUTES[key as keyof typeof ROUTES] === url);

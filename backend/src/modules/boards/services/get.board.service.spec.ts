@@ -4,11 +4,9 @@ import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Document, LeanDocument } from 'mongoose';
-
-import Board from 'modules/boards/schemas/board.schema';
-import GetBoardServiceImpl from 'modules/boards/services/get.board.service';
-import { getTeamService } from 'modules/teams/providers';
-
+import Board from 'src/modules/boards/schemas/board.schema';
+import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
+import { getTeamService } from 'src/modules/teams/providers';
 import { getBoardService } from '../boards.providers';
 
 describe('GetBoardServiceImpl', () => {

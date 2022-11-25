@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import TeamDto from '../dto/team.dto';
 import teamUserDto from '../dto/team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';

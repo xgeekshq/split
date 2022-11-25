@@ -2,11 +2,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-
-import configService from 'libs/test-utils/mocks/configService.mock';
-import jwtService from 'libs/test-utils/mocks/jwtService.mock';
-import GetTokenAuthServiceImpl from 'modules/auth/services/get-token.auth.service';
-import { updateUserService } from 'modules/users/users.providers';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import GetTokenAuthServiceImpl from 'src/modules/auth/services/get-token.auth.service';
+import { updateUserService } from 'src/modules/users/users.providers';
 
 describe('AuthService', () => {
 	let service: GetTokenAuthServiceImpl;

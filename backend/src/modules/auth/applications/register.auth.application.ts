@@ -1,7 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-
-import CreateUserDto from 'modules/users/dto/create.user.dto';
-
+import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { RegisterAuthApplication } from '../interfaces/applications/register.auth.application.interface';
 import { RegisterAuthService } from '../interfaces/services/register.auth.service.interface';
 import { TYPES } from '../interfaces/types';

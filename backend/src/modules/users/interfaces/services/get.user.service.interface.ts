@@ -1,5 +1,4 @@
 import { LeanDocument } from 'mongoose';
-
 import { UserDocument } from '../../schemas/user.schema';
 
 export interface GetUserService {

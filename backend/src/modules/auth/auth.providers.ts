@@ -12,6 +12,7 @@ export const getTokenAuthService = {
 	provide: TYPES.services.GetTokenAuthService,
 	useClass: GetTokenAuthServiceImpl
 };
+
 export const registerAuthService = {
 	provide: TYPES.services.RegisterAuthService,
 	useClass: RegisterAuthServiceImpl

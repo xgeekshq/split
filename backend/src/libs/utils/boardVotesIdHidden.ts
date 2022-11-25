@@ -1,8 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { LeanDocument } from 'mongoose';
-
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { hideText } from './hideText';
 
 export const boardVotesIdHidden = (
@@ -28,19 +26,25 @@ export const boardVotesIdHidden = (
 					if (String(userId) !== String(vote)) {
 						return hideText(String(vote));
 					}
+
 					return vote;
 				});
+
 				return { ...item, votes };
 			});
 			const votes = card.votes.map((vote) => {
 				if (String(userId) !== String(vote)) {
 					return hideText(String(vote));
 				}
+
 				return vote;
 			});
+
 			return { ...card, items, votes };
 		});
+
 		return { ...column, cards };
 	});
+
 	return { ...input, columns };
 };

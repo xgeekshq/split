@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
-import { SLACK_MASTER_CHANNEL_ID } from 'libs/constants/slack';
-import { BoardType, ChangeResponsibleType, MergeBoardType } from 'modules/communication/dto/types';
-import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
-import { SlackMergeBoardProducer } from 'modules/communication/producers/slack-merge-board.producer';
-import { SlackResponsibleProducer } from 'modules/communication/producers/slack-responsible.producer';
-
+import { SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import {
+	BoardType,
+	ChangeResponsibleType,
+	MergeBoardType
+} from 'src/modules/communication/dto/types';
+import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
+import { SlackMergeBoardProducer } from 'src/modules/communication/producers/slack-merge-board.producer';
+import { SlackResponsibleProducer } from 'src/modules/communication/producers/slack-responsible.producer';
 import { CommunicationServiceInterface } from '../interfaces/slack-communication.service.interface';
 
 @Injectable()

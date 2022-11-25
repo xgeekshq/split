@@ -29,17 +29,15 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import { TeamParams } from 'libs/dto/param/team.params';
-import { TeamQueryParams } from 'libs/dto/param/team.query.params';
-import { TeamRoles } from 'libs/enum/team.roles';
-import { INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-
+import { TeamParams } from 'src/libs/dto/param/team.params';
+import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
@@ -84,7 +82,9 @@ export default class TeamsController {
 	@Post()
 	async create(@Body() teamData: CreateTeamDto) {
 		const team = await this.createTeamApp.create(teamData);
+
 		if (!team) throw new BadRequestException(INSERT_FAILED);
+
 		return team;
 	}
 

@@ -22,19 +22,17 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import { VoteGroupParams } from 'libs/dto/param/vote.group.params';
-import { VoteItemParams } from 'libs/dto/param/vote.item.params';
-import { DELETE_FAILED, INSERT_FAILED } from 'libs/exceptions/messages';
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { SocketIdDto } from 'libs/swagger/dto/socket-id.swagger';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
-import SocketGateway from 'modules/socket/gateway/socket.gateway';
-
+import { VoteGroupParams } from 'src/libs/dto/param/vote.group.params';
+import { VoteItemParams } from 'src/libs/dto/param/vote.item.params';
+import { DELETE_FAILED, INSERT_FAILED } from 'src/libs/exceptions/messages';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { SocketIdDto } from 'src/libs/swagger/dto/socket-id.swagger';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import { boardVotesIdHidden } from 'src/libs/utils/boardVotesIdHidden';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import BoardDto from '../../boards/dto/board.dto';
 import VoteDto from '../dto/vote.dto';
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';

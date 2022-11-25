@@ -1,9 +1,7 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-
-import * as BoardTypes from 'modules/boards/interfaces/types';
-
+import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetBoardServiceInterface } from '../../boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';

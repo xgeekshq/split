@@ -1,12 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-
 import {
 	DELETE_FAILED,
 	EMAIL_DONT_MATCH,
 	EMAIL_EXISTS,
 	INSERT_FAILED,
 	UPDATE_FAILED
-} from 'libs/exceptions/messages';
+} from 'src/libs/exceptions/messages';
 
 export class BadRequestResponse {
 	@ApiProperty({

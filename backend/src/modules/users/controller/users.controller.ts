@@ -8,12 +8,10 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UserDto from '../dto/user.dto';
 import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { TYPES } from '../interfaces/types';

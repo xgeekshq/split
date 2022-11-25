@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { CreateCommentService } from '../interfaces/services/create.comment.service.interface';
 
 @Injectable()

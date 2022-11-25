@@ -1,4 +1,4 @@
-import LoggedUserDto from 'modules/users/dto/logged.user.dto';
+import LoggedUserDto from 'src/modules/users/dto/logged.user.dto';
 
 export interface AuthAzureApplication {
 	registerOrLogin(azureToken: string): Promise<LoggedUserDto | null>;

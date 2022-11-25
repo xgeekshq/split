@@ -2,61 +2,61 @@ import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 
-import { BannerContainer, CenteredContainer, ImageBackground } from 'styles/pages/auth.styles';
+import { BannerContainer, CenteredContainer, ImageBackground } from '@/styles/pages/auth.styles';
 
-import TroubleLogin from 'components/auth/ForgotPassword/TroubleLogin';
-import LoginForm from 'components/auth/LoginForm';
-import SignUpTabContent from 'components/auth/SignUp/SignUpTabContent';
-import Banner from 'components/icons/Banner';
-import { TabsList, TabsRoot, TabsTrigger } from 'components/Primitives/Tab';
-import Text from 'components/Primitives/Text';
-import { DASHBOARD_ROUTE } from 'utils/routes';
+import TroubleLogin from '@/components/auth/ForgotPassword/TroubleLogin';
+import LoginForm from '@/components/auth/LoginForm';
+import SignUpTabContent from '@/components/auth/SignUp/SignUpTabContent';
+import Banner from '@/components/icons/Banner';
+import { TabsList, TabsRoot, TabsTrigger } from '@/components/Primitives/Tab';
+import Text from '@/components/Primitives/Text';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-	const session = await getSession(ctx);
-	if (session) {
-		return {
-			redirect: {
-				destination: DASHBOARD_ROUTE,
-				permanent: false
-			}
-		};
-	}
-	return { props: {} };
+  const session = await getSession(ctx);
+  if (session) {
+    return {
+      redirect: {
+        destination: DASHBOARD_ROUTE,
+        permanent: false,
+      },
+    };
+  }
+  return { props: {} };
 };
 
 const Home: NextPage = () => {
-	const [currentTab, setCurrentTab] = useState('login');
-	const [showTroubleLogin, setShowTroubleLogin] = useState(false);
+  const [currentTab, setCurrentTab] = useState('login');
+  const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 
-	return (
-		<ImageBackground>
-			<BannerContainer>
-				<Banner />
-			</BannerContainer>
-			<CenteredContainer>
-				{!showTroubleLogin && (
-					<TabsRoot
-						defaultValue="login"
-						value={currentTab}
-						onValueChange={(value) => setCurrentTab(value)}
-					>
-						<TabsList aria-label="Login or register">
-							<TabsTrigger value="login">
-								<Text heading="4">Log in</Text>
-							</TabsTrigger>
-							<TabsTrigger value="register">
-								<Text heading="4">Sign up</Text>
-							</TabsTrigger>
-						</TabsList>
-						<LoginForm setShowTroubleLogin={setShowTroubleLogin} />
-						<SignUpTabContent setCurrentTab={setCurrentTab} />
-					</TabsRoot>
-				)}
-				{showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
-			</CenteredContainer>
-		</ImageBackground>
-	);
+  return (
+    <ImageBackground>
+      <BannerContainer>
+        <Banner />
+      </BannerContainer>
+      <CenteredContainer>
+        {!showTroubleLogin && (
+          <TabsRoot
+            defaultValue="login"
+            value={currentTab}
+            onValueChange={(value) => setCurrentTab(value)}
+          >
+            <TabsList aria-label="Login or register">
+              <TabsTrigger value="login">
+                <Text heading="4">Log in</Text>
+              </TabsTrigger>
+              <TabsTrigger value="register">
+                <Text heading="4">Sign up</Text>
+              </TabsTrigger>
+            </TabsList>
+            <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
+            <SignUpTabContent setCurrentTab={setCurrentTab} />
+          </TabsRoot>
+        )}
+        {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
+      </CenteredContainer>
+    </ImageBackground>
+  );
 };
 
 export default Home;
