@@ -1,5 +1,5 @@
-import Input from '../../Primitives/Input';
-import Text from '../../Primitives/Text';
+import Input from '@/components/Primitives/Input';
+import Text from '@/components/Primitives/Text';
 
 type Props = { teamName: string };
 

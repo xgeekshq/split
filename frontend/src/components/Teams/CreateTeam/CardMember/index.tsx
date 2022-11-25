@@ -1,47 +1,58 @@
+import useTeam from '@/hooks/useTeam';
+import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { membersListState } from '../../../../store/team/atom/team.atom';
-import { User } from '../../../../types/user/user';
-import { ConfigurationSettings } from '../../../Board/Settings/partials/ConfigurationSettings';
-import Tooltip from '../../../Primitives/Tooltip';
-import CardEndTeam from '../../Team/CardEnd';
-import CardEndCreateTeam from '../CardEnd';
+import Icon from '@/components/icons/Icon';
+import { membersListState } from '@/store/team/atom/team.atom';
+
+import Tooltip from '@/components/Primitives/Tooltip';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
+import CardEndTeam from '@/components/Teams/Team/CardEnd';
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
+import CardEndCreateTeam from '../CardEnd';
 
 type CardBodyProps = {
-  member: User;
-  role: string;
+  member: TeamUser;
   isTeamCreator?: boolean;
-  isNewJoiner?: boolean;
   isTeamMemberOrStakeholder?: boolean;
   isNewTeamPage?: boolean;
   isTeamPage?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-  ({
-    isNewTeamPage,
-    isTeamPage,
-    member,
-    role,
-    isTeamCreator,
-    isNewJoiner,
-    isTeamMemberOrStakeholder,
-  }) => {
-    const setMembersList = useSetRecoilState(membersListState);
-    const membersList = useRecoilValue(membersListState);
+  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMemberOrStakeholder }) => {
+    const [membersList, setMembersList] = useRecoilState(membersListState);
+
+    const {
+      updateTeamUser: { mutate },
+    } = useTeam({ autoFetchTeam: false });
 
     const handleIsNewJoiner = (checked: boolean) => {
       const listUsersMembers = membersList.map((user) =>
-        user.user._id === member._id ? { ...user, isNewJoiner: checked } : user,
+        user.user._id === member.user._id ? { ...user, isNewJoiner: checked } : user,
       );
 
       setMembersList(listUsersMembers);
     };
+
+    const updateIsNewJoinerStatus = (checked: boolean) => {
+      if (member.team) {
+        const updateTeamUser: TeamUserUpdate = {
+          team: member.team,
+          user: member.user._id,
+          role: member.role,
+          isNewJoiner: checked,
+        };
+
+        mutate(updateTeamUser);
+      }
+    };
+
+    const handleSelectFunction = (checked: boolean) =>
+      isTeamPage ? updateIsNewJoinerStatus(checked) : handleIsNewJoiner(checked);
 
     return (
       <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
@@ -69,10 +80,12 @@ const CardMember = React.memo<CardBodyProps>(
               />
 
               <Flex align="center" gap="8">
-                <StyledMemberTitle>{`${member.firstName} ${member.lastName}`}</StyledMemberTitle>
+                <StyledMemberTitle>
+                  {`${member.user.firstName} ${member.user.lastName}`}
+                </StyledMemberTitle>
               </Flex>
             </Flex>
-            {isTeamMemberOrStakeholder && isNewJoiner && (
+            {isTeamMemberOrStakeholder && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
                   New Joiner
@@ -98,23 +111,27 @@ const CardMember = React.memo<CardBodyProps>(
             {!isTeamMemberOrStakeholder && (
               <Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
                 <ConfigurationSettings
-                  handleCheckedChange={handleIsNewJoiner}
-                  isChecked={isNewJoiner || false}
+                  handleCheckedChange={handleSelectFunction}
+                  isChecked={member.isNewJoiner}
                   text=""
                   title="New Joiner"
                 />
               </Flex>
             )}
             {isNewTeamPage && (
-              <CardEndCreateTeam isTeamCreator={isTeamCreator} role={role} userId={member._id} />
+              <CardEndCreateTeam
+                isTeamCreator={isTeamCreator}
+                role={member.role}
+                userId={member.user._id}
+              />
             )}
             {isTeamPage && (
               <CardEndTeam
                 isTeamPage
                 isTeamCreator={isTeamCreator}
                 isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
-                role={role}
-                userId={member._id}
+                role={member.role}
+                userId={member.user._id}
               />
             )}
           </InnerContainer>

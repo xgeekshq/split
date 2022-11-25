@@ -1,6 +1,6 @@
-import { styled } from '../../../../styles/stitches/stitches.config';
-import Flex from '../../../Primitives/Flex';
-import Text from '../../../Primitives/Text';
+import { styled } from '@/styles/stitches/stitches.config';
+import Flex from '@/components/Primitives/Flex';
+import Text from '@/components/Primitives/Text';
 
 const ButtonAddMember = styled('button', {
   color: 'black',
