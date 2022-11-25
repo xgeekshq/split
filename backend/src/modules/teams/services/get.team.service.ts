@@ -1,9 +1,7 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
-import { GetBoardServiceInterface } from '../../boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import { UsersWithTeams } from '../interfaces/users-with-teams.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
@@ -13,9 +11,7 @@ import Team, { TeamDocument } from '../schemas/teams.schema';
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
 		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
-		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
-		private getBoardService: GetBoardServiceInterface
+		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
 	) {}
 
 	async countTeams(userId: string) {
