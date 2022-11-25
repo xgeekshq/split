@@ -1,11 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
-
-import { ChangeResponsibleType } from 'modules/communication/dto/types';
-import { ResponsibleApplicationInterface } from 'modules/communication/interfaces/responsible.application.interface';
-import { TYPES } from 'modules/communication/interfaces/types';
-
+import { ChangeResponsibleType } from 'src/modules/communication/dto/types';
+import { ResponsibleApplicationInterface } from 'src/modules/communication/interfaces/responsible.application.interface';
+import { TYPES } from 'src/modules/communication/interfaces/types';
 import { SlackResponsibleProducer } from '../producers/slack-responsible.producer';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
 

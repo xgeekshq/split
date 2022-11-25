@@ -1,5 +1,4 @@
 import { LeanDocument } from 'mongoose';
-
 import { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 
@@ -31,5 +30,5 @@ export interface GetBoardApplicationInterface {
 
 	getAllBoardIdsAndTeamIdsOfUser(
 		userId: string
-	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
+	): Promise<{ boardIds: LeanDocument<unknown>[]; teamIds: unknown[] }>;
 }

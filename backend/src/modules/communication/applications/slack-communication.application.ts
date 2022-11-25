@@ -1,13 +1,12 @@
 import { Logger } from '@nestjs/common';
-
-import { TeamDto } from 'modules/communication/dto/team.dto';
-import { BoardRoles, BoardType, ConfigurationType } from 'modules/communication/dto/types';
-import { UserDto } from 'modules/communication/dto/user.dto';
-import { BoardNotValidError } from 'modules/communication/errors/board-not-valid.error';
-import { ChatHandlerInterface } from 'modules/communication/interfaces/chat.handler.interface';
-import { CommunicationApplicationInterface } from 'modules/communication/interfaces/communication.application.interface';
-import { ConversationsHandlerInterface } from 'modules/communication/interfaces/conversations.handler.interface';
-import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
+import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { BoardRoles, BoardType, ConfigurationType } from 'src/modules/communication/dto/types';
+import { UserDto } from 'src/modules/communication/dto/user.dto';
+import { BoardNotValidError } from 'src/modules/communication/errors/board-not-valid.error';
+import { ChatHandlerInterface } from 'src/modules/communication/interfaces/chat.handler.interface';
+import { CommunicationApplicationInterface } from 'src/modules/communication/interfaces/communication.application.interface';
+import { ConversationsHandlerInterface } from 'src/modules/communication/interfaces/conversations.handler.interface';
+import { UsersHandlerInterface } from 'src/modules/communication/interfaces/users.handler.interface';
 
 export class SlackCommunicationApplication implements CommunicationApplicationInterface {
 	private logger = new Logger(SlackCommunicationApplication.name);
@@ -26,6 +25,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		teams = await this.inviteAllMembers(teams);
 		await this.postMessageOnEachChannel(teams);
 		await this.postMessageOnMasterChannel(teams);
+
 		return teams;
 	}
 
@@ -36,11 +36,13 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				text += `\n${team.name}:\n`;
 				team.participants.forEach((i, idx) => {
 					text += `${idx + 1}. ${i.firstName} ${i.lastName}`;
+
 					if (i.responsible) {
 						text += ` *- Responsible*`;
 					}
 					text += '\n';
 				});
+
 				return text;
 			}, '');
 
@@ -99,6 +101,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				.filter((i) => typeof i.channelId === 'string')
 				.filter((i) => i.participants.length > 0)
 				.find((i) => i.channelId === channelId);
+
 			if (board) {
 				board.participantsNotInvited = fails;
 			}
@@ -128,6 +131,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 					`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}`
 				)
 			);
+
 			if (board) {
 				board.channelId = channelId;
 			}
@@ -146,6 +150,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 			const participants: UserDto[] = [];
 			i.participants.forEach((participant) => {
 				const found = usersProfiles.find((profile) => profile.email === participant.email);
+
 				if (found) {
 					participants.push({
 						...participant,
@@ -170,6 +175,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		const normalizeName = (name: string) => {
 			// only contain lowercase letters, numbers, hyphens, and underscores, and must be 80 characters or less
 			const fullName = `${this.config.slackChannelPrefix}${name}`;
+
 			return fullName
 				.replace(/\s/, '_')
 				.replace(/[^a-zA-Z0-9-_]/g, '')
@@ -197,6 +203,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				// .filter((i) => typeof i.user !== 'string')
 				.map((i) => {
 					i.user.board = i.board;
+
 					return UserDto.FromUser(i.user, i.role === BoardRoles.RESPONSIBLE);
 				});
 
@@ -233,6 +240,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 	// return the responsible in the board
 	private getUsersInBoardByRole(board: BoardType, role: BoardRoles): UserDto | null {
 		const users = board.users.find((i) => i.role === role);
+
 		if (users && typeof users.user !== 'string') {
 			users.user.board = users.board;
 

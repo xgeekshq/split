@@ -1,12 +1,11 @@
 import { MongooseModule } from '@nestjs/mongoose';
-
-import ResetPassword, { ResetPasswordSchema } from 'modules/auth/schemas/reset-password.schema';
-import Board, { BoardSchema } from 'modules/boards/schemas/board.schema';
-import BoardUser, { BoardUserSchema } from 'modules/boards/schemas/board.user.schema';
-import Schedules, { SchedulesSchema } from 'modules/schedules/schemas/schedules.schema';
-import TeamUser, { TeamUserSchema } from 'modules/teams/schemas/team.user.schema';
-import Team, { TeamSchema } from 'modules/teams/schemas/teams.schema';
-import User, { UserSchema } from 'modules/users/schemas/user.schema';
+import ResetPassword, { ResetPasswordSchema } from 'src/modules/auth/schemas/reset-password.schema';
+import Board, { BoardSchema } from 'src/modules/boards/schemas/board.schema';
+import BoardUser, { BoardUserSchema } from 'src/modules/boards/schemas/board.user.schema';
+import Schedules, { SchedulesSchema } from 'src/modules/schedules/schemas/schedules.schema';
+import TeamUser, { TeamUserSchema } from 'src/modules/teams/schemas/team.user.schema';
+import Team, { TeamSchema } from 'src/modules/teams/schemas/teams.schema';
+import User, { UserSchema } from 'src/modules/users/schemas/user.schema';
 
 export const mongooseBoardModule = MongooseModule.forFeature([
 	{ name: Board.name, schema: BoardSchema }

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.application.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';

@@ -4,10 +4,9 @@ import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-
-import configService from 'libs/test-utils/mocks/configService.mock';
-import jwtService from 'libs/test-utils/mocks/jwtService.mock';
-import mockedUser from 'libs/test-utils/mocks/user.mock';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import mockedUser from 'src/libs/test-utils/mocks/user.mock';
 import {
 	createResetTokenAuthApplication,
 	createResetTokenAuthService,
@@ -15,18 +14,18 @@ import {
 	getTokenAuthService,
 	registerAuthApplication,
 	registerAuthService
-} from 'modules/auth/auth.providers';
-import AuthController from 'modules/auth/controller/auth.controller';
-import { getBoardApplication, getBoardService } from 'modules/boards/boards.providers';
-import EmailModule from 'modules/mailer/mailer.module';
-import { createTeamService, getTeamApplication, getTeamService } from 'modules/teams/providers';
+} from 'src/modules/auth/auth.providers';
+import AuthController from 'src/modules/auth/controller/auth.controller';
+import { getBoardApplication, getBoardService } from 'src/modules/boards/boards.providers';
+import EmailModule from 'src/modules/mailer/mailer.module';
+import { createTeamService, getTeamApplication, getTeamService } from 'src/modules/teams/providers';
 import {
 	createUserService,
 	getUserApplication,
 	getUserService,
 	updateUserApplication,
 	updateUserService
-} from 'modules/users/users.providers';
+} from 'src/modules/users/users.providers';
 
 describe('AuthController', () => {
 	let app: INestApplication;

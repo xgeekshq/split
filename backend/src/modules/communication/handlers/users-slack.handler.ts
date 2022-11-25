@@ -1,8 +1,7 @@
 import { Logger } from 'mongodb';
-
-import { ProfileType } from 'modules/communication/dto/types';
-import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
-import { UsersHandlerInterface } from 'modules/communication/interfaces/users.handler.interface';
+import { ProfileType } from 'src/modules/communication/dto/types';
+import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
+import { UsersHandlerInterface } from 'src/modules/communication/interfaces/users.handler.interface';
 
 export class UsersSlackHandler implements UsersHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateAdapterInterface) {}
@@ -15,10 +14,12 @@ export class UsersSlackHandler implements UsersHandlerInterface {
 		// eslint-disable-next-line no-restricted-syntax
 		for await (const id of usersIds) {
 			const profile = await this.getProfileById(id);
+
 			if (profile) {
 				profiles.push(profile);
 			}
 		}
+
 		return profiles;
 	}
 

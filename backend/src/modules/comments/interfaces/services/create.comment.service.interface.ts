@@ -1,6 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 
 export interface CreateCommentService {
 	createItemComment(

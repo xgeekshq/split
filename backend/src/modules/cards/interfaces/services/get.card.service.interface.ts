@@ -1,7 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
-
+import { CardItemDocument } from 'src/modules/cards/schemas/card.item.schema';
 import { CardDocument } from '../../schemas/card.schema';
 
 export interface GetCardService {

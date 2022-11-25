@@ -1,16 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-
 import {
 	JWT_ACCESS_TOKEN_EXPIRATION_TIME,
 	JWT_ACCESS_TOKEN_SECRET,
 	JWT_REFRESH_TOKEN_EXPIRATION_TIME,
 	JWT_REFRESH_TOKEN_SECRET
-} from 'libs/constants/jwt';
-import { UpdateUserService } from 'modules/users/interfaces/services/update.user.service.interface';
-import { TYPES } from 'modules/users/interfaces/types';
-
+} from 'src/libs/constants/jwt';
+import { UpdateUserService } from 'src/modules/users/interfaces/services/update.user.service.interface';
+import { TYPES } from 'src/modules/users/interfaces/types';
 import { GetTokenAuthService } from '../interfaces/services/get-token.auth.service.interface';
 
 @Injectable()
@@ -26,7 +24,9 @@ export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
 		const accessToken = this.getAccessToken(userId);
 		const refreshToken = this.getRefreshToken(userId);
 		const user = await this.updateUserService.setCurrentRefreshToken(refreshToken.token, userId);
+
 		if (!user) return null;
+
 		return {
 			accessToken,
 			refreshToken
@@ -45,6 +45,7 @@ export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
 				expiresIn: `${this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME)}s`
 			}
 		);
+
 		return {
 			expiresIn: this.configService.get(JWT_ACCESS_TOKEN_EXPIRATION_TIME),
 			token
@@ -59,6 +60,7 @@ export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
 				expiresIn: `${this.configService.get(JWT_REFRESH_TOKEN_EXPIRATION_TIME)}d`
 			}
 		);
+
 		return {
 			expiresIn: this.configService.get(JWT_REFRESH_TOKEN_EXPIRATION_TIME),
 			token

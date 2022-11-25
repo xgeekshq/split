@@ -1,29 +1,27 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-
-import { BoardRoles } from 'libs/enum/board.roles';
-import { TeamRoles } from 'libs/enum/team.roles';
+import { BoardRoles } from 'src/libs/enum/board.roles';
+import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
-} from 'libs/utils/communication-helpers';
-import { getDay, getNextMonth } from 'libs/utils/dates';
-import { generateBoardDtoData, generateSubBoardDtoData } from 'libs/utils/generateBoardData';
-import isEmpty from 'libs/utils/isEmpty';
-import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
-import { TYPES } from 'modules/boards/interfaces/types';
-import { TeamDto } from 'modules/communication/dto/team.dto';
-import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
-import * as CommunicationsType from 'modules/communication/interfaces/types';
-import { AddCronJobDto } from 'modules/schedules/dto/add.cronjob.dto';
-import { CreateSchedulesServiceInterface } from 'modules/schedules/interfaces/services/create.schedules.service.interface';
-import * as SchedulesType from 'modules/schedules/interfaces/types';
-import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
-import { TYPES as TeamType } from 'modules/teams/interfaces/types';
-import TeamUser, { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'modules/users/schemas/user.schema';
-
+} from 'src/libs/utils/communication-helpers';
+import { getDay, getNextMonth } from 'src/libs/utils/dates';
+import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
+import isEmpty from 'src/libs/utils/isEmpty';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { TYPES } from 'src/modules/boards/interfaces/types';
+import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
+import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
+import * as SchedulesType from 'src/modules/schedules/interfaces/types';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
+import TeamUser, { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
@@ -104,10 +102,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string) {
-		const usersIds: String[] = [];
+		const usersIds: string[] = [];
 		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
 		teamUsers.forEach((teamUser) => {
 			const user = teamUser.user as UserDocument;
+
 			if (!usersIds.includes(user._id.toString())) {
 				newUsers.push({
 					user: user._id.toString(),
@@ -144,8 +143,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		}
 
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
+
 		if (slackEnable) {
 			const result = await this.getBoardService.getBoard(newBoard._id, userId);
+
 			if (result?.board) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
 				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(result.board));
@@ -199,7 +200,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		};
 
 		const board = await this.create(boardData, ownerId, true);
+
 		if (!board) return null;
+
 		return board._id.toString();
 	}
 
@@ -207,8 +210,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		let maxTeams = 0;
 		do {
 			maxTeams = teamLength / maxUsersPerTeam;
+
 			if (maxTeams < 2) {
 				maxUsersPerTeam -= 1;
+
 				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
 					return 0;
 				}
@@ -236,6 +241,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 					votesCount: 0
 				}
 			];
+
 			return ++j;
 		}, 0);
 

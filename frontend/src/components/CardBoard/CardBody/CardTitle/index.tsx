@@ -2,43 +2,42 @@ import Tooltip from '../../../Primitives/Tooltip';
 import { Title } from './partials/Title';
 
 type CardTitleProps = {
-	userIsParticipating: boolean;
-	boardId: string;
-	title: string;
-	isSubBoard: boolean | undefined;
-	mainBoardId?: string;
+  userIsParticipating: boolean;
+  boardId: string;
+  title: string;
+  isSubBoard: boolean | undefined;
+  mainBoardId?: string;
 };
 
 const CardTitle: React.FC<CardTitleProps> = ({
-	userIsParticipating,
-	boardId,
-	title,
-	isSubBoard,
-	mainBoardId
-}) => {
-	return isSubBoard ? (
-		<Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
-			<Title
-				boardId={boardId}
-				isSubBoard={isSubBoard}
-				mainBoardId={mainBoardId}
-				title={title}
-				userIsParticipating={userIsParticipating}
-			/>
-		</Tooltip>
-	) : (
-		<Title
-			boardId={boardId}
-			isSubBoard={isSubBoard}
-			mainBoardId={mainBoardId}
-			title={title}
-			userIsParticipating={userIsParticipating}
-		/>
-	);
-};
+  userIsParticipating,
+  boardId,
+  title,
+  isSubBoard,
+  mainBoardId,
+}) =>
+  isSubBoard ? (
+    <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
+      <Title
+        boardId={boardId}
+        isSubBoard={isSubBoard}
+        mainBoardId={mainBoardId}
+        title={title}
+        userIsParticipating={userIsParticipating}
+      />
+    </Tooltip>
+  ) : (
+    <Title
+      boardId={boardId}
+      isSubBoard={isSubBoard}
+      mainBoardId={mainBoardId}
+      title={title}
+      userIsParticipating={userIsParticipating}
+    />
+  );
 
 CardTitle.defaultProps = {
-	mainBoardId: undefined
+  mainBoardId: undefined,
 };
 
 export default CardTitle;

@@ -8,8 +8,7 @@ import {
 	IsString,
 	ValidateNested
 } from 'class-validator';
-
-import CommentDto from 'modules/comments/dto/comment.dto';
+import CommentDto from 'src/modules/comments/dto/comment.dto';
 
 export default class CardItemDto {
 	@ApiPropertyOptional()

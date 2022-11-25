@@ -1,5 +1,4 @@
 import { Document, LeanDocument } from 'mongoose';
-
 import Board, { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 

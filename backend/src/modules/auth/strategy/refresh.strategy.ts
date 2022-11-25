@@ -3,11 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-
-import { JWT_REFRESH_TOKEN_SECRET } from 'libs/constants/jwt';
-import { INVALID_CREDENTIALS } from 'libs/exceptions/messages';
-import TokenPayload from 'libs/interfaces/jwt/token-payload.interface';
-
+import { JWT_REFRESH_TOKEN_SECRET } from 'src/libs/constants/jwt';
+import { INVALID_CREDENTIALS } from 'src/libs/exceptions/messages';
+import TokenPayload from 'src/libs/interfaces/jwt/token-payload.interface';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
 import { TYPES } from '../interfaces/types';
 

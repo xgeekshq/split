@@ -9,18 +9,22 @@ export const createUserService = {
 	provide: TYPES.services.CreateUserService,
 	useClass: CreateUserServiceImpl
 };
+
 export const getUserService = {
 	provide: TYPES.services.GetUserService,
 	useClass: GetUserServiceImpl
 };
+
 export const updateUserService = {
 	provide: TYPES.services.UpdateUserService,
 	useClass: UpdateUserServiceImpl
 };
+
 export const updateUserApplication = {
 	provide: TYPES.applications.UpdateUserApplication,
 	useClass: UpdateUserApplicationImpl
 };
+
 export const getUserApplication = {
 	provide: TYPES.applications.GetUserApplication,
 	useClass: GetUserApplicationImpl

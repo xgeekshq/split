@@ -2,7 +2,6 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
 import TeamUser, { TeamUserDocument } from '../../modules/teams/schemas/team.user.schema';
 
 @Injectable()

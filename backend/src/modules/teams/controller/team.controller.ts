@@ -88,7 +88,9 @@ export default class TeamsController {
 	@Post()
 	async create(@Body() teamData: CreateTeamDto) {
 		const team = await this.createTeamApp.create(teamData);
+
 		if (!team) throw new BadRequestException(INSERT_FAILED);
+
 		return team;
 	}
 

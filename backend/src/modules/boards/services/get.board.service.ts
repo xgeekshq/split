@@ -1,18 +1,16 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { LeanDocument, Model } from 'mongoose';
-
-import { BOARDS_NOT_FOUND } from 'libs/exceptions/messages';
-import { boardVotesIdHidden } from 'libs/utils/boardVotesIdHidden';
-import { hideText } from 'libs/utils/hideText';
-import { CardItemDocument } from 'modules/cards/schemas/card.item.schema';
-import { CardDocument } from 'modules/cards/schemas/card.schema';
-import { CommentDocument } from 'modules/comments/schemas/comment.schema';
-import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
-import * as Team from 'modules/teams/interfaces/types';
-import { UserDocument } from 'modules/users/schemas/user.schema';
-
+import { BOARDS_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { boardVotesIdHidden } from 'src/libs/utils/boardVotesIdHidden';
+import { hideText } from 'src/libs/utils/hideText';
+import { CardItemDocument } from 'src/modules/cards/schemas/card.item.schema';
+import { CardDocument } from 'src/modules/cards/schemas/card.schema';
+import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import * as Team from 'src/modules/teams/interfaces/types';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
@@ -44,6 +42,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			this.getAllBoardsIdsOfUser(userId),
 			this.getTeamService.getTeamsOfUser(userId)
 		]);
+
 		return { boardIds, teamIds: teamIds.map((team) => team._id) };
 	}
 
@@ -81,6 +80,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
 			]
 		};
+
 		return this.getBoards(false, query, page, size);
 	}
 
@@ -144,10 +144,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				})
 				.lean({ virtuals: true })
 				.exec();
+
 			return { boards: boards ?? [], hasNextPage, page };
 		} catch (e) {
 			this.logger.error(BOARDS_NOT_FOUND);
 		}
+
 		return { boards: [], hasNextPage, page };
 	}
 
@@ -191,6 +193,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		if (board.isSubBoard) {
 			const mainBoard = await this.getMainBoardData(boardId);
+
 			if (!mainBoard) return null;
 
 			return { board, mainBoardData: mainBoard };
@@ -239,6 +242,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	): LeanDocument<CommentDocument[]> {
 		return input.map((comment) => {
 			const { anonymous, text } = comment;
+
 			if (anonymous) {
 				return {
 					...comment,
@@ -253,6 +257,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					text: hideText(text)
 				};
 			}
+
 			return { ...comment };
 		});
 	}
@@ -326,11 +331,13 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				const items = card.items.map((item) => {
 					return this.replaceCard(item, userId, hideCards, hideVotes);
 				});
+
 				return {
 					...this.replaceCard(card, userId, hideCards, hideVotes),
 					items
 				};
 			});
+
 			return {
 				...column,
 				cards
@@ -342,6 +349,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	async countBoards(userId: string) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
+
 		return this.boardModel.countDocuments({
 			$and: [
 				{ isSubBoard: false },
@@ -397,6 +405,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			})
 			.lean({ virtuals: true })
 			.exec();
+
 		return board;
 	}
 }

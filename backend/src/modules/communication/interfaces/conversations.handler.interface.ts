@@ -1,4 +1,4 @@
-import { UserDto } from 'modules/communication/dto/user.dto';
+import { UserDto } from 'src/modules/communication/dto/user.dto';
 
 export interface ConversationsHandlerInterface {
 	createChannel(name: string): Promise<{ name: string; id: string }>;

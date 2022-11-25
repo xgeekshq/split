@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/lines-between-class-members */
-import { UserDto } from 'modules/communication/dto/user.dto';
-import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
-import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
+import { UserDto } from 'src/modules/communication/dto/user.dto';
+import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
+import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 
 const MakeSlackCommunicationGateAdapterStub = () => {
 	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
@@ -28,6 +28,7 @@ const MakeSlackCommunicationGateAdapterStub = () => {
 			throw new Error('Method not implemented.');
 		}
 	}
+
 	return new SlackCommunicationGateAdapterStub();
 };
 

@@ -1,22 +1,24 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-
-import AppConfigModule from 'infrastructure/config/config.module';
-import { configuration } from 'infrastructure/config/configuration';
-import DatabaseModule from 'infrastructure/database/database.module';
-import { mongooseResetModule, mongooseUserModule } from 'infrastructure/database/mongoose.module';
-import AuthModule from 'modules/auth/auth.module';
-import AzureModule from 'modules/azure/azure.module';
-import BoardsModule from 'modules/boards/boards.module';
-import { CardsModule } from 'modules/cards/cards.module';
-import { CommentsModule } from 'modules/comments/comments.module';
-import { CommunicationModule } from 'modules/communication/communication.module';
-import EmailModule from 'modules/mailer/mailer.module';
-import { QueueModule } from 'modules/queue/queue.module';
-import SocketModule from 'modules/socket/socket.module';
-import TeamsModule from 'modules/teams/teams.module';
-import UsersModule from 'modules/users/users.module';
-import { VotesModule } from 'modules/votes/votes.module';
+import AppConfigModule from 'src/infrastructure/config/config.module';
+import { configuration } from 'src/infrastructure/config/configuration';
+import DatabaseModule from 'src/infrastructure/database/database.module';
+import {
+	mongooseResetModule,
+	mongooseUserModule
+} from 'src/infrastructure/database/mongoose.module';
+import AuthModule from 'src/modules/auth/auth.module';
+import AzureModule from 'src/modules/azure/azure.module';
+import BoardsModule from 'src/modules/boards/boards.module';
+import { CardsModule } from 'src/modules/cards/cards.module';
+import { CommentsModule } from 'src/modules/comments/comments.module';
+import { CommunicationModule } from 'src/modules/communication/communication.module';
+import EmailModule from 'src/modules/mailer/mailer.module';
+import { QueueModule } from 'src/modules/queue/queue.module';
+import SocketModule from 'src/modules/socket/socket.module';
+import TeamsModule from 'src/modules/teams/teams.module';
+import UsersModule from 'src/modules/users/users.module';
+import { VotesModule } from 'src/modules/votes/votes.module';
 
 const imports = [
 	AppConfigModule,

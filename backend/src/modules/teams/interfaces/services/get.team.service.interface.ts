@@ -1,7 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { TeamQueryParams } from 'libs/dto/param/team.query.params';
-
+import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { TeamUserDocument } from '../../schemas/team.user.schema';
 import { TeamDocument } from '../../schemas/teams.schema';
 

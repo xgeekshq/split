@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
 import { CreateVoteService } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from '../interfaces/types';

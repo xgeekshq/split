@@ -7,23 +7,22 @@ import {
 	ConversationsMembersArguments,
 	UsersProfileGetArguments
 } from '@slack/web-api';
-
-import { FRONTEND_URL } from 'libs/constants/frontend';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import {
 	SLACK_API_BOT_TOKEN,
 	SLACK_CHANNEL_PREFIX,
 	SLACK_MASTER_CHANNEL_ID
-} from 'libs/constants/slack';
-import configService from 'libs/test-utils/mocks/configService.mock';
+} from 'src/libs/constants/slack';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
-} from 'libs/utils/communication-helpers';
-import { SlackCommunicationGateAdapter } from 'modules/communication/adapters/slack-communication-gate.adapter';
-import { SlackCommunicationApplication } from 'modules/communication/applications/slack-communication.application';
-import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
-import { ConversationsSlackHandler } from 'modules/communication/handlers/conversations-slack.handler';
-import { UsersSlackHandler } from 'modules/communication/handlers/users-slack.handler';
+} from 'src/libs/utils/communication-helpers';
+import { SlackCommunicationGateAdapter } from 'src/modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackCommunicationApplication } from 'src/modules/communication/applications/slack-communication.application';
+import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
+import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
+import { UsersSlackHandler } from 'src/modules/communication/handlers/users-slack.handler';
 
 const slackUsersIds = [
 	'U023BECGF',
@@ -90,6 +89,7 @@ jest.mock('@slack/web-api', () => ({
 							}
 						});
 					}
+
 					return Promise.resolve({
 						ok: true,
 						members: slackUsersIds.slice(0, 1),
@@ -113,6 +113,7 @@ jest.mock('@slack/web-api', () => ({
 						}
 
 						const userId = slackUsersIds.find((i) => i === options?.user);
+
 						return Promise.resolve({
 							ok: true,
 							...(userId
