@@ -18,3 +18,6 @@ export const getTeamRequest = (id: string, context?: GetServerSidePropsContext):
 
 export const updateTeamUserRequest = (team: TeamUserUpdate): Promise<TeamUserUpdate> =>
   fetchData(`/teams/${team.team}`, { method: 'PUT', data: team });
+
+export const deleteTeamRequest = async ({ id }: { id: string }): Promise<Team> =>
+  fetchData(`/teams/${id}`, { method: 'DELETE' });
