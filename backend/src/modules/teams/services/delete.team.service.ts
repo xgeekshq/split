@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
-
-import { DELETE_FAILED } from 'libs/exceptions/messages';
-
+import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
@@ -17,6 +15,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		try {
 			await this.deleteTeam(teamId, teamSession);
 			await teamSession.commitTransaction();
+
 			return true;
 		} catch (e) {
 			await teamSession.abortTransaction();
@@ -36,6 +35,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		);
 
 		if (!result) throw new NotFoundException(DELETE_FAILED);
+
 		return { _id: result._id };
 	}
 }
