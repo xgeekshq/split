@@ -91,20 +91,20 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 
       setMembersList(members);
 
-			setToastState({
-				open: true,
-				content: 'The team user was successfully updated.',
-				type: ToastStateEnum.SUCCESS
-			});
-		},
-		onError: () => {
-			setToastState({
-				open: true,
-				content: 'Error while updating the team user',
-				type: ToastStateEnum.ERROR
-			});
-		}
-	});
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while updating the team user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 
   return {
     fetchAllTeams,

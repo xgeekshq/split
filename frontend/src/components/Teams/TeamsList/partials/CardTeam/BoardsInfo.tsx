@@ -1,7 +1,7 @@
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { Team } from '../../../../../types/team/team';
+import { Team } from '@/types/team/team';
 
 type BoardsInfoProps = {
   userSAdmin: boolean | undefined;

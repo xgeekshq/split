@@ -10,7 +10,7 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import TeamsList from '@/components/Teams/TeamsList';
-import useTeam from '../../hooks/useTeam';
+import useTeam from '@/hooks/useTeam';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
