@@ -5,6 +5,7 @@ import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetBoardServiceInterface } from '../../boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
+import { UsersWithTeams } from '../interfaces/users-with-teams.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
@@ -88,6 +89,27 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return teams.map((team) => {
 			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
 		});
+	}
+
+	async getUsersOnlyWithTeams() {
+		const teams: LeanDocument<UsersWithTeams>[] = await this.teamUserModel.aggregate([
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'team',
+					foreignField: '_id',
+					as: 'teams'
+				}
+			},
+			{
+				$group: {
+					_id: '$user',
+					teamsNames: { $push: '$teams.name' }
+				}
+			}
+		]);
+
+		return teams;
 	}
 
 	getTeamUser(userId: string, teamId: string) {

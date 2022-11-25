@@ -1,5 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { UserDocument } from '../../schemas/user.schema';
+import { UserWithTeams } from '../type-user-with-teams';
 
 export interface GetUserService {
 	getByEmail(email: string): Promise<LeanDocument<UserDocument> | null>;
@@ -14,4 +15,6 @@ export interface GetUserService {
 	countUsers(): Promise<number>;
 
 	getAllUsers(): Promise<LeanDocument<UserDocument>[]>;
+
+	getAllUsersWithTeams(): Promise<LeanDocument<UserWithTeams>[]>;
 }

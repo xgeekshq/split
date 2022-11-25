@@ -21,4 +21,8 @@ export class GetUserApplicationImpl implements GetUserApplication {
 	getAllUsers() {
 		return this.getUserService.getAllUsers();
 	}
+
+	getUsersOnlyWithTeams() {
+		return this.getUserService.getAllUsersWithTeams();
+	}
 }
