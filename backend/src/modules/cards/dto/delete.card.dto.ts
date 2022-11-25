@@ -1,3 +1,3 @@
-import { BaseDto } from 'libs/dto/base.dto';
+import { BaseDto } from 'src/libs/dto/base.dto';
 
 export default class DeleteCardDto extends BaseDto {}

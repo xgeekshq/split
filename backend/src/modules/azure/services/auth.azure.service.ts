@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-
-import isEmpty from 'libs/utils/isEmpty';
-import { GetTokenAuthService } from 'modules/auth/interfaces/services/get-token.auth.service.interface';
-import * as AuthType from 'modules/auth/interfaces/types';
-import { signIn } from 'modules/auth/shared/login.auth';
-import { CreateUserService } from 'modules/users/interfaces/services/create.user.service.interface';
-import { GetUserService } from 'modules/users/interfaces/services/get.user.service.interface';
-import * as UserType from 'modules/users/interfaces/types';
-
+import isEmpty from 'src/libs/utils/isEmpty';
+import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import * as AuthType from 'src/modules/auth/interfaces/types';
+import { signIn } from 'src/modules/auth/shared/login.auth';
+import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
+import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
+import * as UserType from 'src/modules/users/interfaces/types';
 import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
 import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -53,9 +51,11 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 		const emailOrUniqueName = email ?? unique_name;
 
 		const userExists = await this.checkUserExistsInActiveDirectory(emailOrUniqueName);
+
 		if (!userExists) return null;
 
 		const user = await this.getUserService.getByEmail(emailOrUniqueName);
+
 		if (user) return signIn(user, this.getTokenService, 'azure');
 
 		const createdUser = await this.createUserService.create({
@@ -89,6 +89,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 				userFound.displayName?.toLowerCase() === email.toLowerCase() ||
 				userFound.userPrincipalName?.toLowerCase() === email.toLowerCase()
 		);
+
 		return !isEmpty(user);
 	}
 }

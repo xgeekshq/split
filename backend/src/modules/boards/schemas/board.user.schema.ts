@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
-
-import { BoardRoles } from 'libs/enum/board.roles';
-import User from 'modules/users/schemas/user.schema';
+import { BoardRoles } from 'src/libs/enum/board.roles';
+import User from 'src/modules/users/schemas/user.schema';
 
 export type BoardUserDocument = BoardUser & Document;
 

@@ -1,7 +1,5 @@
 import { ClientSession, LeanDocument, Model } from 'mongoose';
-
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
 import { CardDocument } from '../schemas/card.schema';
 

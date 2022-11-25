@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isEmpty } from 'class-validator';
 import { LeanDocument, Model, Types } from 'mongoose';
-
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { CardItemDocument } from '../schemas/card.item.schema';
 import { CardDocument } from '../schemas/card.schema';
@@ -94,6 +92,7 @@ export default class GetCardServiceImpl implements GetCardService {
 				}
 			}
 		]);
+
 		return !isEmpty(result) ? (result[0] as LeanDocument<CardItemDocument>) : null;
 	}
 }

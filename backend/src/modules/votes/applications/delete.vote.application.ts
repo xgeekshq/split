@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { DeleteVoteApplication } from '../interfaces/applications/delete.vote.application.interface';
 import { DeleteVoteService } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';

@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
-
 import Board from '../../boards/schemas/board.schema';
 
 export type TeamDocument = Team & Document;

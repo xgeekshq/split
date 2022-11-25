@@ -1,16 +1,14 @@
 import { Logger } from '@nestjs/common';
 import { WebClient } from '@slack/web-api';
-
-import { ConfigurationType } from 'modules/communication/dto/types';
-import { CreateChannelError } from 'modules/communication/errors/create-channel.error';
-import { GetProfileError } from 'modules/communication/errors/get-profile.error';
-import { GetUsersFromChannelError } from 'modules/communication/errors/get-users-from-channel.error';
-import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
-import { PostMessageError } from 'modules/communication/errors/post-message.error';
-import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
-import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
-
+import { ConfigurationType } from 'src/modules/communication/dto/types';
+import { CreateChannelError } from 'src/modules/communication/errors/create-channel.error';
+import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
+import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
+import { InviteUsersError } from 'src/modules/communication/errors/invite-users.error';
+import { PostMessageError } from 'src/modules/communication/errors/post-message.error';
+import { ProfileNotFoundError } from 'src/modules/communication/errors/profile-not-found.error';
+import { ProfileWithoutEmailError } from 'src/modules/communication/errors/profile-without-email.error';
+import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 import { ProfileWithoutIdError } from '../errors/profile-without-id.error';
 
 export class SlackCommunicationGateAdapter implements CommunicationGateAdapterInterface {
@@ -41,6 +39,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			};
 		} catch (error) {
 			this.logger.error(error);
+
 			if (error.data?.error === 'name_taken') {
 				return this.handleCreateChannelError(name, errorCount);
 			}
@@ -51,6 +50,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 	private handleCreateChannelError(name: string, errorCount: number) {
 		errorCount += 1;
 		let newName = name;
+
 		if (newName[newName.length - 2] === '-') {
 			const cipherChars = [...newName];
 			cipherChars[cipherChars.length - 1] = `${Number(cipherChars[cipherChars.length - 1]) + 1}`;
@@ -58,6 +58,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 		} else {
 			newName = `${name}-${errorCount}`;
 		}
+
 		return this.addChannel(`${newName}`, errorCount);
 	}
 
@@ -76,6 +77,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 		} catch (error) {
 			if (typeof error.data?.ok === 'boolean' && !error.data?.ok) {
 				this.logger.warn(error);
+
 				if (error.data.error === 'already_in_channel') {
 					return { ok: true };
 				}
@@ -132,6 +134,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return profile.email;
 		} catch (error) {
 			this.logger.error(error);
+
 			if (error instanceof ProfileNotFoundError || error instanceof ProfileWithoutEmailError) {
 				throw error;
 			}
@@ -143,6 +146,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 	public async getEmailByPlatformUserId(email: string): Promise<string> {
 		try {
 			const { user } = await this.getClient().users.lookupByEmail({ email });
+
 			if (!user) {
 				throw new ProfileNotFoundError();
 			}
@@ -154,6 +158,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return user.id;
 		} catch (error) {
 			this.logger.error(error);
+
 			if (error instanceof ProfileNotFoundError || error instanceof ProfileWithoutEmailError) {
 				throw error;
 			}

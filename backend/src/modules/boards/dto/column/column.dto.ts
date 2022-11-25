@@ -1,8 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
-
-import CardDto from 'modules/cards/dto/card.dto';
+import CardDto from 'src/modules/cards/dto/card.dto';
 
 export default class ColumnDto {
 	@ApiPropertyOptional()

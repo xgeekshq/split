@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
-import Flex from 'components/Primitives/Flex';
+import Flex from '@/components/Primitives/Flex';
 import { membersListState } from '../../../../store/team/atom/team.atom';
 import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import CardMember from '../../CreateTeam/CardMember';

@@ -1,5 +1,5 @@
-import { Token } from 'libs/interfaces/jwt/token.interface';
-import { Tokens } from 'libs/interfaces/jwt/tokens.interface';
+import { Token } from 'src/libs/interfaces/jwt/token.interface';
+import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 
 export interface GetTokenAuthService {
 	getNewPassword(newPassword: string);

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-import { FORBIDDEN } from 'libs/exceptions/messages';
+import { FORBIDDEN } from 'src/libs/exceptions/messages';
 
 export class ForbiddenResponse {
 	@ApiProperty({

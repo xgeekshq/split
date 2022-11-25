@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-
 import TeamUserDto from '../dto/team.user.dto';
 import { UpdateTeamServiceInterface } from '../interfaces/services/update.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';

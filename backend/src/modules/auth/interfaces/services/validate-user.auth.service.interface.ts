@@ -1,6 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { UserDocument } from 'modules/users/schemas/user.schema';
+import { UserDocument } from 'src/modules/users/schemas/user.schema';
 
 export interface ValidateUserAuthService {
 	validateUserWithCredentials(

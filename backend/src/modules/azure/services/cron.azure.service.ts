@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-
-import { AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID } from 'libs/constants/azure';
-
+import { AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID } from 'src/libs/constants/azure';
 import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
 
 @Injectable()
@@ -30,6 +28,7 @@ export default class CronAzureServiceImpl implements CronAzureService {
 		const authUrl = this.getOAuthUrl(this.configService.get(AZURE_TENANT_ID)!);
 
 		const { data } = await axios.post(authUrl, params, config);
+
 		return data.access_token;
 	}
 }

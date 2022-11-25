@@ -1,10 +1,8 @@
-import { forwardRef, Module } from '@nestjs/common';
-
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseTeamModule,
 	mongooseTeamUserModule
-} from 'infrastructure/database/mongoose.module';
-
+} from 'src/infrastructure/database/mongoose.module';
 import BoardsModule from '../boards/boards.module';
 import TeamsController from './controller/team.controller';
 import {

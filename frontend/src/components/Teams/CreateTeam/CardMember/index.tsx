@@ -34,8 +34,8 @@ const CardMember = React.memo<CardBodyProps>(
 				return user.user._id === member.user._id ? { ...user, isNewJoiner: checked } : user;
 			});
 
-			setMembersList(listUsersMembers);
-		};
+      setMembersList(listUsersMembers);
+    };
 
 		const updateIsNewJoinerStatus = (checked: boolean) => {
 			if (member.team) {

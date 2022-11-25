@@ -1,8 +1,6 @@
-import { forwardRef, Module } from '@nestjs/common';
-
-import { mongooseBoardModule } from 'infrastructure/database/mongoose.module';
-import SocketModule from 'modules/socket/socket.module';
-
+import { Module, forwardRef } from '@nestjs/common';
+import { mongooseBoardModule } from 'src/infrastructure/database/mongoose.module';
+import SocketModule from 'src/modules/socket/socket.module';
 import {
 	createCommentApplication,
 	createCommentService,

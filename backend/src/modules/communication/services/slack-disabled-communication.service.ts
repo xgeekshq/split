@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-
-import { BoardType, ChangeResponsibleType, MergeBoardType } from 'modules/communication/dto/types';
-import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
+import {
+	BoardType,
+	ChangeResponsibleType,
+	MergeBoardType
+} from 'src/modules/communication/dto/types';
+import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 
 @Injectable()
 export class SlackDisabledCommunicationService implements CommunicationServiceInterface {

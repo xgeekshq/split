@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ClientSession, Model } from 'mongoose';
-
 import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
 import ResetPassword, { ResetPasswordDocument } from '../schemas/reset-password.schema';
 
@@ -29,11 +28,13 @@ export default class CreateResetTokenAuthServiceImpl implements CreateResetToken
       
       If you did not make this request then please ignore this email.`
 		});
+
 		return { message: msg };
 	}
 
 	public tokenGenerator(emailAddress: string, session: ClientSession) {
 		const genToken = (Math.floor(Math.random() * 9000000) + 1000000).toString();
+
 		return this.resetModel
 			.findOneAndUpdate(
 				{ emailAddress },
@@ -51,6 +52,7 @@ export default class CreateResetTokenAuthServiceImpl implements CreateResetToken
 
 	public tokenValidator(updatedAt: Date) {
 		const isTokenInvalid = (new Date().getTime() - updatedAt.getTime()) / 60000 < 1;
+
 		if (isTokenInvalid) {
 			throw new Error('EMAIL_SENDED_RECENTLY');
 		}
@@ -61,6 +63,7 @@ export default class CreateResetTokenAuthServiceImpl implements CreateResetToken
 		session.startTransaction();
 		try {
 			const passwordModel = await this.resetModel.findOne({ emailAddress });
+
 			if (passwordModel) {
 				this.tokenValidator(passwordModel.updatedAt);
 			}
@@ -72,9 +75,11 @@ export default class CreateResetTokenAuthServiceImpl implements CreateResetToken
 
 			const res = await this.emailBody(token, emailAddress);
 			await session.commitTransaction();
+
 			return res;
 		} catch (e) {
 			await session.abortTransaction();
+
 			return { message: e.message };
 		} finally {
 			await session.endSession();

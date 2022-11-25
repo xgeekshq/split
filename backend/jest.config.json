@@ -1,0 +1,25 @@
+{
+	"verbose": true,
+	"testRegex": ["((\\.|/*.)(spec))\\.ts?$"],
+	"testPathIgnorePatterns": ["node_modules", "dist"],
+	"roots": ["./src"],
+	"modulePaths": ["./src"],
+	"moduleFileExtensions": ["ts", "js"],
+	"moduleNameMapper": {
+	  "^src/(.*)$": "<rootDir>/src/$1"
+	},
+	"coverageReporters": ["text"],
+	"coverageDirectory": "report",
+	"collectCoverageFrom": ["src/**/*.{ts,tsx}", "!node_modules/", "!src/database/migrations/**/*.{ts,tsx}"],
+	"transform": {
+	  "\\.ts$": ["ts-jest"]
+	},
+	"testEnvironment": "node",
+	"preset": "ts-jest",
+	"globals": {
+	  "ts-jest": {
+		"tsconfig": "<rootDir>/tsconfig.json"
+	  }
+	},
+	"testTimeout": 30000
+  }

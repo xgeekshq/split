@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { TYPES } from '../interfaces/types';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { OnQueueCompleted, OnQueueError, OnQueueFailed, Process } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
@@ -7,7 +8,7 @@ export class SlackCommunicationEventListeners<T, R> {
 	constructor(public logger: Logger) {}
 
 	@Process()
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
 	communication(job: Job<T>) {}
 
 	// https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#events
