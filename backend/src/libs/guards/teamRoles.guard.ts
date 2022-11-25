@@ -17,9 +17,9 @@ export class TeamUserGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 
 		const user = request.user;
-		const team: string = request.params.teamId;
+		const teamId: string = request.params.teamId;
 
-		const userFound = await this.teamUserModel.findOne({ user: user._id, teamId: team }).exec();
+		const userFound = await this.teamUserModel.findOne({ user: user._id, team: teamId }).exec();
 
 		return user.isSAdmin || permission === userFound?.role;
 	}
