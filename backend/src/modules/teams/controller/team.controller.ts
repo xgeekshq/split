@@ -245,6 +245,7 @@ export default class TeamsController {
 		type: ForbiddenResponse
 	})
 	@TeamUser(TeamRoles.ADMIN)
+	// @TeamUser(TeamRoles.STAKEHOLDER)
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
 	async deleteTeam(@Param() { teamId }: TeamParams) {
