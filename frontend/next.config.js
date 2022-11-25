@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
 
-require('dotenv').config({ path: '../.env' });
-const webpack = require('webpack');
-
 module.exports = {
 	reactStrictMode: true,
 	output: 'standalone',
@@ -22,16 +19,4 @@ module.exports = {
 		AZURE_CLIENT_SECRET: process.env.AZURE_CLIENT_SECRET,
 		AZURE_TENANT_ID: process.env.AZURE_TENANT_ID
 	},
-	webpackDevMiddleware: (config) => {
-		config.watchOptions = {
-			poll: 1000,
-			aggregateTimeout: 300
-		};
-		return config;
-	},
-	webpack(config) {
-		config.plugins.push(new webpack.EnvironmentPlugin(process.env));
-
-		return config;
-	}
 };

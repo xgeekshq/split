@@ -8,7 +8,6 @@ import {
 	WebSocketServer
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
 import JoinPayload from '../interfaces/joinPayload.interface';
 import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
 

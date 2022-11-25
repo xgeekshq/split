@@ -8,22 +8,20 @@ import {
 	ConversationsMembersArguments,
 	UsersProfileGetArguments
 } from '@slack/web-api';
-
-import { FRONTEND_URL } from 'libs/constants/frontend';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import {
 	SLACK_API_BOT_TOKEN,
 	SLACK_CHANNEL_PREFIX,
 	SLACK_MASTER_CHANNEL_ID
-} from 'libs/constants/slack';
-import configService from 'libs/test-utils/mocks/configService.mock';
-import { CreateChannelError } from 'modules/communication/errors/create-channel.error';
-import { GetProfileError } from 'modules/communication/errors/get-profile.error';
-import { GetUsersFromChannelError } from 'modules/communication/errors/get-users-from-channel.error';
-import { InviteUsersError } from 'modules/communication/errors/invite-users.error';
-import { PostMessageError } from 'modules/communication/errors/post-message.error';
-import { ProfileNotFoundError } from 'modules/communication/errors/profile-not-found.error';
-import { ProfileWithoutEmailError } from 'modules/communication/errors/profile-without-email.error';
-
+} from 'src/libs/constants/slack';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import { CreateChannelError } from 'src/modules/communication/errors/create-channel.error';
+import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
+import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
+import { InviteUsersError } from 'src/modules/communication/errors/invite-users.error';
+import { PostMessageError } from 'src/modules/communication/errors/post-message.error';
+import { ProfileNotFoundError } from 'src/modules/communication/errors/profile-not-found.error';
+import { ProfileWithoutEmailError } from 'src/modules/communication/errors/profile-without-email.error';
 import { SlackCommunicationGateAdapter } from './slack-communication-gate.adapter';
 
 const slackUsersIds = ['U023BECGF', 'U061F7AUR', 'W012A3CDE'];
@@ -81,6 +79,7 @@ jest.mock('@slack/web-api', () => ({
 							}
 						});
 					}
+
 					return Promise.resolve({
 						ok: true,
 						members: slackUsersIds.slice(0, 1),
@@ -104,6 +103,7 @@ jest.mock('@slack/web-api', () => ({
 						}
 
 						const userId = slackUsersIds.find((i) => i === options?.user);
+
 						return Promise.resolve({
 							ok: true,
 							...(userId

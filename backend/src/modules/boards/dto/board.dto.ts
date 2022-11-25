@@ -12,9 +12,7 @@ import {
 	Validate,
 	ValidateNested
 } from 'class-validator';
-
-import { CheckUniqueUsers } from 'libs/validators/check-unique-users';
-
+import { CheckUniqueUsers } from 'src/libs/validators/check-unique-users';
 import BoardUserDto from './board.user.dto';
 import ColumnDto from './column/column.dto';
 

@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LeanDocument } from 'mongoose';
-
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';

@@ -1,5 +1,4 @@
 import { LeanDocument } from 'mongoose';
-
 import { UpdateBoardDto } from '../../dto/update-board.dto';
 import { BoardDocument } from '../../schemas/board.schema';
 

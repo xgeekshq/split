@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { GetUserService } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';

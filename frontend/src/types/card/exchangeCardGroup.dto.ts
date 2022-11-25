@@ -1,11 +1,11 @@
 export default interface ExchangeCardGroupDto {
-	cardGroupIdOfCard?: string;
+  cardGroupIdOfCard?: string;
 
-	targetCardGroupId: string;
+  targetCardGroupId: string;
 
-	draggedCardId: string;
+  draggedCardId: string;
 
-	boardId: string;
+  boardId: string;
 
-	socketId?: string;
+  socketId?: string;
 }

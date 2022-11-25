@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import CardDto from '../dto/card.dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';

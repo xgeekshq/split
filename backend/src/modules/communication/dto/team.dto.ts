@@ -1,5 +1,5 @@
-import { BoardRoles } from 'modules/communication/dto/types';
-import { UserDto } from 'modules/communication/dto/user.dto';
+import { BoardRoles } from 'src/modules/communication/dto/types';
+import { UserDto } from 'src/modules/communication/dto/user.dto';
 
 export class TeamDto {
 	name!: string;

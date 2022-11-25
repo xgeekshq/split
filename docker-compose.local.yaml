@@ -93,6 +93,7 @@ services:
       - ./database/.env
    
   redis:
+    container_name: redis
     image: redis
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"     
     environment:

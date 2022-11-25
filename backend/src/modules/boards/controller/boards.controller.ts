@@ -29,26 +29,24 @@ import {
 	ApiUnauthorizedResponse,
 	OmitType
 } from '@nestjs/swagger';
-
-import { BaseParam } from 'libs/dto/param/base.param';
-import { PaginationParams } from 'libs/dto/param/pagination.params';
-import { BaseParamWSocket } from 'libs/dto/param/socket.param';
+import { BaseParam } from 'src/libs/dto/param/base.param';
+import { PaginationParams } from 'src/libs/dto/param/pagination.params';
+import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
 import {
 	BOARD_NOT_FOUND,
 	DELETE_FAILED,
 	INSERT_FAILED,
 	UPDATE_FAILED
-} from 'libs/exceptions/messages';
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { ForbiddenResponse } from 'libs/swagger/errors/forbidden.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import { BoardResponse } from 'modules/boards/swagger/board.swagger';
-import SocketGateway from 'modules/socket/gateway/socket.gateway';
-
+} from 'src/libs/exceptions/messages';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import BoardDto from '../dto/board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
@@ -99,6 +97,7 @@ export default class BoardsController {
 	@Post()
 	async createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
 		const board = await this.createBoardApp.create(boardData, request.user._id);
+
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 
 		return board;
@@ -142,6 +141,7 @@ export default class BoardsController {
 	@Get()
 	async getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		const { _id: userId, isSAdmin } = request.user;
+
 		if (isSAdmin) {
 			return this.getBoardApp.getSuperAdminBoards(userId, page, size);
 		}
@@ -246,6 +246,7 @@ export default class BoardsController {
 		@Req() request: RequestWithUser
 	) {
 		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
+
 		if (!result) throw new BadRequestException(DELETE_FAILED);
 
 		if (socketId && teamId) {

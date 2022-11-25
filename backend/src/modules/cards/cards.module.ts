@@ -1,5 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
-
+import { Module, forwardRef } from '@nestjs/common';
 import { mongooseBoardModule } from '../../infrastructure/database/mongoose.module';
 import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';

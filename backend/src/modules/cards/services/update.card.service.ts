@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import { CARD_NOT_INSERTED, CARD_NOT_REMOVED } from 'libs/exceptions/messages';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+import { CARD_NOT_INSERTED, CARD_NOT_REMOVED } from 'src/libs/exceptions/messages';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -56,6 +54,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 		} finally {
 			await session.endSession();
 		}
+
 		return null;
 	}
 

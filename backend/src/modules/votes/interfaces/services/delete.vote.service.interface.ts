@@ -1,7 +1,6 @@
 import { LeanDocument } from 'mongoose';
-
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
-import { BoardUserDocument } from 'modules/boards/schemas/board.user.schema';
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
 
 export interface DeleteVoteService {
 	deleteVoteFromCard(

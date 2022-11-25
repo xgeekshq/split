@@ -1,26 +1,31 @@
 {
-	"compilerOptions": {
-		"target": "esnext",
-		"module": "commonjs",
-		"declaration": true,
-		"removeComments": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"allowSyntheticDefaultImports": true,
-		"sourceMap": true,
-		"incremental": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"strictNullChecks": true,
-		"useUnknownInCatchVariables": false,
-		"noImplicitAny": false,
-		"strictBindCallApply": false,
-		"forceConsistentCasingInFileNames": false,
-		"noFallthroughCasesInSwitch": false,
-		"resolveJsonModule": true,
-		"outDir": "./dist",
-		"baseUrl": "./src"
+	"ts-node": {
+	  // these options are overrides used only by ts-node
+	  // same as our --compilerOptions flag and our TS_NODE_COMPILER_OPTIONS environment variable
+	  "require": ["tsconfig-paths/register"],
+	  "files": true,
+	  "compilerOptions": {
+		"module": "commonjs"
+	  }
 	},
-	"include": ["./src", "jest.config.ts", ".eslintrc.cjs"],
-	"exclude": ["node_modules"]
-}
+	"compilerOptions": {
+	  "module": "commonjs",
+	  "declaration": true,
+	  "removeComments": true,
+	  "emitDecoratorMetadata": true,
+	  "experimentalDecorators": true,
+	  "allowSyntheticDefaultImports": true,
+	  "target": "es2017",
+	  "sourceMap": true,
+	  "outDir": "./dist",
+	  "baseUrl": "./",
+	  "incremental": true,
+	  "skipLibCheck": true,
+	  "strictNullChecks": false,
+	  "noImplicitAny": false,
+	  "strictBindCallApply": false,
+	  "forceConsistentCasingInFileNames": false,
+	  "noFallthroughCasesInSwitch": false,
+	  "resolveJsonModule": true,
+	}
+  }

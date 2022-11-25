@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
-
-import { UPDATE_FAILED } from 'libs/exceptions/messages';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-import { BoardUserDocument } from 'modules/boards/schemas/board.user.schema';
-import { CommentDocument } from 'modules/comments/schemas/comment.schema';
-import User from 'modules/users/schemas/user.schema';
-import { DeleteVoteService } from 'modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'modules/votes/interfaces/types';
-
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
+import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
+import User from 'src/modules/users/schemas/user.schema';
+import { DeleteVoteService } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -27,14 +25,17 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 	async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
+
 		if (!getCardItem) {
 			throw Error(UPDATE_FAILED);
 		}
+
 		if (getCardItem.votes?.length) {
 			const promises = getCardItem.votes.map((voteUserId) => {
 				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
 			});
 			const results = await Promise.all(promises);
+
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
@@ -43,18 +44,22 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 
 	async deletedVotesFromCard(boardId: string, cardId: string) {
 		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
+
 		if (!getCard) {
 			throw Error(UPDATE_FAILED);
 		}
+
 		if (getCard.votes?.length) {
 			const promises = getCard.votes.map((voteUserId) => {
 				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
 			});
 			const results = await Promise.all(promises);
+
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
 		}
+
 		if (Array.isArray(getCard.items)) {
 			const promises: Promise<LeanDocument<BoardUserDocument> | null>[] = [];
 			getCard.items.forEach(async (current) => {
@@ -63,6 +68,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 				});
 			});
 			const results = await Promise.all(promises);
+
 			if (results.some((i) => i === null)) {
 				throw Error(UPDATE_FAILED);
 			}
@@ -89,14 +95,17 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 				)
 				.lean()
 				.exec();
+
 			if (!board) throw Error(UPDATE_FAILED);
 			await session.commitTransaction();
+
 			return board;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
 			await session.endSession();
 		}
+
 		return null;
 	}
 
@@ -132,6 +141,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 			)
 			.lean()
 			.exec();
+
 		if (!board) throw Error(UPDATE_FAILED);
 	}
 
@@ -142,6 +152,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 			await this.deletedVotesFromCardItem(boardId, cardItemId);
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
+
 			if (
 				card &&
 				cardItems?.length === 1 &&
@@ -169,14 +180,17 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 				)
 				.lean()
 				.exec();
+
 			if (!board) throw Error(UPDATE_FAILED);
 			await session.commitTransaction();
+
 			return board;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
 			await session.endSession();
 		}
+
 		return null;
 	}
 }

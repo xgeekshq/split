@@ -1,9 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-
-import { compare } from 'libs/utils/bcrypt';
-import { GetUserService } from 'modules/users/interfaces/services/get.user.service.interface';
-import { TYPES } from 'modules/users/interfaces/types';
-
+import { compare } from 'src/libs/utils/bcrypt';
+import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
+import { TYPES } from 'src/modules/users/interfaces/types';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
 
 @Injectable()
@@ -15,9 +13,12 @@ export default class ValidateUserAuthServiceImpl implements ValidateUserAuthServ
 
 	public async validateUserWithCredentials(email: string, plainTextPassword: string) {
 		const user = await this.getUserService.getByEmail(email);
+
 		if (!user) return null;
 		const passwordsMatch = await this.verifyPassword(plainTextPassword, user.password);
+
 		if (!passwordsMatch) return null;
+
 		return user;
 	}
 
@@ -27,12 +28,15 @@ export default class ValidateUserAuthServiceImpl implements ValidateUserAuthServ
 
 	public validateUserByRefreshToken(authorization: string, userId: string) {
 		const refreshToken = authorization.replace('Bearer', '').trim();
+
 		return this.getUserService.getUserIfRefreshTokenMatches(refreshToken, userId);
 	}
 
 	private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
 		const isPasswordMatching = await compare(plainTextPassword, hashedPassword);
+
 		if (!isPasswordMatching) return null;
+
 		return isPasswordMatching;
 	}
 }

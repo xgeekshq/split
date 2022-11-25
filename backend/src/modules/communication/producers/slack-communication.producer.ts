@@ -1,8 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
-
-import { BoardType } from 'modules/communication/dto/types';
+import { BoardType } from 'src/modules/communication/dto/types';
 
 @Injectable()
 export class SlackCommunicationProducer {

@@ -1,60 +1,49 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { HeaderInfo } from 'types/dashboard/header.info';
-import { Token } from 'types/token';
-import { CreateOrLogin } from 'types/user/create-login.user';
+import { HeaderInfo } from '@/types/dashboard/header.info';
+import { Token } from '@/types/token';
+import { CreateOrLogin } from '@/types/user/create-login.user';
 import {
-	EmailUser,
-	LoginUser,
-	NewPassword,
-	RegisterUser,
-	ResetPasswordResponse,
-	ResetTokenResponse,
-	User
-} from 'types/user/user';
-import fetchData from 'utils/fetchData';
+  EmailUser,
+  LoginUser,
+  NewPassword,
+  RegisterUser,
+  ResetPasswordResponse,
+  ResetTokenResponse,
+  User,
+} from '@/types/user/user';
+import fetchData from '@/utils/fetchData';
 
-export const getDashboardHeaderInfo = (
-	context?: GetServerSidePropsContext
-): Promise<HeaderInfo> => {
-	return fetchData(`auth/statistics`, { context, serverSide: !!context });
-};
+export const getDashboardHeaderInfo = (context?: GetServerSidePropsContext): Promise<HeaderInfo> =>
+  fetchData(`auth/statistics`, { context, serverSide: !!context });
 
-export const registerNewUser = (newUser: RegisterUser): Promise<User> => {
-	return fetchData('/auth/register', { method: 'POST', data: newUser, serverSide: false });
-};
+export const registerNewUser = (newUser: RegisterUser): Promise<User> =>
+  fetchData('/auth/register', { method: 'POST', data: newUser, serverSide: false });
 
-export const login = (credentials: LoginUser): Promise<User> => {
-	return fetchData('/auth/login', { method: 'POST', data: credentials, serverSide: true });
-};
+export const login = (credentials: LoginUser): Promise<User> =>
+  fetchData('/auth/login', { method: 'POST', data: credentials, serverSide: true });
 
-export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> => {
-	return fetchData(`/auth/azure/users/${email}`);
-};
+export const checkUserExistsAD = (email: string): Promise<'az' | 'local' | false> =>
+  fetchData(`/auth/azure/users/${email}`);
 
-export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> => {
-	return fetchData(`/auth/users/${email}`);
-};
+export const checkUserExists = (email: string): Promise<'az' | 'local' | boolean> =>
+  fetchData(`/auth/users/${email}`);
 
-export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> => {
-	return fetchData(`/auth/azure`, {
-		method: 'POST',
-		data: { token: azureAccessToken },
-		serverSide: true
-	});
-};
+export const createOrLoginUserAzure = (azureAccessToken: string): Promise<CreateOrLogin> =>
+  fetchData(`/auth/azure`, {
+    method: 'POST',
+    data: { token: azureAccessToken },
+    serverSide: true,
+  });
 
-export const resetTokenEmail = (email: EmailUser): Promise<ResetTokenResponse> => {
-	return fetchData(`/auth/password/reset`, { method: 'PATCH', data: email });
-};
+export const resetTokenEmail = (email: EmailUser): Promise<ResetTokenResponse> =>
+  fetchData(`/auth/password/reset`, { method: 'PATCH', data: email });
 
-export const refreshAccessToken = (token: string): Promise<Token> => {
-	return fetchData('/auth/refresh', { refreshToken: token, serverSide: true });
-};
+export const refreshAccessToken = (token: string): Promise<Token> =>
+  fetchData('/auth/refresh', { refreshToken: token, serverSide: true });
 
-export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordResponse> => {
-	return fetchData('/auth/password', {
-		method: 'PATCH',
-		data: params
-	});
-};
+export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordResponse> =>
+  fetchData('/auth/password', {
+    method: 'PATCH',
+    data: params,
+  });
