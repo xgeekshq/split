@@ -5,53 +5,53 @@ import { Nullable } from '../common';
 import { AccessToken, RefreshToken } from '../token';
 
 export interface User {
-	id?: string;
-	_id: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	password?: string;
-	passwordConf?: string;
-	accessToken?: AccessToken;
-	refreshToken?: RefreshToken;
-	isSAdmin: boolean;
-	joinedAt: string;
+  id?: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
+  passwordConf?: string;
+  accessToken?: AccessToken;
+  refreshToken?: RefreshToken;
+  isSAdmin: boolean;
+  joinedAt: string;
 }
 
 export interface UseUserType {
-	loginAzure: () => Promise<void>;
-	resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
-	resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
+  loginAzure: () => Promise<void>;
+  resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
+  resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
 }
 
 export interface LoginUser {
-	email: Nullable<string>;
-	password: Nullable<string>;
+  email: Nullable<string>;
+  password: Nullable<string>;
 }
 
 export interface EmailUser {
-	email: string;
+  email: string;
 }
 
 export interface RegisterUser {
-	email: string;
-	firstName: string;
-	lastName: string;
-	password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
 }
 
 export interface ResetTokenResponse {
-	message: string;
+  message: string;
 }
 
 export interface NewPassword {
-	password: string;
-	passwordConf: string;
-	token: string;
+  password: string;
+  passwordConf: string;
+  token: string;
 }
 
 export interface ResetPasswordResponse {
-	message: string;
+  message: string;
 }
 
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';

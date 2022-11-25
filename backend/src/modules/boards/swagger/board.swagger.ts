@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-import BoardDto from 'modules/boards/dto/board.dto';
+import BoardDto from 'src/modules/boards/dto/board.dto';
 
 export class BoardResponse {
 	@ApiProperty({ type: BoardDto, isArray: true })

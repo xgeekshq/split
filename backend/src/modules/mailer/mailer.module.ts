@@ -1,6 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-
-import { configuration } from 'infrastructure/config/configuration';
+import { configuration } from 'src/infrastructure/config/configuration';
 
 const { host, port, user, password } = configuration().smtp;
 const EmailModule = MailerModule.forRootAsync({

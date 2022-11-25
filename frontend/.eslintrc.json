@@ -1,0 +1,46 @@
+{
+	"extends": ["airbnb", "airbnb-typescript", "airbnb/hooks", "next", "prettier"],
+	"parserOptions": {
+	  "project": "tsconfig.json",
+	  "sourceType": "module"
+	},
+	"plugins": ["prettier"],
+	"rules": {
+	  "prettier/prettier": ["error"],
+	  "indent": "off",
+	  "@typescript-eslint/indent": "off",
+	  "react/react-in-jsx-scope": 0,
+	  "react/function-component-definition": 0,
+	  "react/jsx-props-no-spreading": "off",
+	  "jsx-a11y/anchor-is-valid": [
+		"error",
+		{
+		  "components": ["Link"],
+		  "specialLink": ["hrefLeft", "hrefRight"],
+		  "aspects": ["invalidHref", "preferButton"]
+		}
+	  ],
+	  "react/jsx-no-useless-fragment": 0,
+	  "react/require-default-props": "off",
+	  "import/prefer-default-export": "off",
+	  "no-param-reassign": "off",
+	  "no-underscore-dangle": "off",
+	  "react/display-name": "off",
+	  "no-plusplus": "off",
+	  "import/no-extraneous-dependencies": [
+		"error",
+		{
+		  "devDependencies": [
+			"**/*.test.ts",
+			"**/*.spec.ts",
+			"**/*.test.tsx",
+			"**/*.spec.tsx",
+			"**/__tests__/*",
+			"**/factories/*",
+			"**/testUtils/*"
+		  ]
+		}
+	  ]
+	}
+  }
+  

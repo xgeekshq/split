@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import isEmpty from 'libs/utils/isEmpty';
-
+import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';

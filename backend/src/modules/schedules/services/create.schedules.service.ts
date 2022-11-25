@@ -1,19 +1,17 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { LeanDocument, Model } from 'mongoose';
-
-import { DELETE_FAILED } from 'libs/exceptions/messages';
-import { getDay, getNextMonth } from 'libs/utils/dates';
+import { DELETE_FAILED } from 'src/libs/exceptions/messages';
+import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import {
 	Configs,
 	CreateBoardService
-} from 'modules/boards/interfaces/services/create.board.service.interface';
-import { GetBoardServiceInterface } from 'modules/boards/interfaces/services/get.board.service.interface';
-import * as BoardTypes from 'modules/boards/interfaces/types';
-import { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+} from 'src/modules/boards/interfaces/services/create.board.service.interface';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import * as BoardTypes from 'src/modules/boards/interfaces/types';
+import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { AddCronJobDto } from '../dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from '../interfaces/services/create.schedules.service.interface';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
@@ -68,6 +66,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				maxUsers: maxUsersPerTeam,
 				willRunAt: new Date(new Date().getFullYear(), month, day, 10).toISOString()
 			});
+
 			if (!cronJobDoc) throw Error('CronJob not created');
 			const job = new CronJob(`0 10 18 10 *`, () =>
 				// const job = new CronJob(`0 10 ${day} ${month} *`, () =>
@@ -87,8 +86,10 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				oldBoardId
 			);
 			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
+
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
+
 				return;
 			}
 
@@ -121,8 +122,10 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		};
 
 		const boardId = await this.createBoardService.splitBoardByTeam(ownerId, teamId, configs);
+
 		if (!boardId) {
 			await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
+
 			return;
 		}
 

@@ -18,74 +18,74 @@ import useTeam from '../../hooks/useTeam';
 import { membersListState, usersListState } from '../../store/team/atom/team.atom';
 
 const Team = () => {
-	// Session Details
-	const { data: session } = useSession({ required: true });
-	// const userId = session?.user?.id;
+  // Session Details
+  const { data: session } = useSession({ required: true });
+  // const userId = session?.user?.id;
 
-	// // Hooks
-	const {
-		fetchTeam: { data }
-	} = useTeam({ autoFetchTeam: false });
+  // // Hooks
+  const {
+    fetchTeam: { data },
+  } = useTeam({ autoFetchTeam: false });
 
-	// Recoil States
-	const setUsersListState = useSetRecoilState(usersListState);
-	const setMembersListState = useSetRecoilState(membersListState);
+  // Recoil States
+  const setUsersListState = useSetRecoilState(usersListState);
+  const setMembersListState = useSetRecoilState(membersListState);
 
-	useEffect(() => {
-		if (!data) {
-			return;
-		}
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
 
-		setMembersListState(data.users);
-	}, [data, session?.user.id, setMembersListState, setUsersListState]);
+    setMembersListState(data.users);
+  }, [data, session?.user.id, setMembersListState, setUsersListState]);
 
-	if (!session || !data) return null;
-	return (
-		<ContainerTeamPage>
-			<Sidebar
-				email={session.user.email}
-				firstName={session.user.firstName}
-				lastName={session.user.lastName}
-				strategy={session.strategy}
-			/>
-			<Suspense fallback={<LoadingPage />}>
-				<QueryError>
-					<ContentSection gap="36" justify="between">
-						<Flex css={{ width: '100%' }} direction="column">
-							<Flex justify="between">
-								<TeamHeader title={data.name} />
-							</Flex>
-							<TeamMembersList />
-						</Flex>
-					</ContentSection>
-				</QueryError>
-			</Suspense>
-		</ContainerTeamPage>
-	);
+  if (!session || !data) return null;
+  return (
+    <ContainerTeamPage>
+      <Sidebar
+        email={session.user.email}
+        firstName={session.user.firstName}
+        lastName={session.user.lastName}
+        strategy={session.strategy}
+      />
+      <Suspense fallback={<LoadingPage />}>
+        <QueryError>
+          <ContentSection gap="36" justify="between">
+            <Flex css={{ width: '100%' }} direction="column">
+              <Flex justify="between">
+                <TeamHeader title={data.name} />
+              </Flex>
+              <TeamMembersList />
+            </Flex>
+          </ContentSection>
+        </QueryError>
+      </Suspense>
+    </ContainerTeamPage>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const { teamId } = context.query;
+  const { teamId } = context.query;
 
-	const queryClient = new QueryClient();
-	try {
-		await queryClient.prefetchQuery(['team', teamId], () =>
-			getTeamRequest(teamId as string, context)
-		);
-		await queryClient.prefetchQuery('users', () => getAllUsers(context));
-	} catch (e) {
-		return {
-			redirect: {
-				permanent: false,
-				destination: '/teams'
-			}
-		};
-	}
-	return {
-		props: {
-			dehydratedState: dehydrate(queryClient)
-		}
-	};
+  const queryClient = new QueryClient();
+  try {
+    await queryClient.prefetchQuery(['team', teamId], () =>
+      getTeamRequest(teamId as string, context),
+    );
+    await queryClient.prefetchQuery('users', () => getAllUsers(context));
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/teams',
+      },
+    };
+  }
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };
 
 export default Team;

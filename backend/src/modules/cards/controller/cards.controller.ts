@@ -22,21 +22,19 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import { BaseDto } from 'libs/dto/base.dto';
-import { BaseParam } from 'libs/dto/param/base.param';
-import { CardGroupParams } from 'libs/dto/param/card.group.params';
-import { CardItemParams } from 'libs/dto/param/card.item.params';
-import { MergeCardsParams } from 'libs/dto/param/merge.cards.params';
-import { UnmergeCardsParams } from 'libs/dto/param/unmerge.cards.params';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'libs/exceptions/messages';
-import JwtAuthenticationGuard from 'libs/guards/jwtAuth.guard';
-import RequestWithUser from 'libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import BoardDto from 'modules/boards/dto/board.dto';
-
+import { BaseDto } from 'src/libs/dto/base.dto';
+import { BaseParam } from 'src/libs/dto/param/base.param';
+import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
+import { CardItemParams } from 'src/libs/dto/param/card.item.params';
+import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
+import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
+import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import BoardDto from 'src/modules/boards/dto/board.dto';
 import SocketGateway from '../../socket/gateway/socket.gateway';
 import { CreateCardDto } from '../dto/create.card.dto';
 import DeleteCardDto from '../dto/delete.card.dto';

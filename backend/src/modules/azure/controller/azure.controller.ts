@@ -19,17 +19,15 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-
-import { EmailParam } from 'libs/dto/param/email.param';
-import { USER_NOT_FOUND } from 'libs/exceptions/messages';
-import { BadRequestResponse } from 'libs/swagger/errors/bad-request.swagger';
-import { InternalServerErrorResponse } from 'libs/swagger/errors/internal-server-error.swagger';
-import { NotFoundResponse } from 'libs/swagger/errors/not-found.swagger';
-import { UnauthorizedResponse } from 'libs/swagger/errors/unauthorized.swagger';
-import { LoginResponse } from 'modules/auth/swagger/login.swagger';
-import { GetUserApplication } from 'modules/users/interfaces/applications/get.user.application.interface';
-import * as User from 'modules/users/interfaces/types';
-
+import { EmailParam } from 'src/libs/dto/param/email.param';
+import { USER_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
+import { GetUserApplication } from 'src/modules/users/interfaces/applications/get.user.application.interface';
+import * as User from 'src/modules/users/interfaces/types';
 import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';

@@ -1,15 +1,13 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-import { UPDATE_FAILED } from 'libs/exceptions/messages';
-import { arrayIdToString } from 'libs/utils/arrayIdToString';
-import isEmpty from 'libs/utils/isEmpty';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-import BoardUser, { BoardUserDocument } from 'modules/boards/schemas/board.user.schema';
-import { GetCardService } from 'modules/cards/interfaces/services/get.card.service.interface';
-import { TYPES } from 'modules/cards/interfaces/types';
-
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
+import isEmpty from 'src/libs/utils/isEmpty';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
+import { GetCardService } from 'src/modules/cards/interfaces/services/get.card.service.interface';
+import { TYPES } from 'src/modules/cards/interfaces/types';
 import { DeleteVoteService } from '../interfaces/services/delete.vote.service.interface';
 
 @Injectable()
@@ -25,6 +23,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
 	private async canUserVote(boardId: string, userId: string): Promise<boolean> {
 		const board = await this.boardModel.findById(boardId).exec();
+
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
@@ -46,17 +45,22 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 				$inc: { votesCount: !count ? -1 : -count }
 			}
 		);
+
 		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
+
 		return boardUser;
 	}
 
 	async deleteVoteFromCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
 		const canUserVote = await this.canUserVote(boardId, userId);
+
 		if (canUserVote) {
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
 			if (!card) return null;
 
 			const cardItem = card.items.find((item) => item._id.toString() === cardItemId);
+
 			if (!cardItem) return null;
 
 			const votes = cardItem.votes as unknown as string[];
@@ -87,8 +91,10 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 						session: dbSession
 					}
 				);
+
 				if (!board) throw Error(UPDATE_FAILED);
 				await dbSession.commitTransaction();
+
 				return await board.populate({
 					path: 'users',
 					select: 'user role votesCount -board',
@@ -106,8 +112,10 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string) {
 		const canUserVote = await this.canUserVote(boardId, userId);
+
 		if (canUserVote) {
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
 			if (!card) return null;
 
 			const { votes } = card;
@@ -131,6 +139,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 			}
 
 			const voteIndex = newVotes.findIndex((vote) => vote.toString() === userId.toString());
+
 			if (voteIndex === -1) return null;
 			newVotes.splice(voteIndex, 1);
 
@@ -159,6 +168,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
 				if (!board) throw Error(UPDATE_FAILED);
 				await dbSession.commitTransaction();
+
 				return board;
 			} catch (error) {
 				await dbSession.abortTransaction();

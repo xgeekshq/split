@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/lines-between-class-members */
-import { ChatSlackHandler } from 'modules/communication/handlers/chat-slack.handler';
-import { CommunicationGateAdapterInterface } from 'modules/communication/interfaces/communication-gate.adapter.interface';
+import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
+import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 
 const MakeSlackCommunicationGateAdapterStub = () => {
 	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
@@ -27,6 +27,7 @@ const MakeSlackCommunicationGateAdapterStub = () => {
 			return Promise.resolve({ ok: true });
 		}
 	}
+
 	return new SlackCommunicationGateAdapterStub();
 };
 

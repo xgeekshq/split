@@ -7,10 +7,12 @@ export const cronAzureService = {
 	provide: TYPES.services.CronAzureService,
 	useClass: CronAzureServiceImpl
 };
+
 export const authAzureService = {
 	provide: TYPES.services.AuthAzureService,
 	useClass: AuthAzureServiceImpl
 };
+
 export const authAzureApplication = {
 	provide: TYPES.applications.AuthAzureApplication,
 	useClass: AuthAzureApplicationImpl

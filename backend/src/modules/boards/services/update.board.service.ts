@@ -1,27 +1,25 @@
 import {
 	BadRequestException,
 	ForbiddenException,
-	forwardRef,
 	Inject,
 	Injectable,
-	NotFoundException
+	NotFoundException,
+	forwardRef
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
-
-import { BoardRoles } from 'libs/enum/board.roles';
-import { TeamRoles } from 'libs/enum/team.roles';
-import { UPDATE_FAILED } from 'libs/exceptions/messages';
-import { getIdFromObjectId } from 'libs/utils/getIdFromObjectId';
-import isEmpty from 'libs/utils/isEmpty';
-import { TeamDto } from 'modules/communication/dto/team.dto';
-import { CommunicationServiceInterface } from 'modules/communication/interfaces/slack-communication.service.interface';
-import * as CommunicationsType from 'modules/communication/interfaces/types';
-import { GetTeamServiceInterface } from 'modules/teams/interfaces/services/get.team.service.interface';
-import * as Teams from 'modules/teams/interfaces/types';
-import { TeamUserDocument } from 'modules/teams/schemas/team.user.schema';
-import User, { UserDocument } from 'modules/users/schemas/user.schema';
-
+import { BoardRoles } from 'src/libs/enum/board.roles';
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
+import isEmpty from 'src/libs/utils/isEmpty';
+import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import * as Teams from 'src/modules/teams/interfaces/types';
+import { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
+import User, { UserDocument } from 'src/modules/users/schemas/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
@@ -258,8 +256,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.lean()
 				.exec()
 		]);
+
 		if (!subBoard || !board || subBoard.submitedByUser) return null;
 		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
+
 		if (!team) return null;
 
 		const newSubColumns = this.generateNewSubColumns(subBoard);
@@ -312,11 +312,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	private async checkIfIsLastBoardToMerge(mainBoardId: string): Promise<boolean> {
 		const board = await this.boardModel.findById(mainBoardId).populate({ path: 'dividedBoards' });
+
 		if (!board) return false;
 
 		const count = (board.dividedBoards as Board[]).reduce((prev, currentValue) => {
 			if (currentValue.submitedByUser) {
 				prev -= 1;
+
 				return prev;
 			}
 
@@ -362,9 +364,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 							};
 						})
 					};
+
 					return newCard;
 				})
 			};
+
 			return newColumn;
 		});
 	}

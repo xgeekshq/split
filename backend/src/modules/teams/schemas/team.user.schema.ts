@@ -1,10 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
-
-import { TeamRoles } from 'libs/enum/team.roles';
-import User from 'modules/users/schemas/user.schema';
-
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import User from 'src/modules/users/schemas/user.schema';
 import Team from './teams.schema';
 
 export type TeamUserDocument = TeamUser & Document;

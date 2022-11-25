@@ -1,7 +1,5 @@
 import { LeanDocument } from 'mongoose';
-
-import { TeamQueryParams } from 'libs/dto/param/team.query.params';
-
+import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { TeamUserDocument } from '../../schemas/team.user.schema';
 import { TeamDocument } from '../../schemas/teams.schema';
 
@@ -19,7 +17,7 @@ export interface GetTeamServiceInterface {
 
 	getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]>;
 
-	getTeamUser(userId: string, boardId: string): Promise<LeanDocument<TeamUserDocument> | null>;
+	getTeamUser(userId: string, teamId: string): Promise<LeanDocument<TeamUserDocument> | null>;
 
 	getAllTeams(): Promise<LeanDocument<TeamDocument>[]>;
 }

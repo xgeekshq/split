@@ -1,15 +1,13 @@
 import { Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
 import {
 	CARD_NOT_FOUND,
 	CARD_NOT_INSERTED,
 	CARD_NOT_REMOVED,
 	UPDATE_FAILED
-} from 'libs/exceptions/messages';
-import Board, { BoardDocument } from 'modules/boards/schemas/board.schema';
-
+} from 'src/libs/exceptions/messages';
+import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -103,6 +101,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 				this.boardModel,
 				session
 			);
+
 			if (!pushResult) throw Error(CARD_NOT_INSERTED);
 			await session.commitTransaction();
 
@@ -112,6 +111,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 		} finally {
 			await session.endSession();
 		}
+
 		return null;
 	}
 }

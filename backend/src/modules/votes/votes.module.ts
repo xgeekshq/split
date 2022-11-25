@@ -1,11 +1,9 @@
-import { forwardRef, Module } from '@nestjs/common';
-
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
 	mongooseBoardUserModule
-} from 'infrastructure/database/mongoose.module';
-import SocketModule from 'modules/socket/socket.module';
-
+} from 'src/infrastructure/database/mongoose.module';
+import SocketModule from 'src/modules/socket/socket.module';
 import { CardsModule } from '../cards/cards.module';
 import VotesController from './controller/votes.controller';
 import {

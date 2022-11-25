@@ -8,75 +8,71 @@ import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { RecoilRoot } from 'recoil';
 
-import globalStyles from 'styles/globals';
+import globalStyles from '@/styles/globals';
 
-import Sprite from 'components/icons/Sprite';
-import Toast, { ToastProvider, ToastViewport } from 'components/Primitives/Toast';
-import { JWT_EXPIRATION_TIME, NEXT_PUBLIC_BACKEND_URL } from 'utils/constants';
-import { ROUTES } from 'utils/routes';
+import Sprite from '@/components/icons/Sprite';
+import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
+import { JWT_EXPIRATION_TIME } from '@/utils/constants';
+import { ROUTES } from '@/utils/routes';
 
 type NextPageWithLayout = NextPage & {
-	getLayout?: (page: ReactElement) => ReactNode;
+  getLayout?: (page: ReactElement) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
-	Component: NextPageWithLayout;
+  Component: NextPageWithLayout;
 };
 
 function Root({
-	Component,
-	pageProps: { session, ...pageProps }
+  Component,
+  pageProps: { session, ...pageProps },
 }: AppPropsWithLayout): JSX.Element {
-	const queryClient = new QueryClient({
-		defaultOptions: {
-			queries: {
-				retry: 1,
-				suspense: true
-			}
-		}
-	});
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        suspense: true,
+      },
+    },
+  });
 
-	// eslint-disable-next-line no-console
-	console.log(NEXT_PUBLIC_BACKEND_URL);
+  const getLayout = Component.getLayout ?? ((page) => page);
 
-	const getLayout = Component.getLayout ?? ((page) => page);
-
-	const router = useRouter();
-	globalStyles();
-	return (
-		<>
-			<Head>
-				<title>SPLIT</title>
-				<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-			</Head>
-			<Sprite />
-			<SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={session}>
-				<QueryClientProvider client={queryClient}>
-					<Hydrate state={pageProps.dehydratedState}>
-						<ToastProvider duration={100000}>
-							<RecoilRoot>
-								{getLayout(<Component {...pageProps} />)}
-								<Toast />
-							</RecoilRoot>
-							<ToastViewport
-								css={{
-									paddingRight:
-										router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56
-								}}
-							/>
-						</ToastProvider>
-					</Hydrate>
-					<ReactQueryDevtools initialIsOpen={false} />
-				</QueryClientProvider>
-			</SessionProvider>
-		</>
-	);
+  const router = useRouter();
+  globalStyles();
+  return (
+    <>
+      <Head>
+        <title>SPLIT</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+      </Head>
+      <Sprite />
+      <SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={session}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <ToastProvider duration={100000}>
+              <RecoilRoot>
+                {getLayout(<Component {...pageProps} />)}
+                <Toast />
+              </RecoilRoot>
+              <ToastViewport
+                css={{
+                  paddingRight: router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56,
+                }}
+              />
+            </ToastProvider>
+          </Hydrate>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </SessionProvider>
+    </>
+  );
 }
 
 Root.getInitialProps = async (appContext: AppContext) => {
-	const appProps = await App.getInitialProps(appContext);
+  const appProps = await App.getInitialProps(appContext);
 
-	return { ...appProps };
+  return { ...appProps };
 };
 
 export default Root;

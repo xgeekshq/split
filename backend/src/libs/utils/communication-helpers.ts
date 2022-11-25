@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function translateBoard(board: any): any {
 	const result = JSON.parse(JSON.stringify(board));
 
@@ -24,6 +25,7 @@ export function fillDividedBoardsUsersWithTeamUsers(board: any): any {
 	const teamUsersRole = board.team?.users ?? [];
 	function getUserFromTeamById(id) {
 		const userRole = teamUsersRole.find((i) => i.user.id === id);
+
 		return userRole
 			? {
 					...userRole.user

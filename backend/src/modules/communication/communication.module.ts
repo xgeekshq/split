@@ -1,8 +1,7 @@
 import { BullModule } from '@nestjs/bull';
-import { forwardRef, Module } from '@nestjs/common';
-
-import { configuration } from 'infrastructure/config/configuration';
-import BoardsModule from 'modules/boards/boards.module';
+import { Module, forwardRef } from '@nestjs/common';
+import { configuration } from 'src/infrastructure/config/configuration';
+import BoardsModule from 'src/modules/boards/boards.module';
 import {
 	ChatHandler,
 	CommunicationApplication,
@@ -12,10 +11,9 @@ import {
 	MergeBoardApplication,
 	ResponsibleApplication,
 	UsersHandler
-} from 'modules/communication/communication.providers';
-import { SlackCommunicationConsumer } from 'modules/communication/consumers/slack-communication.consumer';
-import { SlackCommunicationProducer } from 'modules/communication/producers/slack-communication.producer';
-
+} from 'src/modules/communication/communication.providers';
+import { SlackCommunicationConsumer } from 'src/modules/communication/consumers/slack-communication.consumer';
+import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
 import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';

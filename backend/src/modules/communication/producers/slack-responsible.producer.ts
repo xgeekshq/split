@@ -1,8 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bull';
-
-import { ChangeResponsibleType } from 'modules/communication/dto/types';
+import { ChangeResponsibleType } from 'src/modules/communication/dto/types';
 
 @Injectable()
 export class SlackResponsibleProducer {

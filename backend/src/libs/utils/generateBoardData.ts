@@ -1,6 +1,6 @@
-import BoardDto from 'modules/boards/dto/board.dto';
-import BoardUserDto from 'modules/boards/dto/board.user.dto';
-import { CreateBoardDto } from 'modules/boards/services/create.board.service';
+import BoardDto from 'src/modules/boards/dto/board.dto';
+import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import { CreateBoardDto } from 'src/modules/boards/services/create.board.service';
 
 export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = []): BoardDto => {
 	return {

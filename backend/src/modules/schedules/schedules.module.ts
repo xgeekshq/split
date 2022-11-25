@@ -1,8 +1,6 @@
-import { forwardRef, Module } from '@nestjs/common';
-
-import { mongooseSchedulesModule } from 'infrastructure/database/mongoose.module';
-import BoardsModule from 'modules/boards/boards.module';
-
+import { Module, forwardRef } from '@nestjs/common';
+import { mongooseSchedulesModule } from 'src/infrastructure/database/mongoose.module';
+import BoardsModule from 'src/modules/boards/boards.module';
 import { createSchedulesService, deleteSchedulesService } from './schedules.providers';
 
 @Module({

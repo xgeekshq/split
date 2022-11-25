@@ -1,3 +1,3 @@
-import { TextDto } from 'libs/dto/text.dto';
+import { TextDto } from 'src/libs/dto/text.dto';
 
 export default class UpdateCardDto extends TextDto {}

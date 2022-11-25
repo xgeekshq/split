@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
 import { UpdateCommentService } from '../interfaces/services/update.comment.service.interface';
 import { TYPES } from '../interfaces/types';

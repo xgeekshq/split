@@ -1,38 +1,38 @@
-import { styled } from 'styles/stitches/stitches.config';
+import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from 'components/icons/Icon';
+import Icon from '@/components/icons/Icon';
 
 const GridContainer = styled('section', {
-	display: 'grid',
-	gap: '$29',
-	gridTemplateColumns: 'repeat(3, 1fr)'
+  display: 'grid',
+  gap: '$29',
+  gridTemplateColumns: 'repeat(3, 1fr)',
 });
 
 const StyledTile = styled('div', {
-	position: 'relative',
+  position: 'relative',
 
-	padding: '$20 $24',
-	borderRadius: '$12',
+  padding: '$20 $24',
+  borderRadius: '$12',
 
-	color: '$primary50',
-	backgroundColor: '$primary800',
+  color: '$primary50',
+  backgroundColor: '$primary800',
 
-	h3: {
-		margin: 0,
+  h3: {
+    margin: 0,
 
-		color: 'white',
-		fontSize: '$32',
-		lineHeight: '$36',
-		fontWeight: '$bold'
-	}
+    color: 'white',
+    fontSize: '$32',
+    lineHeight: '$36',
+    fontWeight: '$bold',
+  },
 });
 
 const TileArrow = styled(Icon, {
-	position: 'absolute',
-	bottom: '$28',
-	right: '$28',
+  position: 'absolute',
+  bottom: '$28',
+  right: '$28',
 
-	color: '#000'
+  color: '#000',
 });
 
 export { GridContainer, StyledTile, TileArrow };
