@@ -42,10 +42,8 @@ const TeamMembersList = () => {
 					<CardMember
 						key={member.user._id}
 						isNewTeamPage
-						isNewJoiner={member.isNewJoiner}
 						isTeamCreator={member.user._id === session?.user.id}
-						member={member.user}
-						role={member.role}
+						member={member}
 					/>
 				))}
 				<ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />

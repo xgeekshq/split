@@ -27,10 +27,8 @@ const TeamMembersList = () => {
 					<CardMember
 						key={member.user._id}
 						isTeamPage
-						isNewJoiner={member.isNewJoiner}
 						isTeamCreator={member.user._id === session?.user.id}
-						member={member.user}
-						role={member.role}
+						member={member}
 						isTeamMemberOrStakeholder={[
 							TeamUserRoles.MEMBER,
 							TeamUserRoles.STAKEHOLDER

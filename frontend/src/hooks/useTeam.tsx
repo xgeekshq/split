@@ -100,7 +100,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 		onError: () => {
 			setToastState({
 				open: true,
-				content: 'Error while updating the team user role',
+				content: 'Error while updating the team user',
 				type: ToastStateEnum.ERROR
 			});
 		}

@@ -1,13 +1,12 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import Icon from 'components/icons/Icon';
 import Flex from 'components/Primitives/Flex';
 import Text from 'components/Primitives/Text';
 import useTeam from 'hooks/useTeam';
-import { TeamUserUpdate } from 'types/team/team.user';
+import { TeamUser, TeamUserUpdate } from 'types/team/team.user';
 import { membersListState } from '../../../../store/team/atom/team.atom';
-import { User } from '../../../../types/user/user';
 import { ConfigurationSettings } from '../../../Board/Settings/partials/ConfigurationSettings';
 import Tooltip from '../../../Primitives/Tooltip';
 import CardEndTeam from '../../Team/CardEnd';
@@ -15,27 +14,16 @@ import CardEndCreateTeam from '../CardEnd';
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 
 type CardBodyProps = {
-	member: User;
-	role: string;
+	member: TeamUser;
 	isTeamCreator?: boolean;
-	isNewJoiner?: boolean;
 	isTeamMemberOrStakeholder?: boolean;
 	isNewTeamPage?: boolean;
 	isTeamPage?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-	({
-		isNewTeamPage,
-		isTeamPage,
-		member,
-		role,
-		isTeamCreator,
-		isNewJoiner,
-		isTeamMemberOrStakeholder
-	}) => {
-		const setMembersList = useSetRecoilState(membersListState);
-		const membersList = useRecoilValue(membersListState);
+	({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMemberOrStakeholder }) => {
+		const [membersList, setMembersList] = useRecoilState(membersListState);
 
 		const {
 			updateTeamUser: { mutate }
@@ -43,20 +31,18 @@ const CardMember = React.memo<CardBodyProps>(
 
 		const handleIsNewJoiner = (checked: boolean) => {
 			const listUsersMembers = membersList.map((user) => {
-				return user.user._id === member._id ? { ...user, isNewJoiner: checked } : user;
+				return user.user._id === member.user._id ? { ...user, isNewJoiner: checked } : user;
 			});
 
 			setMembersList(listUsersMembers);
 		};
 
 		const updateIsNewJoinerStatus = (checked: boolean) => {
-			const userFound = membersList.find((teamUser) => teamUser.user._id === member._id);
-
-			if (userFound && userFound.team && userFound.role) {
+			if (member.team) {
 				const updateTeamUser: TeamUserUpdate = {
-					team: userFound.team,
-					user: member._id,
-					role: userFound.role,
+					team: member.team,
+					user: member.user._id,
+					role: member.role,
 					isNewJoiner: checked
 				};
 
@@ -95,11 +81,11 @@ const CardMember = React.memo<CardBodyProps>(
 
 							<Flex align="center" gap="8">
 								<StyledMemberTitle>
-									{`${member.firstName} ${member.lastName}`}
+									{`${member.user.firstName} ${member.user.lastName}`}
 								</StyledMemberTitle>
 							</Flex>
 						</Flex>
-						{isTeamMemberOrStakeholder && isNewJoiner && (
+						{isTeamMemberOrStakeholder && member.isNewJoiner && (
 							<Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
 								<Text size="sm" weight="medium">
 									New Joiner
@@ -127,7 +113,7 @@ const CardMember = React.memo<CardBodyProps>(
 							<Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
 								<ConfigurationSettings
 									handleCheckedChange={handleSelectFunction}
-									isChecked={isNewJoiner || false}
+									isChecked={member.isNewJoiner}
 									text=""
 									title="New Joiner"
 								/>
@@ -136,8 +122,8 @@ const CardMember = React.memo<CardBodyProps>(
 						{isNewTeamPage && (
 							<CardEndCreateTeam
 								isTeamCreator={isTeamCreator}
-								role={role}
-								userId={member._id}
+								role={member.role}
+								userId={member.user._id}
 							/>
 						)}
 						{isTeamPage && (
@@ -145,8 +131,8 @@ const CardMember = React.memo<CardBodyProps>(
 								isTeamPage
 								isTeamCreator={isTeamCreator}
 								isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
-								role={role}
-								userId={member._id}
+								role={member.role}
+								userId={member.user._id}
 							/>
 						)}
 					</InnerContainer>
