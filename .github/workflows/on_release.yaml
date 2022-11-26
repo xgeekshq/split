@@ -23,13 +23,13 @@ jobs:
         uses: jaywcjlove/github-action-package@main
         with:
           version: ${{ github.event.release.name }}
-          path: ./frontend
+          path: ./frontend/package.json
 
       - name: Update backend package.json version
         uses: jaywcjlove/github-action-package@main
         with:
           version: ${{ github.event.release.name }}
-          path: ./backend
+          path: ./backend/package.json
 
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
