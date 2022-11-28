@@ -78,7 +78,6 @@ const CardMember = React.memo<CardBodyProps>(
                   zIndex: 1,
                 }}
               />
-
               <Flex align="center" gap="8">
                 <StyledMemberTitle>
                   {`${member.user.firstName} ${member.user.lastName}`}
@@ -109,7 +108,7 @@ const CardMember = React.memo<CardBodyProps>(
               </Flex>
             )}
             {!isTeamMemberOrStakeholder && (
-              <Flex align="center" css={{ width: '23%' }} gap="8" justify="center">
+              <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}
                   isChecked={member.isNewJoiner}
