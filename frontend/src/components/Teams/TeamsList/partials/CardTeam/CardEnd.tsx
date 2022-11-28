@@ -18,14 +18,12 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
       userSAdmin: undefined,
     };
     const { name } = team;
-    const teamId = team._id;
-    console.log(userSAdmin || havePermissions);
 
     if (userSAdmin || havePermissions) {
       return (
         <Flex css={{ alignItems: 'center' }}>
           <Flex align="center" css={{ ml: '$24' }} gap="24">
-            <DeleteTeam teamName={name} teamId={teamId} />
+            <DeleteTeam teamName={name} teamId={team._id} />
           </Flex>
         </Flex>
       );

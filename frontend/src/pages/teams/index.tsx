@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
@@ -10,7 +10,9 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import TeamsList from '@/components/Teams/TeamsList';
-import useTeam from '../../hooks/useTeam';
+import { teamsListState } from '@/store/team/atom/team.atom';
+import useTeam from '@/hooks/useTeam';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
@@ -19,12 +21,24 @@ const Teams = () => {
     fetchTeamsOfUser: { data, isFetching },
   } = useTeam({ autoFetchTeam: false });
 
+  // Recoil States
+  const setTeamsListState = useSetRecoilState(teamsListState);
+
+  useEffect(() => {
+    if (!data) return;
+    setTeamsListState(data);
+  }, [data, setTeamsListState]);
+
+  // Recoil Values
+  const teamsList = useRecoilValue(teamsListState);
+
   if (!session || !data) return null;
+
   return (
     <Flex direction="column">
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <TeamsList isFetching={isFetching} teams={data} userId={session.user.id} />
+          <TeamsList isFetching={isFetching} teams={teamsList} userId={session.user.id} />
         </QueryError>
       </Suspense>
     </Flex>

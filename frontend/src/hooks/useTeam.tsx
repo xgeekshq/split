@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { Team } from '@/types/team/team';
 import {
   createTeamRequest,
   deleteTeamRequest,
@@ -17,7 +18,15 @@ interface AutoFetchProps {
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-  const { teamId, setToastState, membersList, setMembersList, queryClient } = useTeamUtils();
+  const {
+    teamId,
+    setToastState,
+    membersList,
+    setMembersList,
+    queryClient,
+    teamsList,
+    setTeamsList,
+  } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
     enabled: autoFetchTeam,
@@ -108,8 +117,16 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
   });
 
   const deleteTeam = useMutation(deleteTeamRequest, {
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries('teams');
+
+      // updates the teamsList recoil
+      const teams = teamsList
+        .map((team) => (team._id === variables.id ? null : team))
+        .filter((team) => team !== null) as Team[];
+
+      setTeamsList(teams);
+
       setToastState({
         open: true,
         content: 'The team was successfully deleted.',
