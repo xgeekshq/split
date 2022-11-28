@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { compare } from 'src/libs/utils/bcrypt';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES } from 'src/modules/teams/interfaces/types';
+import UserDto from '../dto/user.dto';
 import { GetUserService } from '../interfaces/services/get.user.service.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import User, { UserDocument } from '../schemas/user.schema';
@@ -48,41 +49,18 @@ export default class GetUserServiceImpl implements GetUserService {
 
 	async getAllUsersWithTeams() {
 		const users = await this.getAllUsers();
-		const results: UserWithTeams[] = [];
-
-		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams();
-
-		users.forEach((user) => {
-			let userHasTeam = false;
-			const teams: string[] = [];
-			usersOnlyWithTeams.forEach((userOnlyWithTeams) => {
-				if (user._id.toString() === userOnlyWithTeams._id.toString()) {
-					userHasTeam = true;
-
-					const { teamsNames } = userOnlyWithTeams;
-
-					teamsNames.forEach((element) => {
-						element.forEach((el) => {
-							teams.push(el);
-						});
-					});
-				}
-			});
-
-			if (userHasTeam) {
-				const userWithTeams: UserWithTeams = {
-					user,
-					teams
-				};
-				results.push(userWithTeams);
-			} else {
-				const userWithTeams: UserWithTeams = {
-					user
-				};
-				results.push(userWithTeams);
-			}
+		const mappedUsers: UserWithTeams[] = users.map((userFound) => {
+			return {
+				user: userFound as UserDto,
+				teams: []
+			};
 		});
+		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams();
+		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
-		return results;
+		return [
+			...usersOnlyWithTeams,
+			...mappedUsers.filter((user) => !ids.has(String(user.user._id)))
+		];
 	}
 }

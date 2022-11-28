@@ -1,6 +1,6 @@
-import User from '../schemas/user.schema';
+import UserDto from '../dto/user.dto';
 
 export type UserWithTeams = {
-	user: User;
+	user: UserDto;
 	teams?: string[];
 };

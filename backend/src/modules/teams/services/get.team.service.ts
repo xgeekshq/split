@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
-import { UsersWithTeams } from '../interfaces/users-with-teams.interface';
+import { UserWithTeams } from '../../users/interfaces/type-user-with-teams';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
@@ -88,7 +88,15 @@ export default class GetTeamService implements GetTeamServiceInterface {
 	}
 
 	async getUsersOnlyWithTeams() {
-		const teams: LeanDocument<UsersWithTeams>[] = await this.teamUserModel.aggregate([
+		const teams: LeanDocument<UserWithTeams>[] = await this.teamUserModel.aggregate([
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'user',
+					foreignField: '_id',
+					as: 'user'
+				}
+			},
 			{
 				$lookup: {
 					from: 'teams',
@@ -98,9 +106,34 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				}
 			},
 			{
+				$unwind: { path: '$user' }
+			},
+			{
+				$unwind: { path: '$teams' }
+			},
+
+			{
 				$group: {
 					_id: '$user',
-					teamsNames: { $push: '$teams.name' }
+					teamsName: { $push: '$teams.name' }
+				}
+			},
+			{
+				$set: { userWithTeam: '$_id' }
+			},
+			{
+				$unset: [
+					'_id',
+					'user.currentHashedRefreshToken',
+					'user.isSAdmin',
+					'user.joinedAt',
+					'user.isDeleted'
+				]
+			},
+			{
+				$project: {
+					user: '$userWithTeam',
+					teamsNames: '$teamsName'
 				}
 			}
 		]);

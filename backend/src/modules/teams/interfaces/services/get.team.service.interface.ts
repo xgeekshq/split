@@ -2,7 +2,7 @@ import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { TeamUserDocument } from '../../schemas/team.user.schema';
 import { TeamDocument } from '../../schemas/teams.schema';
-import { UsersWithTeams } from '../users-with-teams.interface';
+import { UserWithTeams } from '../../../users/interfaces/type-user-with-teams';
 
 export interface GetTeamServiceInterface {
 	countTeams(userId: string): Promise<number>;
@@ -22,5 +22,5 @@ export interface GetTeamServiceInterface {
 
 	getAllTeams(): Promise<LeanDocument<TeamDocument>[]>;
 
-	getUsersOnlyWithTeams(): Promise<LeanDocument<UsersWithTeams>[]>;
+	getUsersOnlyWithTeams(): Promise<LeanDocument<UserWithTeams>[]>;
 }

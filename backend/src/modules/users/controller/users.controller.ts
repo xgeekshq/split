@@ -64,7 +64,7 @@ export default class UsersController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Get('users-with-teams')
+	@Get('teams')
 	getAllUsersWithTeams() {
 		return this.getUserApp.getUsersOnlyWithTeams();
 	}
