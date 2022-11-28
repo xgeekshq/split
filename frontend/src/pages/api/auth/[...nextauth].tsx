@@ -82,7 +82,18 @@ export default NextAuth({
         const data = await createOrLoginUserAzure(azureAccessToken ?? '');
 
         if (!data) return false;
-        const { firstName, lastName, accessToken, refreshToken, email, _id, isSAdmin } = data;
+
+
+        const {
+          firstName,
+          lastName,
+          accessToken,
+          refreshToken,
+          email,
+          id,
+          isSAdmin,
+          userAzureCreatedAt,
+        } = data;
         user.firstName = firstName;
         user.lastName = lastName;
         user.accessToken = accessToken;
@@ -91,6 +102,7 @@ export default NextAuth({
         user.strategy = 'azure';
         user.id = _id;
         user.isSAdmin = isSAdmin;
+        user.userAzureCreatedAt = userAzureCreatedAt || undefined;
       }
 
       return true;

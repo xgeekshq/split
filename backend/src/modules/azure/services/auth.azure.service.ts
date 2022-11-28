@@ -51,8 +51,9 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 		const emailOrUniqueName = email ?? unique_name;
 
 		const userExists = await this.checkUserExistsInActiveDirectory(emailOrUniqueName);
+		const userFromAzure = await this.getUserFromAzure(emailOrUniqueName);
 
-		if (!userExists) return null;
+		if (!userExists || isEmpty(userFromAzure)) return null;
 
 		const user = await this.getUserService.getByEmail(emailOrUniqueName);
 
@@ -61,7 +62,8 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 		const createdUser = await this.createUserService.create({
 			email: emailOrUniqueName,
 			firstName,
-			lastName
+			lastName,
+			userAzureCreatedAt: userFromAzure.value[0].createdDateTime
 		});
 
 		if (!createdUser) return null;
@@ -70,10 +72,10 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 	}
 
 	getGraphQueryUrl(email: string) {
-		return `https://graph.microsoft.com/v1.0/users?$search="mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"&$orderbydisplayName&$count=true`;
+		return `https://graph.microsoft.com/v1.0/users?$search="mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"&$orderbydisplayName&$select=displayName,mail,userPrincipalName,createdDateTime`;
 	}
 
-	async checkUserExistsInActiveDirectory(email: string) {
+	async getUserFromAzure(email: string) {
 		const queryUrl = this.getGraphQueryUrl(email);
 
 		const { data } = await axios.get(queryUrl, {
@@ -82,6 +84,12 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 				ConsistencyLevel: 'eventual'
 			}
 		});
+
+		return data;
+	}
+
+	async checkUserExistsInActiveDirectory(email: string) {
+		const data = await this.getUserFromAzure(email);
 
 		const user = data.value.find(
 			(userFound: AzureUserFound) =>

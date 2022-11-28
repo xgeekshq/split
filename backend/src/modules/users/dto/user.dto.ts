@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export default class UserDto {
 	@ApiProperty()
@@ -32,4 +32,9 @@ export default class UserDto {
 	@ApiPropertyOptional({ default: false })
 	@IsOptional()
 	isSAdmin?: boolean;
+
+	@ApiProperty()
+	@IsOptional()
+	@IsDateString()
+	userAzureCreatedAt: Date;
 }

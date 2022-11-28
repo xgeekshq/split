@@ -35,6 +35,9 @@ export default class User {
 
 	@Prop({ nullable: false, default: false })
 	isDeleted!: boolean;
+
+	@Prop({ nullable: true })
+	userAzureCreatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

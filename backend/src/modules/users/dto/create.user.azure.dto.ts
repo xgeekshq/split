@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export default class CreateUserAzureDto {
 	@ApiProperty()
@@ -16,4 +16,9 @@ export default class CreateUserAzureDto {
 	@IsNotEmpty()
 	@IsString()
 	email!: string;
+
+	@ApiProperty({ type: String, format: 'date' })
+	@IsNotEmpty()
+	@IsDateString()
+	userAzureCreatedAt!: Date;
 }
