@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { membersListState } from '../../../../store/team/atom/team.atom';
+import { membersListState } from '@/store/team/atom/team.atom';
 import { LiWhite, TextWhite } from './styles';
 
 const CreateTeamTipBar = () => {

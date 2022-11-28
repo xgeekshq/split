@@ -1,6 +1,6 @@
-import Icon from '../../../icons/Icon';
-import Flex from '../../../Primitives/Flex';
-import Text from '../../../Primitives/Text';
+import Flex from '@/components/Primitives/Flex';
+import Text from '@/components/Primitives/Text';
+import Icon from '@/components/icons/Icon';
 import { ButtonAddMember } from './styles';
 
 const AddMemberBtn = () => (

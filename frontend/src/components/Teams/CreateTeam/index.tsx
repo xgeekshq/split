@@ -4,9 +4,7 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import useTeam from '../../../hooks/useTeam';
-import SchemaCreateTeam from '../../../schema/schemaCreateTeamForm';
-import { membersListState } from '../../../store/team/atom/team.atom';
+import { membersListState } from '@/store/team/atom/team.atom';
 import {
   ButtonsContainer,
   Container,
@@ -15,14 +13,17 @@ import {
   PageHeader,
   StyledForm,
   SubContainer,
-} from '../../../styles/pages/boards/new.styles';
-import { CreateTeamUser } from '../../../types/team/team.user';
-import Icon from '../../icons/Icon';
-import Button from '../../Primitives/Button';
-import Text from '../../Primitives/Text';
-import TeamMembersList from './ListCardsMembers';
-import TeamName from './TeamName';
+} from '@/styles/pages/boards/new.styles';
+import { CreateTeamUser } from '@/types/team/team.user';
+
+import useTeam from '@/hooks/useTeam';
+import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
+import Button from '@/components/Primitives/Button';
+import Text from '@/components/Primitives/Text';
+import Icon from '@/components/icons/Icon';
 import TipBar from './TipBar';
+import TeamName from './TeamName';
+import TeamMembersList from './ListCardsMembers';
 
 const CreateTeam = () => {
   const router = useRouter();

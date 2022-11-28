@@ -43,6 +43,7 @@ async function bootstrap() {
 			},
 			'refresh-token'
 		)
+		.setExternalDoc('Download Collection', 'docs-json')
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
