@@ -16,7 +16,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 	async delete(teamId: string): Promise<boolean> {
 		const teamSession = await this.teamModel.db.startSession();
 		teamSession.startTransaction();
-		const teamUserSession = await this.teamModel.db.startSession();
+		const teamUserSession = await this.teamUserModel.db.startSession();
 		teamUserSession.startTransaction();
 
 		try {
