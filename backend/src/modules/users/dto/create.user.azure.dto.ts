@@ -17,8 +17,8 @@ export default class CreateUserAzureDto {
 	@IsString()
 	email!: string;
 
-	@ApiProperty({ type: String, format: 'date' })
+	@ApiProperty()
 	@IsNotEmpty()
 	@IsDateString()
-	userAzureCreatedAt!: Date;
+	userAzureCreatedAt!: string;
 }

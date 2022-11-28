@@ -36,5 +36,5 @@ export default class UserDto {
 	@ApiProperty()
 	@IsOptional()
 	@IsDateString()
-	userAzureCreatedAt: Date;
+	userAzureCreatedAt: string;
 }
