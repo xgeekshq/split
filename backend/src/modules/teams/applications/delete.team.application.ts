@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
 import { TYPES } from '../interfaces/types';
 

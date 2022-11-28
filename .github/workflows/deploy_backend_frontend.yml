@@ -84,7 +84,7 @@ jobs:
       - name: Update release draft
         uses: release-drafter/release-drafter@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_RELEASE }}
         with:
           prerelease: true
 
@@ -100,6 +100,6 @@ jobs:
       - name: Update release draft
         uses: release-drafter/release-drafter@v5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_RELEASE }}
         with:
           publish: true

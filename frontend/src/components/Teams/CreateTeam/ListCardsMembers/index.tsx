@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { membersListState } from '../../../../store/team/atom/team.atom';
+import { membersListState } from '@/store/team/atom/team.atom';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
@@ -37,10 +37,8 @@ const TeamMembersList = () => {
           <CardMember
             key={member.user._id}
             isNewTeamPage
-            isNewJoiner={member.isNewJoiner}
             isTeamCreator={member.user._id === session?.user.id}
-            member={member.user}
-            role={member.role}
+            member={member}
           />
         ))}
         <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />

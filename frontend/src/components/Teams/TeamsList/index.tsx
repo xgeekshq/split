@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Team } from '../../../types/team/team';
+import { Team } from '@/types/team/team';
 import EmptyTeams from './partials/EmptyTeams';
 import ListOfCards from './partials/ListOfCards';
 

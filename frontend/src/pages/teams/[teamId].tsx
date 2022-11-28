@@ -4,18 +4,18 @@ import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 
-import { getTeamRequest } from '../../api/teamService';
-import { getAllUsers } from '../../api/userService';
-import QueryError from '../../components/Errors/QueryError';
-import { ContentSection } from '../../components/layouts/DashboardLayout/styles';
-import { ContainerTeamPage } from '../../components/layouts/Layout/styles';
-import LoadingPage from '../../components/loadings/LoadingPage';
-import Flex from '../../components/Primitives/Flex';
-import { Sidebar } from '../../components/Sidebar';
-import TeamHeader from '../../components/Teams/Team/Header';
-import TeamMembersList from '../../components/Teams/Team/ListCardMembers';
-import useTeam from '../../hooks/useTeam';
-import { membersListState, usersListState } from '../../store/team/atom/team.atom';
+import { getTeamRequest } from '@/api/teamService';
+import { getAllUsers } from '@/api/userService';
+import QueryError from '@/components/Errors/QueryError';
+import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
+import { ContainerTeamPage } from '@/components/layouts/Layout/styles';
+import LoadingPage from '@/components/loadings/LoadingPage';
+import Flex from '@/components/Primitives/Flex';
+import { Sidebar } from '@/components/Sidebar';
+import TeamHeader from '@/components/Teams/Team/Header';
+import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
+import useTeam from '@/hooks/useTeam';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 
 const Team = () => {
   // Session Details

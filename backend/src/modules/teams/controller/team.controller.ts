@@ -33,7 +33,7 @@ import {
 import { TeamParams } from 'src/libs/dto/param/team.params';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -247,11 +247,7 @@ export default class TeamsController {
 	@TeamUser(TeamRoles.ADMIN)
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
-	async deleteTeam(@Param() { teamId }: TeamParams) {
-		const result = await this.deleteTeamApp.delete(teamId);
-
-		if (!result) throw new BadRequestException(DELETE_FAILED);
-
-		return result;
+	deleteTeam(@Param() { teamId }: TeamParams) {
+		return this.deleteTeamApp.delete(teamId);
 	}
 }

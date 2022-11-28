@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Flex from '@/components/Primitives/Flex';
-import RoleDescription from '../../CreateTeam/CardEnd/RoleDescription';
-import PopoverRoleSettings from '../../CreateTeam/CardMember/RoleSettings';
+import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
+import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 
 type CardEndTeamProps = {
   role: string;

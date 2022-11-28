@@ -1,10 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
-import { GetBoardServiceInterface } from '../../boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
+import { UserWithTeams } from '../../users/interfaces/type-user-with-teams';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
 
@@ -12,9 +11,7 @@ import Team, { TeamDocument } from '../schemas/teams.schema';
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
 		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
-		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
-		private getBoardService: GetBoardServiceInterface
+		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
 	) {}
 
 	async countTeams(userId: string) {
@@ -88,6 +85,60 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return teams.map((team) => {
 			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
 		});
+	}
+
+	async getUsersOnlyWithTeams() {
+		const teams: LeanDocument<UserWithTeams>[] = await this.teamUserModel.aggregate([
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'user',
+					foreignField: '_id',
+					as: 'user'
+				}
+			},
+			{
+				$lookup: {
+					from: 'teams',
+					localField: 'team',
+					foreignField: '_id',
+					as: 'teams'
+				}
+			},
+			{
+				$unwind: { path: '$user' }
+			},
+			{
+				$unwind: { path: '$teams' }
+			},
+
+			{
+				$group: {
+					_id: '$user',
+					teamsName: { $push: '$teams.name' }
+				}
+			},
+			{
+				$set: { userWithTeam: '$_id' }
+			},
+			{
+				$unset: [
+					'_id',
+					'user.currentHashedRefreshToken',
+					'user.isSAdmin',
+					'user.joinedAt',
+					'user.isDeleted'
+				]
+			},
+			{
+				$project: {
+					user: '$userWithTeam',
+					teamsNames: '$teamsName'
+				}
+			}
+		]);
+
+		return teams;
 	}
 
 	getTeamUser(userId: string, teamId: string) {

@@ -3,7 +3,8 @@ import React from 'react';
 import { DotsLoading } from '@/components/loadings/DotsLoading';
 import Flex from '@/components/Primitives/Flex';
 import { Team } from '@/types/team/team';
-import { ScrollableContent } from '../../../../Boards/MyBoards/styles';
+
+import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import CardBody from '../CardTeam/CardBody';
 
 type ListOfCardsProp = {

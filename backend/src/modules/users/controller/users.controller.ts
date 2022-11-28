@@ -15,6 +15,7 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import UserDto from '../dto/user.dto';
 import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { TYPES } from '../interfaces/types';
+import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -43,5 +44,28 @@ export default class UsersController {
 	@Get()
 	getAllUsers() {
 		return this.getUserApp.getAllUsers();
+	}
+
+	@ApiOperation({ summary: 'Retrieve the list of users with and without teams' })
+	@ApiOkResponse({
+		description: 'Users successfully retrieved!',
+		type: UsersWithTeamsResponse,
+		isArray: true
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('teams')
+	getAllUsersWithTeams() {
+		return this.getUserApp.getUsersOnlyWithTeams();
 	}
 }

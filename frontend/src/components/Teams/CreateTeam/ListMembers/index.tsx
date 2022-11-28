@@ -5,10 +5,11 @@ import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
-import { membersListState, usersListState } from '../../../../store/team/atom/team.atom';
-import { toastState } from '../../../../store/toast/atom/toast.atom';
-import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
-import { ToastStateEnum } from '../../../../utils/enums/toast-types';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+
 import {
   ButtonsContainer,
   StyledDialogCloseButton,
@@ -16,10 +17,10 @@ import {
   StyledDialogContent,
   StyledDialogOverlay,
   StyledDialogTitle,
-} from '../../../Board/Settings/styles';
-import Button from '../../../Primitives/Button';
-import Checkbox from '../../../Primitives/Checkbox';
-import Flex from '../../../Primitives/Flex';
+} from '@/components/Board/Settings/styles';
+import Flex from '@/components/Primitives/Flex';
+import Checkbox from '@/components/Primitives/Checkbox';
+import Button from '@/components/Primitives/Button';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 

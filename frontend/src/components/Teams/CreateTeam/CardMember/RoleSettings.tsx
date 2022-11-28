@@ -4,11 +4,13 @@ import { Popover } from '@radix-ui/react-popover';
 
 import { PopoverContent } from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
-import useTeam from '../../../../hooks/useTeam';
-import { membersListState } from '../../../../store/team/atom/team.atom';
-import { TeamUserUpdate } from '../../../../types/team/team.user';
-import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
-import Icon from '../../../icons/Icon';
+
+import { membersListState } from '@/store/team/atom/team.atom';
+import { TeamUserUpdate } from '@/types/team/team.user';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+
+import useTeam from '@/hooks/useTeam';
+import Icon from '@/components/icons/Icon';
 import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {

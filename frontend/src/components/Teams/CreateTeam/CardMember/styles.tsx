@@ -1,8 +1,8 @@
-import { styled } from '../../../../styles/stitches/stitches.config';
-import Box from '../../../Primitives/Box';
-import Flex from '../../../Primitives/Flex';
-import { PopoverClose, PopoverItem, PopoverTrigger } from '../../../Primitives/Popover';
-import Text from '../../../Primitives/Text';
+import { styled } from '@/styles/stitches/stitches.config';
+import Flex from '@/components/Primitives/Flex';
+import Box from '@/components/Primitives/Box';
+import Text from '@/components/Primitives/Text';
+import { PopoverClose, PopoverItem, PopoverTrigger } from '@/components/Primitives/Popover';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',
