@@ -16,17 +16,23 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 	async delete(teamId: string): Promise<boolean> {
 		const teamSession = await this.teamModel.db.startSession();
 		teamSession.startTransaction();
+		const teamUserSession = await this.teamModel.db.startSession();
+		teamUserSession.startTransaction();
+
 		try {
 			await this.deleteTeam(teamId, teamSession);
-			await this.deleteTeamUsers(teamId, teamSession);
+			await this.deleteTeamUsers(teamId, teamUserSession);
 
 			await teamSession.commitTransaction();
+			await teamUserSession.commitTransaction();
 
 			return true;
 		} catch (e) {
 			await teamSession.abortTransaction();
+			await teamUserSession.abortTransaction();
 		} finally {
 			await teamSession.endSession();
+			await teamUserSession.endSession();
 		}
 		throw new BadRequestException(DELETE_FAILED);
 	}
@@ -42,13 +48,13 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		if (!result) throw new NotFoundException(DELETE_FAILED);
 	}
 
-	private async deleteTeamUsers(teamId: string, teamSession: ClientSession) {
+	private async deleteTeamUsers(teamId: string, teamUserSession: ClientSession) {
 		const { deletedCount } = await this.teamUserModel
 			.deleteMany(
 				{
 					team: teamId
 				},
-				{ session: teamSession }
+				{ session: teamUserSession }
 			)
 			.exec();
 
