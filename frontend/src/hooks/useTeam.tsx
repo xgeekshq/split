@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { Team } from '@/types/team/team';
 import {
   createTeamRequest,
   deleteTeamRequest,
@@ -121,9 +120,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
       queryClient.invalidateQueries('teams');
 
       // updates the teamsList recoil
-      const teams = teamsList
-        .map((team) => (team._id === variables.id ? null : team))
-        .filter((team) => team !== null) as Team[];
+      const teams = teamsList.filter((team) => team._id !== variables.id);
 
       setTeamsList(teams);
 
