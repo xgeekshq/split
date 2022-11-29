@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
@@ -11,20 +11,28 @@ import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import TeamsList from '@/components/Teams/TeamsList';
 import useTeam from '@/hooks/useTeam';
+import useTeamUtils from '@/hooks/useTeamUtils';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
+  const { teamsList, setTeamsList } = useTeamUtils();
 
   const {
     fetchTeamsOfUser: { data, isFetching },
   } = useTeam({ autoFetchTeam: false });
 
+  useEffect(() => {
+    if (!data) return;
+    setTeamsList(data);
+  }, [data, setTeamsList]);
+
   if (!session || !data) return null;
+
   return (
     <Flex direction="column">
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <TeamsList isFetching={isFetching} teams={data} userId={session.user.id} />
+          <TeamsList isFetching={isFetching} teams={teamsList} userId={session.user.id} />
         </QueryError>
       </Suspense>
     </Flex>

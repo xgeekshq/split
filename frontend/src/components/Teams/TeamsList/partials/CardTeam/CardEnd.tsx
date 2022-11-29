@@ -23,7 +23,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
       return (
         <Flex css={{ alignItems: 'center' }}>
           <Flex align="center" css={{ ml: '$24' }} gap="24">
-            <DeleteTeam teamName={name} />
+            <DeleteTeam teamName={name} teamId={team._id} />
           </Flex>
         </Flex>
       );
