@@ -1,3 +1,4 @@
+import { Team } from '@/types/team/team';
 import { atom } from 'recoil';
 
 import { TeamUser } from '../../../types/team/team.user';
@@ -10,5 +11,10 @@ export const membersListState = atom<TeamUser[]>({
 
 export const usersListState = atom<UserList[]>({
   key: 'usersList',
+  default: [],
+});
+
+export const teamsListState = atom<Team[]>({
+  key: 'teamsList',
   default: [],
 });
