@@ -1,7 +1,7 @@
 import { QueryClient, useQueryClient } from 'react-query';
 import { NextRouter, useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { SetterOrUpdater, useRecoilValue, useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
@@ -32,13 +32,11 @@ const useTeamUtils = (): TeamUtilsType => {
   if (session) userId = session.user.id;
 
   const setToastState = useSetRecoilState(toastState);
-  const membersList = useRecoilValue(membersListState);
-  const setMembersList = useSetRecoilState(membersListState);
+  const [membersList, setMembersList] = useRecoilState(membersListState);
 
   const { teamId } = router.query;
 
-  const teamsList = useRecoilValue(teamsListState);
-  const setTeamsList = useSetRecoilState(teamsListState);
+  const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
   return {
     userId,
