@@ -30,24 +30,17 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     },
   });
 
-  const fetchTeam = useQuery(
-    ['team', teamId],
-    () => {
-      if (typeof teamId === 'string') return getTeamRequest(teamId);
-      return undefined;
+  const fetchTeam = useQuery(['team', teamId], () => getTeamRequest(teamId), {
+    enabled: autoFetchTeam,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the team',
+        type: ToastStateEnum.ERROR,
+      });
     },
-    {
-      enabled: autoFetchTeam,
-      refetchOnWindowFocus: false,
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the team',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
+  });
 
   const fetchTeamsOfUser = useQuery(['teams'], () => getTeamsOfUser(), {
     enabled: autoFetchTeam,
