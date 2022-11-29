@@ -5,15 +5,15 @@ import { Team } from '@/types/team/team';
 
 type BoardsInfoProps = {
   userSAdmin: boolean | undefined;
-  teamAdmin: boolean;
+  teamAdminOrStakeholder: boolean;
   team: Team;
 };
 
-const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
+const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProps) => {
   if (team.boardsCount === 0) {
     return (
       <Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
-        {(userSAdmin || teamAdmin) && (
+        {(userSAdmin || teamAdminOrStakeholder) && (
           // <Link href="/boards/new">
           <Flex css={{ alignItems: 'center' }}>
             <Icon
@@ -30,7 +30,7 @@ const BoardsInfo = ({ userSAdmin, teamAdmin, team }: BoardsInfoProps) => {
           </Flex>
           // </Link>
         )}
-        {!teamAdmin && (
+        {!teamAdminOrStakeholder && (
           <Text css={{ ml: '$14' }} size="sm" weight="medium">
             0 boards
           </Text>
