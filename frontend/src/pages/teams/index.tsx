@@ -10,27 +10,21 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import TeamsList from '@/components/Teams/TeamsList';
-import { teamsListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import useTeamUtils from '@/hooks/useTeamUtils';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
+  const { teamsList, setTeamsList } = useTeamUtils();
 
   const {
     fetchTeamsOfUser: { data, isFetching },
   } = useTeam({ autoFetchTeam: false });
 
-  // Recoil States
-  const setTeamsListState = useSetRecoilState(teamsListState);
-
   useEffect(() => {
     if (!data) return;
-    setTeamsListState(data);
-  }, [data, setTeamsListState]);
-
-  // Recoil Values
-  const teamsList = useRecoilValue(teamsListState);
+    setTeamsList(data);
+  }, [data, setTeamsList]);
 
   if (!session || !data) return null;
 
