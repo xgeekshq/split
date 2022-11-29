@@ -52,15 +52,11 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
       Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
     };
   }
-  try {
-    const { data } = !serverSide
-      ? await instance(instanceOptions)
-      : await serverSideInstance(instanceOptions);
+  const { data } = !serverSide
+    ? await instance(instanceOptions)
+    : await serverSideInstance(instanceOptions);
 
-    return data;
-  } catch {
-    return null as any;
-  }
+  return data;
 };
 
 export default fetchData;
