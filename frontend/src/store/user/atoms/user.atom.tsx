@@ -1,3 +1,4 @@
+import { UserWithTeams } from '@/types/user/user';
 import { atom } from 'recoil';
 
 export const userState = atom({
@@ -9,4 +10,9 @@ export const userState = atom({
     id: '',
     strategy: '',
   },
+});
+
+export const usersWithTeamsState = atom<UserWithTeams[] | undefined>({
+  key: 'usersWithTeams',
+  default: [],
 });

@@ -8,16 +8,19 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import { getAllUsers } from '../../api/userService';
+import UsersList from '@/components/Users/UsersList';
+import { getAllUsersWithTeams } from '../../api/userService';
 import requireAuthentication from '../../components/HOC/requireAuthentication';
 import { toastState } from '../../store/toast/atom/toast.atom';
+import { usersWithTeamsState } from '../../store/user/atoms/user.atom';
 import { ToastStateEnum } from '../../utils/enums/toast-types';
 
 const Users = () => {
   const { data: session } = useSession({ required: true });
   const setToastState = useSetRecoilState(toastState);
+  const setUsersWithTeamsState = useSetRecoilState(usersWithTeamsState);
 
-  const { data } = useQuery(['users'], () => getAllUsers(), {
+  const { data, isFetching } = useQuery(['usersWithTeams'], () => getAllUsersWithTeams(), {
     enabled: true,
     refetchOnWindowFocus: false,
     onError: () => {
@@ -29,15 +32,15 @@ const Users = () => {
     },
   });
 
+  setUsersWithTeamsState(data);
+
   if (!session || !data) return null;
 
   return (
     <Flex direction="column">
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          {data.map((user) => (
-            <h2 key={user._id}>{user.email}</h2>
-          ))}
+          <UsersList isFetching={isFetching} usersWithTeams={data} />
         </QueryError>
       </Suspense>
     </Flex>
@@ -51,7 +54,7 @@ export default Users;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('users', () => getAllUsers(context));
+    await queryClient.prefetchQuery('usersWithTeams', () => getAllUsersWithTeams(context));
 
     return {
       props: {
