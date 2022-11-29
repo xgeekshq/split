@@ -51,7 +51,7 @@ import { CreateTeamApplicationInterface } from '../interfaces/applications/creat
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
 
-const TeamUser = (permission: string) => SetMetadata('permission', permission);
+const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Teams')
@@ -214,7 +214,7 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@TeamUser(TeamRoles.ADMIN)
+	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
 	async updateTeamUser(@Body() teamData: TeamUserDto) {
@@ -244,7 +244,7 @@ export default class TeamsController {
 		description: 'Forbidden',
 		type: ForbiddenResponse
 	})
-	@TeamUser(TeamRoles.ADMIN)
+	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
 	deleteTeam(@Param() { teamId }: TeamParams) {
