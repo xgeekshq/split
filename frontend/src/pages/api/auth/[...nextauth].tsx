@@ -51,15 +51,18 @@ export default NextAuth({
         };
         const data: User = await login(loginUser);
 
-        if (data) {
+        if (data && data.id && data.accessToken && data.refreshToken) {
           const token = {
             firstName: data.firstName,
             lastName: data.lastName,
             email: data.email,
             id: data.id,
-            accessToken: data.accessToken?.token,
-            refreshToken: data.refreshToken?.token,
+            accessToken: data.accessToken.token,
+            refreshToken: data.refreshToken.token,
             isSAdmin: data.isSAdmin,
+            accessTokenExpiresIn: data.accessToken.expiresIn,
+            refreshTokenExpiresIn: data.refreshToken.expiresIn,
+            strategy: 'local',
           };
           return token;
         }
@@ -77,7 +80,7 @@ export default NextAuth({
   },
   callbacks: {
     async signIn({ account, user }) {
-      if (account.provider === 'azure-ad') {
+      if (account && account.provider === 'azure-ad') {
         const { access_token: azureAccessToken } = account;
 
         const data = await createOrLoginUserAzure(azureAccessToken ?? '');

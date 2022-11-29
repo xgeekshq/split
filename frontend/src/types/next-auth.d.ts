@@ -14,6 +14,7 @@ declare module 'next-auth' {
     expires: number;
     strategy: string;
     isSAdmin: boolean;
+    error: string;
   }
 
   interface User {
