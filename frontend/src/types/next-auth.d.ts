@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DefaultSession } from 'next-auth';
+import { Token } from './token';
 
 declare module 'next-auth' {
   interface Session {
@@ -8,20 +9,17 @@ declare module 'next-auth' {
       firstName: string;
       lastName: string;
       email: string;
+      isSAdmin: boolean;
+      accessToken: Token;
+      refreshToken?: Token;
     } & DefaultSession['user'];
-    accessToken: string;
-    refreshToken?: string;
-    expires: number;
     strategy: string;
-    isSAdmin: boolean;
     error: string;
   }
 
   interface User {
-    accessToken: string;
-    accessTokenExpiresIn: string;
-    refreshToken: string;
-    refreshTokenExpiresIn: string;
+    accessToken: Token;
+    refreshToken: Token;
     strategy: string;
     id: string;
     firstName: string;
@@ -32,15 +30,16 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    accessToken: string;
-    refreshToken: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    id: string;
+    user: {
+      accessToken: Token;
+      refreshToken: Token;
+      firstName: string;
+      lastName: string;
+      email: string;
+      id: string;
+      isSAdmin: boolean;
+    };
     error: string;
-    accessTokenExpires: number;
     strategy: string;
-    isSAdmin: boolean;
   }
 }

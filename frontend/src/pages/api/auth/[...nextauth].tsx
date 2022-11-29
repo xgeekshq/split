@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { createOrLoginUserAzure, login, refreshAccessToken } from '@/api/authService';
 import { Token } from '@/types/token';
-import { LoginUser, User } from '@/types/user/user';
+import { LoginUser } from '@/types/user/user';
 import {
   CLIENT_ID,
   CLIENT_SECRET,
@@ -17,13 +17,12 @@ import {
 } from '@/utils/constants';
 import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/routes';
 
-async function getNewAccessToken(prevToken: JWT) {
+async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {
-    const data: Token = await refreshAccessToken(prevToken.refreshToken);
+    const data: Token = await refreshAccessToken(prevToken.user.refreshToken.token);
     return {
       ...prevToken,
-      accessToken: data.token,
-      accessTokenExpires: Date.now() + +data.expiresIn * 1000,
+      accessToken: { token: data.token, expiresIn: String(Date.now() + +data.expiresIn * 1000) },
       error: '',
     };
   } catch (error) {
@@ -49,24 +48,20 @@ export default NextAuth({
           email: credentials?.email,
           password: credentials?.password,
         };
-        const data: User = await login(loginUser);
+        const data = await login(loginUser);
+        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id } = data;
+        if (!data || !id || !accessToken || !refreshToken) return null;
 
-        if (data && data.id && data.accessToken && data.refreshToken) {
-          const token = {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            id: data.id,
-            accessToken: data.accessToken.token,
-            refreshToken: data.refreshToken.token,
-            isSAdmin: data.isSAdmin,
-            accessTokenExpiresIn: data.accessToken.expiresIn,
-            refreshTokenExpiresIn: data.refreshToken.expiresIn,
-            strategy: 'local',
-          };
-          return token;
-        }
-        return null;
+        const token = {
+          firstName,
+          lastName,
+          isSAdmin,
+          accessToken,
+          refreshToken,
+          id,
+          strategy: 'local',
+        };
+        return token;
       },
     }),
   ],
@@ -89,9 +84,8 @@ export default NextAuth({
         const { firstName, lastName, accessToken, refreshToken, email, id, isSAdmin } = data;
         user.firstName = firstName;
         user.lastName = lastName;
-        user.accessToken = accessToken.token;
-        user.accessTokenExpiresIn = accessToken.expiresIn;
-        user.refreshToken = refreshToken.token;
+        user.accessToken = accessToken;
+        user.refreshToken = refreshToken;
         user.email = email;
         user.strategy = 'azure';
         user.id = id;
@@ -102,37 +96,36 @@ export default NextAuth({
     },
     async jwt({ token, user, account }) {
       if (account && user) {
-        return {
-          accessToken: user.accessToken,
-          accessTokenExpires: Date.now() + +user.accessTokenExpiresIn * 1000,
-          refreshToken: user.refreshToken,
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: token.email,
+        const jwt: JWT = {
+          user: {
+            accessToken: {
+              token: user.accessToken.token,
+              expiresIn: String(Date.now() + +user.accessToken.expiresIn * 1000),
+            },
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email ?? '',
+            isSAdmin: user.isSAdmin,
+            refreshToken: user.refreshToken,
+          },
           strategy: user.strategy ?? 'local',
           error: '',
-          isSAdmin: user.isSAdmin,
         };
+
+        return jwt;
       }
-      if (Date.now() < token.accessTokenExpires - 5000) {
+
+      if (Date.now() < +token.user.accessToken.expiresIn - 5000) {
         return token;
       }
+
       return getNewAccessToken(token);
     },
     async session({ session, token }) {
-      const newSession: Session = { ...session };
+      let newSession: Session = { ...session };
       if (token) {
-        newSession.user.firstName = token.firstName;
-        newSession.user.lastName = token.lastName;
-        newSession.accessToken = token.accessToken;
-        newSession.refreshToken = token.refreshToken;
-        newSession.user.email = token.email;
-        newSession.user.id = token.id;
-        newSession.error = token.error;
-        newSession.expires = token.accessTokenExpires;
-        newSession.strategy = token.strategy;
-        newSession.isSAdmin = token.isSAdmin;
+        newSession = { ...token, expires: token.user.accessToken.expiresIn };
       }
       return newSession;
     },
