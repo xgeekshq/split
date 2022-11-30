@@ -24,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     await queryClient.prefetchInfiniteQuery('boards/dashboard', ({ pageParam = 0 }) =>
       getDashboardBoardsRequest(pageParam, context),
     );
-    await queryClient.prefetchQuery('team', () => getTeamsOfUser);
+    await queryClient.prefetchQuery('team', () => getTeamsOfUser(context));
 
     return {
       props: {
