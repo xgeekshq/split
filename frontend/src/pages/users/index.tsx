@@ -46,7 +46,7 @@ const Users = () => {
     <Flex direction="column">
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <UsersList isFetching={isFetching} usersWithTeams={data} />
+          <UsersList isFetching={isFetching} />
         </QueryError>
       </Suspense>
     </Flex>
