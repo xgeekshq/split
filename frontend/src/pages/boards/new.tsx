@@ -124,7 +124,7 @@ const NewBoard: NextPage = () => {
           (teamUser) =>
             teamUser.user._id === session?.user.id &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ) || session?.isSAdmin
+        ) || session?.user.isSAdmin
       : false;
     if (!isAdminOrStakeHolder && !haveError) {
       setHaveError(!isAdminOrStakeHolder);

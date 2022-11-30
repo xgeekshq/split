@@ -16,7 +16,7 @@ const nonNeededToken = ['/auth/login', '/auth/refresh', '/auth/registerAzure'];
 
 export const getToken = async (context?: GetServerSidePropsContext) => {
   const session = await getSession(context);
-  if (session) return `Bearer ${session?.accessToken}`;
+  if (session) return `Bearer ${session?.user.accessToken.token}`;
   return 'Bearer ';
 };
 
