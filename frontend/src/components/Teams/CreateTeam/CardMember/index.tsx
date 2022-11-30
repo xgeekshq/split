@@ -17,13 +17,13 @@ import CardEndCreateTeam from '../CardEnd';
 type CardBodyProps = {
   member: TeamUser;
   isTeamCreator?: boolean;
-  isTeamMemberOrStakeholder?: boolean;
   isNewTeamPage?: boolean;
   isTeamPage?: boolean;
+  isTeamMember?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMemberOrStakeholder }) => {
+  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMember }) => {
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
     const {
@@ -84,7 +84,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </StyledMemberTitle>
               </Flex>
             </Flex>
-            {isTeamMemberOrStakeholder && member.isNewJoiner && (
+            {isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
                   New Joiner
@@ -107,7 +107,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </Tooltip>
               </Flex>
             )}
-            {!isTeamMemberOrStakeholder && (
+            {!isTeamMember && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}
@@ -128,7 +128,7 @@ const CardMember = React.memo<CardBodyProps>(
               <CardEndTeam
                 isTeamPage
                 isTeamCreator={isTeamCreator}
-                isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
+                isTeamMember={isTeamMember}
                 role={member.role}
                 userId={member.user._id}
               />

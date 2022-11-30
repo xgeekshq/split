@@ -28,9 +28,9 @@ const TeamMembersList = () => {
           <CardMember
             key={member.user._id}
             isTeamPage
-            isTeamCreator={[TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userRole)}
+            isTeamCreator={member.user._id === session?.user.id}
             member={member}
-            isTeamMemberOrStakeholder={userRole === TeamUserRoles.MEMBER}
+            isTeamMember={userRole === TeamUserRoles.MEMBER}
           />
         ))}
       </ScrollableContent>
