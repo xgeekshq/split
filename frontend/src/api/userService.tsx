@@ -8,5 +8,4 @@ export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]
 
 export const getAllUsersWithTeams = (
   context?: GetServerSidePropsContext,
-): Promise<UserWithTeams[]> =>
-  fetchData(`/users/users-with-teams`, { context, serverSide: !!context });
+): Promise<UserWithTeams[]> => fetchData(`/users/teams`, { context, serverSide: !!context });

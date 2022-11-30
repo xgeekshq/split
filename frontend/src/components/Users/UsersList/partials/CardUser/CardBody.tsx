@@ -29,7 +29,7 @@ const CardBody = React.memo<CardBodyProps>(({ user }) => {
   const loggedUserIsSAdmin = session?.isSAdmin;
 
   const { firstName, lastName, email, isSAdmin } = user.user;
-  const { teams } = user;
+  const { teamsNames } = user;
 
   return (
     <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
@@ -68,13 +68,13 @@ const CardBody = React.memo<CardBodyProps>(({ user }) => {
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
-              {teams.length === 1 ? (
+              {teamsNames.length === 1 ? (
                 <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in {teams.length} team
+                  in {teamsNames.length} team
                 </Text>
               ) : (
                 <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in {teams.length} teams
+                  in {teamsNames.length} teams
                 </Text>
               )}
             </Flex>

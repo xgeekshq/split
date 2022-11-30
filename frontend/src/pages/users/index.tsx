@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
@@ -32,7 +32,13 @@ const Users = () => {
     },
   });
 
-  setUsersWithTeamsState(data);
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setUsersWithTeamsState(data);
+  }, [data, setUsersWithTeamsState]);
 
   if (!session || !data) return null;
 
