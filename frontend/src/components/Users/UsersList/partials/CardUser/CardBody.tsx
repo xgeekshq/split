@@ -68,13 +68,19 @@ const CardBody = React.memo<CardBodyProps>(({ user }) => {
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
-              {teamsNames.length === 1 ? (
+              {!teamsNames && (
                 <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in {teamsNames.length} team
+                  in 0 teams
                 </Text>
-              ) : (
+              )}
+              {teamsNames?.length === 1 && (
                 <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in {teamsNames.length} teams
+                  in 1 team
+                </Text>
+              )}
+              {teamsNames?.length !== 0 && teamsNames?.length !== 1 && teamsNames && (
+                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
+                  in {teamsNames?.length} teams
                 </Text>
               )}
             </Flex>

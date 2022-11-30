@@ -56,7 +56,7 @@ export interface ResetPasswordResponse {
 
 export interface UserWithTeams {
   user: User;
-  teamsNames: string[];
+  teamsNames?: string[];
 }
 
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';
