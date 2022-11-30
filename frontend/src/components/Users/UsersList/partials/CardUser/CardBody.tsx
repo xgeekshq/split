@@ -26,7 +26,7 @@ type CardBodyProps = {
 const CardBody = React.memo<CardBodyProps>(({ user }) => {
   const { data: session } = useSession();
 
-  const loggedUserIsSAdmin = session?.isSAdmin;
+  const loggedUserIsSAdmin = session?.user.isSAdmin;
 
   const { firstName, lastName, email, isSAdmin } = user.user;
   const { teamsNames } = user;
