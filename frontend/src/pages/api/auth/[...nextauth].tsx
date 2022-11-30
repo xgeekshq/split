@@ -49,8 +49,8 @@ export default NextAuth({
           password: credentials?.password,
         };
         const data = await login(loginUser);
-        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id } = data;
-        if (!data || !id || !accessToken || !refreshToken) return null;
+        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id } = data || {};
+        if (!id || !accessToken || !refreshToken) return null;
 
         const token = {
           firstName,
