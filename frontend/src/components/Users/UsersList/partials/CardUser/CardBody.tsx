@@ -8,6 +8,7 @@ import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
+// eslint-disable-next-line import/no-named-as-default
 import SuperAdmin from './SuperAdmin';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -78,7 +79,9 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           </Flex>
           <Flex css={{ width: '40%' }} justify="end">
             <Flex align="center" css={{ width: '$237' }} justify="start">
-              {loggedUserIsSAdmin && <SuperAdmin userSAdmin={isSAdmin} />}
+              {loggedUserIsSAdmin && (
+                <SuperAdmin userSAdmin={isSAdmin} loggedUserSAdmin={loggedUserIsSAdmin} />
+              )}
             </Flex>
             {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
           </Flex>
