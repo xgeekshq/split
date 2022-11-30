@@ -10,17 +10,19 @@ import {
 	getUserApplication,
 	getUserService,
 	updateUserApplication,
-	updateUserService
+	updateUserService,
+	userRepository
 } from './users.providers';
 
 @Module({
-	imports: [mongooseUserModule, mongooseResetModule, TeamsModule],
+	imports: [mongooseUserModule, TeamsModule, mongooseResetModule],
 	providers: [
 		createUserService,
 		getUserService,
 		updateUserService,
 		updateUserApplication,
-		getUserApplication
+		getUserApplication,
+		userRepository
 	],
 	controllers: [UsersController],
 	exports: [

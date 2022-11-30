@@ -5,7 +5,7 @@ import BoardUser, { BoardUserSchema } from 'src/modules/boards/schemas/board.use
 import Schedules, { SchedulesSchema } from 'src/modules/schedules/schemas/schedules.schema';
 import TeamUser, { TeamUserSchema } from 'src/modules/teams/schemas/team.user.schema';
 import Team, { TeamSchema } from 'src/modules/teams/schemas/teams.schema';
-import User, { UserSchema } from 'src/modules/users/schemas/user.schema';
+import User, { UserSchema } from 'src/modules/users/entities/user.schema';
 
 export const mongooseBoardModule = MongooseModule.forFeature([
 	{ name: Board.name, schema: BoardSchema }

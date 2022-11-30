@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
-import User from 'src/modules/users/schemas/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { CommentDocument, CommentSchema } from '../../comments/schemas/comment.schema';
 import { CardItemDocument, CardItemSchema } from './card.item.schema';
 

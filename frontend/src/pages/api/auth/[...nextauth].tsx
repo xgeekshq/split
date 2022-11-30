@@ -49,7 +49,7 @@ export default NextAuth({
           password: credentials?.password,
         };
         const data = await login(loginUser);
-        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id } = data || {};
+        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id, email } = data || {};
         if (!id || !accessToken || !refreshToken) return null;
 
         const token = {
@@ -59,6 +59,7 @@ export default NextAuth({
           accessToken,
           refreshToken,
           id,
+          email,
           strategy: 'local',
         };
         return token;

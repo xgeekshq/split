@@ -21,7 +21,7 @@ import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import { UserDocument } from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';

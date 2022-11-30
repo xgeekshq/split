@@ -9,7 +9,7 @@ import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import { UserDocument } from 'src/modules/users/entities/user.schema';
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';

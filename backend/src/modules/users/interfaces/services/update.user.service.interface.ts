@@ -1,17 +1,13 @@
-import { LeanDocument } from 'mongoose';
-import { UserDocument } from '../../schemas/user.schema';
+import User from '../../entities/user';
 
 export interface UpdateUserService {
-	setCurrentRefreshToken(
-		refreshToken: string,
-		userId: string
-	): Promise<LeanDocument<UserDocument> | null>;
+	setCurrentRefreshToken(refreshToken: string, userId: string): Promise<User | null>;
 
 	setPassword(
 		userEmail: string,
 		newPassword: string,
 		newPasswordConf: string
-	): Promise<UserDocument | null>;
+	): Promise<User | null>;
 
 	checkEmail(token: string): Promise<string>;
 }

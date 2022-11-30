@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { LeanDocument } from 'mongoose';
 import { Strategy } from 'passport-local';
 import { INVALID_CREDENTIALS } from 'src/libs/exceptions/messages';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import { UserDocument } from 'src/modules/users/entities/user.schema';
 import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
 import { TYPES } from '../interfaces/types';
 

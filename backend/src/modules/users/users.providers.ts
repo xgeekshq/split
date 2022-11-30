@@ -1,6 +1,7 @@
 import { GetUserApplicationImpl } from './applications/get.user.application';
 import { UpdateUserApplicationImpl } from './applications/update.user.application';
 import { TYPES } from './interfaces/types';
+import { UserRepository } from './repository/user.repository';
 import CreateUserServiceImpl from './services/create.user.service';
 import GetUserServiceImpl from './services/get.user.service';
 import UpdateUserServiceImpl from './services/update.user.service';
@@ -28,4 +29,9 @@ export const updateUserApplication = {
 export const getUserApplication = {
 	provide: TYPES.applications.GetUserApplication,
 	useClass: GetUserApplicationImpl
+};
+
+export const userRepository = {
+	provide: TYPES.repository,
+	useClass: UserRepository
 };

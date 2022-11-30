@@ -1,5 +1,6 @@
 import { LeanDocument } from 'mongoose';
-import { UserDocument } from '../../schemas/user.schema';
+import User from '../../entities/user';
+import { UserDocument } from '../../entities/user.schema';
 
 export interface UpdateUserApplication {
 	setCurrentRefreshToken(
@@ -11,7 +12,7 @@ export interface UpdateUserApplication {
 		userEmail: string,
 		newPassword: string,
 		newPasswordConf: string
-	): Promise<UserDocument | null>;
+	): Promise<User | null>;
 
 	checkEmail(token: string): Promise<string>;
 }

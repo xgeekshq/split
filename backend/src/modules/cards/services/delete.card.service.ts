@@ -5,7 +5,7 @@ import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
 import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
-import User from 'src/modules/users/schemas/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteService } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';

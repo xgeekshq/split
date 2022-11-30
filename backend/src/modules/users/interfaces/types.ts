@@ -7,5 +7,6 @@ export const TYPES = {
 	applications: {
 		GetUserApplication: 'GetUserApplication',
 		UpdateUserApplication: 'UpdateUserApplication'
-	}
+	},
+	repository: 'UserRepository'
 };
