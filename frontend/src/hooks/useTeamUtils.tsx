@@ -11,7 +11,7 @@ import { ToastStateEnum } from '../utils/enums/toast-types';
 
 type TeamUtilsType = {
   userId: string;
-  teamId: string | string[] | undefined;
+  teamId: string;
   queryClient: QueryClient;
   setToastState: SetterOrUpdater<{ open: boolean; type: ToastStateEnum; content: string }>;
   router: NextRouter;
@@ -40,7 +40,7 @@ const useTeamUtils = (): TeamUtilsType => {
 
   return {
     userId,
-    teamId,
+    teamId: String(teamId),
     queryClient,
     setToastState,
     router,

@@ -87,12 +87,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
       </Tooltip>
 
       <StyledSeparator />
-      <StyledMenuItem
-        align="center"
-        css={{ mt: '$16' }}
-        data-active={active === TEAMS_ROUTE}
-        onClick={handleSignOut}
-      >
+      <StyledMenuItem align="center" css={{ mt: '$16' }} onClick={handleSignOut}>
         <Icon name="log-out" />
         <StyledText>Log out</StyledText>
       </StyledMenuItem>

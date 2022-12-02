@@ -13,9 +13,8 @@ const PageHeader = styled('header', {
   height: '$92',
   width: '100%',
 
-  position: 'sticky',
   top: 0,
-  zIndex: 1,
+  zIndex: 3,
   borderBottom: '0.8px solid $primary200',
   display: 'flex',
   alignItems: 'center',
