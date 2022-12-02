@@ -13,7 +13,7 @@ export interface UpdateUserApplication {
 		userEmail: string,
 		newPassword: string,
 		newPasswordConf: string
-	): Promise<User | null>;
+	): Promise<UserDocument | null>;
 
 	checkEmail(token: string): Promise<string>;
 
