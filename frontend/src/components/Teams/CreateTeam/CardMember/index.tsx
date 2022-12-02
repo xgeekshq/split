@@ -12,7 +12,7 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
-import dayjs from 'dayjs';
+
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 import CardEndCreateTeam from '../CardEnd';
 
@@ -33,18 +33,6 @@ const CardMember = React.memo<CardBodyProps>(
     const {
       updateTeamUser: { mutate },
     } = useTeam({ autoFetchTeam: false });
-
-    const verifyIfIsNewJoiner = () => {
-      const currentDate = dayjs();
-
-      const dateToCompare = member.user.userAzureCreatedAt
-        ? dayjs(member.user.userAzureCreatedAt)
-        : dayjs(member.user.joinedAt);
-
-      const maxDateToBeNewJoiner = dateToCompare.add(3, 'month');
-
-      return currentDate.isBefore(maxDateToBeNewJoiner) || currentDate.isSame(maxDateToBeNewJoiner);
-    };
 
     const handleIsNewJoiner = (checked: boolean) => {
       const listUsersMembers = membersList.map((user) =>
@@ -129,7 +117,7 @@ const CardMember = React.memo<CardBodyProps>(
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}
-                  isChecked={isNewTeamPage ? verifyIfIsNewJoiner() : member.isNewJoiner}
+                  isChecked={member.isNewJoiner}
                   text=""
                   title="New Joiner"
                 />

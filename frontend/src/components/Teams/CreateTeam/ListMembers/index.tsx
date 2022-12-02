@@ -21,6 +21,8 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
+
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 
@@ -83,7 +85,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
-          isNewJoiner: false,
+          isNewJoiner: verifyIfIsNewJoiner(user.userAzureCreatedAt, user.joinedAt),
         },
     );
 
