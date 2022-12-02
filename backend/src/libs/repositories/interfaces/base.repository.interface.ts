@@ -1,4 +1,5 @@
-import { SelectedValues } from '../types';
+import { UpdateQuery } from 'mongoose';
+import { ModelProps, SelectedValues } from '../types';
 
 export interface BaseInterfaceRepository<T> {
 	getAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
@@ -9,9 +10,9 @@ export interface BaseInterfaceRepository<T> {
 
 	update(id: string, item: T);
 
-	getByProp(value: any): Promise<T>;
+	getByProp(value: ModelProps<T>): Promise<T>;
 
 	countDocuments(): Promise<number>;
 
-	findOneByFieldAndUpdate(value: any, query: any): Promise<T>;
+	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T>;
 }

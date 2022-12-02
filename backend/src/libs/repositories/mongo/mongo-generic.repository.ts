@@ -1,6 +1,6 @@
-import { Model } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 import { BaseAbstractRepository } from '../base.abstract.repository';
-import { SelectedValues } from '../types';
+import { ModelProps, SelectedValues } from '../types';
 
 export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
 	private _repository: Model<T>;
@@ -23,7 +23,7 @@ export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
 			.exec() as Promise<T>;
 	}
 
-	getByProp(value: any): Promise<T> {
+	getByProp(value: ModelProps<T>): Promise<T> {
 		return this._repository.findOne(value).exec();
 	}
 
@@ -39,7 +39,7 @@ export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
 		return this._repository.countDocuments().exec();
 	}
 
-	findOneByFieldAndUpdate(value: any, query: any): Promise<T> {
+	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T> {
 		return this._repository.findOneAndUpdate(value, query).exec();
 	}
 }
