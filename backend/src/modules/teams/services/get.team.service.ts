@@ -125,7 +125,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.find()
 			.populate({
 				path: 'users',
-				select: 'user role email',
+				select: 'user role email isNewJoiner',
 				populate: {
 					path: 'user',
 					select: '_id firstName lastName email joinedAt userAzureCreatedAt'

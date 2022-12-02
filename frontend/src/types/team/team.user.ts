@@ -5,7 +5,7 @@ export interface TeamUser {
   user: User;
   role: TeamUserRoles;
   isNewJoiner: boolean;
-  _id?: string;
+  _id: string;
   team?: string;
 }
 

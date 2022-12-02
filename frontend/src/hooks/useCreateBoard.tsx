@@ -55,10 +55,21 @@ const useCreateBoard = (team: Team) => {
       if (splitUsers && team.users.length >= MIN_MEMBERS) {
         new Array(maxTeams).fill(0).forEach((_, i) => {
           const newBoard = generateSubBoard(i + 1);
+          const teamUsersWotIsNEwJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
 
           splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role =
             BoardUserRoles.RESPONSIBLE;
-          newBoard.users = splitUsers[i];
+
+          teamUsersWotIsNEwJoiner[Math.floor(Math.random() * teamUsersWotIsNEwJoiner.length)].role =
+            BoardUserRoles.RESPONSIBLE;
+
+          const result = splitUsers[i].map((user) =>
+            teamUsersWotIsNEwJoiner.find((member) => member._id === user._id)
+              ? teamUsersWotIsNEwJoiner.find((member) => member._id === user._id)
+              : user,
+          ) as BoardUserToAdd[];
+
+          newBoard.users = result;
           subBoards.push(newBoard);
         });
       }
@@ -76,9 +87,16 @@ const useCreateBoard = (team: Team) => {
       new Array(teamMembers.length).fill(0).reduce((j) => {
         if (j >= maxTeams) j = 0;
         const teamUser = getRandomUser(availableUsers);
+
         splitUsers[j] = [
           ...splitUsers[j],
-          { user: teamUser.user, role: BoardUserRoles.MEMBER, votesCount: 0 },
+          {
+            user: teamUser.user,
+            role: BoardUserRoles.MEMBER,
+            votesCount: 0,
+            isNewJoiner: teamUser.isNewJoiner,
+            _id: teamUser._id,
+          },
         ];
         return ++j;
       }, 0);
