@@ -46,7 +46,11 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 
     const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
-    return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser!.role);
+    if (!myUser) {
+      return false;
+    }
+
+    return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser.role);
   }, [isSAdmin, team, userId]);
 
   return (
