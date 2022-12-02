@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import GetTokenAuthServiceImpl from 'src/modules/auth/services/get-token.auth.service';
-import { updateUserService } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 
 describe('AuthService', () => {
 	let service: GetTokenAuthServiceImpl;
@@ -15,6 +15,7 @@ describe('AuthService', () => {
 			providers: [
 				GetTokenAuthServiceImpl,
 				updateUserService,
+				userRepository,
 				{
 					provide: ConfigService,
 					useValue: configService

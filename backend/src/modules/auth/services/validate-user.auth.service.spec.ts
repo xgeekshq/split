@@ -10,7 +10,7 @@ import ValidateUserAuthServiceImpl from 'src/modules/auth/services/validate-user
 import { getTeamService } from 'src/modules/teams/providers';
 import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
-import { getUserService } from 'src/modules/users/users.providers';
+import { getUserService, userRepository } from 'src/modules/users/users.providers';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
@@ -23,9 +23,7 @@ describe('The AuthenticationService', () => {
 	let findUser: jest.Mock;
 	beforeEach(async () => {
 		findUser = jest.fn().mockImplementation(() => ({
-			lean: jest.fn().mockImplementation(() => ({
-				exec: jest.fn().mockReturnValue(mockedUser)
-			}))
+			exec: jest.fn().mockReturnValue(mockedUser)
 		}));
 		const usersRepository = {
 			findOne: findUser
@@ -39,6 +37,7 @@ describe('The AuthenticationService', () => {
 				ValidateUserAuthServiceImpl,
 				getUserService,
 				getTeamService,
+				userRepository,
 				{
 					provide: ConfigService,
 					useValue: configService
@@ -99,9 +98,7 @@ describe('The AuthenticationService', () => {
 			describe('and the user is not found in the database', () => {
 				beforeEach(() => {
 					findUser.mockImplementation(() => ({
-						lean: jest.fn().mockImplementation(() => ({
-							exec: jest.fn().mockReturnValue(undefined)
-						}))
+						exec: jest.fn().mockReturnValue(undefined)
 					}));
 				});
 				it('should throw an error', async () => {
