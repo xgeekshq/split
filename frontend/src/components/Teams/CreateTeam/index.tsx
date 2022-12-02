@@ -53,7 +53,7 @@ const CreateTeam = () => {
   const saveTeam = (title: string) => {
     const membersListToSubmit: CreateTeamUser[] = listMembers.map((member) => ({
       ...member,
-      user: member.user.id,
+      user: member.user._id,
     }));
 
     mutate({ name: title, users: membersListToSubmit });

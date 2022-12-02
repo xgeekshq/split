@@ -49,8 +49,8 @@ export default NextAuth({
           password: credentials?.password,
         };
         const data = await login(loginUser);
-        const { firstName, lastName, isSAdmin, accessToken, refreshToken, id, email } = data || {};
-        if (!id || !accessToken || !refreshToken) return null;
+        const { firstName, lastName, isSAdmin, accessToken, refreshToken, _id, email } = data || {};
+        if (!_id || !accessToken || !refreshToken) return null;
 
         const token = {
           firstName,
@@ -58,7 +58,7 @@ export default NextAuth({
           isSAdmin,
           accessToken,
           refreshToken,
-          id,
+          id: _id,
           email,
           strategy: 'local',
         };
@@ -82,14 +82,14 @@ export default NextAuth({
         const data = await createOrLoginUserAzure(azureAccessToken ?? '');
 
         if (!data) return false;
-        const { firstName, lastName, accessToken, refreshToken, email, id, isSAdmin } = data;
+        const { firstName, lastName, accessToken, refreshToken, email, _id, isSAdmin } = data;
         user.firstName = firstName;
         user.lastName = lastName;
         user.accessToken = accessToken;
         user.refreshToken = refreshToken;
         user.email = email;
         user.strategy = 'azure';
-        user.id = id;
+        user.id = _id;
         user.isSAdmin = isSAdmin;
       }
 
@@ -125,9 +125,11 @@ export default NextAuth({
     },
     async session({ session, token }) {
       let newSession: Session = { ...session };
+
       if (token) {
         newSession = { ...token, expires: token.user.accessToken.expiresIn };
       }
+
       return newSession;
     },
     redirect({ url, baseUrl }) {

@@ -15,7 +15,7 @@ const TeamMembersList = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const user = membersList.find((member) => member.user.id === session?.user.id);
+  const user = membersList.find((member) => member.user._id === session?.user.id);
 
   let userRole: TeamUserRoles;
 
@@ -26,9 +26,9 @@ const TeamMembersList = () => {
       <ScrollableContent direction="column" justify="start" ref={scrollRef}>
         {membersList?.map((member) => (
           <CardMember
-            key={member.user.id}
+            key={member.user._id}
             isTeamPage
-            isTeamCreator={member.user.id === session?.user.id}
+            isTeamCreator={member.user._id === session?.user.id}
             member={member}
             isTeamMemberOrStakeholder={[TeamUserRoles.MEMBER, TeamUserRoles.STAKEHOLDER].includes(
               userRole,

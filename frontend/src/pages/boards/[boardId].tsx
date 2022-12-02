@@ -24,11 +24,11 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { boardId } = context.query;
+  const boardId = String(context.query.boardId);
   const queryClient = new QueryClient();
   try {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
-      getBoardRequest(boardId as string, context),
+      getBoardRequest(boardId, context),
     );
   } catch (e) {
     return {
@@ -40,10 +40,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     props: {
-      key: context.query.boardId,
+      key: boardId,
       dehydratedState: dehydrate(queryClient),
       mainBoardId: context.query.mainBoardId ?? null,
-      boardId: context.query.boardId,
+      boardId,
     },
   };
 };
@@ -86,7 +86,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       (!isSubBoard ? board : mainBoard)?.team.users.some(
         (boardUser) =>
           [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
-          boardUser.user.id === userId,
+          boardUser.user._id === userId,
       ),
     [board, isSubBoard, mainBoard, userId],
   );
@@ -97,9 +97,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         ? [
             board.users.some(
               (boardUser) =>
-                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user.id === userId,
+                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user._id === userId,
             ),
-            board.createdBy.id === userId,
+            board.createdBy._id === userId,
           ]
         : [false, false],
     [board, userId],
@@ -137,7 +137,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   }, [newBoard, data, setNewBoard, mainBoard?._id]);
 
   const userIsInBoard = useMemo(
-    () => board?.users.find((user) => user.user.id === userId),
+    () => board?.users.find((user) => user.user._id === userId),
     [board?.users, userId],
   );
 

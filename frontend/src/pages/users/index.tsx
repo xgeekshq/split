@@ -36,7 +36,7 @@ const Users = () => {
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
           {data.map((user) => (
-            <h2 key={user.id}>{user.email}</h2>
+            <h2 key={user._id}>{user.email}</h2>
           ))}
         </QueryError>
       </Suspense>

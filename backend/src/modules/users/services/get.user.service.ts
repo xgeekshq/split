@@ -51,8 +51,11 @@ export default class GetUserServiceImpl implements GetUserService {
 			};
 		});
 		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams();
-		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user.id)));
+		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
-		return [...usersOnlyWithTeams, ...mappedUsers.filter((user) => !ids.has(String(user.user.id)))];
+		return [
+			...usersOnlyWithTeams,
+			...mappedUsers.filter((user) => !ids.has(String(user.user._id)))
+		];
 	}
 }

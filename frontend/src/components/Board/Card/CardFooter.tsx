@@ -130,7 +130,7 @@ const CardFooter = React.memo<FooterProps>(
 
     const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
-      if (hideCards && createdBy?.id !== userId) return;
+      if (hideCards && createdBy?._id !== userId) return;
       if (user && user.votesCount + countVotes <= 0) return;
       setDisableVoteButton(true);
       setCountVotes(countVotes - 1);
@@ -138,7 +138,7 @@ const CardFooter = React.memo<FooterProps>(
 
     const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
-      if (hideCards && createdBy?.id !== userId) return;
+      if (hideCards && createdBy?._id !== userId) return;
       if (maxVotes && user && user.votesCount >= maxVotes) return;
       if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
 
@@ -163,8 +163,8 @@ const CardFooter = React.memo<FooterProps>(
             <Avatar
               isBoardPage
               fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
-              id={createdBy?.id}
-              isDefaultColor={createdBy?.id === userId}
+              id={createdBy?._id}
+              isDefaultColor={createdBy?._id === userId}
               size={20}
             />
             <Text size="xs">
@@ -192,7 +192,7 @@ const CardFooter = React.memo<FooterProps>(
                   !isMainboard ||
                   !!disableVotes ||
                   !!(user && maxVotes && user.votesCount + countVotes >= maxVotes) ||
-                  (hideCards && createdBy?.id !== userId)
+                  (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleAddVote}
               >
@@ -224,7 +224,7 @@ const CardFooter = React.memo<FooterProps>(
                   votesInThisCard.length === 0 ||
                   !!(user && maxVotes && user.votesCount + countVotes <= 0) ||
                   votesOfUserInThisCard === 0 ||
-                  (hideCards && createdBy?.id !== userId)
+                  (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleDeleteVote}
               >
@@ -240,7 +240,7 @@ const CardFooter = React.memo<FooterProps>(
               }}
             >
               <StyledButtonIcon
-                disabled={hideCards && createdBy?.id !== userId}
+                disabled={hideCards && createdBy?._id !== userId}
                 onClick={setOpenComments}
               >
                 <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />

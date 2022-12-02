@@ -84,12 +84,12 @@ export default class VotesController {
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, cardId, itemId } = params;
-		const board = await this.createVoteApp.addVoteToCard(boardId, cardId, request.user.id, itemId);
+		const board = await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return boardVotesIdHidden(board, request.user.id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Add a vote to a specific card' })
@@ -123,12 +123,12 @@ export default class VotesController {
 		@Body('socketId') socketId: string
 	) {
 		const { boardId, cardId } = params;
-		const board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user.id);
+		const board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return boardVotesIdHidden(board, request.user.id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card item' })
@@ -166,14 +166,14 @@ export default class VotesController {
 		const board = await this.deleteVoteApp.deleteVoteFromCard(
 			boardId,
 			cardId,
-			request.user.id,
+			request.user._id,
 			itemId
 		);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return boardVotesIdHidden(board, request.user.id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Remove a vote from a specific card' })
@@ -210,13 +210,13 @@ export default class VotesController {
 		const board = await this.deleteVoteApp.deleteVoteFromCardGroup(
 			boardId,
 			cardId,
-			request.user.id
+			request.user._id
 		);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return boardVotesIdHidden(board, request.user.id);
+		return boardVotesIdHidden(board, request.user._id);
 	}
 
 	@Put(':boardId/card/:cardId/items/:itemId/vote')
@@ -236,12 +236,12 @@ export default class VotesController {
 				board = await this.deleteVoteApp.deleteVoteFromCard(
 					boardId,
 					cardId,
-					request.user.id,
+					request.user._id,
 					itemId
 				);
 			} else {
 				// eslint-disable-next-line no-await-in-loop
-				board = await this.createVoteApp.addVoteToCard(boardId, cardId, request.user.id, itemId);
+				board = await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId);
 			}
 		}
 
@@ -265,10 +265,10 @@ export default class VotesController {
 		for (let i = 0; i < Math.abs(count); i++) {
 			if (count < 0) {
 				// eslint-disable-next-line no-await-in-loop
-				board = await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user.id);
+				board = await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id);
 			} else {
 				// eslint-disable-next-line no-await-in-loop
-				board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user.id);
+				board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id);
 			}
 		}
 

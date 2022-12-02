@@ -55,7 +55,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 
   const handleChecked = (id: string) => {
     const updateCheckedUser = usersList?.map((user) =>
-      user.id === id ? { ...user, isChecked: !user.isChecked } : user,
+      user._id === id ? { ...user, isChecked: !user.isChecked } : user,
     );
 
     setUsersListState(updateCheckedUser);
@@ -80,7 +80,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 
     const updatedListWithAdded = addedUsers.map(
       (user) =>
-        listOfUsers.find((member) => member.user.id === user.id) || {
+        listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
           isNewJoiner: false,
@@ -90,7 +90,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
     // this insures that the team creator stays always in first
 
     const userAdminIndex = updatedListWithAdded.findIndex(
-      (member) => member.user.id === session?.user.id,
+      (member) => member.user._id === session?.user.id,
     );
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
@@ -150,13 +150,13 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
           <ScrollableContent direction="column" justify="start" ref={scrollRef}>
             <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
               {filteredList?.map((user) => (
-                <Flex key={user.id} align="center" justify="between">
+                <Flex key={user._id} align="center" justify="between">
                   <Flex css={{ width: '50%' }}>
                     <Checkbox
                       checked={user.isChecked}
-                      disabled={user.id === session?.user.id}
+                      disabled={user._id === session?.user.id}
                       handleChange={handleChecked}
-                      id={user.id}
+                      id={user._id}
                       label={`${user.firstName} ${user.lastName}`}
                       size="16"
                     />

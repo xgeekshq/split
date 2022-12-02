@@ -8,10 +8,10 @@ export const signIn = async (
 	getTokenService: GetTokenAuthService | GetTokenAuthApplication,
 	strategy: string
 ) => {
-	const { email, firstName, lastName, id, isSAdmin } = user;
-	const jwt = await getTokenService.getTokens(id);
+	const { email, firstName, lastName, _id, isSAdmin } = user;
+	const jwt = await getTokenService.getTokens(_id);
 
 	if (!jwt) return null;
 
-	return { ...jwt, email, firstName, lastName, strategy, id, isSAdmin };
+	return { ...jwt, email, firstName, lastName, strategy, _id, isSAdmin };
 };

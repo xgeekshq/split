@@ -152,7 +152,7 @@ export default class TeamsController {
 	})
 	@Get('user')
 	getTeamsOfUser(@Req() request: RequestWithUser) {
-		return this.getTeamApp.getTeamsOfUser(request.user.id);
+		return this.getTeamApp.getTeamsOfUser(request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Get a list of users belongs to the team' })

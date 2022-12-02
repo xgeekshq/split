@@ -5,7 +5,7 @@ export default class LoggedUserDto {
 	@IsNotEmpty()
 	@IsMongoId()
 	@IsString()
-	id!: string;
+	_id!: string;
 
 	@IsNotEmpty()
 	@IsString()

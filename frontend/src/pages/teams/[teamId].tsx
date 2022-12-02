@@ -65,13 +65,11 @@ const Team = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { teamId } = context.query;
+  const teamId = String(context.query.teamId);
 
   const queryClient = new QueryClient();
   try {
-    await queryClient.prefetchQuery(['team', teamId], () =>
-      getTeamRequest(teamId as string, context),
-    );
+    await queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context));
     await queryClient.prefetchQuery('users', () => getAllUsers(context));
   } catch (e) {
     return {
@@ -83,6 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     props: {
+      key: teamId,
       dehydratedState: dehydrate(queryClient),
     },
   };

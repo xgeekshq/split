@@ -93,7 +93,7 @@ export default class CardsController {
 	) {
 		const { card, colIdToAdd, socketId } = createCardDto;
 
-		const board = await this.createCardApp.create(boardId, request.user.id, card, colIdToAdd);
+		const board = await this.createCardApp.create(boardId, request.user._id, card, colIdToAdd);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
@@ -127,7 +127,7 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		const board = await this.deleteCardApp.delete(boardId, cardId, request.user.id);
+		const board = await this.deleteCardApp.delete(boardId, cardId, request.user._id);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendUpdatedBoard(boardId, deleteCardDto.socketId);
@@ -166,7 +166,7 @@ export default class CardsController {
 			boardId,
 			cardId,
 			itemId,
-			request.user.id
+			request.user._id
 		);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
@@ -208,7 +208,7 @@ export default class CardsController {
 			boardId,
 			cardId,
 			itemId,
-			request.user.id,
+			request.user._id,
 			text
 		);
 
@@ -249,7 +249,7 @@ export default class CardsController {
 		const board = await this.updateCardApp.updateCardGroupText(
 			boardId,
 			cardId,
-			request.user.id,
+			request.user._id,
 			text
 		);
 

@@ -89,11 +89,11 @@ export default class AuthController {
 	@Post('register')
 	async register(@Body() registrationData: CreateUserDto) {
 		try {
-			const { id, firstName, lastName, email } = await this.registerAuthApp.register(
+			const { _id, firstName, lastName, email } = await this.registerAuthApp.register(
 				registrationData
 			);
 
-			return { id, firstName, lastName, email };
+			return { _id, firstName, lastName, email };
 		} catch (error) {
 			if (error.code === uniqueViolation) {
 				throw new BadRequestException(EMAIL_EXISTS);
@@ -171,7 +171,7 @@ export default class AuthController {
 	@UseGuards(JwtRefreshGuard)
 	@Get('refresh')
 	refresh(@Req() request: RequestWithUser) {
-		return this.getTokenAuthApp.getAccessToken(request.user.id);
+		return this.getTokenAuthApp.getAccessToken(request.user._id);
 	}
 
 	@ApiParam({
@@ -309,7 +309,7 @@ export default class AuthController {
 	@UseGuards(JwtAuthenticationGuard)
 	@Get('/statistics')
 	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
-		const { id: userId } = request.user;
+		const { _id: userId } = request.user;
 		const [usersCount, teamsCount, boardsCount] = await Promise.all([
 			this.getUserApp.countUsers(),
 			this.getTeamsApp.countTeams(userId),

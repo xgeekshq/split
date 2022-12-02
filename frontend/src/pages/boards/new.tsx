@@ -100,7 +100,7 @@ const NewBoard: NextPage = () => {
       newSubBoard.maxVotes = maxVotes;
 
       newSubBoard.users = subBoard.users.map((boardUser) => ({
-        user: boardUser.user.id,
+        user: boardUser.user._id,
         role: boardUser.role,
       }));
 
@@ -120,12 +120,13 @@ const NewBoard: NextPage = () => {
 
   useEffect(() => {
     const isAdminOrStakeHolder = teams
-      ? teams[0].users.find(
+      ? !!teams[0].users.find(
           (teamUser) =>
-            teamUser.user.id === session?.user.id &&
+            teamUser.user._id === session?.user.id &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
         ) || session?.user.isSAdmin
       : false;
+
     if (!isAdminOrStakeHolder && !haveError) {
       setHaveError(!isAdminOrStakeHolder);
     }

@@ -96,7 +96,7 @@ export default class BoardsController {
 	})
 	@Post()
 	async createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
-		const board = await this.createBoardApp.create(boardData, request.user.id);
+		const board = await this.createBoardApp.create(boardData, request.user._id);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 
@@ -121,7 +121,7 @@ export default class BoardsController {
 	})
 	@Get('/dashboard')
 	getDashboardBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
-		return this.getBoardApp.getUserBoardsOfLast3Months(request.user.id, page, size);
+		return this.getBoardApp.getUserBoardsOfLast3Months(request.user._id, page, size);
 	}
 
 	@ApiOperation({ summary: 'Retrieve all boards from database' })
@@ -140,7 +140,7 @@ export default class BoardsController {
 	})
 	@Get()
 	async getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
-		const { id: userId, isSAdmin } = request.user;
+		const { _id: userId, isSAdmin } = request.user;
 
 		if (isSAdmin) {
 			return this.getBoardApp.getSuperAdminBoards(userId, page, size);
@@ -170,7 +170,7 @@ export default class BoardsController {
 	})
 	@Get(':boardId')
 	async getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		const board = await this.getBoardApp.getBoard(boardId, request.user.id);
+		const board = await this.getBoardApp.getBoard(boardId, request.user._id);
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
@@ -212,7 +212,7 @@ export default class BoardsController {
 		@Param() { boardId }: BaseParam,
 		@Body() boardData: UpdateBoardDto
 	) {
-		const board = await this.updateBoardApp.update(request.user.id, boardId, boardData);
+		const board = await this.updateBoardApp.update(request.user._id, boardId, boardData);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 
@@ -245,7 +245,7 @@ export default class BoardsController {
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		const result = await this.deleteBoardApp.delete(boardId, request.user.id);
+		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
 
 		if (!result) throw new BadRequestException(DELETE_FAILED);
 
@@ -280,7 +280,7 @@ export default class BoardsController {
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		const result = await this.updateBoardApp.mergeBoards(boardId, request.user.id);
+		const result = await this.updateBoardApp.mergeBoards(boardId, request.user._id);
 
 		if (!result) {
 			throw new BadRequestException(UPDATE_FAILED);

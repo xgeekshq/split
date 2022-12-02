@@ -72,7 +72,7 @@ const CardBoard = React.memo<CardBoardProps>(
     }, [card]);
 
     const handleOpenComments = () => {
-      if (hideCards && createdBy?.id !== userId) return;
+      if (hideCards && createdBy?._id !== userId) return;
       setOpenComments(!isCommentsOpened);
     };
 
@@ -149,7 +149,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         <Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
                       )}
 
-                      {!isSubmited && userId === card?.createdBy?.id && (
+                      {!isSubmited && userId === card?.createdBy?._id && (
                         <PopoverCardSettings
                           boardId={boardId}
                           cardGroupId={card._id}
