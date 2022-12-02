@@ -2,6 +2,7 @@ import useTeam from '@/hooks/useTeam';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
 import { useRecoilState } from 'recoil';
+import { useSession } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
@@ -24,6 +25,8 @@ type CardBodyProps = {
 
 const CardMember = React.memo<CardBodyProps>(
   ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMemberOrStakeholder }) => {
+    const { data: session } = useSession();
+
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
     const {
@@ -37,6 +40,8 @@ const CardMember = React.memo<CardBodyProps>(
 
       setMembersList(listUsersMembers);
     };
+
+    const isSAdmin = session?.isSAdmin;
 
     const updateIsNewJoinerStatus = (checked: boolean) => {
       if (member.team) {
@@ -84,7 +89,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </StyledMemberTitle>
               </Flex>
             </Flex>
-            {isTeamMemberOrStakeholder && member.isNewJoiner && (
+            {!isSAdmin && isTeamMemberOrStakeholder && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
                   New Joiner
@@ -107,7 +112,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </Tooltip>
               </Flex>
             )}
-            {!isTeamMemberOrStakeholder && (
+            {(!isTeamMemberOrStakeholder || isSAdmin) && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}
@@ -127,6 +132,7 @@ const CardMember = React.memo<CardBodyProps>(
             {isTeamPage && (
               <CardEndTeam
                 isTeamPage
+                isSAdmin={isSAdmin}
                 isTeamCreator={isTeamCreator}
                 isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
                 role={member.role}
