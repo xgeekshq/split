@@ -24,8 +24,14 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { boardId } = context.query;
+  const boardId = String(context.query.boardId);
   const queryClient = new QueryClient();
+
+  if (boardId.includes('.map'))
+    return {
+      props: {},
+    };
+
   try {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId as string, context),
