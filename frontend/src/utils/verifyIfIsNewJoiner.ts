@@ -5,7 +5,7 @@ export const verifyIfIsNewJoiner = (userAzureCreatedAt: Date | undefined, joined
 
   const dateToCompare = userAzureCreatedAt ? dayjs(userAzureCreatedAt) : dayjs(joinedAt);
 
-  const maxDateToBeNewJoiner = dateToCompare.add(2, 'month');
+  const maxDateToBeNewJoiner = dateToCompare.add(3, 'month');
 
   return currentDate.isBefore(maxDateToBeNewJoiner) || currentDate.isSame(maxDateToBeNewJoiner);
 };
