@@ -1,17 +1,23 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
 import Team, { TeamDocument } from '../schemas/teams.schema';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import { DeleteBoardService } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 
 @Injectable()
 export default class DeleteTeamService implements DeleteTeamServiceInterface {
 	constructor(
 		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
+		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
+		@Inject(Boards.TYPES.services.DeleteBoardService)
+		private deleteBoardService: DeleteBoardService
 	) {}
+
+	private readonly newProperty = this;
 
 	async delete(teamId: string): Promise<boolean> {
 		const teamSession = await this.teamModel.db.startSession();
@@ -25,6 +31,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 
 			await teamSession.commitTransaction();
 			await teamUserSession.commitTransaction();
+			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
 
 			return true;
 		} catch (e) {
