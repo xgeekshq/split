@@ -9,5 +9,5 @@ export interface CreateOrLogin {
   firstName: string;
   lastName: string;
   isSAdmin: boolean;
-  userAzureCreatedAt?: string;
+  userAzureCreatedAt?: Date;
 }

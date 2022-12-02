@@ -20,5 +20,5 @@ export default class CreateUserAzureDto {
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsDateString()
-	userAzureCreatedAt!: string;
+	userAzureCreatedAt!: Date;
 }

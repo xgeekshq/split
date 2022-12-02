@@ -15,7 +15,7 @@ export interface User {
   refreshToken?: Token;
   isSAdmin: boolean;
   joinedAt: string;
-  userAzureCreatedAt?: string;
+  userAzureCreatedAt?: Date;
 }
 
 export interface UseUserType {
