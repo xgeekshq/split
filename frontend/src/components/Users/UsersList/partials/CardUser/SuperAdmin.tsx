@@ -1,45 +1,45 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { Switch, SwitchThumb } from '@/components/Primitives/Switch';
-import Icon from '@/components/icons/Icon';
 import { useState } from 'react';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 
 import Separator from '@/components/Primitives/Separator';
+import useUser from '@/hooks/useUser';
+import { UpdateUserIsAdmin } from '@/types/user/user';
 
 type SuperAdminProps = {
   userSAdmin: boolean;
   loggedUserSAdmin: boolean | undefined;
+  userId: string;
 };
 
-const SuperAdmin = ({ userSAdmin, loggedUserSAdmin }: SuperAdminProps) => {
+const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId }: SuperAdminProps) => {
   const [checkedState, setCheckedState] = useState(userSAdmin);
 
-  const handleSuperAdminChange = () => {
-    setCheckedState(!checkedState);
-  };
+  const {
+    updateUserIsAdmin: { mutate },
+  } = useUser();
 
+  const handleSuperAdminChange = (checked: boolean) => {
+    const updateTeamUser: UpdateUserIsAdmin = {
+      _id: userId,
+      isSAdmin: checked,
+    };
+
+    setCheckedState(checked);
+    mutate(updateTeamUser);
+  };
 
   if (loggedUserSAdmin) {
     return (
-      <Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
-        <Switch checked={checkedState} onCheckedChange={handleSuperAdminChange}>
-          {checkedState && (
-            <SwitchThumb>
-              <Icon
-                name="check"
-                css={{
-                  width: '$14',
-                  height: '$14',
-                  color: '$successBase',
-                }}
-              />
-            </SwitchThumb>
-          )}
-          {!checkedState && <SwitchThumb />}
-        </Switch>
-        <Text css={{ ml: '$14' }} size="sm" weight="medium">
-          Super Admin
-        </Text>
+      <Flex css={{ ml: '$2', display: 'flex', alignItems: 'center' }}>
+        <ConfigurationSettings
+          handleCheckedChange={handleSuperAdminChange}
+          isChecked={checkedState}
+          text=""
+          title="Super Admin"
+        />
+
         <Separator
           orientation="vertical"
           css={{
@@ -73,7 +73,6 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin }: SuperAdminProps) => {
           SUPER ADMIN
         </Text>
       )}
->>>>>>> bd6d377 (feat: member only sees user teams count and which user is an admin)
     </Flex>
   );
 };

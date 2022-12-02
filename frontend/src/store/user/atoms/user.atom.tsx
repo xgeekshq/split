@@ -12,7 +12,7 @@ export const userState = atom({
   },
 });
 
-export const usersWithTeamsState = atom<UserWithTeams[] | undefined>({
+export const usersWithTeamsState = atom<UserWithTeams[]>({
   key: 'usersWithTeams',
   default: [],
 });

@@ -5,6 +5,7 @@ import { encrypt } from 'src/libs/utils/bcrypt';
 import ResetPassword, {
 	ResetPasswordDocument
 } from 'src/modules/auth/schemas/reset-password.schema';
+import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
@@ -54,5 +55,12 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		if (!isTokenValid) {
 			throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	updateSuperAdmin(user: UpdateUserDto) {
+		return this.userModel
+			.findOneAndUpdate({ _id: user._id }, { $set: { isSAdmin: user.isSAdmin } }, { new: true })
+			.lean()
+			.exec();
 	}
 }

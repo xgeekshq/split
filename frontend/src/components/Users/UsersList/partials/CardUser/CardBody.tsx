@@ -8,7 +8,7 @@ import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
-// eslint-disable-next-line import/no-named-as-default
+import Tooltip from '@/components/Primitives/Tooltip';
 import SuperAdmin from './SuperAdmin';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -32,7 +32,8 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
 
   const loggedUserIsSAdmin = session?.user.isSAdmin;
 
-  const { firstName, lastName, email, isSAdmin } = userWithTeams.user;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { firstName, lastName, email, isSAdmin, _id } = userWithTeams.user;
   const { teamsNames } = userWithTeams;
 
   const getTeamsCountText = () => {
@@ -44,6 +45,16 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
     }
     return 'no teams';
   };
+
+  let teamsSeparatedByComma: string[] = [];
+  if (teamsNames) {
+    teamsSeparatedByComma = teamsNames?.map((team, index) => {
+      if (index !== teamsNames.length - 1) {
+        return team.concat(', ');
+      }
+      return team;
+    });
+  }
 
   return (
     <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
@@ -72,15 +83,21 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
-              <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                {getTeamsCountText()}
-              </Text>
+              <Tooltip content={teamsSeparatedByComma}>
+                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
+                  {getTeamsCountText()}
+                </Text>
+              </Tooltip>
             </Flex>
           </Flex>
           <Flex css={{ width: '40%' }} justify="end">
             <Flex align="center" css={{ width: '$237' }} justify="start">
               {loggedUserIsSAdmin && (
-                <SuperAdmin userSAdmin={isSAdmin} loggedUserSAdmin={loggedUserIsSAdmin} />
+                <SuperAdmin
+                  userSAdmin={isSAdmin}
+                  loggedUserSAdmin={loggedUserIsSAdmin}
+                  userId={_id}
+                />
               )}
             </Flex>
             {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
