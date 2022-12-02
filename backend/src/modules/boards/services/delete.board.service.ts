@@ -127,18 +127,15 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
 			return this.deleteBoardBoardUsersAndSchedules(boardId, true);
 		}
-
-		return false;
+		throw new BadRequestException(DELETE_FAILED);
 	}
 
 	async deleteBoardsByTeamId(teamId: string) {
 		const teamBoards = await this.getBoardService.getAllBoardsByTeamId(teamId);
 
-		teamBoards.forEach((board) => {
-			const deleteSuccessful = this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false);
-
-			if (!deleteSuccessful) throw new BadRequestException(DELETE_FAILED);
-		});
+		teamBoards.forEach((board) =>
+			this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false)
+		);
 
 		return true;
 	}
