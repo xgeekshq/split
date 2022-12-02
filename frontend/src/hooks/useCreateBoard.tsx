@@ -57,16 +57,11 @@ const useCreateBoard = (team: Team) => {
           const newBoard = generateSubBoard(i + 1);
           const teamUsersWotIsNEwJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
 
-          splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role =
-            BoardUserRoles.RESPONSIBLE;
-
           teamUsersWotIsNEwJoiner[Math.floor(Math.random() * teamUsersWotIsNEwJoiner.length)].role =
             BoardUserRoles.RESPONSIBLE;
 
-          const result = splitUsers[i].map((user) =>
-            teamUsersWotIsNEwJoiner.find((member) => member._id === user._id)
-              ? teamUsersWotIsNEwJoiner.find((member) => member._id === user._id)
-              : user,
+          const result = splitUsers[i].map(
+            (user) => teamUsersWotIsNEwJoiner.find((member) => member._id === user._id) || user,
           ) as BoardUserToAdd[];
 
           newBoard.users = result;

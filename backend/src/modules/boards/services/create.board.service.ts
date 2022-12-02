@@ -277,7 +277,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				{
 					user: (teamUser.user as LeanDocument<UserDocument>)._id.toString(),
 					role: BoardRoles.MEMBER,
-					votesCount: 0
+					votesCount: 0,
+					isNewJoiner: teamUser.isNewJoiner
 				}
 			];
 
@@ -292,8 +293,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	generateSubBoards(maxTeams: number, splitUsers: BoardUserDto[][], subBoards: BoardDto[]) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
-			splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role = BoardRoles.RESPONSIBLE;
-			newBoard.users = splitUsers[i];
+			const teamUsersWotIsNEwJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+
+			teamUsersWotIsNEwJoiner[Math.floor(Math.random() * teamUsersWotIsNEwJoiner.length)].role =
+				BoardRoles.RESPONSIBLE;
+
+			const result = splitUsers[i].map(
+				(user) => teamUsersWotIsNEwJoiner.find((member) => member._id === user._id) || user
+			);
+
+			newBoard.users = result;
 			subBoards.push(newBoard);
 		});
 	}

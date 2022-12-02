@@ -21,7 +21,7 @@ export interface BoardUserToAdd {
   role: BoardUserRoles;
   votesCount: number;
   isNewJoiner?: boolean;
-  _id: string;
+  _id?: string;
 }
 
 export interface BoardUserDto {
