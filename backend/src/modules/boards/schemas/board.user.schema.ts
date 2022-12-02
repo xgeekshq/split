@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import UserEntity from 'src/modules/users/entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 
 export type BoardUserDocument = BoardUser & Document;
 
@@ -19,7 +19,7 @@ export default class BoardUser {
 	role!: string;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
-	user!: UserEntity | ObjectId;
+	user!: User | ObjectId;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'Board', nullable: false })
 	board!: ObjectId;
