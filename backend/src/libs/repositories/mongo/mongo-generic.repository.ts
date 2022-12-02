@@ -1,5 +1,6 @@
 import { Model } from 'mongoose';
 import { BaseAbstractRepository } from '../base.abstract.repository';
+import { SelectedValues } from '../types';
 
 export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
 	private _repository: Model<T>;
@@ -10,11 +11,11 @@ export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
 		this._populateOnFind = populateOnFind;
 	}
 
-	getAll(selectedValues?: string): Promise<T[]> {
+	getAll(selectedValues?: SelectedValues<T>): Promise<T[]> {
 		return this._repository.find().select(selectedValues).populate(this._populateOnFind).exec();
 	}
 
-	get(id: any, selectedValues?: string): Promise<T> {
+	get(id: any, selectedValues?: SelectedValues<T>): Promise<T> {
 		return this._repository
 			.findById(id)
 			.select(selectedValues)

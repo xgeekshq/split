@@ -21,7 +21,10 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	getById(_id: string) {
-		return this.userRepository.get(_id, '-password -currentHashedRefreshToken');
+		return this.userRepository.get(_id, {
+			password: 0,
+			currentHashedRefreshToken: 0
+		});
 	}
 
 	async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
@@ -39,7 +42,7 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	getAllUsers() {
-		return this.userRepository.getAll('-password -currentHashedRefreshToken');
+		return this.userRepository.getAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
 	async getAllUsersWithTeams() {

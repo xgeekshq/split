@@ -1,7 +1,9 @@
-export interface BaseInterfaceRepository<T> {
-	getAll(selectedValues?: string): Promise<T[]>;
+import { SelectedValues } from '../types';
 
-	get(id: string, selectedValues?: string): Promise<T>;
+export interface BaseInterfaceRepository<T> {
+	getAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
+
+	get(id: string, selectedValues?: SelectedValues<T>): Promise<T>;
 
 	create(item: T): Promise<T>;
 
