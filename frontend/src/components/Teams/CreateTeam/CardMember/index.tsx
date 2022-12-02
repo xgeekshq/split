@@ -41,7 +41,7 @@ const CardMember = React.memo<CardBodyProps>(
       setMembersList(listUsersMembers);
     };
 
-    const isSAdmin = session?.isSAdmin;
+    const isSAdmin = session?.user.isSAdmin;
 
     const updateIsNewJoinerStatus = (checked: boolean) => {
       if (member.team) {
