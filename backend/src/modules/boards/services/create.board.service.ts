@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { LeanDocument, Model, ObjectId } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -27,6 +27,8 @@ import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import * as dayjs from 'dayjs';
+import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -45,6 +47,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
+		private updateTeamService: UpdateTeamServiceInterface,
 		@Inject(TYPES.services.GetBoardService)
 		private getBoardService: GetBoardServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
@@ -165,6 +169,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
 	}
 
+	verifyIfIsNewJoiner = (userAzureCreatedAt: Date | undefined, joinedAt: Date) => {
+		const currentDate = dayjs();
+
+		const dateToCompare = userAzureCreatedAt ? dayjs(userAzureCreatedAt) : dayjs(joinedAt);
+
+		const maxDateToBeNewJoiner = dateToCompare.add(2, 'month');
+
+		return currentDate.isBefore(maxDateToBeNewJoiner) || currentDate.isSame(maxDateToBeNewJoiner);
+	};
+
 	async splitBoardByTeam(
 		ownerId: string,
 		teamId: string,
@@ -172,7 +186,32 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	): Promise<string | null> {
 		const { maxUsersPerTeam } = configs;
 
-		const teamUsersWotStakeholders = (await this.getTeamService.getUsersOfTeam(teamId)).filter(
+		let teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
+
+		teamUsers = teamUsers.map((teamUser: TeamUser) => {
+			const user = teamUser.user as User & { _id: ObjectId };
+
+			if (
+				teamUser.isNewJoiner &&
+				!this.verifyIfIsNewJoiner(user.userAzureCreatedAt, user.joinedAt)
+			) {
+				this.updateTeamService.updateTeamUser({
+					team: teamId,
+					user: `${user._id}`,
+					role: teamUser.role,
+					isNewJoiner: false
+				});
+
+				return {
+					...teamUser,
+					isNewJoiner: false
+				};
+			}
+
+			return teamUser;
+		});
+
+		const teamUsersWotStakeholders = teamUsers.filter(
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;

@@ -155,7 +155,7 @@ export default class TeamsController {
 		return this.getTeamApp.getTeamsOfUser(request.user._id);
 	}
 
-	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
+	@ApiOperation({ summary: 'Get a specific team' })
 	@ApiParam({ name: 'teamId', type: String })
 	@ApiQuery({
 		name: 'teamUserRole',

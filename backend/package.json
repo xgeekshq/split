@@ -45,6 +45,7 @@
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.13.2",
 		"cron": "2.1.0",
+		"dayjs": "^1.11.6",
 		"dotenv": "^16.0.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-airbnb-typescript": "^17.0.0",

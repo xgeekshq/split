@@ -24,6 +24,7 @@ export default class TeamUser {
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	user!: User | ObjectId;
+	//user!: User;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'Team', nullable: false })
 	team!: Team | ObjectId;

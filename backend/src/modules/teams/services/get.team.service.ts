@@ -140,7 +140,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.find({ team: teamId })
 			.populate({
 				path: 'user',
-				select: '_id firstName lastName email isSAdmin userAzureCreatedAt'
+				select: '_id firstName lastName email isSAdmin joinedAt userAzureCreatedAt'
 			})
 			.exec();
 	}
