@@ -1,8 +1,8 @@
 import { Model, UpdateQuery } from 'mongoose';
-import { BaseAbstractRepository } from '../base.abstract.repository';
+import { BaseInterfaceRepository } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
-export class MongoGenericRepository<T> implements BaseAbstractRepository<T> {
+export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	private _repository: Model<T>;
 	private _populateOnFind: string[];
 
