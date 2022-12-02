@@ -64,7 +64,7 @@ const Comment: React.FC<CommentProps> = React.memo(
               >
                 {comment.text}
               </Text>
-              {isSubmited && userId === comment.createdBy._id && (
+              {isSubmited && userId === comment.createdBy.id && (
                 <Icon
                   name="menu-dots"
                   css={{
@@ -73,7 +73,7 @@ const Comment: React.FC<CommentProps> = React.memo(
                   }}
                 />
               )}
-              {!isSubmited && userId === comment.createdBy._id && (
+              {!isSubmited && userId === comment.createdBy.id && (
                 <PopoverCommentSettings
                   handleDeleteComment={handleDeleteComment}
                   handleEditing={handleEditing}

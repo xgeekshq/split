@@ -39,7 +39,7 @@ const NewTeam: NextPage = () => {
       return;
     }
     data.forEach((user) => {
-      if (user._id === session?.user.id) {
+      if (user.id === session?.user.id) {
         listMembers.push({
           user,
           role: TeamUserRoles.ADMIN,
@@ -50,7 +50,7 @@ const NewTeam: NextPage = () => {
 
     const usersWithChecked = data.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user.id === session?.user.id,
     }));
 
     setUsersListState(usersWithChecked);

@@ -86,7 +86,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       (!isSubBoard ? board : mainBoard)?.team.users.some(
         (boardUser) =>
           [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
-          boardUser.user._id === userId,
+          boardUser.user.id === userId,
       ),
     [board, isSubBoard, mainBoard, userId],
   );
@@ -97,9 +97,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         ? [
             board.users.some(
               (boardUser) =>
-                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user._id === userId,
+                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user.id === userId,
             ),
-            board.createdBy._id === userId,
+            board.createdBy.id === userId,
           ]
         : [false, false],
     [board, userId],
@@ -137,7 +137,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   }, [newBoard, data, setNewBoard, mainBoard?._id]);
 
   const userIsInBoard = useMemo(
-    () => board?.users.find((user) => user.user._id === userId),
+    () => board?.users.find((user) => user.user.id === userId),
     [board?.users, userId],
   );
 

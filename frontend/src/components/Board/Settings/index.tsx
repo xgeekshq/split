@@ -201,7 +201,7 @@ const BoardSettings = ({
 
       do {
         userFound = cloneUsers[Math.floor(Math.random() * cloneUsers.length)];
-      } while (userFound?.user._id === responsible?._id);
+      } while (userFound?.user.id === responsible?.id);
 
       if (!userFound) return;
 

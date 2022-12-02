@@ -32,7 +32,7 @@ const CardMember = React.memo<CardBodyProps>(
 
     const handleIsNewJoiner = (checked: boolean) => {
       const listUsersMembers = membersList.map((user) =>
-        user.user._id === member.user._id ? { ...user, isNewJoiner: checked } : user,
+        user.user.id === member.user.id ? { ...user, isNewJoiner: checked } : user,
       );
 
       setMembersList(listUsersMembers);
@@ -42,7 +42,7 @@ const CardMember = React.memo<CardBodyProps>(
       if (member.team) {
         const updateTeamUser: TeamUserUpdate = {
           team: member.team,
-          user: member.user._id,
+          user: member.user.id,
           role: member.role,
           isNewJoiner: checked,
         };
@@ -121,7 +121,7 @@ const CardMember = React.memo<CardBodyProps>(
               <CardEndCreateTeam
                 isTeamCreator={isTeamCreator}
                 role={member.role}
-                userId={member.user._id}
+                userId={member.user.id}
               />
             )}
             {isTeamPage && (
@@ -130,7 +130,7 @@ const CardMember = React.memo<CardBodyProps>(
                 isTeamCreator={isTeamCreator}
                 isTeamMemberOrStakeholder={isTeamMemberOrStakeholder}
                 role={member.role}
-                userId={member.user._id}
+                userId={member.user.id}
               />
             )}
           </InnerContainer>

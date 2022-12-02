@@ -113,7 +113,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
             socketId={socketId}
             title={column.title}
             userId={userId}
-            boardUser={board.users.find((boardUser) => boardUser.user._id === userId)}
+            boardUser={board.users.find((boardUser) => boardUser.user.id === userId)}
           />
         ))}
       </DragDropContext>

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import Team from 'src/modules/teams/schemas/teams.schema';
-import User from 'src/modules/users/entities/user.schema';
+import UserEntity from 'src/modules/users/entities/user.schema';
 import { ColumnDocument, ColumnSchema } from './column.schema';
 
 export type BoardDocument = Board & Document;
@@ -41,7 +41,7 @@ export default class Board {
 	team!: Team | ObjectId;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
-	createdBy!: User | ObjectId;
+	createdBy!: UserEntity | ObjectId;
 
 	@Prop({ type: Boolean, default: false })
 	recurrent!: boolean;

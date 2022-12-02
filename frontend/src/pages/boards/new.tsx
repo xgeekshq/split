@@ -100,7 +100,7 @@ const NewBoard: NextPage = () => {
       newSubBoard.maxVotes = maxVotes;
 
       newSubBoard.users = subBoard.users.map((boardUser) => ({
-        user: boardUser.user._id,
+        user: boardUser.user.id,
         role: boardUser.role,
       }));
 
@@ -122,7 +122,7 @@ const NewBoard: NextPage = () => {
     const isAdminOrStakeHolder = teams
       ? teams[0].users.find(
           (teamUser) =>
-            teamUser.user._id === session?.user.id &&
+            teamUser.user.id === session?.user.id &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
         ) || session?.user.isSAdmin
       : false;

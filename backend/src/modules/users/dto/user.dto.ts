@@ -7,7 +7,7 @@ export default class UserDto {
 	@IsMongoId()
 	@IsString()
 	@IsMongoId()
-	_id!: string;
+	id!: string;
 
 	@ApiProperty()
 	@IsNotEmpty()

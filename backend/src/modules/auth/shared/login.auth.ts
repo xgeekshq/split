@@ -1,18 +1,17 @@
-import { LeanDocument } from 'mongoose';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { UserDocument } from 'src/modules/users/entities/user.schema';
+import UserModel from 'src/modules/users/entities/user';
 import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';
 import { GetTokenAuthService } from '../interfaces/services/get-token.auth.service.interface';
 
 export const signIn = async (
-	user: LeanDocument<UserDocument> | UserDto,
+	user: UserModel | UserDto,
 	getTokenService: GetTokenAuthService | GetTokenAuthApplication,
 	strategy: string
 ) => {
-	const { email, firstName, lastName, _id, isSAdmin } = user;
-	const jwt = await getTokenService.getTokens(_id);
+	const { email, firstName, lastName, id, isSAdmin } = user;
+	const jwt = await getTokenService.getTokens(id);
 
 	if (!jwt) return null;
 
-	return { ...jwt, email, firstName, lastName, strategy, id: _id, isSAdmin };
+	return { ...jwt, email, firstName, lastName, strategy, id, isSAdmin };
 };

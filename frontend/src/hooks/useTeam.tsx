@@ -93,7 +93,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 
       // updates the membersList recoil
       const members = membersList.map((member) =>
-        member.user._id === data.user
+        member.user.id === data.user
           ? { ...member, role: data.role, isNewJoiner: data.isNewJoiner }
           : member,
       );

@@ -60,7 +60,7 @@ const useCards = () => {
       comments: [],
       anonymous: newCardData.card.anonymous,
       createdBy: {
-        _id: user ? user.id : '',
+        id: user ? user.id : '',
         firstName: user ? user.firstName : '',
         lastName: user ? user.lastName : '',
         email: '',
@@ -75,7 +75,7 @@ const useCards = () => {
           comments: [],
           anonymous: newCardData.card.anonymous,
           createdBy: {
-            _id: user ? user.id : '',
+            id: user ? user.id : '',
             firstName: user ? user.firstName : '',
             lastName: user ? user.lastName : '',
             email: '',

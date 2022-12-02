@@ -66,7 +66,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
       }
 
       return listUsers.reduce((acc: User[], userFound: ListUsersType) => {
-        if ((userFound.user as User)?._id === userId) {
+        if ((userFound.user as User)?.id === userId) {
           acc.unshift(userFound.user as User);
         } else {
           acc.push(userFound.user as User);
@@ -151,8 +151,8 @@ const CardAvatars = React.memo<CardAvatarProps>(
                 colors={avatarColor}
                 css={{ position: 'relative', ml: idx > 0 ? '-7px' : 0 }}
                 fallbackText={initials}
-                id={value._id}
-                isDefaultColor={value._id === userId}
+                id={value.id}
+                isDefaultColor={value.id === userId}
                 size={32}
               />
             </IconButton>

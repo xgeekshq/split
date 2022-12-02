@@ -132,7 +132,7 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
   const commentObj = {
     text,
     createdBy: {
-      _id: user.id,
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: '',

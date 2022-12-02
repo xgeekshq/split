@@ -19,7 +19,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
-import User, { UserDocument } from 'src/modules/users/entities/user.schema';
+import UserEntity, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
@@ -149,7 +149,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				const boardUserFound = boardData.users.find(
 					(userFound) => userFound.role === BoardRoles.RESPONSIBLE
 				) as unknown as LeanDocument<BoardUserDocument>;
-				newResponsible.email = (boardUserFound.user as User).email;
+				newResponsible.email = (boardUserFound.user as UserEntity).email;
 				newResponsible.id = (boardUserFound.user as unknown as LeanDocument<BoardUserDocument>)._id;
 
 				boardData.users

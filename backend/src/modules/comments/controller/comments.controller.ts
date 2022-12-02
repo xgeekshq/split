@@ -90,7 +90,7 @@ export default class CommentsController {
 			boardId,
 			cardId,
 			itemId,
-			request.user._id,
+			request.user.id,
 			text,
 			anonymous
 		);
@@ -132,7 +132,7 @@ export default class CommentsController {
 		const board = await this.createCommentApp.createCardGroupComment(
 			boardId,
 			cardId,
-			request.user._id,
+			request.user.id,
 			text,
 			anonymous
 		);
@@ -178,7 +178,7 @@ export default class CommentsController {
 			cardId,
 			itemId,
 			commentId,
-			request.user._id,
+			request.user.id,
 			text
 		);
 
@@ -226,7 +226,7 @@ export default class CommentsController {
 			boardId,
 			cardId,
 			commentId,
-			request.user._id,
+			request.user.id,
 			text
 		);
 
@@ -274,7 +274,7 @@ export default class CommentsController {
 		const board = await this.deleteCommentApp.deleteItemComment(
 			boardId,
 			commentId,
-			request.user._id
+			request.user.id
 		);
 
 		if (!board) {
@@ -320,7 +320,7 @@ export default class CommentsController {
 		const board = await this.deleteCommentApp.deleteCardGroupComment(
 			boardId,
 			commentId,
-			request.user._id
+			request.user.id
 		);
 
 		if (!board) {

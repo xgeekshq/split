@@ -144,7 +144,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     return (
       <Popover>
         <PopoverTriggerStyled
-          disabled={hideCards && item.createdBy?._id !== userId}
+          disabled={hideCards && item.createdBy?.id !== userId}
           css={{
             position: 'relative',
             top: firstOne ? '-35px' : 0,
@@ -162,7 +162,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
         <PopoverSettingsContent
           isItem={isItem}
-          isOwner={item.createdBy?._id === userId}
+          isOwner={item.createdBy?.id === userId}
           setDeleteCard={handleDeleteCard}
           setEditCard={handleEditing}
           unmergeCard={unmergeCard}

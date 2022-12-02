@@ -78,7 +78,7 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
       if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
       return [
         {
-          user: teamUser.user._id,
+          user: teamUser.user.id,
           role: BoardUserRoles.MEMBER,
           votesCount: 0,
         },
