@@ -12,14 +12,13 @@
 	"coverageDirectory": "report",
 	"collectCoverageFrom": ["src/**/*.{ts,tsx}", "!node_modules/", "!src/database/migrations/**/*.{ts,tsx}"],
 	"transform": {
-	  "\\.ts$": ["ts-jest"]
+	  "\\.ts$": [
+			"ts-jest", {
+				"tsconfig": "<rootDir>/tsconfig.json"
+			}
+		]
 	},
 	"testEnvironment": "node",
 	"preset": "ts-jest",
-	"globals": {
-	  "ts-jest": {
-		"tsconfig": "<rootDir>/tsconfig.json"
-	  }
-	},
 	"testTimeout": 30000
   }
