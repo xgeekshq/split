@@ -193,7 +193,9 @@ const NewBoard: NextPage = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create board</Button>
+              <Button type="submit" disabled={isBackButtonDisable}>
+                Create board
+              </Button>
             </ButtonsContainer>
           </StyledForm>
         </SubContainer>
