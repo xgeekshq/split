@@ -55,13 +55,13 @@ const useCreateBoard = (team: Team) => {
       if (splitUsers && team.users.length >= MIN_MEMBERS) {
         new Array(maxTeams).fill(0).forEach((_, i) => {
           const newBoard = generateSubBoard(i + 1);
-          const teamUsersWotIsNEwJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+          const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
 
-          teamUsersWotIsNEwJoiner[Math.floor(Math.random() * teamUsersWotIsNEwJoiner.length)].role =
+          teamUsersWotIsNewJoiner[Math.floor(Math.random() * teamUsersWotIsNewJoiner.length)].role =
             BoardUserRoles.RESPONSIBLE;
 
           const result = splitUsers[i].map(
-            (user) => teamUsersWotIsNEwJoiner.find((member) => member._id === user._id) || user,
+            (user) => teamUsersWotIsNewJoiner.find((member) => member._id === user._id) || user,
           ) as BoardUserToAdd[];
 
           newBoard.users = result;

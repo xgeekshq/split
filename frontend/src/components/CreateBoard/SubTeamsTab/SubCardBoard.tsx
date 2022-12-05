@@ -48,13 +48,17 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
     if (!userFound) return;
     userFound.role = BoardUserRoles.RESPONSIBLE;
 
+    const listUsers = users.map(
+      (user) => cloneUsers.find((member) => member._id === user._id) || user,
+    );
+
     setBoard((prevBoard) => ({
       ...prevBoard,
       board: {
         ...prevBoard.board,
         dividedBoards: prevBoard.board.dividedBoards.map((boardFound, i) => {
           if (i === index) {
-            return { ...boardFound, users: cloneUsers };
+            return { ...boardFound, users: listUsers };
           }
           return boardFound;
         }),
