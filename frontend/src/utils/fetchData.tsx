@@ -1,7 +1,8 @@
 import { GetServerSidePropsContext } from 'next';
-import { getSession } from 'next-auth/react';
+
 import axios, { AxiosRequestConfig } from 'axios';
 
+import { getSession } from 'next-auth/react';
 import { NEXT_PUBLIC_BACKEND_URL } from './constants';
 
 export const instance = axios.create({
@@ -15,7 +16,7 @@ const nonNeededToken = ['/auth/login', '/auth/refresh', '/auth/registerAzure'];
 
 export const getToken = async (context?: GetServerSidePropsContext) => {
   const session = await getSession(context);
-  if (session) return `Bearer ${session?.accessToken}`;
+  if (session) return `Bearer ${session?.user.accessToken.token}`;
   return 'Bearer ';
 };
 
@@ -52,15 +53,12 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
       Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
     };
   }
-  try {
-    const { data } = !serverSide
-      ? await instance(instanceOptions)
-      : await serverSideInstance(instanceOptions);
 
-    return data;
-  } catch {
-    return null as any;
-  }
+  const { data } = !serverSide
+    ? await instance(instanceOptions)
+    : await serverSideInstance(instanceOptions);
+
+  return data;
 };
 
 export default fetchData;

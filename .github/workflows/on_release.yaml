@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_RELEASE }}
 
       - name: Update package.json version
         uses: jaywcjlove/github-action-package@main
