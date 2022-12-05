@@ -1,4 +1,4 @@
-import User from '../../entities/user';
+import User from '../../entities/user.schema';
 
 export interface UpdateUserService {
 	setCurrentRefreshToken(refreshToken: string, userId: string): Promise<User | null>;

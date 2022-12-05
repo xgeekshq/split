@@ -1,6 +1,6 @@
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
-import UserModel from 'src/modules/users/entities/user';
+import User from 'src/modules/users/entities/user.schema';
 
 export interface RegisterAuthService {
-	register(registrationData: CreateUserDto): Promise<UserModel>;
+	register(registrationData: CreateUserDto): Promise<User>;
 }

@@ -9,6 +9,8 @@ export type UserDocument = User & mongoose.Document;
 	}
 })
 export default class User {
+	_id?: string;
+
 	@Prop({ nullable: false })
 	firstName!: string;
 

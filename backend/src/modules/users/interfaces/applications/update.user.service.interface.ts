@@ -1,6 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import User from '../../entities/user';
-import { UserDocument } from '../../entities/user.schema';
+import User, { UserDocument } from '../../entities/user.schema';
 
 export interface UpdateUserApplication {
 	setCurrentRefreshToken(
