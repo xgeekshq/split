@@ -124,10 +124,9 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			{
 				$unset: [
 					'_id',
-					'user.currentHashedRefreshToken',
-					'user.isSAdmin',
-					'user.joinedAt',
-					'user.isDeleted'
+					'userWithTeam.currentHashedRefreshToken',
+					'userWithTeam.joinedAt',
+					'userWithTeam.isDeleted'
 				]
 			},
 			{
