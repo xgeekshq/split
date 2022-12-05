@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
@@ -6,12 +6,14 @@ import ResetPassword, {
 	ResetPasswordDocument
 } from 'src/modules/auth/schemas/reset-password.schema';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
-import User, { UserDocument } from '../schemas/user.schema';
+import { TYPES } from '../interfaces/types';
+import { UserRepositoryInterface } from '../repository/user.repository.interface';
 
 @Injectable()
 export default class updateUserServiceImpl implements UpdateUserService {
 	constructor(
-		@InjectModel(User.name) private userModel: Model<UserDocument>,
+		@Inject(TYPES.repository)
+		private readonly userRepository: UserRepositoryInterface,
 		@InjectModel(ResetPassword.name)
 		private resetModel: Model<ResetPasswordDocument>
 	) {}
@@ -19,15 +21,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
 		const currentHashedRefreshToken = await encrypt(refreshToken);
 
-		return this.userModel
-			.findOneAndUpdate(
-				{ _id: userId },
-				{
-					$set: { currentHashedRefreshToken }
-				}
-			)
-			.lean()
-			.exec();
+		return this.userRepository.updateUserWithRefreshToken(currentHashedRefreshToken, userId);
 	}
 
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
@@ -35,12 +29,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 
 		if (newPassword !== newPasswordConf)
 			throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
-		const user = await this.userModel.findOneAndUpdate(
-			{ email: userEmail },
-			{
-				$set: { password }
-			}
-		);
+		const user = this.userRepository.updateUserPassword(userEmail, password);
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 
@@ -52,9 +41,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 
 		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
 		this.tokenValidator(userFromDb.updatedAt);
-		const user = await this.userModel.findOne({
-			email: userFromDb.emailAddress
-		});
+		const user = await this.userRepository.getByProp({ email: userFromDb.emailAddress });
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 

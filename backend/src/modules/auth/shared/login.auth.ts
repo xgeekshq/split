@@ -1,11 +1,10 @@
-import { LeanDocument } from 'mongoose';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';
 import { GetTokenAuthService } from '../interfaces/services/get-token.auth.service.interface';
 
 export const signIn = async (
-	user: LeanDocument<UserDocument> | UserDto,
+	user: User | UserDto,
 	getTokenService: GetTokenAuthService | GetTokenAuthApplication,
 	strategy: string
 ) => {
@@ -14,5 +13,5 @@ export const signIn = async (
 
 	if (!jwt) return null;
 
-	return { ...jwt, email, firstName, lastName, strategy, id: _id, isSAdmin };
+	return { ...jwt, email, firstName, lastName, strategy, _id, isSAdmin };
 };

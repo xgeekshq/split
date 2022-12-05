@@ -120,12 +120,13 @@ const NewBoard: NextPage = () => {
 
   useEffect(() => {
     const isAdminOrStakeHolder = teams
-      ? teams[0].users.find(
+      ? !!teams[0].users.find(
           (teamUser) =>
             teamUser.user._id === session?.user.id &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
         ) || session?.user.isSAdmin
       : false;
+
     if (!isAdminOrStakeHolder && !haveError) {
       setHaveError(!isAdminOrStakeHolder);
     }

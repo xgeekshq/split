@@ -27,6 +27,7 @@
 	  "no-underscore-dangle": "off",
 	  "react/display-name": "off",
 	  "no-plusplus": "off",
+	  "@typescript-eslint/naming-convention": "off",
 	  "import/no-extraneous-dependencies": [
 		"error",
 		{

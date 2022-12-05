@@ -1,32 +1,27 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { compare } from 'src/libs/utils/bcrypt';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import { TYPES } from 'src/modules/teams/interfaces/types';
-import UserDto from '../dto/user.dto';
+import * as Team from 'src/modules/teams/interfaces/types';
 import { GetUserService } from '../interfaces/services/get.user.service.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
-import User, { UserDocument } from '../schemas/user.schema';
+import { TYPES } from '../interfaces/types';
+import { UserRepositoryInterface } from '../repository/user.repository.interface';
 
 @Injectable()
 export default class GetUserServiceImpl implements GetUserService {
 	constructor(
-		@InjectModel(User.name) private userModel: Model<UserDocument>,
-		@Inject(TYPES.services.GetTeamService)
+		@Inject(TYPES.repository)
+		private readonly userRepository: UserRepositoryInterface,
+		@Inject(Team.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface
 	) {}
 
 	getByEmail(email: string) {
-		return this.userModel.findOne({ email }).lean().exec();
+		return this.userRepository.getByProp({ email });
 	}
 
 	getById(_id: string) {
-		return this.userModel
-			.findById(_id)
-			.select(['-password -currentHashedRefreshToken'])
-			.lean()
-			.exec();
+		return this.userRepository.getById(_id);
 	}
 
 	async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
@@ -40,18 +35,18 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	countUsers() {
-		return this.userModel.countDocuments().exec();
+		return this.userRepository.countDocuments();
 	}
 
 	getAllUsers() {
-		return this.userModel.find().select('-password -currentHashedRefreshToken').lean().exec();
+		return this.userRepository.getAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
 	async getAllUsersWithTeams() {
 		const users = await this.getAllUsers();
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {
 			return {
-				user: userFound as UserDto,
+				user: userFound,
 				teams: []
 			};
 		});

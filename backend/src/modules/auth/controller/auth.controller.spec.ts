@@ -24,7 +24,8 @@ import {
 	getUserApplication,
 	getUserService,
 	updateUserApplication,
-	updateUserService
+	updateUserService,
+	userRepository
 } from 'src/modules/users/users.providers';
 
 describe('AuthController', () => {
@@ -56,6 +57,7 @@ describe('AuthController', () => {
 				createUserService,
 				getUserApplication,
 				getUserService,
+				userRepository,
 				ConfigService,
 				{
 					provide: ConfigService,

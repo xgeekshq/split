@@ -67,11 +67,14 @@ const Team = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const teamId = String(context.query.teamId);
 
+  if (teamId.includes('.map'))
+    return {
+      props: {},
+    };
+
   const queryClient = new QueryClient();
   try {
-    await queryClient.prefetchQuery(['team', teamId], () =>
-      getTeamRequest(teamId as string, context),
-    );
+    await queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context));
     await queryClient.prefetchQuery('users', () => getAllUsers(context));
   } catch (e) {
     return {

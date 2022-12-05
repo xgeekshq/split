@@ -1,5 +1,6 @@
 import CommentType from '../comment/comment';
 import { User } from '../user/user';
+
 import { CardItemToAdd, CardItemType } from './cardItem';
 
 export default interface CardType {

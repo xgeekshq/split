@@ -1,16 +1,9 @@
-import { LeanDocument } from 'mongoose';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 
 export interface ValidateUserAuthService {
-	validateUserWithCredentials(
-		email: string,
-		plainTextPassword: string
-	): Promise<LeanDocument<UserDocument> | null>;
+	validateUserWithCredentials(email: string, plainTextPassword: string): Promise<User | null>;
 
-	validateUserById(userId: string): Promise<LeanDocument<UserDocument> | null>;
+	validateUserById(userId: string): Promise<User | null>;
 
-	validateUserByRefreshToken(
-		authorization: string,
-		userId: string
-	): Promise<false | LeanDocument<UserDocument>>;
+	validateUserByRefreshToken(authorization: string, userId: string): Promise<false | User>;
 }

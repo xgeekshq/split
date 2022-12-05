@@ -5,7 +5,6 @@ import { Nullable } from '../common';
 import { Token } from '../token';
 
 export interface User {
-  id?: string;
   _id: string;
   firstName: string;
   lastName: string;

@@ -10,7 +10,7 @@ import { CardDocument } from 'src/modules/cards/schemas/card.schema';
 import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
-import { UserDocument } from 'src/modules/users/schemas/user.schema';
+import { UserDocument } from 'src/modules/users/entities/user.schema';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';

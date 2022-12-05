@@ -1,5 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import { UserDocument } from '../../schemas/user.schema';
+import { UserDocument } from '../../entities/user.schema';
 import { UserWithTeams } from '../type-user-with-teams';
 
 export interface GetUserService {

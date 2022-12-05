@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
-import { TeamQueryParams } from '../../../libs/dto/param/team.query.params';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import { UserWithTeams } from '../../users/interfaces/type-user-with-teams';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
@@ -22,30 +21,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return this.teamModel.countDocuments().exec();
 	}
 
-	getTeam(teamId: string, teamQueryParams: TeamQueryParams = {}) {
-		const { loadUsers, teamUserRole } = teamQueryParams;
+	getTeam(teamId: string) {
 		const teamModel = this.teamModel.findById(teamId);
-		let teamUserRoleFilter = {};
-
-		if (teamUserRole) {
-			teamUserRoleFilter = { match: { role: { $eq: teamUserRole } } };
-		}
-
-		if (loadUsers || teamUserRole) {
-			teamModel
-				.populate({
-					path: 'users',
-					select: 'user role isNewJoiner',
-					...teamUserRoleFilter,
-					populate: {
-						path: 'user',
-						select: '_id firstName lastName email joinedAt'
-					}
-				})
-				.lean({ virtuals: true });
-		} else {
-			teamModel.lean();
-		}
 
 		return teamModel
 			.select('_id name')
@@ -57,14 +34,13 @@ export default class GetTeamService implements GetTeamServiceInterface {
 					select: '_id firstName lastName email joinedAt'
 				}
 			})
-			.lean()
 			.exec();
 	}
 
 	async getTeamsOfUser(userId: string) {
 		const teamsUser = await this.teamUserModel.find({ user: userId }).distinct('team');
 
-		const teams: LeanDocument<TeamDocument>[] = await this.teamModel
+		const teams: LeanDocument<TeamDocument[]> = await this.teamModel
 			.find({ _id: { $in: teamsUser } })
 			.select('_id name')
 			.populate({
@@ -79,7 +55,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				path: 'boards',
 				select: '_id'
 			})
-			.lean()
+			.lean({ virtuals: true })
 			.exec();
 
 		return teams.map((team) => {
@@ -166,7 +142,6 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				path: 'user',
 				select: '_id firstName lastName email isSAdmin'
 			})
-			.lean()
 			.exec();
 	}
 }
