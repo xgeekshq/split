@@ -2,7 +2,7 @@ import { UseMutationResult } from 'react-query/types/react/types';
 import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
-import { AccessToken, RefreshToken } from '../token';
+import { Token } from '../token';
 
 export interface User {
   id?: string;
@@ -12,8 +12,8 @@ export interface User {
   email: string;
   password?: string;
   passwordConf?: string;
-  accessToken?: AccessToken;
-  refreshToken?: RefreshToken;
+  accessToken?: Token;
+  refreshToken?: Token;
   isSAdmin: boolean;
   joinedAt: string;
 }

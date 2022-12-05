@@ -10,6 +10,7 @@ type CardEndTeamProps = {
   userId: string;
   isTeamCreator?: boolean;
   isTeamPage?: boolean;
+  isSAdmin?: boolean;
 };
 
 const CardEndTeam = ({
@@ -18,12 +19,14 @@ const CardEndTeam = ({
   userId,
   isTeamCreator,
   isTeamPage,
+  isSAdmin,
 }: CardEndTeamProps) => (
   <Flex align="center" css={{ width: '$237' }} justify="end">
     <RoleDescription role={role} />
-    {!isTeamMemberOrStakeholder && !isTeamCreator && (
+    {!isSAdmin && !isTeamMemberOrStakeholder && !isTeamCreator && (
       <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />
     )}
+    {isSAdmin && <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />}
   </Flex>
 );
 

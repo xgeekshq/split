@@ -111,7 +111,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Show board settings button if current user is allowed to edit
   const isResponsibleInSubBoard = isSubBoard && isResponsible;
   const hasAdminRole =
-    isStakeholderOrAdmin || session?.isSAdmin || isOwner || isResponsibleInSubBoard;
+    isStakeholderOrAdmin || session?.user.isSAdmin || isOwner || isResponsibleInSubBoard;
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -168,7 +168,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               isOpen={isOpen}
               isOwner={isOwner}
               isResponsible={isResponsible}
-              isSAdmin={session?.isSAdmin}
+              isSAdmin={session?.user.isSAdmin}
               isStakeholderOrAdmin={isStakeholderOrAdmin}
               setIsOpen={setIsOpen}
               socketId={socketId}

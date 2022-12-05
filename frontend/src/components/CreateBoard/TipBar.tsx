@@ -11,16 +11,16 @@ const UnorderedList = styled('ul', { paddingInlineStart: '$26' });
 const CreateBoardTipBar = () => (
   <Flex
     direction="column"
-    justify="center"
     css={{
       minHeight: 'calc(100vh - $sizes$92)',
       backgroundColor: '$primary800',
       padding: '$32',
+      pt: '$100',
       maxWidth: '$384',
-      position: 'fixed',
       right: 0,
       top: 0,
       bottom: 0,
+      zIndex: 1,
     }}
   >
     <Icon
