@@ -30,9 +30,7 @@ const TeamMembersList = () => {
             isTeamPage
             isTeamCreator={member.user._id === session?.user.id}
             member={member}
-            isTeamMemberOrStakeholder={[TeamUserRoles.MEMBER, TeamUserRoles.STAKEHOLDER].includes(
-              userRole,
-            )}
+            isTeamMember={userRole === TeamUserRoles.MEMBER}
           />
         ))}
       </ScrollableContent>

@@ -6,7 +6,7 @@ import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSe
 
 type CardEndTeamProps = {
   role: string;
-  isTeamMemberOrStakeholder?: boolean;
+  isTeamMember?: boolean;
   userId: string;
   isTeamCreator?: boolean;
   isTeamPage?: boolean;
@@ -15,7 +15,7 @@ type CardEndTeamProps = {
 
 const CardEndTeam = ({
   role,
-  isTeamMemberOrStakeholder,
+  isTeamMember,
   userId,
   isTeamCreator,
   isTeamPage,
@@ -23,7 +23,7 @@ const CardEndTeam = ({
 }: CardEndTeamProps) => (
   <Flex align="center" css={{ width: '$237' }} justify="end">
     <RoleDescription role={role} />
-    {!isSAdmin && !isTeamMemberOrStakeholder && !isTeamCreator && (
+    {!isSAdmin && !isTeamMember && !isTeamCreator && (
       <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />
     )}
     {isSAdmin && <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />}

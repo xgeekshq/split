@@ -12,15 +12,16 @@ export class TeamUserGuard implements CanActivate {
 	) {}
 
 	async canActivate(context: ExecutionContext) {
-		const permission = this.reflector.get<string>('permission', context.getHandler());
+		const permissions = this.reflector.get<string[]>('permissions', context.getHandler());
 		const request = context.switchToHttp().getRequest();
 
 		const user = request.user;
 		const teamId: string = request.params.teamId;
 		try {
 			const userFound = await this.teamUserModel.findOne({ user: user._id, team: teamId }).exec();
+			const hasPermissions = permissions.includes(userFound?.role) || user.isSAdmin;
 
-			return user.isSAdmin || permission === userFound?.role;
+			return hasPermissions;
 		} catch (error) {
 			throw new ForbiddenException();
 		}

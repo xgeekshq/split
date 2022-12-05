@@ -10,6 +10,7 @@ import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import BoardsInfo from './BoardsInfo';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -45,7 +46,11 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 
     const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
-    return team && myUser?.role === 'admin';
+    if (!myUser) {
+      return false;
+    }
+
+    return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser.role);
   }, [isSAdmin, team, userId]);
 
   return (
@@ -116,7 +121,11 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
             />
 
             <Flex align="center" css={{ width: '$237' }} justify="start">
-              <BoardsInfo team={team} teamAdmin={havePermissions} userSAdmin={isSAdmin} />
+              <BoardsInfo
+                team={team}
+                teamAdminOrStakeholder={havePermissions}
+                userSAdmin={isSAdmin}
+              />
             </Flex>
           </Flex>
         </Flex>
