@@ -17,8 +17,6 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		private deleteBoardService: DeleteBoardService
 	) {}
 
-	private readonly newProperty = this;
-
 	async delete(teamId: string): Promise<boolean> {
 		const teamSession = await this.teamModel.db.startSession();
 		teamSession.startTransaction();
@@ -29,9 +27,10 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 			await this.deleteTeam(teamId, teamSession);
 			await this.deleteTeamUsers(teamId, teamUserSession);
 
+			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
+
 			await teamSession.commitTransaction();
 			await teamUserSession.commitTransaction();
-			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
 
 			return true;
 		} catch (e) {

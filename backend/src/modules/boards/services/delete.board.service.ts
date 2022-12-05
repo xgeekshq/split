@@ -125,7 +125,11 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		const isOwner = String(userId) === String(createdBy);
 
 		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
-			return this.deleteBoardBoardUsersAndSchedules(boardId, true);
+			try {
+				return this.deleteBoardBoardUsersAndSchedules(boardId, true);
+			} catch (error) {
+				throw new BadRequestException(DELETE_FAILED);
+			}
 		}
 		throw new BadRequestException(DELETE_FAILED);
 	}
@@ -133,9 +137,13 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	async deleteBoardsByTeamId(teamId: string) {
 		const teamBoards = await this.getBoardService.getAllBoardsByTeamId(teamId);
 
-		teamBoards.forEach((board) =>
+		const promises = teamBoards.map((board) =>
 			this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false)
 		);
+
+		await Promise.all(promises).catch(() => {
+			throw new BadRequestException(DELETE_FAILED);
+		});
 
 		return true;
 	}
@@ -168,8 +176,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 			await boardSession.endSession();
 			await boardUserSession.endSession();
 		}
-
-		return false;
+		throw new BadRequestException(DELETE_FAILED);
 	}
 
 	private async deleteSimpleBoardUsers(boardSession: ClientSession, boardId: string) {
