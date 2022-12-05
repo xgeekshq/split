@@ -20,4 +20,17 @@ export class UserRepository
 			currentHashedRefreshToken: 0
 		});
 	}
+
+	updateUserWithRefreshToken(refreshToken: string, userId: string) {
+		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { refreshToken } });
+	}
+
+	updateUserPassword(email: string, password: string) {
+		return this.findOneByFieldAndUpdate(
+			{ email },
+			{
+				$set: { password }
+			}
+		);
+	}
 }

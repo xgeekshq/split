@@ -21,10 +21,7 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	getById(_id: string) {
-		return this.userRepository.get(_id, {
-			password: 0,
-			currentHashedRefreshToken: 0
-		});
+		return this.userRepository.getById(_id);
 	}
 
 	async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {

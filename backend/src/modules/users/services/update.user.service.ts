@@ -21,10 +21,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
 		const currentHashedRefreshToken = await encrypt(refreshToken);
 
-		return this.userRepository.findOneByFieldAndUpdate(
-			{ _id: userId },
-			{ $set: { currentHashedRefreshToken } }
-		);
+		return this.userRepository.updateUserWithRefreshToken(currentHashedRefreshToken, userId);
 	}
 
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
@@ -32,12 +29,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 
 		if (newPassword !== newPasswordConf)
 			throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
-		const user = await this.userRepository.findOneByFieldAndUpdate(
-			{ email: userEmail },
-			{
-				$set: { password }
-			}
-		);
+		const user = this.userRepository.updateUserPassword(userEmail, password);
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 
