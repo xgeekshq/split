@@ -6,7 +6,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
 import SuperAdmin from './SuperAdmin';
@@ -17,33 +16,37 @@ const InnerContainer = styled(Flex, Box, {
   px: '$32',
   backgroundColor: '$white',
   borderRadius: '$12',
+  position: 'relative',
+  py: '$22',
+  maxHeight: '$76',
+  ml: 0,
 });
 
 type CardBodyProps = {
-  user: UserWithTeams;
+  userWithTeams: UserWithTeams;
 };
 
-const CardBody = React.memo<CardBodyProps>(({ user }) => {
+const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   const { data: session } = useSession();
 
   const loggedUserIsSAdmin = session?.user.isSAdmin;
 
-  const { firstName, lastName, email, isSAdmin } = user.user;
-  const { teamsNames } = user;
+  const { firstName, lastName, email, isSAdmin } = userWithTeams.user;
+  const { teamsNames } = userWithTeams;
+
+  const getTeamsCountText = () => {
+    if (teamsNames?.length === 1) {
+      return 'in 1 team';
+    }
+    if (teamsNames?.length !== 0 && teamsNames?.length !== 1 && teamsNames) {
+      return `in ${teamsNames.length} teams`;
+    }
+    return 'no teams';
+  };
 
   return (
     <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
-      <InnerContainer
-        align="center"
-        elevation="1"
-        justify="between"
-        css={{
-          position: 'relative',
-          py: '$22',
-          maxHeight: '$76',
-          ml: 0,
-        }}
-      >
+      <InnerContainer align="center" elevation="1" justify="between">
         <Flex align="center" css={{ width: '25%' }} gap="8">
           <Icon
             name="blob-personal"
@@ -68,36 +71,16 @@ const CardBody = React.memo<CardBodyProps>(({ user }) => {
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
-              {!teamsNames && (
-                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in 0 teams
-                </Text>
-              )}
-              {teamsNames?.length === 1 && (
-                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in 1 team
-                </Text>
-              )}
-              {teamsNames?.length !== 0 && teamsNames?.length !== 1 && teamsNames && (
-                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                  in {teamsNames?.length} teams
-                </Text>
-              )}
+              <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
+                {getTeamsCountText()}
+              </Text>
             </Flex>
           </Flex>
           <Flex css={{ width: '40%' }} justify="end">
             <Flex align="center" css={{ width: '$237' }} justify="start">
-              <SuperAdmin userSAdmin={isSAdmin} loggedUserSAdmin={loggedUserIsSAdmin} />
+              {loggedUserIsSAdmin && <SuperAdmin userSAdmin={isSAdmin} />}
             </Flex>
-            <Separator
-              orientation="vertical"
-              css={{
-                ml: '$20',
-                backgroundColor: '$primary100',
-                height: '$24 !important',
-              }}
-            />
-            <CardEnd user={user.user} userSAdmin={loggedUserIsSAdmin} />
+            {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
           </Flex>
         </Flex>
       </InnerContainer>
