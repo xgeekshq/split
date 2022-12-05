@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
@@ -72,29 +73,104 @@ const useCreateBoard = (team: Team) => {
     [generateSubBoard, team],
   );
 
+  const sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+    users
+      .map((user) => ({
+        ...user,
+        userCreated: user.user.userAzureCreatedAt || user.user.joinedAt,
+      }))
+      .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+
+  const getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+    const availableUsersListSorted = sortUsersListByOldestCreatedDate(availableUsers);
+
+    // returns the user who has the oldest account date
+    return availableUsersListSorted.slice(0, 1).map((user) => ({
+      ...user,
+      isNewJoiner: false,
+    }));
+  };
+
+  const getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
+    const randomGroupOfUsers = [];
+
+    let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+
+    if (availableUsersToBeResponsible.length < 1) {
+      availableUsersToBeResponsible = getAvailableUsersToBeResponsible(availableUsers);
+    }
+
+    // this object ensures that each group has one element that can be responsible
+    const candidateToBeTeamResponsible = getRandomUser(availableUsersToBeResponsible);
+    randomGroupOfUsers.push({
+      user: candidateToBeTeamResponsible.user,
+      role: BoardUserRoles.MEMBER,
+      votesCount: 0,
+      isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+      _id: candidateToBeTeamResponsible._id,
+    });
+
+    const availableUsersWotResponsible = availableUsers.filter(
+      (user) => user._id !== candidateToBeTeamResponsible._id,
+    );
+
+    let i = 0;
+
+    // adds the rest of the elements of each group
+    while (i < usersPerTeam - 1) {
+      const teamUser = getRandomUser(availableUsersWotResponsible);
+      randomGroupOfUsers.push({
+        user: teamUser.user,
+        role: BoardUserRoles.MEMBER,
+        votesCount: 0,
+        isNewJoiner: teamUser.isNewJoiner,
+        _id: teamUser._id,
+      });
+      i++;
+    }
+    return randomGroupOfUsers;
+  };
+
   const handleSplitBoards = useCallback(
     (maxTeams: number) => {
       const subBoards: BoardToAdd[] = [];
       const splitUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
-      const availableUsers = [...teamMembers];
+      let availableUsers = [...teamMembers];
+      const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
+      let membersWithoutTeam = teamMembers.length;
 
-      new Array(teamMembers.length).fill(0).reduce((j) => {
-        if (j >= maxTeams) j = 0;
-        const teamUser = getRandomUser(availableUsers);
+      new Array(maxTeams).fill(0).forEach((_, i) => {
+        let numberOfUsersByGroup = usersPerTeam;
+        membersWithoutTeam -= usersPerTeam;
 
-        splitUsers[j] = [
-          ...splitUsers[j],
-          {
-            user: teamUser.user,
-            role: BoardUserRoles.MEMBER,
-            votesCount: 0,
-            isNewJoiner: teamUser.isNewJoiner,
-            _id: teamUser._id,
-          },
-        ];
-        return ++j;
-      }, 0);
+        if (membersWithoutTeam < usersPerTeam) numberOfUsersByGroup += 1;
+
+        const indexToCompare = i - 1 < 0 ? 0 : i - 1;
+
+        availableUsers = availableUsers.filter(
+          (user) => !splitUsers[indexToCompare].find((member) => member._id === user._id),
+        );
+
+        splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
+      });
+
+      // new Array(teamMembers.length).fill(0).reduce((j) => {
+      //   if (j >= maxTeams) j = 0;
+      //   const teamUser = getRandomUser(availableUsers);
+
+      //   splitUsers[j] = [
+      //     ...splitUsers[j],
+      //     {
+      //       user: teamUser.user,
+      //       role: BoardUserRoles.MEMBER,
+      //       votesCount: 0,
+      //       isNewJoiner: teamUser.isNewJoiner,
+      //       _id: teamUser._id,
+      //     },
+      //   ];
+      //   return ++j;
+      // }, 0);
 
       generateSubBoards(maxTeams, splitUsers, subBoards);
 
