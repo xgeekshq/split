@@ -17,17 +17,21 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId }: SuperAdminProps) =
   const [checkedState, setCheckedState] = useState(userSAdmin);
 
   const {
-    updateUserIsAdmin: { mutate },
+    updateUserIsAdmin: { mutateAsync },
   } = useUser();
 
-  const handleSuperAdminChange = (checked: boolean) => {
+  const handleSuperAdminChange = async (checked: boolean) => {
     const updateTeamUser: UpdateUserIsAdmin = {
       _id: userId,
       isSAdmin: checked,
     };
 
-    setCheckedState(checked);
-    mutate(updateTeamUser);
+    try {
+      await mutateAsync(updateTeamUser);
+      setCheckedState(checked);
+    } catch (error) {
+      setCheckedState(!checked);
+    }
   };
 
   if (loggedUserSAdmin) {

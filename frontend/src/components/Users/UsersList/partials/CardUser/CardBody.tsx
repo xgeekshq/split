@@ -9,6 +9,7 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
 import Tooltip from '@/components/Primitives/Tooltip';
+import Link from 'next/link';
 import SuperAdmin from './SuperAdmin';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -70,7 +71,11 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           />
 
           <Flex align="center" css={{ width: '$147' }} gap="8">
-            <CardTitle firstName={firstName} lastName={lastName} />
+            <Link href={`/users/${userWithTeams.user._id}`}>
+              <Flex>
+                <CardTitle firstName={firstName} lastName={lastName} />
+              </Flex>
+            </Link>
           </Flex>
 
           <Flex align="center" css={{ width: '$147' }}>
