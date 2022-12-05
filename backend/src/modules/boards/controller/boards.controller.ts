@@ -32,12 +32,7 @@ import {
 import { BaseParam } from 'src/libs/dto/param/base.param';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
-import {
-	BOARD_NOT_FOUND,
-	DELETE_FAILED,
-	INSERT_FAILED,
-	UPDATE_FAILED
-} from 'src/libs/exceptions/messages';
+import { BOARD_NOT_FOUND, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -246,8 +241,6 @@ export default class BoardsController {
 		@Req() request: RequestWithUser
 	) {
 		const result = await this.deleteBoardApp.delete(boardId, request.user._id);
-
-		if (!result) throw new BadRequestException(DELETE_FAILED);
 
 		if (socketId && teamId) {
 			this.socketService.sendUpdatedBoards(socketId, teamId);

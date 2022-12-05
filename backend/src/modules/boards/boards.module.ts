@@ -39,6 +39,12 @@ import BoardsController from './controller/boards.controller';
 		getBoardApplication
 	],
 	controllers: [BoardsController],
-	exports: [getBoardApplication, createBoardService, getBoardService, updateBoardService]
+	exports: [
+		getBoardApplication,
+		createBoardService,
+		getBoardService,
+		updateBoardService,
+		deleteBoardService
+	]
 })
 export default class BoardsModule {}

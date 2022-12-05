@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	NotFoundException,
+	forwardRef
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, LeanDocument, Model, ObjectId } from 'mongoose';
 import { TeamRoles } from 'src/libs/enum/team.roles';
@@ -13,6 +19,8 @@ import { UserDocument } from 'src/modules/users/entities/user.schema';
 import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardService {
@@ -24,7 +32,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
 		private deleteSheduleService: DeleteSchedulesServiceInterface,
 		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>
+		private boardUserModel: Model<BoardUserDocument>,
+		@Inject(forwardRef(() => Boards.TYPES.services.GetBoardService))
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
 	private async getTeamUser(
@@ -82,7 +92,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		if (deletedCount <= 0) throw Error(DELETE_FAILED);
 	}
 
-	async deleteBoard(boardId: string, userId: string, boardSession: ClientSession) {
+	async deleteBoard(boardId: string, boardSession: ClientSession) {
 		const result = await this.boardModel.findOneAndRemove(
 			{
 				_id: boardId
@@ -96,7 +106,6 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 	}
 
 	async delete(boardId: string, userId: string) {
-		const boardSession = await this.boardModel.db.startSession();
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
@@ -116,31 +125,70 @@ export default class DeleteBoardServiceImpl implements DeleteBoardService {
 		const isOwner = String(userId) === String(createdBy);
 
 		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
-			const boardUserSession = await this.boardUserModel.db.startSession();
-			boardSession.startTransaction();
-			boardUserSession.startTransaction();
 			try {
-				const { _id, dividedBoards } = await this.deleteBoard(boardId, userId, boardSession);
-				this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
-
-				if (!isEmpty(dividedBoards)) {
-					await this.deleteSubBoards(dividedBoards, boardSession);
-
-					await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
-				}
-				await boardSession.commitTransaction();
-				await boardUserSession.commitTransaction();
-
-				return true;
-			} catch (e) {
-				await boardSession.abortTransaction();
-				await boardUserSession.abortTransaction();
-			} finally {
-				await boardSession.endSession();
-				await boardUserSession.endSession();
+				return this.deleteBoardBoardUsersAndSchedules(boardId, true);
+			} catch (error) {
+				throw new BadRequestException(DELETE_FAILED);
 			}
 		}
+		throw new BadRequestException(DELETE_FAILED);
+	}
 
-		return false;
+	async deleteBoardsByTeamId(teamId: string) {
+		const teamBoards = await this.getBoardService.getAllBoardsByTeamId(teamId);
+
+		const promises = teamBoards.map((board) =>
+			this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false)
+		);
+
+		await Promise.all(promises).catch(() => {
+			throw new BadRequestException(DELETE_FAILED);
+		});
+
+		return true;
+	}
+
+	private async deleteBoardBoardUsersAndSchedules(boardId: string, isMainBoard: boolean) {
+		const boardSession = await this.boardModel.db.startSession();
+		const boardUserSession = await this.boardUserModel.db.startSession();
+		boardSession.startTransaction();
+		boardUserSession.startTransaction();
+		try {
+			const { _id, dividedBoards } = await this.deleteBoard(boardId.toString(), boardSession);
+			this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
+
+			if (isMainBoard && !isEmpty(dividedBoards)) {
+				await this.deleteSubBoards(dividedBoards, boardSession);
+
+				await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
+			} else {
+				await this.deleteSimpleBoardUsers(boardUserSession, _id);
+			}
+
+			await boardSession.commitTransaction();
+			await boardUserSession.commitTransaction();
+
+			return true;
+		} catch (e) {
+			await boardSession.abortTransaction();
+			await boardUserSession.abortTransaction();
+		} finally {
+			await boardSession.endSession();
+			await boardUserSession.endSession();
+		}
+		throw new BadRequestException(DELETE_FAILED);
+	}
+
+	private async deleteSimpleBoardUsers(boardSession: ClientSession, boardId: string) {
+		const { deletedCount } = await this.boardUserModel
+			.deleteMany(
+				{
+					board: boardId
+				},
+				{ session: boardSession }
+			)
+			.exec();
+
+		if (deletedCount <= 0) throw Error(DELETE_FAILED);
 	}
 }
