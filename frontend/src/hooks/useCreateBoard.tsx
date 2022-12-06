@@ -81,7 +81,7 @@ const useCreateBoard = (team: Team) => {
       }))
       .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
-  const getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+  const getAvailableUsersToBeResponsible = useCallback((availableUsers: TeamUser[]) => {
     const availableUsersListSorted = sortUsersListByOldestCreatedDate(availableUsers);
 
     // returns the user who has the oldest account date
@@ -89,47 +89,50 @@ const useCreateBoard = (team: Team) => {
       ...user,
       isNewJoiner: false,
     }));
-  };
+  }, []);
 
-  const getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
-    const randomGroupOfUsers = [];
+  const getRandomGroup = useCallback(
+    (usersPerTeam: number, availableUsers: TeamUser[]) => {
+      const randomGroupOfUsers = [];
 
-    let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+      let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
 
-    if (availableUsersToBeResponsible.length < 1) {
-      availableUsersToBeResponsible = getAvailableUsersToBeResponsible(availableUsers);
-    }
+      if (availableUsersToBeResponsible.length < 1) {
+        availableUsersToBeResponsible = getAvailableUsersToBeResponsible(availableUsers);
+      }
 
-    // this object ensures that each group has one element that can be responsible
-    const candidateToBeTeamResponsible = getRandomUser(availableUsersToBeResponsible);
-    randomGroupOfUsers.push({
-      user: candidateToBeTeamResponsible.user,
-      role: BoardUserRoles.MEMBER,
-      votesCount: 0,
-      isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
-      _id: candidateToBeTeamResponsible._id,
-    });
-
-    const availableUsersWotResponsible = availableUsers.filter(
-      (user) => user._id !== candidateToBeTeamResponsible._id,
-    );
-
-    let i = 0;
-
-    // adds the rest of the elements of each group
-    while (i < usersPerTeam - 1) {
-      const teamUser = getRandomUser(availableUsersWotResponsible);
+      // this object ensures that each group has one element that can be responsible
+      const candidateToBeTeamResponsible = getRandomUser(availableUsersToBeResponsible);
       randomGroupOfUsers.push({
-        user: teamUser.user,
+        user: candidateToBeTeamResponsible.user,
         role: BoardUserRoles.MEMBER,
         votesCount: 0,
-        isNewJoiner: teamUser.isNewJoiner,
-        _id: teamUser._id,
+        isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+        _id: candidateToBeTeamResponsible._id,
       });
-      i++;
-    }
-    return randomGroupOfUsers;
-  };
+
+      const availableUsersWotResponsible = availableUsers.filter(
+        (user) => user._id !== candidateToBeTeamResponsible._id,
+      );
+
+      let i = 0;
+
+      // adds the rest of the elements of each group
+      while (i < usersPerTeam - 1) {
+        const teamUser = getRandomUser(availableUsersWotResponsible);
+        randomGroupOfUsers.push({
+          user: teamUser.user,
+          role: BoardUserRoles.MEMBER,
+          votesCount: 0,
+          isNewJoiner: teamUser.isNewJoiner,
+          _id: teamUser._id,
+        });
+        i++;
+      }
+      return randomGroupOfUsers;
+    },
+    [getAvailableUsersToBeResponsible, getRandomUser],
+  );
 
   const handleSplitBoards = useCallback(
     (maxTeams: number) => {
@@ -176,7 +179,7 @@ const useCreateBoard = (team: Team) => {
 
       return subBoards;
     },
-    [generateSubBoards, getRandomUser, teamMembers],
+    [generateSubBoards, getRandomGroup, teamMembers],
   );
 
   const canAdd = useMemo(() => {

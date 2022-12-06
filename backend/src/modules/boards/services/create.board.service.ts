@@ -262,28 +262,105 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return Math.floor(maxTeams);
 	};
 
+	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+		users
+			.map((user) => ({
+				...user,
+				userCreated: (user.user as User).userAzureCreatedAt || (user.user as User).joinedAt
+			}))
+			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+
+	getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
+
+		// returns the user who has the oldest account date
+		return availableUsersListSorted.slice(0, 1).map((user) => ({
+			...user,
+			isNewJoiner: false
+		}));
+	};
+
+	getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
+		const randomGroupOfUsers = [];
+
+		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+
+		if (availableUsersToBeResponsible.length < 1) {
+			availableUsersToBeResponsible = this.getAvailableUsersToBeResponsible(availableUsers);
+		}
+
+		// this object ensures that each group has one element that can be responsible
+		const candidateToBeTeamResponsible = this.getRandomUser(availableUsersToBeResponsible);
+		randomGroupOfUsers.push({
+			user: candidateToBeTeamResponsible.user as User,
+			role: BoardRoles.MEMBER,
+			votesCount: 0,
+			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner
+		});
+
+		const availableUsersWotResponsible = availableUsers.filter(
+			(user) => user._id !== candidateToBeTeamResponsible._id
+		);
+
+		let i = 0;
+
+		// adds the rest of the elements of each group
+		while (i < usersPerTeam - 1) {
+			const teamUser = this.getRandomUser(availableUsersWotResponsible);
+			randomGroupOfUsers.push({
+				user: teamUser.user,
+				role: BoardRoles.MEMBER,
+				votesCount: 0,
+				isNewJoiner: teamUser.isNewJoiner
+			});
+			i++;
+		}
+
+		return randomGroupOfUsers;
+	};
+
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
 	handleSplitBoards = (maxTeams: number, teamMembers: LeanDocument<TeamUserDocument>[]) => {
 		const subBoards: BoardDto[] = [];
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
-		const availableUsers = [...teamMembers];
-		new Array(teamMembers.length).fill(0).reduce((j) => {
-			if (j >= maxTeams) j = 0;
-			const teamUser = this.getRandomUser(availableUsers);
-			splitUsers[j] = [
-				...splitUsers[j],
-				{
-					user: (teamUser.user as LeanDocument<UserDocument>)._id.toString(),
-					role: BoardRoles.MEMBER,
-					votesCount: 0,
-					isNewJoiner: teamUser.isNewJoiner
-				}
-			];
+		let availableUsers = [...teamMembers];
+		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
+		let membersWithoutTeam = teamMembers.length;
 
-			return ++j;
-		}, 0);
+		new Array(maxTeams).fill(0).forEach((_, i) => {
+			let numberOfUsersByGroup = usersPerTeam;
+			membersWithoutTeam -= usersPerTeam;
+
+			if (membersWithoutTeam < usersPerTeam) numberOfUsersByGroup += 1;
+
+			const indexToCompare = i - 1 < 0 ? 0 : i - 1;
+
+			availableUsers = availableUsers.filter(
+				(user) => !splitUsers[indexToCompare].find((member) => member._id === user._id)
+			);
+
+			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
+		});
+
+		// const availableUsers = [...teamMembers];
+
+		// new Array(teamMembers.length).fill(0).reduce((j) => {
+		// 	if (j >= maxTeams) j = 0;
+		// 	const teamUser = this.getRandomUser(availableUsers);
+		// 	splitUsers[j] = [
+		// 		...splitUsers[j],
+		// 		{
+		// 			user: (teamUser.user as LeanDocument<UserDocument>)._id.toString(),
+		// 			role: BoardRoles.MEMBER,
+		// 			votesCount: 0,
+		// 			isNewJoiner: teamUser.isNewJoiner
+		// 		}
+		// 	];
+
+		// 	return ++j;
+		// }, 0);
 
 		this.generateSubBoards(maxTeams, splitUsers, subBoards);
 
