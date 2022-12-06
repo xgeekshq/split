@@ -54,7 +54,6 @@ const NewTeam: NextPage = () => {
     }));
 
     setUsersListState(usersWithChecked);
-
     setMembersListState(listMembers);
   }, [data, session?.user.id, setMembersListState, setUsersListState]);
 

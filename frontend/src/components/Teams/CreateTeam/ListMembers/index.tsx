@@ -145,7 +145,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
             />
           </Flex>
           <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-            Teams
+            Team Members
           </Text>
           <ScrollableContent direction="column" justify="start" ref={scrollRef}>
             <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>

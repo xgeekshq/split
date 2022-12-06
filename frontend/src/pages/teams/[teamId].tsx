@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
@@ -16,28 +16,68 @@ import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
 import useTeam from '@/hooks/useTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { TeamUser } from '@/types/team/team.user';
+import { UserList } from '@/types/team/userList';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { User } from '@/types/user/user';
 
 const Team = () => {
   // Session Details
   const { data: session } = useSession({ required: true });
   // const userId = session?.user?.id;
+  const setToastState = useSetRecoilState(toastState);
 
   // // Hooks
   const {
     fetchTeam: { data },
   } = useTeam({ autoFetchTeam: false });
 
+  const usersData = useQuery(['users'], () => getAllUsers(), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the users',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  }).data;
+
   // Recoil States
   const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
 
   useEffect(() => {
-    if (!data) {
+    if (!data || !usersData) {
       return;
     }
+    const teamMemberList: UserList[] = data.users.map((teamUser: TeamUser) => ({
+      ...teamUser.user,
+      isChecked: true,
+    }));
+
+    const allUsersList: UserList[] = usersData.map((user: User) => ({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      isSAdmin: user.isSAdmin,
+      joinedAt: user.joinedAt,
+      isChecked: true,
+    }));
+
+    const checkboxUsersList = allUsersList.map((user: UserList) => {
+      const userIsTeamMember = teamMemberList
+        .map((teamMember: UserList) => teamMember._id === user._id)
+        .includes(true);
+      return userIsTeamMember ? user : { ...user, isChecked: false };
+    });
 
     setMembersListState(data.users);
-  }, [data, session?.user.id, setMembersListState, setUsersListState]);
+    setUsersListState(checkboxUsersList);
+  }, [data, session?.user.id, setMembersListState, setUsersListState, usersData]);
 
   if (!session || !data) return null;
   return (

@@ -92,7 +92,7 @@ const Checkbox: React.FC<{
     shouldUseForm: false,
   };
 
-  const { setValue } = useFormContext();
+  const formContext = useFormContext();
 
   const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | 'indeterminate'>(
     checked,
@@ -103,7 +103,7 @@ const Checkbox: React.FC<{
     if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
 
     if (shouldUseForm) {
-      setValue('slackEnable', !!isChecked);
+      formContext.setValue('slackEnable', !!isChecked);
     }
   };
 
