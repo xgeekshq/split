@@ -60,6 +60,8 @@ const Comment: React.FC<CommentProps> = React.memo(
                 size="xs"
                 css={{
                   filter: commentBlur(hideCards, comment as CommentType, userId),
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre',
                 }}
               >
                 {comment.text}
