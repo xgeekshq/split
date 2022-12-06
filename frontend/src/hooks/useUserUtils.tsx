@@ -1,7 +1,6 @@
 import { QueryClient, useQueryClient } from 'react-query';
 import { NextRouter, useRouter } from 'next/router';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
-
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { UserWithTeams } from '@/types/user/user';
 import { usersWithTeamsState } from '../store/user/atoms/user.atom';
