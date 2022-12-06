@@ -18,7 +18,12 @@ import {
 import AuthController from 'src/modules/auth/controller/auth.controller';
 import { getBoardApplication, getBoardService } from 'src/modules/boards/boards.providers';
 import EmailModule from 'src/modules/mailer/mailer.module';
-import { createTeamService, getTeamApplication, getTeamService } from 'src/modules/teams/providers';
+import {
+	createTeamService,
+	getTeamApplication,
+	getTeamService,
+	updateTeamService
+} from 'src/modules/teams/providers';
 import {
 	createUserService,
 	getUserApplication,
@@ -58,6 +63,7 @@ describe('AuthController', () => {
 				getUserApplication,
 				getUserService,
 				userRepository,
+				updateTeamService,
 				ConfigService,
 				{
 					provide: ConfigService,

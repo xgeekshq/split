@@ -101,7 +101,7 @@ export default NextAuth({
         user.strategy = 'azure';
         user.id = _id;
         user.isSAdmin = isSAdmin;
-        user.userAzureCreatedAt = userAzureCreatedAt || undefined;
+        user.userAzureCreatedAt = userAzureCreatedAt;
       }
 
       return true;
