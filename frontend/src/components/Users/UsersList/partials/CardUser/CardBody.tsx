@@ -32,6 +32,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   const { data: session } = useSession();
 
   const loggedUserIsSAdmin = session?.user.isSAdmin;
+  const userLoginId = session?.user.id;
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { firstName, lastName, email, isSAdmin, _id } = userWithTeams.user;
@@ -89,7 +90,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
               <Tooltip content={teamsSeparatedByComma}>
-                <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
+                <Text css={{ mr: '$2', fontWeight: '$bold', cursor: 'default' }} size="sm">
                   {getTeamsCountText()}
                 </Text>
               </Tooltip>
@@ -97,13 +98,12 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           </Flex>
           <Flex css={{ width: '40%' }} justify="end">
             <Flex align="center" css={{ width: '$237' }} justify="start">
-              {loggedUserIsSAdmin && (
-                <SuperAdmin
-                  userSAdmin={isSAdmin}
-                  loggedUserSAdmin={loggedUserIsSAdmin}
-                  userId={_id}
-                />
-              )}
+              <SuperAdmin
+                userSAdmin={isSAdmin}
+                loggedUserSAdmin={loggedUserIsSAdmin}
+                userId={_id}
+                loggedUserId={userLoginId}
+              />
             </Flex>
             {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
           </Flex>

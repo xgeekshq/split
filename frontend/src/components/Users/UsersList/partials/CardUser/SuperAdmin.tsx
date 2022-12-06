@@ -3,7 +3,6 @@ import Text from '@/components/Primitives/Text';
 import { useState } from 'react';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 
-import Separator from '@/components/Primitives/Separator';
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
 
@@ -11,10 +10,12 @@ type SuperAdminProps = {
   userSAdmin: boolean;
   loggedUserSAdmin: boolean | undefined;
   userId: string;
+  loggedUserId: string | undefined;
 };
 
-const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId }: SuperAdminProps) => {
+const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: SuperAdminProps) => {
   const [checkedState, setCheckedState] = useState(userSAdmin);
+  const isDisabledState = true;
 
   const {
     updateUserIsAdmin: { mutateAsync },
@@ -37,21 +38,25 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId }: SuperAdminProps) =
   if (loggedUserSAdmin) {
     return (
       <Flex css={{ ml: '$2', display: 'flex', alignItems: 'center' }}>
-        <ConfigurationSettings
-          handleCheckedChange={handleSuperAdminChange}
-          isChecked={checkedState}
-          text=""
-          title="Super Admin"
-        />
+        {loggedUserId !== userId && (
+          <ConfigurationSettings
+            handleCheckedChange={handleSuperAdminChange}
+            isChecked={checkedState}
+            text=""
+            title="Super Admin"
+          />
+        )}
 
-        <Separator
-          orientation="vertical"
-          css={{
-            ml: '$20',
-            backgroundColor: '$primary100',
-            height: '$24 !important',
-          }}
-        />
+        {loggedUserId === userId && (
+          <ConfigurationSettings
+            handleCheckedChange={handleSuperAdminChange}
+            isChecked={checkedState}
+            text=""
+            title="Super Admin"
+            disabled={isDisabledState}
+            styleVariant={isDisabledState}
+          />
+        )}
       </Flex>
     );
   }
