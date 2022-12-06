@@ -62,7 +62,8 @@ const useCreateBoard = (team: Team) => {
             BoardUserRoles.RESPONSIBLE;
 
           const result = splitUsers[i].map(
-            (user) => teamUsersWotIsNewJoiner.find((member) => member._id === user._id) || user,
+            (user) =>
+              teamUsersWotIsNewJoiner.find((member) => member.user._id === user.user._id) || user,
           ) as BoardUserToAdd[];
 
           newBoard.users = result;
@@ -75,20 +76,20 @@ const useCreateBoard = (team: Team) => {
 
   const sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
     users
-      .map((user) => ({
-        ...user,
-        userCreated: user.user.userAzureCreatedAt || user.user.joinedAt,
-      }))
+      .map((user) => {
+        user.userCreated = user.user.userAzureCreatedAt || user.user.joinedAt;
+        return user;
+      })
       .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
   const getAvailableUsersToBeResponsible = useCallback((availableUsers: TeamUser[]) => {
     const availableUsersListSorted = sortUsersListByOldestCreatedDate(availableUsers);
 
     // returns the user who has the oldest account date
-    return availableUsersListSorted.slice(0, 1).map((user) => ({
-      ...user,
-      isNewJoiner: false,
-    }));
+    return availableUsersListSorted.slice(0, 1).map((user) => {
+      user.isNewJoiner = false;
+      return user;
+    });
   }, []);
 
   const getRandomGroup = useCallback(
@@ -112,7 +113,7 @@ const useCreateBoard = (team: Team) => {
       });
 
       const availableUsersWotResponsible = availableUsers.filter(
-        (user) => user._id !== candidateToBeTeamResponsible._id,
+        (user) => user.user._id !== candidateToBeTeamResponsible.user._id,
       );
 
       let i = 0;
@@ -120,6 +121,7 @@ const useCreateBoard = (team: Team) => {
       // adds the rest of the elements of each group
       while (i < usersPerTeam - 1) {
         const teamUser = getRandomUser(availableUsersWotResponsible);
+
         randomGroupOfUsers.push({
           user: teamUser.user,
           role: BoardUserRoles.MEMBER,
@@ -147,33 +149,17 @@ const useCreateBoard = (team: Team) => {
         let numberOfUsersByGroup = usersPerTeam;
         membersWithoutTeam -= usersPerTeam;
 
-        if (membersWithoutTeam < usersPerTeam) numberOfUsersByGroup += 1;
+        if (membersWithoutTeam < usersPerTeam && membersWithoutTeam !== 0)
+          numberOfUsersByGroup += 1;
 
         const indexToCompare = i - 1 < 0 ? 0 : i - 1;
 
         availableUsers = availableUsers.filter(
-          (user) => !splitUsers[indexToCompare].find((member) => member._id === user._id),
+          (user) => !splitUsers[indexToCompare].find((member) => member.user._id === user.user._id),
         );
 
         splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
       });
-
-      // new Array(teamMembers.length).fill(0).reduce((j) => {
-      //   if (j >= maxTeams) j = 0;
-      //   const teamUser = getRandomUser(availableUsers);
-
-      //   splitUsers[j] = [
-      //     ...splitUsers[j],
-      //     {
-      //       user: teamUser.user,
-      //       role: BoardUserRoles.MEMBER,
-      //       votesCount: 0,
-      //       isNewJoiner: teamUser.isNewJoiner,
-      //       _id: teamUser._id,
-      //     },
-      //   ];
-      //   return ++j;
-      // }, 0);
 
       generateSubBoards(maxTeams, splitUsers, subBoards);
 

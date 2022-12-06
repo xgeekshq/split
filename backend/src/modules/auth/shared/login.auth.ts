@@ -13,5 +13,15 @@ export const signIn = async (
 
 	if (!jwt) return null;
 
-	return { ...jwt, email, firstName, lastName, strategy, id: _id, isSAdmin, userAzureCreatedAt };
+	return {
+		...jwt,
+		email,
+		firstName,
+		lastName,
+		strategy,
+		id: _id,
+		isSAdmin,
+		userAzureCreatedAt,
+		_id
+	};
 };

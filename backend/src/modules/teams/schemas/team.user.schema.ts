@@ -9,6 +9,8 @@ export type TeamUserDocument = TeamUser & Document;
 
 @Schema()
 export default class TeamUser {
+	_id?: string;
+
 	@Prop({
 		nullable: false,
 		type: String,
@@ -23,11 +25,12 @@ export default class TeamUser {
 	isNewJoiner!: boolean;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
-	user!: User | ObjectId;
-	//user!: User;
+	user!: User | ObjectId | string;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'Team', nullable: false })
 	team!: Team | ObjectId;
+
+	userCreated?: Date;
 }
 
 export const TeamUserSchema = SchemaFactory.createForClass(TeamUser);

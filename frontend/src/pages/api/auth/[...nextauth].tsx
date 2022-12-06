@@ -83,14 +83,13 @@ export default NextAuth({
 
         if (!data) return false;
 
-
         const {
           firstName,
           lastName,
           accessToken,
           refreshToken,
           email,
-          id,
+          _id,
           isSAdmin,
           userAzureCreatedAt,
         } = data;
