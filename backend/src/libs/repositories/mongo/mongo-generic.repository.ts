@@ -1,4 +1,4 @@
-import { Model, UpdateQuery } from 'mongoose';
+import { Model, QueryOptions, UpdateQuery } from 'mongoose';
 import { BaseInterfaceRepository } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
@@ -39,7 +39,11 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().exec();
 	}
 
-	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T> {
-		return this._repository.findOneAndUpdate(value, query).exec();
+	findOneByFieldAndUpdate(
+		value: ModelProps<T>,
+		query: UpdateQuery<T>,
+		options?: QueryOptions<T>
+	): Promise<T> {
+		return this._repository.findOneAndUpdate(value, query, options).exec();
 	}
 }

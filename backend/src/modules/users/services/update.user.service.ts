@@ -60,9 +60,10 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	}
 
 	updateSuperAdmin(user: UpdateUserDto) {
-		return this.userModel
-			.findOneAndUpdate({ _id: user._id }, { $set: { isSAdmin: user.isSAdmin } }, { new: true })
-			.lean()
-			.exec();
+		const userToUpdate = this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
+
+		if (!userToUpdate) throw new HttpException('UPDATE_FAILED', HttpStatus.BAD_REQUEST);
+
+		return userToUpdate;
 	}
 }

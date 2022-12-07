@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Inject, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Put, UseGuards } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
@@ -21,7 +21,6 @@ import { GetUserApplication } from '../interfaces/applications/get.user.applicat
 import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
@@ -114,10 +113,6 @@ export default class UsersController {
 	@UseGuards(SuperAdminGuard)
 	@Put('/sadmin')
 	async updateUserSuperAdmin(@Body() userData: UpdateUserDto) {
-		const user = await this.updateUserApp.updateSuperAdmin(userData);
-
-		if (!user) throw new BadRequestException(UPDATE_FAILED);
-
-		return user;
+		return await this.updateUserApp.updateSuperAdmin(userData);
 	}
 }

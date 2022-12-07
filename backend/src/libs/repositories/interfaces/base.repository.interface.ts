@@ -1,4 +1,4 @@
-import { UpdateQuery } from 'mongoose';
+import { QueryOptions, UpdateQuery } from 'mongoose';
 import { ModelProps, SelectedValues } from '../types';
 
 export interface BaseInterfaceRepository<T> {
@@ -14,5 +14,9 @@ export interface BaseInterfaceRepository<T> {
 
 	countDocuments(): Promise<number>;
 
-	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T>;
+	findOneByFieldAndUpdate(
+		value: ModelProps<T>,
+		query: UpdateQuery<T>,
+		options?: QueryOptions<T>
+	): Promise<T>;
 }
