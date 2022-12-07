@@ -14,6 +14,16 @@ export const createBoardState = atom({
   default: false,
 });
 
+export const createBoardTeam = atom<Team | undefined>({
+  key: 'createBoardTeam',
+  default: {
+    _id: '',
+    name: '',
+    users: [],
+    boardsCount: 0,
+  },
+});
+
 export interface CreateBoardData {
   count: {
     teamsCount: number;

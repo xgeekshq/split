@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -17,7 +17,7 @@ import {
   SubContainer,
 } from '@/styles/pages/boards/new.styles';
 
-import { getAllTeams } from '@/api/teamService';
+import { getTeamsOfUser } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName';
 import FakeSettingsTabs from '@/components/CreateBoard/fake/FakeSettingsTabs';
 import SettingsTabs from '@/components/CreateBoard/SettingsTabs';
@@ -32,16 +32,19 @@ import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
   createBoardDataState,
   createBoardError,
+  createBoardTeam,
 } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useTeam from '@/hooks/useTeam';
+import { teamsOfUser } from '@/store/team/atom/team.atom';
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession({ required: true });
-  const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
   /**
@@ -51,6 +54,9 @@ const NewBoard: NextPage = () => {
   const boardState = useRecoilValue(createBoardDataState);
   const resetBoardState = useResetRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
+  const [teams, setTeams] = useRecoilState(teamsOfUser);
+  // const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
+  const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   /**
    * User Board Hook
@@ -58,6 +64,17 @@ const NewBoard: NextPage = () => {
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
+
+  /**
+   * Team  Hook
+   */
+  const {
+    fetchTeamsOfUser: { data: teamsData },
+  } = useTeam({ autoFetchTeam: false });
+
+  if (teamsData) {
+    setTeams(teamsData);
+  }
 
   /**
    * React Hook Form
@@ -83,6 +100,7 @@ const NewBoard: NextPage = () => {
    */
   const handleBack = useCallback(() => {
     resetBoardState();
+    setSelectedTeam(undefined);
     setBackButtonState(true);
     router.back();
   }, [router, resetBoardState]);
@@ -210,7 +228,7 @@ export default NewBoard;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getAllTeams(context));
+    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
 
     return {
       props: {
