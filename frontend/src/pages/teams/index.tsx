@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
@@ -21,10 +21,9 @@ const Teams = () => {
     fetchTeamsOfUser: { data, isFetching },
   } = useTeam({ autoFetchTeam: false });
 
-  useEffect(() => {
-    if (!data) return;
+  if (data) {
     setTeamsList(data);
-  }, [data, setTeamsList]);
+  }
 
   if (!session || !data) return null;
 

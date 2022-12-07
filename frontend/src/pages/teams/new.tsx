@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
@@ -12,6 +11,9 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import QueryError from '@/components/Errors/QueryError';
+import LoadingPage from '@/components/loadings/LoadingPage';
+import { Suspense } from 'react';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -32,12 +34,8 @@ const NewTeam: NextPage = () => {
   const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
 
-  useEffect(() => {
-    const listMembers: TeamUser[] | undefined = [];
-
-    if (!data) {
-      return;
-    }
+  const listMembers: TeamUser[] | undefined = [];
+  if (data) {
     data.forEach((user) => {
       if (user._id === session?.user.id) {
         listMembers.push({
@@ -56,9 +54,17 @@ const NewTeam: NextPage = () => {
     setUsersListState(usersWithChecked);
 
     setMembersListState(listMembers);
-  }, [data, session?.user.id, setMembersListState, setUsersListState]);
+  }
 
-  return <CreateTeam />;
+  if (!session || !data) return null;
+
+  return (
+    <Suspense fallback={<LoadingPage />}>
+      <QueryError>
+        <CreateTeam />
+      </QueryError>
+    </Suspense>
+  );
 };
 
 export default NewTeam;
