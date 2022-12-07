@@ -17,7 +17,7 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 
-	async createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
+	createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
 		return Promise.all(
 			teamUsers.map((user) => this.teamUserRepository.create({ ...user, team: teamId }))
 		);

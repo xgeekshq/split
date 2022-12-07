@@ -2,6 +2,8 @@ import { ClientSession, Model, PopulateOptions, UpdateQuery } from 'mongoose';
 import { BaseInterfaceRepository } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
+type PopulateType = PopulateOptions | (PopulateOptions | string)[];
+
 export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	protected _repository: Model<T>;
 	protected _session: ClientSession;
@@ -14,14 +16,11 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().lean().exec();
 	}
 
-	findAll(
-		selectedValues?: SelectedValues<T>,
-		populate?: PopulateOptions | (PopulateOptions | string)[]
-	): Promise<T[]> {
+	findAll(selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T[]> {
 		return this._repository.find().select(selectedValues).populate(populate).exec();
 	}
 
-	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: any): Promise<T> {
+	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T> {
 		return this._repository
 			.findById(id)
 			.select(selectedValues)
@@ -33,7 +32,11 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.findOne(value).exec();
 	}
 
-	findAllWithQuery(query: any, selectedValues?: SelectedValues<T>, populate?: any): Promise<T[]> {
+	findAllWithQuery(
+		query: any,
+		selectedValues?: SelectedValues<T>,
+		populate?: PopulateType
+	): Promise<T[]> {
 		return this._repository
 			.find(query)
 			.select(selectedValues)
