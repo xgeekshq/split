@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
@@ -10,6 +10,7 @@ import { UpdateUserService } from '../interfaces/services/update.user.service.in
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import User, { UserDocument } from '../entities/user.schema';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 
 @Injectable()
 export default class updateUserServiceImpl implements UpdateUserService {
@@ -62,7 +63,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async updateSuperAdmin(user: UpdateUserDto) {
 		const userToUpdate = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
 
-		if (!userToUpdate) throw new HttpException('UPDATE_FAILED', HttpStatus.BAD_REQUEST);
+		if (!userToUpdate) throw new BadRequestException(UPDATE_FAILED);
 
 		return userToUpdate;
 	}
