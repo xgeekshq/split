@@ -33,7 +33,9 @@ const TeamMembersList = () => {
         <Text css={{ mb: '$16' }} heading="3">
           Team Members
         </Text>
-        {(!isTeamMember || isSAdmin) && <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />}
+        {(!isTeamMember || isSAdmin) && (
+          <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
+        )}
       </Flex>
       <ScrollableContent direction="column" justify="start" ref={scrollRef}>
         {membersList?.map((member) => (

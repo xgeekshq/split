@@ -27,9 +27,10 @@ import { ButtonAddMember, ScrollableContent } from './styles';
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  isTeamPage?: boolean;
 };
 
-const ListMembers = ({ isOpen, setIsOpen }: Props) => {
+const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const { data: session } = useSession({ required: true });
   const [searchMember, setSearchMember] = useState<string>('');
 
@@ -76,9 +77,21 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
   const saveMembers = () => {
     const listOfUsers = [...membersList];
 
-    const addedUsers = usersList.filter((user) => user.isChecked);
+    const selectedUsers = usersList.filter((user) => user.isChecked);
+    const unselectedUsers = usersList.filter((user) => !user.isChecked);
 
-    const updatedListWithAdded = addedUsers.map(
+    if (isTeamPage) {
+      const addedUsers = selectedUsers.filter(
+        (user) => !listOfUsers.some((teamUser) => teamUser.user._id === user._id),
+      );
+      const removedUsers = unselectedUsers.filter((user) =>
+        listOfUsers.some((teamUser) => teamUser.user._id === user._id),
+      );
+      console.log(addedUsers);
+      console.log(removedUsers);
+    }
+
+    const updatedListWithAdded = selectedUsers.map(
       (user) =>
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
