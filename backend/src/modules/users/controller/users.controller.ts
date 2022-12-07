@@ -112,7 +112,7 @@ export default class UsersController {
 	})
 	@UseGuards(SuperAdminGuard)
 	@Put('/sadmin')
-	async updateUserSuperAdmin(@Body() userData: UpdateUserDto) {
-		return await this.updateUserApp.updateSuperAdmin(userData);
+	updateUserSuperAdmin(@Body() userData: UpdateUserDto) {
+		return this.updateUserApp.updateSuperAdmin(userData);
 	}
 }

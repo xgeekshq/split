@@ -59,8 +59,8 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		}
 	}
 
-	updateSuperAdmin(user: UpdateUserDto) {
-		const userToUpdate = this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
+	async updateSuperAdmin(user: UpdateUserDto) {
+		const userToUpdate = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
 
 		if (!userToUpdate) throw new HttpException('UPDATE_FAILED', HttpStatus.BAD_REQUEST);
 
