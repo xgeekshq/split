@@ -1,44 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
-import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
-import Team, { TeamDocument } from '../schemas/teams.schema';
+import TeamUser from '../entities/team.user.schema';
+import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
+import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export default class CreateTeamService implements CreateTeamServiceInterface {
 	constructor(
-		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
+		@Inject(TYPES.repositories.TeamRepository)
+		private readonly teamRepository: TeamRepositoryInterface,
+		@Inject(TYPES.repositories.TeamUserRepository)
+		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 
 	async createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
-		await Promise.all(
-			teamUsers.map((user) => this.teamUserModel.create({ ...user, team: teamId }))
+		return Promise.all(
+			teamUsers.map((user) => this.teamUserRepository.create({ ...user, team: teamId }))
 		);
 	}
 
 	createTeamUser(teamUser: TeamUserDto) {
-		return this.teamUserModel.create({ ...teamUser });
+		return this.teamUserRepository.create({ ...teamUser });
 	}
 
 	createTeam(name: string) {
-		return this.teamModel.create({ name });
+		return this.teamRepository.create({ name });
 	}
 
 	async create(teamData: CreateTeamDto) {
 		const { users, name } = teamData;
-		const newTeam = await this.teamModel.create({
+		const newTeam = await this.teamRepository.create({
 			name
 		});
 
+		let teamUsers: TeamUser[] = [];
+
 		if (!isEmpty(users)) {
-			await this.createTeamUsers(users, newTeam._id);
+			teamUsers = await this.createTeamUsers(users, newTeam._id);
 		}
 
-		return newTeam.populate('users');
+		return { ...newTeam, users: teamUsers };
 	}
 }

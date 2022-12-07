@@ -12,6 +12,8 @@ import {
 	deleteTeamService,
 	getTeamApplication,
 	getTeamService,
+	teamRepository,
+	teamUserRepository,
 	updateTeamApplication,
 	updateTeamService
 } from './providers';
@@ -26,7 +28,9 @@ import {
 		updateTeamService,
 		updateTeamApplication,
 		deleteTeamApplication,
-		deleteTeamService
+		deleteTeamService,
+		teamUserRepository,
+		teamRepository
 	],
 	controllers: [TeamsController],
 	exports: [getTeamApplication, getTeamService, createTeamService, updateTeamService]

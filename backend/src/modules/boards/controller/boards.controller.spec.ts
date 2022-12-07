@@ -18,7 +18,13 @@ import {
 	deleteSchedulesService
 } from 'src/modules/schedules/schedules.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { createTeamService, getTeamApplication, getTeamService } from 'src/modules/teams/providers';
+import {
+	createTeamService,
+	getTeamApplication,
+	getTeamService,
+	teamRepository,
+	teamUserRepository
+} from 'src/modules/teams/providers';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -42,6 +48,8 @@ describe('BoardsController', () => {
 				createTeamService,
 				createSchedulesService,
 				deleteSchedulesService,
+				teamRepository,
+				teamUserRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

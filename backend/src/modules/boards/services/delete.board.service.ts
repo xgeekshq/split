@@ -14,16 +14,16 @@ import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interface
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
+import { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
-import { DeleteBoardService } from '../interfaces/services/delete.board.service.interface';
+import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 
 @Injectable()
-export default class DeleteBoardServiceImpl implements DeleteBoardService {
+export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
 	constructor(
 		@InjectModel(Board.name)
 		private boardModel: Model<BoardDocument>,
