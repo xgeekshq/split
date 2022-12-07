@@ -1,18 +1,24 @@
-import { UpdateQuery } from 'mongoose';
+import { PopulateOptions, UpdateQuery } from 'mongoose';
 import { ModelProps, SelectedValues } from '../types';
+
+export type PopulateType = PopulateOptions | (PopulateOptions | string)[];
 
 export interface BaseInterfaceRepository<T> {
 	findAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
 
-	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: any): Promise<T>;
+	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T>;
 
-	findAllWithQuery(query: any, selectedValues?: SelectedValues<T>, populate?: any): Promise<T[]>;
+	findAllWithQuery(
+		query: any,
+		selectedValues?: SelectedValues<T>,
+		populate?: PopulateType
+	): Promise<T[]>;
 
 	findOneByField(fields: ModelProps<T>): Promise<T>;
 
 	create(item: T): Promise<T>;
 
-	update(id: string, item: T);
+	update(id: string, item: T): Promise<T>;
 
 	deleteMany(field: ModelProps<T>, withSession: boolean): Promise<number>;
 
@@ -22,11 +28,11 @@ export interface BaseInterfaceRepository<T> {
 
 	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T>;
 
-	startTransaction();
+	startTransaction(): Promise<void>;
 
-	commitTransaction();
+	commitTransaction(): Promise<void>;
 
-	abortTransaction();
+	abortTransaction(): Promise<void>;
 
-	endSession();
+	endSession(): Promise<void>;
 }

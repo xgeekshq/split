@@ -1,8 +1,6 @@
-import { ClientSession, Model, PopulateOptions, UpdateQuery } from 'mongoose';
-import { BaseInterfaceRepository } from '../interfaces/base.repository.interface';
+import { ClientSession, Model, UpdateQuery } from 'mongoose';
+import { BaseInterfaceRepository, PopulateType } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
-
-type PopulateType = PopulateOptions | (PopulateOptions | string)[];
 
 export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	protected _repository: Model<T>;
@@ -49,8 +47,8 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.create(item);
 	}
 
-	update(id: string, item: T) {
-		return this._repository.findByIdAndUpdate(id, item);
+	update(id: string, item: T): Promise<T> {
+		return this._repository.findByIdAndUpdate(id, item).exec();
 	}
 
 	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T> {
