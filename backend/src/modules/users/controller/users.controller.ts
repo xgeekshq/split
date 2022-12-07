@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Inject, Put, Req, UseGuards } from '@nestjs/common';
+import { DeleteUserApplicationInterface } from './../interfaces/applications/delete.user.application';
+import { UserParams } from './../../../libs/dto/param/user.param';
+import { Body, Controller, Delete, Get, Inject, Param, Put, Req, UseGuards } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
@@ -8,6 +10,7 @@ import {
 	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
+	ApiParam,
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
@@ -36,7 +39,9 @@ export default class UsersController {
 		@Inject(TYPES.applications.GetUserApplication)
 		private getUserApp: GetUserApplication,
 		@Inject(TYPES.applications.UpdateUserApplication)
-		private updateUserApp: UpdateUserApplication
+		private updateUserApp: UpdateUserApplication,
+		@Inject(TYPES.applications.DeleteUserApplication)
+		private deleteUserApp: DeleteUserApplicationInterface
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })
@@ -115,5 +120,40 @@ export default class UsersController {
 	@Put('/sadmin')
 	updateUserSuperAdmin(@Req() request: RequestWithUser, @Body() userData: UpdateUserDto) {
 		return this.updateUserApp.updateSuperAdmin(userData, request.user);
+	}
+	@ApiOperation({ summary: 'Delete user' })
+	@ApiParam({ name: 'userId', type: String })
+	@ApiOkResponse({
+		description: 'User successfully deleted!',
+		type: Boolean
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'User not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@UseGuards(SuperAdminGuard)
+	@Delete(':userId')
+	async deleteUser(@Param() { userId }: UserParams) {
+		return await this.deleteUserApp.delete(userId);
 	}
 }

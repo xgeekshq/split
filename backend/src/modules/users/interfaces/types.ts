@@ -2,11 +2,13 @@ export const TYPES = {
 	services: {
 		CreateUserService: 'CreateUserService',
 		GetUserService: 'GetUserService',
-		UpdateUserService: 'UpdateUserService'
+		UpdateUserService: 'UpdateUserService',
+		DeleteUserService: 'DeleteUserService'
 	},
 	applications: {
 		GetUserApplication: 'GetUserApplication',
-		UpdateUserApplication: 'UpdateUserApplication'
+		UpdateUserApplication: 'UpdateUserApplication',
+		DeleteUserApplication: 'DeleteUserApplication'
 	},
 	repository: 'UserRepository'
 };
