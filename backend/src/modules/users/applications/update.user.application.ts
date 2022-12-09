@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
 import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
