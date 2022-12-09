@@ -83,7 +83,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
-          isNewJoiner: verifyIfIsNewJoiner(user.providerAccountCreatedAt, user.joinedAt),
+          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
         },
     );
 

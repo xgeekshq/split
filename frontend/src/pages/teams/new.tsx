@@ -44,7 +44,7 @@ const NewTeam: NextPage = () => {
         listMembers.push({
           user,
           role: TeamUserRoles.ADMIN,
-          isNewJoiner: verifyIfIsNewJoiner(user.providerAccountCreatedAt, user.joinedAt),
+          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
         });
       }
     });

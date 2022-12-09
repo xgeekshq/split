@@ -28,7 +28,7 @@ import { Configs, CreateBoardService } from '../interfaces/services/create.board
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
-import { addMonths, isBefore, isSameDay } from 'date-fns';
+import { addMonths, isAfter } from 'date-fns';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -169,16 +169,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
 	}
 
-	verifyIfIsNewJoiner = (providerAccountCreatedAt: Date | undefined, joinedAt: Date) => {
-		const currentDate = new Date();
-
-		const dateToCompare = providerAccountCreatedAt ? providerAccountCreatedAt : joinedAt;
+	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
+		const dateToCompare = providerAccountCreatedAt || joinedAt;
 
 		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
 
-		return (
-			isBefore(maxDateToBeNewJoiner, currentDate) || isSameDay(maxDateToBeNewJoiner, currentDate)
-		);
+		return !isAfter(maxDateToBeNewJoiner, new Date());
 	};
 
 	async splitBoardByTeam(
@@ -195,7 +191,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 			if (
 				teamUser.isNewJoiner &&
-				this.verifyIfIsNewJoiner(user.providerAccountCreatedAt, user.joinedAt)
+				this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
 			) {
 				this.updateTeamService.updateTeamUser({
 					team: teamId,

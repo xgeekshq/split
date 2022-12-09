@@ -1,16 +1,9 @@
-import dayjs from 'dayjs';
+import { addMonths, isAfter, parseISO } from 'date-fns';
 
-export const verifyIfIsNewJoiner = (
-  providerAccountCreatedAt: Date | undefined,
-  joinedAt: string,
-) => {
-  const currentDate = dayjs();
+export const verifyIfIsNewJoiner = (joinedAt: string, providerAccountCreatedAt?: string) => {
+  const dateToCompare = parseISO(providerAccountCreatedAt || joinedAt);
 
-  const dateToCompare = providerAccountCreatedAt
-    ? dayjs(providerAccountCreatedAt)
-    : dayjs(joinedAt);
+  const maxDateToBeNewJoiner = addMonths(dateToCompare, 2);
 
-  const maxDateToBeNewJoiner = dateToCompare.add(3, 'month');
-
-  return maxDateToBeNewJoiner.isAfter(currentDate);
+  return isAfter(maxDateToBeNewJoiner, new Date());
 };
