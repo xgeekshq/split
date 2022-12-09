@@ -139,7 +139,6 @@ const CardBoard = React.memo<CardBoardProps>(
                         css={{
                           wordBreak: 'break-word',
                           whiteSpace: 'pre',
-
                           filter: cardBlur(hideCards, card as CardType, userId),
                         }}
                       >
