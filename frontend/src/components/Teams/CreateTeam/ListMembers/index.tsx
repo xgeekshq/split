@@ -180,7 +180,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
                 lineHeight: '$18',
               }}
             >
-              Add new member
+              Add/remove members
             </Text>
           </ButtonAddMember>
         </DialogTrigger>
