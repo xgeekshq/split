@@ -121,6 +121,7 @@ export default class UsersController {
 	updateUserSuperAdmin(@Req() request: RequestWithUser, @Body() userData: UpdateUserDto) {
 		return this.updateUserApp.updateSuperAdmin(userData, request.user);
 	}
+
 	@ApiOperation({ summary: 'Delete user' })
 	@ApiParam({ name: 'userId', type: String })
 	@ApiOkResponse({
@@ -153,7 +154,7 @@ export default class UsersController {
 	})
 	@UseGuards(SuperAdminGuard)
 	@Delete(':userId')
-	async deleteUser(@Param() { userId }: UserParams) {
-		return await this.deleteUserApp.delete(userId);
+	async deleteUser(@Req() request: RequestWithUser, @Param() { userId }: UserParams) {
+		return this.deleteUserApp.delete(request, userId);
 	}
 }

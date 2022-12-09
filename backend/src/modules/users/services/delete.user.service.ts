@@ -5,6 +5,7 @@ import TeamUser, { TeamUserDocument } from 'src/modules/teams/schemas/team.user.
 import User, { UserDocument } from '../entities/user.schema';
 import { DeleteUserServiceInterface } from '../interfaces/services/delete.user.service.interface';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 
 @Injectable()
 export default class DeleteUserServiceImpl implements DeleteUserServiceInterface {
@@ -13,7 +14,11 @@ export default class DeleteUserServiceImpl implements DeleteUserServiceInterface
 		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
 	) {}
 
-	async delete(userId: string): Promise<boolean> {
+	async delete(request: RequestWithUser, userId: string): Promise<boolean> {
+		if (request.user._id == userId) {
+			throw new BadRequestException(DELETE_FAILED);
+		}
+
 		const userSession = await this.userModel.db.startSession();
 		userSession.startTransaction();
 		const teamUserSession = await this.teamUserModel.db.startSession();

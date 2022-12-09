@@ -1,6 +1,7 @@
 import { DeleteUserApplicationInterface } from './../interfaces/applications/delete.user.application';
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 
 @Injectable()
 export class DeleteTeamApplicationImpl implements DeleteUserApplicationInterface {
@@ -9,7 +10,7 @@ export class DeleteTeamApplicationImpl implements DeleteUserApplicationInterface
 		private deleteUserServices: DeleteUserApplicationInterface
 	) {}
 
-	delete(userId: string) {
-		return this.deleteUserServices.delete(userId);
+	delete(request: RequestWithUser, userId: string) {
+		return this.deleteUserServices.delete(request, userId);
 	}
 }
