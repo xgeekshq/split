@@ -114,6 +114,6 @@ export default class UsersController {
 	@UseGuards(SuperAdminGuard)
 	@Put('/sadmin')
 	updateUserSuperAdmin(@Req() request: RequestWithUser, @Body() userData: UpdateUserDto) {
-		return this.updateUserApp.updateSuperAdmin(userData, request);
+		return this.updateUserApp.updateSuperAdmin(userData, request.user);
 	}
 }
