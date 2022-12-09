@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -14,12 +14,15 @@ import {
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { MIN_MEMBERS } from '@/utils/constants';
 import { StyledBox } from './styles';
 
 export const SelectTeam = () => {
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
+  const setHaveError = useSetRecoilState(createBoardError);
 
   const teams = useRecoilValue(teamsOfUser);
 
@@ -28,6 +31,17 @@ export const SelectTeam = () => {
 
     setSelectedTeam(foundTeam);
   };
+
+  useEffect(() => {
+    if (selectedTeam) {
+      setHaveError(
+        !!(
+          selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length <
+          MIN_MEMBERS
+        ),
+      );
+    }
+  }, [selectedTeam, setHaveError]);
 
   return (
     <StyledBox
