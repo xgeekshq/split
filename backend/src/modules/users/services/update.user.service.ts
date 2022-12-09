@@ -11,6 +11,7 @@ import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import User, { UserDocument } from '../entities/user.schema';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 
 @Injectable()
 export default class updateUserServiceImpl implements UpdateUserService {
@@ -60,11 +61,16 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		}
 	}
 
-	async updateSuperAdmin(user: UpdateUserDto) {
-		const userToUpdate = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
+	async updateSuperAdmin(user: UpdateUserDto, requestUser: RequestWithUser) {
+		if (requestUser.user._id.toString() === user._id) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
 
-		if (!userToUpdate) throw new BadRequestException(UPDATE_FAILED);
+		if (!userUpdated) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
 
-		return userToUpdate;
+		return userUpdated;
 	}
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Put, Req, UseGuards } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
@@ -25,6 +25,7 @@ import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -112,7 +113,7 @@ export default class UsersController {
 	})
 	@UseGuards(SuperAdminGuard)
 	@Put('/sadmin')
-	updateUserSuperAdmin(@Body() userData: UpdateUserDto) {
-		return this.updateUserApp.updateSuperAdmin(userData);
+	updateUserSuperAdmin(@Req() request: RequestWithUser, @Body() userData: UpdateUserDto) {
+		return this.updateUserApp.updateSuperAdmin(userData, request);
 	}
 }

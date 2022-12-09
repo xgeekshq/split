@@ -48,15 +48,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
     return 'no teams';
   };
 
-  let teamsSeparatedByComma: string[] = [];
-  if (teamsNames) {
-    teamsSeparatedByComma = teamsNames?.map((team, index) => {
-      if (index !== teamsNames.length - 1) {
-        return team.concat(', ');
-      }
-      return team;
-    });
-  }
+  const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
   return (
     <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">

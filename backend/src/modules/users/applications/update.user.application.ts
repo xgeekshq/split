@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
@@ -23,7 +24,7 @@ export class UpdateUserApplicationImpl implements UpdateUserApplication {
 		return this.updateUserService.checkEmail(token);
 	}
 
-	updateSuperAdmin(user: UpdateUserDto) {
-		return this.updateUserService.updateSuperAdmin(user);
+	updateSuperAdmin(user: UpdateUserDto, requestUser: RequestWithUser) {
+		return this.updateUserService.updateSuperAdmin(user, requestUser);
 	}
 }
