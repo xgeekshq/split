@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { ClientSession, LeanDocument, Model } from 'mongoose';
 import TeamUserDto from '../dto/team.user.dto';
 import { UpdateTeamServiceInterface } from '../interfaces/services/update.team.service.interface';
 import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
@@ -18,5 +19,43 @@ export default class UpdateTeamService implements UpdateTeamServiceInterface {
 			)
 			.lean()
 			.exec();
+	}
+
+	async addAndRemoveTeamUsers(addUsers: TeamUserDto[], removeUsers: string[]) {
+		const teamUserSession = await this.teamUserModel.db.startSession();
+		teamUserSession.startTransaction();
+		try {
+			if (addUsers.length > 0) await this.addTeamUsers(addUsers);
+
+			if (removeUsers.length > 0) await this.deleteTeamUsers(removeUsers, teamUserSession);
+
+			await teamUserSession.commitTransaction();
+
+			return true;
+		} catch (error) {
+			await teamUserSession.abortTransaction();
+		} finally {
+			await teamUserSession.endSession();
+		}
+		throw new BadRequestException(UPDATE_FAILED);
+	}
+
+	async addTeamUsers(teamUsers: TeamUserDto[]) {
+		const { length } = await this.teamUserModel.insertMany(teamUsers);
+
+		if (length < 1) throw new Error(INSERT_FAILED);
+	}
+
+	async deleteTeamUsers(teamUsers: string[], teamUserSession: ClientSession) {
+		const { deletedCount } = await this.teamUserModel
+			.deleteMany(
+				{
+					_id: teamUsers
+				},
+				{ session: teamUserSession }
+			)
+			.exec();
+
+		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}
 }
