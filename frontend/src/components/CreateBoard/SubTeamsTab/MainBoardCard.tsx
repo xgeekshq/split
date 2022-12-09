@@ -99,7 +99,7 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [team]);
 
   return (
     <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">

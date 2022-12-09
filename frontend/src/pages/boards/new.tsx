@@ -36,7 +36,7 @@ import {
 } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeam from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
@@ -137,16 +137,18 @@ const NewBoard: NextPage = () => {
   };
 
   useEffect(() => {
-    const isAdminOrStakeHolder = teams
-      ? !!teams[0].users.find(
-          (teamUser) =>
-            teamUser.user._id === session?.user.id &&
-            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ) || session?.user.isSAdmin
-      : false;
+    const isAdminOrStakeHolder = false;
+    // const isAdminOrStakeHolder = teams
+    //   ? !!teams[0].users.find(
+    //       (teamUser) =>
+    //         teamUser.user._id === session?.user.id &&
+    //         [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+    //     ) || session?.user.isSAdmin
+    //   : false;
 
     if (!isAdminOrStakeHolder && !haveError) {
-      setHaveError(!isAdminOrStakeHolder);
+      // setHaveError(!isAdminOrStakeHolder);
+      setHaveError(false);
     }
 
     if (status === 'success') {

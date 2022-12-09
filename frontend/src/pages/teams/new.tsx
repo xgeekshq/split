@@ -13,7 +13,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/loadings/LoadingPage';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -35,26 +35,29 @@ const NewTeam: NextPage = () => {
   const setMembersListState = useSetRecoilState(membersListState);
 
   const listMembers: TeamUser[] | undefined = [];
-  if (data) {
-    data.forEach((user) => {
-      if (user._id === session?.user.id) {
-        listMembers.push({
-          user,
-          role: TeamUserRoles.ADMIN,
-          isNewJoiner: false,
-        });
-      }
-    });
 
-    const usersWithChecked = data.map((user) => ({
-      ...user,
-      isChecked: user._id === session?.user.id,
-    }));
+  useEffect(() => {
+    if (data) {
+      data.forEach((user) => {
+        if (user._id === session?.user.id) {
+          listMembers.push({
+            user,
+            role: TeamUserRoles.ADMIN,
+            isNewJoiner: false,
+          });
+        }
+      });
 
-    setUsersListState(usersWithChecked);
+      const usersWithChecked = data.map((user) => ({
+        ...user,
+        isChecked: user._id === session?.user.id,
+      }));
 
-    setMembersListState(listMembers);
-  }
+      setUsersListState(usersWithChecked);
+
+      setMembersListState(listMembers);
+    }
+  }, [data, listMembers, session?.user.id, setMembersListState, setUsersListState]);
 
   if (!session || !data) return null;
 

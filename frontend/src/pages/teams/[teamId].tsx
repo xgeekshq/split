@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
@@ -30,9 +30,11 @@ const Team = () => {
   // Recoil States
   const setMembersListState = useSetRecoilState(membersListState);
 
-  if (data) {
-    setMembersListState(data.users);
-  }
+  useEffect(() => {
+    if (data) {
+      setMembersListState(data.users);
+    }
+  }, [data, setMembersListState]);
 
   if (!session || !data) return null;
   return (

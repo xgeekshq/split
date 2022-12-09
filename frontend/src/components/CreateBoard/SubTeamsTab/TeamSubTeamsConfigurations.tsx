@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -11,11 +11,9 @@ import Text from '@/components/Primitives/Text';
 import {
   CreateBoardData,
   createBoardDataState,
-  createBoardError,
+  createBoardTeam,
 } from '@/store/createBoard/atoms/create-board.atom';
-import { Team } from '@/types/team/team';
-import { TeamUser } from '@/types/team/team.user';
-import { User } from '@/types/user/user';
+
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useTeam from '@/hooks/useTeam';
 import MainBoardCard from './MainBoardCard';
@@ -34,15 +32,17 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
   timesOpen,
   setTimesOpen,
 }) => {
-  const [stakeholders, setStakeholders] = useState<User[]>([]);
-  const [team, setTeam] = useState<Team | null>(null);
+  // const [stakeholders, setStakeholders] = useState<User[]>([]);
+
+  const selectedTeam = useRecoilValue(createBoardTeam);
+  console.log(selectedTeam);
 
   const {
     fetchTeamsOfUser: { data: teams },
   } = useTeam({ autoFetchTeam: false });
 
   const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
-  const [haveError, setHaveError] = useRecoilState(createBoardError);
+  // const [haveError, setHaveError] = useRecoilState(createBoardError);
 
   const MIN_MEMBERS = 4;
 
@@ -51,34 +51,32 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
 
     if (
       isTeamsValid &&
-      teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      selectedTeam &&
+      selectedTeam?.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
         MIN_MEMBERS
     ) {
-      const selectedTeam = teams[0];
-
-      const isStakeholder = (userTeam: TeamUser): boolean =>
-        userTeam.role === TeamUserRoles.STAKEHOLDER;
-      const getStakeholder = ({ user }: TeamUser): User => user;
-      const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
+      // const isStakeholder = (userTeam: TeamUser): boolean =>
+      //   userTeam.role === TeamUserRoles.STAKEHOLDER;
+      // const getStakeholder = ({ user }: TeamUser): User => user;
+      // const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
 
       setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
 
-      const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
-        ...stakeholderList,
-        firstName: stakeholderList.firstName
-          .split(' ')
-          .concat(stakeholderList.lastName.split(' '))[0],
-        lastName: stakeholderList.firstName.split(' ').concat(stakeholderList.lastName.split(' '))[
-          stakeholderList.firstName.split(' ').concat(stakeholderList.lastName.split(' ')).length -
-            1
-        ],
-      }));
-      setStakeholders(stakeholdersNames);
-      setTeam(selectedTeam);
-    } else {
-      setHaveError(true);
-    }
-  }, [teams, setBoardData, setHaveError]);
+      // const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
+      //   ...stakeholderList,
+      //   firstName: stakeholderList.firstName
+      //     .split(' ')
+      //     .concat(stakeholderList.lastName.split(' '))[0],
+      //   lastName: stakeholderList.firstName.split(' ').concat(stakeholderList.lastName.split(' '))[
+      //     stakeholderList.firstName.split(' ').concat(stakeholderList.lastName.split(' ')).length -
+      //       1
+      //   ],
+      // }));
+      // setStakeholders(stakeholdersNames);
+    } // else {
+    //   setHaveError(true);
+    // }
+  }, [teams, setBoardData, selectedTeam]);
 
   useEffect(() => {
     if (timesOpen < 2) {
@@ -102,7 +100,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
           <Text color="primary300" size="xs">
             Stakeholders
           </Text>
-          <Text css={{ wordBreak: 'break-word' }} size="md">
+          {/* <Text css={{ wordBreak: 'break-word' }} size="md">
             {!haveError &&
               stakeholders &&
               stakeholders.length > 0 &&
@@ -111,15 +109,15 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
                   ? `${value.firstName} ${value.lastName}, `
                   : `${value.firstName} ${value.lastName}`,
               )}
-          </Text>
+          </Text> */}
         </StyledBox>
       </Flex>
-      {team && (
+      {selectedTeam && (
         <>
           <Flex justify="end">
-            <QuickEditSubTeams team={team} />
+            <QuickEditSubTeams team={selectedTeam} />
           </Flex>
-          <MainBoardCard team={team} timesOpen={timesOpen} />
+          <MainBoardCard team={selectedTeam} timesOpen={timesOpen} />
         </>
       )}
     </Flex>
