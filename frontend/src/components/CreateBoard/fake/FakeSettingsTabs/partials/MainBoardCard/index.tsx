@@ -15,7 +15,7 @@ import { Container, MainContainer } from './styles';
 
 const FakeMainBoardCard = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
-    <MainContainer align="center" elevation="1" justify="between">
+    <MainContainer align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
       <Flex>
         <Flex align="center" gap="8">
           <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
@@ -111,6 +111,7 @@ const FakeMainBoardCard = () => (
             py: '$16',
             pl: '$32',
             pr: '$24',
+            opacity: '0.5',
           }}
         >
           <Flex align="center">
@@ -132,14 +133,8 @@ const FakeMainBoardCard = () => (
                   borderRadius: '$round',
                   border: '1px solid $colors$primary400',
                   ml: '$12',
-                  cursor: 'pointer',
 
                   transtion: 'all 0.2s ease-in-out',
-
-                  '&:hover': {
-                    backgroundColor: '$primary400',
-                    color: 'white',
-                  },
                 }}
               >
                 <Icon
@@ -185,6 +180,7 @@ const FakeMainBoardCard = () => (
             py: '$16',
             pl: '$32',
             pr: '$24',
+            opacity: '0.5',
           }}
         >
           <Flex align="center">
@@ -206,14 +202,8 @@ const FakeMainBoardCard = () => (
                   borderRadius: '$round',
                   border: '1px solid $colors$primary400',
                   ml: '$12',
-                  cursor: 'pointer',
 
                   transtion: 'all 0.2s ease-in-out',
-
-                  '&:hover': {
-                    backgroundColor: '$primary400',
-                    color: 'white',
-                  },
                 }}
               >
                 <Icon
@@ -245,7 +235,9 @@ const FakeMainBoardCard = () => (
         </Container>
       </Flex>
     </Flex>
-    <Checkbox id="slack" label="Create Slack group for each sub-team" size="16" />
+    <Tooltip color="primary100" content="First select a team">
+      <Checkbox id="slack" label="Create Slack group for each sub-team" size="16" disabled />
+    </Tooltip>
   </Flex>
 );
 
