@@ -21,6 +21,8 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
+import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
+import useTeam from '@/hooks/useTeam';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 
@@ -31,6 +33,10 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+  const {
+    addAndRemoveTeamUser: { mutate },
+  } = useTeam({ autoFetchTeam: false });
+
   const { data: session } = useSession({ required: true });
   const [searchMember, setSearchMember] = useState<string>('');
 
@@ -76,19 +82,60 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const saveMembers = () => {
     const listOfUsers = [...membersList];
+    const teamId = listOfUsers[0].team;
 
     const selectedUsers = usersList.filter((user) => user.isChecked);
     const unselectedUsers = usersList.filter((user) => !user.isChecked);
 
-    if (isTeamPage) {
+    if (isTeamPage && teamId) {
       const addedUsers = selectedUsers.filter(
         (user) => !listOfUsers.some((teamUser) => teamUser.user._id === user._id),
       );
-      const removedUsers = unselectedUsers.filter((user) =>
-        listOfUsers.some((teamUser) => teamUser.user._id === user._id),
+      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
+        user: teamUser._id,
+        role: TeamUserRoles.MEMBER,
+        isNewJoiner: false,
+      }));
+      const removedUsers = listOfUsers.filter((teamUser) =>
+        unselectedUsers.some((user) => teamUser.user._id === user._id),
       );
-      console.log(addedUsers);
-      console.log(removedUsers);
+      // console.log(addedUsersToSend);
+      // console.log(removedUsers);
+
+      const usersToUpdate: TeamUserAddAndRemove = {
+        addUsers: addedUsersToSend,
+        removeUsers: removedUsers,
+        team: teamId,
+      };
+
+      mutate(usersToUpdate);
+
+      // const updatedListWithAdded = selectedUsers.map(
+      //   (user) =>
+      //     listOfUsers.find((member) => member.user._id === user._id) || {
+      //       user,
+      //       role: TeamUserRoles.MEMBER,
+      //       isNewJoiner: false,
+      //     },
+      // );
+
+      // const userAdminIndex = updatedListWithAdded.findIndex(
+      //   (member) => member.user._id === session?.user.id,
+      // );
+
+      // updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
+
+      // setToastState({
+      //   open: true,
+      //   content: 'Team member/s successfully updated',
+      //   type: ToastStateEnum.SUCCESS,
+      // });
+
+      // setMembersListState(updatedListWithAdded);
+
+      setIsOpen(false);
+
+      return;
     }
 
     const updatedListWithAdded = selectedUsers.map(
@@ -110,7 +157,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
     setToastState({
       open: true,
-      content: 'Team member/s successfully added',
+      content: 'Team member/s successfully updated',
       type: ToastStateEnum.SUCCESS,
     });
 
@@ -140,7 +187,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         <StyledDialogOverlay />
         <StyledDialogContent>
           <StyledDialogTitle>
-            <Text heading="4">Add team members</Text>
+            <Text heading="4">Add/remove team members</Text>
             <DialogClose asChild>
               <StyledDialogCloseButton isIcon size="lg">
                 <Icon css={{ color: '$primary400' }} name="close" size={24} />

@@ -21,3 +21,9 @@ export interface TeamUserUpdate {
   user: string;
   team: string;
 }
+
+export interface TeamUserAddAndRemove {
+  addUsers: CreateTeamUser[];
+  removeUsers: TeamUser[];
+  team: string;
+}

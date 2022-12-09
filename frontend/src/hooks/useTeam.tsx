@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'react-query';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import {
+  addAndRemoveTeamUserRequest,
   createTeamRequest,
   deleteTeamRequest,
   getAllTeams,
@@ -108,6 +109,26 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     },
   });
 
+  const addAndRemoveTeamUser = useMutation(addAndRemoveTeamUserRequest, {
+    onSuccess: (data) => {
+      // updates members from the membersList recoil
+      setMembersList(data.users);
+
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while updating the team user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   const deleteTeam = useMutation(deleteTeamRequest, {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries('teams');
@@ -138,6 +159,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     createTeam,
     fetchTeam,
     updateTeamUser,
+    addAndRemoveTeamUser,
     deleteTeam,
   };
 };
