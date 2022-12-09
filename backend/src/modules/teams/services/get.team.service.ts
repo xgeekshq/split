@@ -31,7 +31,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				select: 'user role isNewJoiner',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt userAzureCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
 			})
 			.exec();
@@ -48,7 +48,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				select: 'user role',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt userAzureCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
 			})
 			.populate({
@@ -128,7 +128,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 				select: 'user role email isNewJoiner',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt userAzureCreatedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
 			})
 			.lean({ virtuals: true })
@@ -140,7 +140,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			.find({ team: teamId })
 			.populate({
 				path: 'user',
-				select: '_id firstName lastName email isSAdmin joinedAt userAzureCreatedAt'
+				select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
 			})
 			.exec();
 	}

@@ -27,8 +27,8 @@ import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
-import * as dayjs from 'dayjs';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
+import { addMonths, isBefore, isSameDay } from 'date-fns';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -169,14 +169,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
 	}
 
-	verifyIfIsNewJoiner = (userAzureCreatedAt: Date | undefined, joinedAt: Date) => {
-		const currentDate = dayjs();
+	verifyIfIsNewJoiner = (providerAccountCreatedAt: Date | undefined, joinedAt: Date) => {
+		const currentDate = new Date();
 
-		const dateToCompare = userAzureCreatedAt ? dayjs(userAzureCreatedAt) : dayjs(joinedAt);
+		const dateToCompare = providerAccountCreatedAt ? providerAccountCreatedAt : joinedAt;
 
-		const maxDateToBeNewJoiner = dateToCompare.add(3, 'month');
+		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
 
-		return currentDate.isBefore(maxDateToBeNewJoiner) || currentDate.isSame(maxDateToBeNewJoiner);
+		return (
+			isBefore(maxDateToBeNewJoiner, currentDate) || isSameDay(maxDateToBeNewJoiner, currentDate)
+		);
 	};
 
 	async splitBoardByTeam(
@@ -193,7 +195,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 			if (
 				teamUser.isNewJoiner &&
-				!this.verifyIfIsNewJoiner(user.userAzureCreatedAt, user.joinedAt)
+				this.verifyIfIsNewJoiner(user.providerAccountCreatedAt, user.joinedAt)
 			) {
 				this.updateTeamService.updateTeamUser({
 					team: teamId,
@@ -262,7 +264,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users
 			.map((user) => {
-				user.userCreated = (user.user as User).userAzureCreatedAt || (user.user as User).joinedAt;
+				user.userCreated =
+					(user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt;
 
 				return user;
 			})

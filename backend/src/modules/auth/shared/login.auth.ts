@@ -8,7 +8,7 @@ export const signIn = async (
 	getTokenService: GetTokenAuthService | GetTokenAuthApplication,
 	strategy: string
 ) => {
-	const { email, firstName, lastName, _id, isSAdmin, userAzureCreatedAt } = user;
+	const { email, firstName, lastName, _id, isSAdmin, providerAccountCreatedAt } = user;
 	const jwt = await getTokenService.getTokens(_id);
 
 	if (!jwt) return null;
@@ -21,7 +21,7 @@ export const signIn = async (
 		strategy,
 		id: _id,
 		isSAdmin,
-		userAzureCreatedAt,
+		providerAccountCreatedAt,
 		_id
 	};
 };

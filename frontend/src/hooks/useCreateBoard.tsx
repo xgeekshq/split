@@ -77,7 +77,7 @@ const useCreateBoard = (team: Team) => {
   const sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
     users
       .map((user) => {
-        user.userCreated = user.user.userAzureCreatedAt || user.user.joinedAt;
+        user.userCreated = user.user.providerAccountCreatedAt || user.user.joinedAt;
         return user;
       })
       .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));

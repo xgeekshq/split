@@ -6,5 +6,5 @@ export interface UserList {
   isSAdmin: boolean;
   joinedAt: string;
   isChecked: boolean;
-  userAzureCreatedAt?: Date;
+  providerAccountCreatedAt?: Date;
 }

@@ -63,7 +63,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 			email: emailOrUniqueName,
 			firstName,
 			lastName,
-			userAzureCreatedAt: userFromAzure.value[0].createdDateTime
+			providerAccountCreatedAt: userFromAzure.value[0].createdDateTime
 		});
 
 		if (!createdUser) return null;

@@ -25,7 +25,7 @@ declare module 'next-auth' {
     firstName: string;
     lastName: string;
     isSAdmin: boolean;
-    userAzureCreatedAt?: Date;
+    providerAccountCreatedAt?: Date;
   }
 }
 

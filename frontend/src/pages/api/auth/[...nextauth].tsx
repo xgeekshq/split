@@ -91,7 +91,7 @@ export default NextAuth({
           email,
           _id,
           isSAdmin,
-          userAzureCreatedAt,
+          providerAccountCreatedAt,
         } = data;
         user.firstName = firstName;
         user.lastName = lastName;
@@ -101,7 +101,7 @@ export default NextAuth({
         user.strategy = 'azure';
         user.id = _id;
         user.isSAdmin = isSAdmin;
-        user.userAzureCreatedAt = userAzureCreatedAt;
+        user.providerAccountCreatedAt = providerAccountCreatedAt;
       }
 
       return true;
