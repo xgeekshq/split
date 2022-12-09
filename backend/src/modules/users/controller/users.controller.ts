@@ -155,6 +155,6 @@ export default class UsersController {
 	@UseGuards(SuperAdminGuard)
 	@Delete(':userId')
 	async deleteUser(@Req() request: RequestWithUser, @Param() { userId }: UserParams) {
-		return this.deleteUserApp.delete(request, userId);
+		return this.deleteUserApp.delete(request.user, userId);
 	}
 }

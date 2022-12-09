@@ -1,5 +1,5 @@
-import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import UserDto from '../../dto/user.dto';
 
 export interface DeleteUserServiceInterface {
-	delete(request: RequestWithUser, userId: string): Promise<boolean>;
+	delete(user: UserDto, userId: string): Promise<boolean>;
 }
