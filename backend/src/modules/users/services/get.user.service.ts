@@ -17,7 +17,7 @@ export default class GetUserServiceImpl implements GetUserService {
 	) {}
 
 	getByEmail(email: string) {
-		return this.userRepository.getByProp({ email });
+		return this.userRepository.findOneByField({ email });
 	}
 
 	getById(_id: string) {
@@ -39,7 +39,7 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	getAllUsers() {
-		return this.userRepository.getAll({ password: 0, currentHashedRefreshToken: 0 });
+		return this.userRepository.findAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
 	async getAllUsersWithTeams() {

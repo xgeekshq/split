@@ -41,7 +41,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 
 		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
 		this.tokenValidator(userFromDb.updatedAt);
-		const user = await this.userRepository.getByProp({ email: userFromDb.emailAddress });
+		const user = await this.userRepository.findOneByField({ email: userFromDb.emailAddress });
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 

@@ -1,68 +1,65 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { ClientSession, Model } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
-import TeamUser, { TeamUserDocument } from '../schemas/team.user.schema';
-import Team, { TeamDocument } from '../schemas/teams.schema';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import { DeleteBoardService } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
+import { TYPES } from '../interfaces/types';
+import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
+import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
+import * as Boards from '../../boards/interfaces/types';
+import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
 
 @Injectable()
 export default class DeleteTeamService implements DeleteTeamServiceInterface {
 	constructor(
-		@InjectModel(Team.name) private teamModel: Model<TeamDocument>,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>,
+		@Inject(TYPES.repositories.TeamRepository)
+		private readonly teamRepository: TeamRepositoryInterface,
+		@Inject(TYPES.repositories.TeamUserRepository)
+		private readonly teamUserRepository: TeamUserRepositoryInterface,
 		@Inject(Boards.TYPES.services.DeleteBoardService)
-		private deleteBoardService: DeleteBoardService
+		private deleteBoardService: DeleteBoardServiceInterface
 	) {}
 
 	async delete(teamId: string): Promise<boolean> {
-		const teamSession = await this.teamModel.db.startSession();
-		teamSession.startTransaction();
-		const teamUserSession = await this.teamUserModel.db.startSession();
-		teamUserSession.startTransaction();
+		await this.teamRepository.startTransaction();
+		await this.teamUserRepository.startTransaction();
 
 		try {
-			await this.deleteTeam(teamId, teamSession);
-			await this.deleteTeamUsers(teamId, teamUserSession);
+			await this.deleteTeam(teamId, true);
+			await this.deleteTeamUsers(teamId, true);
 
 			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
 
-			await teamSession.commitTransaction();
-			await teamUserSession.commitTransaction();
+			await this.teamRepository.commitTransaction();
+			await this.teamUserRepository.commitTransaction();
 
 			return true;
 		} catch (e) {
-			await teamSession.abortTransaction();
-			await teamUserSession.abortTransaction();
+			await this.teamRepository.abortTransaction();
+			await this.teamUserRepository.abortTransaction();
 		} finally {
-			await teamSession.endSession();
-			await teamUserSession.endSession();
+			await this.teamRepository.endSession();
+			await this.teamUserRepository.endSession();
 		}
 		throw new BadRequestException(DELETE_FAILED);
 	}
 
-	private async deleteTeam(teamId: string, teamSession: ClientSession) {
-		const result = await this.teamModel.findOneAndRemove(
+	private async deleteTeam(teamId: string, withSession: boolean) {
+		const result = await this.teamRepository.findOneAndRemoveByField(
 			{
 				_id: teamId
 			},
-			{ session: teamSession }
+			withSession
 		);
 
 		if (!result) throw new NotFoundException(DELETE_FAILED);
 	}
 
-	private async deleteTeamUsers(teamId: string, teamUserSession: ClientSession) {
-		const { deletedCount } = await this.teamUserModel
-			.deleteMany(
-				{
-					team: teamId
-				},
-				{ session: teamUserSession }
-			)
-			.exec();
+	private async deleteTeamUsers(teamId: string, withSession: boolean) {
+		const deletedCount = await this.teamUserRepository.deleteMany(
+			{
+				team: teamId
+			},
+			withSession
+		);
 
 		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}

@@ -14,7 +14,6 @@ export class UpdateTeamApplication implements UpdateTeamApplicationInterface {
 	updateTeamUser(teamData: TeamUserDto) {
 		return this.updateTeamService.updateTeamUser(teamData);
 	}
-
 	addAndRemoveTeamUsers(addUsers: TeamUserDto[], removeUsers: string[]) {
 		return this.updateTeamService.addAndRemoveTeamUsers(addUsers, removeUsers);
 	}

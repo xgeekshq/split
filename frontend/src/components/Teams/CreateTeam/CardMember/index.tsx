@@ -102,7 +102,6 @@ const CardMember = React.memo<CardBodyProps>(
                 </StyledMemberTitle>
               </Flex>
             </Flex>
-            {/* here */}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
@@ -126,7 +125,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </Tooltip>
               </Flex>
             )}
-            {((!isTeamMember && session?.user.id !== member._id) || isSAdmin) && (
+            {(!(isTeamMember || isTeamCreator) || isSAdmin) && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}

@@ -11,5 +11,9 @@ export const TYPES = {
 		UpdateTeamApplication: 'UpdateTeamApplication',
 		DeleteTeamApplication: 'DeleteTeamApplication'
 		//   UpdateBoardApplication: 'UpdateBoardApplication',
+	},
+	repositories: {
+		TeamRepository: 'TeamRepository',
+		TeamUserRepository: 'TeamUserRepository'
 	}
 };

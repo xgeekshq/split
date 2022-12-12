@@ -1,10 +1,10 @@
 import { CreateTeamDto } from '../../dto/crate-team.dto';
 import TeamUserDto from '../../dto/team.user.dto';
-import { TeamUserDocument } from '../../schemas/team.user.schema';
-import { TeamDocument } from '../../schemas/teams.schema';
+import TeamUser from '../../entities/team.user.schema';
+import Team from '../../entities/teams.schema';
 
 export interface CreateTeamApplicationInterface {
-	createTeamUser(teamUser: TeamUserDto): Promise<TeamUserDocument>;
+	createTeamUser(teamUser: TeamUserDto): Promise<TeamUser>;
 
-	create(teamData: CreateTeamDto): Promise<TeamDocument>;
+	create(teamData: CreateTeamDto): Promise<Team>;
 }
