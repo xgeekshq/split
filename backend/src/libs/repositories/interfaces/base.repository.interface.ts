@@ -1,16 +1,29 @@
-import { QueryOptions, UpdateQuery } from 'mongoose';
+import { FilterQuery, PopulateOptions, QueryOptions, UpdateQuery } from 'mongoose';
+
 import { ModelProps, SelectedValues } from '../types';
 
-export interface BaseInterfaceRepository<T> {
-	getAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
+export type PopulateType = PopulateOptions | (PopulateOptions | string)[];
 
-	get(id: string, selectedValues?: SelectedValues<T>): Promise<T>;
+export interface BaseInterfaceRepository<T> {
+	findAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
+
+	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T>;
+
+	findAllWithQuery(
+		query: any,
+		selectedValues?: SelectedValues<T>,
+		populate?: PopulateType
+	): Promise<T[]>;
+
+	findOneByField(fields: ModelProps<T>): Promise<T>;
 
 	create(item: T): Promise<T>;
 
-	update(id: string, item: T);
+	insertMany(listOfItems: T[]): Promise<T[]>;
 
-	getByProp(value: ModelProps<T>): Promise<T>;
+	update(id: string, item: T): Promise<T>;
+
+	deleteMany(field: FilterQuery<T>, withSession: boolean): Promise<number>;
 
 	countDocuments(): Promise<number>;
 
@@ -19,4 +32,14 @@ export interface BaseInterfaceRepository<T> {
 		query: UpdateQuery<T>,
 		options?: QueryOptions<T>
 	): Promise<T>;
+
+	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T>;
+
+	startTransaction(): Promise<void>;
+
+	commitTransaction(): Promise<void>;
+
+	abortTransaction(): Promise<void>;
+
+	endSession(): Promise<void>;
 }

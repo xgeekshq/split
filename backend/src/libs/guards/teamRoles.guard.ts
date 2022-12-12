@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@
 import { Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import TeamUser, { TeamUserDocument } from '../../modules/teams/schemas/team.user.schema';
+import TeamUser, { TeamUserDocument } from '../../modules/teams/entities/team.user.schema';
 
 @Injectable()
 export class TeamUserGuard implements CanActivate {
