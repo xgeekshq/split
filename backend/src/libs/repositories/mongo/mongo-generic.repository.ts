@@ -1,4 +1,4 @@
-import { ClientSession, Model, UpdateQuery } from 'mongoose';
+import { ClientSession, FilterQuery, Model, UpdateQuery } from 'mongoose';
 import { BaseInterfaceRepository, PopulateType } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
@@ -47,6 +47,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.create(item);
 	}
 
+	insertMany(listOfItems: T[]): Promise<T[]> {
+		return this._repository.insertMany(listOfItems);
+	}
+
 	update(id: string, item: T): Promise<T> {
 		return this._repository.findByIdAndUpdate(id, item).exec();
 	}
@@ -74,7 +78,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 	}
 
-	async deleteMany(field: ModelProps<T>, withSession = false): Promise<number> {
+	async deleteMany(field: FilterQuery<T>, withSession = false): Promise<number> {
 		const { deletedCount } = await this._repository
 			.deleteMany(field, { session: withSession ? this._session : undefined })
 			.exec();

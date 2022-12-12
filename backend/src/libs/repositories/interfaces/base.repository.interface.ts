@@ -1,4 +1,4 @@
-import { PopulateOptions, UpdateQuery } from 'mongoose';
+import { FilterQuery, PopulateOptions, UpdateQuery } from 'mongoose';
 import { ModelProps, SelectedValues } from '../types';
 
 export type PopulateType = PopulateOptions | (PopulateOptions | string)[];
@@ -18,9 +18,11 @@ export interface BaseInterfaceRepository<T> {
 
 	create(item: T): Promise<T>;
 
+	insertMany(listOfItems: T[]): Promise<T[]>;
+
 	update(id: string, item: T): Promise<T>;
 
-	deleteMany(field: ModelProps<T>, withSession: boolean): Promise<number>;
+	deleteMany(field: FilterQuery<T>, withSession: boolean): Promise<number>;
 
 	countDocuments(): Promise<number>;
 
