@@ -22,6 +22,8 @@ import {
 	createTeamService,
 	getTeamApplication,
 	getTeamService,
+	teamRepository,
+	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
 import {
@@ -63,6 +65,8 @@ describe('AuthController', () => {
 				getUserApplication,
 				getUserService,
 				userRepository,
+				teamRepository,
+				teamUserRepository,
 				updateTeamService,
 				ConfigService,
 				{

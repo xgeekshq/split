@@ -7,7 +7,12 @@ import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import mockedUser from 'src/libs/test-utils/mocks/user.mock';
 import ValidateUserAuthServiceImpl from 'src/modules/auth/services/validate-user.auth.service';
-import { getTeamService, updateTeamService } from 'src/modules/teams/providers';
+import {
+	getTeamService,
+	teamRepository,
+	teamUserRepository,
+	updateTeamService
+} from 'src/modules/teams/providers';
 import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import { getUserService, userRepository } from 'src/modules/users/users.providers';
@@ -38,6 +43,8 @@ describe('The AuthenticationService', () => {
 				getUserService,
 				getTeamService,
 				userRepository,
+				teamRepository,
+				teamUserRepository,
 				updateTeamService,
 				{
 					provide: ConfigService,

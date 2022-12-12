@@ -22,6 +22,8 @@ import {
 	createTeamService,
 	getTeamApplication,
 	getTeamService,
+	teamRepository,
+	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
 
@@ -47,6 +49,8 @@ describe('BoardsController', () => {
 				createTeamService,
 				createSchedulesService,
 				deleteSchedulesService,
+				teamRepository,
+				teamUserRepository,
 				updateTeamService,
 				{
 					provide: getModelToken('User'),
