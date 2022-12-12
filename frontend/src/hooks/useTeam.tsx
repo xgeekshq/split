@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from 'react-query';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { CreatedTeamUser, TeamUser } from '@/types/team/team.user';
 import {
   addAndRemoveTeamUserRequest,
   createTeamRequest,
@@ -26,6 +27,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     queryClient,
     teamsList,
     setTeamsList,
+    usersList,
   } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
@@ -110,20 +112,34 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
   });
 
   const addAndRemoveTeamUser = useMutation(addAndRemoveTeamUserRequest, {
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      const removedTeamUserIds = variables.removeUsers;
+      const createdTeamUsers: CreatedTeamUser[] = data;
+
+      const createdTeamUsersWithUser: TeamUser[] = createdTeamUsers.map((teamUser) => ({
+        ...teamUser,
+        user: usersList.filter((user) => user._id === teamUser.user)[0],
+      }));
+
+      const removedUsersFromMembersList = membersList.filter(
+        (member) => !removedTeamUserIds.includes(member._id),
+      );
+
+      const finalMembersList = [...removedUsersFromMembersList, ...createdTeamUsersWithUser];
+
       // updates members from the membersList recoil
-      setMembersList(data.users);
+      setMembersList(finalMembersList);
 
       setToastState({
         open: true,
-        content: 'The team user was successfully updated.',
+        content: 'The team was successfully updated.',
         type: ToastStateEnum.SUCCESS,
       });
     },
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error while updating the team user',
+        content: 'Error while updating the team.',
         type: ToastStateEnum.ERROR,
       });
     },

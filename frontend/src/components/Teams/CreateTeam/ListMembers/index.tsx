@@ -23,6 +23,7 @@ import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
+import { useRouter } from 'next/router';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 
@@ -36,6 +37,8 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const {
     addAndRemoveTeamUser: { mutate },
   } = useTeam({ autoFetchTeam: false });
+
+  const router = useRouter();
 
   const { data: session } = useSession({ required: true });
   const [searchMember, setSearchMember] = useState<string>('');
@@ -82,56 +85,38 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const saveMembers = () => {
     const listOfUsers = [...membersList];
-    const teamId = listOfUsers[0].team;
 
     const selectedUsers = usersList.filter((user) => user.isChecked);
     const unselectedUsers = usersList.filter((user) => !user.isChecked);
+    const { teamId } = router.query;
 
     if (isTeamPage && teamId) {
+      const team = teamId as string;
+
       const addedUsers = selectedUsers.filter(
         (user) => !listOfUsers.some((teamUser) => teamUser.user._id === user._id),
       );
+
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
         user: teamUser._id,
         role: TeamUserRoles.MEMBER,
         isNewJoiner: false,
+        team,
       }));
+
       const removedUsers = listOfUsers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user._id === user._id),
       );
-      // console.log(addedUsersToSend);
-      // console.log(removedUsers);
+      const removedUsersIds = removedUsers.map((user) => user._id);
+      if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {
+        const usersToUpdate: TeamUserAddAndRemove = {
+          addUsers: addedUsersToSend,
+          removeUsers: removedUsersIds,
+          team,
+        };
 
-      const usersToUpdate: TeamUserAddAndRemove = {
-        addUsers: addedUsersToSend,
-        removeUsers: removedUsers,
-        team: teamId,
-      };
-
-      mutate(usersToUpdate);
-
-      // const updatedListWithAdded = selectedUsers.map(
-      //   (user) =>
-      //     listOfUsers.find((member) => member.user._id === user._id) || {
-      //       user,
-      //       role: TeamUserRoles.MEMBER,
-      //       isNewJoiner: false,
-      //     },
-      // );
-
-      // const userAdminIndex = updatedListWithAdded.findIndex(
-      //   (member) => member.user._id === session?.user.id,
-      // );
-
-      // updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
-
-      // setToastState({
-      //   open: true,
-      //   content: 'Team member/s successfully updated',
-      //   type: ToastStateEnum.SUCCESS,
-      // });
-
-      // setMembersListState(updatedListWithAdded);
+        mutate(usersToUpdate);
+      }
 
       setIsOpen(false);
 
@@ -243,7 +228,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
               variant="primary"
               onClick={saveMembers}
             >
-              Add
+              Update
             </Button>
           </ButtonsContainer>
         </StyledDialogContent>

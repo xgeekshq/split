@@ -25,13 +25,15 @@ export default class UpdateTeamService implements UpdateTeamServiceInterface {
 		const teamUserSession = await this.teamUserModel.db.startSession();
 		teamUserSession.startTransaction();
 		try {
-			if (addUsers.length > 0) await this.addTeamUsers(addUsers);
+			let createdTeamUsers: TeamUserDocument[] = [];
+
+			if (addUsers.length > 0) createdTeamUsers = await this.addTeamUsers(addUsers);
 
 			if (removeUsers.length > 0) await this.deleteTeamUsers(removeUsers, teamUserSession);
 
 			await teamUserSession.commitTransaction();
 
-			return true;
+			return createdTeamUsers;
 		} catch (error) {
 			await teamUserSession.abortTransaction();
 		} finally {
@@ -41,9 +43,11 @@ export default class UpdateTeamService implements UpdateTeamServiceInterface {
 	}
 
 	async addTeamUsers(teamUsers: TeamUserDto[]) {
-		const { length } = await this.teamUserModel.insertMany(teamUsers);
+		const createdTeamUsers = await this.teamUserModel.insertMany(teamUsers);
 
-		if (length < 1) throw new Error(INSERT_FAILED);
+		if (createdTeamUsers.length < 1) throw new Error(INSERT_FAILED);
+
+		return createdTeamUsers;
 	}
 
 	async deleteTeamUsers(teamUsers: string[], teamUserSession: ClientSession) {

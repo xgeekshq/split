@@ -45,6 +45,7 @@ const TeamMembersList = () => {
             isTeamCreator={member.user._id === session?.user.id}
             member={member}
             isTeamMember={isTeamMember}
+            isOpen={isOpen}
           />
         ))}
       </ScrollableContent>

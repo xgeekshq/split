@@ -9,10 +9,19 @@ export interface TeamUser {
   team?: string;
 }
 
+export interface CreatedTeamUser {
+  user: string;
+  role: TeamUserRoles;
+  isNewJoiner: boolean;
+  _id?: string;
+  team?: string;
+}
+
 export interface CreateTeamUser {
   user: string; // user._id
   role: TeamUserRoles;
   isNewJoiner?: boolean;
+  team?: string;
 }
 
 export interface TeamUserUpdate {
@@ -24,6 +33,6 @@ export interface TeamUserUpdate {
 
 export interface TeamUserAddAndRemove {
   addUsers: CreateTeamUser[];
-  removeUsers: TeamUser[];
+  removeUsers: (string | undefined)[];
   team: string;
 }
