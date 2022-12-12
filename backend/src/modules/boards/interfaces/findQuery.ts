@@ -1,5 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import { TeamDocument } from 'src/modules/teams/schemas/teams.schema';
+import Team from 'src/modules/teams/entities/teams.schema';
 
 export type QueryType = {
 	$and: (
@@ -20,7 +20,7 @@ export type QueryType = {
 					  }
 					| {
 							team: {
-								$in?: LeanDocument<TeamDocument>[];
+								$in?: Team[] | string[];
 								$ne?: undefined | null;
 							};
 							_id?: undefined;
