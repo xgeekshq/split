@@ -16,19 +16,21 @@ export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
   py: '$12',
   pl: '$17',
   pr: '$16',
+  cursor: 'pointer',
   '&[data-placeholder]': {
     fontSize: 13,
-    color: '$primary400',
+    color: '$primary300',
   },
 });
 
 export const SelectIcon = styled(SelectPrimitive.SelectIcon, {
-  color: '$primary400',
+  color: '$primary800',
 });
 
 export const SelectContent = styled(SelectPrimitive.Content, {
   overflow: 'hidden',
   backgroundColor: 'white',
+  boxShadow: '0px 4px 16px rgba(18, 25, 34, 0.05)',
 });
 
 export const SelectViewport = styled(SelectPrimitive.Viewport, {
@@ -38,15 +40,14 @@ export const SelectViewport = styled(SelectPrimitive.Viewport, {
 export const StyledItem = styled(SelectPrimitive.Item, {
   fontSize: 16,
   lineHeight: 1,
-  color: '$primary400',
+  color: '$primary800',
   borderRadius: 3,
   display: 'flex',
   alignItems: 'center',
-  height: 25,
+  height: 35,
   padding: '0 35px 0 25px',
   position: 'relative',
   userSelect: 'none',
-
   '&[data-disabled]': {
     color: mauve.mauve8,
     pointerEvents: 'none',
@@ -54,8 +55,9 @@ export const StyledItem = styled(SelectPrimitive.Item, {
 
   '&[data-highlighted]': {
     outline: 'none',
-    backgroundColor: '$primary400',
+    backgroundColor: '$primary800',
     color: 'white',
+    cursor: 'pointer',
   },
 });
 
@@ -77,7 +79,7 @@ export const StyledItemIndicator = styled(SelectPrimitive.ItemIndicator, {
 
 const StyledRootSelect = styled(SelectPrimitive.Root);
 const StyledSelectValue = styled(SelectPrimitive.Value, {
-  color: '$primary700',
+  color: '$primary800',
   fontSize: '16px',
 });
 const StyledSelectPortal = styled(SelectPrimitive.Portal);

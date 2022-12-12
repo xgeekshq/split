@@ -1,7 +1,7 @@
 import { ReactElement, Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 import { getDashboardHeaderInfo } from '@/api/authService';
 import { getTeamsOfUser } from '@/api/teamService';
@@ -12,6 +12,7 @@ import Flex from '@/components/Primitives/Flex';
 import TeamsList from '@/components/Teams/TeamsList';
 import useTeam from '@/hooks/useTeam';
 import useTeamUtils from '@/hooks/useTeamUtils';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
@@ -25,7 +26,7 @@ const Teams = () => {
     if (data) {
       setTeamsList(data);
     }
-  }, []);
+  }, [data, setTeamsList]);
 
   if (!session || !data) return null;
 
@@ -42,11 +43,8 @@ const Teams = () => {
 
 Teams.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext,
-) => {
-  const session = await getSession(context);
-  if (session) {
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+  async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
     await queryClient.prefetchQuery('dashboardInfo', () => getDashboardHeaderInfo(context));
@@ -56,8 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (
         dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
       },
     };
-  }
-  return { props: {} };
-};
+  },
+);
 
 export default Teams;

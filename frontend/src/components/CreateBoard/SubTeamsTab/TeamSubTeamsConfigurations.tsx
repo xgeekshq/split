@@ -27,7 +27,7 @@ import QuickEditSubTeams from './QuickEditSubTeams';
 import SelectTeam from './SelectTeam';
 import FakeMainBoardCard from '../fake/FakeSettingsTabs/partials/MainBoardCard';
 
-const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
+const StyledBox = styled(Flex, Box, {});
 
 type TeamSubTeamsInterface = {
   timesOpen: number;
@@ -53,13 +53,6 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
     const isTeamsValid = Array.isArray(teams) && teams.length > 0;
 
     if (isTeamsValid && selectedTeam) {
-      // setHaveError(
-      //   !!(
-      //     selectedTeam?.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length <
-      //     MIN_MEMBERS
-      //   ),
-      // );
-
       const isStakeholder = (userTeam: TeamUser): boolean =>
         userTeam.role === TeamUserRoles.STAKEHOLDER;
       const getStakeholder = ({ user }: TeamUser): User => user;
@@ -104,6 +97,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
               borderRadius: '$4',
               border: '1px solid $primary200',
               background: '$background',
+              height: '$64',
             }}
             direction="column"
             elevation="1"
@@ -116,7 +110,16 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
           </StyledBox>
         ) : (
           <StyledBox
-            css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
+            css={{
+              width: '100%',
+              py: '$12',
+              pl: '$17',
+              pr: '$16',
+              borderRadius: '$4',
+              border: '1px solid $primary200',
+              background: 'white',
+              height: '$64',
+            }}
             direction="column"
             elevation="1"
             gap="2"
@@ -137,7 +140,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
           </StyledBox>
         )}
       </Flex>
-      {selectedTeam && (
+      {selectedTeam ? (
         <>
           <Flex justify="end">
             <QuickEditSubTeams team={selectedTeam} />
@@ -148,6 +151,10 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
             <MainBoardCard team={selectedTeam} timesOpen={timesOpen} />
           )}
         </>
+      ) : (
+        <Flex css={{ mt: '$36' }}>
+          <FakeMainBoardCard />
+        </Flex>
       )}
     </Flex>
   );

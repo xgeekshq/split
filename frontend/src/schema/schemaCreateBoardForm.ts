@@ -10,7 +10,10 @@ const SchemaCreateBoard = Joi.object({
     'number.min': 'Please insert a number greater than zero.',
   }),
   slackEnable: Joi.boolean().required().messages({
-    'boolean.required': 'Please enterm the value for slack enable.',
+    'boolean.required': 'Please enter the value for slack enable.',
+  }),
+  team: Joi.string().required().messages({
+    'any.required': 'Please Select Team',
   }),
 });
 

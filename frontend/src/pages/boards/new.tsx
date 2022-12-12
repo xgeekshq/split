@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import {
   ButtonsContainer,
   Container,
@@ -16,10 +15,8 @@ import {
   StyledForm,
   SubContainer,
 } from '@/styles/pages/boards/new.styles';
-
-import { getTeamsOfUser } from '@/api/teamService';
+import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName';
-
 import SettingsTabs from '@/components/CreateBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -48,6 +45,7 @@ const NewBoard: NextPage = () => {
   const { data: session } = useSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   /**
    * Recoil Atoms and Hooks
@@ -57,7 +55,6 @@ const NewBoard: NextPage = () => {
   const resetBoardState = useResetRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
   const setTeams = useSetRecoilState(teamsOfUser);
-
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   /**
@@ -74,19 +71,26 @@ const NewBoard: NextPage = () => {
     fetchTeamsOfUser: { data: teamsData },
   } = useTeam({ autoFetchTeam: false });
 
+  const {
+    fetchAllTeams: { data: allTeamsData },
+  } = useTeam({ autoFetchTeam: false });
+
   /**
    * React Hook Form
    */
-  const methods = useForm<{ text: string; maxVotes?: number; slackEnable?: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      text: '',
-      maxVotes: boardState.board.maxVotes,
-      slackEnable: false,
+  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable?: boolean }>(
+    {
+      mode: 'onBlur',
+      reValidateMode: 'onBlur',
+      defaultValues: {
+        text: '',
+        maxVotes: boardState.board.maxVotes,
+        slackEnable: false,
+        team: undefined,
+      },
+      resolver: joiResolver(SchemaCreateBoard),
     },
-    resolver: joiResolver(SchemaCreateBoard),
-  });
+  );
 
   const mainBoardName = useWatch({
     control: methods.control,
@@ -102,14 +106,14 @@ const NewBoard: NextPage = () => {
     setHaveError(false);
     setBackButtonState(true);
     router.back();
-  }, [router, resetBoardState]);
+  }, [resetBoardState, setSelectedTeam, setHaveError, router]);
 
   /**
    * Save board
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, maxVotes?: number, slackEnable?: boolean) => {
+  const saveBoard = (title: string, team: string, maxVotes?: number, slackEnable?: boolean) => {
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
       newSubBoard.hideCards = boardState.board.hideCards;
@@ -132,15 +136,17 @@ const NewBoard: NextPage = () => {
       maxVotes,
       slackEnable,
       maxUsers: boardState.count.maxUsersCount,
+      team,
     });
   };
 
   useEffect(() => {
-    if (teamsData) {
-      setTeams(teamsData);
+    if (teamsData && allTeamsData && session) {
+      setTeams(session?.user.isSAdmin ? allTeamsData : teamsData);
     }
 
     if (status === 'success') {
+      setIsSaving(true);
       setToastState({
         open: true,
         content: 'Board created with success!',
@@ -148,16 +154,27 @@ const NewBoard: NextPage = () => {
       });
 
       resetBoardState();
+      setSelectedTeam(undefined);
       router.push('/boards');
     }
-  }, [status, resetBoardState, router, setToastState, session, teamsData, setTeams]);
+  }, [
+    status,
+    resetBoardState,
+    router,
+    setToastState,
+    session,
+    teamsData,
+    setTeams,
+    allTeamsData,
+    setSelectedTeam,
+  ]);
 
-  if (!session || !teamsData) return null;
+  if (!session || !teamsData || !allTeamsData) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Container>
+        <Container style={isSaving ? { opacity: 0.5 } : undefined}>
           <PageHeader>
             <Text color="primary800" heading={3} weight="bold">
               Add new SPLIT board
@@ -184,8 +201,8 @@ const NewBoard: NextPage = () => {
                 direction="column"
                 onSubmit={
                   !haveError
-                    ? methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                        saveBoard(text, maxVotes, slackEnable);
+                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
+                        saveBoard(text, team, maxVotes, slackEnable);
                       })
                     : undefined
                 }
@@ -223,6 +240,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
+    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
 
     return {
       props: {
