@@ -1,5 +1,5 @@
 import { ClientSession, FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
-import { BaseInterfaceRepository, PopulateType} from '../interfaces/base.repository.interface';
+import { BaseInterfaceRepository, PopulateType } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
 export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
@@ -61,6 +61,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		options?: QueryOptions<T>
 	): Promise<T> {
 		return this._repository.findOneAndUpdate(value, query, options).exec();
+	}
 
 	findOneAndRemove(id: string, withSession = false): Promise<T> {
 		return this._repository
@@ -104,6 +105,5 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 
 	async endSession() {
 		await this._session.endSession();
-
 	}
 }
