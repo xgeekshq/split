@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { Switch, SwitchThumb } from '@/components/Primitives/Switch';
+import { Switch } from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
+import SwitchThumbComponent from './SwitchThumbComponent';
 
 type Props = {
   title: string;
@@ -37,36 +37,14 @@ const ConfigurationSettings = ({
             onCheckedChange={handleCheckedChange}
             disabled={disabled}
           >
-            <SwitchThumb variant="sm">
-              {isChecked && (
-                <Icon
-                  name="check"
-                  css={{
-                    width: '$10',
-                    height: '$10',
-                    color: color || '$successBase',
-                  }}
-                />
-              )}
-            </SwitchThumb>
+            <SwitchThumbComponent isChecked={isChecked} iconName="check" color={color} />
           </Switch>
         </Flex>
       </Tooltip>
     )}
     {!styleVariant && (
       <Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange}>
-        <SwitchThumb variant="sm">
-          {isChecked && (
-            <Icon
-              name="check"
-              css={{
-                width: '$10',
-                height: '$10',
-                color: color || '$successBase',
-              }}
-            />
-          )}
-        </SwitchThumb>
+        <SwitchThumbComponent isChecked={isChecked} iconName="check" color={color} />
       </Switch>
     )}
     <Flex direction="column">
