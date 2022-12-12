@@ -86,19 +86,6 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return deletedCount;
 	}
 
-	async deleteManyByListOfIds(teamUserIds: string[], withSession: boolean): Promise<number> {
-		const { deletedCount } = await this._repository
-			.deleteMany(
-				{
-					_id: teamUserIds
-				},
-				{ session: withSession ? this._session : undefined }
-			)
-			.exec();
-
-		return deletedCount;
-	}
-
 	async startTransaction() {
 		this._session = await this._repository.db.startSession();
 		this._session.startTransaction();
