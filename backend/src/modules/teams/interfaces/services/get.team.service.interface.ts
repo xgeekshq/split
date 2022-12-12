@@ -1,7 +1,7 @@
 import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
-import { TeamUserDocument } from '../../schemas/team.user.schema';
-import { TeamDocument } from '../../schemas/teams.schema';
+import TeamUser from '../../entities/team.user.schema';
+import Team from '../../entities/teams.schema';
 import { UserWithTeams } from '../../../users/interfaces/type-user-with-teams';
 
 export interface GetTeamServiceInterface {
@@ -9,18 +9,15 @@ export interface GetTeamServiceInterface {
 
 	countAllTeams(): Promise<number>;
 
-	getTeamsOfUser(userId: string): Promise<LeanDocument<TeamDocument>[]>;
+	getTeamsOfUser(userId: string): Promise<Team[]>;
 
-	getTeam(
-		teamId: string,
-		teamQueryParams?: TeamQueryParams
-	): Promise<LeanDocument<TeamDocument> | null>;
+	getTeam(teamId: string, teamQueryParams?: TeamQueryParams): Promise<Team | null>;
 
-	getUsersOfTeam(teamId: string): Promise<LeanDocument<TeamUserDocument>[]>;
+	getUsersOfTeam(teamId: string): Promise<TeamUser[]>;
 
-	getTeamUser(userId: string, teamId: string): Promise<LeanDocument<TeamUserDocument> | null>;
+	getTeamUser(userId: string, teamId: string): Promise<TeamUser | null>;
 
-	getAllTeams(): Promise<LeanDocument<TeamDocument>[]>;
+	getAllTeams(): Promise<LeanDocument<Team>[]>;
 
-	getUsersOnlyWithTeams(): Promise<LeanDocument<UserWithTeams>[]>;
+	getUsersOnlyWithTeams(): Promise<UserWithTeams[]>;
 }

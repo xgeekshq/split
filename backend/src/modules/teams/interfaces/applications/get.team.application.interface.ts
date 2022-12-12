@@ -1,6 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
-import { TeamDocument } from '../../schemas/teams.schema';
+import { TeamDocument } from '../../entities/teams.schema';
 
 export interface GetTeamApplicationInterface {
 	countTeams(userId: string): Promise<number>;

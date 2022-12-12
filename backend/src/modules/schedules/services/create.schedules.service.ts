@@ -64,12 +64,19 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				team: String(teamId),
 				owner: String(ownerId),
 				maxUsers: maxUsersPerTeam,
-				willRunAt: new Date(new Date().getFullYear(), month, day, 10).toISOString()
+				willRunAt: new Date(
+					new Date().getUTCMonth() === 11 && month == 0
+						? new Date().getFullYear() + 1
+						: new Date().getFullYear(),
+					month,
+					day,
+					10
+				).toISOString()
 			});
 
 			if (!cronJobDoc) throw Error('CronJob not created');
-			const job = new CronJob(`0 10 18 10 *`, () =>
-				// const job = new CronJob(`0 10 ${day} ${month} *`, () =>
+
+			const job = new CronJob(`0 10 ${day} ${month} *`, () =>
 				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
 			);
 			this.schedulerRegistry.addCronJob(String(boardId), job);
