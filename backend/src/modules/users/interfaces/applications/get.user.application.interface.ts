@@ -9,5 +9,7 @@ export interface GetUserApplication {
 
 	getAllUsers(): Promise<LeanDocument<UserDocument>[]>;
 
-	getUsersOnlyWithTeams(): Promise<LeanDocument<UserWithTeams>[]>;
+	getAllUsersWithPagination(page: number, size: number): Promise<LeanDocument<UserDocument>[]>;
+
+	getAllUsersWithTeams(page?: number, size?: number): Promise<LeanDocument<UserWithTeams>[]>;
 }

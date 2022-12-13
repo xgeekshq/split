@@ -22,7 +22,11 @@ export class GetUserApplicationImpl implements GetUserApplication {
 		return this.getUserService.getAllUsers();
 	}
 
-	getUsersOnlyWithTeams() {
-		return this.getUserService.getAllUsersWithTeams();
+	getAllUsersWithPagination(page: number, size: number) {
+		return this.getUserService.getAllUsersWithPagination(page, size);
+	}
+
+	getAllUsersWithTeams(page?: number, size?: number) {
+		return this.getUserService.getAllUsersWithTeams(page, size);
 	}
 }

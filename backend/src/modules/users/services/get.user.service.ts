@@ -42,15 +42,22 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.findAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
-	async getAllUsersWithTeams() {
-		const users = await this.getAllUsers();
+	getAllUsersWithPagination(page?: number, size?: number) {
+		return this.userRepository.getAllWithPagination(page, size);
+	}
+
+	async getAllUsersWithTeams(page = 0, size = 10) {
+		const users = await this.getAllUsersWithPagination(page, size);
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {
 			return {
 				user: userFound,
 				teams: []
 			};
 		});
-		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams();
+		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams(users);
+
+		//return usersOnlyWithTeams;
+
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
 		return [
