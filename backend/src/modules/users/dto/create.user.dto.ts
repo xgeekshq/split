@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
+import {
+	IsDateString,
+	IsEmail,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	Matches,
+	MinLength
+} from 'class-validator';
 
 export default class CreateUserDto {
 	@ApiProperty({ type: String, format: 'email' })
@@ -36,4 +44,9 @@ export default class CreateUserDto {
 			'Use at least 8 characters, upper and lower case letters, numbers and symbols like !“?$%^&).'
 	})
 	password!: string;
+
+	@ApiProperty()
+	@IsOptional()
+	@IsDateString()
+	providerAccountCreatedAt?: Date;
 }

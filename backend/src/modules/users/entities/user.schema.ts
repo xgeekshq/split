@@ -34,6 +34,9 @@ export default class User extends BaseModel {
 
 	@Prop({ nullable: false, default: false })
 	isDeleted!: boolean;
+
+	@Prop({ nullable: true })
+	providerAccountCreatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

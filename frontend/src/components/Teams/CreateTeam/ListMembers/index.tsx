@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
 
 import Icon from '@/components/icons/Icon';
@@ -24,6 +24,8 @@ import Button from '@/components/Primitives/Button';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
 import { useRouter } from 'next/router';
+
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 
@@ -43,12 +45,10 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const { data: session } = useSession({ required: true });
   const [searchMember, setSearchMember] = useState<string>('');
 
-  const usersList = useRecoilValue(usersListState);
-  const membersList = useRecoilValue(membersListState);
+  const [usersList, setUsersListState] = useRecoilState(usersListState);
+  const [membersList, setMembersListState] = useRecoilState(membersListState);
 
   const setToastState = useSetRecoilState(toastState);
-  const setMembersListState = useSetRecoilState(membersListState);
-  const setUsersListState = useSetRecoilState(usersListState);
 
   // References
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -128,7 +128,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
-          isNewJoiner: false,
+          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
         },
     );
 

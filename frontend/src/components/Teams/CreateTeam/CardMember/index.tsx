@@ -12,6 +12,7 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
+
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 import CardEndCreateTeam from '../CardEnd';
 
