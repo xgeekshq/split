@@ -12,6 +12,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -43,7 +44,7 @@ const NewTeam: NextPage = () => {
         listMembers.push({
           user,
           role: TeamUserRoles.ADMIN,
-          isNewJoiner: false,
+          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
         });
       }
     });

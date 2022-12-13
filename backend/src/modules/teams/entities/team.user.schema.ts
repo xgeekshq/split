@@ -28,6 +28,8 @@ export default class TeamUser extends BaseModel {
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'Team', nullable: false })
 	team?: Team | ObjectId | string;
+
+	userCreated?: Date;
 }
 
 export const TeamUserSchema = SchemaFactory.createForClass(TeamUser);
