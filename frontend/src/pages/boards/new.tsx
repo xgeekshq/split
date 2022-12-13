@@ -45,7 +45,7 @@ const NewBoard: NextPage = () => {
   const { data: session } = useSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   /**
    * Recoil Atoms and Hooks
@@ -101,6 +101,7 @@ const NewBoard: NextPage = () => {
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
+    setIsLoading(true);
     resetBoardState();
     setSelectedTeam(undefined);
     setHaveError(false);
@@ -146,7 +147,7 @@ const NewBoard: NextPage = () => {
     }
 
     if (status === 'success') {
-      setIsSaving(true);
+      setIsLoading(true);
       setToastState({
         open: true,
         content: 'Board created with success!',
@@ -174,7 +175,7 @@ const NewBoard: NextPage = () => {
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Container style={isSaving ? { opacity: 0.5 } : undefined}>
+        <Container style={isLoading ? { opacity: 0.5 } : undefined}>
           <PageHeader>
             <Text color="primary800" heading={3} weight="bold">
               Add new SPLIT board
