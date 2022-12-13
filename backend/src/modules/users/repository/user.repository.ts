@@ -13,9 +13,8 @@ export class UserRepository
 	constructor(@InjectModel(User.name) private model: Model<UserDocument>) {
 		super(model);
 	}
-
-	getById(userId: string) {
-		return this.get(userId, {
+	getById(userId: string): Promise<User> {
+		return this.findOneById(userId, {
 			password: 0,
 			currentHashedRefreshToken: 0
 		});

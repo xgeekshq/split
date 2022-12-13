@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
@@ -55,10 +56,17 @@ const useCreateBoard = (team: Team) => {
       if (splitUsers && team.users.length >= MIN_MEMBERS) {
         new Array(maxTeams).fill(0).forEach((_, i) => {
           const newBoard = generateSubBoard(i + 1);
+          const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
 
-          splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role =
+          teamUsersWotIsNewJoiner[Math.floor(Math.random() * teamUsersWotIsNewJoiner.length)].role =
             BoardUserRoles.RESPONSIBLE;
-          newBoard.users = splitUsers[i];
+
+          const result = splitUsers[i].map(
+            (user) =>
+              teamUsersWotIsNewJoiner.find((member) => member.user._id === user.user._id) || user,
+          ) as BoardUserToAdd[];
+
+          newBoard.users = result;
           subBoards.push(newBoard);
         });
       }
@@ -66,28 +74,98 @@ const useCreateBoard = (team: Team) => {
     [generateSubBoard, team],
   );
 
+  const sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+    users
+      .map((user) => {
+        user.userCreated = user.user.providerAccountCreatedAt || user.user.joinedAt;
+        return user;
+      })
+      .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+
+  const getAvailableUsersToBeResponsible = useCallback((availableUsers: TeamUser[]) => {
+    const availableUsersListSorted = sortUsersListByOldestCreatedDate(availableUsers);
+
+    // returns the user who has the oldest account date
+    return availableUsersListSorted.slice(0, 1).map((user) => {
+      user.isNewJoiner = false;
+      return user;
+    });
+  }, []);
+
+  const getRandomGroup = useCallback(
+    (usersPerTeam: number, availableUsers: TeamUser[]) => {
+      const randomGroupOfUsers = [];
+
+      let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+
+      if (availableUsersToBeResponsible.length < 1) {
+        availableUsersToBeResponsible = getAvailableUsersToBeResponsible(availableUsers);
+      }
+
+      // this object ensures that each group has one element that can be responsible
+      const candidateToBeTeamResponsible = getRandomUser(availableUsersToBeResponsible);
+      randomGroupOfUsers.push({
+        user: candidateToBeTeamResponsible.user,
+        role: BoardUserRoles.MEMBER,
+        votesCount: 0,
+        isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+        _id: candidateToBeTeamResponsible._id,
+      });
+
+      const availableUsersWotResponsible = availableUsers.filter(
+        (user) => user.user._id !== candidateToBeTeamResponsible.user._id,
+      );
+
+      let i = 0;
+
+      // adds the rest of the elements of each group
+      while (i < usersPerTeam - 1) {
+        const teamUser = getRandomUser(availableUsersWotResponsible);
+
+        randomGroupOfUsers.push({
+          user: teamUser.user,
+          role: BoardUserRoles.MEMBER,
+          votesCount: 0,
+          isNewJoiner: teamUser.isNewJoiner,
+          _id: teamUser._id,
+        });
+        i++;
+      }
+      return randomGroupOfUsers;
+    },
+    [getAvailableUsersToBeResponsible, getRandomUser],
+  );
+
   const handleSplitBoards = useCallback(
     (maxTeams: number) => {
       const subBoards: BoardToAdd[] = [];
       const splitUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
-      const availableUsers = [...teamMembers];
+      let availableUsers = [...teamMembers];
+      const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
+      let membersWithoutTeam = teamMembers.length;
 
-      new Array(teamMembers.length).fill(0).reduce((j) => {
-        if (j >= maxTeams) j = 0;
-        const teamUser = getRandomUser(availableUsers);
-        splitUsers[j] = [
-          ...splitUsers[j],
-          { user: teamUser.user, role: BoardUserRoles.MEMBER, votesCount: 0 },
-        ];
-        return ++j;
-      }, 0);
+      new Array(maxTeams).fill(0).forEach((_, i) => {
+        let numberOfUsersByGroup = usersPerTeam;
+        membersWithoutTeam -= usersPerTeam;
+
+        if (membersWithoutTeam < usersPerTeam && membersWithoutTeam !== 0)
+          numberOfUsersByGroup += 1;
+
+        const indexToCompare = i - 1 < 0 ? 0 : i - 1;
+
+        availableUsers = availableUsers.filter(
+          (user) => !splitUsers[indexToCompare].find((member) => member.user._id === user.user._id),
+        );
+
+        splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
+      });
 
       generateSubBoards(maxTeams, splitUsers, subBoards);
 
       return subBoards;
     },
-    [generateSubBoards, getRandomUser, teamMembers],
+    [generateSubBoards, getRandomGroup, teamMembers],
   );
 
   const canAdd = useMemo(() => {

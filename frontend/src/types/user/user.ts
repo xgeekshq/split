@@ -15,6 +15,7 @@ export interface User {
   refreshToken?: Token;
   isSAdmin: boolean;
   joinedAt: string;
+  providerAccountCreatedAt?: string;
 }
 
 export interface UseUserType {

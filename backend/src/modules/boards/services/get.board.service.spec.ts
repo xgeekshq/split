@@ -6,7 +6,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Document, LeanDocument } from 'mongoose';
 import Board from 'src/modules/boards/schemas/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
-import { getTeamService } from 'src/modules/teams/providers';
+import {
+	getTeamService,
+	teamRepository,
+	teamUserRepository,
+	updateTeamService
+} from 'src/modules/teams/providers';
 import { getBoardService } from '../boards.providers';
 
 describe('GetBoardServiceImpl', () => {
@@ -17,6 +22,9 @@ describe('GetBoardServiceImpl', () => {
 			providers: [
 				getTeamService,
 				getBoardService,
+				teamUserRepository,
+				teamRepository,
+				updateTeamService,
 				{
 					provide: getModelToken('Team'),
 					useValue: {}

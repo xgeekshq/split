@@ -7,6 +7,7 @@ export interface TeamUser {
   isNewJoiner: boolean;
   _id?: string;
   team?: string;
+  userCreated?: Date | string;
 }
 
 export interface CreateTeamUser {

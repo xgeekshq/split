@@ -9,4 +9,5 @@ export interface CreateOrLogin {
   firstName: string;
   lastName: string;
   isSAdmin: boolean;
+  providerAccountCreatedAt?: string;
 }

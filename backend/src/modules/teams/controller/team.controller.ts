@@ -47,6 +47,7 @@ import { UpdateTeamApplication } from '../applications/update.team.application';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
+import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
@@ -155,7 +156,7 @@ export default class TeamsController {
 		return this.getTeamApp.getTeamsOfUser(request.user._id);
 	}
 
-	@ApiOperation({ summary: 'Get a list of users belongs to the team' })
+	@ApiOperation({ summary: 'Get a specific team' })
 	@ApiParam({ name: 'teamId', type: String })
 	@ApiQuery({
 		name: 'teamUserRole',
@@ -223,6 +224,40 @@ export default class TeamsController {
 		if (!teamUser) throw new BadRequestException(UPDATE_FAILED);
 
 		return teamUser;
+	}
+
+	@ApiOperation({ summary: 'Add and remove team members' })
+	@ApiParam({ type: String, name: 'teamId', required: true })
+	@ApiBody({ type: UpdateTeamUserDto })
+	@ApiOkResponse({
+		type: TeamUserDto,
+		description: 'Team member updated successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(TeamUserGuard)
+	@Put('/:teamId/addAndRemove')
+	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
+		return this.updateTeamApp.addAndRemoveTeamUsers(users.addUsers, users.removeUsers);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific team' })

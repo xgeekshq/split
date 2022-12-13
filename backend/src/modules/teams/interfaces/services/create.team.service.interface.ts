@@ -1,12 +1,12 @@
 import TeamDto from '../../dto/team.dto';
 import TeamUserDto from '../../dto/team.user.dto';
-import { TeamUserDocument } from '../../schemas/team.user.schema';
-import { TeamDocument } from '../../schemas/teams.schema';
+import TeamUser from '../../entities/team.user.schema';
+import Team from '../../entities/teams.schema';
 
 export interface CreateTeamServiceInterface {
-	create(teamData: TeamDto): Promise<TeamDocument>;
+	create(teamData: TeamDto): Promise<Team>;
 
-	createTeam(name: string): Promise<TeamDocument>;
+	createTeam(name: string): Promise<Team>;
 
-	createTeamUser(teamUser: TeamUserDto): Promise<TeamUserDocument>;
+	createTeamUser(teamUser: TeamUserDto): Promise<TeamUser>;
 }

@@ -31,10 +31,14 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
   const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
 
   const handleLottery = () => {
-    const cloneUsers = [...deepClone(users)].map((user) => ({
-      ...user,
-      role: BoardUserRoles.MEMBER,
-    }));
+    const cloneUsers = [...deepClone(users)].flatMap((user) => {
+      if (!user.isNewJoiner)
+        return {
+          ...user,
+          role: BoardUserRoles.MEMBER,
+        };
+      return [];
+    });
 
     if (cloneUsers.length <= 1) return;
 
@@ -46,13 +50,17 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
     if (!userFound) return;
     userFound.role = BoardUserRoles.RESPONSIBLE;
 
+    const listUsers = users.map(
+      (user) => cloneUsers.find((member) => member._id === user._id) || user,
+    );
+
     setBoard((prevBoard) => ({
       ...prevBoard,
       board: {
         ...prevBoard.board,
         dividedBoards: prevBoard.board.dividedBoards.map((boardFound, i) => {
           if (i === index) {
-            return { ...boardFound, users: cloneUsers };
+            return { ...boardFound, users: listUsers };
           }
           return boardFound;
         }),

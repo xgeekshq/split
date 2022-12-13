@@ -20,13 +20,15 @@ import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interface
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
-import TeamUser, { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
-import { UserDocument } from 'src/modules/users/entities/user.schema';
+import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
+import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
+import { addMonths, isAfter } from 'date-fns';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -45,6 +47,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
+		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
+		private updateTeamService: UpdateTeamServiceInterface,
 		@Inject(TYPES.services.GetBoardService)
 		private getBoardService: GetBoardServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
@@ -165,6 +169,14 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
 	}
 
+	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
+		const dateToCompare = providerAccountCreatedAt || joinedAt;
+
+		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
+
+		return !isAfter(maxDateToBeNewJoiner, new Date());
+	};
+
 	async splitBoardByTeam(
 		ownerId: string,
 		teamId: string,
@@ -172,7 +184,29 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	): Promise<string | null> {
 		const { maxUsersPerTeam } = configs;
 
-		const teamUsersWotStakeholders = (await this.getTeamService.getUsersOfTeam(teamId)).filter(
+		let teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
+
+		teamUsers = teamUsers.map((teamUser: TeamUser) => {
+			const user = teamUser.user as User;
+
+			if (
+				teamUser.isNewJoiner &&
+				this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
+			) {
+				this.updateTeamService.updateTeamUser({
+					team: teamId,
+					user: `${user._id}`,
+					role: teamUser.role,
+					isNewJoiner: false
+				});
+
+				teamUser.isNewJoiner = false;
+			}
+
+			return teamUser;
+		});
+
+		const teamUsersWotStakeholders = teamUsers.filter(
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;
@@ -223,27 +257,101 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return Math.floor(maxTeams);
 	};
 
+	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+		users
+			.map((user) => {
+				user.userCreated =
+					(user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt;
+
+				return user;
+			})
+			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+
+	getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
+
+		// returns the user who has the oldest account date
+		const selectedAvailableUser = availableUsersListSorted.slice(0, 1);
+
+		const findSelectedAvailableUser = availableUsers.find(
+			(user) => (user.user as User)._id === (selectedAvailableUser[0].user as User)._id
+		);
+
+		findSelectedAvailableUser.isNewJoiner = false;
+
+		const findSelectedAvailableUserArray: TeamUser[] = [];
+
+		findSelectedAvailableUserArray.push(findSelectedAvailableUser);
+
+		return findSelectedAvailableUserArray;
+	};
+
+	getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
+		const randomGroupOfUsers = [];
+
+		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+
+		if (availableUsersToBeResponsible.length < 1) {
+			availableUsersToBeResponsible = this.getAvailableUsersToBeResponsible(availableUsers);
+		}
+
+		// this object ensures that each group has one element that can be responsible
+		const candidateToBeTeamResponsible = this.getRandomUser(availableUsersToBeResponsible);
+
+		randomGroupOfUsers.push({
+			user: (candidateToBeTeamResponsible.user as User)._id,
+			role: BoardRoles.MEMBER,
+			votesCount: 0,
+			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner
+		});
+
+		const availableUsersWotResponsible = availableUsers.filter(
+			(user) => (user.user as User)._id !== (candidateToBeTeamResponsible.user as User)._id
+		);
+
+		let i = 0;
+
+		// adds the rest of the elements of each group
+		while (i < usersPerTeam - 1) {
+			const teamUser = this.getRandomUser(availableUsersWotResponsible);
+			randomGroupOfUsers.push({
+				user: (teamUser.user as User)._id,
+				role: BoardRoles.MEMBER,
+				votesCount: 0,
+				isNewJoiner: teamUser.isNewJoiner
+			});
+			i++;
+		}
+
+		return randomGroupOfUsers;
+	};
+
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
 	handleSplitBoards = (maxTeams: number, teamMembers: LeanDocument<TeamUserDocument>[]) => {
 		const subBoards: BoardDto[] = [];
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
-		const availableUsers = [...teamMembers];
-		new Array(teamMembers.length).fill(0).reduce((j) => {
-			if (j >= maxTeams) j = 0;
-			const teamUser = this.getRandomUser(availableUsers);
-			splitUsers[j] = [
-				...splitUsers[j],
-				{
-					user: (teamUser.user as LeanDocument<UserDocument>)._id.toString(),
-					role: BoardRoles.MEMBER,
-					votesCount: 0
-				}
-			];
+		let availableUsers = [...teamMembers];
+		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
+		let membersWithoutTeam = teamMembers.length;
 
-			return ++j;
-		}, 0);
+		new Array(maxTeams).fill(0).forEach((_, i) => {
+			let numberOfUsersByGroup = usersPerTeam;
+			membersWithoutTeam -= usersPerTeam;
+
+			if (membersWithoutTeam < usersPerTeam && membersWithoutTeam !== 0) numberOfUsersByGroup += 1;
+
+			const indexToCompare = i - 1 < 0 ? 0 : i - 1;
+
+			availableUsers = availableUsers.filter((user) => {
+				return !splitUsers[indexToCompare].find((member) => {
+					return member.user === (user.user as User)._id;
+				});
+			});
+
+			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
+		});
 
 		this.generateSubBoards(maxTeams, splitUsers, subBoards);
 
@@ -253,8 +361,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	generateSubBoards(maxTeams: number, splitUsers: BoardUserDto[][], subBoards: BoardDto[]) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
-			splitUsers[i][Math.floor(Math.random() * splitUsers[i].length)].role = BoardRoles.RESPONSIBLE;
-			newBoard.users = splitUsers[i];
+			const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+
+			teamUsersWotIsNewJoiner[Math.floor(Math.random() * teamUsersWotIsNewJoiner.length)].role =
+				BoardRoles.RESPONSIBLE;
+
+			const result = splitUsers[i].map(
+				(user) => teamUsersWotIsNewJoiner.find((member) => member.user === user.user) || user
+			);
+
+			newBoard.users = result;
 			subBoards.push(newBoard);
 		});
 	}

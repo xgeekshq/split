@@ -25,6 +25,7 @@ declare module 'next-auth' {
     firstName: string;
     lastName: string;
     isSAdmin: boolean;
+    providerAccountCreatedAt?: string;
   }
 }
 

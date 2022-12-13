@@ -2,7 +2,6 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
-
 import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import CreateTeam from '@/components/Teams/CreateTeam';
@@ -14,6 +13,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import { Suspense, useEffect } from 'react';
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -34,30 +34,31 @@ const NewTeam: NextPage = () => {
   const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
 
-  const listMembers: TeamUser[] | undefined = [];
-
   useEffect(() => {
-    if (data) {
-      data.forEach((user) => {
-        if (user._id === session?.user.id) {
-          listMembers.push({
-            user,
-            role: TeamUserRoles.ADMIN,
-            isNewJoiner: false,
-          });
-        }
-      });
+    const listMembers: TeamUser[] | undefined = [];
 
-      const usersWithChecked = data.map((user) => ({
-        ...user,
-        isChecked: user._id === session?.user.id,
-      }));
-
-      setUsersListState(usersWithChecked);
-
-      setMembersListState(listMembers);
+    if (!data) {
+      return;
     }
-  }, [data, listMembers, session?.user.id, setMembersListState, setUsersListState]);
+    data.forEach((user) => {
+      if (user._id === session?.user.id) {
+        listMembers.push({
+          user,
+          role: TeamUserRoles.ADMIN,
+          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
+        });
+      }
+    });
+
+    const usersWithChecked = data.map((user) => ({
+      ...user,
+      isChecked: user._id === session?.user.id,
+    }));
+
+    setUsersListState(usersWithChecked);
+
+    setMembersListState(listMembers);
+  }, [data, session?.user.id, setMembersListState, setUsersListState]);
 
   if (!session || !data) return null;
 

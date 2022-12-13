@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import BaseModel from 'src/libs/models/base.model';
 
 export type UserDocument = User & mongoose.Document;
 
@@ -8,9 +9,7 @@ export type UserDocument = User & mongoose.Document;
 		virtuals: true
 	}
 })
-export default class User {
-	_id?: string;
-
+export default class User extends BaseModel {
 	@Prop({ nullable: false })
 	firstName!: string;
 
@@ -35,6 +34,9 @@ export default class User {
 
 	@Prop({ nullable: false, default: false })
 	isDeleted!: boolean;
+
+	@Prop({ nullable: true })
+	providerAccountCreatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

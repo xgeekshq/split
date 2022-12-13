@@ -47,10 +47,10 @@ const CreateTeamTipBar = () => {
       {listMembers.length > 1 && (
         <>
           <TextWhite css={{ mb: '$8' }} heading="6">
-            Newbie
+            New Joiner
           </TextWhite>
           <LiWhite as="span">
-            The newbie will not be selected as a responsible for the SPLIT sub-teams.
+            The new joiner will not be selected as a responsible for the SPLIT sub-teams.
           </LiWhite>
         </>
       )}

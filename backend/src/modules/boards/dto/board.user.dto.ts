@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+	IsBoolean,
+	IsEnum,
+	IsMongoId,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString
+} from 'class-validator';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 
 export default class BoardUserDto {
@@ -24,4 +32,9 @@ export default class BoardUserDto {
 	@IsOptional()
 	@IsNumber()
 	votesCount?: number;
+
+	@ApiPropertyOptional()
+	@IsOptional()
+	@IsBoolean()
+	isNewJoiner?: boolean;
 }
