@@ -38,25 +38,14 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: Supe
   if (loggedUserSAdmin) {
     return (
       <Flex css={{ ml: '$2', display: 'flex', alignItems: 'center' }}>
-        {loggedUserId !== userId && (
-          <ConfigurationSettings
-            handleCheckedChange={handleSuperAdminChange}
-            isChecked={checkedState}
-            text=""
-            title="Super Admin"
-          />
-        )}
-
-        {loggedUserId === userId && (
-          <ConfigurationSettings
-            handleCheckedChange={handleSuperAdminChange}
-            isChecked={checkedState}
-            text=""
-            title="Super Admin"
-            disabled={isDisabledState}
-            styleVariant={isDisabledState}
-          />
-        )}
+        <ConfigurationSettings
+          handleCheckedChange={handleSuperAdminChange}
+          isChecked={checkedState}
+          text=""
+          title="Super Admin"
+          disabled={loggedUserId !== userId ? undefined : isDisabledState}
+          styleVariant={loggedUserId !== userId ? undefined : isDisabledState}
+        />
       </Flex>
     );
   }
