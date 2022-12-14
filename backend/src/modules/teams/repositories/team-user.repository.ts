@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
+import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
 import TeamUserDto from '../dto/team.user.dto';
 import TeamUser, { TeamUserDocument } from '../entities/team.user.schema';
@@ -38,15 +40,21 @@ export class TeamUserRepository
 		});
 	}
 
-	getUsersOnlyWithTeams(): Promise<UserWithTeams[]> {
+	getUsersOnlyWithTeams(users: User[]): Promise<UserWithTeams[]> {
+		const ids = users.map((user) => new ObjectId(user._id));
+
 		return this._repository
 			.aggregate([
+				{
+					$match: { $expr: { $in: ['$user', ids] } }
+				},
 				{
 					$lookup: {
 						from: 'users',
 						localField: 'user',
 						foreignField: '_id',
-						as: 'user'
+						as: 'user',
+						pipeline: [{ $sort: { firstName: 1 } }]
 					}
 				},
 				{
@@ -63,7 +71,6 @@ export class TeamUserRepository
 				{
 					$unwind: { path: '$teams' }
 				},
-
 				{
 					$group: {
 						_id: '$user',
@@ -73,6 +80,7 @@ export class TeamUserRepository
 				{
 					$set: { userWithTeam: '$_id' }
 				},
+
 				{
 					$unset: [
 						'_id',

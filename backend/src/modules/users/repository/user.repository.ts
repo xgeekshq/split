@@ -42,6 +42,7 @@ export class UserRepository
 			.find()
 			.skip(page * size)
 			.limit(size)
+			.sort({ firstName: 1 })
 			.exec();
 	}
 }

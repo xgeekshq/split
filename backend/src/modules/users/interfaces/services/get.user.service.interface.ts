@@ -18,5 +18,8 @@ export interface GetUserService {
 
 	getAllUsersWithPagination(page: number, size: number): Promise<LeanDocument<UserDocument>[]>;
 
-	getAllUsersWithTeams(page?: number, size?: number): Promise<LeanDocument<UserWithTeams>[]>;
+	getAllUsersWithTeams(
+		page?: number,
+		size?: number
+	): Promise<{ userWithTeams: LeanDocument<UserWithTeams>[]; hasNextPage: boolean; page: number }>;
 }
