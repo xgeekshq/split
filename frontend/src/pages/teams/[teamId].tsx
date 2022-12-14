@@ -59,12 +59,7 @@ const Team = () => {
     }));
 
     const allUsersList: UserList[] = usersData.map((user: User) => ({
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      isSAdmin: user.isSAdmin,
-      joinedAt: user.joinedAt,
+      ...user,
       isChecked: true,
     }));
 

@@ -77,26 +77,15 @@ const CardMember = React.memo<CardBodyProps>(
             }}
           >
             <Flex align="center" css={{ width: '23%' }} gap="8">
-              {isOpen ? (
-                <Icon
-                  name="blob-personal"
-                  css={{
-                    width: '32px',
-                    height: '$32',
-                    zIndex: 1,
-                    opacity: 0.2,
-                  }}
-                />
-              ) : (
-                <Icon
-                  name="blob-personal"
-                  css={{
-                    width: '32px',
-                    height: '$32',
-                    zIndex: 1,
-                  }}
-                />
-              )}
+              <Icon
+                name="blob-personal"
+                css={{
+                  width: '32px',
+                  height: '$32',
+                  zIndex: 1,
+                  opacity: isOpen ? 0.2 : 1,
+                }}
+              />
               <Flex align="center" gap="8">
                 <StyledMemberTitle>
                   {`${member.user.firstName} ${member.user.lastName}`}

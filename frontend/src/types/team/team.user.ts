@@ -14,14 +14,14 @@ export interface CreatedTeamUser {
   user: string;
   role: TeamUserRoles;
   isNewJoiner: boolean;
-  _id?: string;
+  _id: string;
   team?: string;
 }
 
 export interface CreateTeamUser {
   user: string; // user._id
   role: TeamUserRoles;
-  isNewJoiner?: boolean;
+  isNewJoiner: boolean;
   team?: string;
 }
 
