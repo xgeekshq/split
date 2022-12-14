@@ -4,7 +4,7 @@ import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ButtonsContainer,
@@ -33,12 +33,40 @@ import {
 } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
-
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeam from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/loadings/LoadingPage';
+
+const defaultBoard = {
+  users: [],
+  team: null,
+  count: {
+    teamsCount: 2,
+    maxUsersCount: 2,
+  },
+  board: {
+    title: 'Main Board -',
+    columns: [
+      { title: 'Went well', color: '$highlight1Light', cards: [] },
+      { title: 'To improve', color: '$highlight4Light', cards: [] },
+      { title: 'Action points', color: '$highlight3Light', cards: [] },
+    ],
+    isPublic: false,
+    maxVotes: undefined,
+    dividedBoards: [],
+    recurrent: true,
+    users: [],
+    team: null,
+    isSubBoard: false,
+    boardNumber: 0,
+    hideCards: false,
+    hideVotes: false,
+    slackEnable: false,
+    totalUsedVotes: 0,
+  },
+};
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
@@ -51,8 +79,7 @@ const NewBoard: NextPage = () => {
    * Recoil Atoms and Hooks
    */
   const setToastState = useSetRecoilState(toastState);
-  const boardState = useRecoilValue(createBoardDataState);
-  const resetBoardState = useResetRecoilState(createBoardDataState);
+  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
   const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
@@ -102,12 +129,12 @@ const NewBoard: NextPage = () => {
    */
   const handleBack = useCallback(() => {
     setIsLoading(true);
-    resetBoardState();
+    setBoardState(defaultBoard);
     setSelectedTeam(undefined);
     setHaveError(false);
     setBackButtonState(true);
     router.back();
-  }, [resetBoardState, setSelectedTeam, setHaveError, router]);
+  }, [setBoardState, setSelectedTeam, setHaveError, router]);
 
   /**
    * Save board
@@ -154,13 +181,12 @@ const NewBoard: NextPage = () => {
         type: ToastStateEnum.SUCCESS,
       });
 
-      resetBoardState();
+      setBoardState(defaultBoard);
       setSelectedTeam(undefined);
       router.push('/boards');
     }
   }, [
     status,
-    resetBoardState,
     router,
     setToastState,
     session,
@@ -168,6 +194,7 @@ const NewBoard: NextPage = () => {
     setTeams,
     allTeamsData,
     setSelectedTeam,
+    setBoardState,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;

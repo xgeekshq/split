@@ -1,33 +1,39 @@
-import React, { useEffect, useState } from 'react';
-
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
-
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-
-import {
-  CreateBoardData,
-  createBoardDataState,
-  createBoardError,
-  createBoardTeam,
-} from '@/store/createBoard/atoms/create-board.atom';
-
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useTeam from '@/hooks/useTeam';
 import { TeamUser } from '@/types/team/team.user';
-
 import { User } from '@/types/user/user';
-
 import MainBoardCard from './MainBoardCard';
 import QuickEditSubTeams from './QuickEditSubTeams';
-// eslint-disable-next-line import/no-named-as-default
 import SelectTeam from './SelectTeam';
 import FakeMainBoardCard from '../fake/FakeSettingsTabs/partials/MainBoardCard';
 
-const StyledBox = styled(Flex, Box, {});
+const StyledBox = styled(Flex, Box, {
+  width: '100%',
+  py: '$12',
+  pl: '$17',
+  pr: '$16',
+  borderRadius: '$4',
+  border: '1px solid $primary200',
+  height: '$64',
+});
+
+type BoxContainerProps = {
+  children: ReactNode;
+  color: string;
+};
+
+const BoxContainer = ({ children, color }: BoxContainerProps) => (
+  <StyledBox direction="column" elevation="1" gap="2" css={{ background: color }}>
+    {children}
+  </StyledBox>
+);
 
 type TeamSubTeamsInterface = {
   timesOpen: number;
@@ -46,7 +52,6 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
     fetchTeamsOfUser: { data: teams },
   } = useTeam({ autoFetchTeam: false });
 
-  const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
 
   useEffect(() => {
@@ -57,8 +62,6 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
         userTeam.role === TeamUserRoles.STAKEHOLDER;
       const getStakeholder = ({ user }: TeamUser): User => user;
       const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
-
-      setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
 
       const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
         ...stakeholderList,
@@ -72,7 +75,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
       }));
       setStakeholders(stakeholdersNames);
     }
-  }, [teams, setBoardData, selectedTeam, setHaveError]);
+  }, [teams, selectedTeam, setHaveError]);
 
   useEffect(() => {
     if (timesOpen < 2) {
@@ -88,42 +91,14 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
         <SelectTeam />
 
         {haveError ? (
-          <StyledBox
-            css={{
-              width: '100%',
-              py: '$12',
-              pl: '$17',
-              pr: '$16',
-              borderRadius: '$4',
-              border: '1px solid $primary200',
-              background: '$background',
-              height: '$64',
-            }}
-            direction="column"
-            elevation="1"
-            gap="2"
-          >
+          <BoxContainer color="$background">
             <Text color="primary300" size="xs">
               Stakeholders
             </Text>
             <Text css={{ wordBreak: 'break-word' }} size="md" />
-          </StyledBox>
+          </BoxContainer>
         ) : (
-          <StyledBox
-            css={{
-              width: '100%',
-              py: '$12',
-              pl: '$17',
-              pr: '$16',
-              borderRadius: '$4',
-              border: '1px solid $primary200',
-              background: 'white',
-              height: '$64',
-            }}
-            direction="column"
-            elevation="1"
-            gap="2"
-          >
+          <BoxContainer color="white">
             <Text color="primary300" size="xs">
               Stakeholders
             </Text>
@@ -137,7 +112,7 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
                     : `${value.firstName} ${value.lastName}`,
                 )}
             </Text>
-          </StyledBox>
+          </BoxContainer>
         )}
       </Flex>
       {selectedTeam ? (
