@@ -20,7 +20,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ isLoading }) => {
     <>
       <Flex>
         <Text css={{ fontWeight: '$bold', flex: 1, mt: '$36' }}>
-          {usersWithTeams?.length} registered users
+          {usersWithTeams.length} registered users
         </Text>
         <Flex css={{ width: '460px' }} direction="column" gap={16}>
           <SearchInput icon="search" iconPosition="left" id="search" placeholder="Search user" />

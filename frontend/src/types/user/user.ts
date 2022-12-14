@@ -22,6 +22,7 @@ export interface UseUserType {
   loginAzure: () => Promise<void>;
   resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
+  updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
 }
 
 export interface LoginUser {
@@ -57,6 +58,11 @@ export interface ResetPasswordResponse {
 export interface UserWithTeams {
   user: User;
   teamsNames?: string[];
+}
+
+export interface UpdateUserIsAdmin {
+  _id: string;
+  isSAdmin: boolean;
 }
 
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';

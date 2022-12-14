@@ -1,40 +1,76 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { Switch, SwitchThumb } from '@/components/Primitives/Switch';
-import Icon from '@/components/icons/Icon';
 import { useState } from 'react';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
+
+import useUser from '@/hooks/useUser';
+import { UpdateUserIsAdmin } from '@/types/user/user';
 
 type SuperAdminProps = {
   userSAdmin: boolean;
+  loggedUserSAdmin: boolean | undefined;
+  userId: string;
+  loggedUserId: string | undefined;
 };
 
-const SuperAdmin = ({ userSAdmin }: SuperAdminProps) => {
+const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: SuperAdminProps) => {
   const [checkedState, setCheckedState] = useState(userSAdmin);
+  const isDisabledState = true;
 
-  const handleSuperAdminChange = () => {
-    setCheckedState(!checkedState);
+  const {
+    updateUserIsAdmin: { mutateAsync },
+  } = useUser();
+
+  const handleSuperAdminChange = async (checked: boolean) => {
+    const updateTeamUser: UpdateUserIsAdmin = {
+      _id: userId,
+      isSAdmin: checked,
+    };
+
+    try {
+      await mutateAsync(updateTeamUser);
+      setCheckedState(checked);
+    } catch (error) {
+      setCheckedState(!checked);
+    }
   };
 
+  if (loggedUserSAdmin) {
+    return (
+      <Flex css={{ ml: '$2', display: 'flex', alignItems: 'center' }}>
+        <ConfigurationSettings
+          handleCheckedChange={handleSuperAdminChange}
+          isChecked={checkedState}
+          text=""
+          title="Super Admin"
+          disabled={loggedUserId !== userId ? undefined : isDisabledState}
+          styleVariant={loggedUserId !== userId ? undefined : isDisabledState}
+        />
+      </Flex>
+    );
+  }
   return (
     <Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
-      <Switch checked={checkedState} onCheckedChange={handleSuperAdminChange}>
-        {checkedState && (
-          <SwitchThumb>
-            <Icon
-              name="check"
-              css={{
-                width: '$14',
-                height: '$14',
-                color: '$successBase',
-              }}
-            />
-          </SwitchThumb>
-        )}
-        {!checkedState && <SwitchThumb />}
-      </Switch>
-      <Text css={{ ml: '$14' }} size="sm" weight="medium">
-        Super Admin
-      </Text>
+      {userSAdmin && (
+        <Text
+          css={{
+            ml: '$14',
+            background: '#E3FFF5',
+            borderStyle: 'solid',
+            borderColor: '#3EC796',
+            borderWidth: 'thin',
+            color: '#3EC796',
+            borderRadius: '$12',
+            padding: '$8',
+            height: '1.55rem',
+            lineHeight: '$8',
+          }}
+          size="sm"
+          weight="medium"
+        >
+          SUPER ADMIN
+        </Text>
+      )}
     </Flex>
   );
 };

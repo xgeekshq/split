@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
@@ -21,7 +21,7 @@ const Users = () => {
   const setUsersWithTeamsState = useSetRecoilState(usersWithTeamsState);
 
   const { data, isFetching } = useQuery(['usersWithTeams'], () => getAllUsersWithTeams(), {
-    enabled: true,
+    enabled: false,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
@@ -32,14 +32,9 @@ const Users = () => {
     },
   });
 
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
+  if (data) {
     setUsersWithTeamsState(data);
-  }, [data, setUsersWithTeamsState]);
-
+  }
   if (!session || !data) return null;
 
   return (
