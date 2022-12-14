@@ -100,11 +100,12 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
   const { columnId, cardGroupId, cardId } = changes;
   const column = boardData.columns.find((col) => col._id === columnId);
   const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
+  const cardGroupIdx = column?.cards.findIndex((card) => card._id === cardGroupId);
   const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
 
-  if (column && cardGroup && selectedCard) {
+  if (column && cardGroup && selectedCard && cardGroupIdx) {
     cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
-    column.cards = addElementAtIndex(column.cards, column.cards.length, {
+    column.cards = addElementAtIndex(column.cards, cardGroupIdx, {
       ...selectedCard,
       items: [selectedCard],
     });
