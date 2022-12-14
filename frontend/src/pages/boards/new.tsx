@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import {
   ButtonsContainer,
   Container,
@@ -16,10 +15,8 @@ import {
   StyledForm,
   SubContainer,
 } from '@/styles/pages/boards/new.styles';
-
-import { getAllTeams } from '@/api/teamService';
+import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName';
-import FakeSettingsTabs from '@/components/CreateBoard/fake/FakeSettingsTabs';
 import SettingsTabs from '@/components/CreateBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -32,25 +29,60 @@ import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
   createBoardDataState,
   createBoardError,
+  createBoardTeam,
 } from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useTeam from '@/hooks/useTeam';
+import { teamsOfUser } from '@/store/team/atom/team.atom';
+import QueryError from '@/components/Errors/QueryError';
+import LoadingPage from '@/components/loadings/LoadingPage';
+
+const defaultBoard = {
+  users: [],
+  team: null,
+  count: {
+    teamsCount: 2,
+    maxUsersCount: 2,
+  },
+  board: {
+    title: 'Main Board -',
+    columns: [
+      { title: 'Went well', color: '$highlight1Light', cards: [] },
+      { title: 'To improve', color: '$highlight4Light', cards: [] },
+      { title: 'Action points', color: '$highlight3Light', cards: [] },
+    ],
+    isPublic: false,
+    maxVotes: undefined,
+    dividedBoards: [],
+    recurrent: true,
+    users: [],
+    team: null,
+    isSubBoard: false,
+    boardNumber: 0,
+    hideCards: false,
+    hideVotes: false,
+    slackEnable: false,
+    totalUsedVotes: 0,
+  },
+};
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession({ required: true });
-  const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+
   const [isBackButtonDisable, setBackButtonState] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   /**
    * Recoil Atoms and Hooks
    */
   const setToastState = useSetRecoilState(toastState);
-  const boardState = useRecoilValue(createBoardDataState);
-  const resetBoardState = useResetRecoilState(createBoardDataState);
+  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
+  const setTeams = useSetRecoilState(teamsOfUser);
+  const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   /**
    * User Board Hook
@@ -60,18 +92,32 @@ const NewBoard: NextPage = () => {
   } = useBoard({ autoFetchBoard: false });
 
   /**
+   * Team  Hook
+   */
+  const {
+    fetchTeamsOfUser: { data: teamsData },
+  } = useTeam({ autoFetchTeam: false });
+
+  const {
+    fetchAllTeams: { data: allTeamsData },
+  } = useTeam({ autoFetchTeam: false });
+
+  /**
    * React Hook Form
    */
-  const methods = useForm<{ text: string; maxVotes?: number; slackEnable?: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      text: '',
-      maxVotes: boardState.board.maxVotes,
-      slackEnable: false,
+  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable?: boolean }>(
+    {
+      mode: 'onBlur',
+      reValidateMode: 'onBlur',
+      defaultValues: {
+        text: '',
+        maxVotes: boardState.board.maxVotes,
+        slackEnable: false,
+        team: undefined,
+      },
+      resolver: joiResolver(SchemaCreateBoard),
     },
-    resolver: joiResolver(SchemaCreateBoard),
-  });
+  );
 
   const mainBoardName = useWatch({
     control: methods.control,
@@ -82,17 +128,20 @@ const NewBoard: NextPage = () => {
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
-    resetBoardState();
+    setIsLoading(true);
+    setBoardState(defaultBoard);
+    setSelectedTeam(undefined);
+    setHaveError(false);
     setBackButtonState(true);
     router.back();
-  }, [router, resetBoardState]);
+  }, [setBoardState, setSelectedTeam, setHaveError, router]);
 
   /**
    * Save board
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, maxVotes?: number, slackEnable?: boolean) => {
+  const saveBoard = (title: string, team: string, maxVotes?: number, slackEnable?: boolean) => {
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
       newSubBoard.hideCards = boardState.board.hideCards;
@@ -115,102 +164,111 @@ const NewBoard: NextPage = () => {
       maxVotes,
       slackEnable,
       maxUsers: boardState.count.maxUsersCount,
+      team,
     });
   };
 
   useEffect(() => {
-    const isAdminOrStakeHolder = teams
-      ? !!teams[0].users.find(
-          (teamUser) =>
-            teamUser.user._id === session?.user.id &&
-            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ) || session?.user.isSAdmin
-      : false;
-
-    if (!isAdminOrStakeHolder && !haveError) {
-      setHaveError(!isAdminOrStakeHolder);
+    if (teamsData && allTeamsData && session) {
+      setTeams(session?.user.isSAdmin ? allTeamsData : teamsData);
     }
 
     if (status === 'success') {
+      setIsLoading(true);
       setToastState({
         open: true,
         content: 'Board created with success!',
         type: ToastStateEnum.SUCCESS,
       });
 
-      resetBoardState();
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
       router.push('/boards');
     }
-  }, [status, resetBoardState, router, setToastState, session, haveError, teams, setHaveError]);
+  }, [
+    status,
+    router,
+    setToastState,
+    session,
+    teamsData,
+    setTeams,
+    allTeamsData,
+    setSelectedTeam,
+    setBoardState,
+  ]);
+
+  if (!session || !teamsData || !allTeamsData) return null;
 
   return (
-    <Container>
-      <PageHeader>
-        <Text color="primary800" heading={3} weight="bold">
-          Add new SPLIT board
-        </Text>
+    <Suspense fallback={<LoadingPage />}>
+      <QueryError>
+        <Container style={isLoading ? { opacity: 0.5 } : undefined}>
+          <PageHeader>
+            <Text color="primary800" heading={3} weight="bold">
+              Add new SPLIT board
+            </Text>
 
-        <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-          <Icon name="close" />
-        </Button>
-      </PageHeader>
-      <ContentContainer>
-        <SubContainer>
-          {haveError && (
-            <AlertBox
-              text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
-              title="No team yet!"
-              type="error"
-              css={{
-                marginTop: '$20',
-              }}
-            />
-          )}
+            <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
+              <Icon name="close" />
+            </Button>
+          </PageHeader>
+          <ContentContainer>
+            <SubContainer>
+              {haveError && (
+                <AlertBox
+                  text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+                  title="No team yet!"
+                  type="error"
+                  css={{
+                    marginTop: '$20',
+                  }}
+                />
+              )}
 
-          <StyledForm
-            direction="column"
-            status={!haveError}
-            onSubmit={
-              !haveError
-                ? methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                    saveBoard(text, maxVotes, slackEnable);
-                  })
-                : undefined
-            }
-          >
-            <InnerContent direction="column">
-              <FormProvider {...methods}>
-                <BoardName mainBoardName={mainBoardName} />
-                {haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
-              </FormProvider>
-            </InnerContent>
-            <ButtonsContainer gap="24" justify="end">
-              <Button
-                disabled={isBackButtonDisable}
-                type="button"
-                variant="lightOutline"
-                onClick={handleBack}
+              <StyledForm
+                direction="column"
+                onSubmit={
+                  !haveError
+                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
+                        saveBoard(text, team, maxVotes, slackEnable);
+                      })
+                    : undefined
+                }
               >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isBackButtonDisable}>
-                Create board
-              </Button>
-            </ButtonsContainer>
-          </StyledForm>
-        </SubContainer>
-        <TipBar />
-      </ContentContainer>
-    </Container>
+                <InnerContent direction="column">
+                  <FormProvider {...methods}>
+                    <BoardName mainBoardName={mainBoardName} />
+                    <SettingsTabs />
+                  </FormProvider>
+                </InnerContent>
+                <ButtonsContainer gap="24" justify="end">
+                  <Button
+                    disabled={isBackButtonDisable}
+                    type="button"
+                    variant="lightOutline"
+                    onClick={handleBack}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isBackButtonDisable}>
+                    Create board
+                  </Button>
+                </ButtonsContainer>
+              </StyledForm>
+            </SubContainer>
+            <TipBar />
+          </ContentContainer>
+        </Container>
+      </QueryError>
+    </Suspense>
   );
 };
-
-export default NewBoard;
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getAllTeams(context));
+    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
+    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
 
     return {
       props: {
@@ -219,3 +277,5 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     };
   },
 );
+
+export default NewBoard;

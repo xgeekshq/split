@@ -15,7 +15,7 @@ import { Sidebar } from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
 import useTeam from '@/hooks/useTeam';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { membersListState } from '@/store/team/atom/team.atom';
 
 const Team = () => {
   // Session Details
@@ -28,16 +28,13 @@ const Team = () => {
   } = useTeam({ autoFetchTeam: false });
 
   // Recoil States
-  const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
 
   useEffect(() => {
-    if (!data) {
-      return;
+    if (data) {
+      setMembersListState(data.users);
     }
-
-    setMembersListState(data.users);
-  }, [data, session?.user.id, setMembersListState, setUsersListState]);
+  }, [data, setMembersListState]);
 
   if (!session || !data) return null;
   return (

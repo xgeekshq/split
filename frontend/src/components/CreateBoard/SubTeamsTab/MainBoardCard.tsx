@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
 import { SetterOrUpdater, useRecoilState } from 'recoil';
-
 import { styled } from '@/styles/stitches/stitches.config';
-
 import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Checkbox from '@/components/Primitives/Checkbox';
-import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
@@ -16,17 +13,11 @@ import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/cre
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import Flex from '@/components/Primitives/Flex';
 import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
 
-const MainContainer = styled(Flex, Box, {
-  backgroundColor: 'white',
-  height: '$76',
-  width: '100%',
-  borderRadius: '$12',
-  px: '$24',
-  py: '$22',
-});
+const MainContainer = styled(Flex, Box, {});
 
 interface SubBoardListProp {
   dividedBoards: BoardToAdd[];
@@ -99,11 +90,23 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [team]);
 
   return (
     <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
-      <MainContainer align="center" elevation="1" justify="between">
+      <MainContainer
+        align="center"
+        elevation="1"
+        justify="between"
+        css={{
+          backgroundColor: 'white',
+          height: '$76',
+          width: '100%',
+          borderRadius: '$12',
+          px: '$24',
+          py: '$22',
+        }}
+      >
         <Flex>
           <Flex align="center" gap="8">
             <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">

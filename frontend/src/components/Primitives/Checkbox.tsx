@@ -151,7 +151,12 @@ const Checkbox: React.FC<{
       </Flex>
       <Text
         as="label"
-        css={{ paddingLeft: '$8', width: '100%', cursor: 'pointer' }}
+        css={{
+          paddingLeft: '$8',
+          width: '100%',
+          cursor: 'pointer',
+          color: disabled ? '$primary200' : '$primaryBase',
+        }}
         htmlFor={id}
         size="sm"
       >
