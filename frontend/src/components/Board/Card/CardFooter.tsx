@@ -87,7 +87,9 @@ const CardFooter = React.memo<FooterProps>(
       return card.createdByTeam;
     }, [card]);
 
-    const { handleVote } = useVotes();
+    const {
+      handleVote: { mutate, status },
+    } = useVotes();
 
     const user = boardUser;
     const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
@@ -116,7 +118,7 @@ const CardFooter = React.memo<FooterProps>(
     useEffect(() => {
       if (countVotes === 0) return;
 
-      handleVote.mutate({
+      mutate({
         boardId,
         cardId: card._id,
         socketId,
@@ -127,6 +129,12 @@ const CardFooter = React.memo<FooterProps>(
       setCountVotes(0);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [countVotes]);
+
+    useEffect(() => {
+      if (status === 'success') {
+        setDisableVoteButton(false);
+      }
+    }, [status]);
 
     const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
