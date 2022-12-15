@@ -69,15 +69,15 @@ const useUser = (): UseUserType => {
   });
 
   const deleteUser = useMutation(deleteUserRequest, {
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries('usersWithTeams');
 
       // updates the usersList recoil
-      const users = usersWithTeamsList.filter(
-        (userWithTeams) => userWithTeams.user._id !== variables.id,
-      );
+      // const users = usersWithTeamsList.filter(
+      //   (userWithTeams) => userWithTeams.user._id !== variables.id,
+      // );
 
-      setUsersWithTeamsList(users);
+      // setUsersWithTeamsList(users);
 
       setToastState({
         open: true,
