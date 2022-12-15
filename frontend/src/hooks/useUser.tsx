@@ -12,8 +12,13 @@ import {
   UseUserType,
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { updateUserIsAdminRequest } from '../api/userService';
+import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
+  const { setToastState, usersWithTeamsList, setUsersWithTeamsList, queryClient } = useUserUtils();
+
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
     {
@@ -37,7 +42,33 @@ const useUser = (): UseUserType => {
     });
   };
 
-  return { loginAzure, resetToken, resetPassword };
+  const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('usersWithTeams');
+
+      // updates the usersList recoil
+      const users = usersWithTeamsList.map((user) =>
+        user.user._id === data._id ? { ...user, isAdmin: data.isSAdmin } : user,
+      );
+
+      setUsersWithTeamsList(users);
+
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while updating the team user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin };
 };
 
 export default useUser;

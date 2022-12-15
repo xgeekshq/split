@@ -32,4 +32,8 @@ export class UserRepository
 			}
 		);
 	}
+
+	updateSuperAdmin(userId: string, isSAdmin: boolean) {
+		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { isSAdmin } }, { new: true });
+	}
 }

@@ -22,6 +22,12 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
         height: '$20',
       },
       md: { flex: '0 0 $sizes$42', width: '$42', height: '$24' },
+      disabled: {
+        '&[data-state="checked"]': { backgroundColor: '$successBase', opacity: 0.5 },
+        flex: '0 0 $sizes$35',
+        width: '$35',
+        height: '$20',
+      },
     },
   },
   defaultVariants: {

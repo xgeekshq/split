@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Flex from '@/components/Primitives/Flex';
+import Separator from '@/components/Primitives/Separator';
 import { User } from '@/types/user/user';
 import DeleteUser from './DeleteUser';
 import EditUser from './EditUser';
@@ -11,6 +12,14 @@ type CardEndProps = {
 
 const CardEnd: React.FC<CardEndProps> = React.memo(({ user }) => (
   <Flex css={{ alignItems: 'center' }}>
+    <Separator
+      orientation="vertical"
+      css={{
+        ml: '$20',
+        backgroundColor: '$primary100',
+        height: '$24 !important',
+      }}
+    />
     <Flex align="center" css={{ ml: '$24' }} gap="24">
       <EditUser user={user} />
     </Flex>

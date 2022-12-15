@@ -18,3 +18,8 @@ export const teamsListState = atom<Team[]>({
   key: 'teamsList',
   default: [],
 });
+
+export const teamsOfUser = atom<Team[]>({
+  key: 'teamsOfUser',
+  default: [],
+});

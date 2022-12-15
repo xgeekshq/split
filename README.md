@@ -37,6 +37,10 @@ The backend will run on `http://localhost:BACKEND_PORT` and the frontend on `htt
 - `/dashboard`: dashboard
 - `/boards`: boards list
 - `/boards/[boardId]`: board page
+- `/teams`: teams list
+- `/teams/[teamId]`: team page
+- `/users`: users list
+- `/users/[userId]`: user page
 
 ## 📝 License
 

@@ -5,4 +5,5 @@ export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {
 	getById(userId: string): Promise<User>;
 	updateUserWithRefreshToken(refreshToken: string, userId: string): Promise<User>;
 	updateUserPassword(email: string, password: string): Promise<User>;
+	updateSuperAdmin(userId: string, isSAdmin: boolean): Promise<User>;
 }

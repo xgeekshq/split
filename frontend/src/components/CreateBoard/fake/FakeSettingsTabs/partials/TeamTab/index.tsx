@@ -3,41 +3,16 @@ import React from 'react';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+
+// eslint-disable-next-line import/no-named-as-default
+import SelectTeam from '@/components/CreateBoard/SubTeamsTab/SelectTeam';
 import FakeMainBoardCard from '../MainBoardCard';
 import { StyledBox } from './styles';
 
 const FakeTeamTab: React.FC = () => (
   <Flex css={{ mt: '$32' }} direction="column">
     <Flex css={{ width: '100%' }} gap="22" justify="between">
-      <StyledBox
-        css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
-        direction="column"
-        elevation="1"
-        gap="2"
-      >
-        <Text color="primary300" size="xs">
-          Team
-        </Text>
-        <Flex align="center" gap="8">
-          <Text size="md" />
-          <Text color="primary300" size="md">
-            (-- members)
-          </Text>
-          <Tooltip content="All active members on the platform">
-            <div>
-              <Icon
-                name="info"
-                css={{
-                  width: '$14',
-                  height: '$14',
-                  color: '$primary400',
-                }}
-              />
-            </div>
-          </Tooltip>
-        </Flex>
-      </StyledBox>
+      <SelectTeam />
       <StyledBox
         css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
         direction="column"
@@ -56,6 +31,7 @@ const FakeTeamTab: React.FC = () => (
         gap="8"
         justify="end"
         css={{
+          color: '$primary200',
           py: '$14',
           cursor: 'pointer',
           transition: 'text-decoration 0.2s ease-in-out',
@@ -71,15 +47,15 @@ const FakeTeamTab: React.FC = () => (
           css={{
             width: '$16',
             height: '$16',
+            color: '$primary200',
           }}
         />
-        <Text size="sm" weight="medium">
+        <Text size="sm" weight="medium" color="primary200">
           Quick edit sub-teams configurations
         </Text>
       </Flex>
     </Flex>
     <FakeMainBoardCard />
-    {/* <MainBoardCard team={team} stakeholders={stakeholders} /> */}
   </Flex>
 );
 

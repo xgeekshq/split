@@ -1,221 +1,63 @@
-import { useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { useCallback, useState } from 'react';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { joiResolver } from '@hookform/resolvers/joi';
-
-import {
-  ButtonsContainer,
-  Container,
-  ContentContainer,
-  InnerContent,
-  PageHeader,
-  StyledForm,
-  SubContainer,
-} from '@/styles/pages/boards/new.styles';
-
-import { getAllTeams } from '@/api/teamService';
-import BoardName from '@/components/CreateBoard/BoardName';
-import FakeSettingsTabs from '@/components/CreateBoard/fake/FakeSettingsTabs';
-import SettingsTabs from '@/components/CreateBoard/SettingsTabs';
-import TipBar from '@/components/CreateBoard/TipBar';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
+import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import Icon from '@/components/icons/Icon';
-import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
-import useBoard from '@/hooks/useBoard';
-import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
-import {
-  createBoardDataState,
-  createBoardError,
-} from '@/store/createBoard/atoms/create-board.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { CreateBoardDto } from '@/types/board/board';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import Flex from '@/components/Primitives/Flex';
+import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession({ required: true });
-  const { data: teams } = useQuery(['teams'], () => getAllTeams(), { suspense: false });
+
   const [isBackButtonDisable, setBackButtonState] = useState(false);
-
-  /**
-   * Recoil Atoms and Hooks
-   */
-  const setToastState = useSetRecoilState(toastState);
-  const boardState = useRecoilValue(createBoardDataState);
-  const resetBoardState = useResetRecoilState(createBoardDataState);
-  const [haveError, setHaveError] = useRecoilState(createBoardError);
-
-  /**
-   * User Board Hook
-   */
-  const {
-    createBoard: { status, mutate },
-  } = useBoard({ autoFetchBoard: false });
-
-  /**
-   * React Hook Form
-   */
-  const methods = useForm<{ text: string; maxVotes?: number; slackEnable?: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
-    defaultValues: {
-      text: '',
-      maxVotes: boardState.board.maxVotes,
-      slackEnable: false,
-    },
-    resolver: joiResolver(SchemaCreateBoard),
-  });
-
-  const mainBoardName = useWatch({
-    control: methods.control,
-    name: 'text',
-  });
 
   /**
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
-    resetBoardState();
     setBackButtonState(true);
     router.back();
-  }, [router, resetBoardState]);
+  }, [router]);
 
-  /**
-   * Save board
-   * @param title Board Title
-   * @param maxVotes Maxium number of votes allowed
-   */
-  const saveBoard = (title: string, maxVotes?: number, slackEnable?: boolean) => {
-    const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
-      const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
-      newSubBoard.hideCards = boardState.board.hideCards;
-      newSubBoard.hideVotes = boardState.board.hideVotes;
-      newSubBoard.maxVotes = maxVotes;
-
-      newSubBoard.users = subBoard.users.map((boardUser) => ({
-        user: boardUser.user._id,
-        role: boardUser.role,
-      }));
-
-      return newSubBoard;
-    });
-
-    mutate({
-      ...boardState.board,
-      users: boardState.users,
-      title,
-      dividedBoards: newDividedBoards,
-      maxVotes,
-      slackEnable,
-      maxUsers: boardState.count.maxUsersCount,
-    });
-  };
-
-  useEffect(() => {
-    const isAdminOrStakeHolder = teams
-      ? !!teams[0].users.find(
-          (teamUser) =>
-            teamUser.user._id === session?.user.id &&
-            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ) || session?.user.isSAdmin
-      : false;
-
-    if (!isAdminOrStakeHolder && !haveError) {
-      setHaveError(!isAdminOrStakeHolder);
-    }
-
-    if (status === 'success') {
-      setToastState({
-        open: true,
-        content: 'Board created with success!',
-        type: ToastStateEnum.SUCCESS,
-      });
-
-      resetBoardState();
-      router.push('/boards');
-    }
-  }, [status, resetBoardState, router, setToastState, session, haveError, teams, setHaveError]);
+  if (!session) return null;
 
   return (
     <Container>
       <PageHeader>
         <Text color="primary800" heading={3} weight="bold">
-          Add new SPLIT board
+          Add new board
         </Text>
-
         <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
           <Icon name="close" />
         </Button>
       </PageHeader>
-      <ContentContainer>
-        <SubContainer>
-          {haveError && (
-            <AlertBox
-              text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
-              title="No team yet!"
-              type="error"
-              css={{
-                marginTop: '$20',
-              }}
-            />
-          )}
 
-          <StyledForm
-            direction="column"
-            status={!haveError}
-            onSubmit={
-              !haveError
-                ? methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                    saveBoard(text, maxVotes, slackEnable);
-                  })
-                : undefined
-            }
-          >
-            <InnerContent direction="column">
-              <FormProvider {...methods}>
-                <BoardName mainBoardName={mainBoardName} />
-                {haveError ? <FakeSettingsTabs /> : <SettingsTabs />}
-              </FormProvider>
-            </InnerContent>
-            <ButtonsContainer gap="24" justify="end">
-              <Button
-                disabled={isBackButtonDisable}
-                type="button"
-                variant="lightOutline"
-                onClick={handleBack}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isBackButtonDisable}>
-                Create board
-              </Button>
-            </ButtonsContainer>
-          </StyledForm>
-        </SubContainer>
-        <TipBar />
+      <ContentContainer>
+        <Text heading={3} color="primary800" weight="bold">
+          What kind of retro do you want to create?
+        </Text>
+        <Flex gap={40}>
+          <BoxColumnContainer
+            iconName="blob-team-retro"
+            title="Regular retro"
+            description="Make a retro with one team and the usual setup as you are used to it."
+            route="/boards/newRegularBoard"
+          />
+
+          <BoxColumnContainer
+            iconName="blob-split-retro"
+            title="SPLIT retro"
+            description="Make a retro with a huge team or a whole company. Split into sub-teams with associated boards, and finally merge everything into one main board."
+            route="/boards/newSplitBoard"
+          />
+        </Flex>
       </ContentContainer>
     </Container>
   );
 };
 
 export default NewBoard;
-
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-  async (context: GetServerSidePropsContext) => {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getAllTeams(context));
-
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  },
-);

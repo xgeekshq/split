@@ -92,6 +92,19 @@ const CardMember = React.memo<CardBodyProps>(
                 </StyledMemberTitle>
               </Flex>
             </Flex>
+            {!isTeamMember && isTeamCreator && !isSAdmin && (
+              <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
+                <ConfigurationSettings
+                  handleCheckedChange={handleSelectFunction}
+                  isChecked={member.isNewJoiner}
+                  text=""
+                  title="New Joiner"
+                  disabled
+                  styleVariant={isTeamCreator}
+                  disabledInfo="Can't change your own New Joiner status"
+                />
+              </Flex>
+            )}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">

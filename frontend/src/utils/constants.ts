@@ -22,4 +22,6 @@ export const AUTH_SSO =
 
 export const REFRESH_TOKEN_ERROR = 'REFRESH_TOKEN_ERROR';
 
+export const MIN_MEMBERS = 4;
+
 // -------------------------------

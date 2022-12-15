@@ -46,8 +46,8 @@ const Team = () => {
   }).data;
 
   // Recoil States
-  const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
+  const setUsersListState = useSetRecoilState(usersListState);
 
   useEffect(() => {
     if (!data || !usersData) {
