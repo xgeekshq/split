@@ -7,9 +7,10 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usePrevious } from '@/utils/previousState';
 import BoardConfigurations from './Configurations/BoardConfigurations';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 
@@ -31,13 +32,15 @@ const StyledTextTab = styled(Text, {
 
 const Settings = () => {
   const [currentTab, setCurrentTab] = useState(1);
-  const [timesOpen, setTimesOpen] = useState<number>(0);
 
   /**
    * Recoil Atoms
    */
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
+  const selectedTeam = useRecoilValue(createBoardTeam);
+
+  const prevTeam = usePrevious(selectedTeam?.name);
 
   const {
     formState: { errors },
@@ -81,12 +84,7 @@ const Settings = () => {
         css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
         orientation="horizontal"
       />
-      {currentTab === 1 && (
-        <TeamSubTeamsConfigurations
-          setTimesOpen={() => setTimesOpen(timesOpen + 1)}
-          timesOpen={timesOpen}
-        />
-      )}
+      {currentTab === 1 && <TeamSubTeamsConfigurations previousTeam={prevTeam} />}
       {currentTab === 2 && <BoardConfigurations />}
     </Flex>
   );

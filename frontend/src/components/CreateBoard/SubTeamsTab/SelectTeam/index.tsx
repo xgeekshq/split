@@ -105,7 +105,7 @@ const SelectTeam = () => {
         )}
         <Select onValueChange={handleTeamChange}>
           <SelectTrigger aria-label="Teams">
-            <SelectValue placeholder="Select Team" />
+            <SelectValue placeholder="Select Team">{selectedTeam?.name || ''}</SelectValue>
             <SelectIcon>
               <Icon
                 name="arrow-down"

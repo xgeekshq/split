@@ -35,15 +35,11 @@ const BoxContainer = ({ children, color }: BoxContainerProps) => (
   </StyledBox>
 );
 
-type TeamSubTeamsInterface = {
-  timesOpen: number;
-  setTimesOpen: () => void;
+type TeamSubTeamsConfigurationsProps = {
+  previousTeam?: string;
 };
 
-const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
-  timesOpen,
-  setTimesOpen,
-}) => {
+const TeamSubTeamsConfigurations = ({ previousTeam }: TeamSubTeamsConfigurationsProps) => {
   const [stakeholders, setStakeholders] = useState<User[]>([]);
 
   const selectedTeam = useRecoilValue(createBoardTeam);
@@ -76,14 +72,6 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
       setStakeholders(stakeholdersNames);
     }
   }, [teams, selectedTeam, setHaveError]);
-
-  useEffect(() => {
-    if (timesOpen < 2) {
-      setTimesOpen();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Flex css={{ mt: '$32' }} direction="column">
@@ -120,10 +108,11 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
           <Flex justify="end">
             <QuickEditSubTeams team={selectedTeam} />
           </Flex>
+
           {haveError ? (
             <FakeMainBoardCard />
           ) : (
-            <MainBoardCard team={selectedTeam} timesOpen={timesOpen} />
+            <MainBoardCard team={selectedTeam} previousTeam={previousTeam} />
           )}
         </>
       ) : (

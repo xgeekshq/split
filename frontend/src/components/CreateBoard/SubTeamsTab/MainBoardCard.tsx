@@ -26,7 +26,7 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
   team: Team;
-  timesOpen: number;
+  previousTeam?: string;
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => (
@@ -37,7 +37,7 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
   </Flex>
 ));
 
-const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team, previousTeam }: MainBoardCardInterface) => {
   /**
    * Recoil Atoms
    */
@@ -76,7 +76,7 @@ const MainBoardCard = React.memo(({ team, timesOpen }: MainBoardCardInterface) =
       ];
     });
 
-    if (timesOpen < 2) {
+    if (board.dividedBoards.length === 0 || previousTeam !== team.name) {
       setCreateBoardData((prev) => ({
         ...prev,
         users,
