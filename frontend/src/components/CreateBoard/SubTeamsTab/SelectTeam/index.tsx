@@ -1,16 +1,4 @@
 import React, { useEffect, useMemo } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectIcon,
-  SelectItemText,
-  SelectPortal,
-  SelectTrigger,
-  SelectValue,
-  SelectViewport,
-  StyledItem,
-  StyledItemIndicator,
-} from '@/components/Primitives/Select';
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
@@ -22,7 +10,8 @@ import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
-import { HelperTextWrapper, StyledBox } from './styles';
+import { OptionType } from '@/components/Boards/Filters/FilterBoards';
+import { HelperTextWrapper, StyledBox, StyledSelect } from './styles';
 
 const SelectTeam = () => {
   const { data: session } = useSession({ required: true });
@@ -63,6 +52,11 @@ const SelectTeam = () => {
     setSelectedTeam(foundTeam);
   };
 
+  const teamsNames = useMemo(
+    () => teams.map((team) => ({ label: team.name, value: team._id })),
+    [teams],
+  );
+
   useEffect(() => {
     if (selectedTeam) {
       const haveMinMembers = !!(
@@ -98,47 +92,15 @@ const SelectTeam = () => {
         direction="column"
         elevation="1"
       >
-        {selectedTeam && (
-          <Text color="primary300" size="xs">
-            Select Team
-          </Text>
-        )}
-        <Select onValueChange={handleTeamChange}>
-          <SelectTrigger aria-label="Teams">
-            <SelectValue placeholder="Select Team">{selectedTeam?.name || ''}</SelectValue>
-            <SelectIcon>
-              <Icon
-                name="arrow-down"
-                css={{
-                  width: '$20',
-                  height: '$20',
-                }}
-              />
-            </SelectIcon>
-          </SelectTrigger>
-          <SelectPortal>
-            <SelectContent>
-              <SelectViewport>
-                {teams.map((team) => (
-                  <StyledItem value={team._id} key={team._id}>
-                    <SelectItemText>
-                      {team.name} <Text color="primary300">({team.users.length} members)</Text>
-                    </SelectItemText>
-                    <StyledItemIndicator>
-                      <Icon
-                        name="check"
-                        css={{
-                          width: '$20',
-                          height: '$20',
-                        }}
-                      />
-                    </StyledItemIndicator>
-                  </StyledItem>
-                ))}
-              </SelectViewport>
-            </SelectContent>
-          </SelectPortal>
-        </Select>
+        <StyledSelect
+          className="react-select-container"
+          classNamePrefix="react-select"
+          options={teamsNames}
+          value={teamsNames.find((option) => option.value === selectedTeam?.name)}
+          onChange={(selectedOption) => {
+            handleTeamChange((selectedOption as OptionType)?.value);
+          }}
+        />
       </StyledBox>
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (

@@ -1,10 +1,11 @@
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
+import Select from 'react-select';
 
-export const StyledBox = styled(Flex, Box, {});
+const StyledBox = styled(Flex, Box, {});
 
-export const HelperTextWrapper = styled(Flex, {
+const HelperTextWrapper = styled(Flex, {
   '& svg': {
     flex: '0 0 16px',
     height: '$16 ',
@@ -13,3 +14,7 @@ export const HelperTextWrapper = styled(Flex, {
   },
   '& *:not(svg)': { flex: '1 1 auto' },
 });
+
+const StyledSelect = styled(Select, {});
+
+export { StyledSelect, StyledBox, HelperTextWrapper };
