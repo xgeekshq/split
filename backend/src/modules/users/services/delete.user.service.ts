@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
-import TeamUser, { TeamUserDocument } from 'src/modules/teams/schemas/team.user.schema';
+import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import User, { UserDocument } from '../entities/user.schema';
 import { DeleteUserServiceInterface } from '../interfaces/services/delete.user.service.interface';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
