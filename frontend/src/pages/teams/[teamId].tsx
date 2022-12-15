@@ -31,7 +31,7 @@ const Team = () => {
   // // Hooks
   const {
     fetchTeam: { data },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchTeam: true });
 
   const usersData = useQuery(['users'], () => getAllUsers(), {
     enabled: true,

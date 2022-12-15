@@ -112,26 +112,19 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     },
   });
 
-  // const getPrevData = async (teamId: string): Promise<TeamUser[]> => {
-  //   const query = fetchTeam(teamId);
-  //   const teamUsers = await queryClient.cancelQueries(query);
-  //   return teamUsers?.users;
-  // };
-
   const addAndRemoveTeamUser = useMutation(addAndRemoveTeamUserRequest, {
     onMutate: async (addedAndRemovedMembers) => {
       await queryClient.cancelQueries(['team', addedAndRemovedMembers.team]);
 
-      // Snapshot the previous value
-      const previousTeam = queryClient.getQueryData(['team', addedAndRemovedMembers.team]);
+      const previousTeam = queryClient.getQueryData<Team>(['team', addedAndRemovedMembers.team]);
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(['team', addedAndRemovedMembers.team], (oldTeam: Team) => {
-        if (oldTeam) {
+      queryClient.setQueryData<Team | undefined>(
+        ['team', addedAndRemovedMembers.team],
+        (oldTeam: Team | undefined) => {
+          if (!oldTeam) return oldTeam;
           const removedTeamUserIds = addedAndRemovedMembers.removeUsers;
           const createdTeamUsersWithUser: TeamUser[] = addedAndRemovedMembers.addUsers.map(
             (teamUser) => ({
-              // _id: new Date().getTime().toString(),
               ...teamUser,
               user: usersList.filter((user) => user._id === teamUser.user)[0],
             }),
@@ -144,61 +137,25 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
             ...usersFromMembersList,
             ...createdTeamUsersWithUser,
           ];
-          setMembersList(finalMembersList);
+
+          setToastState({
+            open: true,
+            content: 'The team was successfully updated.',
+            type: ToastStateEnum.SUCCESS,
+          });
 
           return {
             ...oldTeam,
             users: finalMembersList,
           };
-        }
-        return oldTeam;
-      });
+        },
+      );
 
-      // Return a context object with the snapshotted value
       return { previousTeam };
     },
     onSettled: (data, _error, variables) => {
       queryClient.invalidateQueries(['team', variables.team]);
     },
-    // onSuccess: (data) => {
-    //   if (!data) return;
-    //   // console.log(data);
-    //   // console.log(membersList);
-    //   // membersList.map((member) => {
-    //   //   const letsSee = data.find((user) => {
-    //   //     console.log(user.user);
-    //   //     return user.user === member.user._id;
-    //   //   });
-    //   //   console.log(member);
-    //   //   console.log(letsSee);
-    //   //   return member;
-    //   // });
-    //   // const finalTT = membersList.map((member) => ({
-    //   //   ...member,
-    //   //   _id: data.find((user) => user.user === member.user._id)?._id,
-    //   // }));
-    //   // // console.log('finaList on success', finalTT);
-    //   // setMembersList(finalTT);
-    // },
-    // onSuccess: (data, variables) => {
-    //   const removedTeamUserIds = variables.removeUsers;
-    //   const createdTeamUsers: CreatedTeamUser[] = data;
-    //   const createdTeamUsersWithUser: TeamUser[] = createdTeamUsers.map((teamUser) => ({
-    //     ...teamUser,
-    //     user: usersList.filter((user) => user._id === teamUser.user)[0],
-    //   }));
-    //   const usersFromMembersList = membersList.filter(
-    //     (member) => !removedTeamUserIds.includes(member._id),
-    //   );
-    //   const finalMembersList = [...usersFromMembersList, ...createdTeamUsersWithUser];
-    //   // updates members from the membersList recoil
-    //   setMembersList(finalMembersList);
-    //   setToastState({
-    //     open: true,
-    //     content: 'The team was successfully updated.',
-    //     type: ToastStateEnum.SUCCESS,
-    //   });
-    // },
     onError: (error, variables, context) => {
       queryClient.setQueryData(['team', variables.team], context?.previousTeam);
       setToastState({
