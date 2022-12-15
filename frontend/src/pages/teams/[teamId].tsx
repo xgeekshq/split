@@ -45,7 +45,6 @@ const Team = () => {
     },
   }).data;
 
-
   // Recoil States
   const setMembersListState = useSetRecoilState(membersListState);
   const setUsersListState = useSetRecoilState(usersListState);

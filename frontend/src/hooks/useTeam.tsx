@@ -20,9 +20,7 @@ interface AutoFetchProps {
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-
-  const { teamId, setToastState, queryClient, teamsList, setTeamsList } = useTeamUtils();
-
+  const { teamId, setToastState, queryClient, teamsList, setTeamsList, usersList } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
     enabled: autoFetchTeam,
