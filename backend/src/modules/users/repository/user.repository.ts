@@ -36,4 +36,13 @@ export class UserRepository
 	updateSuperAdmin(userId: string, isSAdmin: boolean) {
 		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { isSAdmin } }, { new: true });
 	}
+
+	getAllWithPagination(page: number, size: number) {
+		return this.model
+			.find()
+			.skip(page * size)
+			.limit(size)
+			.sort({ firstName: 1, lastName: 1 })
+			.exec();
+	}
 }
