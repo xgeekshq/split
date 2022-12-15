@@ -45,6 +45,7 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: Supe
           title="Super Admin"
           disabled={loggedUserId !== userId ? undefined : isDisabledState}
           styleVariant={loggedUserId !== userId ? undefined : isDisabledState}
+          disabledInfo="Can't change your own role"
         />
       </Flex>
     );

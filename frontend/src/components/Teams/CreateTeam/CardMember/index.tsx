@@ -22,10 +22,11 @@ type CardBodyProps = {
   isNewTeamPage?: boolean;
   isTeamPage?: boolean;
   isTeamMember?: boolean;
+  isOpen?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMember }) => {
+  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMember, isOpen }) => {
     const { data: session } = useSession();
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
@@ -82,6 +83,7 @@ const CardMember = React.memo<CardBodyProps>(
                   width: '32px',
                   height: '$32',
                   zIndex: 1,
+                  opacity: isOpen ? 0.2 : 1,
                 }}
               />
               <Flex align="center" gap="8">
@@ -90,6 +92,19 @@ const CardMember = React.memo<CardBodyProps>(
                 </StyledMemberTitle>
               </Flex>
             </Flex>
+            {!isTeamMember && isTeamCreator && !isSAdmin && (
+              <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
+                <ConfigurationSettings
+                  handleCheckedChange={handleSelectFunction}
+                  isChecked={member.isNewJoiner}
+                  text=""
+                  title="New Joiner"
+                  disabled
+                  styleVariant={isTeamCreator}
+                  disabledInfo="Can't change your own New Joiner status"
+                />
+              </Flex>
+            )}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
@@ -113,7 +128,7 @@ const CardMember = React.memo<CardBodyProps>(
                 </Tooltip>
               </Flex>
             )}
-            {(!isTeamMember || isSAdmin) && (
+            {(!(isTeamMember || isTeamCreator) || isSAdmin) && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <ConfigurationSettings
                   handleCheckedChange={handleSelectFunction}
