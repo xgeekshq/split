@@ -26,7 +26,10 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
 		const currentHashedRefreshToken = await encrypt(refreshToken);
 
-		return this.userRepository.updateUserWithRefreshToken(currentHashedRefreshToken, userId);
+		return this.userRepository.updateUserWithRefreshToken(
+			currentHashedRefreshToken,
+			String(userId)
+		);
 	}
 
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
