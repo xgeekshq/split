@@ -20,6 +20,10 @@ const SettingsTabs = () => {
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
 
+  const handleChangeTab = (value: number) => {
+    setCurrentTab(value);
+  };
+
   const {
     formState: { errors },
   } = useFormContext();
@@ -48,7 +52,7 @@ const SettingsTabs = () => {
           color="primary300"
           data-activetab={currentTab === 1}
           size="md"
-          onClick={!haveError ? () => setCurrentTab(1) : undefined}
+          onClick={!haveError ? () => handleChangeTab(1) : undefined}
         >
           Participants
         </StyledTextTab>
@@ -56,7 +60,7 @@ const SettingsTabs = () => {
           color="primary300"
           data-activetab={currentTab === 2}
           size="md"
-          onClick={!haveError ? () => setCurrentTab(2) : undefined}
+          onClick={!haveError ? () => handleChangeTab(2) : undefined}
         >
           Configurations
         </StyledTextTab>
