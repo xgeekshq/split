@@ -76,11 +76,15 @@ const NewRegularBoard: NextPage = () => {
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
-    setIsLoading(true);
+    if (createBoard) {
+      setCreateBoard(false);
+    } else {
+      setIsLoading(true);
 
-    setBackButtonState(true);
-    router.back();
-  }, [router]);
+      setBackButtonState(true);
+      router.back();
+    }
+  }, [createBoard, router]);
 
   if (!session || !teamsData || !allTeamsData) return null;
 
