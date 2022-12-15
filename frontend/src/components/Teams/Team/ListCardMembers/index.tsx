@@ -23,13 +23,11 @@ const TeamMembersList = () => {
 
   const user = membersList.find((member) => member.user._id === session?.user.id);
 
-  let userRole: TeamUserRoles;
-
-  if (user) userRole = user.role;
-
   if (!user) return null;
 
+  const userRole = user.role;
   const isTeamMember = userRole === TeamUserRoles.MEMBER;
+
   return (
     <Flex css={{ mt: '$32' }} direction="column">
       <Flex>
