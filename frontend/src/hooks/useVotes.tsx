@@ -245,44 +245,6 @@ const useVotes = () => {
     },
   });
 
-  // const handleVote = useMutation(handleVotes, {
-  // 	// eslint-disable-next-line consistent-return
-  // 	onMutate: async (voteData) => {
-  // 		if (voteData.count > 0) {
-  // 			return addVoteOptimistic(voteData);
-  // 		}
-  // 		if (voteData.count < 0) {
-  // 			return removeVoteOptimistic(voteData);
-  // 		}
-  // 	},
-  // 	// eslint-disable-next-line consistent-return
-  // 	onSettled: (boardDataFromApi, _err, voteData) => {
-  // 		if (voteData.count > 0) {
-  // 			return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote added.');
-  // 		}
-  // 		if (voteData.count < 0) {
-  // 			return invalidateQueriesAndToastMessage(boardDataFromApi, 'Vote removed.');
-  // 		}
-  // 	},
-  // 	// eslint-disable-next-line consistent-return
-  // 	onError: (_err, voteData, ctx) => {
-  // 		if (voteData.count > 0) {
-  // 			return restoreBoardDataAndToastError(
-  // 				ctx?.prevBoardData,
-  // 				voteData,
-  // 				'Error adding the vote'
-  // 			);
-  // 		}
-  // 		if (voteData.count < 0) {
-  // 			return restoreBoardDataAndToastError(
-  // 				ctx?.prevBoardData,
-  // 				voteData,
-  // 				'Error deleting the vote'
-  // 			);
-  // 		}
-  // 	}
-  // });
-
   return {
     handleVote,
   };
