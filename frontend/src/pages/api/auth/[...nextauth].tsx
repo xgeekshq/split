@@ -20,9 +20,13 @@ import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/route
 async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {
     const data: Token = await refreshAccessToken(prevToken.user.refreshToken.token);
+
     return {
       ...prevToken,
-      accessToken: { token: data.token, expiresIn: String(Date.now() + +data.expiresIn * 1000) },
+      user: {
+        ...prevToken.user,
+        accessToken: { token: data.token, expiresIn: String(Date.now() + +data.expiresIn * 1000) },
+      },
       error: '',
     };
   } catch (error) {

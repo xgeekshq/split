@@ -15,13 +15,16 @@ export class UserRepository
 	}
 	getById(userId: string): Promise<User> {
 		return this.findOneById(userId, {
-			password: 0,
-			currentHashedRefreshToken: 0
+			password: 0
 		});
 	}
 
 	updateUserWithRefreshToken(refreshToken: string, userId: string) {
-		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { refreshToken } });
+		return this.findOneByFieldAndUpdate(
+			{ _id: userId },
+			{ $set: { currentHashedRefreshToken: refreshToken } },
+			{ new: true }
+		);
 	}
 
 	updateUserPassword(email: string, password: string) {
