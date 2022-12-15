@@ -8,12 +8,19 @@ type BoxRowContainerProps = {
   title: string;
   description: string;
   active: boolean;
+  handleSelect?: () => void;
 };
 
-export const BoxRowContainer = ({ iconName, title, description, active }: BoxRowContainerProps) => {
+export const BoxRowContainer = ({
+  iconName,
+  title,
+  description,
+  active,
+  handleSelect,
+}: BoxRowContainerProps) => {
   if (active)
     return (
-      <StyledBox elevation={2} align="start" gap={10}>
+      <StyledBox elevation={2} align="start" gap={10} onClick={handleSelect}>
         <Flex>
           <Icon name={iconName} css={{ height: '$40', width: '$40' }} />
         </Flex>
