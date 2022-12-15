@@ -65,12 +65,14 @@ const NewRegularBoard: NextPage = () => {
                 iconName="blob-settings"
                 title="Configure board"
                 description="Select team or participants, configure your board and schedule a date and time."
+                active
               />
 
               <BoxRowContainer
                 iconName="blob-arrow-right"
                 title="Quick create"
                 description="Jump the settings and just create a board. All configurations can still be done within the board itself."
+                active={false}
               />
             </Flex>
           </ContentSelectContainer>
