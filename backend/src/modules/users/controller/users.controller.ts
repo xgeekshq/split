@@ -1,6 +1,17 @@
 import { DeleteUserApplicationInterface } from './../interfaces/applications/delete.user.application';
 import { UserParams } from './../../../libs/dto/param/user.param';
-import { Body, Controller, Delete, Get, Inject, Param, Put, Req, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Inject,
+	Param,
+	Put,
+	Query,
+	Req,
+	UseGuards
+} from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
