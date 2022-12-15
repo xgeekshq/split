@@ -53,8 +53,7 @@ export class TeamUserRepository
 						from: 'users',
 						localField: 'user',
 						foreignField: '_id',
-						as: 'user',
-						pipeline: [{ $sort: { firstName: 1 } }]
+						as: 'user'
 					}
 				},
 				{
@@ -80,7 +79,6 @@ export class TeamUserRepository
 				{
 					$set: { userWithTeam: '$_id' }
 				},
-
 				{
 					$unset: [
 						'_id',

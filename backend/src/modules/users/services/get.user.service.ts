@@ -74,9 +74,9 @@ export default class GetUserServiceImpl implements GetUserService {
 		results.userWithTeams.sort((a, b) => {
 			if (a.user.firstName === b.user.firstName) {
 				return a.user.lastName < b.user.lastName ? -1 : 1;
-			} else {
-				return a.user.firstName < b.user.firstName ? -1 : 1;
 			}
+
+			return a.user.firstName < b.user.firstName ? -1 : 1;
 		});
 
 		return results;
