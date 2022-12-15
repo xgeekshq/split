@@ -1,11 +1,12 @@
 import { QueryClient, useQueryClient } from 'react-query';
 import { NextRouter, useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
-import { membersListState, teamsListState } from '../store/team/atom/team.atom';
+import { UserList } from '@/types/team/userList';
+import { membersListState, teamsListState, usersListState } from '../store/team/atom/team.atom';
 import { TeamUser } from '../types/team/team.user';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 
@@ -19,6 +20,7 @@ type TeamUtilsType = {
   setMembersList: SetterOrUpdater<TeamUser[]>;
   teamsList: Team[];
   setTeamsList: SetterOrUpdater<Team[]>;
+  usersList: UserList[];
 };
 
 const useTeamUtils = (): TeamUtilsType => {
@@ -34,6 +36,8 @@ const useTeamUtils = (): TeamUtilsType => {
   const setToastState = useSetRecoilState(toastState);
   const [membersList, setMembersList] = useRecoilState(membersListState);
 
+  const usersList = useRecoilValue(usersListState);
+
   const { teamId } = router.query;
 
   const [teamsList, setTeamsList] = useRecoilState(teamsListState);
@@ -48,6 +52,7 @@ const useTeamUtils = (): TeamUtilsType => {
     setMembersList,
     teamsList,
     setTeamsList,
+    usersList,
   };
 };
 
