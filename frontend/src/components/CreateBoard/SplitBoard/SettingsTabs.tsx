@@ -68,6 +68,7 @@ const Settings = () => {
         >
           Team/-Sub-teams configurations
         </StyledTextTab>
+
         <StyledTextTab
           color="primary300"
           data-activetab={currentTab === 2}
@@ -81,6 +82,7 @@ const Settings = () => {
         css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
         orientation="horizontal"
       />
+
       {currentTab === 1 && (
         <TeamSubTeamsConfigurations
           setTimesOpen={() => setTimesOpen(timesOpen + 1)}

@@ -8,6 +8,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
 import { StyledTextTab } from './styles';
+import SettingsParticipant from '../SettingsParticipant';
 
 const SettingsTabs = () => {
   const [currentTab, setCurrentTab] = useState(1);
@@ -64,13 +65,9 @@ const SettingsTabs = () => {
         css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
         orientation="horizontal"
       />
-      {/* {currentTab === 1 && (
-        <TeamSubTeamsConfigurations
-          setTimesOpen={() => setTimesOpen(timesOpen + 1)}
-          timesOpen={timesOpen}
-        />
-      )}
-      {currentTab === 2 && <BoardConfigurations />} */}
+
+      {currentTab === 1 && <SettingsParticipant />}
+      {/* {currentTab === 2 && <BoardConfigurations />} */}
     </Flex>
   );
 };

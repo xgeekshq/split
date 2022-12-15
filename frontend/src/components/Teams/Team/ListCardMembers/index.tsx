@@ -17,6 +17,8 @@ const TeamMembersList = () => {
 
   const user = membersList.find((member) => member.user._id === session?.user.id);
 
+  console.log(membersList);
+
   let userRole: TeamUserRoles;
 
   if (user) userRole = user.role;

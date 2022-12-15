@@ -17,15 +17,7 @@ interface AutoFetchProps {
 }
 
 const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-  const {
-    teamId,
-    setToastState,
-    membersList,
-    setMembersList,
-    queryClient,
-    teamsList,
-    setTeamsList,
-  } = useTeamUtils();
+  const { teamId, setToastState, queryClient, teamsList, setTeamsList } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
     enabled: autoFetchTeam,
@@ -81,17 +73,8 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
   });
 
   const updateTeamUser = useMutation(updateTeamUserRequest, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries('team');
-
-      // updates the membersList recoil
-      const members = membersList.map((member) =>
-        member.user._id === data.user
-          ? { ...member, role: data.role, isNewJoiner: data.isNewJoiner }
-          : member,
-      );
-
-      setMembersList(members);
+    onSuccess: () => {
+      queryClient.invalidateQueries(['team', teamId]);
 
       setToastState({
         open: true,

@@ -25,7 +25,7 @@ const Team = () => {
   // // Hooks
   const {
     fetchTeam: { data },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchTeam: true });
 
   // Recoil States
   const setMembersListState = useSetRecoilState(membersListState);
