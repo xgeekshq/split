@@ -40,5 +40,14 @@ export class UserRepository
 
 	deleteUser(userId: string, withSession: boolean) {
 		return this.findOneAndRemove(userId, withSession);
+  }
+  
+	getAllWithPagination(page: number, size: number) {
+		return this.model
+			.find()
+			.skip(page * size)
+			.limit(size)
+			.sort({ firstName: 1, lastName: 1 })
+			.exec();
 	}
 }

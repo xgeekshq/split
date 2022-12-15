@@ -29,6 +29,7 @@ import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagge
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -82,8 +83,8 @@ export default class UsersController {
 		type: InternalServerErrorResponse
 	})
 	@Get('teams')
-	getAllUsersWithTeams() {
-		return this.getUserApp.getUsersOnlyWithTeams();
+	getAllUsersWithTeams(@Query() { page, size }: PaginationParams) {
+		return this.getUserApp.getAllUsersWithTeams(page, size);
 	}
 
 	@ApiOperation({ summary: 'Update user is super admin' })

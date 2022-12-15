@@ -15,6 +15,7 @@ type Props = {
   color?: string;
   disabled?: boolean;
   styleVariant?: boolean;
+  disabledInfo?: string;
 };
 
 const ConfigurationSettings = ({
@@ -26,10 +27,11 @@ const ConfigurationSettings = ({
   color,
   disabled,
   styleVariant,
+  disabledInfo,
 }: Props) => (
   <Flex gap={20}>
     {styleVariant && (
-      <Tooltip content="Can't change your own role">
+      <Tooltip content={disabledInfo}>
         <Flex>
           <Switch
             checked={isChecked}

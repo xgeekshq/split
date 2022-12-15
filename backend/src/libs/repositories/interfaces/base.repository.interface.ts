@@ -1,5 +1,4 @@
 import { FilterQuery, PopulateOptions, QueryOptions, UpdateQuery } from 'mongoose';
-
 import { ModelProps, SelectedValues } from '../types';
 
 export type PopulateType = PopulateOptions | (PopulateOptions | string)[];

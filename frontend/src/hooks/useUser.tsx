@@ -17,7 +17,7 @@ import { deleteUserRequest, updateUserIsAdminRequest } from '../api/userService'
 import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
-  const { setToastState, usersWithTeamsList, setUsersWithTeamsList, queryClient } = useUserUtils();
+  const { setToastState, queryClient } = useUserUtils();
 
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
@@ -43,15 +43,15 @@ const useUser = (): UseUserType => {
   };
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries('usersWithTeams');
 
-      // updates the usersList recoil
-      const users = usersWithTeamsList.map((user) =>
-        user.user._id === data._id ? { ...user, isAdmin: data.isSAdmin } : user,
-      );
+      // // updates the usersList recoil
+      // const users = usersWithTeamsList.map((user) =>
+      //   user.user._id === data._id ? { ...user, isAdmin: data.isSAdmin } : user,
+      // );
 
-      setUsersWithTeamsList(users);
+      // setUsersWithTeamsList(users);
 
       setToastState({
         open: true,

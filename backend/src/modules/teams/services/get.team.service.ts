@@ -4,6 +4,7 @@ import Team from '../entities/teams.schema';
 import { TYPES } from '../interfaces/types';
 import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
 import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
+import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -38,8 +39,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		});
 	}
 
-	getUsersOnlyWithTeams() {
-		return this.teamUserRepository.getUsersOnlyWithTeams();
+	getUsersOnlyWithTeams(users: User[]) {
+		return this.teamUserRepository.getUsersOnlyWithTeams(users);
 	}
 
 	getTeamUser(userId: string, teamId: string) {

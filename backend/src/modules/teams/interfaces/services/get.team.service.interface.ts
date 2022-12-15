@@ -3,6 +3,7 @@ import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import TeamUser from '../../entities/team.user.schema';
 import Team from '../../entities/teams.schema';
 import { UserWithTeams } from '../../../users/interfaces/type-user-with-teams';
+import User from 'src/modules/users/entities/user.schema';
 
 export interface GetTeamServiceInterface {
 	countTeams(userId: string): Promise<number>;
@@ -19,5 +20,5 @@ export interface GetTeamServiceInterface {
 
 	getAllTeams(): Promise<LeanDocument<Team>[]>;
 
-	getUsersOnlyWithTeams(): Promise<UserWithTeams[]>;
+	getUsersOnlyWithTeams(users: User[]): Promise<LeanDocument<UserWithTeams>[]>;
 }

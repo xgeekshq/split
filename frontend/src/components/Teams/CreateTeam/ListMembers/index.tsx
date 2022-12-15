@@ -21,6 +21,9 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
+import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
+import useTeam from '@/hooks/useTeam';
+import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import SearchInput from './SearchInput';
@@ -29,9 +32,16 @@ import { ButtonAddMember, ScrollableContent } from './styles';
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  isTeamPage?: boolean;
 };
 
-const ListMembers = ({ isOpen, setIsOpen }: Props) => {
+const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+  const {
+    addAndRemoveTeamUser: { mutate },
+  } = useTeam({ autoFetchTeam: false });
+
+  const router = useRouter();
+
   const { data: session } = useSession({ required: true });
   const [searchMember, setSearchMember] = useState<string>('');
 
@@ -76,9 +86,44 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
   const saveMembers = () => {
     const listOfUsers = [...membersList];
 
-    const addedUsers = usersList.filter((user) => user.isChecked);
+    const selectedUsers = usersList.filter((user) => user.isChecked);
+    const unselectedUsers = usersList.filter((user) => !user.isChecked);
+    const { teamId } = router.query;
 
-    const updatedListWithAdded = addedUsers.map(
+    if (isTeamPage && teamId) {
+      const team = teamId as string;
+
+      const addedUsers = selectedUsers.filter(
+        (user) => !listOfUsers.some((teamUser) => teamUser.user._id === user._id),
+      );
+
+      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
+        user: teamUser._id,
+        role: TeamUserRoles.MEMBER,
+        isNewJoiner: false,
+        team,
+      }));
+
+      const removedUsers = listOfUsers.filter((teamUser) =>
+        unselectedUsers.some((user) => teamUser.user._id === user._id),
+      );
+      const removedUsersIds = removedUsers.map((user) => user._id);
+      if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {
+        const usersToUpdate: TeamUserAddAndRemove = {
+          addUsers: addedUsersToSend,
+          removeUsers: removedUsersIds,
+          team,
+        };
+
+        mutate(usersToUpdate);
+      }
+
+      setIsOpen(false);
+
+      return;
+    }
+
+    const updatedListWithAdded = selectedUsers.map(
       (user) =>
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
@@ -97,7 +142,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
 
     setToastState({
       open: true,
-      content: 'Team member/s successfully added',
+      content: 'Team member/s successfully updated',
       type: ToastStateEnum.SUCCESS,
     });
 
@@ -120,14 +165,14 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
                 lineHeight: '$18',
               }}
             >
-              Add new member
+              Add/remove members
             </Text>
           </ButtonAddMember>
         </DialogTrigger>
         <StyledDialogOverlay />
         <StyledDialogContent>
           <StyledDialogTitle>
-            <Text heading="4">Add team members</Text>
+            <Text heading="4">Add/remove team members</Text>
             <DialogClose asChild>
               <StyledDialogCloseButton isIcon size="lg">
                 <Icon css={{ color: '$primary400' }} name="close" size={24} />
@@ -145,7 +190,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
             />
           </Flex>
           <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-            Teams
+            Team Members
           </Text>
           <ScrollableContent direction="column" justify="start" ref={scrollRef}>
             <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
@@ -183,7 +228,7 @@ const ListMembers = ({ isOpen, setIsOpen }: Props) => {
               variant="primary"
               onClick={saveMembers}
             >
-              Add
+              Update
             </Button>
           </ButtonsContainer>
         </StyledDialogContent>
