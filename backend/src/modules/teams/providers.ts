@@ -9,6 +9,7 @@ import CreateTeamService from './services/create.team.service';
 import DeleteTeamService from './services/delete.team.service';
 import GetTeamService from './services/get.team.service';
 import UpdateTeamService from './services/update.team.service';
+import DeleteTeamUserService from './services/delete.team.user.service';
 
 export const createTeamService = {
 	provide: TYPES.services.CreateTeamService,
@@ -58,4 +59,9 @@ export const teamRepository = {
 export const teamUserRepository = {
 	provide: TYPES.repositories.TeamUserRepository,
 	useClass: TeamUserRepository
+};
+
+export const deleteTeamUserService = {
+	provide: TYPES.services.DeleteTeamUserService,
+	useClass: DeleteTeamUserService
 };

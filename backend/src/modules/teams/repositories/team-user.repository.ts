@@ -91,4 +91,8 @@ export class TeamUserRepository
 			])
 			.exec();
 	}
+
+	deleteTeamUser(userId: string, withSession: boolean): Promise<number> {
+		return this.deleteMany({ userId }, withSession);
+	}
 }

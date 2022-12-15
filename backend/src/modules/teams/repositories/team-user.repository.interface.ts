@@ -9,4 +9,5 @@ export interface TeamUserRepositoryInterface extends BaseInterfaceRepository<Tea
 	getUsersOnlyWithTeams(): Promise<UserWithTeams[]>;
 	getUsersOfTeam(teamId: string);
 	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null>;
+	deleteTeamUser(userId: string, withSession: boolean): Promise<number>;
 }
