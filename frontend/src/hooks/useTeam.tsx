@@ -60,6 +60,8 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
 
   const createTeam = useMutation(createTeamRequest, {
     onSuccess: () => {
+      queryClient.invalidateQueries('teams');
+
       setToastState({
         open: true,
         content: 'The team was successfully created.',

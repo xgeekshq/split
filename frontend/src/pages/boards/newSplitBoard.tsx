@@ -129,12 +129,9 @@ const NewSplitBoard: NextPage = () => {
    */
   const handleBack = useCallback(() => {
     setIsLoading(true);
-    setBoardState(defaultBoard);
-    setSelectedTeam(undefined);
-    setHaveError(false);
     setBackButtonState(true);
     router.back();
-  }, [setBoardState, setSelectedTeam, setHaveError, router]);
+  }, [router]);
 
   /**
    * Save board
@@ -185,6 +182,11 @@ const NewSplitBoard: NextPage = () => {
       setSelectedTeam(undefined);
       router.push('/boards');
     }
+    return () => {
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
+      setHaveError(false);
+    };
   }, [
     status,
     router,
@@ -195,6 +197,7 @@ const NewSplitBoard: NextPage = () => {
     allTeamsData,
     setSelectedTeam,
     setBoardState,
+    setHaveError,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;

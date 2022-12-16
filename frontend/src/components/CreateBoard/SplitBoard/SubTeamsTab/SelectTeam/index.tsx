@@ -22,6 +22,7 @@ import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
+import { useRouter } from 'next/router';
 import { HelperTextWrapper, StyledBox } from './styles';
 
 const SelectTeam = () => {
@@ -33,6 +34,9 @@ const SelectTeam = () => {
     clearErrors,
     formState: { errors },
   } = useFormContext();
+
+  const router = useRouter();
+  const routerTeam = router.query.team as string;
 
   /**
    * Recoil Atoms and Hooks
@@ -64,6 +68,15 @@ const SelectTeam = () => {
   };
 
   useEffect(() => {
+    if (routerTeam) {
+      setValue('team', routerTeam);
+      const foundTeam = teams.find((team) => team._id === routerTeam);
+      setSelectedTeam(foundTeam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (selectedTeam) {
       const haveMinMembers = !!(
         selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
@@ -80,7 +93,16 @@ const SelectTeam = () => {
 
       setHaveError(!isAdminOrStakeholder || !haveMinMembers);
     }
-  }, [selectedTeam, session?.user.id, session?.user.isSAdmin, setHaveError]);
+  }, [
+    routerTeam,
+    selectedTeam,
+    session?.user.id,
+    session?.user.isSAdmin,
+    setHaveError,
+    setSelectedTeam,
+    setValue,
+    teams,
+  ]);
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
@@ -103,7 +125,8 @@ const SelectTeam = () => {
             Select Team
           </Text>
         )}
-        <Select onValueChange={handleTeamChange}>
+
+        <Select onValueChange={handleTeamChange} defaultValue={routerTeam ?? undefined}>
           <SelectTrigger aria-label="Teams">
             <SelectValue placeholder="Select Team" />
             <SelectIcon>
@@ -139,6 +162,7 @@ const SelectTeam = () => {
             </SelectContent>
           </SelectPortal>
         </Select>
+        {/* )} */}
       </StyledBox>
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
