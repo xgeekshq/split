@@ -7,9 +7,6 @@ import Text from '@/components/Primitives/Text';
 const CardsContainer = styled(Flex, {
   mt: '$20',
   px: '$20',
-  overflowX: 'hidden',
-  overflowY: 'auto',
-  maxHeight: 'calc(100vh - 450px)',
 
   '&::-webkit-scrollbar': {
     width: '$4',

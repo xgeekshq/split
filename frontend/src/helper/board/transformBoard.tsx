@@ -55,15 +55,21 @@ export const handleUpdateText = (board: BoardType, data: UpdateCardDto) => {
 
 export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPositionDto) => {
   const boardData = removeReadOnly(board);
-
-  const { targetColumnId, colIdOfCard, newPosition, cardPosition } = changes;
+  const { targetColumnId, colIdOfCard, newPosition, cardPosition, sorted, cardId } = changes;
+  let currentCardPosition: number | undefined = cardPosition;
   const colToRemove = boardData.columns.find((col) => col._id === colIdOfCard);
   const colToAdd = boardData.columns.find((col) => col._id === targetColumnId);
-  const cardToAdd = colToRemove?.cards[cardPosition];
+  if (sorted) {
+    currentCardPosition = colToRemove?.cards.findIndex((card) => card._id === cardId);
+  }
 
-  if (cardToAdd && colToAdd && colToRemove) {
-    colToRemove.cards = removeElementAtIndex(colToRemove.cards, cardPosition);
-    colToAdd.cards = addElementAtIndex(colToAdd.cards, newPosition, cardToAdd);
+  if (currentCardPosition !== undefined) {
+    const cardToAdd = colToRemove?.cards[currentCardPosition];
+
+    if (cardToAdd && colToAdd && colToRemove) {
+      colToRemove.cards = removeElementAtIndex(colToRemove.cards, currentCardPosition);
+      colToAdd.cards = addElementAtIndex(colToAdd.cards, newPosition, cardToAdd);
+    }
   }
   return boardData;
 };

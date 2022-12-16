@@ -101,7 +101,7 @@ const CardBody = React.memo<CardBodyProps>(
 
     const newBoard = useRecoilValue(newBoardState);
 
-    const isANewBoard = newBoard?._id === board._id;
+    const isANewBoard = newBoard === board._id;
 
     const userIsParticipating = useMemo(
       () => !!users.find((user) => user.user?._id === userId),
