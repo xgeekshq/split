@@ -6,4 +6,5 @@ export default interface UpdateCardPositionDto {
   boardId: string;
   cardId: string;
   socketId: string;
+  sorted: boolean;
 }

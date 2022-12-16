@@ -62,6 +62,7 @@ const globalStyles = globalCss({
 
   '#__next': {
     minHeight: '100vh',
+    overflow: 'auto',
   },
   svg: { verticalAlign: 'middle' },
 });

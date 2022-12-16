@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
 
 import Column from '@/components/Board/Column/Column';
@@ -12,6 +12,7 @@ import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
+import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 
 type Props = {
   userId: string;
@@ -22,6 +23,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
   const { updateCardPosition, mergeCards } = useCards();
   const setToastState = useSetRecoilState(toastState);
   const setOnDragCard = useSetRecoilState(onDragCardStart);
+  const filteredColumns = useRecoilValue(filteredColumnsState);
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
@@ -94,6 +96,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         cardId: draggableId,
         boardId: board?._id,
         socketId,
+        sorted: filteredColumns.includes(source.droppableId),
       };
 
       updateCardPosition.mutate(changes);
