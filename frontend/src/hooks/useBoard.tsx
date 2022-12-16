@@ -66,7 +66,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   const updateBoard = useMutation(updateBoardRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('board');
+      queryClient.invalidateQueries(['board', { id: boardId }]);
 
       setToastState({
         open: true,
@@ -75,6 +75,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
       });
     },
     onError: (error: AxiosError) => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
       const errorMessage = error.response?.data.message.includes('max votes')
         ? error.response?.data.message
         : 'Error updating the board';

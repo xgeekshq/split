@@ -163,6 +163,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 							new: true
 						}
 					)
+					.populate({
+						path: 'users',
+						select: 'user role votesCount -board',
+						populate: { path: 'user', select: 'firstName lastName _id' }
+					})
 					.lean()
 					.exec();
 
