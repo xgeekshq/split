@@ -77,24 +77,22 @@ export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPo
 export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
   const boardData = removeReadOnly(board);
 
-  const { cardGroupId, cardId, colIdOfCardGroup } = changes;
-  const column = boardData.columns.find((col) => col._id === colIdOfCardGroup);
-  const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
-  const selectedCard = column?.cards.find((card) => card._id === cardId);
+  const { cardGroupId, cardId, colIdOfCardGroup, columnIdOfCard, cardPosition, sorted } = changes;
+  let currentCardPosition: number | undefined = cardPosition;
+  const targetColumn = boardData.columns.find((col) => col._id === colIdOfCardGroup);
+  const cardGroup = targetColumn?.cards.find((card) => card._id === cardGroupId);
+  const sourceColumn = boardData.columns.find((col) => col._id === columnIdOfCard);
+  const selectedCard = sourceColumn?.cards.find((card) => card._id === cardId);
 
-  if (column && cardGroup && selectedCard) {
+  if (sorted) {
+    currentCardPosition = sourceColumn?.cards.findIndex((card) => card._id === cardId);
+  }
+
+  if (cardGroup && selectedCard && sourceColumn && currentCardPosition !== undefined) {
+    sourceColumn.cards = removeElementAtIndex(sourceColumn.cards, currentCardPosition);
     cardGroup.items = addElementAtIndex(cardGroup.items, cardGroup.items.length, {
-      _id: selectedCard._id,
-      text: selectedCard.text,
-      comments: selectedCard.comments,
-      votes: selectedCard.votes,
-      createdBy: selectedCard.createdBy,
-      createdByTeam: selectedCard.createdByTeam,
-      anonymous: selectedCard.anonymous,
+      ...selectedCard,
     });
-
-    const index = column.cards.findIndex((idxCard) => idxCard === selectedCard);
-    column.cards = removeElementAtIndex(column.cards, index);
   }
 
   return boardData;

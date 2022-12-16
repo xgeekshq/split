@@ -14,4 +14,6 @@ export default interface MergeCardsDto {
   userId: string;
 
   cardPosition: number;
+
+  sorted: boolean;
 }

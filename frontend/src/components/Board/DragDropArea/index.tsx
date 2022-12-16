@@ -40,6 +40,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
     sourceDroppableId: string,
     draggableId: string,
     sourceIndex: number,
+    sorted: boolean,
   ) => {
     if (!board.hideCards) {
       const changes: MergeCardsDto = {
@@ -51,6 +52,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         socketId,
         userId,
         cardPosition: sourceIndex,
+        sorted,
       };
 
       mergeCards.mutate(changes);
@@ -78,6 +80,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         sourceDroppableId,
         draggableId,
         sourceIndex,
+        filteredColumns.includes(sourceDroppableId),
       );
     }
 
