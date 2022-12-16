@@ -87,7 +87,7 @@ const TeamSubTeamsConfigurations = ({ previousTeam }: TeamSubTeamsConfigurations
           </BoxContainer>
         ) : (
           <BoxContainer color="white">
-            <Text color="primary300" size="xs">
+            <Text color="primary300" size="xs" css={{ pb: '$2' }}>
               Stakeholders
             </Text>
             <Text css={{ wordBreak: 'break-word' }} size="md">

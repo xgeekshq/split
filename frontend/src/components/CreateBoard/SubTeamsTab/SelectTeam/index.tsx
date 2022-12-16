@@ -11,7 +11,22 @@ import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
 import { OptionType } from '@/components/Boards/Filters/FilterBoards';
-import { HelperTextWrapper, StyledBox, StyledSelect } from './styles';
+import { components, ControlProps } from 'react-select';
+import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styles';
+
+const Control = ({ children, ...props }: ControlProps) => (
+  <components.Control {...props}>
+    <Flex direction="column" css={{ width: '$347' }}>
+      {(props.selectProps.value as { label: string; value: string }).label && (
+        <Text color="primary300" size="xs">
+          Select Team
+        </Text>
+      )}
+
+      <Flex css={{ width: '100%' }}>{children}</Flex>
+    </Flex>
+  </components.Control>
+);
 
 const SelectTeam = () => {
   const { data: session } = useSession({ required: true });
@@ -53,7 +68,11 @@ const SelectTeam = () => {
   };
 
   const teamsNames = useMemo(
-    () => teams.map((team) => ({ label: team.name, value: team._id })),
+    () =>
+      teams.map((team) => ({
+        label: `${team.name} (${team.users.length} members)`,
+        value: team._id,
+      })),
     [teams],
   );
 
@@ -81,9 +100,9 @@ const SelectTeam = () => {
       <StyledBox
         css={{
           width: '100%',
-          py: '$12',
           pl: '$17',
           pr: '$16',
+          py: '$12',
           height: '$64',
           borderRadius: '$4',
           backgroundColor: 'white',
@@ -93,9 +112,25 @@ const SelectTeam = () => {
         elevation="1"
       >
         <StyledSelect
-          className="react-select-container"
-          classNamePrefix="react-select"
+          components={{
+            IndicatorSeparator: () => null,
+            Control,
+          }}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: '#A9B3BF',
+              primary50: 'white',
+              primary: 'black',
+              text: '#060D16',
+            },
+          })}
+          styles={selectStyles}
           options={teamsNames}
+          placeholder="Select Team"
+          controlShouldRenderValue={!!selectedTeam}
+          defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
           value={teamsNames.find((option) => option.value === selectedTeam?.name)}
           onChange={(selectedOption) => {
             handleTeamChange((selectedOption as OptionType)?.value);
