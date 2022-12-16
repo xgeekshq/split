@@ -8,9 +8,13 @@ export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]
 
 export const getAllUsersWithTeams = (
   pageParam: number,
+  searchUser?: string,
   context?: GetServerSidePropsContext,
 ): Promise<{ userWithTeams: UserWithTeams[]; hasNextPage: boolean; page: number }> =>
-  fetchData(`/users/teams?page=${pageParam ?? 0}`, { context, serverSide: !!context });
+  fetchData(`/users/teams?page=${pageParam ?? 0}&searchUser=${searchUser ?? ''}`, {
+    context,
+    serverSide: !!context,
+  });
 
 export const updateUserIsAdminRequest = (user: UpdateUserIsAdmin): Promise<User> =>
   fetchData(`/users/sadmin/`, { method: 'PUT', data: user });
