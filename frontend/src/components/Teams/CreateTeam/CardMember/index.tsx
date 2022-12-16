@@ -1,4 +1,3 @@
-import useTeam from '@/hooks/useTeam';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,6 +12,7 @@ import Tooltip from '@/components/Primitives/Tooltip';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
 
+import useTeam from '@/hooks/useTeam';
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 import CardEndCreateTeam from '../CardEnd';
 

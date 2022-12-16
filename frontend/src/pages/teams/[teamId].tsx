@@ -14,13 +14,13 @@ import Flex from '@/components/Primitives/Flex';
 import { Sidebar } from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
-import useTeam from '@/hooks/useTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { User } from '@/types/user/user';
+import useTeam from '@/hooks/useTeam';
 
 const Team = () => {
   // Session Details
