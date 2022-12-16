@@ -6,11 +6,14 @@ const SchemaCreateBoard = Joi.object({
     'string.empty': 'Please enter the board name',
     'string.max': 'Maximum of 30 characters',
   }),
-  maxVotes: Joi.number().min(1).optional().messages({
+  maxVotes: Joi.number().integer().min(1).optional().messages({
     'number.min': 'Please insert a number greater than zero.',
   }),
   slackEnable: Joi.boolean().required().messages({
-    'boolean.required': 'Please enterm the value for slack enable.',
+    'boolean.required': 'Please enter the value for slack enable.',
+  }),
+  team: Joi.string().required().messages({
+    'any.required': 'Please Select Team',
   }),
 });
 

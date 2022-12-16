@@ -1,28 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
-
-import { getAllTeams } from '@/api/teamService';
-import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
-import {
-  CreateBoardData,
-  createBoardDataState,
-  createBoardError,
-} from '@/store/createBoard/atoms/create-board.atom';
-import { Team } from '@/types/team/team';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import useTeam from '@/hooks/useTeam';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import MainBoardCard from './MainBoardCard';
 import QuickEditSubTeams from './QuickEditSubTeams';
+import SelectTeam from './SelectTeam';
+import FakeMainBoardCard from '../fake/FakeSettingsTabs/partials/MainBoardCard';
 
-const StyledBox = styled(Flex, Box, { borderRadius: '$12', backgroundColor: 'white' });
+const StyledBox = styled(Flex, Box, {
+  width: '100%',
+  py: '$12',
+  pl: '$17',
+  pr: '$16',
+  borderRadius: '$4',
+  border: '1px solid $primary200',
+  height: '$64',
+});
+
+type BoxContainerProps = {
+  children: ReactNode;
+  color: string;
+};
+
+const BoxContainer = ({ children, color }: BoxContainerProps) => (
+  <StyledBox direction="column" elevation="1" gap="2" css={{ background: color }}>
+    {children}
+  </StyledBox>
+);
 
 type TeamSubTeamsInterface = {
   timesOpen: number;
@@ -34,34 +45,23 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
   setTimesOpen,
 }) => {
   const [stakeholders, setStakeholders] = useState<User[]>([]);
-  const [team, setTeam] = useState<Team | null>(null);
 
-  const { data: teams } = useQuery(['teams'], () => getAllTeams(), {
-    suspense: false,
-    refetchOnWindowFocus: false,
-  });
+  const selectedTeam = useRecoilValue(createBoardTeam);
 
-  const setBoardData = useSetRecoilState<CreateBoardData>(createBoardDataState);
+  const {
+    fetchTeamsOfUser: { data: teams },
+  } = useTeam({ autoFetchTeam: false });
+
   const [haveError, setHaveError] = useRecoilState(createBoardError);
-
-  const MIN_MEMBERS = 4;
 
   useEffect(() => {
     const isTeamsValid = Array.isArray(teams) && teams.length > 0;
 
-    if (
-      isTeamsValid &&
-      teams[0].users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-        MIN_MEMBERS
-    ) {
-      const selectedTeam = teams[0];
-
+    if (isTeamsValid && selectedTeam) {
       const isStakeholder = (userTeam: TeamUser): boolean =>
         userTeam.role === TeamUserRoles.STAKEHOLDER;
       const getStakeholder = ({ user }: TeamUser): User => user;
       const stakeholdersFound = selectedTeam.users.filter(isStakeholder).map(getStakeholder);
-
-      setBoardData((prev) => ({ ...prev, board: { ...prev.board, team: selectedTeam._id } }));
 
       const stakeholdersNames = stakeholdersFound.map((stakeholderList) => ({
         ...stakeholderList,
@@ -74,11 +74,8 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
         ],
       }));
       setStakeholders(stakeholdersNames);
-      setTeam(selectedTeam);
-    } else {
-      setHaveError(true);
     }
-  }, [teams, setBoardData, setHaveError]);
+  }, [teams, selectedTeam, setHaveError]);
 
   useEffect(() => {
     if (timesOpen < 2) {
@@ -91,62 +88,48 @@ const TeamSubTeamsConfigurations: React.FC<TeamSubTeamsInterface> = ({
   return (
     <Flex css={{ mt: '$32' }} direction="column">
       <Flex css={{ width: '100%' }} gap="22" justify="between">
-        <StyledBox
-          css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
-          direction="column"
-          elevation="1"
-          gap="2"
-        >
-          <Text color="primary300" size="xs">
-            Team
-          </Text>
-          <Flex align="center" gap="8">
-            <Text size="md">{haveError || !team ? '' : team?.name}</Text>
-            <Text color="primary300" size="md">
-              ({haveError || !team ? '--' : team?.users.length} members)
+        <SelectTeam />
+
+        {haveError ? (
+          <BoxContainer color="$background">
+            <Text color="primary300" size="xs">
+              Stakeholders
             </Text>
-            <Tooltip content="All active members on the platform">
-              <div>
-                <Icon
-                  name="info"
-                  css={{
-                    width: '$14',
-                    height: '$14',
-                    color: '$primary400',
-                  }}
-                />
-              </div>
-            </Tooltip>
-          </Flex>
-        </StyledBox>
-        <StyledBox
-          css={{ width: '100%', py: '$12', pl: '$17', pr: '$16' }}
-          direction="column"
-          elevation="1"
-          gap="2"
-        >
-          <Text color="primary300" size="xs">
-            Stakeholders
-          </Text>
-          <Text css={{ wordBreak: 'break-word' }} size="md">
-            {!haveError &&
-              stakeholders &&
-              stakeholders.length > 0 &&
-              stakeholders.map((value, index) =>
-                index < stakeholders.length - 1
-                  ? `${value.firstName} ${value.lastName}, `
-                  : `${value.firstName} ${value.lastName}`,
-              )}
-          </Text>
-        </StyledBox>
+            <Text css={{ wordBreak: 'break-word' }} size="md" />
+          </BoxContainer>
+        ) : (
+          <BoxContainer color="white">
+            <Text color="primary300" size="xs">
+              Stakeholders
+            </Text>
+            <Text css={{ wordBreak: 'break-word' }} size="md">
+              {!haveError &&
+                stakeholders &&
+                stakeholders.length > 0 &&
+                stakeholders.map((value, index) =>
+                  index < stakeholders.length - 1
+                    ? `${value.firstName} ${value.lastName}, `
+                    : `${value.firstName} ${value.lastName}`,
+                )}
+            </Text>
+          </BoxContainer>
+        )}
       </Flex>
-      {team && (
+      {selectedTeam ? (
         <>
           <Flex justify="end">
-            <QuickEditSubTeams team={team} />
+            <QuickEditSubTeams team={selectedTeam} />
           </Flex>
-          <MainBoardCard team={team} timesOpen={timesOpen} />
+          {haveError ? (
+            <FakeMainBoardCard />
+          ) : (
+            <MainBoardCard team={selectedTeam} timesOpen={timesOpen} />
+          )}
         </>
+      ) : (
+        <Flex css={{ mt: '$36' }}>
+          <FakeMainBoardCard />
+        </Flex>
       )}
     </Flex>
   );

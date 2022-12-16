@@ -31,7 +31,7 @@ function Root({
     defaultOptions: {
       queries: {
         retry: 1,
-        suspense: true,
+        suspense: false,
       },
     },
   });

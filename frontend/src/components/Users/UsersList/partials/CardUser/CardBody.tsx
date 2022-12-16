@@ -8,6 +8,8 @@ import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
+import Tooltip from '@/components/Primitives/Tooltip';
+import Link from 'next/link';
 import SuperAdmin from './SuperAdmin';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -30,8 +32,10 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   const { data: session } = useSession();
 
   const loggedUserIsSAdmin = session?.user.isSAdmin;
+  const userLoginId = session?.user.id;
 
-  const { firstName, lastName, email, isSAdmin } = userWithTeams.user;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { firstName, lastName, email, isSAdmin, _id } = userWithTeams.user;
   const { teamsNames } = userWithTeams;
 
   const getTeamsCountText = () => {
@@ -43,6 +47,8 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
     }
     return 'no teams';
   };
+
+  const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
   return (
     <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
@@ -58,7 +64,11 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           />
 
           <Flex align="center" css={{ width: '$147' }} gap="8">
-            <CardTitle firstName={firstName} lastName={lastName} />
+            <Link href={`/users/${userWithTeams.user._id}`}>
+              <Flex>
+                <CardTitle firstName={firstName} lastName={lastName} />
+              </Flex>
+            </Link>
           </Flex>
 
           <Flex align="center" css={{ width: '$147' }}>
@@ -71,14 +81,21 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
-              <Text css={{ mr: '$2', fontWeight: '$bold' }} size="sm">
-                {getTeamsCountText()}
-              </Text>
+              <Tooltip content={teamsSeparatedByComma}>
+                <Text css={{ mr: '$2', fontWeight: '$bold', cursor: 'default' }} size="sm">
+                  {getTeamsCountText()}
+                </Text>
+              </Tooltip>
             </Flex>
           </Flex>
           <Flex css={{ width: '40%' }} justify="end">
             <Flex align="center" css={{ width: '$237' }} justify="start">
-              {loggedUserIsSAdmin && <SuperAdmin userSAdmin={isSAdmin} />}
+              <SuperAdmin
+                userSAdmin={isSAdmin}
+                loggedUserSAdmin={loggedUserIsSAdmin}
+                userId={_id}
+                loggedUserId={userLoginId}
+              />
             </Flex>
             {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
           </Flex>

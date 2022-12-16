@@ -1,17 +1,22 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import ResetPassword, {
 	ResetPasswordDocument
 } from 'src/modules/auth/schemas/reset-password.schema';
+import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
+import User, { UserDocument } from '../entities/user.schema';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import UserDto from '../dto/user.dto';
 
 @Injectable()
 export default class updateUserServiceImpl implements UpdateUserService {
 	constructor(
+		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@InjectModel(ResetPassword.name)
@@ -21,7 +26,10 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
 		const currentHashedRefreshToken = await encrypt(refreshToken);
 
-		return this.userRepository.updateUserWithRefreshToken(currentHashedRefreshToken, userId);
+		return this.userRepository.updateUserWithRefreshToken(
+			currentHashedRefreshToken,
+			String(userId)
+		);
 	}
 
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
@@ -54,5 +62,18 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		if (!isTokenValid) {
 			throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	async updateSuperAdmin(user: UpdateUserDto, requestUser: UserDto) {
+		if (requestUser._id.toString() === user._id) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
+
+		if (!userUpdated) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return userUpdated;
 	}
 }

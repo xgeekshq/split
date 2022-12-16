@@ -1,4 +1,4 @@
-import { ClientSession, FilterQuery, Model, UpdateQuery } from 'mongoose';
+import { ClientSession, FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
 import { BaseInterfaceRepository, PopulateType } from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
@@ -55,8 +55,12 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.findByIdAndUpdate(id, item).exec();
 	}
 
-	findOneByFieldAndUpdate(value: ModelProps<T>, query: UpdateQuery<T>): Promise<T> {
-		return this._repository.findOneAndUpdate(value, query, { new: true }).exec();
+	findOneByFieldAndUpdate(
+		value: ModelProps<T>,
+		query: UpdateQuery<T>,
+		options?: QueryOptions<T>
+	): Promise<T> {
+		return this._repository.findOneAndUpdate(value, query, options).exec();
 	}
 
 	findOneAndRemove(id: string, withSession = false): Promise<T> {

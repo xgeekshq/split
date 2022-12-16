@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
-
 import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import CreateTeam from '@/components/Teams/CreateTeam';
@@ -12,6 +10,9 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import QueryError from '@/components/Errors/QueryError';
+import LoadingPage from '@/components/loadings/LoadingPage';
+import { Suspense, useEffect } from 'react';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 const NewTeam: NextPage = () => {
@@ -58,7 +59,15 @@ const NewTeam: NextPage = () => {
     setMembersListState(listMembers);
   }, [data, session?.user.id, setMembersListState, setUsersListState]);
 
-  return <CreateTeam />;
+  if (!session || !data) return null;
+
+  return (
+    <Suspense fallback={<LoadingPage />}>
+      <QueryError>
+        <CreateTeam />
+      </QueryError>
+    </Suspense>
+  );
 };
 
 export default NewTeam;

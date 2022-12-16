@@ -22,10 +22,10 @@ import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
-import useTeam from '@/hooks/useTeam';
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+import useTeam from '@/hooks/useTeam';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 

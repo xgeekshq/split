@@ -42,20 +42,43 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.findAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
-	async getAllUsersWithTeams() {
-		const users = await this.getAllUsers();
+	getAllUsersWithPagination(page?: number, size?: number) {
+		return this.userRepository.getAllWithPagination(page, size);
+	}
+
+	async getAllUsersWithTeams(page = 0, size = 15) {
+		const users = await this.getAllUsersWithPagination(page, size);
+
+		const count = await this.userRepository.countDocuments();
+		const hasNextPage = page + 1 < Math.ceil(count / size);
+
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {
 			return {
 				user: userFound,
-				teams: []
+				teamsNames: []
 			};
 		});
-		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams();
+		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams(users);
+
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
-		return [
-			...usersOnlyWithTeams,
-			...mappedUsers.filter((user) => !ids.has(String(user.user._id)))
-		];
+		const results = {
+			userWithTeams: [
+				...usersOnlyWithTeams,
+				...mappedUsers.filter((user) => !ids.has(String(user.user._id)))
+			],
+			hasNextPage,
+			page
+		};
+
+		results.userWithTeams.sort((a, b) => {
+			if (a.user.firstName === b.user.firstName) {
+				return a.user.lastName < b.user.lastName ? -1 : 1;
+			}
+
+			return a.user.firstName < b.user.firstName ? -1 : 1;
+		});
+
+		return results;
 	}
 }

@@ -3,24 +3,20 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import { membersListState } from '@/store/team/atom/team.atom';
-import {
-  ButtonsContainer,
-  Container,
-  ContentContainer,
-  InnerContent,
-  PageHeader,
-  StyledForm,
-  SubContainer,
-} from '@/styles/pages/boards/new.styles';
+import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
-
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/icons/Icon';
+import {
+  ButtonsContainer,
+  InnerContent,
+  StyledForm,
+  SubContainer,
+} from '@/styles/pages/boards/newSplitBoard.styles';
 import TipBar from './TipBar';
 import TeamName from './TeamName';
 import TeamMembersList from './ListCardsMembers';

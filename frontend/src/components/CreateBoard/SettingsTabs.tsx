@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -8,6 +8,8 @@ import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardConfigurations from './Configurations/BoardConfigurations';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 
@@ -35,6 +37,7 @@ const Settings = () => {
    * Recoil Atoms
    */
   const haveError = useRecoilValue(createBoardError);
+  const setToastState = useSetRecoilState(toastState);
 
   const {
     formState: { errors },
@@ -44,7 +47,15 @@ const Settings = () => {
     if (errors.maxVotes) {
       setCurrentTab(2);
     }
-  }, [errors.maxVotes]);
+
+    if (errors.team && currentTab === 2) {
+      setToastState({
+        open: true,
+        content: 'Please choose a team in the "Team/-Sub-teams configuration" tab',
+        type: ToastStateEnum.ERROR,
+      });
+    }
+  }, [currentTab, errors.maxVotes, errors.team, setToastState]);
 
   return (
     <Flex direction="column">

@@ -29,8 +29,9 @@ export default class JwtRefreshTokenStrategy extends PassportStrategy(
 
 	async validate(request: Request, payload: TokenPayload) {
 		const { authorization } = request.headers;
+
 		const user = await this.validateUserAuthService.validateUserByRefreshToken(
-			authorization!,
+			authorization,
 			payload.userId
 		);
 

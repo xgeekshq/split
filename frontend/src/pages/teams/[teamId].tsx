@@ -14,13 +14,13 @@ import Flex from '@/components/Primitives/Flex';
 import { Sidebar } from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
-import useTeam from '@/hooks/useTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { User } from '@/types/user/user';
+import useTeam from '@/hooks/useTeam';
 
 const Team = () => {
   // Session Details
@@ -31,7 +31,7 @@ const Team = () => {
   // // Hooks
   const {
     fetchTeam: { data },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchTeam: true });
 
   const usersData = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -46,8 +46,8 @@ const Team = () => {
   }).data;
 
   // Recoil States
-  const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
+  const setUsersListState = useSetRecoilState(usersListState);
 
   useEffect(() => {
     if (!data || !usersData) {
@@ -59,12 +59,7 @@ const Team = () => {
     }));
 
     const allUsersList: UserList[] = usersData.map((user: User) => ({
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      isSAdmin: user.isSAdmin,
-      joinedAt: user.joinedAt,
+      ...user,
       isChecked: true,
     }));
 

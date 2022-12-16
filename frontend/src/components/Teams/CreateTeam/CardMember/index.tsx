@@ -1,4 +1,3 @@
-import useTeam from '@/hooks/useTeam';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,6 +12,7 @@ import Tooltip from '@/components/Primitives/Tooltip';
 import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
 
+import useTeam from '@/hooks/useTeam';
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
 import CardEndCreateTeam from '../CardEnd';
 
@@ -77,32 +77,34 @@ const CardMember = React.memo<CardBodyProps>(
             }}
           >
             <Flex align="center" css={{ width: '23%' }} gap="8">
-              {isOpen ? (
-                <Icon
-                  name="blob-personal"
-                  css={{
-                    width: '32px',
-                    height: '$32',
-                    zIndex: 1,
-                    opacity: 0.2,
-                  }}
-                />
-              ) : (
-                <Icon
-                  name="blob-personal"
-                  css={{
-                    width: '32px',
-                    height: '$32',
-                    zIndex: 1,
-                  }}
-                />
-              )}
+              <Icon
+                name="blob-personal"
+                css={{
+                  width: '32px',
+                  height: '$32',
+                  zIndex: 1,
+                  opacity: isOpen ? 0.2 : 1,
+                }}
+              />
               <Flex align="center" gap="8">
                 <StyledMemberTitle>
                   {`${member.user.firstName} ${member.user.lastName}`}
                 </StyledMemberTitle>
               </Flex>
             </Flex>
+            {!isTeamMember && isTeamCreator && !isSAdmin && (
+              <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
+                <ConfigurationSettings
+                  handleCheckedChange={handleSelectFunction}
+                  isChecked={member.isNewJoiner}
+                  text=""
+                  title="New Joiner"
+                  disabled
+                  styleVariant={isTeamCreator}
+                  disabledInfo="Can't change your own New Joiner status"
+                />
+              </Flex>
+            )}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
                 <Text size="sm" weight="medium">
