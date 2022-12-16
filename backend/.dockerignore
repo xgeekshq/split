@@ -1,2 +1,14 @@
-node_modules/*
-dist/*
+# Ignore everything
+*
+
+# Allow files and directories for prod
+!/src
+!/test
+!.eslintrc.js
+!.prettierrc
+!nest-cli.json
+!package*.json
+!tsconfig.json
+!tsconfig.build.json
+!ormconfig.json
+!yarn.lock
