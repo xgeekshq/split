@@ -42,7 +42,7 @@ RUN npm run build
 ENV NODE_ENV production
 
 # Running `npm` removes the existing node_modules directory and passing in --omit=dev ensures that only the production dependencies are installed. This ensures that the node_modules directory is as optimized as possible
-RUN npm ci --omit=dev
+RUN npm prune --omit=dev
 
 ###################
 # PRODUCTION
