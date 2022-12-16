@@ -59,7 +59,7 @@ const Comment: React.FC<CommentProps> = React.memo(
               <Text
                 size="xs"
                 css={{
-                  filter: commentBlur(hideCards, comment as CommentType, userId),
+                  filter: commentBlur(hideCards, comment, userId),
                   wordBreak: 'break-word',
                   whiteSpace: 'pre-line',
                 }}
@@ -88,7 +88,7 @@ const Comment: React.FC<CommentProps> = React.memo(
                   size="xs"
                   weight="medium"
                   css={{
-                    filter: commentBlur(hideCards, comment as CommentType, userId),
+                    filter: commentBlur(hideCards, comment, userId),
                   }}
                 >
                   {comment.createdBy.firstName} {comment.createdBy.lastName}
