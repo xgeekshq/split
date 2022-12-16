@@ -10,6 +10,7 @@ import {
 	createTeamService,
 	deleteTeamApplication,
 	deleteTeamService,
+	deleteTeamUserService,
 	getTeamApplication,
 	getTeamService,
 	teamRepository,
@@ -30,9 +31,16 @@ import {
 		deleteTeamApplication,
 		deleteTeamService,
 		teamUserRepository,
-		teamRepository
+		teamRepository,
+		deleteTeamUserService
 	],
 	controllers: [TeamsController],
-	exports: [getTeamApplication, getTeamService, createTeamService, updateTeamService]
+	exports: [
+		getTeamApplication,
+		getTeamService,
+		createTeamService,
+		updateTeamService,
+		deleteTeamUserService
+	]
 })
 export default class TeamsModule {}

@@ -13,7 +13,7 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { updateUserIsAdminRequest } from '../api/userService';
+import { deleteUserRequest, updateUserIsAdminRequest } from '../api/userService';
 import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
@@ -62,13 +62,39 @@ const useUser = (): UseUserType => {
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error while updating the team user',
+        content: 'Error while updating the user',
         type: ToastStateEnum.ERROR,
       });
     },
   });
 
-  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin };
+  const deleteUser = useMutation(deleteUserRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('usersWithTeams');
+
+      // updates the usersList recoil
+      // const users = usersWithTeamsList.filter(
+      //   (userWithTeams) => userWithTeams.user._id !== variables.id,
+      // );
+
+      // setUsersWithTeamsList(users);
+
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while deleting the user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin, deleteUser };
 };
 
 export default useUser;

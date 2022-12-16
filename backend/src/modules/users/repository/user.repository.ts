@@ -13,6 +13,7 @@ export class UserRepository
 	constructor(@InjectModel(User.name) private model: Model<UserDocument>) {
 		super(model);
 	}
+
 	getById(userId: string): Promise<User> {
 		return this.findOneById(userId, {
 			password: 0
@@ -40,6 +41,10 @@ export class UserRepository
 		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { isSAdmin } }, { new: true });
 	}
 
+	deleteUser(userId: string, withSession: boolean) {
+		return this.findOneAndRemove(userId, withSession);
+  }
+  
 	getAllWithPagination(page: number, size: number) {
 		return this.model
 			.find()
