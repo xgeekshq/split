@@ -162,7 +162,6 @@ const SelectTeam = () => {
             </SelectContent>
           </SelectPortal>
         </Select>
-        {/* )} */}
       </StyledBox>
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
