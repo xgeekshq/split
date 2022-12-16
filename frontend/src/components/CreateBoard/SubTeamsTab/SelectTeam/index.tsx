@@ -16,7 +16,7 @@ import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styl
 
 const Control = ({ children, ...props }: ControlProps) => (
   <components.Control {...props}>
-    <Flex direction="column" css={{ width: '$347' }}>
+    <Flex direction="column" css={{ width: '100%' }}>
       {(props.selectProps.value as { label: string; value: string }).label && (
         <Text color="primary300" size="xs">
           Select Team
