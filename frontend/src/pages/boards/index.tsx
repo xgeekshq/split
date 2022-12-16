@@ -7,9 +7,24 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
+import { getTeamsOfUser } from '@/api/teamService';
+import useTeam from '@/hooks/useTeam';
+import { teamsListState } from '@/store/team/atom/team.atom';
+import { useSetRecoilState } from 'recoil';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });
+  const setTeamsList = useSetRecoilState(teamsListState);
+
+  const {
+    fetchTeamsOfUser: { data },
+  } = useTeam({ autoFetchTeam: false });
+
+  useEffect(() => {
+    if (data) {
+      setTeamsList(data);
+    }
+  }, [data, setTeamsList]);
 
   if (!session) return null;
   return (
