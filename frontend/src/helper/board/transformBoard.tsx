@@ -97,15 +97,17 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
 export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroupDto) => {
   const boardData = removeReadOnly(board);
 
-  const { columnId, cardGroupId, cardId } = changes;
+  const { columnId, cardGroupId, cardId, newPosition } = changes;
   const column = boardData.columns.find((col) => col._id === columnId);
   const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
-  const cardGroupIdx = column?.cards.findIndex((card) => card._id === cardGroupId);
   const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
 
-  if (column && cardGroup && selectedCard && cardGroupIdx) {
+  if (column && cardGroup && selectedCard) {
     cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
-    column.cards = addElementAtIndex(column.cards, cardGroupIdx, {
+    if (cardGroup.items.length === 1) {
+      cardGroup.text = cardGroup.items[0].text;
+    }
+    column.cards = addElementAtIndex(column.cards, newPosition, {
       ...selectedCard,
       items: [selectedCard],
     });

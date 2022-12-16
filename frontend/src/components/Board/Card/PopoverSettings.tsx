@@ -137,7 +137,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
         columnId,
         socketId,
         cardId: itemId,
-        newPosition,
+        newPosition: firstOne ? newPosition : newPosition + 1,
       });
     };
 
