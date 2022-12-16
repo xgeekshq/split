@@ -5,7 +5,7 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 
 // eslint-disable-next-line import/no-named-as-default
-import SelectTeam from '@/components/CreateBoard/SubTeamsTab/SelectTeam';
+import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTeam';
 import FakeMainBoardCard from '../MainBoardCard';
 import { StyledBox } from './styles';
 

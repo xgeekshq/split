@@ -19,4 +19,15 @@ const StyledBox = styled(Flex, Box, {
   },
 });
 
-export { StyledBox };
+const DisabledStylesBox = styled(StyledBox, {
+  opacity: 0.5,
+  '&:hover': {
+    cursor: 'not-allowed',
+    background: 'white',
+    [`& ${Text}`]: {
+      color: 'black',
+    },
+  },
+});
+
+export { StyledBox, DisabledStylesBox };

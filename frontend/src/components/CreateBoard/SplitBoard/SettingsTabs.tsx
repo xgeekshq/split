@@ -10,7 +10,7 @@ import Text from '@/components/Primitives/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import BoardConfigurations from './Configurations/BoardConfigurations';
+import BoardConfigurations from '../Configurations/BoardConfigurations';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 
 const StyledTextTab = styled(Text, {
@@ -39,6 +39,11 @@ const Settings = () => {
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
 
+  const handleChangeTab = (value: number) => {
+    if (haveError) return;
+    setCurrentTab(value);
+  };
+
   const {
     formState: { errors },
   } = useFormContext();
@@ -64,15 +69,16 @@ const Settings = () => {
           color="primary300"
           data-activetab={currentTab === 1}
           size="md"
-          onClick={!haveError ? () => setCurrentTab(1) : undefined}
+          onClick={() => handleChangeTab(1)}
         >
           Team/-Sub-teams configurations
         </StyledTextTab>
+
         <StyledTextTab
           color="primary300"
           data-activetab={currentTab === 2}
           size="md"
-          onClick={!haveError ? () => setCurrentTab(2) : undefined}
+          onClick={() => handleChangeTab(2)}
         >
           Configurations
         </StyledTextTab>
@@ -81,6 +87,7 @@ const Settings = () => {
         css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
         orientation="horizontal"
       />
+
       {currentTab === 1 && (
         <TeamSubTeamsConfigurations
           setTimesOpen={() => setTimesOpen(timesOpen + 1)}

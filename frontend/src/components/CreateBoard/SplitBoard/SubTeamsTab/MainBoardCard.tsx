@@ -14,7 +14,7 @@ import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Flex from '@/components/Primitives/Flex';
-import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
+import { TeamUserRoles } from '../../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {});

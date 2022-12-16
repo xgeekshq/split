@@ -12,7 +12,7 @@ import { User } from '@/types/user/user';
 import MainBoardCard from './MainBoardCard';
 import QuickEditSubTeams from './QuickEditSubTeams';
 import SelectTeam from './SelectTeam';
-import FakeMainBoardCard from '../fake/FakeSettingsTabs/partials/MainBoardCard';
+import FakeMainBoardCard from '../FakeSettingsTabs/partials/MainBoardCard';
 
 const StyledBox = styled(Flex, Box, {
   width: '100%',
