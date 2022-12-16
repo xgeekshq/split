@@ -21,6 +21,7 @@ const SettingsTabs = () => {
   const setToastState = useSetRecoilState(toastState);
 
   const handleChangeTab = (value: number) => {
+    if (haveError) return;
     setCurrentTab(value);
   };
 
@@ -52,7 +53,7 @@ const SettingsTabs = () => {
           color="primary300"
           data-activetab={currentTab === 1}
           size="md"
-          onClick={!haveError ? () => handleChangeTab(1) : undefined}
+          onClick={() => handleChangeTab(1)}
         >
           Participants
         </StyledTextTab>
@@ -60,7 +61,7 @@ const SettingsTabs = () => {
           color="primary300"
           data-activetab={currentTab === 2}
           size="md"
-          onClick={!haveError ? () => handleChangeTab(2) : undefined}
+          onClick={() => handleChangeTab(2)}
         >
           Configurations
         </StyledTextTab>
