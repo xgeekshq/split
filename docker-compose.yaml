@@ -19,6 +19,7 @@ services:
       - split-network
     depends_on:
       - mongo
+
   frontend:
     container_name: frontend
     restart: unless-stopped
@@ -31,10 +32,14 @@ services:
       - 3000:3000
     env_file:
       - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - split-network
     depends_on:
       - backend
+
   mongo2:
     container_name: mongo2
     image: mongo
@@ -73,10 +78,7 @@ services:
       - '6379:6379'
     env_file:
       - ./database/redis/.env
+
 networks:
   split-network:
     driver: bridge
-
-volumes:
-  mongo-data:
-    driver: local
