@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Droppable } from '@react-forked/dnd';
+import { Droppable } from '@hello-pangea/dnd';
 
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';

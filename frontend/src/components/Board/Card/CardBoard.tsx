@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Draggable } from '@react-forked/dnd';
+import { Draggable } from '@hello-pangea/dnd';
 
 import { styled } from '@/styles/stitches/stitches.config';
 

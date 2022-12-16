@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult, BeforeCapture } from '@react-forked/dnd';
+import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
 
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Flex';
