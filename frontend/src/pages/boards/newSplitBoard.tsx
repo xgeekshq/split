@@ -38,6 +38,7 @@ import {
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient } from 'react-query';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 const defaultBoard = {
   users: [],
@@ -129,13 +130,16 @@ const NewSplitBoard: NextPage = () => {
    */
   const handleBack = useCallback(() => {
     setIsLoading(true);
-    setBoardState(defaultBoard);
-    setSelectedTeam(undefined);
-    setHaveError(false);
+
     setBackButtonState(true);
     router.back();
-  }, [setBoardState, setSelectedTeam, setHaveError, router]);
+  }, [router]);
 
+  const handleCancelBtn = () => {
+    setIsLoading(true);
+
+    router.push(DASHBOARD_ROUTE);
+  };
   /**
    * Save board
    * @param title Board Title
@@ -185,6 +189,12 @@ const NewSplitBoard: NextPage = () => {
       setSelectedTeam(undefined);
       router.push('/boards');
     }
+
+    return () => {
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
+      setHaveError(false);
+    };
   }, [
     status,
     router,
@@ -195,6 +205,7 @@ const NewSplitBoard: NextPage = () => {
     allTeamsData,
     setSelectedTeam,
     setBoardState,
+    setHaveError,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;
@@ -246,7 +257,7 @@ const NewSplitBoard: NextPage = () => {
                     disabled={isBackButtonDisable}
                     type="button"
                     variant="lightOutline"
-                    onClick={handleBack}
+                    onClick={handleCancelBtn}
                   >
                     Cancel
                   </Button>

@@ -99,6 +99,7 @@ const SelectTeam = () => {
     <Flex direction="column" css={{ width: '100%' }}>
       <StyledBox
         css={{
+          minWidth: 0,
           width: '100%',
           pl: '$17',
           pr: '$16',

@@ -22,6 +22,7 @@ const StyledBox = styled(Flex, Box, {
   borderRadius: '$4',
   border: '1px solid $primary200',
   height: '$64',
+  minWidth: 0,
 });
 
 type BoxContainerProps = {
@@ -90,15 +91,18 @@ const TeamSubTeamsConfigurations = ({ previousTeam }: TeamSubTeamsConfigurations
             <Text color="primary300" size="xs" css={{ pb: '$2' }}>
               Stakeholders
             </Text>
-            <Text css={{ wordBreak: 'break-word' }} size="md">
+            <Text
+              css={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
+              size="md"
+            >
               {!haveError &&
                 stakeholders &&
                 stakeholders.length > 0 &&
-                stakeholders.map((value, index) =>
-                  index < stakeholders.length - 1
-                    ? `${value.firstName} ${value.lastName}, `
-                    : `${value.firstName} ${value.lastName}`,
-                )}
+                stakeholders.map((value) => `${value.firstName} ${value.lastName}`).join(', ')}
             </Text>
           </BoxContainer>
         )}
