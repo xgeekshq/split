@@ -117,7 +117,7 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
 export const handleAddComments = (board: BoardType, changes: AddCommentDto, user: User) => {
   // avoid read only error
   const boardData: BoardType = JSON.parse(JSON.stringify(board));
-  const { cardId, cardItemId, text } = changes;
+  const { cardId, cardItemId, text, anonymous } = changes;
   let columnIndex = 0;
 
   boardData.columns.forEach((item, index) => {
@@ -133,14 +133,14 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
   const commentObj = {
     text,
     createdBy: {
-      _id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      _id: !anonymous ? user.id : '12345',
+      firstName: !anonymous ? user.firstName : 'aaaaaa',
+      lastName: !anonymous ? user.lastName : 'aaaaaa',
       email: '',
       isSAdmin: false,
       joinedAt: '',
     },
-    anonymous: false,
+    anonymous,
     _id: placehodlerId,
     id: placehodlerId,
   };

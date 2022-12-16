@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Draggable } from '@react-forked/dnd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Draggable } from '@hello-pangea/dnd';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -10,6 +10,8 @@ import { cardBlur } from '@/helper/board/blurFilter';
 import { getCommentsFromCardGroup } from '@/helper/board/comments';
 import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
+import { onDragCardStart } from '@/store/card/atoms/card.atom';
+import { useRecoilValue } from 'recoil';
 import AddCardOrComment from '../AddCardOrComment';
 import Comments from '../Comment/Comments';
 import CardFooter from './CardFooter';
@@ -59,6 +61,7 @@ const CardBoard = React.memo<CardBoardProps>(
       [card],
     );
 
+    const draggedCard = useRecoilValue(onDragCardStart);
     const [isCommentsOpened, setOpenComments] = useState(false);
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -83,6 +86,13 @@ const CardBoard = React.memo<CardBoardProps>(
     const handleDeleting = () => {
       setDeleting(!deleting);
     };
+
+    useEffect(() => {
+      if (card._id === draggedCard) {
+        setOpenComments(false);
+      }
+    }, [card._id, draggedCard]);
+
     return (
       <Draggable key={card._id} draggableId={card._id} index={index} isDragDisabled={isSubmited}>
         {(provided) => (

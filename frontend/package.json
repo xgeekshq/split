@@ -13,8 +13,8 @@
 		"jest": "jest"
 	},
 	"dependencies": {
+		"@hello-pangea/dnd": "^16.2.0",
 		"@hookform/resolvers": "^2.8.8",
-		"@modulz/radix-icons": "^4.0.0",
 		"@radix-ui/colors": "^0.1.8",
 		"@radix-ui/react-accordion": "^0.1.6",
 		"@radix-ui/react-alert-dialog": "^0.1.7",
@@ -32,7 +32,6 @@
 		"@radix-ui/react-tabs": "^0.1.5",
 		"@radix-ui/react-toast": "^0.1.1",
 		"@radix-ui/react-tooltip": "^0.1.7",
-		"@react-forked/dnd": "^14.0.2",
 		"@stitches/react": "^1.2.7",
 		"@testing-library/dom": "^8.13.0",
 		"@testing-library/react": "^12.1.5",

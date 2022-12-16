@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult } from '@react-forked/dnd';
+import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
 
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Flex';
@@ -11,6 +11,7 @@ import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { onDragCardStart } from '@/store/card/atoms/card.atom';
 
 type Props = {
   userId: string;
@@ -20,11 +21,16 @@ type Props = {
 const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
   const { updateCardPosition, mergeCards } = useCards();
   const setToastState = useSetRecoilState(toastState);
+  const setOnDragCard = useSetRecoilState(onDragCardStart);
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
     [board],
   );
+
+  const onDragStart = ({ draggableId }: BeforeCapture) => {
+    setOnDragCard(draggableId);
+  };
 
   const handleCombine = (
     combineDroppableId: string,
@@ -91,12 +97,13 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
       };
 
       updateCardPosition.mutate(changes);
+      setOnDragCard('');
     }
   };
 
   return (
     <Flex css={{ width: '100%' }} gap="24">
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onBeforeCapture={onDragStart}>
         {board.columns.map((column, index) => (
           <Column
             key={column._id}
