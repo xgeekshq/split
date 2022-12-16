@@ -53,6 +53,10 @@ FROM node:$TAG As production
 # Copy the bundled code from the build stage to the production image
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./package.json
+
+EXPOSE 3200
+ENV PORT 3200
 
 # Start the server using the production build
 CMD npm run start:prod
