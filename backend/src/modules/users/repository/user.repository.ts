@@ -45,7 +45,22 @@ export class UserRepository
 		return this.findOneAndRemove(userId, withSession);
 	}
 
-	getAllWithPagination(page: number, size: number) {
+	getAllWithPagination(page: number, size: number, searchUser?: string) {
+		if (searchUser) {
+			return this.model
+				.find({
+					$or: [
+						{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+						{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+						{ email: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } }
+					]
+				})
+				.skip(page * size)
+				.limit(size)
+				.sort({ firstName: 1, lastName: 1 })
+				.exec();
+		}
+
 		return this.model
 			.find()
 			.skip(page * size)

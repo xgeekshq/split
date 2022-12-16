@@ -26,7 +26,7 @@ export class GetUserApplicationImpl implements GetUserApplication {
 		return this.getUserService.getAllUsersWithPagination(page, size);
 	}
 
-	getAllUsersWithTeams(page?: number, size?: number) {
-		return this.getUserService.getAllUsersWithTeams(page, size);
+	getAllUsersWithTeams(page?: number, size?: number, searchUser?: string) {
+		return this.getUserService.getAllUsersWithTeams(page, size, searchUser);
 	}
 }

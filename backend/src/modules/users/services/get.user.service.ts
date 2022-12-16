@@ -42,12 +42,12 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.findAll({ password: 0, currentHashedRefreshToken: 0 });
 	}
 
-	getAllUsersWithPagination(page?: number, size?: number) {
-		return this.userRepository.getAllWithPagination(page, size);
+	getAllUsersWithPagination(page?: number, size?: number, searchUser?: string) {
+		return this.userRepository.getAllWithPagination(page, size, searchUser);
 	}
 
-	async getAllUsersWithTeams(page = 0, size = 15) {
-		const users = await this.getAllUsersWithPagination(page, size);
+	async getAllUsersWithTeams(page = 0, size = 15, searchUser?: string) {
+		const users = await this.getAllUsersWithPagination(page, size, searchUser);
 
 		const count = await this.userRepository.countDocuments();
 		const hasNextPage = page + 1 < Math.ceil(count / size);
