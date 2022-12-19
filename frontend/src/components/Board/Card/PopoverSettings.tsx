@@ -36,7 +36,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   };
 
   return (
-    <PopoverContent portalled={false}>
+    <PopoverContent>
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setEditCard}>
           <Icon name="edit" />

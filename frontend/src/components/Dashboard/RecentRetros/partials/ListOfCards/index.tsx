@@ -8,7 +8,7 @@ import BoardType from '@/types/board/board';
 import { LastUpdatedText } from './styles';
 
 type ListOfCardsProp = {
-  data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }>;
+  data: InfiniteData<{ boards: BoardType[]; hasNextPage: boolean }> | undefined;
   userId: string;
   isLoading: boolean;
   fetchBoards: UseInfiniteQueryResult<
@@ -27,7 +27,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 
   const boardsSplitedByDay = useMemo(() => {
     const boardsByDay = new Map<string, BoardType[]>();
-    data.pages.forEach((p) => {
+    data?.pages.forEach((p) => {
       p.boards.forEach((board) => {
         const date = new Date(board.updatedAt).toDateString();
         const boardsForDay = boardsByDay.get(date);
@@ -39,7 +39,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
       });
     });
     return boardsByDay;
-  }, [data.pages]);
+  }, [data?.pages]);
 
   const onScroll = () => {
     if (scrollRef.current) {
