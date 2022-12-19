@@ -13,6 +13,7 @@ export interface GetUserApplication {
 
 	getAllUsersWithTeams(
 		page?: number,
-		size?: number
+		size?: number,
+		searchUser?: string
 	): Promise<{ userWithTeams: LeanDocument<UserWithTeams>[]; hasNextPage: boolean; page: number }>;
 }

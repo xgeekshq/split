@@ -94,8 +94,8 @@ export default class UsersController {
 		type: InternalServerErrorResponse
 	})
 	@Get('teams')
-	getAllUsersWithTeams(@Query() { page, size }: PaginationParams) {
-		return this.getUserApp.getAllUsersWithTeams(page, size);
+	getAllUsersWithTeams(@Query() { page, size, searchUser }: PaginationParams) {
+		return this.getUserApp.getAllUsersWithTeams(page, size, searchUser);
 	}
 
 	@ApiOperation({ summary: 'Update user is super admin' })
