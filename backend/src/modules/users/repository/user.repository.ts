@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User, { UserDocument } from '../entities/user.schema';
 import { UserRepositoryInterface } from './user.repository.interface';
@@ -46,23 +46,20 @@ export class UserRepository
 	}
 
 	getAllWithPagination(page: number, size: number, searchUser?: string) {
+		let query: FilterQuery<UserDocument>;
+
 		if (searchUser) {
-			return this.model
-				.find({
-					$or: [
-						{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
-						{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
-						{ email: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } }
-					]
-				})
-				.skip(page * size)
-				.limit(size)
-				.sort({ firstName: 1, lastName: 1 })
-				.exec();
+			query = {
+				$or: [
+					{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+					{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+					{ email: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } }
+				]
+			};
 		}
 
 		return this.model
-			.find()
+			.find(query)
 			.skip(page * size)
 			.limit(size)
 			.sort({ firstName: 1, lastName: 1 })
