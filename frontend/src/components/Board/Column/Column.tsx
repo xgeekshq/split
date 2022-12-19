@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
 
 import Flex from '@/components/Primitives/Flex';
@@ -33,12 +33,6 @@ const Column = React.memo<ColumnBoardType>(
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
 
     const filteredCards = useCallback(() => {
-      if (filter) {
-        setFilteredColumns((prev) => {
-          if (prev.includes(columnId)) return prev;
-          return [...prev, columnId];
-        });
-      }
       switch (filter) {
         case 'asc':
           return [...cards].sort((a, b) => {
@@ -53,17 +47,27 @@ const Column = React.memo<ColumnBoardType>(
             return votesB - votesA;
           });
         default:
-          setFilteredColumns((prev) => {
-            const newValues = [...prev];
-            const index = newValues.indexOf(columnId);
-            if (index > -1) {
-              newValues.splice(index, 1);
-            }
-            return newValues;
-          });
           return cards;
       }
-    }, [cards, columnId, filter, setFilteredColumns]);
+    }, [cards, filter]);
+
+    useEffect(() => {
+      if (filter) {
+        setFilteredColumns((prev) => {
+          if (prev.includes(columnId)) return prev;
+          return [...prev, columnId];
+        });
+      } else {
+        setFilteredColumns((prev) => {
+          const newValues = [...prev];
+          const index = newValues.indexOf(columnId);
+          if (index > -1) {
+            newValues.splice(index, 1);
+          }
+          return newValues;
+        });
+      }
+    }, [columnId, filter, setFilteredColumns]);
 
     return (
       <OuterContainer>

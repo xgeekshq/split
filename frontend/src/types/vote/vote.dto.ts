@@ -8,4 +8,6 @@ export default interface VoteDto {
   socketId?: string;
 
   isCardGroup: boolean;
+
+  count: number;
 }
