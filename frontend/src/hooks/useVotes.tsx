@@ -74,14 +74,12 @@ const useVotes = () => {
 
   const updateBoardUser = (boardData: BoardType, action: Action) => {
     boardData.users = boardData.users.map((boardUser) => {
-      if (boardUser.user._id === userId) {
-        return {
-          ...boardUser,
-          votesCount: action === Action.Add ? boardUser.votesCount + 1 : boardUser.votesCount - 1,
-        };
-      }
+      if (boardUser.user._id !== userId) return boardUser;
 
-      return boardUser;
+      return {
+        ...boardUser,
+        votesCount: action === Action.Add ? boardUser.votesCount + 1 : boardUser.votesCount - 1,
+      };
     });
   };
 
