@@ -50,7 +50,7 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
       queryClient.invalidateQueries('boards/dashboard');
     });
   }, [socket, queryClient]);
-  if (!data || isEmpty(data?.pages[0].boards)) return <EmptyBoards />;
+  if (!isFetching && (!data || isEmpty(data?.pages[0].boards))) return <EmptyBoards />;
   return (
     <ListOfCards
       data={data}

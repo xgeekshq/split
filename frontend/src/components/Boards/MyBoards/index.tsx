@@ -97,7 +97,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     }
   };
 
-  if (isEmpty(dataByTeamAndDate.boardsTeamAndDate.size)) {
+  if (isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) {
     return <EmptyBoards />;
   }
 

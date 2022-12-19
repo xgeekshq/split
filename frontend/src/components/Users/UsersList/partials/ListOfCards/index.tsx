@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-
-import { DotsLoading } from '@/components/loadings/DotsLoading';
 import Flex from '@/components/Primitives/Flex';
 import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
@@ -11,6 +9,7 @@ import { useInfiniteQuery } from 'react-query';
 import { getAllUsersWithTeams } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import LoadingPage from '@/components/loadings/LoadingPage';
 import { ScrollableContent } from '../../../../Boards/MyBoards/styles';
 import CardBody from '../CardUser/CardBody';
 
@@ -108,11 +107,7 @@ const ListOfCards = React.memo(() => {
           ))}
         </Flex>
 
-        {isLoading && (
-          <Flex justify="center">
-            <DotsLoading />
-          </Flex>
-        )}
+        {isLoading && <LoadingPage />}
       </ScrollableContent>
     </>
   );

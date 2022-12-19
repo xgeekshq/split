@@ -1,9 +1,6 @@
 import { ReactElement, Suspense } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-
-import { getBoardsRequest } from '@/api/boardService';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -30,16 +27,6 @@ export default Boards;
 
 Boards.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-  async (context: GetServerSidePropsContext) => {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchInfiniteQuery('boards', ({ pageParam = 0 }) =>
-      getBoardsRequest(pageParam, context),
-    );
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  },
-);
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
+  props: {},
+}));
