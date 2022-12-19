@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { DotsLoading } from '@/components/loadings/DotsLoading';
 import Flex from '@/components/Primitives/Flex';
@@ -18,10 +18,11 @@ const ListOfCards = React.memo(() => {
   const setToastState = useSetRecoilState(toastState);
   // const setUsersWithTeamsState = useSetRecoilState(usersWithTeamsState);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [search, setSearch] = useState<string>('');
 
   const fetchUsers = useInfiniteQuery(
     'usersWithTeams',
-    ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam),
+    ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, search),
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -65,6 +66,17 @@ const ListOfCards = React.memo(() => {
     }
   };
 
+  const handleSearchUser = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUsers.refetch();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [search, fetchUsers]);
+
   return (
     <>
       <Flex>
@@ -72,7 +84,14 @@ const ListOfCards = React.memo(() => {
           {users.length} registered users
         </Text>
         <Flex css={{ width: '460px' }} direction="column" gap={16}>
-          <SearchInput icon="search" iconPosition="left" id="search" placeholder="Search user" />
+          <SearchInput
+            icon="search"
+            iconPosition="left"
+            id="search"
+            placeholder="Search user"
+            currentValue={search}
+            handleChange={handleSearchUser}
+          />
         </Flex>
       </Flex>
       <ScrollableContent
