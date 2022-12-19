@@ -102,11 +102,6 @@ const BoardSettings = ({
   // Method to close dialog and reset switches state
   const handleClose = () => {
     setIsOpen(false);
-    setData(initialData);
-    setSwitchesState({
-      maxVotes: false,
-      responsible: false,
-    });
   };
 
   /**
@@ -116,18 +111,20 @@ const BoardSettings = ({
    * if yes set the input with this value
    */
   useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      title: board?.title,
-      maxVotes: board?.maxVotes,
-    }));
-    methods.setValue('title', board.title);
-    methods.setValue('maxVotes', board.maxVotes ?? null);
+    if (!isOpen && board) {
+      setData((prev) => ({
+        ...prev,
+        title: board?.title,
+        maxVotes: board?.maxVotes,
+      }));
+      methods.setValue('title', board.title);
+      methods.setValue('maxVotes', board.maxVotes ?? null);
 
-    setSwitchesState((prev) => ({ ...prev, maxVotes: !isEmpty(data.maxVotes) }));
+      setSwitchesState((prev) => ({ ...prev, maxVotes: !isEmpty(board.maxVotes) }));
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board]);
+  }, [board, isOpen]);
 
   const handleHideCardsChange = (checked: boolean) => {
     setData((prev) => ({
