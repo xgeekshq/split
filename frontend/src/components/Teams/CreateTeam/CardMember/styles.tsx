@@ -24,6 +24,7 @@ const PopoverTriggerStyled = styled(PopoverTrigger, {
         '&:hover': {
           backgroundColor: '$primary500',
           color: 'white',
+          cursor: 'pointer',
         },
       },
       true: {
