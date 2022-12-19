@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Flex from '@/components/Primitives/Flex';
 import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
