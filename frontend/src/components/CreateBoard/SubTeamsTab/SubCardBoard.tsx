@@ -146,19 +146,20 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
                 />
               </Flex>
             )}
-
-            <Text color="primary300" css={{ mx: '$8' }} size="sm">
-              {responsible?.firstName} {responsible?.lastName}
-            </Text>
-            <Avatar
-              css={{ position: 'relative' }}
-              fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
-              size={32}
-              colors={{
-                bg: highlight2Colors.highlight2Lighter,
-                fontColor: highlight2Colors.highlight2Dark,
-              }}
-            />
+            <Flex>
+              <Text color="primary300" css={{ mx: '$8' }} size="sm">
+                {responsible?.firstName} {responsible?.lastName}
+              </Text>
+              <Avatar
+                css={{ position: 'relative' }}
+                fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
+                size={32}
+                colors={{
+                  bg: highlight2Colors.highlight2Lighter,
+                  fontColor: highlight2Colors.highlight2Dark,
+                }}
+              />
+            </Flex>
           </Flex>
         </Flex>
         <Flex align="center" gap="8">

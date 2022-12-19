@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
@@ -28,7 +28,7 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
       fetchTeamsOfUser: { data: teams },
     } = useTeam({ autoFetchTeam: false });
 
-    const [haveError, setHaveError] = useRecoilState(createBoardError);
+    const haveError = useRecoilValue(createBoardError);
 
     useEffect(() => {
       const isTeamsValid = Array.isArray(teams) && teams.length > 0;
@@ -55,12 +55,12 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
       }
 
       return () => setStakeholders([]);
-    }, [teams, selectedTeam, setHaveError]);
+    }, [teams, selectedTeam]);
 
     return (
       <Flex css={{ mt: '$32' }} direction="column">
         <Flex css={{ width: '100%' }} gap="22" justify="between">
-          <SelectTeam />
+          <SelectTeam previousTeam={previousTeam} />
 
           {haveError ? (
             <BoxContainer color="$background">
@@ -79,11 +79,7 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
               <QuickEditSubTeams team={selectedTeam} />
             </Flex>
 
-            {haveError ? (
-              <FakeMainBoardCard />
-            ) : (
-              <MainBoardCard team={selectedTeam} previousTeam={previousTeam} />
-            )}
+            {haveError ? <FakeMainBoardCard /> : <MainBoardCard team={selectedTeam} />}
           </>
         ) : (
           <Flex css={{ mt: '$36' }}>

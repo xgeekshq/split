@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { SetterOrUpdater, useRecoilState } from 'recoil';
+import React from 'react';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
 import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
@@ -12,9 +12,7 @@ import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Flex from '@/components/Primitives/Flex';
-import { TeamUserRoles } from '../../../utils/enums/team.user.roles';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {});
@@ -26,7 +24,6 @@ interface SubBoardListProp {
 
 interface MainBoardCardInterface {
   team: Team;
-  previousTeam?: string;
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => (
@@ -37,60 +34,20 @@ const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) 
   </Flex>
 ));
 
-const MainBoardCard = React.memo(({ team, previousTeam }: MainBoardCardInterface) => {
+const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
   /**
    * Recoil Atoms
    */
-  const [haveError, setHaveError] = useRecoilState(createBoardError);
+  const haveError = useRecoilValue(createBoardError);
 
   const {
     handleAddTeam,
     handleRemoveTeam,
-    handleSplitBoards,
     createBoardData: { board },
     setCreateBoardData,
     canAdd,
     canReduce,
-    teamMembers,
   } = useCreateBoard(team);
-
-  const teamMembersCount = teamMembers?.length ?? 0;
-
-  useEffect(() => {
-    if (teamMembersCount < 4 && board.dividedBoards.length) {
-      setHaveError(true);
-      return;
-    }
-
-    const maxUsersCount = Math.ceil(teamMembersCount / 2);
-    const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
-
-    const users = team.users.flatMap((teamUser) => {
-      if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
-      return [
-        {
-          user: teamUser.user._id,
-          role: BoardUserRoles.MEMBER,
-          votesCount: 0,
-        },
-      ];
-    });
-
-    if (board.dividedBoards.length === 0 || previousTeam !== team.name) {
-      setCreateBoardData((prev) => ({
-        ...prev,
-        users,
-        board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
-        count: {
-          ...prev.count,
-          teamsCount,
-          maxUsersCount,
-        },
-      }));
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team]);
 
   return (
     <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">

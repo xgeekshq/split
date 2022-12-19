@@ -10,7 +10,7 @@ import { Team } from '../types/team/team';
 import { TeamUser } from '../types/team/team.user';
 import { BoardUserRoles } from '../utils/enums/board.user.roles';
 
-const useCreateBoard = (team: Team) => {
+const useCreateBoard = (team?: Team) => {
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
   const resetBoardState = useResetRecoilState(createBoardDataState);
 
@@ -19,8 +19,8 @@ const useCreateBoard = (team: Team) => {
   const minTeams = 2;
   const MIN_MEMBERS = 4;
 
-  const teamMembers = team.users.filter((teamUser) => teamUser.role !== TeamUserRoles.STAKEHOLDER);
-
+  const teamMembers = team?.users.filter((teamUser) => teamUser.role !== TeamUserRoles.STAKEHOLDER);
+  const teamMembersLength = teamMembers?.length ?? 0;
   const dividedBoardsCount = board.dividedBoards.length;
 
   const generateSubBoard = useCallback(
@@ -53,7 +53,7 @@ const useCreateBoard = (team: Team) => {
 
   const generateSubBoards = useCallback(
     (maxTeams: number, splitUsers: BoardUserToAdd[][], subBoards: BoardToAdd[]) => {
-      if (splitUsers && team.users.length >= MIN_MEMBERS) {
+      if (splitUsers && (team?.users.length ?? 0) >= MIN_MEMBERS) {
         new Array(maxTeams).fill(0).forEach((_, i) => {
           const newBoard = generateSubBoard(i + 1);
           const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
@@ -138,12 +138,15 @@ const useCreateBoard = (team: Team) => {
 
   const handleSplitBoards = useCallback(
     (maxTeams: number) => {
+      if (!teamMembers) {
+        return [];
+      }
       const subBoards: BoardToAdd[] = [];
       const splitUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
       let availableUsers = [...teamMembers];
-      const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
-      let membersWithoutTeam = teamMembers.length;
+      const usersPerTeam = Math.floor(teamMembersLength / maxTeams);
+      let membersWithoutTeam = teamMembersLength;
 
       new Array(maxTeams).fill(0).forEach((_, i) => {
         let numberOfUsersByGroup = usersPerTeam;
@@ -165,18 +168,18 @@ const useCreateBoard = (team: Team) => {
 
       return subBoards;
     },
-    [generateSubBoards, getRandomGroup, teamMembers],
+    [generateSubBoards, getRandomGroup, teamMembers, teamMembersLength],
   );
 
   const canAdd = useMemo(() => {
     if (
-      dividedBoardsCount === teamMembers.length ||
-      dividedBoardsCount === Math.floor(teamMembers.length / 2)
+      dividedBoardsCount === teamMembersLength ||
+      dividedBoardsCount === Math.floor(teamMembersLength / 2)
     ) {
       return false;
     }
     return true;
-  }, [dividedBoardsCount, teamMembers.length]);
+  }, [dividedBoardsCount, teamMembersLength]);
 
   const canReduce = useMemo(() => {
     if (dividedBoardsCount <= minTeams) {
@@ -187,7 +190,7 @@ const useCreateBoard = (team: Team) => {
 
   const handleAddTeam = () => {
     if (!canAdd) return;
-    const countUsers = Math.ceil(teamMembers.length / (dividedBoardsCount + 1));
+    const countUsers = Math.ceil(teamMembersLength / (dividedBoardsCount + 1));
 
     setCreateBoardData((prev) => ({
       ...prev,
@@ -201,7 +204,7 @@ const useCreateBoard = (team: Team) => {
 
   const handleRemoveTeam = () => {
     if (!canReduce) return;
-    const countUsers = Math.ceil(teamMembers.length / (dividedBoardsCount - 1));
+    const countUsers = Math.ceil(teamMembersLength / (dividedBoardsCount - 1));
     setCreateBoardData((prev) => ({
       ...prev,
       count: { ...prev.count, maxUsersCount: countUsers, teamsCount: dividedBoardsCount - 1 },

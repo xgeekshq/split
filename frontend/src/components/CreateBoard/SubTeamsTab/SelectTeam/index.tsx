@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
@@ -12,6 +12,8 @@ import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
 import { OptionType } from '@/components/Boards/Filters/FilterBoards';
 import { components, ControlProps } from 'react-select';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import useCreateBoard from '@/hooks/useCreateBoard';
 import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styles';
 
 const Control = ({ children, ...props }: ControlProps) => (
@@ -28,8 +30,20 @@ const Control = ({ children, ...props }: ControlProps) => (
   </components.Control>
 );
 
-const SelectTeam = () => {
+type SelectTeamProps = {
+  previousTeam?: string;
+};
+
+const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const { data: session } = useSession({ required: true });
+
+  /**
+   * Recoil Atoms and Hooks
+   */
+  const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
+  const setHaveError = useSetRecoilState(createBoardError);
+  const teams = useRecoilValue(teamsOfUser);
+  const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
 
   const {
     setValue,
@@ -38,18 +52,13 @@ const SelectTeam = () => {
     formState: { errors },
   } = useFormContext();
 
-  /**
-   * Recoil Atoms and Hooks
-   */
-  const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
-  const setHaveError = useSetRecoilState(createBoardError);
-  const teams = useRecoilValue(teamsOfUser);
-
   const message = errors.team?.message;
   const teamValueOnForm = getValues().team;
   const isValueEmpty = isEmpty(teamValueOnForm);
 
-  const currentState = useMemo(() => {
+  const teamMembersCount = teamMembers?.length ?? 0;
+
+  const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';
     if (isValueEmpty) return 'default';
     if (!message && !isValueEmpty) return 'valid';
@@ -76,24 +85,68 @@ const SelectTeam = () => {
     [teams],
   );
 
+  const verifyIfCanCreateBoard = useCallback(() => {
+    if (!selectedTeam) {
+      return true;
+    }
+
+    const haveMinMembers = !!(
+      selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      MIN_MEMBERS
+    );
+
+    const isAdminOrStakeholder =
+      !!selectedTeam.users?.find(
+        (teamUser) =>
+          teamUser.user._id === session?.user.id &&
+          [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+      ) || session?.user.isSAdmin;
+
+    return !haveMinMembers || !isAdminOrStakeholder;
+  }, [selectedTeam, session?.user.id, session?.user.isSAdmin]);
+
+  const createBoard = useCallback(() => {
+    if (!selectedTeam) {
+      return;
+    }
+    const maxUsersCount = Math.ceil(teamMembersCount / 2);
+    const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
+
+    const users = selectedTeam.users.flatMap((teamUser) => {
+      if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
+      return [
+        {
+          user: teamUser.user._id,
+          role: BoardUserRoles.MEMBER,
+          votesCount: 0,
+        },
+      ];
+    });
+
+    if (previousTeam !== selectedTeam.name) {
+      setCreateBoardData((prev) => ({
+        ...prev,
+        users,
+        board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+        count: {
+          ...prev.count,
+          teamsCount,
+          maxUsersCount,
+        },
+      }));
+    }
+  }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
+
   useEffect(() => {
     if (selectedTeam) {
-      const haveMinMembers = !!(
-        selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-        MIN_MEMBERS
-      );
+      const canNotCreateBoard = verifyIfCanCreateBoard();
+      setHaveError(canNotCreateBoard);
 
-      const isAdminOrStakeholder = selectedTeam
-        ? !!selectedTeam.users.find(
-            (teamUser) =>
-              teamUser.user._id === session?.user.id &&
-              [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-          ) || session?.user.isSAdmin
-        : false;
-
-      setHaveError(!isAdminOrStakeholder || !haveMinMembers);
+      if (!canNotCreateBoard) {
+        createBoard();
+      }
     }
-  }, [selectedTeam, session?.user.id, session?.user.isSAdmin, setHaveError]);
+  }, [createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
@@ -107,7 +160,8 @@ const SelectTeam = () => {
           height: '$64',
           borderRadius: '$4',
           backgroundColor: 'white',
-          border: currentState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
+          border:
+            currentSelectTeamState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
         }}
         direction="column"
         elevation="1"
@@ -141,11 +195,13 @@ const SelectTeam = () => {
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            {currentState === 'error' && <Icon css={{ width: '$24', height: '$24' }} name="info" />}
+            {currentSelectTeamState === 'error' && (
+              <Icon css={{ width: '$24', height: '$24' }} name="info" />
+            )}
             <Text
               hint
               css={{
-                color: currentState === 'error' ? '$dangerBase' : '$primary300',
+                color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300',
               }}
             >
               {message}
