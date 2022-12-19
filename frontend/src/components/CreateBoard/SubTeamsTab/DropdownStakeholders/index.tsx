@@ -3,18 +3,18 @@ import { ReactNode } from 'react';
 import { User } from '@/types/user/user';
 import { Dropdown, DropdownBtn, DropdownContent, DropdownItem } from './styles';
 
-type PopoverStakeholdersProps = {
+type DropdownStakeholdersProps = {
   children: ReactNode;
   stakeholders: User[];
 };
 
-const PopoverStakeholders = ({ children, stakeholders }: PopoverStakeholdersProps) => (
+const DropdownStakeholders = ({ children, stakeholders }: DropdownStakeholdersProps) => (
   <Dropdown>
     <DropdownBtn>{children}</DropdownBtn>
     <DropdownContent>
       {stakeholders.map((stakeholder) => (
         <DropdownItem key={stakeholder._id} justify="between" align="center">
-          <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
+          <Text size="sm" weight="medium">
             {`${stakeholder.firstName} ${stakeholder.lastName} `}
           </Text>
           <Text size="xs" color="primary300">{`(${stakeholder.email})`}</Text>
@@ -24,4 +24,4 @@ const PopoverStakeholders = ({ children, stakeholders }: PopoverStakeholdersProp
   </Dropdown>
 );
 
-export default PopoverStakeholders;
+export default DropdownStakeholders;

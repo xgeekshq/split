@@ -42,6 +42,10 @@ export const selectStyles = {
     ...base,
     paddingLeft: 0,
   }),
+  indicatorContainer: (base: CSSObjectWithLabel) => ({
+    ...base,
+    paddingTop: 0,
+  }),
 };
 
 const StyledSelect = styled(Select, {});

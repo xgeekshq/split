@@ -86,83 +86,99 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
           pr: '$24',
         }}
       >
-        <Flex align="center">
+        <Flex align="center" justify="start">
           <Text heading="5">{board.title}</Text>
+        </Flex>
+
+        <Flex align="center" justify="start">
           <Flex align="center">
-            <Text css={{ ml: '$40', mr: '$8' }}>Responsible Lottery</Text>
+            <Text css={{ mr: '$8' }}>Responsible Lottery</Text>
             <Separator
               css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
               orientation="vertical"
             />
-            {users.length <= 1 ? (
-              <Flex
-                align="center"
-                justify="center"
+          </Flex>
+          {users.length <= 1 ? (
+            <Flex
+              align="center"
+              justify="center"
+              css={{
+                height: '$24',
+                width: '$24',
+                borderRadius: '$round',
+                border: '1px solid $colors$primary400',
+                ml: '$12',
+                opacity: '0.2',
+              }}
+              onClick={handleLottery}
+            >
+              <Icon
+                name="wand"
                 css={{
-                  height: '$24',
-                  width: '$24',
-                  borderRadius: '$round',
-                  border: '1px solid $colors$primary400',
-                  ml: '$12',
-                  opacity: '0.2',
-                }}
-                onClick={handleLottery}
-              >
-                <Icon
-                  name="wand"
-                  css={{
-                    width: '$12',
-                    height: '$12',
-                  }}
-                />
-              </Flex>
-            ) : (
-              <Flex
-                align="center"
-                justify="center"
-                css={{
-                  height: '$24',
-                  width: '$24',
-                  borderRadius: '$round',
-                  border: '1px solid $colors$primary400',
-                  ml: '$12',
-                  cursor: 'pointer',
-
-                  transition: 'all 0.2s ease-in-out',
-
-                  '&:hover': {
-                    backgroundColor: '$primary400',
-                    color: 'white',
-                  },
-                }}
-                onClick={handleLottery}
-              >
-                <Icon
-                  name="wand"
-                  css={{
-                    width: '$12',
-                    height: '$12',
-                  }}
-                />
-              </Flex>
-            )}
-            <Flex>
-              <Text color="primary300" css={{ mx: '$8' }} size="sm">
-                {responsible?.firstName} {responsible?.lastName}
-              </Text>
-              <Avatar
-                css={{ position: 'relative' }}
-                fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
-                size={32}
-                colors={{
-                  bg: highlight2Colors.highlight2Lighter,
-                  fontColor: highlight2Colors.highlight2Dark,
+                  width: '$12',
+                  height: '$12',
                 }}
               />
             </Flex>
+          ) : (
+            <Flex
+              align="center"
+              justify="center"
+              css={{
+                height: '$24',
+                width: '$24',
+                borderRadius: '$round',
+                border: '1px solid $colors$primary400',
+                ml: '$12',
+                cursor: 'pointer',
+
+                transition: 'all 0.2s ease-in-out',
+
+                '&:hover': {
+                  backgroundColor: '$primary400',
+                  color: 'white',
+                },
+              }}
+              onClick={handleLottery}
+            >
+              <Icon
+                name="wand"
+                css={{
+                  width: '$12',
+                  height: '$12',
+                }}
+              />
+            </Flex>
+          )}
+          <Flex align="center">
+            <Flex css={{ width: '100%' }}>
+              <Text
+                color="primary300"
+                css={{
+                  mx: '$8',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  width: '$100',
+                }}
+                size="sm"
+              >
+                {responsible?.firstName} {responsible?.lastName}
+              </Text>
+            </Flex>
+            <Avatar
+              css={{ position: 'relative' }}
+              fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
+              size={32}
+              colors={{
+                bg: highlight2Colors.highlight2Lighter,
+                fontColor: highlight2Colors.highlight2Dark,
+              }}
+            />
           </Flex>
         </Flex>
-        <Flex align="center" gap="8">
+
+        <Flex align="center" gap="8" justify="center">
           <Text size="sm">Sub team {index + 1}</Text>
           <CardAvatars listUsers={board.users} responsible={false} teamAdmins={false} userId="1" />
         </Flex>

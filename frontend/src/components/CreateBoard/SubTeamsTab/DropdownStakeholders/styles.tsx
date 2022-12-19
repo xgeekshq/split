@@ -32,18 +32,20 @@ const DropdownBtn = styled('button', {
   color: 'white',
   border: 'none',
   cursor: 'pointer',
+  width: ' 100%',
   padding: 0,
   minWidth: 0,
   '&:hover': {
     display: 'block',
-    width: ' 100%',
-    minWidth: 0,
   },
 });
 
 const DropdownItem = styled(Flex, {
   height: '$36',
   py: '$8',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
 });
 
 export { Dropdown, DropdownBtn, DropdownContent, DropdownItem };

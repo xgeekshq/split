@@ -1,7 +1,7 @@
 import { User } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
 import BoxContainer from '../BoxContainer';
-import PopoverStakeholders from '../PopoverStakeholders';
+import DropdownStakeholders from '../DropdownStakeholders';
 
 type StakeholdersBoxProps = {
   haveError: boolean;
@@ -33,9 +33,9 @@ const StakeholdersNames = ({ haveError, stakeholders }: StakeholdersBoxProps) =>
 const StakeholdersBox = ({ haveError, stakeholders }: StakeholdersBoxProps) => (
   <>
     {stakeholders.length > 0 ? (
-      <PopoverStakeholders stakeholders={stakeholders}>
+      <DropdownStakeholders stakeholders={stakeholders}>
         <StakeholdersNames haveError={haveError} stakeholders={stakeholders} />
-      </PopoverStakeholders>
+      </DropdownStakeholders>
     ) : (
       <StakeholdersNames haveError={haveError} stakeholders={stakeholders} />
     )}
