@@ -178,7 +178,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
                           zIndex: '30',
                           '& svg': { size: '$16' },
                           right: 0,
-                          top: '-22px',
+                          top: '$-22',
                         }}
                         gap="8"
                       >

@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
@@ -7,7 +7,6 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import { getTeamsOfUser } from '@/api/teamService';
 import useTeam from '@/hooks/useTeam';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
