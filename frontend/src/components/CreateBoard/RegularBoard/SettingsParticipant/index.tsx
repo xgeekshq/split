@@ -1,12 +1,12 @@
 import Flex from '@/components/Primitives/Flex';
-
-import Text from '@/components/Primitives/Text';
-import { useState } from 'react';
 import {
   RadioGroupIndicator,
   RadioGroupItem,
   RadioGroupRoot,
 } from '@/components/Primitives/RadioGroup';
+
+import Text from '@/components/Primitives/Text';
+import { useState } from 'react';
 import { FormStyled, LabelStyled } from './styles';
 
 const SettingsParticipant = () => {

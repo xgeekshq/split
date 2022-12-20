@@ -13,4 +13,8 @@ export class PaginationParams {
 	@IsNumber()
 	@Min(1)
 	size?: number;
+
+	@IsOptional()
+	@Type(() => String)
+	searchUser?: string;
 }

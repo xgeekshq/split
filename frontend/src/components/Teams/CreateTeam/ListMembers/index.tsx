@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
@@ -22,10 +22,10 @@ import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
-import useTeam from '@/hooks/useTeam';
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+import useTeam from '@/hooks/useTeam';
 import SearchInput from './SearchInput';
 import { ButtonAddMember, ScrollableContent } from './styles';
 
@@ -48,6 +48,9 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const [usersList, setUsersListState] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
 
+  const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+
   const setToastState = useSetRecoilState(toastState);
 
   // References
@@ -64,24 +67,40 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   };
 
   const handleChecked = (id: string) => {
-    const updateCheckedUser = usersList?.map((user) =>
+    const updateCheckedUser = usersList.map((user) =>
       user._id === id ? { ...user, isChecked: !user.isChecked } : user,
     );
 
     setUsersListState(updateCheckedUser);
   };
 
+  // Update selectAll button when list is all checked
+  useEffect(() => {
+    setIsCheckAll(!usersList.map((user) => user.isChecked).includes(false));
+  }, [setIsCheckAll, usersList]);
+
+  // Remove selectAll button when user is filtering by name/email
+  useEffect(() => {
+    setIsFiltering(searchMember.length > 0);
+  }, [searchMember.length, setIsFiltering]);
+
   const filteredList = useMemo(() => {
-    const searchString = searchMember.toLowerCase();
+    const searchString = searchMember.toLowerCase().trim();
 
     return usersList.filter((user) => {
-      const firstName = user.firstName.toLowerCase();
-      const lastName = user.lastName.toLowerCase();
-      return (
-        firstName.includes(searchString) || lastName.includes(searchString) || searchMember === ''
-      );
+      const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
+      const email = user.email.toLowerCase();
+      return email.includes(searchString) || fullName.includes(searchString) || searchMember === '';
     });
   }, [searchMember, usersList]);
+
+  const handleSelectAll = () => {
+    const updateCheckedUser = usersList.map((user) =>
+      user._id !== session?.user.id ? { ...user, isChecked: !isCheckAll } : user,
+    );
+    setIsCheckAll(!isCheckAll);
+    setUsersListState(updateCheckedUser);
+  };
 
   const saveMembers = () => {
     const listOfUsers = [...membersList];
@@ -100,7 +119,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
         user: teamUser._id,
         role: TeamUserRoles.MEMBER,
-        isNewJoiner: false,
+        isNewJoiner: verifyIfIsNewJoiner(teamUser.joinedAt, teamUser.providerAccountCreatedAt),
         team,
       }));
 
@@ -196,6 +215,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
             <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
               {filteredList?.map((user) => (
                 <Flex key={user._id} align="center" justify="between">
+                  {/* <Text>{user.isChecked ? 'True' : 'false'}</Text> */}
                   <Flex css={{ width: '50%' }}>
                     <Checkbox
                       checked={user.isChecked}
@@ -204,6 +224,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
                       id={user._id}
                       label={`${user.firstName} ${user.lastName}`}
                       size="16"
+                      hasSelectAll
                     />
                   </Flex>
                   <Flex css={{ width: '50%' }}>
@@ -216,6 +237,16 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
             </Flex>
           </ScrollableContent>
           <ButtonsContainer gap={24} justify="end">
+            {!isFiltering && (
+              <Checkbox
+                checked={isCheckAll}
+                handleSelectAll={handleSelectAll}
+                id="selectAll"
+                label="Select all"
+                size="16"
+                hasSelectAll
+              />
+            )}
             <Button
               css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
               variant="primaryOutline"

@@ -25,7 +25,7 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter 
       options={options}
       value={
         !isSelected
-          ? { label: 'Select', value: '' }
+          ? { label: 'Select Team', value: '' }
           : options.find((option) => option.value === filter)
       }
       onChange={(selectedOption) => {

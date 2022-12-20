@@ -27,6 +27,7 @@ const TeamMembersList = () => {
 
   const userRole = user.role;
   const isTeamMember = userRole === TeamUserRoles.MEMBER;
+
   return (
     <Flex css={{ mt: '$32' }} direction="column">
       <Flex>

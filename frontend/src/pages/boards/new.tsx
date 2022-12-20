@@ -8,12 +8,18 @@ import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
+import useBoard from '@/hooks/useBoard';
+import LoadingPage from '@/components/loadings/LoadingPage';
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
+
+  const {
+    createBoard: { status },
+  } = useBoard({ autoFetchBoard: false });
 
   /**
    * Handle back to boards list page
@@ -56,6 +62,7 @@ const NewBoard: NextPage = () => {
           />
         </Flex>
       </ContentContainer>
+      {status === 'loading' && <LoadingPage />}
     </Container>
   );
 };

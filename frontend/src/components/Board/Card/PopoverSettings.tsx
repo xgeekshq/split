@@ -36,7 +36,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   };
 
   return (
-    <PopoverContent portalled={false}>
+    <PopoverContent>
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setEditCard}>
           <Icon name="edit" />
@@ -137,7 +137,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
         columnId,
         socketId,
         cardId: itemId,
-        newPosition,
+        newPosition: firstOne ? newPosition : newPosition + 1,
       });
     };
 

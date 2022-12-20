@@ -32,7 +32,7 @@ const PageHeader = styled('header', {
 const ContentContainer = styled('section', {
   display: 'flex',
   width: '100%',
-  minHeight: 'calc(100vh - $sizes$92)',
+  minHeight: 'calc(100vh - $sizes$141)',
   alignItems: 'center',
   justifyContent: 'center',
   flexDirection: 'column',

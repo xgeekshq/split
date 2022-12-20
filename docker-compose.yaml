@@ -1,83 +1,72 @@
 version: "3.9"
-
 services:
   backend:
+    container_name: backend
+    restart: unless-stopped
     build:
       context: backend
-      dockerfile: docker/prod/Dockerfile
-
-    # set image name
-    image: split-backend
-
-    # set container name
-    container_name: backend
-
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
     ports:
       - 3200:3200
-
     env_file:
       - ./backend/.env
-
-    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     networks:
       - split-network
     depends_on:
       - mongo
+
   frontend:
+    container_name: frontend
+    restart: unless-stopped
     build:
       context: frontend
-      dockerfile: docker/prod/Dockerfile
-      args:
-        - NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3200}
-        - NEXT_PUBLIC_NEXTAUTH_URL=${NEXT_PUBLIC_NEXTAUTH_URL:-http://localhost:3000}
-        - NEXT_PUBLIC_ENABLE_AZURE=${NEXT_PUBLIC_ENABLE_AZURE}
-
-    # set image name
-    image: split-frontend
-
-    # set container name
-    container_name: frontend
-
+      dockerfile: Dockerfile
+      target: development
+    command: npm run dev
     ports:
       - 3000:3000
-
     env_file:
       - ./frontend/.env
-
-    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - split-network
     depends_on:
       - backend
+
   mongo2:
+    container_name: mongo2
     image: mongo
     restart: always
-    container_name: mongo2
-    networks:
-      - split-network
+    command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
     ports:
       - "27018:27017"
-    entrypoint: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
-
     env_file:
       - ./database/.env
+    networks:
+      - split-network
 
   mongo:
+    container_name: mongo
     image: mongo
     restart: always
-    container_name: mongo
+    command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
     ports:
       - "27017:27017"
+    env_file:
+      - ./database/.env
+    links:
+      - mongo2
     volumes:
       - ./database/rs-init.sh:/scripts/rs-init.sh
     networks:
       - split-network
-    links:
-      - mongo2
-    command: "bash -c '/usr/bin/mongod --replSet $${MONGO_REPLICA_NAME} --journal --bind_ip_all'"
-
-    env_file:
-      - ./database/.env
   
   redis:
     container_name: redis
@@ -89,6 +78,7 @@ services:
       - '6379:6379'
     env_file:
       - ./database/redis/.env
+
 networks:
   split-network:
     driver: bridge

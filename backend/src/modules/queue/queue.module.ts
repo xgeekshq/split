@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 					password: configService.get('redis.password'),
 					host: configService.get('redis.host'),
 					port: configService.get('redis.port'),
-					...(process.env.NODE_ENV === 'prod'
+					...(process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'dev'
 						? {
 								tls: {
 									host: configService.get('redis.host')

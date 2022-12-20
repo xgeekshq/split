@@ -267,7 +267,7 @@ const NewSplitBoard: NextPage = () => {
                 </ButtonsContainer>
               </StyledForm>
             </SubContainer>
-            <TipBar />
+            <TipBar isSplitBoard />
           </ContentContainer>
         </Container>
       </QueryError>

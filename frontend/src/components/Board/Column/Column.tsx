@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Droppable } from '@react-forked/dnd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Droppable } from '@hello-pangea/dnd';
 
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { getCardVotes } from '@/helper/board/votes';
 import { ColumnBoardType } from '@/types/column';
+import { useSetRecoilState } from 'recoil';
+import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
@@ -28,16 +30,17 @@ const Column = React.memo<ColumnBoardType>(
     hideCards,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
+    const setFilteredColumns = useSetRecoilState(filteredColumnsState);
 
-    const filteredCards = () => {
+    const filteredCards = useCallback(() => {
       switch (filter) {
-        case 'desc':
+        case 'asc':
           return [...cards].sort((a, b) => {
             const votesA = a.items.length === 1 ? a.items[0].votes.length : getCardVotes(a).length;
             const votesB = b.items.length === 1 ? b.items[0].votes.length : getCardVotes(b).length;
             return votesA - votesB;
           });
-        case 'asc':
+        case 'desc':
           return [...cards].sort((a, b) => {
             const votesA = a.items.length === 1 ? a.items[0].votes.length : getCardVotes(a).length;
             const votesB = b.items.length === 1 ? b.items[0].votes.length : getCardVotes(b).length;
@@ -46,7 +49,25 @@ const Column = React.memo<ColumnBoardType>(
         default:
           return cards;
       }
-    };
+    }, [cards, filter]);
+
+    useEffect(() => {
+      if (filter) {
+        setFilteredColumns((prev) => {
+          if (prev.includes(columnId)) return prev;
+          return [...prev, columnId];
+        });
+      } else {
+        setFilteredColumns((prev) => {
+          const newValues = [...prev];
+          const index = newValues.indexOf(columnId);
+          if (index > -1) {
+            newValues.splice(index, 1);
+          }
+          return newValues;
+        });
+      }
+    }, [columnId, filter, setFilteredColumns]);
 
     return (
       <OuterContainer>
@@ -100,7 +121,7 @@ const Column = React.memo<ColumnBoardType>(
                   <CardsList
                     boardId={boardId}
                     boardUser={boardUser}
-                    cards={filter ? filteredCards() : cards}
+                    cards={filteredCards()}
                     colId={columnId}
                     color={color}
                     hideCards={hideCards}

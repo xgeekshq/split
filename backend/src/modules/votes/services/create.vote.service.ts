@@ -58,44 +58,35 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const canUserVote = await this.canUserVote(boardId, userId);
 
 		if (canUserVote) {
-			const dbSession = await this.boardModel.db.startSession();
-			dbSession.startTransaction();
-			try {
-				await this.incrementVoteUser(boardId, userId);
-				const board = await this.boardModel
-					.findOneAndUpdate(
-						{
-							_id: boardId,
-							'columns.cards.items._id': cardItemId
+			await this.incrementVoteUser(boardId, userId);
+			const board = await this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards.items._id': cardItemId
+					},
+					{
+						$push: {
+							'columns.$.cards.$[c].items.$[i].votes': userId
 						},
-						{
-							$push: {
-								'columns.$.cards.$[c].items.$[i].votes': userId
-							},
-							$inc: { totalUsedVotes: 1 }
-						},
-						{
-							arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-							new: true
-						}
-					)
-					.populate({
-						path: 'users',
-						select: 'user role votesCount -board',
-						populate: { path: 'user', select: 'firstName lastName _id' }
-					})
-					.lean()
-					.exec();
+						$inc: { totalUsedVotes: 1 }
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+						new: true
+					}
+				)
+				.populate({
+					path: 'users',
+					select: 'user role votesCount -board',
+					populate: { path: 'user', select: 'firstName lastName _id' }
+				})
+				.lean()
+				.exec();
 
-				if (!board) throw Error(UPDATE_FAILED);
-				await dbSession.commitTransaction();
+			if (!board) throw Error(UPDATE_FAILED);
 
-				return board;
-			} catch (error) {
-				await dbSession.abortTransaction();
-			} finally {
-				await dbSession.endSession();
-			}
+			return board;
 		}
 		throw new BadRequestException('Error adding a vote');
 	}
@@ -104,38 +95,32 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 		const canUserVote = await this.canUserVote(boardId, userId);
 
 		if (canUserVote) {
-			const dbSession = await this.boardModel.db.startSession();
-			dbSession.startTransaction();
-			try {
-				await this.incrementVoteUser(boardId, userId);
-				const board = await this.boardModel
-					.findOneAndUpdate(
-						{
-							_id: boardId,
-							'columns.cards._id': cardId
-						},
-						{
-							$push: {
-								'columns.$.cards.$[c].votes': userId
-							}
-						},
-						{
-							arrayFilters: [{ 'c._id': cardId }],
-							new: true
+			await this.incrementVoteUser(boardId, userId);
+			const board = await this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards._id': cardId
+					},
+					{
+						$push: {
+							'columns.$.cards.$[c].votes': userId
 						}
-					)
-					.lean()
-					.exec();
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }],
+						new: true
+					}
+				)
+				.populate({
+					path: 'users',
+					select: 'user role votesCount -board',
+					populate: { path: 'user', select: 'firstName lastName _id' }
+				})
+				.lean()
+				.exec();
 
-				await dbSession.commitTransaction();
-
-				return board;
-			} catch (error) {
-				await dbSession.abortTransaction();
-				throw error;
-			} finally {
-				await dbSession.endSession();
-			}
+			return board;
 		}
 		throw new BadRequestException('Error adding a vote');
 	}

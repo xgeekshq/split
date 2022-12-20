@@ -137,7 +137,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Use effect to remove "New Board" indicator
   useEffect(() => {
-    if (data?.board?._id === newBoard?._id || mainBoard?._id === newBoard?._id) {
+    if (data?.board?._id === newBoard || mainBoard?._id === newBoard) {
       setNewBoard(undefined);
     }
   }, [newBoard, data, setNewBoard, mainBoard?._id]);

@@ -1,22 +1,22 @@
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
+import { styled } from '@/styles/stitches/stitches.config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { styled } from '@/styles/stitches/stitches.config';
 import { StyledBox } from './styles';
-
-type BoxColumnContainerContentProps = {
-  iconName: string;
-  description: string;
-  title: string;
-};
 
 type BoxColumnContainerProps = {
   iconName: string;
   title: string;
   description: string;
   route: string;
+};
+
+type BoxColumnContainerContentProps = {
+  iconName: string;
+  description: string;
+  title: string;
 };
 
 const StyledA = styled('a', { textDecoration: 'none' });

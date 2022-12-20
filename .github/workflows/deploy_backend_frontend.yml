@@ -14,7 +14,7 @@ jobs:
     name: Build backend
     uses: ./.github/workflows/build_docker.yaml
     with:
-      DOCKERFILE: ./backend/docker/prod/Dockerfile
+      DOCKERFILE: ./backend/Dockerfile
       REPOSITORY: backend
       ROOT: ./backend
     secrets: inherit
@@ -23,7 +23,7 @@ jobs:
     name: Build frontend
     uses: ./.github/workflows/build_docker.yaml
     with:
-      DOCKERFILE: ./frontend/docker/prod/Dockerfile
+      DOCKERFILE: ./frontend/Dockerfile
       REPOSITORY: frontend
       ROOT: ./frontend
     secrets: inherit

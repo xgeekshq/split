@@ -49,7 +49,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
         </StyledMenuItem>
       </Link>
       <Link href={BOARDS_ROUTE}>
-        <StyledMenuItem align="center" data-active={active === BOARDS_ROUTE}>
+        <StyledMenuItem align="center" data-active={active.includes(BOARDS_ROUTE)}>
           <Icon name="boards" />
           <StyledText>Boards</StyledText>
         </StyledMenuItem>
@@ -61,7 +61,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
         </StyledMenuItem>
       </Link>
       <Link href={TEAMS_ROUTE}>
-        <StyledMenuItem align="center" data-active={active === TEAMS_ROUTE}>
+        <StyledMenuItem align="center" data-active={active.includes(TEAMS_ROUTE)}>
           <Icon name="team" />
           <StyledText>Teams</StyledText>
         </StyledMenuItem>

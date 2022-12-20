@@ -71,41 +71,30 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
 			votes.splice(voteIndex, 1);
 
-			const dbSession = await this.boardModel.db.startSession();
-			dbSession.startTransaction();
-			try {
-				await this.decrementVoteUser(boardId, userId);
-				const board = await this.boardModel.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards.items._id': cardItemId
-					},
-					{
-						$set: {
-							'columns.$.cards.$[c].items.$[i].votes': votes
-						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-						new: true,
-						session: dbSession
+			await this.decrementVoteUser(boardId, userId);
+			const board = await this.boardModel.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns.cards.items._id': cardItemId
+				},
+				{
+					$set: {
+						'columns.$.cards.$[c].items.$[i].votes': votes
 					}
-				);
+				},
+				{
+					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+					new: true
+				}
+			);
 
-				if (!board) throw Error(UPDATE_FAILED);
-				await dbSession.commitTransaction();
+			if (!board) throw Error(UPDATE_FAILED);
 
-				return await board.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				});
-			} catch (error) {
-				await dbSession.abortTransaction();
-				throw error;
-			} finally {
-				await dbSession.endSession();
-			}
+			return await board.populate({
+				path: 'users',
+				select: 'user role votesCount -board',
+				populate: { path: 'user', select: 'firstName lastName _id' }
+			});
 		}
 		throw new BadRequestException('Error removing a vote');
 	}
@@ -143,39 +132,34 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 			if (voteIndex === -1) return null;
 			newVotes.splice(voteIndex, 1);
 
-			const dbSession = await this.boardModel.db.startSession();
-			dbSession.startTransaction();
-			try {
-				await this.decrementVoteUser(boardId, userId);
-				const board = await this.boardModel
-					.findOneAndUpdate(
-						{
-							_id: boardId,
-							'columns.cards._id': cardId
-						},
-						{
-							$set: {
-								'columns.$.cards.$[c].votes': newVotes
-							}
-						},
-						{
-							arrayFilters: [{ 'c._id': cardId }],
-							new: true
+			await this.decrementVoteUser(boardId, userId);
+			const board = await this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns.cards._id': cardId
+					},
+					{
+						$set: {
+							'columns.$.cards.$[c].votes': newVotes
 						}
-					)
-					.lean()
-					.exec();
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }],
+						new: true
+					}
+				)
+				.populate({
+					path: 'users',
+					select: 'user role votesCount -board',
+					populate: { path: 'user', select: 'firstName lastName _id' }
+				})
+				.lean()
+				.exec();
 
-				if (!board) throw Error(UPDATE_FAILED);
-				await dbSession.commitTransaction();
+			if (!board) throw Error(UPDATE_FAILED);
 
-				return board;
-			} catch (error) {
-				await dbSession.abortTransaction();
-				throw error;
-			} finally {
-				await dbSession.endSession();
-			}
+			return board;
 		}
 		throw new BadRequestException('Error removing a vote');
 	}

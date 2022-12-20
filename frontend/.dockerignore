@@ -1,2 +1,18 @@
-node_modules/*
-dist/*
+# Ignore everything
+*
+
+# Allow files and directories for prod
+!/public
+!/src
+!.eslintrc.json
+!.prettierrc.json
+!next.config.js
+!next-i18next.config.js
+!package*.json
+!postcss.config.js
+!tailwind.config.js
+!tsconfig.json
+!yarn.lock
+!jest.config.js
+!jest.setup.js
+!cypress.json

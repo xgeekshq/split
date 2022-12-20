@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import {
 	mongooseResetModule,
+	mongooseTeamUserModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersController from './controller/users.controller';
 import {
 	createUserService,
+	deleteUserApplication,
+	deleteUserService,
 	getUserApplication,
 	getUserService,
 	updateUserApplication,
@@ -15,14 +18,16 @@ import {
 } from './users.providers';
 
 @Module({
-	imports: [mongooseUserModule, TeamsModule, mongooseResetModule],
+	imports: [mongooseUserModule, TeamsModule, mongooseResetModule, mongooseTeamUserModule],
 	providers: [
 		createUserService,
 		getUserService,
 		updateUserService,
 		updateUserApplication,
 		getUserApplication,
-		userRepository
+		userRepository,
+		deleteUserService,
+		deleteUserApplication
 	],
 	controllers: [UsersController],
 	exports: [
@@ -30,7 +35,9 @@ import {
 		getUserService,
 		updateUserService,
 		updateUserApplication,
-		getUserApplication
+		getUserApplication,
+		deleteUserService,
+		deleteUserApplication
 	]
 })
 export default class UsersModule {}

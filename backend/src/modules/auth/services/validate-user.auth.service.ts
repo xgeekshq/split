@@ -27,7 +27,7 @@ export default class ValidateUserAuthServiceImpl implements ValidateUserAuthServ
 	}
 
 	public validateUserByRefreshToken(authorization: string, userId: string) {
-		const refreshToken = authorization.replace('Bearer', '').trim();
+		const refreshToken = authorization.replace('Bearer ', '').trim();
 
 		return this.getUserService.getUserIfRefreshTokenMatches(refreshToken, userId);
 	}

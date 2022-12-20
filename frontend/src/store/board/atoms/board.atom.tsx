@@ -12,7 +12,7 @@ export const boardInfoState = atom<BoardInfoType>({
   default: undefined,
 });
 
-export const newBoardState = atom<BoardType | undefined>({
+export const newBoardState = atom<string | undefined>({
   key: 'newBoard',
   default: undefined,
 });

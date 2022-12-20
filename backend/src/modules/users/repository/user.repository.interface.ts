@@ -6,5 +6,6 @@ export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {
 	updateUserWithRefreshToken(refreshToken: string, userId: string): Promise<User>;
 	updateUserPassword(email: string, password: string): Promise<User>;
 	updateSuperAdmin(userId: string, isSAdmin: boolean): Promise<User>;
-	getAllWithPagination(page: number, size: number): Promise<User[]>;
+	deleteUser(userId: string, withSession: boolean);
+	getAllWithPagination(page: number, size: number, searchUser?: string): Promise<User[]>;
 }

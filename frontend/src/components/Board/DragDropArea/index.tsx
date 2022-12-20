@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult } from '@react-forked/dnd';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
 
 import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Flex';
@@ -11,6 +11,8 @@ import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { onDragCardStart } from '@/store/card/atoms/card.atom';
+import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 
 type Props = {
   userId: string;
@@ -20,11 +22,17 @@ type Props = {
 const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
   const { updateCardPosition, mergeCards } = useCards();
   const setToastState = useSetRecoilState(toastState);
+  const setOnDragCard = useSetRecoilState(onDragCardStart);
+  const filteredColumns = useRecoilValue(filteredColumnsState);
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
     [board],
   );
+
+  const onDragStart = ({ draggableId }: BeforeCapture) => {
+    setOnDragCard(draggableId);
+  };
 
   const handleCombine = (
     combineDroppableId: string,
@@ -32,6 +40,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
     sourceDroppableId: string,
     draggableId: string,
     sourceIndex: number,
+    sorted: boolean,
   ) => {
     if (!board.hideCards) {
       const changes: MergeCardsDto = {
@@ -43,6 +52,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         socketId,
         userId,
         cardPosition: sourceIndex,
+        sorted,
       };
 
       mergeCards.mutate(changes);
@@ -70,6 +80,7 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         sourceDroppableId,
         draggableId,
         sourceIndex,
+        filteredColumns.includes(sourceDroppableId),
       );
     }
 
@@ -88,15 +99,17 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
         cardId: draggableId,
         boardId: board?._id,
         socketId,
+        sorted: filteredColumns.includes(source.droppableId),
       };
 
       updateCardPosition.mutate(changes);
+      setOnDragCard('');
     }
   };
 
   return (
     <Flex css={{ width: '100%' }} gap="24">
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onBeforeCapture={onDragStart}>
         {board.columns.map((column, index) => (
           <Column
             key={column._id}

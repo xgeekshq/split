@@ -34,6 +34,13 @@ const useVotes = () => {
 
   const getBoardQueryKey = (boardId = ''): QueryKeyType => ['board', { id: boardId }];
 
+  const setPreviousBoardQuery = (id: string, context: any) => {
+    queryClient.setQueryData(
+      getBoardQueryKey(id),
+      (context as { previousBoard: BoardType }).previousBoard,
+    );
+  };
+
   const getFirstCardItemIndexWithVotes = (cardItems: CardItemType[]) =>
     cardItems.findIndex((cardItem) => cardItem.votes.length > 0);
 
@@ -63,6 +70,17 @@ const useVotes = () => {
     prevBoardData.columns[colIndex].cards[cardIndex].items[cardItemIndex].votes.pop();
 
     return newBoardData;
+  };
+
+  const updateBoardUser = (boardData: BoardType, action: Action) => {
+    boardData.users = boardData.users.map((boardUser) => {
+      if (boardUser.user._id !== userId) return boardUser;
+
+      return {
+        ...boardUser,
+        votesCount: action === Action.Add ? boardUser.votesCount + 1 : boardUser.votesCount - 1,
+      };
+    });
   };
 
   const updateCardItemVoteOptimistic = (
@@ -145,7 +163,7 @@ const useVotes = () => {
     voteData: voteDto,
     action: Action,
   ) => {
-    const { cardId, cardItemId, isCardGroup } = voteData;
+    const { cardId, cardItemId, isCardGroup, count } = voteData;
 
     const [colIndex, cardIndex, cardItemIndex] = [-1, -1, -1];
     let indexes = [colIndex, cardIndex, cardItemIndex];
@@ -165,7 +183,15 @@ const useVotes = () => {
     );
 
     if (foundCardItem) {
-      return updateCardOrCardIndexVotesOptimistic(prevBoardData, indexes, isCardGroup, action);
+      const newBoard = updateCardOrCardIndexVotesOptimistic(
+        prevBoardData,
+        indexes,
+        isCardGroup,
+        action,
+      );
+      updateBoardUser(newBoard, count > 0 ? Action.Add : Action.Remove);
+
+      return newBoard;
     }
 
     return prevBoardData;
@@ -184,11 +210,6 @@ const useVotes = () => {
 
     return { newBoardData, prevBoardData };
   };
-
-  const addVoteOptimistic = async (voteData: voteDto) => updateVoteOptimistic(Action.Add, voteData);
-
-  const removeVoteOptimistic = async (voteData: voteDto) =>
-    updateVoteOptimistic(Action.Remove, voteData);
 
   const buildToastMessage = (
     toastMessage: string,
@@ -209,39 +230,27 @@ const useVotes = () => {
     }
   };
 
-  const restoreBoardDataAndToastError = (
-    prevBoardData: BoardType | undefined,
-    { boardId }: voteDto,
-    errorMessage: string,
-  ) => {
-    queryClient.setQueryData(getBoardQueryKey(boardId), prevBoardData);
-
-    toastErrorMessage(errorMessage);
-  };
-
-  const invalidateQueriesAndToastMessage = (
-    boardDataFromApi: BoardType | undefined,
-    message: string,
-  ) => {
-    queryClient.invalidateQueries(getBoardQueryKey(boardDataFromApi?._id));
-
-    toastRemainingVotesMessage(message, boardDataFromApi);
-  };
-
   const handleVote = useMutation(handleVotes, {
-    onSuccess: (voteData, variables) => {
-      if (voteData.maxVotes) {
-        toastRemainingVotesMessage('', voteData);
+    onMutate: async (variables) => {
+      const { newBoardData, prevBoardData } = await updateVoteOptimistic(
+        variables.count > 0 ? Action.Add : Action.Remove,
+        variables,
+      );
+
+      if (newBoardData?.maxVotes && newBoardData) {
+        toastRemainingVotesMessage('', newBoardData);
       }
-      queryClient.invalidateQueries(['board', { id: voteData?._id }]);
+
+      return { previousBoard: prevBoardData, variables };
     },
-    onError: (error, variables) => {
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
-      setToastState({
-        open: true,
-        content: 'Error adding the vote',
-        type: ToastStateEnum.ERROR,
-      });
+    onSettled: (data, error, variables, context) => {
+      if (error) {
+        queryClient.invalidateQueries(['board', { id: data?._id }]);
+      }
+    },
+    onError: (error, variables, context) => {
+      setPreviousBoardQuery(variables.boardId, context);
+      toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },
   });
 

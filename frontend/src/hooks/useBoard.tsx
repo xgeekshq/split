@@ -8,8 +8,7 @@ import {
   getBoardRequest,
   updateBoardRequest,
 } from '@/api/boardService';
-import { boardState, newBoardState } from '@/store/board/atoms/board.atom';
-import BoardType from '@/types/board/board';
+import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useBoardUtils from './useBoardUtils';
@@ -21,7 +20,6 @@ interface AutoFetchProps {
 const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   const { boardId, queryClient, setToastState } = useBoardUtils();
 
-  const setBoard = useSetRecoilState(boardState);
   const setNewBoard = useSetRecoilState(newBoardState);
   // #region BOARD
 
@@ -38,7 +36,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const createBoard = useMutation(createBoardRequest, {
-    onSuccess: (data) => setNewBoard(data),
+    onSuccess: (data) => setNewBoard(data._id),
     onError: () => {
       setToastState({
         open: true,
@@ -67,10 +65,8 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const updateBoard = useMutation(updateBoardRequest, {
-    onSuccess: (board: BoardType) => {
-      setBoard(board);
-
-      queryClient.invalidateQueries('board');
+    onSuccess: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
 
       setToastState({
         open: true,
@@ -79,6 +75,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
       });
     },
     onError: (error: AxiosError) => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
       const errorMessage = error.response?.data.message.includes('max votes')
         ? error.response?.data.message
         : 'Error updating the board';

@@ -1,5 +1,5 @@
-import { styled } from '@stitches/react';
 import { Label } from '@/components/Primitives/RadioGroup';
+import { styled } from '@stitches/react';
 
 const LabelStyled = styled(Label, {
   color: '$primary800',

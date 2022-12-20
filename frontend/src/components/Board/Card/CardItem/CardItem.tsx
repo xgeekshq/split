@@ -70,7 +70,8 @@ const CardItem: React.FC<CardItemProps> = React.memo(
               <Text
                 size="sm"
                 css={{
-                  whiteSpace: 'pre',
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre-line',
                   filter: cardItemBlur(hideCards, item as CardItemType, userId),
                 }}
               >

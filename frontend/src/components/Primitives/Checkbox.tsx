@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { Dispatch, useState } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
@@ -72,6 +71,8 @@ const Checkbox: React.FC<{
   setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
   handleChange?: (value: string) => void;
   shouldUseForm?: boolean;
+  handleSelectAll?: () => void;
+  hasSelectAll?: boolean;
 }> = ({
   id,
   label,
@@ -82,6 +83,8 @@ const Checkbox: React.FC<{
   handleChange,
   shouldUseForm,
   setCheckedTerms,
+  handleSelectAll,
+  hasSelectAll,
 }) => {
   Checkbox.defaultProps = {
     variant: 'default',
@@ -90,6 +93,8 @@ const Checkbox: React.FC<{
     handleChange: undefined,
     setCheckedTerms: null,
     shouldUseForm: false,
+    handleSelectAll: undefined,
+    hasSelectAll: false,
   };
 
   const formContext = useFormContext();
@@ -99,6 +104,7 @@ const Checkbox: React.FC<{
   );
   const handleCheckedChange = (isChecked: boolean | 'indeterminate') => {
     if (handleChange) handleChange(id);
+    if (handleSelectAll) handleSelectAll();
     setCurrentCheckValue(isChecked);
     if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
 
@@ -106,6 +112,7 @@ const Checkbox: React.FC<{
       formContext.setValue('slackEnable', !!isChecked);
     }
   };
+  const checkValue = hasSelectAll ? checked : currentCheckValue;
 
   return (
     <Flex
@@ -118,7 +125,7 @@ const Checkbox: React.FC<{
     >
       <Flex>
         <StyledCheckbox
-          checked={currentCheckValue}
+          checked={checkValue}
           disabled={disabled}
           id={id}
           name={id}
@@ -144,8 +151,8 @@ const Checkbox: React.FC<{
               },
             }}
           >
-            {currentCheckValue === true && <Icon name="check" />}
-            {currentCheckValue === 'indeterminate' && <Icon name="indeterminate" />}
+            {checkValue === true && <Icon name="check" />}
+            {checkValue === 'indeterminate' && <Icon name="indeterminate" />}
           </CheckboxIndicator>
         </StyledCheckbox>
       </Flex>

@@ -1,6 +1,5 @@
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { styled } from '@stitches/react';
-import { mauve } from '@radix-ui/colors';
 
 export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
   all: 'unset',
@@ -49,7 +48,7 @@ export const StyledItem = styled(SelectPrimitive.Item, {
   position: 'relative',
   userSelect: 'none',
   '&[data-disabled]': {
-    color: mauve.mauve8,
+    color: 'blue',
     pointerEvents: 'none',
   },
 
@@ -65,7 +64,7 @@ export const SelectLabel = styled(SelectPrimitive.Label, {
   padding: '0 25px',
   fontSize: 12,
   lineHeight: '25px',
-  color: mauve.mauve11,
+  color: 'blue',
 });
 
 export const StyledItemIndicator = styled(SelectPrimitive.ItemIndicator, {
