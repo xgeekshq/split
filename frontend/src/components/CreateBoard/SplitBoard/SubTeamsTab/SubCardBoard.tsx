@@ -86,20 +86,27 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
           pr: '$24',
         }}
       >
-        <Flex align="center">
+        <Flex align="center" justify="start">
           <Text heading="5">{board.title}</Text>
-          <Flex align="center">
-            <Text css={{ ml: '$40', mr: '$8' }}>Responsible Lottery</Text>
+        </Flex>
+
+        <Flex align="center" justify="start" css={{ width: '50%' }}>
+          <Flex align="center" css={{ minWidth: '$160' }}>
+            <Text css={{ mr: '$8' }}>Responsible Lottery</Text>
             <Separator
               css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
               orientation="vertical"
             />
+          </Flex>
+
+          <Flex align="center" css={{ minWidth: 0 }}>
             {users.length <= 1 ? (
               <Flex
                 align="center"
                 justify="center"
                 css={{
                   height: '$24',
+                  minWidth: '$24',
                   width: '$24',
                   borderRadius: '$round',
                   border: '1px solid $colors$primary400',
@@ -122,14 +129,13 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
                 justify="center"
                 css={{
                   height: '$24',
+                  minWidth: '$24',
                   width: '$24',
                   borderRadius: '$round',
                   border: '1px solid $colors$primary400',
                   ml: '$12',
                   cursor: 'pointer',
-
                   transition: 'all 0.2s ease-in-out',
-
                   '&:hover': {
                     backgroundColor: '$primary400',
                     color: 'white',
@@ -146,12 +152,22 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
                 />
               </Flex>
             )}
-
-            <Text color="primary300" css={{ mx: '$8' }} size="sm">
-              {responsible?.firstName} {responsible?.lastName}
-            </Text>
+            <Flex css={{ minWidth: 0 }}>
+              <Text
+                color="primary300"
+                css={{
+                  mx: '$8',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                }}
+                size="sm"
+              >
+                {responsible?.firstName} {responsible?.lastName}
+              </Text>
+            </Flex>
             <Avatar
-              css={{ position: 'relative' }}
+              css={{ position: 'relative', minWidth: '$34' }}
               fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
               size={32}
               colors={{
@@ -161,7 +177,8 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
             />
           </Flex>
         </Flex>
-        <Flex align="center" gap="8">
+
+        <Flex align="center" gap="8" justify="center">
           <Text size="sm">Sub team {index + 1}</Text>
           <CardAvatars listUsers={board.users} responsible={false} teamAdmins={false} userId="1" />
         </Flex>

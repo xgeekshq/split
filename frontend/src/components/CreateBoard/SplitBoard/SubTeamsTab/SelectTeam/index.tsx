@@ -1,16 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectIcon,
-  SelectItemText,
-  SelectPortal,
-  SelectTrigger,
-  SelectValue,
-  SelectViewport,
-  StyledItem,
-  StyledItemIndicator,
-} from '@/components/Primitives/Select';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
@@ -22,18 +10,33 @@ import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
+import { OptionType } from '@/components/Boards/Filters/FilterBoards';
+import { components, ControlProps } from 'react-select';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
-import { HelperTextWrapper, StyledBox } from './styles';
+import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styles';
 
-const SelectTeam = () => {
+const Control = ({ children, ...props }: ControlProps) => (
+  <components.Control {...props}>
+    <Flex direction="column" css={{ width: '100%', px: '$17' }}>
+      {(props.selectProps.value as { label: string; value: string }).label && (
+        <Text color="primary300" size="xs">
+          Select Team
+        </Text>
+      )}
+
+      <Flex css={{ width: '100%' }}>{children}</Flex>
+    </Flex>
+  </components.Control>
+);
+
+type SelectTeamProps = {
+  previousTeam?: string;
+};
+
+const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const { data: session } = useSession({ required: true });
-
-  const {
-    setValue,
-    getValues,
-    clearErrors,
-    formState: { errors },
-  } = useFormContext();
 
   const router = useRouter();
   const routerTeam = router.query.team as string;
@@ -44,12 +47,22 @@ const SelectTeam = () => {
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setHaveError = useSetRecoilState(createBoardError);
   const teams = useRecoilValue(teamsOfUser);
+  const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
+
+  const {
+    setValue,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext();
 
   const message = errors.team?.message;
   const teamValueOnForm = getValues().team;
   const isValueEmpty = isEmpty(teamValueOnForm);
 
-  const currentState = useMemo(() => {
+  const teamMembersCount = teamMembers?.length ?? 0;
+
+  const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';
     if (isValueEmpty) return 'default';
     if (!message && !isValueEmpty) return 'valid';
@@ -67,6 +80,67 @@ const SelectTeam = () => {
     setSelectedTeam(foundTeam);
   };
 
+  const teamsNames = useMemo(
+    () =>
+      teams.map((team) => ({
+        label: `${team.name} (${team.users.length} members)`,
+        value: team._id,
+      })),
+    [teams],
+  );
+
+  const verifyIfCanCreateBoard = useCallback(() => {
+    if (!selectedTeam) {
+      return true;
+    }
+
+    const haveMinMembers = !!(
+      selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      MIN_MEMBERS
+    );
+
+    const isAdminOrStakeholder =
+      !!selectedTeam.users?.find(
+        (teamUser) =>
+          teamUser.user._id === session?.user.id &&
+          [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+      ) || session?.user.isSAdmin;
+
+    return !haveMinMembers || !isAdminOrStakeholder;
+  }, [selectedTeam, session?.user.id, session?.user.isSAdmin]);
+
+  const createBoard = useCallback(() => {
+    if (!selectedTeam) {
+      return;
+    }
+    const maxUsersCount = Math.ceil(teamMembersCount / 2);
+    const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
+
+    const users = selectedTeam.users.flatMap((teamUser) => {
+      if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
+      return [
+        {
+          user: teamUser.user._id,
+          role: BoardUserRoles.MEMBER,
+          votesCount: 0,
+        },
+      ];
+    });
+
+    if (previousTeam !== selectedTeam._id) {
+      setCreateBoardData((prev) => ({
+        ...prev,
+        users,
+        board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+        count: {
+          ...prev.count,
+          teamsCount,
+          maxUsersCount,
+        },
+      }));
+    }
+  }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
+
   useEffect(() => {
     if (routerTeam) {
       setValue('team', routerTeam);
@@ -78,99 +152,68 @@ const SelectTeam = () => {
 
   useEffect(() => {
     if (selectedTeam) {
-      const haveMinMembers = !!(
-        selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-        MIN_MEMBERS
-      );
+      const canNotCreateBoard = verifyIfCanCreateBoard();
 
-      const isAdminOrStakeholder = selectedTeam
-        ? !!selectedTeam.users.find(
-            (teamUser) =>
-              teamUser.user._id === session?.user.id &&
-              [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-          ) || session?.user.isSAdmin
-        : false;
+      setHaveError(canNotCreateBoard);
 
-      setHaveError(!isAdminOrStakeholder || !haveMinMembers);
+      if (!canNotCreateBoard) {
+        createBoard();
+      }
     }
-  }, [
-    routerTeam,
-    selectedTeam,
-    session?.user.id,
-    session?.user.isSAdmin,
-    setHaveError,
-    setSelectedTeam,
-    setValue,
-    teams,
-  ]);
+  }, [routerTeam, createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
       <StyledBox
         css={{
+          minWidth: 0,
           width: '100%',
           py: '$12',
-          pl: '$17',
-          pr: '$16',
           height: '$64',
           borderRadius: '$4',
           backgroundColor: 'white',
-          border: currentState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
+          border:
+            currentSelectTeamState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
         }}
         direction="column"
         elevation="1"
       >
-        {selectedTeam && (
-          <Text color="primary300" size="xs">
-            Select Team
-          </Text>
-        )}
-
-        <Select onValueChange={handleTeamChange} defaultValue={routerTeam ?? undefined}>
-          <SelectTrigger aria-label="Teams">
-            <SelectValue placeholder="Select Team" />
-            <SelectIcon>
-              <Icon
-                name="arrow-down"
-                css={{
-                  width: '$20',
-                  height: '$20',
-                }}
-              />
-            </SelectIcon>
-          </SelectTrigger>
-          <SelectPortal>
-            <SelectContent>
-              <SelectViewport>
-                {teams.map((team) => (
-                  <StyledItem value={team._id} key={team._id}>
-                    <SelectItemText>
-                      {team.name} <Text color="primary300">({team.users.length} members)</Text>
-                    </SelectItemText>
-                    <StyledItemIndicator>
-                      <Icon
-                        name="check"
-                        css={{
-                          width: '$20',
-                          height: '$20',
-                        }}
-                      />
-                    </StyledItemIndicator>
-                  </StyledItem>
-                ))}
-              </SelectViewport>
-            </SelectContent>
-          </SelectPortal>
-        </Select>
+        <StyledSelect
+          components={{
+            IndicatorSeparator: () => null,
+            Control,
+          }}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: '#A9B3BF',
+              primary50: 'white',
+              primary: 'black',
+              text: '#060D16',
+            },
+          })}
+          styles={selectStyles}
+          options={teamsNames}
+          placeholder="Select Team"
+          controlShouldRenderValue={!!selectedTeam}
+          defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
+          value={teamsNames.find((option) => option.value === selectedTeam?._id)}
+          onChange={(selectedOption) => {
+            handleTeamChange((selectedOption as OptionType)?.value);
+          }}
+        />
       </StyledBox>
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            {currentState === 'error' && <Icon css={{ width: '$24', height: '$24' }} name="info" />}
+            {currentSelectTeamState === 'error' && (
+              <Icon css={{ width: '$24', height: '$24' }} name="info" />
+            )}
             <Text
               hint
               css={{
-                color: currentState === 'error' ? '$dangerBase' : '$primary300',
+                color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300',
               }}
             >
               {message}

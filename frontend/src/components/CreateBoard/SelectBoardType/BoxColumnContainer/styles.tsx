@@ -5,6 +5,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledBox = styled(Flex, Box, {
   width: '$308',
+  height: '$260',
   pt: '$24',
   pb: '$24',
   px: '$32',

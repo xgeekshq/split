@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode } from 'react';
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { NextPage } from 'next';
 import App, { AppContext, AppProps } from 'next/app';
@@ -14,19 +14,20 @@ import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
 import { JWT_EXPIRATION_TIME } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
+import { Session } from 'next-auth';
 
-type NextPageWithLayout = NextPage & {
+type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
+type AppPropsWithLayout<P> = AppProps<P> & {
+  Component: NextPageWithLayout<P>;
 };
 
 function Root({
   Component,
-  pageProps: { session, ...pageProps },
-}: AppPropsWithLayout): JSX.Element {
+  pageProps,
+}: AppPropsWithLayout<{ session: Session; dehydratedState: DehydratedState }>): JSX.Element {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -47,7 +48,7 @@ function Root({
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
       </Head>
       <Sprite />
-      <SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={session}>
+      <SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <ToastProvider duration={100000}>

@@ -55,7 +55,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   const {
     count: { teamsCount, maxUsersCount },
   } = createBoardData;
-  const teamLength = teamMembers.length ?? 0;
+  const teamLength = teamMembers?.length ?? 0;
   const minUsers = teamLength % 2 === 0 ? 2 : 3;
   const maxTeams = Math.floor(teamLength / 2);
   const minTeams = 2;
@@ -95,7 +95,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       ...prev,
       teamsCount: currentValue,
       maxUsersCount: !isEmpty(value)
-        ? Math.ceil(teamMembers.length / Number(currentValue))
+        ? Math.ceil(teamLength / Number(currentValue))
         : prev.maxUsersCount,
     }));
   };
@@ -106,9 +106,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
     setValues((prev) => ({
       ...prev,
       maxUsersCount: currentValue,
-      teamsCount: !isEmpty(value)
-        ? Math.ceil(teamMembers.length / Number(currentValue))
-        : prev.teamsCount,
+      teamsCount: !isEmpty(value) ? Math.ceil(teamLength / Number(currentValue)) : prev.teamsCount,
     }));
   };
 

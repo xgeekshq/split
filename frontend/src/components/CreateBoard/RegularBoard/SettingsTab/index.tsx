@@ -1,36 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { usePrevious } from '@/utils/previousState';
-import BoardConfigurations from '../Configurations/BoardConfigurations';
-import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
+import Text from '@/components/Primitives/Text';
+import { StyledTextTab } from './styles';
+import SettingsParticipant from '../SettingsParticipant';
 
-const StyledTextTab = styled(Text, {
-  pb: '$12 !important',
-  lineHeight: '$20',
-  '&:hover': {
-    cursor: 'pointer',
-  },
-  '&[data-activetab="true"]': {
-    boxSizing: 'border-box',
-    borderBottom: '2px solid $colors$primary800',
-    fontWeight: '$bold',
-    fontSize: '$16',
-    letterSpacing: '$0-2',
-    color: '$primary800',
-  },
-});
-
-const Settings = () => {
+const SettingsTabs = () => {
   const [currentTab, setCurrentTab] = useState(1);
 
   /**
@@ -38,8 +18,6 @@ const Settings = () => {
    */
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
-  const selectedTeam = useRecoilValue(createBoardTeam);
-  const prevTeam = usePrevious(selectedTeam?._id);
 
   const handleChangeTab = (value: number) => {
     if (haveError) return;
@@ -66,6 +44,9 @@ const Settings = () => {
 
   return (
     <Flex direction="column">
+      <Text heading={3} css={{ mb: '$8', mt: '$12' }}>
+        Settings
+      </Text>
       <Flex css={{ width: '100%' }} gap="24">
         <StyledTextTab
           color="primary300"
@@ -73,9 +54,8 @@ const Settings = () => {
           size="md"
           onClick={() => handleChangeTab(1)}
         >
-          Team/-Sub-teams configurations
+          Participants
         </StyledTextTab>
-
         <StyledTextTab
           color="primary300"
           data-activetab={currentTab === 2}
@@ -89,10 +69,11 @@ const Settings = () => {
         css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
         orientation="horizontal"
       />
-      {currentTab === 1 && <TeamSubTeamsConfigurations previousTeam={prevTeam} />}
-      {currentTab === 2 && <BoardConfigurations />}
+
+      {currentTab === 1 && <SettingsParticipant />}
+      {/* {currentTab === 2 && <BoardConfigurations />} */}
     </Flex>
   );
 };
 
-export default Settings;
+export default SettingsTabs;
