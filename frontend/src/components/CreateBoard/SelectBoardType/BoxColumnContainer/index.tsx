@@ -47,6 +47,7 @@ export const BoxColumnContainer = ({
 }: BoxColumnContainerProps) => {
   const router = useRouter();
   const hasRouteQuery = router.query.team;
+
   return hasRouteQuery ? (
     <Link href={{ pathname: route, query: { team: router.query.team } }}>
       <StyledA>

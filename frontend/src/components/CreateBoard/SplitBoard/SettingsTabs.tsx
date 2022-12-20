@@ -7,9 +7,10 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { usePrevious } from '@/utils/previousState';
 import BoardConfigurations from '../Configurations/BoardConfigurations';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 
@@ -38,7 +39,7 @@ const Settings = () => {
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
   const selectedTeam = useRecoilValue(createBoardTeam);
-  const prevTeam = usePrevious(selectedTeam?.name);
+  const prevTeam = usePrevious(selectedTeam?._id);
 
   const handleChangeTab = (value: number) => {
     if (haveError) return;

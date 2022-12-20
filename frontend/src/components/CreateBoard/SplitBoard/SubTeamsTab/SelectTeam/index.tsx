@@ -127,7 +127,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       ];
     });
 
-    if (previousTeam !== selectedTeam.name) {
+    if (previousTeam !== selectedTeam._id) {
       setCreateBoardData((prev) => ({
         ...prev,
         users,
@@ -153,6 +153,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   useEffect(() => {
     if (selectedTeam) {
       const canNotCreateBoard = verifyIfCanCreateBoard();
+
       setHaveError(canNotCreateBoard);
 
       if (!canNotCreateBoard) {
@@ -195,9 +196,9 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
           styles={selectStyles}
           options={teamsNames}
           placeholder="Select Team"
-          controlShouldRenderValue={!!selectedTeam || !!routerTeam}
-          defaultValue={routerTeam ?? { label: selectedTeam?.name, value: selectedTeam?._id }}
-          value={teamsNames.find((option) => option.value === selectedTeam?.name)}
+          controlShouldRenderValue={!!selectedTeam}
+          defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
+          value={teamsNames.find((option) => option.value === selectedTeam?._id)}
           onChange={(selectedOption) => {
             handleTeamChange((selectedOption as OptionType)?.value);
           }}
