@@ -7,7 +7,7 @@ import DeleteTeam from './DeleteTeam';
 type CardEndProps = {
   team: Team;
   havePermissions: boolean;
-  userId: string;
+  userId: string | undefined;
   userSAdmin?: boolean;
   userIsParticipating: boolean;
 };

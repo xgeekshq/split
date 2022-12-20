@@ -9,8 +9,13 @@ import UsersEdit from '@/components/Users/UserEdit';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
 
+import { useRouter } from 'next/router';
+
 const UserDetails = () => {
   const { data: session } = useSession({ required: true });
+
+  const router = useRouter();
+  const { userId } = router.query;
 
   if (!session) return null;
 
@@ -20,11 +25,11 @@ const UserDetails = () => {
         <QueryError>
           <ContentSection gap="36" justify="between">
             <Flex css={{ width: '100%' }} direction="column">
-              <Flex justify="start">
+              <Flex justify="between">
                 <UserHeader title="Nuno Caseiro" />
               </Flex>
+              <UsersEdit userId={userId?.toString()} />
             </Flex>
-            <UsersEdit />
           </ContentSection>
         </QueryError>
       </Suspense>

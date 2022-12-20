@@ -28,7 +28,7 @@ export interface CreateTeamUser {
 export interface TeamUserUpdate {
   role: TeamUserRoles;
   isNewJoiner: boolean;
-  user: string;
+  user: string | undefined;
   team: string;
 }
 

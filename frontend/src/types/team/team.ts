@@ -4,7 +4,7 @@ export interface Team {
   _id: string;
   name: string;
   users: TeamUser[];
-  boardsCount: number;
+  boardsCount?: number;
 }
 
 export interface CreateTeamDto {

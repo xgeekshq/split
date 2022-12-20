@@ -14,7 +14,7 @@ import Icon from '@/components/icons/Icon';
 import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
-  userId: string;
+  userId: string | undefined;
   isTeamPage?: boolean;
 }
 
