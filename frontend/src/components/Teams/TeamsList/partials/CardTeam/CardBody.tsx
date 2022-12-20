@@ -35,8 +35,6 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
 
   const router = useRouter();
 
-  console.log(router.pathname.includes('userId'));
-
   const isSAdmin = session?.user.isSAdmin;
 
   const { _id: id, users } = team;
