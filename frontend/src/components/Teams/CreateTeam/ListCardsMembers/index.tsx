@@ -1,13 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
-
+import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
+
+import { ButtonAddMember } from '../ListMembers/styles';
 
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +43,19 @@ const TeamMembersList = () => {
             member={member}
           />
         ))}
-        <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+        <ButtonAddMember onClick={() => setIsOpen(true)} css={{ marginLeft: 'auto' }}>
+          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
+          <Text
+            weight="medium"
+            css={{
+              ml: '$10',
+              fontSize: '$14',
+              lineHeight: '$18',
+            }}
+          >
+            Add/remove members
+          </Text>
+        </ButtonAddMember>
       </ScrollableContent>
     </Flex>
   );

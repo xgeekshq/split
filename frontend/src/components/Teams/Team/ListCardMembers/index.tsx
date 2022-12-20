@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
@@ -11,23 +11,34 @@ import CardMember from '@/components/Teams/CreateTeam/CardMember';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
 
-const TeamMembersList = () => {
+type TeamMemberListProps = {
+  handleMembersList: () => void;
+};
+
+const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
   const { data: session } = useSession({ required: true });
   const membersList = useRecoilValue(membersListState);
 
   const isSAdmin = session?.user.isSAdmin;
 
   const [isOpen, setIsOpen] = useState(false);
+  const didMountRef = useRef(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const user = membersList.find((member) => member.user._id === session?.user.id);
 
-  if (!user) return null;
+  useEffect(() => {
+    if (didMountRef.current && !isOpen) {
+      handleMembersList();
+    }
+    didMountRef.current = true;
+  }, [handleMembersList, isOpen]);
 
-  const userRole = user.role;
+  const userRole = user?.role;
   const isTeamMember = userRole === TeamUserRoles.MEMBER;
 
+  if (!user) return null;
   return (
     <Flex css={{ mt: '$32' }} direction="column">
       <Flex>

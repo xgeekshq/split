@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Dialog, DialogClose, DialogTrigger } from '@radix-ui/react-dialog';
+import { Dialog, DialogClose, DialogTrigger, Portal } from '@radix-ui/react-dialog';
 
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
@@ -188,81 +188,83 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
             </Text>
           </ButtonAddMember>
         </DialogTrigger>
-        <StyledDialogOverlay />
-        <StyledDialogContent>
-          <StyledDialogTitle>
-            <Text heading="4">Add/remove team members</Text>
-            <DialogClose asChild>
-              <StyledDialogCloseButton isIcon size="lg">
-                <Icon css={{ color: '$primary400' }} name="close" size={24} />
-              </StyledDialogCloseButton>
-            </DialogClose>
-          </StyledDialogTitle>
-          <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-            <SearchInput
-              currentValue={searchMember}
-              handleChange={handleSearchChange}
-              icon="search"
-              iconPosition="left"
-              id="search"
-              placeholder="Search member"
-            />
-          </Flex>
-          <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-            Team Members
-          </Text>
-          <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-            <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
-              {filteredList?.map((user) => (
-                <Flex key={user._id} align="center" justify="between">
-                  {/* <Text>{user.isChecked ? 'True' : 'false'}</Text> */}
-                  <Flex css={{ width: '50%' }}>
-                    <Checkbox
-                      checked={user.isChecked}
-                      disabled={user._id === session?.user.id}
-                      handleChange={handleChecked}
-                      id={user._id}
-                      label={`${user.firstName} ${user.lastName}`}
-                      size="16"
-                      hasSelectAll
-                    />
-                  </Flex>
-                  <Flex css={{ width: '50%' }}>
-                    <Text color="primary300" css={{ textAlign: 'left', width: '50%' }} size="sm">
-                      {user.email}
-                    </Text>
-                  </Flex>
-                </Flex>
-              ))}
-            </Flex>
-          </ScrollableContent>
-          <ButtonsContainer gap={24} justify="end">
-            {!isFiltering && (
-              <Checkbox
-                checked={isCheckAll}
-                handleSelectAll={handleSelectAll}
-                id="selectAll"
-                label="Select all"
-                size="16"
-                hasSelectAll
+        <Portal>
+          <StyledDialogOverlay />
+          <StyledDialogContent>
+            <StyledDialogTitle>
+              <Text heading="4">Add/remove team members</Text>
+              <DialogClose asChild>
+                <StyledDialogCloseButton isIcon size="lg">
+                  <Icon css={{ color: '$primary400' }} name="close" size={24} />
+                </StyledDialogCloseButton>
+              </DialogClose>
+            </StyledDialogTitle>
+            <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+              <SearchInput
+                currentValue={searchMember}
+                handleChange={handleSearchChange}
+                icon="search"
+                iconPosition="left"
+                id="search"
+                placeholder="Search member"
               />
-            )}
-            <Button
-              css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-              variant="primaryOutline"
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              css={{ marginRight: '$32', padding: '$16 $24' }}
-              variant="primary"
-              onClick={saveMembers}
-            >
-              Update
-            </Button>
-          </ButtonsContainer>
-        </StyledDialogContent>
+            </Flex>
+            <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+              Team Members
+            </Text>
+            <ScrollableContent direction="column" justify="start" ref={scrollRef}>
+              <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
+                {filteredList?.map((user) => (
+                  <Flex key={user._id} align="center" justify="between">
+                    {/* <Text>{user.isChecked ? 'True' : 'false'}</Text> */}
+                    <Flex css={{ width: '50%' }}>
+                      <Checkbox
+                        checked={user.isChecked}
+                        disabled={user._id === session?.user.id}
+                        handleChange={handleChecked}
+                        id={user._id}
+                        label={`${user.firstName} ${user.lastName}`}
+                        size="16"
+                        hasSelectAll
+                      />
+                    </Flex>
+                    <Flex css={{ width: '50%' }}>
+                      <Text color="primary300" css={{ textAlign: 'left', width: '50%' }} size="sm">
+                        {user.email}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                ))}
+              </Flex>
+            </ScrollableContent>
+            <ButtonsContainer gap={24} justify="end">
+              {!isFiltering && (
+                <Checkbox
+                  checked={isCheckAll}
+                  handleSelectAll={handleSelectAll}
+                  id="selectAll"
+                  label="Select all"
+                  size="16"
+                  hasSelectAll
+                />
+              )}
+              <Button
+                css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
+                variant="primaryOutline"
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                css={{ marginRight: '$32', padding: '$16 $24' }}
+                variant="primary"
+                onClick={saveMembers}
+              >
+                Update
+              </Button>
+            </ButtonsContainer>
+          </StyledDialogContent>
+        </Portal>
       </Dialog>
     </StyledDialogContainer>
   );

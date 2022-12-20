@@ -50,7 +50,7 @@ function Root({
       <SessionProvider refetchInterval={JWT_EXPIRATION_TIME - 5} session={session}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
-            <ToastProvider duration={100000}>
+            <ToastProvider duration={7000}>
               <RecoilRoot>
                 {getLayout(<Component {...pageProps} />)}
                 <Toast />

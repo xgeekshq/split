@@ -26,7 +26,9 @@ const CardEndTeam = ({
     {!isSAdmin && !isTeamMember && !isTeamCreator && (
       <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />
     )}
-    {isSAdmin && <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} />}
+    {(isSAdmin || isTeamCreator) && (
+      <PopoverRoleSettings isTeamPage={isTeamPage} userId={userId} isTeamCreator={isTeamCreator} />
+    )}
   </Flex>
 );
 
