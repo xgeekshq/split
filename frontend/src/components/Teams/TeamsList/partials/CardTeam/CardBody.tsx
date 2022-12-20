@@ -11,6 +11,9 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { useRouter } from 'next/router';
+import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
+import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 import BoardsInfo from './BoardsInfo';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -22,13 +25,15 @@ const InnerContainer = styled(Flex, Box, {
 });
 
 type CardBodyProps = {
-  userId: string;
+  userId: string | undefined;
   team: Team;
   index?: number;
 };
 
 const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
   const { data: session } = useSession();
+
+  const router = useRouter();
 
   const isSAdmin = session?.user.isSAdmin;
 
@@ -119,14 +124,21 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
                 height: '$24 !important',
               }}
             />
+            {router.pathname.includes('users') ? (
+              <Flex align="center" css={{ width: '$237' }} justify="end">
+                <RoleDescription role={TeamUserRoles.ADMIN} />
 
-            <Flex align="center" css={{ width: '$237' }} justify="start">
-              <BoardsInfo
-                team={team}
-                teamAdminOrStakeholder={havePermissions}
-                userSAdmin={isSAdmin}
-              />
-            </Flex>
+                <PopoverRoleSettings userId={userId} />
+              </Flex>
+            ) : (
+              <Flex align="center" css={{ width: '$237' }} justify="start">
+                <BoardsInfo
+                  team={team}
+                  teamAdminOrStakeholder={havePermissions}
+                  userSAdmin={isSAdmin}
+                />
+              </Flex>
+            )}
           </Flex>
         </Flex>
         <Flex css={{ width: '20%' }} justify="end">

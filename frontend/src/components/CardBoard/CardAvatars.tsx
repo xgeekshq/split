@@ -20,7 +20,7 @@ type CardAvatarProps = {
   responsible: boolean;
   teamAdmins: boolean;
   stakeholders?: boolean;
-  userId: string;
+  userId: string | undefined;
   myBoards?: boolean;
   haveError?: boolean;
   isBoardsPage?: boolean;
