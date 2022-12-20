@@ -9,14 +9,15 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import TeamsList from '@/components/Teams/TeamsList';
 import useTeam from '@/hooks/useTeam';
-import useTeamUtils from '@/hooks/useTeamUtils';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
+import { useRecoilState } from 'recoil';
+import { teamsListState } from '@/store/team/atom/team.atom';
+import TeamsList from '@/components/Teams/TeamsList';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
-  const { teamsList, setTeamsList } = useTeamUtils();
+  const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
   const {
     fetchTeamsOfUser: { data, isFetching },

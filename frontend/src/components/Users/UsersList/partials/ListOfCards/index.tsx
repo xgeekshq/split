@@ -74,7 +74,8 @@ const ListOfCards = React.memo(() => {
       fetchUsers.refetch();
     }, 100);
     return () => clearTimeout(timer);
-  }, [search, fetchUsers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   return (
     <>
