@@ -17,12 +17,11 @@ const UserHeader = ({ title }: UserHeaderProps) => {
       title: 'Users',
       link: '/users',
     },
+    {
+      title,
+      isActive: true,
+    },
   ];
-
-  breadcrumbItems.push({
-    title,
-    isActive: true,
-  });
   return (
     <Flex align="center" justify="between" css={{ width: '100%' }}>
       <Flex direction="column">
@@ -34,11 +33,11 @@ const UserHeader = ({ title }: UserHeaderProps) => {
           <Text
             css={{
               ml: '$14',
-              background: '#E3FFF5',
+              background: '$primary1000',
               borderStyle: 'solid',
-              borderColor: '#3EC796',
+              borderColor: '$primary900',
               borderWidth: 'thin',
-              color: '#3EC796',
+              color: '$primary900',
               borderRadius: '$12',
               padding: '$8',
               height: '1.55rem',

@@ -13,6 +13,8 @@ const primaryColors = {
   primary600: '#212832',
   primary700: '#141A22',
   primary800: '#060D16',
+  primary900: '#3EC796',
+  primary1000: '#E3FFF5',
 };
 
 export { primaryColors };

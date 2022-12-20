@@ -64,11 +64,28 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           />
 
           <Flex align="center" css={{ width: '$147' }} gap="8">
-            <Link href={`/users/${userWithTeams.user._id}`}>
+            {loggedUserIsSAdmin ? (
+              <Link href={`/users/${userWithTeams.user._id}`}>
+                <Flex>
+                  <CardTitle firstName={firstName} lastName={lastName} />
+                </Flex>
+              </Link>
+            ) : (
               <Flex>
-                <CardTitle firstName={firstName} lastName={lastName} />
+                <Text
+                  css={{
+                    mr: '$2',
+                    fontWeight: '$bold',
+                    fontSize: '$14',
+                    letterSpacing: '$0-17',
+                    cursor: 'default',
+                  }}
+                  size="sm"
+                >
+                  {firstName} {lastName}
+                </Text>
               </Flex>
-            </Link>
+            )}
           </Flex>
 
           <Flex align="center" css={{ width: '$147' }}>
@@ -78,6 +95,18 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           </Flex>
         </Flex>
 
+        {!loggedUserIsSAdmin && (
+          <Flex css={{ width: '100%' }} justify="end">
+            <Flex align="center" css={{ width: '$237' }} justify="end">
+              <SuperAdmin
+                userSAdmin={isSAdmin}
+                loggedUserSAdmin={loggedUserIsSAdmin}
+                userId={_id}
+                loggedUserId={userLoginId}
+              />
+            </Flex>
+          </Flex>
+        )}
         <Flex align="center" css={{ justifyContent: 'end', width: '$683' }} gap="8">
           <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$147' }}>
@@ -88,17 +117,19 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
               </Tooltip>
             </Flex>
           </Flex>
-          <Flex css={{ width: '40%' }} justify="end">
-            <Flex align="center" css={{ width: '$237' }} justify="start">
-              <SuperAdmin
-                userSAdmin={isSAdmin}
-                loggedUserSAdmin={loggedUserIsSAdmin}
-                userId={_id}
-                loggedUserId={userLoginId}
-              />
+          {loggedUserIsSAdmin && (
+            <Flex css={{ width: '40%' }} justify="end">
+              <Flex align="center" css={{ width: '$237' }} justify="start">
+                <SuperAdmin
+                  userSAdmin={isSAdmin}
+                  loggedUserSAdmin={loggedUserIsSAdmin}
+                  userId={_id}
+                  loggedUserId={userLoginId}
+                />
+              </Flex>
+              <CardEnd user={userWithTeams.user} />
             </Flex>
-            {loggedUserIsSAdmin && <CardEnd user={userWithTeams.user} />}
-          </Flex>
+          )}
         </Flex>
       </InnerContainer>
     </Flex>
