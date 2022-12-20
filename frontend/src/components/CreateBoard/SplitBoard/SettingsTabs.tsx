@@ -9,7 +9,7 @@ import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/cre
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usePrevious } from '@/utils/previousState';
-import BoardConfigurations from './Configurations/BoardConfigurations';
+import BoardConfigurations from '../Configurations/BoardConfigurations';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 
 const StyledTextTab = styled(Text, {

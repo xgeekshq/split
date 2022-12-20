@@ -14,6 +14,7 @@ import { OptionType } from '@/components/Boards/Filters/FilterBoards';
 import { components, ControlProps } from 'react-select';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
+import { useRouter } from 'next/router';
 import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styles';
 
 const Control = ({ children, ...props }: ControlProps) => (
@@ -36,6 +37,9 @@ type SelectTeamProps = {
 
 const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const { data: session } = useSession({ required: true });
+
+  const router = useRouter();
+  const routerTeam = router.query.team as string;
 
   /**
    * Recoil Atoms and Hooks
@@ -138,6 +142,15 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
 
   useEffect(() => {
+    if (routerTeam) {
+      setValue('team', routerTeam);
+      const foundTeam = teams.find((team) => team._id === routerTeam);
+      setSelectedTeam(foundTeam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (selectedTeam) {
       const canNotCreateBoard = verifyIfCanCreateBoard();
       setHaveError(canNotCreateBoard);
@@ -146,7 +159,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         createBoard();
       }
     }
-  }, [createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
+  }, [routerTeam, createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
@@ -182,8 +195,8 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
           styles={selectStyles}
           options={teamsNames}
           placeholder="Select Team"
-          controlShouldRenderValue={!!selectedTeam}
-          defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
+          controlShouldRenderValue={!!selectedTeam || !!routerTeam}
+          defaultValue={routerTeam ?? { label: selectedTeam?.name, value: selectedTeam?._id }}
           value={teamsNames.find((option) => option.value === selectedTeam?.name)}
           onChange={(selectedOption) => {
             handleTeamChange((selectedOption as OptionType)?.value);
