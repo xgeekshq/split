@@ -1,8 +1,7 @@
-import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsOptional } from 'class-validator';
 
 export class UserTeamsParams {
 	@IsMongoId()
-	@IsString()
 	@IsOptional()
 	userId?: string;
 }
