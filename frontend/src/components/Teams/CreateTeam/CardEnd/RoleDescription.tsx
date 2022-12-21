@@ -4,7 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 type RoleDescriptionProps = {
-  role: string;
+  role: string | undefined;
 };
 
 const RoleDescription = ({ role }: RoleDescriptionProps) => (

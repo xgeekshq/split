@@ -7,7 +7,7 @@ type EditUserProps = { user: User };
 
 const EditUser: React.FC<EditUserProps> = ({ user }) => (
   <Flex pointer>
-    <Link href={`/users/${user._id}`}>
+    <Link href={`/users/${user._id}?firstName=${user.firstName}&lastName=${user.lastName}`}>
       <Icon
         name="edit"
         css={{

@@ -7,8 +7,13 @@ import { CreatedTeamUser, TeamUserAddAndRemove, TeamUserUpdate } from '../types/
 export const getAllTeams = (context?: GetServerSidePropsContext): Promise<Team[]> =>
   fetchData(`/teams`, { context, serverSide: !!context });
 
-export const getTeamsOfUser = (context?: GetServerSidePropsContext): Promise<Team[]> =>
-  fetchData(`/teams/user`, { context, serverSide: !!context });
+export const getTeamsOfUser = (
+  context?: GetServerSidePropsContext,
+  userId?: string,
+): Promise<Team[]> =>
+  userId
+    ? fetchData(`/teams/user?userId=${userId ?? ''}`, { context, serverSide: !!context })
+    : fetchData(`/teams/user`, { context, serverSide: !!context });
 
 export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> =>
   fetchData(`/teams`, { method: 'POST', data: newTeam });

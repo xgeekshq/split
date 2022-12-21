@@ -14,6 +14,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
 import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
 import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
+import { TeamUser } from '@/types/team/team.user';
 import BoardsInfo from './BoardsInfo';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -38,6 +39,10 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
   const isSAdmin = session?.user.isSAdmin;
 
   const { _id: id, users } = team;
+
+  const userFound: TeamUser | undefined = users.find((member) => member.user._id === userId);
+
+  const userRole = userFound?.role;
 
   const userIsParticipating = useMemo(
     () => users.some((user) => user.user._id === userId),
@@ -126,7 +131,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
             />
             {router.pathname.includes('users') ? (
               <Flex align="center" css={{ width: '$237' }} justify="end">
-                <RoleDescription role={TeamUserRoles.ADMIN} />
+                <RoleDescription role={userRole} />
 
                 <PopoverRoleSettings userId={userId} />
               </Flex>
