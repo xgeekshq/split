@@ -216,9 +216,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			return null;
 		}
 
+		const team = await this.getTeamService.getTeam(teamId);
+
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
-				`xgeeks-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
+				`${team.name}-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
 					month: 'long'
 				}).format(configs.date)}-${configs.date?.getFullYear()}`
 			).board,
@@ -254,7 +256,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			}
 		} while (maxTeams < 2);
 
-		return Math.floor(maxTeams);
+		return Math.round(maxTeams);
 	};
 
 	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
@@ -335,12 +337,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		let availableUsers = [...teamMembers];
 		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
 		let membersWithoutTeam = teamMembers.length;
+		let countNumberOfGroups = 0;
 
 		new Array(maxTeams).fill(0).forEach((_, i) => {
+			countNumberOfGroups++;
+
 			let numberOfUsersByGroup = usersPerTeam;
 			membersWithoutTeam -= usersPerTeam;
 
-			if (membersWithoutTeam < usersPerTeam && membersWithoutTeam !== 0) numberOfUsersByGroup += 1;
+			if (countNumberOfGroups === maxTeams && membersWithoutTeam !== 0)
+				numberOfUsersByGroup += membersWithoutTeam;
 
 			const indexToCompare = i - 1 < 0 ? 0 : i - 1;
 

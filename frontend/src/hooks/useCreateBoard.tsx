@@ -148,12 +148,16 @@ const useCreateBoard = (team?: Team) => {
       const usersPerTeam = Math.floor(teamMembersLength / maxTeams);
       let membersWithoutTeam = teamMembersLength;
 
+      let countNumberOfGroups = 0;
+
       new Array(maxTeams).fill(0).forEach((_, i) => {
+        countNumberOfGroups++;
+
         let numberOfUsersByGroup = usersPerTeam;
         membersWithoutTeam -= usersPerTeam;
 
-        if (membersWithoutTeam < usersPerTeam && membersWithoutTeam !== 0)
-          numberOfUsersByGroup += 1;
+        if (countNumberOfGroups === maxTeams && membersWithoutTeam !== 0)
+          numberOfUsersByGroup += membersWithoutTeam;
 
         const indexToCompare = i - 1 < 0 ? 0 : i - 1;
 
@@ -190,11 +194,15 @@ const useCreateBoard = (team?: Team) => {
 
   const handleAddTeam = () => {
     if (!canAdd) return;
-    const countUsers = Math.ceil(teamMembersLength / (dividedBoardsCount + 1));
+    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(2);
 
     setCreateBoardData((prev) => ({
       ...prev,
-      count: { ...prev.count, maxUsersCount: countUsers, teamsCount: dividedBoardsCount + 1 },
+      count: {
+        ...prev.count,
+        maxUsersCount: Number(countUsers),
+        teamsCount: dividedBoardsCount + 1,
+      },
       board: {
         ...prev.board,
         dividedBoards: handleSplitBoards(dividedBoardsCount + 1),
@@ -204,10 +212,15 @@ const useCreateBoard = (team?: Team) => {
 
   const handleRemoveTeam = () => {
     if (!canReduce) return;
-    const countUsers = Math.ceil(teamMembersLength / (dividedBoardsCount - 1));
+    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(2);
+
     setCreateBoardData((prev) => ({
       ...prev,
-      count: { ...prev.count, maxUsersCount: countUsers, teamsCount: dividedBoardsCount - 1 },
+      count: {
+        ...prev.count,
+        maxUsersCount: Number(countUsers),
+        teamsCount: dividedBoardsCount - 1,
+      },
       board: {
         ...prev.board,
         dividedBoards: handleSplitBoards(dividedBoardsCount - 1),
