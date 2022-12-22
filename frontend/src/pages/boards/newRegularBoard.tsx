@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import Icon from '@/components/icons/Icon';
@@ -26,9 +26,44 @@ import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.st
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import TipBar from '@/components/CreateBoard/TipBar';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { teamsOfUser } from '@/store/team/atom/team.atom';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
+
+const defaultBoard = {
+  users: [],
+  team: null,
+  count: {
+    teamsCount: 2,
+    maxUsersCount: 2,
+  },
+  board: {
+    title: 'Main Board -',
+    columns: [
+      { title: 'Went well', color: '$highlight1Light', cards: [] },
+      { title: 'To improve', color: '$highlight4Light', cards: [] },
+      { title: 'Action points', color: '$highlight3Light', cards: [] },
+    ],
+    isPublic: false,
+    maxVotes: undefined,
+    dividedBoards: [],
+    recurrent: true,
+    users: [],
+    team: null,
+    isSubBoard: false,
+    boardNumber: 0,
+    hideCards: false,
+    hideVotes: false,
+    slackEnable: false,
+    totalUsedVotes: 0,
+  },
+};
 
 const NewRegularBoard: NextPage = () => {
   const router = useRouter();
@@ -37,6 +72,13 @@ const NewRegularBoard: NextPage = () => {
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [createBoard, setCreateBoard] = useState(false);
+
+  const setToastState = useSetRecoilState(toastState);
+  const setBoardState = useSetRecoilState(createBoardDataState);
+  // const [boardState, setBoardState] = useRecoilState(createBoardDataState);
+
+  const setTeams = useSetRecoilState(teamsOfUser);
+  const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   /**
    * Team  Hook
@@ -53,19 +95,16 @@ const NewRegularBoard: NextPage = () => {
     setCreateBoard(true);
   };
 
-  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable?: boolean }>(
-    {
-      mode: 'onBlur',
-      reValidateMode: 'onBlur',
-      defaultValues: {
-        text: '',
-        maxVotes: 2,
-        slackEnable: false,
-        team: undefined,
-      },
-      resolver: joiResolver(SchemaCreateBoard),
+  const methods = useForm<{ text?: string; maxVotes?: number; slackEnable?: boolean }>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      text: '',
+      maxVotes: 2,
+      slackEnable: false,
     },
-  );
+    resolver: joiResolver(SchemaCreateRegularBoard),
+  });
 
   const mainBoardName = useWatch({
     control: methods.control,
@@ -76,15 +115,73 @@ const NewRegularBoard: NextPage = () => {
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
-    if (createBoard) {
-      setCreateBoard(false);
-    } else {
-      setIsLoading(true);
+    setIsLoading(true);
 
-      setBackButtonState(true);
-      router.back();
+    setBackButtonState(true);
+    router.back();
+  }, [router]);
+
+  const handleCancelBtn = () => {
+    setIsLoading(true);
+
+    router.push(DASHBOARD_ROUTE);
+  };
+
+  /**
+   * Save board
+
+   */
+  // const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+  // mutate( {
+  //   ...boardState.board,
+  //   users: boardState.users,
+  //   title: title || boardState.board.title,
+  //   maxVotes,
+  //   slackEnable,
+  //   maxUsers: boardState.count.maxUsersCount,
+  // });
+  // };
+
+  useEffect(() => {
+    if (teamsData && allTeamsData && session) {
+      const availableTeams = teamsData.filter((team) =>
+        team.users?.find(
+          (teamUser) =>
+            teamUser.user._id === session?.user.id &&
+            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+        ),
+      );
+
+      setTeams(session?.user.isSAdmin ? allTeamsData : availableTeams);
     }
-  }, [createBoard, router]);
+
+    // if (status === 'success') {
+    //   setIsLoading(true);
+    //   setToastState({
+    //     open: true,
+    //     content: 'Board created with success!',
+    //     type: ToastStateEnum.SUCCESS,
+    //   });
+
+    //   setBoardState(defaultBoard);
+    //   setSelectedTeam(undefined);
+    //   router.push('/boards');
+    // }
+
+    return () => {
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
+    };
+  }, [
+    router,
+    setToastState,
+    session,
+    teamsData,
+    setTeams,
+    allTeamsData,
+    setSelectedTeam,
+    setBoardState,
+  ]);
 
   if (!session || !teamsData || !allTeamsData) return null;
 
@@ -104,7 +201,12 @@ const NewRegularBoard: NextPage = () => {
           {createBoard ? (
             <ContentContainer>
               <SubContainer>
-                <StyledForm direction="column">
+                <StyledForm
+                  direction="column"
+                  // onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                  //   saveBoard(text, maxVotes, slackEnable);
+                  // })}
+                >
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
                       <BoardName mainBoardName={mainBoardName} />
@@ -116,7 +218,7 @@ const NewRegularBoard: NextPage = () => {
                       disabled={isBackButtonDisable}
                       type="button"
                       variant="lightOutline"
-                      onClick={handleBack}
+                      onClick={handleCancelBtn}
                     >
                       Cancel
                     </Button>

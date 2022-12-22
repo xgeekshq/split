@@ -10,26 +10,11 @@ import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '@/components/Primitives/Flex';
-import { OptionType } from '@/components/Boards/Filters/FilterBoards';
-import { components, ControlProps } from 'react-select';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
-import { HelperTextWrapper, selectStyles, StyledBox, StyledSelect } from './styles';
-
-const Control = ({ children, ...props }: ControlProps) => (
-  <components.Control {...props}>
-    <Flex direction="column" css={{ width: '100%', px: '$17' }}>
-      {(props.selectProps.value as { label: string; value: string }).label && (
-        <Text color="primary300" size="xs">
-          Select Team
-        </Text>
-      )}
-
-      <Flex css={{ width: '100%' }}>{children}</Flex>
-    </Flex>
-  </components.Control>
-);
+import SelectComponent from '@/components/CreateBoard/Select';
+import { HelperTextWrapper } from './styles';
 
 type SelectTeamProps = {
   previousTeam?: string;
@@ -61,6 +46,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const isValueEmpty = isEmpty(teamValueOnForm);
 
   const teamMembersCount = teamMembers?.length ?? 0;
+  const numberOfTeams = teams?.length ?? 0;
 
   const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';
@@ -164,60 +150,47 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
-      <StyledBox
-        css={{
-          minWidth: 0,
-          width: '100%',
-          py: '$12',
-          height: '$64',
-          borderRadius: '$4',
-          backgroundColor: 'white',
-          border:
-            currentSelectTeamState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
-        }}
-        direction="column"
-        elevation="1"
-      >
-        <StyledSelect
-          components={{
-            IndicatorSeparator: () => null,
-            Control,
-          }}
-          theme={(theme) => ({
-            ...theme,
-            colors: {
-              ...theme.colors,
-              primary25: '#A9B3BF',
-              primary50: 'white',
-              primary: 'black',
-              text: '#060D16',
-            },
-          })}
-          styles={selectStyles}
-          options={teamsNames}
-          placeholder="Select Team"
-          controlShouldRenderValue={!!selectedTeam}
-          defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
-          value={teamsNames.find((option) => option.value === selectedTeam?._id)}
-          onChange={(selectedOption) => {
-            handleTeamChange((selectedOption as OptionType)?.value);
-          }}
-        />
-      </StyledBox>
+      <SelectComponent
+        teamsNames={teamsNames}
+        selectedTeam={selectedTeam}
+        handleTeamChange={handleTeamChange}
+        currentSelectTeamState={currentSelectTeamState}
+        numberOfTeams={numberOfTeams}
+      />
+      {numberOfTeams === 0 && (
+        <Flex justify="start">
+          <HelperTextWrapper css={{ mt: '$8' }} gap="4">
+            <Icon css={{ width: '$24', height: '$24' }} name="info" />
+
+            <Text
+              hint
+              css={{
+                color: '$dangerBase',
+              }}
+            >
+              In order to create a team board, you must be team-admin or stakeholder of at least one
+              team.
+            </Text>
+          </HelperTextWrapper>
+        </Flex>
+      )}
+
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
             {currentSelectTeamState === 'error' && (
               <Icon css={{ width: '$24', height: '$24' }} name="info" />
             )}
-            <Text
-              hint
-              css={{
-                color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300',
-              }}
-            >
-              {message}
-            </Text>
+            {!isHelperEmpty && (
+              <Text
+                hint
+                css={{
+                  color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300',
+                }}
+              >
+                {message}
+              </Text>
+            )}
           </HelperTextWrapper>
         )}
       </Flex>

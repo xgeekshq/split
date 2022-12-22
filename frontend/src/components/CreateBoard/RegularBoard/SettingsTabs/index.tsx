@@ -8,11 +8,10 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
 import { StyledTextTab } from './styles';
-import SettingsParticipant from '../SettingsParticipant';
+import ParticipantsTab from '../ParticipantsTab';
 
 const SettingsTabs = () => {
   const [currentTab, setCurrentTab] = useState(1);
-  // const [timesOpen, setTimesOpen] = useState<number>(0);
 
   /**
    * Recoil Atoms
@@ -71,7 +70,7 @@ const SettingsTabs = () => {
         orientation="horizontal"
       />
 
-      {currentTab === 1 && <SettingsParticipant />}
+      {currentTab === 1 && <ParticipantsTab />}
       {/* {currentTab === 2 && <BoardConfigurations />} */}
     </Flex>
   );
