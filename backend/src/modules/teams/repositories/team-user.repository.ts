@@ -99,6 +99,6 @@ export class TeamUserRepository
 	}
 
 	deleteTeamUser(userId: string, withSession: boolean): Promise<number> {
-		return this.deleteMany({ userId }, withSession);
+		return this.deleteMany({ user: userId }, withSession);
 	}
 }

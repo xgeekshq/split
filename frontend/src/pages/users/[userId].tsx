@@ -1,4 +1,4 @@
-import { ReactElement, Suspense } from 'react';
+import { ReactElement, Suspense, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
 import QueryError from '@/components/Errors/QueryError';
@@ -17,6 +17,7 @@ import { getTeamsOfUser } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { teamsListState } from '@/store/team/atom/team.atom';
 
 const UserDetails = () => {
   const { data: session } = useSession({ required: true });
@@ -26,8 +27,11 @@ const UserDetails = () => {
 
   const setToastState = useSetRecoilState(toastState);
 
+  // Recoil States
+  const setTeamsListState = useSetRecoilState(teamsListState);
+
   const { data, isFetching } = useQuery(['teams'], () => getTeamsOfUser(), {
-    enabled: true,
+    enabled: false,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
@@ -37,6 +41,14 @@ const UserDetails = () => {
       });
     },
   });
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    setTeamsListState(data);
+  }, [data, setTeamsListState]);
 
   if (!session || !data) return null;
 
@@ -49,9 +61,7 @@ const UserDetails = () => {
               <Flex justify="between">
                 <UserHeader firstName={firstName} lastName={lastName} />
               </Flex>
-              {data && (
-                <UsersEdit userId={userId?.toString()} teams={data} isLoading={isFetching} />
-              )}
+              {data && <UsersEdit userId={userId?.toString()} isLoading={isFetching} />}
             </Flex>
           </ContentSection>
         </QueryError>

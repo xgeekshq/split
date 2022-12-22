@@ -6,13 +6,16 @@ import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import * as TeamUser from 'src/modules/teams/interfaces/types';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teams/interfaces/services/delete.team.user.service.interface';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 
 @Injectable()
 export default class DeleteUserServiceImpl implements DeleteUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository) private readonly userRepository: UserRepositoryInterface,
 		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
-		private teamUserService: DeleteTeamUserServiceInterface
+		private teamUserService: DeleteTeamUserServiceInterface,
+		@Inject(TeamUser.TYPES.services.GetTeamService)
+		private getTeamUserService: GetTeamServiceInterface
 	) {}
 
 	async delete(user: UserDto, userId: string): Promise<boolean> {
@@ -24,7 +27,11 @@ export default class DeleteUserServiceImpl implements DeleteUserServiceInterface
 
 		try {
 			this.deleteUser(userId, true);
-			await this.teamUserService.delete(userId);
+			const userFound = await this.getTeamUserService.getTeamsOfUser(userId);
+
+			if (userFound.length > 0) {
+				await this.teamUserService.delete(userId);
+			}
 			await this.userRepository.commitTransaction();
 
 			return true;

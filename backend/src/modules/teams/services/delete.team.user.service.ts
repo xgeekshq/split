@@ -28,12 +28,7 @@ export default class DeleteTeamUserService implements DeleteTeamUserServiceInter
 	}
 
 	private async deleteTeamUsers(userId: string, withSession: boolean) {
-		const deletedCount = await this.teamUserRepository.deleteMany(
-			{
-				user: userId
-			},
-			withSession
-		);
+		const deletedCount = await this.teamUserRepository.deleteTeamUser(userId, withSession);
 
 		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}
