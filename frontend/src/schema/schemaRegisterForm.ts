@@ -1,12 +1,12 @@
 import Joi from 'joi';
 
 const SchemaRegisterForm = Joi.object({
-  firstName: Joi.string().required().min(2).messages({
+  firstName: Joi.string().alphanum().required().min(2).messages({
     'string.min': 'Your name must have more than 1 character.',
     'any.required': 'Please insert your first name',
     'string.empty': 'Please insert your first name',
   }),
-  lastName: Joi.string().required().min(2).messages({
+  lastName: Joi.string().alphanum().required().min(2).messages({
     'string.min': 'Your name must have more than 1 character.',
     'any.required': 'Please insert your last name',
     'string.empty': 'Please insert your last name',

@@ -47,11 +47,30 @@ const Header = ({ firstName, lastName, email }: Props) => {
             {initialLetters}
           </Text>
         </Flex>
-        <Flex direction="column">
-          <Text css={{ color: '$white' }} size="sm" weight="medium">
+        <Flex direction="column" css={{ width: '80%' }}>
+          <Text
+            css={{
+              color: '$white',
+              textOverflow: 'ellipsis',
+              width: '100%',
+              overflow: 'hidden',
+              wordBreak: 'keep-all',
+            }}
+            size="sm"
+            weight="medium"
+          >
             {`${firstName} ${lastName}`}
           </Text>
-          <Text css={{ color: '$primary200' }} size="xs" weight="medium">
+          <Text
+            css={{
+              color: '$primary200',
+              textOverflow: 'ellipsis',
+              width: '100%',
+              overflow: 'hidden',
+            }}
+            size="xs"
+            weight="medium"
+          >
             {email}
           </Text>
         </Flex>

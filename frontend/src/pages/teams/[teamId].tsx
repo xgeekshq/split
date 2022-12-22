@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useCallback, useEffect } from 'react';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
@@ -21,12 +21,14 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { User } from '@/types/user/user';
 import useTeam from '@/hooks/useTeam';
+import { useRouter } from 'next/router';
 
 const Team = () => {
   // Session Details
   const { data: session } = useSession({ required: true });
   // const userId = session?.user?.id;
   const setToastState = useSetRecoilState(toastState);
+  const router = useRouter();
 
   // // Hooks
   const {
@@ -49,7 +51,7 @@ const Team = () => {
   const setMembersListState = useSetRecoilState(membersListState);
   const setUsersListState = useSetRecoilState(usersListState);
 
-  useEffect(() => {
+  const handleMembersList = useCallback(() => {
     if (!data || !usersData) {
       return;
     }
@@ -72,7 +74,11 @@ const Team = () => {
 
     setMembersListState(data.users);
     setUsersListState(checkboxUsersList);
-  }, [data, session?.user.id, setMembersListState, setUsersListState, usersData]);
+  }, [data, setMembersListState, setUsersListState, usersData]);
+
+  useEffect(() => {
+    handleMembersList();
+  }, [data, setMembersListState, setUsersListState, usersData, router, handleMembersList]);
 
   if (!session || !data) return null;
   return (
@@ -90,7 +96,7 @@ const Team = () => {
               <Flex justify="between">
                 <TeamHeader title={data.name} />
               </Flex>
-              <TeamMembersList />
+              <TeamMembersList handleMembersList={handleMembersList} />
             </Flex>
           </ContentSection>
         </QueryError>
