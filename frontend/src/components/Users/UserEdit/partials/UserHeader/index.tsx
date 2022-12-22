@@ -7,10 +7,11 @@ import Icon from '@/components/icons/Icon';
 import { TitleSection } from './styles';
 
 type UserHeaderProps = {
-  title: string;
+  firstName: string | string[] | undefined;
+  lastName: string | string[] | undefined;
 };
 
-const UserHeader = ({ title }: UserHeaderProps) => {
+const UserHeader = ({ firstName, lastName }: UserHeaderProps) => {
   // Set breadcrumbs
   const breadcrumbItems: BreadcrumbType = [
     {
@@ -18,7 +19,7 @@ const UserHeader = ({ title }: UserHeaderProps) => {
       link: '/users',
     },
     {
-      title,
+      title: `${firstName} ${lastName}`,
       isActive: true,
     },
   ];
@@ -29,7 +30,9 @@ const UserHeader = ({ title }: UserHeaderProps) => {
           <Breadcrumb items={breadcrumbItems} />
         </Flex>
         <TitleSection>
-          <Text heading="1">{title}</Text>
+          <Text heading="1">
+            {firstName} {lastName}
+          </Text>
           <Text
             css={{
               ml: '$14',

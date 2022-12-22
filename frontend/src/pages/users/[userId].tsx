@@ -10,14 +10,35 @@ import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
 
 import { useRouter } from 'next/router';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { getTeamsOfUser } from '@/api/teamService';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 const UserDetails = () => {
   const { data: session } = useSession({ required: true });
 
   const router = useRouter();
-  const { userId } = router.query;
+  const { userId, firstName, lastName } = router.query;
 
-  if (!session) return null;
+  const setToastState = useSetRecoilState(toastState);
+
+  const { data, isFetching } = useQuery(['teams'], () => getTeamsOfUser(), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the teams',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  if (!session || !data) return null;
 
   return (
     <Flex direction="column">
@@ -26,9 +47,11 @@ const UserDetails = () => {
           <ContentSection gap="36" justify="between">
             <Flex css={{ width: '100%' }} direction="column">
               <Flex justify="between">
-                <UserHeader title="Nuno Caseiro" />
+                <UserHeader firstName={firstName} lastName={lastName} />
               </Flex>
-              <UsersEdit userId={userId?.toString()} />
+              {data && (
+                <UsersEdit userId={userId?.toString()} teams={data} isLoading={isFetching} />
+              )}
             </Flex>
           </ContentSection>
         </QueryError>
@@ -38,5 +61,20 @@ const UserDetails = () => {
 };
 
 UserDetails.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
+
+export const getServerSideProps: GetServerSideProps = requireAuthentication(
+  async (context: GetServerSidePropsContext) => {
+    const userId = context.query.userId?.toString();
+
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context, userId));
+
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  },
+);
 
 export default UserDetails;

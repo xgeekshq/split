@@ -4,49 +4,27 @@ import Flex from '@/components/Primitives/Flex';
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import CardBody from '@/components/Teams/TeamsList/partials/CardTeam/CardBody';
 import { Team } from '@/types/team/team';
-import { TeamUser } from '@/types/team/team.user';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { DotsLoading } from '@/components/loadings/DotsLoading';
 
 type ListOfCardsProp = {
   userId: string | undefined;
+  teams: Team[];
+  isLoading: boolean;
 };
 
-const users: TeamUser = {
-  user: {
-    _id: '1',
-    firstName: 'zeca',
-    lastName: 'pola',
-    email: 'zeca@twe.pt',
-    isSAdmin: true,
-    joinedAt: '2022-11-17T12:51:21.897+00:00',
-  },
-  role: TeamUserRoles.ADMIN,
-  isNewJoiner: false,
-};
-
-const ListOfCards = React.memo<ListOfCardsProp>(({ userId }) => {
-  const dummyData: Team[] = [
-    {
-      _id: '1',
-      name: 'xgeeks',
-      users: [users],
-    },
-    {
-      _id: '2',
-      name: 'xkigroup',
-      users: [users],
-    },
-  ];
-
-  return (
-    <ScrollableContent direction="column" gap="24" justify="start">
-      <Flex direction="column" gap="20">
-        {dummyData.map((team) => (
-          <CardBody key={team._id} team={team} userId={userId} />
-        ))}
+const ListOfCards = React.memo<ListOfCardsProp>(({ userId, teams, isLoading }) => (
+  <ScrollableContent direction="column" gap="24" justify="start">
+    <Flex direction="column" gap="20">
+      {teams.map((team: Team) => (
+        <CardBody key={team._id} team={team} userId={userId} />
+      ))}
+    </Flex>
+    {isLoading && (
+      <Flex justify="center">
+        <DotsLoading />
       </Flex>
-    </ScrollableContent>
-  );
-});
+    )}
+  </ScrollableContent>
+));
 
 export default ListOfCards;

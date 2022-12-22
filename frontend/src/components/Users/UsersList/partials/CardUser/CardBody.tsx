@@ -65,7 +65,9 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
 
           <Flex align="center" css={{ width: '$147' }} gap="8">
             {loggedUserIsSAdmin ? (
-              <Link href={`/users/${userWithTeams.user._id}`}>
+              <Link
+                href={`/users/${userWithTeams.user._id}?firstName=${userWithTeams.user.firstName}&lastName=${userWithTeams.user.lastName}`}
+              >
                 <Flex>
                   <CardTitle firstName={firstName} lastName={lastName} />
                 </Flex>
