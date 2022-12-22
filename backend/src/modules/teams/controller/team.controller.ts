@@ -32,6 +32,7 @@ import {
 } from '@nestjs/swagger';
 import { TeamParams } from 'src/libs/dto/param/team.params';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
+import { UserTeamsParams } from 'src/libs/dto/param/user.teams.param';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
@@ -152,7 +153,11 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Get('user')
-	getTeamsOfUser(@Req() request: RequestWithUser) {
+	getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
+		if (userId) {
+			return this.getTeamApp.getTeamsOfUser(userId);
+		}
+
 		return this.getTeamApp.getTeamsOfUser(request.user._id);
 	}
 
