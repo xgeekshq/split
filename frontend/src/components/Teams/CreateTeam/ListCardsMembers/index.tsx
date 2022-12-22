@@ -44,7 +44,7 @@ const TeamMembersList = () => {
           />
         ))}
         <ButtonAddMember onClick={() => setIsOpen(true)} css={{ marginLeft: 'auto' }}>
-          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
+          <Icon css={{ width: '$16', height: '$16' }} name="plus" />
           <Text
             weight="medium"
             css={{

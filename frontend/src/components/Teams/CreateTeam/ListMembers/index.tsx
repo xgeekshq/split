@@ -216,7 +216,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
               <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
                 {filteredList?.map((user) => (
                   <Flex key={user._id} align="center" justify="between">
-                    {/* <Text>{user.isChecked ? 'True' : 'false'}</Text> */}
                     <Flex css={{ width: '50%' }}>
                       <Checkbox
                         checked={user.isChecked}
