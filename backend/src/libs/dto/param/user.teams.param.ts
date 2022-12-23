@@ -8,4 +8,8 @@ export class UserTeamsParams {
 	@IsMongoId()
 	@IsOptional()
 	teamId?: string;
+
+	@IsMongoId()
+	@IsOptional()
+	teamUserId?: string;
 }

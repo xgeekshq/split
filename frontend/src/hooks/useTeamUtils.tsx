@@ -6,12 +6,7 @@ import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } fr
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
-import {
-  membersListState,
-  teamsListState,
-  usersListState,
-  userTeamsListState,
-} from '../store/team/atom/team.atom';
+import { membersListState, teamsListState, usersListState } from '../store/team/atom/team.atom';
 import { TeamUser } from '../types/team/team.user';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 
@@ -26,8 +21,6 @@ type TeamUtilsType = {
   teamsList: Team[];
   setTeamsList: SetterOrUpdater<Team[]>;
   usersList: UserList[];
-  setUserTeamsList: SetterOrUpdater<Team[]>;
-  userTeamsList: Team[];
   userId: string | undefined;
 };
 
@@ -50,8 +43,6 @@ const useTeamUtils = (): TeamUtilsType => {
 
   const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
-  const [userTeamsList, setUserTeamsList] = useRecoilState(userTeamsListState);
-
   return {
     loggedUserId,
     teamId: String(teamId),
@@ -63,8 +54,6 @@ const useTeamUtils = (): TeamUtilsType => {
     teamsList,
     setTeamsList,
     usersList,
-    userTeamsList,
-    setUserTeamsList,
     userId: Array.isArray(userId) ? userId[0] : userId,
   };
 };

@@ -21,7 +21,7 @@ const Teams = () => {
 
   const {
     fetchTeamsOfUser: { data, isFetching },
-  } = useTeam({});
+  } = useTeam();
 
   useEffect(() => {
     if (data) {

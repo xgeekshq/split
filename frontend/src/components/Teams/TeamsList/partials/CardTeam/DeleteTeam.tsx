@@ -9,18 +9,18 @@ type DeleteTeamProps = {
   teamName: string;
   teamId: string;
   socketId?: string;
-  userId?: string;
+  teamUserId?: string;
   isTeamPage?: boolean | undefined;
 };
 
-const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, userId, isTeamPage }) => {
+const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, teamUserId, isTeamPage }) => {
   const { deleteTeam, deleteTeamUser } = useTeam({});
 
   const handleDelete = () => {
     if (isTeamPage) {
       deleteTeam.mutate({ id: teamId });
     } else {
-      deleteTeamUser.mutate({ userId, teamId });
+      deleteTeamUser.mutate({ teamUserId });
     }
   };
   return (

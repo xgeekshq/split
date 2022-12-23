@@ -97,11 +97,11 @@ const NewSplitBoard: NextPage = () => {
    */
   const {
     fetchTeamsOfUser: { data: teamsData },
-  } = useTeam({});
+  } = useTeam();
 
   const {
     fetchAllTeams: { data: allTeamsData },
-  } = useTeam({});
+  } = useTeam();
 
   /**
    * React Hook Form

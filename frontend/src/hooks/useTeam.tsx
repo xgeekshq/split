@@ -28,18 +28,9 @@ const useTeam = ({
   autoFetchAllTeams = false,
   autoFetchTeamsOfUser = false,
   autoFetchTeamsOfSpecificUser = false,
-}: AutoFetchProps): UseTeamType => {
-  const {
-    teamId,
-    setToastState,
-    queryClient,
-    teamsList,
-    setTeamsList,
-    usersList,
-    userTeamsList,
-    setUserTeamsList,
-    userId,
-  } = useTeamUtils();
+}: AutoFetchProps = {}): UseTeamType => {
+  const { teamId, setToastState, queryClient, teamsList, setTeamsList, usersList, userId } =
+    useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
     enabled: autoFetchAllTeams,
@@ -210,13 +201,8 @@ const useTeam = ({
   });
 
   const deleteTeamUser = useMutation(deleteTeamUserRequest, {
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries(['userTeamsList']);
-
-      // updates the teamsList recoil
-      const teams = userTeamsList.filter((team) => team._id !== variables.teamId);
-
-      setUserTeamsList(teams);
+    onSuccess: () => {
+      queryClient.invalidateQueries(['teams', userId]);
 
       setToastState({
         open: true,

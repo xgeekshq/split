@@ -17,7 +17,7 @@ const Boards = () => {
 
   const {
     fetchTeamsOfUser: { data },
-  } = useTeam({});
+  } = useTeam();
 
   useEffect(() => {
     if (data) {

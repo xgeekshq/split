@@ -39,7 +39,18 @@ const CardTitle: React.FC<CardTitleProps> = ({ teamId, title, isTeamPage }) =>
       <StyledBoardTitle>{title}</StyledBoardTitle>
     </Link>
   ) : (
-    <StyledBoardTitle>{title}</StyledBoardTitle>
+    <StyledBoardTitle
+      css={{
+        '@hover': {
+          '&:hover': {
+            textDecoration: 'none',
+            cursor: 'auto',
+          },
+        },
+      }}
+    >
+      {title}
+    </StyledBoardTitle>
   );
 
 export default CardTitle;

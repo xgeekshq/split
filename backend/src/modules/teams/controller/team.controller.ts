@@ -315,8 +315,8 @@ export default class TeamsController {
 		type: ForbiddenResponse
 	})
 	@UseGuards(SuperAdminGuard)
-	@Delete('/:userId/:teamId')
-	deleteTeamUsers(@Param() { userId, teamId }: UserTeamsParams) {
-		return this.deleteTeamUserApp.deleteTeamOfUser(userId, teamId, true);
+	@Delete('/user/:teamUserId')
+	deleteTeamUsers(@Param() { teamUserId }: UserTeamsParams) {
+		return this.deleteTeamUserApp.deleteTeamUser(teamUserId, true);
 	}
 }

@@ -10,7 +10,7 @@ export class DeleteTeamUserApplication implements DeleteTeamUserApplicationInter
 		private deleteTeamUserServices: DeleteTeamUserServiceInterface
 	) {}
 
-	deleteTeamOfUser(userId: string, teamId: string, withSession: boolean) {
-		return this.deleteTeamUserServices.deleteTeamOfUser(userId, teamId, withSession);
+	deleteTeamUser(teamUserId: string, withSession: boolean) {
+		return this.deleteTeamUserServices.deleteTeamUser(teamUserId, withSession);
 	}
 }

@@ -55,7 +55,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
         </StyledMenuItem>
       </Link>
       <Link href={USERS_ROUTE}>
-        <StyledMenuItem align="center" data-active={active === USERS_ROUTE}>
+        <StyledMenuItem align="center" data-active={active.includes(USERS_ROUTE)}>
           <Icon name="user" />
           <StyledText>Users</StyledText>
         </StyledMenuItem>

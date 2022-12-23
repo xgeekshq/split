@@ -151,7 +151,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
           <CardEnd
             havePermissions={havePermissions}
             team={team}
-            userId={userId}
+            teamUserId={userFound?._id}
             userIsParticipating={userIsParticipating}
             userSAdmin={isSAdmin}
             isTeamPage={isTeamPage}

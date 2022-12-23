@@ -39,6 +39,6 @@ export const deleteTeamRequest = ({ id }: { id: string }): Promise<Team> =>
   fetchData(`/teams/${id}`, { method: 'DELETE' });
 
 export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promise<TeamUser> =>
-  fetchData(`/teams/${teamOfUserToDelete.userId}/${teamOfUserToDelete.teamId}`, {
+  fetchData(`/teams/user/${teamOfUserToDelete.teamUserId}`, {
     method: 'DELETE',
   });

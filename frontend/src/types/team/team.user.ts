@@ -39,6 +39,5 @@ export interface TeamUserAddAndRemove {
 }
 
 export interface DeleteTeamUser {
-  userId?: string;
-  teamId: string;
+  teamUserId?: string;
 }

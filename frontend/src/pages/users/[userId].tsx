@@ -50,7 +50,11 @@ const UserDetails = () => {
           <ContentSection gap="36" justify="between">
             <Flex css={{ width: '100%' }} direction="column">
               <Flex justify="between">
-                <UserHeader firstName={firstName} lastName={lastName} isSAdmin={isSAdmin} />
+                <UserHeader
+                  firstName={firstName as string}
+                  lastName={lastName as string}
+                  isSAdmin={(isSAdmin as string) === 'true'}
+                />
               </Flex>
               {data && <UsersEdit userId={userId?.toString()} isLoading={isFetching} />}
             </Flex>
