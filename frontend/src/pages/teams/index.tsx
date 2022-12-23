@@ -21,7 +21,7 @@ const Teams = () => {
 
   const {
     fetchTeamsOfUser: { data, isFetching },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchTeamsOfUser: false });
 
   useEffect(() => {
     if (data) {
@@ -47,7 +47,7 @@ Teams.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
+    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
     await queryClient.prefetchQuery('dashboardInfo', () => getDashboardHeaderInfo(context));
 
     return {

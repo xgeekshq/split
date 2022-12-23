@@ -5,12 +5,25 @@ import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
 import useTeam from '@/hooks/useTeam';
 
-type DeleteTeamProps = { teamName: string; teamId: string; socketId?: string };
+type DeleteTeamProps = {
+  teamName: string;
+  teamId: string;
+  socketId?: string;
+  userId?: string;
+  isTeamPage?: boolean | undefined;
+};
 
-const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId }) => {
+const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, userId, isTeamPage }) => {
   const { deleteTeam } = useTeam({ autoFetchTeam: false });
+
+  const { deleteTeamUser } = useTeam({ autoFetchTeam: false });
+
   const handleDelete = () => {
-    deleteTeam.mutate({ id: teamId });
+    if (isTeamPage) {
+      deleteTeam.mutate({ id: teamId });
+    } else {
+      deleteTeamUser.mutate({ userId, teamId });
+    }
   };
   return (
     <AlertCustomDialog

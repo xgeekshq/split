@@ -27,9 +27,9 @@ export default class DeleteUserServiceImpl implements DeleteUserServiceInterface
 
 		try {
 			this.deleteUser(userId, true);
-			const userFound = await this.getTeamUserService.getTeamsOfUser(userId);
+			const teamsOfUser = await this.getTeamUserService.getTeamsOfUser(userId);
 
-			if (userFound.length > 0) {
+			if (teamsOfUser.length > 0) {
 				await this.teamUserService.delete(userId);
 			}
 			await this.userRepository.commitTransaction();

@@ -98,7 +98,7 @@ const ListOfCards = React.memo(() => {
         direction="column"
         gap="24"
         justify="start"
-        css={{ mt: '$24', height: 'calc(100vh - 350px)', overflow: 'auto', pr: '$10' }}
+        css={{ mt: '$24', overflow: 'scroll', pr: '$10' }}
         ref={scrollRef}
         onScroll={onScroll}
       >

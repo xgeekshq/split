@@ -7,6 +7,7 @@ import Text from '@/components/Primitives/Text';
 type CardTitleProps = {
   title: string;
   teamId: string;
+  isTeamPage?: boolean;
 };
 
 const StyledBoardTitle = styled(Text, {
@@ -26,8 +27,8 @@ const StyledBoardTitle = styled(Text, {
   },
 });
 
-const CardTitle: React.FC<CardTitleProps> = ({ teamId, title }) => {
-  const getTitle = () => (
+const CardTitle: React.FC<CardTitleProps> = ({ teamId, title, isTeamPage }) =>
+  isTeamPage ? (
     <Link
       key={teamId}
       href={{
@@ -37,9 +38,8 @@ const CardTitle: React.FC<CardTitleProps> = ({ teamId, title }) => {
     >
       <StyledBoardTitle>{title}</StyledBoardTitle>
     </Link>
+  ) : (
+    <StyledBoardTitle>{title}</StyledBoardTitle>
   );
-
-  return getTitle();
-};
 
 export default CardTitle;

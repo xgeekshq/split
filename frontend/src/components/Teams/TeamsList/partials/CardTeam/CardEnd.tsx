@@ -7,13 +7,14 @@ import DeleteTeam from './DeleteTeam';
 type CardEndProps = {
   team: Team;
   havePermissions: boolean;
-  userId: string | undefined;
+  userId?: string;
   userSAdmin?: boolean;
   userIsParticipating: boolean;
+  isTeamPage?: boolean | undefined;
 };
 
 const CardEnd: React.FC<CardEndProps> = React.memo(
-  ({ team, havePermissions, userSAdmin = undefined }) => {
+  ({ team, havePermissions, userId, userSAdmin = undefined, isTeamPage }) => {
     CardEnd.defaultProps = {
       userSAdmin: undefined,
     };
@@ -23,7 +24,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
       return (
         <Flex css={{ alignItems: 'center' }}>
           <Flex align="center" css={{ ml: '$24' }} gap="24">
-            <DeleteTeam teamName={name} teamId={team._id} />
+            <DeleteTeam teamName={name} teamId={team._id} userId={userId} isTeamPage={isTeamPage} />
           </Flex>
         </Flex>
       );

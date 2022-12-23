@@ -2,14 +2,20 @@ import { GetServerSidePropsContext } from 'next';
 
 import { CreateTeamDto, Team } from '@/types/team/team';
 import fetchData from '@/utils/fetchData';
-import { CreatedTeamUser, TeamUserAddAndRemove, TeamUserUpdate } from '../types/team/team.user';
+import {
+  CreatedTeamUser,
+  DeleteTeamUser,
+  TeamUser,
+  TeamUserAddAndRemove,
+  TeamUserUpdate,
+} from '../types/team/team.user';
 
 export const getAllTeams = (context?: GetServerSidePropsContext): Promise<Team[]> =>
   fetchData(`/teams`, { context, serverSide: !!context });
 
 export const getTeamsOfUser = (
-  context?: GetServerSidePropsContext,
   userId?: string,
+  context?: GetServerSidePropsContext,
 ): Promise<Team[]> =>
   userId
     ? fetchData(`/teams/user?userId=${userId ?? ''}`, { context, serverSide: !!context })
@@ -31,3 +37,8 @@ export const addAndRemoveTeamUserRequest = (
 
 export const deleteTeamRequest = ({ id }: { id: string }): Promise<Team> =>
   fetchData(`/teams/${id}`, { method: 'DELETE' });
+
+export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promise<TeamUser> =>
+  fetchData(`/teams/${teamOfUserToDelete.userId}/${teamOfUserToDelete.teamId}`, {
+    method: 'DELETE',
+  });

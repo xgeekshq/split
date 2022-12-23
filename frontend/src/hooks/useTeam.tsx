@@ -11,19 +11,38 @@ import {
   getTeamRequest,
   getTeamsOfUser,
   updateTeamUserRequest,
+  deleteTeamUserRequest,
 } from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
 
 interface AutoFetchProps {
-  autoFetchTeam: boolean;
+  autoFetchTeam?: boolean;
+  autoFetchAllTeams?: boolean;
+  autoFetchTeamsOfUser?: boolean;
+  autoFetchTeamsOfSpecificUser?: boolean;
 }
 
-const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
-  const { teamId, setToastState, queryClient, teamsList, setTeamsList, usersList } = useTeamUtils();
+const useTeam = ({
+  autoFetchTeam = false,
+  autoFetchAllTeams = false,
+  autoFetchTeamsOfUser = false,
+  autoFetchTeamsOfSpecificUser = false,
+}: AutoFetchProps): UseTeamType => {
+  const {
+    teamId,
+    setToastState,
+    queryClient,
+    teamsList,
+    setTeamsList,
+    usersList,
+    userTeamsList,
+    setUserTeamsList,
+    userId,
+  } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
-    enabled: autoFetchTeam,
+    enabled: autoFetchAllTeams,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
@@ -47,7 +66,7 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
   });
 
   const fetchTeamsOfUser = useQuery(['teams'], () => getTeamsOfUser(), {
-    enabled: autoFetchTeam,
+    enabled: autoFetchTeamsOfUser,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
@@ -57,6 +76,22 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
       });
     },
   });
+
+  const fetchTeamsOfSpecificUser = useQuery(
+    ['teams', userId],
+    () => getTeamsOfUser(userId, undefined),
+    {
+      enabled: autoFetchTeamsOfSpecificUser,
+      refetchOnWindowFocus: false,
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the teams',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
 
   const createTeam = useMutation(createTeamRequest, {
     onSuccess: () => {
@@ -174,6 +209,30 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     },
   });
 
+  const deleteTeamUser = useMutation(deleteTeamUserRequest, {
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries(['userTeamsList']);
+
+      // updates the teamsList recoil
+      const teams = userTeamsList.filter((team) => team._id !== variables.teamId);
+
+      setUserTeamsList(teams);
+
+      setToastState({
+        open: true,
+        content: 'The team was successfully deleted.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error deleting the team',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   return {
     fetchAllTeams,
     fetchTeamsOfUser,
@@ -182,6 +241,8 @@ const useTeam = ({ autoFetchTeam = false }: AutoFetchProps): UseTeamType => {
     updateTeamUser,
     addAndRemoveTeamUser,
     deleteTeam,
+    deleteTeamUser,
+    fetchTeamsOfSpecificUser,
   };
 };
 

@@ -6,7 +6,7 @@ import CardBody from '@/components/Teams/TeamsList/partials/CardTeam/CardBody';
 import { Team } from '@/types/team/team';
 import { DotsLoading } from '@/components/loadings/DotsLoading';
 import { useRecoilValue } from 'recoil';
-import { teamsListState } from '@/store/team/atom/team.atom';
+import { userTeamsListState } from '@/store/team/atom/team.atom';
 
 type ListOfCardsProp = {
   userId: string | undefined;
@@ -14,13 +14,13 @@ type ListOfCardsProp = {
 };
 
 const ListOfCards = React.memo<ListOfCardsProp>(({ userId, isLoading }) => {
-  const teamsOfUsers = useRecoilValue(teamsListState);
+  const teamsOfUsers = useRecoilValue(userTeamsListState);
 
   return (
     <ScrollableContent direction="column" gap="24" justify="start">
       <Flex direction="column" gap="20">
         {teamsOfUsers?.map((team: Team) => (
-          <CardBody key={team._id} team={team} userId={userId} />
+          <CardBody key={team._id} team={team} userId={userId} isTeamPage={false} />
         ))}
       </Flex>
       {isLoading && (

@@ -29,9 +29,10 @@ type CardBodyProps = {
   userId: string | undefined;
   team: Team;
   index?: number;
+  isTeamPage?: boolean;
 };
 
-const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
+const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -87,7 +88,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
           />
 
           <Flex align="center" gap="8">
-            <CardTitle teamId={id} title={team.name} />
+            <CardTitle teamId={id} title={team.name} isTeamPage={isTeamPage} />
           </Flex>
         </Flex>
 
@@ -124,7 +125,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
             <Separator
               orientation="vertical"
               css={{
-                ml: '$40',
+                ml: '$4x0',
                 backgroundColor: '$primary100',
                 height: '$24 !important',
               }}
@@ -153,6 +154,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team }) => {
             userId={userId}
             userIsParticipating={userIsParticipating}
             userSAdmin={isSAdmin}
+            isTeamPage={isTeamPage}
           />
         </Flex>
       </InnerContainer>

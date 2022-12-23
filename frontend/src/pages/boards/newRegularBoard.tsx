@@ -43,11 +43,11 @@ const NewRegularBoard: NextPage = () => {
    */
   const {
     fetchTeamsOfUser: { data: teamsData },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchTeamsOfUser: false });
 
   const {
     fetchAllTeams: { data: allTeamsData },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ autoFetchAllTeams: false });
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);
@@ -157,7 +157,7 @@ const NewRegularBoard: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(context));
+    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
     await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
 
     return {
