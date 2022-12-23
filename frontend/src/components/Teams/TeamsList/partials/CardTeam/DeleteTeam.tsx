@@ -14,9 +14,7 @@ type DeleteTeamProps = {
 };
 
 const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, userId, isTeamPage }) => {
-  const { deleteTeam } = useTeam({ autoFetchTeam: false });
-
-  const { deleteTeamUser } = useTeam({ autoFetchTeam: false });
+  const { deleteTeam, deleteTeamUser } = useTeam({});
 
   const handleDelete = () => {
     if (isTeamPage) {

@@ -37,9 +37,7 @@ const useTeamUtils = (): TeamUtilsType => {
 
   const queryClient = useQueryClient();
 
-  let loggedUserId = '';
-
-  if (session) loggedUserId = session.user.id;
+  const loggedUserId = session?.user.id || '';
 
   const { userId } = router.query;
 

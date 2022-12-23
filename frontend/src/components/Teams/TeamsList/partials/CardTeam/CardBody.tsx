@@ -134,7 +134,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
               <Flex align="center" css={{ width: '$237' }} justify="end">
                 <RoleDescription role={userRole} />
 
-                <PopoverRoleSettings userId={userId} />
+                <PopoverRoleSettings userId={userId} isTeamPage />
               </Flex>
             ) : (
               <Flex align="center" css={{ width: '$237' }} justify="start">

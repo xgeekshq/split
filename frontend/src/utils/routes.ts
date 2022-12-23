@@ -18,6 +18,8 @@ export const ROUTES = {
   Teams: TEAMS_ROUTE,
   TeamPage: (teamId: string): string => `/teams/${teamId}`,
   Users: USERS_ROUTE,
+  UserEdit: (userId: string, firstName: string, lastName: string, isSAdmin: boolean) =>
+    `/users/${userId}?firstName=${firstName}&lastName=${lastName}&isSAdmin=${isSAdmin}`,
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined =>

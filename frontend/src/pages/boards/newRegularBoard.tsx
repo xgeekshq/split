@@ -43,11 +43,11 @@ const NewRegularBoard: NextPage = () => {
    */
   const {
     fetchTeamsOfUser: { data: teamsData },
-  } = useTeam({ autoFetchTeamsOfUser: false });
+  } = useTeam({});
 
   const {
     fetchAllTeams: { data: allTeamsData },
-  } = useTeam({ autoFetchAllTeams: false });
+  } = useTeam({});
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);
