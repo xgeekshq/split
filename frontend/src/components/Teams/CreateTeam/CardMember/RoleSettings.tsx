@@ -12,7 +12,6 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useTeam from '@/hooks/useTeam';
 import Icon from '@/components/icons/Icon';
 import { useRouter } from 'next/router';
-import { UseMutationResult } from 'react-query';
 import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
@@ -30,7 +29,9 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
     const router = useRouter();
 
-    const { updateTeamUser, updateUserTeam } = useTeam();
+    const {
+      updateTeamUser: { mutate },
+    } = useTeam();
 
     const selectRole = (value: TeamUserRoles) => {
       const members = membersList.map((member) =>
@@ -40,11 +41,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
       setMembersList(members);
     };
 
-    const updateUser = (
-      value: TeamUserRoles,
-      users: TeamUser[],
-      update: UseMutationResult<TeamUserUpdate, unknown, TeamUserUpdate, unknown>,
-    ) => {
+    const updateUser = (value: TeamUserRoles, users: TeamUser[]) => {
       const userFound = users.find((member) => member.user._id === userId);
 
       if (userFound && userFound.team) {
@@ -55,21 +52,19 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
           isNewJoiner: userFound.isNewJoiner,
         };
 
-        update.mutate(updateTeamUserRole);
+        mutate(updateTeamUserRole);
       }
     };
 
-    let updateUserRole: (value: TeamUserRoles) => void;
-
-    updateUserRole = (value: TeamUserRoles) => {
-      updateUser(value, membersList, updateTeamUser);
+    let updateUserRole = (value: TeamUserRoles) => {
+      updateUser(value, membersList);
     };
 
     if (router.pathname.includes('users')) {
       updateUserRole = (value: TeamUserRoles) => {
         const users = userTeamsList.flatMap((team) => team.users);
 
-        updateUser(value, users, updateUserTeam);
+        updateUser(value, users);
       };
     }
 
