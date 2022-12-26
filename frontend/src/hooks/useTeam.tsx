@@ -122,6 +122,25 @@ const useTeam = ({
     },
   });
 
+  const updateUserTeam = useMutation(updateTeamUserRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['teams', userId]);
+
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while updating the team user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   const addAndRemoveTeamUser = useMutation(addAndRemoveTeamUserRequest, {
     onMutate: async (addedAndRemovedMembers) => {
       await queryClient.cancelQueries(['team', addedAndRemovedMembers.team]);
@@ -229,6 +248,7 @@ const useTeam = ({
     deleteTeam,
     deleteTeamUser,
     fetchTeamsOfSpecificUser,
+    updateUserTeam,
   };
 };
 
