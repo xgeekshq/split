@@ -11,7 +11,7 @@ import { TeamUser } from '../types/team/team.user';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 
 type TeamUtilsType = {
-  userId: string;
+  loggedUserId: string;
   teamId: string;
   queryClient: QueryClient;
   setToastState: SetterOrUpdater<{ open: boolean; type: ToastStateEnum; content: string }>;
@@ -21,6 +21,7 @@ type TeamUtilsType = {
   teamsList: Team[];
   setTeamsList: SetterOrUpdater<Team[]>;
   usersList: UserList[];
+  userId: string | undefined;
 };
 
 const useTeamUtils = (): TeamUtilsType => {
@@ -29,9 +30,9 @@ const useTeamUtils = (): TeamUtilsType => {
 
   const queryClient = useQueryClient();
 
-  let userId = '';
+  const loggedUserId = session?.user.id || '';
 
-  if (session) userId = session.user.id;
+  const { userId } = router.query;
 
   const setToastState = useSetRecoilState(toastState);
   const [membersList, setMembersList] = useRecoilState(membersListState);
@@ -43,7 +44,7 @@ const useTeamUtils = (): TeamUtilsType => {
   const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
   return {
-    userId,
+    loggedUserId,
     teamId: String(teamId),
     queryClient,
     setToastState,
@@ -53,6 +54,7 @@ const useTeamUtils = (): TeamUtilsType => {
     teamsList,
     setTeamsList,
     usersList,
+    userId: Array.isArray(userId) ? userId[0] : userId,
   };
 };
 

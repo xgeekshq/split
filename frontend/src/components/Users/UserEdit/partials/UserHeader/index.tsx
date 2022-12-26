@@ -7,11 +7,12 @@ import Icon from '@/components/icons/Icon';
 import { TitleSection } from './styles';
 
 type UserHeaderProps = {
-  firstName: string | string[] | undefined;
-  lastName: string | string[] | undefined;
+  firstName: string;
+  lastName: string;
+  isSAdmin: boolean;
 };
 
-const UserHeader = ({ firstName, lastName }: UserHeaderProps) => {
+const UserHeader = ({ firstName, lastName, isSAdmin }: UserHeaderProps) => {
   // Set breadcrumbs
   const breadcrumbItems: BreadcrumbType = [
     {
@@ -33,24 +34,26 @@ const UserHeader = ({ firstName, lastName }: UserHeaderProps) => {
           <Text heading="1">
             {firstName} {lastName}
           </Text>
-          <Text
-            css={{
-              ml: '$14',
-              background: '$primary1000',
-              borderStyle: 'solid',
-              borderColor: '$primary900',
-              borderWidth: 'thin',
-              color: '$primary900',
-              borderRadius: '$12',
-              padding: '$8',
-              height: '1.55rem',
-              lineHeight: '$8',
-            }}
-            size="sm"
-            weight="medium"
-          >
-            SUPER ADMIN
-          </Text>
+          {isSAdmin && (
+            <Text
+              css={{
+                ml: '$14',
+                background: '$primary1000',
+                borderStyle: 'solid',
+                borderColor: '$primary900',
+                borderWidth: 'thin',
+                color: '$primary900',
+                borderRadius: '$12',
+                padding: '$8',
+                height: '1.55rem',
+                lineHeight: '$8',
+              }}
+              size="sm"
+              weight="medium"
+            >
+              SUPER ADMIN
+            </Text>
+          )}
         </TitleSection>
       </Flex>
       <Flex justify="end" css={{ height: '$10 ' }}>

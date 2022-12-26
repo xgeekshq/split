@@ -10,7 +10,8 @@ export const TYPES = {
 		CreateTeamApplication: 'CreateTeamApplication',
 		GetTeamApplication: 'GetTeamApplication',
 		UpdateTeamApplication: 'UpdateTeamApplication',
-		DeleteTeamApplication: 'DeleteTeamApplication'
+		DeleteTeamApplication: 'DeleteTeamApplication',
+		DeleteTeamUserApplication: 'DeleteTeamUserApplication'
 		//   UpdateBoardApplication: 'UpdateBoardApplication',
 	},
 	repositories: {

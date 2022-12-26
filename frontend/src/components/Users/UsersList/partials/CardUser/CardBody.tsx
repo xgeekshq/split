@@ -10,6 +10,7 @@ import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Link from 'next/link';
+import { ROUTES } from '@/utils/routes';
 import SuperAdmin from './SuperAdmin';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -66,7 +67,12 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
           <Flex align="center" css={{ width: '$147' }} gap="8">
             {loggedUserIsSAdmin ? (
               <Link
-                href={`/users/${userWithTeams.user._id}?firstName=${userWithTeams.user.firstName}&lastName=${userWithTeams.user.lastName}`}
+                href={ROUTES.UserEdit(
+                  userWithTeams.user._id,
+                  userWithTeams.user.firstName,
+                  userWithTeams.user.lastName,
+                  userWithTeams.user.isSAdmin,
+                )}
               >
                 <Flex>
                   <CardTitle firstName={firstName} lastName={lastName} />

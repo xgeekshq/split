@@ -1,7 +1,13 @@
 import { UseMutationResult, UseQueryResult } from 'react-query';
 
 import { CreateTeamDto, Team } from './team';
-import { TeamUserUpdate, TeamUserAddAndRemove, CreatedTeamUser } from './team.user';
+import {
+  TeamUserUpdate,
+  TeamUserAddAndRemove,
+  CreatedTeamUser,
+  TeamUser,
+  DeleteTeamUser,
+} from './team.user';
 
 export default interface UseTeamType {
   createTeam: UseMutationResult<Team, unknown, CreateTeamDto, unknown>;
@@ -16,4 +22,8 @@ export default interface UseTeamType {
     unknown
   >;
   deleteTeam: UseMutationResult<Team, unknown, { id: string }, unknown>;
+
+  deleteTeamUser: UseMutationResult<TeamUser, unknown, DeleteTeamUser, unknown>;
+
+  fetchTeamsOfSpecificUser: UseQueryResult<Team[], unknown>;
 }

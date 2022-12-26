@@ -37,3 +37,7 @@ export interface TeamUserAddAndRemove {
   removeUsers: (string | undefined)[];
   team: string;
 }
+
+export interface DeleteTeamUser {
+  teamUserId?: string;
+}

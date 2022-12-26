@@ -33,7 +33,7 @@ const CardMember = React.memo<CardBodyProps>(
 
     const {
       updateTeamUser: { mutate },
-    } = useTeam({ autoFetchTeam: false });
+    } = useTeam({});
 
     const handleIsNewJoiner = (checked: boolean) => {
       const listUsersMembers = membersList.map((user) =>

@@ -82,6 +82,14 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 	}
 
+	findByIdAndDelete(id: string, withSession: boolean): Promise<T> {
+		return this._repository
+			.findByIdAndDelete(id, {
+				session: withSession ? this._session : undefined
+			})
+			.exec();
+	}
+
 	async deleteMany(field: FilterQuery<T>, withSession = false): Promise<number> {
 		const { deletedCount } = await this._repository
 			.deleteMany(field, { session: withSession ? this._session : undefined })

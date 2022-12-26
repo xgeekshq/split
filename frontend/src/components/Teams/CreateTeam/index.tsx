@@ -26,7 +26,7 @@ const CreateTeam = () => {
 
   const {
     createTeam: { mutate, status },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({});
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 

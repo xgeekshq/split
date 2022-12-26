@@ -10,6 +10,7 @@ import DeleteTeamService from './services/delete.team.service';
 import GetTeamService from './services/get.team.service';
 import UpdateTeamService from './services/update.team.service';
 import DeleteTeamUserService from './services/delete.team.user.service';
+import { DeleteTeamUserApplication } from './applications/delete.team.user.application';
 
 export const createTeamService = {
 	provide: TYPES.services.CreateTeamService,
@@ -64,4 +65,9 @@ export const teamUserRepository = {
 export const deleteTeamUserService = {
 	provide: TYPES.services.DeleteTeamUserService,
 	useClass: DeleteTeamUserService
+};
+
+export const deleteTeamUserApplication = {
+	provide: TYPES.applications.DeleteTeamUserApplication,
+	useClass: DeleteTeamUserApplication
 };

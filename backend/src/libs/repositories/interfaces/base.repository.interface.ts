@@ -41,4 +41,6 @@ export interface BaseInterfaceRepository<T> {
 	abortTransaction(): Promise<void>;
 
 	endSession(): Promise<void>;
+
+	findByIdAndDelete(id: string, withSession: boolean): Promise<T>;
 }

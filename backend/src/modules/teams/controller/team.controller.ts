@@ -52,6 +52,8 @@ import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
+import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
+import { DeleteTeamUserApplication } from '../applications/delete.team.user.application';
 
 const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -68,7 +70,9 @@ export default class TeamsController {
 		@Inject(TYPES.applications.UpdateTeamApplication)
 		private updateTeamApp: UpdateTeamApplication,
 		@Inject(TYPES.applications.DeleteTeamApplication)
-		private deleteTeamApp: DeleteTeamApplication
+		private deleteTeamApp: DeleteTeamApplication,
+		@Inject(TYPES.applications.DeleteTeamUserApplication)
+		private deleteTeamUserApp: DeleteTeamUserApplication
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -289,5 +293,30 @@ export default class TeamsController {
 	@Delete(':teamId')
 	deleteTeam(@Param() { teamId }: TeamParams) {
 		return this.deleteTeamApp.delete(teamId);
+	}
+
+	@ApiOperation({ summary: 'Delete a specific team of a user' })
+	@ApiParam({ type: String, name: 'userId', required: true })
+	@ApiOkResponse({ type: Boolean, description: 'Team of user successfully deleted!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@UseGuards(SuperAdminGuard)
+	@Delete('/user/:teamUserId')
+	deleteTeamUsers(@Param() { teamUserId }: UserTeamsParams) {
+		return this.deleteTeamUserApp.deleteTeamUser(teamUserId, true);
 	}
 }

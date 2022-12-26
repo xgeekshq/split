@@ -10,6 +10,7 @@ import {
 	createTeamService,
 	deleteTeamApplication,
 	deleteTeamService,
+	deleteTeamUserApplication,
 	deleteTeamUserService,
 	getTeamApplication,
 	getTeamService,
@@ -32,7 +33,8 @@ import {
 		deleteTeamService,
 		teamUserRepository,
 		teamRepository,
-		deleteTeamUserService
+		deleteTeamUserService,
+		deleteTeamUserApplication
 	],
 	controllers: [TeamsController],
 	exports: [

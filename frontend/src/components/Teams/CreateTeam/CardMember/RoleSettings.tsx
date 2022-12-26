@@ -26,7 +26,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
     const {
       updateTeamUser: { mutate },
-    } = useTeam({ autoFetchTeam: false });
+    } = useTeam({});
 
     const selectRole = (value: TeamUserRoles) => {
       const members = membersList.map((member) =>
