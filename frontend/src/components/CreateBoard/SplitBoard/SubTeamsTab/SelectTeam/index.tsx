@@ -144,8 +144,6 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   useEffect(() => {
     if (routerTeam) {
       setValue('team', routerTeam);
-      const foundTeam = teams.find((team) => team._id === routerTeam);
-      setSelectedTeam(foundTeam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

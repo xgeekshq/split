@@ -2,7 +2,7 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
@@ -71,6 +71,7 @@ const defaultBoard = {
 
 const NewSplitBoard: NextPage = () => {
   const router = useRouter();
+  const routerTeam = router.query.team;
   const { data: session } = useSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
@@ -83,7 +84,8 @@ const NewSplitBoard: NextPage = () => {
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
   const setTeams = useSetRecoilState(teamsOfUser);
-  const setSelectedTeam = useSetRecoilState(createBoardTeam);
+  const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
+  const teams = useRecoilValue(teamsOfUser);
 
   /**
    * User Board Hook
@@ -124,6 +126,11 @@ const NewSplitBoard: NextPage = () => {
     control: methods.control,
     name: 'text',
   });
+
+  if (routerTeam && !selectedTeam) {
+    const foundTeam = teams.find((team) => team._id === routerTeam);
+    setSelectedTeam(foundTeam);
+  }
 
   /**
    * Handle back to boards list page
