@@ -6,12 +6,13 @@ import { PopoverContent } from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
 
 import { membersListState, userTeamsListState } from '@/store/team/atom/team.atom';
-import { TeamUserUpdate } from '@/types/team/team.user';
+import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import useTeam from '@/hooks/useTeam';
 import Icon from '@/components/icons/Icon';
 import { useRouter } from 'next/router';
+import { UseMutationResult } from 'react-query';
 import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
@@ -39,10 +40,12 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
       setMembersList(members);
     };
 
-    let updateUserRole: (value: TeamUserRoles) => void;
-
-    updateUserRole = (value: TeamUserRoles) => {
-      const userFound = membersList.find((member) => member.user._id === userId);
+    const updateUser = (
+      value: TeamUserRoles,
+      users: TeamUser[],
+      update: UseMutationResult<TeamUserUpdate, unknown, TeamUserUpdate, unknown>,
+    ) => {
+      const userFound = users.find((member) => member.user._id === userId);
 
       if (userFound && userFound.team) {
         const updateTeamUserRole: TeamUserUpdate = {
@@ -52,26 +55,21 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
           isNewJoiner: userFound.isNewJoiner,
         };
 
-        updateTeamUser.mutate(updateTeamUserRole);
+        update.mutate(updateTeamUserRole);
       }
+    };
+
+    let updateUserRole: (value: TeamUserRoles) => void;
+
+    updateUserRole = (value: TeamUserRoles) => {
+      updateUser(value, membersList, updateTeamUser);
     };
 
     if (router.pathname.includes('users')) {
       updateUserRole = (value: TeamUserRoles) => {
         const users = userTeamsList.flatMap((team) => team.users);
 
-        const userFound = users.find((member) => member.user._id === userId);
-
-        if (userFound && userFound.team) {
-          const updateTeamUserRole: TeamUserUpdate = {
-            team: userFound.team,
-            user: userId,
-            role: value,
-            isNewJoiner: userFound.isNewJoiner,
-          };
-
-          updateUserTeam.mutate(updateTeamUserRole);
-        }
+        updateUser(value, users, updateUserTeam);
       };
     }
 
