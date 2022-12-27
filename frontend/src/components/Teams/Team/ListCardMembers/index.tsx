@@ -38,7 +38,7 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
   const userRole = user?.role;
   const isTeamMember = userRole === TeamUserRoles.MEMBER;
 
-  if (!user) return null;
+  if (!user && !isSAdmin) return null;
   return (
     <Flex css={{ mt: '$32' }} direction="column">
       <Flex>

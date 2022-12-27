@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
@@ -9,20 +8,18 @@ import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
 
-import { ButtonAddMember } from '../ListMembers/styles';
-
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [containerHeight, setContainerHeight] = useState<number | null | undefined>(null);
+  // const [containerHeight, setContainerHeight] = useState<number | null | undefined>(null);
 
   const { data: session } = useSession({ required: true });
   const membersList = useRecoilValue(membersListState);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleScroll = () => {
-    setContainerHeight(scrollRef.current?.scrollHeight);
-  };
+  // const handleScroll = () => {
+  //   setContainerHeight(scrollRef.current?.scrollHeight);
+  // };
 
   return (
     <Flex css={{ mt: '$38' }} direction="column">
@@ -30,11 +27,11 @@ const TeamMembersList = () => {
         <Text css={{ mb: '$16' }} heading="3">
           Team Members
         </Text>
-        {containerHeight && containerHeight > window.innerHeight - 500 ? (
-          <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
-        ) : null}
+        {/* {containerHeight && containerHeight > window.innerHeight - 500 ? ( */}
+        <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+        {/* ) : null} */}
       </Flex>
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={handleScroll}>
+      <ScrollableContent direction="column" justify="start" ref={scrollRef}>
         {membersList?.map((member) => (
           <CardMember
             key={member.user._id}
@@ -43,7 +40,7 @@ const TeamMembersList = () => {
             member={member}
           />
         ))}
-        <ButtonAddMember onClick={() => setIsOpen(true)} css={{ marginLeft: 'auto' }}>
+        {/* <ButtonAddMember onClick={() => setIsOpen(true)} css={{ marginLeft: 'auto' }}>
           <Icon css={{ width: '$16', height: '$16' }} name="plus" />
           <Text
             weight="medium"
@@ -55,7 +52,7 @@ const TeamMembersList = () => {
           >
             Add/remove members
           </Text>
-        </ButtonAddMember>
+        </ButtonAddMember> */}
       </ScrollableContent>
     </Flex>
   );
