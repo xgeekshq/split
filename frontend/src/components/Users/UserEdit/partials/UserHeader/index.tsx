@@ -1,10 +1,10 @@
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
-import { AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
-import Icon from '@/components/icons/Icon';
+import { useState } from 'react';
 import { TitleSection } from './styles';
+import { ListTeams } from '../TeamsDialog';
 
 type UserHeaderProps = {
   firstName: string;
@@ -24,6 +24,9 @@ const UserHeader = ({ firstName, lastName, isSAdmin }: UserHeaderProps) => {
       isActive: true,
     },
   ];
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Flex align="center" justify="between" css={{ width: '100%' }}>
       <Flex direction="column">
@@ -56,11 +59,8 @@ const UserHeader = ({ firstName, lastName, isSAdmin }: UserHeaderProps) => {
           )}
         </TitleSection>
       </Flex>
-      <Flex justify="end" css={{ height: '$10 ' }}>
-        <AddNewBoardButton size="sm">
-          <Icon css={{ color: 'white' }} name="plus" />
-          Add user to new team
-        </AddNewBoardButton>
+      <Flex justify="end" css={{ mt: '$40' }}>
+        <ListTeams isOpen={isOpen} setIsOpen={setIsOpen} />
       </Flex>
     </Flex>
   );
