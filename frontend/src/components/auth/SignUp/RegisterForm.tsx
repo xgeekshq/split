@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import router from 'next/router';
@@ -106,7 +106,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     createUser.mutate(user);
   };
 
-  methods.setValue('email', emailName.email);
+  useEffect(() => {
+    methods.setValue('email', emailName.email);
+  }, [methods, emailName.email]);
+
   return (
     <FormProvider {...methods}>
       <StyledForm
