@@ -13,4 +13,6 @@ export interface GetTeamApplicationInterface {
 	): Promise<LeanDocument<TeamDocument> | null>;
 
 	getTeamsOfUser(userId: string): Promise<LeanDocument<TeamDocument>[]>;
+
+	getTeamsUserIsNotMember(userId: string): Promise<LeanDocument<TeamDocument>[]>;
 }

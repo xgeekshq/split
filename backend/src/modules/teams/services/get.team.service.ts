@@ -54,4 +54,28 @@ export default class GetTeamService implements GetTeamServiceInterface {
 	getUsersOfTeam(teamId: string) {
 		return this.teamUserRepository.getUsersOfTeam(teamId);
 	}
+
+	async getTeamsUserIsNotMember(userId: string) {
+		const allTeams = await this.teamRepository.getAllTeams();
+		const teamUsers = await this.teamUserRepository.getAllTeamsOfUser(userId);
+
+		if (teamUsers.length === 0) return allTeams;
+
+		const teamsWithUsers: Team[] = await this.teamRepository.getTeamsWithUsers(
+			teamUsers.map((teamUser) => teamUser._id)
+		);
+
+		//ID's of the teams the user IS member
+		const teamsIds = teamsWithUsers.map((team) => team._id.toString());
+
+		const teamsUserIsNotMember = allTeams.flatMap((team) => {
+			if (teamsIds.includes(team._id.toString())) return [];
+
+			const { name, _id } = team;
+
+			return { name, _id };
+		});
+
+		return teamsUserIsNotMember;
+	}
 }
