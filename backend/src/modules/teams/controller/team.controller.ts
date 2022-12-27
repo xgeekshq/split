@@ -197,6 +197,26 @@ export default class TeamsController {
 		return this.getTeamApp.getTeam(teamId, teamQueryParams);
 	}
 
+	@ApiOperation({ summary: 'Retrieve a list of teams that dont belong to an user' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('not/:userId')
+	@UseGuards(SuperAdminGuard)
+	getTeamsUserIsNotMember(@Param() { userId }: UserTeamsParams) {
+		return this.getTeamApp.getTeamsUserIsNotMember(userId);
+	}
+
 	@ApiOperation({ summary: 'Update a specific team member' })
 	@ApiParam({ type: String, name: 'teamId', required: true })
 	@ApiBody({ type: TeamUserDto })
