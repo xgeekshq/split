@@ -50,38 +50,6 @@ const TeamMembersList = () => {
             member={member}
           />
         ))}
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-          />
-        ))}
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-          />
-        ))}
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-          />
-        ))}
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-          />
-        ))}
       </ScrollableContent>
       <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
     </Flex>
