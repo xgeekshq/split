@@ -16,12 +16,13 @@ import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './s
 
 interface PopoverRoleSettingsProps {
   userId: string | undefined;
+  teamId?: string | undefined;
   isTeamPage?: boolean;
   isTeamCreator?: boolean;
 }
 
 const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
-  ({ userId, isTeamPage, isTeamCreator }) => {
+  ({ userId, teamId, isTeamPage, isTeamCreator }) => {
     const membersList = useRecoilValue(membersListState);
     const setMembersList = useSetRecoilState(membersListState);
 
@@ -41,15 +42,14 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
       setMembersList(members);
     };
 
-    const updateUser = (value: TeamUserRoles, teamUsers: TeamUser[]) => {
-      const userFound = teamUsers.find((member) => member.user._id === userId);
+    const updateUser = (value: TeamUserRoles, teamUser?: TeamUser) => {
+      if (teamUser && teamUser.team) {
 
-      if (userFound && userFound.team) {
         const updateTeamUserRole: TeamUserUpdate = {
-          team: userFound.team,
+          team: teamUser.team,
           user: userId,
           role: value,
-          isNewJoiner: userFound.isNewJoiner,
+          isNewJoiner: teamUser.isNewJoiner,
         };
 
         mutate(updateTeamUserRole);
@@ -57,14 +57,16 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
     };
 
     let updateUserRole = (value: TeamUserRoles) => {
-      updateUser(value, membersList);
+      const userFound = membersList.find((member) => member.user._id === userId);
+      updateUser(value, userFound);
     };
 
     if (router.pathname.includes('users')) {
       updateUserRole = (value: TeamUserRoles) => {
-        const users = userTeamsList.flatMap((team) => team.users);
+        const teamUsers = userTeamsList.flatMap((team) => team.users);
+        const teamFound = teamUsers.find((teamUser) => teamUser.team === teamId);
 
-        updateUser(value, users);
+        updateUser(value, teamFound);
       };
     }
 
