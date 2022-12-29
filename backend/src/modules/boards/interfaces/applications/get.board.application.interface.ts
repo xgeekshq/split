@@ -13,6 +13,8 @@ export interface GetBoardApplicationInterface {
 
 	getUsersBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
 
+	getTeamBoards(teamId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
+
 	getBoard(
 		boardId: string,
 		userId: string

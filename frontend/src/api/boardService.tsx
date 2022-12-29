@@ -39,9 +39,25 @@ export const getDashboardBoardsRequest = (
 
 export const getBoardsRequest = (
   pageParam: number,
+  team?: string,
   context?: GetServerSidePropsContext,
 ): Promise<{ boards: BoardType[]; hasNextPage: boolean; page: number }> =>
-  fetchData(`/boards?page=${pageParam ?? 0}&size=10`, { context, serverSide: !!context });
+  fetchData(
+    team
+      ? `/boards?team=${team}&page=${pageParam ?? 0}&size=10`
+      : `/boards?page=${pageParam ?? 0}&size=10`,
+    { context, serverSide: !!context },
+  );
+
+export const getBoardsByTeamRequest = (
+  team: string,
+  pageParam: number,
+  context?: GetServerSidePropsContext,
+): Promise<{ boards: BoardType[]; hasNextPage: boolean; page: number }> =>
+  fetchData(`/boards/teamId/${team}?page=${pageParam ?? 0}&size=10`, {
+    context,
+    serverSide: !!context,
+  });
 
 export const deleteBoardRequest = async ({
   id,

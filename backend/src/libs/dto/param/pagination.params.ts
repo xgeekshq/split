@@ -17,4 +17,8 @@ export class PaginationParams {
 	@IsOptional()
 	@Type(() => String)
 	searchUser?: string;
+
+	@IsOptional()
+	@Type(() => String)
+	team?: string;
 }

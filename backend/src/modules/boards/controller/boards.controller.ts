@@ -134,8 +134,15 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Get()
-	async getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
+	async getAllBoards(
+		@Req() request: RequestWithUser,
+		@Query() { page, size, team }: PaginationParams
+	) {
 		const { _id: userId, isSAdmin } = request.user;
+
+		if (team) {
+			return this.getBoardApp.getTeamBoards(team, page, size);
+		}
 
 		if (isSAdmin) {
 			return this.getBoardApp.getSuperAdminBoards(userId, page, size);

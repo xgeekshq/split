@@ -27,6 +27,10 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		return this.getBoardService.getUsersBoards(userId, page, size);
 	}
 
+	getTeamBoards(teamId: string, page?: number, size?: number): Promise<BoardsAndPage | null> {
+		return this.getBoardService.getTeamBoards(teamId, page, size);
+	}
+
 	getBoard(boardId: string, userId: string) {
 		return this.getBoardService.getBoard(boardId, userId);
 	}
