@@ -44,6 +44,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
     const updateUser = (value: TeamUserRoles, teamUser?: TeamUser) => {
       if (teamUser && teamUser.team) {
+
         const updateTeamUserRole: TeamUserUpdate = {
           team: teamUser.team,
           user: userId,
