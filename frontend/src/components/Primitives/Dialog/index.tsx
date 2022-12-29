@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
 import {
   StyledDialogContainer,
@@ -16,10 +16,9 @@ type Props = {
 
 const Dialog = (props: Props) => {
   const { isOpen, setIsOpen, children } = props;
-  const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
   return (
-    <StyledDialogContainer ref={dialogContainerRef}>
+    <StyledDialogContainer>
       <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
         <Portal>
           <StyledDialogOverlay />

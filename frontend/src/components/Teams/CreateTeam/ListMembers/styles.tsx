@@ -13,7 +13,6 @@ const ButtonAddMember = styled('button', {
     cursor: 'pointer',
     textDecoration: 'underline',
   },
-  marginTop: '10px',
 });
 
 const ScrollableContent = styled(Flex, {
