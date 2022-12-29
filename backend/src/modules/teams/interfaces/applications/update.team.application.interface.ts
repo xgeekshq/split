@@ -8,4 +8,5 @@ export interface UpdateTeamApplicationInterface {
 		addUsers: TeamUserDto[],
 		removeUsers: string[]
 	): Promise<LeanDocument<TeamUserDocument[]>>;
+	addTeamUsers(teamUsers: TeamUserDto[]): Promise<LeanDocument<TeamUserDocument>[]>;
 }
