@@ -22,7 +22,7 @@ import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
 import { TeamChecked } from '@/types/team/team';
-import { TeamUserUpdate } from '@/types/team/team.user';
+import isEmpty from '@/utils/isEmpty';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 
@@ -32,8 +32,7 @@ type Props = {
 };
 
 const ListTeams = ({ isOpen, setIsOpen }: Props) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  let teamsUserIsNotMember: TeamChecked[] = [];
+  let teamsUserIsNotMember: TeamChecked[];
 
   const [searchTeam, setSearchTeam] = useState<string>('');
 
@@ -62,9 +61,7 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   }, [isOpen, refetch]);
 
   // after fetching data, add the field "isChecked", to be used in the Add button
-  if (data) {
-    teamsUserIsNotMember = data?.map((team) => ({ ...team, isChecked: false }));
-  }
+  teamsUserIsNotMember = data?.map((team) => ({ ...team, isChecked: false })) || [];
 
   // Method to close dialog
   const handleClose = () => {
@@ -82,12 +79,9 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   };
 
   const handleAddTeams = () => {
-    const checkedTeams = teamsUserIsNotMember.filter((team) => team.isChecked);
-
-    if (!checkedTeams) {
-      setIsOpen(false);
-    } else {
-      const teamUsers: TeamUserUpdate[] = checkedTeams.map((team) => ({
+    const teamUsers = teamsUserIsNotMember.flatMap((team) => {
+      if (!team.isChecked) return [];
+      return {
         user: userId as string,
         role: TeamUserRoles.MEMBER,
         team: team._id,
@@ -95,10 +89,12 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
           joinedAt as string,
           providerAccountCreatedAt ? (providerAccountCreatedAt as string) : undefined,
         ),
-      }));
-      mutate(teamUsers);
-      setIsOpen(false);
-    }
+      };
+    });
+
+    if (!isEmpty(teamUsers)) mutate(teamUsers);
+
+    setIsOpen(false);
   };
 
   // filter

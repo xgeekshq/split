@@ -38,6 +38,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { firstName, lastName, email, isSAdmin, _id } = userWithTeams.user;
   const { teamsNames } = userWithTeams;
+  const { user } = userWithTeams;
 
   const getTeamsCountText = () => {
     if (teamsNames?.length === 1) {
@@ -66,16 +67,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
 
           <Flex align="center" css={{ width: '$147' }} gap="8">
             {loggedUserIsSAdmin ? (
-              <Link
-                href={ROUTES.UserEdit(
-                  userWithTeams.user._id,
-                  userWithTeams.user.firstName,
-                  userWithTeams.user.lastName,
-                  userWithTeams.user.isSAdmin,
-                  userWithTeams.user.joinedAt,
-                  userWithTeams.user.providerAccountCreatedAt,
-                )}
-              >
+              <Link href={ROUTES.UserEdit(user)}>
                 <Flex>
                   <CardTitle firstName={firstName} lastName={lastName} />
                 </Flex>
