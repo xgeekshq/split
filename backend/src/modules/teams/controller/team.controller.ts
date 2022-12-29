@@ -289,6 +289,38 @@ export default class TeamsController {
 		return this.updateTeamApp.addAndRemoveTeamUsers(users.addUsers, users.removeUsers);
 	}
 
+	@ApiOperation({ summary: 'Add team members' })
+	@ApiBody({ type: TeamUserDto })
+	@ApiOkResponse({
+		type: TeamUserDto,
+		description: 'Team member updated successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@UseGuards(SuperAdminGuard)
+	@Put('add/user')
+	addTeamUsers(@Body() teamUsers: TeamUserDto[]) {
+		return this.updateTeamApp.addTeamUsers(teamUsers);
+	}
+
 	@ApiOperation({ summary: 'Delete a specific team' })
 	@ApiParam({ type: String, name: 'teamId', required: true })
 	@ApiOkResponse({ type: Boolean, description: 'Team successfully deleted!' })
