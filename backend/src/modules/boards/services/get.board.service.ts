@@ -79,6 +79,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.getBoards(false, query, page, size);
 	}
 
+	getTeamBoards(teamId: string, page: number, size?: number) {
+		const query = {
+			$and: [{ isSubBoard: false }, { $or: [{ team: teamId }] }]
+		};
+
+		return this.getBoards(false, query, page, size);
+	}
+
 	async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
 		const count = await this.boardModel.find(query).countDocuments().exec();
 		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));

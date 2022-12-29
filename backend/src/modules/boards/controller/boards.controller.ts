@@ -134,14 +134,13 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Get()
-	async getAllBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
+	async getAllBoards(
+		@Req() request: RequestWithUser,
+		@Query() { page, size, team }: PaginationParams
+	) {
 		const { _id: userId, isSAdmin } = request.user;
 
-		if (isSAdmin) {
-			return this.getBoardApp.getSuperAdminBoards(userId, page, size);
-		}
-
-		return this.getBoardApp.getUsersBoards(userId, page, size);
+		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
 	}
 
 	@ApiOperation({ summary: 'Retrieve one board by id' })

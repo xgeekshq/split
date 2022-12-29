@@ -25,6 +25,10 @@ export type QueryType = {
 							};
 							_id?: undefined;
 					  }
+					| {
+							team: Team | string;
+							_id?: undefined;
+					  }
 				)[];
 				isSubBoard?: undefined;
 				updatedAt?: undefined;
