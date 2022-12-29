@@ -140,15 +140,7 @@ export default class BoardsController {
 	) {
 		const { _id: userId, isSAdmin } = request.user;
 
-		if (team) {
-			return this.getBoardApp.getTeamBoards(team, page, size);
-		}
-
-		if (isSAdmin) {
-			return this.getBoardApp.getSuperAdminBoards(userId, page, size);
-		}
-
-		return this.getBoardApp.getUsersBoards(userId, page, size);
+		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
 	}
 
 	@ApiOperation({ summary: 'Retrieve one board by id' })
