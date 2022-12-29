@@ -72,6 +72,8 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
                   userWithTeams.user.firstName,
                   userWithTeams.user.lastName,
                   userWithTeams.user.isSAdmin,
+                  userWithTeams.user.joinedAt,
+                  userWithTeams.user.providerAccountCreatedAt,
                 )}
               >
                 <Flex>

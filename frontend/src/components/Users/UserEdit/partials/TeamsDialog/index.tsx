@@ -1,14 +1,9 @@
-import React, { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react';
-// import { useSession } from 'next-auth/react';
-import { useRecoilState } from 'recoil';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState, useMemo } from 'react';
 import { Dialog, DialogClose, DialogTrigger, Portal } from '@radix-ui/react-dialog';
 
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
-import { usersListState, userTeamsListState } from '@/store/team/atom/team.atom';
-// import { toastState } from '@/store/toast/atom/toast.atom';
-// import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-// import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import {
   ButtonsContainer,
@@ -21,12 +16,13 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
-// import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
-// import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-// import useTeam from '@/hooks/useTeam';
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+import useTeam from '@/hooks/useTeam';
 import { AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
+import { TeamChecked } from '@/types/team/team';
+import { TeamUserUpdate } from '@/types/team/team.user';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 
@@ -36,16 +32,39 @@ type Props = {
 };
 
 const ListTeams = ({ isOpen, setIsOpen }: Props) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  let teamsUserIsNotMember: TeamChecked[] = [];
+
   const [searchTeam, setSearchTeam] = useState<string>('');
 
-  const [usersList, setUsersListState] = useRecoilState(usersListState);
-  const [userTeamsList] = useRecoilState(userTeamsListState);
-
-  // const setToastState = useSetRecoilState(toastState);
+  const router = useRouter();
+  const { userId, joinedAt, providerAccountCreatedAt } = router.query;
 
   // References
   const scrollRef = useRef<HTMLDivElement>(null);
   const dialogContainerRef = useRef<HTMLSpanElement>(null);
+
+  const {
+    fetchTeamsUserIsNotMember: { data, refetch },
+  } = useTeam();
+
+  const {
+    updateAddTeamsToUser: { mutate },
+  } = useTeam();
+
+  // only fetch the data when the component is mounted (after button to open dialog is clicked)
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (didMount.current) {
+      refetch();
+    }
+    didMount.current = true;
+  }, [isOpen, refetch]);
+
+  // after fetching data, add the field "isChecked", to be used in the Add button
+  if (data) {
+    teamsUserIsNotMember = data?.map((team) => ({ ...team, isChecked: false }));
+  }
 
   // Method to close dialog
   const handleClose = () => {
@@ -57,14 +76,38 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   };
 
   const handleChecked = (id: string) => {
-    const updateCheckedUser = usersList.map((user) =>
-      user._id === id ? { ...user, isChecked: !user.isChecked } : user,
+    teamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
+      team._id === id ? { ...team, isChecked: !team.isChecked } : team,
     );
-
-    setUsersListState(updateCheckedUser);
   };
 
-  const filteredList = useMemo(() => userTeamsList, [userTeamsList]);
+  const handleAddTeams = () => {
+    const checkedTeams = teamsUserIsNotMember.filter((team) => team.isChecked);
+
+    if (!checkedTeams) {
+      setIsOpen(false);
+    } else {
+      const teamUsers: TeamUserUpdate[] = checkedTeams.map((team) => ({
+        user: userId as string,
+        role: TeamUserRoles.MEMBER,
+        team: team._id,
+        isNewJoiner: verifyIfIsNewJoiner(
+          joinedAt as string,
+          providerAccountCreatedAt ? (providerAccountCreatedAt as string) : undefined,
+        ),
+      }));
+      mutate(teamUsers);
+      setIsOpen(false);
+    }
+  };
+
+  // filter
+  const filteredTeams = useMemo(() => {
+    const input = searchTeam.toLowerCase().trim();
+    return input
+      ? teamsUserIsNotMember.filter((team) => team.name.toLowerCase().trim().includes(input))
+      : teamsUserIsNotMember;
+  }, [searchTeam, teamsUserIsNotMember]);
 
   return (
     <StyledDialogContainer ref={dialogContainerRef}>
@@ -101,14 +144,14 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
             </Text>
             <ScrollableContent direction="column" justify="start" ref={scrollRef}>
               <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
-                {filteredList?.map((user) => (
-                  <Flex key={user._id} align="center" justify="between">
+                {filteredTeams?.map((team) => (
+                  <Flex key={team._id} align="center" justify="between">
                     <Flex css={{ width: '50%' }}>
                       <Checkbox
                         checked={false}
                         handleChange={handleChecked}
-                        id={user._id}
-                        label={user.name}
+                        id={team._id}
+                        label={team.name}
                         size="16"
                       />
                     </Flex>
@@ -124,7 +167,11 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
               >
                 Cancel
               </Button>
-              <Button css={{ marginRight: '$32', padding: '$16 $24' }} variant="primary">
+              <Button
+                css={{ marginRight: '$32', padding: '$16 $24' }}
+                variant="primary"
+                onClick={handleAddTeams}
+              >
                 Add
               </Button>
             </ButtonsContainer>
