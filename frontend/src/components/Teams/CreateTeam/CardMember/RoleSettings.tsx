@@ -41,8 +41,8 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
       setMembersList(members);
     };
 
-    const updateUser = (value: TeamUserRoles, users: TeamUser[]) => {
-      const userFound = users.find((member) => member.user._id === userId);
+    const updateUser = (value: TeamUserRoles, teamUsers: TeamUser[]) => {
+      const userFound = teamUsers.find((member) => member.user._id === userId);
 
       if (userFound && userFound.team) {
         const updateTeamUserRole: TeamUserUpdate = {

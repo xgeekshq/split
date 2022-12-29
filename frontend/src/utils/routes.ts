@@ -1,3 +1,5 @@
+import { User } from '@/types/user/user';
+
 export const DASHBOARD_ROUTE = '/dashboard';
 export const START_PAGE_ROUTE = '/';
 export const BOARDS_ROUTE = '/boards';
@@ -18,8 +20,10 @@ export const ROUTES = {
   Teams: TEAMS_ROUTE,
   TeamPage: (teamId: string): string => `/teams/${teamId}`,
   Users: USERS_ROUTE,
-  UserEdit: (userId: string, firstName: string, lastName: string, isSAdmin: boolean) =>
-    `/users/${userId}?firstName=${firstName}&lastName=${lastName}&isSAdmin=${isSAdmin}`,
+  UserEdit: (user: User) => {
+    const { _id: userId, firstName, lastName, isSAdmin, joinedAt, providerAccountCreatedAt } = user;
+    return `/users/${userId}?firstName=${firstName}&lastName=${lastName}&isSAdmin=${isSAdmin}&joinedAt=${joinedAt}&providerAccountCreatedAt=${providerAccountCreatedAt}`;
+  },
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined =>
