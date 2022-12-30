@@ -36,12 +36,11 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   } = useTeam();
 
   // only fetch the data when the component is mounted (after button to open dialog is clicked)
-  const didMount = useRef(false);
+
   useEffect(() => {
-    if (didMount.current) {
+    if (isOpen) {
       refetch();
     }
-    didMount.current = true;
   }, [isOpen, refetch]);
 
   // after fetching data, add the field "isChecked", to be used in the Add button
