@@ -5,8 +5,9 @@ import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog/index';
+import Dialog from '@/components/Primitives/Dialog';
 import { FilterBoardMembers } from './FilterBoardMembers';
+import { ScrollableContent } from './styles';
 
 type ListUsersType = {
   user: User;
@@ -42,17 +43,22 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
       <Dialog.Header>
         <Text heading="4">Board Members</Text>
       </Dialog.Header>
-      <FilterBoardMembers title="Team Members" users={members} />
-      {!isEmpty(responsible) && <FilterBoardMembers title="Responsible" users={responsible} />}
-      {!isEmpty(stakeholders) && (
-        <FilterBoardMembers
-          title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}
-          users={stakeholders}
-        />
-      )}
-      {!isEmpty(admin) && (
-        <FilterBoardMembers title={admin.length > 1 ? 'Team Admins' : 'Team Admin'} users={admin} />
-      )}
+      <ScrollableContent direction="column" justify="start">
+        <FilterBoardMembers title="Team Members" users={members} />
+        {!isEmpty(responsible) && <FilterBoardMembers title="Responsible" users={responsible} />}
+        {!isEmpty(stakeholders) && (
+          <FilterBoardMembers
+            title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}
+            users={stakeholders}
+          />
+        )}
+        {!isEmpty(admin) && (
+          <FilterBoardMembers
+            title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
+            users={admin}
+          />
+        )}
+      </ScrollableContent>
     </Dialog>
   );
 };

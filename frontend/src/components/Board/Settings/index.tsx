@@ -19,7 +19,7 @@ import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog/index';
+import Dialog from '@/components/Primitives/Dialog';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import {
   StyledAccordionContent,

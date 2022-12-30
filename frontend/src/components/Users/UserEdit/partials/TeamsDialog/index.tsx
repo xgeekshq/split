@@ -10,7 +10,7 @@ import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog/index';
+import Dialog from '@/components/Primitives/Dialog';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 
