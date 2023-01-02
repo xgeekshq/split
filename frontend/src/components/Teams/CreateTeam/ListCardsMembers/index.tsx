@@ -1,47 +1,34 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
+import Icon from '@/components/icons/Icon';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
+import { ButtonAddMember } from '../ListMembers/styles';
 
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [containerHeight, setContainerHeight] = useState<number | null | undefined>(null);
 
   const { data: session } = useSession({ required: true });
   const membersList = useRecoilValue(membersListState);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // const handleScroll = () => {
-  //   setContainerHeight(scrollRef.current?.scrollHeight);
-  // };
+  const handleOpen = (event: MouseEvent) => {
+    event.preventDefault();
+    setIsOpen(true);
+  };
 
   return (
     <Flex css={{ mt: '$38' }} direction="column">
-      <Flex>
-        <Text css={{ mb: '$16' }} heading="3">
+      <Flex css={{ mb: '$16' }}>
+        <Text css={{ flex: 1 }} heading="3">
           Team Members
         </Text>
-        {/* {containerHeight && containerHeight > window.innerHeight - 500 ? ( */}
-        <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
-        {/* ) : null} */}
-      </Flex>
-      <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-          />
-        ))}
-        {/* <ButtonAddMember onClick={() => setIsOpen(true)} css={{ marginLeft: 'auto' }}>
-          <Icon css={{ width: '$16', height: '$16' }} name="plus" />
+        <ButtonAddMember onClick={handleOpen}>
+          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
           <Text
             weight="medium"
             css={{
@@ -52,8 +39,19 @@ const TeamMembersList = () => {
           >
             Add/remove members
           </Text>
-        </ButtonAddMember> */}
+        </ButtonAddMember>
+      </Flex>
+      <ScrollableContent direction="column" justify="start">
+        {membersList?.map((member) => (
+          <CardMember
+            key={member.user._id}
+            isNewTeamPage
+            isTeamCreator={member.user._id === session?.user.id}
+            member={member}
+          />
+        ))}
       </ScrollableContent>
+      <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
     </Flex>
   );
 };
