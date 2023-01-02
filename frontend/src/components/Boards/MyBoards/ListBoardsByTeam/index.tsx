@@ -15,6 +15,7 @@ import Icon from '@/components/icons/Icon';
 import { Socket } from 'socket.io-client';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
+import EmptyTeamBoards from '../EmptyTeamBoards';
 
 interface ListBoardsByTeamProps {
   filteredTeam: Team;
@@ -86,6 +87,10 @@ const ListBoardsByTeam = ({
       }
     }
   };
+
+  if (dataByTeamAndDate.size === 0 && !isLoading) {
+    return <EmptyTeamBoards />;
+  }
 
   return (
     <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>

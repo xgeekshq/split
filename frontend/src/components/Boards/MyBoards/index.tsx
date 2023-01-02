@@ -120,11 +120,16 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     label: team.name,
   }));
 
-  if (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) {
-    return <EmptyBoards />;
-  }
-  if (filter === 'personal' && !isLoading) {
-    return <EmptyBoards />;
+  if (
+    (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) ||
+    filter === 'personal'
+  ) {
+    return (
+      <>
+        <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
+        <EmptyBoards />
+      </>
+    );
   }
 
   const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filter);
@@ -132,7 +137,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   return (
     <>
       <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
-      {!(filter === 'all' || filter === 'personal') && filteredTeam && (
+      {!['all', 'personal'].includes(filter) && filteredTeam && (
         <ListBoardsByTeam
           filteredTeam={filteredTeam}
           userId={userId}
@@ -141,115 +146,113 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         />
       )}
 
-      {filter === 'all' && (
-        <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-          {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
-            const { users } = Array.from(boardsOfTeam)[0][1][0];
-            if (filter !== 'all' && teamId !== filter) return null;
-            return (
-              <Flex key={teamId} css={{ mb: '$24' }} direction="column">
+      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
+        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
+          const { users } = Array.from(boardsOfTeam)[0][1][0];
+          if (filter !== 'all' && teamId !== filter) return null;
+          return (
+            <Flex key={teamId} css={{ mb: '$24' }} direction="column">
+              <Flex
+                direction="column"
+                css={{
+                  position: 'sticky',
+                  zIndex: '5',
+                  top: '-0.4px',
+                  backgroundColor: '$background',
+                }}
+              >
+                <TeamHeader
+                  team={dataByTeamAndDate.teams.get(teamId)}
+                  userId={userId}
+                  users={users}
+                />
+              </Flex>
+              {/* to be used on the full version -> */}
+              <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
                 <Flex
-                  direction="column"
                   css={{
-                    position: 'sticky',
-                    zIndex: '5',
-                    top: '-0.4px',
-                    backgroundColor: '$background',
+                    position: 'relative',
+                    zIndex: '9',
+                    '& svg': { size: '$16' },
+                    right: 0,
+                    top: '$-22',
                   }}
+                  gap="8"
                 >
-                  <TeamHeader
-                    team={dataByTeamAndDate.teams.get(teamId)}
-                    userId={userId}
-                    users={users}
+                  <Icon
+                    name="plus"
+                    css={{
+                      width: '$16',
+                      height: '$32',
+                      marginRight: '$5',
+                    }}
                   />
-                </Flex>
-                <Flex css={{ zIndex: '1' }} direction="column" gap="16">
-                  {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
-                    const formatedDate = new Date(date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    });
-                    return (
-                      <Flex key={date} direction="column">
-                        <Text
-                          color="primary300"
-                          size="xs"
-                          css={{
-                            position: 'sticky',
-                            zIndex: '5',
-                            top: '-0.2px',
-                            height: '$24',
-                            backgroundColor: '$background',
-                          }}
-                        >
-                          Last updated -{' '}
-                          {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
-                        </Text>
-                        {/* to be used on the full version -> */}
-                        <Flex justify="end" css={{ width: '100%' }}>
-                          <Flex
-                            css={{
-                              position: 'relative',
-                              zIndex: '30',
-                              '& svg': { size: '$16' },
-                              right: 0,
-                              top: '$-22',
-                            }}
-                            gap="8"
-                          >
-                            <Icon
-                              name="plus"
-                              css={{
-                                width: '$16',
-                                height: '$32',
-                                marginRight: '$5',
-                              }}
-                            />
-                            <Text
-                              heading="6"
-                              css={{
-                                width: 'fit-content',
-                                display: 'flex',
-                                alignItems: 'center',
-                                '@hover': {
-                                  '&:hover': {
-                                    cursor: 'pointer',
-                                  },
-                                },
-                              }}
-                            >
-                              {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-                                ? 'Add new personal board'
-                                : 'Add new team board'}
-                            </Text>
-                          </Flex>
-                        </Flex>
-                        <Flex direction="column" gap="20">
-                          {boardsOfDay.map((board: BoardType) => (
-                            <CardBody
-                              key={board._id}
-                              board={board}
-                              dividedBoardsCount={board.dividedBoards.length}
-                              isDashboard={false}
-                              isSAdmin={isSuperAdmin}
-                              socketId={socket?.id}
-                              userId={userId}
-                            />
-                          ))}
-                        </Flex>
-                      </Flex>
-                    );
-                  })}
+                  <Text
+                    heading="6"
+                    css={{
+                      width: 'fit-content',
+                      display: 'flex',
+                      alignItems: 'center',
+                      '@hover': {
+                        '&:hover': {
+                          cursor: 'pointer',
+                        },
+                      },
+                    }}
+                  >
+                    {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
+                      ? 'Add new personal board'
+                      : 'Add new team board'}
+                  </Text>
                 </Flex>
               </Flex>
-            );
-          })}
+              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
+                {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
+                  const formatedDate = new Date(date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  });
+                  return (
+                    <Flex key={date} direction="column">
+                      <Text
+                        color="primary300"
+                        size="xs"
+                        css={{
+                          position: 'sticky',
+                          zIndex: '5',
+                          top: '-0.2px',
+                          height: '$24',
+                          backgroundColor: '$background',
+                        }}
+                      >
+                        Last updated -{' '}
+                        {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
+                      </Text>
+                      <Flex direction="column" gap="20">
+                        {boardsOfDay.map((board: BoardType) => (
+                          <CardBody
+                            key={board._id}
+                            board={board}
+                            dividedBoardsCount={board.dividedBoards.length}
+                            isDashboard={false}
+                            isSAdmin={isSuperAdmin}
+                            socketId={socket?.id}
+                            userId={userId}
+                          />
+                        ))}
+                      </Flex>
+                    </Flex>
+                  );
+                })}
+              </Flex>
+            </Flex>
+          );
+        })}
 
-          {isLoading && <LoadingPage />}
-        </ScrollableContent>
-      )}
+        {isLoading && <LoadingPage />}
+      </ScrollableContent>
     </>
   );
 });
