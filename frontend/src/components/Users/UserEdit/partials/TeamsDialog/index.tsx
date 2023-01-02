@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState, useMemo } from 'react';
+import React, { Dispatch, SetStateAction, useState, useMemo } from 'react';
 
 import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -8,9 +8,10 @@ import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
-import { TeamChecked } from '@/types/team/team';
+import { TeamChecked, Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
+import { useQueryClient } from 'react-query';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 
@@ -24,28 +25,23 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
 
   const [searchTeam, setSearchTeam] = useState<string>('');
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const { userId, joinedAt, providerAccountCreatedAt } = router.query;
 
   const {
-    fetchTeamsUserIsNotMember: { data, refetch },
-  } = useTeam();
+    fetchTeamsUserIsNotMember: { refetch },
+  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
 
   const {
     updateAddTeamsToUser: { mutate },
   } = useTeam();
 
-  // only fetch the data when the component is mounted (after button to open dialog is clicked)
-  const didMount = useRef(false);
-  useEffect(() => {
-    if (didMount.current) {
-      refetch();
-    }
-    didMount.current = true;
-  }, [isOpen, refetch]);
-
   // after fetching data, add the field "isChecked", to be used in the Add button
-  teamsUserIsNotMember = data?.map((team) => ({ ...team, isChecked: false })) || [];
+  teamsUserIsNotMember = (
+    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', userId]) || []
+  ).map((team) => ({ ...team, isChecked: false }));
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTeam(event.target.value);
@@ -71,7 +67,10 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
       };
     });
 
-    if (!isEmpty(teamUsers)) mutate(teamUsers);
+    if (!isEmpty(teamUsers)) {
+      mutate(teamUsers);
+      refetch();
+    }
 
     setIsOpen(false);
   };
