@@ -17,19 +17,24 @@ import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 
 interface ListBoardsByTeamProps {
-  teamId: string;
+  filteredTeam: Team;
   userId: string;
   isSuperAdmin: boolean;
   socket: Socket | null;
 }
 
-const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsByTeamProps) => {
+const ListBoardsByTeam = ({
+  filteredTeam,
+  userId,
+  isSuperAdmin,
+  socket,
+}: ListBoardsByTeamProps) => {
   const setToastState = useSetRecoilState(toastState);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchBoardsByTeam = useInfiniteQuery(
-    'boards',
-    ({ team = teamId, pageParam = 0 }) => getBoardsRequest(pageParam, team),
+    ['boards', filteredTeam._id],
+    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam._id),
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -51,12 +56,7 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
 
   const currentDate = new Date().toDateString();
 
-  // if (!data) return null;
-  // // console.log(data);
-  // data.pages.forEach((page) => console.log(page.boards));
-
   const dataByTeamAndDate = useMemo(() => {
-    const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
     data?.pages.forEach((page) => {
@@ -65,7 +65,6 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
           boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
-          if (board.team) teams.set(`${board.team?._id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -76,7 +75,7 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
         boardsOfTeam.set(date, [board]);
       });
     });
-    return { boardsTeamAndDate, teams };
+    return boardsTeamAndDate;
   }, [data?.pages]);
 
   const onScroll = () => {
@@ -88,51 +87,13 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
     }
   };
 
-  const filteredTeam = dataByTeamAndDate.teams.get(teamId);
-
-  // if (isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) {
-  //   return <EmptyBoards />;
-  // }
-  if (!filteredTeam) return null;
-
   return (
     <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-      {/* <Flex>
-        <Flex
-          direction="column"
-          css={{
-            position: 'sticky',
-            zIndex: '5',
-            top: '-0.4px',
-            backgroundColor: '$background',
-          }}
-        >
-          <TeamHeader team={filteredTeam} userId={userId} users={users} />
-        </Flex>
-      </Flex> */}
-      {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([team, boardsOfTeam]) => {
-        // console.log(teamsList.find((team) => teamId === filter));
+      {Array.from(dataByTeamAndDate).map(([team, boardsOfTeam]) => {
         const { users } = Array.from(boardsOfTeam)[0][1][0];
-        // if (teamFiltered && teamId !== teamFiltered._id) {
-        //   return (
-        //     <Flex key={teamId} css={{ mb: '$24' }} direction="column">
-        //       <Flex
-        //         direction="column"
-        //         css={{
-        //           position: 'sticky',
-        //           zIndex: '5',
-        //           top: '-0.4px',
-        //           backgroundColor: '$background',
-        //         }}
-        //       >
-        // <TeamHeader team={filteredTeam} userId={userId} users={users} />;
-        //       </Flex>
-        //     </Flex>
-        //   );
-        // }
         return (
           <Flex key={team} css={{ mb: '$24' }} direction="column">
-            <Flex key={teamId} css={{ mb: '$24' }} direction="column">
+            <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
               <Flex
                 direction="column"
                 css={{
@@ -142,14 +103,46 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
                   backgroundColor: '$background',
                 }}
               >
-                <TeamHeader
-                  team={dataByTeamAndDate.teams.get(teamId)}
-                  userId={userId}
-                  users={users}
-                />
+                <TeamHeader team={filteredTeam} userId={userId} users={users} />
               </Flex>
-              {/* </Flex> */}
-              <Flex css={{ zIndex: '1' }} direction="column" gap="16">
+              {/* to be used on the full version -> */}
+              <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
+                <Flex
+                  css={{
+                    position: 'relative',
+                    zIndex: '9',
+                    '& svg': { size: '$16' },
+                    right: 0,
+                    top: '$-22',
+                  }}
+                  gap="8"
+                >
+                  <Icon
+                    name="plus"
+                    css={{
+                      width: '$16',
+                      height: '$32',
+                      marginRight: '$5',
+                    }}
+                  />
+                  <Text
+                    heading="6"
+                    css={{
+                      width: 'fit-content',
+                      display: 'flex',
+                      alignItems: 'center',
+                      '@hover': {
+                        '&:hover': {
+                          cursor: 'pointer',
+                        },
+                      },
+                    }}
+                  >
+                    Add new team board
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
                   const formatedDate = new Date(date).toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -173,45 +166,6 @@ const ListBoardsByTeam = ({ teamId, userId, isSuperAdmin, socket }: ListBoardsBy
                         Last updated -{' '}
                         {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
                       </Text>
-                      {/* to be used on the full version -> */}
-                      <Flex justify="end" css={{ width: '100%' }}>
-                        <Flex
-                          css={{
-                            position: 'relative',
-                            zIndex: '30',
-                            '& svg': { size: '$16' },
-                            right: 0,
-                            top: '$-22',
-                          }}
-                          gap="8"
-                        >
-                          <Icon
-                            name="plus"
-                            css={{
-                              width: '$16',
-                              height: '$32',
-                              marginRight: '$5',
-                            }}
-                          />
-                          <Text
-                            heading="6"
-                            css={{
-                              width: 'fit-content',
-                              display: 'flex',
-                              alignItems: 'center',
-                              '@hover': {
-                                '&:hover': {
-                                  cursor: 'pointer',
-                                },
-                              },
-                            }}
-                          >
-                            {!Array.from(dataByTeamAndDate.teams.keys()).includes(team)
-                              ? 'Add new personal board'
-                              : 'Add new team board'}
-                          </Text>
-                        </Flex>
-                      </Flex>
                       <Flex direction="column" gap="20">
                         {boardsOfDay.map((board: BoardType) => (
                           <CardBody

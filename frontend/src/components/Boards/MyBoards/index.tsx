@@ -40,33 +40,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const routerTeam = router.query.team as string;
   const teamsList = useRecoilValue(teamsListState);
 
-  // useMemo(() => {
-  //   if (!(filter === 'all' || filter === 'personal')) {
-  //     const team = teamsList.find((team) => team._id === filter);
-  //     // console.log();
-  //     // const fetchBoards = useInfiniteQuery(
-  //     //   'boards',
-  //     //   ({ pageParam = 0 }) => getBoardsRequest(pageParam),
-  //     //   {
-  //     //     enabled: true,
-  //     //     refetchOnWindowFocus: false,
-  //     //     getNextPageParam: (lastPage) => {
-  //     //       const { hasNextPage, page } = lastPage;
-  //     //       if (hasNextPage) return page + 1;
-  //     //       return undefined;
-  //     //     },
-  //     //     onError: () => {
-  //     //       setToastState({
-  //     //         open: true,
-  //     //         content: 'Error getting the boards',
-  //     //         type: ToastStateEnum.ERROR,
-  //     //       });
-  //     //     },
-  //     //   },
-  //     // );
-  //   }
-  // }, [filter, teamsList]);
-
   const fetchBoards = useInfiniteQuery(
     'boards',
     ({ pageParam = 0 }) => getBoardsRequest(pageParam),
@@ -147,21 +120,21 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     label: team.name,
   }));
 
-  // console.log(dataByTeamAndDate);
-  // console.log(dataByTeamAndDate.boardsTeamAndDate);
   if (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) {
+    return <EmptyBoards />;
+  }
+  if (filter === 'personal' && !isLoading) {
     return <EmptyBoards />;
   }
 
   const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filter);
-  // if (!teamFiltered) return null;
 
   return (
     <>
       <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
       {!(filter === 'all' || filter === 'personal') && filteredTeam && (
         <ListBoardsByTeam
-          teamId={filter}
+          filteredTeam={filteredTeam}
           userId={userId}
           isSuperAdmin={isSuperAdmin}
           socket={socket}
@@ -278,160 +251,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         </ScrollableContent>
       )}
     </>
-    // <>
-    //   <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
-    //   {/* <ListBoardsByTeam
-    //     teamId="638e0e0e0a9452459840e8c9"
-    //     userId={userId}
-    //     isSuperAdmin={isSuperAdmin}
-    //     socket={socket}
-    //   /> */}
-
-    //   {/* <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} /> */}
-
-    //   <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-    //     {/* <Flex>
-    //      <Flex
-    //        direction="column"
-    //        css={{
-    //          position: 'sticky',
-    //          zIndex: '5',
-    //          top: '-0.4px',
-    //          backgroundColor: '$background',
-    //        }}
-    //      >
-    //        <TeamHeader team={dataByTeamAndDate.teams.get(filter)} userId={userId} users={users} />
-    //      </Flex>
-    //    </Flex> */}
-    //     {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
-    //       // console.log(teamsList.find((team) => teamId === filter));
-    //       const { users } = Array.from(boardsOfTeam)[0][1][0];
-    //       if (teamFiltered && teamId !== teamFiltered._id) {
-    //         return (
-    //           <Flex key={teamId} css={{ mb: '$24' }} direction="column">
-    //             <Flex
-    //               direction="column"
-    //               css={{
-    //                 position: 'sticky',
-    //                 zIndex: '5',
-    //                 top: '-0.4px',
-    //                 backgroundColor: '$background',
-    //               }}
-    //             >
-    //               <TeamHeader
-    //                 team={teamFiltered}
-    //                 userId={userId}
-    //                 users={dataByTeamAndDate.teams.get(teamId)?.users}
-    //               />
-    //             </Flex>
-    //           </Flex>
-    //         );
-    //       }
-    //       if (filter !== 'all' && teamId !== filter) return null;
-    //       return (
-    //         <Flex key={teamId} css={{ mb: '$24' }} direction="column">
-    //           <Flex
-    //             direction="column"
-    //             css={{
-    //               position: 'sticky',
-    //               zIndex: '5',
-    //               top: '-0.4px',
-    //               backgroundColor: '$background',
-    //             }}
-    //           >
-    //             <TeamHeader
-    //               team={dataByTeamAndDate.teams.get(teamId)}
-    //               userId={userId}
-    //               users={users}
-    //             />
-    //           </Flex>
-    //           <Flex css={{ zIndex: '1' }} direction="column" gap="16">
-    //             {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
-    //               const formatedDate = new Date(date).toLocaleDateString('en-US', {
-    //                 weekday: 'long',
-    //                 year: 'numeric',
-    //                 month: 'short',
-    //                 day: 'numeric',
-    //               });
-    //               return (
-    //                 <Flex key={date} direction="column">
-    //                   <Text
-    //                     color="primary300"
-    //                     size="xs"
-    //                     css={{
-    //                       position: 'sticky',
-    //                       zIndex: '5',
-    //                       top: '-0.2px',
-    //                       height: '$24',
-    //                       backgroundColor: '$background',
-    //                     }}
-    //                   >
-    //                     Last updated -{' '}
-    //                     {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
-    //                   </Text>
-    //                   {/* to be used on the full version -> */}
-    //                   <Flex justify="end" css={{ width: '100%' }}>
-    //                     <Flex
-    //                       css={{
-    //                         position: 'relative',
-    //                         zIndex: '30',
-    //                         '& svg': { size: '$16' },
-    //                         right: 0,
-    //                         top: '$-22',
-    //                       }}
-    //                       gap="8"
-    //                     >
-    //                       <Icon
-    //                         name="plus"
-    //                         css={{
-    //                           width: '$16',
-    //                           height: '$32',
-    //                           marginRight: '$5',
-    //                         }}
-    //                       />
-    //                       <Text
-    //                         heading="6"
-    //                         css={{
-    //                           width: 'fit-content',
-    //                           display: 'flex',
-    //                           alignItems: 'center',
-    //                           '@hover': {
-    //                             '&:hover': {
-    //                               cursor: 'pointer',
-    //                             },
-    //                           },
-    //                         }}
-    //                       >
-    //                         {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-    //                           ? 'Add new personal board'
-    //                           : 'Add new team board'}
-    //                       </Text>
-    //                     </Flex>
-    //                   </Flex>
-    //                   <Flex direction="column" gap="20">
-    //                     {boardsOfDay.map((board: BoardType) => (
-    //                       <CardBody
-    //                         key={board._id}
-    //                         board={board}
-    //                         dividedBoardsCount={board.dividedBoards.length}
-    //                         isDashboard={false}
-    //                         isSAdmin={isSuperAdmin}
-    //                         socketId={socket?.id}
-    //                         userId={userId}
-    //                       />
-    //                     ))}
-    //                   </Flex>
-    //                 </Flex>
-    //               );
-    //             })}
-    //           </Flex>
-    //         </Flex>
-    //       );
-    //     })}
-
-    //     {isLoading && <LoadingPage />}
-    //   </ScrollableContent>
-    // </>
   );
 });
 
