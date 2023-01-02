@@ -15,6 +15,7 @@ const StyledMemberTitle = styled(Text, {
   fontSize: '$14',
   letterSpacing: '$0-17',
   '&[data-disabled="true"]': { opacity: 0.4 },
+  wordBreak: 'break-word',
 });
 
 const PopoverTriggerStyled = styled(PopoverTrigger, {

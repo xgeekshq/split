@@ -185,7 +185,11 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
                 />
               </Flex>
               <Flex css={{ width: '50%' }}>
-                <Text color="primary300" css={{ textAlign: 'left', width: '50%' }} size="sm">
+                <Text
+                  color="primary300"
+                  css={{ textAlign: 'left', width: '100%', wordBreak: 'break-word' }}
+                  size="sm"
+                >
                   {user.email}
                 </Text>
               </Flex>
