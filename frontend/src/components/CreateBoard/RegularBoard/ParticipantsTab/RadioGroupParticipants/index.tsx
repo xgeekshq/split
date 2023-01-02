@@ -4,26 +4,27 @@ import {
   RadioGroupItem,
   RadioGroupRoot,
 } from '@/components/Primitives/RadioGroup';
-
 import Text from '@/components/Primitives/Text';
-import { useState } from 'react';
+import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { useSetRecoilState } from 'recoil';
 import { FormStyled, LabelStyled } from './styles';
 
-const SettingsParticipant = () => {
-  const [option, setOption] = useState('team');
+type RadioGroupParticipantsProps = {
+  handleSelection: (value: string) => void;
+};
 
-  const handleSelectOption = (value: string) => {
-    setOption(value);
+const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps) => {
+  const setSelectedTeam = useSetRecoilState(createBoardTeam);
+
+  const handleSelect = (value: string) => {
+    handleSelection(value);
+    setSelectedTeam(undefined);
   };
 
   return (
     <Flex direction="column" css={{ width: '100%', mt: '$32' }} gap="24">
       <FormStyled>
-        <RadioGroupRoot
-          defaultValue={option}
-          aria-label="View density"
-          onValueChange={handleSelectOption}
-        >
+        <RadioGroupRoot defaultValue="team" aria-label="View density" onValueChange={handleSelect}>
           <Flex css={{ alignItems: 'center' }}>
             <RadioGroupItem value="team" id="team">
               <RadioGroupIndicator />
@@ -52,4 +53,4 @@ const SettingsParticipant = () => {
   );
 };
 
-export default SettingsParticipant;
+export default RadioGroupParticipants;
