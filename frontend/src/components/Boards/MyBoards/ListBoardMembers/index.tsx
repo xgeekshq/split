@@ -1,19 +1,11 @@
-import React, { Dispatch, SetStateAction, useRef } from 'react';
-import { Dialog, DialogClose } from '@radix-ui/react-dialog';
+import React, { Dispatch, SetStateAction } from 'react';
 
-import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import {
-  StyledDialogCloseButton,
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-  StyledDialogTitle,
-} from '../../../Board/Settings/styles';
+import Dialog from '@/components/Primitives/Dialog';
 import { FilterBoardMembers } from './FilterBoardMembers';
 import { ScrollableContent } from './styles';
 
@@ -30,10 +22,6 @@ type ListBoardMembersProps = {
 };
 
 const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersProps) => {
-  // References
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const dialogContainerRef = useRef<HTMLSpanElement>(null);
-
   const admin = boardMembers
     .filter((user) => user.role === TeamUserRoles.ADMIN)
     .map((user) => user.user);
@@ -51,39 +39,27 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
     .map((user) => user.user);
 
   return (
-    <StyledDialogContainer ref={dialogContainerRef}>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <StyledDialogOverlay />
-        <StyledDialogContent>
-          <StyledDialogTitle>
-            <Text heading="4">Board Members</Text>
-            <DialogClose asChild>
-              <StyledDialogCloseButton isIcon size="lg">
-                <Icon css={{ color: '$primary400' }} name="close" size={24} />
-              </StyledDialogCloseButton>
-            </DialogClose>
-          </StyledDialogTitle>
-          <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-            <FilterBoardMembers title="Team Members" users={members} />
-            {!isEmpty(responsible) && (
-              <FilterBoardMembers title="Responsible" users={responsible} />
-            )}
-            {!isEmpty(stakeholders) && (
-              <FilterBoardMembers
-                title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}
-                users={stakeholders}
-              />
-            )}
-            {!isEmpty(admin) && (
-              <FilterBoardMembers
-                title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
-                users={admin}
-              />
-            )}
-          </ScrollableContent>
-        </StyledDialogContent>
-      </Dialog>
-    </StyledDialogContainer>
+    <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Dialog.Header>
+        <Text heading="4">Board Members</Text>
+      </Dialog.Header>
+      <ScrollableContent direction="column" justify="start">
+        <FilterBoardMembers title="Team Members" users={members} />
+        {!isEmpty(responsible) && <FilterBoardMembers title="Responsible" users={responsible} />}
+        {!isEmpty(stakeholders) && (
+          <FilterBoardMembers
+            title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}
+            users={stakeholders}
+          />
+        )}
+        {!isEmpty(admin) && (
+          <FilterBoardMembers
+            title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
+            users={admin}
+          />
+        )}
+      </ScrollableContent>
+    </Dialog>
   );
 };
 

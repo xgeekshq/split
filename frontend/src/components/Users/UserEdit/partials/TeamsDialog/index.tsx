@@ -1,28 +1,17 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState, useMemo } from 'react';
-import { Dialog, DialogClose, DialogTrigger, Portal } from '@radix-ui/react-dialog';
+import React, { Dispatch, SetStateAction, useState, useMemo } from 'react';
 
-import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-
-import {
-  ButtonsContainer,
-  StyledDialogCloseButton,
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-  StyledDialogTitle,
-} from '@/components/Board/Settings/styles';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
-import Button from '@/components/Primitives/Button';
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
-import { AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
-import { TeamChecked } from '@/types/team/team';
+import { TeamChecked, Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
+import Dialog from '@/components/Primitives/Dialog';
+import { useQueryClient } from 'react-query';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 
@@ -36,37 +25,23 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
 
   const [searchTeam, setSearchTeam] = useState<string>('');
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const { userId, joinedAt, providerAccountCreatedAt } = router.query;
 
-  // References
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const dialogContainerRef = useRef<HTMLSpanElement>(null);
-
   const {
-    fetchTeamsUserIsNotMember: { data, refetch },
-  } = useTeam();
+    fetchTeamsUserIsNotMember: { refetch },
+  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
 
   const {
     updateAddTeamsToUser: { mutate },
   } = useTeam();
 
-  // only fetch the data when the component is mounted (after button to open dialog is clicked)
-  const didMount = useRef(false);
-  useEffect(() => {
-    if (didMount.current) {
-      refetch();
-    }
-    didMount.current = true;
-  }, [isOpen, refetch]);
-
   // after fetching data, add the field "isChecked", to be used in the Add button
-  teamsUserIsNotMember = data?.map((team) => ({ ...team, isChecked: false })) || [];
-
-  // Method to close dialog
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  teamsUserIsNotMember = (
+    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', userId]) || []
+  ).map((team) => ({ ...team, isChecked: false }));
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTeam(event.target.value);
@@ -92,7 +67,10 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
       };
     });
 
-    if (!isEmpty(teamUsers)) mutate(teamUsers);
+    if (!isEmpty(teamUsers)) {
+      mutate(teamUsers);
+      refetch();
+    }
 
     setIsOpen(false);
   };
@@ -106,75 +84,46 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   }, [searchTeam, teamsUserIsNotMember]);
 
   return (
-    <StyledDialogContainer ref={dialogContainerRef}>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <AddNewBoardButton css={{ mt: '-10px' }} size="sm">
-            <Icon css={{ color: 'white' }} name="plus" />
-            Add user to new team
-          </AddNewBoardButton>
-        </DialogTrigger>
-        <Portal>
-          <StyledDialogOverlay />
-          <StyledDialogContent>
-            <StyledDialogTitle>
-              <Text heading="4">Add new team</Text>
-              <DialogClose asChild>
-                <StyledDialogCloseButton isIcon size="lg">
-                  <Icon css={{ color: '$primary400' }} name="close" size={24} />
-                </StyledDialogCloseButton>
-              </DialogClose>
-            </StyledDialogTitle>
-            <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-              <SearchInput
-                currentValue={searchTeam}
-                handleChange={handleSearchChange}
-                icon="search"
-                iconPosition="left"
-                id="search"
-                placeholder="Search team"
-              />
-            </Flex>
-            <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-              Teams
-            </Text>
-            <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-              <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
-                {filteredTeams?.map((team) => (
-                  <Flex key={team._id} align="center" justify="between">
-                    <Flex css={{ width: '50%' }}>
-                      <Checkbox
-                        checked={false}
-                        handleChange={handleChecked}
-                        id={team._id}
-                        label={team.name}
-                        size="16"
-                      />
-                    </Flex>
-                  </Flex>
-                ))}
+    <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Dialog.Header>
+        <Text heading="4">Add new team</Text>
+      </Dialog.Header>
+      <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+        <SearchInput
+          currentValue={searchTeam}
+          handleChange={handleSearchChange}
+          icon="search"
+          iconPosition="left"
+          id="search"
+          placeholder="Search team"
+        />
+      </Flex>
+      <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+        Teams
+      </Text>
+      <ScrollableContent direction="column" justify="start">
+        <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
+          {filteredTeams?.map((team) => (
+            <Flex key={team._id} align="center" justify="between">
+              <Flex css={{ width: '50%' }}>
+                <Checkbox
+                  checked={false}
+                  handleChange={handleChecked}
+                  id={team._id}
+                  label={team.name}
+                  size="16"
+                />
               </Flex>
-            </ScrollableContent>
-            <ButtonsContainer gap={24} justify="end">
-              <Button
-                css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-                variant="primaryOutline"
-                onClick={handleClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                css={{ marginRight: '$32', padding: '$16 $24' }}
-                variant="primary"
-                onClick={handleAddTeams}
-              >
-                Add
-              </Button>
-            </ButtonsContainer>
-          </StyledDialogContent>
-        </Portal>
-      </Dialog>
-    </StyledDialogContainer>
+            </Flex>
+          ))}
+        </Flex>
+      </ScrollableContent>
+      <Dialog.Footer
+        setIsOpen={setIsOpen}
+        handleAffirmative={handleAddTeams}
+        affirmativeLabel="Add"
+      />
+    </Dialog>
   );
 };
 

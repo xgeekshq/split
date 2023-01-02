@@ -22,6 +22,8 @@ import { boardInfoState, newBoardState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import Button from '@/components/Primitives/Button';
+import Icon from '@/components/icons/Icon';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -153,21 +155,35 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     }
   }, [data, route]);
 
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
   if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
   return board && userId && socketId ? (
     <>
       <BoardHeader />
       <Container direction="column">
-        <Flex align="center" css={{ py: '$32', width: '100%' }} gap={40} justify="between">
-          {showButtonToMerge ? <AlertMergeIntoMain boardId={boardId} socketId={socketId} /> : null}
+        <Flex align="center" css={{ py: '$32', width: '100%' }} justify="between">
+          <Flex gap={40} css={{ flex: 1, pr: '$40' }}>
+            {showButtonToMerge ? (
+              <AlertMergeIntoMain boardId={boardId} socketId={socketId} />
+            ) : null}
 
-          {showMessageHaveSubBoardsMerged ? (
-            <AlertBox
-              css={{ flex: 1 }}
-              title="No sub-team has merged into this main board yet."
-              type="info"
-            />
-          ) : null}
+            {showMessageHaveSubBoardsMerged ? (
+              <AlertBox
+                css={{ flex: 1 }}
+                title="No sub-team has merged into this main board yet."
+                type="info"
+              />
+            ) : null}
+          </Flex>
+
+          <Button onClick={handleOpen} variant="primaryOutline">
+            <Icon name="settings" />
+            Board settings
+            <Icon name="arrow-down" />
+          </Button>
 
           {hasAdminRole && !board?.submitedAt ? (
             <BoardSettings

@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
+import Icon from '@/components/icons/Icon';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
+import { ButtonAddMember } from '../ListMembersDialog/styles';
 
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,17 +16,33 @@ const TeamMembersList = () => {
   const { data: session } = useSession({ required: true });
   const membersList = useRecoilValue(membersListState);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const handleOpen = (event: MouseEvent) => {
+    event.preventDefault();
+    setIsOpen(true);
+  };
 
   return (
     <Flex css={{ mt: '$38' }} direction="column">
-      <Flex>
-        <Text css={{ mb: '$16' }} heading="3">
+      <Flex css={{ mb: '$16' }}>
+        <Text css={{ flex: 1 }} heading="3">
           Team Members
         </Text>
-        <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+        <ButtonAddMember onClick={handleOpen}>
+          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
+          <Text
+            weight="medium"
+            css={{
+              ml: '$10',
+              fontSize: '$14',
+              lineHeight: '$18',
+            }}
+          >
+            Add/remove members
+          </Text>
+        </ButtonAddMember>
+        {/* <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} /> */}
       </Flex>
-      <ScrollableContent direction="column" justify="start" ref={scrollRef}>
+      <ScrollableContent direction="column" justify="start">
         {membersList?.map((member) => (
           <CardMember
             key={member.user._id}
@@ -34,6 +52,7 @@ const TeamMembersList = () => {
           />
         ))}
       </ScrollableContent>
+      <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
     </Flex>
   );
 };
