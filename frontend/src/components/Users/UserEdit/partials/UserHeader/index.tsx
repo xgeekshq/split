@@ -12,9 +12,17 @@ type UserHeaderProps = {
   firstName: string;
   lastName: string;
   isSAdmin: boolean;
+  providerAccountCreatedAt?: string;
+  joinedAt: string;
 };
 
-const UserHeader = ({ firstName, lastName, isSAdmin }: UserHeaderProps) => {
+const UserHeader = ({
+  firstName,
+  lastName,
+  isSAdmin,
+  providerAccountCreatedAt,
+  joinedAt,
+}: UserHeaderProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Set breadcrumbs
@@ -72,7 +80,12 @@ const UserHeader = ({ firstName, lastName, isSAdmin }: UserHeaderProps) => {
         </TitleSection>
       </Flex>
       <Flex justify="end" css={{ mt: '$40' }}>
-        <ListTeams isOpen={isOpen} setIsOpen={setIsOpen} />
+        <ListTeams
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          providerAccountCreatedAt={providerAccountCreatedAt}
+          joinedAt={joinedAt}
+        />
       </Flex>
     </Flex>
   );

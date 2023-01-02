@@ -9,7 +9,6 @@ import UsersEdit from '@/components/Users/UserEdit';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
 
-import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { dehydrate, QueryClient } from 'react-query';
@@ -17,12 +16,10 @@ import { getTeamsOfUser } from '@/api/teamService';
 import { useSetRecoilState } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
+import useUser from '@/hooks/useUser';
 
 const UserDetails = () => {
   const { data: session } = useSession({ required: true });
-
-  const router = useRouter();
-  const { userId, firstName, lastName, isSAdmin } = router.query;
 
   // Recoil States
   const setTeamsListState = useSetRecoilState(userTeamsListState);
@@ -33,6 +30,10 @@ const UserDetails = () => {
     autoFetchTeamsOfSpecificUser: true,
   });
 
+  const {
+    getUserById: { data: user },
+  } = useUser({ autoFetchGetUser: true });
+
   useEffect(() => {
     if (!data) {
       return;
@@ -41,7 +42,7 @@ const UserDetails = () => {
     setTeamsListState(data);
   }, [data, setTeamsListState]);
 
-  if (!session || !data) return null;
+  if (!session || !data || !user) return null;
 
   return (
     <Flex direction="column">
@@ -51,12 +52,14 @@ const UserDetails = () => {
             <Flex css={{ width: '100%' }} direction="column">
               <Flex justify="between">
                 <UserHeader
-                  firstName={firstName as string}
-                  lastName={lastName as string}
-                  isSAdmin={(isSAdmin as string) === 'true'}
+                  firstName={user.firstName}
+                  lastName={user.lastName}
+                  isSAdmin={user.isSAdmin}
+                  providerAccountCreatedAt={user.providerAccountCreatedAt}
+                  joinedAt={user.joinedAt}
                 />
               </Flex>
-              {data && <UsersEdit userId={userId?.toString()} isLoading={isFetching} />}
+              {data && <UsersEdit userId={user._id} isLoading={isFetching} />}
             </Flex>
           </ContentSection>
         </QueryError>

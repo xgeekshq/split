@@ -1,4 +1,4 @@
-import { UseMutationResult } from 'react-query/types/react/types';
+import { UseMutationResult, UseQueryResult } from 'react-query/types/react/types';
 import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
@@ -24,6 +24,7 @@ export interface UseUserType {
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
+  getUserById: UseQueryResult<User, unknown>;
 }
 
 export interface LoginUser {
