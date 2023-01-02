@@ -10,11 +10,14 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
 import SelectComponent from '@/components/CreateBoard/Select';
+import { useSession } from 'next-auth/react';
 import { HelperTextWrapper } from '../../SplitBoard/SubTeamsTab/SelectTeam/styles';
 
 const SelectTeam = () => {
   const router = useRouter();
   const routerTeam = router.query.team as string;
+
+  const { data: session } = useSession();
 
   /**
    * Recoil Atoms and Hooks
@@ -49,7 +52,14 @@ const SelectTeam = () => {
     const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
     const users = selectedTeam.users.flatMap((teamUser) => {
-      if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
+      if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === session?.user.id)
+        return [
+          {
+            user: teamUser.user._id,
+            role: BoardUserRoles.RESPONSIBLE,
+            votesCount: 0,
+          },
+        ];
       return [
         {
           user: teamUser.user._id,
@@ -69,7 +79,7 @@ const SelectTeam = () => {
         maxUsersCount,
       },
     }));
-  }, [selectedTeam, setCreateBoardData, teamMembersCount]);
+  }, [selectedTeam, session?.user.id, setCreateBoardData, teamMembersCount]);
 
   useEffect(() => {
     if (routerTeam) {
