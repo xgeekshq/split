@@ -89,7 +89,24 @@ const ListBoardsByTeam = ({
   };
 
   if (dataByTeamAndDate.size === 0 && !isLoading) {
-    return <EmptyTeamBoards />;
+    return (
+      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
+        <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
+          <Flex
+            direction="column"
+            css={{
+              position: 'sticky',
+              zIndex: '5',
+              top: '-0.4px',
+              backgroundColor: '$background',
+            }}
+          >
+            <TeamHeader team={filteredTeam} userId={userId} users={filteredTeam.users} />
+          </Flex>
+          <EmptyTeamBoards />
+        </Flex>
+      </ScrollableContent>
+    );
   }
 
   return (

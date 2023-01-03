@@ -3,12 +3,13 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
+import { TeamUser } from '@/types/team/team.user';
 import CardAvatars from '../CardBoard/CardAvatars';
 
 interface TeamHeaderProps {
   team?: Team;
   userId: string;
-  users?: BoardUser[];
+  users?: BoardUser[] | TeamUser[];
 }
 
 const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
