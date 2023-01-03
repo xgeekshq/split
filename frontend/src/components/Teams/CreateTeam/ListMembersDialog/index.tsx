@@ -56,6 +56,11 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
         user._id === id ? { ...user, isChecked: !user.isChecked } : user,
       );
 
+      updateCheckedUser.sort((x, y) => {
+        if (x === y) return 0;
+        return x ? 1 : -1;
+      });
+
       setUsersListState(updateCheckedUser);
     };
 

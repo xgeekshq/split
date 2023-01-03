@@ -17,10 +17,9 @@ const SelectParticipants = () => {
 
   const usersListNames = useMemo(
     () =>
-      usersList.flatMap((user) => {
-        const foundUser = createBoardData.users.find((member) => user._id === member.user);
-        return foundUser ? [user] : [];
-      }),
+      usersList.flatMap((user) =>
+        createBoardData.users.find((member) => user._id === member.user) ? [user] : [],
+      ),
     [createBoardData.users, usersList],
   );
 
