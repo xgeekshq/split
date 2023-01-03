@@ -9,6 +9,7 @@ import Icon from '@/components/icons/Icon';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { Socket } from 'socket.io-client';
 import { Team } from '@/types/team/team';
+import Link from 'next/link';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 
@@ -51,42 +52,49 @@ const ListBoards = React.memo<ListBoardsProps>(
               </Flex>
               {/* to be used on the full version -> */}
               <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
-                <Flex
-                  css={{
-                    position: 'relative',
-                    zIndex: '9',
-                    '& svg': { size: '$16' },
-                    right: 0,
-                    top: '$-22',
+                <Link
+                  href={{
+                    pathname: `/boards/new`,
+                    query: { team: teamId },
                   }}
-                  gap="8"
                 >
-                  <Icon
-                    name="plus"
+                  <Flex
                     css={{
-                      width: '$16',
-                      height: '$32',
-                      marginRight: '$5',
+                      position: 'relative',
+                      zIndex: '9',
+                      '& svg': { size: '$16' },
+                      right: 0,
+                      top: '$-22',
                     }}
-                  />
-                  <Text
-                    heading="6"
-                    css={{
-                      width: 'fit-content',
-                      display: 'flex',
-                      alignItems: 'center',
-                      '@hover': {
-                        '&:hover': {
-                          cursor: 'pointer',
-                        },
-                      },
-                    }}
+                    gap="8"
                   >
-                    {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-                      ? 'Add new personal board'
-                      : 'Add new team board'}
-                  </Text>
-                </Flex>
+                    <Icon
+                      name="plus"
+                      css={{
+                        width: '$16',
+                        height: '$32',
+                        marginRight: '$5',
+                      }}
+                    />
+                    <Text
+                      heading="6"
+                      css={{
+                        width: 'fit-content',
+                        display: 'flex',
+                        alignItems: 'center',
+                        '@hover': {
+                          '&:hover': {
+                            cursor: 'pointer',
+                          },
+                        },
+                      }}
+                    >
+                      {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
+                        ? 'Add new personal board'
+                        : 'Add new team board'}
+                    </Text>
+                  </Flex>
+                </Link>
               </Flex>
               <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {

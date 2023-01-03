@@ -100,7 +100,7 @@ const ListBoardsByTeam = ({
           >
             <TeamHeader team={filteredTeam} userId={userId} users={filteredTeam.users} />
           </Flex>
-          <EmptyTeamBoards />
+          <EmptyTeamBoards teamId={filteredTeam._id} />
         </Flex>
       </ScrollableContent>
     );
