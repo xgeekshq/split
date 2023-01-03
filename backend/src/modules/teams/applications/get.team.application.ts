@@ -26,4 +26,8 @@ export class GetTeamApplication implements GetTeamApplicationInterface {
 	getTeamsOfUser(userId: string) {
 		return this.getTeamService.getTeamsOfUser(userId);
 	}
+
+	getTeamsUserIsNotMember(userId: string) {
+		return this.getTeamService.getTeamsUserIsNotMember(userId);
+	}
 }

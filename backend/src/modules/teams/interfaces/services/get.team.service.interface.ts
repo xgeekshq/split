@@ -21,4 +21,6 @@ export interface GetTeamServiceInterface {
 	getAllTeams(): Promise<LeanDocument<Team>[]>;
 
 	getUsersOnlyWithTeams(users: User[]): Promise<LeanDocument<UserWithTeams>[]>;
+
+	getTeamsUserIsNotMember(userId: string): Promise<LeanDocument<Team>[]>;
 }

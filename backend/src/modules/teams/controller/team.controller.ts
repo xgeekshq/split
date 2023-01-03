@@ -197,6 +197,26 @@ export default class TeamsController {
 		return this.getTeamApp.getTeam(teamId, teamQueryParams);
 	}
 
+	@ApiOperation({ summary: 'Retrieve a list of teams that dont belong to an user' })
+	@ApiOkResponse({ description: 'Teams successfully retrieved!', type: TeamDto, isArray: true })
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('not/:userId')
+	@UseGuards(SuperAdminGuard)
+	getTeamsUserIsNotMember(@Param() { userId }: UserTeamsParams) {
+		return this.getTeamApp.getTeamsUserIsNotMember(userId);
+	}
+
 	@ApiOperation({ summary: 'Update a specific team member' })
 	@ApiParam({ type: String, name: 'teamId', required: true })
 	@ApiBody({ type: TeamUserDto })
@@ -267,6 +287,38 @@ export default class TeamsController {
 	@Put('/:teamId/addAndRemove')
 	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
 		return this.updateTeamApp.addAndRemoveTeamUsers(users.addUsers, users.removeUsers);
+	}
+
+	@ApiOperation({ summary: 'Add team members' })
+	@ApiBody({ type: TeamUserDto })
+	@ApiOkResponse({
+		type: TeamUserDto,
+		description: 'Team member updated successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@UseGuards(SuperAdminGuard)
+	@Put('add/user')
+	addTeamUsers(@Body() teamUsers: TeamUserDto[]) {
+		return this.updateTeamApp.addTeamUsers(teamUsers);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific team' })

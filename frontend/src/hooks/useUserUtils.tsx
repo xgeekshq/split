@@ -12,10 +12,13 @@ type UserUtilsType = {
   router: NextRouter;
   usersWithTeamsList: UserWithTeams[];
   setUsersWithTeamsList: SetterOrUpdater<UserWithTeams[]>;
+  userId: string | undefined;
 };
 
 const useUserUtils = (): UserUtilsType => {
   const router = useRouter();
+
+  const { userId } = router.query;
 
   const queryClient = useQueryClient();
 
@@ -28,6 +31,7 @@ const useUserUtils = (): UserUtilsType => {
     router,
     usersWithTeamsList,
     setUsersWithTeamsList,
+    userId: Array.isArray(userId) ? userId[0] : userId,
   };
 };
 

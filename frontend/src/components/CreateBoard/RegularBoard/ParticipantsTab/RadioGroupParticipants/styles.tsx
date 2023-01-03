@@ -9,6 +9,7 @@ const LabelStyled = styled(Label, {
 
 const FormStyled = styled('form', {
   width: '100%',
+  '@media (min-width: 1500px)': { width: '80%' },
 });
 
 export { LabelStyled, FormStyled };

@@ -52,11 +52,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           return;
         }
 
-        if (!data) {
-          setShowSignUp(SignUpEnum.REGISTER);
-          return;
-        }
-
         setValueHelperText(' This email already exists');
         setValueState(true);
       },

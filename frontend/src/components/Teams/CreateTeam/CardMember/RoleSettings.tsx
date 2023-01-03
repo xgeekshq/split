@@ -5,28 +5,34 @@ import { Popover, PopoverPortal } from '@radix-ui/react-popover';
 import { PopoverContent } from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
 
-import { membersListState } from '@/store/team/atom/team.atom';
-import { TeamUserUpdate } from '@/types/team/team.user';
+import { membersListState, userTeamsListState } from '@/store/team/atom/team.atom';
+import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import useTeam from '@/hooks/useTeam';
 import Icon from '@/components/icons/Icon';
+import { useRouter } from 'next/router';
 import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
   userId: string | undefined;
+  teamId?: string | undefined;
   isTeamPage?: boolean;
   isTeamCreator?: boolean;
 }
 
 const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
-  ({ userId, isTeamPage, isTeamCreator }) => {
+  ({ userId, teamId, isTeamPage, isTeamCreator }) => {
     const membersList = useRecoilValue(membersListState);
     const setMembersList = useSetRecoilState(membersListState);
 
+    const userTeamsList = useRecoilValue(userTeamsListState);
+
+    const router = useRouter();
+
     const {
       updateTeamUser: { mutate },
-    } = useTeam({});
+    } = useTeam();
 
     const selectRole = (value: TeamUserRoles) => {
       const members = membersList.map((member) =>
@@ -36,20 +42,32 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
       setMembersList(members);
     };
 
-    const updateUserRole = (value: TeamUserRoles) => {
-      const userFound = membersList.find((member) => member.user._id === userId);
-
-      if (userFound && userFound.team) {
-        const updateTeamUser: TeamUserUpdate = {
-          team: userFound.team,
+    const updateUser = (value: TeamUserRoles, teamUser?: TeamUser) => {
+      if (teamUser && teamUser.team) {
+        const updateTeamUserRole: TeamUserUpdate = {
+          team: teamUser.team,
           user: userId,
           role: value,
-          isNewJoiner: userFound.isNewJoiner,
+          isNewJoiner: teamUser.isNewJoiner,
         };
 
-        mutate(updateTeamUser);
+        mutate(updateTeamUserRole);
       }
     };
+
+    let updateUserRole = (value: TeamUserRoles) => {
+      const userFound = membersList.find((member) => member.user._id === userId);
+      updateUser(value, userFound);
+    };
+
+    if (router.pathname.includes('users')) {
+      updateUserRole = (value: TeamUserRoles) => {
+        const teamUsers = userTeamsList.flatMap((team) => team.users);
+        const teamFound = teamUsers.find((teamUser) => teamUser.team === teamId);
+
+        updateUser(value, teamFound);
+      };
+    }
 
     const handleSelectFunction = (role: TeamUserRoles) =>
       isTeamPage ? updateUserRole(role) : selectRole(role);

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { membersListState } from '@/store/team/atom/team.atom';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
@@ -17,20 +17,23 @@ import {
   StyledForm,
   SubContainer,
 } from '@/styles/pages/boards/newSplitBoard.styles';
+import { useSession } from 'next-auth/react';
 import TipBar from './TipBar';
 import TeamName from './TeamName';
 import TeamMembersList from './ListCardsMembers';
 
 const CreateTeam = () => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const {
     createTeam: { mutate, status },
-  } = useTeam({});
+  } = useTeam();
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
   const listMembers = useRecoilValue(membersListState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
 
   const methods = useForm<{ text: string }>({
     mode: 'onBlur',
@@ -46,6 +49,14 @@ const CreateTeam = () => {
     name: 'text',
   });
 
+  const resetListUsersState = useCallback(() => {
+    const updateCheckedUser = usersList.map((user) => ({
+      ...user,
+      isChecked: user._id === session?.user.id,
+    }));
+    setUsersList(updateCheckedUser);
+  }, [session?.user.id, setUsersList, usersList]);
+
   const saveTeam = (title: string) => {
     const membersListToSubmit: CreateTeamUser[] = listMembers.map((member) => ({
       ...member,
@@ -53,12 +64,14 @@ const CreateTeam = () => {
     }));
 
     mutate({ name: title, users: membersListToSubmit });
+    resetListUsersState();
   };
 
   const handleBack = useCallback(() => {
     setBackButtonState(true);
+    resetListUsersState();
     router.back();
-  }, [router]);
+  }, [resetListUsersState, router]);
 
   useEffect(() => {
     if (status === 'success') {

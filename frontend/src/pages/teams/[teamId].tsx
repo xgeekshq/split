@@ -15,11 +15,9 @@ import { Sidebar } from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import { TeamUser } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { User } from '@/types/user/user';
 import useTeam from '@/hooks/useTeam';
 import { useRouter } from 'next/router';
 
@@ -52,24 +50,11 @@ const Team = () => {
   const setUsersListState = useSetRecoilState(usersListState);
 
   const handleMembersList = useCallback(() => {
-    if (!data || !usersData) {
-      return;
-    }
-    const teamMemberList: UserList[] = data.users.map((teamUser: TeamUser) => ({
-      ...teamUser.user,
-      isChecked: true,
-    }));
+    if (!data || !usersData) return;
 
-    const allUsersList: UserList[] = usersData.map((user: User) => ({
-      ...user,
-      isChecked: true,
-    }));
-
-    const checkboxUsersList = allUsersList.map((user: UserList) => {
-      const userIsTeamMember = teamMemberList
-        .map((teamMember: UserList) => teamMember._id === user._id)
-        .includes(true);
-      return userIsTeamMember ? user : { ...user, isChecked: false };
+    const checkboxUsersList = usersData.map((user): UserList => {
+      const userIsTeamMember = data.users.some((teamMember) => teamMember.user._id === user._id);
+      return { ...user, isChecked: userIsTeamMember };
     });
 
     setMembersListState(data.users);

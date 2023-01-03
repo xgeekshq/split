@@ -5,7 +5,7 @@ import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 
-type Props = { mainBoardName: string };
+type Props = { mainBoardName?: string };
 
 const BoardName = ({ mainBoardName }: Props) => {
   /**

@@ -163,6 +163,7 @@ const Checkbox: React.FC<{
           width: '100%',
           cursor: 'pointer',
           color: disabled ? '$primary200' : '$primaryBase',
+          wordBreak: 'break-word',
         }}
         htmlFor={id}
         size="sm"

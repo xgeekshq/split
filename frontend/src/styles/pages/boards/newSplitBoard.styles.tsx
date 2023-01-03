@@ -5,14 +5,12 @@ import Flex from '@/components/Primitives/Flex';
 const Container = styled('main', {
   width: '100%',
   minHeight: '100vh',
-
   backgroundColor: '$primary50',
 });
 
 const PageHeader = styled('header', {
   height: '$92',
   width: '100%',
-
   top: 0,
   zIndex: 3,
   borderBottom: '0.8px solid $primary200',
@@ -40,7 +38,6 @@ const PageHeader = styled('header', {
 
 const ContentContainer = styled('section', {
   display: 'flex',
-
   width: '100%',
   minHeight: 'calc(100vh - $sizes$92)',
 });
@@ -74,7 +71,6 @@ const StyledForm = styled('form', Flex, {
   defaultVariants: {
     status: true,
   },
-
   flex: '1 1 auto',
 });
 

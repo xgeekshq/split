@@ -12,6 +12,8 @@ import {
   getTeamsOfUser,
   updateTeamUserRequest,
   deleteTeamUserRequest,
+  getTeamsUserIsNotMemberRequest,
+  updateAddTeamsToUserRequest,
 } from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
@@ -21,6 +23,7 @@ interface AutoFetchProps {
   autoFetchAllTeams?: boolean;
   autoFetchTeamsOfUser?: boolean;
   autoFetchTeamsOfSpecificUser?: boolean;
+  autoFetchTeamsUserIsNotMember?: boolean;
 }
 
 const useTeam = ({
@@ -28,6 +31,7 @@ const useTeam = ({
   autoFetchAllTeams = false,
   autoFetchTeamsOfUser = false,
   autoFetchTeamsOfSpecificUser = false,
+  autoFetchTeamsUserIsNotMember = false,
 }: AutoFetchProps = {}): UseTeamType => {
   const { teamId, setToastState, queryClient, teamsList, setTeamsList, usersList, userId } =
     useTeamUtils();
@@ -84,6 +88,22 @@ const useTeam = ({
     },
   );
 
+  const fetchTeamsUserIsNotMember = useQuery(
+    ['teamsUserIsNotMember', userId],
+    () => getTeamsUserIsNotMemberRequest(userId),
+    {
+      enabled: autoFetchTeamsUserIsNotMember,
+      refetchOnWindowFocus: false,
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the teams',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+
   const createTeam = useMutation(createTeamRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries('teams');
@@ -104,8 +124,30 @@ const useTeam = ({
   });
 
   const updateTeamUser = useMutation(updateTeamUserRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['team', teamId]);
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(['team', teamId]),
+        queryClient.invalidateQueries(['teams', userId]),
+      ]);
+
+      setToastState({
+        open: true,
+        content: 'The team user was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error while updating the team user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  const updateAddTeamsToUser = useMutation(updateAddTeamsToUserRequest, {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['teams', userId]);
 
       setToastState({
         open: true,
@@ -201,8 +243,11 @@ const useTeam = ({
   });
 
   const deleteTeamUser = useMutation(deleteTeamUserRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['teams', userId]);
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(['teams', userId]),
+        queryClient.invalidateQueries(['teamsUserIsNotMember', userId]),
+      ]);
 
       setToastState({
         open: true,
@@ -229,6 +274,8 @@ const useTeam = ({
     deleteTeam,
     deleteTeamUser,
     fetchTeamsOfSpecificUser,
+    fetchTeamsUserIsNotMember,
+    updateAddTeamsToUser,
   };
 };
 

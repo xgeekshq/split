@@ -16,4 +16,6 @@ export interface GetUserApplication {
 		size?: number,
 		searchUser?: string
 	): Promise<{ userWithTeams: LeanDocument<UserWithTeams>[]; hasNextPage: boolean; page: number }>;
+
+	getById(id: string): Promise<LeanDocument<UserDocument> | null>;
 }

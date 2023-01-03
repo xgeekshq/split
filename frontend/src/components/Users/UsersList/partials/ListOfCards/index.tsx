@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Flex from '@/components/Primitives/Flex';
 import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
-import SearchInput from '@/components/Teams/CreateTeam/ListMembers/SearchInput';
+import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
 import { useSetRecoilState } from 'recoil';
 // import { usersWithTeamsState } from '@/store/user/atoms/user.atom';
 import { useInfiniteQuery } from 'react-query';
@@ -72,7 +72,7 @@ const ListOfCards = React.memo(() => {
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchUsers.refetch();
-    }, 100);
+    }, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
