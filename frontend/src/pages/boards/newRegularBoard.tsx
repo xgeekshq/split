@@ -19,7 +19,7 @@ import {
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
@@ -28,13 +28,15 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import TipBar from '@/components/CreateBoard/TipBar';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser } from '@/store/team/atom/team.atom';
+import { teamsOfUser, usersListState } from '@/store/team/atom/team.atom';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
+import { getAllUsers } from '@/api/userService';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 const defaultBoard = {
   users: [],
@@ -74,9 +76,9 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  const setBoardState = useSetRecoilState(createBoardDataState);
-  // const [boardState, setBoardState] = useRecoilState(createBoardDataState);
-
+  // const setBoardState = useSetRecoilState(createBoardDataState);
+  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
   const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
@@ -90,6 +92,18 @@ const NewRegularBoard: NextPage = () => {
   const {
     fetchAllTeams: { data: allTeamsData },
   } = useTeam();
+
+  const { data: allUsers } = useQuery(['users'], () => getAllUsers(), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the users',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);
@@ -111,17 +125,28 @@ const NewRegularBoard: NextPage = () => {
     name: 'text',
   });
 
+  const resetListUsersState = useCallback(() => {
+    const updateCheckedUser = usersList.map((user) => ({
+      ...user,
+      isChecked: user._id === session?.user.id,
+    }));
+    setUsersList(updateCheckedUser);
+  }, [session?.user.id, setUsersList, usersList]);
+
   /**
    * Handle back to boards list page
    */
   const handleBack = useCallback(() => {
     setIsLoading(true);
 
+    resetListUsersState();
+
     setBackButtonState(true);
     router.back();
-  }, [router]);
+  }, [resetListUsersState, router]);
 
   const handleCancelBtn = () => {
+    resetListUsersState();
     setIsLoading(true);
 
     router.push(DASHBOARD_ROUTE);
@@ -131,19 +156,27 @@ const NewRegularBoard: NextPage = () => {
    * Save board
 
    */
-  // const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
-  // mutate( {
-  //   ...boardState.board,
-  //   users: boardState.users,
-  //   title: title || boardState.board.title,
-  //   maxVotes,
-  //   slackEnable,
-  //   maxUsers: boardState.count.maxUsersCount,
-  // });
-  // };
+  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+    console.log({
+      ...boardState.board,
+      users: boardState.users,
+      title: title || boardState.board.title,
+      maxVotes,
+      slackEnable,
+      maxUsers: boardState.count.maxUsersCount,
+    });
+    // mutate( {
+    //   ...boardState.board,
+    //   users: boardState.users,
+    //   title: title || boardState.board.title,
+    //   maxVotes,
+    //   slackEnable,
+    //   maxUsers: boardState.count.maxUsersCount,
+    // });
+  };
 
   useEffect(() => {
-    if (teamsData && allTeamsData && session) {
+    if (teamsData && allTeamsData && session && allUsers) {
       const availableTeams = teamsData.filter((team) =>
         team.users?.find(
           (teamUser) =>
@@ -153,6 +186,13 @@ const NewRegularBoard: NextPage = () => {
       );
 
       setTeams(session?.user.isSAdmin ? allTeamsData : availableTeams);
+
+      const usersWithChecked = allUsers.map((user) => ({
+        ...user,
+        isChecked: user._id === session?.user.id,
+      }));
+
+      setUsersList(usersWithChecked);
     }
 
     // if (status === 'success') {
@@ -181,6 +221,8 @@ const NewRegularBoard: NextPage = () => {
     allTeamsData,
     setSelectedTeam,
     setBoardState,
+    allUsers,
+    setUsersList,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;
@@ -203,9 +245,9 @@ const NewRegularBoard: NextPage = () => {
               <SubContainer>
                 <StyledForm
                   direction="column"
-                  // onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                  //   saveBoard(text, maxVotes, slackEnable);
-                  // })}
+                  onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                    saveBoard(text, maxVotes, slackEnable);
+                  })}
                 >
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
@@ -261,6 +303,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
     await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
+    await queryClient.prefetchQuery('users', () => getAllUsers(context));
 
     return {
       props: {

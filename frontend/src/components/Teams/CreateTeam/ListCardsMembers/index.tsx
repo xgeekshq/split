@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
@@ -8,7 +8,7 @@ import Icon from '@/components/icons/Icon';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
-import { ButtonAddMember } from '../ListMembers/styles';
+import { ButtonAddMember } from '../ListMembersDialog/styles';
 
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +40,7 @@ const TeamMembersList = () => {
             Add/remove members
           </Text>
         </ButtonAddMember>
+        {/* <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} /> */}
       </Flex>
       <ScrollableContent direction="column" justify="start">
         {membersList?.map((member) => (

@@ -12,7 +12,7 @@ import QuickEditSubTeams from './QuickEditSubTeams';
 import SelectTeam from './SelectTeam';
 import FakeMainBoardCard from '../FakeSettingsTabs/partials/MainBoardCard';
 import BoxContainer from './BoxContainer';
-import StakeholdersBox from './StakeholdersBox';
+import StakeholdersBox from './UsersBox';
 
 type TeamSubTeamsConfigurationsProps = {
   previousTeam?: string;
@@ -70,7 +70,11 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
               <Text css={{ wordBreak: 'break-word' }} size="md" />
             </BoxContainer>
           ) : (
-            <StakeholdersBox stakeholders={stakeholders} haveError={haveError} />
+            <StakeholdersBox
+              participants={stakeholders}
+              haveError={haveError}
+              title="Stakeholders"
+            />
           )}
         </Flex>
         {selectedTeam ? (
