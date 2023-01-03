@@ -94,17 +94,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		});
 	}
 
-	addOwner(users: BoardUserDto[], userId: string) {
-		return [
-			...users,
-			{
-				user: userId.toString(),
-				role: BoardRoles.OWNER,
-				votesCount: 0
-			}
-		];
-	}
-
 	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string) {
 		const usersIds: string[] = [];
 		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
