@@ -23,7 +23,7 @@ const EmptyTeamBoards = ({ teamId }: EmptyTeamBoardsProps) => (
         }}
       >
         <StyledNewBoardLink underline weight="medium">
-          Add a new board
+          Add a new team board
         </StyledNewBoardLink>
       </Link>{' '}
       now.
