@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilState } from 'recoil';
-import { Dialog, DialogClose, DialogTrigger, Portal } from '@radix-ui/react-dialog';
+import { Dialog, DialogClose, Portal } from '@radix-ui/react-dialog';
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import { usersListState } from '@/store/team/atom/team.atom';
@@ -16,7 +16,7 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
-import { ButtonAddMember, ScrollableContent } from './styles';
+import { ScrollableContent } from './styles';
 import SearchInput from './SearchInput';
 
 type ListMembersDialogProps = {
@@ -44,6 +44,10 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
 
     // Method to close dialog
     const handleClose = () => {
+      const listOfUsersToBeSorted = [...usersList];
+      setUsersListState(
+        listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
+      );
       setIsOpen(false);
     };
 
@@ -97,24 +101,16 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     return (
       <StyledDialogContainer ref={dialogContainerRef}>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <ButtonAddMember>
-              <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-              <Text
-                weight="medium"
-                css={{
-                  ml: '$10',
-                  fontSize: '$14',
-                  lineHeight: '$18',
-                }}
-              >
-                {btnTitle}
-              </Text>
-            </ButtonAddMember>
-          </DialogTrigger>
           <Portal>
             <StyledDialogOverlay />
-            <StyledDialogContent>
+            <StyledDialogContent
+              onPointerDownOutside={() => {
+                const listOfUsersToBeSorted = [...usersList];
+                setUsersListState(
+                  listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
+                );
+              }}
+            >
               <StyledDialogTitle>
                 <Text heading="4">{btnTitle}</Text>
                 <DialogClose asChild>

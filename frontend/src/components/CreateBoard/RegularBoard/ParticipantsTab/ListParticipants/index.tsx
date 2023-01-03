@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -16,13 +16,16 @@ type ListParticipantsProps = {
 const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
   const { data: session } = useSession();
 
-  const usersList = useRecoilValue(usersListState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
   const setCreateBoardData = useSetRecoilState(createBoardDataState);
 
   const setToastState = useSetRecoilState(toastState);
 
   const saveParticipants = () => {
     const selectedUsers = usersList.filter((user) => user.isChecked);
+    const usersListToBeSorted = [...usersList];
+
+    setUsersList(usersListToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)));
 
     const users = selectedUsers.map((user) =>
       user._id === session?.user.id

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -26,14 +26,14 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const { data: session } = useSession({ required: true });
 
-  const usersList = useRecoilValue(usersListState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
 
   const setToastState = useSetRecoilState(toastState);
 
   const saveMembers = () => {
     const listOfUsers = [...membersList];
-
+    const listOfUsersToBeSorted = [...usersList];
     const selectedUsers = usersList.filter((user) => user.isChecked);
     const unselectedUsers = usersList.filter((user) => !user.isChecked);
     const { teamId } = router.query;
@@ -95,6 +95,8 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     });
 
     setMembersListState(updatedListWithAdded);
+
+    setUsersList(listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)));
 
     setIsOpen(false);
   };
