@@ -67,7 +67,6 @@ const defaultBoard = {
     hideCards: false,
     hideVotes: false,
     slackEnable: false,
-    totalUsedVotes: 0,
   },
 };
 

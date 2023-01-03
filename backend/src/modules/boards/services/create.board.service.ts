@@ -106,15 +106,19 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 					user: user._id.toString(),
 					role: responsibles.includes(user._id.toString())
 						? BoardRoles.RESPONSIBLE
-						: teamUser.role === TeamRoles.ADMIN
-						? BoardRoles.MEMBER
-						: teamUser.role === TeamRoles.STAKEHOLDER
-						? BoardRoles.RESPONSIBLE
-						: teamUser.role,
+						: this.handleBoardUserRole(teamUser),
 					votesCount: 0
 				});
 			}
 		});
+	}
+
+	handleBoardUserRole(teamUser: TeamUser): string {
+		return teamUser.role === TeamRoles.ADMIN
+			? BoardRoles.MEMBER
+			: teamUser.role === TeamRoles.STAKEHOLDER
+			? BoardRoles.RESPONSIBLE
+			: teamUser.role;
 	}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false) {

@@ -40,7 +40,6 @@ export default interface BoardType {
   submitedByUser?: string;
   submitedAt?: Date;
   slackEnable?: boolean;
-  totalUsedVotes: number;
   responsibles?: string[];
 }
 
