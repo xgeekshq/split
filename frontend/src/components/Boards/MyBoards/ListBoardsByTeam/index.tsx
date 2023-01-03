@@ -7,15 +7,12 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import LoadingPage from '@/components/loadings/LoadingPage';
-import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
 import { Socket } from 'socket.io-client';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 import EmptyTeamBoards from '../EmptyTeamBoards';
+import ListBoards from '../ListBoards';
 
 interface ListBoardsByTeamProps {
   filteredTeam: Team;
@@ -55,9 +52,8 @@ const ListBoardsByTeam = ({
   );
   const { data, isLoading } = fetchBoardsByTeam;
 
-  const currentDate = new Date().toDateString();
-
   const dataByTeamAndDate = useMemo(() => {
+    const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
     data?.pages.forEach((page) => {
@@ -66,6 +62,7 @@ const ListBoardsByTeam = ({
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
           boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
+          if (board.team) teams.set(`${board.team?._id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -76,7 +73,7 @@ const ListBoardsByTeam = ({
         boardsOfTeam.set(date, [board]);
       });
     });
-    return boardsTeamAndDate;
+    return { boardsTeamAndDate, teams };
   }, [data?.pages]);
 
   const onScroll = () => {
@@ -88,7 +85,7 @@ const ListBoardsByTeam = ({
     }
   };
 
-  if (dataByTeamAndDate.size === 0 && !isLoading) {
+  if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
         <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
@@ -110,109 +107,17 @@ const ListBoardsByTeam = ({
   }
 
   return (
-    <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-      {Array.from(dataByTeamAndDate).map(([team, boardsOfTeam]) => {
-        const { users } = Array.from(boardsOfTeam)[0][1][0];
-        return (
-          <Flex key={team} css={{ mb: '$24' }} direction="column">
-            <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
-              <Flex
-                direction="column"
-                css={{
-                  position: 'sticky',
-                  zIndex: '5',
-                  top: '-0.4px',
-                  backgroundColor: '$background',
-                }}
-              >
-                <TeamHeader team={filteredTeam} userId={userId} users={users} />
-              </Flex>
-              {/* to be used on the full version -> */}
-              <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
-                <Flex
-                  css={{
-                    position: 'relative',
-                    zIndex: '9',
-                    '& svg': { size: '$16' },
-                    right: 0,
-                    top: '$-22',
-                  }}
-                  gap="8"
-                >
-                  <Icon
-                    name="plus"
-                    css={{
-                      width: '$16',
-                      height: '$32',
-                      marginRight: '$5',
-                    }}
-                  />
-                  <Text
-                    heading="6"
-                    css={{
-                      width: 'fit-content',
-                      display: 'flex',
-                      alignItems: 'center',
-                      '@hover': {
-                        '&:hover': {
-                          cursor: 'pointer',
-                        },
-                      },
-                    }}
-                  >
-                    Add new team board
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
-                {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
-                  const formatedDate = new Date(date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  });
-                  return (
-                    <Flex key={date} direction="column">
-                      <Text
-                        color="primary300"
-                        size="xs"
-                        css={{
-                          position: 'sticky',
-                          zIndex: '5',
-                          top: '-0.2px',
-                          height: '$24',
-                          backgroundColor: '$background',
-                        }}
-                      >
-                        Last updated -{' '}
-                        {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
-                      </Text>
-                      <Flex direction="column" gap="20">
-                        {boardsOfDay.map((board: BoardType) => (
-                          <CardBody
-                            key={board._id}
-                            board={board}
-                            dividedBoardsCount={board.dividedBoards.length}
-                            isDashboard={false}
-                            isSAdmin={isSuperAdmin}
-                            socketId={socket?.id}
-                            userId={userId}
-                          />
-                        ))}
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Flex>
-            </Flex>
-          </Flex>
-        );
-      })}
-
-      {isLoading && <LoadingPage />}
-    </ScrollableContent>
+    <ListBoards
+      userId={userId}
+      isSuperAdmin={isSuperAdmin}
+      dataByTeamAndDate={dataByTeamAndDate}
+      scrollRef={scrollRef}
+      onScroll={onScroll}
+      filter={filteredTeam._id}
+      isLoading={isLoading}
+      socket={socket}
+    />
   );
 };
 
-export { ListBoardsByTeam };
+export default ListBoardsByTeam;

@@ -3,11 +3,7 @@ import { useInfiniteQuery } from 'react-query';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getBoardsRequest } from '@/api/boardService';
-import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
-import LoadingPage from '@/components/loadings/LoadingPage';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
 import { useSocketBoardIO } from '@/hooks/useSocketBoardIO';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
@@ -15,12 +11,10 @@ import { Team } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import Icon from '@/components/icons/Icon';
 import { teamsListState } from '@/store/team/atom/team.atom';
-import TeamHeader from '../TeamHeader';
-import { ScrollableContent } from './styles';
 import FilterBoards from '../Filters/FilterBoards';
-import { ListBoardsByTeam } from './ListBoardsByTeam';
+import ListBoardsByTeam from './ListBoardsByTeam';
+import ListBoards from './ListBoards';
 
 interface MyBoardsProps {
   userId: string;
@@ -80,8 +74,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentDate = new Date().toDateString();
-
   const dataByTeamAndDate = useMemo(() => {
     const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
@@ -120,23 +112,15 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     label: team.name,
   }));
 
-  if (
-    (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading) ||
-    filter === 'personal'
-  ) {
-    return (
-      <>
-        <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
-        <EmptyBoards />
-      </>
-    );
-  }
+  if (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
+    return <EmptyBoards />;
 
   const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filter);
 
   return (
     <>
       <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
+
       {!['all', 'personal'].includes(filter) && filteredTeam && (
         <ListBoardsByTeam
           filteredTeam={filteredTeam}
@@ -146,113 +130,16 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         />
       )}
 
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
-          const { users } = Array.from(boardsOfTeam)[0][1][0];
-          if (filter !== 'all' && teamId !== filter) return null;
-          return (
-            <Flex key={teamId} css={{ mb: '$24' }} direction="column">
-              <Flex
-                direction="column"
-                css={{
-                  position: 'sticky',
-                  zIndex: '5',
-                  top: '-0.4px',
-                  backgroundColor: '$background',
-                }}
-              >
-                <TeamHeader
-                  team={dataByTeamAndDate.teams.get(teamId)}
-                  userId={userId}
-                  users={users}
-                />
-              </Flex>
-              {/* to be used on the full version -> */}
-              <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
-                <Flex
-                  css={{
-                    position: 'relative',
-                    zIndex: '9',
-                    '& svg': { size: '$16' },
-                    right: 0,
-                    top: '$-22',
-                  }}
-                  gap="8"
-                >
-                  <Icon
-                    name="plus"
-                    css={{
-                      width: '$16',
-                      height: '$32',
-                      marginRight: '$5',
-                    }}
-                  />
-                  <Text
-                    heading="6"
-                    css={{
-                      width: 'fit-content',
-                      display: 'flex',
-                      alignItems: 'center',
-                      '@hover': {
-                        '&:hover': {
-                          cursor: 'pointer',
-                        },
-                      },
-                    }}
-                  >
-                    {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-                      ? 'Add new personal board'
-                      : 'Add new team board'}
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
-                {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
-                  const formatedDate = new Date(date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  });
-                  return (
-                    <Flex key={date} direction="column">
-                      <Text
-                        color="primary300"
-                        size="xs"
-                        css={{
-                          position: 'sticky',
-                          zIndex: '5',
-                          top: '-0.2px',
-                          height: '$24',
-                          backgroundColor: '$background',
-                        }}
-                      >
-                        Last updated -{' '}
-                        {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
-                      </Text>
-                      <Flex direction="column" gap="20">
-                        {boardsOfDay.map((board: BoardType) => (
-                          <CardBody
-                            key={board._id}
-                            board={board}
-                            dividedBoardsCount={board.dividedBoards.length}
-                            isDashboard={false}
-                            isSAdmin={isSuperAdmin}
-                            socketId={socket?.id}
-                            userId={userId}
-                          />
-                        ))}
-                      </Flex>
-                    </Flex>
-                  );
-                })}
-              </Flex>
-            </Flex>
-          );
-        })}
-
-        {isLoading && <LoadingPage />}
-      </ScrollableContent>
+      <ListBoards
+        userId={userId}
+        isSuperAdmin={isSuperAdmin}
+        dataByTeamAndDate={dataByTeamAndDate}
+        scrollRef={scrollRef}
+        onScroll={onScroll}
+        filter={filter}
+        isLoading={isLoading}
+        socket={socket}
+      />
     </>
   );
 });
