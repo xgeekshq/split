@@ -261,20 +261,22 @@ export default class VotesController {
 
 		const { count, socketId } = data;
 
-		let board;
+		const promises = [];
 		for (let i = 0; i < Math.abs(count); i++) {
 			if (count < 0) {
 				// eslint-disable-next-line no-await-in-loop
-				board = await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id);
+				promises.push(
+					this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id)
+				);
 			} else {
 				// eslint-disable-next-line no-await-in-loop
-				board = await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id);
+				promises.push(this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id));
 			}
 		}
 
-		if (!board) throw new BadRequestException(DELETE_FAILED);
+		await Promise.all(promises);
 		this.socketService.sendUpdatedBoard(boardId, socketId);
 
-		return board;
+		return 'ok';
 	}
 }
