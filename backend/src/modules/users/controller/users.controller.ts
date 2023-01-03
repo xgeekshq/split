@@ -98,6 +98,29 @@ export default class UsersController {
 		return this.getUserApp.getAllUsersWithTeams(page, size, searchUser);
 	}
 
+	@ApiOperation({ summary: 'Retrieve user' })
+	@ApiOkResponse({
+		description: 'User successfully retrieved!',
+		type: UserDto
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@UseGuards(SuperAdminGuard)
+	@Get(':userId')
+	getUser(@Param() { userId }: UserParams) {
+		return this.getUserApp.getById(userId);
+	}
+
 	@ApiOperation({ summary: 'Update user is super admin' })
 	@ApiBody({ type: UpdateSuperAdminSwagger })
 	@ApiOkResponse({

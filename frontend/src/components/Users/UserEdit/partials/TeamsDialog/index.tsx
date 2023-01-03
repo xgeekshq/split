@@ -18,9 +18,11 @@ import { ScrollableContent } from './styles';
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  providerAccountCreatedAt?: string;
+  joinedAt: string;
 };
 
-const ListTeams = ({ isOpen, setIsOpen }: Props) => {
+const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Props) => {
   let teamsUserIsNotMember: TeamChecked[];
 
   const [searchTeam, setSearchTeam] = useState<string>('');
@@ -28,7 +30,7 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
   const queryClient = useQueryClient();
 
   const router = useRouter();
-  const { userId, joinedAt, providerAccountCreatedAt } = router.query;
+  const { userId } = router.query;
 
   const {
     fetchTeamsUserIsNotMember: { refetch },
@@ -60,10 +62,7 @@ const ListTeams = ({ isOpen, setIsOpen }: Props) => {
         user: userId as string,
         role: TeamUserRoles.MEMBER,
         team: team._id,
-        isNewJoiner: verifyIfIsNewJoiner(
-          joinedAt as string,
-          providerAccountCreatedAt ? (providerAccountCreatedAt as string) : undefined,
-        ),
+        isNewJoiner: verifyIfIsNewJoiner(joinedAt, providerAccountCreatedAt || undefined),
       };
     });
 

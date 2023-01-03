@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
@@ -13,11 +13,15 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { deleteUserRequest, updateUserIsAdminRequest } from '../api/userService';
+import { deleteUserRequest, updateUserIsAdminRequest, getUser } from '../api/userService';
 import useUserUtils from './useUserUtils';
 
-const useUser = (): UseUserType => {
-  const { setToastState, queryClient } = useUserUtils();
+interface AutoFetchProps {
+  autoFetchGetUser?: boolean;
+}
+
+const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
+  const { setToastState, queryClient, userId } = useUserUtils();
 
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
@@ -41,6 +45,18 @@ const useUser = (): UseUserType => {
       redirect: true,
     });
   };
+
+  const getUserById = useQuery(['userById', userId], () => getUser(userId), {
+    enabled: autoFetchGetUser,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the user',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
@@ -94,7 +110,7 @@ const useUser = (): UseUserType => {
     },
   });
 
-  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin, deleteUser };
+  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin, deleteUser, getUserById };
 };
 
 export default useUser;

@@ -243,8 +243,11 @@ const useTeam = ({
   });
 
   const deleteTeamUser = useMutation(deleteTeamUserRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['teams', userId]);
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries(['teams', userId]),
+        queryClient.invalidateQueries(['teamsUserIsNotMember', userId]),
+      ]);
 
       setToastState({
         open: true,
