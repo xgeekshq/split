@@ -90,6 +90,7 @@ const BoardHeader = () => {
       isActive: true,
     });
   }
+
   return (
     <StyledHeader>
       <Flex align="center" gap="20" justify="between">
@@ -179,9 +180,8 @@ const BoardHeader = () => {
               </>
             )}
           {!isSubBoard &&
-            boardData.mainBoardData &&
             !isEmpty(
-              boardData.mainBoardData.team.users.filter(
+              boardData.board.team.users.filter(
                 (user: TeamUser) => user.role === TeamUserRoles.STAKEHOLDER,
               ),
             ) && (
