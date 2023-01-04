@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
@@ -8,8 +8,6 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import CardMember from '@/components/Teams/CreateTeam/CardMember';
-import { ButtonAddMember } from '@/components/Primitives/Dialog/styles';
-import Icon from '@/components/icons/Icon';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
 
@@ -35,11 +33,6 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
     didMountRef.current = true;
   }, [handleMembersList, isOpen]);
 
-  const handleOpen = (event: MouseEvent) => {
-    event.preventDefault();
-    setIsOpen(true);
-  };
-
   const userRole = user?.role;
   const isTeamMember = userRole === TeamUserRoles.MEMBER;
 
@@ -50,19 +43,6 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
         <Text css={{ flex: 1 }} heading="3">
           Team Members
         </Text>
-        <ButtonAddMember onClick={handleOpen}>
-          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-          <Text
-            weight="medium"
-            css={{
-              ml: '$10',
-              fontSize: '$14',
-              lineHeight: '$18',
-            }}
-          >
-            Add/remove members
-          </Text>
-        </ButtonAddMember>
         {(!isTeamMember || isSAdmin) && (
           <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
         )}

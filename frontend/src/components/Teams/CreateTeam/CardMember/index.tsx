@@ -149,7 +149,6 @@ const CardMember = React.memo<CardBodyProps>(
               <CardEndTeam
                 isTeamPage
                 isSAdmin={isSAdmin}
-                isTeamCreator={isTeamCreator}
                 isTeamMember={isTeamMember}
                 role={member.role}
                 userId={member.user._id}
