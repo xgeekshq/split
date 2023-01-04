@@ -22,6 +22,9 @@ const CARD_NOT_FOUND = "Card wasn't found";
 const FORBIDDEN = 'FORBIDDEN';
 const NOT_FOUND = 'NOT_FOUND';
 
+const DELETE_VOTE_FAILED = 'Error removing a vote';
+const INSERT_VOTE_FAILED = 'Error adding a vote';
+
 export {
 	BOARD_NOT_FOUND,
 	BOARDS_NOT_FOUND,
@@ -39,5 +42,7 @@ export {
 	TOKENS_NOT_MATCHING,
 	UNAUTHORIZED,
 	UPDATE_FAILED,
-	USER_NOT_FOUND
+	USER_NOT_FOUND,
+	DELETE_VOTE_FAILED,
+	INSERT_VOTE_FAILED
 };

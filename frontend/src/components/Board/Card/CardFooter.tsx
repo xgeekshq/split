@@ -110,13 +110,10 @@ const CardFooter = React.memo<FooterProps>(
     };
 
     const votesData = calculateVotes();
-    console.log(votesData);
 
     const { cardItemId, votesInThisCard, votesOfUserInThisCard } = votesData;
 
     const [countVotes, setCountVotes] = useState(0);
-
-    // const [disableVoteButton, setDisableVoteButton] = useState(false);
 
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -131,22 +128,14 @@ const CardFooter = React.memo<FooterProps>(
           count: countVotes,
         });
         setCountVotes(0);
-      }, 500);
+      }, 300);
       return () => clearTimeout(timer);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [countVotes]);
-
-    // useEffect(() => {
-    //   if (status === 'success') {
-    //     setDisableVoteButton(false);
-    //   }
-    // }, [status]);
+    }, [boardId, card._id, cardItemId, countVotes, mutate, socketId]);
 
     const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
       if (hideCards && createdBy?._id !== userId) return;
-      if (user && user.votesCount + countVotes <= 0) return;
-      // setDisableVoteButton(true);
+
       updateVote({
         boardId,
         cardId: card._id,
@@ -160,9 +149,6 @@ const CardFooter = React.memo<FooterProps>(
 
     const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
-      if (hideCards && createdBy?._id !== userId) return;
-      if (maxVotes && user && user.votesCount >= maxVotes) return;
-      if (maxVotes && user && user.votesCount >= maxVotes) return;
 
       updateVote({
         boardId,
@@ -174,14 +160,6 @@ const CardFooter = React.memo<FooterProps>(
       });
       setCountVotes(countVotes + 1);
     };
-
-    console.log(
-      !isMainboard ||
-        votesInThisCard.length === 0 ||
-        !!(user && maxVotes && user.votesCount + countVotes <= 0) ||
-        votesOfUserInThisCard === 0 ||
-        (hideCards && createdBy?._id !== userId),
-    );
 
     return (
       <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
@@ -221,7 +199,6 @@ const CardFooter = React.memo<FooterProps>(
             >
               <StyledButtonIcon
                 disabled={
-                  // disableVoteButton ||
                   !isMainboard ||
                   !!disableVotes ||
                   !!(user && maxVotes && user.votesCount >= maxVotes) ||

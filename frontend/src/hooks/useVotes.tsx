@@ -242,25 +242,8 @@ const useVotes = () => {
   };
 
   const handleVote = useMutation(handleVotes, {
-    // onMutate: async (variables) => {
-    //   const { newBoardData, prevBoardData } = await updateVoteOptimistic(
-    //     variables.count > 0 ? Action.Add : Action.Remove,
-    //     variables,
-    //   );
-
-    //   if (newBoardData?.maxVotes && newBoardData) {
-    //     toastRemainingVotesMessage('', newBoardData);
-    //   }
-
-    //   return { previousBoard: prevBoardData, variables };
-    // },
-    // onSettled: (data, error, variables, context) => {
-    //   if (error) {
-    //     queryClient.invalidateQueries(['board', { id: data?._id }]);
-    //   }
-    // },
-    onSuccess: async (variables) => {},
-    onError: (error, variables, context) => {
+    onSuccess: async () => {},
+    onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },

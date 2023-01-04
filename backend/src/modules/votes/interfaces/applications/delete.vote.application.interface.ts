@@ -1,17 +1,16 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-
-export interface DeleteVoteApplication {
+export interface DeleteVoteApplicationInterface {
 	deleteVoteFromCard(
 		boardId: string,
 		cardId: string,
 		userId: string,
-		cardItemId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+		cardItemId: string,
+		count: number
+	): Promise<void>;
 
 	deleteVoteFromCardGroup(
 		boardId: string,
 		cardId: string,
-		userId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+		userId: string,
+		count: number
+	): Promise<void>;
 }

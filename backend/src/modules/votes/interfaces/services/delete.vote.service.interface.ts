@@ -1,24 +1,18 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
-
-export interface DeleteVoteService {
+export interface DeleteVoteServiceInterface {
 	deleteVoteFromCard(
 		boardId: string,
 		cardId: string,
 		userId: string,
-		cardItemId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+		cardItemId: string,
+		count: number
+	): Promise<void>;
 
 	deleteVoteFromCardGroup(
 		boardId: string,
 		cardId: string,
-		userId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
-
-	decrementVoteUser(
-		boardId: string,
 		userId: string,
-		count?: number | undefined
-	): Promise<LeanDocument<BoardUserDocument> | null>;
+		count: number
+	): Promise<void>;
+
+	decrementVoteUser(boardId: string, userId: string, count?: number | undefined): Promise<void>;
 }

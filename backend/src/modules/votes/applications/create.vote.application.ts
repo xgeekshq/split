@@ -1,20 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateVoteApplication } from '../interfaces/applications/create.vote.application.interface';
-import { CreateVoteService } from '../interfaces/services/create.vote.service.interface';
+import { CreateVoteApplicationInterface } from '../interfaces/applications/create.vote.application.interface';
+import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class CreateVoteApplicationImpl implements CreateVoteApplication {
+export class CreateVoteApplicationImpl implements CreateVoteApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.CreateVoteService)
-		private createVoteService: CreateVoteService
+		private createVoteService: CreateVoteServiceInterface
 	) {}
 
-	addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		return this.createVoteService.addVoteToCard(boardId, cardId, userId, cardItemId);
+	addVoteToCard(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		cardItemId: string,
+		count: number
+	) {
+		return this.createVoteService.addVoteToCard(boardId, cardId, userId, cardItemId, count);
 	}
 
-	addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
-		return this.createVoteService.addVoteToCardGroup(boardId, cardId, userId);
+	addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		return this.createVoteService.addVoteToCardGroup(boardId, cardId, userId, count);
 	}
 }

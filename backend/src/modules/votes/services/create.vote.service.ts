@@ -1,24 +1,24 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
-import { CreateVoteService } from '../interfaces/services/create.vote.service.interface';
+import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 
 @Injectable()
-export default class CreateVoteServiceImpl implements CreateVoteService {
+export default class CreateVoteServiceImpl implements CreateVoteServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	private async canUserVote(boardId: string, userId: string): Promise<boolean> {
+	private async canUserVote(boardId: string, userId: string, count: number): Promise<boolean> {
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
-			throw new NotFoundException('Board not found!');
+			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
 		if (board.maxVotes === null || board.maxVotes === undefined) {
@@ -32,10 +32,10 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 
 		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
 
-		return userCanVote ? boardUserFound.votesCount + 1 <= maxVotes : false;
+		return userCanVote ? boardUserFound.votesCount + count <= maxVotes : false;
 	}
 
-	private async incrementVoteUser(boardId: string, userId: string) {
+	private async incrementVoteUser(boardId: string, userId: string, count: number) {
 		const boardUser = await this.boardUserModel
 			.findOneAndUpdate(
 				{
@@ -43,84 +43,74 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 					board: boardId
 				},
 				{
-					$inc: { votesCount: 1 }
+					$inc: { votesCount: count }
 				}
 			)
 			.lean()
 			.exec();
 
 		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
-
-		return boardUser;
 	}
 
-	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		const canUserVote = await this.canUserVote(boardId, userId);
+	async addVoteToCard(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		cardItemId: string,
+		count: number
+	) {
+		const canUserVote = await this.canUserVote(boardId, userId, count);
 
-		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards.items._id': cardItemId
-					},
-					{
-						$push: {
-							'columns.$.cards.$[c].items.$[i].votes': userId
-						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-						new: true
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
+		await this.incrementVoteUser(boardId, userId, count);
+		const board = await this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns.cards.items._id': cardItemId
+				},
+				{
+					$push: {
+						'columns.$.cards.$[c].items.$[i].votes': Array(count).fill(userId)
 					}
-				)
-				.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				})
-				.lean()
-				.exec();
+				},
+				{
+					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+					new: true
+				}
+			)
+			.lean()
+			.exec();
 
-			if (!board) throw Error(UPDATE_FAILED);
-
-			return board;
-		}
-		throw new BadRequestException('Error adding a vote');
+		if (!board) throw new BadRequestException(INSERT_VOTE_FAILED);
 	}
 
-	async addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
-		const canUserVote = await this.canUserVote(boardId, userId);
+	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		const canUserVote = await this.canUserVote(boardId, userId, count);
 
-		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$push: {
-							'columns.$.cards.$[c].votes': userId
-						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }],
-						new: true
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
+		await this.incrementVoteUser(boardId, userId, count);
+		const board = await this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns.cards._id': cardId
+				},
+				{
+					$push: {
+						'columns.$.cards.$[c].votes': Array(count).fill(userId)
 					}
-				)
-				.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				})
-				.lean()
-				.exec();
+				},
+				{
+					arrayFilters: [{ 'c._id': cardId }],
+					new: true
+				}
+			)
+			.lean()
+			.exec();
 
-			return board;
-		}
-		throw new BadRequestException('Error adding a vote');
+		if (!board) throw new BadRequestException(INSERT_VOTE_FAILED);
 	}
 }

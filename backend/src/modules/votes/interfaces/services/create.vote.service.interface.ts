@@ -1,17 +1,11 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-
-export interface CreateVoteService {
+export interface CreateVoteServiceInterface {
 	addVoteToCard(
 		boardId: string,
 		cardId: string,
 		userId: string,
-		cardItemId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+		cardItemId: string,
+		count: number
+	): Promise<void>;
 
-	addVoteToCardGroup(
-		boardId: string,
-		cardId: string,
-		userId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number): Promise<void>;
 }
