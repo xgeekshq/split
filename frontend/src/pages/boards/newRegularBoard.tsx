@@ -37,6 +37,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { getAllUsers } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useBoard from '@/hooks/useBoard';
 
 const defaultBoard = {
   users: [],
@@ -76,8 +77,8 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  const setBoardState = useSetRecoilState(createBoardDataState);
-  // const [boardState, setBoardState] = useRecoilState(createBoardDataState);
+  // const setBoardState = useSetRecoilState(createBoardDataState);
+  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
@@ -104,6 +105,13 @@ const NewRegularBoard: NextPage = () => {
       });
     },
   });
+
+  /**
+   * Board  Hook
+   */
+  const {
+    createBoard: { status, mutate },
+  } = useBoard({ autoFetchBoard: false });
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);
@@ -156,16 +164,18 @@ const NewRegularBoard: NextPage = () => {
    * Save board
 
    */
-  // const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
-  //   // mutate( {
-  //   //   ...boardState.board,
-  //   //   users: boardState.users,
-  //   //   title: title || boardState.board.title,
-  //   //   maxVotes,
-  //   //   slackEnable,
-  //   //   maxUsers: boardState.count.maxUsersCount,
-  //   // });
-  // };
+  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+    mutate({
+      ...boardState.board,
+      users: boardState.users,
+      title: title || boardState.board.title,
+      dividedBoards: [],
+      maxVotes,
+      slackEnable,
+      maxUsers: boardState.count.maxUsersCount,
+      recurrent: false,
+    });
+  };
 
   useEffect(() => {
     if (teamsData && allTeamsData && session && allUsers) {
@@ -187,18 +197,18 @@ const NewRegularBoard: NextPage = () => {
       setUsersList(usersWithChecked);
     }
 
-    // if (status === 'success') {
-    //   setIsLoading(true);
-    //   setToastState({
-    //     open: true,
-    //     content: 'Board created with success!',
-    //     type: ToastStateEnum.SUCCESS,
-    //   });
+    if (status === 'success') {
+      setIsLoading(true);
+      setToastState({
+        open: true,
+        content: 'Board created with success!',
+        type: ToastStateEnum.SUCCESS,
+      });
 
-    //   setBoardState(defaultBoard);
-    //   setSelectedTeam(undefined);
-    //   router.push('/boards');
-    // }
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
+      router.push('/boards');
+    }
 
     return () => {
       setBoardState(defaultBoard);
@@ -215,6 +225,7 @@ const NewRegularBoard: NextPage = () => {
     setBoardState,
     allUsers,
     setUsersList,
+    status,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;
@@ -237,9 +248,9 @@ const NewRegularBoard: NextPage = () => {
               <SubContainer>
                 <StyledForm
                   direction="column"
-                  // onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                  //   saveBoard(text, maxVotes, slackEnable);
-                  // })}
+                  onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                    saveBoard(text, maxVotes, slackEnable);
+                  })}
                 >
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
