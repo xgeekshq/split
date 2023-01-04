@@ -16,7 +16,11 @@ const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId,
   const { deleteBoard } = useBoard({ autoFetchBoard: false });
 
   const handleDelete = () => {
-    deleteBoard.mutate({ id: boardId, socketId, teamId });
+    if (teamId) {
+      deleteBoard.mutate({ id: boardId, socketId, teamId });
+    } else {
+      deleteBoard.mutate({ id: boardId });
+    }
   };
 
   return (
