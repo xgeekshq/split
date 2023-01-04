@@ -110,7 +110,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string, responsibles: string[]) {
 		const usersIds: string[] = [];
 		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
-		// console.log(responsibles);
+
 		teamUsers.forEach((teamUser) => {
 			const user = teamUser.user as User;
 
@@ -236,6 +236,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		}
 
 		const team = await this.getTeamService.getTeam(teamId);
+		const responsibles = [];
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
@@ -245,13 +246,14 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			).board,
 			users: [],
 			team: teamId,
-			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders),
+			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
 			hideCards: configs.hideCards ?? false,
 			hideVotes: configs.hideVotes ?? false,
 			maxUsers: configs.maxUsersPerTeam,
-			slackEnable: configs.slackEnable
+			slackEnable: configs.slackEnable,
+			responsibles
 		};
 
 		const board = await this.create(boardData, ownerId, true);
@@ -349,7 +351,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
-	handleSplitBoards = (maxTeams: number, teamMembers: LeanDocument<TeamUserDocument>[]) => {
+	handleSplitBoards = (
+		maxTeams: number,
+		teamMembers: LeanDocument<TeamUserDocument>[],
+		responsibles: string[]
+	) => {
 		const subBoards: BoardDto[] = [];
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
@@ -378,18 +384,24 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 		});
 
-		this.generateSubBoards(maxTeams, splitUsers, subBoards);
+		this.generateSubBoards(maxTeams, splitUsers, subBoards, responsibles);
 
 		return subBoards;
 	};
 
-	generateSubBoards(maxTeams: number, splitUsers: BoardUserDto[][], subBoards: BoardDto[]) {
+	generateSubBoards(
+		maxTeams: number,
+		splitUsers: BoardUserDto[][],
+		subBoards: BoardDto[],
+		responsibles: string[]
+	) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
 			const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
 
-			teamUsersWotIsNewJoiner[Math.floor(Math.random() * teamUsersWotIsNewJoiner.length)].role =
-				BoardRoles.RESPONSIBLE;
+			const randomIndex = Math.floor(Math.random() * teamUsersWotIsNewJoiner.length);
+			teamUsersWotIsNewJoiner[randomIndex].role = BoardRoles.RESPONSIBLE;
+			responsibles.push(teamUsersWotIsNewJoiner[randomIndex].user.toString());
 
 			const result = splitUsers[i].map(
 				(user) => teamUsersWotIsNewJoiner.find((member) => member.user === user.user) || user

@@ -88,7 +88,8 @@ const CardFooter = React.memo<FooterProps>(
     }, [card]);
 
     const {
-      handleVote: { mutate, status },
+      handleVote: { mutate },
+      updateVote,
     } = useVotes();
 
     const user = boardUser;
@@ -107,56 +108,58 @@ const CardFooter = React.memo<FooterProps>(
       }
       return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
     };
+
     const votesData = calculateVotes();
 
     const { cardItemId, votesInThisCard, votesOfUserInThisCard } = votesData;
 
     const [countVotes, setCountVotes] = useState(0);
 
-    const [disableVoteButton, setDisableVoteButton] = useState(false);
-
     useEffect(() => {
-      if (countVotes === 0) return;
+      const timer = setTimeout(() => {
+        if (countVotes === 0) return;
 
-      mutate({
+        mutate({
+          boardId,
+          cardId: card._id,
+          socketId,
+          cardItemId,
+          isCardGroup: cardItemId === undefined,
+          count: countVotes,
+        });
+        setCountVotes(0);
+      }, 300);
+      return () => clearTimeout(timer);
+    }, [boardId, card._id, cardItemId, countVotes, mutate, socketId]);
+
+    const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      event.stopPropagation();
+      if (hideCards && createdBy?._id !== userId) return;
+
+      updateVote({
         boardId,
         cardId: card._id,
         socketId,
         cardItemId,
         isCardGroup: cardItemId === undefined,
-        count: countVotes,
+        count: countVotes - 1,
       });
-      setCountVotes(0);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [countVotes]);
-
-    useEffect(() => {
-      if (status === 'success') {
-        setDisableVoteButton(false);
-      }
-    }, [status]);
-
-    const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      event.stopPropagation();
-      if (hideCards && createdBy?._id !== userId) return;
-      if (user && user.votesCount + countVotes <= 0) return;
-      setDisableVoteButton(true);
       setCountVotes(countVotes - 1);
     };
 
     const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
-      if (hideCards && createdBy?._id !== userId) return;
-      if (maxVotes && user && user.votesCount >= maxVotes) return;
-      if (maxVotes && user && user.votesCount + countVotes >= maxVotes) return;
 
-      setDisableVoteButton(true);
+      updateVote({
+        boardId,
+        cardId: card._id,
+        socketId,
+        cardItemId,
+        isCardGroup: cardItemId === undefined,
+        count: countVotes + 1,
+      });
       setCountVotes(countVotes + 1);
     };
-
-    useEffect(() => {
-      setDisableVoteButton(false);
-    }, [card]);
 
     return (
       <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
@@ -196,10 +199,9 @@ const CardFooter = React.memo<FooterProps>(
             >
               <StyledButtonIcon
                 disabled={
-                  disableVoteButton ||
                   !isMainboard ||
                   !!disableVotes ||
-                  !!(user && maxVotes && user.votesCount + countVotes >= maxVotes) ||
+                  !!(user && maxVotes && user.votesCount >= maxVotes) ||
                   (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleAddVote}
@@ -227,10 +229,9 @@ const CardFooter = React.memo<FooterProps>(
             >
               <StyledButtonIcon
                 disabled={
-                  disableVoteButton ||
                   !isMainboard ||
                   votesInThisCard.length === 0 ||
-                  !!(user && maxVotes && user.votesCount + countVotes <= 0) ||
+                  !!(user && maxVotes && user.votesCount <= 0) ||
                   votesOfUserInThisCard === 0 ||
                   (hideCards && createdBy?._id !== userId)
                 }
