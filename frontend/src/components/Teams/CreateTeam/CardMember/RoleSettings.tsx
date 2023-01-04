@@ -92,9 +92,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
               <PopoverItemStyled
                 align="end"
                 direction="column"
-                onClick={() => {
-                  handleSelectFunction(TeamUserRoles.MEMBER);
-                }}
+                onClick={handleSelectFunction(TeamUserRoles.MEMBER)}
               >
                 <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
                   Team Member
