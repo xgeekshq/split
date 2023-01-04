@@ -77,7 +77,6 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  // const setBoardState = useSetRecoilState(createBoardDataState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setTeams = useSetRecoilState(teamsOfUser);
