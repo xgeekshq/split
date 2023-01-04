@@ -28,7 +28,7 @@ const Teams = () => {
   useEffect(() => {
     if (userIsSAdmin && sAdminData) setTeamsList(sAdminData);
     else if (!userIsSAdmin && data) setTeamsList(data);
-  }, [sAdminData, setTeamsList, userIsSAdmin]);
+  }, [data, sAdminData, setTeamsList, userIsSAdmin]);
 
   if (!session || !sAdminData) return null;
 

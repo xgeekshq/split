@@ -15,7 +15,7 @@ import CardBody from '../CardUser/CardBody';
 
 const ListOfCards = React.memo(() => {
   const setToastState = useSetRecoilState(toastState);
-  // const setUsersWithTeamsState = useSetRecoilState(usersWithTeamsState);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState<string>('');
 
@@ -41,10 +41,6 @@ const ListOfCards = React.memo(() => {
   );
 
   const { data, isLoading } = fetchUsers;
-
-  // if (data) {
-  //   setUsersWithTeamsState(data?.pages[0].userWithTeams);
-  // }
 
   const users = useMemo(() => {
     const usersArray: UserWithTeams[] = [];
