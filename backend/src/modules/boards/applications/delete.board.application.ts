@@ -10,7 +10,7 @@ export class DeleteBoardApplication implements DeleteBoardApplicationInterface {
 		private deleteBoardService: DeleteBoardServiceInterface
 	) {}
 
-	delete(boardId: string, userId: string): Promise<boolean> {
-		return this.deleteBoardService.delete(boardId, userId);
+	delete(boardId: string, userId: string, isSAdmin: boolean): Promise<boolean> {
+		return this.deleteBoardService.delete(boardId, userId, isSAdmin);
 	}
 }
