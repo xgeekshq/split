@@ -38,6 +38,9 @@ import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { getAllUsers } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useBoard from '@/hooks/useBoard';
+import isEmpty from '@/utils/isEmpty';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { BoardUserDto } from '@/types/board/board.user';
 
 const defaultBoard = {
   users: [],
@@ -47,7 +50,7 @@ const defaultBoard = {
     maxUsersCount: 2,
   },
   board: {
-    title: 'Main Board -',
+    title: 'Default Board',
     columns: [
       { title: 'Went well', color: '$highlight1Light', cards: [] },
       { title: 'To improve', color: '$highlight4Light', cards: [] },
@@ -163,13 +166,34 @@ const NewRegularBoard: NextPage = () => {
 
    */
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+    const users: BoardUserDto[] = [];
+    if (isEmpty(boardState.users) && session) {
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+    }
+
     mutate({
       ...boardState.board,
-      users: boardState.users,
+      users: isEmpty(boardState.users) ? users : boardState.users,
       title: title || boardState.board.title,
       dividedBoards: [],
       maxVotes,
       slackEnable,
+      maxUsers: boardState.count.maxUsersCount,
+      recurrent: false,
+    });
+  };
+
+  const saveEmptyBoard = () => {
+    const users: BoardUserDto[] = [];
+    if (session) {
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+    }
+
+    mutate({
+      ...boardState.board,
+      users: isEmpty(boardState.users) ? users : boardState.users,
+      title: boardState.board.title,
+      dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
     });
@@ -288,7 +312,8 @@ const NewRegularBoard: NextPage = () => {
                   iconName="blob-arrow-right"
                   title="Quick create"
                   description="Jump the settings and just create a board. All configurations can still be done within the board itself."
-                  active={false}
+                  handleSelect={saveEmptyBoard}
+                  active
                 />
               </Flex>
             </ContentSelectContainer>
