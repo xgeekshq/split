@@ -113,13 +113,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     [board, userId],
   );
 
-  // Show button in sub boards to merge into main
-  const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && isResponsible);
-
   // Show board settings button if current user is allowed to edit
-  const isResponsibleInSubBoard = isSubBoard && isResponsible;
-  const hasAdminRole =
-    isStakeholderOrAdmin || session?.user.isSAdmin || isOwner || isResponsibleInSubBoard;
+  const hasAdminRole = isStakeholderOrAdmin || session?.user.isSAdmin || isOwner || isResponsible;
+
+  // Show button in sub boards to merge into main
+  const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -165,37 +163,38 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       <BoardHeader />
       <Container direction="column">
         <Flex align="center" css={{ py: '$32', width: '100%' }} justify="between">
-          <Flex gap={40} css={{ flex: 1, pr: '$40' }}>
-            {showButtonToMerge ? (
-              <AlertMergeIntoMain boardId={boardId} socketId={socketId} />
-            ) : null}
+          {!showMessageIfMerged && (
+            <Flex gap={40} css={{ flex: 1, pr: '$40' }}>
+              {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
 
-            {showMessageHaveSubBoardsMerged ? (
-              <AlertBox
-                css={{ flex: 1 }}
-                title="No sub-team has merged into this main board yet."
-                type="info"
+              {showMessageHaveSubBoardsMerged && (
+                <AlertBox
+                  css={{ flex: 1 }}
+                  title="No sub-team has merged into this main board yet."
+                  type="info"
+                />
+              )}
+            </Flex>
+          )}
+
+          {hasAdminRole && !board?.submitedAt && (
+            <>
+              <Button onClick={handleOpen} variant="primaryOutline">
+                <Icon name="settings" />
+                Board settings
+                <Icon name="arrow-down" />
+              </Button>
+              <BoardSettings
+                isOpen={isOpen}
+                isOwner={isOwner}
+                isResponsible={isResponsible}
+                isSAdmin={session?.user.isSAdmin}
+                isStakeholderOrAdmin={isStakeholderOrAdmin}
+                setIsOpen={setIsOpen}
+                socketId={socketId}
               />
-            ) : null}
-          </Flex>
-
-          <Button onClick={handleOpen} variant="primaryOutline">
-            <Icon name="settings" />
-            Board settings
-            <Icon name="arrow-down" />
-          </Button>
-
-          {hasAdminRole && !board?.submitedAt ? (
-            <BoardSettings
-              isOpen={isOpen}
-              isOwner={isOwner}
-              isResponsible={isResponsible}
-              isSAdmin={session?.user.isSAdmin}
-              isStakeholderOrAdmin={isStakeholderOrAdmin}
-              setIsOpen={setIsOpen}
-              socketId={socketId}
-            />
-          ) : null}
+            </>
+          )}
 
           {showMessageIfMerged ? (
             <AlertGoToMainBoard mainBoardId={mainBoardId} submitedAt={board.submitedAt as Date} />

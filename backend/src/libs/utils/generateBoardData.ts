@@ -18,7 +18,8 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 		boardNumber: index,
 		maxVotes: undefined,
 		hideCards: false,
-		hideVotes: false
+		hideVotes: false,
+		responsibles: []
 	};
 };
 
@@ -42,7 +43,8 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 			team: null,
 			boardNumber: 0,
 			hideCards: false,
-			hideVotes: false
+			hideVotes: false,
+			responsibles: []
 		}
 	};
 };

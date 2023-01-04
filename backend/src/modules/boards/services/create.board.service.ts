@@ -21,7 +21,7 @@ import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
-import User, { UserDocument } from 'src/modules/users/entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
@@ -107,31 +107,31 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		});
 	}
 
-	addOwner(users: BoardUserDto[], userId: string) {
-		return [
-			...users,
-			{
-				user: userId.toString(),
-				role: BoardRoles.OWNER,
-				votesCount: 0
-			}
-		];
-	}
-
-	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string) {
+	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string, responsibles: string[]) {
 		const usersIds: string[] = [];
 		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+		// console.log(responsibles);
 		teamUsers.forEach((teamUser) => {
-			const user = teamUser.user as UserDocument;
+			const user = teamUser.user as User;
 
 			if (!usersIds.includes(user._id.toString())) {
 				newUsers.push({
 					user: user._id.toString(),
-					role: teamUser.role === TeamRoles.ADMIN ? BoardRoles.MEMBER : teamUser.role,
+					role: responsibles.includes(user._id.toString())
+						? BoardRoles.RESPONSIBLE
+						: this.handleBoardUserRole(teamUser),
 					votesCount: 0
 				});
 			}
 		});
+	}
+
+	handleBoardUserRole(teamUser: TeamUser): string {
+		return teamUser.role === TeamRoles.ADMIN
+			? BoardRoles.MEMBER
+			: teamUser.role === TeamRoles.STAKEHOLDER
+			? BoardRoles.RESPONSIBLE
+			: teamUser.role;
 	}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false) {
@@ -143,7 +143,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 
 		if (team) {
-			await this.saveBoardUsersFromTeam(newUsers, team);
+			await this.saveBoardUsersFromTeam(newUsers, team, boardData.responsibles);
 		}
 
 		if (!haveDividedBoards && !team) {

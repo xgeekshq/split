@@ -138,7 +138,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
 		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
 
-		if (isAdminOrStakeholder || isOwner || (isSubBoard && isSubBoardResponsible)) {
+		if (isAdminOrStakeholder || isOwner || isSubBoardResponsible) {
 			/**
 			 * Validate if:
 			 * - have users on request

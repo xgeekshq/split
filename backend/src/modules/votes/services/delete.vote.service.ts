@@ -90,11 +90,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteService {
 
 			if (!board) throw Error(UPDATE_FAILED);
 
-			return await board.populate({
-				path: 'users',
-				select: 'user role votesCount -board',
-				populate: { path: 'user', select: 'firstName lastName _id' }
-			});
+			return board;
 		}
 		throw new BadRequestException('Error removing a vote');
 	}
