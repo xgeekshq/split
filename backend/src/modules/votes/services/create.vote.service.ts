@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
@@ -35,21 +35,27 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		return userCanVote ? boardUserFound.votesCount + count <= maxVotes : false;
 	}
 
-	private async incrementVoteUser(boardId: string, userId: string, count: number) {
+	private async incrementVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		session?: ClientSession
+	) {
 		const boardUser = await this.boardUserModel
-			.findOneAndUpdate(
+			.updateOne(
 				{
 					user: userId,
 					board: boardId
 				},
 				{
-					$inc: { votesCount: count }
+					$inc: { votesCount: count },
+					session
 				}
 			)
 			.lean()
 			.exec();
 
-		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
+		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);
 	}
 
 	async addVoteToCard(
@@ -63,27 +69,42 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 
 		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
 
-		await this.incrementVoteUser(boardId, userId, count);
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards.items._id': cardItemId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].items.$[i].votes': Array(count).fill(userId)
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		try {
+			await this.incrementVoteUser(boardId, userId, count, userSession);
+			const board = await this.boardModel
+				.updateOne(
+					{
+						_id: boardId,
+						'columns.cards.items._id': cardItemId
+					},
+					{
+						$push: {
+							'columns.$.cards.$[c].items.$[i].votes': Array(count).fill(userId)
+						}
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+						session
 					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-					new: true
-				}
-			)
-			.lean()
-			.exec();
+				)
+				.lean()
+				.exec();
 
-		if (!board) throw new BadRequestException(INSERT_VOTE_FAILED);
+			if (board.modifiedCount !== 1) throw new BadRequestException(INSERT_VOTE_FAILED);
+
+			await userSession.commitTransaction();
+			await session.commitTransaction();
+		} catch (e) {
+			await userSession.abortTransaction();
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+			await userSession.endSession();
+		}
 	}
 
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
@@ -91,26 +112,40 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 
 		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
 
-		await this.incrementVoteUser(boardId, userId, count);
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].votes': Array(count).fill(userId)
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		try {
+			await this.incrementVoteUser(boardId, userId, count, userSession);
+			const board = await this.boardModel
+				.updateOne(
+					{
+						_id: boardId,
+						'columns.cards._id': cardId
+					},
+					{
+						$push: {
+							'columns.$.cards.$[c].votes': Array(count).fill(userId)
+						}
+					},
+					{
+						arrayFilters: [{ 'c._id': cardId }],
+						session
 					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }],
-					new: true
-				}
-			)
-			.lean()
-			.exec();
+				)
+				.lean()
+				.exec();
 
-		if (!board) throw new BadRequestException(INSERT_VOTE_FAILED);
+			if (board.modifiedCount !== 1) throw new BadRequestException(INSERT_VOTE_FAILED);
+			await userSession.commitTransaction();
+			await session.commitTransaction();
+		} catch (e) {
+			await userSession.abortTransaction();
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+			await userSession.endSession();
+		}
 	}
 }

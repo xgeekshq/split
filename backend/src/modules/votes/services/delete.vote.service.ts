@@ -1,6 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { UpdateResult } from 'mongodb';
+import { ClientSession, Model } from 'mongoose';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
@@ -33,22 +34,28 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			.exec();
 
 		return boardUserFound?.votesCount
-			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - count >= 0
+			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - Math.abs(count) >= 0
 			: false;
 	}
 
-	async decrementVoteUser(boardId: string, userId: string, count?: number) {
-		const boardUser = await this.boardUserModel.findOneAndUpdate(
+	async decrementVoteUser(
+		boardId: string,
+		userId: string,
+		count?: number,
+		session?: ClientSession
+	) {
+		const boardUser = await this.boardUserModel.updateOne(
 			{
 				user: userId,
 				board: boardId
 			},
 			{
-				$inc: { votesCount: !count ? -1 : count }
+				$inc: { votesCount: !count ? -1 : count },
+				session
 			}
 		);
 
-		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
+		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);
 	}
 
 	async deleteVoteFromCard(
@@ -76,10 +83,25 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		userVotes.splice(0, Math.abs(count));
 		votes = votes.concat(userVotes);
 
-		await this.decrementVoteUser(boardId, userId, count);
-		const board = await this.setCardItemVotes(boardId, cardItemId, votes, cardId);
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		try {
+			await this.decrementVoteUser(boardId, userId, count, userSession);
+			const board = await this.setCardItemVotes(boardId, cardItemId, votes, cardId, session);
 
-		if (!board) throw Error(UPDATE_FAILED);
+			if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
+
+			await userSession.commitTransaction();
+			await session.commitTransaction();
+		} catch (e) {
+			await userSession.abortTransaction();
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+			await userSession.endSession();
+		}
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
@@ -104,10 +126,25 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 
 			mappedVotes = mappedVotes.concat(userVotes);
 
-			await this.decrementVoteUser(boardId, userId, -votesToReduce);
-			const board = await this.setCardVotes(boardId, mappedVotes, cardId);
+			const userSession = await this.boardUserModel.db.startSession();
+			userSession.startTransaction();
+			const session = await this.boardModel.db.startSession();
+			session.startTransaction();
+			try {
+				await this.decrementVoteUser(boardId, userId, -votesToReduce, userSession);
+				const board = await this.setCardVotes(boardId, mappedVotes, cardId, session);
 
-			if (!board) throw Error(UPDATE_FAILED);
+				if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
+
+				await userSession.commitTransaction();
+				await session.commitTransaction();
+			} catch (e) {
+				await userSession.abortTransaction();
+				await session.abortTransaction();
+			} finally {
+				await session.endSession();
+				await userSession.endSession();
+			}
 
 			currentCount -= Math.abs(votesToReduce);
 
@@ -144,9 +181,14 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		}
 	}
 
-	setCardVotes(boardId: string, mappedVotes: string[], cardId: string) {
+	setCardVotes(
+		boardId: string,
+		mappedVotes: string[],
+		cardId: string,
+		session: ClientSession
+	): Promise<UpdateResult> {
 		return this.boardModel
-			.findOneAndUpdate(
+			.updateOne(
 				{
 					_id: boardId,
 					'columns.cards._id': cardId
@@ -158,33 +200,37 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				},
 				{
 					arrayFilters: [{ 'c._id': cardId }],
-					new: true
+					session
 				}
 			)
-			.populate({
-				path: 'users',
-				select: 'user role votesCount -board',
-				populate: { path: 'user', select: 'firstName lastName _id' }
-			})
 			.lean()
 			.exec();
 	}
 
-	setCardItemVotes(boardId: string, cardItemId: string, votes: string[], cardId: string) {
-		return this.boardModel.findOneAndUpdate(
-			{
-				_id: boardId,
-				'columns.cards.items._id': cardItemId
-			},
-			{
-				$set: {
-					'columns.$.cards.$[c].items.$[i].votes': votes
+	setCardItemVotes(
+		boardId: string,
+		cardItemId: string,
+		votes: string[],
+		cardId: string,
+		session: ClientSession
+	): Promise<UpdateResult> {
+		return this.boardModel
+			.updateOne(
+				{
+					_id: boardId,
+					'columns.cards.items._id': cardItemId
+				},
+				{
+					$set: {
+						'columns.$.cards.$[c].items.$[i].votes': votes
+					}
+				},
+				{
+					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+					session
 				}
-			},
-			{
-				arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-				new: true
-			}
-		);
+			)
+			.lean()
+			.exec();
 	}
 }
