@@ -12,7 +12,7 @@ const AlertGoToMainBoard: React.FC<Props> = ({ submitedAt, mainBoardId }) => {
 
   return (
     <AlertBox
-      css={{ flex: '1' }}
+      css={{ flex: '1', width: '100%' }}
       text="The sub-team board can not be edited anymore. If you want to edit cards, go to the main board and edit the according card there."
       title={`Sub-team board successfully merged into main board ${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`}
       type="info"

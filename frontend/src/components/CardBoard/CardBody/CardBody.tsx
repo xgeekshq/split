@@ -120,8 +120,8 @@ const CardBody = React.memo<CardBodyProps>(
         return true;
       }
 
-      return !!users.find((user) => user.role === 'owner');
-    }, [isSAdmin, team, userId, users, board.createdBy]);
+      return false;
+    }, [isSAdmin, team, userId, board.createdBy]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();

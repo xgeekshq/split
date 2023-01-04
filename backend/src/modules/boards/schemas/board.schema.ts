@@ -61,9 +61,6 @@ export default class Board {
 	@Prop({ type: Boolean, nullable: false, default: false })
 	hideVotes?: boolean;
 
-	@Prop({ type: Number, nullable: false, default: 0 })
-	totalUsedVotes?: number;
-
 	@Prop({ type: Boolean, nullable: false, default: false })
 	slackEnable!: boolean;
 
