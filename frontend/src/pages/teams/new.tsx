@@ -50,10 +50,12 @@ const NewTeam: NextPage = () => {
       }
     });
 
-    const usersWithChecked = data.map((user) => ({
-      ...user,
-      isChecked: user._id === session?.user.id,
-    }));
+    const usersWithChecked = data
+      .map((user) => ({
+        ...user,
+        isChecked: user._id === session?.user.id,
+      }))
+      .sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
 
     setUsersListState(usersWithChecked);
     setMembersListState(listMembers);

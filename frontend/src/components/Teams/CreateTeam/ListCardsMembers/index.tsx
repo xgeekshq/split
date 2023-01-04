@@ -40,7 +40,6 @@ const TeamMembersList = () => {
             Add/remove members
           </Text>
         </ButtonAddMember>
-        {/* <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} /> */}
       </Flex>
       <ScrollableContent direction="column" justify="start">
         {membersList?.map((member) => (

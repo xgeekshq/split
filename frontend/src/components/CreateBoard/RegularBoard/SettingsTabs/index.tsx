@@ -9,6 +9,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
 import { StyledTextTab } from './styles';
 import ParticipantsTab from '../ParticipantsTab';
+import BoardConfigurations from '../../Configurations/BoardConfigurations';
 
 const SettingsTabs = () => {
   const [currentTab, setCurrentTab] = useState(1);
@@ -71,7 +72,7 @@ const SettingsTabs = () => {
       />
 
       {currentTab === 1 && <ParticipantsTab />}
-      {/* {currentTab === 2 && <BoardConfigurations />} */}
+      {currentTab === 2 && <BoardConfigurations isRegularBoard />}
     </Flex>
   );
 };

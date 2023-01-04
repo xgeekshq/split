@@ -76,8 +76,8 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  // const setBoardState = useSetRecoilState(createBoardDataState);
-  const [boardState, setBoardState] = useRecoilState(createBoardDataState);
+  const setBoardState = useSetRecoilState(createBoardDataState);
+  // const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
@@ -156,24 +156,16 @@ const NewRegularBoard: NextPage = () => {
    * Save board
 
    */
-  const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
-    console.log({
-      ...boardState.board,
-      users: boardState.users,
-      title: title || boardState.board.title,
-      maxVotes,
-      slackEnable,
-      maxUsers: boardState.count.maxUsersCount,
-    });
-    // mutate( {
-    //   ...boardState.board,
-    //   users: boardState.users,
-    //   title: title || boardState.board.title,
-    //   maxVotes,
-    //   slackEnable,
-    //   maxUsers: boardState.count.maxUsersCount,
-    // });
-  };
+  // const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
+  //   // mutate( {
+  //   //   ...boardState.board,
+  //   //   users: boardState.users,
+  //   //   title: title || boardState.board.title,
+  //   //   maxVotes,
+  //   //   slackEnable,
+  //   //   maxUsers: boardState.count.maxUsersCount,
+  //   // });
+  // };
 
   useEffect(() => {
     if (teamsData && allTeamsData && session && allUsers) {
@@ -245,9 +237,9 @@ const NewRegularBoard: NextPage = () => {
               <SubContainer>
                 <StyledForm
                   direction="column"
-                  onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                    saveBoard(text, maxVotes, slackEnable);
-                  })}
+                  // onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                  //   saveBoard(text, maxVotes, slackEnable);
+                  // })}
                 >
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
