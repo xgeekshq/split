@@ -14,6 +14,8 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
+import { useRecoilState } from 'recoil';
+import { maxVotesReachedAtom } from '@/store/vote/atoms/vote.atom';
 
 interface FooterProps {
   boardId: string;
@@ -87,17 +89,19 @@ const CardFooter = React.memo<FooterProps>(
       return card.createdByTeam;
     }, [card]);
 
+    const [maxVotesReached, setMaxVotesReached] = useRecoilState(maxVotesReachedAtom);
+
     const {
       handleVote: { mutate },
-      updateVote,
+      toastInfoMessage,
     } = useVotes();
 
     const user = boardUser;
     const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
 
-    const calculateVotes = () => {
+    const calculateVotes = useMemo(() => {
+      const cardTyped = card as CardType;
       if (Object.hasOwnProperty.call(card, 'items')) {
-        const cardTyped = card as CardType;
         const cardItemId = cardTyped.items.length === 1 ? cardTyped.items[0]._id : undefined;
 
         const votesInThisCard =
@@ -107,17 +111,42 @@ const CardFooter = React.memo<FooterProps>(
         return { cardItemId, votesOfUserInThisCard, votesInThisCard };
       }
       return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
-    };
+    }, [card, userId]);
 
-    const votesData = calculateVotes();
+    const { cardItemId, votesInThisCard, votesOfUserInThisCard } = calculateVotes;
 
-    const { cardItemId, votesInThisCard, votesOfUserInThisCard } = votesData;
+    const [votesData, setVotesData] = useState({
+      votesOfUserInThisCard,
+      countVotes: 0,
+      userVotes: user?.votesCount ?? 0,
+      votesInThisCard: votesInThisCard.length,
+    });
 
-    const [countVotes, setCountVotes] = useState(0);
+    useEffect(() => {
+      setVotesData({
+        votesOfUserInThisCard,
+        countVotes: 0,
+        userVotes: user?.votesCount ?? 0,
+        votesInThisCard: votesInThisCard.length,
+      });
+
+      if (user && user.votesCount === maxVotes) {
+        setMaxVotesReached(true);
+      } else {
+        setMaxVotesReached(false);
+      }
+    }, [
+      votesOfUserInThisCard,
+      user?.votesCount,
+      votesInThisCard.length,
+      user,
+      maxVotes,
+      setMaxVotesReached,
+    ]);
 
     useEffect(() => {
       const timer = setTimeout(() => {
-        if (countVotes === 0) return;
+        if (votesData.countVotes === 0) return;
 
         mutate({
           boardId,
@@ -125,40 +154,52 @@ const CardFooter = React.memo<FooterProps>(
           socketId,
           cardItemId,
           isCardGroup: cardItemId === undefined,
-          count: countVotes,
+          count: votesData.countVotes,
         });
-        setCountVotes(0);
+        setVotesData((prev) => ({
+          ...prev,
+          countVotes: 0,
+        }));
       }, 300);
+
       return () => clearTimeout(timer);
-    }, [boardId, card._id, cardItemId, countVotes, mutate, socketId]);
+    }, [boardId, card._id, cardItemId, mutate, socketId, votesData.countVotes]);
 
     const handleDeleteVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
       if (hideCards && createdBy?._id !== userId) return;
+      setVotesData((prev) => ({
+        ...prev,
+        countVotes: prev.countVotes - 1,
+        votesOfUserInThisCard: prev.votesOfUserInThisCard - 1,
+        userVotes: prev.userVotes - 1,
+        votesInThisCard: prev.votesInThisCard - 1,
+      }));
+      toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes - 1)} votes left.`);
 
-      updateVote({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: cardItemId === undefined,
-        count: countVotes - 1,
-      });
-      setCountVotes(countVotes - 1);
+      if (user && votesData.userVotes - 1 === maxVotes) {
+        setMaxVotesReached(true);
+      } else {
+        setMaxVotesReached(false);
+      }
     };
 
     const handleAddVote = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation();
+      setVotesData((prev) => ({
+        ...prev,
+        countVotes: prev.countVotes + 1,
+        votesOfUserInThisCard: prev.votesOfUserInThisCard + 1,
+        userVotes: prev.userVotes + 1,
+        votesInThisCard: prev.votesInThisCard + 1,
+      }));
+      toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes + 1)} votes left.`);
 
-      updateVote({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: cardItemId === undefined,
-        count: countVotes + 1,
-      });
-      setCountVotes(countVotes + 1);
+      if (user && votesData.userVotes + 1 === maxVotes) {
+        setMaxVotesReached(true);
+      } else {
+        setMaxVotesReached(false);
+      }
     };
 
     return (
@@ -201,7 +242,8 @@ const CardFooter = React.memo<FooterProps>(
                 disabled={
                   !isMainboard ||
                   !!disableVotes ||
-                  !!(user && maxVotes && user.votesCount >= maxVotes) ||
+                  !!(user && maxVotes && votesData.userVotes >= maxVotes) ||
+                  maxVotesReached ||
                   (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleAddVote}
@@ -211,11 +253,11 @@ const CardFooter = React.memo<FooterProps>(
               <Text
                 size="xs"
                 css={{
-                  visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
+                  visibility: votesData.votesInThisCard > 0 ? 'visible' : 'hidden',
                   width: '10px',
                 }}
               >
-                {votesInThisCard.length}
+                {votesData.votesInThisCard}
               </Text>
             </Flex>
 
@@ -230,9 +272,9 @@ const CardFooter = React.memo<FooterProps>(
               <StyledButtonIcon
                 disabled={
                   !isMainboard ||
-                  votesInThisCard.length === 0 ||
-                  !!(user && maxVotes && user.votesCount <= 0) ||
-                  votesOfUserInThisCard === 0 ||
+                  votesData.votesInThisCard === 0 ||
+                  !!(user && maxVotes && votesData.userVotes === 0) ||
+                  votesData.votesOfUserInThisCard === 0 ||
                   (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleDeleteVote}

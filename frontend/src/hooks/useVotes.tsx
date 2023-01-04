@@ -173,7 +173,7 @@ const useVotes = () => {
         (card, indexCard) =>
           card._id === cardId &&
           card.items.some((cardItem, indexCardItem) => {
-            const cardItemFound = isCardGroup || cardItem._id === cardItemId;
+            const cardItemFound: boolean = isCardGroup || cardItem._id === cardItemId;
 
             if (cardItemFound) indexes = [indexCol, indexCard, indexCardItem];
 
@@ -231,7 +231,7 @@ const useVotes = () => {
   };
 
   const updateVote = async (variables: VoteDto) => {
-    const { newBoardData, prevBoardData } = await updateVoteOptimistic(
+    const { newBoardData } = await updateVoteOptimistic(
       variables.count > 0 ? Action.Add : Action.Remove,
       variables,
     );
@@ -242,16 +242,18 @@ const useVotes = () => {
   };
 
   const handleVote = useMutation(handleVotes, {
-    onSuccess: async () => {},
+    onSuccess: async (_, variables) => {
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+    },
     onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },
   });
 
   return {
     handleVote,
-    updateVote,
+    toastInfoMessage,
   };
 };
 
