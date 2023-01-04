@@ -18,11 +18,10 @@ interface PopoverRoleSettingsProps {
   userId: string | undefined;
   teamId?: string | undefined;
   isTeamPage?: boolean;
-  isTeamCreator?: boolean;
 }
 
 const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
-  ({ userId, teamId, isTeamPage, isTeamCreator }) => {
+  ({ userId, teamId, isTeamPage }) => {
     const membersList = useRecoilValue(membersListState);
     const setMembersList = useSetRecoilState(membersListState);
 
@@ -89,25 +88,23 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
         </PopoverTriggerStyled>
         <PopoverPortal>
           <PopoverContent css={{ width: '$360', height: '$316' }}>
-            {!isTeamCreator && (
-              <PopoverCloseStyled>
-                <PopoverItemStyled
-                  align="end"
-                  direction="column"
-                  onClick={() => {
-                    handleSelectFunction(TeamUserRoles.MEMBER);
-                  }}
-                >
-                  <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
-                    Team Member
-                  </Text>
+            <PopoverCloseStyled>
+              <PopoverItemStyled
+                align="end"
+                direction="column"
+                onClick={() => {
+                  handleSelectFunction(TeamUserRoles.MEMBER);
+                }}
+              >
+                <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
+                  Team Member
+                </Text>
 
-                  <Text css={{ textAlign: 'end' }} size="sm">
-                    The team member can create boards and can create teams.
-                  </Text>
-                </PopoverItemStyled>
-              </PopoverCloseStyled>
-            )}
+                <Text css={{ textAlign: 'end' }} size="sm">
+                  The team member can create boards and can create teams.
+                </Text>
+              </PopoverItemStyled>
+            </PopoverCloseStyled>
             <PopoverCloseStyled>
               <PopoverItemStyled
                 align="end"

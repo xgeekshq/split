@@ -151,14 +151,14 @@ const useTeam = ({
 
       setToastState({
         open: true,
-        content: 'The team user was successfully updated.',
+        content: 'The team(s) was successfully added to the user.',
         type: ToastStateEnum.SUCCESS,
       });
     },
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error while updating the team user',
+        content: 'Error while adding team(s) to the user',
         type: ToastStateEnum.ERROR,
       });
     },

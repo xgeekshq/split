@@ -13,10 +13,9 @@ import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
-import { BoardUser, BoardUserNoPopulated } from '@/types/board/board.user';
+import { BoardUserNoPopulated } from '@/types/board/board.user';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import {
@@ -91,6 +90,7 @@ const BoardHeader = () => {
       isActive: true,
     });
   }
+
   return (
     <StyledHeader>
       <Flex align="center" gap="20" justify="between">
@@ -179,29 +179,30 @@ const BoardHeader = () => {
                 </Flex>
               </>
             )}
-          {!isEmpty(
-            (boardData!.board.users || users).filter(
-              (user: BoardUser) => user.role === BoardUserRoles.STAKEHOLDER,
-            ),
-          ) && (
-            <>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+          {!isSubBoard &&
+            !isEmpty(
+              boardData.board.team.users.filter(
+                (user: TeamUser) => user.role === TeamUserRoles.STAKEHOLDER,
+              ),
+            ) && (
+              <>
+                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
 
-              <Flex align="center" gap="10">
-                <Text color="primary300" size="sm">
-                  Stakeholders
-                </Text>
-                <CardAvatars
-                  isBoardsPage
-                  stakeholders
-                  listUsers={isSubBoard ? users : teamUsers}
-                  responsible={false}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                />
-              </Flex>
-            </>
-          )}
+                <Flex align="center" gap="10">
+                  <Text color="primary300" size="sm">
+                    Stakeholders
+                  </Text>
+                  <CardAvatars
+                    isBoardsPage
+                    stakeholders
+                    listUsers={isSubBoard ? users : teamUsers}
+                    responsible={false}
+                    teamAdmins={false}
+                    userId={session!.user.id}
+                  />
+                </Flex>
+              </>
+            )}
           {isSubBoard && (
             <>
               <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />

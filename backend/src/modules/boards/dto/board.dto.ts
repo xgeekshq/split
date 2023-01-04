@@ -108,4 +108,7 @@ export default class BoardDto {
 	@IsOptional()
 	@IsBoolean()
 	slackEnable?: boolean;
+
+	@ApiProperty({ type: String, isArray: true })
+	responsibles!: string[];
 }
