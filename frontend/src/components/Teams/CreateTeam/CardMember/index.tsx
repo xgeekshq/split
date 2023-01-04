@@ -99,9 +99,6 @@ const CardMember = React.memo<CardBodyProps>(
                   isChecked={member.isNewJoiner}
                   text=""
                   title="New Joiner"
-                  disabled
-                  styleVariant={isTeamCreator}
-                  disabledInfo="Can't change your own New Joiner status"
                 />
               </Flex>
             )}

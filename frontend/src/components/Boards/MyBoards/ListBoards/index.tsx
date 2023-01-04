@@ -50,7 +50,6 @@ const ListBoards = React.memo<ListBoardsProps>(
               >
                 <TeamHeader team={teamFound} userId={userId} users={users} />
               </Flex>
-              {/* to be used on the full version -> */}
               <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
                 <Link
                   href={{
