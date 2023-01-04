@@ -58,14 +58,16 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		Promise.all(newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId })));
+		return Promise.all(
+			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
+		);
 	}
 
 	async createDividedBoards(boards: BoardDto[], userId: string) {
 		const newBoardsIds = await Promise.allSettled(
 			boards.map(async (board) => {
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true);
+				const { _id } = await this.createBoard(board, userId, true, true);
 
 				if (!isEmpty(users)) {
 					this.saveBoardUsers(users, _id);
@@ -78,18 +80,29 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
 	}
 
-	async createBoard(boardData: BoardDto, userId: string, isSubBoard = false) {
+	async createBoard(boardData: BoardDto, userId: string, isSubBoard = false, haveSubBoards = true) {
 		const { dividedBoards = [], team } = boardData;
 
-		/**
-		 * Add in each divided board the team id (from main board)
-		 */
-		const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({ ...dividedBoard, team }));
+		if (haveSubBoards) {
+			/**
+			 * Add in each divided board the team id (from main board)
+			 */
+			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
+				...dividedBoard,
+				team
+			}));
+
+			return this.boardModel.create({
+				...boardData,
+				createdBy: userId,
+				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
+				isSubBoard
+			});
+		}
 
 		return this.boardModel.create({
 			...boardData,
 			createdBy: userId,
-			dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
 			isSubBoard
 		});
 	}
@@ -122,13 +135,19 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false) {
-		const { team, recurrent, maxUsers, slackEnable } = boardData;
-		const newUsers = [];
+		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
-		const newBoard = await this.createBoard(boardData, userId);
+		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
+		let newUsers = [];
+
+		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 
 		if (team) {
 			await this.saveBoardUsersFromTeam(newUsers, team, boardData.responsibles);
+		}
+
+		if (!haveDividedBoards && !team) {
+			newUsers = [...users];
 		}
 
 		this.saveBoardUsers(newUsers, newBoard._id);
