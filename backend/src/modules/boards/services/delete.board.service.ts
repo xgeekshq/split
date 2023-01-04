@@ -21,6 +21,7 @@ import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
@@ -105,8 +106,11 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		return { dividedBoards: result.dividedBoards, _id: result._id };
 	}
 
-	async delete(boardId: string, userId: string, isSAdmin: boolean) {
+	async delete(boardId: string, user: UserDto) {
 		const board = await this.boardModel.findById(boardId).exec();
+
+		const userId = user._id;
+		const isSAdmin = user.isSAdmin;
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');

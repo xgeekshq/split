@@ -239,11 +239,7 @@ export default class BoardsController {
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		const result = await this.deleteBoardApp.delete(
-			boardId,
-			request.user._id,
-			request.user.isSAdmin
-		);
+		const result = await this.deleteBoardApp.delete(boardId, request.user);
 
 		if (socketId && teamId) {
 			this.socketService.sendUpdatedBoards(socketId, teamId);

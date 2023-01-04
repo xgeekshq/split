@@ -79,7 +79,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.getBoards(false, query, page, size);
 	}
 
-	async getTeamBoards(teamId: string, page: number, size?: number) {
+	getTeamBoards(teamId: string, page: number, size?: number) {
 		const query = {
 			$and: [{ isSubBoard: false }, { $or: [{ team: teamId }] }]
 		};
