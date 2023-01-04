@@ -54,7 +54,7 @@ export const deleteBoardRequest = async ({
 }: {
   id: string;
   socketId?: string;
-  teamId: string;
+  teamId?: string;
 }): Promise<BoardType> =>
   fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId, teamId } });
 
