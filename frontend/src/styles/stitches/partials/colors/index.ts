@@ -10,8 +10,6 @@ import { successColors } from './success.colors';
 import { warningColors } from './warning.colors';
 
 const colors = {
-  // background: "#F4F7F8",
-  // rgba(244, 247, 248, 1)
   background: '#F4F7F8',
   surface: '#FFFFFF',
   transparent: '#FFFFFF 0%',

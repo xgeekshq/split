@@ -12,7 +12,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/icons/Icon';
-import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
@@ -119,7 +118,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           handleRegister(credentials);
         })}
       >
-        <LogoIcon />
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>

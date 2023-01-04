@@ -1,6 +1,4 @@
 import React, { Dispatch, useState } from 'react';
-
-import { TabsContent } from '@/components/Primitives/Tab';
 import { SignUpEnum } from '@/utils/signUp.enum';
 import RegisterForm from './RegisterForm';
 import SignUpForm from './SignUpForm';
@@ -40,7 +38,7 @@ const SignUpTabContent: React.FC<SignUpTabContentProps> = ({ setCurrentTab }) =>
     );
   };
 
-  return <TabsContent value="register">{conditionalRendering()}</TabsContent>;
+  return conditionalRendering();
 };
 
 export default SignUpTabContent;

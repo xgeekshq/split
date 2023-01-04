@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 
-import { BannerContainer, CenteredContainer, ImageBackground } from '@/styles/pages/auth.styles';
+import { BannerContainer, ImageBackground } from '@/styles/pages/auth.styles';
 
 import TroubleLogin from '@/components/auth/ForgotPassword/TroubleLogin';
 import LoginForm from '@/components/auth/LoginForm';
 import SignUpTabContent from '@/components/auth/SignUp/SignUpTabContent';
 import Banner from '@/components/icons/Banner';
-import { TabsList, TabsRoot, TabsTrigger } from '@/components/Primitives/Tab';
 import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import Flex from '@/components/Primitives/Flex';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -30,32 +30,54 @@ const Home: NextPage = () => {
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 
   return (
-    <ImageBackground>
-      <BannerContainer>
-        <Banner />
-      </BannerContainer>
-      <CenteredContainer>
-        {!showTroubleLogin && (
-          <TabsRoot
-            defaultValue="login"
-            value={currentTab}
-            onValueChange={(value) => setCurrentTab(value)}
-          >
-            <TabsList aria-label="Login or register">
-              <TabsTrigger value="login">
-                <Text heading="4">Log in</Text>
-              </TabsTrigger>
-              <TabsTrigger value="register">
-                <Text heading="4">Sign up</Text>
-              </TabsTrigger>
-            </TabsList>
+    <Flex justify="between" css={{ height: '100vh' }}>
+      <Flex direction="column" css={{ flexGrow: '1', height: '100%' }}>
+        <BannerContainer>
+          <Banner />
+        </BannerContainer>
+        <Flex
+          direction="column"
+          css={{
+            ml: '$72',
+            mr: '$58',
+            mt: '9.7%',
+            height: '100%',
+            justifyContent: 'space-between',
+          }}
+        >
+          {!showTroubleLogin && currentTab === 'login' ? (
             <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
+          ) : (
             <SignUpTabContent setCurrentTab={setCurrentTab} />
-          </TabsRoot>
-        )}
-        {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
-      </CenteredContainer>
-    </ImageBackground>
+          )}
+          {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
+          {currentTab === 'login' ? (
+            <Text css={{ mb: '7%', textAlign: 'center', mt: '$10' }}>
+              No account yet?{' '}
+              <Text
+                onClick={() => setCurrentTab('signUp')}
+                css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
+              >
+                Sign up.
+              </Text>
+            </Text>
+          ) : (
+            <Text css={{ mb: '7%', textAlign: 'center', mt: '$10' }}>
+              Already have an account?{' '}
+              <Text
+                onClick={() => setCurrentTab('login')}
+                css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
+              >
+                Log in.
+              </Text>
+            </Text>
+          )}
+        </Flex>
+      </Flex>
+      <Flex css={{ width: '65%', py: '$24', pr: '$24', flexShrink: 0, flexGrow: 1 }}>
+        <ImageBackground />
+      </Flex>
+    </Flex>
   );
 };
 

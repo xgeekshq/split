@@ -5,7 +5,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from './Flex';
 
 const StyledTabs = styled(TabsPrimitive.Root, {
-  width: '$500',
   boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
   borderRadius: '$12',
   backgroundColor: '$white',

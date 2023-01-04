@@ -7,7 +7,6 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import { checkUserExists, checkUserExistsAD } from '@/api/authService';
-import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
@@ -103,7 +102,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           handleCheckUserExists(email);
         })}
       >
-        <LogoIcon />
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>

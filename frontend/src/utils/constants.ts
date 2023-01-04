@@ -16,6 +16,7 @@ export const TENANT_ID = serverRuntimeConfig.AZURE_TENANT_ID;
 export const NEXT_PUBLIC_ENABLE_AZURE = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_AZURE === 'true';
 export const NEXT_PUBLIC_ENABLE_GIT = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_GIT === 'true';
 export const NEXT_PUBLIC_ENABLE_GOOGLE = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_GOOGLE === 'true';
+export const NEXT_PUBLIC_MANUAL_LOGIN = publicRuntimeConfig.NEXT_PUBLIC_MANUAL_LOGIN === 'true';
 
 export const AUTH_SSO =
   NEXT_PUBLIC_ENABLE_AZURE || NEXT_PUBLIC_ENABLE_GIT || NEXT_PUBLIC_ENABLE_GOOGLE;
