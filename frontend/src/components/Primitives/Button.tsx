@@ -21,6 +21,9 @@ const Button = styled('button', {
         cursor: 'default',
       },
     },
+    '&:active': {
+      boxShadow: 'none',
+    },
   },
   variants: {
     variant: {

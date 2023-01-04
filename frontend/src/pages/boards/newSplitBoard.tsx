@@ -278,7 +278,7 @@ const NewSplitBoard: NextPage = () => {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isBackButtonDisable}>
+                  <Button type="submit" disabled={isBackButtonDisable || haveError}>
                     Create board
                   </Button>
                 </ButtonsContainer>
