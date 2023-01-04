@@ -4,6 +4,7 @@ import Select, { CSSObjectWithLabel, ControlProps, components } from 'react-sele
 import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
+// import { filterByTeamSelectStyles } from './styles';
 
 const StyledSelect = styled(Select, {});
 interface OptionType {
@@ -22,7 +23,11 @@ const Control = ({ children, ...props }: ControlProps) => (
     <Flex css={{ width: '100%', px: '$17' }}>
       {(props.selectProps.value as { label: string; value: string }).label ? (
         <Flex align="center" css={{ width: '100%' }}>
-          <Text size="sm" color="primary300" css={{ paddingBottom: '2.5px' }}>
+          <Text
+            size="sm"
+            color={props.isFocused ? 'primary800' : 'primary300'}
+            css={{ paddingBottom: '2.5px' }}
+          >
             Team:
           </Text>
           {children}
@@ -66,10 +71,11 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter 
           borderRadius: '12px',
           borderTopLeftRadius: '0',
           borderBottomLeftRadius: '0',
-          border: '1px solid $primary200',
+          border: isSelected ? '1px solid $primary200' : '5px solid $primary800',
           fontSize: '14px',
           cursor: 'pointer',
           boxShadow: 'none',
+          color: isSelected ? 'primary800' : 'primary300',
         }),
         menu: (base: CSSObjectWithLabel) => ({
           ...base,
