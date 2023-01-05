@@ -35,7 +35,6 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   const loggedUserIsSAdmin = session?.user.isSAdmin;
   const userLoginId = session?.user.id;
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { firstName, lastName, email, isSAdmin, _id } = userWithTeams.user;
   const { teamsNames } = userWithTeams;
   const { user } = userWithTeams;
@@ -62,6 +61,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
               width: '$32',
               height: '$32',
               zIndex: 1,
+              flexShrink: '0',
             }}
           />
 
@@ -81,6 +81,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
                     fontSize: '$14',
                     letterSpacing: '$0-17',
                     cursor: 'default',
+                    overflow: 'auto',
                   }}
                   size="sm"
                 >
@@ -90,7 +91,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
             )}
           </Flex>
 
-          <Flex align="center" css={{ width: '$147' }}>
+          <Flex align="center" css={{ width: '$147', pl: '$10' }}>
             <Text color="primary300" size="sm">
               {email}
             </Text>

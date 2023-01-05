@@ -41,7 +41,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   position: 'fixed',
   top: 0,
   right: 0,
-
+  overflow: 'auto',
   height: '100vh',
   width: '592px',
 
@@ -192,7 +192,6 @@ const ButtonsContainer = styled(Flex, {
   borderTop: '1px solid $colors$primary100',
   py: '$24',
   px: '$32',
-  position: 'fixed',
   width: '100%',
   bottom: 0,
   right: 0,
