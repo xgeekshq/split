@@ -31,13 +31,22 @@ const Home: NextPage = () => {
   const [currentTab, setCurrentTab] = useState('login');
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 
+  const handleTabState = () => {
+    if (currentTab === 'login') {
+      setCurrentTab('signUp');
+    } else {
+      setCurrentTab('login');
+    }
+    setShowTroubleLogin(false);
+  };
+
   const renderFooter = () => {
     if (!NEXT_PUBLIC_LOGIN_SSO_ONLY) {
       return currentTab === 'login' ? (
         <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
           No account yet?{' '}
           <Text
-            onClick={() => setCurrentTab('signUp')}
+            onClick={handleTabState}
             css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
           >
             Sign up.
@@ -47,7 +56,7 @@ const Home: NextPage = () => {
         <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
           Already have an account?{' '}
           <Text
-            onClick={() => setCurrentTab('login')}
+            onClick={handleTabState}
             css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
           >
             Log in.
@@ -78,6 +87,16 @@ const Home: NextPage = () => {
     );
   };
 
+  const renderBody = () => {
+    if (!showTroubleLogin) {
+      if (currentTab === 'login') {
+        return <LoginForm setShowTroubleLogin={setShowTroubleLogin} />;
+      }
+      return <SignUpTabContent setCurrentTab={setCurrentTab} />;
+    }
+    return <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />;
+  };
+
   return (
     <Flex justify="between" css={{ minHeight: '100vh', overflow: 'auto' }}>
       <Flex direction="column" css={{ flexGrow: '1' }}>
@@ -94,12 +113,7 @@ const Home: NextPage = () => {
             justifyContent: 'space-between',
           }}
         >
-          {!showTroubleLogin && currentTab === 'login' ? (
-            <LoginForm setShowTroubleLogin={setShowTroubleLogin} />
-          ) : (
-            <SignUpTabContent setCurrentTab={setCurrentTab} />
-          )}
-          {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
+          {renderBody()}
           {renderFooter()}
         </Flex>
       </Flex>
