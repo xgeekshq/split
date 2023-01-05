@@ -50,9 +50,9 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				board: boardId
 			},
 			{
-				$inc: { votesCount: !count ? -1 : count },
-				session
-			}
+				$inc: { votesCount: !count ? -1 : count }
+			},
+			{ session }
 		);
 
 		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);

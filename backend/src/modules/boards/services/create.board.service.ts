@@ -127,9 +127,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	handleBoardUserRole(teamUser: TeamUser): string {
-		return teamUser.role === TeamRoles.ADMIN
-			? BoardRoles.MEMBER
-			: teamUser.role === TeamRoles.STAKEHOLDER
+		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
 			? BoardRoles.RESPONSIBLE
 			: teamUser.role;
 	}

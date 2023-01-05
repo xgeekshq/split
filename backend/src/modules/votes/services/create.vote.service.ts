@@ -48,7 +48,9 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 					board: boardId
 				},
 				{
-					$inc: { votesCount: count },
+					$inc: { votesCount: count }
+				},
+				{
 					session
 				}
 			)
@@ -101,9 +103,10 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		} catch (e) {
 			await userSession.abortTransaction();
 			await session.abortTransaction();
+			throw new BadRequestException(INSERT_VOTE_FAILED);
 		} finally {
-			await session.endSession();
 			await userSession.endSession();
+			await session.endSession();
 		}
 	}
 
@@ -138,14 +141,15 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 				.exec();
 
 			if (board.modifiedCount !== 1) throw new BadRequestException(INSERT_VOTE_FAILED);
-			await userSession.commitTransaction();
 			await session.commitTransaction();
+			await userSession.commitTransaction();
 		} catch (e) {
-			await userSession.abortTransaction();
 			await session.abortTransaction();
+			await userSession.abortTransaction();
+			throw new BadRequestException(INSERT_VOTE_FAILED);
 		} finally {
-			await session.endSession();
 			await userSession.endSession();
+			await session.endSession();
 		}
 	}
 }

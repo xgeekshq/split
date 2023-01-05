@@ -242,7 +242,7 @@ const useVotes = () => {
   };
 
   const handleVote = useMutation(handleVotes, {
-    onSuccess: async (_, variables) => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
     },
     onError: (_, variables, context) => {
