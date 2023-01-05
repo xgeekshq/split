@@ -56,7 +56,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			cipherChars[cipherChars.length - 1] = `${Number(cipherChars[cipherChars.length - 1]) + 1}`;
 			newName = cipherChars.join('');
 		} else {
-			newName = `${name}-${errorCount}`;
+			newName = `${name}-${errorCount + new Date().getMilliseconds()}`;
 		}
 
 		return this.addChannel(`${newName}`, errorCount);

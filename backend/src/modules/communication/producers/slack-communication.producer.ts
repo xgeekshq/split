@@ -17,7 +17,7 @@ export class SlackCommunicationProducer {
 
 	public static readonly REMOVE_ON_COMPLETE = true;
 
-	public static readonly REMOVE_ON_FAIL = false;
+	public static readonly REMOVE_ON_FAIL = true;
 
 	public static readonly PRIORITY = 1;
 

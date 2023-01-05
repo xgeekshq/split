@@ -27,6 +27,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     enabled: autoFetchBoard,
     refetchOnWindowFocus: false,
     onError: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
       setToastState({
         open: true,
         content: 'Error getting the board',
