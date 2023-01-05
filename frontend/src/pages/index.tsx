@@ -111,7 +111,6 @@ const Home: NextPage = () => {
             mt: '9.7%',
             height: '100%',
             justifyContent: 'space-between',
-            '@media (min-width: 1500px)': { py: '$100', px: '$100' },
           }}
         >
           {renderBody()}
@@ -124,7 +123,6 @@ const Home: NextPage = () => {
           py: '$24',
           pr: '$24',
           flexShrink: 0,
-          '@media (min-width: 1500px)': { py: '50px', pr: '50px' },
         }}
       >
         <ImageBackground />
