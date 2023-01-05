@@ -92,6 +92,7 @@ const Home: NextPage = () => {
             mt: '9.7%',
             height: '100%',
             justifyContent: 'space-between',
+            '@media (min-width: 1500px)': { py: '$110', px: '$100' },
           }}
         >
           {!showTroubleLogin && currentTab === 'login' ? (
@@ -103,7 +104,15 @@ const Home: NextPage = () => {
           {renderFooter()}
         </Flex>
       </Flex>
-      <Flex css={{ width: '65%', py: '$24', pr: '$24', flexShrink: 0 }}>
+      <Flex
+        css={{
+          width: '65%',
+          py: '$24',
+          pr: '$24',
+          flexShrink: 0,
+          '@media (min-width: 1500px)': { py: '50px', pr: '50px' },
+        }}
+      >
         <ImageBackground />
       </Flex>
     </Flex>
