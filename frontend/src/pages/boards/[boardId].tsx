@@ -42,7 +42,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       getBoardRequest(boardId, context),
     );
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
-    if (!data?.board?.users.find((user) => user.user._id === session?.user.id)) {
+    const boardUser = data?.board?.users.find((user) => user.user._id === session?.user.id);
+
+    const teamUserFound = data?.board.isSubBoard
+      ? data.mainBoardData.team.users.find((teamUser) => teamUser.user._id === session?.user.id)
+      : data?.board.team.users.find((teamUser) => teamUser.user._id === session?.user.id);
+
+    console.log(teamUserFound);
+
+    if (!boardUser && teamUserFound?.role === TeamUserRoles.MEMBER && !session?.user.isSAdmin) {
       throw Error();
     }
   } catch (e) {
