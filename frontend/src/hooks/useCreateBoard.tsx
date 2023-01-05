@@ -75,10 +75,10 @@ const useCreateBoard = (team?: Team) => {
 
   const sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
     users
-      .map((user) => {
-        user.userCreated = user.user.providerAccountCreatedAt || user.user.joinedAt;
-        return user;
-      })
+      .map((user) => ({
+        ...user,
+        userCreated: user.user.providerAccountCreatedAt || user.user.joinedAt,
+      }))
       .sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
   const getAvailableUsersToBeResponsible = useCallback((availableUsers: TeamUser[]) => {
@@ -103,6 +103,7 @@ const useCreateBoard = (team?: Team) => {
 
       // this object ensures that each group has one element that can be responsible
       const candidateToBeTeamResponsible = getRandomUser(availableUsersToBeResponsible);
+
       randomGroupOfUsers.push({
         user: candidateToBeTeamResponsible.user,
         role: BoardUserRoles.MEMBER,

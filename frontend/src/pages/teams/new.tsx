@@ -13,7 +13,6 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import { Suspense, useEffect } from 'react';
-import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
@@ -45,7 +44,7 @@ const NewTeam: NextPage = () => {
         listMembers.push({
           user,
           role: TeamUserRoles.ADMIN,
-          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
+          isNewJoiner: false,
         });
       }
     });
