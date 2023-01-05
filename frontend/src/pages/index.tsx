@@ -111,7 +111,7 @@ const Home: NextPage = () => {
             mt: '9.7%',
             height: '100%',
             justifyContent: 'space-between',
-            '@media (min-width: 1500px)': { py: '$110', px: '$100' },
+            '@media (min-width: 1500px)': { py: '$100', px: '$100' },
           }}
         >
           {renderBody()}

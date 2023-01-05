@@ -29,7 +29,7 @@ const ImageBackground = styled(Flex, {
 const BannerContainer = styled(Flex, {
   ml: '$72',
   mt: '8.4%',
-  '@media (min-width: 1500px)': { ml: '185px' },
+  '@media (min-width: 1500px)': { ml: '$185' },
 });
 
 export { BannerContainer, CenteredContainer, ImageBackground };
