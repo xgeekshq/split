@@ -1,16 +1,7 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { UpdateResult } from 'mongodb';
 
 export interface DeleteCommentApplication {
-	deleteItemComment(
-		boardId: string,
-		commentId: string,
-		userId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	deleteItemComment(boardId: string, commentId: string, userId: string): Promise<UpdateResult>;
 
-	deleteCardGroupComment(
-		boardId: string,
-		commentId: string,
-		userId: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	deleteCardGroupComment(boardId: string, commentId: string, userId: string): Promise<UpdateResult>;
 }

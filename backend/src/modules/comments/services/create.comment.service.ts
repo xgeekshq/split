@@ -27,7 +27,8 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 						'columns.$.cards.$[c].items.$[i].comments': {
 							text,
 							createdBy: userId,
-							anonymous
+							anonymous,
+							createdAt: new Date()
 						}
 					}
 				},
@@ -40,7 +41,13 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 			.exec();
 	}
 
-	createCardGroupComment(boardId: string, cardId: string, userId: string, text: string) {
+	createCardGroupComment(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		text: string,
+		anonymous: boolean
+	) {
 		return this.boardModel
 			.findOneAndUpdate(
 				{
@@ -51,7 +58,9 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 					$push: {
 						'columns.$.cards.$[c].comments': {
 							text,
-							createdBy: userId
+							createdBy: userId,
+							anonymous,
+							createdAt: new Date()
 						}
 					}
 				},

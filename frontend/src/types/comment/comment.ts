@@ -6,4 +6,5 @@ export default interface CommentType {
   createdBy: User;
   isNested?: boolean;
   anonymous: boolean;
+  createdAt: string;
 }

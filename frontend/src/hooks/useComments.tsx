@@ -89,8 +89,8 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(['board', { id: data?._id }]);
+    onSettled: (data, _, variables) => {
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);

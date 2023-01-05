@@ -57,7 +57,10 @@ const CardBoard = React.memo<CardBoardProps>(
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
-      () => (card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card)),
+      () =>
+        [
+          ...(card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card)),
+        ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
       [card],
     );
 
