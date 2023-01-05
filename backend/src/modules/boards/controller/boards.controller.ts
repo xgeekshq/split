@@ -136,11 +136,35 @@ export default class BoardsController {
 	@Get()
 	async getAllBoards(
 		@Req() request: RequestWithUser,
-		@Query() { page, size, team, personalBoards }: PaginationParams
+		@Query() { page, size, team }: PaginationParams
 	) {
 		const { _id: userId, isSAdmin } = request.user;
 
-		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, personalBoards, page, size);
+		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
+	}
+
+	@ApiOperation({ summary: 'Retrieve all boards from database' })
+	@ApiOkResponse({ type: BoardResponse, description: 'Boards' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get()
+	async getPersonalBoards(
+		@Req() request: RequestWithUser,
+		@Query() { page, size }: PaginationParams
+	) {
+		const { _id: userId } = request.user;
+
+		return this.getBoardApp.getPersonalBoards(userId, page, size);
 	}
 
 	@ApiOperation({ summary: 'Retrieve one board by id' })

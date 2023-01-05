@@ -23,7 +23,6 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		teamId?: string,
 		userId?: string,
 		isSuperAdmin?: boolean,
-		personalBoards?: boolean,
 		page?: number,
 		size?: number
 	) {
@@ -31,9 +30,11 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 
 		if (isSuperAdmin) return this.getBoardService.getSuperAdminBoards(userId, page, size);
 
-		if (personalBoards) return this.getBoardService.getPersonalUserBoards(userId, page, size);
-
 		return this.getBoardService.getUsersBoards(userId, page, size);
+	}
+
+	getPersonalBoards(userId?: string, page?: number, size?: number) {
+		return this.getBoardService.getPersonalUserBoards(userId, page, size);
 	}
 
 	getBoard(boardId: string, userId: string) {
