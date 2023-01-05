@@ -21,4 +21,8 @@ export class PaginationParams {
 	@IsOptional()
 	@Type(() => String)
 	team?: string;
+
+	@IsOptional()
+	@Type(() => String)
+	personalBoards?: boolean;
 }

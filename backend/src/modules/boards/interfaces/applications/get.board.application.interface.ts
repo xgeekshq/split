@@ -13,6 +13,7 @@ export interface GetBoardApplicationInterface {
 		teamId?: string,
 		userId?: string,
 		isSuperAdmin?: boolean,
+		personalBoards?: boolean,
 		page?: number,
 		size?: number
 	): Promise<BoardsAndPage | null>;

@@ -136,11 +136,11 @@ export default class BoardsController {
 	@Get()
 	async getAllBoards(
 		@Req() request: RequestWithUser,
-		@Query() { page, size, team }: PaginationParams
+		@Query() { page, size, team, personalBoards }: PaginationParams
 	) {
 		const { _id: userId, isSAdmin } = request.user;
 
-		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
+		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, personalBoards, page, size);
 	}
 
 	@ApiOperation({ summary: 'Retrieve one board by id' })

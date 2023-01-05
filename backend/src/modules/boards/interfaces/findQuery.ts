@@ -21,6 +21,7 @@ export type QueryType = {
 					| {
 							team: {
 								$in?: Team[] | string[];
+								$type?: number;
 								$ne?: undefined | null;
 							};
 							_id?: undefined;
