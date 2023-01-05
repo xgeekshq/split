@@ -76,7 +76,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 			if (!cronJobDoc) throw Error('CronJob not created');
 
-			const job = new CronJob(`${new Date().getMinutes() + 1} * * * *`, () =>
+			const job = new CronJob(`0 10 ${day} ${month} *`, () =>
 				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
 			);
 			this.schedulerRegistry.addCronJob(String(boardId), job);
