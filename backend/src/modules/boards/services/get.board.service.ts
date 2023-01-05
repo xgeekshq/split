@@ -29,7 +29,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
 
 	getAllBoardsIdsOfUser(userId: string) {
-		return this.boardModel.find({ user: userId }).select('board').distinct('board').lean().exec();
+		return this.boardModel.find({ user: userId }).select('board').lean().exec();
 	}
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {

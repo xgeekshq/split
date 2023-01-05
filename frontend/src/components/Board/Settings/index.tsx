@@ -175,7 +175,7 @@ const BoardSettings = ({
 
   // Method to generate a random responsible
   const handleRandomResponsible = () => {
-    if (switchesState.responsible) return;
+    if (!switchesState.responsible) return;
 
     const cloneUsers = [...deepClone(data.users)].map((user) => ({
       ...user,

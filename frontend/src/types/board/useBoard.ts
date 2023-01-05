@@ -13,7 +13,7 @@ export default interface UseBoardType {
   deleteBoard: UseMutationResult<
     BoardType,
     unknown,
-    { id: string; socketId?: string; teamId: string },
+    { id: string; socketId?: string; teamId?: string },
     unknown
   >;
   fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;

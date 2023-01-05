@@ -52,10 +52,12 @@ const Team = () => {
   const handleMembersList = useCallback(() => {
     if (!data || !usersData) return;
 
-    const checkboxUsersList = usersData.map((user): UserList => {
-      const userIsTeamMember = data.users.some((teamMember) => teamMember.user._id === user._id);
-      return { ...user, isChecked: userIsTeamMember };
-    });
+    const checkboxUsersList = usersData
+      .map((user): UserList => {
+        const userIsTeamMember = data.users.some((teamMember) => teamMember.user._id === user._id);
+        return { ...user, isChecked: userIsTeamMember };
+      })
+      .sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
 
     setMembersListState(data.users);
     setUsersListState(checkboxUsersList);

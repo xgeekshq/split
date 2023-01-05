@@ -185,6 +185,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
           boardMembers={boardMembers}
           isOpen={dialogIsOpen}
           setIsOpen={setDialogIsOpen}
+          isSubBoard={!stakeholders}
         />
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
           {haveError

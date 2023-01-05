@@ -10,7 +10,11 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 
 const DEFAULT_MAX_VOTES = 6;
 
-const BoardConfigurations = () => {
+type BoardConfigurationsProps = {
+  isRegularBoard?: Boolean;
+};
+
+const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
 
   const { board } = createBoardData;
@@ -54,6 +58,16 @@ const BoardConfigurations = () => {
 
     setValue('maxVotes', DEFAULT_MAX_VOTES);
     register('maxVotes');
+  };
+
+  const handleMakeBoardPublicChange = (checked: boolean) => {
+    setCreateBoardData((prev) => ({
+      ...prev,
+      board: {
+        ...prev.board,
+        isPublic: checked,
+      },
+    }));
   };
 
   return (
@@ -133,7 +147,7 @@ const BoardConfigurations = () => {
               Make votes more significant by limiting them.
             </Text>
             <Input
-              css={{ mt: '$8' }}
+              css={{ mt: '$8', mb: 0 }}
               disabled={!board.maxVotes}
               id="maxVotes"
               placeholder="Max votes"
@@ -141,6 +155,33 @@ const BoardConfigurations = () => {
             />
           </Flex>
         </Flex>
+        {isRegularBoard && (
+          <Flex gap="16">
+            <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange}>
+              <SwitchThumb>
+                {board.isPublic && (
+                  <Icon
+                    name="check"
+                    css={{
+                      width: '$14',
+                      height: '$14',
+                      color: '$successBase',
+                    }}
+                  />
+                )}
+              </SwitchThumb>
+            </Switch>
+            <Flex direction="column">
+              <Text size="md" weight="medium">
+                Make board public
+              </Text>
+              <Text color="primary500" size="sm">
+                If you make this board public anyone with the link to the board can access it. Where
+                to find the link? Just copy the URL of the board itself and share it.
+              </Text>
+            </Flex>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

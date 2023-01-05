@@ -39,6 +39,8 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient } from 'react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import isEmpty from '@/utils/isEmpty';
 
 const defaultBoard = {
   users: [],
@@ -65,7 +67,6 @@ const defaultBoard = {
     hideCards: false,
     hideVotes: false,
     slackEnable: false,
-    totalUsedVotes: 0,
   },
 };
 
@@ -153,6 +154,7 @@ const NewSplitBoard: NextPage = () => {
    * @param maxVotes Maxium number of votes allowed
    */
   const saveBoard = (title: string, team: string, maxVotes?: number, slackEnable?: boolean) => {
+    const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
       newSubBoard.hideCards = boardState.board.hideCards;
@@ -163,6 +165,13 @@ const NewSplitBoard: NextPage = () => {
         user: boardUser.user._id,
         role: boardUser.role,
       }));
+
+      const responsible = newSubBoard.users.find(
+        (user) => user.role === BoardUserRoles.RESPONSIBLE,
+      );
+      if (!isEmpty(responsible)) {
+        responsibles.push(responsible.user);
+      }
 
       return newSubBoard;
     });
@@ -176,6 +185,7 @@ const NewSplitBoard: NextPage = () => {
       slackEnable,
       maxUsers: boardState.count.maxUsersCount,
       team,
+      responsibles,
     });
   };
 

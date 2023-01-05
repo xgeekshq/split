@@ -4,9 +4,9 @@ import { useSession } from 'next-auth/react';
 
 import { handleVotes } from '@/api/boardService';
 import { CardItemType } from '@/types/card/cardItem';
-import voteDto from '@/types/vote/vote.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
+import VoteDto from '@/types/vote/vote.dto';
 import BoardType from '../types/board/board';
 import { getRemainingVotes } from '../utils/getRemainingVotes';
 import useBoardUtils from './useBoardUtils';
@@ -160,7 +160,7 @@ const useVotes = () => {
 
   const updateBoardDataOptimistic = (
     prevBoardData: BoardType,
-    voteData: voteDto,
+    voteData: VoteDto,
     action: Action,
   ) => {
     const { cardId, cardItemId, isCardGroup, count } = voteData;
@@ -173,7 +173,7 @@ const useVotes = () => {
         (card, indexCard) =>
           card._id === cardId &&
           card.items.some((cardItem, indexCardItem) => {
-            const cardItemFound = isCardGroup || cardItem._id === cardItemId;
+            const cardItemFound: boolean = isCardGroup || cardItem._id === cardItemId;
 
             if (cardItemFound) indexes = [indexCol, indexCard, indexCardItem];
 
@@ -197,7 +197,7 @@ const useVotes = () => {
     return prevBoardData;
   };
 
-  const updateVoteOptimistic = async (action: Action, voteData: voteDto) => {
+  const updateVoteOptimistic = async (action: Action, voteData: VoteDto) => {
     const boardQueryKey = getBoardQueryKey(voteData.boardId);
 
     await queryClient.cancelQueries(boardQueryKey);
@@ -230,32 +230,30 @@ const useVotes = () => {
     }
   };
 
+  const updateVote = async (variables: VoteDto) => {
+    const { newBoardData } = await updateVoteOptimistic(
+      variables.count > 0 ? Action.Add : Action.Remove,
+      variables,
+    );
+
+    if (newBoardData?.maxVotes && newBoardData) {
+      toastRemainingVotesMessage('', newBoardData);
+    }
+  };
+
   const handleVote = useMutation(handleVotes, {
-    onMutate: async (variables) => {
-      const { newBoardData, prevBoardData } = await updateVoteOptimistic(
-        variables.count > 0 ? Action.Add : Action.Remove,
-        variables,
-      );
-
-      if (newBoardData?.maxVotes && newBoardData) {
-        toastRemainingVotesMessage('', newBoardData);
-      }
-
-      return { previousBoard: prevBoardData, variables };
+    onSuccess: async (_, variables) => {
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
     },
-    onSettled: (data, error, variables, context) => {
-      if (error) {
-        queryClient.invalidateQueries(['board', { id: data?._id }]);
-      }
-    },
-    onError: (error, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables, context) => {
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },
   });
 
   return {
     handleVote,
+    toastInfoMessage,
   };
 };
 

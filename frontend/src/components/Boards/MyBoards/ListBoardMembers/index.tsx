@@ -19,9 +19,15 @@ type ListBoardMembersProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   boardMembers: ListUsersType[];
+  isSubBoard: boolean;
 };
 
-const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersProps) => {
+const ListBoardMembers = ({
+  isOpen,
+  setIsOpen,
+  boardMembers,
+  isSubBoard,
+}: ListBoardMembersProps) => {
   const admin = boardMembers
     .filter((user) => user.role === TeamUserRoles.ADMIN)
     .map((user) => user.user);
@@ -45,7 +51,9 @@ const ListBoardMembers = ({ isOpen, setIsOpen, boardMembers }: ListBoardMembersP
       </Dialog.Header>
       <ScrollableContent direction="column" justify="start">
         <FilterBoardMembers title="Team Members" users={members} />
-        {!isEmpty(responsible) && <FilterBoardMembers title="Responsible" users={responsible} />}
+        {!isEmpty(responsible) && isSubBoard && (
+          <FilterBoardMembers title="Responsible" users={responsible} />
+        )}
         {!isEmpty(stakeholders) && (
           <FilterBoardMembers
             title={stakeholders.length > 1 ? 'Stakeholders' : 'Stakeholder'}

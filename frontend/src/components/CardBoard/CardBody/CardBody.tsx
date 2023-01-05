@@ -112,16 +112,23 @@ const CardBody = React.memo<CardBodyProps>(
       if (isSAdmin) {
         return true;
       }
-      const myUser = team.users.find((user) => String(user.user._id) === String(userId));
+
+      let myUser;
+
       const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
-      const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
-      const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
-      if (team && (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner)) {
-        return true;
+
+      if (team) {
+        myUser = team.users.find((user) => String(user.user._id) === String(userId));
+
+        const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
+        const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
+        if (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner) {
+          return true;
+        }
       }
 
-      return !!users.find((user) => user.role === 'owner');
-    }, [isSAdmin, team, userId, users, board.createdBy]);
+      return myUserIsOwnerMainBoard;
+    }, [isSAdmin, team, userId, board.createdBy]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();

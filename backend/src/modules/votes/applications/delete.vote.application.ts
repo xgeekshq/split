@@ -1,20 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DeleteVoteApplication } from '../interfaces/applications/delete.vote.application.interface';
-import { DeleteVoteService } from '../interfaces/services/delete.vote.service.interface';
+import { DeleteVoteApplicationInterface } from '../interfaces/applications/delete.vote.application.interface';
+import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class DeleteVoteApplicationImpl implements DeleteVoteApplication {
+export class DeleteVoteApplicationImpl implements DeleteVoteApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteService
+		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
-	deleteVoteFromCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		return this.deleteVoteService.deleteVoteFromCard(boardId, cardId, userId, cardItemId);
+	deleteVoteFromCard(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		cardItemId: string,
+		count: number
+	) {
+		return this.deleteVoteService.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
 	}
 
-	deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string) {
-		return this.deleteVoteService.deleteVoteFromCardGroup(boardId, cardId, userId);
+	deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		return this.deleteVoteService.deleteVoteFromCardGroup(boardId, cardId, userId, count);
 	}
 }

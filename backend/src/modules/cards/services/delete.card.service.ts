@@ -3,10 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
 import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
-import { DeleteVoteService } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
@@ -20,7 +19,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		@Inject(TYPES.services.GetCardService)
 		private getCardService: GetCardService,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteService
+		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
@@ -61,7 +60,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 
 		if (Array.isArray(getCard.items)) {
-			const promises: Promise<LeanDocument<BoardUserDocument> | null>[] = [];
+			const promises = [];
 			getCard.items.forEach(async (current) => {
 				current.votes.forEach(async (currentVote) => {
 					promises.push(this.deleteVoteService.decrementVoteUser(boardId, currentVote));

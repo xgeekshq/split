@@ -21,6 +21,7 @@ import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
@@ -105,26 +106,31 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		return { dividedBoards: result.dividedBoards, _id: result._id };
 	}
 
-	async delete(boardId: string, userId: string) {
+	async delete(boardId: string, user: UserDto) {
 		const board = await this.boardModel.findById(boardId).exec();
+
+		const userId = user._id;
+		const isSAdmin = user.isSAdmin;
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
 		const { team, createdBy } = board;
-		const teamUser = await this.getTeamUser(userId, String(team));
-		const users = await this.getUsersOfTeam(String(team));
 
-		const userIsSAdmin = await this.isUserSAdmin(userId, users);
+		let isAdminOrStakeholder = false;
 
-		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
-			teamUser.role as TeamRoles
-		);
+		if (team) {
+			const teamUser = await this.getTeamUser(userId, String(team));
+
+			isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
+				teamUser.role as TeamRoles
+			);
+		}
 
 		// Validate if the logged user are the owner
 		const isOwner = String(userId) === String(createdBy);
 
-		if (isOwner || isAdminOrStakeholder || userIsSAdmin) {
+		if (isOwner || isAdminOrStakeholder || isSAdmin) {
 			try {
 				return this.deleteBoardBoardUsersAndSchedules(boardId, true);
 			} catch (error) {

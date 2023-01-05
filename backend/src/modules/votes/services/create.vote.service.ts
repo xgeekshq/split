@@ -1,24 +1,24 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { ClientSession, Model } from 'mongoose';
+import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
-import { CreateVoteService } from '../interfaces/services/create.vote.service.interface';
+import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 
 @Injectable()
-export default class CreateVoteServiceImpl implements CreateVoteService {
+export default class CreateVoteServiceImpl implements CreateVoteServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	private async canUserVote(boardId: string, userId: string): Promise<boolean> {
+	private async canUserVote(boardId: string, userId: string, count: number): Promise<boolean> {
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
-			throw new NotFoundException('Board not found!');
+			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
 		if (board.maxVotes === null || board.maxVotes === undefined) {
@@ -32,96 +32,120 @@ export default class CreateVoteServiceImpl implements CreateVoteService {
 
 		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
 
-		return userCanVote ? boardUserFound.votesCount + 1 <= maxVotes : false;
+		return userCanVote ? boardUserFound.votesCount + count <= maxVotes : false;
 	}
 
-	private async incrementVoteUser(boardId: string, userId: string) {
+	private async incrementVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		session?: ClientSession
+	) {
 		const boardUser = await this.boardUserModel
-			.findOneAndUpdate(
+			.updateOne(
 				{
 					user: userId,
 					board: boardId
 				},
 				{
-					$inc: { votesCount: 1 }
+					$inc: { votesCount: count },
+					session
 				}
 			)
 			.lean()
 			.exec();
 
-		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
-
-		return boardUser;
+		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);
 	}
 
-	async addVoteToCard(boardId: string, cardId: string, userId: string, cardItemId: string) {
-		const canUserVote = await this.canUserVote(boardId, userId);
+	async addVoteToCard(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		cardItemId: string,
+		count: number
+	) {
+		const canUserVote = await this.canUserVote(boardId, userId, count);
 
-		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		try {
+			await this.incrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.boardModel
-				.findOneAndUpdate(
+				.updateOne(
 					{
 						_id: boardId,
 						'columns.cards.items._id': cardItemId
 					},
 					{
 						$push: {
-							'columns.$.cards.$[c].items.$[i].votes': userId
-						},
-						$inc: { totalUsedVotes: 1 }
+							'columns.$.cards.$[c].items.$[i].votes': Array(count).fill(userId)
+						}
 					},
 					{
 						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-						new: true
+						session
 					}
 				)
-				.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				})
 				.lean()
 				.exec();
 
-			if (!board) throw Error(UPDATE_FAILED);
+			if (board.modifiedCount !== 1) throw new BadRequestException(INSERT_VOTE_FAILED);
 
-			return board;
+			await userSession.commitTransaction();
+			await session.commitTransaction();
+		} catch (e) {
+			await userSession.abortTransaction();
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+			await userSession.endSession();
 		}
-		throw new BadRequestException('Error adding a vote');
 	}
 
-	async addVoteToCardGroup(boardId: string, cardId: string, userId: string) {
-		const canUserVote = await this.canUserVote(boardId, userId);
+	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		const canUserVote = await this.canUserVote(boardId, userId, count);
 
-		if (canUserVote) {
-			await this.incrementVoteUser(boardId, userId);
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		try {
+			await this.incrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.boardModel
-				.findOneAndUpdate(
+				.updateOne(
 					{
 						_id: boardId,
 						'columns.cards._id': cardId
 					},
 					{
 						$push: {
-							'columns.$.cards.$[c].votes': userId
+							'columns.$.cards.$[c].votes': Array(count).fill(userId)
 						}
 					},
 					{
 						arrayFilters: [{ 'c._id': cardId }],
-						new: true
+						session
 					}
 				)
-				.populate({
-					path: 'users',
-					select: 'user role votesCount -board',
-					populate: { path: 'user', select: 'firstName lastName _id' }
-				})
 				.lean()
 				.exec();
 
-			return board;
+			if (board.modifiedCount !== 1) throw new BadRequestException(INSERT_VOTE_FAILED);
+			await userSession.commitTransaction();
+			await session.commitTransaction();
+		} catch (e) {
+			await userSession.abortTransaction();
+			await session.abortTransaction();
+		} finally {
+			await session.endSession();
+			await userSession.endSession();
 		}
-		throw new BadRequestException('Error adding a vote');
 	}
 }

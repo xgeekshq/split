@@ -37,6 +37,10 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { getAllUsers } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useBoard from '@/hooks/useBoard';
+import isEmpty from '@/utils/isEmpty';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { BoardUserDto } from '@/types/board/board.user';
 
 const defaultBoard = {
   users: [],
@@ -46,7 +50,7 @@ const defaultBoard = {
     maxUsersCount: 2,
   },
   board: {
-    title: 'Main Board -',
+    title: 'Default Board',
     columns: [
       { title: 'Went well', color: '$highlight1Light', cards: [] },
       { title: 'To improve', color: '$highlight4Light', cards: [] },
@@ -63,7 +67,6 @@ const defaultBoard = {
     hideCards: false,
     hideVotes: false,
     slackEnable: false,
-    totalUsedVotes: 0,
   },
 };
 
@@ -76,7 +79,6 @@ const NewRegularBoard: NextPage = () => {
   const [createBoard, setCreateBoard] = useState(false);
 
   const setToastState = useSetRecoilState(toastState);
-  // const setBoardState = useSetRecoilState(createBoardDataState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setTeams = useSetRecoilState(teamsOfUser);
@@ -104,6 +106,13 @@ const NewRegularBoard: NextPage = () => {
       });
     },
   });
+
+  /**
+   * Board  Hook
+   */
+  const {
+    createBoard: { status, mutate },
+  } = useBoard({ autoFetchBoard: false });
 
   const addNewRegularBoard = () => {
     setCreateBoard(true);
@@ -157,22 +166,37 @@ const NewRegularBoard: NextPage = () => {
 
    */
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
-    console.log({
+    const users: BoardUserDto[] = [];
+    if (isEmpty(boardState.users) && session) {
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+    }
+
+    mutate({
       ...boardState.board,
-      users: boardState.users,
+      users: isEmpty(boardState.users) ? users : boardState.users,
       title: title || boardState.board.title,
+      dividedBoards: [],
       maxVotes,
       slackEnable,
       maxUsers: boardState.count.maxUsersCount,
+      recurrent: false,
     });
-    // mutate( {
-    //   ...boardState.board,
-    //   users: boardState.users,
-    //   title: title || boardState.board.title,
-    //   maxVotes,
-    //   slackEnable,
-    //   maxUsers: boardState.count.maxUsersCount,
-    // });
+  };
+
+  const saveEmptyBoard = () => {
+    const users: BoardUserDto[] = [];
+    if (session) {
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+    }
+
+    mutate({
+      ...boardState.board,
+      users: isEmpty(boardState.users) ? users : boardState.users,
+      title: boardState.board.title,
+      dividedBoards: [],
+      maxUsers: boardState.count.maxUsersCount,
+      recurrent: false,
+    });
   };
 
   useEffect(() => {
@@ -195,18 +219,18 @@ const NewRegularBoard: NextPage = () => {
       setUsersList(usersWithChecked);
     }
 
-    // if (status === 'success') {
-    //   setIsLoading(true);
-    //   setToastState({
-    //     open: true,
-    //     content: 'Board created with success!',
-    //     type: ToastStateEnum.SUCCESS,
-    //   });
+    if (status === 'success') {
+      setIsLoading(true);
+      setToastState({
+        open: true,
+        content: 'Board created with success!',
+        type: ToastStateEnum.SUCCESS,
+      });
 
-    //   setBoardState(defaultBoard);
-    //   setSelectedTeam(undefined);
-    //   router.push('/boards');
-    // }
+      setBoardState(defaultBoard);
+      setSelectedTeam(undefined);
+      router.push('/boards');
+    }
 
     return () => {
       setBoardState(defaultBoard);
@@ -223,6 +247,7 @@ const NewRegularBoard: NextPage = () => {
     setBoardState,
     allUsers,
     setUsersList,
+    status,
   ]);
 
   if (!session || !teamsData || !allTeamsData) return null;
@@ -287,7 +312,8 @@ const NewRegularBoard: NextPage = () => {
                   iconName="blob-arrow-right"
                   title="Quick create"
                   description="Jump the settings and just create a board. All configurations can still be done within the board itself."
-                  active={false}
+                  handleSelect={saveEmptyBoard}
+                  active
                 />
               </Flex>
             </ContentSelectContainer>

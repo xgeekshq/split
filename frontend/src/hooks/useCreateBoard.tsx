@@ -41,7 +41,6 @@ const useCreateBoard = (team?: Team) => {
       maxVotes: undefined,
       hideCards: false,
       hideVotes: false,
-      totalUsedVotes: 0,
     }),
     [],
   );
