@@ -12,7 +12,7 @@ import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Flex';
 import { NEXT_PUBLIC_MANUAL_LOGIN } from '@/utils/constants';
-import Icon from '@/components/icons/Icon';
+import Image from 'next/image';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -57,7 +57,8 @@ const Home: NextPage = () => {
     }
     return (
       <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
-        SPLIT - A product by <Icon css={{ width: '$66', height: '$14' }} name="xgeeks-logo" />
+        SPLIT - A product by{' '}
+        <Image alt="xgeeks_logo" src="/xgeeks_logo.svg" width={66} height={13} />
       </Text>
     );
   };
