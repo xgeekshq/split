@@ -177,10 +177,12 @@ const CardFooter = React.memo<FooterProps>(
       }));
       toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes - 1)} votes left.`);
 
-      if (user && votesData.userVotes - 1 === maxVotes) {
-        setMaxVotesReached(true);
-      } else {
-        setMaxVotesReached(false);
+      if (maxVotes) {
+        if (user && votesData.userVotes - 1 === maxVotes) {
+          setMaxVotesReached(true);
+        } else {
+          setMaxVotesReached(false);
+        }
       }
     };
 
@@ -193,12 +195,14 @@ const CardFooter = React.memo<FooterProps>(
         userVotes: prev.userVotes + 1,
         votesInThisCard: prev.votesInThisCard + 1,
       }));
-      toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes + 1)} votes left.`);
 
-      if (user && votesData.userVotes + 1 === maxVotes) {
-        setMaxVotesReached(true);
-      } else {
-        setMaxVotesReached(false);
+      if (maxVotes) {
+        toastInfoMessage(`You have ${maxVotes - (votesData.userVotes + 1)} votes left.`);
+        if (user && votesData.userVotes + 1 === maxVotes) {
+          setMaxVotesReached(true);
+        } else {
+          setMaxVotesReached(false);
+        }
       }
     };
 
@@ -243,7 +247,7 @@ const CardFooter = React.memo<FooterProps>(
                   !isMainboard ||
                   !!disableVotes ||
                   !!(user && maxVotes && votesData.userVotes >= maxVotes) ||
-                  maxVotesReached ||
+                  (maxVotes && maxVotesReached) ||
                   (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleAddVote}

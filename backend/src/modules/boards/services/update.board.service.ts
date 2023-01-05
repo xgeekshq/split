@@ -213,7 +213,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				updatedBoard &&
 				String(currentResponsible?.id) !== newResponsible.id &&
 				board.slackChannelId &&
-				updatedBoard.slackEnable
+				updatedBoard.slackEnable &&
+				updatedBoard.isSubBoard
 			) {
 				this.handleResponsibleSlackMessage(
 					newResponsible,
