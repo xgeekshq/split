@@ -143,8 +143,8 @@ export default class BoardsController {
 		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
 	}
 
-	@ApiOperation({ summary: 'Retrieve all boards from database' })
-	@ApiOkResponse({ type: BoardResponse, description: 'Boards' })
+	@ApiOperation({ summary: 'Retrieve personal boards from user' })
+	@ApiOkResponse({ type: BoardResponse, description: 'Personal boards' })
 	@ApiBadRequestResponse({
 		description: 'Bad Request',
 		type: BadRequestResponse
@@ -157,7 +157,7 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Get()
+	@Get('/personal')
 	async getPersonalBoards(
 		@Req() request: RequestWithUser,
 		@Query() { page, size }: PaginationParams
