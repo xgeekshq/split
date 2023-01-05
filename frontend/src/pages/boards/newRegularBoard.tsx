@@ -167,6 +167,14 @@ const NewRegularBoard: NextPage = () => {
    */
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
+    const responsibles: string[] = [];
+
+    const responsible = boardState.users.find((user) => user.role === BoardUserRoles.RESPONSIBLE);
+
+    if (!isEmpty(responsible)) {
+      responsibles.push(responsible.user);
+    }
+
     if (isEmpty(boardState.users) && session) {
       users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
     }
@@ -180,6 +188,7 @@ const NewRegularBoard: NextPage = () => {
       slackEnable,
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
+      responsibles,
     });
   };
 
