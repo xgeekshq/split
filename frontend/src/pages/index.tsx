@@ -11,6 +11,8 @@ import Banner from '@/components/icons/Banner';
 import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Flex';
+import { NEXT_PUBLIC_MANUAL_LOGIN } from '@/utils/constants';
+import Icon from '@/components/icons/Icon';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -28,6 +30,37 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 const Home: NextPage = () => {
   const [currentTab, setCurrentTab] = useState('login');
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);
+
+  const renderFooter = () => {
+    if (NEXT_PUBLIC_MANUAL_LOGIN) {
+      return currentTab === 'login' ? (
+        <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+          No account yet?{' '}
+          <Text
+            onClick={() => setCurrentTab('signUp')}
+            css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
+          >
+            Sign up.
+          </Text>
+        </Text>
+      ) : (
+        <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+          Already have an account?{' '}
+          <Text
+            onClick={() => setCurrentTab('login')}
+            css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
+          >
+            Log in.
+          </Text>
+        </Text>
+      );
+    }
+    return (
+      <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+        SPLIT - A product by <Icon css={{ width: '$66', height: '$14' }} name="xgeeks-logo" />
+      </Text>
+    );
+  };
 
   return (
     <Flex justify="between" css={{ height: '100vh' }}>
@@ -51,27 +84,7 @@ const Home: NextPage = () => {
             <SignUpTabContent setCurrentTab={setCurrentTab} />
           )}
           {showTroubleLogin && <TroubleLogin setShowTroubleLogin={setShowTroubleLogin} />}
-          {currentTab === 'login' ? (
-            <Text css={{ mb: '7%', textAlign: 'center', mt: '$10' }}>
-              No account yet?{' '}
-              <Text
-                onClick={() => setCurrentTab('signUp')}
-                css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
-              >
-                Sign up.
-              </Text>
-            </Text>
-          ) : (
-            <Text css={{ mb: '7%', textAlign: 'center', mt: '$10' }}>
-              Already have an account?{' '}
-              <Text
-                onClick={() => setCurrentTab('login')}
-                css={{ color: '$highlight2Dark', '@hover': { '&:hover': { cursor: 'pointer' } } }}
-              >
-                Log in.
-              </Text>
-            </Text>
-          )}
+          {renderFooter()}
         </Flex>
       </Flex>
       <Flex css={{ width: '65%', py: '$24', pr: '$24', flexShrink: 0, flexGrow: 1 }}>

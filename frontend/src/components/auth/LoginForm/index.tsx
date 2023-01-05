@@ -21,10 +21,12 @@ import {
   NEXT_PUBLIC_ENABLE_AZURE,
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
+  NEXT_PUBLIC_MANUAL_LOGIN,
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
+import LoginSSO from './LoginSSO';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -94,7 +96,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     setShowTroubleLogin(true);
   };
 
-  return (
+  return !NEXT_PUBLIC_MANUAL_LOGIN ? (
+    <LoginSSO handleLoginAzure={handleLoginAzure} />
+  ) : (
     <FormProvider {...methods}>
       <StyledForm
         autoComplete="off"
