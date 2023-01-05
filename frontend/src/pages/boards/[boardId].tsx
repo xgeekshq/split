@@ -151,7 +151,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     if (data === null) {
       route.push('/board-deleted');
     }
-  }, [data, route]);
+    if (!userIsInBoard) {
+      route.back();
+    }
+  }, [data, route, userIsInBoard]);
 
   const handleOpen = () => {
     setIsOpen(true);

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { UpdateResult } from 'mongodb';
 import { Model } from 'mongoose';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { DeleteCommentService } from '../interfaces/services/delete.comment.service.interface';
@@ -8,9 +9,9 @@ import { DeleteCommentService } from '../interfaces/services/delete.comment.serv
 export default class DeleteCommentServiceImpl implements DeleteCommentService {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
-	deleteItemComment(boardId: string, commentId: string, userId: string) {
+	deleteItemComment(boardId: string, commentId: string, userId: string): Promise<UpdateResult> {
 		return this.boardModel
-			.findOneAndUpdate(
+			.updateOne(
 				{
 					_id: boardId,
 					'columns.cards.items.comments._id': commentId,
@@ -18,34 +19,36 @@ export default class DeleteCommentServiceImpl implements DeleteCommentService {
 				},
 				{
 					$pull: {
-						'columns.$.cards.$[].items.$[].comments': {
+						'columns.$[].cards.$[].items.$[].comments': {
 							_id: commentId,
 							createdBy: userId
 						}
 					}
-				},
-				{ new: true }
+				}
 			)
 			.lean()
 			.exec();
 	}
 
-	deleteCardGroupComment(boardId: string, commentId: string, userId: string) {
+	deleteCardGroupComment(
+		boardId: string,
+		commentId: string,
+		userId: string
+	): Promise<UpdateResult> {
 		return this.boardModel
-			.findOneAndUpdate(
+			.updateOne(
 				{
 					_id: boardId,
 					'columns.cards.comments._id': commentId
 				},
 				{
 					$pull: {
-						'columns.$.cards.$[].comments': {
+						'columns.$[].cards.$[].comments': {
 							_id: commentId,
 							createdBy: userId
 						}
 					}
-				},
-				{ new: true }
+				}
 			)
 			.lean()
 			.exec();

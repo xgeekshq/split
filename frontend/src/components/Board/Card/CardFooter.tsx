@@ -97,7 +97,6 @@ const CardFooter = React.memo<FooterProps>(
     } = useVotes();
 
     const user = boardUser;
-    const disableVotes = maxVotes && user && user.votesCount >= maxVotes;
 
     const calculateVotes = useMemo(() => {
       const cardTyped = card as CardType;
@@ -130,10 +129,8 @@ const CardFooter = React.memo<FooterProps>(
         votesInThisCard: votesInThisCard.length,
       });
 
-      if (user && user.votesCount === maxVotes) {
-        setMaxVotesReached(true);
-      } else {
-        setMaxVotesReached(false);
+      if (maxVotes) {
+        setMaxVotesReached(user?.votesCount === maxVotes);
       }
     }, [
       votesOfUserInThisCard,
@@ -160,7 +157,7 @@ const CardFooter = React.memo<FooterProps>(
           ...prev,
           countVotes: 0,
         }));
-      }, 300);
+      }, 200);
 
       return () => clearTimeout(timer);
     }, [boardId, card._id, cardItemId, mutate, socketId, votesData.countVotes]);
@@ -175,14 +172,10 @@ const CardFooter = React.memo<FooterProps>(
         userVotes: prev.userVotes - 1,
         votesInThisCard: prev.votesInThisCard - 1,
       }));
-      toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes - 1)} votes left.`);
 
       if (maxVotes) {
-        if (user && votesData.userVotes - 1 === maxVotes) {
-          setMaxVotesReached(true);
-        } else {
-          setMaxVotesReached(false);
-        }
+        toastInfoMessage(`You have ${maxVotes! - (votesData.userVotes - 1)} votes left.`);
+        setMaxVotesReached(votesData.userVotes - 1 === maxVotes);
       }
     };
 
@@ -198,11 +191,7 @@ const CardFooter = React.memo<FooterProps>(
 
       if (maxVotes) {
         toastInfoMessage(`You have ${maxVotes - (votesData.userVotes + 1)} votes left.`);
-        if (user && votesData.userVotes + 1 === maxVotes) {
-          setMaxVotesReached(true);
-        } else {
-          setMaxVotesReached(false);
-        }
+        setMaxVotesReached(votesData.userVotes + 1 === maxVotes);
       }
     };
 
@@ -245,8 +234,6 @@ const CardFooter = React.memo<FooterProps>(
               <StyledButtonIcon
                 disabled={
                   !isMainboard ||
-                  !!disableVotes ||
-                  !!(user && maxVotes && votesData.userVotes >= maxVotes) ||
                   (maxVotes && maxVotesReached) ||
                   (hideCards && createdBy?._id !== userId)
                 }

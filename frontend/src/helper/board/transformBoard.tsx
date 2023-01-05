@@ -149,6 +149,7 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
     anonymous,
     _id: placehodlerId,
     id: placehodlerId,
+    createdAt: new Date().toISOString(),
   };
 
   cardItem?.comments.push(commentObj);
