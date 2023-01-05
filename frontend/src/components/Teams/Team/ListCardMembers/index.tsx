@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MouseEvent, useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
@@ -8,6 +8,8 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import CardMember from '@/components/Teams/CreateTeam/CardMember';
+import { ButtonAddMember } from '@/components/Primitives/Dialog/styles';
+import Icon from '@/components/icons/Icon';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
 
@@ -25,6 +27,11 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
   const didMountRef = useRef(false);
 
   const user = membersList.find((member) => member.user._id === session?.user.id);
+
+  const handleOpen = (event: MouseEvent) => {
+    event.preventDefault();
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     if (didMountRef.current && !isOpen) {
@@ -44,7 +51,19 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           Team Members
         </Text>
         {(!isTeamMember || isSAdmin) && (
-          <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
+          <ButtonAddMember onClick={handleOpen}>
+            <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
+            <Text
+              weight="medium"
+              css={{
+                ml: '$10',
+                fontSize: '$14',
+                lineHeight: '$18',
+              }}
+            >
+              Add/remove members
+            </Text>
+          </ButtonAddMember>
         )}
       </Flex>
       <ScrollableContent direction="column" justify="start">
@@ -59,6 +78,7 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           />
         ))}
       </ScrollableContent>
+      <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
     </Flex>
   );
 };
