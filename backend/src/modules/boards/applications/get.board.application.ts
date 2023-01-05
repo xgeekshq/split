@@ -23,12 +23,15 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		teamId?: string,
 		userId?: string,
 		isSuperAdmin?: boolean,
+		personalBoards?: boolean,
 		page?: number,
 		size?: number
 	) {
 		if (teamId) return this.getBoardService.getTeamBoards(teamId, page, size);
 
 		if (isSuperAdmin) return this.getBoardService.getSuperAdminBoards(userId, page, size);
+
+		if (personalBoards) return this.getBoardService.getPersonalUserBoards(userId, page, size);
 
 		return this.getBoardService.getUsersBoards(userId, page, size);
 	}
