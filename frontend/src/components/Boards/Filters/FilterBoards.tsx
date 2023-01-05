@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
+import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
+import { useRecoilState } from 'recoil';
 import FilterSelect from './FilterSelect';
 
 export interface OptionType {
@@ -30,25 +30,29 @@ const StyledButton = styled(Button, {
 });
 
 interface FilterBoardsProps {
-  setFilter: Dispatch<SetStateAction<string>>;
-  filter: string;
   teamNames: OptionType[];
 }
 
-const FilterBoards: React.FC<FilterBoardsProps> = ({ setFilter, filter, teamNames }) => (
-  <Flex css={{ zIndex: '10' }} justify="end">
-    <StyledButton
-      css={{ borderRadius: '12px 0 0 12px' }}
-      data-active={filter === 'all'}
-      onClick={() => setFilter('all')}
-    >
-      All
-    </StyledButton>
-    <StyledButton data-active={filter === 'personal'} onClick={() => setFilter('personal')}>
-      Personal
-    </StyledButton>
-    <FilterSelect filter={filter} options={teamNames} setFilter={setFilter} />
-  </Flex>
-);
+const FilterBoards: React.FC<FilterBoardsProps> = ({ teamNames }) => {
+  const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
+  return (
+    <Flex css={{ zIndex: '10' }} justify="end">
+      <StyledButton
+        css={{ borderRadius: '12px 0 0 12px' }}
+        data-active={filterState === 'all'}
+        onClick={() => setFilterState('all')}
+      >
+        All
+      </StyledButton>
+      <StyledButton
+        data-active={filterState === 'personal'}
+        onClick={() => setFilterState('personal')}
+      >
+        Personal
+      </StyledButton>
+      <FilterSelect options={teamNames} />
+    </Flex>
+  );
+};
 
 export default FilterBoards;

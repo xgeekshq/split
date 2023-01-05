@@ -16,3 +16,8 @@ export const newBoardState = atom<string | undefined>({
   key: 'newBoard',
   default: undefined,
 });
+
+export const filterTeamBoardsState = atom<string>({
+  key: 'filterTeamBoards',
+  default: 'all',
+});

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useInfiniteQuery } from 'react-query';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getBoardsRequest } from '@/api/boardService';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
@@ -12,6 +12,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
 import { teamsListState } from '@/store/team/atom/team.atom';
+import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
 import ListBoards from './ListBoards';
@@ -28,7 +29,7 @@ export interface OptionType {
 
 const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const setToastState = useSetRecoilState(toastState);
-  const [filter, setFilter] = useState('all');
+  const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const routerTeam = router.query.team as string;
@@ -72,7 +73,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   }, [socket, queryClient]);
 
   useEffect(() => {
-    if (routerTeam) setFilter(routerTeam);
+    if (routerTeam) setFilterState(routerTeam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -114,16 +115,16 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     label: team.name,
   }));
 
-  if (filter === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
+  if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
     return <EmptyBoards />;
 
-  const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filter);
+  const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filterState);
 
   return (
     <>
-      <FilterBoards setFilter={setFilter} teamNames={teamNames} filter={filter} />
+      <FilterBoards teamNames={teamNames} />
 
-      {!['all', 'personal'].includes(filter) && filteredTeam && (
+      {!['all', 'personal'].includes(filterState) && filteredTeam && (
         <ListBoardsByTeam
           filteredTeam={filteredTeam}
           userId={userId}
@@ -138,7 +139,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         dataByTeamAndDate={dataByTeamAndDate}
         scrollRef={scrollRef}
         onScroll={onScroll}
-        filter={filter}
+        filter={filterState}
         isLoading={isLoading}
         socket={socket}
       />
