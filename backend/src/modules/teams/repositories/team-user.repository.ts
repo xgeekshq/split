@@ -34,9 +34,9 @@ export class TeamUserRepository
 	}
 
 	getUsersOfTeam(teamId: string) {
-		return this.findAllWithQuery({ team: teamId }, undefined, {
+		return this.findAllWithQuery({ team: teamId }, 'user role isNewJoiner _id', {
 			path: 'user',
-			select: '_id firstName lastName email isSAdmin'
+			select: '_id firstName lastName email isSAdmin providerAccountCreatedAt'
 		});
 	}
 

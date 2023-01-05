@@ -281,10 +281,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users
 			.map((user) => {
-				user.userCreated =
-					(user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt;
-
-				return user;
+				return {
+					...user,
+					userCreated: (user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt
+				};
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
