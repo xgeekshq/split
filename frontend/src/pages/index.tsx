@@ -11,7 +11,7 @@ import Banner from '@/components/icons/Banner';
 import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Flex';
-import { NEXT_PUBLIC_MANUAL_LOGIN } from '@/utils/constants';
+import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';
 import StyledImage from '@/components/Primitives/Image';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
   const [showTroubleLogin, setShowTroubleLogin] = useState(false);
 
   const renderFooter = () => {
-    if (NEXT_PUBLIC_MANUAL_LOGIN) {
+    if (!NEXT_PUBLIC_LOGIN_SSO_ONLY) {
       return currentTab === 'login' ? (
         <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
           No account yet?{' '}
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
           direction="column"
           css={{
             ml: '$72',
-            mr: '$58',
+            mr: '$72',
             mt: '9.7%',
             height: '100%',
             justifyContent: 'space-between',

@@ -126,10 +126,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           database.
         </Text>
         <Input disabled id="email" placeholder="Email address" state="default" type="text" />
-        <Flex direction="row" gap="16">
-          <Input id="firstName" placeholder="First Name" type="text" />
-          <Input id="lastName" placeholder="Last Name" type="text" />
-        </Flex>
+        <Input id="firstName" placeholder="First Name" type="text" />
+        <Input id="lastName" placeholder="Last Name" type="text" />
         <Input
           helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
           icon="eye"

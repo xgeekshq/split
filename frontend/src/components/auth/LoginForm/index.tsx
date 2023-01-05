@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
@@ -21,7 +21,7 @@ import {
   NEXT_PUBLIC_ENABLE_AZURE,
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
-  NEXT_PUBLIC_MANUAL_LOGIN,
+  NEXT_PUBLIC_LOGIN_SSO_ONLY,
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
@@ -59,21 +59,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     loginAzure();
   };
 
-  /**
-   * Show error toast when change loginErrorCode
-   * If this error is different of -1
-   */
-  useEffect(() => {
-    if (loginErrorCode !== -1) {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: getAuthError(loginErrorCode),
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loginErrorCode]);
-
   const handleLogin = async (credentials: LoginUser) => {
     setLoading((prevState) => ({ ...prevState, credentials: true }));
     const result = await signIn<RedirectableProviderType>('credentials', {
@@ -88,6 +73,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     }
 
     setLoginErrorCode(result.status);
+    if (result.error) {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: getAuthError(result.status),
+      });
+    }
 
     setLoading((prevState) => ({ ...prevState, credentials: false }));
   };
@@ -96,7 +88,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     setShowTroubleLogin(true);
   };
 
-  return !NEXT_PUBLIC_MANUAL_LOGIN ? (
+  return NEXT_PUBLIC_LOGIN_SSO_ONLY ? (
     <LoginSSO handleLoginAzure={handleLoginAzure} />
   ) : (
     <FormProvider {...methods}>
