@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
-import Select, { CSSObjectWithLabel, ControlProps, components } from 'react-select';
+import Select, { ControlProps, components } from 'react-select';
 
 import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-// import { filterByTeamSelectStyles } from './styles';
+import { filterByTeamSelectStyles } from './styles';
 
 const StyledSelect = styled(Select, {});
 interface OptionType {
@@ -60,52 +60,7 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter 
           text: '#060D16',
         },
       })}
-      styles={{
-        control: (styles: CSSObjectWithLabel) => ({
-          ...styles,
-          backgroundColor: 'transparent',
-          minWidth: 0,
-          width: '179px',
-          minHeight: '36px',
-          height: '36px',
-          borderRadius: '12px',
-          borderTopLeftRadius: '0',
-          borderBottomLeftRadius: '0',
-          border: isSelected ? '1px solid $primary200' : '5px solid $primary800',
-          fontSize: '14px',
-          cursor: 'pointer',
-          boxShadow: 'none',
-          color: isSelected ? 'primary800' : 'primary300',
-        }),
-        menu: (base: CSSObjectWithLabel) => ({
-          ...base,
-          marginTop: 2,
-        }),
-        valueContainer: (base: CSSObjectWithLabel) => ({
-          ...base,
-          paddingLeft: 0,
-          paddingTop: 0,
-        }),
-        input: (base: CSSObjectWithLabel) => ({
-          ...base,
-          paddingTop: 0,
-          margin: 0,
-          paddingLeft: 0,
-        }),
-        singleValue: (base: CSSObjectWithLabel) => ({
-          ...base,
-          paddingLeft: 0,
-        }),
-        indicatorsContainer: (base: CSSObjectWithLabel) => ({
-          ...base,
-          marginRight: -3,
-          padding: 0,
-        }),
-        dropdownIndicator: (base: CSSObjectWithLabel) => ({
-          ...base,
-          padding: 0,
-        }),
-      }}
+      styles={filterByTeamSelectStyles}
       controlShouldRenderValue={!(filter === 'all' || filter === 'personal')}
       options={options}
       value={
