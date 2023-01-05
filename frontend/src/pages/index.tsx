@@ -12,7 +12,7 @@ import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Flex';
 import { NEXT_PUBLIC_MANUAL_LOGIN } from '@/utils/constants';
-import Image from 'next/image';
+import StyledImage from '@/components/Primitives/Image';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -56,16 +56,31 @@ const Home: NextPage = () => {
       );
     }
     return (
-      <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+      <Text
+        css={{
+          mb: '15%',
+          textAlign: 'center',
+          mt: '$10',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         SPLIT - A product by{' '}
-        <Image alt="xgeeks_logo" src="/xgeeks_logo.svg" width={66} height={13} />
+        <StyledImage
+          alt="xgeeks_logo"
+          src="/xgeeks_logo.svg"
+          width={66}
+          height={13}
+          css={{ ml: '$8', mt: '$4' }}
+        />
       </Text>
     );
   };
 
   return (
-    <Flex justify="between" css={{ height: '100vh' }}>
-      <Flex direction="column" css={{ flexGrow: '1', height: '100%' }}>
+    <Flex justify="between" css={{ minHeight: '100vh', overflow: 'auto' }}>
+      <Flex direction="column" css={{ flexGrow: '1' }}>
         <BannerContainer>
           <Banner />
         </BannerContainer>
@@ -88,7 +103,7 @@ const Home: NextPage = () => {
           {renderFooter()}
         </Flex>
       </Flex>
-      <Flex css={{ width: '65%', py: '$24', pr: '$24', flexShrink: 0, flexGrow: 1 }}>
+      <Flex css={{ width: '65%', py: '$24', pr: '$24', flexShrink: 0 }}>
         <ImageBackground />
       </Flex>
     </Flex>
