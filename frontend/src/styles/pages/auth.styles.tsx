@@ -17,21 +17,19 @@ const CenteredContainer = styled('div', {
   borderRadius: '$12',
 });
 const ImageBackground = styled(Flex, {
-  height: '100vh',
+  height: '100%',
   width: '100%',
-  position: 'relative',
   backgroundColor: '$black',
   backgroundImage: 'url(/images/background.svg)',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
-  overflow: 'auto',
+  borderRadius: '$72 0 $72',
 });
 
 const BannerContainer = styled(Flex, {
-  size: 'fit-content',
-  position: 'absolute',
-  left: '112px',
-  top: '72px',
+  ml: '$72',
+  mt: '8.4%',
+  '@media (min-width: 1500px)': { ml: '$185' },
 });
 
 export { BannerContainer, CenteredContainer, ImageBackground };

@@ -12,7 +12,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/icons/Icon';
-import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
@@ -119,7 +118,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           handleRegister(credentials);
         })}
       >
-        <LogoIcon />
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>
@@ -128,10 +126,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           database.
         </Text>
         <Input disabled id="email" placeholder="Email address" state="default" type="text" />
-        <Flex direction="row" gap="16">
-          <Input id="firstName" placeholder="First Name" type="text" />
-          <Input id="lastName" placeholder="Last Name" type="text" />
-        </Flex>
+        <Input id="firstName" placeholder="First Name" type="text" />
+        <Input id="lastName" placeholder="Last Name" type="text" />
         <Input
           helperText="Use at least 8 characters, upper and lower case letters, numbers and symbols like !”?$%^&)."
           icon="eye"

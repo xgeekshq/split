@@ -18,12 +18,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import EmailSent from './EmailSent';
 
 const MainContainer = styled('form', Flex, {
-  width: '$500',
-  backgroundColor: '$white',
-  boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
-  borderRadius: '$12',
-  py: '$48',
-  px: '$32',
+  width: '100%',
 });
 
 const GoBackWrapper = styled(Flex, {
