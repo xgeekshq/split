@@ -1,9 +1,10 @@
-import { Dispatch, SetStateAction } from 'react';
 import Select, { ControlProps, components } from 'react-select';
 
 import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
+import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
+import { useRecoilState } from 'recoil';
 import { filterByTeamSelectStyles } from './styles';
 
 const StyledSelect = styled(Select, {});
@@ -14,8 +15,6 @@ interface OptionType {
 
 interface FilterSelectProps {
   options: OptionType[];
-  setFilter: Dispatch<SetStateAction<string>>;
-  filter: string;
 }
 
 const Control = ({ children, ...props }: ControlProps) => (
@@ -39,8 +38,9 @@ const Control = ({ children, ...props }: ControlProps) => (
   </components.Control>
 );
 
-const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter }) => {
-  const isSelected = filter !== 'all' && filter !== 'personal';
+const FilterSelect: React.FC<FilterSelectProps> = ({ options }) => {
+  const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
+  const isSelected = !(filterState === 'all' || filterState === 'personal');
   return (
     <StyledSelect
       placeholder="select team"
@@ -61,15 +61,15 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ filter, options, setFilter 
         },
       })}
       styles={filterByTeamSelectStyles}
-      controlShouldRenderValue={!(filter === 'all' || filter === 'personal')}
+      controlShouldRenderValue={isSelected}
       options={options}
       value={
         !isSelected
           ? { label: 'select team', value: '' }
-          : options.find((option) => option.value === filter)
+          : options.find((option) => option.value === filterState)
       }
       onChange={(selectedOption) => {
-        setFilter((selectedOption as OptionType)?.value);
+        setFilterState((selectedOption as OptionType)?.value);
       }}
     />
   );
