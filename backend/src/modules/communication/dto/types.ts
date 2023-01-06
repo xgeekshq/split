@@ -33,6 +33,7 @@ export type BoardType = {
 		users: UserRoleType[];
 	} | null;
 	users: UserRoleType[];
+	slackChannelId?: string;
 };
 
 export type ConfigurationType = {
@@ -59,3 +60,5 @@ export type MergeBoardType = {
 	boardId: string;
 	mainBoardId: string;
 };
+
+export type ArchiveChannelResult = { channelId: string; result: boolean };

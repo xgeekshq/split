@@ -7,16 +7,19 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'src/libs/constants/slack';
 import { SlackCommunicationGateAdapter } from 'src/modules/communication/adapters/slack-communication-gate.adapter';
+import { SlackArchiveChannelApplication } from 'src/modules/communication/applications/slack-archive-channel.application';
 import { SlackCommunicationApplication } from 'src/modules/communication/applications/slack-communication.application';
 import { SlackMergeBoardApplication } from 'src/modules/communication/applications/slack-merge-board.application';
 import { SlackResponsibleApplication } from 'src/modules/communication/applications/slack-responsible.application';
 import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
+import { ArchiveChannelApplicationInterface } from 'src/modules/communication/interfaces/archive-channel.application.interface';
 import { ChatHandlerInterface } from 'src/modules/communication/interfaces/chat.handler.interface';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 import { ConversationsHandlerInterface } from 'src/modules/communication/interfaces/conversations.handler.interface';
 import { TYPES } from 'src/modules/communication/interfaces/types';
 import { UsersHandlerInterface } from 'src/modules/communication/interfaces/users.handler.interface';
+import { SlackArchiveChannelService } from 'src/modules/communication/services/slack-archive-channel.service';
 import { SlackCommunicationService } from 'src/modules/communication/services/slack-communication.service';
 import { SlackDisabledCommunicationService } from 'src/modules/communication/services/slack-disabled-communication.service';
 import { UsersSlackHandler } from './handlers/users-slack.handler';
@@ -81,6 +84,14 @@ export const CommunicationApplication = {
 	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
 };
 
+export const ArchiveChannelApplication = {
+	provide: TYPES.application.SlackArchiveChannelApplication,
+	useFactory: (conversationsHandler: ConversationsHandlerInterface) => {
+		return new SlackArchiveChannelApplication(conversationsHandler);
+	},
+	inject: [ConversationsSlackHandler]
+};
+
 export const ResponsibleApplication = {
 	provide: TYPES.application.SlackResponsibleApplication,
 	useFactory: (
@@ -106,4 +117,12 @@ export const CommunicationService = {
 	useClass: configuration().slack.enable
 		? SlackCommunicationService
 		: SlackDisabledCommunicationService
+};
+
+export const ArchiveChannelService = {
+	provide: TYPES.services.SlackArchiveChannelService,
+	useFactory: (application: ArchiveChannelApplicationInterface) => {
+		return new SlackArchiveChannelService(application);
+	},
+	inject: [ConversationsSlackHandler]
 };

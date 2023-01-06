@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import * as WebClientSlackApi from '@slack/web-api';
 import {
 	ChatMeMessageArguments,
+	ConversationsArchiveArguments,
 	ConversationsCreateArguments,
 	ConversationsInviteArguments,
 	ConversationsMembersArguments,
@@ -15,6 +16,7 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'src/libs/constants/slack';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
+import { ArchiveChannelError } from 'src/modules/communication/errors/archive-channel.error';
 import { CreateChannelError } from 'src/modules/communication/errors/create-channel.error';
 import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
@@ -30,7 +32,12 @@ jest.mock('@slack/web-api', () => ({
 	WebClient: function WebClient() {
 		return {
 			conversations: {
-				create(options?: ConversationsCreateArguments | undefined) {
+				archive(_options?: ConversationsArchiveArguments) {
+					return Promise.resolve({
+						ok: true
+					});
+				},
+				create(options?: ConversationsCreateArguments) {
 					return Promise.resolve({
 						ok: true,
 						channel: {
@@ -39,7 +46,7 @@ jest.mock('@slack/web-api', () => ({
 						}
 					});
 				},
-				invite(options?: ConversationsInviteArguments | undefined) {
+				invite(options?: ConversationsInviteArguments) {
 					return new Promise((resolve, reject) => {
 						if (options?.users?.split(',').every((i) => slackUsersIds.includes(i))) {
 							resolve({
@@ -69,7 +76,7 @@ jest.mock('@slack/web-api', () => ({
 					});
 				},
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				members(options?: ConversationsMembersArguments | undefined) {
+				members(options?: ConversationsMembersArguments) {
 					if (options?.cursor === 'next_cursor') {
 						return Promise.resolve({
 							ok: true,
@@ -92,7 +99,7 @@ jest.mock('@slack/web-api', () => ({
 			users: {
 				profile: {
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					get(options?: UsersProfileGetArguments | undefined) {
+					get(options?: UsersProfileGetArguments) {
 						if (options?.user === 'user_exists_without_email') {
 							return Promise.resolve({
 								ok: true,
@@ -119,7 +126,7 @@ jest.mock('@slack/web-api', () => ({
 			},
 			chat: {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				postMessage(options?: ChatMeMessageArguments | undefined) {
+				postMessage(options?: ChatMeMessageArguments) {
 					return Promise.resolve({
 						ok: true,
 						channel: options?.channel
@@ -158,6 +165,13 @@ describe('SlackCommunicationGateAdapter', () => {
 
 		expect(id.startsWith('C')).toBe(true);
 		expect(name).toBe('test');
+	});
+
+	it('should archive a slack channel and return ok', async () => {
+		const input = 'test';
+		const { ok } = await adapter.archive(input);
+
+		expect(ok).toBe(true);
 	});
 
 	it('should add users to a channel', async () => {
@@ -221,30 +235,28 @@ describe('SlackCommunicationGateAdapter', () => {
 		const WebClientMockError: any = function WebClient() {
 			return {
 				conversations: {
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					create(options?: ConversationsCreateArguments | undefined) {
+					archive(_options?: ConversationsArchiveArguments) {
 						return Promise.reject(new Error('some error message'));
 					},
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					invite(options?: ConversationsInviteArguments | undefined) {
+					create(_options?: ConversationsCreateArguments) {
 						return Promise.reject(new Error('some error message'));
 					},
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					members(options?: ConversationsMembersArguments | undefined) {
+					invite(_options?: ConversationsInviteArguments) {
+						return Promise.reject(new Error('some error message'));
+					},
+					members(_options?: ConversationsMembersArguments) {
 						return Promise.reject(new Error('some error message'));
 					}
 				},
 				users: {
 					profile: {
-						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-						get(options?: UsersProfileGetArguments | undefined) {
+						get(_options?: UsersProfileGetArguments) {
 							return Promise.reject(new Error('some error message'));
 						}
 					}
 				},
 				chat: {
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					postMessage(options?: ChatMeMessageArguments | undefined) {
+					postMessage(_options?: ChatMeMessageArguments) {
 						return Promise.reject(new Error('some error message'));
 					}
 				}
@@ -263,6 +275,13 @@ describe('SlackCommunicationGateAdapter', () => {
 
 		afterEach(() => {
 			LoggerErrorMock.mockRestore();
+		});
+
+		it('should throw "ArchiveChannelError" when call "archive"', async () => {
+			const input = 'test';
+
+			await expect(adapterWithErrors.archive(input)).rejects.toThrowError(ArchiveChannelError);
+			expect(LoggerErrorMock).toBeCalledTimes(1);
 		});
 
 		it('should throw "CreateChannelError" when call "addChannel"', async () => {

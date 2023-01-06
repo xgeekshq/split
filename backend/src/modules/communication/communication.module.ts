@@ -1,8 +1,10 @@
 import { BullModule } from '@nestjs/bull';
-import { Module, forwardRef } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { configuration } from 'src/infrastructure/config/configuration';
 import BoardsModule from 'src/modules/boards/boards.module';
 import {
+	ArchiveChannelApplication,
+	ArchiveChannelService,
 	ChatHandler,
 	CommunicationApplication,
 	CommunicationGateAdapter,
@@ -64,11 +66,13 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 		CommunicationService,
 		...(configuration().slack.enable
 			? [
+					ArchiveChannelService,
 					CommunicationGateAdapter,
 					ChatHandler,
 					ConversationsHandler,
 					UsersHandler,
 					CommunicationApplication,
+					ArchiveChannelApplication,
 					ResponsibleApplication,
 					MergeBoardApplication,
 					SlackCommunicationProducer,
