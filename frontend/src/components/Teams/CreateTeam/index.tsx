@@ -112,7 +112,16 @@ const CreateTeam = () => {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create team</Button>
+              <Button
+                disabled={
+                  !['success', 'idle'].includes(status) ||
+                  ((methods.formState.isSubmitting || methods.formState.isSubmitted) &&
+                    !methods.formState.errors)
+                }
+                type="submit"
+              >
+                Create team
+              </Button>
             </ButtonsContainer>
           </StyledForm>
         </SubContainer>
