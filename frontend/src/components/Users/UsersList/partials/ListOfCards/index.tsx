@@ -4,7 +4,6 @@ import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
 import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
 import { useSetRecoilState } from 'recoil';
-// import { usersWithTeamsState } from '@/store/user/atoms/user.atom';
 import { useInfiniteQuery } from 'react-query';
 import { getAllUsersWithTeams } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
