@@ -76,7 +76,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.incrementVoteUser(boardId, userId, count, userSession);
+			await this.incrementVoteUser(boardId, userId, count);
 			const board = await this.boardModel
 				.updateOne(
 					{
@@ -89,8 +89,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 						}
 					},
 					{
-						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-						session
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }]
 					}
 				)
 				.lean()

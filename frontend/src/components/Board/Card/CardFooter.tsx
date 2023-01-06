@@ -124,6 +124,7 @@ const CardFooter = React.memo<FooterProps>(
         cardItemId,
         isCardGroup: cardItemId === undefined,
         count: -1,
+        userId,
       });
 
       if (maxVotes) {
@@ -141,6 +142,7 @@ const CardFooter = React.memo<FooterProps>(
         cardItemId,
         isCardGroup: cardItemId === undefined,
         count: 1,
+        userId,
       });
 
       if (maxVotes) {

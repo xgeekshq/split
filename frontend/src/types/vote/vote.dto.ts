@@ -10,4 +10,6 @@ export default interface VoteDto {
   isCardGroup: boolean;
 
   count: number;
+
+  userId: string;
 }

@@ -161,7 +161,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         <Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
                       )}
 
-                      {!isSubmited && (userId === card?.createdBy?._id || !hideCards) && (
+                      {!isSubmited && userId === card?.createdBy?._id && (
                         <PopoverCardSettings
                           boardId={boardId}
                           cardGroupId={card._id}

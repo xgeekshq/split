@@ -55,13 +55,12 @@ export const handleUpdateText = (board: BoardType, data: UpdateCardDto) => {
 
 export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPositionDto) => {
   const boardData = removeReadOnly(board);
-  const { targetColumnId, colIdOfCard, newPosition, cardPosition, sorted, cardId } = changes;
+  const { targetColumnId, colIdOfCard, newPosition, cardPosition, cardId } = changes;
   let currentCardPosition: number | undefined = cardPosition;
   const colToRemove = boardData.columns.find((col) => col._id === colIdOfCard);
   const colToAdd = boardData.columns.find((col) => col._id === targetColumnId);
-  if (sorted) {
-    currentCardPosition = colToRemove?.cards.findIndex((card) => card._id === cardId);
-  }
+
+  currentCardPosition = colToRemove?.cards.findIndex((card) => card._id === cardId);
 
   if (currentCardPosition !== undefined) {
     const cardToAdd = colToRemove?.cards[currentCardPosition];
@@ -77,16 +76,14 @@ export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPo
 export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
   const boardData = removeReadOnly(board);
 
-  const { cardGroupId, cardId, colIdOfCardGroup, columnIdOfCard, cardPosition, sorted } = changes;
+  const { cardGroupId, cardId, colIdOfCardGroup, columnIdOfCard, cardPosition } = changes;
   let currentCardPosition: number | undefined = cardPosition;
   const targetColumn = boardData.columns.find((col) => col._id === colIdOfCardGroup);
   const cardGroup = targetColumn?.cards.find((card) => card._id === cardGroupId);
   const sourceColumn = boardData.columns.find((col) => col._id === columnIdOfCard);
   const selectedCard = sourceColumn?.cards.find((card) => card._id === cardId);
 
-  if (sorted) {
-    currentCardPosition = sourceColumn?.cards.findIndex((card) => card._id === cardId);
-  }
+  currentCardPosition = sourceColumn?.cards.findIndex((card) => card._id === cardId);
 
   if (cardGroup && selectedCard && sourceColumn && currentCardPosition !== undefined) {
     sourceColumn.cards = removeElementAtIndex(sourceColumn.cards, currentCardPosition);

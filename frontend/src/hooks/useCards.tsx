@@ -16,6 +16,7 @@ import AddCardDto from '@/types/card/addCard.dto';
 import CardType from '@/types/card/card';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -130,20 +131,24 @@ const useCards = () => {
     },
   });
 
+  const updateCardPositionOptimistic = async (data: UpdateCardPositionDto) => {
+    const prevBoardData = await getPrevData(data.boardId);
+
+    if (prevBoardData) {
+      const newBoard = handleUpdateCardPosition(prevBoardData, data);
+      updateBoardColumns(data.boardId, newBoard.columns);
+    }
+
+    return prevBoardData;
+  };
+
   const updateCardPosition = useMutation(updateCardPositionRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const newBoard = handleUpdateCardPosition(prevBoardData, data);
-        updateBoardColumns(data.boardId, newBoard.columns);
-      }
+      const prevBoardData = updateCardPositionOptimistic(data);
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
-    },
+    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -287,6 +292,7 @@ const useCards = () => {
     mergeCards,
     removeFromMergeCard,
     mergeBoard,
+    updateCardPositionOptimistic,
   };
 };
 
