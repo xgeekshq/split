@@ -47,6 +47,12 @@ export const getBoardsRequest = (
     { context, serverSide: !!context },
   );
 
+export const getPersonalBoardsRequest = (
+  pageParam = 0,
+  context?: GetServerSidePropsContext,
+): Promise<{ boards: BoardType[]; hasNextPage: boolean; page: number }> =>
+  fetchData(`/boards/personal?page=${pageParam}&size=10`, { context, serverSide: !!context });
+
 export const deleteBoardRequest = async ({
   id,
   socketId,

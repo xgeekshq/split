@@ -11,7 +11,7 @@ import Flex from '@/components/Primitives/Flex';
 import { Socket } from 'socket.io-client';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
-import EmptyTeamBoards from '../EmptyTeamBoards';
+import EmptyTeamBoards from './EmptyTeamBoards';
 import ListBoards from '../ListBoards';
 
 interface ListBoardsByTeamProps {
@@ -58,11 +58,11 @@ const ListBoardsByTeam = ({
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?._id ?? `personal`}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team._id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
-          if (board.team) teams.set(`${board.team?._id}`, board.team);
+          boardsTeamAndDate.set(`${board.team?._id}`, new Map([[date, [board]]]));
+          teams.set(`${board.team?._id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);

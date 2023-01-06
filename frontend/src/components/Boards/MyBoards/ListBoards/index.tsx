@@ -30,13 +30,13 @@ interface ListBoardsProps {
 const ListBoards = React.memo<ListBoardsProps>(
   ({ userId, isSuperAdmin, dataByTeamAndDate, scrollRef, onScroll, filter, isLoading, socket }) => {
     const currentDate = new Date().toDateString();
-    const teamsList = useRecoilValue(teamsListState);
+    const allTeamsList = useRecoilValue(teamsListState);
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
         {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
-          const teamFound = teamsList.find((team) => team._id === teamId);
-          if ((filter !== 'all' && teamId !== filter) || !teamFound) return null;
+          const teamFound = allTeamsList.find((team) => team._id === teamId);
+          if (filter !== 'all' && teamId !== filter) return null;
           return (
             <Flex key={teamId} css={{ mb: '$24' }} direction="column">
               <Flex
