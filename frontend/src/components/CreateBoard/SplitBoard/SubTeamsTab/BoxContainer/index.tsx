@@ -7,7 +7,12 @@ type BoxContainerProps = {
 };
 
 const BoxContainer = ({ children, color }: BoxContainerProps) => (
-  <StyledBox direction="column" elevation="1" gap="2" css={{ background: color }}>
+  <StyledBox
+    direction="column"
+    elevation="1"
+    gap="2"
+    css={{ background: color, pb: '$10', pl: '$14' }}
+  >
     {children}
   </StyledBox>
 );
