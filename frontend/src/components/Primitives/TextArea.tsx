@@ -28,13 +28,14 @@ const StyledTextArea = styled('textarea', {
 
   fontSize: '$16',
   lineHeight: '$20',
-  resize: 'none',
+  resize: 'vertical',
   height: 'auto',
   boxShadow: '0',
   border: '1px solid $primary200',
   borderRadius: '$4',
   outline: 'none',
   fontWeight: 'normal',
+  whiteSpace: 'pre-line',
   width: '100%',
   pt: '$28',
   pb: '$8',
@@ -140,6 +141,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
       direction="column"
       ref={flexRef}
     >
+      <TextArea />
       <Flex>
         {floatPlaceholder && (
           <Flex>
