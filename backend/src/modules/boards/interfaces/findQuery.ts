@@ -33,5 +33,13 @@ export type QueryType = {
 				isSubBoard?: undefined;
 				updatedAt?: undefined;
 		  }
+		| {
+				_id: {
+					$in: LeanDocument<unknown>[];
+				};
+		  }
+		| {
+				team: string;
+		  }
 	)[];
 };

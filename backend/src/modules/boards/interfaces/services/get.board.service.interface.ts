@@ -15,6 +15,12 @@ export interface GetBoardServiceInterface {
 
 	getTeamBoards(teamId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
 
+	getPersonalUserBoards(
+		userId: string,
+		page?: number,
+		size?: number
+	): Promise<BoardsAndPage | null>;
+
 	getBoardFromRepo(boardId: string): Promise<LeanDocument<BoardDocument> | null>;
 
 	getBoard(

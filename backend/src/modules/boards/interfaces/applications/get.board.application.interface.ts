@@ -17,6 +17,8 @@ export interface GetBoardApplicationInterface {
 		size?: number
 	): Promise<BoardsAndPage | null>;
 
+	getPersonalBoards(userId?: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
+
 	getBoard(
 		boardId: string,
 		userId: string

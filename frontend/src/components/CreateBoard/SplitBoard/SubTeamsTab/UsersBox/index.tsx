@@ -11,7 +11,7 @@ type UsersBoxProps = {
 
 const UsersNames = ({ haveError, participants, title }: UsersBoxProps) => (
   <BoxContainer color="white">
-    <Text color="primary300" size="xs" css={{ pb: '$2', textAlign: 'start' }}>
+    <Text color="primary300" size="xs" css={{ textAlign: 'start' }}>
       {title}
     </Text>
     <Text
@@ -20,6 +20,7 @@ const UsersNames = ({ haveError, participants, title }: UsersBoxProps) => (
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textAlign: 'start',
+        height: '$64',
       }}
       size="md"
     >
