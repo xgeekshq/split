@@ -33,6 +33,10 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		return this.getBoardService.getUsersBoards(userId, page, size);
 	}
 
+	getPersonalBoards(userId?: string, page?: number, size?: number) {
+		return this.getBoardService.getPersonalUserBoards(userId, page, size);
+	}
+
 	getBoard(boardId: string, userId: string) {
 		return this.getBoardService.getBoard(boardId, userId);
 	}

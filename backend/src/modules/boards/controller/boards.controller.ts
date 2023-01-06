@@ -143,6 +143,30 @@ export default class BoardsController {
 		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
 	}
 
+	@ApiOperation({ summary: 'Retrieve personal boards from user' })
+	@ApiOkResponse({ type: BoardResponse, description: 'Personal boards' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get('/personal')
+	async getPersonalBoards(
+		@Req() request: RequestWithUser,
+		@Query() { page, size }: PaginationParams
+	) {
+		const { _id: userId } = request.user;
+
+		return this.getBoardApp.getPersonalBoards(userId, page, size);
+	}
+
 	@ApiOperation({ summary: 'Retrieve one board by id' })
 	@ApiParam({ type: String, name: 'boardId', required: true })
 	@ApiOkResponse({ type: BoardDto, description: 'Board retrieved successfully!' })
