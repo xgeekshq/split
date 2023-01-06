@@ -121,6 +121,7 @@ const useCards = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
         content: 'Error adding the card',
@@ -145,6 +146,7 @@ const useCards = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
         content: 'Error updating the card position',
@@ -169,6 +171,7 @@ const useCards = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
         content: 'Error updating the card',
@@ -199,6 +202,7 @@ const useCards = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
         content: 'Error deleting the card',
@@ -238,6 +242,7 @@ const useCards = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setMergeCard(undefined);
       setToastState({
         open: true,
@@ -262,6 +267,7 @@ const useCards = () => {
       queryClient.invalidateQueries(getBoardQuery(data?._id));
     },
     onError: (data, variables, context) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setPreviousBoardQuery(variables.boardId, context);
       setToastState({
         open: true,

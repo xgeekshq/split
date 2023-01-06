@@ -89,7 +89,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			 */
 			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
 				...dividedBoard,
-				team
+				team,
+				slackEnable: boardData.slackEnable
 			}));
 
 			return this.boardModel.create({
@@ -238,7 +239,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
-				`${team.name}-mainboard-${configs.date?.getUTCDay()}-${new Intl.DateTimeFormat('en-US', {
+				`${team.name}-mainboard-${new Intl.DateTimeFormat('en-US', {
 					month: 'long'
 				}).format(configs.date)}-${configs.date?.getFullYear()}`
 			).board,
@@ -281,10 +282,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users
 			.map((user) => {
-				user.userCreated =
-					(user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt;
-
-				return user;
+				return {
+					...user,
+					userCreated: (user.user as User).providerAccountCreatedAt || (user.user as User).joinedAt
+				};
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 

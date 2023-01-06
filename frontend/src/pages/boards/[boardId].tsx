@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
@@ -24,10 +24,13 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
+import { GetBoardResponse } from '@/types/board/board';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
   const queryClient = new QueryClient();
+
+  const session = await getSession(context);
 
   if (boardId.includes('.map'))
     return {
@@ -38,6 +41,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
+    const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
+    const boardUser = data?.board?.users.find((user) => user.user._id === session?.user.id);
+
+    const teamUserFound = data?.board.isSubBoard
+      ? data.mainBoardData.team.users.find((teamUser) => teamUser.user._id === session?.user.id)
+      : data?.board.team.users.find((teamUser) => teamUser.user._id === session?.user.id);
+
+    if (!boardUser && teamUserFound?.role === TeamUserRoles.MEMBER && !session?.user.isSAdmin) {
+      throw Error();
+    }
   } catch (e) {
     return {
       redirect: {

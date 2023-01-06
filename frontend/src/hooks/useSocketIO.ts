@@ -19,7 +19,6 @@ export const useSocketIO = (boardId: string): string | undefined => {
     });
 
     newSocket.on('updateAllBoard', () => {
-      console.log('UPDATE ALL BOARD');
       queryClient.invalidateQueries(['board', { id: boardId }]);
     });
 

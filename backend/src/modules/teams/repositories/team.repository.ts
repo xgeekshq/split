@@ -23,7 +23,7 @@ export class TeamRepository
 				select: 'user role isNewJoiner',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
 			}
 		);
@@ -33,10 +33,10 @@ export class TeamRepository
 		return this.findAllWithQuery({ _id: { $in: teamIds } }, { _id: 1, name: 1 }, [
 			{
 				path: 'users',
-				select: 'user role',
+				select: 'user role isNewJoiner',
 				populate: {
 					path: 'user',
-					select: '_id firstName lastName email joinedAt'
+					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
 			},
 			{
@@ -52,7 +52,7 @@ export class TeamRepository
 			select: 'user role email',
 			populate: {
 				path: 'user',
-				select: '_id firstName lastName email joinedAt'
+				select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 			}
 		});
 	}

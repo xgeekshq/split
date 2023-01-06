@@ -51,7 +51,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 			month: 'long'
 		});
 
-		const generalText = `<!channel> In order to proceed with the retro of this month, here are the random teams: \n\n
+		const generalText = `<!channel> \n*${teams[0].name} monthly-${until}* \nIn order to proceed with the retro of this month, here are the random teams: \n\n
     ${textGeneralTeams} \n
     Each team has a *random* selected responsible, in order to create the board, organize the retro and everything else that is described in the doc(https://confluence.kigroup.de/display/OX/Retro) :eyes: :thumbsup:\n\n
     This must be done until \`${until} 1st\`\n\n

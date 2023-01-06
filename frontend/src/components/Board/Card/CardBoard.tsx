@@ -57,7 +57,10 @@ const CardBoard = React.memo<CardBoardProps>(
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
-      () => (card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card)),
+      () =>
+        [
+          ...(card.items.length === 1 ? card.items[0].comments : getCommentsFromCardGroup(card)),
+        ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
       [card],
     );
 
@@ -158,7 +161,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         <Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
                       )}
 
-                      {!isSubmited && userId === card?.createdBy?._id && (
+                      {!isSubmited && (userId === card?.createdBy?._id || !hideCards) && (
                         <PopoverCardSettings
                           boardId={boardId}
                           cardGroupId={card._id}

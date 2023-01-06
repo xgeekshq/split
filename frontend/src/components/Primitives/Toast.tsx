@@ -37,7 +37,7 @@ const StyledToast = styled(ToastPrimitive.Root, {
   boxShadow: '0px 4px 16px -4px rgba(18, 25, 34, 0.2)',
   display: 'flex',
   height: '$56',
-  width: '$455',
+  width: '$362',
   justifyContent: 'space-between',
   alignItems: 'center',
   direction: 'raw',

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { InfiniteData, useMutation, useQuery } from 'react-query';
 import { useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
 
@@ -11,6 +11,7 @@ import {
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import BoardType from '@/types/board/board';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -27,6 +28,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     enabled: autoFetchBoard,
     refetchOnWindowFocus: false,
     onError: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
       setToastState({
         open: true,
         content: 'Error getting the board',
@@ -47,8 +49,32 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const deleteBoard = useMutation(deleteBoardRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('boards');
+    onSuccess: (data, variables) => {
+      queryClient.setQueryData(
+        ['boards'],
+        (
+          oldData:
+            | InfiniteData<{
+                boards: BoardType[];
+                hasNextPage: boolean;
+                page: number;
+              }>
+            | undefined,
+        ) => {
+          if (!oldData) return { pages: [], pageParams: [] };
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              boards: page.boards.filter((board) => board._id !== variables.id),
+            })),
+          };
+        },
+      );
+
+      queryClient.invalidateQueries(['boards']);
+
       setToastState({
         open: true,
         content: 'The board was successfully deleted.',

@@ -70,6 +70,7 @@ const useComments = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
         content: 'Error updating the comment',
@@ -89,11 +90,12 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(['board', { id: data?._id }]);
+    onSettled: (data, _, variables) => {
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
         content: 'Error updating the comment',
@@ -118,6 +120,7 @@ const useComments = () => {
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
+      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
         content: 'Error updating the comment',

@@ -58,7 +58,11 @@ function Root({
               </RecoilRoot>
               <ToastViewport
                 css={{
-                  paddingRight: router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56,
+                  left: router.asPath === ROUTES.START_PAGE_ROUTE ? '0' : 'none',
+                  right: router.asPath === ROUTES.START_PAGE_ROUTE ? 'none' : 0,
+                  top: router.asPath === ROUTES.START_PAGE_ROUTE ? 'calc(10% + 60px)' : '$106',
+                  paddingRight: router.asPath === ROUTES.START_PAGE_ROUTE ? 0 : 56,
+                  paddingLeft: router.asPath === ROUTES.START_PAGE_ROUTE ? '$72' : 0,
                 }}
               />
             </ToastProvider>

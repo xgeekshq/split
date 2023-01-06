@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	HttpStatus,
 	Inject,
 	Param,
 	Post,
@@ -274,10 +275,10 @@ export default class CommentsController {
 		const board = await this.deleteCommentApp.deleteItemComment(
 			boardId,
 			commentId,
-			request.user._id
+			request.user._id.toString()
 		);
 
-		if (!board) {
+		if (board.modifiedCount !== 1) {
 			throw new BadRequestException(DELETE_FAILED);
 		}
 
@@ -285,7 +286,7 @@ export default class CommentsController {
 			this.socketService.sendUpdatedBoard(boardId, socketId);
 		}
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Delete a comment in a card' })
@@ -320,10 +321,10 @@ export default class CommentsController {
 		const board = await this.deleteCommentApp.deleteCardGroupComment(
 			boardId,
 			commentId,
-			request.user._id
+			request.user._id.toString()
 		);
 
-		if (!board) {
+		if (board.modifiedCount !== 1) {
 			throw new BadRequestException(DELETE_FAILED);
 		}
 
@@ -331,6 +332,6 @@ export default class CommentsController {
 			this.socketService.sendUpdatedBoard(boardId, socketId);
 		}
 
-		return board;
+		return HttpStatus.OK;
 	}
 }

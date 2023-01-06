@@ -4,7 +4,9 @@ import User from 'src/modules/users/entities/user.schema';
 
 export type CommentDocument = Comment & mongoose.Document;
 
-@Schema()
+@Schema({
+	timestamps: true
+})
 export default class Comment {
 	@Prop({ nullable: false })
 	text!: string;

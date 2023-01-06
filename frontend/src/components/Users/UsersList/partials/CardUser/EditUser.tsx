@@ -9,18 +9,20 @@ type EditUserProps = { user: User };
 const EditUser: React.FC<EditUserProps> = ({ user }) => (
   <Flex pointer>
     <Link href={ROUTES.UserEdit(user._id)}>
-      <Icon
-        name="edit"
-        css={{
-          color: '$primary400',
-          width: '$20',
-          height: '$20',
-          '&:hover': {
-            backgroundColor: '#d7e0e0',
-            borderRadius: '1em',
-          },
-        }}
-      />
+      <Flex>
+        <Icon
+          name="edit"
+          css={{
+            color: '$primary400',
+            width: '$20',
+            height: '$20',
+            '&:hover': {
+              backgroundColor: '#d7e0e0',
+              borderRadius: '1em',
+            },
+          }}
+        />
+      </Flex>
     </Link>
   </Flex>
 );

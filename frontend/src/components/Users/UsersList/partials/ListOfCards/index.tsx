@@ -4,7 +4,6 @@ import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
 import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
 import { useSetRecoilState } from 'recoil';
-// import { usersWithTeamsState } from '@/store/user/atoms/user.atom';
 import { useInfiniteQuery } from 'react-query';
 import { getAllUsersWithTeams } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -15,7 +14,7 @@ import CardBody from '../CardUser/CardBody';
 
 const ListOfCards = React.memo(() => {
   const setToastState = useSetRecoilState(toastState);
-  // const setUsersWithTeamsState = useSetRecoilState(usersWithTeamsState);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState<string>('');
 
@@ -41,10 +40,6 @@ const ListOfCards = React.memo(() => {
   );
 
   const { data, isLoading } = fetchUsers;
-
-  // if (data) {
-  //   setUsersWithTeamsState(data?.pages[0].userWithTeams);
-  // }
 
   const users = useMemo(() => {
     const usersArray: UserWithTeams[] = [];

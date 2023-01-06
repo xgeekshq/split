@@ -85,15 +85,14 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
               width: '$32',
               height: '$32',
               zIndex: 1,
+              flexShrink: 0,
             }}
           />
 
-          <Flex align="center" gap="8">
-            <CardTitle teamId={id} title={team.name} isTeamPage={isTeamPage} />
-          </Flex>
+          <CardTitle teamId={id} title={team.name} isTeamPage={isTeamPage} />
         </Flex>
 
-        <Flex align="center" css={{ justifyContent: 'start', width: '$683' }} gap="8">
+        <Flex align="center" css={{ justifyContent: 'start', pl: '$10' }} gap="8">
           <Flex align="center" css={{ width: '$160' }}>
             <Text color="primary300" size="sm">
               Members

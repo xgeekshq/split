@@ -7,14 +7,14 @@ import {
   ImageBackground,
 } from '@/styles/pages/error.styles';
 
-import Banner from '@/components/icons/Banner';
 import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text';
+import SecondaryBanner from '@/components/icons/SecondaryBanner';
 
 const Custom500 = () => (
   <ImageBackground>
     <BannerContainer>
-      <Banner />
+      <SecondaryBanner />
     </BannerContainer>
 
     <ContainerSection>

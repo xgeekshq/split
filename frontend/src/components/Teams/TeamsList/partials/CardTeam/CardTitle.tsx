@@ -14,6 +14,11 @@ const StyledBoardTitle = styled(Text, {
   fontWeight: '$bold',
   fontSize: '$14',
   letterSpacing: '$0-17',
+  wordBreak: 'break-word',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  maxWidth: '$260',
   '&[data-disabled="true"]': { opacity: 0.4 },
   '@hover': {
     '&:hover': {

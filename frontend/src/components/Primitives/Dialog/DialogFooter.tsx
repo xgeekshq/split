@@ -12,7 +12,7 @@ const Footer: React.FC<FooterProps> = (props) => {
   const { children, handleAffirmative, setIsOpen, affirmativeLabel, buttonRef } = props;
 
   return (
-    <ButtonsContainer gap={24} align="center" justify="end">
+    <ButtonsContainer gap={24} align="center" justify="end" css={{ backgroundColor: '$white' }}>
       {children}
       <Button
         css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
