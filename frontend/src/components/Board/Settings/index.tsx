@@ -109,24 +109,22 @@ const BoardSettings = ({
    * if yes set the input with this value
    */
   useEffect(() => {
-    if (board) {
-      setData((prev) => ({
-        ...prev,
-        title: board.title,
-        maxVotes: board.maxVotes,
-        hideCards: board.hideCards,
-        hideVotes: board.hideVotes,
-      }));
-      methods.setValue('title', board.title);
-      methods.setValue('maxVotes', board.maxVotes ?? null);
+    setData((prev) => ({
+      ...prev,
+      title: board.title,
+      maxVotes: board.maxVotes,
+      hideCards: board.hideCards,
+      hideVotes: board.hideVotes,
+    }));
+    methods.setValue('title', board.title);
+    methods.setValue('maxVotes', board.maxVotes ?? null);
 
-      setSwitchesState((prev) => ({
-        ...prev,
-        hideVotes: board.hideVotes,
-        hideCards: board.hideCards,
-        maxVotes: !isEmpty(board.maxVotes),
-      }));
-    }
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideVotes: board.hideVotes,
+      hideCards: board.hideCards,
+      maxVotes: !isEmpty(board.maxVotes),
+    }));
   }, [board, isOpen, methods]);
 
   const handleHideCardsChange = () => {
