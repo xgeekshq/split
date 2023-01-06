@@ -54,7 +54,7 @@ const ListBoards = React.memo<ListBoardsProps>(
               <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
                 <Link
                   href={{
-                    pathname: `/boards/new`,
+                    pathname: teamId === 'personal' ? `/boards/newRegularBoard` : `/boards/new`,
                     query: { team: teamId },
                   }}
                 >

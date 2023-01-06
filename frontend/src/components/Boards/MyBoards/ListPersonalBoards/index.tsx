@@ -8,7 +8,9 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import { Socket } from 'socket.io-client';
+import Flex from '@/components/Primitives/Flex';
 import ListBoards from '../ListBoards';
+import EmptyPersonalBoards from './EmptyPersonalBoards.tsx';
 
 interface ListBoardsByTeamProps {
   userId: string;
@@ -42,42 +44,24 @@ const ListPersonalBoards = ({ userId, isSuperAdmin, socket }: ListBoardsByTeamPr
   );
   const { data, isLoading } = fetchBoardsByTeam;
 
-  //   const personalBoards = useMemo(() => {
-  //     const teams = new Map<string, Team>();
-  //     const boardsAndDate = new Map<string, BoardType[]>;
-
-  //     data?.pages.forEach((page) => {
-  //       page.boards?.forEach((board) => {
-  //         boards.push(board);
-  //         const date = new Date(board.updatedAt).toDateString();
-  //         if (!boardsOfTeam) {
-  //           boardsTeamAndDate.set(`personal`, new Map([[date, [board]]]));
-  //           return;
-  //         }
-  //         const boardsOfDay = boardsOfTeam.get(date);
-  //         if (boardsOfDay) {
-  //           boardsOfDay.push(board);
-  //           return;
-  //         }
-  //         boardsOfTeam.set(date, [board]);
-  //       });
-  //     });
-  //     return { boards, teams };
-  //   }, [data?.pages]);
-
   const dataByTeamAndDate = useMemo(() => {
     const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
+        const boardsOfTeam = boardsTeamAndDate.get('personal');
         const date = new Date(board.updatedAt).toDateString();
-        const boardsOfPersonal = boardsTeamAndDate.get('personal');
-        if (!boardsOfPersonal) {
+        if (!boardsOfTeam) {
           boardsTeamAndDate.set('personal', new Map([[date, [board]]]));
           return;
         }
-        boardsOfPersonal.set(date, [board]);
+        const boardsOfDay = boardsOfTeam.get(date);
+        if (boardsOfDay) {
+          boardsOfDay.push(board);
+          return;
+        }
+        boardsOfTeam.set(date, [board]);
       });
     });
     return { boardsTeamAndDate, teams };
@@ -92,30 +76,13 @@ const ListPersonalBoards = ({ userId, isSuperAdmin, socket }: ListBoardsByTeamPr
     }
   };
 
-  //   if (personalBoards.length === 0 && !isLoading) {
-  //     return (
-  //       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-  //         <Flex key="personal" css={{ mb: '$24' }} direction="column">
-  //           <Flex
-  //             direction="column"
-  //             css={{
-  //               position: 'sticky',
-  //               zIndex: '5',
-  //               top: '-0.4px',
-  //               backgroundColor: '$background',
-  //             }}
-  //           >
-  //             <TeamHeader
-  //               team={dataByTeamAndDate.boardsTeamAndDate.get('personal')}
-  //               userId={userId}
-  //               users={filteredTeam.users}
-  //             />
-  //           </Flex>
-  //           <EmptyPersonalBoards />
-  //         </Flex>
-  //       </ScrollableContent>
-  //     );
-  //   }
+  if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
+    return (
+      <Flex key="personal" css={{ mb: '$24' }} direction="column">
+        <EmptyPersonalBoards />
+      </Flex>
+    );
+  }
 
   return (
     <ListBoards

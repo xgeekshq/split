@@ -136,17 +136,18 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
       {filterState === 'personal' && (
         <ListPersonalBoards userId={userId} isSuperAdmin={isSuperAdmin} socket={socket} />
       )}
-
-      <ListBoards
-        userId={userId}
-        isSuperAdmin={isSuperAdmin}
-        dataByTeamAndDate={dataByTeamAndDate}
-        scrollRef={scrollRef}
-        onScroll={onScroll}
-        filter={filterState}
-        isLoading={isLoading}
-        socket={socket}
-      />
+      {filterState === 'all' && (
+        <ListBoards
+          userId={userId}
+          isSuperAdmin={isSuperAdmin}
+          dataByTeamAndDate={dataByTeamAndDate}
+          scrollRef={scrollRef}
+          onScroll={onScroll}
+          filter={filterState}
+          isLoading={isLoading}
+          socket={socket}
+        />
+      )}
     </>
   );
 });
