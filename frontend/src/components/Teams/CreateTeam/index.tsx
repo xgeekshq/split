@@ -31,6 +31,7 @@ const CreateTeam = () => {
   } = useTeam();
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
+  const [isSubmitButtonDisable, setSubmitButtonState] = useState(false);
 
   const listMembers = useRecoilValue(membersListState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
@@ -95,6 +96,7 @@ const CreateTeam = () => {
             direction="column"
             onSubmit={methods.handleSubmit(({ text }) => {
               saveTeam(text);
+              setSubmitButtonState(true);
             })}
           >
             <InnerContent direction="column">
@@ -112,14 +114,7 @@ const CreateTeam = () => {
               >
                 Cancel
               </Button>
-              <Button
-                disabled={
-                  !['success', 'idle'].includes(status) ||
-                  ((methods.formState.isSubmitting || methods.formState.isSubmitted) &&
-                    !methods.formState.errors)
-                }
-                type="submit"
-              >
+              <Button disabled={isSubmitButtonDisable} type="submit">
                 Create team
               </Button>
             </ButtonsContainer>
