@@ -65,7 +65,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
             }}
           />
 
-          <Flex align="center" css={{ width: '$147' }} gap="8">
+          <Flex align="center" gap="8">
             {loggedUserIsSAdmin ? (
               <Link href={ROUTES.UserEdit(user._id)}>
                 <Flex>
@@ -81,7 +81,10 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
                     fontSize: '$14',
                     letterSpacing: '$0-17',
                     cursor: 'default',
-                    overflow: 'auto',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    maxWidth: '$260',
                   }}
                   size="sm"
                 >
@@ -91,7 +94,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
             )}
           </Flex>
 
-          <Flex align="center" css={{ width: '$147', pl: '$10' }}>
+          <Flex align="center" css={{ width: '$147', pl: '$36' }}>
             <Text color="primary300" size="sm">
               {email}
             </Text>
