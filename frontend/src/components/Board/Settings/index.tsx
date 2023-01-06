@@ -65,15 +65,23 @@ const BoardSettings = ({
     maxVotes: board?.maxVotes,
     users: board?.users,
   };
+
   const [data, setData] = useState<UpdateBoardType>(initialData);
 
   // References
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
   // Unique state to handle the switches change
-  const [switchesState, setSwitchesState] = useState<{ maxVotes: boolean; responsible: boolean }>({
+  const [switchesState, setSwitchesState] = useState<{
+    maxVotes: boolean;
+    responsible: boolean;
+    hideCards: boolean;
+    hideVotes: boolean;
+  }>({
     maxVotes: false,
     responsible: false,
+    hideCards: false,
+    hideVotes: false,
   });
 
   // User Board Hook
@@ -101,32 +109,45 @@ const BoardSettings = ({
    * if yes set the input with this value
    */
   useEffect(() => {
-    if (!isOpen && board) {
+    if (board) {
       setData((prev) => ({
         ...prev,
-        title: board?.title,
-        maxVotes: board?.maxVotes,
+        title: board.title,
+        maxVotes: board.maxVotes,
+        hideCards: board.hideCards,
+        hideVotes: board.hideVotes,
       }));
       methods.setValue('title', board.title);
       methods.setValue('maxVotes', board.maxVotes ?? null);
 
-      setSwitchesState((prev) => ({ ...prev, maxVotes: !isEmpty(board.maxVotes) }));
+      setSwitchesState((prev) => ({
+        ...prev,
+        hideVotes: board.hideVotes,
+        hideCards: board.hideCards,
+        maxVotes: !isEmpty(board.maxVotes),
+      }));
     }
+  }, [board, isOpen, methods]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board, isOpen]);
-
-  const handleHideCardsChange = (checked: boolean) => {
+  const handleHideCardsChange = () => {
     setData((prev) => ({
       ...prev,
-      hideCards: checked,
+      hideCards: !prev.hideCards,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideCards: !prev.hideCards,
     }));
   };
 
-  const handleHideVotesChange = (checked: boolean) => {
+  const handleHideVotesChange = () => {
     setData((prev) => ({
       ...prev,
-      hideVotes: checked,
+      hideVotes: !prev.hideVotes,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideVotes: !prev.hideVotes,
     }));
   };
 
@@ -162,7 +183,13 @@ const BoardSettings = ({
         socketId,
       },
       {
-        onSuccess: () => setSwitchesState({ maxVotes: false, responsible: false }),
+        onSuccess: () =>
+          setSwitchesState({
+            hideCards: false,
+            maxVotes: false,
+            hideVotes: false,
+            responsible: false,
+          }),
       },
     );
     setIsOpen(false);
@@ -259,7 +286,7 @@ const BoardSettings = ({
                     <Flex direction="column" gap={16}>
                       <ConfigurationSettings
                         handleCheckedChange={handleHideCardsChange}
-                        isChecked={data.hideCards}
+                        isChecked={switchesState.hideCards}
                         text="Participants can not see the cards from other participants of this retrospective."
                         title="Hide cards from others"
                       />
@@ -268,7 +295,7 @@ const BoardSettings = ({
                         <>
                           <ConfigurationSettings
                             handleCheckedChange={handleHideVotesChange}
-                            isChecked={data.hideVotes}
+                            isChecked={switchesState.hideVotes}
                             text="Participants can not see the votes from other participants of this retrospective."
                             title="Hide votes from others"
                           />
