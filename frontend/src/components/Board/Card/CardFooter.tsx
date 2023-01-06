@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -148,6 +148,10 @@ const CardFooter = React.memo<FooterProps>(
         setMaxVotesReached(userVotes + 1 === maxVotes);
       }
     };
+
+    useEffect(() => {
+      setMaxVotesReached(user?.votesCount === maxVotes);
+    }, [maxVotes, setMaxVotesReached, user?.votesCount]);
 
     return (
       <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
