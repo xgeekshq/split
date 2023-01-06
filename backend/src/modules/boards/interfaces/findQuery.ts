@@ -9,7 +9,6 @@ export type QueryType = {
 					$gte: number;
 				};
 				$or?: undefined;
-				$and?: undefined;
 		  }
 		| {
 				$or: (
