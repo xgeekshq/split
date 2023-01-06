@@ -29,7 +29,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
 
 	getAllBoardsIdsOfUser(userId: string) {
-		return this.boardModel.find({ user: userId }).select('board').lean().exec();
+		return this.boardUserModel.find({ user: userId }).select('board').lean().exec();
 	}
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
@@ -38,7 +38,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			this.getTeamService.getTeamsOfUser(userId)
 		]);
 
-		return { boardIds, teamIds: teamIds.map((team) => team._id) };
+		return {
+			boardIds: boardIds.map((boardUser) => boardUser.board),
+			teamIds: teamIds.map((team) => team._id)
+		};
 	}
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
@@ -91,7 +94,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		const { boardIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 
 		const query = {
-			$and: [{ isSubBoard: false }, { $or: [{ _id: { $in: boardIds } }, { team: { $type: 10 } }] }] //`$type: 10` means team is null
+			$and: [{ isSubBoard: false }, { team: null }, { _id: { $in: boardIds } }]
 		};
 
 		return this.getBoards(false, query, page, size);

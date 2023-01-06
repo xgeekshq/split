@@ -9,6 +9,7 @@ export type QueryType = {
 					$gte: number;
 				};
 				$or?: undefined;
+				$and?: undefined;
 		  }
 		| {
 				$or: (
@@ -21,7 +22,6 @@ export type QueryType = {
 					| {
 							team: {
 								$in?: Team[] | string[];
-								$type?: number;
 								$ne?: undefined | null;
 							};
 							_id?: undefined;
@@ -33,6 +33,14 @@ export type QueryType = {
 				)[];
 				isSubBoard?: undefined;
 				updatedAt?: undefined;
+		  }
+		| {
+				_id: {
+					$in: LeanDocument<unknown>[];
+				};
+		  }
+		| {
+				team: string;
 		  }
 	)[];
 };
