@@ -17,7 +17,17 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
   return (
     <Flex align="center" css={{ mb: '$16' }} justify="between">
       <Flex align="center">
-        <Text heading="5">{hasTeam ? team.name : 'My boards'}</Text>
+        <Text
+          css={{
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            maxWidth: '$260',
+          }}
+          heading="5"
+        >
+          {hasTeam ? team.name : 'My boards'}
+        </Text>
         {hasTeam && (
           <Flex align="center" css={{ ml: '$24' }} gap="12">
             <Flex align="center" gap="8">
