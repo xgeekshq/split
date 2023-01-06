@@ -5,7 +5,9 @@ const ScrollableContent = styled(Flex, {
   mt: '$24',
   maxHeight: 'calc(100vh - 180px)',
   overflowY: 'auto',
-  pb: '$10',
+  pb: '$40',
+  pr: '$10',
+  mb: '$10',
 });
 
 export { ScrollableContent };

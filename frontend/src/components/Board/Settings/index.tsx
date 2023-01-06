@@ -54,26 +54,44 @@ const BoardSettings = ({
   isResponsible,
 }: Props) => {
   // Recoil State used on [boardId].tsx
-  const { board } = useRecoilValue(boardInfoState);
+  const {
+    board: {
+      maxVotes: boardMaxVotes,
+      title: boardTitle,
+      _id,
+      hideCards,
+      hideVotes,
+      users,
+      isSubBoard,
+    },
+  } = useRecoilValue(boardInfoState);
 
   // State used to change values
   const initialData: UpdateBoardType = {
-    _id: board?._id,
-    hideCards: board?.hideCards,
-    hideVotes: board?.hideVotes,
-    title: board?.title,
-    maxVotes: board?.maxVotes,
-    users: board?.users,
+    _id,
+    hideCards,
+    hideVotes,
+    title: boardTitle,
+    maxVotes: boardMaxVotes,
+    users,
   };
+
   const [data, setData] = useState<UpdateBoardType>(initialData);
 
   // References
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
   // Unique state to handle the switches change
-  const [switchesState, setSwitchesState] = useState<{ maxVotes: boolean; responsible: boolean }>({
+  const [switchesState, setSwitchesState] = useState<{
+    maxVotes: boolean;
+    responsible: boolean;
+    hideCards: boolean;
+    hideVotes: boolean;
+  }>({
     maxVotes: false,
     responsible: false,
+    hideCards: false,
+    hideVotes: false,
   });
 
   // User Board Hook
@@ -101,32 +119,43 @@ const BoardSettings = ({
    * if yes set the input with this value
    */
   useEffect(() => {
-    if (!isOpen && board) {
-      setData((prev) => ({
-        ...prev,
-        title: board?.title,
-        maxVotes: board?.maxVotes,
-      }));
-      methods.setValue('title', board.title);
-      methods.setValue('maxVotes', board.maxVotes ?? null);
-
-      setSwitchesState((prev) => ({ ...prev, maxVotes: !isEmpty(board.maxVotes) }));
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [board, isOpen]);
-
-  const handleHideCardsChange = (checked: boolean) => {
     setData((prev) => ({
       ...prev,
-      hideCards: checked,
+      title: boardTitle,
+      maxVotes: boardMaxVotes,
+      hideCards,
+      hideVotes,
+    }));
+    methods.setValue('title', boardTitle);
+    methods.setValue('maxVotes', boardMaxVotes ?? null);
+
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideVotes,
+      hideCards,
+      maxVotes: !isEmpty(boardMaxVotes),
+    }));
+  }, [boardMaxVotes, boardTitle, hideCards, hideVotes, isOpen, methods]);
+
+  const handleHideCardsChange = () => {
+    setData((prev) => ({
+      ...prev,
+      hideCards: !prev.hideCards,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideCards: !prev.hideCards,
     }));
   };
 
-  const handleHideVotesChange = (checked: boolean) => {
+  const handleHideVotesChange = () => {
     setData((prev) => ({
       ...prev,
-      hideVotes: checked,
+      hideVotes: !prev.hideVotes,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      hideVotes: !prev.hideVotes,
     }));
   };
 
@@ -162,7 +191,13 @@ const BoardSettings = ({
         socketId,
       },
       {
-        onSuccess: () => setSwitchesState({ maxVotes: false, responsible: false }),
+        onSuccess: () =>
+          setSwitchesState({
+            hideCards: false,
+            maxVotes: false,
+            hideVotes: false,
+            responsible: false,
+          }),
       },
     );
     setIsOpen(false);
@@ -259,16 +294,16 @@ const BoardSettings = ({
                     <Flex direction="column" gap={16}>
                       <ConfigurationSettings
                         handleCheckedChange={handleHideCardsChange}
-                        isChecked={data.hideCards}
+                        isChecked={switchesState.hideCards}
                         text="Participants can not see the cards from other participants of this retrospective."
                         title="Hide cards from others"
                       />
 
-                      {!board.isSubBoard && (
+                      {!isSubBoard && (
                         <>
                           <ConfigurationSettings
                             handleCheckedChange={handleHideVotesChange}
-                            isChecked={data.hideVotes}
+                            isChecked={switchesState.hideVotes}
                             text="Participants can not see the votes from other participants of this retrospective."
                             title="Hide votes from others"
                           />
@@ -293,105 +328,104 @@ const BoardSettings = ({
                   </StyledAccordionContent>
                 </StyledAccordionItem>
 
-                {board.isSubBoard &&
-                  (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
-                    <StyledAccordionItem value="responsible">
-                      <StyledAccordionHeader>
-                        <StyledAccordionTrigger>
-                          <Text heading="5">Team Responsible</Text>
-                          <StyledAccordionIcon name="arrow-down" />
-                        </StyledAccordionTrigger>
-                      </StyledAccordionHeader>
-                      <StyledAccordionContent>
-                        <Flex direction="column" gap={16}>
-                          <ConfigurationSettings
-                            isChecked={switchesState.responsible}
-                            text="Change responsible participant for this board."
-                            title="Team Responsible"
-                            handleCheckedChange={handleResponsibleChange}
+                {isSubBoard && (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
+                  <StyledAccordionItem value="responsible">
+                    <StyledAccordionHeader>
+                      <StyledAccordionTrigger>
+                        <Text heading="5">Team Responsible</Text>
+                        <StyledAccordionIcon name="arrow-down" />
+                      </StyledAccordionTrigger>
+                    </StyledAccordionHeader>
+                    <StyledAccordionContent>
+                      <Flex direction="column" gap={16}>
+                        <ConfigurationSettings
+                          isChecked={switchesState.responsible}
+                          text="Change responsible participant for this board."
+                          title="Team Responsible"
+                          handleCheckedChange={handleResponsibleChange}
+                        >
+                          <Flex
+                            align="center"
+                            css={{
+                              mt: '$10',
+                              opacity: !switchesState.responsible ? '40%' : 'unset',
+                              pointerEvents: !switchesState.responsible ? 'none' : 'unset',
+                              transition: 'all 0.25s ease-in-out',
+                            }}
                           >
-                            <Flex
-                              align="center"
+                            <Text
                               css={{
-                                mt: '$10',
-                                opacity: !switchesState.responsible ? '40%' : 'unset',
-                                pointerEvents: !switchesState.responsible ? 'none' : 'unset',
-                                transition: 'all 0.25s ease-in-out',
+                                mr: '$8',
+                                color: '$primary300',
                               }}
                             >
-                              <Text
+                              Responsible Lottery
+                            </Text>
+                            <Separator
+                              orientation="vertical"
+                              css={{
+                                '&[data-orientation=vertical]': {
+                                  height: '$12',
+                                  width: 1,
+                                },
+                              }}
+                            />
+
+                            <Flex
+                              align="center"
+                              justify="center"
+                              css={{
+                                height: '$24',
+                                width: '$24',
+                                borderRadius: '$round',
+                                border: '1px solid $colors$primary400',
+                                ml: '$12',
+                                cursor: switchesState.responsible ? 'pointer' : 'default',
+
+                                transition: 'all 0.2s ease-in-out',
+
+                                '&:hover': switchesState.responsible
+                                  ? {
+                                      backgroundColor: '$primary400',
+                                      color: 'white',
+                                    }
+                                  : 'none',
+                              }}
+                              onClick={handleRandomResponsible}
+                            >
+                              <Icon
+                                name="wand"
                                 css={{
-                                  mr: '$8',
-                                  color: '$primary300',
+                                  width: '$12',
+                                  height: '$12',
                                 }}
-                              >
-                                Responsible Lottery
-                              </Text>
-                              <Separator
-                                orientation="vertical"
-                                css={{
-                                  '&[data-orientation=vertical]': {
-                                    height: '$12',
-                                    width: 1,
-                                  },
-                                }}
-                              />
-
-                              <Flex
-                                align="center"
-                                justify="center"
-                                css={{
-                                  height: '$24',
-                                  width: '$24',
-                                  borderRadius: '$round',
-                                  border: '1px solid $colors$primary400',
-                                  ml: '$12',
-                                  cursor: switchesState.responsible ? 'pointer' : 'default',
-
-                                  transition: 'all 0.2s ease-in-out',
-
-                                  '&:hover': switchesState.responsible
-                                    ? {
-                                        backgroundColor: '$primary400',
-                                        color: 'white',
-                                      }
-                                    : 'none',
-                                }}
-                                onClick={handleRandomResponsible}
-                              >
-                                <Icon
-                                  name="wand"
-                                  css={{
-                                    width: '$12',
-                                    height: '$12',
-                                  }}
-                                />
-                              </Flex>
-
-                              <Text color="primary800" css={{ mx: '$8' }} size="sm">
-                                {!responsible
-                                  ? 'Responsible not found!'
-                                  : `${responsible?.firstName} ${responsible?.lastName}`}
-                              </Text>
-
-                              <Avatar
-                                css={{ position: 'relative' }}
-                                size={32}
-                                colors={{
-                                  bg: '$highlight2Lighter',
-                                  fontColor: '$highlight2Dark',
-                                }}
-                                fallbackText={getInitials(
-                                  responsible?.firstName ?? '-',
-                                  responsible?.lastName ?? '-',
-                                )}
                               />
                             </Flex>
-                          </ConfigurationSettings>
-                        </Flex>
-                      </StyledAccordionContent>
-                    </StyledAccordionItem>
-                  )}
+
+                            <Text color="primary800" css={{ mx: '$8' }} size="sm">
+                              {!responsible
+                                ? 'Responsible not found!'
+                                : `${responsible?.firstName} ${responsible?.lastName}`}
+                            </Text>
+
+                            <Avatar
+                              css={{ position: 'relative' }}
+                              size={32}
+                              colors={{
+                                bg: '$highlight2Lighter',
+                                fontColor: '$highlight2Dark',
+                              }}
+                              fallbackText={getInitials(
+                                responsible?.firstName ?? '-',
+                                responsible?.lastName ?? '-',
+                              )}
+                            />
+                          </Flex>
+                        </ConfigurationSettings>
+                      </Flex>
+                    </StyledAccordionContent>
+                  </StyledAccordionItem>
+                )}
               </Accordion>
             </Flex>
             <Dialog.Footer setIsOpen={setIsOpen} affirmativeLabel="Save" buttonRef={submitBtnRef} />
