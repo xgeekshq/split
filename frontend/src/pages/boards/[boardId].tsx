@@ -48,8 +48,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ? data.mainBoardData.team.users.find((teamUser) => teamUser.user._id === session?.user.id)
       : data?.board.team.users.find((teamUser) => teamUser.user._id === session?.user.id);
 
-    console.log(teamUserFound);
-
     if (!boardUser && teamUserFound?.role === TeamUserRoles.MEMBER && !session?.user.isSAdmin) {
       throw Error();
     }

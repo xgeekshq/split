@@ -58,8 +58,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
   const { data, isLoading } = fetchBoards;
 
-  console.log('data', data);
-
   const teamSocketId = data?.pages[0].boards[0].team
     ? data?.pages[0].boards[0].team._id
     : undefined;
