@@ -89,7 +89,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			 */
 			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
 				...dividedBoard,
-				team
+				team,
+				slackEnable: boardData.slackEnable
 			}));
 
 			return this.boardModel.create({
