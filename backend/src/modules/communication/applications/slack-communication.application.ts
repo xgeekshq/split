@@ -56,7 +56,6 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
     Each team has a *random* selected responsible, in order to create the board, organize the retro and everything else that is described in the doc(https://confluence.kigroup.de/display/OX/Retro) :eyes: :thumbsup:\n\n
     This must be done until \`${until} 1st\`\n\n
     All the channels needed have been created automatically for your team and another one for responsibles of the teams.\n\n
-    (Note: currently, retrobot does not check if the chosen responsibles joined xgeeks less than 3 months ago, so, if that happens, you have to decide who will take that role in the team. In the future, retrobot will automatically validate this rule.)\n\n
     Talent wins games, but teamwork and intelligence wins championships. :fire: :muscle:`;
 
 		this.chatHandler.postMessage(this.config.slackMasterChannelId, generalText);

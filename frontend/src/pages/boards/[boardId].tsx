@@ -197,15 +197,17 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                 Board settings
                 <Icon name="arrow-down" />
               </Button>
-              <BoardSettings
-                isOpen={isOpen}
-                isOwner={isOwner}
-                isResponsible={isResponsible}
-                isSAdmin={session?.user.isSAdmin}
-                isStakeholderOrAdmin={isStakeholderOrAdmin}
-                setIsOpen={setIsOpen}
-                socketId={socketId}
-              />
+              {isOpen && (
+                <BoardSettings
+                  isOpen={isOpen}
+                  isOwner={isOwner}
+                  isResponsible={isResponsible}
+                  isSAdmin={session?.user.isSAdmin}
+                  isStakeholderOrAdmin={isStakeholderOrAdmin}
+                  setIsOpen={setIsOpen}
+                  socketId={socketId}
+                />
+              )}
             </>
           )}
 

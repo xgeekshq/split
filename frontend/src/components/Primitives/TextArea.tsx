@@ -1,12 +1,8 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { styled } from '@/styles/stitches/stitches.config';
-
-import Icon from '@/components/icons/Icon';
 import isEmpty from '@/utils/isEmpty';
-import Flex from './Flex';
-import Text from './Text';
 
 const StyledTextArea = styled('textarea', {
   // Reset
@@ -35,6 +31,7 @@ const StyledTextArea = styled('textarea', {
   borderRadius: '$4',
   outline: 'none',
   fontWeight: 'normal',
+  whiteSpace: 'pre-line',
   width: '100%',
   pt: '$28',
   pb: '$8',
@@ -76,19 +73,6 @@ const StyledTextArea = styled('textarea', {
   },
 });
 
-const StyledText = styled(Text, {
-  fontSize: '$16',
-  top: '0',
-  p: '$16',
-  pl: '$17',
-  lineHeight: '24px',
-  color: '$primary300',
-  position: 'absolute',
-  pointerEvents: 'none',
-  transformOrigin: '0 0',
-  transition: 'all .2s ease-in-out',
-});
-
 interface ResizableTextAreaProps {
   id: string;
   placeholder: string;
@@ -97,20 +81,19 @@ interface ResizableTextAreaProps {
   floatPlaceholder?: boolean;
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({
-  id,
-  placeholder,
-  helperText,
-  disabled,
-  floatPlaceholder,
-}) => {
+const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled }) => {
   TextArea.defaultProps = {
     helperText: undefined,
     disabled: false,
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const flexRef = useRef<HTMLDivElement | null>(null);
+
+  function textAreaAdjust(element: HTMLTextAreaElement | null) {
+    if (!element) return;
+    element.style.height = '1px';
+    element.style.height = `${25 + element.scrollHeight}px`;
+  }
 
   const {
     register,
@@ -134,69 +117,24 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
     return autoState;
   }, [autoState, disabled, id, touchedFields]);
 
+  useEffect(() => {
+    textAreaAdjust(textareaRef.current);
+  }, []);
+
   return (
-    <Flex
-      css={{ position: 'relative', width: '100%', height: 'auto' }}
-      direction="column"
-      ref={flexRef}
-    >
-      <Flex>
-        {floatPlaceholder && (
-          <Flex>
-            <StyledTextArea
-              {...rest}
-              disabled={disabled}
-              id={id}
-              placeholder=" "
-              variant={currentState}
-              ref={(e) => {
-                if (ref) ref(e);
-                textareaRef.current = e;
-              }}
-            />
-            <StyledText as="label" htmlFor={id}>
-              {placeholder}
-            </StyledText>
-          </Flex>
-        )}
-      </Flex>
-      <StyledTextArea
-        {...rest}
-        css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
-        disabled={disabled}
-        id={id}
-        placeholder={placeholder}
-        variant={currentState}
-        ref={(e) => {
-          if (ref) ref(e);
-          textareaRef.current = e;
-        }}
-      />
-      {floatPlaceholder && (
-        <Flex
-          align="center"
-          gap="4"
-          css={{
-            mt: '$8',
-            '& svg': {
-              height: '$16 !important',
-              width: '$16 !important',
-              color: '$dangerBase',
-            },
-          }}
-        >
-          {currentState === 'error' && <Icon css={{ width: '$24', height: '$24' }} name="info" />}
-          <Text
-            hint
-            css={{
-              color: currentState === 'error' ? '$dangerBase' : '$primary300',
-            }}
-          >
-            {!isEmpty(helperText) ? helperText : errors[`${id}`]?.message}
-          </Text>
-        </Flex>
-      )}
-    </Flex>
+    <StyledTextArea
+      {...rest}
+      css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
+      disabled={disabled}
+      id={id}
+      onChange={() => textAreaAdjust(textareaRef.current)}
+      placeholder={placeholder}
+      variant={currentState}
+      ref={(e) => {
+        if (ref) ref(e);
+        textareaRef.current = e;
+      }}
+    />
   );
 };
 export default TextArea;
