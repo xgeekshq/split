@@ -96,7 +96,7 @@ const Column = React.memo<ColumnBoardType>(
                 )}
               </Flex>
               <Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
-              <Flex css={{}} direction="column">
+              <Flex direction="column">
                 {!isSubmited && (
                   <Flex
                     align="center"
