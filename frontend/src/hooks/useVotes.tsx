@@ -236,7 +236,7 @@ const useVotes = () => {
       variables,
     );
 
-    if (newBoardData?.maxVotes && newBoardData && variables.userId === userId) {
+    if (newBoardData?.maxVotes && variables.userId === userId) {
       toastRemainingVotesMessage('', newBoardData);
     }
   };
