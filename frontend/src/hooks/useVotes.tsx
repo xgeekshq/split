@@ -72,9 +72,9 @@ const useVotes = () => {
     return newBoardData;
   };
 
-  const updateBoardUser = (boardData: BoardType, action: Action) => {
+  const updateBoardUser = (boardData: BoardType, action: Action, currentUser: string) => {
     boardData.users = boardData.users.map((boardUser) => {
-      if (boardUser.user._id !== userId) return boardUser;
+      if (boardUser.user._id !== currentUser) return boardUser;
 
       return {
         ...boardUser,
@@ -189,7 +189,7 @@ const useVotes = () => {
         isCardGroup,
         action,
       );
-      updateBoardUser(newBoard, count > 0 ? Action.Add : Action.Remove);
+      updateBoardUser(newBoard, count > 0 ? Action.Add : Action.Remove, voteData.userId);
 
       return newBoard;
     }
@@ -236,7 +236,7 @@ const useVotes = () => {
       variables,
     );
 
-    if (newBoardData?.maxVotes && newBoardData) {
+    if (newBoardData?.maxVotes && variables.userId === userId) {
       toastRemainingVotesMessage('', newBoardData);
     }
   };
@@ -244,7 +244,6 @@ const useVotes = () => {
   const handleVote = useMutation(handleVotes, {
     onSuccess: async (data, variables) => {
       updateVote(variables);
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
     },
     onError: (_, variables, context) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
@@ -255,6 +254,7 @@ const useVotes = () => {
   return {
     handleVote,
     toastInfoMessage,
+    updateVote,
   };
 };
 

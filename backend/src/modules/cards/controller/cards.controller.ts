@@ -290,17 +290,23 @@ export default class CardsController {
 		const { boardId, cardId } = params;
 		const { targetColumnId, newPosition, socketId } = boardData;
 
-		const board = await this.updateCardApp.updateCardPosition(
-			boardId,
-			cardId,
-			targetColumnId,
-			newPosition
-		);
+		try {
+			const board = await this.updateCardApp.updateCardPosition(
+				boardId,
+				cardId,
+				targetColumnId,
+				newPosition
+			);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+			if (!board) throw new BadRequestException(UPDATE_FAILED);
+			this.socketService.sendUpdateCardPosition(socketId, boardData);
 
-		return board;
+			return board;
+		} catch (e) {
+			this.socketService.sendUpdatedBoard(boardId, socketId);
+
+			throw e;
+		}
 	}
 
 	@ApiOperation({ summary: 'Merge two cards together' })

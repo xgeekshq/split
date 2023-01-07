@@ -49,7 +49,7 @@ export class TeamRepository
 	getAllTeams(): Promise<Team[]> {
 		return this.findAllWithQuery(null, null, {
 			path: 'users',
-			select: 'user role email',
+			select: 'user role email isNewJoiner',
 			populate: {
 				path: 'user',
 				select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
