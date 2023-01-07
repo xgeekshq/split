@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { styled } from '@/styles/stitches/stitches.config';
@@ -117,13 +117,17 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled 
     return autoState;
   }, [autoState, disabled, id, touchedFields]);
 
+  useEffect(() => {
+    textAreaAdjust(textareaRef.current);
+  }, []);
+
   return (
     <StyledTextArea
       {...rest}
       css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
       disabled={disabled}
       id={id}
-      onKeyUp={() => textAreaAdjust(textareaRef.current)}
+      onChange={() => textAreaAdjust(textareaRef.current)}
       placeholder={placeholder}
       variant={currentState}
       ref={(e) => {
