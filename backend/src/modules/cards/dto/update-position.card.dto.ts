@@ -4,7 +4,6 @@ import { BaseDto } from 'src/libs/dto/base.dto';
 export class UpdateCardPositionDto extends BaseDto {
 	@IsNotEmpty()
 	@IsMongoId()
-	@IsString()
 	targetColumnId!: string;
 
 	@IsNotEmpty()
@@ -13,12 +12,10 @@ export class UpdateCardPositionDto extends BaseDto {
 
 	@IsNotEmpty()
 	@IsMongoId()
-	@IsString()
 	boardId!: string;
 
 	@IsNotEmpty()
 	@IsMongoId()
-	@IsString()
 	colIdOfCard: string;
 
 	@IsNotEmpty()
@@ -27,7 +24,6 @@ export class UpdateCardPositionDto extends BaseDto {
 
 	@IsNotEmpty()
 	@IsMongoId()
-	@IsString()
 	cardId: string;
 
 	@IsNotEmpty()
