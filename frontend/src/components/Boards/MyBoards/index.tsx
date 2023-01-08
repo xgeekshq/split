@@ -11,11 +11,12 @@ import { Team } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import { teamsListState } from '@/store/team/atom/team.atom';
+import { userTeamsListState } from '@/store/team/atom/team.atom';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
 import ListBoards from './ListBoards';
+import ListPersonalBoards from './ListPersonalBoards';
 
 interface MyBoardsProps {
   userId: string;
@@ -33,7 +34,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const routerTeam = router.query.team as string;
-  const teamsList = useRecoilValue(teamsListState);
+  const userTeamsList = useRecoilValue(userTeamsListState);
 
   const fetchBoards = useInfiniteQuery(
     'boards',
@@ -108,7 +109,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
     }
   };
 
-  const teamNames: OptionType[] = teamsList.map((team) => ({
+  const teamNames: OptionType[] = userTeamsList.map((team) => ({
     value: team._id,
     label: team.name,
   }));
@@ -116,7 +117,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
     return <EmptyBoards />;
 
-  const filteredTeam: Team | undefined = teamsList.find((team) => team._id === filterState);
+  const filteredTeam: Team | undefined = userTeamsList.find((team) => team._id === filterState);
 
   return (
     <>
@@ -130,17 +131,21 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
           socket={socket}
         />
       )}
-
-      <ListBoards
-        userId={userId}
-        isSuperAdmin={isSuperAdmin}
-        dataByTeamAndDate={dataByTeamAndDate}
-        scrollRef={scrollRef}
-        onScroll={onScroll}
-        filter={filterState}
-        isLoading={isLoading}
-        socket={socket}
-      />
+      {filterState === 'personal' && (
+        <ListPersonalBoards userId={userId} isSuperAdmin={isSuperAdmin} socket={socket} />
+      )}
+      {filterState === 'all' && (
+        <ListBoards
+          userId={userId}
+          isSuperAdmin={isSuperAdmin}
+          dataByTeamAndDate={dataByTeamAndDate}
+          scrollRef={scrollRef}
+          onScroll={onScroll}
+          filter={filterState}
+          isLoading={isLoading}
+          socket={socket}
+        />
+      )}
     </>
   );
 });

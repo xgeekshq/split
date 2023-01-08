@@ -8,24 +8,32 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
-import { teamsListState } from '@/store/team/atom/team.atom';
+import { teamsListState, userTeamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from 'react-query';
-import { getTeamsOfUser } from '@/api/teamService';
+import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });
-  const setTeamsList = useSetRecoilState(teamsListState);
+  const setUserTeamsList = useSetRecoilState(userTeamsListState);
+  const setAllTeamsList = useSetRecoilState(teamsListState);
 
   const {
     fetchTeamsOfUser: { data },
+    fetchAllTeams: { data: dataAllTeams },
   } = useTeam();
 
   useEffect(() => {
     if (data) {
-      setTeamsList(data);
+      setUserTeamsList(data);
     }
-  }, [data, setTeamsList]);
+  }, [data, setUserTeamsList]);
+
+  useEffect(() => {
+    if (dataAllTeams) {
+      setAllTeamsList(dataAllTeams);
+    }
+  }, [dataAllTeams, setAllTeamsList]);
 
   if (!session) return null;
   return (
@@ -47,6 +55,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
+    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
     return {
       props: {
         dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
