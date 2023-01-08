@@ -40,7 +40,7 @@ import { CreateCardDto } from '../dto/create.card.dto';
 import DeleteCardDto from '../dto/delete.card.dto';
 import UnmergeCardsDto from '../dto/unmerge.dto';
 import UpdateCardDto from '../dto/update.card.dto';
-import { UpdateCardPositionDto } from '../dto/update-position.card..dto';
+import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
 import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
 import { MergeCardApplication } from '../interfaces/applications/merge.card.application.interface';

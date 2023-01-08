@@ -119,7 +119,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled 
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
-  }, []);
+  }, [value]);
 
   return (
     <StyledTextArea
@@ -127,7 +127,6 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled 
       css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
       disabled={disabled}
       id={id}
-      onChange={() => textAreaAdjust(textareaRef.current)}
       placeholder={placeholder}
       variant={currentState}
       ref={(e) => {
