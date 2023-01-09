@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import isEmpty from 'src/libs/utils/isEmpty';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
 import { pushCardIntoPosition } from '../shared/push.card';
@@ -26,49 +27,8 @@ export default class CreateCardServiceImpl implements CreateCardService {
 			card.items[0].createdBy = userId;
 		}
 
-		return (await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel)).populate([
-			{
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			},
-			{
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			},
-			{
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			},
-			{
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			},
-			{
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			},
-			{
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			},
-			{
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			},
-			{
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			}
-		]);
+		return (await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel)).populate(
+			BoardDataPopulate
+		);
 	}
 }

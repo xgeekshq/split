@@ -150,7 +150,6 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: () => {},
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -172,7 +171,6 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));

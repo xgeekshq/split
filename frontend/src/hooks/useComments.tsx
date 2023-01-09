@@ -96,7 +96,6 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
@@ -119,7 +118,6 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);

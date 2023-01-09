@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CARD_NOT_INSERTED, CARD_NOT_REMOVED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -49,50 +50,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 			await session.commitTransaction();
 			await session.endSession();
 
-			return pushResult.populate([
-				{
-					path: 'users',
-					select: 'user role -board votesCount',
-					populate: { path: 'user', select: 'firstName email lastName _id' }
-				},
-				{
-					path: 'team',
-					select: 'name users -_id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-					}
-				},
-				{
-					path: 'columns.cards.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'columns.cards.comments.createdBy',
-					select: '_id  firstName lastName'
-				},
-				{
-					path: 'columns.cards.items.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'columns.cards.items.comments.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'createdBy',
-					select: '_id firstName lastName isSAdmin joinedAt'
-				},
-				{
-					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user'
-					}
-				}
-			]);
+			return pushResult.populate(BoardDataPopulate);
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
@@ -131,48 +89,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 					new: true
 				}
 			)
-			.populate({
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			})
-			.populate({
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			})
-			.populate({
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			})
-			.populate({
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			})
+			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
 	}
@@ -194,48 +111,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 					new: true
 				}
 			)
-			.populate({
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			})
-			.populate({
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			})
-			.populate({
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			})
-			.populate({
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			})
+			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
 	}
