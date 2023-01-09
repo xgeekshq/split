@@ -41,30 +41,36 @@ export class MergeCardServiceImpl implements MergeCardService {
 
 			const newComments = cardGroup.comments.concat(comments);
 
-			const setResult = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$set: {
-							'columns.$[].cards.$[c].items': newItems,
-							'columns.$[].cards.$[c].votes': newVotes,
-							'columns.$[].cards.$[c].comments': newComments
-						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardId }],
-						new: true
+			const setResult = await this.boardModel.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns.cards._id': cardId
+				},
+				{
+					$set: {
+						'columns.$[].cards.$[c].items': newItems,
+						'columns.$[].cards.$[c].votes': newVotes,
+						'columns.$[].cards.$[c].comments': newComments
 					}
-				)
-				.populate({
+				},
+				{
+					arrayFilters: [{ 'c._id': cardId }],
+					new: true,
+					session
+				}
+			);
+
+			if (!setResult) throw Error(UPDATE_FAILED);
+			await session.commitTransaction();
+			await session.endSession();
+
+			return setResult.populate([
+				{
 					path: 'users',
 					select: 'user role -board votesCount',
 					populate: { path: 'user', select: 'firstName email lastName _id' }
-				})
-				.populate({
+				},
+				{
 					path: 'team',
 					select: 'name users -_id',
 					populate: {
@@ -72,42 +78,36 @@ export class MergeCardServiceImpl implements MergeCardService {
 						select: 'user role',
 						populate: { path: 'user', select: 'firstName lastName email joinedAt' }
 					}
-				})
-				.populate({
+				},
+				{
 					path: 'columns.cards.createdBy',
 					select: '_id firstName lastName'
-				})
-				.populate({
+				},
+				{
 					path: 'columns.cards.comments.createdBy',
 					select: '_id  firstName lastName'
-				})
-				.populate({
+				},
+				{
 					path: 'columns.cards.items.createdBy',
 					select: '_id firstName lastName'
-				})
-				.populate({
+				},
+				{
 					path: 'columns.cards.items.comments.createdBy',
 					select: '_id firstName lastName'
-				})
-				.populate({
+				},
+				{
 					path: 'createdBy',
 					select: '_id firstName lastName isSAdmin joinedAt'
-				})
-				.populate({
+				},
+				{
 					path: 'dividedBoards',
 					select: '-__v -createdAt -id',
 					populate: {
 						path: 'users',
 						select: 'role user'
 					}
-				})
-				.lean()
-				.session(session);
-
-			if (!setResult) throw Error(UPDATE_FAILED);
-			await session.commitTransaction();
-
-			return setResult;
+				}
+			]);
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {

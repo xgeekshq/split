@@ -3,7 +3,7 @@ import { Configuration } from './interfaces/configuration.interface';
 export const DEFAULT_SERVER_PORT = 3200;
 
 export const configuration = (): Configuration => {
-	const NODE_ENV = process.env.NODE_ENV;
+	// const NODE_ENV = process.env.NODE_ENV;
 	const defaultConfiguration = {
 		server: {
 			port: parseInt(process.env.BACKEND_PORT as string, 10) || DEFAULT_SERVER_PORT
@@ -12,10 +12,7 @@ export const configuration = (): Configuration => {
 			url: process.env.NEXT_PUBLIC_NEXTAUTH_URL as string
 		},
 		database: {
-			uri:
-				NODE_ENV === 'local'
-					? `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin&replicaSet=${process.env.DB_REPLICA_SET}&readPreference=primary&directConnection=true`
-					: `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${process.env.DB_USER}@`
+			uri: 'mongodb://split-db:STbMkTrb1ts95BUy91RNFlXAbg6XFvfeP97QuKbQDKRq3hVN3QeNQMsCfuuQULkXWuXzslirxMymACDbPpGBfg==@split-db.mongo.cosmos.azure.com:10255/split-dev?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@split-db@'
 		},
 		jwt: {
 			accessToken: {
