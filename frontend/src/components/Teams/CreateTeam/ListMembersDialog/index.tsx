@@ -16,6 +16,7 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';
+import { UserList } from '@/types/team/userList';
 import { ScrollableContent } from './styles';
 import SearchInput from './SearchInput';
 
@@ -23,7 +24,7 @@ type ListMembersDialogProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   isTeamPage?: boolean;
-  saveUsers: () => void;
+  saveUsers: (checkedUserList: UserList[]) => void;
   title: string;
   btnTitle: string;
 };
@@ -34,6 +35,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     const [searchMember, setSearchMember] = useState<string>('');
 
     const [usersList, setUsersListState] = useRecoilState(usersListState);
+    const [usersChecked, setUsersChecked] = useState(usersList);
 
     const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
     const [isFiltering, setIsFiltering] = useState<boolean>(false);
@@ -44,10 +46,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
 
     // Method to close dialog
     const handleClose = () => {
-      const listOfUsersToBeSorted = [...usersList];
-      setUsersListState(
-        listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
-      );
+      setUsersChecked(usersList);
       setIsOpen(false);
     };
 
@@ -56,61 +55,58 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     };
 
     const handleChecked = (id: string) => {
-      const updateCheckedUser = usersList.map((user) =>
+      const updateCheckedUsers = usersChecked.map((user) =>
         user._id === id ? { ...user, isChecked: !user.isChecked } : user,
       );
 
-      updateCheckedUser.sort((x, y) => {
-        if (x === y) return 0;
-        return x ? 1 : -1;
-      });
-
-      setUsersListState(updateCheckedUser);
+      setUsersChecked(updateCheckedUsers);
     };
 
-    // Update selectAll button when list is all checked
-    useEffect(() => {
-      setIsCheckAll(!usersList.map((user) => user.isChecked).includes(false));
-    }, [setIsCheckAll, usersList]);
+    const handleSelectAll = () => {
+      const updateCheckedUsers = usersChecked.map((user) =>
+        user._id !== session?.user.id ? { ...user, isChecked: !isCheckAll } : user,
+      );
+      setIsCheckAll(!isCheckAll);
+      setUsersChecked(updateCheckedUsers);
+    };
 
-    // Remove selectAll button when user is filtering by name/email
-    useEffect(() => {
-      setIsFiltering(searchMember.length > 0);
-    }, [searchMember.length, setIsFiltering]);
+    const handleUpdateUsers = () => {
+      setUsersListState(usersChecked);
+      saveUsers(usersChecked);
+    };
 
     const filteredList = useMemo(() => {
       const searchString = searchMember.toLowerCase().trim();
 
-      return usersList.filter((user) => {
+      return usersChecked.filter((user) => {
         const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
         const email = user.email.toLowerCase();
         return (
           email.includes(searchString) || fullName.includes(searchString) || searchMember === ''
         );
       });
-    }, [searchMember, usersList]);
+    }, [searchMember, usersChecked]);
 
-    const handleSelectAll = () => {
-      const updateCheckedUser = usersList.map((user) =>
-        user._id !== session?.user.id ? { ...user, isChecked: !isCheckAll } : user,
-      );
-      setIsCheckAll(!isCheckAll);
-      setUsersListState(updateCheckedUser);
-    };
+    useEffect(() => {
+      setUsersChecked(usersList);
+    }, [usersList]);
+
+    // Update selectAll button when list is all checked
+    useEffect(() => {
+      setIsCheckAll(!usersChecked.map((user) => user.isChecked).includes(false));
+    }, [setIsCheckAll, usersChecked]);
+
+    // Remove selectAll button when user is filtering by name/email
+    useEffect(() => {
+      setIsFiltering(searchMember.length > 0);
+    }, [searchMember.length, setIsFiltering]);
 
     return (
       <StyledDialogContainer ref={dialogContainerRef}>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <Portal>
             <StyledDialogOverlay />
-            <StyledDialogContent
-              onPointerDownOutside={() => {
-                const listOfUsersToBeSorted = [...usersList];
-                setUsersListState(
-                  listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
-                );
-              }}
-            >
+            <StyledDialogContent onPointerDownOutside={() => setUsersChecked(usersList)}>
               <StyledDialogTitle>
                 <Text heading="4">{btnTitle}</Text>
                 <DialogClose asChild>
@@ -181,7 +177,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                 <Button
                   css={{ marginRight: '$32', padding: '$16 $24' }}
                   variant="primary"
-                  onClick={saveUsers}
+                  onClick={handleUpdateUsers}
                 >
                   Update
                 </Button>

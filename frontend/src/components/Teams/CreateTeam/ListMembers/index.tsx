@@ -9,6 +9,7 @@ import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
+import { UserList } from '@/types/team/userList';
 import ListMembersDialog from '../ListMembersDialog';
 
 type Props = {
@@ -26,16 +27,16 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const { data: session } = useSession({ required: true });
 
-  const [usersList, setUsersList] = useRecoilState(usersListState);
+  const [, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
 
   const setToastState = useSetRecoilState(toastState);
 
-  const saveMembers = () => {
+  const saveMembers = (checkedUserList: UserList[]) => {
     const listOfUsers = [...membersList];
-    const listOfUsersToBeSorted = [...usersList];
-    const selectedUsers = usersList.filter((user) => user.isChecked);
-    const unselectedUsers = usersList.filter((user) => !user.isChecked);
+    const listOfUsersToBeSorted = [...checkedUserList];
+    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+    const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
     const { teamId } = router.query;
 
     if (isTeamPage && teamId) {
@@ -81,7 +82,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     );
 
     // this insures that the team creator stays always in first
-
     const userAdminIndex = updatedListWithAdded.findIndex(
       (member) => member.user._id === session?.user.id,
     );
@@ -96,7 +96,17 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
     setMembersListState(updatedListWithAdded);
 
-    setUsersList(listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)));
+    setUsersList(
+      listOfUsersToBeSorted
+        .sort((a, b) => {
+          if (a.firstName === b.firstName) {
+            return a.lastName < b.lastName ? -1 : 1;
+          }
+
+          return a.firstName < b.firstName ? -1 : 1;
+        })
+        .sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
+    );
 
     setIsOpen(false);
   };
