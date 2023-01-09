@@ -14,7 +14,9 @@ import {
 	ResponsibleApplication,
 	UsersHandler
 } from 'src/modules/communication/communication.providers';
+import { SlackArchiveChannelConsumer } from 'src/modules/communication/consumers/slack-archive-channel.consumer';
 import { SlackCommunicationConsumer } from 'src/modules/communication/consumers/slack-communication.consumer';
+import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
@@ -58,15 +60,26 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 							removeOnComplete: SlackMergeBoardProducer.REMOVE_ON_COMPLETE,
 							priority: SlackMergeBoardProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackArchiveChannelProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackArchiveChannelProducer.ATTEMPTS,
+							backoff: SlackArchiveChannelProducer.BACKOFF,
+							delay: SlackArchiveChannelProducer.DELAY,
+							removeOnFail: SlackArchiveChannelProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackArchiveChannelProducer.REMOVE_ON_COMPLETE,
+							priority: SlackArchiveChannelProducer.PRIORITY
+						}
 					})
 			  ]
 			: [])
 	],
 	providers: [
 		CommunicationService,
+		ArchiveChannelService,
 		...(configuration().slack.enable
 			? [
-					ArchiveChannelService,
 					CommunicationGateAdapter,
 					ChatHandler,
 					ConversationsHandler,
@@ -80,7 +93,9 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 					SlackResponsibleProducer,
 					SlackResponsibleConsumer,
 					SlackMergeBoardProducer,
-					SlackMergeBoardConsumer
+					SlackMergeBoardConsumer,
+					SlackArchiveChannelProducer,
+					SlackArchiveChannelConsumer
 			  ]
 			: [])
 	],

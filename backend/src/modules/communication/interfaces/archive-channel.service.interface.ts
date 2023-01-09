@@ -1,5 +1,5 @@
-import { ArchiveChannelResult, BoardType } from '../dto/types';
+import { ArchiveChannelData } from '../dto/types';
 
 export interface ArchiveChannelServiceInterface {
-	execute(arg: BoardType | string, cascate: boolean): Promise<ArchiveChannelResult[]>;
+	execute(data: ArchiveChannelData): Promise<void>;
 }

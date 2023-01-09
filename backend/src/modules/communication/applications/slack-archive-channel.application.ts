@@ -1,4 +1,9 @@
-import { ArchiveChannelResult, BoardType } from 'src/modules/communication/dto/types';
+import {
+	ArchiveChannelData,
+	ArchiveChannelDataOptions,
+	ArchiveChannelResult,
+	BoardType
+} from 'src/modules/communication/dto/types';
 import { ArchiveChannelInvalidArgError } from 'src/modules/communication/errors/archive-channel-invalid-arg.error';
 import { ArchiveChannelApplicationInterface } from 'src/modules/communication/interfaces/archive-channel.application.interface';
 import { ConversationsHandlerInterface } from 'src/modules/communication/interfaces/conversations.handler.interface';
@@ -6,20 +11,22 @@ import { ConversationsHandlerInterface } from 'src/modules/communication/interfa
 export class SlackArchiveChannelApplication implements ArchiveChannelApplicationInterface {
 	constructor(private readonly conversationsHandler: ConversationsHandlerInterface) {}
 
-	public async execute(arg: BoardType | string, cascade = false): Promise<ArchiveChannelResult[]> {
-		if (!this.isValid(arg)) {
+	public async execute(data: ArchiveChannelData): Promise<ArchiveChannelResult[]> {
+		if (!this.isValid(data)) {
 			throw new ArchiveChannelInvalidArgError();
 		}
 
-		if (typeof arg === 'string') {
-			return [await this.archiveChannel(arg)];
+		if (data.type === ArchiveChannelDataOptions.CHANNEL_ID) {
+			return [await this.archiveChannel(data.data)];
 		}
 
-		if (!cascade) {
-			return [await this.archiveChannel(arg.slackChannelId)];
+		const board = data.data as BoardType;
+
+		if (!data.cascade) {
+			return [await this.archiveChannel(board.slackChannelId)];
 		}
 
-		return await this.arquiveAllChannelsInMainBoard(arg);
+		return await this.arquiveAllChannelsInMainBoard(board);
 	}
 
 	private async archiveChannel(channelId): Promise<ArchiveChannelResult> {
@@ -41,11 +48,23 @@ export class SlackArchiveChannelApplication implements ArchiveChannelApplication
 		}));
 	}
 
-	private isValid(arg: BoardType | string): boolean {
-		return (
-			typeof arg === 'string' ||
-			(!!arg.id && typeof arg.isSubBoard === 'boolean' && !!arg.slackChannelId)
-		);
+	private isValid(data: ArchiveChannelData): boolean {
+		if (data.type === ArchiveChannelDataOptions.CHANNEL_ID) {
+			return typeof data.data === 'string';
+		}
+
+		const board = data.data as BoardType;
+
+		if (data.cascade) {
+			return (
+				data.type === ArchiveChannelDataOptions.BOARD &&
+				board.id &&
+				!!board.slackChannelId &&
+				Array.isArray(board.dividedBoards)
+			);
+		}
+
+		return data.type === ArchiveChannelDataOptions.BOARD && board.id && !!board.slackChannelId;
 	}
 
 	private async resolvePromises(promises: Promise<any>[]): Promise<any[]> {

@@ -3,6 +3,11 @@ export enum BoardRoles {
 	RESPONSIBLE = 'responsible'
 }
 
+export enum ArchiveChannelDataOptions {
+	CHANNEL_ID = 'CHANNEL_ID',
+	BOARD = 'BOARD'
+}
+
 export type ProfileType = {
 	id: string;
 	email: string;
@@ -62,3 +67,9 @@ export type MergeBoardType = {
 };
 
 export type ArchiveChannelResult = { channelId: string; result: boolean };
+
+export type ArchiveChannelData = {
+	type: ArchiveChannelDataOptions;
+	data: BoardType | string;
+	cascade?: boolean;
+};

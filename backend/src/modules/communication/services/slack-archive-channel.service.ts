@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { ArchiveChannelResult, BoardType } from 'src/modules/communication/dto/types';
-import { ArchiveChannelApplicationInterface } from 'src/modules/communication/interfaces/archive-channel.application.interface';
+import { Inject, Injectable } from '@nestjs/common';
+import { ArchiveChannelData } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
+import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 
 @Injectable()
 export class SlackArchiveChannelService implements ArchiveChannelServiceInterface {
-	constructor(private application: ArchiveChannelApplicationInterface) {}
+	constructor(
+		@Inject(SlackArchiveChannelProducer)
+		private readonly slackArchiveChannelProducer: SlackArchiveChannelProducer
+	) {}
 
-	public async execute(
-		arg: BoardType | string,
-		cascate?: boolean
-	): Promise<ArchiveChannelResult[]> {
-		return this.application.execute(arg, cascate);
+	public async execute(data: ArchiveChannelData): Promise<void> {
+		this.slackArchiveChannelProducer.add(data);
 	}
 }

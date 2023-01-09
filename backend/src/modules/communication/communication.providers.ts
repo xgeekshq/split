@@ -13,7 +13,6 @@ import { SlackMergeBoardApplication } from 'src/modules/communication/applicatio
 import { SlackResponsibleApplication } from 'src/modules/communication/applications/slack-responsible.application';
 import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
-import { ArchiveChannelApplicationInterface } from 'src/modules/communication/interfaces/archive-channel.application.interface';
 import { ChatHandlerInterface } from 'src/modules/communication/interfaces/chat.handler.interface';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 import { ConversationsHandlerInterface } from 'src/modules/communication/interfaces/conversations.handler.interface';
@@ -121,8 +120,7 @@ export const CommunicationService = {
 
 export const ArchiveChannelService = {
 	provide: TYPES.services.SlackArchiveChannelService,
-	useFactory: (application: ArchiveChannelApplicationInterface) => {
-		return new SlackArchiveChannelService(application);
-	},
-	inject: [ConversationsSlackHandler]
+	useClass: configuration().slack.enable
+		? SlackArchiveChannelService
+		: SlackDisabledCommunicationService
 };

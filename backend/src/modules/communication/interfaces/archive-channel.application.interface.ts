@@ -1,5 +1,5 @@
-import { ArchiveChannelResult, BoardType } from 'src/modules/communication/dto/types';
+import { ArchiveChannelData, ArchiveChannelResult } from 'src/modules/communication/dto/types';
 
 export interface ArchiveChannelApplicationInterface {
-	execute(arg: BoardType | string, cascade: boolean): Promise<ArchiveChannelResult[]>;
+	execute(data: ArchiveChannelData): Promise<ArchiveChannelResult[]>;
 }
