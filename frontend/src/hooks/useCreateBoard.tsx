@@ -149,11 +149,9 @@ const useCreateBoard = (team?: Team) => {
       let leftOverUsers = teamMembersLength % maxTeams;
 
       new Array(maxTeams).fill(0).forEach((_, i) => {
-        const numberOfUsersByGroup = leftOverUsers > 0 ? usersPerTeam + 1 : usersPerTeam;
+        const numberOfUsersByGroup = leftOverUsers-- > 0 ? usersPerTeam + 1 : usersPerTeam;
 
         splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
-
-        leftOverUsers--;
 
         availableUsers = availableUsers.filter(
           (user) => !splitUsers[i].find((member) => member.user._id === user.user._id),
