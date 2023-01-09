@@ -118,7 +118,9 @@ const useCards = () => {
       return { previousBoard: prevBoardData, data };
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
     onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
@@ -238,7 +240,9 @@ const useCards = () => {
       return { previousBoard: prevBoardData, data };
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -263,7 +267,9 @@ const useCards = () => {
       return { previousBoard: prevBoardData, data };
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));

@@ -2,7 +2,11 @@ import { useMutation } from 'react-query';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
-import { handleAddComments } from '@/helper/board/transformBoard';
+import {
+  handleAddComments,
+  handleDeleteComments,
+  handleUpdateComments,
+} from '@/helper/board/transformBoard';
 import BoardType from '@/types/board/board';
 import ColumnType from '@/types/column';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
@@ -65,8 +69,10 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(['board', { id: data?._id }]);
+    onSettled: (data, error, variables) => {
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
@@ -84,15 +90,13 @@ const useComments = () => {
       const board = await getPrevData(data.boardId);
 
       if (board) {
-        // const boardData = handleDeleteComments(board, data);
-        updateBoardColumns(data.boardId, board.columns);
+        const boardData = handleDeleteComments(board, data);
+        updateBoardColumns(data.boardId, boardData.columns);
       }
 
       return { previousBoard: board, data };
     },
-    onSettled: (data, _, variables) => {
-      queryClient.invalidateQueries(['board', { id: variables.boardId }]);
-    },
+    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
@@ -109,15 +113,13 @@ const useComments = () => {
       const board = await getPrevData(data.boardId);
 
       if (board) {
-        // const boardData = handleUpdateComments(board, data);
-        updateBoardColumns(data.boardId, board.columns);
+        const boardData = handleUpdateComments(board, data);
+        updateBoardColumns(data.boardId, boardData.columns);
       }
 
       return { previousBoard: board, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(['board', { id: data?._id }]);
-    },
+    onSettled: () => {},
     onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
