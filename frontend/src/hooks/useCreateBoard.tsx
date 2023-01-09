@@ -154,7 +154,7 @@ const useCreateBoard = (team?: Team) => {
         splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
 
         availableUsers = availableUsers.filter(
-          (user) => !splitUsers[i].find((member) => member.user._id === user.user._id),
+          (user) => !splitUsers[i].some((member) => member.user._id === user.user._id),
         );
       });
 

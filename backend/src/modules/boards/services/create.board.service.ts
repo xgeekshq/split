@@ -369,7 +369,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 
 			availableUsers = availableUsers.filter((user) => {
-				return !splitUsers[i].find((member) => {
+				return !splitUsers[i].some((member) => {
 					return member.user === (user.user as User)._id;
 				});
 			});
