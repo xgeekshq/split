@@ -6,6 +6,7 @@ import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import useCards from '@/hooks/useCards';
 import VoteDto from '@/types/vote/vote.dto';
+import BoardType from '@/types/board/board';
 import useVotes from './useVotes';
 
 export const useSocketIO = (boardId: string): string | undefined => {
@@ -33,6 +34,10 @@ export const useSocketIO = (boardId: string): string | undefined => {
   useEffect(() => {
     socket?.on('updateAllBoard', () => {
       queryClient.invalidateQueries(['board', { id: boardId }]);
+    });
+
+    socket?.on('board', (board: BoardType) => {
+      queryClient.setQueryData(['board', { id: boardId }], { board });
     });
 
     socket?.on(`${boardId}cardPosition`, (updateCardPositionDto: UpdateCardPositionDto) => {

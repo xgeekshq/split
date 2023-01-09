@@ -118,9 +118,9 @@ const useCards = () => {
       return { previousBoard: prevBoardData, data };
     },
     onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
+      queryClient.setQueryData(getBoardQuery(data?._id), { board: data });
     },
-    onError: (data, variables, context) => {
+    onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -148,8 +148,7 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: () => {},
-    onError: (data, variables, context) => {
+    onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -174,7 +173,7 @@ const useCards = () => {
     onSettled: (data) => {
       queryClient.invalidateQueries(getBoardQuery(data?._id));
     },
-    onError: (data, variables, context) => {
+    onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -205,7 +204,7 @@ const useCards = () => {
         content: 'Card deleted with success!',
       });
     },
-    onError: (data, variables, context) => {
+    onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -217,7 +216,7 @@ const useCards = () => {
   });
 
   const mergeBoard = useMutation(mergeBoardRequest, {
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.subBoardId));
     },
     onError: () => {
@@ -271,7 +270,7 @@ const useCards = () => {
     onSettled: (data) => {
       queryClient.invalidateQueries(getBoardQuery(data?._id));
     },
-    onError: (data, variables, context) => {
+    onError: (_, variables, context) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setPreviousBoardQuery(variables.boardId, context);
       setToastState({

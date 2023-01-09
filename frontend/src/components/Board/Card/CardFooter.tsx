@@ -76,7 +76,7 @@ const CardFooter = React.memo<FooterProps>(
     const createdBy = useMemo(() => {
       if (Object.hasOwnProperty.call(card, 'items')) {
         const cardTyped = card as CardType;
-        return cardTyped.items[cardTyped.items.length - 1].createdBy;
+        return cardTyped.items.at(-1)?.createdBy;
       }
       return card.createdBy;
     }, [card]);
@@ -84,7 +84,7 @@ const CardFooter = React.memo<FooterProps>(
     const createdByTeam = useMemo(() => {
       if (Object.hasOwnProperty.call(card, 'items')) {
         const cardTyped = card as CardType;
-        return cardTyped.items[cardTyped.items.length - 1].createdByTeam;
+        return cardTyped.items.at(-1)?.createdByTeam;
       }
       return card.createdByTeam;
     }, [card]);
