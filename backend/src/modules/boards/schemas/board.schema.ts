@@ -14,6 +14,8 @@ export type BoardDocument = Board & Document;
 	}
 })
 export default class Board {
+	_id: string;
+
 	@Prop({ nullable: false })
 	title!: string;
 

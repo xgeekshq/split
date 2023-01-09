@@ -35,6 +35,7 @@ import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger'
 import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import BoardDto from 'src/modules/boards/dto/board.dto';
+import Board from 'src/modules/boards/schemas/board.schema';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import CreateCommentDto from '../dto/create.comment.dto';
 import UpdateCardCommentDto from '../dto/update.comment.dto';
@@ -97,7 +98,7 @@ export default class CommentsController {
 		);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, createCommentDto.socketId);
+		this.socketService.sendBoard(board as Board, createCommentDto.socketId);
 
 		return board;
 	}
@@ -139,7 +140,7 @@ export default class CommentsController {
 		);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		this.socketService.sendBoard(board as Board, socketId);
 
 		return board;
 	}
@@ -188,7 +189,7 @@ export default class CommentsController {
 		}
 
 		if (socketId) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
+			this.socketService.sendBoard(board as Board, socketId);
 		}
 
 		return board;
@@ -236,7 +237,7 @@ export default class CommentsController {
 		}
 
 		if (socketId) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
+			this.socketService.sendBoard(board as Board, socketId);
 		}
 
 		return board;
@@ -278,12 +279,12 @@ export default class CommentsController {
 			request.user._id.toString()
 		);
 
-		if (board.modifiedCount !== 1) {
+		if (!board) {
 			throw new BadRequestException(DELETE_FAILED);
 		}
 
 		if (socketId) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
+			this.socketService.sendBoard(board as Board, socketId);
 		}
 
 		return HttpStatus.OK;
@@ -324,12 +325,12 @@ export default class CommentsController {
 			request.user._id.toString()
 		);
 
-		if (board.modifiedCount !== 1) {
+		if (!board) {
 			throw new BadRequestException(DELETE_FAILED);
 		}
 
 		if (socketId) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
+			this.socketService.sendBoard(board as Board, socketId);
 		}
 
 		return HttpStatus.OK;

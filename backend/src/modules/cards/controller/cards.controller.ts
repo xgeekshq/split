@@ -47,6 +47,7 @@ import { MergeCardApplication } from '../interfaces/applications/merge.card.appl
 import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.application.interface';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
+import Board from 'src/modules/boards/schemas/board.schema';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -96,7 +97,7 @@ export default class CardsController {
 		const board = await this.createCardApp.create(boardId, request.user._id, card, colIdToAdd);
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		this.socketService.sendBoard(board as Board, socketId);
 
 		return board;
 	}
@@ -130,7 +131,7 @@ export default class CardsController {
 		const board = await this.deleteCardApp.delete(boardId, cardId, request.user._id);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, deleteCardDto.socketId);
+		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
 		return board;
 	}
@@ -170,7 +171,7 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, deleteCardDto.socketId);
+		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
 		return board;
 	}
@@ -213,7 +214,7 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		this.socketService.sendBoard(board as Board, socketId);
 
 		return board;
 	}
@@ -254,7 +255,7 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, updateCardDto.socketId);
+		this.socketService.sendBoard(board as Board, updateCardDto.socketId);
 
 		return board;
 	}
@@ -337,7 +338,7 @@ export default class CardsController {
 		const board = await this.mergeCardApp.mergeCards(boardId, draggedCardId, targetCardId);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		this.socketService.sendBoard(board as Board, socketId);
 
 		return board;
 	}
@@ -380,7 +381,7 @@ export default class CardsController {
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 
-		this.socketService.sendUpdatedBoard(boardId, socketId);
+		this.socketService.sendBoard(board as Board, socketId);
 
 		return board;
 	}

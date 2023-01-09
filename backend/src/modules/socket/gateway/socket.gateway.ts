@@ -8,6 +8,7 @@ import {
 	WebSocketServer
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import Board from 'src/modules/boards/schemas/board.schema';
 import { UpdateCardPositionDto } from 'src/modules/cards/dto/update-position.card.dto';
 import VoteDto from 'src/modules/votes/dto/vote.dto';
 import JoinPayload from '../interfaces/joinPayload.interface';
@@ -24,6 +25,10 @@ export default class SocketGateway
 
 	sendUpdatedBoard(newBoardId: string, excludedClient: string) {
 		this.server.to(newBoardId.toString()).except(excludedClient).emit('updateAllBoard', newBoardId);
+	}
+
+	sendBoard(board: Board, excludedClient: string) {
+		this.server.to(board._id.toString()).except(excludedClient).emit('board', board);
 	}
 
 	sendUpdatedBoards(excludedClient: string, teamId: string) {
