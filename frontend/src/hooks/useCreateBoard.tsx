@@ -146,26 +146,18 @@ const useCreateBoard = (team?: Team) => {
 
       let availableUsers = [...teamMembers];
       const usersPerTeam = Math.floor(teamMembersLength / maxTeams);
-      let membersWithoutTeam = teamMembersLength;
-
-      let countNumberOfGroups = 0;
+      let leftOverUsers = teamMembersLength % maxTeams;
 
       new Array(maxTeams).fill(0).forEach((_, i) => {
-        countNumberOfGroups++;
-
-        let numberOfUsersByGroup = usersPerTeam;
-        membersWithoutTeam -= usersPerTeam;
-
-        if (countNumberOfGroups === maxTeams && membersWithoutTeam !== 0)
-          numberOfUsersByGroup += membersWithoutTeam;
-
-        const indexToCompare = i - 1 < 0 ? 0 : i - 1;
-
-        availableUsers = availableUsers.filter(
-          (user) => !splitUsers[indexToCompare].find((member) => member.user._id === user.user._id),
-        );
+        const numberOfUsersByGroup = leftOverUsers > 0 ? usersPerTeam + 1 : usersPerTeam;
 
         splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
+
+        leftOverUsers--;
+
+        availableUsers = availableUsers.filter(
+          (user) => !splitUsers[i].find((member) => member.user._id === user.user._id),
+        );
       });
 
       generateSubBoards(maxTeams, splitUsers, subBoards);
