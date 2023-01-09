@@ -66,8 +66,12 @@ export const handleUpdateCardPosition = (board: BoardType, changes: UpdateCardPo
     const cardToAdd = colToRemove?.cards[currentCardPosition];
 
     if (cardToAdd && colToAdd && colToRemove) {
-      colToRemove.cards = removeElementAtIndex(colToRemove.cards, currentCardPosition);
-      colToAdd.cards = addElementAtIndex(colToAdd.cards, newPosition, cardToAdd);
+      try {
+        colToRemove.cards = removeElementAtIndex(colToRemove.cards, currentCardPosition);
+        colToAdd.cards = addElementAtIndex(colToAdd.cards, newPosition, cardToAdd);
+      } catch (e) {
+        return boardData;
+      }
     }
   }
   return boardData;
@@ -82,14 +86,17 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
   const cardGroup = targetColumn?.cards.find((card) => card._id === cardGroupId);
   const sourceColumn = boardData.columns.find((col) => col._id === columnIdOfCard);
   const selectedCard = sourceColumn?.cards.find((card) => card._id === cardId);
-
   currentCardPosition = sourceColumn?.cards.findIndex((card) => card._id === cardId);
 
   if (cardGroup && selectedCard && sourceColumn && currentCardPosition !== undefined) {
-    sourceColumn.cards = removeElementAtIndex(sourceColumn.cards, currentCardPosition);
-    cardGroup.items = addElementAtIndex(cardGroup.items, cardGroup.items.length, {
-      ...selectedCard,
-    });
+    try {
+      sourceColumn.cards = removeElementAtIndex(sourceColumn.cards, currentCardPosition);
+      cardGroup.items = addElementAtIndex(cardGroup.items, cardGroup.items.length, {
+        ...selectedCard,
+      });
+    } catch (e) {
+      return boardData;
+    }
   }
 
   return boardData;
@@ -104,14 +111,18 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
   const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
 
   if (column && cardGroup && selectedCard) {
-    cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
-    if (cardGroup.items.length === 1) {
-      cardGroup.text = cardGroup.items[0].text;
+    try {
+      cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
+      if (cardGroup.items.length === 1) {
+        cardGroup.text = cardGroup.items[0].text;
+      }
+      column.cards = addElementAtIndex(column.cards, newPosition, {
+        ...selectedCard,
+        items: [selectedCard],
+      });
+    } catch (e) {
+      return boardData;
     }
-    column.cards = addElementAtIndex(column.cards, newPosition, {
-      ...selectedCard,
-      items: [selectedCard],
-    });
   }
 
   return boardData;
