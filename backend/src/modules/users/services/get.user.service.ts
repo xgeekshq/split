@@ -6,6 +6,7 @@ import { GetUserService } from '../interfaces/services/get.user.service.interfac
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
+import { sortAlphabetically } from '../utils/sortings';
 
 @Injectable()
 export default class GetUserServiceImpl implements GetUserService {
@@ -38,8 +39,15 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.countDocuments();
 	}
 
-	getAllUsers() {
-		return this.userRepository.findAll({ password: 0, currentHashedRefreshToken: 0 });
+	async getAllUsers() {
+		const allUsers = await this.userRepository.findAll({
+			password: 0,
+			currentHashedRefreshToken: 0
+		});
+
+		allUsers.sort(sortAlphabetically);
+
+		return allUsers;
 	}
 
 	getAllUsersWithPagination(page?: number, size?: number, searchUser?: string) {
@@ -71,13 +79,7 @@ export default class GetUserServiceImpl implements GetUserService {
 			page
 		};
 
-		results.userWithTeams.sort((a, b) => {
-			if (a.user.firstName === b.user.firstName) {
-				return a.user.lastName < b.user.lastName ? -1 : 1;
-			}
-
-			return a.user.firstName < b.user.firstName ? -1 : 1;
-		});
+		results.userWithTeams.sort((a, b) => sortAlphabetically(a.user, b.user));
 
 		return results;
 	}
