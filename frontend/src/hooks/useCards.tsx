@@ -265,9 +265,8 @@ const useCards = () => {
     onSettled: (data, error, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
     },
-    onError: (_, variables, context) => {
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
-      setPreviousBoardQuery(variables.boardId, context);
       setToastState({
         open: true,
         content: 'Error unmerge the card',

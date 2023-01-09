@@ -59,19 +59,16 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	async addCronJob(day: number, month: number, addCronJobDto: AddCronJobDto) {
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
 		try {
+			const year =
+				new Date().getUTCMonth() === 11 && month == 0
+					? new Date().getFullYear() + 1
+					: new Date().getFullYear();
 			const cronJobDoc = await this.schedulesModel.create({
 				board: String(boardId),
 				team: String(teamId),
 				owner: String(ownerId),
 				maxUsers: maxUsersPerTeam,
-				willRunAt: new Date(
-					new Date().getUTCMonth() === 11 && month == 0
-						? new Date().getFullYear() + 1
-						: new Date().getFullYear(),
-					month,
-					day,
-					10
-				).toISOString()
+				willRunAt: new Date(year, month, day, 10).toISOString()
 			});
 
 			if (!cronJobDoc) throw Error('CronJob not created');
