@@ -8,6 +8,7 @@ import {
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -103,50 +104,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			await session.commitTransaction();
 			await session.endSession();
 
-			return pushResult.populate([
-				{
-					path: 'users',
-					select: 'user role -board votesCount',
-					populate: { path: 'user', select: 'firstName email lastName _id' }
-				},
-				{
-					path: 'team',
-					select: 'name users -_id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-					}
-				},
-				{
-					path: 'columns.cards.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'columns.cards.comments.createdBy',
-					select: '_id  firstName lastName'
-				},
-				{
-					path: 'columns.cards.items.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'columns.cards.items.comments.createdBy',
-					select: '_id firstName lastName'
-				},
-				{
-					path: 'createdBy',
-					select: '_id firstName lastName isSAdmin joinedAt'
-				},
-				{
-					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user'
-					}
-				}
-			]);
+			return pushResult.populate(BoardDataPopulate);
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {

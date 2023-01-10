@@ -6,4 +6,5 @@ export default interface UpdateCommentDto {
   boardId: string;
   socketId?: string;
   isCardGroup: boolean;
+  anonymous: boolean;
 }

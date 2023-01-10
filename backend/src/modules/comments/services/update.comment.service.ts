@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { UpdateCommentService } from '../interfaces/services/update.comment.service.interface';
 
 @Injectable()
@@ -14,7 +15,8 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 		cardItemId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	) {
 		return this.boardModel
 			.findOneAndUpdate(
@@ -25,7 +27,8 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 				},
 				{
 					$set: {
-						'columns.$.cards.$[c].items.$[i].comments.$[com].text': text
+						'columns.$.cards.$[c].items.$[i].comments.$[com].text': text,
+						'columns.$.cards.$[c].items.$[i].comments.$[com].anonymous': anonymous
 					}
 				},
 				{
@@ -37,48 +40,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 					new: true
 				}
 			)
-			.populate({
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			})
-			.populate({
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			})
-			.populate({
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			})
-			.populate({
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			})
+			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
 	}
@@ -88,7 +50,8 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 		cardId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	) {
 		return this.boardModel
 			.findOneAndUpdate(
@@ -98,7 +61,8 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 				},
 				{
 					$set: {
-						'columns.$.cards.$[c].comments.$[com].text': text
+						'columns.$.cards.$[c].comments.$[com].text': text,
+						'columns.$.cards.$[c].comments.$[com].anonymous': anonymous
 					}
 				},
 				{
@@ -106,48 +70,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 					new: true
 				}
 			)
-			.populate({
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			})
-			.populate({
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			})
-			.populate({
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			})
-			.populate({
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			})
+			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
 	}

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model, ObjectId } from 'mongoose';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
@@ -92,48 +93,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					},
 					{ new: true }
 				)
-				.populate({
-					path: 'users',
-					select: 'user role -board votesCount',
-					populate: { path: 'user', select: 'firstName email lastName _id' }
-				})
-				.populate({
-					path: 'team',
-					select: 'name users -_id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-					}
-				})
-				.populate({
-					path: 'columns.cards.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.comments.createdBy',
-					select: '_id  firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.items.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.items.comments.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'createdBy',
-					select: '_id firstName lastName isSAdmin joinedAt'
-				})
-				.populate({
-					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user'
-					}
-				})
+				.populate(BoardDataPopulate)
 				.lean()
 				.exec();
 
@@ -219,48 +179,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					},
 					{ arrayFilters: [{ 'card._id': cardId }], new: true }
 				)
-				.populate({
-					path: 'users',
-					select: 'user role -board votesCount',
-					populate: { path: 'user', select: 'firstName email lastName _id' }
-				})
-				.populate({
-					path: 'team',
-					select: 'name users -_id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-					}
-				})
-				.populate({
-					path: 'columns.cards.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.comments.createdBy',
-					select: '_id  firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.items.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'columns.cards.items.comments.createdBy',
-					select: '_id firstName lastName'
-				})
-				.populate({
-					path: 'createdBy',
-					select: '_id firstName lastName isSAdmin joinedAt'
-				})
-				.populate({
-					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
-					populate: {
-						path: 'users',
-						select: 'role user'
-					}
-				})
+				.populate(BoardDataPopulate)
 				.lean()
 				.exec();
 
