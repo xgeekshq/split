@@ -40,12 +40,13 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	async getAllUsers() {
-		const allUsers = await this.userRepository.findAll({
-			password: 0,
-			currentHashedRefreshToken: 0
-		});
-
-		allUsers.sort(sortAlphabetically);
+		const allUsers = await this.userRepository.findAll(
+			{
+				password: 0,
+				currentHashedRefreshToken: 0
+			},
+			{ firstName: 'asc', lastName: 'asc' }
+		);
 
 		return allUsers;
 	}

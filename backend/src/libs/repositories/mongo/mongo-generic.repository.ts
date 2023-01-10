@@ -1,5 +1,9 @@
 import { ClientSession, FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
-import { BaseInterfaceRepository, PopulateType } from '../interfaces/base.repository.interface';
+import {
+	BaseInterfaceRepository,
+	PopulateType,
+	SortType
+} from '../interfaces/base.repository.interface';
 import { ModelProps, SelectedValues } from '../types';
 
 export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
@@ -14,8 +18,12 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().lean().exec();
 	}
 
-	findAll(selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T[]> {
-		return this._repository.find().select(selectedValues).populate(populate).exec();
+	findAll(
+		selectedValues?: SelectedValues<T>,
+		sort?: SortType,
+		populate?: PopulateType
+	): Promise<T[]> {
+		return this._repository.find().select(selectedValues).sort(sort).populate(populate).exec();
 	}
 
 	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T> {
