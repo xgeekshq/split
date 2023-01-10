@@ -80,7 +80,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
 	}
 
-	async createBoard(boardData: BoardDto, userId: string, isSubBoard = false, haveSubBoards = true) {
+	async createBoard(
+		boardData: BoardDto,
+		userId: string,
+		isSubBoard = false,
+		haveSubBoards = true
+	): Promise<BoardDocument> {
 		const { dividedBoards = [], team } = boardData;
 
 		if (haveSubBoards) {
@@ -133,7 +138,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			: teamUser.role;
 	}
 
-	async create(boardData: BoardDto, userId: string, fromSchedule = false) {
+	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<BoardDocument> {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
@@ -228,7 +233,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = this.findMaxUsersPerTeam(teamLength, maxUsersPerTeam);
+		const maxTeams = Math.ceil(teamLength / Number(maxUsersPerTeam));
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -250,7 +255,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			maxVotes: configs.maxVotes ?? null,
 			hideCards: configs.hideCards ?? false,
 			hideVotes: configs.hideVotes ?? false,
-			maxUsers: configs.maxUsersPerTeam,
+			maxUsers: Math.ceil(configs.maxUsersPerTeam),
 			slackEnable: configs.slackEnable,
 			responsibles
 		};
@@ -261,23 +266,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		return board._id.toString();
 	}
-
-	private findMaxUsersPerTeam = (teamLength: number, maxUsersPerTeam: number): number => {
-		let maxTeams = 0;
-		do {
-			maxTeams = teamLength / maxUsersPerTeam;
-
-			if (maxTeams < 2) {
-				maxUsersPerTeam -= 1;
-
-				if (maxTeams <= 0 || maxUsersPerTeam <= 1) {
-					return 0;
-				}
-			}
-		} while (maxTeams < 2);
-
-		return Math.round(maxTeams);
-	};
 
 	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users

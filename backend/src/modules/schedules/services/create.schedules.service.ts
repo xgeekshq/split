@@ -42,8 +42,10 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const date = new Date(schedule.willRunAt);
 			const day = date.getUTCDate();
 			const month = date.getUTCMonth();
+			const hours = date.getUTCHours();
+			const minutes = date.getUTCMinutes();
 			await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(String(schedule.board));
-			await this.addCronJob(day, month, this.mapScheduleDocumentToDto(schedule));
+			await this.addCronJob(day, month, this.mapScheduleDocumentToDto(schedule), hours, minutes);
 		});
 	}
 
@@ -56,11 +58,20 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		};
 	}
 
-	async addCronJob(day: number, month: number, addCronJobDto: AddCronJobDto) {
+	async addCronJob(
+		day: number,
+		month: number,
+		addCronJobDto: AddCronJobDto,
+		hours = 10,
+		minutes = 0
+	) {
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
+
+		month = month <= 0 ? 0 : month;
+
 		try {
 			const year =
-				new Date().getUTCMonth() === 11 && month == 0
+				new Date().getUTCMonth() === 11 && month === 0
 					? new Date().getFullYear() + 1
 					: new Date().getFullYear();
 			const cronJobDoc = await this.schedulesModel.create({
@@ -68,12 +79,12 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				team: String(teamId),
 				owner: String(ownerId),
 				maxUsers: maxUsersPerTeam,
-				willRunAt: new Date(year, month, day, 10).toISOString()
+				willRunAt: new Date(year, month, day, hours, minutes).toISOString()
 			});
 
 			if (!cronJobDoc) throw Error('CronJob not created');
 
-			const job = new CronJob(`0 10 ${day} ${month} *`, () =>
+			const job = new CronJob(`${minutes} ${hours} ${day} ${month} *`, () =>
 				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
 			);
 			this.schedulerRegistry.addCronJob(String(boardId), job);
@@ -113,7 +124,8 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		oldBoardId: string
 	) {
 		const day = getDay();
-		const month = getNextMonth();
+		let month = getNextMonth();
+		month = month - 1 <= 0 ? 0 : month - 1;
 
 		const configs: Configs = {
 			recurrent: oldBoard.recurrent,
@@ -122,7 +134,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			hideVotes: oldBoard.hideVotes,
 			maxUsersPerTeam: deletedSchedule.maxUsers,
 			slackEnable: oldBoard.slackEnable ?? false,
-			date: new Date(new Date().getFullYear(), month - 1, day, 10)
+			date: new Date(new Date().getFullYear(), month, day)
 		};
 
 		const boardId = await this.createBoardService.splitBoardByTeam(ownerId, teamId, configs);
@@ -140,6 +152,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			maxUsersPerTeam: deletedSchedule.maxUsers
 		};
 
-		this.addCronJob(day, month - 1, addCronJobDto);
+		this.addCronJob(day, month, addCronJobDto);
 	}
 }
