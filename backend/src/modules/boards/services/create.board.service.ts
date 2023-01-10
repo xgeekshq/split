@@ -360,27 +360,19 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		let availableUsers = [...teamMembers];
 		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
-		let membersWithoutTeam = teamMembers.length;
-		let countNumberOfGroups = 0;
+
+		let leftOverUsers = teamMembers.length % maxTeams;
 
 		new Array(maxTeams).fill(0).forEach((_, i) => {
-			countNumberOfGroups++;
+			const numberOfUsersByGroup = leftOverUsers-- > 0 ? usersPerTeam + 1 : usersPerTeam;
 
-			let numberOfUsersByGroup = usersPerTeam;
-			membersWithoutTeam -= usersPerTeam;
-
-			if (countNumberOfGroups === maxTeams && membersWithoutTeam !== 0)
-				numberOfUsersByGroup += membersWithoutTeam;
-
-			const indexToCompare = i - 1 < 0 ? 0 : i - 1;
+			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 
 			availableUsers = availableUsers.filter((user) => {
-				return !splitUsers[indexToCompare].find((member) => {
+				return !splitUsers[i].some((member) => {
 					return member.user === (user.user as User)._id;
 				});
 			});
-
-			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 		});
 
 		this.generateSubBoards(maxTeams, splitUsers, subBoards, responsibles);
