@@ -41,10 +41,31 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     const scrollRef = useRef<HTMLDivElement>(null);
     const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
+    const sortUserList = () => {
+      const listToBeSorted = [...usersList];
+
+      // Sort by Name
+      listToBeSorted.sort((a, b) => {
+        const aFullName = `${a.firstName.toLowerCase()} ${a.lastName.toLowerCase()}`;
+        const bFullName = `${b.firstName.toLowerCase()} ${b.lastName.toLowerCase()}`;
+
+        return aFullName < bFullName ? -1 : 1;
+      });
+
+      // Sort by Checked
+      listToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
+
+      // Ensure Team Admin is in First place
+      const userAdminIndex = listToBeSorted.findIndex((user) => user._id === session?.user.id);
+      listToBeSorted.unshift(listToBeSorted.splice(userAdminIndex, 1)[0]);
+
+      return listToBeSorted;
+    };
+
     // Method to close dialog
     const handleClose = () => {
       setSearchMember('');
-      setUsersChecked(usersList);
+      setUsersChecked(sortUserList());
       setIsOpen(false);
     };
 
@@ -89,28 +110,6 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     // Sets User List from State
     useEffect(() => {
       if (usersList.length <= 0) return;
-
-      // SORTS
-      const sortUserList = () => {
-        const listToBeSorted = [...usersList];
-
-        // Sort by Name
-        listToBeSorted.sort((a, b) => {
-          const aFullName = `${a.firstName.toLowerCase()} ${a.lastName.toLowerCase()}`;
-          const bFullName = `${b.firstName.toLowerCase()} ${b.lastName.toLowerCase()}`;
-
-          return aFullName < bFullName ? -1 : 1;
-        });
-
-        // Sort by Checked
-        listToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
-
-        // Ensure Team Admin is in First place
-        const userAdminIndex = listToBeSorted.findIndex((user) => user._id === session?.user.id);
-        listToBeSorted.unshift(listToBeSorted.splice(userAdminIndex, 1)[0]);
-
-        return listToBeSorted;
-      };
 
       setUsersChecked(sortUserList());
     }, [usersList]);

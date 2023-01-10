@@ -80,6 +80,14 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         },
     );
 
+    // Sort by Name
+    updatedListWithAdded.sort((a, b) => {
+      const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+      const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+
+      return aFullName < bFullName ? -1 : 1;
+    });
+
     // this insures that the team creator stays always in first
     const userAdminIndex = updatedListWithAdded.findIndex(
       (member) => member.user._id === session?.user.id,
