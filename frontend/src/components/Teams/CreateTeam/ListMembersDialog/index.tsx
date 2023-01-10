@@ -88,6 +88,8 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
 
     // Sets User List from State
     useEffect(() => {
+      if (usersList.length <= 0) return;
+
       // SORTS
       const sortUserList = () => {
         const listToBeSorted = [...usersList];
