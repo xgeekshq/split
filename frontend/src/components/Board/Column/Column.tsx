@@ -112,6 +112,7 @@ const Column = React.memo<ColumnBoardType>(
                       defaultOpen={countAllCards === 0}
                       isUpdate={false}
                       socketId={socketId}
+                      anonymous={false}
                     />
                   </Flex>
                 )}

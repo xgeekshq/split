@@ -83,6 +83,7 @@ const Comments = React.memo(
               isCard={false}
               isUpdate={false}
               socketId={socketId}
+              anonymous={false}
             />
           </Flex>
         )}

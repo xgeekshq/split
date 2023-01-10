@@ -152,7 +152,9 @@ const CardFooter = React.memo<FooterProps>(
     };
 
     useEffect(() => {
-      setMaxVotesReached(user?.votesCount === maxVotes);
+      if (user?.votesCount && maxVotes) {
+        setMaxVotesReached(user?.votesCount === maxVotes);
+      }
     }, [maxVotes, setMaxVotesReached, user?.votesCount]);
 
     return (

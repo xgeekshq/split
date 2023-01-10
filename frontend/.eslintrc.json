@@ -29,6 +29,7 @@
 	  "no-plusplus": "off",
 	  "@typescript-eslint/naming-convention": "off",
 	  "no-console": "error",
+	  "@typescript-eslint/no-unused-expressions": "off",
 	  "import/no-extraneous-dependencies": [
 		"error",
 		{

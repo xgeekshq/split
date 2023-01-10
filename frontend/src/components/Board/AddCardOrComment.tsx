@@ -41,6 +41,7 @@ type AddCardProps = {
   cancelUpdate?: () => void;
   defaultOpen?: boolean;
   isEditing?: boolean;
+  anonymous: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -57,13 +58,14 @@ const AddCard = React.memo<AddCardProps>(
     commentId,
     isEditing = false,
     defaultOpen,
+    anonymous,
     ...props
   }) => {
     const { addCardInColumn, updateCard } = useCards();
     const { addCommentInCard, updateComment } = useComments();
     const [isOpen, setIsOpen] = useState(!!isUpdate || !!cancelUpdate || defaultOpen);
-    const [isAnonymous, setIsAnonymous] = useState(false);
-    const [isCommentAnonymous, setIsCommentAnonymous] = useState(false);
+    const [isAnonymous, setIsAnonymous] = useState(anonymous);
+    const [isCommentAnonymous, setIsCommentAnonymous] = useState(anonymous);
 
     const methods = useForm<{ text: string }>({
       mode: 'onSubmit',
@@ -147,6 +149,7 @@ const AddCard = React.memo<AddCardProps>(
         socketId,
         isCardGroup: !cardItemId,
         commentId,
+        anonymous: isCommentAnonymous,
       };
 
       updateComment.mutate(updateCommentDto);
@@ -214,6 +217,7 @@ const AddCard = React.memo<AddCardProps>(
               id={colId + cardId}
               label="Add anonymously"
               size="16"
+              checked={anonymous}
               setCheckedTerms={() => {
                 setIsCommentAnonymous(!isCommentAnonymous);
               }}
@@ -225,6 +229,7 @@ const AddCard = React.memo<AddCardProps>(
                 id={colId}
                 label="Post anonymously"
                 size="16"
+                checked={anonymous}
                 setCheckedTerms={() => {
                   setIsAnonymous(!isAnonymous);
                 }}

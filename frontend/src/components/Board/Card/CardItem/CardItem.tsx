@@ -94,7 +94,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                   />
                 </Flex>
               )}
-              {!isSubmited && userId === item?.createdBy?._id && (
+              {!isSubmited && (
                 <PopoverCardSettings
                   isItem
                   boardId={boardId}
@@ -139,6 +139,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             cardText={item.text}
             colId={columnId}
             socketId={socketId}
+            anonymous={item.anonymous}
           />
         )}
         {deleting && (

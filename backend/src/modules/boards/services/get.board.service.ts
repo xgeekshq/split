@@ -15,6 +15,7 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -377,48 +378,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	private async getBoardData(boardId: string) {
 		const board = await this.boardModel
 			.findById(boardId)
-			.populate({
-				path: 'users',
-				select: 'user role -board votesCount',
-				populate: { path: 'user', select: 'firstName email lastName _id' }
-			})
-			.populate({
-				path: 'team',
-				select: 'name users -_id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: { path: 'user', select: 'firstName lastName email joinedAt' }
-				}
-			})
-			.populate({
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			})
-			.populate({
-				path: 'createdBy',
-				select: '_id firstName lastName isSAdmin joinedAt'
-			})
-			.populate({
-				path: 'dividedBoards',
-				select: '-__v -createdAt -id',
-				populate: {
-					path: 'users',
-					select: 'role user'
-				}
-			})
+			.populate(BoardDataPopulate)
 			.lean({ virtuals: true })
 			.exec();
 

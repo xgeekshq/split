@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import isEmpty from 'src/libs/utils/isEmpty';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
 import { pushCardIntoPosition } from '../shared/push.card';
@@ -11,7 +12,7 @@ import { pushCardIntoPosition } from '../shared/push.card';
 export default class CreateCardServiceImpl implements CreateCardService {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
-	create(boardId: string, userId: string, card: CardDto, colIdToAdd: string) {
+	async create(boardId: string, userId: string, card: CardDto, colIdToAdd: string) {
 		card.createdBy = userId;
 
 		if (isEmpty(card.items)) {
@@ -26,6 +27,8 @@ export default class CreateCardServiceImpl implements CreateCardService {
 			card.items[0].createdBy = userId;
 		}
 
-		return pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
+		const board = await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
+
+		return board.populate(BoardDataPopulate);
 	}
 }

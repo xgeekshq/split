@@ -8,7 +8,8 @@ export interface UpdateCommentService {
 		cardItemId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
 
 	updateCardGroupComment(
@@ -16,6 +17,7 @@ export interface UpdateCommentService {
 		cardId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
 }

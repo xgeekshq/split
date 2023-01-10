@@ -110,6 +110,7 @@ const Comment: React.FC<CommentProps> = React.memo(
             commentId={comment._id}
             isCard={false}
             socketId={socketId}
+            anonymous={comment.anonymous}
           />
         )}
       </Flex>

@@ -16,7 +16,8 @@ export class UpdateCommentApplicationImpl implements UpdateCommentApplication {
 		cardItemId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	) {
 		return this.updateCommentService.updateItemComment(
 			boardId,
@@ -24,7 +25,8 @@ export class UpdateCommentApplicationImpl implements UpdateCommentApplication {
 			cardItemId,
 			commentId,
 			userId,
-			text
+			text,
+			anonymous
 		);
 	}
 
@@ -33,14 +35,16 @@ export class UpdateCommentApplicationImpl implements UpdateCommentApplication {
 		cardId: string,
 		commentId: string,
 		userId: string,
-		text: string
+		text: string,
+		anonymous: boolean
 	) {
 		return this.updateCommentService.updateCardGroupComment(
 			boardId,
 			cardId,
 			commentId,
 			userId,
-			text
+			text,
+			anonymous
 		);
 	}
 }

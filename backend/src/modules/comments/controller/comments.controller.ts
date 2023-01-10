@@ -173,7 +173,7 @@ export default class CommentsController {
 		@Body() commentData: UpdateCardCommentDto
 	) {
 		const { boardId, cardId, itemId, commentId } = params;
-		const { text, socketId } = commentData;
+		const { text, socketId, anonymous } = commentData;
 
 		const board = await this.updateCommentApp.updateItemComment(
 			boardId,
@@ -181,7 +181,8 @@ export default class CommentsController {
 			itemId,
 			commentId,
 			request.user._id,
-			text
+			text,
+			anonymous
 		);
 
 		if (!board) {
@@ -222,14 +223,15 @@ export default class CommentsController {
 		@Body() commentData: UpdateCardCommentDto
 	) {
 		const { boardId, cardId, commentId } = params;
-		const { text, socketId } = commentData;
+		const { text, socketId, anonymous } = commentData;
 
 		const board = await this.updateCommentApp.updateCardGroupComment(
 			boardId,
 			cardId,
 			commentId,
 			request.user._id,
-			text
+			text,
+			anonymous
 		);
 
 		if (!board) {

@@ -117,8 +117,10 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.setQueryData(getBoardQuery(data?._id), { board: data });
+    onSettled: (data, error, variables) => {
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
     onError: (_, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
@@ -148,8 +150,7 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -170,10 +171,7 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
-    },
-    onError: (_, variables, context) => {
+    onError: (data, variables, context) => {
       setPreviousBoardQuery(variables.boardId, context);
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
@@ -195,9 +193,7 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
-
+    onSettled: () => {
       setToastState({
         open: true,
         type: ToastStateEnum.SUCCESS,
@@ -241,11 +237,12 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
+    onSettled: (data, error, variables) => {
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setMergeCard(undefined);
       setToastState({
@@ -267,12 +264,13 @@ const useCards = () => {
 
       return { previousBoard: prevBoardData, data };
     },
-    onSettled: (data) => {
-      queryClient.invalidateQueries(getBoardQuery(data?._id));
+    onSettled: (data, error, variables) => {
+      if (!error) {
+        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+      }
     },
-    onError: (_, variables, context) => {
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
-      setPreviousBoardQuery(variables.boardId, context);
       setToastState({
         open: true,
         content: 'Error unmerge the card',
