@@ -1,10 +1,6 @@
-type MongoPopulate = {
-	path: string;
-	select: string;
-	populate?: MongoPopulate;
-};
+import { PopulateOptions } from 'mongoose';
 
-export const BoardDataPopulate: MongoPopulate[] = [
+export const BoardDataPopulate: PopulateOptions[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',

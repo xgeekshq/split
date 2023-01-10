@@ -27,8 +27,8 @@ export default class CreateCardServiceImpl implements CreateCardService {
 			card.items[0].createdBy = userId;
 		}
 
-		return (await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel)).populate(
-			BoardDataPopulate
-		);
+		const board = await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
+
+		return board.populate(BoardDataPopulate);
 	}
 }
