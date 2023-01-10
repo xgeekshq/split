@@ -192,7 +192,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
 
-		return !isAfter(maxDateToBeNewJoiner, new Date());
+		return isAfter(maxDateToBeNewJoiner, new Date());
 	};
 
 	async splitBoardByTeam(
@@ -209,7 +209,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 			if (
 				teamUser.isNewJoiner &&
-				this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
+				!this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
 			) {
 				this.updateTeamService.updateTeamUser({
 					team: teamId,
