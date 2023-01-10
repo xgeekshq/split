@@ -27,14 +27,13 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const { data: session } = useSession({ required: true });
 
-  const [, setUsersList] = useRecoilState(usersListState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
 
   const setToastState = useSetRecoilState(toastState);
 
   const saveMembers = (checkedUserList: UserList[]) => {
     const listOfUsers = [...membersList];
-    const listOfUsersToBeSorted = [...checkedUserList];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
     const { teamId } = router.query;
@@ -95,24 +94,14 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     });
 
     setMembersListState(updatedListWithAdded);
-
-    setUsersList(
-      listOfUsersToBeSorted
-        .sort((a, b) => {
-          if (a.firstName === b.firstName) {
-            return a.lastName < b.lastName ? -1 : 1;
-          }
-
-          return a.firstName < b.firstName ? -1 : 1;
-        })
-        .sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
-    );
+    setUsersList(checkedUserList);
 
     setIsOpen(false);
   };
 
   return (
     <ListMembersDialog
+      usersList={usersList}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       saveUsers={saveMembers}
