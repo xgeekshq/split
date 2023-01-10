@@ -1,4 +1,10 @@
-export const BoardDataPopulate = [
+type MongoPopulate = {
+	path: string;
+	select: string;
+	populate?: MongoPopulate;
+};
+
+export const BoardDataPopulate: MongoPopulate[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',

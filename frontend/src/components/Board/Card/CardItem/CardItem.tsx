@@ -139,6 +139,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             cardText={item.text}
             colId={columnId}
             socketId={socketId}
+            anonymous={item.anonymous}
           />
         )}
         {deleting && (
