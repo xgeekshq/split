@@ -41,6 +41,13 @@ const useVotes = () => {
     );
   };
 
+  const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
+    const query = getBoardQueryKey(id);
+    await queryClient.cancelQueries(query);
+    const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
+    return prevData?.board;
+  };
+
   const getFirstCardItemIndexWithVotes = (cardItems: CardItemType[]) =>
     cardItems.findIndex((cardItem) => cardItem.votes.length > 0);
 
@@ -231,7 +238,7 @@ const useVotes = () => {
   };
 
   const updateVote = async (variables: VoteDto) => {
-    const { newBoardData } = await updateVoteOptimistic(
+    const { newBoardData, prevBoardData } = await updateVoteOptimistic(
       variables.count > 0 ? Action.Add : Action.Remove,
       variables,
     );
@@ -239,11 +246,15 @@ const useVotes = () => {
     if (newBoardData?.maxVotes && variables.userId === userId) {
       toastRemainingVotesMessage('', newBoardData);
     }
+
+    return { newBoardData, prevBoardData };
   };
 
   const handleVote = useMutation(handleVotes, {
-    onSuccess: async (data, variables) => {
-      updateVote(variables);
+    onMutate: async (variables) => {
+      const { newBoardData, prevBoardData } = await updateVote(variables);
+
+      return { previousBoard: prevBoardData, data: newBoardData };
     },
     onError: (_, variables, context) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
