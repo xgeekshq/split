@@ -208,14 +208,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		// board1 = this.commentsClean(b)
 		board = this.cleanBoard(board, userId);
 
-		if (board.isSubBoard) {
-			const mainBoard = await this.getMainBoardData(boardId);
-
-			if (!mainBoard) return null;
-
-			return { board, mainBoardData: mainBoard };
-		}
-
 		return { board };
 	}
 

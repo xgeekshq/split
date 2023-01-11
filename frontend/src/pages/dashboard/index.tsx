@@ -17,13 +17,13 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 }));
 
 const Dashboard = () => {
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
 
   const { data, isLoading } = useQuery('dashboardInfo', () => getDashboardHeaderInfo(), {
     enabled: true,
     refetchOnWindowFocus: false,
   });
-  if (!isLoading && (!session || !data)) return null;
+  if (!isLoading && !data) return null;
   if (isLoading) {
     return <LoadingPage />;
   }
