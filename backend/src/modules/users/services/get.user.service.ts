@@ -39,8 +39,8 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.countDocuments();
 	}
 
-	async getAllUsers() {
-		return await this.userRepository.findAll(
+	getAllUsers() {
+		return this.userRepository.findAll(
 			{
 				password: 0,
 				currentHashedRefreshToken: 0
