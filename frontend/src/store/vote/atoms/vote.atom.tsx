@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const maxVotesReachedAtom = atom<boolean>({
+export const maxVotesReachedAtom = atom<{ maxVotesReached: boolean; noVotes: boolean }>({
   key: 'usersWithTeams',
-  default: false,
+  default: { maxVotesReached: false, noVotes: false },
 });
