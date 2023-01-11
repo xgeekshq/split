@@ -205,7 +205,7 @@ const CardFooter = React.memo<FooterProps>(
               <StyledButtonIcon
                 disabled={
                   !isMainboard ||
-                  user?.votesCount === maxVotes ||
+                  (maxVotes && user?.votesCount === maxVotes) ||
                   (maxVotes && disableVotes.maxVotesReached) ||
                   (hideCards && createdBy?._id !== userId)
                 }
