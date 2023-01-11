@@ -51,9 +51,9 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			await this.addCronJob({
 				day,
 				month,
-				addCronJobDto: this.mapScheduleDocumentToDto(schedule),
 				hours,
-				minutes
+				minutes,
+				addCronJobDto: this.mapScheduleDocumentToDto(schedule)
 			});
 		});
 	}
