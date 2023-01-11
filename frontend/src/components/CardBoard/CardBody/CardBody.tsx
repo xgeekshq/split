@@ -91,10 +91,21 @@ type CardBodyProps = {
   mainBoardId?: string;
   isSAdmin?: boolean;
   socketId?: string;
+  mainBoardTitle?: string;
 };
 
 const CardBody = React.memo<CardBodyProps>(
-  ({ userId, board, index, isDashboard, dividedBoardsCount, mainBoardId, isSAdmin, socketId }) => {
+  ({
+    userId,
+    board,
+    index,
+    isDashboard,
+    dividedBoardsCount,
+    mainBoardId,
+    isSAdmin,
+    socketId,
+    mainBoardTitle,
+  }) => {
     const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
     const countDividedBoards = dividedBoardsCount || dividedBoards.length;
     const [openSubBoards, setSubBoardsOpen] = useState(false);
@@ -146,9 +157,10 @@ const CardBody = React.memo<CardBodyProps>(
           mainBoardId={board._id}
           socketId={socketId}
           userId={userId}
+          mainBoardTitle={board.title}
         />
       ),
-      [board._id, countDividedBoards, isDashboard, userId, socketId],
+      [countDividedBoards, isDashboard, board._id, board.title, socketId, userId],
     );
 
     const iconLockConditions =
@@ -190,6 +202,7 @@ const CardBody = React.memo<CardBodyProps>(
                     mainBoardId={mainBoardId}
                     title={board.title}
                     userIsParticipating={userIsParticipating}
+                    mainBoardTitle={mainBoardTitle}
                   />
                   {isSubBoard && (
                     <Text color="primary300" size="xs">

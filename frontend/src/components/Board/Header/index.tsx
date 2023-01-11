@@ -18,6 +18,7 @@ import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import { useRouter } from 'next/router';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -33,6 +34,7 @@ import {
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
+  const router = useRouter();
 
   // Atoms
   const boardData = useRecoilValue(boardInfoState);
@@ -71,12 +73,15 @@ const BoardHeader = () => {
     },
   ];
 
-  if (isSubBoard && !!boardData?.mainBoardData) {
-    const { title: mainTitle, id: mainId } = boardData.mainBoardData;
+  const { mainBoardTitle, mainBoardId } = router.query;
 
+  const mainTitle = mainBoardTitle as string;
+  const mainId = mainBoardId as string;
+
+  if (isSubBoard) {
     breadcrumbItems.push(
       {
-        title: mainTitle,
+        title: mainTitle ?? title,
         link: `/boards/${mainId}`,
       },
       {
@@ -107,6 +112,7 @@ const BoardHeader = () => {
                     query: {
                       boardId: getSubBoard()?.id,
                       mainBoardId: boardData?.board._id,
+                      mainBoardTitle: boardData?.board.title,
                     },
                   }}
                 >
