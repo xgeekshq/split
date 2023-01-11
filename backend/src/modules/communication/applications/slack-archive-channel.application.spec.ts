@@ -8,7 +8,11 @@ import {
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { SlackCommunicationGateAdapter } from 'src/modules/communication/adapters/slack-communication-gate.adapter';
 import { SlackArchiveChannelApplication } from 'src/modules/communication/applications/slack-archive-channel.application';
-import { ArchiveChannelData, ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
+import {
+	ArchiveChannelData,
+	ArchiveChannelDataOptions,
+	BoardType
+} from 'src/modules/communication/dto/types';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
 
 const slackChannel = {
@@ -108,5 +112,48 @@ describe('SlackArchiveChannelApplication', () => {
 		};
 
 		await expect(application.execute(archiveChannelData)).rejects.toThrowError();
+	});
+
+	it('shoult archive channel by board', async () => {
+		const archiveChannelData: ArchiveChannelData = {
+			type: ArchiveChannelDataOptions.BOARD,
+			data: { id: 'any_board_id', slackChannelId: 'U023BECGF' } as BoardType
+		};
+
+		const result = await application.execute(archiveChannelData);
+
+		expect(result).toMatchObject([
+			{ channelId: (archiveChannelData.data as BoardType).slackChannelId, result: true }
+		]);
+	});
+
+	it('shoult archive all channels by board with dividedBoards if "cascade" is set to true', async () => {
+		const archiveChannelData: ArchiveChannelData = {
+			type: ArchiveChannelDataOptions.BOARD,
+			cascade: true,
+			data: {
+				id: 'any_board_id',
+				slackChannelId: 'not_exists',
+				dividedBoards: Object.entries(slackChannel).map(([k], idx) => ({
+					id: `any_board_id_${idx}`,
+					slackChannelId: k
+				}))
+			} as BoardType
+		};
+
+		const result = await application.execute(archiveChannelData);
+
+		expect(result).toMatchObject([
+			{ channelId: 'not_exists', result: false },
+			{ channelId: 'U023BECGF', result: true },
+			{ channelId: 'U061F7AUR', result: true },
+			{ channelId: 'W012A3CDE', result: true },
+			{ channelId: 'U678BAAGC', result: true },
+			{ channelId: 'U160F7AUZ', result: true },
+			{ channelId: 'U156F7AOI', result: true },
+			{ channelId: 'W058A3SDQ', result: true },
+			{ channelId: 'W013A3CEF', result: 'Archive channel fails' },
+			{ channelId: 'U111BAXFL', result: 'Archive channel fails' }
+		]);
 	});
 });
