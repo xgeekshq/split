@@ -183,6 +183,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "StereoPT",
+      "name": "Guido Pereira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8330038?v=4",
+      "profile": "https://github.com/StereoPT",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
