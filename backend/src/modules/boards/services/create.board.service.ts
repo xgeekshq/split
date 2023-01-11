@@ -189,7 +189,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	createFirstCronJob(addCronJobDto: AddCronJobDto) {
-		this.createSchedulesService.addCronJob(getDay(), getNextMonth() - 1, addCronJobDto);
+		this.createSchedulesService.addCronJob({
+			day: getDay(),
+			month: getNextMonth() - 1,
+			addCronJobDto
+		});
 	}
 
 	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {

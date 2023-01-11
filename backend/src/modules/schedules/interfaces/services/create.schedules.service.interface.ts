@@ -1,11 +1,13 @@
 import { AddCronJobDto } from '../../dto/add.cronjob.dto';
 
+export type AddCronJobType = {
+	day: number;
+	month: number;
+	addCronJobDto: AddCronJobDto;
+	hours?: number;
+	minutes?: number;
+};
+
 export interface CreateSchedulesServiceInterface {
-	addCronJob(
-		day: number,
-		month: number,
-		addCronJobDto: AddCronJobDto,
-		hours?: number,
-		minutes?: number
-	): Promise<void>;
+	addCronJob(input: AddCronJobType): Promise<void>;
 }

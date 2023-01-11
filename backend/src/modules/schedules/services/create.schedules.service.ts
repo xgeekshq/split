@@ -13,7 +13,10 @@ import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { AddCronJobDto } from '../dto/add.cronjob.dto';
-import { CreateSchedulesServiceInterface } from '../interfaces/services/create.schedules.service.interface';
+import {
+	AddCronJobType,
+	CreateSchedulesServiceInterface
+} from '../interfaces/services/create.schedules.service.interface';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import { TYPES } from '../interfaces/types';
 import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
@@ -45,7 +48,13 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const hours = date.getUTCHours();
 			const minutes = date.getUTCMinutes();
 			await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(String(schedule.board));
-			await this.addCronJob(day, month, this.mapScheduleDocumentToDto(schedule), hours, minutes);
+			await this.addCronJob({
+				day,
+				month,
+				addCronJobDto: this.mapScheduleDocumentToDto(schedule),
+				hours,
+				minutes
+			});
 		});
 	}
 
@@ -58,20 +67,15 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		};
 	}
 
-	async addCronJob(
-		day: number,
-		month: number,
-		addCronJobDto: AddCronJobDto,
-		hours = 10,
-		minutes = 0
-	) {
+	async addCronJob(input: AddCronJobType) {
+		const { day, month, addCronJobDto, hours, minutes } = input;
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
 
-		month = month <= 0 ? 0 : month;
+		const newMonth = month <= 0 ? 0 : month;
 
 		try {
 			const year =
-				new Date().getUTCMonth() === 11 && month === 0
+				new Date().getUTCMonth() === 11 && newMonth === 0
 					? new Date().getFullYear() + 1
 					: new Date().getFullYear();
 			const cronJobDoc = await this.schedulesModel.create({
@@ -79,12 +83,12 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				team: String(teamId),
 				owner: String(ownerId),
 				maxUsers: maxUsersPerTeam,
-				willRunAt: new Date(year, month, day, hours, minutes).toISOString()
+				willRunAt: new Date(year, newMonth, day, hours, minutes).toISOString()
 			});
 
 			if (!cronJobDoc) throw Error('CronJob not created');
 
-			const job = new CronJob(`${minutes} ${hours} ${day} ${month} *`, () =>
+			const job = new CronJob(`${minutes} ${hours} ${day} ${newMonth} *`, () =>
 				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
 			);
 			this.schedulerRegistry.addCronJob(String(boardId), job);
@@ -152,6 +156,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			maxUsersPerTeam: deletedSchedule.maxUsers
 		};
 
-		this.addCronJob(day, month, addCronJobDto);
+		this.addCronJob({ day, month, addCronJobDto });
 	}
 }
