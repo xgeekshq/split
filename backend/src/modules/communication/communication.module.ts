@@ -99,6 +99,6 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 			  ]
 			: [])
 	],
-	exports: [CommunicationService]
+	exports: [CommunicationService, ArchiveChannelService]
 })
 export class CommunicationModule {}

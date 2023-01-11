@@ -12,6 +12,9 @@ import {
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
+import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
+import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from '../dto/add.cronjob.dto';
 import {
 	AddCronJobType,
@@ -34,7 +37,9 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		private createBoardService: CreateBoardService,
 		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
 		private getBoardService: GetBoardServiceInterface,
-		private schedulerRegistry: SchedulerRegistry
+		private schedulerRegistry: SchedulerRegistry,
+		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
+		private archiveChannelService: ArchiveChannelServiceInterface
 	) {
 		this.createInitialJobs();
 	}
@@ -110,6 +115,21 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
 
 				return;
+			}
+
+			if (oldBoard.slackEnable) {
+				this.archiveChannelService.execute({
+					type: ArchiveChannelDataOptions.BOARD,
+					data: {
+						id: oldBoard._id,
+						slackChannelId: oldBoard.slackChannelId,
+						dividedBoards: oldBoard.dividedBoards.map((i) => ({
+							id: i._id,
+							slackChannelId: i.slackChannelId
+						}))
+					},
+					cascade: true
+				});
 			}
 
 			if (!deletedSchedule) return;

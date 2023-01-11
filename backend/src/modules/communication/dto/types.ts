@@ -32,7 +32,7 @@ export type BoardType = {
 	id: string;
 	title: string;
 	isSubBoard: boolean;
-	dividedBoards: BoardType[];
+	dividedBoards: Partial<BoardType>[];
 	team: {
 		name: string;
 		users: UserRoleType[];
@@ -70,6 +70,6 @@ export type ArchiveChannelResult = { channelId: string; result: boolean };
 
 export type ArchiveChannelData = {
 	type: ArchiveChannelDataOptions;
-	data: BoardType | string;
+	data: Pick<BoardType, 'id' | 'slackChannelId' | 'dividedBoards'> | string;
 	cascade?: boolean;
 };
