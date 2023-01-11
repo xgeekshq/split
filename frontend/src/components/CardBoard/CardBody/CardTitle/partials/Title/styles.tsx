@@ -7,15 +7,14 @@ const StyledBoardTitle = styled(Text, {
   fontSize: '$14',
   letterSpacing: '$0-17',
   '&[data-disabled="true"]': { opacity: 0.4 },
-  '@hover': {
-    '&:hover': {
-      '&[data-disabled="true"]': {
-        textDecoration: 'none',
-        cursor: 'default',
-      },
-      textDecoration: 'underline',
-      cursor: 'pointer',
+
+  '&:hover': {
+    '&[data-disabled="true"]': {
+      textDecoration: 'none',
+      cursor: 'default',
     },
+    textDecoration: 'underline',
+    cursor: 'pointer',
   },
 });
 

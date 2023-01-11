@@ -47,8 +47,12 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return this.teamUserRepository.findOneByField({ user: userId, team: teamId });
 	}
 
-	getAllTeams() {
-		return this.teamRepository.getAllTeams();
+	async getAllTeams() {
+		const teams = await this.teamRepository.getAllTeams();
+
+		return teams.map((team) => {
+			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
+		});
 	}
 
 	getUsersOfTeam(teamId: string) {
