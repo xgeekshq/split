@@ -30,9 +30,4 @@ export const getCardVotes = (card: CardType) => {
   return votes;
 };
 
-export const votesOfUserInCard = (card: CardType, userId: string) => {
-  const votes = getCardVotes(card);
-  return votes.includes(userId);
-};
-
 export default countVotes;
