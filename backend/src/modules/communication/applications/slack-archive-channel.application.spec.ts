@@ -11,7 +11,7 @@ import { SlackArchiveChannelApplication } from 'src/modules/communication/applic
 import {
 	ArchiveChannelData,
 	ArchiveChannelDataOptions,
-	BoardType
+	PartialBoardType
 } from 'src/modules/communication/dto/types';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
 
@@ -117,13 +117,13 @@ describe('SlackArchiveChannelApplication', () => {
 	it('shoult archive channel by board', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.BOARD,
-			data: { id: 'any_board_id', slackChannelId: 'U023BECGF' } as BoardType
+			data: { id: 'any_board_id', slackChannelId: 'U023BECGF' }
 		};
 
 		const result = await application.execute(archiveChannelData);
 
 		expect(result).toMatchObject([
-			{ channelId: (archiveChannelData.data as BoardType).slackChannelId, result: true }
+			{ channelId: (archiveChannelData.data as PartialBoardType).slackChannelId, result: true }
 		]);
 	});
 
@@ -138,7 +138,7 @@ describe('SlackArchiveChannelApplication', () => {
 					id: `any_board_id_${idx}`,
 					slackChannelId: k
 				}))
-			} as BoardType
+			}
 		};
 
 		const result = await application.execute(archiveChannelData);
