@@ -15,18 +15,7 @@ export class TeamRepository
 	}
 
 	getTeam(teamId: string): Promise<Team> {
-		return this.findOneById(
-			teamId,
-			{ _id: 1, name: 1 },
-			{
-				path: 'users',
-				select: 'user role isNewJoiner',
-				populate: {
-					path: 'user',
-					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
-				}
-			}
-		);
+		return this.findOneById(teamId, { _id: 1, name: 1 });
 	}
 
 	getTeamsWithUsers(teamIds: string[]): Promise<Team[]> {
