@@ -54,6 +54,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   return (
     <ListMembersDialog
+      usersList={usersList}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       saveUsers={saveParticipants}

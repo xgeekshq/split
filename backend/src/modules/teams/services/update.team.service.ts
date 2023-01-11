@@ -23,7 +23,7 @@ export default class UpdateTeamService implements UpdateTeamServiceInterface {
 
 			if (addUsers.length > 0) createdTeamUsers = await this.addTeamUsers(addUsers);
 
-			if (removeUsers.length > 0) await this.deleteTeamUsers(removeUsers, true);
+			if (removeUsers.length > 0) await this.deleteTeamUsers(removeUsers, false);
 
 			return createdTeamUsers;
 		} catch (error) {
