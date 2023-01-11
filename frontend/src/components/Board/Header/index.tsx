@@ -115,6 +115,7 @@ const BoardHeader = () => {
                       mainBoardTitle: boardData?.board.title,
                     },
                   }}
+                  as={`/${getSubBoard()?.id}?mainBoardId=${boardData?.board._id}`}
                 >
                   <StyledBoardLink>{getSubBoard()?.title.replace('team ', '')}</StyledBoardLink>
                 </Link>
