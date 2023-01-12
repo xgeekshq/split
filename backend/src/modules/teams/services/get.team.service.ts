@@ -25,22 +25,18 @@ export default class GetTeamService implements GetTeamServiceInterface {
 
 	async getTeam(teamId: string) {
 		const team = await this.teamRepository.getTeam(teamId);
-		const users = await this.teamUserRepository.getUsersOfTeam(teamId);
 
-		users.sort((a, b) => {
-			const fullNameA = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
-			const fullNameB = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+		team.users.sort((a, b) => {
+			const userA = a.user as User;
+			const userB = b.user as User;
+
+			const fullNameA = `${userA.firstName.toLowerCase()} ${userA.lastName.toLowerCase()}`;
+			const fullNameB = `${userB.firstName.toLowerCase()} ${userB.lastName.toLowerCase()}`;
 
 			return fullNameA < fullNameB ? -1 : 1;
 		});
 
-		const teamWithUsers = {
-			_id: team._id,
-			name: team.name,
-			users
-		};
-
-		return teamWithUsers;
+		return team;
 	}
 
 	async getTeamsOfUser(userId: string) {
