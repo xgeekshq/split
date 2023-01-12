@@ -82,6 +82,18 @@ const RegularBoardHeader = () => {
         </Flex>
         <Flex align="center" gap="24">
           <Flex align="center" gap="10">
+            <Text
+              color="primary800"
+              size="sm"
+              css={{
+                fontWeight: 500,
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
+            >
+              {team?.name}
+            </Text>
             <CardAvatars
               isBoardsPage
               listUsers={isSubBoard ? users : teamUsers}
