@@ -46,6 +46,32 @@ const StyledInput = styled('input', {
   '&:-webkit-autofill': {
     '-webkit-box-shadow': '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
   },
+  variants: {
+    variant: {
+      default: {
+        '&:focus': {
+          borderColor: '$primary400',
+          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
+        },
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
+        },
+      },
+      error: {
+        '&:focus': {
+          borderColor: '$danger700',
+          boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
+        },
+        borderColor: '$danger700',
+        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$dangerLightest',
+        },
+      },
+    },
+  },
 });
 
 const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
@@ -63,39 +89,63 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 
   const [values, setValues] = useState<{
     teamsCount: number | string;
+    teamError: boolean;
     maxUsersCount: number | string;
+    maxUserError: boolean;
   }>({
     teamsCount,
+    teamError: false,
     maxUsersCount,
+    maxUserError: false,
   });
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
   useEffect(() => {
     setValues({
       teamsCount,
+      teamError: false,
       maxUsersCount,
+      maxUserError: false,
     });
   }, [maxUsersCount, teamsCount]);
 
+  const hasError = (value: number | string, min: number, max: number) =>
+    +value < min || +value > max;
+
   const handleChangeCountTeams = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setIsSubmitDisabled(+value < minTeams || +value > maxTeams);
+
+    const error = hasError(value, minTeams, maxTeams);
+    setIsSubmitDisabled(error);
 
     setValues((prev) => ({
       ...prev,
       teamsCount: value,
-      maxUsersCount: !isEmpty(value) ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
+      teamError: error,
+      maxUsersCount:
+        !isEmpty(value) && !error ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
+      maxUserError:
+        !isEmpty(value) && !error
+          ? hasError(Math.ceil(teamLength / +value), minUsers, maxUsers)
+          : prev.maxUserError,
     }));
   };
 
   const handleMaxMembers = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setIsSubmitDisabled(+value < minUsers || +value > maxUsers);
+
+    const error = hasError(value, minUsers, maxUsers);
+    setIsSubmitDisabled(error);
 
     setValues((prev) => ({
       ...prev,
       maxUsersCount: value,
-      teamsCount: !isEmpty(value) ? Math.ceil(teamLength / +value) : prev.teamsCount,
+      teamError:
+        !isEmpty(value) && !error
+          ? hasError(Math.ceil(teamLength / +value), minTeams, maxTeams)
+          : prev.teamError,
+      teamsCount: !isEmpty(value) && !error ? Math.ceil(teamLength / +value) : prev.teamsCount,
+      maxUserError: error,
     }));
   };
 
@@ -179,6 +229,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               <StyledInput
                 css={{ mb: 0 }}
                 id="teamsCount"
+                variant={values.teamError ? 'error' : 'default'}
                 max={maxTeams}
                 min={minTeams}
                 placeholder=" "
@@ -187,7 +238,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleChangeCountTeams}
               />
               <Flex>
-                <Text hint css={{ color: '$primary800' }}>
+                <Text hint css={{ color: values.teamError ? '$dangerBase' : '$primary800' }}>
                   Min {minTeams}, Max {maxTeams}{' '}
                   <Text hint color="primary300">
                     sub-teams
@@ -200,6 +251,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               <StyledInput
                 css={{ mb: 0 }}
                 id="maxUsers"
+                variant={values.maxUserError ? 'error' : 'default'}
                 max={maxUsers}
                 min={minUsers}
                 placeholder=" "
@@ -208,7 +260,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleMaxMembers}
               />
               <Flex>
-                <Text hint css={{ color: '$primary800' }}>
+                <Text hint css={{ color: values.maxUserError ? '$dangerBase' : '$primary800' }}>
                   Min {minUsers}, Max {maxUsers}{' '}
                   <Text hint color="primary300">
                     members per team
