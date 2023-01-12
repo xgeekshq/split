@@ -22,8 +22,14 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		private getCardService: GetCardService
 	) {}
 
-	private async canUserVote(boardId: string, userId: string, count: number): Promise<boolean> {
-		const board = await this.boardModel.findById(boardId).exec();
+	private async canUserVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		boardSession: ClientSession,
+		boardUserSession: ClientSession
+	): Promise<boolean> {
+		const board = await this.boardModel.findById(boardId).session(boardSession).exec();
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
@@ -31,6 +37,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 
 		const boardUserFound = await this.boardUserModel
 			.findOne({ board: boardId, user: userId })
+			.session(boardUserSession)
 			.exec();
 
 		return boardUserFound?.votesCount
@@ -65,7 +72,12 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		cardItemId: string,
 		count: number
 	) {
-		const canUserVote = await this.canUserVote(boardId, userId, count);
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+
+		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
 		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
@@ -83,10 +95,6 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		userVotes.splice(0, Math.abs(count));
 		votes = votes.concat(userVotes);
 
-		const userSession = await this.boardUserModel.db.startSession();
-		userSession.startTransaction();
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
 		try {
 			await this.decrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.setCardItemVotes(boardId, cardItemId, votes, cardId, session);
@@ -105,10 +113,14 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
-		const canUserVote = await this.canUserVote(boardId, userId, count);
+		const userSession = await this.boardUserModel.db.startSession();
+		userSession.startTransaction();
+		const session = await this.boardModel.db.startSession();
+		session.startTransaction();
+		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
-		let currentCount = Math.abs(count);
+		const currentCount = Math.abs(count);
 		let card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
 		if (!card) throw new BadRequestException(DELETE_VOTE_FAILED);
@@ -126,10 +138,6 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 
 			mappedVotes = mappedVotes.concat(userVotes);
 
-			const userSession = await this.boardUserModel.db.startSession();
-			userSession.startTransaction();
-			const session = await this.boardModel.db.startSession();
-			session.startTransaction();
 			try {
 				await this.decrementVoteUser(boardId, userId, -votesToReduce, userSession);
 				const board = await this.setCardVotes(boardId, mappedVotes, cardId, session);
@@ -146,38 +154,34 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				await userSession.endSession();
 			}
 
-			currentCount -= Math.abs(votesToReduce);
+			// currentCount -= Math.abs(votesToReduce);
 
-			if (currentCount === 0) return;
+			// if (currentCount === 0) return;
+
+			return;
 		}
 
 		if (!isEmpty(currentCount)) {
-			while (currentCount > 0) {
-				card = await this.getCardService.getCardFromBoard(boardId, cardId);
+			// while (currentCount > 0) {
+			card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
-				const item = card.items.find(({ votes: itemVotes }) =>
-					arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
-				);
+			const item = card.items.find(({ votes: itemVotes }) =>
+				arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
+			);
 
-				if (!item) return null;
+			if (!item) return null;
 
-				const votesOfUser = (item.votes as unknown as string[]).filter(
-					(vote) => vote.toString() === userId.toString()
-				);
+			// const votesOfUser = (item.votes as unknown as string[]).filter(
+			// 	(vote) => vote.toString() === userId.toString()
+			// );
 
-				const itemVotesToReduce =
-					votesOfUser.length / currentCount >= 1 ? currentCount : votesOfUser.length;
+			// const itemVotesToReduce =
+			// 	votesOfUser.length / currentCount >= 1 ? currentCount : votesOfUser.length;
 
-				await this.deleteVoteFromCard(
-					boardId,
-					cardId,
-					userId,
-					item._id.toString(),
-					-itemVotesToReduce
-				);
+			await this.deleteVoteFromCard(boardId, cardId, userId, item._id.toString(), -currentCount);
 
-				currentCount -= itemVotesToReduce;
-			}
+			// currentCount -= itemVotesToReduce;
+			// }
 		}
 	}
 

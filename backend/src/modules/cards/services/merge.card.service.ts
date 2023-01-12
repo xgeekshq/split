@@ -16,7 +16,8 @@ export class MergeCardServiceImpl implements MergeCardService {
 		private readonly cardService: GetCardService
 	) {}
 
-	async mergeCards(boardId: string, draggedCardId: string, cardId: string) {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async mergeCards(boardId: string, draggedCardId: string, cardId: string, userId: string) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 

@@ -77,12 +77,14 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   }, [maxUsersCount, teamsCount]);
 
   const handleMaxUsersValue = (value: number | string) => {
+    if (isEmpty(value)) return value;
     if (Number(value) < minUsers) return minUsers;
     if (Number(value) > maxUsers) return maxUsers;
     return value;
   };
 
   const handleTeamsValue = (value: number | string) => {
+    if (isEmpty(value)) return value;
     if (Number(value) < minTeams) return minTeams;
     if (Number(value) > maxTeams) return maxTeams;
     return value;

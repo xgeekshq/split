@@ -1,9 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import BaseModel from 'src/libs/models/base.model';
 import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
-import { ColumnDocument, ColumnSchema } from './column.schema';
+import Column, { ColumnSchema } from './column.schema';
 
 export type BoardDocument = Board & Document;
 
@@ -13,9 +14,7 @@ export type BoardDocument = Board & Document;
 		virtuals: true
 	}
 })
-export default class Board {
-	_id: string;
-
+export default class Board extends BaseModel {
 	@Prop({ nullable: false })
 	title!: string;
 
@@ -29,7 +28,7 @@ export default class Board {
 	submitedAt!: Date;
 
 	@Prop({ nullable: false, type: [ColumnSchema] })
-	columns!: ColumnDocument[];
+	columns!: Column[];
 
 	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Board' }] })
 	dividedBoards!: Board[] | ObjectId[];

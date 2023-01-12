@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import BaseModel from 'src/libs/models/base.model';
 import User from 'src/modules/users/entities/user.schema';
-import { CommentDocument, CommentSchema } from '../../comments/schemas/comment.schema';
+import Comment, { CommentSchema } from '../../comments/schemas/comment.schema';
 
 export type CardItemDocument = CardItem & Document;
 
 @Schema()
-export default class CardItem {
+export default class CardItem extends BaseModel {
 	@Prop({ nullable: false })
 	text!: string;
 
@@ -15,7 +16,7 @@ export default class CardItem {
 	votes!: User[] | ObjectId[];
 
 	@Prop({ type: [CommentSchema] })
-	comments!: CommentDocument[];
+	comments!: Comment[];
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	createdBy!: User | ObjectId;

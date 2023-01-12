@@ -263,9 +263,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		if (!team) return null;
 
-		const newSubColumns = this.generateNewSubColumns(subBoard);
+		const newSubColumns = this.generateNewSubColumns(subBoard as Board);
 
-		const newColumns = [...board.columns];
+		const newColumns = [...(board as Board).columns];
 		for (let i = 0; i < newColumns.length; i++) {
 			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
 		}
@@ -329,7 +329,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return count === 0;
 	}
 
-	private generateNewSubColumns(subBoard: LeanDocument<BoardDocument>) {
+	private generateNewSubColumns(subBoard: Board) {
 		return [...subBoard.columns].map((column) => {
 			const newColumn = {
 				title: column.title,
