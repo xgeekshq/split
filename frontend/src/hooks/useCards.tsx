@@ -9,6 +9,7 @@ import {
   handleUnMergeCard,
   handleUpdateCardPosition,
   handleUpdateText,
+  removeReadOnly,
 } from '@/helper/board/transformBoard';
 import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
 import BoardType from '@/types/board/board';
@@ -17,6 +18,8 @@ import CardType from '@/types/card/card';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
+import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
+import MergeCardsDto from '@/types/board/mergeCard.dto';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -226,6 +229,25 @@ const useCards = () => {
 
   // #region MERGE_CARDS
 
+  const handleSetMergeQueryData = (data: MergeCardsDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleMergeCard(old.board, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const mergeCards = useMutation(mergeCardsRequest, {
     onMutate: async (data) => {
       const prevBoardData = await getPrevData(data.boardId);
@@ -236,11 +258,6 @@ const useCards = () => {
       }
 
       return { previousBoard: prevBoardData, data };
-    },
-    onSettled: (data, error, variables) => {
-      if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
-      }
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -253,20 +270,70 @@ const useCards = () => {
     },
   });
 
+  const handleMutateUnmergeOptimistic = async (data: RemoveFromCardGroupDto) => {
+    const prevBoardData = await getPrevData(data.boardId);
+
+    if (prevBoardData) {
+      const boardData = handleUnMergeCard(prevBoardData, data);
+      updateBoardColumns(data.boardId, boardData.columns);
+    }
+
+    return { previousBoard: prevBoardData, data };
+  };
+
+  const handleSetUnmergeQueryData = (data: RemoveFromCardGroupDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleUnMergeCard(old.board, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
+  const handleUpdateCardItemIdOfUnmergedCard = (
+    board: BoardType,
+    variables: RemoveFromCardGroupDto,
+  ): BoardType => {
+    const mappedBoard = removeReadOnly(board);
+    const column = mappedBoard.columns.find((col) => col._id === variables.columnId);
+    const card = column?.cards.find((cardFound) => cardFound._id === variables.cardId);
+    if (card && variables.newCardItemId) {
+      card.items[0]._id = variables.newCardItemId;
+    }
+
+    return mappedBoard;
+  };
+
   const removeFromMergeCard = useMutation(removeFromMergeRequest, {
-    onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleUnMergeCard(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
-    },
-    onSettled: (data, error, variables) => {
+    onMutate: async (data) => handleMutateUnmergeOptimistic(data),
+    onSettled: async (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newCardItemId = data;
+        queryClient.setQueryData<{ board: BoardType } | undefined>(
+          getBoardQuery(variables.boardId),
+          (old: { board: BoardType } | undefined) => {
+            if (old) {
+              const newBoard = handleUpdateCardItemIdOfUnmergedCard(old.board, variables);
+              return {
+                board: {
+                  ...old.board,
+                  columns: newBoard.columns,
+                },
+              };
+            }
+            return old;
+          },
+        );
       }
     },
     onError: (data, variables) => {
@@ -290,6 +357,8 @@ const useCards = () => {
     removeFromMergeCard,
     mergeBoard,
     updateCardPositionOptimistic,
+    handleSetUnmergeQueryData,
+    handleSetMergeQueryData,
   };
 };
 

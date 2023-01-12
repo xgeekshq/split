@@ -13,7 +13,7 @@ import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { addElementAtIndex, removeElementAtIndex } from '@/utils/array';
 
 // avoid read only error
-const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
+export const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
 
 export const handleNewCard = (board: BoardType, colIdToAdd: string, newCard: CardType) => {
   const boardData = removeReadOnly(board);
@@ -114,7 +114,7 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
 export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroupDto) => {
   const boardData = removeReadOnly(board);
 
-  const { columnId, cardGroupId, cardId, newPosition } = changes;
+  const { columnId, cardGroupId, cardId, newPosition, newCardItemId } = changes;
   const column = boardData.columns.find((col) => col._id === columnId);
   const cardGroup = column?.cards.find((card) => card._id === cardGroupId);
   const selectedCard = cardGroup?.items.find((item) => item._id === cardId);
@@ -138,6 +138,13 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
         votes: [],
         items: [selectedCard],
       });
+
+      if (newCardItemId) {
+        const card = column?.cards.find((cardFound) => cardFound._id === cardId);
+        if (card && newCardItemId) {
+          card.items[0]._id = newCardItemId;
+        }
+      }
     } catch (e) {
       return boardData;
     }

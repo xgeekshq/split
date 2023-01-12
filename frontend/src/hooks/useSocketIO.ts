@@ -7,12 +7,15 @@ import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import useCards from '@/hooks/useCards';
 import VoteDto from '@/types/vote/vote.dto';
 import BoardType from '@/types/board/board';
+import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
+import MergeCardsDto from '@/types/board/mergeCard.dto';
 import useVotes from './useVotes';
 
 export const useSocketIO = (boardId: string): string | undefined => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
-  const { updateCardPositionOptimistic } = useCards();
+  const { updateCardPositionOptimistic, handleSetUnmergeQueryData, handleSetMergeQueryData } =
+    useCards();
   const { updateVote } = useVotes();
 
   useEffect(() => {
@@ -47,6 +50,15 @@ export const useSocketIO = (boardId: string): string | undefined => {
     socket?.on(`${boardId}vote`, (votesDto: VoteDto) => {
       updateVote(votesDto);
     });
+
+    socket?.on(`${boardId}unmerge`, (unmergeDto: RemoveFromCardGroupDto) => {
+      handleSetUnmergeQueryData(unmergeDto);
+    });
+
+    socket?.on(`${boardId}merge`, (mergeDto: MergeCardsDto) => {
+      handleSetMergeQueryData(mergeDto);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryClient, socket]);
 
   return socket?.id;

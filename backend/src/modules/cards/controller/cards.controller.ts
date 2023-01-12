@@ -22,7 +22,6 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { BaseDto } from 'src/libs/dto/base.dto';
 import { BaseParam } from 'src/libs/dto/param/base.param';
 import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
@@ -48,6 +47,7 @@ import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/schemas/board.schema';
+import { MergeCardDto } from '../dto/group/merge.card.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -334,7 +334,7 @@ export default class CardsController {
 	async mergeCards(
 		@Req() request: RequestWithUser,
 		@Param() params: MergeCardsParams,
-		@Body() mergeCardsDto: BaseDto
+		@Body() mergeCardsDto: MergeCardDto
 	) {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
@@ -347,7 +347,7 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
 		return board;
 	}
@@ -380,7 +380,7 @@ export default class CardsController {
 		const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
 		const { columnId, socketId, newPosition } = unmergeCardsDto;
 
-		const board = await this.unmergeCardApp.unmergeAndUpdatePosition(
+		const itemId = await this.unmergeCardApp.unmergeAndUpdatePosition(
 			boardId,
 			cardGroupId,
 			draggedCardId,
@@ -388,10 +388,11 @@ export default class CardsController {
 			newPosition
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
+		if (!itemId) throw new BadRequestException(UPDATE_FAILED);
 
-		this.socketService.sendBoard(board as Board, socketId);
+		unmergeCardsDto.newCardItemId = itemId;
+		this.socketService.sendUnmergeCards(socketId, unmergeCardsDto);
 
-		return board;
+		return itemId;
 	}
 }

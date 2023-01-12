@@ -8,7 +8,6 @@ import {
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { GetCardService } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -82,9 +81,11 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			}
 
 			const newCardItem = { ...cardItemToMove };
+			const itemId = newCardItem._id;
 			delete newCardItem._id;
 
 			const newCard = {
+				_id: itemId,
 				...cardItemToMove,
 				comments: [],
 				votes: [],
@@ -104,7 +105,9 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			await session.commitTransaction();
 			await session.endSession();
 
-			return pushResult.populate(BoardDataPopulate);
+			const newCardSaved = await this.cardService.getCardFromBoard(boardId, itemId);
+
+			return newCardSaved.items[0]._id;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {

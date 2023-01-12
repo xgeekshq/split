@@ -10,4 +10,6 @@ export default interface RemoveFromCardGroupDto {
   socketId: string;
 
   newPosition: number;
+
+  newCardItemId?: string;
 }

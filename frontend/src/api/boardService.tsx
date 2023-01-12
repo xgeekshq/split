@@ -122,10 +122,8 @@ export const mergeCardsRequest = (mergeCard: MergeCardsDto): Promise<BoardType> 
     { method: 'PUT', data: mergeCard },
   );
 
-export const removeFromMergeRequest = (
-  removeFromMerge: RemoveFromCardGroupDto,
-): Promise<BoardType> =>
-  fetchData<BoardType>(
+export const removeFromMergeRequest = (removeFromMerge: RemoveFromCardGroupDto): Promise<string> =>
+  fetchData<string>(
     `/boards/${removeFromMerge.boardId}/card/${removeFromMerge.cardGroupId}/cardItem/${removeFromMerge.cardId}/removeFromCardGroup`,
     { method: 'PUT', data: removeFromMerge },
   );

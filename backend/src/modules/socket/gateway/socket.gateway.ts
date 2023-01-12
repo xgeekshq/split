@@ -9,6 +9,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import Board from 'src/modules/boards/schemas/board.schema';
+import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';
+import UnmergeCardsDto from 'src/modules/cards/dto/unmerge.dto';
 import { UpdateCardPositionDto } from 'src/modules/cards/dto/update-position.card.dto';
 import VoteDto from 'src/modules/votes/dto/vote.dto';
 import JoinPayload from '../interfaces/joinPayload.interface';
@@ -49,6 +51,14 @@ export default class SocketGateway
 		// voteDto.userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 		voteDto.fromRequest = false;
 		this.server.except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
+	}
+
+	sendUnmergeCards(excludedClient: string, unmergeDto: UnmergeCardsDto) {
+		this.server.except(excludedClient).emit(`${unmergeDto.boardId}unmerge`, unmergeDto);
+	}
+
+	sendMergeCards(excludedClient: string, mergeDto: MergeCardDto) {
+		this.server.except(excludedClient).emit(`${mergeDto.boardId}merge`, mergeDto);
 	}
 
 	afterInit() {

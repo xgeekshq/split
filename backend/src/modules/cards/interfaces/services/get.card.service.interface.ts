@@ -1,12 +1,8 @@
-import { LeanDocument } from 'mongoose';
-import { CardItemDocument } from 'src/modules/cards/schemas/card.item.schema';
-import { CardDocument } from '../../schemas/card.schema';
+import CardItem from 'src/modules/cards/schemas/card.item.schema';
+import Card from '../../schemas/card.schema';
 
 export interface GetCardService {
-	getCardFromBoard(boardId: string, cardId: string): Promise<LeanDocument<CardDocument> | null>;
+	getCardFromBoard(boardId: string, cardId: string): Promise<Card | null>;
 
-	getCardItemFromGroup(
-		boardId: string,
-		cardItemId: string
-	): Promise<LeanDocument<CardItemDocument | CardDocument> | null>;
+	getCardItemFromGroup(boardId: string, cardItemId: string): Promise<CardItem | Card> | null;
 }
