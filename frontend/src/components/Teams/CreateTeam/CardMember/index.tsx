@@ -9,7 +9,7 @@ import Icon from '@/components/icons/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
 import Tooltip from '@/components/Primitives/Tooltip';
-import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
+import { ConfigurationSettings } from '@/components/Board/SplitBoard/Settings/partials/ConfigurationSettings';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
 
 import useTeam from '@/hooks/useTeam';

@@ -1,10 +1,10 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { useState } from 'react';
-import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
 
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
+import { ConfigurationSettings } from '@/components/Board/SplitBoard/Settings/partials/ConfigurationSettings';
 
 type SuperAdminProps = {
   userSAdmin: boolean;

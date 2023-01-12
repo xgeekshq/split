@@ -3,16 +3,13 @@ import { dehydrate, QueryClient } from 'react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import { getBoardRequest } from '@/api/boardService';
-import AlertGoToMainBoard from '@/components/Board/AlertGoToMainBoard';
-import AlertMergeIntoMain from '@/components/Board/AlertMergeIntoMain';
+import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import DragDropArea from '@/components/Board/DragDropArea';
-import BoardHeader from '@/components/Board/Header';
-import { BoardSettings } from '@/components/Board/Settings';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Flex from '@/components/Primitives/Flex';
@@ -25,6 +22,10 @@ import isEmpty from '@/utils/isEmpty';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import { GetBoardResponse } from '@/types/board/board';
+import { BoardSettings } from '@/components/Board/SplitBoard/Settings';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
+import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
+import RegularBoard from '@/components/Board/RegularBoard';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -41,14 +42,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
+    // TODO: adapt boardId to accept personal boards :)
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
     const boardUser = data?.board?.users.find((user) => user.user._id === session?.user.id);
 
-    const teamUserFound = data?.board.isSubBoard
-      ? data.mainBoardData.team.users.find((teamUser) => teamUser.user._id === session?.user.id)
-      : data?.board.team.users.find((teamUser) => teamUser.user._id === session?.user.id);
+    const userFound = data?.board.users.find((teamUser) => teamUser.user._id === session?.user.id);
 
-    if (!boardUser && teamUserFound?.role === TeamUserRoles.MEMBER && !session?.user.isSAdmin) {
+    const teamUserFound = data?.board.isSubBoard
+      ? data?.mainBoardData.team?.users.find((teamUser) => teamUser.user._id === session?.user.id)
+      : data?.board.team?.users.find((teamUser) => teamUser.user._id === session?.user.id);
+
+    if (
+      !boardUser &&
+      [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.MEMBER) &&
+      !session?.user.isSAdmin
+    ) {
       throw Error();
     }
   } catch (e) {
@@ -81,7 +89,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Recoil States
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
-  const setBoard = useSetRecoilState(boardInfoState);
+  const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
 
   // Session Details
   const { data: session } = useSession({ required: true });
@@ -98,18 +106,39 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const isSubBoard = board?.isSubBoard;
   const route = useRouter();
 
+  const isPersonalBoard = !data?.board.team; // personal boards don't have teams
+
+  // regular boards have teams but no subboards (divided boards)
+  const isRegularOrPersonalBoard =
+    (!data?.board.isSubBoard && !!data?.board.team && !data?.board.dividedBoards.length) ||
+    !data?.board.team;
+  // console.log('isRegularBoard', isRegularBoard);
+
   // Socket IO Hook
   const socketId = useSocketIO(boardId);
+
+  // Use effect to set recoil state using data from API
+  useEffect(() => {
+    if (data) {
+      setRecoilBoard(data);
+    }
+  }, [data, setRecoilBoard]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
     () =>
-      (!isSubBoard ? board : mainBoard)?.team.users.some(
-        (boardUser) =>
-          [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
-          boardUser.user._id === userId,
-      ),
-    [board, isSubBoard, mainBoard, userId],
+      isPersonalBoard
+        ? board?.users.some(
+            (boardUser) =>
+              [BoardUserRoles.STAKEHOLDER, BoardUserRoles.RESPONSIBLE].includes(boardUser.role) &&
+              boardUser.user._id === userId,
+          )
+        : (!isSubBoard ? board : mainBoard)?.team.users.some(
+            (boardUser) =>
+              [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
+              boardUser.user._id === userId,
+          ),
+    [board, isPersonalBoard, isSubBoard, mainBoard, userId],
   );
 
   const [isResponsible, isOwner] = useMemo(
@@ -141,13 +170,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Show Alert message if sub board was merged
   const showMessageIfMerged = !!(board?.submitedByUser && board.submitedAt && mainBoardId);
 
-  // Use effect to set recoil state using data from API
-  useEffect(() => {
-    if (data) {
-      setBoard(data);
-    }
-  }, [data, setBoard]);
-
   // Use effect to remove "New Board" indicator
   useEffect(() => {
     if (data?.board?._id === newBoard || mainBoard?._id === newBoard) {
@@ -170,7 +192,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     setIsOpen(true);
   };
 
-  if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
+  if ((!userIsInBoard && !hasAdminRole) || !data || !recoilBoard) return <LoadingPage />;
+
+  if (isRegularOrPersonalBoard) return <RegularBoard />;
+
   return board && userId && socketId ? (
     <>
       <BoardHeader />
