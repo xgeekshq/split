@@ -1,10 +1,12 @@
-import { FilterQuery, PopulateOptions, QueryOptions, UpdateQuery } from 'mongoose';
+import { FilterQuery, PopulateOptions, QueryOptions, SortOrder, UpdateQuery } from 'mongoose';
 import { ModelProps, SelectedValues } from '../types';
 
 export type PopulateType = PopulateOptions | (PopulateOptions | string)[];
 
+export type SortType = string | { [key: string]: SortOrder } | [string, SortOrder][];
+
 export interface BaseInterfaceRepository<T> {
-	findAll(selectedValues?: SelectedValues<T>): Promise<T[]>;
+	findAll(selectedValues?: SelectedValues<T>, sort?: SortType): Promise<T[]>;
 
 	findOneById(id: any, selectedValues?: SelectedValues<T>, populate?: PopulateType): Promise<T>;
 

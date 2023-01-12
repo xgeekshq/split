@@ -89,7 +89,7 @@ const CardFooter = React.memo<FooterProps>(
       return card.createdByTeam;
     }, [card]);
 
-    const [maxVotesReached, setMaxVotesReached] = useRecoilState(maxVotesReachedAtom);
+    const [disableVotes, setDisableVotes] = useRecoilState(maxVotesReachedAtom);
 
     const {
       handleVote: { mutate, status },
@@ -129,8 +129,11 @@ const CardFooter = React.memo<FooterProps>(
 
       if (maxVotes) {
         toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
-        setMaxVotesReached(userVotes - 1 === maxVotes);
       }
+      setDisableVotes({
+        maxVotesReached: userVotes - 1 === maxVotes,
+        noVotes: userVotes - 1 === 0,
+      });
     };
 
     const handleAddVote = () => {
@@ -147,15 +150,21 @@ const CardFooter = React.memo<FooterProps>(
 
       if (maxVotes) {
         toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
-        setMaxVotesReached(userVotes + 1 === maxVotes);
       }
+      setDisableVotes({
+        maxVotesReached: userVotes + 1 === maxVotes,
+        noVotes: userVotes + 1 === 0,
+      });
     };
 
     useEffect(() => {
-      if (user?.votesCount && maxVotes) {
-        setMaxVotesReached(user?.votesCount === maxVotes);
+      if (user?.votesCount && maxVotes && (status === 'success' || status === 'idle')) {
+        setDisableVotes({
+          maxVotesReached: userVotes === maxVotes,
+          noVotes: userVotes === 0,
+        });
       }
-    }, [maxVotes, setMaxVotesReached, user?.votesCount]);
+    }, [maxVotes, setDisableVotes, status, user?.votesCount, userVotes]);
 
     return (
       <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
@@ -196,7 +205,8 @@ const CardFooter = React.memo<FooterProps>(
               <StyledButtonIcon
                 disabled={
                   !isMainboard ||
-                  (maxVotes && maxVotesReached) ||
+                  (maxVotes && user?.votesCount === maxVotes) ||
+                  (maxVotes && disableVotes.maxVotesReached) ||
                   (hideCards && createdBy?._id !== userId)
                 }
                 onClick={handleAddVote}
@@ -226,6 +236,7 @@ const CardFooter = React.memo<FooterProps>(
                 disabled={
                   !isMainboard ||
                   votesInThisCard.length === 0 ||
+                  disableVotes.noVotes ||
                   !!(user && maxVotes && userVotes === 0) ||
                   votesOfUserInThisCard === 0 ||
                   (hideCards && createdBy?._id !== userId)

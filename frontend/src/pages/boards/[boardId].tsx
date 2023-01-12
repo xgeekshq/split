@@ -48,9 +48,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const userFound = data?.board.users.find((teamUser) => teamUser.user._id === session?.user.id);
 
-    const teamUserFound = data?.board.isSubBoard
-      ? data?.mainBoardData.team?.users.find((teamUser) => teamUser.user._id === session?.user.id)
-      : data?.board.team?.users.find((teamUser) => teamUser.user._id === session?.user.id);
+    const teamUserFound = data?.board.team?.users.find(
+      (teamUser) => teamUser.user._id === session?.user.id,
+    );
 
     if (
       !boardUser &&
@@ -92,7 +92,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
 
   // Session Details
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
   const userId = session?.user?.id;
 
   // Hooks
@@ -101,7 +101,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   } = useBoard({
     autoFetchBoard: true,
   });
-  const mainBoard = data?.mainBoardData;
+
   const board = data?.board;
   const isSubBoard = board?.isSubBoard;
   const route = useRouter();
@@ -133,12 +133,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               [BoardUserRoles.STAKEHOLDER, BoardUserRoles.RESPONSIBLE].includes(boardUser.role) &&
               boardUser.user._id === userId,
           )
-        : (!isSubBoard ? board : mainBoard)?.team.users.some(
+        : board?.team.users.some(
             (boardUser) =>
               [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
               boardUser.user._id === userId,
           ),
-    [board, isPersonalBoard, isSubBoard, mainBoard, userId],
+    [board, isPersonalBoard, isSubBoard, userId],
   );
 
   const [isResponsible, isOwner] = useMemo(
@@ -172,15 +172,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Use effect to remove "New Board" indicator
   useEffect(() => {
-    if (data?.board?._id === newBoard || mainBoard?._id === newBoard) {
+    if (data?.board?._id === newBoard || mainBoardId === newBoard) {
       setNewBoard(undefined);
     }
-  }, [newBoard, data, setNewBoard, mainBoard?._id]);
-
-  const userIsInBoard = useMemo(
-    () => board?.users.find((user) => user.user._id === userId),
-    [board?.users, userId],
-  );
+  }, [newBoard, data, setNewBoard, mainBoardId]);
 
   useEffect(() => {
     if (data === null) {
@@ -192,7 +187,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     setIsOpen(true);
   };
 
-  if ((!userIsInBoard && !hasAdminRole) || !data || !recoilBoard) return <LoadingPage />;
+  if (!recoilBoard) return <LoadingPage />;
 
   if (isRegularOrPersonalBoard) return <RegularBoard />;
 

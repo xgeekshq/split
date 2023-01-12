@@ -183,6 +183,26 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "JoaoSaIvador",
+      "name": "João Salvador",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24455614?v=4",
+      "profile": "http://www.linkedin.com/in/jpvsalvador",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "StereoPT",
+      "name": "Guido Pereira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8330038?v=4",
+      "profile": "https://github.com/StereoPT",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,

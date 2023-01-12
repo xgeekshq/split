@@ -114,7 +114,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
             }}
           />
 
-          <Flex align="center" css={{ ml: '$40', alignItems: 'center' }} gap="8">
+          <Flex align="center" css={{ ml: '$20', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$160' }}>
               <Text color="primary300" css={{ mr: '$2' }} size="sm">
                 Team admin
@@ -125,7 +125,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
             <Separator
               orientation="vertical"
               css={{
-                ml: '$4x0',
+                ml: '$20',
                 backgroundColor: '$primary100',
                 height: '$24 !important',
               }}

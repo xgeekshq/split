@@ -25,6 +25,7 @@ const RegularBoard = () => {
 
   // Session Details
   const { data: session } = useSession({ required: true });
+
   const userId = session?.user.id;
 
   // Socket IO Hook

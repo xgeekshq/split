@@ -9,6 +9,7 @@ import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
+import { UserList } from '@/types/team/userList';
 import ListMembersDialog from '../ListMembersDialog';
 
 type Props = {
@@ -31,11 +32,10 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const setToastState = useSetRecoilState(toastState);
 
-  const saveMembers = () => {
+  const saveMembers = (checkedUserList: UserList[]) => {
     const listOfUsers = [...membersList];
-    const listOfUsersToBeSorted = [...usersList];
-    const selectedUsers = usersList.filter((user) => user.isChecked);
-    const unselectedUsers = usersList.filter((user) => !user.isChecked);
+    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+    const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
     const { teamId } = router.query;
 
     if (isTeamPage && teamId) {
@@ -80,8 +80,15 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         },
     );
 
-    // this insures that the team creator stays always in first
+    // Sort by Name
+    updatedListWithAdded.sort((a, b) => {
+      const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+      const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
 
+      return aFullName < bFullName ? -1 : 1;
+    });
+
+    // this insures that the team creator stays always in first
     const userAdminIndex = updatedListWithAdded.findIndex(
       (member) => member.user._id === session?.user.id,
     );
@@ -95,14 +102,14 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     });
 
     setMembersListState(updatedListWithAdded);
-
-    setUsersList(listOfUsersToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)));
+    setUsersList(checkedUserList);
 
     setIsOpen(false);
   };
 
   return (
     <ListMembersDialog
+      usersList={usersList}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       saveUsers={saveMembers}
