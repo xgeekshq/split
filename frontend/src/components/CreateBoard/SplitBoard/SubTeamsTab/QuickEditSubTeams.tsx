@@ -122,12 +122,10 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       ...prev,
       teamsCount: value,
       teamError: error,
-      maxUsersCount:
-        !isEmpty(value) && !error ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
-      maxUserError:
-        !isEmpty(value) && !error
-          ? hasError(Math.ceil(teamLength / +value), minUsers, maxUsers)
-          : prev.maxUserError,
+      maxUsersCount: !error ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
+      maxUserError: !error
+        ? hasError(Math.ceil(teamLength / +value), minUsers, maxUsers)
+        : prev.maxUserError,
     }));
   };
 
@@ -140,11 +138,10 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
     setValues((prev) => ({
       ...prev,
       maxUsersCount: value,
-      teamError:
-        !isEmpty(value) && !error
-          ? hasError(Math.ceil(teamLength / +value), minTeams, maxTeams)
-          : prev.teamError,
-      teamsCount: !isEmpty(value) && !error ? Math.ceil(teamLength / +value) : prev.teamsCount,
+      teamError: !error
+        ? hasError(Math.ceil(teamLength / +value), minTeams, maxTeams)
+        : prev.teamError,
+      teamsCount: !error ? Math.ceil(teamLength / +value) : prev.teamsCount,
       maxUserError: error,
     }));
   };
