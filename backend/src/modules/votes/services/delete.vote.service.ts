@@ -130,16 +130,15 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		let mappedVotes = votes as unknown as string[];
 		const userVotes = mappedVotes.filter((vote) => vote.toString() === userId.toString());
 
-		if (!isEmpty(votes.length)) {
-			const votesToReduce = userVotes.length / currentCount >= 1 ? currentCount : userVotes.length;
+		if (!isEmpty(userVotes)) {
 			mappedVotes = mappedVotes.filter((vote) => vote.toString() !== userId.toString());
 
-			userVotes.splice(0, Math.abs(votesToReduce));
+			userVotes.splice(0, Math.abs(currentCount));
 
 			mappedVotes = mappedVotes.concat(userVotes);
 
 			try {
-				await this.decrementVoteUser(boardId, userId, -votesToReduce, userSession);
+				await this.decrementVoteUser(boardId, userId, -currentCount, userSession);
 				const board = await this.setCardVotes(boardId, mappedVotes, cardId, session);
 
 				if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
@@ -154,15 +153,10 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				await userSession.endSession();
 			}
 
-			// currentCount -= Math.abs(votesToReduce);
-
-			// if (currentCount === 0) return;
-
 			return;
 		}
 
 		if (!isEmpty(currentCount)) {
-			// while (currentCount > 0) {
 			card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
 			const item = card.items.find(({ votes: itemVotes }) =>
@@ -171,17 +165,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 
 			if (!item) return null;
 
-			// const votesOfUser = (item.votes as unknown as string[]).filter(
-			// 	(vote) => vote.toString() === userId.toString()
-			// );
-
-			// const itemVotesToReduce =
-			// 	votesOfUser.length / currentCount >= 1 ? currentCount : votesOfUser.length;
-
 			await this.deleteVoteFromCard(boardId, cardId, userId, item._id.toString(), -currentCount);
-
-			// currentCount -= itemVotesToReduce;
-			// }
 		}
 	}
 

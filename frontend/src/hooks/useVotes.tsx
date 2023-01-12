@@ -144,7 +144,10 @@ const useVotes = () => {
     const newBoardData = prevBoardData;
     const [colIndex, cardIndex] = indexes;
 
-    if (hasVotesOnCards) {
+    if (
+      hasVotesOnCards &&
+      newBoardData.columns[colIndex].cards[cardIndex].votes.includes(userIdOfVote)
+    ) {
       const voteIndex = newBoardData.columns[colIndex].cards[cardIndex].votes.indexOf(userIdOfVote);
       if (voteIndex >= 0) {
         newBoardData.columns[colIndex].cards[cardIndex].votes.splice(voteIndex, 1);
