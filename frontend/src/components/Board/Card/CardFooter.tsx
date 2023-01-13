@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -14,8 +14,6 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
-import { useRecoilState } from 'recoil';
-import { maxVotesReachedAtom } from '@/store/vote/atoms/vote.atom';
 
 interface FooterProps {
   boardId: string;
@@ -57,218 +55,197 @@ const StyledButtonIcon = styled(Button, {
   },
 });
 
-const CardFooter = React.memo<FooterProps>(
-  ({
-    boardId,
-    userId,
-    socketId,
-    card,
-    anonymous,
-    isItem,
-    isMainboard,
-    comments,
-    boardUser,
-    maxVotes,
-    setOpenComments,
-    isCommentsOpened,
-    hideCards,
-  }) => {
-    const createdBy = useMemo(() => {
-      if (Object.hasOwnProperty.call(card, 'items')) {
-        const cardTyped = card as CardType;
-        return cardTyped.items.at(-1)?.createdBy;
-      }
-      return card.createdBy;
-    }, [card]);
-
-    const createdByTeam = useMemo(() => {
-      if (Object.hasOwnProperty.call(card, 'items')) {
-        const cardTyped = card as CardType;
-        return cardTyped.items.at(-1)?.createdByTeam;
-      }
-      return card.createdByTeam;
-    }, [card]);
-
-    const [disableVotes, setDisableVotes] = useRecoilState(maxVotesReachedAtom);
-
-    const {
-      handleVote: { mutate, status },
-      toastInfoMessage,
-    } = useVotes();
-
-    const user = boardUser;
-    const userVotes = user?.votesCount ?? 0;
-
-    const calculateVotes = useMemo(() => {
+const CardFooter = ({
+  boardId,
+  userId,
+  socketId,
+  card,
+  anonymous,
+  isItem,
+  isMainboard,
+  comments,
+  boardUser,
+  maxVotes,
+  setOpenComments,
+  isCommentsOpened,
+  hideCards,
+}: FooterProps) => {
+  const createdBy = useMemo(() => {
+    if (Object.hasOwnProperty.call(card, 'items')) {
       const cardTyped = card as CardType;
-      if (Object.hasOwnProperty.call(card, 'items')) {
-        const cardItemId = cardTyped.items.length === 1 ? cardTyped.items[0]._id : undefined;
+      return cardTyped.items.at(-1)?.createdBy;
+    }
+    return card.createdBy;
+  }, [card]);
 
-        const votesInThisCard =
-          cardTyped.items.length === 1 ? cardTyped.items[0].votes : getCardVotes(cardTyped);
+  const createdByTeam = useMemo(() => {
+    if (Object.hasOwnProperty.call(card, 'items')) {
+      const cardTyped = card as CardType;
+      return cardTyped.items.at(-1)?.createdByTeam;
+    }
+    return card.createdByTeam;
+  }, [card]);
 
-        const votesOfUserInThisCard = votesInThisCard.filter((vote) => vote === userId).length;
-        return { cardItemId, votesOfUserInThisCard, votesInThisCard };
-      }
-      return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
-    }, [card, userId]);
+  const {
+    handleVote: { mutate, status },
+    toastInfoMessage,
+  } = useVotes();
 
-    const { cardItemId, votesInThisCard, votesOfUserInThisCard } = calculateVotes;
+  const user = boardUser;
+  const userVotes = user?.votesCount ?? 0;
 
-    const handleDeleteVote = () => {
-      if ((hideCards && createdBy?._id !== userId) || status === 'loading') return;
-      mutate({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: cardItemId === undefined,
-        count: -1,
-        userId,
-      });
+  const calculateVotes = () => {
+    const cardTyped = card as CardType;
+    if (Object.hasOwnProperty.call(card, 'items')) {
+      const cardItemId = cardTyped.items.length === 1 ? cardTyped.items[0]._id : undefined;
 
-      if (maxVotes) {
-        toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
-      }
-      setDisableVotes({
-        maxVotesReached: userVotes - 1 === maxVotes,
-        noVotes: userVotes - 1 === 0,
-      });
-    };
+      const votesInThisCard =
+        cardTyped.items.length === 1 ? cardTyped.items[0].votes : getCardVotes(cardTyped);
 
-    const handleAddVote = () => {
-      if (status === 'loading') return;
-      mutate({
-        boardId,
-        cardId: card._id,
-        socketId,
-        cardItemId,
-        isCardGroup: cardItemId === undefined,
-        count: 1,
-        userId,
-      });
+      const votesOfUserInThisCard = votesInThisCard.filter((vote) => vote === userId).length;
 
-      if (maxVotes) {
-        toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
-      }
-      setDisableVotes({
-        maxVotesReached: userVotes + 1 === maxVotes,
-        noVotes: userVotes + 1 === 0,
-      });
-    };
+      return { cardItemId, votesOfUserInThisCard, votesInThisCard };
+    }
 
-    useEffect(() => {
-      if (user?.votesCount && maxVotes && (status === 'success' || status === 'idle')) {
-        setDisableVotes({
-          maxVotesReached: userVotes === maxVotes,
-          noVotes: userVotes === 0,
-        });
-      }
-    }, [maxVotes, setDisableVotes, status, user?.votesCount, userVotes]);
+    return { cardItemId: undefined, votesOfUserInThisCard: 0, votesInThisCard: [] };
+  };
 
-    return (
-      <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
-        {!anonymous && !createdByTeam && (
+  const { cardItemId, votesInThisCard, votesOfUserInThisCard } = calculateVotes();
+
+  const handleDeleteVote = () => {
+    if ((hideCards && createdBy?._id !== userId) || status === 'loading') return;
+    mutate({
+      boardId,
+      cardId: card._id,
+      socketId,
+      cardItemId,
+      isCardGroup: cardItemId === undefined,
+      count: -1,
+      userId,
+    });
+
+    if (maxVotes) {
+      toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
+    }
+  };
+
+  const handleAddVote = () => {
+    if (status === 'loading') return;
+    mutate({
+      boardId,
+      cardId: card._id,
+      socketId,
+      cardItemId,
+      isCardGroup: cardItemId === undefined,
+      count: 1,
+      userId,
+    });
+
+    if (maxVotes) {
+      toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
+    }
+  };
+
+  return (
+    <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
+      {!anonymous && !createdByTeam && (
+        <Flex
+          align="center"
+          gap="4"
+          css={{
+            filter: cardFooterBlur(hideCards, createdBy, userId),
+          }}
+        >
+          <Avatar
+            isBoardPage
+            fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
+            id={createdBy?._id}
+            isDefaultColor={createdBy?._id === userId}
+            size={20}
+          />
+          <Text size="xs">
+            {createdBy?.firstName} {createdBy?.lastName}
+          </Text>
+        </Flex>
+      )}
+      {createdByTeam && (
+        <Text size="xs" weight="medium">
+          {createdByTeam}
+        </Text>
+      )}
+      {!isItem && comments && (
+        <Flex align="center" gap="10">
           <Flex
             align="center"
-            gap="4"
+            gap="2"
             css={{
               filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
-            <Avatar
-              isBoardPage
-              fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
-              id={createdBy?._id}
-              isDefaultColor={createdBy?._id === userId}
-              size={20}
-            />
-            <Text size="xs">
-              {createdBy?.firstName} {createdBy?.lastName}
+            <StyledButtonIcon
+              disabled={
+                !isMainboard ||
+                (maxVotes && user?.votesCount === maxVotes) ||
+                (hideCards && createdBy?._id !== userId)
+              }
+              onClick={handleAddVote}
+            >
+              <Icon name="thumbs-up" />
+            </StyledButtonIcon>
+            <Text
+              size="xs"
+              css={{
+                visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
+                width: '10px',
+              }}
+            >
+              {votesInThisCard.length}
             </Text>
           </Flex>
-        )}
-        {createdByTeam && (
-          <Text size="xs" weight="medium">
-            {createdByTeam}
-          </Text>
-        )}
-        {!isItem && comments && (
-          <Flex align="center" gap="10">
-            <Flex
-              align="center"
-              gap="2"
-              css={{
-                filter: cardFooterBlur(hideCards, createdBy, userId),
-              }}
-            >
-              <StyledButtonIcon
-                disabled={
-                  !isMainboard ||
-                  (maxVotes && user?.votesCount === maxVotes) ||
-                  (maxVotes && disableVotes.maxVotesReached) ||
-                  (hideCards && createdBy?._id !== userId)
-                }
-                onClick={handleAddVote}
-              >
-                <Icon name="thumbs-up" />
-              </StyledButtonIcon>
-              <Text
-                size="xs"
-                css={{
-                  visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
-                  width: '10px',
-                }}
-              >
-                {votesInThisCard.length}
-              </Text>
-            </Flex>
 
-            <Flex
-              align="center"
-              gap="2"
-              css={{
-                mr: '$10',
-                filter: cardFooterBlur(hideCards, createdBy, userId),
-              }}
+          <Flex
+            align="center"
+            gap="2"
+            css={{
+              mr: '$10',
+              filter: cardFooterBlur(hideCards, createdBy, userId),
+            }}
+          >
+            <StyledButtonIcon
+              disabled={
+                !isMainboard ||
+                votesInThisCard.length === 0 ||
+                (maxVotes && userVotes === 0) ||
+                votesOfUserInThisCard === 0 ||
+                (hideCards && createdBy?._id !== userId)
+              }
+              onClick={handleDeleteVote}
             >
-              <StyledButtonIcon
-                disabled={
-                  !isMainboard ||
-                  votesInThisCard.length === 0 ||
-                  disableVotes.noVotes ||
-                  !!(user && maxVotes && userVotes === 0) ||
-                  votesOfUserInThisCard === 0 ||
-                  (hideCards && createdBy?._id !== userId)
-                }
-                onClick={handleDeleteVote}
-              >
-                <Icon name="thumbs-down" />
-              </StyledButtonIcon>
-            </Flex>
-
-            <Flex
-              align="center"
-              gap="2"
-              css={{
-                filter: cardFooterBlur(hideCards, createdBy, userId),
-              }}
-            >
-              <StyledButtonIcon
-                disabled={hideCards && createdBy?._id !== userId}
-                onClick={setOpenComments}
-              >
-                <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
-              </StyledButtonIcon>
-              <Text css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }} size="xs">
-                {comments.length}
-              </Text>
-            </Flex>
+              <Icon name="thumbs-down" />
+            </StyledButtonIcon>
           </Flex>
-        )}
-      </Flex>
-    );
-  },
-);
+
+          <Flex
+            align="center"
+            gap="2"
+            css={{
+              filter: cardFooterBlur(hideCards, createdBy, userId),
+            }}
+          >
+            <StyledButtonIcon
+              disabled={hideCards && createdBy?._id !== userId}
+              onClick={setOpenComments}
+            >
+              <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
+            </StyledButtonIcon>
+            <Text css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }} size="xs">
+              {comments.length}
+            </Text>
+          </Flex>
+        </Flex>
+      )}
+    </Flex>
+  );
+};
 
 export default CardFooter;

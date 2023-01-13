@@ -5,6 +5,7 @@ export interface MergeCardService {
 	mergeCards(
 		boardId: string,
 		draggedCardId: string,
-		cardId: string
+		cardId: string,
+		userId: string
 	): Promise<LeanDocument<BoardDocument> | null>;
 }
