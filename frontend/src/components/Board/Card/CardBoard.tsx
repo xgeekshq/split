@@ -221,6 +221,8 @@ const CardBoard = React.memo<CardBoardProps>(
                   cardTitle={card.text}
                   handleClose={handleDeleting}
                   socketId={socketId}
+                  columnId={colId}
+                  userId={userId}
                 />
               )}
             </Container>

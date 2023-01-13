@@ -11,9 +11,11 @@ import { Server, Socket } from 'socket.io';
 import { hideText } from 'src/libs/utils/hideText';
 import Board from 'src/modules/boards/schemas/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
+import DeleteCardDto from 'src/modules/cards/dto/delete.card.dto';
 import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';
 import UnmergeCardsDto from 'src/modules/cards/dto/unmerge.dto';
 import { UpdateCardPositionDto } from 'src/modules/cards/dto/update-position.card.dto';
+import UpdateCardDto from 'src/modules/cards/dto/update.card.dto';
 import VoteDto from 'src/modules/votes/dto/vote.dto';
 import JoinPayload from '../interfaces/joinPayload.interface';
 import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
@@ -50,7 +52,6 @@ export default class SocketGateway
 	}
 
 	sendUpdateVotes(excludedClient: string, voteDto: VoteDto) {
-		// voteDto.userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 		voteDto.fromRequest = false;
 		voteDto.userId = hideText(voteDto.userId);
 		this.server.except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
@@ -66,6 +67,14 @@ export default class SocketGateway
 
 	sendAddCard(excludedClient: string, createCardDto: CreateCardDto) {
 		this.server.except(excludedClient).emit(`${createCardDto.boardId}addCard`, createCardDto);
+	}
+
+	sendDeleteCard(excludedClient: string, deleteCardDto: DeleteCardDto) {
+		this.server.except(excludedClient).emit(`${deleteCardDto.boardId}deleteCard`, deleteCardDto);
+	}
+
+	sendUpdateCard(excludedClient: string, updateCardDto: UpdateCardDto) {
+		this.server.except(excludedClient).emit(`${updateCardDto.boardId}deleteCard`, updateCardDto);
 	}
 
 	afterInit() {

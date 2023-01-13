@@ -72,16 +72,47 @@ export const handleNewCard = (board: BoardType, colIdToAdd: string, cardDto: Add
 export const handleDeleteCard = (board: BoardType, data: DeleteCardDto): BoardType => {
   const boardData = removeReadOnly(board);
 
-  boardData.columns.forEach((column) => {
-    column.cards.forEach((card, index) => {
-      if (card._id === data.cardId) {
-        column.cards.splice(index, 1);
-      }
-    });
-  });
+  const { columnId, cardId, cardItemId, isCardGroup, userId } = data;
 
-  // falta refactor last item
-  // falta devolver os votos ao user
+  let votesOfUser = 0;
+  const column = boardData.columns.find((col) => col._id === columnId);
+
+  const cardIdx = column?.cards.findIndex((cardValue) => cardValue._id === cardId);
+
+  if (!column || cardIdx === undefined) return boardData;
+
+  if (isCardGroup) {
+    votesOfUser = column.cards[cardIdx].items.reduce(
+      (prev, current) => prev + current.votes.filter((vote) => vote === userId).length,
+      column.cards[cardIdx].votes.filter((vote) => vote === userId).length,
+    );
+
+    column.cards.splice(cardIdx, 1);
+  }
+
+  if (!isCardGroup) {
+    const cardItemIdx = column?.cards[cardIdx].items.findIndex((item) => item._id === cardItemId);
+
+    votesOfUser = column.cards[cardIdx].items[cardItemIdx].votes.length;
+    column.cards[cardIdx].items.splice(cardItemIdx, 1);
+
+    if (column.cards[cardIdx].items.length === 1) {
+      column.cards[cardIdx].text = column.cards[cardIdx].items[0].text;
+      column.cards[cardIdx].items[0].comments = column.cards[cardIdx].items[0].comments.concat(
+        column.cards[cardIdx].comments,
+      );
+      column.cards[cardIdx].items[0].votes = column.cards[cardIdx].items[0].votes.concat(
+        column.cards[cardIdx].votes,
+      );
+      column.cards[cardIdx].comments = [];
+      column.cards[cardIdx].votes = [];
+    }
+  }
+
+  const boardUserIdx = boardData.users.findIndex((bUser) => bUser.user._id === userId);
+  if (boardUserIdx) {
+    boardData.users[boardUserIdx].votesCount -= votesOfUser;
+  }
 
   return boardData;
 };

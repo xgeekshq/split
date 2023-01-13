@@ -49,16 +49,11 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 
 			await session.commitTransaction();
 			await session.endSession();
-
-			// return pushResult.populate(BoardDataPopulate);
-			return pushResult;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
 			await session.endSession();
 		}
-
-		return null;
 	}
 
 	updateCardText(

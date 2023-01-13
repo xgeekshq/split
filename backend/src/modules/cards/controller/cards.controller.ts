@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	HttpStatus,
 	Inject,
 	Param,
 	Patch,
@@ -149,7 +150,7 @@ export default class CardsController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card item' })
@@ -189,7 +190,7 @@ export default class CardsController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a specific card item' })
@@ -230,9 +231,9 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		this.socketService.sendUpdateCard(socketId, updateCardDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a specific card' })
@@ -261,7 +262,7 @@ export default class CardsController {
 		@Body() updateCardDto: UpdateCardDto
 	) {
 		const { boardId, cardId } = params;
-		const { text } = updateCardDto;
+		const { text, socketId } = updateCardDto;
 
 		const board = await this.updateCardApp.updateCardGroupText(
 			boardId,
@@ -271,9 +272,9 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, updateCardDto.socketId);
+		this.socketService.sendUpdateCard(socketId, updateCardDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({
@@ -318,7 +319,7 @@ export default class CardsController {
 			if (!board) throw new BadRequestException(UPDATE_FAILED);
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
 
-			return board;
+			return HttpStatus.OK;
 		} catch (e) {
 			this.socketService.sendUpdatedBoard(boardId, socketId);
 
@@ -365,7 +366,7 @@ export default class CardsController {
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 		this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Remove a card item from a group' })

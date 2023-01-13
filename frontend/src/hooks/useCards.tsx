@@ -19,6 +19,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
+import DeleteCardDto from '@/types/card/deleteCard.dto';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -71,7 +72,7 @@ const useCards = () => {
     );
   };
 
-  const handleAddCardOptimistic = (data: AddCardDto) => {
+  const setQueryDataAddCard = (data: AddCardDto) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -105,7 +106,7 @@ const useCards = () => {
     onSettled: (data, error, variables) => {
       if (!error) {
         variables.newCard = data;
-        handleAddCardOptimistic(variables);
+        setQueryDataAddCard(variables);
       }
     },
     onError: (_, variables) => {
@@ -118,7 +119,7 @@ const useCards = () => {
     },
   });
 
-  const updateCardPositionOptimistic = async (data: UpdateCardPositionDto) => {
+  const setQueryDataUpdateCardPosition = async (data: UpdateCardPositionDto) => {
     const prevBoardData = await getPrevData(data.boardId);
 
     if (prevBoardData) {
@@ -131,7 +132,7 @@ const useCards = () => {
 
   const updateCardPosition = useMutation(updateCardPositionRequest, {
     onMutate: async (data) => {
-      const prevBoardData = updateCardPositionOptimistic(data);
+      const prevBoardData = setQueryDataUpdateCardPosition(data);
 
       return { previousBoard: prevBoardData, data };
     },
@@ -167,16 +168,29 @@ const useCards = () => {
     },
   });
 
+  const setQueryDataDeleteCard = (data: DeleteCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleDeleteCard(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const deleteCard = useMutation(deleteCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleDeleteCard(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataDeleteCard(data);
+      return { previousBoard: null, data };
     },
     onSettled: () => {
       setToastState({
@@ -185,8 +199,7 @@ const useCards = () => {
         content: 'Card deleted with success!',
       });
     },
-    onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -211,7 +224,7 @@ const useCards = () => {
 
   // #region MERGE_CARDS
 
-  const handleSetMergeQueryData = (data: MergeCardsDto) => {
+  const setQueryDataMergeCard = (data: MergeCardsDto) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -263,7 +276,7 @@ const useCards = () => {
     return { previousBoard: prevBoardData, data };
   };
 
-  const handleSetUnmergeQueryData = (data: RemoveFromCardGroupDto) => {
+  const setQueryDataUnmergeCard = (data: RemoveFromCardGroupDto) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -338,10 +351,11 @@ const useCards = () => {
     mergeCards,
     removeFromMergeCard,
     mergeBoard,
-    updateCardPositionOptimistic,
-    handleSetUnmergeQueryData,
-    handleSetMergeQueryData,
-    handleAddCardOptimistic,
+    setQueryDataUpdateCardPosition,
+    setQueryDataUnmergeCard,
+    setQueryDataMergeCard,
+    setQueryDataAddCard,
+    setQueryDataDeleteCard,
   };
 };
 

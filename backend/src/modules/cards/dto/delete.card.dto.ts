@@ -4,7 +4,6 @@ import { BaseDto } from 'src/libs/dto/base.dto';
 
 export default class DeleteCardDto extends BaseDto {
 	@ApiProperty()
-	@IsNotEmpty()
 	@IsMongoId()
 	cardId: string;
 
@@ -21,4 +20,12 @@ export default class DeleteCardDto extends BaseDto {
 	@IsOptional()
 	@IsMongoId()
 	cardItemId?: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	columnId: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	userId: string;
 }

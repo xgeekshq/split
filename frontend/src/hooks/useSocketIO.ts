@@ -10,17 +10,18 @@ import BoardType from '@/types/board/board';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
+import DeleteCardDto from '@/types/card/deleteCard.dto';
 import useVotes from './useVotes';
 
 export const useSocketIO = (boardId: string): string | undefined => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
   const {
-    updateCardPositionOptimistic,
-    handleSetUnmergeQueryData,
-    handleSetMergeQueryData,
-    handleAddCardOptimistic,
-    // handleDeleteCardOptimistic
+    setQueryDataUpdateCardPosition,
+    setQueryDataUnmergeCard,
+    setQueryDataMergeCard,
+    setQueryDataAddCard,
+    setQueryDataDeleteCard,
   } = useCards();
   const { updateVote } = useVotes();
 
@@ -50,7 +51,7 @@ export const useSocketIO = (boardId: string): string | undefined => {
     });
 
     socket?.on(`${boardId}cardPosition`, (updateCardPositionDto: UpdateCardPositionDto) => {
-      updateCardPositionOptimistic(updateCardPositionDto);
+      setQueryDataUpdateCardPosition(updateCardPositionDto);
     });
 
     socket?.on(`${boardId}vote`, (votesDto: VoteDto) => {
@@ -58,22 +59,21 @@ export const useSocketIO = (boardId: string): string | undefined => {
     });
 
     socket?.on(`${boardId}unmerge`, (unmergeDto: RemoveFromCardGroupDto) => {
-      handleSetUnmergeQueryData(unmergeDto);
+      setQueryDataUnmergeCard(unmergeDto);
     });
 
     socket?.on(`${boardId}merge`, (mergeDto: MergeCardsDto) => {
-      handleSetMergeQueryData(mergeDto);
+      setQueryDataMergeCard(mergeDto);
     });
 
     socket?.on(`${boardId}addCard`, (addCardDto: AddCardDto) => {
-      handleAddCardOptimistic(addCardDto);
+      setQueryDataAddCard(addCardDto);
     });
 
-    // socket?.on(`${boardId}deleteCard`, (deleteCardDto: DeleteCardDto) => {
-    //   handleDeleteCardOptimistic(deleteCardDto);
-    // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryClient, socket]);
+    socket?.on(`${boardId}deleteCard`, (deleteCardDto: DeleteCardDto) => {
+      setQueryDataDeleteCard(deleteCardDto);
+    });
+  }, [queryClient, socket, boardId]);
 
   return socket?.id;
 };
