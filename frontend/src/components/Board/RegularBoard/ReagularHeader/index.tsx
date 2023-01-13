@@ -168,6 +168,7 @@ const RegularBoardHeader = () => {
                   listUsers={users}
                   teamAdmins={false}
                   userId={session!.user.id}
+                  isRegularBoardNoTeam
                 />
               </Flex>
             </>
@@ -184,6 +185,7 @@ const RegularBoardHeader = () => {
                   listUsers={users}
                   teamAdmins={false}
                   userId={session!.user.id}
+                  isRegularBoardNoTeam
                 />
               </Flex>
             </>

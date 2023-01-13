@@ -24,6 +24,7 @@ type CardAvatarProps = {
   myBoards?: boolean;
   haveError?: boolean;
   isBoardsPage?: boolean;
+  isRegularBoardNoTeam?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
@@ -36,6 +37,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
     responsible,
     myBoards,
     isBoardsPage,
+    isRegularBoardNoTeam,
   }) => {
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
     const [viewAllUsers, setViewAllUsers] = useState(false);
@@ -186,6 +188,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
           isOpen={dialogIsOpen}
           setIsOpen={setDialogIsOpen}
           isSubBoard={!stakeholders}
+          isRegularBoardNoTeam={isRegularBoardNoTeam}
         />
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
           {haveError

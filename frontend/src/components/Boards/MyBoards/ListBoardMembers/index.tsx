@@ -20,6 +20,7 @@ type ListBoardMembersProps = {
   isOpen: boolean;
   boardMembers: ListUsersType[];
   isSubBoard: boolean;
+  isRegularBoardNoTeam?: boolean;
 };
 
 const ListBoardMembers = ({
@@ -27,6 +28,7 @@ const ListBoardMembers = ({
   setIsOpen,
   boardMembers,
   isSubBoard,
+  isRegularBoardNoTeam,
 }: ListBoardMembersProps) => {
   const admin = boardMembers
     .filter((user) => user.role === TeamUserRoles.ADMIN)
@@ -50,9 +52,17 @@ const ListBoardMembers = ({
         <Text heading="4">Board Members</Text>
       </Dialog.Header>
       <ScrollableContent direction="column" justify="start">
-        <FilterBoardMembers title="Team Members" users={members} />
+        {!isEmpty(members) && (
+          <FilterBoardMembers
+            title={isRegularBoardNoTeam ? 'Participants' : 'Team Members'}
+            users={members}
+          />
+        )}
         {!isEmpty(responsible) && isSubBoard && (
-          <FilterBoardMembers title="Responsible" users={responsible} />
+          <FilterBoardMembers
+            title={isRegularBoardNoTeam ? 'Board Creator' : 'Responsible'}
+            users={responsible}
+          />
         )}
         {!isEmpty(stakeholders) && (
           <FilterBoardMembers
