@@ -19,13 +19,16 @@ export default class CardItem extends BaseModel {
 	comments!: Comment[];
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
-	createdBy!: User | ObjectId;
+	createdBy!: User | ObjectId | string;
 
 	@Prop()
 	createdByTeam!: string;
 
 	@Prop({ nullable: false, default: false })
 	anonymous!: boolean;
+
+	@Prop({ type: Date, default: Date.now })
+	createdAt: Date;
 }
 
 export const CardItemSchema = SchemaFactory.createForClass(CardItem);

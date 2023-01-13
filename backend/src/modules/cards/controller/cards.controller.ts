@@ -48,6 +48,8 @@ import { UpdateCardApplication } from '../interfaces/applications/update.card.ap
 import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/schemas/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
+import { replaceCard } from 'src/modules/boards/utils/clean-board';
+import Card from '../schemas/card.schema';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -94,12 +96,26 @@ export default class CardsController {
 	) {
 		const { card, colIdToAdd, socketId } = createCardDto;
 
-		const board = await this.createCardApp.create(boardId, request.user._id, card, colIdToAdd);
+		const { newCard, hideCards, hideVotes } = await this.createCardApp.create(
+			boardId,
+			request.user._id,
+			card,
+			colIdToAdd
+		);
 
-		if (!board) throw new BadRequestException(INSERT_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		if (!card) throw new BadRequestException(INSERT_FAILED);
 
-		return board;
+		const cardWithHiddenInfo = replaceCard(
+			newCard,
+			request.user._id.toString(),
+			hideCards,
+			hideVotes
+		);
+
+		createCardDto.newCard = cardWithHiddenInfo as Card;
+		this.socketService.sendAddCard(socketId, createCardDto);
+
+		return newCard;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card' })

@@ -8,7 +8,9 @@ import {
 	WebSocketServer
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { hideText } from 'src/libs/utils/hideText';
 import Board from 'src/modules/boards/schemas/board.schema';
+import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
 import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';
 import UnmergeCardsDto from 'src/modules/cards/dto/unmerge.dto';
 import { UpdateCardPositionDto } from 'src/modules/cards/dto/update-position.card.dto';
@@ -50,6 +52,7 @@ export default class SocketGateway
 	sendUpdateVotes(excludedClient: string, voteDto: VoteDto) {
 		// voteDto.userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 		voteDto.fromRequest = false;
+		voteDto.userId = hideText(voteDto.userId);
 		this.server.except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
 	}
 
@@ -59,6 +62,10 @@ export default class SocketGateway
 
 	sendMergeCards(excludedClient: string, mergeDto: MergeCardDto) {
 		this.server.except(excludedClient).emit(`${mergeDto.boardId}merge`, mergeDto);
+	}
+
+	sendAddCard(excludedClient: string, createCardDto: CreateCardDto) {
+		this.server.except(excludedClient).emit(`${createCardDto.boardId}addCard`, createCardDto);
 	}
 
 	afterInit() {

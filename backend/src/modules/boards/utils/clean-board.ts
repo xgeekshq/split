@@ -1,8 +1,8 @@
-import { LeanDocument, ObjectId } from 'mongoose';
+import { LeanDocument } from 'mongoose';
 import { boardVotesIdHidden } from 'src/libs/utils/boardVotesIdHidden';
 import { hideText } from 'src/libs/utils/hideText';
-import { CardItemDocument } from 'src/modules/cards/schemas/card.item.schema';
-import { CardDocument } from 'src/modules/cards/schemas/card.schema';
+import CardItem from 'src/modules/cards/schemas/card.item.schema';
+import Card from 'src/modules/cards/schemas/card.schema';
 import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
 import Board from '../schemas/board.schema';
@@ -13,18 +13,7 @@ import Board from '../schemas/board.schema';
  * @param userId Current Logged User
  * @returns Board
  */
-export const cleanBoard = (
-	input: LeanDocument<
-		Board & {
-			_id: ObjectId;
-		}
-	>,
-	userId: string
-): LeanDocument<
-	Board & {
-		_id: ObjectId;
-	}
-> => {
+export const cleanBoard = (input: Board, userId: string): Board => {
 	const { hideCards = false, hideVotes = false, columns: boardColumns } = input;
 	// Columns
 	input.columns = boardColumns.map((column) => {
@@ -45,7 +34,7 @@ export const cleanBoard = (
 		};
 	});
 
-	return boardVotesIdHidden(input, userId) as LeanDocument<Board & { _id: ObjectId }>;
+	return boardVotesIdHidden(input, userId);
 };
 
 /**
@@ -57,11 +46,11 @@ export const cleanBoard = (
  * @returns Card or a Card Item
  */
 export const replaceCard = (
-	input: LeanDocument<CardDocument | CardItemDocument>,
+	input: Card | CardItem,
 	userId: string,
 	hideCards: boolean,
 	hideVotes: boolean
-): LeanDocument<CardDocument | CardItemDocument> => {
+): Card | CardItem => {
 	let { text, comments, votes, createdBy } = input;
 	const { anonymous } = input;
 	const createdByAsUserDocument = createdBy as UserDocument;
@@ -98,10 +87,7 @@ export const replaceCard = (
  * @param userId Current Logged User
  * @returns Array of Votes (filtered)
  */
-export const filterVotes = (
-	input: LeanDocument<CardDocument | CardItemDocument>,
-	userId: string
-) => {
+export const filterVotes = (input: Card | CardItem, userId: string) => {
 	return (input.votes as UserDocument[]).filter((vote) => String(vote._id) === String(userId));
 };
 

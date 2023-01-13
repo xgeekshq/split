@@ -12,6 +12,7 @@ import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
+import CardType from '@/types/card/card';
 
 // #region BOARD
 
@@ -68,8 +69,8 @@ export const deleteBoardRequest = async ({
 
 // #region CARD
 
-export const addCardRequest = (addCardDto: AddCardDto): Promise<BoardType> =>
-  fetchData<BoardType>(`/boards/${addCardDto.boardId}/card`, {
+export const addCardRequest = (addCardDto: AddCardDto): Promise<CardType> =>
+  fetchData<CardType>(`/boards/${addCardDto.boardId}/card`, {
     method: 'POST',
     data: addCardDto,
   });

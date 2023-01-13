@@ -9,13 +9,19 @@ import VoteDto from '@/types/vote/vote.dto';
 import BoardType from '@/types/board/board';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
+import AddCardDto from '@/types/card/addCard.dto';
 import useVotes from './useVotes';
 
 export const useSocketIO = (boardId: string): string | undefined => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
-  const { updateCardPositionOptimistic, handleSetUnmergeQueryData, handleSetMergeQueryData } =
-    useCards();
+  const {
+    updateCardPositionOptimistic,
+    handleSetUnmergeQueryData,
+    handleSetMergeQueryData,
+    handleAddCardOptimistic,
+    // handleDeleteCardOptimistic
+  } = useCards();
   const { updateVote } = useVotes();
 
   useEffect(() => {
@@ -58,6 +64,14 @@ export const useSocketIO = (boardId: string): string | undefined => {
     socket?.on(`${boardId}merge`, (mergeDto: MergeCardsDto) => {
       handleSetMergeQueryData(mergeDto);
     });
+
+    socket?.on(`${boardId}addCard`, (addCardDto: AddCardDto) => {
+      handleAddCardOptimistic(addCardDto);
+    });
+
+    // socket?.on(`${boardId}deleteCard`, (deleteCardDto: DeleteCardDto) => {
+    //   handleDeleteCardOptimistic(deleteCardDto);
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryClient, socket]);
 

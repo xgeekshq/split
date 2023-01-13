@@ -7,7 +7,7 @@ import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
-import { GetCardService } from 'src/modules/cards/interfaces/services/get.card.service.interface';
+import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
 import { TYPES } from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 
@@ -19,7 +19,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private getCardService: GetCardService
+		private getCardService: GetCardServiceInterface
 	) {}
 
 	private logger: Logger = new Logger('DeleteVoteService');

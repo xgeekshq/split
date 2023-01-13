@@ -9,7 +9,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
-import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { CardItemDocument } from '../schemas/card.item.schema';
 
@@ -18,7 +18,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private getCardService: GetCardService,
+		private getCardService: GetCardServiceInterface,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
 		private deleteVoteService: DeleteVoteServiceInterface
 	) {}

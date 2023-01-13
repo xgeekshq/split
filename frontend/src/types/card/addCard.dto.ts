@@ -1,4 +1,5 @@
-import { CardToAdd } from './card';
+import { User } from '../user/user';
+import CardType, { CardToAdd } from './card';
 
 export default interface AddCardDto {
   boardId: string;
@@ -8,4 +9,8 @@ export default interface AddCardDto {
   card: CardToAdd;
 
   socketId?: string;
+
+  newCard?: CardType;
+
+  user?: User;
 }

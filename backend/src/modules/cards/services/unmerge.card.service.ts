@@ -8,7 +8,7 @@ import {
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { pullItem } from '../shared/pull.card';
@@ -18,7 +18,7 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private readonly cardService: GetCardService
+		private readonly cardService: GetCardServiceInterface
 	) {}
 
 	async unmergeAndUpdatePosition(
@@ -114,6 +114,6 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			await session.endSession();
 		}
 
-		return null;
+		throw Error(CARD_NOT_REMOVED);
 	}
 }

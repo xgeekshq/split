@@ -11,16 +11,59 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { addElementAtIndex, removeElementAtIndex } from '@/utils/array';
+import AddCardDto from '@/types/card/addCard.dto';
 
 // avoid read only error
 export const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
 
-export const handleNewCard = (board: BoardType, colIdToAdd: string, newCard: CardType) => {
+const generateNewCard = (newCardData: AddCardDto): CardType => {
+  const idCard = '123';
+  const newCard: CardType = {
+    _id: idCard,
+    text: newCardData.card.text,
+    votes: [],
+    comments: [],
+    anonymous: newCardData.card.anonymous,
+    createdBy: {
+      _id: newCardData.user ? newCardData.user._id : '',
+      firstName: newCardData.user ? newCardData.user.firstName : '',
+      lastName: newCardData.user ? newCardData.user.lastName : '',
+      email: '',
+      joinedAt: '',
+      isSAdmin: false,
+    },
+    items: [
+      {
+        _id: idCard,
+        text: newCardData.card.text,
+        votes: [],
+        comments: [],
+        anonymous: newCardData.card.anonymous,
+        createdBy: {
+          _id: newCardData.user ? newCardData.user._id : '',
+          firstName: newCardData.user ? newCardData.user.firstName : '',
+          lastName: newCardData.user ? newCardData.user.lastName : '',
+          email: '',
+          joinedAt: '',
+          isSAdmin: false,
+        },
+      },
+    ],
+  };
+  return newCard;
+};
+
+export const handleNewCard = (board: BoardType, colIdToAdd: string, cardDto: AddCardDto) => {
   const boardData = removeReadOnly(board);
+
+  const { newCard, user } = cardDto;
 
   const column = boardData.columns.find((col) => col._id === colIdToAdd);
   if (column) {
-    column.cards = addElementAtIndex(column.cards, 0, newCard);
+    if (newCard && user) {
+      column.cards = removeElementAtIndex(column.cards, 0);
+    }
+    column.cards = addElementAtIndex(column.cards, 0, cardDto.newCard ?? generateNewCard(cardDto));
   }
 
   return boardData;
@@ -36,6 +79,9 @@ export const handleDeleteCard = (board: BoardType, data: DeleteCardDto): BoardTy
       }
     });
   });
+
+  // falta refactor last item
+  // falta devolver os votos ao user
 
   return boardData;
 };

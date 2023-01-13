@@ -14,7 +14,6 @@ import {
 import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
 import BoardType from '@/types/board/board';
 import AddCardDto from '@/types/card/addCard.dto';
-import CardType from '@/types/card/card';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
@@ -55,43 +54,6 @@ const useCards = () => {
     return prevData?.board;
   };
 
-  const generateNewCard = (newCardData: AddCardDto): CardType => {
-    const idCard = '123';
-    const newCard: CardType = {
-      _id: idCard,
-      text: newCardData.card.text,
-      votes: [],
-      comments: [],
-      anonymous: newCardData.card.anonymous,
-      createdBy: {
-        _id: user ? user.id : '',
-        firstName: user ? user.firstName : '',
-        lastName: user ? user.lastName : '',
-        email: '',
-        joinedAt: '',
-        isSAdmin: false,
-      },
-      items: [
-        {
-          _id: idCard,
-          text: newCardData.card.text,
-          votes: [],
-          comments: [],
-          anonymous: newCardData.card.anonymous,
-          createdBy: {
-            _id: user ? user.id : '',
-            firstName: user ? user.firstName : '',
-            lastName: user ? user.lastName : '',
-            email: '',
-            joinedAt: '',
-            isSAdmin: false,
-          },
-        },
-      ],
-    };
-    return newCard;
-  };
-
   const updateBoardColumns = (id: string, columns: ColumnType[]) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(id),
@@ -109,12 +71,32 @@ const useCards = () => {
     );
   };
 
+  const handleAddCardOptimistic = (data: AddCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleNewCard(old.board, data.colIdToAdd, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const addCardInColumn = useMutation(addCardRequest, {
     onMutate: async (data) => {
       const prevBoardData = await getPrevData(data.boardId);
 
       if (prevBoardData && user) {
-        const boardData = handleNewCard(prevBoardData, data.colIdToAdd, generateNewCard(data));
+        data.user = { ...user, joinedAt: '', _id: user.id };
+        const boardData = handleNewCard(prevBoardData, data.colIdToAdd, data);
         updateBoardColumns(data.boardId, boardData.columns);
       }
 
@@ -122,11 +104,11 @@ const useCards = () => {
     },
     onSettled: (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newCard = data;
+        handleAddCardOptimistic(variables);
       }
     },
-    onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -359,6 +341,7 @@ const useCards = () => {
     updateCardPositionOptimistic,
     handleSetUnmergeQueryData,
     handleSetMergeQueryData,
+    handleAddCardOptimistic,
   };
 };
 

@@ -1,24 +1,7 @@
-import { ObjectId } from 'mongodb';
-import { LeanDocument } from 'mongoose';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board from 'src/modules/boards/schemas/board.schema';
 import { hideText } from './hideText';
 
-export const boardVotesIdHidden = (
-	input:
-		| LeanDocument<BoardDocument>
-		| LeanDocument<
-				Board & {
-					_id: ObjectId;
-				}
-		  >,
-	userId: string
-):
-	| LeanDocument<BoardDocument>
-	| LeanDocument<
-			Board & {
-				_id: ObjectId;
-			}
-	  > => {
+export const boardVotesIdHidden = (input: Board, userId: string): Board => {
 	const columns = input.columns.map((column) => {
 		const cards = column.cards.map((card) => {
 			const items = card.items.map((item) => {

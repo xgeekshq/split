@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { CARD_NOT_INSERTED, CARD_NOT_REMOVED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
-import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { pullCard } from '../shared/pull.card';
@@ -15,7 +15,7 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private readonly cardService: GetCardService
+		private readonly cardService: GetCardServiceInterface
 	) {}
 
 	async updateCardPosition(
@@ -50,7 +50,8 @@ export default class UpdateCardServiceImpl implements UpdateCardService {
 			await session.commitTransaction();
 			await session.endSession();
 
-			return pushResult.populate(BoardDataPopulate);
+			// return pushResult.populate(BoardDataPopulate);
+			return pushResult;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
