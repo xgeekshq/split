@@ -14,8 +14,14 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	private async canUserVote(boardId: string, userId: string, count: number): Promise<boolean> {
-		const board = await this.boardModel.findById(boardId).exec();
+	private async canUserVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		boardSession: ClientSession,
+		boardUserSession: ClientSession
+	): Promise<boolean> {
+		const board = await this.boardModel.findById(boardId).session(boardSession).exec();
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
@@ -28,6 +34,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 
 		const boardUserFound = await this.boardUserModel
 			.findOne({ board: boardId, user: userId })
+			.session(boardUserSession)
 			.exec();
 
 		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
@@ -67,14 +74,15 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		cardItemId: string,
 		count: number
 	) {
-		const canUserVote = await this.canUserVote(boardId, userId, count);
-
-		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
-
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
+
+		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
+
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
 		try {
 			await this.incrementVoteUser(boardId, userId, count);
 			const board = await this.boardModel
@@ -110,14 +118,15 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 	}
 
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
-		const canUserVote = await this.canUserVote(boardId, userId, count);
-
-		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
-
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
+
+		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
+
+		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
+
 		try {
 			await this.incrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.boardModel
