@@ -13,7 +13,7 @@ export default class CardItem extends BaseModel {
 	text!: string;
 
 	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }] })
-	votes!: User[] | ObjectId[];
+	votes!: User[] | ObjectId[] | string[];
 
 	@Prop({ type: [CommentSchema] })
 	comments!: Comment[];

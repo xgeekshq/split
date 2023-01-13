@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model, ObjectId } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
-import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
-import { CardItemDocument } from '../schemas/card.item.schema';
+import CardItem from '../schemas/card.item.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -113,9 +113,9 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 	async refactorLastItem(
 		boardId: string,
 		cardId: string,
-		newVotes: (LeanDocument<User> | LeanDocument<ObjectId>)[],
-		newComments: LeanDocument<CommentDocument>[],
-		cardItems: LeanDocument<CardItemDocument>[]
+		newVotes: (User | ObjectId | string)[],
+		newComments: Comment[],
+		cardItems: CardItem[]
 	) {
 		const [{ text, createdBy }] = cardItems;
 

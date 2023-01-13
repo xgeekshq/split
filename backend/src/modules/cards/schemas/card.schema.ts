@@ -24,7 +24,7 @@ export default class Card extends BaseModel {
 	comments!: Comment[];
 
 	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'User' }] })
-	votes!: User[] | ObjectId[];
+	votes!: User[] | ObjectId[] | string[];
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	createdBy!: User | ObjectId | string;

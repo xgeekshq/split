@@ -28,10 +28,12 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		boardId: string,
 		userId: string,
 		count: number,
+		cardId: string,
 		boardSession: ClientSession,
-		boardUserSession: ClientSession
+		boardUserSession: ClientSession,
+		cardItemId?: string
 	): Promise<boolean> {
-		const board = await this.boardModel.findById(boardId).session(boardSession).exec();
+		const board = await this.boardModel.findById(boardId).session(boardSession).lean().exec();
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
@@ -41,6 +43,27 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			.findOne({ board: boardId, user: userId })
 			.session(boardUserSession)
 			.exec();
+
+		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
+		if (!card) return false;
+
+		if (cardItemId) {
+			const item = card.items.find((item) => item._id === cardItemId);
+
+			if (!arrayIdToString(item.votes as string[]).includes(userId.toString())) {
+				return false;
+			}
+		} else {
+			let votes = card.votes as string[];
+			card.items.forEach((item) => {
+				votes = votes.concat(item.votes as string[]);
+			});
+
+			if (!arrayIdToString(votes).includes(userId.toString())) {
+				return false;
+			}
+		}
 
 		return boardUserFound?.votesCount
 			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - Math.abs(count) >= 0
@@ -79,7 +102,14 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 
-		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
+		const canUserVote = await this.canUserVote(
+			boardId,
+			userId,
+			count,
+			cardId,
+			session,
+			userSession
+		);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
 		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
@@ -98,8 +128,8 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		votes = votes.concat(userVotes);
 
 		try {
-			await this.decrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.setCardItemVotes(boardId, cardItemId, votes, cardId, session);
+			await this.decrementVoteUser(boardId, userId, count, userSession);
 
 			if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
 
@@ -120,7 +150,14 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
-		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
+		const canUserVote = await this.canUserVote(
+			boardId,
+			userId,
+			count,
+			cardId,
+			session,
+			userSession
+		);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
 		let currentCount = Math.abs(count);

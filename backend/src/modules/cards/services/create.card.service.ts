@@ -30,18 +30,37 @@ export default class CreateCardServiceImpl implements CreateCardService {
 			card.items[0].createdBy = userId;
 		}
 
-		const { columns, hideCards, hideVotes } = await pushCardIntoPosition(
-			boardId,
-			colIdToAdd,
-			0,
-			card,
-			this.boardModel
-		);
+		let board = await pushCardIntoPosition(boardId, colIdToAdd, 0, card, this.boardModel);
 
-		if (!columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+		board = (
+			await board.populate([
+				{
+					path: 'columns.cards.createdBy',
+					select: '_id firstName lastName'
+				},
+				{
+					path: 'columns.cards.comments.createdBy',
+					select: '_id  firstName lastName'
+				},
+				{
+					path: 'columns.cards.items.createdBy',
+					select: '_id firstName lastName'
+				},
+				{
+					path: 'columns.cards.items.comments.createdBy',
+					select: '_id firstName lastName'
+				}
+			])
+		).toObject({ virtuals: true });
 
-		const colIndex = columns.findIndex((col) => col._id.toString() === colIdToAdd);
+		if (!board.columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
 
-		return { newCard: columns[colIndex].cards[0], hideCards, hideVotes };
+		const colIndex = board.columns.findIndex((col) => col._id.toString() === colIdToAdd);
+
+		return {
+			newCard: board.columns[colIndex].cards[0],
+			hideCards: board.hideCards,
+			hideVotes: board.hideVotes
+		};
 	}
 }
