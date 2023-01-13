@@ -331,11 +331,20 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/card/:cardId/merge/:targetCardId')
-	async mergeCards(@Param() params: MergeCardsParams, @Body() mergeCardsDto: BaseDto) {
+	async mergeCards(
+		@Req() request: RequestWithUser,
+		@Param() params: MergeCardsParams,
+		@Body() mergeCardsDto: BaseDto
+	) {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
 
-		const board = await this.mergeCardApp.mergeCards(boardId, draggedCardId, targetCardId);
+		const board = await this.mergeCardApp.mergeCards(
+			boardId,
+			draggedCardId,
+			targetCardId,
+			request.user._id.toString()
+		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 		this.socketService.sendBoard(board as Board, socketId);

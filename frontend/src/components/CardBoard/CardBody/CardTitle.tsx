@@ -51,7 +51,6 @@ const CardTitle: React.FC<CardTitleProps> = ({
             pathname: `boards/[boardId]`,
             query: isSubBoard ? { boardId, mainBoardId, mainBoardTitle } : { boardId },
           }}
-          as={isSubBoard ? `/${boardId}?mainBoardId=${mainBoardId}` : `/${boardId}`}
         >
           <StyledBoardTitle data-disabled={!userIsParticipating && !havePermissions}>
             {title}
