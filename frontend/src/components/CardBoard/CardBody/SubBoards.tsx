@@ -17,11 +17,12 @@ const SubBoards = React.memo(
     if (isDashboard) {
       return (
         <Flex direction="column" gap="8">
-          {dividedBoards.map((subBoard, idx) =>
-            subBoard.users.find((boardUser) => boardUser.user?._id === userId)
+          {dividedBoards.map((subBoard, idx) => {
+            const isTeamAdmin = String(subBoard.createdBy) === userId;
+            return isTeamAdmin || subBoard.users.find((boardUser) => boardUser.user?._id === userId)
               ? renderCardBody(subBoard, idx)
-              : null,
-          )}
+              : null;
+          })}
         </Flex>
       );
     }
