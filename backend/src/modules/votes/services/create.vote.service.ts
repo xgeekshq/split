@@ -94,7 +94,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 					},
 					{
 						$push: {
-							'columns.$.cards.$[c].items.$[i].votes': userId
+							'columns.$.cards.$[c].items.$[i].votes': Array(count).fill(userId)
 						}
 					},
 					{
