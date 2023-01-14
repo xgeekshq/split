@@ -5,5 +5,5 @@ export interface UnmergeCardApplication {
 		draggedCardId: string,
 		columnId: string,
 		position: number
-	): Promise<string | null>;
+	): Promise<string>;
 }
