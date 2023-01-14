@@ -3,7 +3,7 @@ import { boardVotesIdHidden } from 'src/libs/utils/boardVotesIdHidden';
 import { hideText } from 'src/libs/utils/hideText';
 import CardItem from 'src/modules/cards/schemas/card.item.schema';
 import Card from 'src/modules/cards/schemas/card.schema';
-import { CommentDocument } from 'src/modules/comments/schemas/comment.schema';
+import Comment from 'src/modules/comments/schemas/comment.schema';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
 import Board from '../schemas/board.schema';
 
@@ -116,9 +116,9 @@ export const replaceUser = (input: UserDocument, userId: string): LeanDocument<U
 export const replaceComments = (
 	hideCards: boolean,
 	createdByAsUserDocument: UserDocument,
-	input: LeanDocument<CommentDocument[]>,
+	input: Comment[],
 	userId: string
-): LeanDocument<CommentDocument[]> => {
+): Comment[] => {
 	return input.map((comment) => {
 		const { anonymous, text } = comment;
 

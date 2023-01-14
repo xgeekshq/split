@@ -20,6 +20,7 @@ import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
+import UpdateCardDto from '@/types/card/updateCard.dto';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -40,13 +41,6 @@ const useCards = () => {
   const setMergeCard = useSetRecoilState(mergeCardState);
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
-
-  const setPreviousBoardQuery = (id: string, context: any) => {
-    queryClient.setQueryData(
-      getBoardQuery(id),
-      (context as { previousBoard: BoardType }).previousBoard,
-    );
-  };
 
   const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
     const query = getBoardQuery(id);
@@ -93,15 +87,10 @@ const useCards = () => {
 
   const addCardInColumn = useMutation(addCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData && user) {
-        data.user = { ...user, joinedAt: '', _id: user.id };
-        const boardData = handleNewCard(prevBoardData, data.colIdToAdd, data);
-        updateBoardColumns(data.boardId, boardData.columns);
+      if (user) {
+        data.user = { ...user, joinedAt: '', _id: user?.id };
+        setQueryDataAddCard(data);
       }
-
-      return { previousBoard: prevBoardData, data };
     },
     onSettled: (data, error, variables) => {
       if (!error) {
@@ -146,19 +135,31 @@ const useCards = () => {
     },
   });
 
+  const setQueryDataUpdateCard = (data: UpdateCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleUpdateText(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const updateCard = useMutation(updateCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleUpdateText(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataUpdateCard(data);
+      return { previousBoard: null, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -356,6 +357,7 @@ const useCards = () => {
     setQueryDataMergeCard,
     setQueryDataAddCard,
     setQueryDataDeleteCard,
+    setQueryDataUpdateCard,
   };
 };
 

@@ -11,7 +11,10 @@ import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
+import UpdateCardDto from '@/types/card/updateCard.dto';
+import AddCommentDto from '@/types/comment/addComment.dto';
 import useVotes from './useVotes';
+import useComments from './useComments';
 
 export const useSocketIO = (boardId: string): string | undefined => {
   const queryClient = useQueryClient();
@@ -22,8 +25,10 @@ export const useSocketIO = (boardId: string): string | undefined => {
     setQueryDataMergeCard,
     setQueryDataAddCard,
     setQueryDataDeleteCard,
+    setQueryDataUpdateCard,
   } = useCards();
   const { updateVote } = useVotes();
+  const { setQueryDataAddComment } = useComments();
 
   useEffect(() => {
     const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? 'http://127.0.0.1:3200', {
@@ -67,11 +72,21 @@ export const useSocketIO = (boardId: string): string | undefined => {
     });
 
     socket?.on(`${boardId}addCard`, (addCardDto: AddCardDto) => {
+      addCardDto.user = undefined;
       setQueryDataAddCard(addCardDto);
+    });
+
+    socket?.on(`${boardId}updateCard`, (updateCardDto: UpdateCardDto) => {
+      setQueryDataUpdateCard(updateCardDto);
     });
 
     socket?.on(`${boardId}deleteCard`, (deleteCardDto: DeleteCardDto) => {
       setQueryDataDeleteCard(deleteCardDto);
+    });
+
+    socket?.on(`${boardId}addComment`, (addCommentDto: AddCommentDto) => {
+      addCommentDto.fromSocket = true;
+      setQueryDataAddComment(addCommentDto);
     });
   }, [queryClient, socket, boardId]);
 

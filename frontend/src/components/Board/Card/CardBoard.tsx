@@ -236,6 +236,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 isSubmited={isSubmited}
                 socketId={socketId}
                 userId={userId}
+                columnId={colId}
               />
             )}
           </Flex>

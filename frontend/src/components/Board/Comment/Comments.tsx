@@ -18,6 +18,7 @@ interface CommentsListProps {
   isSubmited: boolean;
   hideCards: boolean;
   userId: string;
+  columnId: string;
 }
 
 const Comments = React.memo(
@@ -30,6 +31,7 @@ const Comments = React.memo(
     isSubmited,
     hideCards,
     userId,
+    columnId,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -61,6 +63,7 @@ const Comments = React.memo(
               isSubmited={isSubmited}
               socketId={socketId}
               userId={userId}
+              columnId={columnId}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -79,7 +82,7 @@ const Comments = React.memo(
               cancelUpdate={handleSetCreateComment}
               cardId={cardId}
               cardItemId={cardItems.length === 1 ? cardItems[0]._id : undefined}
-              colId="1"
+              colId={columnId}
               isCard={false}
               isUpdate={false}
               socketId={socketId}

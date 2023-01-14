@@ -17,7 +17,7 @@ import AddCardDto from '@/types/card/addCard.dto';
 export const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
 
 const generateNewCard = (newCardData: AddCardDto): CardType => {
-  const idCard = '123';
+  const idCard = `newCard${newCardData.card.text}${newCardData.user?._id}`;
   const newCard: CardType = {
     _id: idCard,
     text: newCardData.card.text,
@@ -61,7 +61,10 @@ export const handleNewCard = (board: BoardType, colIdToAdd: string, cardDto: Add
   const column = boardData.columns.find((col) => col._id === colIdToAdd);
   if (column) {
     if (newCard && user) {
-      column.cards = removeElementAtIndex(column.cards, 0);
+      const cardIdx = column.cards.findIndex(
+        (card) => card._id === `newCard${cardDto.card.text}${cardDto.user?._id}`,
+      );
+      column.cards = removeElementAtIndex(column.cards, cardIdx);
     }
     column.cards = addElementAtIndex(column.cards, 0, cardDto.newCard ?? generateNewCard(cardDto));
   }
@@ -233,18 +236,13 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
 export const handleAddComments = (board: BoardType, changes: AddCommentDto, user: User) => {
   // avoid read only error
   const boardData: BoardType = JSON.parse(JSON.stringify(board));
-  const { cardId, cardItemId, text, anonymous, isCardGroup } = changes;
-  let columnIndex = 0;
-
-  boardData.columns.forEach((item, index) => {
-    if (item.cards.find((col) => col._id === cardId) !== undefined) {
-      columnIndex = index;
-    }
-  });
+  const { cardId, cardItemId, text, anonymous, isCardGroup, newComment, columnId, fromSocket } =
+    changes;
+  const columnIndex = boardData.columns.findIndex((col) => col._id === columnId);
 
   const card = boardData.columns[columnIndex].cards.find((c) => c._id === cardId);
-  const cardItem = card!.items.find((c) => c._id === cardItemId);
-  const placehodlerId = (Math.random() + 1).toString(36).substring(7);
+  const cardItem = card?.items.find((c) => c._id === cardItemId);
+  const placehodlerId = `newComment${text}${user.id}`;
 
   const commentObj = {
     text,
@@ -262,10 +260,23 @@ export const handleAddComments = (board: BoardType, changes: AddCommentDto, user
     createdAt: new Date().toISOString(),
   };
 
-  if (!isCardGroup) {
-    cardItem?.comments.push(commentObj);
-  } else {
-    card?.comments.push(commentObj);
+  if (!isCardGroup && cardItem) {
+    if (newComment && !fromSocket) {
+      const commentIdx = cardItem.comments.findIndex(
+        (comment) => comment._id === `newComment${text}${user.id}`,
+      );
+      cardItem.comments = removeElementAtIndex(cardItem.comments, commentIdx);
+    }
+    cardItem.comments = addElementAtIndex(cardItem.comments, 0, newComment || commentObj);
+  } else if (card && isCardGroup) {
+    if (newComment && !fromSocket) {
+      const commentIdx = card.comments.findIndex(
+        (comment) => comment._id === `newComment${text}${user.id}`,
+      );
+
+      card.comments = removeElementAtIndex(card.comments, commentIdx);
+    }
+    card.comments = addElementAtIndex(card.comments, 0, newComment || commentObj);
   }
 
   return boardData;

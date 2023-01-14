@@ -51,6 +51,7 @@ import Board from 'src/modules/boards/schemas/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
 import Card from '../schemas/card.schema';
+import { hideText } from 'src/libs/utils/hideText';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -104,11 +105,11 @@ export default class CardsController {
 			colIdToAdd
 		);
 
-		if (!card) throw new BadRequestException(INSERT_FAILED);
+		if (!newCard) throw new BadRequestException(INSERT_FAILED);
 
 		const cardWithHiddenInfo = replaceCard(
 			newCard,
-			request.user._id.toString(),
+			hideText(request.user._id.toString()),
 			hideCards,
 			hideVotes
 		);
@@ -309,14 +310,8 @@ export default class CardsController {
 		const { targetColumnId, newPosition, socketId } = boardData;
 
 		try {
-			const board = await this.updateCardApp.updateCardPosition(
-				boardId,
-				cardId,
-				targetColumnId,
-				newPosition
-			);
+			await this.updateCardApp.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
 
-			if (!board) throw new BadRequestException(UPDATE_FAILED);
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
 
 			return HttpStatus.OK;

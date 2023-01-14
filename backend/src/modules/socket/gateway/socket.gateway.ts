@@ -16,6 +16,9 @@ import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';
 import UnmergeCardsDto from 'src/modules/cards/dto/unmerge.dto';
 import { UpdateCardPositionDto } from 'src/modules/cards/dto/update-position.card.dto';
 import UpdateCardDto from 'src/modules/cards/dto/update.card.dto';
+import CreateCommentDto from 'src/modules/comments/dto/create.comment.dto';
+import DeleteCommentDto from 'src/modules/comments/dto/delete.comment.dto';
+import UpdateCardCommentDto from 'src/modules/comments/dto/update.comment.dto';
 import VoteDto from 'src/modules/votes/dto/vote.dto';
 import JoinPayload from '../interfaces/joinPayload.interface';
 import JoinPayloadBoards from '../interfaces/joinPayloadBoards.interface';
@@ -74,8 +77,26 @@ export default class SocketGateway
 	}
 
 	sendUpdateCard(excludedClient: string, updateCardDto: UpdateCardDto) {
-		this.server.except(excludedClient).emit(`${updateCardDto.boardId}deleteCard`, updateCardDto);
+		this.server.except(excludedClient).emit(`${updateCardDto.boardId}updateCard`, updateCardDto);
 	}
+
+	sendAddComment(excludedClient: string, addCommentDto: CreateCommentDto) {
+		this.server.except(excludedClient).emit(`${addCommentDto.boardId}addComment`, addCommentDto);
+	}
+
+	sendUpdateComment(excludedClient: string, updateCommentDto: UpdateCardCommentDto) {
+		this.server
+			.except(excludedClient)
+			.emit(`${updateCommentDto.boardId}deleteComment`, updateCommentDto);
+	}
+
+	sendDeleteComment(excludedClient: string, deleteCommentDto: DeleteCommentDto) {
+		this.server
+			.except(excludedClient)
+			.emit(`${deleteCommentDto.boardId}deleteComment`, deleteCommentDto);
+	}
+
+	// send update board
 
 	afterInit() {
 		this.logger.log('Init');

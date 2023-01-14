@@ -9,6 +9,7 @@ import {
 } from '@/helper/board/transformBoard';
 import BoardType from '@/types/board/board';
 import ColumnType from '@/types/column';
+import AddCommentDto from '@/types/comment/addComment.dto';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 import useBoardUtils from './useBoardUtils';
@@ -20,13 +21,6 @@ const useComments = () => {
   const user = session?.user;
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
-
-  const setPreviousBoardQuery = (id: string, context: any) => {
-    queryClient.setQueryData(
-      getBoardQuery(id),
-      (context as { previousBoard: BoardType }).previousBoard,
-    );
-  };
 
   const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
     const query = getBoardQuery(id);
@@ -52,34 +46,47 @@ const useComments = () => {
     );
   };
 
+  const setQueryDataAddComment = (data: AddCommentDto) => {
+    const newUser = {
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+    } as User;
+
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleAddComments(old.board, data, newUser);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const addCommentInCard = useMutation(addCommentRequest, {
     onMutate: async (data) => {
-      const newUser = {
-        id: user?.id,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-      } as User;
-
-      const board = await getPrevData(data.boardId);
-
-      if (board && newUser) {
-        const boardData = handleAddComments(board, data, newUser);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: board, data };
+      setQueryDataAddComment(data);
+      return { previousBoard: null, data };
     },
     onSettled: (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newComment = data;
+        setQueryDataAddComment(variables);
       }
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
-        content: 'Error updating the comment',
+        content: 'Error adding the comment',
         type: ToastStateEnum.ERROR,
       });
     },
@@ -96,8 +103,7 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
@@ -118,8 +124,7 @@ const useComments = () => {
 
       return { previousBoard: board, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
@@ -133,6 +138,7 @@ const useComments = () => {
     addCommentInCard,
     deleteComment,
     updateComment,
+    setQueryDataAddComment,
   };
 };
 

@@ -13,6 +13,7 @@ import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
 import CardType from '@/types/card/card';
+import CommentType from '@/types/comment/comment';
 
 // #region BOARD
 
@@ -132,8 +133,8 @@ export const removeFromMergeRequest = (removeFromMerge: RemoveFromCardGroupDto):
 // #endregion
 
 // #region COMMENT
-export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardType> =>
-  fetchData<BoardType>(
+export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<CommentType> =>
+  fetchData<CommentType>(
     addCommentDto.isCardGroup
       ? `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/comments`
       : `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/items/${addCommentDto.cardItemId}/comments`,
