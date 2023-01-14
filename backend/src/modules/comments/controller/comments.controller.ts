@@ -216,7 +216,7 @@ export default class CommentsController {
 
 		this.socketService.sendUpdateComment(socketId, commentData);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a card comment' })
@@ -263,7 +263,7 @@ export default class CommentsController {
 
 		this.socketService.sendUpdateComment(socketId, commentData);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Delete a comment in a card item' })

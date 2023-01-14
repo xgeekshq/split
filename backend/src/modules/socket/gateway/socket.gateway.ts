@@ -87,7 +87,7 @@ export default class SocketGateway
 	sendUpdateComment(excludedClient: string, updateCommentDto: UpdateCardCommentDto) {
 		this.server
 			.except(excludedClient)
-			.emit(`${updateCommentDto.boardId}deleteComment`, updateCommentDto);
+			.emit(`${updateCommentDto.boardId}updateComment`, updateCommentDto);
 	}
 
 	sendDeleteComment(excludedClient: string, deleteCommentDto: DeleteCommentDto) {
