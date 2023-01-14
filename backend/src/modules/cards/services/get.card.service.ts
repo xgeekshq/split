@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isEmpty } from 'class-validator';
-import { LeanDocument, Model, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { GetCardService } from '../interfaces/services/get.card.service.interface';
-import { CardItemDocument } from '../schemas/card.item.schema';
-import { CardDocument } from '../schemas/card.schema';
+import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
+import CardItem from '../schemas/card.item.schema';
+import Card from '../schemas/card.schema';
 
 @Injectable()
-export default class GetCardServiceImpl implements GetCardService {
+export default class GetCardServiceImpl implements GetCardServiceInterface {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
 	async getCardFromBoard(boardId: string, cardId: string) {
@@ -49,7 +49,7 @@ export default class GetCardServiceImpl implements GetCardService {
 			])
 			.exec();
 
-		return !isEmpty(result) ? (result[0] as LeanDocument<CardDocument>) : null;
+		return !isEmpty(result) ? (result[0] as Card) : null;
 	}
 
 	async getCardItemFromGroup(boardId: string, cardItemId: string) {
@@ -93,6 +93,6 @@ export default class GetCardServiceImpl implements GetCardService {
 			}
 		]);
 
-		return !isEmpty(result) ? (result[0] as LeanDocument<CardItemDocument>) : null;
+		return !isEmpty(result) ? (result[0] as CardItem) : null;
 	}
 }

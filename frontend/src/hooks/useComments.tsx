@@ -8,7 +8,9 @@ import {
   handleUpdateComments,
 } from '@/helper/board/transformBoard';
 import BoardType from '@/types/board/board';
-import ColumnType from '@/types/column';
+import AddCommentDto from '@/types/comment/addComment.dto';
+import DeleteCommentDto from '@/types/comment/deleteComment.dto';
+import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 import useBoardUtils from './useBoardUtils';
@@ -21,31 +23,25 @@ const useComments = () => {
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
 
-  const setPreviousBoardQuery = (id: string, context: any) => {
-    queryClient.setQueryData(
-      getBoardQuery(id),
-      (context as { previousBoard: BoardType }).previousBoard,
-    );
-  };
+  const setQueryDataAddComment = (data: AddCommentDto) => {
+    const newUser = {
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+    } as User;
 
-  const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
-    const query = getBoardQuery(id);
-    await queryClient.cancelQueries(query);
-    const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
-    return prevData?.board;
-  };
-
-  const updateBoardColumns = (id: string, columns: ColumnType[]) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
-      getBoardQuery(id),
+      getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
-        if (old)
+        if (old) {
+          const boardData = handleAddComments(old.board, data, newUser);
           return {
             board: {
-              ...old.board,
-              columns,
+              ...boardData,
+              columns: boardData.columns,
             },
           };
+        }
 
         return old;
       },
@@ -54,50 +50,51 @@ const useComments = () => {
 
   const addCommentInCard = useMutation(addCommentRequest, {
     onMutate: async (data) => {
-      const newUser = {
-        id: user?.id,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-      } as User;
-
-      const board = await getPrevData(data.boardId);
-
-      if (board && newUser) {
-        const boardData = handleAddComments(board, data, newUser);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: board, data };
+      setQueryDataAddComment(data);
+      return { previousBoard: null, data };
     },
     onSettled: (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newComment = data;
+        setQueryDataAddComment(variables);
       }
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
-        content: 'Error updating the comment',
+        content: 'Error adding the comment',
         type: ToastStateEnum.ERROR,
       });
     },
   });
+
+  const setQueryDataDeleteComment = (data: DeleteCommentDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleDeleteComments(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
 
   const deleteComment = useMutation(deleteCommentRequest, {
     onMutate: async (data) => {
-      const board = await getPrevData(data.boardId);
+      setQueryDataDeleteComment(data);
 
-      if (board) {
-        const boardData = handleDeleteComments(board, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: board, data };
+      return { previousBoard: null, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
@@ -107,19 +104,32 @@ const useComments = () => {
     },
   });
 
+  const setQueryDataUpdateComment = (data: UpdateCommentDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleUpdateComments(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const updateComment = useMutation(updateCommentRequest, {
     onMutate: async (data) => {
-      const board = await getPrevData(data.boardId);
+      setQueryDataUpdateComment(data);
 
-      if (board) {
-        const boardData = handleUpdateComments(board, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: board, data };
+      return { previousBoard: null, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       setToastState({
         open: true,
@@ -133,6 +143,9 @@ const useComments = () => {
     addCommentInCard,
     deleteComment,
     updateComment,
+    setQueryDataAddComment,
+    setQueryDataDeleteComment,
+    setQueryDataUpdateComment,
   };
 };
 

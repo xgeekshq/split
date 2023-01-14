@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateCommentApplication } from '../interfaces/applications/create.comment.application.interface';
-import { CreateCommentService } from '../interfaces/services/create.comment.service.interface';
+import { CreateCommentServiceInterface } from '../interfaces/services/create.comment.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class CreateCommentApplicationImpl implements CreateCommentApplication {
 	constructor(
 		@Inject(TYPES.services.CreateCommentService)
-		private createCommentService: CreateCommentService
+		private createCommentService: CreateCommentServiceInterface
 	) {}
 
 	createItemComment(
@@ -16,7 +16,8 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
 		itemId: string,
 		userId: string,
 		text: string,
-		anonymous: boolean
+		anonymous: boolean,
+		columnId: string
 	) {
 		return this.createCommentService.createItemComment(
 			boardId,
@@ -24,7 +25,8 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
 			itemId,
 			userId,
 			text,
-			anonymous
+			anonymous,
+			columnId
 		);
 	}
 
@@ -33,14 +35,16 @@ export class CreateCommentApplicationImpl implements CreateCommentApplication {
 		cardId: string,
 		userId: string,
 		text: string,
-		anonymous: boolean
+		anonymous: boolean,
+		columnId: string
 	) {
 		return this.createCommentService.createCardGroupComment(
 			boardId,
 			cardId,
 			userId,
 			text,
-			anonymous
+			anonymous,
+			columnId
 		);
 	}
 }

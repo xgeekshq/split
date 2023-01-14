@@ -13,6 +13,7 @@ import {
 	updateTeamService
 } from 'src/modules/teams/providers';
 import { getBoardService } from '../boards.providers';
+import { cleanBoard } from '../utils/clean-board';
 
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
@@ -91,8 +92,7 @@ describe('GetBoardServiceImpl', () => {
 		} as unknown as LeanDocument<Board & Document<any, any, any> & { _id: any }>;
 		const userId = 'any_id_1';
 
-		// eslint-disable-next-line @typescript-eslint/dot-notation
-		const result = service['cleanBoard'](boardGiven, userId);
+		const result = cleanBoard(boardGiven as Board, userId);
 
 		expect(result).toMatchObject({
 			columns: [

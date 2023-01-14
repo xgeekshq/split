@@ -1,13 +1,13 @@
-import { ClientSession, LeanDocument, Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import CardDto from '../dto/card.dto';
-import { CardDocument } from '../schemas/card.schema';
+import Card from '../schemas/card.schema';
 
 export const pushCardIntoPosition = async (
 	boardId: string,
 	columnId: string,
 	position: number,
-	card: LeanDocument<CardDocument> | CardDto,
+	card: Card | CardDto,
 	boardModel: Model<BoardDocument>,
 	session?: ClientSession
 ) => {

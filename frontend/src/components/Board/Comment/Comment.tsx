@@ -19,10 +19,11 @@ interface CommentProps {
   isSubmited: boolean;
   hideCards: boolean;
   userId: string;
+  columnId: string;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
-  ({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId }) => {
+  ({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId, columnId }) => {
     const { deleteComment } = useComments();
     const [editing, setEditing] = useState(false);
 
@@ -106,7 +107,7 @@ const Comment: React.FC<CommentProps> = React.memo(
             cardId={cardId}
             cardItemId={cardItemId}
             cardText={comment.text}
-            colId="1"
+            colId={columnId}
             commentId={comment._id}
             isCard={false}
             socketId={socketId}

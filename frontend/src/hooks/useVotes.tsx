@@ -265,15 +265,17 @@ const useVotes = () => {
   const updateVoteOptimistic = async (action: Action, voteData: VoteDto) => {
     const boardQueryKey = getBoardQueryKey(voteData.boardId);
 
-    await queryClient.cancelQueries(boardQueryKey);
-
     const prevBoardData: BoardType = getPreviousBoardData(boardQueryKey);
+
+    if (prevBoardData.hideVotes && voteData.userId !== userId) {
+      return prevBoardData;
+    }
 
     const newBoardData = updateBoardDataOptimistic(prevBoardData, voteData, action);
 
     queryClient.setQueryData(boardQueryKey, { board: newBoardData });
 
-    return { newBoardData, prevBoardData };
+    return newBoardData;
   };
 
   const buildToastMessage = (
@@ -296,7 +298,7 @@ const useVotes = () => {
   };
 
   const updateVote = async (variables: VoteDto) => {
-    const { newBoardData, prevBoardData } = await updateVoteOptimistic(
+    const newBoardData = await updateVoteOptimistic(
       variables.count > 0 ? Action.Add : Action.Remove,
       variables,
     );
@@ -304,8 +306,6 @@ const useVotes = () => {
     if (newBoardData?.maxVotes && variables.userId === userId) {
       toastRemainingVotesMessage('', newBoardData);
     }
-
-    return { newBoardData, prevBoardData };
   };
 
   const handleVote = useMutation(handleVotes, {

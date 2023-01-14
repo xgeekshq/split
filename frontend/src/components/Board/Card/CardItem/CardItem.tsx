@@ -150,6 +150,8 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             cardTitle={item.text}
             handleClose={handleDeleting}
             socketId={socketId}
+            userId={userId}
+            columnId={columnId}
           />
         )}
       </Container>

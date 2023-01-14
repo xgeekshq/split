@@ -1,4 +1,6 @@
 export default interface DeleteCardDto {
+  columnId: string;
+
   cardId: string;
 
   boardId: string;
@@ -8,4 +10,6 @@ export default interface DeleteCardDto {
   isCardGroup: boolean;
 
   cardItemId?: string;
+
+  userId: string;
 }

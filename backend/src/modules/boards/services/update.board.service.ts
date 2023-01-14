@@ -361,9 +361,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 										createdBy: comment.createdBy,
 										anonymous: comment.anonymous
 									};
-								})
+								}),
+								createdAt: card.createdAt
 							};
-						})
+						}),
+						createdAt: card.createdAt
 					};
 
 					return newCard;
