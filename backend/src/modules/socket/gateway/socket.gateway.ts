@@ -47,6 +47,7 @@ export default class SocketGateway
 
 	sendUpdateVotes(excludedClient: string, voteDto: VoteDto) {
 		// voteDto.userId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+		voteDto.fromRequest = false;
 		this.server.except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
 	}
 

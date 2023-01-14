@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
@@ -13,6 +13,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
+	private logger: Logger = new Logger('CreateVoteService');
 
 	private async canUserVote(
 		boardId: string,
@@ -84,7 +85,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
 
 		try {
-			await this.incrementVoteUser(boardId, userId, count);
+			await this.incrementVoteUser(boardId, userId, count, userSession);
 			const board = await this.boardModel
 				.updateOne(
 					{
@@ -97,7 +98,8 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 						}
 					},
 					{
-						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }]
+						arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
+						session
 					}
 				)
 				.lean()
@@ -108,6 +110,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			await userSession.commitTransaction();
 			await session.commitTransaction();
 		} catch (e) {
+			this.logger.error(e);
 			await userSession.abortTransaction();
 			await session.abortTransaction();
 			throw new BadRequestException(INSERT_VOTE_FAILED);
@@ -152,6 +155,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			await session.commitTransaction();
 			await userSession.commitTransaction();
 		} catch (e) {
+			this.logger.error(e);
 			await session.abortTransaction();
 			await userSession.abortTransaction();
 			throw new BadRequestException(INSERT_VOTE_FAILED);

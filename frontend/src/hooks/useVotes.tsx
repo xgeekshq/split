@@ -94,13 +94,18 @@ const useVotes = () => {
     return newBoardData;
   };
 
-  const updateBoardUser = (boardData: BoardType, action: Action, currentUser: string) => {
+  const updateBoardUser = (
+    boardData: BoardType,
+    action: Action,
+    currentUser: string,
+    count: number,
+  ) => {
     boardData.users = boardData.users.map((boardUser) => {
       if (boardUser.user._id !== currentUser) return boardUser;
 
       return {
         ...boardUser,
-        votesCount: action === Action.Add ? boardUser.votesCount + 1 : boardUser.votesCount - 1,
+        votesCount: boardUser.votesCount + count,
       };
     });
   };
@@ -186,11 +191,26 @@ const useVotes = () => {
     isCardGroup: boolean,
     action: Action,
     userIdOfVote: string,
+    count: number,
+    fromRequest: boolean,
   ) => {
-    if (isCardGroup)
-      return updateCardsVotesOptimistic(prevBoardData, indexes, action, userIdOfVote);
+    let board = prevBoardData;
+    let countAbs = Math.abs(count);
+    while (countAbs !== 0) {
+      if (isCardGroup) {
+        board = updateCardsVotesOptimistic(board, indexes, action, userIdOfVote);
+      } else {
+        board = updateCardItemVoteOptimistic(board, indexes, action, userIdOfVote);
+      }
 
-    return updateCardItemVoteOptimistic(prevBoardData, indexes, action, userIdOfVote);
+      if (fromRequest) {
+        countAbs = 0;
+      } else {
+        countAbs -= 1;
+      }
+    }
+
+    return board;
   };
 
   const updateBoardDataOptimistic = (
@@ -224,8 +244,17 @@ const useVotes = () => {
         isCardGroup,
         action,
         voteData.userId,
+        count,
+        voteData.fromRequest,
       );
-      updateBoardUser(newBoard, count > 0 ? Action.Add : Action.Remove, voteData.userId);
+
+      const currentCount = count > 0 ? 1 : -1;
+      updateBoardUser(
+        newBoard,
+        count > 0 ? Action.Add : Action.Remove,
+        voteData.userId,
+        voteData.fromRequest ? currentCount : count,
+      );
 
       return newBoard;
     }
@@ -280,12 +309,7 @@ const useVotes = () => {
   };
 
   const handleVote = useMutation(handleVotes, {
-    onMutate: async (variables) => {
-      const { newBoardData, prevBoardData } = await updateVote(variables);
-
-      return { previousBoard: prevBoardData, data: newBoardData };
-    },
-    onError: (_, variables, context) => {
+    onError: (_, variables) => {
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },

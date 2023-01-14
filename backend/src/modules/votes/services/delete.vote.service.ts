@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateResult } from 'mongodb';
 import { ClientSession, Model } from 'mongoose';
@@ -21,6 +21,8 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		@Inject(TYPES.services.GetCardService)
 		private getCardService: GetCardService
 	) {}
+
+	private logger: Logger = new Logger('DeleteVoteService');
 
 	private async canUserVote(
 		boardId: string,
@@ -104,6 +106,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			await userSession.commitTransaction();
 			await session.commitTransaction();
 		} catch (e) {
+			this.logger.error(e);
 			await userSession.abortTransaction();
 			await session.abortTransaction();
 		} finally {
@@ -120,7 +123,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
-		const currentCount = Math.abs(count);
+		let currentCount = Math.abs(count);
 		let card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
 		if (!card) throw new BadRequestException(DELETE_VOTE_FAILED);
@@ -132,13 +135,13 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 
 		if (!isEmpty(userVotes)) {
 			mappedVotes = mappedVotes.filter((vote) => vote.toString() !== userId.toString());
-
-			userVotes.splice(0, Math.abs(currentCount));
+			const votesToReduce = userVotes.length / currentCount >= 1 ? currentCount : userVotes.length;
+			userVotes.splice(0, Math.abs(votesToReduce));
 
 			mappedVotes = mappedVotes.concat(userVotes);
 
 			try {
-				await this.decrementVoteUser(boardId, userId, -currentCount, userSession);
+				await this.decrementVoteUser(boardId, userId, -votesToReduce, userSession);
 				const board = await this.setCardVotes(boardId, mappedVotes, cardId, session);
 
 				if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
@@ -146,6 +149,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				await userSession.commitTransaction();
 				await session.commitTransaction();
 			} catch (e) {
+				this.logger.error(e);
 				await userSession.abortTransaction();
 				await session.abortTransaction();
 			} finally {
@@ -153,19 +157,38 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				await userSession.endSession();
 			}
 
-			return;
+			currentCount -= Math.abs(votesToReduce);
+
+			if (currentCount === 0) return;
 		}
 
 		if (!isEmpty(currentCount)) {
-			card = await this.getCardService.getCardFromBoard(boardId, cardId);
+			while (currentCount > 0) {
+				card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
-			const item = card.items.find(({ votes: itemVotes }) =>
-				arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
-			);
+				const item = card.items.find(({ votes: itemVotes }) =>
+					arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
+				);
 
-			if (!item) return null;
+				if (!item) return null;
 
-			await this.deleteVoteFromCard(boardId, cardId, userId, item._id.toString(), -currentCount);
+				const votesOfUser = (item.votes as unknown as string[]).filter(
+					(vote) => vote.toString() === userId.toString()
+				);
+
+				const itemVotesToReduce =
+					votesOfUser.length / currentCount >= 1 ? currentCount : votesOfUser.length;
+
+				await this.deleteVoteFromCard(
+					boardId,
+					cardId,
+					userId,
+					item._id.toString(),
+					-itemVotesToReduce
+				);
+
+				currentCount -= itemVotesToReduce;
+			}
 		}
 	}
 

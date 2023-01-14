@@ -95,9 +95,13 @@ export const handleMergeCard = (board: BoardType, changes: MergeCardsDto) => {
 
   if (cardGroup && selectedCard && sourceColumn && currentCardPosition !== undefined) {
     try {
+      cardGroup.comments = cardGroup.comments.concat(selectedCard.comments);
+      cardGroup.votes = cardGroup.votes.concat(selectedCard.votes);
       sourceColumn.cards = removeElementAtIndex(sourceColumn.cards, currentCardPosition);
-      cardGroup.items = addElementAtIndex(cardGroup.items, cardGroup.items.length, {
-        ...selectedCard,
+      selectedCard.items.forEach((_, idx) => {
+        cardGroup.items = addElementAtIndex(cardGroup.items, cardGroup.items.length, {
+          ...selectedCard.items[idx],
+        });
       });
     } catch (e) {
       return boardData;
@@ -120,9 +124,18 @@ export const handleUnMergeCard = (board: BoardType, changes: RemoveFromCardGroup
       cardGroup.items = cardGroup.items.filter((item) => item._id !== selectedCard._id);
       if (cardGroup.items.length === 1) {
         cardGroup.text = cardGroup.items[0].text;
+        cardGroup.items[0].comments = cardGroup.items[0].comments.concat(cardGroup.comments);
+        cardGroup.items[0].votes = cardGroup.items[0].votes.concat(cardGroup.votes);
+        cardGroup.anonymous = cardGroup.items[0].anonymous;
+        cardGroup.createdBy = cardGroup.items[0].createdBy;
+        cardGroup.createdByTeam = cardGroup.items[0].createdByTeam;
+        cardGroup.comments = [];
+        cardGroup.votes = [];
       }
       column.cards = addElementAtIndex(column.cards, newPosition, {
         ...selectedCard,
+        comments: [],
+        votes: [],
         items: [selectedCard],
       });
     } catch (e) {

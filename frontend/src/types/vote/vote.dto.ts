@@ -12,4 +12,6 @@ export default interface VoteDto {
   count: number;
 
   userId: string;
+
+  fromRequest: boolean;
 }
