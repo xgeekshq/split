@@ -71,7 +71,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
             <LastUpdatedText color="primary300" size="xs">
               Last updated - {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
             </LastUpdatedText>
-            <Flex direction="column" gap="20">
+            <Flex direction="column" gap="8">
               {splitedBoard.map((board: BoardType) => (
                 <CardBody
                   key={board._id}
