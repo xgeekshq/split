@@ -37,7 +37,9 @@ const ListBoards = React.memo<ListBoardsProps>(
       if (!team) return false;
 
       return team.users.find(
-        (user) => user.user._id === userId && user.role === TeamUserRoles.ADMIN,
+        (user) =>
+          user.user._id === userId &&
+          [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(user.role),
       );
     };
 
