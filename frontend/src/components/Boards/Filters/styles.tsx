@@ -48,9 +48,16 @@ const filterByTeamSelectStyles = {
     ...base,
     padding: 0,
   }),
-  option: (base: CSSObjectWithLabel) => ({
+  option: (base: CSSObjectWithLabel, state: any) => ({
     ...base,
-    cursor: 'pointer',
+    backgroundColor: state.isSelected ? '#2F3742' : 'white',
+    color: state.isSelected ? 'white' : '#060D16',
+    '&:hover': {
+      ...base,
+      cursor: 'pointer',
+      backgroundColor: '#2F3742',
+      color: 'white',
+    },
   }),
 };
 
