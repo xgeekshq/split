@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -12,12 +10,7 @@ export class UpdateCardApplicationImpl implements UpdateCardApplication {
 		private updateCardService: UpdateCardService
 	) {}
 
-	updateCardPosition(
-		boardId: string,
-		cardId: string,
-		targetColumnId: string,
-		newPosition: number
-	): Promise<LeanDocument<BoardDocument> | null> {
+	updateCardPosition(boardId: string, cardId: string, targetColumnId: string, newPosition: number) {
 		return this.updateCardService.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
 	}
 

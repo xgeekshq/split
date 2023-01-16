@@ -13,6 +13,7 @@ import {
 	updateTeamService
 } from 'src/modules/teams/providers';
 import { getBoardService } from '../boards.providers';
+import { cleanBoard } from '../utils/clean-board';
 
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
@@ -53,67 +54,66 @@ describe('GetBoardServiceImpl', () => {
 		expect(service).toBeDefined();
 	});
 
-	// it('should keep votes only for one user by userId', () => {
-	// 	const boardGiven = {
-	// 		columns: [
-	// 			{
-	// 				cards: [
-	// 					{
-	// 						items: [
-	// 							{
-	// 								votes: ['any_id_1', 'any_id_2']
-	// 							}
-	// 						],
-	// 						votes: ['any_id_1']
-	// 					}
-	// 				]
-	// 			},
-	// 			{
-	// 				cards: [
-	// 					{
-	// 						items: [
-	// 							{
-	// 								votes: []
-	// 							},
-	// 							{
-	// 								votes: []
-	// 							}
-	// 						],
-	// 						votes: ['any_id_4']
-	// 					}
-	// 				]
-	// 			},
-	// 			{
-	// 				cards: []
-	// 			}
-	// 		],
-	// 		hideVotes: true
-	// 	} as unknown as LeanDocument<Board & Document<any, any, any> & { _id: any }>;
-	// 	const userId = 'any_id_1';
+	it('should keep votes only for one user by userId', () => {
+		const boardGiven = {
+			columns: [
+				{
+					cards: [
+						{
+							items: [
+								{
+									votes: ['any_id_1', 'any_id_2']
+								}
+							],
+							votes: ['any_id_1']
+						}
+					]
+				},
+				{
+					cards: [
+						{
+							items: [
+								{
+									votes: []
+								},
+								{
+									votes: []
+								}
+							],
+							votes: ['any_id_4']
+						}
+					]
+				},
+				{
+					cards: []
+				}
+			],
+			hideVotes: true
+		} as unknown as LeanDocument<Board & Document<any, any, any> & { _id: any }>;
+		const userId = 'any_id_1';
 
-	// 	// eslint-disable-next-line @typescript-eslint/dot-notation
-	// 	const result = service['cleanBoard'](boardGiven, userId);
+		const result = cleanBoard(boardGiven as Board, userId);
 
-	// 	expect(result).toMatchObject({
-	// 		columns: [
-	// 			{
-	// 				cards: [
-	// 					{
-	// 						items: [
-	// 							{
-	// 								votes: []
-	// 							}
-	// 						],
-	// 						votes: []
-	// 					}
-	// 				]
-	// 			},
-	// 			{
-	// 				cards: [{ items: [{ votes: [] }, { votes: [] }], votes: [] }]
-	// 			},
-	// 			{ cards: [] }
-	// 		],
-	// 		hideVotes: true
-	// 	});
-	// });
+		expect(result).toMatchObject({
+			columns: [
+				{
+					cards: [
+						{
+							items: [
+								{
+									votes: []
+								}
+							],
+							votes: []
+						}
+					]
+				},
+				{
+					cards: [{ items: [{ votes: [] }, { votes: [] }], votes: [] }]
+				},
+				{ cards: [] }
+			],
+			hideVotes: true
+		});
+	});
 });

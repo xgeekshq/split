@@ -1,15 +1,39 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform, TransformFnParams } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
-import { BaseDto } from 'src/libs/dto/base.dto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { TextDto } from 'src/libs/dto/text.dto';
+import Comment from '../schemas/comment.schema';
 
-export default class CreateCommentDto extends BaseDto {
+export default class CreateCommentDto extends TextDto {
+	@ApiPropertyOptional({ description: 'User Id' })
+	@IsOptional()
+	@IsMongoId()
+	createdBy?: string;
+
 	@ApiProperty()
 	@IsNotEmpty()
-	@IsString()
-	@Transform(({ value }: TransformFnParams) => value.trim())
-	text!: string;
-
 	@IsBoolean()
 	anonymous!: boolean;
+
+	@ApiProperty()
+	@IsMongoId()
+	boardId: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	cardId: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	@IsOptional()
+	cardItemId?: string;
+
+	@ApiProperty()
+	@IsMongoId()
+	columnId: string;
+
+	@ApiProperty()
+	@IsBoolean()
+	isCardGroup: boolean;
+
+	newComment?: Comment;
 }

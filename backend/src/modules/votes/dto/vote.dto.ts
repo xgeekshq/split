@@ -32,4 +32,6 @@ export default class VoteDto {
 	@IsMongoId()
 	@IsString()
 	userId: string;
+
+	fromRequest: boolean;
 }

@@ -1,23 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
-import { CreateCommentService } from '../interfaces/services/create.comment.service.interface';
+import { CreateCommentServiceInterface } from '../interfaces/services/create.comment.service.interface';
 
 @Injectable()
-export default class CreateCommentServiceImpl implements CreateCommentService {
+export default class CreateCommentServiceImpl implements CreateCommentServiceInterface {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
-	createItemComment(
+	async createItemComment(
 		boardId: string,
 		cardId: string,
 		itemId: string,
 		userId: string,
 		text: string,
-		anonymous: boolean
+		anonymous: boolean,
+		columnId: string
 	) {
-		return this.boardModel
+		const board = await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: boardId,
@@ -41,16 +43,33 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
+
+		if (!board) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+
+		const colIdx = board.columns.findIndex((col) => col._id.toString() === columnId);
+		const cardIdx = board.columns[colIdx].cards.findIndex((card) => card._id.toString() === cardId);
+		const cardItemIdx = board.columns[colIdx].cards[cardIdx].items.findIndex(
+			(item) => item._id.toString() === itemId
+		);
+
+		return {
+			newComment:
+				board.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments[
+					board.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments.length - 1
+				],
+			hideCards: board.hideCards
+		};
 	}
 
-	createCardGroupComment(
+	async createCardGroupComment(
 		boardId: string,
 		cardId: string,
 		userId: string,
 		text: string,
-		anonymous: boolean
+		anonymous: boolean,
+		columnId: string
 	) {
-		return this.boardModel
+		const board = await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: boardId,
@@ -74,5 +93,18 @@ export default class CreateCommentServiceImpl implements CreateCommentService {
 			.populate(BoardDataPopulate)
 			.lean()
 			.exec();
+
+		if (!board) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+
+		const colIdx = board.columns.findIndex((col) => col._id.toString() === columnId);
+		const cardIdx = board.columns[colIdx].cards.findIndex((card) => card._id.toString() === cardId);
+
+		return {
+			newComment:
+				board.columns[colIdx].cards[cardIdx].comments[
+					board.columns[colIdx].cards[cardIdx].comments.length - 1
+				],
+			hideCards: board.hideCards
+		};
 	}
 }

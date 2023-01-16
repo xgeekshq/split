@@ -43,12 +43,18 @@ const ListOfCards = React.memo(() => {
 
   const users = useMemo(() => {
     const usersArray: UserWithTeams[] = [];
+    let userAmount = 0;
     data?.pages.forEach((page) => {
+      userAmount = page.userAmount;
       page.userWithTeams?.forEach((user) => {
         usersArray.push(user);
       });
     });
-    return usersArray;
+
+    return {
+      amount: userAmount,
+      data: usersArray,
+    };
   }, [data?.pages]);
 
   const onScroll = () => {
@@ -76,7 +82,7 @@ const ListOfCards = React.memo(() => {
     <>
       <Flex>
         <Text css={{ fontWeight: '$bold', flex: 1, mt: '$36' }}>
-          {users.length} registered users
+          {users.amount} registered users
         </Text>
         <Flex css={{ width: '460px' }} direction="column" gap={16}>
           <SearchInput
@@ -98,7 +104,7 @@ const ListOfCards = React.memo(() => {
         onScroll={onScroll}
       >
         <Flex direction="column">
-          {users.map((user: UserWithTeams) => (
+          {users.data.map((user: UserWithTeams) => (
             <CardBody key={user.user._id} userWithTeams={user} />
           ))}
         </Flex>

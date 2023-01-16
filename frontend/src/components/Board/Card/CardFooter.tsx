@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -89,10 +89,13 @@ const CardFooter = ({
   const {
     handleVote: { mutate, status },
     toastInfoMessage,
+    updateVote,
   } = useVotes();
 
   const user = boardUser;
   const userVotes = user?.votesCount ?? 0;
+
+  const [count, setCount] = useState(0);
 
   const calculateVotes = () => {
     const cardTyped = card as CardType;
@@ -114,37 +117,58 @@ const CardFooter = ({
 
   const handleDeleteVote = () => {
     if ((hideCards && createdBy?._id !== userId) || status === 'loading') return;
-    mutate({
+    if (maxVotes) {
+      toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
+    }
+    updateVote({
       boardId,
       cardId: card._id,
       socketId,
       cardItemId,
       isCardGroup: cardItemId === undefined,
-      count: -1,
+      count: count - 1,
       userId,
+      fromRequest: true,
     });
-
-    if (maxVotes) {
-      toastInfoMessage(`You have ${maxVotes! - (userVotes - 1)} votes left.`);
-    }
+    setCount((prev) => prev - 1);
   };
 
   const handleAddVote = () => {
     if (status === 'loading') return;
-    mutate({
+    if (maxVotes) {
+      toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
+    }
+    updateVote({
       boardId,
       cardId: card._id,
       socketId,
       cardItemId,
       isCardGroup: cardItemId === undefined,
-      count: 1,
+      count: count + 1,
       userId,
+      fromRequest: true,
     });
-
-    if (maxVotes) {
-      toastInfoMessage(`You have ${maxVotes - (userVotes + 1)} votes left.`);
-    }
+    setCount((prev) => prev + 1);
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (count === 0) return;
+      mutate({
+        boardId,
+        cardId: card._id,
+        socketId,
+        cardItemId,
+        isCardGroup: cardItemId === undefined,
+        count,
+        userId,
+        fromRequest: true,
+      });
+      setCount(0);
+    }, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
 
   return (
     <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>

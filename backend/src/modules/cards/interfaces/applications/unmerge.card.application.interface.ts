@@ -1,6 +1,3 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-
 export interface UnmergeCardApplication {
 	unmergeAndUpdatePosition(
 		boardId: string,
@@ -8,5 +5,5 @@ export interface UnmergeCardApplication {
 		draggedCardId: string,
 		columnId: string,
 		position: number
-	): Promise<LeanDocument<BoardDocument> | null>;
+	): Promise<string>;
 }

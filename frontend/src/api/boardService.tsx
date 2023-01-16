@@ -12,6 +12,8 @@ import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
+import CardType from '@/types/card/card';
+import CommentType from '@/types/comment/comment';
 
 // #region BOARD
 
@@ -68,8 +70,8 @@ export const deleteBoardRequest = async ({
 
 // #region CARD
 
-export const addCardRequest = (addCardDto: AddCardDto): Promise<BoardType> =>
-  fetchData<BoardType>(`/boards/${addCardDto.boardId}/card`, {
+export const addCardRequest = (addCardDto: AddCardDto): Promise<CardType> =>
+  fetchData<CardType>(`/boards/${addCardDto.boardId}/card`, {
     method: 'POST',
     data: addCardDto,
   });
@@ -122,10 +124,8 @@ export const mergeCardsRequest = (mergeCard: MergeCardsDto): Promise<BoardType> 
     { method: 'PUT', data: mergeCard },
   );
 
-export const removeFromMergeRequest = (
-  removeFromMerge: RemoveFromCardGroupDto,
-): Promise<BoardType> =>
-  fetchData<BoardType>(
+export const removeFromMergeRequest = (removeFromMerge: RemoveFromCardGroupDto): Promise<string> =>
+  fetchData<string>(
     `/boards/${removeFromMerge.boardId}/card/${removeFromMerge.cardGroupId}/cardItem/${removeFromMerge.cardId}/removeFromCardGroup`,
     { method: 'PUT', data: removeFromMerge },
   );
@@ -133,8 +133,8 @@ export const removeFromMergeRequest = (
 // #endregion
 
 // #region COMMENT
-export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<BoardType> =>
-  fetchData<BoardType>(
+export const addCommentRequest = (addCommentDto: AddCommentDto): Promise<CommentType> =>
+  fetchData<CommentType>(
     addCommentDto.isCardGroup
       ? `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/comments`
       : `/boards/${addCommentDto.boardId}/card/${addCommentDto.cardId}/items/${addCommentDto.cardItemId}/comments`,

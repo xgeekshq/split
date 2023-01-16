@@ -8,6 +8,7 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
@@ -193,14 +194,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return mainBoard;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async getBoard(boardId: string, userId: string) {
-		const board = await this.getBoardData(boardId);
+		let board = await this.getBoardData(boardId);
 
 		if (!board) return null;
 
-		// board1 = this.commentsClean(b)
-		// board = cleanBoard(board, userId);
+		board = cleanBoard(board, userId);
 
 		return { board };
 	}
@@ -223,7 +222,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			.lean({ virtuals: true })
 			.exec();
 
-		return board;
+		return board as Board;
 	}
 
 	getAllBoardsByTeamId(teamId: string) {

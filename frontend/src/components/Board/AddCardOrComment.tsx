@@ -133,6 +133,8 @@ const AddCard = React.memo<AddCardProps>(
         socketId,
         isCardGroup: !cardItemId,
         anonymous: isCommentAnonymous,
+        columnId: colId,
+        fromSocket: false,
       };
       addCommentInCard.mutate(commentDto);
       cancelUpdate();

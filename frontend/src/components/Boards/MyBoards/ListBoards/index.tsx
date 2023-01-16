@@ -10,6 +10,7 @@ import { teamsListState } from '@/store/team/atom/team.atom';
 import { Socket } from 'socket.io-client';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 
@@ -31,6 +32,17 @@ const ListBoards = React.memo<ListBoardsProps>(
   ({ userId, isSuperAdmin, dataByTeamAndDate, scrollRef, onScroll, filter, isLoading, socket }) => {
     const currentDate = new Date().toDateString();
     const allTeamsList = useRecoilValue(teamsListState);
+    const isTeamAdmin = (boards: Map<string, BoardType[]>) => {
+      const { team } = Array.from(boards)[0][1][0];
+      if (!team) return false;
+
+      return team.users.find(
+        (user) =>
+          user.user._id === userId &&
+          [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(user.role),
+      );
+    };
+
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
         {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
@@ -51,49 +63,53 @@ const ListBoards = React.memo<ListBoardsProps>(
                 <TeamHeader team={teamFound} userId={userId} users={users} />
               </Flex>
               <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
-                <Link
-                  href={{
-                    pathname: teamId === 'personal' ? `/boards/newRegularBoard` : `/boards/new`,
-                    query: { team: teamId },
-                  }}
-                >
-                  <Flex
-                    css={{
-                      position: 'relative',
-                      zIndex: '9',
-                      '& svg': { size: '$16' },
-                      right: 0,
-                      top: '$-22',
+                {(isSuperAdmin ||
+                  isTeamAdmin(boardsOfTeam) ||
+                  !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
+                  <Link
+                    href={{
+                      pathname: teamId === 'personal' ? `/boards/newRegularBoard` : `/boards/new`,
+                      query: { team: teamId },
                     }}
-                    gap="8"
                   >
-                    <Icon
-                      name="plus"
+                    <Flex
                       css={{
-                        width: '$16',
-                        height: '$32',
-                        marginRight: '$5',
+                        position: 'relative',
+                        zIndex: '9',
+                        '& svg': { size: '$16' },
+                        right: 0,
+                        top: '$-22',
                       }}
-                    />
-                    <Text
-                      heading="6"
-                      css={{
-                        width: 'fit-content',
-                        display: 'flex',
-                        alignItems: 'center',
-                        '@hover': {
-                          '&:hover': {
-                            cursor: 'pointer',
-                          },
-                        },
-                      }}
+                      gap="8"
                     >
-                      {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-                        ? 'Add new personal board'
-                        : 'Add new team board'}
-                    </Text>
-                  </Flex>
-                </Link>
+                      <Icon
+                        name="plus"
+                        css={{
+                          width: '$16',
+                          height: '$32',
+                          marginRight: '$5',
+                        }}
+                      />
+                      <Text
+                        heading="6"
+                        css={{
+                          width: 'fit-content',
+                          display: 'flex',
+                          alignItems: 'center',
+                          '@hover': {
+                            '&:hover': {
+                              cursor: 'pointer',
+                            },
+                          },
+                        }}
+                      >
+                        {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
+                          ? 'Add new personal board'
+                          : 'Add new team board'}
+                      </Text>
+                    </Flex>
+                  </Link>
+                )}
               </Flex>
               <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {

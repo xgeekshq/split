@@ -7,7 +7,7 @@ export interface UpdateCardService {
 		cardId: string,
 		targetColumnId: string,
 		newPosition: number
-	): Promise<LeanDocument<BoardDocument> | null>;
+	): Promise<void>;
 
 	updateCardText(
 		boardId: string,
@@ -15,12 +15,12 @@ export interface UpdateCardService {
 		cardItemId: string,
 		userId: string,
 		text: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	): Promise<LeanDocument<BoardDocument>>;
 
 	updateCardGroupText(
 		boardId: string,
 		cardId: string,
 		userId: string,
 		text: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	): Promise<LeanDocument<BoardDocument>>;
 }

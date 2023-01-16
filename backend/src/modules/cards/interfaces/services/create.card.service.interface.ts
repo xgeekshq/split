@@ -1,6 +1,5 @@
-import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import CardDto from '../../dto/card.dto';
+import Card from '../../schemas/card.schema';
 
 export interface CreateCardService {
 	create(
@@ -8,5 +7,9 @@ export interface CreateCardService {
 		userId: string,
 		card: CardDto,
 		colIdToAdd: string
-	): Promise<LeanDocument<BoardDocument> | null>;
+	): Promise<{
+		newCard: Card;
+		hideCards: boolean;
+		hideVotes: boolean;
+	}>;
 }
