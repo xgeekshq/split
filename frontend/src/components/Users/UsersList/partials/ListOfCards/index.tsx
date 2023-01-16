@@ -19,7 +19,7 @@ const ListOfCards = React.memo(() => {
   const [search, setSearch] = useState<string>('');
 
   const fetchUsers = useInfiniteQuery(
-    'usersWithTeams',
+    ['usersWithTeams'],
     ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, search),
     {
       enabled: true,

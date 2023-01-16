@@ -37,7 +37,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const userTeamsList = useRecoilValue(userTeamsListState);
 
   const fetchBoards = useInfiniteQuery(
-    'boards',
+    ['boards'],
     ({ pageParam = 0 }) => getBoardsRequest(pageParam),
     {
       enabled: true,
@@ -67,7 +67,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on('teamId', () => {
-      queryClient.invalidateQueries('boards');
+      queryClient.invalidateQueries(['boards']);
     });
   }, [socket, queryClient]);
 

@@ -18,7 +18,7 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
   const setToastState = useSetRecoilState(toastState);
 
   const fetchDashboardBoards = useInfiniteQuery(
-    'boards/dashboard',
+    ['boards/dashboard'],
     ({ pageParam = 0 }) => getDashboardBoardsRequest(pageParam),
     {
       enabled: true,
@@ -47,7 +47,7 @@ const RecentRetros = React.memo<RecentRetrosProp>(({ userId }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on('teamId', () => {
-      queryClient.invalidateQueries('boards/dashboard');
+      queryClient.invalidateQueries(['boards/dashboard']);
     });
   }, [socket, queryClient]);
   if (!isFetching && (!data || isEmpty(data?.pages[0].boards))) return <EmptyBoards />;

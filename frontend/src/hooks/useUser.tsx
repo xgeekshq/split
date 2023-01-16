@@ -26,7 +26,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
     {
-      mutationKey: 'forgotPassword',
+      mutationKey: ['forgotPassword'],
       onSuccess: async (response: ResetTokenResponse) => response.message,
     },
   );
@@ -34,7 +34,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const resetPassword = useMutation<ResetPasswordResponse, AxiosError, NewPassword>(
     (data: NewPassword) => resetUserPassword(data),
     {
-      mutationKey: 'resetPassword',
+      mutationKey: ['resetPassword'],
       onSuccess: async (response: ResetPasswordResponse) => response.message,
     },
   );
@@ -60,7 +60,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('usersWithTeams');
+      queryClient.invalidateQueries(['usersWithTeams']);
 
       // // updates the usersList recoil
       // const users = usersWithTeamsList.map((user) =>
@@ -86,7 +86,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const deleteUser = useMutation(deleteUserRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('usersWithTeams');
+      queryClient.invalidateQueries(['usersWithTeams']);
 
       // updates the usersList recoil
       // const users = usersWithTeamsList.filter(

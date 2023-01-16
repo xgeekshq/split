@@ -295,8 +295,8 @@ const NewSplitBoard: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
+    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
+    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
 
     return {
       props: {

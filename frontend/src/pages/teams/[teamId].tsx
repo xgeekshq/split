@@ -103,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   try {
     await queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context));
-    await queryClient.prefetchQuery('users', () => getAllUsers(context));
+    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
   } catch (e) {
     return {
       redirect: {

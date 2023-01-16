@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 const Dashboard = () => {
   const { data: session } = useSession();
 
-  const { data, isLoading } = useQuery('dashboardInfo', () => getDashboardHeaderInfo(), {
+  const { data, isLoading } = useQuery(['dashboardInfo'], () => getDashboardHeaderInfo(), {
     enabled: true,
     refetchOnWindowFocus: false,
   });
