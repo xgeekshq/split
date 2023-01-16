@@ -4,7 +4,7 @@ import Select, { CSSObjectWithLabel } from 'react-select';
 const filterByTeamSelectStyles = {
   control: (styles: CSSObjectWithLabel) => ({
     ...styles,
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     minWidth: 0,
     width: '179px',
     minHeight: '36px',
@@ -20,6 +20,9 @@ const filterByTeamSelectStyles = {
   menu: (base: CSSObjectWithLabel) => ({
     ...base,
     marginTop: 2,
+    paddingTop: '6px',
+    paddingBottom: '6px',
+    borderRadius: '12px',
   }),
   valueContainer: (base: CSSObjectWithLabel) => ({
     ...base,
@@ -44,6 +47,17 @@ const filterByTeamSelectStyles = {
   dropdownIndicator: (base: CSSObjectWithLabel) => ({
     ...base,
     padding: 0,
+  }),
+  option: (base: CSSObjectWithLabel, state: any) => ({
+    ...base,
+    backgroundColor: state.isSelected ? '#2F3742' : 'white',
+    color: state.isSelected ? 'white' : '#060D16',
+    '&:hover': {
+      ...base,
+      cursor: 'pointer',
+      backgroundColor: '#2F3742',
+      color: 'white',
+    },
   }),
 };
 

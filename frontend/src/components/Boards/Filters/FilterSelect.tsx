@@ -54,10 +54,8 @@ const FilterSelect: React.FC<FilterSelectProps> = ({ options }) => {
         ...theme,
         colors: {
           ...theme.colors,
-          primary25: '#A9B3BF',
-          primary50: 'white',
+          primary50: '#2F3742',
           primary: '#2F3742',
-          text: '#060D16',
         },
       })}
       styles={filterByTeamSelectStyles}
