@@ -10,7 +10,12 @@ export const getAllUsersWithTeams = (
   pageParam: number,
   searchUser?: string,
   context?: GetServerSidePropsContext,
-): Promise<{ userWithTeams: UserWithTeams[]; hasNextPage: boolean; page: number }> =>
+): Promise<{
+  userWithTeams: UserWithTeams[];
+  hasNextPage: boolean;
+  page: number;
+  userAmount: number;
+}> =>
   fetchData(`/users/teams?page=${pageParam ?? 0}&searchUser=${searchUser ?? ''}`, {
     context,
     serverSide: !!context,

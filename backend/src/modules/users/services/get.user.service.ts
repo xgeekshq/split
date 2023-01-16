@@ -74,6 +74,7 @@ export default class GetUserServiceImpl implements GetUserService {
 				...usersOnlyWithTeams,
 				...mappedUsers.filter((user) => !ids.has(String(user.user._id)))
 			],
+			userAmount: count,
 			hasNextPage,
 			page
 		};
