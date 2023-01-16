@@ -12,7 +12,7 @@ import { TeamChecked, Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
 import { useQueryClient } from 'react-query';
-import SearchInput from './SearchInput';
+import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
 import { ScrollableContent } from './styles';
 
 type Props = {
@@ -47,6 +47,10 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTeam(event.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTeam('');
   };
 
   const handleChecked = (id: string) => {
@@ -91,8 +95,9 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
         <SearchInput
           currentValue={searchTeam}
           handleChange={handleSearchChange}
+          handleClear={handleClearSearch}
           icon="search"
-          iconPosition="left"
+          iconPosition="both"
           id="search"
           placeholder="Search team"
         />
