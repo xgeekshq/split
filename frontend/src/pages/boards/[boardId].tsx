@@ -54,8 +54,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (
       !boardUser &&
-      ![teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) &&
-      ![teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN) &&
+      !(
+        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) ||
+        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN)
+      ) &&
       !session?.user.isSAdmin
     ) {
       throw Error();
@@ -140,7 +142,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
               boardUser.user._id === userId,
           ),
-    [board, isPersonalBoard, isSubBoard, userId],
+    [board, isPersonalBoard, userId],
   );
 
   const [isResponsible, isOwner] = useMemo(
