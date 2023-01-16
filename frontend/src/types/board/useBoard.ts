@@ -1,4 +1,4 @@
-import { UseMutationResult, UseQueryResult } from 'react-query';
+import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from './board';
 

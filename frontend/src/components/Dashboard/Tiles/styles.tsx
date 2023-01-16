@@ -25,6 +25,9 @@ const StyledTile = styled('div', {
     lineHeight: '$36',
     fontWeight: '$bold',
   },
+  '@hover': {
+    cursor: 'pointer',
+  },
 });
 
 const TileArrow = styled(Icon, {

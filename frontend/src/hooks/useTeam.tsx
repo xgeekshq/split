@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { TeamUser } from '@/types/team/team.user';
@@ -106,7 +106,7 @@ const useTeam = ({
 
   const createTeam = useMutation(createTeamRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('teams');
+      queryClient.invalidateQueries(['teams']);
 
       setToastState({
         open: true,
@@ -220,7 +220,7 @@ const useTeam = ({
 
   const deleteTeam = useMutation(deleteTeamRequest, {
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries('teams');
+      queryClient.invalidateQueries(['teams']);
 
       // updates the teamsList recoil
       const teams = teamsList.filter((team) => team._id !== variables.id);

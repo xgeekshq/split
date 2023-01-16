@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { InfiniteData, UseInfiniteQueryResult } from 'react-query';
+import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import { DotsLoading } from '@/components/loadings/DotsLoading';
