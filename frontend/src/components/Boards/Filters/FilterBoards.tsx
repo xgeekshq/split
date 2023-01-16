@@ -15,7 +15,7 @@ const StyledButton = styled(Button, {
   border: '1px solid $colors$primary100',
   borderRadius: '0px',
   height: '$36 !important',
-  backgroundColor: '$background !important',
+  backgroundColor: '$white !important',
   color: '$primary300 !important',
   fontSize: '$14 !important',
   lineHeight: '$20 !important',
