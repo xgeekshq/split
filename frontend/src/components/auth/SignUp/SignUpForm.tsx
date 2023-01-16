@@ -1,6 +1,6 @@
 import React, { Dispatch, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 

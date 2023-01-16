@@ -1,12 +1,11 @@
 import React, { Dispatch, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { AxiosError } from 'axios';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -18,7 +17,7 @@ import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { RegisterUser, User } from '@/types/user/user';
+import { RegisterUser } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { SignUpEnum } from '@/utils/signUp.enum';
@@ -81,24 +80,21 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
     }
   };
 
-  const createUser = useMutation<User, AxiosError, RegisterUser, unknown>(
-    (user: RegisterUser) => registerNewUser(user),
-    {
-      mutationKey: 'register',
-      onError: () => {
-        setToastState({
-          open: true,
-          type: ToastStateEnum.ERROR,
-          content: 'Something went wrong, please try again',
-        });
-      },
-      onSuccess: () => {
-        setShowSignUp(SignUpEnum.SIGN_UP);
-        setCurrentTab('login');
-        handleLogin();
-      },
+  const createUser = useMutation((user: RegisterUser) => registerNewUser(user), {
+    mutationKey: ['register'],
+    onError: () => {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Something went wrong, please try again',
+      });
     },
-  );
+    onSuccess: () => {
+      setShowSignUp(SignUpEnum.SIGN_UP);
+      setCurrentTab('login');
+      handleLogin();
+    },
+  });
 
   const handleRegister = async (user: RegisterUser) => {
     user.email = user.email.toLowerCase();

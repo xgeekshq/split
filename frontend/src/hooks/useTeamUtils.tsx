@@ -1,4 +1,4 @@
-import { QueryClient, useQueryClient } from 'react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { NextRouter, useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';

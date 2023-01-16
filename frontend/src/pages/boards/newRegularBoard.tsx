@@ -19,7 +19,7 @@ import {
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
@@ -335,9 +335,9 @@ const NewRegularBoard: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
-    await queryClient.prefetchQuery('users', () => getAllUsers(context));
+    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
+    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
 
     return {
       props: {

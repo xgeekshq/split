@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
+
 import { io, Socket } from 'socket.io-client';
 
 import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
@@ -15,6 +15,7 @@ import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
+import { useQueryClient } from '@tanstack/react-query';
 import useVotes from './useVotes';
 import useComments from './useComments';
 

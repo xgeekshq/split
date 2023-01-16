@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
@@ -26,7 +26,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
     {
-      mutationKey: 'forgotPassword',
+      mutationKey: ['forgotPassword'],
       onSuccess: async (response: ResetTokenResponse) => response.message,
     },
   );
@@ -34,7 +34,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const resetPassword = useMutation<ResetPasswordResponse, AxiosError, NewPassword>(
     (data: NewPassword) => resetUserPassword(data),
     {
-      mutationKey: 'resetPassword',
+      mutationKey: ['resetPassword'],
       onSuccess: async (response: ResetPasswordResponse) => response.message,
     },
   );
@@ -60,7 +60,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('usersWithTeams');
+      queryClient.invalidateQueries(['usersWithTeams']);
 
       // // updates the usersList recoil
       // const users = usersWithTeamsList.map((user) =>
@@ -86,14 +86,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const deleteUser = useMutation(deleteUserRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries('usersWithTeams');
-
-      // updates the usersList recoil
-      // const users = usersWithTeamsList.filter(
-      //   (userWithTeams) => userWithTeams.user._id !== variables.id,
-      // );
-
-      // setUsersWithTeamsList(users);
+      queryClient.invalidateQueries(['usersWithTeams']);
 
       setToastState({
         open: true,
