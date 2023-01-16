@@ -46,6 +46,32 @@ const StyledInput = styled('input', {
   '&:-webkit-autofill': {
     '-webkit-box-shadow': '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
   },
+  variants: {
+    variant: {
+      default: {
+        '&:focus': {
+          borderColor: '$primary400',
+          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
+        },
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
+        },
+      },
+      error: {
+        '&:focus': {
+          borderColor: '$danger700',
+          boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
+        },
+        borderColor: '$danger700',
+        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$dangerLightest',
+        },
+      },
+    },
+  },
 });
 
 const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
@@ -63,52 +89,60 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
 
   const [values, setValues] = useState<{
     teamsCount: number | string;
+    teamError: boolean;
     maxUsersCount: number | string;
+    maxUserError: boolean;
   }>({
     teamsCount,
+    teamError: false,
     maxUsersCount,
+    maxUserError: false,
   });
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
   useEffect(() => {
     setValues({
       teamsCount,
+      teamError: false,
       maxUsersCount,
+      maxUserError: false,
     });
   }, [maxUsersCount, teamsCount]);
 
-  const handleMaxUsersValue = (value: number | string) => {
-    if (isEmpty(value)) return value;
-    if (Number(value) < minUsers) return minUsers;
-    if (Number(value) > maxUsers) return maxUsers;
-    return value;
-  };
-
-  const handleTeamsValue = (value: number | string) => {
-    if (isEmpty(value)) return value;
-    if (Number(value) < minTeams) return minTeams;
-    if (Number(value) > maxTeams) return maxTeams;
-    return value;
-  };
+  const hasError = (value: number | string, min: number, max: number) =>
+    +value < min || +value > max;
 
   const handleChangeCountTeams = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const currentValue = handleTeamsValue(value);
+
+    const error = hasError(value, minTeams, maxTeams);
+    setIsSubmitDisabled(error);
+
     setValues((prev) => ({
       ...prev,
-      teamsCount: currentValue,
-      maxUsersCount: !isEmpty(value)
-        ? Math.ceil(teamLength / Number(currentValue))
-        : prev.maxUsersCount,
+      teamsCount: value,
+      teamError: error,
+      maxUsersCount: !error ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
+      maxUserError: !error
+        ? hasError(Math.ceil(teamLength / +value), minUsers, maxUsers)
+        : prev.maxUserError,
     }));
   };
 
   const handleMaxMembers = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const currentValue = handleMaxUsersValue(value);
+
+    const error = hasError(value, minUsers, maxUsers);
+    setIsSubmitDisabled(error);
+
     setValues((prev) => ({
       ...prev,
-      maxUsersCount: currentValue,
-      teamsCount: !isEmpty(value) ? Math.ceil(teamLength / Number(currentValue)) : prev.teamsCount,
+      maxUsersCount: value,
+      teamError: !error
+        ? hasError(Math.ceil(teamLength / +value), minTeams, maxTeams)
+        : prev.teamError,
+      teamsCount: !error ? Math.ceil(teamLength / +value) : prev.teamsCount,
+      maxUserError: error,
     }));
   };
 
@@ -118,12 +152,12 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       ...prev,
       count: {
         ...prev.count,
-        teamsCount: Number(values.teamsCount),
-        maxUsersCount: Number(values.maxUsersCount),
+        teamsCount: Math.floor(+values.teamsCount),
+        maxUsersCount: Math.floor(+values.maxUsersCount),
       },
       board: {
         ...prev.board,
-        dividedBoards: handleSplitBoards(Number(values.teamsCount)),
+        dividedBoards: handleSplitBoards(Math.floor(+values.teamsCount)),
       },
     }));
   };
@@ -192,6 +226,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               <StyledInput
                 css={{ mb: 0 }}
                 id="teamsCount"
+                variant={values.teamError ? 'error' : 'default'}
                 max={maxTeams}
                 min={minTeams}
                 placeholder=" "
@@ -200,7 +235,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleChangeCountTeams}
               />
               <Flex>
-                <Text hint css={{ color: '$primary800' }}>
+                <Text hint css={{ color: values.teamError ? '$dangerBase' : '$primary800' }}>
                   Min {minTeams}, Max {maxTeams}{' '}
                   <Text hint color="primary300">
                     sub-teams
@@ -213,6 +248,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               <StyledInput
                 css={{ mb: 0 }}
                 id="maxUsers"
+                variant={values.maxUserError ? 'error' : 'default'}
                 max={maxUsers}
                 min={minUsers}
                 placeholder=" "
@@ -221,7 +257,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleMaxMembers}
               />
               <Flex>
-                <Text hint css={{ color: '$primary800' }}>
+                <Text hint css={{ color: values.maxUserError ? '$dangerBase' : '$primary800' }}>
                   Min {minUsers}, Max {maxUsers}{' '}
                   <Text hint color="primary300">
                     members per team
@@ -232,7 +268,9 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           </Flex>
           <Flex css={{ mt: '$32' }} gap="24" justify="end">
             <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSaveConfigs}>Save configurations</AlertDialogAction>
+            <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
+              Save configurations
+            </AlertDialogAction>
           </Flex>
         </Flex>
       </AlertDialogContent>
