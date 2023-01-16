@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	HttpStatus,
 	Inject,
 	Param,
 	Patch,
@@ -22,7 +23,6 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { BaseDto } from 'src/libs/dto/base.dto';
 import { BaseParam } from 'src/libs/dto/param/base.param';
 import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
@@ -48,6 +48,10 @@ import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/schemas/board.schema';
+import { MergeCardDto } from '../dto/group/merge.card.dto';
+import { replaceCard } from 'src/modules/boards/utils/clean-board';
+import Card from '../schemas/card.schema';
+import { hideText } from 'src/libs/utils/hideText';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -94,12 +98,26 @@ export default class CardsController {
 	) {
 		const { card, colIdToAdd, socketId } = createCardDto;
 
-		const board = await this.createCardApp.create(boardId, request.user._id, card, colIdToAdd);
+		const { newCard, hideCards, hideVotes } = await this.createCardApp.create(
+			boardId,
+			request.user._id,
+			card,
+			colIdToAdd
+		);
 
-		if (!board) throw new BadRequestException(INSERT_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		if (!newCard) throw new BadRequestException(INSERT_FAILED);
 
-		return board;
+		const cardWithHiddenInfo = replaceCard(
+			newCard,
+			hideText(request.user._id.toString()),
+			hideCards,
+			hideVotes
+		);
+
+		createCardDto.newCard = cardWithHiddenInfo as Card;
+		this.socketService.sendAddCard(socketId, createCardDto);
+
+		return newCard;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card' })
@@ -133,7 +151,7 @@ export default class CardsController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card item' })
@@ -173,7 +191,7 @@ export default class CardsController {
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a specific card item' })
@@ -214,9 +232,9 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		this.socketService.sendUpdateCard(socketId, updateCardDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Update a specific card' })
@@ -245,7 +263,7 @@ export default class CardsController {
 		@Body() updateCardDto: UpdateCardDto
 	) {
 		const { boardId, cardId } = params;
-		const { text } = updateCardDto;
+		const { text, socketId } = updateCardDto;
 
 		const board = await this.updateCardApp.updateCardGroupText(
 			boardId,
@@ -255,9 +273,9 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, updateCardDto.socketId);
+		this.socketService.sendUpdateCard(socketId, updateCardDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({
@@ -292,17 +310,11 @@ export default class CardsController {
 		const { targetColumnId, newPosition, socketId } = boardData;
 
 		try {
-			const board = await this.updateCardApp.updateCardPosition(
-				boardId,
-				cardId,
-				targetColumnId,
-				newPosition
-			);
+			await this.updateCardApp.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
 
-			if (!board) throw new BadRequestException(UPDATE_FAILED);
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
 
-			return board;
+			return HttpStatus.OK;
 		} catch (e) {
 			this.socketService.sendUpdatedBoard(boardId, socketId);
 
@@ -334,7 +346,7 @@ export default class CardsController {
 	async mergeCards(
 		@Req() request: RequestWithUser,
 		@Param() params: MergeCardsParams,
-		@Body() mergeCardsDto: BaseDto
+		@Body() mergeCardsDto: MergeCardDto
 	) {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
@@ -347,9 +359,9 @@ export default class CardsController {
 		);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendBoard(board as Board, socketId);
+		this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
-		return board;
+		return HttpStatus.OK;
 	}
 
 	@ApiOperation({ summary: 'Remove a card item from a group' })
@@ -380,7 +392,7 @@ export default class CardsController {
 		const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
 		const { columnId, socketId, newPosition } = unmergeCardsDto;
 
-		const board = await this.unmergeCardApp.unmergeAndUpdatePosition(
+		const itemId = await this.unmergeCardApp.unmergeAndUpdatePosition(
 			boardId,
 			cardGroupId,
 			draggedCardId,
@@ -388,10 +400,11 @@ export default class CardsController {
 			newPosition
 		);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
+		if (!itemId) throw new BadRequestException(UPDATE_FAILED);
 
-		this.socketService.sendBoard(board as Board, socketId);
+		unmergeCardsDto.newCardItemId = itemId;
+		this.socketService.sendUnmergeCards(socketId, unmergeCardsDto);
 
-		return board;
+		return itemId;
 	}
 }

@@ -3,8 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CARD_NOT_FOUND, CARD_NOT_REMOVED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
-import { GetCardService } from '../interfaces/services/get.card.service.interface';
+import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { MergeCardService } from '../interfaces/services/merge.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { pullCard } from '../shared/pull.card';
@@ -13,7 +12,7 @@ export class MergeCardServiceImpl implements MergeCardService {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private readonly cardService: GetCardService
+		private readonly cardService: GetCardServiceInterface
 	) {}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,13 +65,13 @@ export class MergeCardServiceImpl implements MergeCardService {
 			await session.commitTransaction();
 			await session.endSession();
 
-			return setResult.populate(BoardDataPopulate);
+			return true;
 		} catch (e) {
 			await session.abortTransaction();
 		} finally {
 			await session.endSession();
 		}
 
-		return null;
+		return false;
 	}
 }

@@ -7,6 +7,8 @@ interface DeleteProps {
   boardId: string;
   socketId: string | undefined;
   cardItemId?: string;
+  userId: string;
+  columnId: string;
   handleClose: () => void;
 }
 
@@ -17,6 +19,8 @@ const DeleteCard = ({
   socketId,
   handleClose,
   cardItemId,
+  userId,
+  columnId,
 }: DeleteProps) => {
   const { deleteCard } = useCards();
 
@@ -32,6 +36,8 @@ const DeleteCard = ({
       socketId,
       isCardGroup: !cardItemId,
       cardItemId,
+      userId,
+      columnId,
     });
   };
 

@@ -9,14 +9,18 @@ import {
   handleUnMergeCard,
   handleUpdateCardPosition,
   handleUpdateText,
+  removeReadOnly,
 } from '@/helper/board/transformBoard';
 import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
 import BoardType from '@/types/board/board';
 import AddCardDto from '@/types/card/addCard.dto';
-import CardType from '@/types/card/card';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
+import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
+import MergeCardsDto from '@/types/board/mergeCard.dto';
+import DeleteCardDto from '@/types/card/deleteCard.dto';
+import UpdateCardDto from '@/types/card/updateCard.dto';
 import {
   addCardRequest,
   deleteCardRequest,
@@ -38,55 +42,11 @@ const useCards = () => {
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
 
-  const setPreviousBoardQuery = (id: string, context: any) => {
-    queryClient.setQueryData(
-      getBoardQuery(id),
-      (context as { previousBoard: BoardType }).previousBoard,
-    );
-  };
-
   const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
     const query = getBoardQuery(id);
     await queryClient.cancelQueries(query);
     const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
     return prevData?.board;
-  };
-
-  const generateNewCard = (newCardData: AddCardDto): CardType => {
-    const idCard = '123';
-    const newCard: CardType = {
-      _id: idCard,
-      text: newCardData.card.text,
-      votes: [],
-      comments: [],
-      anonymous: newCardData.card.anonymous,
-      createdBy: {
-        _id: user ? user.id : '',
-        firstName: user ? user.firstName : '',
-        lastName: user ? user.lastName : '',
-        email: '',
-        joinedAt: '',
-        isSAdmin: false,
-      },
-      items: [
-        {
-          _id: idCard,
-          text: newCardData.card.text,
-          votes: [],
-          comments: [],
-          anonymous: newCardData.card.anonymous,
-          createdBy: {
-            _id: user ? user.id : '',
-            firstName: user ? user.firstName : '',
-            lastName: user ? user.lastName : '',
-            email: '',
-            joinedAt: '',
-            isSAdmin: false,
-          },
-        },
-      ],
-    };
-    return newCard;
   };
 
   const updateBoardColumns = (id: string, columns: ColumnType[]) => {
@@ -106,24 +66,39 @@ const useCards = () => {
     );
   };
 
+  const setQueryDataAddCard = (data: AddCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleNewCard(old.board, data.colIdToAdd, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const addCardInColumn = useMutation(addCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData && user) {
-        const boardData = handleNewCard(prevBoardData, data.colIdToAdd, generateNewCard(data));
-        updateBoardColumns(data.boardId, boardData.columns);
+      if (user) {
+        data.user = { ...user, joinedAt: '', _id: user?.id };
+        setQueryDataAddCard(data);
       }
-
-      return { previousBoard: prevBoardData, data };
     },
     onSettled: (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newCard = data;
+        setQueryDataAddCard(variables);
       }
     },
-    onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -133,7 +108,7 @@ const useCards = () => {
     },
   });
 
-  const updateCardPositionOptimistic = async (data: UpdateCardPositionDto) => {
+  const setQueryDataUpdateCardPosition = async (data: UpdateCardPositionDto) => {
     const prevBoardData = await getPrevData(data.boardId);
 
     if (prevBoardData) {
@@ -146,7 +121,7 @@ const useCards = () => {
 
   const updateCardPosition = useMutation(updateCardPositionRequest, {
     onMutate: async (data) => {
-      const prevBoardData = updateCardPositionOptimistic(data);
+      const prevBoardData = setQueryDataUpdateCardPosition(data);
 
       return { previousBoard: prevBoardData, data };
     },
@@ -160,19 +135,31 @@ const useCards = () => {
     },
   });
 
+  const setQueryDataUpdateCard = (data: UpdateCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleUpdateText(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const updateCard = useMutation(updateCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleUpdateText(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataUpdateCard(data);
+      return { previousBoard: null, data };
     },
-    onError: (data, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -182,16 +169,29 @@ const useCards = () => {
     },
   });
 
+  const setQueryDataDeleteCard = (data: DeleteCardDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleDeleteCard(old.board, data);
+          return {
+            board: {
+              ...boardData,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const deleteCard = useMutation(deleteCardRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleDeleteCard(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataDeleteCard(data);
+      return { previousBoard: null, data };
     },
     onSettled: () => {
       setToastState({
@@ -200,8 +200,7 @@ const useCards = () => {
         content: 'Card deleted with success!',
       });
     },
-    onError: (_, variables, context) => {
-      setPreviousBoardQuery(variables.boardId, context);
+    onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
@@ -226,6 +225,25 @@ const useCards = () => {
 
   // #region MERGE_CARDS
 
+  const setQueryDataMergeCard = (data: MergeCardsDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleMergeCard(old.board, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
   const mergeCards = useMutation(mergeCardsRequest, {
     onMutate: async (data) => {
       const prevBoardData = await getPrevData(data.boardId);
@@ -236,11 +254,6 @@ const useCards = () => {
       }
 
       return { previousBoard: prevBoardData, data };
-    },
-    onSettled: (data, error, variables) => {
-      if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
-      }
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -253,20 +266,70 @@ const useCards = () => {
     },
   });
 
+  const handleMutateUnmergeOptimistic = async (data: RemoveFromCardGroupDto) => {
+    const prevBoardData = await getPrevData(data.boardId);
+
+    if (prevBoardData) {
+      const boardData = handleUnMergeCard(prevBoardData, data);
+      updateBoardColumns(data.boardId, boardData.columns);
+    }
+
+    return { previousBoard: prevBoardData, data };
+  };
+
+  const setQueryDataUnmergeCard = (data: RemoveFromCardGroupDto) => {
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleUnMergeCard(old.board, data);
+          return {
+            board: {
+              ...old.board,
+              columns: boardData.columns,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+  };
+
+  const handleUpdateCardItemIdOfUnmergedCard = (
+    board: BoardType,
+    variables: RemoveFromCardGroupDto,
+  ): BoardType => {
+    const mappedBoard = removeReadOnly(board);
+    const column = mappedBoard.columns.find((col) => col._id === variables.columnId);
+    const card = column?.cards.find((cardFound) => cardFound._id === variables.cardId);
+    if (card && variables.newCardItemId) {
+      card.items[0]._id = variables.newCardItemId;
+    }
+
+    return mappedBoard;
+  };
+
   const removeFromMergeCard = useMutation(removeFromMergeRequest, {
-    onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleUnMergeCard(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
-    },
-    onSettled: (data, error, variables) => {
+    onMutate: async (data) => handleMutateUnmergeOptimistic(data),
+    onSettled: async (data, error, variables) => {
       if (!error) {
-        queryClient.setQueryData(getBoardQuery(variables.boardId), { board: data });
+        variables.newCardItemId = data;
+        queryClient.setQueryData<{ board: BoardType } | undefined>(
+          getBoardQuery(variables.boardId),
+          (old: { board: BoardType } | undefined) => {
+            if (old) {
+              const newBoard = handleUpdateCardItemIdOfUnmergedCard(old.board, variables);
+              return {
+                board: {
+                  ...old.board,
+                  columns: newBoard.columns,
+                },
+              };
+            }
+            return old;
+          },
+        );
       }
     },
     onError: (data, variables) => {
@@ -289,7 +352,12 @@ const useCards = () => {
     mergeCards,
     removeFromMergeCard,
     mergeBoard,
-    updateCardPositionOptimistic,
+    setQueryDataUpdateCardPosition,
+    setQueryDataUnmergeCard,
+    setQueryDataMergeCard,
+    setQueryDataAddCard,
+    setQueryDataDeleteCard,
+    setQueryDataUpdateCard,
   };
 };
 

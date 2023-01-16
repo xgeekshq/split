@@ -72,25 +72,13 @@ export default class VotesController {
 		const { boardId, cardId, itemId } = params;
 		const { count, socketId } = data;
 
-		try {
-			if (count < 0) {
-				await this.deleteVoteApp.deleteVoteFromCard(
-					boardId,
-					cardId,
-					request.user._id,
-					itemId,
-					count
-				);
-			} else {
-				await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId, count);
-			}
-
-			this.socketService.sendUpdateVotes(socketId, data);
-		} catch (e) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-
-			throw e;
+		if (count < 0) {
+			await this.deleteVoteApp.deleteVoteFromCard(boardId, cardId, request.user._id, itemId, count);
+		} else {
+			await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId, count);
 		}
+
+		this.socketService.sendUpdateVotes(socketId, data);
 
 		return HttpStatus.OK;
 	}
@@ -128,19 +116,13 @@ export default class VotesController {
 		const { boardId, cardId } = params;
 		const { count, socketId } = data;
 
-		try {
-			if (count < 0) {
-				await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id, count);
-			} else {
-				await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id, count);
-			}
-
-			this.socketService.sendUpdateVotes(socketId, data);
-		} catch (e) {
-			this.socketService.sendUpdatedBoard(boardId, socketId);
-
-			throw e;
+		if (count < 0) {
+			await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id, count);
+		} else {
+			await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id, count);
 		}
+
+		this.socketService.sendUpdateVotes(socketId, data);
 
 		return HttpStatus.OK;
 	}
