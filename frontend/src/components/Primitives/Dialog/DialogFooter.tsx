@@ -1,4 +1,4 @@
-import { ButtonsContainer } from '@/components/Board/Settings/styles';
+import { ButtonsContainer } from '@/components/Board/SplitBoard/Settings/styles';
 import Button from '../Button';
 
 type FooterProps = {

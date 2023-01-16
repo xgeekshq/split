@@ -10,7 +10,7 @@ import {
   StyledDialogContent,
   StyledDialogOverlay,
   StyledDialogTitle,
-} from '@/components/Board/Settings/styles';
+} from '@/components/Board/SplitBoard/Settings/styles';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Button from '@/components/Primitives/Button';

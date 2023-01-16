@@ -2,7 +2,6 @@ import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
 
-import Column from '@/components/Board/Column/Column';
 import Flex from '@/components/Primitives/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';
@@ -13,6 +12,7 @@ import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
+import Column from '@/components/Board/Column/Column';
 
 type Props = {
   userId: string;
