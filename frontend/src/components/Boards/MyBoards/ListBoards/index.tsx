@@ -111,7 +111,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                   </Link>
                 )}
               </Flex>
-              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="16">
+              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="24">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
                   const formatedDate = new Date(date).toLocaleDateString('en-US', {
                     weekday: 'long',
@@ -135,7 +135,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                         Last updated -{' '}
                         {date === currentDate ? `Today, ${formatedDate}` : formatedDate}
                       </Text>
-                      <Flex direction="column" gap="20">
+                      <Flex direction="column" gap="8">
                         {boardsOfDay.map((board: BoardType) => (
                           <CardBody
                             key={board._id}
