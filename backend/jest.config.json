@@ -8,9 +8,9 @@
 	"moduleNameMapper": {
 	  "^src/(.*)$": "<rootDir>/src/$1"
 	},
-	"coverageReporters": ["text"],
+	"coverageReporters": ["html","text"],
 	"coverageDirectory": "report",
-	"collectCoverageFrom": ["src/**/*.{ts,tsx}", "!node_modules/", "!src/database/migrations/**/*.{ts,tsx}"],
+	"collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}", "!node_modules/", "!src/database/migrations/**/*.{ts,tsx}"],
 	"transform": {
 	  "\\.ts$": [
 			"ts-jest", {
@@ -20,5 +20,6 @@
 	},
 	"testEnvironment": "node",
 	"preset": "ts-jest",
-	"testTimeout": 30000
+	"testTimeout": 30000,
+	"collectCoverage": true
   }
