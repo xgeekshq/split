@@ -54,7 +54,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (
       !boardUser &&
-      [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.MEMBER) &&
+      ![teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) &&
+      ![teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN) &&
       !session?.user.isSAdmin
     ) {
       throw Error();
@@ -67,6 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+
   return {
     props: {
       key: boardId,
