@@ -11,7 +11,7 @@ import useTeam from '@/hooks/useTeam';
 import { TeamChecked, Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import SearchInput from './SearchInput';
 import { ScrollableContent } from './styles';
 

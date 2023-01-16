@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';

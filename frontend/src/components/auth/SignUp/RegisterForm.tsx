@@ -1,6 +1,6 @@
 import React, { Dispatch, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import router from 'next/router';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';

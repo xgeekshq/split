@@ -1,5 +1,5 @@
 import { ReactElement, Suspense, useEffect } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 

@@ -10,7 +10,7 @@ import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
 import { teamsListState, userTeamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 
 const Boards = () => {

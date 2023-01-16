@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 
 import { getDashboardBoardsRequest } from '@/api/boardService';

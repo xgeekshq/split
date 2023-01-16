@@ -1,5 +1,5 @@
 import React, { Suspense, useCallback, useEffect } from 'react';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';

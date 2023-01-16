@@ -37,7 +37,7 @@ import {
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';

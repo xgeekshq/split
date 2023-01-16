@@ -1,5 +1,5 @@
 import React, { ReactElement, Suspense } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { InnerContainer } from '@/styles/pages/dashboard.styles';

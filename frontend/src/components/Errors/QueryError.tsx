@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { ErrorBoundary } from 'react-error-boundary';
-import { QueryErrorResetBoundary } from 'react-query';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';

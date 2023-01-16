@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
 import { handleVotes } from '@/api/boardService';

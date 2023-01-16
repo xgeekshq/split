@@ -1,6 +1,6 @@
 import { ReactElement, ReactNode } from 'react';
-import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import { NextPage } from 'next';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
@@ -15,6 +15,7 @@ import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toa
 import { JWT_EXPIRATION_TIME } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 import { Session } from 'next-auth';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
