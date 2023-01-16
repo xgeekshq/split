@@ -96,7 +96,13 @@ const RegularBoard = () => {
           )}
         </Flex>
 
-        <DragDropArea board={board} socketId={socketId} userId={userId} />
+        <DragDropArea
+          board={board}
+          socketId={socketId}
+          userId={userId}
+          isRegularBoard
+          hasAdminRole={hasAdminRole}
+        />
       </Container>
     </>
   ) : (
