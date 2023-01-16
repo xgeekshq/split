@@ -88,13 +88,6 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
     onSuccess: () => {
       queryClient.invalidateQueries(['usersWithTeams']);
 
-      // updates the usersList recoil
-      // const users = usersWithTeamsList.filter(
-      //   (userWithTeams) => userWithTeams.user._id !== variables.id,
-      // );
-
-      // setUsersWithTeamsList(users);
-
       setToastState({
         open: true,
         content: 'The team user was successfully updated.',
