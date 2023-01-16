@@ -1,3 +1,5 @@
+import { BoardUserGuard } from './../../../libs/guards/boardRoles';
+import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
 	BadRequestException,
 	Body,
@@ -11,6 +13,7 @@ import {
 	Put,
 	Query,
 	Req,
+	SetMetadata,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -50,6 +53,8 @@ import { DeleteBoardApplicationInterface } from '../interfaces/applications/dele
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
+
+const BoardUser = (permission: string) => SetMetadata('permission', permission);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Boards')
@@ -224,6 +229,8 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@BoardUser(BoardRoles.RESPONSIBLE)
+	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
 	async updateBoard(
 		@Req() request: RequestWithUser,
