@@ -73,6 +73,10 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
       setSearchMember(event.target.value);
     };
 
+    const handleClearSearch = () => {
+      setSearchMember('');
+    };
+
     const handleChecked = (id: string) => {
       const updateCheckedUsers = usersChecked.map((user) =>
         user._id === id ? { ...user, isChecked: !user.isChecked } : user,
@@ -137,8 +141,9 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                 <SearchInput
                   currentValue={searchMember}
                   handleChange={handleSearchChange}
+                  handleClear={handleClearSearch}
                   icon="search"
-                  iconPosition="left"
+                  iconPosition="both"
                   id="search"
                   placeholder="Search member"
                 />

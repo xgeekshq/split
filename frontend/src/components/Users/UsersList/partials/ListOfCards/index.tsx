@@ -70,6 +70,10 @@ const ListOfCards = React.memo(() => {
     setSearch(event.target.value);
   };
 
+  const handleClearSearch = () => {
+    setSearch('');
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchUsers.refetch();
@@ -87,11 +91,12 @@ const ListOfCards = React.memo(() => {
         <Flex css={{ width: '460px' }} direction="column" gap={16}>
           <SearchInput
             icon="search"
-            iconPosition="left"
+            iconPosition="both"
             id="search"
             placeholder="Search user"
             currentValue={search}
             handleChange={handleSearchUser}
+            handleClear={handleClearSearch}
           />
         </Flex>
       </Flex>
