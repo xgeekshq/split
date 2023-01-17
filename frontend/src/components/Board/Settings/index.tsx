@@ -185,7 +185,7 @@ const BoardSettings = ({
     }
   };
 
-  const handleMakeBoardPublic = () => {
+  const handleIsPublicChange = () => {
     setData((prev) => ({
       ...prev,
       isPublic: !prev.isPublic,
@@ -202,7 +202,6 @@ const BoardSettings = ({
         ...data,
         title,
         maxVotes,
-        isPublic,
         socketId,
       },
       {
@@ -336,7 +335,7 @@ const BoardSettings = ({
                   {isRegularBoard &&
                     (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
                       <ConfigurationSwitchSettings
-                        handleCheckedChange={handleMakeBoardPublic}
+                        handleCheckedChange={handleIsPublicChange}
                         isChecked={switchesState.isPublic}
                         text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
                         title="Make board public"
