@@ -29,6 +29,7 @@ import {
   StyledAccordionItem,
   StyledAccordionTrigger,
 } from './styles';
+import { ParticipantsSettings } from './partials/ParticipantsSettings';
 
 const DEFAULT_MAX_VOTES = 6;
 
@@ -256,6 +257,8 @@ const BoardSettings = ({
     return () => window?.removeEventListener('keydown', keyDownHandler);
   }, []);
 
+  const usersListNames = users.map((user) => user.user);
+
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header>
@@ -283,8 +286,9 @@ const BoardSettings = ({
                 Board Settings
               </Text>
               <Accordion type="multiple">
-                <StyledAccordionItem value="configurations" variant="first">
-                  <StyledAccordionHeader variant="first">
+                <ParticipantsSettings usersListNames={usersListNames} />
+                <StyledAccordionItem value="configurations">
+                  <StyledAccordionHeader>
                     <StyledAccordionTrigger>
                       <Text heading="5">Configurations</Text>
                       <StyledAccordionIcon name="arrow-down" />
