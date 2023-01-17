@@ -24,4 +24,14 @@ export default class ColumnDto {
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	cards!: CardDto[];
+
+	@ApiProperty()
+	@IsOptional()
+	@IsString()
+	cardText?: string;
+
+	@ApiProperty()
+	@IsOptional()
+	@IsString()
+	socketId?: string;
 }

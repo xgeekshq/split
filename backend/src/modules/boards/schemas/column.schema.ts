@@ -17,6 +17,9 @@ export default class Column {
 
 	@Prop({ nullable: false, type: [CardSchema] })
 	cards!: Card[];
+
+	@Prop({ nullable: false })
+	cardText!: string;
 }
 
 export const ColumnSchema = SchemaFactory.createForClass(Column);
