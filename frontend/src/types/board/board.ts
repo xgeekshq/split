@@ -81,4 +81,5 @@ export type UpdateBoardType = {
   title: string;
   maxVotes?: number | null;
   users?: BoardUser[];
+  isPublic: boolean;
 };

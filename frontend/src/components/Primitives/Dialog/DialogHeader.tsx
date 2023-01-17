@@ -1,7 +1,4 @@
-import {
-  StyledDialogCloseButton,
-  StyledDialogTitle,
-} from '@/components/Board/SplitBoard/Settings/styles';
+import { StyledDialogCloseButton, StyledDialogTitle } from '@/components/Board/Settings/styles';
 import Icon from '@/components/icons/Icon';
 import { DialogClose } from '@radix-ui/react-dialog';
 import Flex from '../Flex';
