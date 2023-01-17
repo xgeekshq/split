@@ -102,7 +102,16 @@ const Column = React.memo<ColumMemoProps>(
                   {isMainboard && (
                     <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
                   )}
-                  {hasAdminRole && <OptionsMenu disabled={false} isRegularBoard={isRegularBoard} />}
+                  {hasAdminRole && (
+                    <OptionsMenu
+                      disabled={false}
+                      isRegularBoard={isRegularBoard}
+                      title={title}
+                      cards={cards}
+                      columnId={columnId}
+                      boardId={boardId}
+                    />
+                  )}
                 </Flex>
               </Flex>
               <Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
