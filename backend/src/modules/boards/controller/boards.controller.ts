@@ -59,8 +59,6 @@ import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
-const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
-
 @ApiBearerAuth('access-token')
 @ApiTags('Boards')
 @UseGuards(JwtAuthenticationGuard)

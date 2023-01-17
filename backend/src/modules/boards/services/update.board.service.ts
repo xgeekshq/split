@@ -351,4 +351,17 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		return result;
 	}
+
+	async emptyColumn(boardId: string, columnId: string) {
+		const result = this.boardModel
+			.find({
+				_id: boardId,
+				'columns._id': columnId
+			})
+			.populate(BoardDataPopulate)
+			.lean()
+			.exec();
+
+		return result;
+	}
 }
