@@ -12,8 +12,14 @@ import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
+import OptionsMenu from './partials/OptionsMenu';
 
-const Column = React.memo<ColumnBoardType>(
+type ColumMemoProps = {
+  isRegularBoard?: boolean;
+  hasAdminRole: boolean;
+} & ColumnBoardType;
+
+const Column = React.memo<ColumMemoProps>(
   ({
     columnId,
     cards,
@@ -28,6 +34,8 @@ const Column = React.memo<ColumnBoardType>(
     countAllCards,
     isSubmited,
     hideCards,
+    isRegularBoard,
+    hasAdminRole,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -90,10 +98,12 @@ const Column = React.memo<ColumnBoardType>(
                     {cards.length} cards
                   </Text>
                 </Flex>
-
-                {isMainboard && (
-                  <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
-                )}
+                <Flex>
+                  {isMainboard && (
+                    <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
+                  )}
+                  {hasAdminRole && <OptionsMenu disabled={false} isRegularBoard={isRegularBoard} />}
+                </Flex>
               </Flex>
               <Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
               <Flex direction="column">

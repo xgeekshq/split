@@ -16,6 +16,11 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
   boxSizing: 'border-box',
   variants: {
     variant: {
+      xs: {
+        flex: '0 0 $sizes$24',
+        width: '$24',
+        height: '$14',
+      },
       sm: {
         flex: '0 0 $sizes$35',
         width: '$35',
@@ -49,6 +54,10 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   '&[data-state="checked"]': { transform: 'translate(90%, -50%)' },
   variants: {
     variant: {
+      xs: {
+        width: '$12',
+        height: '$12',
+      },
       sm: {
         width: '$17',
         height: '$17',
