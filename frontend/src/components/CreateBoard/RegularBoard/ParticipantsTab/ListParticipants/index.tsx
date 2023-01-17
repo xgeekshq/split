@@ -7,6 +7,7 @@ import ListMembersDialog from '@/components/Teams/CreateTeam/ListMembersDialog';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useSession } from 'next-auth/react';
+import { UserList } from '@/types/team/userList';
 
 type ListParticipantsProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -21,11 +22,13 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   const setToastState = useSetRecoilState(toastState);
 
-  const saveParticipants = () => {
-    const selectedUsers = usersList.filter((user) => user.isChecked);
-    const usersListToBeSorted = [...usersList];
+  const saveParticipants = (checkedUserList: UserList[]) => {
+    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+    const checkedUsersListToBeSorted = [...checkedUserList];
 
-    setUsersList(usersListToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)));
+    setUsersList(
+      checkedUsersListToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
+    );
 
     const users = selectedUsers.map((user) =>
       user._id === session?.user.id
