@@ -43,7 +43,7 @@ const Home: NextPage = () => {
   const renderFooter = () => {
     if (!NEXT_PUBLIC_LOGIN_SSO_ONLY) {
       return currentTab === 'login' ? (
-        <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+        <Text css={{ mb: '5%', textAlign: 'center', mt: '$10' }}>
           No account yet?{' '}
           <Text
             onClick={handleTabState}
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
           </Text>
         </Text>
       ) : (
-        <Text css={{ mb: '15%', textAlign: 'center', mt: '$10' }}>
+        <Text css={{ mb: '5%', textAlign: 'center', mt: '$10' }}>
           Already have an account?{' '}
           <Text
             onClick={handleTabState}
@@ -109,6 +109,7 @@ const Home: NextPage = () => {
             ml: '$72',
             mr: '$72',
             mt: '9.7%',
+            mb: '$24',
             height: '100%',
             justifyContent: 'space-between',
           }}
