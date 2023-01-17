@@ -18,9 +18,10 @@ type Props = {
   userId: string;
   board: BoardType;
   socketId: string;
-  isRegularBoard?: boolean;
   hasAdminRole: boolean;
+  isRegularBoard?: boolean;
 };
+
 const DragDropArea: React.FC<Props> = ({
   userId,
   board,
