@@ -66,6 +66,9 @@ const Settings = () => {
 
   return (
     <Flex direction="column">
+      <Text heading={3} css={{ mb: '$24', mt: '$32' }}>
+        Settings
+      </Text>
       <Flex css={{ width: '100%' }} gap="24">
         <StyledTextTab
           color="primary300"
