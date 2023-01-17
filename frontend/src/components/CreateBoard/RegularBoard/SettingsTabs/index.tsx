@@ -45,11 +45,12 @@ const SettingsTabs = () => {
 
   return (
     <Flex direction="column">
-      <Text heading={3} css={{ mb: '$8', mt: '$12' }}>
+      <Text heading={3} css={{ mb: '$24', mt: '$32' }}>
         Settings
       </Text>
-      <Flex css={{ width: '100%' }} gap="24">
+      <Flex css={{ width: '100%', borderBottom: '1px solid $primary200' }} gap="24">
         <StyledTextTab
+          css={{ marginBottom: '-1.5px' }}
           color="primary300"
           data-activetab={currentTab === 1}
           size="md"
@@ -58,6 +59,7 @@ const SettingsTabs = () => {
           Participants
         </StyledTextTab>
         <StyledTextTab
+          css={{ marginBottom: '-1.5px' }}
           color="primary300"
           data-activetab={currentTab === 2}
           size="md"
