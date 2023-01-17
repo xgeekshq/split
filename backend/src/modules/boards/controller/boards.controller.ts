@@ -1,5 +1,5 @@
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { BoardUserGuard } from './../../../libs/guards/boardRoles';
+import { BoardUserGuard } from '../../../libs/guards/boardRoles.guard';
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
 	BadRequestException,
