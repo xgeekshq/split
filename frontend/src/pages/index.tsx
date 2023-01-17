@@ -125,7 +125,7 @@ const Home: NextPage = () => {
           flexShrink: 0,
         }}
       >
-        <ImageBackground />
+        <ImageBackground css={{ boxShadow: '-8px 8px 24px rgba(0, 0, 0, 0.16)' }} />
       </Flex>
     </Flex>
   );
