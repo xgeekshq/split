@@ -14,7 +14,14 @@ type OptionsMenuProps = {
   isRegularBoard?: boolean;
 };
 
-const colors = ['#CDFAE0', ' #DEB7FF', ' #9BFDFA', '#FE9EBF', '#9DCAFF', '#FEB9A9'];
+const colors = [
+  '$highlight1Light',
+  '$highlight2Light',
+  '$highlight3Light',
+  '$highlight4Light',
+  '$infoLighter',
+  '$warningLighter',
+];
 
 const OptionsMenu = ({ disabled, isRegularBoard }: OptionsMenuProps) => {
   const [defaultText, setDefaultText] = useState(false);
