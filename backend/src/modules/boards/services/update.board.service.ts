@@ -6,9 +6,8 @@ import {
 	forwardRef
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model, ObjectId } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -90,22 +89,23 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - and the logged user isn't the current responsible
 		 */
 		if (isSubBoard && boardData.users) {
-			const boardUserFound = boardData.users.find(
+			const boardUserFound = boardData.users?.find(
 				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
-			) as unknown as LeanDocument<BoardUserDocument>;
-			newResponsible.email = (boardUserFound.user as User).email;
-			newResponsible.id = (boardUserFound.user as unknown as LeanDocument<BoardUserDocument>)._id;
+			).user as unknown as User;
 
-			boardData.users
+			newResponsible.email = boardUserFound.email;
+			newResponsible.id = boardUserFound._id;
+			const promises = boardData.users
 				.filter((boardUser) =>
 					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
-						(boardUser.user as unknown as LeanDocument<UserDocument>)._id
+						(boardUser.user as unknown as User)._id
 					)
 				)
 				.map(async (boardUser) => {
-					const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
-					try {
-						await this.boardUserModel.findOneAndUpdate(
+					const typedBoardUser = boardUser.user as unknown as User;
+
+					return this.boardUserModel
+						.findOneAndUpdate(
 							{
 								user: typedBoardUser._id,
 								board: boardId
@@ -113,11 +113,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 							{
 								role: boardUser.role
 							}
-						);
-					} catch {
-						throw new BadRequestException(UPDATE_FAILED);
-					}
+						)
+						.exec();
 				});
+			await Promise.all(promises);
 		}
 
 		/**
