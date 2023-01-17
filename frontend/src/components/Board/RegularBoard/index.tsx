@@ -11,7 +11,7 @@ import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
-import { BoardSettings } from '@/components/Board/SplitBoard/Settings';
+import { BoardSettings } from '@/components/Board/Settings';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
@@ -90,6 +90,7 @@ const RegularBoard = () => {
                   isStakeholderOrAdmin={isStakeholderOrAdmin}
                   setIsOpen={setIsOpen}
                   socketId={socketId}
+                  isRegularBoard
                 />
               )}
             </>

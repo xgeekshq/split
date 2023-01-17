@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
-import { ConfigurationSettings } from '@/components/Board/SplitBoard/Settings/partials/ConfigurationSettings';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
 
 type SuperAdminProps = {
   userSAdmin: boolean;

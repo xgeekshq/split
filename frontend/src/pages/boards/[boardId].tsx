@@ -22,7 +22,7 @@ import isEmpty from '@/utils/isEmpty';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import { GetBoardResponse } from '@/types/board/board';
-import { BoardSettings } from '@/components/Board/SplitBoard/Settings';
+import { BoardSettings } from '@/components/Board/Settings';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import RegularBoard from '@/components/Board/RegularBoard';
