@@ -3,6 +3,8 @@ import Flex from '@/components/Primitives/Flex';
 import { Popover, PopoverContent } from '@/components/Primitives/Popover';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
+import useColumn from '@/hooks/useColumn';
+import CardType from '@/types/card/card';
 import { useState } from 'react';
 import ColorSquare from '../ColorSquare';
 import { SwitchDefaultText } from '../SwitchDefaultText';
@@ -12,6 +14,10 @@ import { PopoverItemStyled, PopoverTriggerStyled } from './styles';
 type OptionsMenuProps = {
   disabled?: boolean;
   isRegularBoard?: boolean;
+  cards: CardType[];
+  title: string;
+  columnId: string;
+  boardId: string;
 };
 
 const colors = [
@@ -23,11 +29,35 @@ const colors = [
   '$warningLighter',
 ];
 
-const OptionsMenu = ({ disabled, isRegularBoard }: OptionsMenuProps) => {
+const OptionsMenu = ({
+  disabled,
+  isRegularBoard,
+  cards,
+  title,
+  columnId,
+  boardId,
+}: OptionsMenuProps) => {
   const [defaultText, setDefaultText] = useState(false);
+
+  const {
+    updateColumn: { mutate },
+  } = useColumn();
 
   const handleDefaultTextCheck = () => {
     setDefaultText(!defaultText);
+  };
+
+  const handleColorChange = (selectedColor: string) => {
+    const column = {
+      _id: columnId,
+      title,
+      color: selectedColor,
+      cards,
+      cardText: '',
+      boardId,
+    };
+
+    mutate(column);
   };
 
   return (
@@ -39,11 +69,11 @@ const OptionsMenu = ({ disabled, isRegularBoard }: OptionsMenuProps) => {
         <PopoverContent>
           <PopoverItemStyled>
             <Icon name="boards" size={24} />
-            <Text size="sm">Edit column name</Text>
+            <Text size="sm">Edit column name </Text>
           </PopoverItemStyled>
           {isRegularBoard && (
             <>
-              <PopoverItemStyled>
+              <PopoverItemStyled onClick={() => handleColorChange('$highlight4Light')}>
                 <Icon name="recurring" size={24} />
                 <Text size="sm">Empty column cards</Text>
               </PopoverItemStyled>
@@ -73,7 +103,7 @@ const OptionsMenu = ({ disabled, isRegularBoard }: OptionsMenuProps) => {
           </Flex>
           <Flex direction="row" align="center" css={{ pb: '$10', pl: '$3' }}>
             {colors.map((square) => (
-              <ColorSquare key={square} color={square} />
+              <ColorSquare key={square} color={square} handleColorChange={handleColorChange} />
             ))}
           </Flex>
         </PopoverContent>
