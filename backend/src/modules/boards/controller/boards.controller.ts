@@ -1,3 +1,6 @@
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import { BoardUserGuard } from '../../../libs/guards/boardRoles.guard';
+import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
 	BadRequestException,
 	Body,
@@ -11,6 +14,7 @@ import {
 	Put,
 	Query,
 	Req,
+	SetMetadata,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -50,6 +54,8 @@ import { DeleteBoardApplicationInterface } from '../interfaces/applications/dele
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
+
+const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Boards')
@@ -224,13 +230,11 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
-	async updateBoard(
-		@Req() request: RequestWithUser,
-		@Param() { boardId }: BaseParam,
-		@Body() boardData: UpdateBoardDto
-	) {
-		const board = await this.updateBoardApp.update(request.user._id, boardId, boardData);
+	async updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
+		const board = await this.updateBoardApp.update(boardId, boardData);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 
