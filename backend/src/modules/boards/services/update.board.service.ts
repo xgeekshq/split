@@ -16,7 +16,6 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -35,44 +34,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
-
-	/**
-	 * Method to retrieve user details from team.
-	 * This method is used to see if the user is Admin or a Stakeholder
-	 *
-	 * @param userId Current User Logged
-	 * @param teamId Team ID (team from board)
-	 * @returns Team User
-	 */
-	private async getTeamUser(
-		userId: string,
-		teamId: string
-	): Promise<LeanDocument<TeamUserDocument>> {
-		const teamUser = await this.getTeamService.getTeamUser(userId, teamId);
-
-		if (!teamUser) {
-			throw new NotFoundException('User not found on this team!');
-		}
-
-		return teamUser;
-	}
-
-	/**
-	 * Method to get user from board, if it's responsible
-	 * If not, return a null value
-	 *
-	 * @param userId Current User Logged
-	 * @param boardId Board Id
-	 * @returns Board User
-	 */
-	private async isUserResponsible(userId: string, boardId: string): Promise<boolean> {
-		const user = await this.boardUserModel
-			.findOne({ user: userId, board: boardId, role: BoardRoles.RESPONSIBLE })
-			.lean()
-			.exec();
-
-		return !!user;
-	}
 
 	/**
 	 * Method to get current responsible to a specific board
@@ -109,7 +70,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		);
 	}
 
-	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
+	async update(boardId: string, boardData: UpdateBoardDto) {
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {

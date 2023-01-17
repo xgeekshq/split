@@ -233,12 +233,8 @@ export default class BoardsController {
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
-	async updateBoard(
-		@Req() request: RequestWithUser,
-		@Param() { boardId }: BaseParam,
-		@Body() boardData: UpdateBoardDto
-	) {
-		const board = await this.updateBoardApp.update(request.user._id, boardId, boardData);
+	async updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
+		const board = await this.updateBoardApp.update(boardId, boardData);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 
