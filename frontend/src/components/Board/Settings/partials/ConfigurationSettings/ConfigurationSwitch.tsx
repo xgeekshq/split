@@ -18,7 +18,7 @@ type Props = {
   disabledInfo?: string;
 };
 
-const ConfigurationSettings = ({
+const ConfigurationSwitchSettings = ({
   title,
   text,
   isChecked,
@@ -61,4 +61,4 @@ const ConfigurationSettings = ({
   </Flex>
 );
 
-export { ConfigurationSettings };
+export { ConfigurationSwitchSettings };
