@@ -22,8 +22,8 @@ const TeamMembersList = () => {
   };
 
   return (
-    <Flex css={{ mt: '$38' }} direction="column">
-      <Flex css={{ mb: '$16' }}>
+    <Flex css={{ mt: '$20' }} direction="column">
+      <Flex>
         <Text css={{ flex: 1 }} heading="3">
           Team Members
         </Text>

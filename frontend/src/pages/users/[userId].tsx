@@ -11,7 +11,7 @@ import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
 
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getTeamsOfUser } from '@/api/teamService';
 import { useSetRecoilState } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';

@@ -1,5 +1,5 @@
 import React, { ReactElement, Suspense } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { InnerContainer } from '@/styles/pages/dashboard.styles';
@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 const Dashboard = () => {
   const { data: session } = useSession();
 
-  const { data, isLoading } = useQuery('dashboardInfo', () => getDashboardHeaderInfo(), {
+  const { data, isLoading } = useQuery(['dashboardInfo'], () => getDashboardHeaderInfo(), {
     enabled: true,
     refetchOnWindowFocus: false,
   });

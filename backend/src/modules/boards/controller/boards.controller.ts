@@ -1,3 +1,4 @@
+import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardUserGuard } from './../../../libs/guards/boardRoles';
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
@@ -54,7 +55,7 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 
-const BoardUser = (permission: string) => SetMetadata('permission', permission);
+const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Boards')
@@ -229,7 +230,7 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@BoardUser(BoardRoles.RESPONSIBLE)
+	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
 	async updateBoard(

@@ -1,4 +1,4 @@
-import { UseMutationResult, UseQueryResult } from 'react-query/types/react/types';
+import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';

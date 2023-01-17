@@ -19,7 +19,7 @@ import {
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
@@ -310,19 +310,18 @@ const NewRegularBoard: NextPage = () => {
             <ContentSelectContainer>
               <Flex gap={16} direction="column">
                 <BoxRowContainer
-                  iconName="blob-settings"
-                  title="Configure board"
-                  description="Select team or participants, configure your board and schedule a date and time."
-                  active
-                  handleSelect={addNewRegularBoard}
-                />
-
-                <BoxRowContainer
                   iconName="blob-arrow-right"
                   title="Quick create"
                   description="Jump the settings and just create a board. All configurations can still be done within the board itself."
                   handleSelect={saveEmptyBoard}
                   active
+                />
+                <BoxRowContainer
+                  iconName="blob-settings"
+                  title="Configure board"
+                  description="Select team or participants, configure your board and schedule a date and time."
+                  active
+                  handleSelect={addNewRegularBoard}
                 />
               </Flex>
             </ContentSelectContainer>
@@ -336,9 +335,9 @@ const NewRegularBoard: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
-    await queryClient.prefetchQuery('users', () => getAllUsers(context));
+    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
+    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
 
     return {
       props: {

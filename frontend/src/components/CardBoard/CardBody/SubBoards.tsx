@@ -13,7 +13,7 @@ type SubBoardsProps = {
 
 const SubBoards = React.memo(
   ({ isSubBoard, isDashboard, dividedBoards, renderCardBody, userId }: SubBoardsProps) => {
-    if (isSubBoard) return null;
+    if (isSubBoard || dividedBoards.length <= 0) return null;
     if (isDashboard) {
       return (
         <Flex direction="column" gap="8">

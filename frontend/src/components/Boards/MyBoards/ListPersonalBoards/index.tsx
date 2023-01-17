@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 
 import { getPersonalBoardsRequest } from '@/api/boardService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';

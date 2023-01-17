@@ -1,4 +1,4 @@
-import { InfiniteData, useMutation, useQuery } from 'react-query';
+import { InfiniteData, useMutation, useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
 

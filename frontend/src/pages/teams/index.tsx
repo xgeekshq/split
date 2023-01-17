@@ -1,5 +1,5 @@
 import { ReactElement, Suspense, useEffect } from 'react';
-import { dehydrate, QueryClient } from 'react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useSession } from 'next-auth/react';
 
@@ -52,9 +52,9 @@ Teams.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery('allTeams', () => getAllTeams(context));
-    await queryClient.prefetchQuery('teams', () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery('dashboardInfo', () => getDashboardHeaderInfo(context));
+    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
+    await queryClient.prefetchQuery(['dashboardInfo'], () => getDashboardHeaderInfo(context));
 
     return {
       props: {

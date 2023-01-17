@@ -167,7 +167,7 @@ const CardBody = React.memo<CardBodyProps>(
       isSubBoard && !havePermissions && !userIsParticipating && !isDashboard;
 
     return (
-      <Flex css={{ flex: '1 1 0' }} direction="column" gap="12">
+      <Flex css={{ flex: '1 1 0' }} direction="column" gap="8">
         <Flex>
           {isSubBoard && <LeftArrow index={index} isDashboard={isDashboard} />}
 
