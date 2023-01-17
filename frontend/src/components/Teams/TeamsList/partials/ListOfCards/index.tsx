@@ -15,7 +15,7 @@ type ListOfCardsProp = {
 
 const ListOfCards = React.memo<ListOfCardsProp>(({ teams, userId, isLoading }) => (
   <ScrollableContent direction="column" gap="24" justify="start">
-    <Flex direction="column" gap="20">
+    <Flex direction="column" gap="8">
       {teams.map((team: Team) => (
         <CardBody key={team._id} team={team} userId={userId} isTeamPage />
       ))}
