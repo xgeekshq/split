@@ -46,7 +46,7 @@ const SearchInput: React.FC<InputProps> = ({
               css={{
                 width: '$24',
                 height: '$24',
-                color: '$primary400',
+                color: '$primary300',
               }}
             />
           )}
