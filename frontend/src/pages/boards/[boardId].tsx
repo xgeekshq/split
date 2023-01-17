@@ -240,7 +240,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
           ) : null}
         </Flex>
 
-        <DragDropArea board={board} socketId={socketId} userId={userId} />
+        <DragDropArea
+          board={board}
+          socketId={socketId}
+          userId={userId}
+          hasAdminRole={hasAdminRole}
+        />
       </Container>
     </>
   ) : (
