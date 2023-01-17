@@ -9,7 +9,7 @@ import Icon from '@/components/icons/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
 import Tooltip from '@/components/Primitives/Tooltip';
-import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
+import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
 import CardEndTeam from '@/components/Teams/Team/CardEnd';
 
 import useTeam from '@/hooks/useTeam';
@@ -94,7 +94,7 @@ const CardMember = React.memo<CardBodyProps>(
             </Flex>
             {!isTeamMember && isTeamCreator && !isSAdmin && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
-                <ConfigurationSettings
+                <ConfigurationSwitchSettings
                   handleCheckedChange={handleSelectFunction}
                   isChecked={member.isNewJoiner}
                   text=""
@@ -127,7 +127,7 @@ const CardMember = React.memo<CardBodyProps>(
             )}
             {(!(isTeamMember || isTeamCreator) || isSAdmin) && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
-                <ConfigurationSettings
+                <ConfigurationSwitchSettings
                   handleCheckedChange={handleSelectFunction}
                   isChecked={member.isNewJoiner}
                   text=""
