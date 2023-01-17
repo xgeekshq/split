@@ -26,22 +26,26 @@ const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps
       <FormStyled>
         <RadioGroupRoot defaultValue="team" aria-label="View density" onValueChange={handleSelect}>
           <Flex css={{ alignItems: 'center' }}>
-            <RadioGroupItem value="team" id="team">
+            <RadioGroupItem value="team" id="selectTeam">
               <RadioGroupIndicator />
             </RadioGroupItem>
             <Flex direction="column" gap={6}>
-              <LabelStyled htmlFor="team">Select Team</LabelStyled>
+              <LabelStyled htmlFor="selectTeam" css={{ cursor: 'pointer' }}>
+                Select Team
+              </LabelStyled>
               <Text size="sm" color="primary500" css={{ pl: '$14' }}>
                 Select a team for your new board.
               </Text>
             </Flex>
           </Flex>
           <Flex css={{ alignItems: 'center', mr: '$100' }}>
-            <RadioGroupItem value="participant" id="participants">
+            <RadioGroupItem value="participant" id="selectParticipant">
               <RadioGroupIndicator />
             </RadioGroupItem>
             <Flex direction="column" gap={6}>
-              <LabelStyled htmlFor="participants">Select Participants</LabelStyled>
+              <LabelStyled htmlFor="selectParticipant" css={{ cursor: 'pointer' }}>
+                Select Participants
+              </LabelStyled>
               <Text size="sm" color="primary500" css={{ pl: '$14' }}>
                 Select individual participants for your new board.
               </Text>

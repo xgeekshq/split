@@ -1,16 +1,13 @@
 import {
 	BadRequestException,
-	ForbiddenException,
 	Inject,
 	Injectable,
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model, ObjectId } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import { TeamRoles } from 'src/libs/enum/team.roles';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -18,7 +15,6 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -37,44 +33,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
-
-	/**
-	 * Method to retrieve user details from team.
-	 * This method is used to see if the user is Admin or a Stakeholder
-	 *
-	 * @param userId Current User Logged
-	 * @param teamId Team ID (team from board)
-	 * @returns Team User
-	 */
-	private async getTeamUser(
-		userId: string,
-		teamId: string
-	): Promise<LeanDocument<TeamUserDocument>> {
-		const teamUser = await this.getTeamService.getTeamUser(userId, teamId);
-
-		if (!teamUser) {
-			throw new NotFoundException('User not found on this team!');
-		}
-
-		return teamUser;
-	}
-
-	/**
-	 * Method to get user from board, if it's responsible
-	 * If not, return a null value
-	 *
-	 * @param userId Current User Logged
-	 * @param boardId Board Id
-	 * @returns Board User
-	 */
-	private async isUserResponsible(userId: string, boardId: string): Promise<boolean> {
-		const user = await this.boardUserModel
-			.findOne({ user: userId, board: boardId, role: BoardRoles.RESPONSIBLE })
-			.lean()
-			.exec();
-
-		return !!user;
-	}
 
 	/**
 	 * Method to get current responsible to a specific board
@@ -111,7 +69,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		);
 	}
 
-	async update(userId: string, boardId: string, boardData: UpdateBoardDto) {
+	async update(boardId: string, boardData: UpdateBoardDto) {
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
@@ -119,116 +77,98 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 
 		// Destructuring board variables
-		const { team, createdBy, isSubBoard } = board;
-
-		// Get Team User to see if is Admin or Stakeholder
-		const teamUser = await this.getTeamUser(userId, String(team));
-
-		// Role Validation
-		const isAdminOrStakeholder = [TeamRoles.STAKEHOLDER, TeamRoles.ADMIN].includes(
-			teamUser.role as TeamRoles
-		);
-
-		// Get user info to see if is responsible or not
-		const isSubBoardResponsible = await this.isUserResponsible(userId, boardId);
-
-		// Validate if the logged user are the owner
-		const isOwner = String(userId) === String(createdBy);
+		const { isSubBoard } = board;
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
 		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
 
-		if (isAdminOrStakeholder || isOwner || isSubBoardResponsible) {
-			/**
-			 * Validate if:
-			 * - have users on request
-			 * - is a sub-board
-			 * - and the logged user isn't the current responsible
-			 */
-			if (isSubBoard && boardData.users) {
-				const boardUserFound = boardData.users.find(
-					(userFound) => userFound.role === BoardRoles.RESPONSIBLE
-				) as unknown as LeanDocument<BoardUserDocument>;
-				newResponsible.email = (boardUserFound.user as User).email;
-				newResponsible.id = (boardUserFound.user as unknown as LeanDocument<BoardUserDocument>)._id;
+		/**
+		 * Validate if:
+		 * - have users on request
+		 * - is a sub-board
+		 * - and the logged user isn't the current responsible
+		 */
+		if (isSubBoard && boardData.users) {
+			const boardUserFound = boardData.users?.find(
+				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
+			).user as unknown as User;
 
-				boardData.users
-					.filter((boardUser) =>
-						[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
-							(boardUser.user as unknown as LeanDocument<UserDocument>)._id
-						)
+			newResponsible.email = boardUserFound.email;
+			newResponsible.id = boardUserFound._id;
+			const promises = boardData.users
+				.filter((boardUser) =>
+					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
+						(boardUser.user as unknown as User)._id
 					)
-					.map(async (boardUser) => {
-						const typedBoardUser = boardUser.user as unknown as LeanDocument<BoardUserDocument>;
-						try {
-							await this.boardUserModel.findOneAndUpdate(
-								{
-									user: typedBoardUser._id,
-									board: boardId
-								},
-								{
-									role: boardUser.role
-								}
-							);
-						} catch {
-							throw new BadRequestException(UPDATE_FAILED);
-						}
-					});
-			}
-
-			/**
-			 * Only can change the maxVotes if:
-			 * - new maxVotes not empty
-			 * - current highest votes equals to zero
-			 * - or current highest votes lower than new maxVotes
-			 */
-
-			if (!isEmpty(boardData.maxVotes)) {
-				const highestVotes = await this.getHighestVotesOnBoard(boardId);
-
-				// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
-				if (highestVotes > Number(boardData.maxVotes)) {
-					throw new BadRequestException(
-						`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
-					);
-				}
-			}
-
-			const updatedBoard = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId
-					},
-					{
-						...boardData
-					},
-					{
-						new: true
-					}
 				)
-				.lean()
-				.exec();
+				.map(async (boardUser) => {
+					const typedBoardUser = boardUser.user as unknown as User;
 
-			if (
-				updatedBoard &&
-				String(currentResponsible?.id) !== newResponsible.id &&
-				board.slackChannelId &&
-				updatedBoard.slackEnable &&
-				updatedBoard.isSubBoard
-			) {
-				this.handleResponsibleSlackMessage(
-					newResponsible,
-					currentResponsible,
-					board._id,
-					board.title,
-					board.slackChannelId
-				);
-			}
-
-			return updatedBoard;
+					return this.boardUserModel
+						.findOneAndUpdate(
+							{
+								user: typedBoardUser._id,
+								board: boardId
+							},
+							{
+								role: boardUser.role
+							}
+						)
+						.exec();
+				});
+			await Promise.all(promises);
 		}
 
-		throw new ForbiddenException('You are not allowed to update this board!');
+		/**
+		 * Only can change the maxVotes if:
+		 * - new maxVotes not empty
+		 * - current highest votes equals to zero
+		 * - or current highest votes lower than new maxVotes
+		 */
+
+		if (!isEmpty(boardData.maxVotes)) {
+			const highestVotes = await this.getHighestVotesOnBoard(boardId);
+
+			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
+			if (highestVotes > Number(boardData.maxVotes)) {
+				throw new BadRequestException(
+					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
+				);
+			}
+		}
+
+		const updatedBoard = await this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId
+				},
+				{
+					...boardData
+				},
+				{
+					new: true
+				}
+			)
+			.lean()
+			.exec();
+
+		if (
+			updatedBoard &&
+			String(currentResponsible?.id) !== newResponsible.id &&
+			board.slackChannelId &&
+			updatedBoard.slackEnable &&
+			updatedBoard.isSubBoard
+		) {
+			this.handleResponsibleSlackMessage(
+				newResponsible,
+				currentResponsible,
+				board._id,
+				board.title,
+				board.slackChannelId
+			);
+		}
+
+		return updatedBoard;
 	}
 
 	private async handleResponsibleSlackMessage(

@@ -66,8 +66,12 @@ const Settings = () => {
 
   return (
     <Flex direction="column">
-      <Flex css={{ width: '100%' }} gap="24">
+      <Text heading={3} css={{ mb: '$24', mt: '$32' }}>
+        Settings
+      </Text>
+      <Flex css={{ width: '100%', borderBottom: '1px solid $primary200' }} gap="24">
         <StyledTextTab
+          css={{ marginBottom: '-1.5px' }}
           color="primary300"
           data-activetab={currentTab === 1}
           size="md"
@@ -77,6 +81,7 @@ const Settings = () => {
         </StyledTextTab>
 
         <StyledTextTab
+          css={{ marginBottom: '-1.5px' }}
           color="primary300"
           data-activetab={currentTab === 2}
           size="md"

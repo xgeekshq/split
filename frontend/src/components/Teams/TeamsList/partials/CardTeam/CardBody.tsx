@@ -66,7 +66,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
   }, [isSAdmin, team, userId]);
 
   return (
-    <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
+    <Flex css={{ flex: '1 1 1' }} direction="column" gap="12">
       <InnerContainer
         align="center"
         elevation="1"

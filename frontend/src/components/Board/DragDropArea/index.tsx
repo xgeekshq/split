@@ -18,8 +18,17 @@ type Props = {
   userId: string;
   board: BoardType;
   socketId: string;
+  hasAdminRole: boolean;
+  isRegularBoard?: boolean;
 };
-const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
+
+const DragDropArea: React.FC<Props> = ({
+  userId,
+  board,
+  socketId,
+  isRegularBoard,
+  hasAdminRole,
+}) => {
   const { updateCardPosition, mergeCards } = useCards();
   const setToastState = useSetRecoilState(toastState);
   const setOnDragCard = useSetRecoilState(onDragCardStart);
@@ -127,6 +136,8 @@ const DragDropArea: React.FC<Props> = ({ userId, board, socketId }) => {
             title={column.title}
             userId={userId}
             boardUser={board.users.find((boardUser) => boardUser.user._id === userId)}
+            isRegularBoard={isRegularBoard}
+            hasAdminRole={hasAdminRole}
           />
         ))}
       </DragDropContext>

@@ -11,8 +11,8 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		private updateBoardService: UpdateBoardServiceInterface
 	) {}
 
-	update(userId: string, boardId: string, boardData: UpdateBoardDto) {
-		return this.updateBoardService.update(userId, boardId, boardData);
+	update(boardId: string, boardData: UpdateBoardDto) {
+		return this.updateBoardService.update(boardId, boardData);
 	}
 
 	mergeBoards(subBoardId: string, userId: string) {

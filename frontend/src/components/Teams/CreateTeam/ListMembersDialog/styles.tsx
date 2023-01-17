@@ -36,6 +36,9 @@ const PlaceholderText = styled(Text, {
   '&[data-iconposition="right"]': {
     pl: '$17',
   },
+  '&[data-iconposition="both"]': {
+    pl: '$57',
+  },
 });
 
 const IconWrapper = styled(Flex, {
@@ -49,6 +52,9 @@ const IconWrapper = styled(Flex, {
   },
   '&[data-iconposition="right"]': {
     right: '$16',
+  },
+  '&[data-iconposition="both"]': {
+    left: '$16',
   },
   '&[data-type="password"]': {
     '&:hover': {
@@ -173,6 +179,10 @@ const StyledInput = styled('input', {
 
   '&[data-iconposition="right"]': {
     pr: '$56',
+  },
+
+  '&[data-iconposition="both"]': {
+    px: '$56',
   },
 });
 
