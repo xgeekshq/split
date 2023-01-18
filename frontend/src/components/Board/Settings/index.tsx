@@ -39,6 +39,7 @@ type Props = {
   isSAdmin?: boolean | undefined;
   isResponsible: boolean;
   isRegularBoard?: boolean;
+  noTeam?: boolean;
 };
 
 const BoardSettings = ({
@@ -50,6 +51,7 @@ const BoardSettings = ({
   isSAdmin,
   isResponsible,
   isRegularBoard,
+  noTeam,
 }: Props) => {
   // Recoil State used on [boardId].tsx
   const {
@@ -301,9 +303,11 @@ const BoardSettings = ({
                 Board Settings
               </Text>
               <Accordion type="multiple">
-                {isRegularBoard && <ParticipantsSettings usersListNames={usersListNames} />}
+                {isRegularBoard && noTeam && (
+                  <ParticipantsSettings usersListNames={usersListNames} />
+                )}
 
-                <ConfigurationSettings>
+                <ConfigurationSettings variant={isRegularBoard && noTeam ? 'others' : 'first'}>
                   <ConfigurationSwitchSettings
                     handleCheckedChange={handleHideCardsChange}
                     isChecked={switchesState.hideCards}

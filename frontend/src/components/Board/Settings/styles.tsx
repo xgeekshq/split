@@ -176,6 +176,7 @@ const StyledAccordionItem = styled(AccordionPrimitive.Item, {
       },
       others: {
         borderTop: '1px solid $colors$primary100',
+        mb: '$40',
       },
     },
   },

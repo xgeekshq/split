@@ -8,9 +8,13 @@ import {
   StyledAccordionContent,
 } from '../../styles';
 
-const ConfigurationSettings: React.FC = ({ children }) => (
-  <StyledAccordionItem value="configurations" variant="first">
-    <StyledAccordionHeader variant="first">
+type Props = {
+  variant?: 'first' | 'others';
+};
+
+const ConfigurationSettings: React.FC<Props> = ({ variant, children }) => (
+  <StyledAccordionItem value="configurations" variant={variant ?? 'others'}>
+    <StyledAccordionHeader variant={variant ?? 'others'}>
       <StyledAccordionTrigger>
         <Text heading="5">Configurations</Text>
         <StyledAccordionIcon name="arrow-down" />

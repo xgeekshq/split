@@ -91,6 +91,7 @@ const RegularBoard = () => {
                   setIsOpen={setIsOpen}
                   socketId={socketId}
                   isRegularBoard
+                  noTeam={!board.team}
                 />
               )}
             </>
