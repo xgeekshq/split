@@ -7,12 +7,12 @@ import { selectStyles, StyledBox, StyledSelect } from './styles';
 
 const Control = ({ children, ...props }: ControlProps) => (
   <components.Control {...props}>
-    {(props.selectProps.value as { label: string; value: string }).label && (
-      <Text color="primary300" size="xs">
-        Select Team
-      </Text>
-    )}
     <Flex direction="column" css={{ width: '100%', px: '$17' }}>
+      {(props.selectProps.value as { label: string; value: string }).label && (
+        <Text color="primary300" size="xs">
+          Select Team
+        </Text>
+      )}
       <Flex css={{ width: '100%' }}>{children}</Flex>
     </Flex>
   </components.Control>
