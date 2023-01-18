@@ -73,6 +73,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 
     setLoginErrorCode(result.status);
     if (result.error) {
+      methods.setError('email', { type: 'custom', message: '' });
+      methods.setError('password', { type: 'custom', message: '' });
       setToastState({
         open: true,
         type: ToastStateEnum.ERROR,

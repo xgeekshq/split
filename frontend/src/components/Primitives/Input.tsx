@@ -235,11 +235,10 @@ const Input: React.FC<InputProps> = ({
   const isValueEmpty = isEmpty(value);
 
   const autoState = useMemo(() => {
-    if (Object.keys(errors).length > 0 || message) return 'error';
-    if (isValueEmpty) return 'default';
+    if (errors[id]) return 'error';
     if (!message && !isValueEmpty) return 'valid';
     return undefined;
-  }, [message, isValueEmpty]);
+  }, [errors, message, isValueEmpty]);
 
   const currentState = useMemo(() => {
     if (disabled && !touchedFields[id] && !forceState) return 'default';
