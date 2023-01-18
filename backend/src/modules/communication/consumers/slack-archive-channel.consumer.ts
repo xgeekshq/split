@@ -41,8 +41,6 @@ export class SlackArchiveChannelConsumer extends SlackCommunicationEventListener
 			);
 		}
 
-		const result = await this.application.execute(data);
-
-		return result;
+		return this.application.execute(data);
 	}
 }

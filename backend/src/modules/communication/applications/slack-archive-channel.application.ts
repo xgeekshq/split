@@ -26,7 +26,7 @@ export class SlackArchiveChannelApplication implements ArchiveChannelApplication
 			return [await this.archiveChannel(board.slackChannelId)];
 		}
 
-		return await this.arquiveAllChannelsInMainBoard(board);
+		return this.arquiveAllChannelsInMainBoard(board);
 	}
 
 	private async archiveChannel(channelId): Promise<ArchiveChannelResult> {

@@ -72,7 +72,7 @@ describe('SlackArchiveChannelApplication', () => {
 		expect(application).toBeDefined();
 	});
 
-	it('shoult archive channel by channel id', async () => {
+	it('should archive channel by channel id', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.CHANNEL_ID,
 			data: 'U023BECGF'
@@ -83,7 +83,7 @@ describe('SlackArchiveChannelApplication', () => {
 		expect(result).toMatchObject([{ channelId: archiveChannelData.data, result: true }]);
 	});
 
-	it('shoult returns "ok" if the channel is already archived', async () => {
+	it('should returns "ok" if the channel is already archived', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.CHANNEL_ID,
 			data: 'W058A3SDQ'
@@ -94,7 +94,7 @@ describe('SlackArchiveChannelApplication', () => {
 		expect(result).toMatchObject([{ channelId: archiveChannelData.data, result: true }]);
 	});
 
-	it('shoult returns "result" as false if the response from slack returns an error', async () => {
+	it('should returns "result" as false if the response from slack returns an error', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.CHANNEL_ID,
 			data: 'Do_not_exists'
@@ -105,7 +105,7 @@ describe('SlackArchiveChannelApplication', () => {
 		expect(result).toMatchObject([{ channelId: archiveChannelData.data, result: false }]);
 	});
 
-	it('shoult throws "ArchiveChannelError" if an error occurs', async () => {
+	it('should throws "ArchiveChannelError" if an error occurs', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.CHANNEL_ID,
 			data: 'U111BAXFL'
@@ -114,7 +114,7 @@ describe('SlackArchiveChannelApplication', () => {
 		await expect(application.execute(archiveChannelData)).rejects.toThrowError();
 	});
 
-	it('shoult archive channel by board', async () => {
+	it('should archive channel by board', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.BOARD,
 			data: { id: 'any_board_id', slackChannelId: 'U023BECGF' }
@@ -127,7 +127,7 @@ describe('SlackArchiveChannelApplication', () => {
 		]);
 	});
 
-	it('shoult archive all channels by board with dividedBoards if "cascade" is set to true', async () => {
+	it('should archive all channels by board with dividedBoards if "cascade" is set to true', async () => {
 		const archiveChannelData: ArchiveChannelData = {
 			type: ArchiveChannelDataOptions.BOARD,
 			cascade: true,
