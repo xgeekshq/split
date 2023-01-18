@@ -235,7 +235,7 @@ const Input: React.FC<InputProps> = ({
   const isValueEmpty = isEmpty(value);
 
   const autoState = useMemo(() => {
-    if (message) return 'error';
+    if (Object.keys(errors).length > 0 || message) return 'error';
     if (isValueEmpty) return 'default';
     if (!message && !isValueEmpty) return 'valid';
     return undefined;

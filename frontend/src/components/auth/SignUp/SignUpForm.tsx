@@ -16,7 +16,6 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { EmailUser } from '@/types/user/user';
 import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import isEmpty from '@/utils/isEmpty';
 import { SignUpEnum } from '@/utils/signUp.enum';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
@@ -29,8 +28,15 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, emailName }) => {
   const setToastState = useSetRecoilState(toastState);
-  const [valueHelperText, setValueHelperText] = useState('');
   const [valueState, setValueState] = useState(false);
+  const methods = useForm<EmailUser>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      email: emailName.email,
+    },
+    resolver: joiResolver(SchemaEmail),
+  });
   useQuery(
     ['checkUserExists', emailName],
     () =>
@@ -51,7 +57,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           return;
         }
 
-        setValueHelperText(' This email already exists');
+        methods.setError('email', { type: 'custom', message: 'This email already exists' });
         setValueState(true);
       },
 
@@ -72,14 +78,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
       },
     },
   );
-  const methods = useForm<EmailUser>({
-    mode: 'onSubmit',
-    reValidateMode: 'onSubmit',
-    defaultValues: {
-      email: emailName.email,
-    },
-    resolver: joiResolver(SchemaEmail),
-  });
 
   const handleCheckUserExists = async (email: string) => {
     setEmailName({ goback: false, email });
@@ -108,9 +106,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
         <Text css={{ mt: '$8', color: '$primary500' }} size="md">
           Enter your email address to proceed further
         </Text>
+
         <Input
           css={{ mt: '$32' }}
-          helperText={isEmpty(valueHelperText) ? undefined : valueHelperText}
           id="email"
           placeholder="Email address"
           state={!valueState ? 'default' : 'error'}
