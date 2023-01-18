@@ -6,13 +6,29 @@ type FooterProps = {
   handleAffirmative?: () => void;
   setIsOpen: (isOpen: boolean) => void;
   buttonRef?: React.RefObject<HTMLButtonElement>;
+  showSeparator?: boolean;
 };
 
 const Footer: React.FC<FooterProps> = (props) => {
-  const { children, handleAffirmative, setIsOpen, affirmativeLabel, buttonRef } = props;
+  const {
+    children,
+    handleAffirmative,
+    setIsOpen,
+    affirmativeLabel,
+    buttonRef,
+    showSeparator = true,
+  } = props;
 
   return (
-    <ButtonsContainer gap={24} align="center" justify="end" css={{ backgroundColor: '$white' }}>
+    <ButtonsContainer
+      gap={24}
+      align="center"
+      justify="end"
+      css={{
+        backgroundColor: '$white',
+        borderTop: showSeparator ? '1px solid $colors$primary100' : 'none',
+      }}
+    >
       {children}
       <Button
         css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}

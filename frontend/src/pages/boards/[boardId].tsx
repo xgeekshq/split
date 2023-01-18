@@ -192,7 +192,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   if (!recoilBoard) return <LoadingPage />;
 
-  if (isRegularOrPersonalBoard) return <RegularBoard />;
+  if (isRegularOrPersonalBoard) return <RegularBoard socketId={socketId} />;
 
   return board && userId && socketId ? (
     <>
