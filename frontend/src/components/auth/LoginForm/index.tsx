@@ -11,7 +11,6 @@ import { DotsLoading } from '@/components/loadings/DotsLoading';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
-import { getAuthError } from '@/errors/auth-messages';
 import useUser from '@/hooks/useUser';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -74,10 +73,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 
     setLoginErrorCode(result.status);
     if (result.error) {
+      methods.setError('email', { type: 'custom', message: '' });
+      methods.setError('password', { type: 'custom', message: '' });
       setToastState({
         open: true,
         type: ToastStateEnum.ERROR,
-        content: getAuthError(result.status),
+        content: result.error,
       });
     }
 
