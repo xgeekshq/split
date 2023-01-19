@@ -109,19 +109,16 @@ const NewSplitBoard: NextPage = () => {
   /**
    * React Hook Form
    */
-  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable?: boolean }>(
-    {
-      mode: 'onBlur',
-      reValidateMode: 'onBlur',
-      defaultValues: {
-        text: '',
-        maxVotes: boardState.board.maxVotes,
-        slackEnable: false,
-        team: undefined,
-      },
-      resolver: joiResolver(SchemaCreateBoard),
+  const methods = useForm<{ text: string; team: string; maxVotes?: number }>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      text: '',
+      maxVotes: boardState.board.maxVotes,
+      team: undefined,
     },
-  );
+    resolver: joiResolver(SchemaCreateBoard),
+  });
 
   const mainBoardName = useWatch({
     control: methods.control,
@@ -153,7 +150,7 @@ const NewSplitBoard: NextPage = () => {
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, team: string, maxVotes?: number, slackEnable?: boolean) => {
+  const saveBoard = (title: string, team: string, maxVotes?: number) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -182,7 +179,6 @@ const NewSplitBoard: NextPage = () => {
       title,
       dividedBoards: newDividedBoards,
       maxVotes,
-      slackEnable,
       maxUsers: boardState.count.maxUsersCount,
       team,
       responsibles,
@@ -257,8 +253,8 @@ const NewSplitBoard: NextPage = () => {
                 direction="column"
                 onSubmit={
                   !haveError
-                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
-                        saveBoard(text, team, maxVotes, slackEnable);
+                    ? methods.handleSubmit(({ text, team, maxVotes }) => {
+                        saveBoard(text, team, maxVotes);
                       })
                     : undefined
                 }
