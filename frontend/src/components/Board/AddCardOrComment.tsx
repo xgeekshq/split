@@ -174,6 +174,7 @@ const AddCard = React.memo<AddCardProps>(
           css={{
             mx: '$20',
             display: 'flex',
+            fontWeight: '$medium',
           }}
           onClick={() => setIsOpen(true)}
         >
