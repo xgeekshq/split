@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable, Logger, NotFoundException } fr
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateResult } from 'mongodb';
 import { ClientSession, Model } from 'mongoose';
+import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
@@ -141,7 +142,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			await userSession.abortTransaction();
 			await session.abortTransaction();
 
-			if (e.code === 112 && retryCount < 5) {
+			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
 				await userSession.endSession();
 				await session.endSession();
@@ -201,7 +202,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				await userSession.abortTransaction();
 				await session.abortTransaction();
 
-				if (e.code === 112 && retryCount < 5) {
+				if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 					retryCount++;
 					await userSession.endSession();
 					await session.endSession();

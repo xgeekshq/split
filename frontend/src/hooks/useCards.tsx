@@ -14,7 +14,6 @@ import {
 import { mergeCardState } from '@/store/mergeCard/atoms/merge-card.atom';
 import BoardType from '@/types/board/board';
 import AddCardDto from '@/types/card/addCard.dto';
-import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
@@ -43,32 +42,6 @@ const useCards = () => {
   const setReady = useSetRecoilState(operationsQueueAtom);
 
   const getBoardQuery = (id: string | undefined) => ['board', { id }];
-
-  const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
-    const query = getBoardQuery(id);
-    await queryClient.cancelQueries(query);
-    const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
-    return prevData?.board;
-  };
-
-  const updateBoardColumns = (id: string, columns: ColumnType[]) => {
-    setReady(false);
-    queryClient.setQueryData<{ board: BoardType } | undefined>(
-      getBoardQuery(id),
-      (old: { board: BoardType } | undefined) => {
-        if (old)
-          return {
-            board: {
-              ...old.board,
-              columns,
-            },
-          };
-
-        return old;
-      },
-    );
-    setReady(true);
-  };
 
   const setQueryDataAddCard = (data: AddCardDto) => {
     setReady(false);
@@ -116,22 +89,29 @@ const useCards = () => {
 
   const setQueryDataUpdateCardPosition = async (data: UpdateCardPositionDto) => {
     setReady(false);
-    const prevBoardData = await getPrevData(data.boardId);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const newBoard = handleUpdateCardPosition(old.board, data);
+          return {
+            board: {
+              ...old.board,
+              columns: newBoard.columns,
+            },
+          };
+        }
 
-    if (prevBoardData) {
-      const newBoard = handleUpdateCardPosition(prevBoardData, data);
-      updateBoardColumns(data.boardId, newBoard.columns);
-    }
+        return old;
+      },
+    );
 
     setReady(true);
-    return prevBoardData;
   };
 
   const updateCardPosition = useMutation(updateCardPositionRequest, {
     onMutate: async (data) => {
-      const prevBoardData = setQueryDataUpdateCardPosition(data);
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataUpdateCardPosition(data);
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -260,14 +240,7 @@ const useCards = () => {
 
   const mergeCards = useMutation(mergeCardsRequest, {
     onMutate: async (data) => {
-      const prevBoardData = await getPrevData(data.boardId);
-
-      if (prevBoardData) {
-        const boardData = handleMergeCard(prevBoardData, data);
-        updateBoardColumns(data.boardId, boardData.columns);
-      }
-
-      return { previousBoard: prevBoardData, data };
+      setQueryDataMergeCard(data);
     },
     onError: (data, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
@@ -279,18 +252,6 @@ const useCards = () => {
       });
     },
   });
-
-  const handleMutateUnmergeOptimistic = async (data: RemoveFromCardGroupDto) => {
-    setReady(false);
-    const prevBoardData = await getPrevData(data.boardId);
-
-    if (prevBoardData) {
-      const boardData = handleUnMergeCard(prevBoardData, data);
-      updateBoardColumns(data.boardId, boardData.columns);
-    }
-    setReady(true);
-    return { previousBoard: prevBoardData, data };
-  };
 
   const setQueryDataUnmergeCard = (data: RemoveFromCardGroupDto) => {
     setReady(false);
@@ -314,7 +275,9 @@ const useCards = () => {
   };
 
   const removeFromMergeCard = useMutation(removeFromMergeRequest, {
-    onMutate: async (data) => handleMutateUnmergeOptimistic(data),
+    onMutate: async (data) => {
+      setQueryDataUnmergeCard(data);
+    },
     onSettled: async (data, error, variables) => {
       if (!error) {
         variables.newCardItemId = data;

@@ -126,36 +126,37 @@ export const useSocketIO = (boardId: string): string | undefined => {
 
   useEffect(() => {
     if (!isEmpty(queue) && ready) {
+      const { dto } = queue[0];
       switch (queue[0].action) {
         case BoardAction.UPDATECARDPOSITION:
-          setQueryDataUpdateCardPosition(queue[0].dto);
+          setQueryDataUpdateCardPosition(dto);
           break;
         case BoardAction.VOTE:
-          updateVote(queue[0].dto);
+          updateVote(dto);
           break;
         case BoardAction.UNMERGE:
-          setQueryDataUnmergeCard(queue[0].dto);
+          setQueryDataUnmergeCard(dto);
           break;
         case BoardAction.MERGE:
-          setQueryDataMergeCard(queue[0].dto);
+          setQueryDataMergeCard(dto);
           break;
         case BoardAction.ADDCARD:
-          setQueryDataAddCard(queue[0].dto);
+          setQueryDataAddCard(dto);
           break;
         case BoardAction.UPDATECARD:
-          setQueryDataUpdateCard(queue[0].dto);
+          setQueryDataUpdateCard(dto);
           break;
         case BoardAction.DELETECARD:
-          setQueryDataDeleteCard(queue[0].dto);
+          setQueryDataDeleteCard(dto);
           break;
         case BoardAction.ADDCOMMENT:
-          setQueryDataAddComment(queue[0].dto);
+          setQueryDataAddComment(dto);
           break;
         case BoardAction.DELETECOMMENT:
-          setQueryDataDeleteComment(queue[0].dto);
+          setQueryDataDeleteComment(dto);
           break;
         case BoardAction.UPDATECOMMENT:
-          setQueryDataUpdateComment(queue[0].dto);
+          setQueryDataUpdateComment(dto);
           break;
         default:
           break;

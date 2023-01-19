@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
+import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
@@ -115,7 +116,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			await userSession.abortTransaction();
 			await session.abortTransaction();
 
-			if (e.code === 112 && retryCount < 5) {
+			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
 				await userSession.endSession();
 				await session.endSession();
@@ -169,7 +170,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			await session.abortTransaction();
 			await userSession.abortTransaction();
 
-			if (e.code === 112 && retryCount < 5) {
+			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
 				await userSession.endSession();
 				await session.endSession();
