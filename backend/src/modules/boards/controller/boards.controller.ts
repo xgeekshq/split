@@ -346,7 +346,7 @@ export default class BoardsController {
 	})
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
-	@Put(':boardId/column')
+	@Put(':boardId/column/:columnId')
 	updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
 		return this.updateBoardApp.updateColumn(boardId, columnData);
 	}
