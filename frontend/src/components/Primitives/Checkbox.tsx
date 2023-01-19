@@ -68,7 +68,7 @@ const Checkbox: React.FC<{
   disabled?: boolean;
   size: '12' | '16';
   setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
-  handleChange?: (value?: string) => void;
+  handleChange?: ((value: string) => void) | (() => void);
   handleSelectAll?: () => void;
   hasSelectAll?: boolean;
 }> = ({
