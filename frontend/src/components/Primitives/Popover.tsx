@@ -43,7 +43,6 @@ const StyledContent = styled(PopoverPrimitive.Content, {
 const StyledPopoverItem = styled(Flex, {
   pl: '$16',
   py: '$8',
-  backgroundColor: '$primary50',
   '& svg': {
     color: '$primary400',
     size: '$16',
