@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useMutation } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 
@@ -7,6 +6,8 @@ import { CardItemType } from '@/types/card/cardItem';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import VoteDto from '@/types/vote/vote.dto';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { useSetRecoilState } from 'recoil';
 import BoardType from '../types/board/board';
 import { getRemainingVotes } from '../utils/getRemainingVotes';
 import useBoardUtils from './useBoardUtils';
@@ -29,24 +30,12 @@ const useVotes = () => {
   const { data: session } = useSession({ required: true });
   const userId = session?.user?.id || '';
 
+  const setReady = useSetRecoilState(operationsQueueAtom);
+
   // work around to avoid read only error
   const getEditableBoardData = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
 
   const getBoardQueryKey = (boardId = ''): QueryKeyType => ['board', { id: boardId }];
-
-  const setPreviousBoardQuery = (id: string, context: any) => {
-    queryClient.setQueryData(
-      getBoardQueryKey(id),
-      (context as { previousBoard: BoardType }).previousBoard,
-    );
-  };
-
-  const getPrevData = async (id: string | undefined): Promise<BoardType | undefined> => {
-    const query = getBoardQueryKey(id);
-    await queryClient.cancelQueries(query);
-    const prevData = queryClient.getQueryData<{ board: BoardType }>(query);
-    return prevData?.board;
-  };
 
   const getFirstCardItemIndexWithVotes = (cardItems: CardItemType[], userIdOfVote: string) =>
     cardItems.findIndex((cardItem) => cardItem.votes.includes(userIdOfVote));
@@ -298,10 +287,12 @@ const useVotes = () => {
   };
 
   const updateVote = async (variables: VoteDto) => {
+    setReady(false);
     const newBoardData = await updateVoteOptimistic(
       variables.count > 0 ? Action.Add : Action.Remove,
       variables,
     );
+    setReady(true);
 
     if (newBoardData?.maxVotes && variables.userId === userId) {
       toastRemainingVotesMessage('', newBoardData);
@@ -310,6 +301,7 @@ const useVotes = () => {
 
   const handleVote = useMutation(handleVotes, {
     onError: (_, variables) => {
+      queryClient.cancelQueries(['board', { id: variables.boardId }]);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },

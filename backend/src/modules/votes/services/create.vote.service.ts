@@ -76,9 +76,17 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		count: number
 	) {
 		const userSession = await this.boardUserModel.db.startSession();
-		userSession.startTransaction();
+		userSession.startTransaction({
+			readPreference: 'primary',
+			readConcern: { level: 'local' },
+			writeConcern: { w: 'majority' }
+		});
 		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
+		session.startTransaction({
+			readPreference: 'primary',
+			readConcern: { level: 'local' },
+			writeConcern: { w: 'majority' }
+		});
 
 		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
 

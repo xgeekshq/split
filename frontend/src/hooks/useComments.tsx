@@ -11,6 +11,8 @@ import BoardType from '@/types/board/board';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { useSetRecoilState } from 'recoil';
 import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 import useBoardUtils from './useBoardUtils';
@@ -18,6 +20,7 @@ import useBoardUtils from './useBoardUtils';
 const useComments = () => {
   const { queryClient, setToastState } = useBoardUtils();
   const { data: session } = useSession({ required: false });
+  const setReady = useSetRecoilState(operationsQueueAtom);
 
   const user = session?.user;
 
@@ -29,7 +32,7 @@ const useComments = () => {
       firstName: user?.firstName,
       lastName: user?.lastName,
     } as User;
-
+    setReady(false);
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -46,6 +49,7 @@ const useComments = () => {
         return old;
       },
     );
+    setReady(true);
   };
 
   const addCommentInCard = useMutation(addCommentRequest, {
@@ -70,6 +74,7 @@ const useComments = () => {
   });
 
   const setQueryDataDeleteComment = (data: DeleteCommentDto) => {
+    setReady(false);
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -86,6 +91,7 @@ const useComments = () => {
         return old;
       },
     );
+    setReady(true);
   };
 
   const deleteComment = useMutation(deleteCommentRequest, {
@@ -105,6 +111,7 @@ const useComments = () => {
   });
 
   const setQueryDataUpdateComment = (data: UpdateCommentDto) => {
+    setReady(false);
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -121,6 +128,7 @@ const useComments = () => {
         return old;
       },
     );
+    setReady(true);
   };
 
   const updateComment = useMutation(updateCommentRequest, {
