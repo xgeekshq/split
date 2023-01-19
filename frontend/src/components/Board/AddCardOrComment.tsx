@@ -212,7 +212,7 @@ const AddCard = React.memo<AddCardProps>(
             floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
-            placeholder="Write your comment here..."
+            placeholder={cardText || 'Write your comment here...'}
           />
           {!isCard && (
             <Checkbox

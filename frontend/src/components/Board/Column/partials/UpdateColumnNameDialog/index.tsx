@@ -35,7 +35,7 @@ type UpdateColumnNameProps = {
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
 
-const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
+const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
   boardId,
   columnId,
   columnTitle,
@@ -50,7 +50,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
     updateColumn: { mutate },
   } = useColumn();
 
-  const methods = useForm<{ title: string; textCard: string }>({
+  const methods = useForm<{ title: string }>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -154,4 +154,4 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
     </AlertDialog>
   );
 };
-export default UpdateColumnDialog;
+export default UpdateColumnName;

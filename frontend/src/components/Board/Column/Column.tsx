@@ -12,7 +12,8 @@ import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
-import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import UpdateColumnName from './partials/UpdateColumnNameDialog';
+import DefaultCardText from './partials/DefaultCardText';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -27,6 +28,7 @@ const Column = React.memo<ColumMemoProps>(
     boardId,
     title,
     color,
+    cardText,
     socketId,
     isMainboard,
     boardUser,
@@ -40,9 +42,11 @@ const Column = React.memo<ColumMemoProps>(
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
     const [openDialogName, setOpenDialogName] = useState(false);
+    const [dialogType, setDialogType] = useState('ColumnName');
 
-    const handleDialogNameChange = (open: boolean) => {
+    const handleDialogNameChange = (open: boolean, type: string) => {
       setOpenDialogName(open);
+      setDialogType(type);
     };
 
     const filteredCards = useCallback(() => {
@@ -108,12 +112,12 @@ const Column = React.memo<ColumMemoProps>(
                     {isMainboard && (
                       <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
                     )}
-                    {hasAdminRole && (
+                    {hasAdminRole && isRegularBoard && (
                       <OptionsMenu
                         disabled={false}
-                        isRegularBoard={isRegularBoard}
                         title={title}
                         cards={cards}
+                        cardText={cardText}
                         columnId={columnId}
                         boardId={boardId}
                         setOpenDialogName={handleDialogNameChange}
@@ -139,6 +143,7 @@ const Column = React.memo<ColumMemoProps>(
                         isUpdate={false}
                         socketId={socketId}
                         anonymous={false}
+                        cardText={cardText}
                       />
                     </Flex>
                   )}
@@ -167,14 +172,25 @@ const Column = React.memo<ColumMemoProps>(
             )}
           </Droppable>
         </OuterContainer>
-        <UpdateColumnDialog
+        <UpdateColumnName
           boardId={boardId}
-          isOpen={openDialogName}
+          isOpen={openDialogName && dialogType === 'ColumnName'}
           setIsOpen={setOpenDialogName}
           columnId={columnId}
           columnTitle={title}
           columnColor={color}
           cards={cards}
+          cardText={cardText}
+        />
+        <DefaultCardText
+          boardId={boardId}
+          isOpen={openDialogName && dialogType === 'CardText'}
+          setIsOpen={setOpenDialogName}
+          columnId={columnId}
+          columnTitle={title}
+          columnColor={color}
+          cards={cards}
+          cardText={cardText}
         />
       </>
     );

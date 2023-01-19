@@ -92,7 +92,8 @@ const OptionsMenu = ({
                 </Text>
                 <SwitchDefaultText
                   handleCheckedChange={handleDefaultTextCheck}
-                  isChecked={defaultText}
+                  isChecked={cardText !== 'Write your comment here...'}
+                  disabled={cardText === 'Write your comment here...' || !cardText}
                 />
               </Flex>
             </PopoverItemStyled>
