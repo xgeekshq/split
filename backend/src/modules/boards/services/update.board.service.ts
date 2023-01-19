@@ -360,16 +360,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return board;
 	}
 
-	async emptyColumn(boardId: string, columnId: string) {
-		const result = this.boardModel
-			.find({
-				_id: boardId,
-				'columns._id': columnId
-			})
-			.populate(BoardDataPopulate)
-			.lean()
-			.exec();
+		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
-		return result;
+		return board;
 	}
 }
