@@ -12,12 +12,12 @@ import { PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 type OptionsMenuProps = {
   disabled?: boolean;
-  isRegularBoard?: boolean;
   cards: CardType[];
   title: string;
   columnId: string;
   boardId: string;
-  setOpenDialogName: (open: boolean) => void;
+  cardText?: string;
+  setOpenDialogName: (open: boolean, type: string) => void;
 };
 
 const colors = [
@@ -31,10 +31,10 @@ const colors = [
 
 const OptionsMenu = ({
   disabled,
-  isRegularBoard,
   cards,
   title,
   columnId,
+  cardText,
   boardId,
 
   setOpenDialogName,
@@ -56,55 +56,50 @@ const OptionsMenu = ({
       title,
       color: selectedColor,
       cards,
-      cardText: '',
+      cardText,
       boardId,
     };
 
     mutate(column);
   };
 
-  const handleOpen = () => {
-    setOpenDialogName(true);
+  const handleOpen = (type: string) => {
+    setOpenDialogName(true, type);
     setOpenPopover(false);
   };
 
   return (
     <>
       <Popover open={openPopover} onOpenChange={(value: boolean) => setOpenPopover(value)}>
-        <PopoverTriggerStyled disabled={disabled}>
+        <PopoverTriggerStyled disabled={disabled} css={{ ml: '$8' }}>
           <Icon name="menu-dots" size={24} />
         </PopoverTriggerStyled>
         {!disabled && (
           <PopoverContent>
-            <PopoverItemStyled onClick={handleOpen}>
+            <PopoverItemStyled onClick={() => handleOpen('ColumnName')}>
               <Icon name="boards" size={24} />
               <Text size="sm">Edit column name </Text>
             </PopoverItemStyled>
-
-            {isRegularBoard && (
-              <>
-                <PopoverItemStyled onClick={() => handleColorChange('$highlight4Light')}>
-                  <Icon name="recurring" size={24} />
-                  <Text size="sm">Empty column cards</Text>
-                </PopoverItemStyled>
-
-                <PopoverItemStyled>
-                  <Flex align="center" gap={8}>
-                    <Icon name="file-alt" size={24} />
-                    <Text size="sm">Activate card default text</Text>
-                    <SwitchDefaultText
-                      handleCheckedChange={handleDefaultTextCheck}
-                      isChecked={defaultText}
-                    />
-                  </Flex>
-                </PopoverItemStyled>
-
-                <PopoverItemStyled>
-                  <Icon name="trash-alt" size={24} />
-                  <Text size="sm">Delete column</Text>
-                </PopoverItemStyled>
-              </>
-            )}
+            <PopoverItemStyled onClick={() => handleColorChange('$highlight4Light')}>
+              <Icon name="recurring" size={24} />
+              <Text size="sm">Empty column cards</Text>
+            </PopoverItemStyled>
+            <PopoverItemStyled>
+              <Flex align="center" gap={8}>
+                <Icon name="file-alt" size={24} />
+                <Text onClick={() => handleOpen('CardText')} size="sm">
+                  Activate card default text
+                </Text>
+                <SwitchDefaultText
+                  handleCheckedChange={handleDefaultTextCheck}
+                  isChecked={defaultText}
+                />
+              </Flex>
+            </PopoverItemStyled>
+            <PopoverItemStyled>
+              <Icon name="trash-alt" size={24} />
+              <Text size="sm">Delete column</Text>
+            </PopoverItemStyled>
             <Separator orientation="horizontal" css={{ mt: '$5' }} />
             <Flex gap={8} css={{ pb: '$8', pt: '$20', pl: '$18' }}>
               <Text size="xs" color="primary800" weight="medium">

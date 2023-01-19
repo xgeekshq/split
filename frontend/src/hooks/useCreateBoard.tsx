@@ -27,9 +27,24 @@ const useCreateBoard = (team?: Team) => {
     (index: number, users: BoardUserToAdd[] = []): BoardToAdd => ({
       title: `Sub-team board ${index}`,
       columns: [
-        { title: 'Went well', color: '$highlight1Light', cards: [] },
-        { title: 'To improve', color: '$highlight4Light', cards: [] },
-        { title: 'Action points', color: '$highlight3Light', cards: [] },
+        {
+          title: 'Went well',
+          color: '$highlight1Light',
+          cards: [],
+          cardText: 'Write your commment here...',
+        },
+        {
+          title: 'To improve',
+          color: '$highlight4Light',
+          cards: [],
+          cardText: 'Write your commment here...',
+        },
+        {
+          title: 'Action points',
+          color: '$highlight3Light',
+          cards: [],
+          cardText: 'Write your commment here...',
+        },
       ],
       isPublic: false,
       dividedBoards: [],

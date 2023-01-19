@@ -30,6 +30,7 @@ type UpdateColumnNameProps = {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   children?: ReactNode;
+  cardText?: string;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
@@ -39,6 +40,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   columnId,
   columnTitle,
   columnColor,
+  cardText,
   cards,
   isOpen,
   setIsOpen,
@@ -48,7 +50,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
     updateColumn: { mutate },
   } = useColumn();
 
-  const methods = useForm<{ title: string }>({
+  const methods = useForm<{ title: string; textCard: string }>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -75,7 +77,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
       title,
       color: columnColor,
       cards,
-      cardText: '',
+      cardText,
       boardId,
     };
 
@@ -90,6 +92,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
       <AlertDialogContent handleClose={handleClose}>
         <DialogTitleContainer css={{ px: '$24' }} align="center" justify="between">
           <StyledDialogTitle heading="4">Update column name</StyledDialogTitle>
+
           <AlertDialogCancel
             asChild
             isIcon
@@ -124,6 +127,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
                 css={{
                   backgroundColor: '$white',
                   borderRadius: '$12',
+                  border: 'none',
                 }}
               >
                 <Button
