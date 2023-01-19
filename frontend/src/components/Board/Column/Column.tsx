@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
@@ -13,7 +12,7 @@ import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
-import UpdateColumnName from './partials/UpdateColumnNameDialog';
+import UpdateColumnDialog from './partials/UpdateColumnDialog';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -168,7 +167,7 @@ const Column = React.memo<ColumMemoProps>(
             )}
           </Droppable>
         </OuterContainer>
-        <UpdateColumnName
+        <UpdateColumnDialog
           boardId={boardId}
           isOpen={openDialogName}
           setIsOpen={setOpenDialogName}
