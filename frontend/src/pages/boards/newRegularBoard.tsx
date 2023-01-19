@@ -10,6 +10,7 @@ import LoadingPage from '@/components/loadings/LoadingPage';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,
+  ContentWrapper,
   ContentContainer,
   InnerContent,
   PageHeader,
@@ -275,37 +276,41 @@ const NewRegularBoard: NextPage = () => {
             </Button>
           </PageHeader>
           {createBoard ? (
-            <ContentContainer>
-              <SubContainer>
-                <StyledForm
-                  direction="column"
-                  onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                    saveBoard(text, maxVotes, slackEnable);
-                  })}
-                >
-                  <InnerContent direction="column">
-                    <FormProvider {...methods}>
-                      <BoardName mainBoardName={mainBoardName} />
-                      <SettingsTabs />
-                    </FormProvider>
-                  </InnerContent>
-                  <ButtonsContainer gap="24" justify="end">
-                    <Button
-                      disabled={isBackButtonDisable}
-                      type="button"
-                      variant="lightOutline"
-                      onClick={handleCancelBtn}
+            <>
+              <ContentWrapper>
+                <ContentContainer>
+                  <SubContainer>
+                    <StyledForm
+                      direction="column"
+                      onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                        saveBoard(text, maxVotes, slackEnable);
+                      })}
                     >
-                      Cancel
-                    </Button>
-                    <Button type="submit" disabled={isBackButtonDisable}>
-                      Create board
-                    </Button>
-                  </ButtonsContainer>
-                </StyledForm>
-              </SubContainer>
-              <TipBar isRegularBoard />
-            </ContentContainer>
+                      <InnerContent direction="column">
+                        <FormProvider {...methods}>
+                          <BoardName mainBoardName={mainBoardName} />
+                          <SettingsTabs />
+                        </FormProvider>
+                      </InnerContent>
+                    </StyledForm>
+                  </SubContainer>
+                  <TipBar isRegularBoard />
+                </ContentContainer>
+              </ContentWrapper>
+              <ButtonsContainer gap="24" justify="end">
+                <Button
+                  disabled={isBackButtonDisable}
+                  type="button"
+                  variant="lightOutline"
+                  onClick={handleCancelBtn}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isBackButtonDisable}>
+                  Create board
+                </Button>
+              </ButtonsContainer>
+            </>
           ) : (
             <ContentSelectContainer>
               <Flex gap={16} direction="column">
