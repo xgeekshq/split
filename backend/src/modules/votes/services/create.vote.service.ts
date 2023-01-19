@@ -75,18 +75,11 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		cardItemId: string,
 		count: number
 	) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
-		userSession.startTransaction({
-			readPreference: 'primary',
-			readConcern: { level: 'local' },
-			writeConcern: { w: 'majority' }
-		});
+		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
-		session.startTransaction({
-			readPreference: 'primary',
-			readConcern: { level: 'local' },
-			writeConcern: { w: 'majority' }
-		});
+		session.startTransaction();
 
 		const canUserVote = await this.canUserVote(boardId, userId, count, session, userSession);
 
@@ -121,7 +114,15 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			this.logger.error(e);
 			await userSession.abortTransaction();
 			await session.abortTransaction();
-			throw new BadRequestException(INSERT_VOTE_FAILED);
+
+			if (e.code === 112 && retryCount < 5) {
+				retryCount++;
+				await userSession.endSession();
+				await session.endSession();
+				await this.addVoteToCard(boardId, cardId, userId, cardItemId, count);
+			} else {
+				throw new BadRequestException(INSERT_VOTE_FAILED);
+			}
 		} finally {
 			await userSession.endSession();
 			await session.endSession();
@@ -129,6 +130,7 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 	}
 
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
@@ -166,7 +168,15 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			this.logger.error(e);
 			await session.abortTransaction();
 			await userSession.abortTransaction();
-			throw new BadRequestException(INSERT_VOTE_FAILED);
+
+			if (e.code === 112 && retryCount < 5) {
+				retryCount++;
+				await userSession.endSession();
+				await session.endSession();
+				await this.addVoteToCardGroup(boardId, cardId, userId, count);
+			} else {
+				throw new BadRequestException(INSERT_VOTE_FAILED);
+			}
 		} finally {
 			await userSession.endSession();
 			await session.endSession();

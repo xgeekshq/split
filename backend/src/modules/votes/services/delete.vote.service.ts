@@ -97,6 +97,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		cardItemId: string,
 		count: number
 	) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
@@ -139,6 +140,15 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			this.logger.error(e);
 			await userSession.abortTransaction();
 			await session.abortTransaction();
+
+			if (e.code === 112 && retryCount < 5) {
+				retryCount++;
+				await userSession.endSession();
+				await session.endSession();
+				await this.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
+			} else {
+				throw new BadRequestException(DELETE_VOTE_FAILED);
+			}
 		} finally {
 			await session.endSession();
 			await userSession.endSession();
@@ -146,6 +156,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
@@ -189,6 +200,15 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				this.logger.error(e);
 				await userSession.abortTransaction();
 				await session.abortTransaction();
+
+				if (e.code === 112 && retryCount < 5) {
+					retryCount++;
+					await userSession.endSession();
+					await session.endSession();
+					await this.deleteVoteFromCardGroup(boardId, cardId, userId, count);
+				} else {
+					throw new BadRequestException(DELETE_VOTE_FAILED);
+				}
 			} finally {
 				await session.endSession();
 				await userSession.endSession();

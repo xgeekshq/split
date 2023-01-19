@@ -303,6 +303,7 @@ const useVotes = () => {
     onError: (_, variables) => {
       queryClient.cancelQueries(['board', { id: variables.boardId }]);
       queryClient.invalidateQueries(['board', { id: variables.boardId }]);
+      setReady(true);
       toastErrorMessage(`Error ${variables.count > 0 ? 'adding' : 'removing'} the vote`);
     },
   });
