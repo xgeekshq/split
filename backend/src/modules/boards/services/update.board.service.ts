@@ -23,6 +23,8 @@ import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { BoardDataPopulate } from '../utils/populate-board';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -33,7 +35,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>
+		private boardUserModel: Model<BoardUserDocument>,
+		private socketService: SocketGateway
 	) {}
 
 	/**
@@ -326,8 +329,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		);
 	}
 
-	async updateColumn(boardId: string, column: UpdateColumnDto) {
-		const result = this.boardModel
+	updateColumn(boardId: string, column: UpdateColumnDto) {
+		const board = this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: boardId,
@@ -349,19 +352,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
-		return result;
-	}
+		if (!board) throw new BadRequestException(UPDATE_FAILED);
 
-	async emptyColumn(boardId: string, columnId: string) {
-		const result = this.boardModel
-			.find({
-				_id: boardId,
-				'columns._id': columnId
-			})
-			.populate(BoardDataPopulate)
-			.lean()
-			.exec();
+		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
-		return result;
+		return board;
 	}
 }

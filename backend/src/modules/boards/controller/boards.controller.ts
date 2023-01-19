@@ -347,15 +347,7 @@ export default class BoardsController {
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId/column')
-	async updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
-		const board = await this.updateBoardApp.updateColumn(boardId, columnData);
-
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-
-		if (columnData.socketId) {
-			this.socketService.sendUpdatedBoard(boardId, columnData.socketId);
-		}
-
-		return board;
+	updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
+		return this.updateBoardApp.updateColumn(boardId, columnData);
 	}
 }
