@@ -29,6 +29,7 @@ import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,
   PageHeader,
+  ContentWrapper,
   ContentContainer,
   SubContainer,
   InnerContent,
@@ -240,21 +241,9 @@ const NewSplitBoard: NextPage = () => {
               <Icon name="close" />
             </Button>
           </PageHeader>
-          <ContentContainer>
-            <SubContainer>
-              {haveError && (
-                <AlertBox
-                  text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
-                  title="No team yet!"
-                  type="error"
-                  css={{
-                    marginTop: '$20',
-                  }}
-                />
-              )}
-
+          <ContentWrapper>
+            <ContentContainer>
               <StyledForm
-                direction="column"
                 onSubmit={
                   !haveError
                     ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
@@ -263,29 +252,41 @@ const NewSplitBoard: NextPage = () => {
                     : undefined
                 }
               >
-                <InnerContent direction="column">
-                  <FormProvider {...methods}>
-                    <BoardName mainBoardName={mainBoardName} />
-                    <SettingsTabs />
-                  </FormProvider>
-                </InnerContent>
-                <ButtonsContainer gap="24" justify="end">
-                  <Button
-                    disabled={isBackButtonDisable}
-                    type="button"
-                    variant="lightOutline"
-                    onClick={handleCancelBtn}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isBackButtonDisable || haveError}>
-                    Create board
-                  </Button>
-                </ButtonsContainer>
+                <SubContainer>
+                  {haveError && (
+                    <AlertBox
+                      text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+                      title="No team yet!"
+                      type="error"
+                      css={{
+                        marginTop: '$20',
+                      }}
+                    />
+                  )}
+                  <InnerContent direction="column">
+                    <FormProvider {...methods}>
+                      <BoardName mainBoardName={mainBoardName} />
+                      <SettingsTabs />
+                    </FormProvider>
+                  </InnerContent>
+                </SubContainer>
               </StyledForm>
-            </SubContainer>
-            <TipBar isSplitBoard />
-          </ContentContainer>
+              <TipBar isSplitBoard />
+            </ContentContainer>
+          </ContentWrapper>
+          <ButtonsContainer gap="24" justify="end">
+            <Button
+              disabled={isBackButtonDisable}
+              type="button"
+              variant="lightOutline"
+              onClick={handleCancelBtn}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isBackButtonDisable || haveError}>
+              Create board
+            </Button>
+          </ButtonsContainer>
         </Container>
       </QueryError>
     </Suspense>

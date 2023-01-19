@@ -7,12 +7,11 @@ const CreateTeamTipBar = () => (
     direction="column"
     justify="start"
     css={{
-      minHeight: 'calc(100vh - $sizes$92)',
+      minHeight: 'calc(100vh - $sizes$92 - $sizes$81)',
       backgroundColor: '$primary800',
       padding: '$32',
       paddingTop: '$100',
       maxWidth: '$384',
-      position: 'fixed',
       right: 0,
       top: '$220',
       bottom: 0,
