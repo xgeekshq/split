@@ -93,6 +93,7 @@ const Column = React.memo<ColumMemoProps>(
                       border: '1px solid $colors$primary100',
                       px: '$8',
                       py: '$2',
+                      backgroundColor: '$primary50',
                     }}
                   >
                     {cards.length} cards
