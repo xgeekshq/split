@@ -34,7 +34,7 @@ type UpdateColumnNameProps = {
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
 
-const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
+const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   boardId,
   columnId,
   columnTitle,
@@ -48,18 +48,18 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     updateColumn: { mutate },
   } = useColumn();
 
-  const methods = useForm<{ text: string }>({
+  const methods = useForm<{ title: string }>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      text: columnTitle || '',
+      title: columnTitle || '',
     },
     resolver: joiResolver(SchemaChangeColumnName),
   });
 
   const columnName = useWatch({
     control: methods.control,
-    name: 'text',
+    name: 'title',
   });
 
   // References
@@ -69,10 +69,10 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     setIsOpen(false);
   };
 
-  const handleConfirm = (text: string) => {
+  const handleConfirm = (title: string) => {
     const column = {
       _id: columnId,
-      title: text,
+      title,
       color: columnColor,
       cards,
       cardText: '',
@@ -102,13 +102,13 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
           </AlertDialogCancel>
         </DialogTitleContainer>
         <FormProvider {...methods}>
-          <StyledForm onSubmit={methods.handleSubmit(({ text }) => handleConfirm(text))}>
+          <StyledForm onSubmit={methods.handleSubmit(({ title }) => handleConfirm(title))}>
             <Flex direction="column" css={{ width: '100%' }}>
               <Separator css={{ backgroundColor: '$primary100' }} />
               <Flex direction="column" css={{ width: '100%', px: '$32', pt: '$24' }}>
                 <Input
                   forceState
-                  id="text"
+                  id="title"
                   maxChars="15"
                   placeholder="Column name"
                   state="default"
@@ -150,4 +150,4 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     </AlertDialog>
   );
 };
-export default UpdateColumnName;
+export default UpdateColumnDialog;
