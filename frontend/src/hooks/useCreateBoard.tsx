@@ -184,7 +184,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleAddTeam = () => {
     if (!canAdd) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,
@@ -202,7 +202,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleRemoveTeam = () => {
     if (!canReduce) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,
