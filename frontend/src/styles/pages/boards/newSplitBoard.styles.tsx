@@ -37,20 +37,18 @@ const PageHeader = styled('header', {
 });
 
 const ContentWrapper = styled('section', {
-  width: '100%',
+  position: 'relative',
   height: 'calc(100vh - $sizes$92 - $sizes$81)',
-  overflowY: 'scroll',
+  overflowY: 'auto',
 });
 
 const ContentContainer = styled('section', {
   display: 'flex',
-  width: '100%',
   height: 'auto',
 });
 
 const InnerContent = styled(Flex, {
   flex: '1 1 auto',
-  width: '100%',
   height: '100%',
 });
 

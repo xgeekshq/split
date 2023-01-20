@@ -17,7 +17,6 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
   <Flex
     direction="column"
     css={{
-      minHeight: 'calc(100vh - $sizes$92 - $sizes$81)',
       backgroundColor: '$primary800',
       padding: '$32',
       pt: '$100',
