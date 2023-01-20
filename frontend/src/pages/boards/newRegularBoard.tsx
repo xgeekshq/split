@@ -42,6 +42,7 @@ import useBoard from '@/hooks/useBoard';
 import isEmpty from '@/utils/isEmpty';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
+import { defaultColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -52,29 +53,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Default Board',
-    columns: [
-      {
-        title: 'Went well',
-        color: '$highlight1Light',
-        cards: [],
-        isDefaultText: true,
-        cardText: 'Write your comment...',
-      },
-      {
-        title: 'To improve',
-        color: '$highlight4Light',
-        cards: [],
-        isDefaultText: true,
-        cardText: 'Write your comment...',
-      },
-      {
-        title: 'Action points',
-        color: '$highlight3Light',
-        cards: [],
-        isDefaultText: true,
-        cardText: 'Write your comment...',
-      },
-    ],
+    columns: defaultColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],

@@ -38,23 +38,35 @@ const useColumn = () => {
     onMutate: async (data) => {
       const prevBoard = await getPrevData(data.boardId);
 
-      // if(prevBoard)
-      // updateBoardColumns(data.boardId)
+      if (prevBoard) {
+        const columnsWithUpdate = prevBoard.columns.map((column) =>
+          column._id === data._id
+            ? {
+                _id: data._id,
+                color: data.color,
+                title: data.title,
+                cards: data.cards,
+                cardText: data.cardText,
+                isDefaultText: data.isDefaultText,
+              }
+            : column,
+        );
+
+        updateBoardColumns(data.boardId, columnsWithUpdate);
+      }
 
       return { previousBoard: prevBoard, data };
     },
     onSuccess: async (data) => {
       const prevBoard = await getPrevData(data._id);
 
-      if (prevBoard) updateBoardColumns(data._id, data.columns);
-
       return { previousBoard: prevBoard, data };
     },
-    onError: () => {
-      // queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+    onError: (_, variables) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
       setToastState({
         open: true,
-        content: 'Error updating the card',
+        content: 'Error updating the column',
         type: ToastStateEnum.ERROR,
       });
     },

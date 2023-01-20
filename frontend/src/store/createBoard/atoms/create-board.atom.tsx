@@ -3,6 +3,7 @@ import { atom } from 'recoil';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserDto } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
+import { defaultColumns } from '@/helper/board/defaultColumns';
 
 export const createBoardError = atom({
   key: 'haveCreateBoardError',
@@ -41,29 +42,7 @@ export const createBoardDataState = atom<CreateBoardData>({
     },
     board: {
       title: 'Main Board -',
-      columns: [
-        {
-          title: 'Went well',
-          color: '$highlight1Light',
-          cards: [],
-          isDefaultText: true,
-          cardText: 'Write your comment here...',
-        },
-        {
-          title: 'To improve',
-          color: '$highlight4Light',
-          cards: [],
-          isDefaultText: true,
-          cardText: 'Write your comment here...',
-        },
-        {
-          title: 'Action points',
-          color: '$highlight3Light',
-          cards: [],
-          isDefaultText: true,
-          cardText: 'Write your comment here...',
-        },
-      ],
+      columns: defaultColumns,
       isPublic: false,
       maxVotes: undefined,
       dividedBoards: [],
