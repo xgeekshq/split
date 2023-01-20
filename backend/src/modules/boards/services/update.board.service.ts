@@ -340,7 +340,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					$set: {
 						'columns.$[column].color': column.color,
 						'columns.$[column].title': column.title,
-						'columns.$[column].cardText': column.cardText
+						'columns.$[column].cardText': column.cardText,
+						'columns.$[column].isDefaultText': column.isDefaultText
 					}
 				},
 				{

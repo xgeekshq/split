@@ -6,9 +6,27 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 	return {
 		title: `Sub-team board ${index}`,
 		columns: [
-			{ title: 'Went well', color: '$highlight1Light', cards: [] },
-			{ title: 'To improve', color: '$highlight4Light', cards: [] },
-			{ title: 'Action points', color: '$highlight3Light', cards: [] }
+			{
+				title: 'Went well',
+				color: '$highlight1Light',
+				cards: [],
+				cardText: 'Write your comment here...',
+				isDefaultText: true
+			},
+			{
+				title: 'To improve',
+				color: '$highlight4Light',
+				cards: [],
+				cardText: 'Write your comment here...',
+				isDefaultText: true
+			},
+			{
+				title: 'Action points',
+				color: '$highlight3Light',
+				cards: [],
+				cardText: 'Write your comment here...',
+				isDefaultText: true
+			}
 		],
 		isPublic: false,
 		dividedBoards: [],
@@ -31,9 +49,27 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 		board: {
 			title,
 			columns: [
-				{ title: 'Went well', color: '$highlight1Light', cards: [] },
-				{ title: 'To improve', color: '$highlight4Light', cards: [] },
-				{ title: 'Action points', color: '$highlight3Light', cards: [] }
+				{
+					title: 'Went well',
+					color: '$highlight1Light',
+					cards: [],
+					cardText: 'Write your comment here...',
+					isDefaultText: true
+				},
+				{
+					title: 'To improve',
+					color: '$highlight4Light',
+					cards: [],
+					cardText: 'Write your comment here...',
+					isDefaultText: true
+				},
+				{
+					title: 'Action points',
+					color: '$highlight3Light',
+					cards: [],
+					cardText: 'Write your comment here...',
+					isDefaultText: true
+				}
 			],
 			isPublic: false,
 			maxVotes: undefined,
