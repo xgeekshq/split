@@ -359,9 +359,4 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		return board;
 	}
-
-		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
-
-		return board;
-	}
 }
