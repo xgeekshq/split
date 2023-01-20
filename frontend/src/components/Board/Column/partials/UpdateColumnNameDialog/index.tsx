@@ -31,6 +31,7 @@ type UpdateColumnNameProps = {
   setIsOpen: (value: boolean) => void;
   children?: ReactNode;
   cardText?: string;
+  isDefaultText: boolean;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
@@ -45,6 +46,7 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
   isOpen,
   setIsOpen,
   children,
+  isDefaultText,
 }) => {
   const {
     updateColumn: { mutate },
@@ -79,6 +81,7 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
       cards,
       cardText,
       boardId,
+      isDefaultText,
     };
 
     mutate(column);

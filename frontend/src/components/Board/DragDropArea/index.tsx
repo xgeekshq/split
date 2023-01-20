@@ -127,6 +127,7 @@ const DragDropArea: React.FC<Props> = ({
             color={column.color}
             cardText={column.cardText}
             columnId={column._id}
+            isDefaultText={column.isDefaultText}
             countAllCards={countAllCards}
             hideCards={board.hideCards}
             index={index}

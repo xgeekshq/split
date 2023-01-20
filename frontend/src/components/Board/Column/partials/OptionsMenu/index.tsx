@@ -15,9 +15,11 @@ type OptionsMenuProps = {
   cards: CardType[];
   title: string;
   columnId: string;
+  color: string;
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
+  isDefaultText?: boolean;
 };
 
 const colors = [
@@ -34,12 +36,12 @@ const OptionsMenu = ({
   cards,
   title,
   columnId,
+  color,
   cardText,
   boardId,
-
+  isDefaultText,
   setOpenDialogName,
 }: OptionsMenuProps) => {
-  const [defaultText, setDefaultText] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
 
   const {
@@ -47,7 +49,17 @@ const OptionsMenu = ({
   } = useColumn();
 
   const handleDefaultTextCheck = () => {
-    setDefaultText(!defaultText);
+    const column = {
+      _id: columnId,
+      title,
+      color,
+      cards,
+      cardText,
+      boardId,
+      isDefaultText: !isDefaultText,
+    };
+
+    mutate(column);
   };
 
   const handleColorChange = (selectedColor: string) => {
@@ -58,6 +70,7 @@ const OptionsMenu = ({
       cards,
       cardText,
       boardId,
+      isDefaultText,
     };
 
     mutate(column);
@@ -90,10 +103,11 @@ const OptionsMenu = ({
                 <Text onClick={() => handleOpen('CardText')} size="sm">
                   Activate card default text
                 </Text>
+
                 <SwitchDefaultText
                   handleCheckedChange={handleDefaultTextCheck}
-                  isChecked={cardText !== 'Write your comment here...'}
-                  disabled={cardText === 'Write your comment here...' || !cardText}
+                  isChecked={!isDefaultText}
+                  disabled={cardText === 'Write your comment here...'}
                 />
               </Flex>
             </PopoverItemStyled>

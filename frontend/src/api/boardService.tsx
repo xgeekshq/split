@@ -73,7 +73,10 @@ export const deleteBoardRequest = async ({
 export const updateColumnRequest = (
   columnData: ColumnType & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column`, { method: 'PUT', data: columnData });
+  fetchData(`/boards/${columnData.boardId}/column/${columnData._id}`, {
+    method: 'PUT',
+    data: columnData,
+  });
 // #endRegion
 
 // #region CARD

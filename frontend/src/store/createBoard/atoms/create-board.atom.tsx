@@ -42,9 +42,27 @@ export const createBoardDataState = atom<CreateBoardData>({
     board: {
       title: 'Main Board -',
       columns: [
-        { title: 'Went well', color: '$highlight1Light', cards: [] },
-        { title: 'To improve', color: '$highlight4Light', cards: [] },
-        { title: 'Action points', color: '$highlight3Light', cards: [] },
+        {
+          title: 'Went well',
+          color: '$highlight1Light',
+          cards: [],
+          isDefaultText: true,
+          cardText: 'Write your comment here...',
+        },
+        {
+          title: 'To improve',
+          color: '$highlight4Light',
+          cards: [],
+          isDefaultText: true,
+          cardText: 'Write your comment here...',
+        },
+        {
+          title: 'Action points',
+          color: '$highlight3Light',
+          cards: [],
+          isDefaultText: true,
+          cardText: 'Write your comment here...',
+        },
       ],
       isPublic: false,
       maxVotes: undefined,
