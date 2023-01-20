@@ -97,6 +97,7 @@ const CreateTeam = () => {
         <ContentContainer>
           <SubContainer>
             <StyledForm
+              id="hook-form"
               direction="column"
               onSubmit={methods.handleSubmit(({ text }) => {
                 saveTeam(text);
@@ -123,7 +124,7 @@ const CreateTeam = () => {
         >
           Cancel
         </Button>
-        <Button disabled={isSubmitButtonDisable} type="submit">
+        <Button form="hook-form" disabled={isSubmitButtonDisable} type="submit">
           Create team
         </Button>
       </ButtonsContainer>

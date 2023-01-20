@@ -110,13 +110,14 @@ const NewSplitBoard: NextPage = () => {
   /**
    * React Hook Form
    */
-  const methods = useForm<{ text: string; team: string; maxVotes?: number }>({
+  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
       team: undefined,
+      slackEnable: boardState.board.slackEnable,
     },
     resolver: joiResolver(SchemaCreateBoard),
   });
@@ -124,6 +125,11 @@ const NewSplitBoard: NextPage = () => {
   const mainBoardName = useWatch({
     control: methods.control,
     name: 'text',
+  });
+
+  const slackEnable = useWatch({
+    control: methods.control,
+    name: 'slackEnable',
   });
 
   if (routerTeam && !selectedTeam) {
@@ -187,6 +193,10 @@ const NewSplitBoard: NextPage = () => {
   };
 
   useEffect(() => {
+    setBoardState((prev) => ({ ...prev, board: { ...prev.board, slackEnable } }));
+  }, [setBoardState, slackEnable]);
+
+  useEffect(() => {
     if (teamsData && allTeamsData && session) {
       setTeams(session?.user.isSAdmin ? allTeamsData : teamsData);
     }
@@ -240,6 +250,7 @@ const NewSplitBoard: NextPage = () => {
           <ContentWrapper>
             <ContentContainer>
               <StyledForm
+                id="hook-form"
                 onSubmit={
                   !haveError
                     ? methods.handleSubmit(({ text, team, maxVotes }) => {
@@ -279,7 +290,7 @@ const NewSplitBoard: NextPage = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isBackButtonDisable || haveError}>
+            <Button type="submit" form="hook-form" disabled={isBackButtonDisable || haveError}>
               Create board
             </Button>
           </ButtonsContainer>
