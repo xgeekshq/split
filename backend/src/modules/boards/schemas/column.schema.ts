@@ -20,6 +20,9 @@ export default class Column {
 
 	@Prop({ nullable: false })
 	cardText!: string;
+
+	@Prop({ nullable: false })
+	isDefaultText!: boolean;
 }
 
 export const ColumnSchema = SchemaFactory.createForClass(Column);

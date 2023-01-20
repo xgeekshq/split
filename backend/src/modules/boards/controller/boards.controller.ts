@@ -268,10 +268,9 @@ export default class BoardsController {
 	async deleteBoard(
 		@Param() { boardId }: BaseParam,
 		@Query() { teamId }: TeamParamOptional,
-		@Query() { socketId }: BaseParamWSocket,
-		@Req() request: RequestWithUser
+		@Query() { socketId }: BaseParamWSocket
 	) {
-		const result = await this.deleteBoardApp.delete(boardId, request.user);
+		const result = await this.deleteBoardApp.delete(boardId);
 
 		if (socketId && teamId) {
 			this.socketService.sendUpdatedBoards(socketId, teamId);
