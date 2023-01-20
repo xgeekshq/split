@@ -34,16 +34,16 @@ export class SlackArchiveChannelApplication implements ArchiveChannelApplication
 	}
 
 	private async arquiveAllChannelsInMainBoard(board: BoardType): Promise<ArchiveChannelResult[]> {
-		const boards = [board, ...board.dividedBoards].filter(
-			(i) => typeof i.slackChannelId === 'string'
-		);
+		const allSlackChannelIds = [board, ...board.dividedBoards]
+			.filter((i) => typeof i.slackChannelId === 'string')
+			.map((i) => i.slackChannelId);
 
-		const promises = boards.map((i) => this.conversationsHandler.archiveChannel(i.slackChannelId));
+		const promises = allSlackChannelIds.map((i) => this.conversationsHandler.archiveChannel(i));
 
 		const results = await this.resolvePromises(promises);
 
-		return boards.map((i, idx) => ({
-			channelId: i.slackChannelId,
+		return allSlackChannelIds.map((channelId, idx) => ({
+			channelId,
 			result: results[idx]
 		}));
 	}

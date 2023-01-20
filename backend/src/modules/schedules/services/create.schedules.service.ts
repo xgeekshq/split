@@ -73,7 +73,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	}
 
 	async addCronJob(input: AddCronJobType) {
-		const { day, month, addCronJobDto, hours, minutes } = input;
+		const { day, month, addCronJobDto, hours = 10, minutes = 0 } = input;
 		const { ownerId, teamId, boardId, maxUsersPerTeam } = addCronJobDto;
 
 		const newMonth = month <= 0 ? 0 : month;
@@ -109,7 +109,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(
 				oldBoardId
 			);
-			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
+			const oldBoard = await this.getBoardService.getBoardData(oldBoardId);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
