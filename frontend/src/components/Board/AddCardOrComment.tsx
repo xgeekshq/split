@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import Button from '@/components/Primitives/Button';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
@@ -176,6 +175,7 @@ const AddCard = React.memo<AddCardProps>(
           css={{
             mx: '$20',
             display: 'flex',
+            fontWeight: '$medium',
           }}
           onClick={() => setIsOpen(true)}
         >
@@ -183,6 +183,8 @@ const AddCard = React.memo<AddCardProps>(
           Add new card
         </Button>
       );
+
+    const placeholder = cardText || '';
 
     return (
       <StyledForm
@@ -214,7 +216,7 @@ const AddCard = React.memo<AddCardProps>(
             floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
-            placeholder={!isDefaultText && cardText ? cardText : 'Write your comment here...'}
+            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
           {!isCard && (
             <Checkbox

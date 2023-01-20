@@ -185,7 +185,7 @@ const Column = React.memo<ColumMemoProps>(
           columnColor={color}
           cards={cards}
           cardText={cardText}
-          isDefaultText={isDefaultText || true}
+          isDefaultText={isDefaultText}
         />
         <DefaultCardText
           boardId={boardId}

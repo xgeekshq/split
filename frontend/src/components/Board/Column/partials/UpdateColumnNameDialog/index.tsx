@@ -17,9 +17,10 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Button';
-import { ButtonsContainer } from '@/components/Board/SplitBoard/Settings/styles';
+
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
+import { ButtonsContainer } from '@/components/Board/Settings/styles';
 
 type UpdateColumnNameProps = {
   boardId: string;
@@ -31,7 +32,7 @@ type UpdateColumnNameProps = {
   setIsOpen: (value: boolean) => void;
   children?: ReactNode;
   cardText?: string;
-  isDefaultText: boolean;
+  isDefaultText?: boolean;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });

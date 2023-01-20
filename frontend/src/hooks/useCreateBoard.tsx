@@ -236,11 +236,22 @@ const useCreateBoard = (team?: Team) => {
     }));
   };
 
+  const handleSlackToggle = () => {
+    setCreateBoardData((prev) => ({
+      ...prev,
+      board: {
+        ...prev.board,
+        slackEnable: !prev.board.slackEnable,
+      },
+    }));
+  };
+
   return {
     createBoardData,
     setCreateBoardData,
     handleAddTeam,
     handleRemoveTeam,
+    handleSlackToggle,
     canAdd,
     canReduce,
     generateSubBoard,

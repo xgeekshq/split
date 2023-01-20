@@ -15,12 +15,12 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { FormProvider, useForm } from 'react-hook-form';
 import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Button';
-import { ButtonsContainer } from '@/components/Board/SplitBoard/Settings/styles';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { SchemaDefaultCardText } from '@/schema/schemaDefaultCardText';
 import TextArea from '@/components/Primitives/TextArea';
 import Text from '@/components/Primitives/Text';
+import { ButtonsContainer } from '@/components/Board/Settings/styles';
 
 type DefaultCardTextProps = {
   boardId: string;

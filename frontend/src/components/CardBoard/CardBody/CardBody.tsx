@@ -157,6 +157,7 @@ const CardBody = React.memo<CardBodyProps>(
           mainBoardId={board._id}
           socketId={socketId}
           userId={userId}
+          isSAdmin={isSAdmin}
           mainBoardTitle={board.title}
         />
       ),

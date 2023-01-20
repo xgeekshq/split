@@ -43,9 +43,9 @@ const PopoverItemStyled = styled(PopoverItem, {
         '&>svg': { color: '$primary300' },
 
         '&:hover': {
-          backgroundColor: '$primary50',
-          '&>span': { color: '$primary800 !important' },
-          '&>svg': { color: '$primary300 !important' },
+          backgroundColor: '$primary500',
+          '& span': { color: '$white' },
+          '& svg': { color: '$white' },
         },
       },
     },

@@ -17,7 +17,7 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
   <Flex
     direction="column"
     css={{
-      minHeight: 'calc(100vh - $sizes$92)',
+      minHeight: 'calc(100vh - $sizes$92 - $sizes$81)',
       backgroundColor: '$primary800',
       padding: '$32',
       pt: '$100',
@@ -25,7 +25,6 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
       right: 0,
       top: 0,
       bottom: 0,
-      zIndex: 1,
     }}
   >
     <Icon
@@ -41,7 +40,7 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
         <UnorderedList>
           <LiWhite>The participants of the sub-teams are generated randomly.</LiWhite>
 
-          <LiWhite>The number of participants is splitted equally between all sub-teams.</LiWhite>
+          <LiWhite>The number of participants is split equally between all sub-teams.</LiWhite>
 
           <LiWhite>For each sub-team there is one responsible selected.</LiWhite>
         </UnorderedList>

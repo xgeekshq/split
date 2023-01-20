@@ -4,7 +4,7 @@ import {
   StyledDialogContainer,
   StyledDialogContent,
   StyledDialogOverlay,
-} from '@/components/Board/SplitBoard/Settings/styles';
+} from '@/components/Board/Settings/styles';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
 

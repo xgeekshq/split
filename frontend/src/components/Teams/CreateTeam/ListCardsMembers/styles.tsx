@@ -3,8 +3,6 @@ import Flex from '@/components/Primitives/Flex';
 
 const ScrollableContent = styled(Flex, {
   mt: '$24',
-  maxHeight: 'calc(100vh - 500px)',
-  overflowY: 'auto',
   pb: '$10',
 });
 

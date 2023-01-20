@@ -16,6 +16,7 @@ import {
   UNDEFINED,
 } from '@/utils/constants';
 import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/routes';
+import { getAuthError } from '@/errors/auth-messages';
 
 async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {
@@ -52,21 +53,31 @@ export default NextAuth({
           email: credentials?.email,
           password: credentials?.password,
         };
-        const data = await login(loginUser);
-        const { firstName, lastName, isSAdmin, accessToken, refreshToken, _id, email } = data || {};
-        if (!_id || !accessToken || !refreshToken) return null;
 
-        const token = {
-          firstName,
-          lastName,
-          isSAdmin,
-          accessToken,
-          refreshToken,
-          id: _id,
-          email,
-          strategy: 'local',
-        };
-        return token;
+        try {
+          const data = await login(loginUser);
+
+          const { firstName, lastName, isSAdmin, accessToken, refreshToken, _id, email } =
+            data || {};
+          if (!_id || !accessToken || !refreshToken) return null;
+
+          const token = {
+            firstName,
+            lastName,
+            isSAdmin,
+            accessToken,
+            refreshToken,
+            id: _id,
+            email,
+            strategy: 'local',
+          };
+          return token;
+        } catch (error: any) {
+          const code = error.response.status;
+          throw Error(getAuthError(code));
+        }
+
+        // getAuthError(result.status),
       },
     }),
   ],
