@@ -41,12 +41,9 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   position: 'fixed',
   top: 0,
   right: 0,
-  overflow: 'auto',
   height: '100vh',
   width: '592px',
-
   padding: 0,
-
   backgroundColor: 'white',
   zIndex: 10,
 
