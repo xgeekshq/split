@@ -12,7 +12,7 @@ const SwitchDefaultText = ({
   handleCheckedChange,
   disabled = false,
 }: SwitchDefaultTextProps) => (
-  <Flex gap={20}>
+  <Flex gap={20} css={{ opacity: disabled ? '0.5' : '1' }}>
     <Switch
       checked={isChecked}
       variant="xs"

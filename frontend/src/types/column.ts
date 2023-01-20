@@ -7,6 +7,7 @@ interface ColumnType {
   color: string;
   cards: CardType[];
   cardText?: string;
+  isDefaultText?: boolean;
 }
 
 export interface CreateColumn extends Omit<ColumnType, '_id' | 'cards'> {
@@ -29,6 +30,7 @@ export interface ColumnBoardType {
   isSubmited: boolean;
   hideCards: boolean;
   cardText?: string;
+  isDefaultText?: boolean;
 }
 
 export interface ColumnInnerList {
@@ -44,6 +46,7 @@ export interface ColumnInnerList {
   isSubmited: boolean;
   hideCards: boolean;
   cardText?: string;
+  isDefaultText?: boolean;
 }
 
 export type ColumnDragItem = {

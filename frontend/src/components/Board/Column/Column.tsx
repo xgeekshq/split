@@ -28,6 +28,7 @@ const Column = React.memo<ColumMemoProps>(
     boardId,
     title,
     color,
+    isDefaultText,
     cardText,
     socketId,
     isMainboard,
@@ -121,6 +122,8 @@ const Column = React.memo<ColumMemoProps>(
                         columnId={columnId}
                         boardId={boardId}
                         setOpenDialogName={handleDialogNameChange}
+                        isDefaultText={isDefaultText}
+                        color={color}
                       />
                     )}
                   </Flex>
@@ -144,6 +147,7 @@ const Column = React.memo<ColumMemoProps>(
                         socketId={socketId}
                         anonymous={false}
                         cardText={cardText}
+                        isDefaultText={isDefaultText ?? true}
                       />
                     </Flex>
                   )}
@@ -181,6 +185,7 @@ const Column = React.memo<ColumMemoProps>(
           columnColor={color}
           cards={cards}
           cardText={cardText}
+          isDefaultText={isDefaultText || true}
         />
         <DefaultCardText
           boardId={boardId}

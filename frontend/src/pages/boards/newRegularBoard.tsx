@@ -52,9 +52,27 @@ const defaultBoard = {
   board: {
     title: 'Default Board',
     columns: [
-      { title: 'Went well', color: '$highlight1Light', cards: [] },
-      { title: 'To improve', color: '$highlight4Light', cards: [] },
-      { title: 'Action points', color: '$highlight3Light', cards: [] },
+      {
+        title: 'Went well',
+        color: '$highlight1Light',
+        cards: [],
+        isDefaultText: true,
+        cardText: 'Write your comment...',
+      },
+      {
+        title: 'To improve',
+        color: '$highlight4Light',
+        cards: [],
+        isDefaultText: true,
+        cardText: 'Write your comment...',
+      },
+      {
+        title: 'Action points',
+        color: '$highlight3Light',
+        cards: [],
+        isDefaultText: true,
+        cardText: 'Write your comment...',
+      },
     ],
     isPublic: false,
     maxVotes: undefined,

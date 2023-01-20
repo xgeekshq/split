@@ -42,6 +42,7 @@ type AddCardProps = {
   defaultOpen?: boolean;
   isEditing?: boolean;
   anonymous: boolean;
+  isDefaultText: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -53,6 +54,7 @@ const AddCard = React.memo<AddCardProps>(
     cardId,
     cardItemId,
     cardText,
+    isDefaultText,
     cancelUpdate,
     isCard,
     commentId,
@@ -71,7 +73,7 @@ const AddCard = React.memo<AddCardProps>(
       mode: 'onSubmit',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText || '',
+        text: '',
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
@@ -212,7 +214,7 @@ const AddCard = React.memo<AddCardProps>(
             floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
-            placeholder={cardText || 'Write your comment here...'}
+            placeholder={!isDefaultText && cardText ? cardText : 'Write your comment here...'}
           />
           {!isCard && (
             <Checkbox

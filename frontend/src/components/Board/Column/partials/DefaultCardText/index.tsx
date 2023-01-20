@@ -78,6 +78,7 @@ const DefaultCardText: React.FC<DefaultCardTextProps> = ({
       cards,
       cardText: text,
       boardId,
+      isDefaultText: false,
     };
 
     mutate(column);
