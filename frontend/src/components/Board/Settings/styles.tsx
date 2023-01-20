@@ -192,7 +192,6 @@ const ButtonsContainer = styled(Flex, {
   bottom: 0,
   right: 0,
   borderTop: '1px solid $colors$primary100',
-
   '&>button': {
     margin: 0,
   },

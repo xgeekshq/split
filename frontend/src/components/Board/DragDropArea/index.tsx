@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
-
 import Flex from '@/components/Primitives/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';
