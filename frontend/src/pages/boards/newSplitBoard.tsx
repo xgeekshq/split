@@ -251,7 +251,7 @@ const NewSplitBoard: NextPage = () => {
                 <SubContainer>
                   {haveError && (
                     <AlertBox
-                      text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+                      text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
                       title="No team yet!"
                       type="error"
                       css={{

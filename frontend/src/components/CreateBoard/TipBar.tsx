@@ -40,7 +40,7 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
         <UnorderedList>
           <LiWhite>The participants of the sub-teams are generated randomly.</LiWhite>
 
-          <LiWhite>The number of participants is splitted equally between all sub-teams.</LiWhite>
+          <LiWhite>The number of participants is split equally between all sub-teams.</LiWhite>
 
           <LiWhite>For each sub-team there is one responsible selected.</LiWhite>
         </UnorderedList>
