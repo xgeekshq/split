@@ -17,10 +17,11 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Button';
-
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { ButtonsContainer } from '@/components/Board/Settings/styles';
+import Text from '@/components/Primitives/Text';
+import TextArea from '@/components/Primitives/TextArea';
 
 type UpdateColumnNameProps = {
   boardId: string;
@@ -33,11 +34,12 @@ type UpdateColumnNameProps = {
   children?: ReactNode;
   cardText?: string;
   isDefaultText?: boolean;
+  type: string;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
 
-const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
+const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   boardId,
   columnId,
   columnTitle,
@@ -48,16 +50,18 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
   setIsOpen,
   children,
   isDefaultText,
+  type,
 }) => {
   const {
     updateColumn: { mutate },
   } = useColumn();
 
-  const methods = useForm<{ title: string }>({
+  const methods = useForm<{ title: string; text: string }>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
       title: columnTitle || '',
+      text: cardText || 'Write your comment here...',
     },
     resolver: joiResolver(SchemaChangeColumnName),
   });
@@ -67,6 +71,11 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     name: 'title',
   });
 
+  const columnTextCard = useWatch({
+    control: methods.control,
+    name: 'text',
+  });
+
   // References
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -74,18 +83,18 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     setIsOpen(false);
   };
 
-  const handleConfirm = (title: string) => {
-    const column = {
+  const handleConfirm = (title: string, text: string) => {
+    const columnUpdate = {
       _id: columnId,
       title,
       color: columnColor,
       cards,
-      cardText,
+      cardText: text,
       boardId,
-      isDefaultText,
+      isDefaultText: type === 'ColumnName' ? isDefaultText : false,
     };
 
-    mutate(column);
+    mutate(columnUpdate);
 
     handleClose();
   };
@@ -95,7 +104,9 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
       {children}
       <AlertDialogContent handleClose={handleClose}>
         <DialogTitleContainer css={{ px: '$24' }} align="center" justify="between">
-          <StyledDialogTitle heading="4">Update column name</StyledDialogTitle>
+          <StyledDialogTitle heading="4">
+            {type === 'ColumnName' ? 'Update column name' : 'Activate card default text'}
+          </StyledDialogTitle>
 
           <AlertDialogCancel
             asChild
@@ -109,20 +120,39 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
           </AlertDialogCancel>
         </DialogTitleContainer>
         <FormProvider {...methods}>
-          <StyledForm onSubmit={methods.handleSubmit(({ title }) => handleConfirm(title))}>
+          <StyledForm
+            id="form_dialog"
+            onSubmit={methods.handleSubmit(({ title, text }) => {
+              handleConfirm(title, text);
+            })}
+          >
             <Flex direction="column" css={{ width: '100%' }}>
               <Separator css={{ backgroundColor: '$primary100' }} />
               <Flex direction="column" css={{ width: '100%', px: '$32', pt: '$24' }}>
-                <Input
-                  forceState
-                  id="title"
-                  maxChars="15"
-                  placeholder="Column name"
-                  state="default"
-                  type="text"
-                  showCount
-                  currentValue={columnName}
-                />
+                {type === 'ColumnName' ? (
+                  <Input
+                    forceState
+                    id="title"
+                    maxChars="15"
+                    placeholder="Column name"
+                    state="default"
+                    type="text"
+                    showCount
+                    currentValue={columnName}
+                  />
+                ) : (
+                  <>
+                    <Text size="md" color="primary400" weight="regular">
+                      This default text will be visible as placeholder when someone is creating a
+                      new card.
+                    </Text>
+                    <TextArea
+                      floatPlaceholder={false}
+                      id="text"
+                      placeholder={columnTextCard || 'Write your comment here...'}
+                    />
+                  </>
+                )}
               </Flex>
               <ButtonsContainer
                 gap={24}
@@ -146,9 +176,11 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
                 <Button
                   css={{ marginRight: '$32', padding: '$16 $24' }}
                   variant="primary"
+                  form="form_dialog"
+                  // type="submit"
                   ref={submitBtnRef}
                 >
-                  Update column name
+                  {type === 'ColumnName' ? 'Update column name' : 'Activate card default text'}
                 </Button>
               </ButtonsContainer>
             </Flex>
@@ -158,4 +190,4 @@ const UpdateColumnName: React.FC<UpdateColumnNameProps> = ({
     </AlertDialog>
   );
 };
-export default UpdateColumnName;
+export default UpdateColumnDialog;
