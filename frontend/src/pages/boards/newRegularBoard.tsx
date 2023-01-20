@@ -281,6 +281,7 @@ const NewRegularBoard: NextPage = () => {
                 <ContentContainer>
                   <SubContainer>
                     <StyledForm
+                      id="hook-form"
                       direction="column"
                       onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
                         saveBoard(text, maxVotes, slackEnable);
@@ -306,7 +307,7 @@ const NewRegularBoard: NextPage = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isBackButtonDisable}>
+                <Button type="submit" form="hook-form" disabled={isBackButtonDisable}>
                   Create board
                 </Button>
               </ButtonsContainer>
