@@ -12,8 +12,7 @@ import CardsList from './CardsList';
 import { SortMenu } from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
-import UpdateColumnName from './partials/UpdateColumnNameDialog';
-import DefaultCardText from './partials/DefaultCardText';
+import UpdateColumnDialog from './partials/UpdateColumnDialog';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -176,26 +175,17 @@ const Column = React.memo<ColumMemoProps>(
             )}
           </Droppable>
         </OuterContainer>
-        <UpdateColumnName
+        <UpdateColumnDialog
           boardId={boardId}
-          isOpen={openDialogName && dialogType === 'ColumnName'}
+          isOpen={openDialogName}
           setIsOpen={setOpenDialogName}
           columnId={columnId}
           columnTitle={title}
           columnColor={color}
           cards={cards}
           cardText={cardText}
-          isDefaultText={isDefaultText || true}
-        />
-        <DefaultCardText
-          boardId={boardId}
-          isOpen={openDialogName && dialogType === 'CardText'}
-          setIsOpen={setOpenDialogName}
-          columnId={columnId}
-          columnTitle={title}
-          columnColor={color}
-          cards={cards}
-          cardText={cardText}
+          isDefaultText={isDefaultText}
+          type={dialogType}
         />
       </>
     );

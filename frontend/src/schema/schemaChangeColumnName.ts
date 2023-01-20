@@ -6,6 +6,10 @@ const SchemaChangeColumnName = Joi.object({
     'string.empty': 'Please write a name',
     'string.max': 'Maximum of 15 characters',
   }),
+  text: Joi.string().required().trim().messages({
+    'any.required': 'Please write a text',
+    'string.empty': 'Please write a text',
+  }),
 });
 
 export { SchemaChangeColumnName };
