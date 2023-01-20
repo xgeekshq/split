@@ -1,8 +1,9 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
 
+import { useFormContext } from 'react-hook-form';
 import Flex from './Flex';
 import Text from './Text';
 import Icon from '../icons/Icon';
@@ -92,15 +93,26 @@ const Checkbox: React.FC<{
     handleSelectAll: undefined,
     hasSelectAll: false,
   };
+  const formContext = useFormContext();
 
   const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | 'indeterminate'>(
     checked,
   );
+
+  useEffect(() => {
+    if (formContext) {
+      setCurrentCheckValue(formContext.getValues(id));
+    }
+  }, [formContext, id]);
+
   const handleCheckedChange = (isChecked: boolean | 'indeterminate') => {
     if (handleChange) handleChange(id);
     if (handleSelectAll) handleSelectAll();
     setCurrentCheckValue(isChecked);
     if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
+    if (formContext) {
+      formContext.setValue(id, !!isChecked);
+    }
   };
   const checkValue = hasSelectAll ? checked : currentCheckValue;
 
