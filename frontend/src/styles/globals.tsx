@@ -3,11 +3,16 @@ import { globalCss } from './stitches/stitches.config';
 const globalStyles = globalCss({
   '@import': [
     'url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap")',
+    'url("/fonts/digital-7-mono-italic.woff")',
   ],
   '@font-face': [
     {
       fontFamily: '"DM Sans", sans-serif',
       src: 'url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap")',
+    },
+    {
+      fontFamily: 'Digital-7 Mono',
+      src: 'url("/fonts/digital-7-mono-italic.woff")',
     },
   ],
   '*': {
