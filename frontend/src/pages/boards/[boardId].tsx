@@ -1,31 +1,32 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import { getBoardRequest } from '@/api/boardService';
-import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import DragDropArea from '@/components/Board/DragDropArea';
+import RegularBoard from '@/components/Board/RegularBoard';
+import { BoardSettings } from '@/components/Board/Settings';
+import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
+import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
+import Timer from '@/components/Board/SplitBoard/Timer';
+import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import AlertBox from '@/components/Primitives/AlertBox';
+import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
 import { boardInfoState, newBoardState } from '@/store/board/atoms/board.atom';
+import { GetBoardResponse } from '@/types/board/board';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/icons/Icon';
-import { GetBoardResponse } from '@/types/board/board';
-import { BoardSettings } from '@/components/Board/Settings';
-import BoardHeader from '@/components/Board/SplitBoard/Header';
-import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
-import RegularBoard from '@/components/Board/RegularBoard';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -213,6 +214,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               )}
             </Flex>
           )}
+
+          <Flex css={{ flex: 1 }}>
+            <Timer />
+          </Flex>
 
           {hasAdminRole && !board?.submitedAt && (
             <>
