@@ -81,6 +81,33 @@ const Button = styled('button', {
           opacity: 0.8,
         },
       },
+      transparent: {
+        py: '$12',
+        gap: '0',
+        backgroundColor: '$tansparent',
+        '&:disabled': {
+          backgroundColor: '$primary50',
+          opacity: 0.8,
+        },
+      },
+      transparentHover: {
+        py: '$2',
+        gap: '0',
+        backgroundColor: '$tansparent',
+        '@hover': {
+          '&:hover': {
+            backgroundColor: '$highlight2Base',
+          },
+        },
+        '&:active': {
+          backgroundColor: '$highlight2Base',
+          boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
+        },
+
+        '&:disabled': {
+          opacity: 0,
+        },
+      },
       lightOutline: {
         backgroundColor: 'transparent',
         color: '$primary300',
@@ -223,6 +250,18 @@ const Button = styled('button', {
         '& span': {
           height: '$16 !important',
           width: '$16 !important',
+        },
+      },
+      xs: {
+        height: '$8',
+        fontWeight: '$bold',
+        fontSize: '$12',
+        lineHeight: '$1',
+        px: '$1',
+        py: '$1',
+        '& span': {
+          height: '$10 !important',
+          width: '$10 !important',
         },
       },
     },
