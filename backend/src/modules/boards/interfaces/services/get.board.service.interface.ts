@@ -23,6 +23,8 @@ export interface GetBoardServiceInterface {
 
 	getBoardFromRepo(boardId: string): Promise<LeanDocument<BoardDocument> | null>;
 
+	getBoardData(boardId: string): Promise<Board>;
+
 	getBoard(
 		boardId: string,
 		userId: string
