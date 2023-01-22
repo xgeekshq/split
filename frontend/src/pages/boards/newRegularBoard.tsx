@@ -42,6 +42,7 @@ import useBoard from '@/hooks/useBoard';
 import isEmpty from '@/utils/isEmpty';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
+import { defaultColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -52,11 +53,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Default Board',
-    columns: [
-      { title: 'Went well', color: '$highlight1Light', cards: [] },
-      { title: 'To improve', color: '$highlight4Light', cards: [] },
-      { title: 'Action points', color: '$highlight3Light', cards: [] },
-    ],
+    columns: defaultColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],
@@ -281,6 +278,7 @@ const NewRegularBoard: NextPage = () => {
                 <ContentContainer>
                   <SubContainer>
                     <StyledForm
+                      id="hook-form"
                       direction="column"
                       onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
                         saveBoard(text, maxVotes, slackEnable);
@@ -306,7 +304,7 @@ const NewRegularBoard: NextPage = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isBackButtonDisable}>
+                <Button type="submit" form="hook-form" disabled={isBackButtonDisable}>
                   Create board
                 </Button>
               </ButtonsContainer>

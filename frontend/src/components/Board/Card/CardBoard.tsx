@@ -38,6 +38,8 @@ interface CardBoardProps {
   maxVotes?: number;
   isSubmited: boolean;
   hideCards: boolean;
+  isDefaultText: boolean;
+  cardText?: string;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -54,6 +56,7 @@ const CardBoard = React.memo<CardBoardProps>(
     maxVotes,
     isSubmited,
     hideCards,
+    isDefaultText,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -133,6 +136,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   colId={colId}
                   socketId={socketId}
                   anonymous={card.anonymous}
+                  isDefaultText={isDefaultText}
                 />
               )}
               {!editing && (
@@ -195,6 +199,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       items={card.items}
                       socketId={socketId}
                       userId={userId}
+                      isDefaultText={isDefaultText}
                     />
                   )}
                   <CardFooter
@@ -237,6 +242,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 socketId={socketId}
                 userId={userId}
                 columnId={colId}
+                isDefaultText={isDefaultText}
               />
             )}
           </Flex>

@@ -42,6 +42,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import { defaultColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -52,11 +53,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Main Board -',
-    columns: [
-      { title: 'Went well', color: '$highlight1Light', cards: [] },
-      { title: 'To improve', color: '$highlight4Light', cards: [] },
-      { title: 'Action points', color: '$highlight3Light', cards: [] },
-    ],
+    columns: defaultColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],

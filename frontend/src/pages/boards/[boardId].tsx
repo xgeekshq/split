@@ -116,7 +116,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const isRegularOrPersonalBoard =
     (!data?.board.isSubBoard && !!data?.board.team && !data?.board.dividedBoards.length) ||
     !data?.board.team;
-  // console.log('isRegularBoard', isRegularBoard);
 
   // Socket IO Hook
   const socketId = useSocketIO(boardId);
@@ -193,7 +192,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   if (!recoilBoard) return <LoadingPage />;
 
-  if (isRegularOrPersonalBoard) return <RegularBoard />;
+  if (isRegularOrPersonalBoard) return <RegularBoard socketId={socketId} />;
 
   return board && userId && socketId ? (
     <>
