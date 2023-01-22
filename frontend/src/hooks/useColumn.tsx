@@ -42,12 +42,7 @@ const useColumn = () => {
         const columnsWithUpdate = prevBoard.columns.map((column) =>
           column._id === data._id
             ? {
-                _id: data._id,
-                color: data.color,
-                title: data.title,
-                cards: data.cards,
-                cardText: data.cardText,
-                isDefaultText: data.isDefaultText,
+                ...data,
               }
             : column,
         );

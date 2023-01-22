@@ -177,7 +177,6 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
                   css={{ marginRight: '$32', padding: '$16 $24' }}
                   variant="primary"
                   form="form_dialog"
-                  // type="submit"
                   ref={submitBtnRef}
                 >
                   {type === 'ColumnName' ? 'Update column name' : 'Activate card default text'}
