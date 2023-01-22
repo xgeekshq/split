@@ -6,7 +6,6 @@ import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import { useSocketIO } from '@/hooks/useSocketIO';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Button from '@/components/Primitives/Button';
@@ -15,7 +14,11 @@ import { BoardSettings } from '@/components/Board/Settings';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
-const RegularBoard = () => {
+type RegularBoardProps = {
+  socketId?: string;
+};
+
+const RegularBoard = ({ socketId }: RegularBoardProps) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
@@ -27,9 +30,6 @@ const RegularBoard = () => {
   const { data: session } = useSession({ required: true });
 
   const userId = session?.user.id;
-
-  // Socket IO Hook
-  const socketId = useSocketIO(board?._id);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(

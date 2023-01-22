@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import Button from '@/components/Primitives/Button';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
@@ -42,6 +41,7 @@ type AddCardProps = {
   defaultOpen?: boolean;
   isEditing?: boolean;
   anonymous: boolean;
+  isDefaultText: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -53,6 +53,7 @@ const AddCard = React.memo<AddCardProps>(
     cardId,
     cardItemId,
     cardText,
+    isDefaultText,
     cancelUpdate,
     isCard,
     commentId,
@@ -71,7 +72,7 @@ const AddCard = React.memo<AddCardProps>(
       mode: 'onSubmit',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText || '',
+        text: '',
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
@@ -183,6 +184,8 @@ const AddCard = React.memo<AddCardProps>(
         </Button>
       );
 
+    const placeholder = cardText || '';
+
     return (
       <StyledForm
         {...props}
@@ -213,7 +216,7 @@ const AddCard = React.memo<AddCardProps>(
             floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
-            placeholder="Write your comment here..."
+            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
           {!isCard && (
             <Checkbox

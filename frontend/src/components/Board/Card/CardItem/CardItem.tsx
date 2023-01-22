@@ -27,6 +27,7 @@ interface CardItemProps {
   isMainboard: boolean;
   isSubmited: boolean;
   hideCards: boolean;
+  isDefaultText: boolean;
 }
 
 const Container = styled(Flex, {
@@ -51,6 +52,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     isMainboard,
     isSubmited,
     hideCards,
+    isDefaultText,
   }) => {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -140,6 +142,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             colId={columnId}
             socketId={socketId}
             anonymous={item.anonymous}
+            isDefaultText={isDefaultText}
           />
         )}
         {deleting && (

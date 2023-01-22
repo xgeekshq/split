@@ -186,13 +186,12 @@ const StyledAccordionItem = styled(AccordionPrimitive.Item, {
  * Custom styles
  */
 const ButtonsContainer = styled(Flex, {
-  borderTop: '1px solid $colors$primary100',
   py: '$24',
   px: '$32',
   width: '100%',
   bottom: 0,
   right: 0,
-
+  borderTop: '1px solid $colors$primary100',
   '&>button': {
     margin: 0,
   },

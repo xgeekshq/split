@@ -14,20 +14,16 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Dialog = (props: Props) => {
-  const { isOpen, setIsOpen, children } = props;
-
-  return (
-    <StyledDialogContainer>
-      <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
-        <Portal>
-          <StyledDialogOverlay />
-          <StyledDialogContent>{children}</StyledDialogContent>
-        </Portal>
-      </RadixDialog>
-    </StyledDialogContainer>
-  );
-};
+const Dialog = ({ isOpen, setIsOpen, children }: Props) => (
+  <StyledDialogContainer>
+    <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
+      <Portal>
+        <StyledDialogOverlay />
+        <StyledDialogContent>{children}</StyledDialogContent>
+      </Portal>
+    </RadixDialog>
+  </StyledDialogContainer>
+);
 
 Dialog.Footer = DialogFooter;
 Dialog.Header = DialogHeader;

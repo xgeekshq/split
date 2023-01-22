@@ -19,6 +19,7 @@ interface CommentsListProps {
   hideCards: boolean;
   userId: string;
   columnId: string;
+  isDefaultText: boolean;
 }
 
 const Comments = React.memo(
@@ -32,6 +33,7 @@ const Comments = React.memo(
     hideCards,
     userId,
     columnId,
+    isDefaultText,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -64,6 +66,7 @@ const Comments = React.memo(
               socketId={socketId}
               userId={userId}
               columnId={columnId}
+              isDefaultText={isDefaultText}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -87,6 +90,7 @@ const Comments = React.memo(
               isUpdate={false}
               socketId={socketId}
               anonymous={false}
+              isDefaultText={isDefaultText}
             />
           </Flex>
         )}

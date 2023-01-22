@@ -17,6 +17,7 @@ const CardsList = React.memo<ColumnInnerList>(
     maxVotes,
     isSubmited,
     hideCards,
+    isDefaultText,
   }) => (
     <>
       {cards.map((card: CardType, idx) => (
@@ -34,6 +35,7 @@ const CardsList = React.memo<ColumnInnerList>(
           maxVotes={maxVotes}
           socketId={socketId}
           userId={userId}
+          isDefaultText={isDefaultText || true}
         />
       ))}
     </>
