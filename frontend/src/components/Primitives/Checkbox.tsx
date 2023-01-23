@@ -110,7 +110,7 @@ const Checkbox: React.FC<{
     if (handleSelectAll) handleSelectAll();
     setCurrentCheckValue(isChecked);
     if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
-    if (formContext) {
+    if (id === 'slackEnable' && formContext) {
       formContext.setValue(id, !!isChecked);
     }
   };
