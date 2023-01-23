@@ -3,6 +3,7 @@ import { useRecoilState, useResetRecoilState } from 'recoil';
 
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
+import { defaultColumns } from '@/helper/board/defaultColumns';
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
@@ -26,11 +27,7 @@ const useCreateBoard = (team?: Team) => {
   const generateSubBoard = useCallback(
     (index: number, users: BoardUserToAdd[] = []): BoardToAdd => ({
       title: `Sub-team board ${index}`,
-      columns: [
-        { title: 'Went well', color: '$highlight1Light', cards: [] },
-        { title: 'To improve', color: '$highlight4Light', cards: [] },
-        { title: 'Action points', color: '$highlight3Light', cards: [] },
-      ],
+      columns: defaultColumns,
       isPublic: false,
       dividedBoards: [],
       recurrent: false,
@@ -184,7 +181,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleAddTeam = () => {
     if (!canAdd) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,
@@ -202,7 +199,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleRemoveTeam = () => {
     if (!canReduce) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,

@@ -2,6 +2,7 @@ import { BadRequestException, Inject, Injectable, Logger, NotFoundException } fr
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateResult } from 'mongodb';
 import { ClientSession, Model } from 'mongoose';
+import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
@@ -97,6 +98,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		cardItemId: string,
 		count: number
 	) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
@@ -139,6 +141,15 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			this.logger.error(e);
 			await userSession.abortTransaction();
 			await session.abortTransaction();
+
+			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
+				retryCount++;
+				await userSession.endSession();
+				await session.endSession();
+				await this.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
+			} else {
+				throw new BadRequestException(DELETE_VOTE_FAILED);
+			}
 		} finally {
 			await session.endSession();
 			await userSession.endSession();
@@ -146,6 +157,7 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		let retryCount = 0;
 		const userSession = await this.boardUserModel.db.startSession();
 		userSession.startTransaction();
 		const session = await this.boardModel.db.startSession();
@@ -189,6 +201,15 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 				this.logger.error(e);
 				await userSession.abortTransaction();
 				await session.abortTransaction();
+
+				if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
+					retryCount++;
+					await userSession.endSession();
+					await session.endSession();
+					await this.deleteVoteFromCardGroup(boardId, cardId, userId, count);
+				} else {
+					throw new BadRequestException(DELETE_VOTE_FAILED);
+				}
 			} finally {
 				await session.endSession();
 				await userSession.endSession();

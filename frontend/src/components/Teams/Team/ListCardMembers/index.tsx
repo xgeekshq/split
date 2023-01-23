@@ -66,7 +66,12 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           </ButtonAddMember>
         )}
       </Flex>
-      <ScrollableContent direction="column" justify="start">
+      <ScrollableContent
+        direction="column"
+        justify="start"
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+        gap="8"
+      >
         {membersList?.map((member) => (
           <CardMember
             key={member.user._id}

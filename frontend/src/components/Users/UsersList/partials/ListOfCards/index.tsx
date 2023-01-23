@@ -88,7 +88,7 @@ const ListOfCards = React.memo(() => {
         <Text css={{ fontWeight: '$bold', flex: 1, mt: '$36' }}>
           {users.amount} registered users
         </Text>
-        <Flex css={{ width: '460px' }} direction="column" gap={16}>
+        <Flex css={{ width: '460px' }}>
           <SearchInput
             icon="search"
             iconPosition="both"
@@ -104,11 +104,11 @@ const ListOfCards = React.memo(() => {
         direction="column"
         gap="24"
         justify="start"
-        css={{ mt: '$24', overflow: 'scroll', pr: '$10' }}
+        css={{ height: 'calc(100vh - 250px)', paddingBottom: '$8' }}
         ref={scrollRef}
         onScroll={onScroll}
       >
-        <Flex direction="column">
+        <Flex direction="column" css={{ gap: '$8' }}>
           {users.data.map((user: UserWithTeams) => (
             <CardBody key={user.user._id} userWithTeams={user} />
           ))}

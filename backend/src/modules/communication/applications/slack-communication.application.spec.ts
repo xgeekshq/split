@@ -40,7 +40,7 @@ jest.mock('@slack/web-api', () => ({
 	WebClient: function WebClient() {
 		return {
 			conversations: {
-				create(options?: ConversationsCreateArguments | undefined) {
+				create(options?: ConversationsCreateArguments) {
 					return Promise.resolve({
 						ok: true,
 						channel: {
@@ -49,7 +49,7 @@ jest.mock('@slack/web-api', () => ({
 						}
 					});
 				},
-				invite(options?: ConversationsInviteArguments | undefined) {
+				invite(options?: ConversationsInviteArguments) {
 					return new Promise((resolve, reject) => {
 						if (options?.users?.split(',').every((i) => slackUsersIds.includes(i))) {
 							resolve({
@@ -79,7 +79,7 @@ jest.mock('@slack/web-api', () => ({
 					});
 				},
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				members(options?: ConversationsMembersArguments | undefined) {
+				members(options?: ConversationsMembersArguments) {
 					if (options?.cursor === 'next_cursor') {
 						return Promise.resolve({
 							ok: true,
@@ -102,7 +102,7 @@ jest.mock('@slack/web-api', () => ({
 			users: {
 				profile: {
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-					get(options?: UsersProfileGetArguments | undefined) {
+					get(options?: UsersProfileGetArguments) {
 						if (options?.user === 'user_exists_without_email') {
 							return Promise.resolve({
 								ok: true,
@@ -129,7 +129,7 @@ jest.mock('@slack/web-api', () => ({
 			},
 			chat: {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				postMessage(options?: ChatMeMessageArguments | undefined) {
+				postMessage(options?: ChatMeMessageArguments) {
 					return Promise.resolve({
 						ok: true,
 						channel: options?.channel

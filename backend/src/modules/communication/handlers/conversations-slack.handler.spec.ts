@@ -6,6 +6,9 @@ import { CommunicationGateAdapterInterface } from 'src/modules/communication/int
 
 const MakeSlackCommunicationGateAdapterStub = () => {
 	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
+		archive(channelId: string): Promise<{ ok: boolean; error?: string }> {
+			return Promise.resolve({ ok: true });
+		}
 		getEmailByPlatformUserId(email: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}
@@ -42,6 +45,18 @@ describe('ConversationsSlackHandler', () => {
 
 	it('should be defined', () => {
 		expect(handler).toBeDefined();
+	});
+
+	it('should archive a channel', async () => {
+		const channelName = 'any_channel_name';
+
+		const spy = jest.spyOn(slackCommunicationGateAdapterStub, 'archive');
+
+		const result = await handler.archiveChannel(channelName);
+
+		expect(result).toBe(true);
+		expect(spy).toHaveBeenCalledTimes(1);
+		spy.mockRestore();
 	});
 
 	it('should create a channel', async () => {
@@ -88,6 +103,18 @@ describe('ConversationsSlackHandler', () => {
 		const result = await handler.getUsersFromChannelSlowly(channelId);
 
 		expect(result).toBeInstanceOf(Array);
+		expect(spy).toHaveBeenCalledTimes(1);
+		spy.mockRestore();
+	});
+
+	it('should throw error when adapter throws calling "archive"', async () => {
+		const channelName = 'any_channel_name';
+
+		const spy = jest
+			.spyOn(slackCommunicationGateAdapterStub, 'archive')
+			.mockImplementation(() => Promise.reject(new Error('some error')));
+
+		await expect(handler.archiveChannel(channelName)).rejects.toThrowError();
 		expect(spy).toHaveBeenCalledTimes(1);
 		spy.mockRestore();
 	});

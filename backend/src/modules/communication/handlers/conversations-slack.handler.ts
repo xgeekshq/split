@@ -5,6 +5,12 @@ import { ConversationsHandlerInterface } from 'src/modules/communication/interfa
 export class ConversationsSlackHandler implements ConversationsHandlerInterface {
 	constructor(private readonly communicationGateAdapter: CommunicationGateAdapterInterface) {}
 
+	async archiveChannel(channelId: string): Promise<boolean> {
+		const { ok } = await this.communicationGateAdapter.archive(channelId);
+
+		return ok;
+	}
+
 	async createChannel(name: string): Promise<{ name: string; id: string }> {
 		return this.communicationGateAdapter.addChannel(name);
 	}

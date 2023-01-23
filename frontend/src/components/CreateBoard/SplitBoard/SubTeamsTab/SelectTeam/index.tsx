@@ -14,6 +14,7 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
 import SelectComponent from '@/components/CreateBoard/Select';
+import { Team } from '@/types/team/team';
 import { HelperTextWrapper } from './styles';
 
 type SelectTeamProps = {
@@ -45,8 +46,15 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const teamValueOnForm = getValues().team;
   const isValueEmpty = isEmpty(teamValueOnForm);
 
+  const isAdminOrStakeholder = (team: Team) =>
+    !!team.users?.find(
+      (teamUser) =>
+        teamUser.user._id === session?.user.id &&
+        [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+    ) || session?.user.isSAdmin;
+
   const teamMembersCount = teamMembers?.length ?? 0;
-  const numberOfTeams = teams?.length ?? 0;
+  const numberOfTeams = teams?.filter((team) => isAdminOrStakeholder(team)).length ?? 0;
 
   const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';
@@ -68,10 +76,12 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
   const teamsNames = useMemo(
     () =>
-      teams.map((team) => ({
-        label: `${team.name} (${team.users.length} members)`,
-        value: team._id,
-      })),
+      teams
+        .filter((team) => isAdminOrStakeholder(team))
+        .map((team) => ({
+          label: `${team.name} (${team.users.length} members)`,
+          value: team._id,
+        })),
     [teams],
   );
 
@@ -85,14 +95,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       MIN_MEMBERS
     );
 
-    const isAdminOrStakeholder =
-      !!selectedTeam.users?.find(
-        (teamUser) =>
-          teamUser.user._id === session?.user.id &&
-          [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-      ) || session?.user.isSAdmin;
-
-    return !haveMinMembers || !isAdminOrStakeholder;
+    return !haveMinMembers || !isAdminOrStakeholder(selectedTeam);
   }, [selectedTeam, session?.user.id, session?.user.isSAdmin]);
 
   const createBoard = useCallback(() => {
@@ -131,8 +134,10 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     if (routerTeam) {
       setValue('team', routerTeam);
     }
+
+    setHaveError(numberOfTeams <= 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [numberOfTeams]);
 
   useEffect(() => {
     if (selectedTeam) {
@@ -160,12 +165,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
             <Icon css={{ width: '$24', height: '$24' }} name="info" />
 
-            <Text
-              hint
-              css={{
-                color: '$dangerBase',
-              }}
-            >
+            <Text hint css={{ color: '$dangerBase' }}>
               In order to create a team board, you must be team-admin or stakeholder of at least one
               team.
             </Text>
@@ -182,9 +182,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
             {!isHelperEmpty && (
               <Text
                 hint
-                css={{
-                  color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300',
-                }}
+                css={{ color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300' }}
               >
                 {message}
               </Text>

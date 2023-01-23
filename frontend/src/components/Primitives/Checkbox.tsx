@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@stitches/react';
@@ -69,8 +69,7 @@ const Checkbox: React.FC<{
   disabled?: boolean;
   size: '12' | '16';
   setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
-  handleChange?: (value: string) => void;
-  shouldUseForm?: boolean;
+  handleChange?: ((value: string) => void) | (() => void);
   handleSelectAll?: () => void;
   hasSelectAll?: boolean;
 }> = ({
@@ -81,7 +80,6 @@ const Checkbox: React.FC<{
   checked,
   disabled,
   handleChange,
-  shouldUseForm,
   setCheckedTerms,
   handleSelectAll,
   hasSelectAll,
@@ -92,24 +90,28 @@ const Checkbox: React.FC<{
     disabled: false,
     handleChange: undefined,
     setCheckedTerms: null,
-    shouldUseForm: false,
     handleSelectAll: undefined,
     hasSelectAll: false,
   };
-
   const formContext = useFormContext();
 
   const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | 'indeterminate'>(
     checked,
   );
+
+  useEffect(() => {
+    if (formContext) {
+      setCurrentCheckValue(formContext.getValues(id));
+    }
+  }, [formContext, id]);
+
   const handleCheckedChange = (isChecked: boolean | 'indeterminate') => {
     if (handleChange) handleChange(id);
     if (handleSelectAll) handleSelectAll();
     setCurrentCheckValue(isChecked);
     if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
-
-    if (shouldUseForm) {
-      formContext.setValue('slackEnable', !!isChecked);
+    if (id === 'slackEnable' && formContext) {
+      formContext.setValue(id, !!isChecked);
     }
   };
   const checkValue = hasSelectAll ? checked : currentCheckValue;

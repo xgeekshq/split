@@ -44,13 +44,19 @@ const ListBoards = React.memo<ListBoardsProps>(
     };
 
     return (
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
+      <ScrollableContent
+        direction="column"
+        justify="start"
+        ref={scrollRef}
+        onScroll={onScroll}
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+      >
+        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
           const teamFound = allTeamsList.find((team) => team._id === teamId);
           if (filter !== 'all' && teamId !== filter) return null;
           return (
-            <Flex key={teamId} css={{ mb: '$24' }} direction="column">
+            <Flex key={teamId} css={{ mt: index !== 0 ? '$32' : '' }} direction="column">
               <Flex
                 direction="column"
                 css={{
@@ -58,11 +64,12 @@ const ListBoards = React.memo<ListBoardsProps>(
                   zIndex: '5',
                   top: '-0.4px',
                   backgroundColor: '$background',
+                  marginBottom: '-5px',
                 }}
               >
                 <TeamHeader team={teamFound} userId={userId} users={users} />
               </Flex>
-              <Flex justify="end" css={{ width: '100%', marginBottom: '-5px' }}>
+              <Flex justify="end" css={{ width: '100%', minHeight: '15px' }}>
                 {(isSuperAdmin ||
                   isTeamAdmin(boardsOfTeam) ||
                   !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
@@ -78,7 +85,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                         zIndex: '9',
                         '& svg': { size: '$16' },
                         right: 0,
-                        top: '$-22',
+                        top: '-$12',
                       }}
                       gap="8"
                     >
@@ -111,7 +118,7 @@ const ListBoards = React.memo<ListBoardsProps>(
                   </Link>
                 )}
               </Flex>
-              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="24">
+              <Flex css={{ zIndex: '1', marginTop: '-10px' }} direction="column" gap="32">
                 {Array.from(boardsOfTeam).map(([date, boardsOfDay]) => {
                   const formatedDate = new Date(date).toLocaleDateString('en-US', {
                     weekday: 'long',

@@ -338,3 +338,17 @@ export const handleDeleteComments = (board: BoardType, changes: DeleteCommentDto
 
   return boardData;
 };
+
+export const handleUpdateCardItemIdOfUnmergedCard = (
+  board: BoardType,
+  variables: RemoveFromCardGroupDto,
+): BoardType => {
+  const mappedBoard = removeReadOnly(board);
+  const column = mappedBoard.columns.find((col) => col._id === variables.columnId);
+  const card = column?.cards.find((cardFound) => cardFound._id === variables.cardId);
+  if (card && variables.newCardItemId) {
+    card.items[0]._id = variables.newCardItemId;
+  }
+
+  return mappedBoard;
+};

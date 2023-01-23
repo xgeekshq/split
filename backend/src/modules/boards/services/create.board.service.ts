@@ -154,7 +154,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			newUsers = [...users];
 		}
 
-		this.saveBoardUsers(newUsers, newBoard._id);
+		await this.saveBoardUsers(newUsers, newBoard._id);
 
 		if (newBoard && recurrent && team && maxUsers) {
 			const addCronJobDto: AddCronJobDto = {
@@ -172,11 +172,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable) {
-			const result = await this.getBoardService.getBoard(newBoard._id, userId);
+			const populatedBoard = await this.getBoardService.getBoardData(newBoard._id);
 
-			if (result?.board) {
+			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
-				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(result.board));
+				const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(populatedBoard));
 				this.slackCommunicationService.execute(board);
 			} else {
 				this.logger.error(
