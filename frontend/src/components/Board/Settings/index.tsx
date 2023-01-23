@@ -75,8 +75,6 @@ const BoardSettings = ({
   } = useRecoilValue(boardInfoState);
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
 
-  // const { editColumns, setEditColumns } = useRecoilState(editColumnsState);
-
   // State used to change values
   const initialData: UpdateBoardType = {
     _id,
