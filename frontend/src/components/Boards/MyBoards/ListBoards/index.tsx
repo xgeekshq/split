@@ -44,13 +44,19 @@ const ListBoards = React.memo<ListBoardsProps>(
     };
 
     return (
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
+      <ScrollableContent
+        direction="column"
+        justify="start"
+        ref={scrollRef}
+        onScroll={onScroll}
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+      >
+        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
           const teamFound = allTeamsList.find((team) => team._id === teamId);
           if (filter !== 'all' && teamId !== filter) return null;
           return (
-            <Flex key={teamId} css={{ mb: '$32' }} direction="column">
+            <Flex key={teamId} css={{ mt: index !== 0 ? '$32' : '' }} direction="column">
               <Flex
                 direction="column"
                 css={{
