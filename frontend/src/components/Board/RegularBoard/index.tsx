@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
@@ -7,7 +7,7 @@ import DragDropArea from '@/components/Board/DragDropArea';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import { useSocketIO } from '@/hooks/useSocketIO';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
@@ -22,6 +22,14 @@ const RegularBoard = () => {
 
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
+
+  const setEditColumns = useSetRecoilState(editColumnsState);
+
+  useEffect(() => {
+    const columnTitles = board.columns.map((column) => column.title);
+    setEditColumns(columnTitles);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [board.columns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });

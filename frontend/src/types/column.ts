@@ -8,7 +8,7 @@ interface ColumnType {
   cards: CardType[];
 }
 
-export interface CreateColumn extends Omit<ColumnType, '_id' | 'cards'> {
+export interface CreateColumn extends Omit<ColumnType, '_id' | 'cards' | 'color'> {
   cards: never[];
 }
 

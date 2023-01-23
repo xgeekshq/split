@@ -21,3 +21,8 @@ export const filterTeamBoardsState = atom<string>({
   key: 'filterTeamBoards',
   default: 'all',
 });
+
+export const editColumnsState = atom<string[]>({
+  key: 'editColumns',
+  default: [],
+});
