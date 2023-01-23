@@ -52,7 +52,7 @@ const CardBody = React.memo<CardBodyProps>(({ userWithTeams }) => {
   const teamsSeparatedByComma = teamsNames?.join(', ') || '';
 
   return (
-    <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
+    <Flex css={{ flex: '1 1 1' }} direction="column">
       <InnerContainer align="center" elevation="1" justify="between">
         <Flex align="center" css={{ width: '25%' }} gap="8">
           <Icon
