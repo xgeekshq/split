@@ -156,7 +156,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		await this.saveBoardUsers(newUsers, newBoard._id);
 
-		if (newBoard && recurrent && team && maxUsers) {
+		const teamData = await this.getTeamService.getTeam(team);
+
+		if (newBoard && recurrent && team && maxUsers && teamData.name === 'xgeeks') {
 			const addCronJobDto: AddCronJobDto = {
 				boardId: newBoard._id.toString(),
 				ownerId: userId,
@@ -171,7 +173,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-		if (slackEnable) {
+		if (slackEnable && team && teamData.name === 'xgeeks') {
 			const populatedBoard = await this.getBoardService.getBoardData(newBoard._id);
 
 			if (populatedBoard) {
