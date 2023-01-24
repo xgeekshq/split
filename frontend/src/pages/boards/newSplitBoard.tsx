@@ -43,6 +43,7 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { defaultColumns } from '@/helper/board/defaultColumns';
+import Link from 'next/link';
 
 const defaultBoard = {
   users: [],
@@ -262,10 +263,14 @@ const NewSplitBoard: NextPage = () => {
                       text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
                       title="No team yet!"
                       type="error"
-                      css={{
-                        marginTop: '$20',
-                      }}
-                    />
+                      css={{ flexWrap: 'wrap', gap: '$16' }}
+                    >
+                      <Link href="/teams/new">
+                        <Button size="sm" css={{ px: '$40' }}>
+                          Create team
+                        </Button>
+                      </Link>
+                    </AlertBox>
                   )}
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
