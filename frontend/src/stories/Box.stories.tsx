@@ -4,9 +4,10 @@ import { ComponentStory } from '@storybook/react';
 import Box from '@/components/Primitives/Box';
 
 type ElevationType = 0 | 1 | 2 | 3 | 4;
+type VariantType = 'bordered' | 'dropdown';
 
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
-const VARIANT_OPTIONS = ['bordered', 'dropdown'];
+const VARIANT_OPTIONS: VariantType[] = ['bordered', 'dropdown'];
 
 export default {
   title: 'Primitives/Box',
@@ -68,4 +69,15 @@ export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) =>
   </>
 );
 
-// Template.bind({})
+export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
+  <>
+    {VARIANT_OPTIONS.map((variant) => (
+      <div style={{ marginBottom: '2rem' }} key={variant}>
+        <h4>{variant.charAt(0).toUpperCase() + variant.slice(1)} variant</h4>
+        <Box variant={variant} {...args}>
+          {children}
+        </Box>
+      </div>
+    ))}
+  </>
+);
