@@ -47,12 +47,12 @@ const NewBoard: NextPage = () => {
           What kind of retro do you want to create?
         </Text>
         <Flex gap={40}>
-          <BoxColumnContainer
+          {/* <BoxColumnContainer
             iconName="blob-team-retro"
             title="Regular retro"
             description="Make a retro with one team and the usual setup as you are used to it."
             route="/boards/newRegularBoard"
-          />
+          /> */}
 
           <BoxColumnContainer
             iconName="blob-split-retro"
