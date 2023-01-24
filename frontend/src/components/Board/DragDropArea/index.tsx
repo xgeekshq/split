@@ -139,6 +139,7 @@ const DragDropArea: React.FC<Props> = ({
             boardUser={board.users.find((boardUser) => boardUser.user._id === userId)}
             isRegularBoard={isRegularBoard}
             hasAdminRole={hasAdminRole}
+            addCards={board.addCards}
           />
         ))}
       </DragDropContext>

@@ -17,6 +17,7 @@ import UpdateColumnDialog from './partials/UpdateColumnDialog';
 type ColumMemoProps = {
   isRegularBoard?: boolean;
   hasAdminRole: boolean;
+  addCards: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -38,6 +39,7 @@ const Column = React.memo<ColumMemoProps>(
     hideCards,
     isRegularBoard,
     hasAdminRole,
+    addCards,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -137,17 +139,19 @@ const Column = React.memo<ColumMemoProps>(
                         '&>form': { px: '$20' },
                       }}
                     >
-                      <AddCardOrComment
-                        isCard
-                        boardId={boardId}
-                        colId={columnId}
-                        defaultOpen={countAllCards === 0}
-                        isUpdate={false}
-                        socketId={socketId}
-                        anonymous={false}
-                        cardText={cardText}
-                        isDefaultText={isDefaultText ?? true}
-                      />
+                      {addCards && (
+                        <AddCardOrComment
+                          isCard
+                          boardId={boardId}
+                          colId={columnId}
+                          defaultOpen={countAllCards === 0}
+                          isUpdate={false}
+                          socketId={socketId}
+                          anonymous={false}
+                          cardText={cardText}
+                          isDefaultText={isDefaultText ?? true}
+                        />
+                      )}
                     </Flex>
                   )}
                   <CardsContainer

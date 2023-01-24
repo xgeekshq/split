@@ -66,6 +66,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	async createDividedBoards(boards: BoardDto[], userId: string) {
 		const newBoardsIds = await Promise.allSettled(
 			boards.map(async (board) => {
+				board.addCards = true;
 				const { users } = board;
 				const { _id } = await this.createBoard(board, userId, true, true);
 

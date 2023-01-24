@@ -71,6 +71,7 @@ const BoardSettings = ({
       isSubBoard,
       isPublic,
       columns,
+      addCards,
     },
   } = useRecoilValue(boardInfoState);
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
@@ -85,6 +86,7 @@ const BoardSettings = ({
     users,
     isPublic,
     columns,
+    addCards,
   };
 
   const [data, setData] = useState<UpdateBoardType>(initialData);
@@ -100,12 +102,14 @@ const BoardSettings = ({
     hideCards: boolean;
     hideVotes: boolean;
     isPublic: boolean;
+    addCards: boolean;
   }>({
     maxVotes: false,
     responsible: false,
     hideCards: false,
     hideVotes: false,
     isPublic: false,
+    addCards: false,
   });
 
   // User Board Hook
@@ -152,6 +156,7 @@ const BoardSettings = ({
       hideCards,
       hideVotes,
       isPublic,
+      addCards,
     }));
     methods.setValue('title', boardTitle);
     methods.setValue('maxVotes', boardMaxVotes ?? null);
@@ -166,6 +171,7 @@ const BoardSettings = ({
       hideCards,
       maxVotes: !isEmpty(boardMaxVotes),
       isPublic,
+      addCards,
     }));
   }, [
     boardMaxVotes,
@@ -177,6 +183,7 @@ const BoardSettings = ({
     isPublic,
     methods,
     editColumns,
+    addCards,
   ]);
 
   const handleHideCardsChange = () => {
@@ -198,6 +205,17 @@ const BoardSettings = ({
     setSwitchesState((prev) => ({
       ...prev,
       hideVotes: !prev.hideVotes,
+    }));
+  };
+
+  const handleAddCardsChange = () => {
+    setData((prev) => ({
+      ...prev,
+      addCards: !prev.addCards,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      addCards: !prev.addCards,
     }));
   };
 
@@ -251,6 +269,7 @@ const BoardSettings = ({
             hideVotes: false,
             responsible: false,
             isPublic: false,
+            addCards: false,
           }),
       },
     );
@@ -352,6 +371,12 @@ const BoardSettings = ({
                       isChecked={switchesState.hideCards}
                       text="Participants can not see the cards from other participants of this retrospective."
                       title="Hide cards from others"
+                    />
+                    <ConfigurationSwitchSettings
+                      handleCheckedChange={handleAddCardsChange}
+                      isChecked={switchesState.addCards}
+                      text="Allow users to add cards"
+                      title="Add cards"
                     />
 
                     {!isSubBoard && (

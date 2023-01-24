@@ -38,6 +38,7 @@ const useCreateBoard = (team?: Team) => {
       maxVotes: undefined,
       hideCards: false,
       hideVotes: false,
+      addCards: true,
     }),
     [],
   );
