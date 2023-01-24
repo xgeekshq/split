@@ -5,11 +5,10 @@ import { DeleteColumnButton } from './DeleteButton';
 interface Props {
   title: string;
   index: number;
-  handleDeleteColumn: () => void;
   disableDeleteColumn?: boolean;
 }
 
-const ColumnBoxAndDelete = ({ title, index, handleDeleteColumn, disableDeleteColumn }: Props) => (
+const ColumnBoxAndDelete = ({ title, index, disableDeleteColumn }: Props) => (
   <Flex gap={20}>
     <Input
       forceState
@@ -23,7 +22,7 @@ const ColumnBoxAndDelete = ({ title, index, handleDeleteColumn, disableDeleteCol
     <Flex direction="column">
       <DeleteColumnButton
         columnTitle={title}
-        handleDeleteColumn={handleDeleteColumn}
+        columnIndex={index}
         disableDeleteColumn={disableDeleteColumn}
       />
     </Flex>

@@ -25,9 +25,9 @@ import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers
 import { ConfigurationSwitchSettings } from './partials/ConfigurationSettings/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
-import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 import { ColumnSettings } from './partials/Columns';
 import { AddColumnButton } from './partials/Columns/AddColumnButton';
+import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 
 const DEFAULT_MAX_VOTES = 6;
 
@@ -114,6 +114,7 @@ const BoardSettings = ({
   } = useBoard({ autoFetchBoard: false });
 
   const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
 
   // Use Form Hook
   const methods = useForm<{
@@ -240,7 +241,6 @@ const BoardSettings = ({
         ...data,
         title,
         maxVotes,
-        columns,
         socketId,
       },
       {
@@ -310,6 +310,12 @@ const BoardSettings = ({
     return () => window?.removeEventListener('keydown', keyDownHandler);
   }, []);
 
+  const handleAddColumn = () => {
+    const arrayWithColumn = editColumns.map((column) => column);
+    arrayWithColumn.push('');
+    setEditColumns(arrayWithColumn);
+  };
+
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header>
@@ -317,18 +323,11 @@ const BoardSettings = ({
       </Dialog.Header>
       <FormProvider {...methods}>
         <StyledForm
-          onSubmit={methods.handleSubmit(
-            ({ title, maxVotes, column1title, column2title, column3title, column4title }) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const updatedColumns = [column1title, column2title, column3title, column4title];
-              updateBoard(title, maxVotes);
-            },
-          )}
+          onSubmit={methods.handleSubmit(({ title, maxVotes }) => {
+            updateBoard(title, maxVotes);
+          })}
         >
-          <Flex
-            direction="column"
-            css={{ justifyContent: 'space-between', height: '100%', marginTop: '-4.025%' }}
-          >
+          <Flex direction="column" css={{ justifyContent: 'space-between', height: '100%' }}>
             <ScrollableContent direction="column" justify="start" ref={scrollRef}>
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
@@ -381,18 +380,17 @@ const BoardSettings = ({
                       </>
                     )}
 
-                    {isRegularBoard &&
-                      (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
-                        <ConfigurationSwitchSettings
-                          handleCheckedChange={handleIsPublicChange}
-                          isChecked={switchesState.isPublic}
-                          text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
-                          title="Make board public"
-                        />
-                      )}
+                    {isRegularBoard && hasPermissions && (
+                      <ConfigurationSwitchSettings
+                        handleCheckedChange={handleIsPublicChange}
+                        isChecked={switchesState.isPublic}
+                        text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
+                        title="Make board public"
+                      />
+                    )}
                   </ConfigurationSettings>
 
-                  {isSubBoard && (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
+                  {isSubBoard && hasPermissions && (
                     <TeamResponsibleSettings>
                       <ConfigurationSwitchSettings
                         isChecked={switchesState.responsible}
@@ -482,7 +480,6 @@ const BoardSettings = ({
                   )}
                   {isRegularBoard && (
                     <ColumnSettings>
-                      {/* '44vh' */}
                       <Flex css={{ height: '$310' }} direction="column">
                         {editColumns.map((title, index) => (
                           <ColumnBoxAndDelete
@@ -490,21 +487,10 @@ const BoardSettings = ({
                             index={index}
                             key={`column${index + 1}`}
                             disableDeleteColumn={editColumns.length === 1}
-                            handleDeleteColumn={() => {
-                              const arrayWithoutColumn = editColumns.map((column) => column);
-                              arrayWithoutColumn.splice(index, 1);
-                              setEditColumns(arrayWithoutColumn);
-                            }}
                           />
                         ))}
                         {editColumns.length < 4 && (
-                          <AddColumnButton
-                            onAddColumn={() => {
-                              const arrayWithColumn = editColumns.map((column) => column);
-                              arrayWithColumn.push('');
-                              setEditColumns(arrayWithColumn);
-                            }}
-                          />
+                          <AddColumnButton onAddColumn={handleAddColumn} />
                         )}
                       </Flex>
                     </ColumnSettings>
