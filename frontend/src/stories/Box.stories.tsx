@@ -69,6 +69,15 @@ export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) =>
   </>
 );
 
+Elevations.argTypes = {
+  elevation: {
+    control: false,
+  },
+  variant: {
+    control: false,
+  },
+};
+
 export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
   <>
     {VARIANT_OPTIONS.map((variant) => (
@@ -81,3 +90,12 @@ export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
     ))}
   </>
 );
+
+Variants.argTypes = {
+  elevation: {
+    control: false,
+  },
+  variant: {
+    control: false,
+  },
+};
