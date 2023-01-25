@@ -324,6 +324,10 @@ const BoardSettings = ({
     setEditColumns(arrayWithNewColumn);
   };
 
+  const handleCloseDialog = () => {
+    setEditColumns(columns);
+  };
+
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header>
@@ -516,7 +520,12 @@ const BoardSettings = ({
                 </Accordion>
               </Flex>
             </ScrollableContent>
-            <Dialog.Footer setIsOpen={setIsOpen} affirmativeLabel="Save" buttonRef={submitBtnRef} />
+            <Dialog.Footer
+              setIsOpen={setIsOpen}
+              affirmativeLabel="Save"
+              buttonRef={submitBtnRef}
+              handleNegative={isRegularBoard ? handleCloseDialog : undefined}
+            />
           </Flex>
         </StyledForm>
       </FormProvider>
