@@ -35,12 +35,6 @@ const DEFAULT_MAX_VOTES = 6;
 
 const StyledForm = styled('form', { height: 'calc(100% - 89px)' });
 
-export type UpdateColumn = {
-  id: string;
-  title: string;
-  color: string;
-};
-
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -117,6 +111,7 @@ const BoardSettings = ({
   } = useBoard({ autoFetchBoard: false });
 
   const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
 
   // Use Form Hook
   const methods = useForm<{
@@ -179,7 +174,6 @@ const BoardSettings = ({
     isOpen,
     isPublic,
     methods,
-    // setEditColumns,
     editColumns,
   ]);
 
@@ -320,6 +314,16 @@ const BoardSettings = ({
     return () => window?.removeEventListener('keydown', keyDownHandler);
   }, []);
 
+  const handleAddColumn = () => {
+    const arrayWithNewColumn = [...editColumns];
+    arrayWithNewColumn.push({
+      title: '',
+      color: colors[Math.floor(Math.random() * colors.length)],
+      cards: [],
+    });
+    setEditColumns(arrayWithNewColumn);
+  };
+
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <Dialog.Header>
@@ -394,18 +398,17 @@ const BoardSettings = ({
                       </>
                     )}
 
-                    {isRegularBoard &&
-                      (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
-                        <ConfigurationSwitchSettings
-                          handleCheckedChange={handleIsPublicChange}
-                          isChecked={switchesState.isPublic}
-                          text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
-                          title="Make board public"
-                        />
-                      )}
+                    {isRegularBoard && hasPermissions && (
+                      <ConfigurationSwitchSettings
+                        handleCheckedChange={handleIsPublicChange}
+                        isChecked={switchesState.isPublic}
+                        text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
+                        title="Make board public"
+                      />
+                    )}
                   </ConfigurationSettings>
 
-                  {isSubBoard && (isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible) && (
+                  {isSubBoard && hasPermissions && (
                     <TeamResponsibleSettings>
                       <ConfigurationSwitchSettings
                         isChecked={switchesState.responsible}
@@ -502,25 +505,10 @@ const BoardSettings = ({
                             index={index}
                             key={`column${index + 1}`}
                             disableDeleteColumn={editColumns.length === 1}
-                            handleDeleteColumn={() => {
-                              const arrayWithoutColumn = [...editColumns];
-                              arrayWithoutColumn.splice(index, 1);
-                              setEditColumns(arrayWithoutColumn);
-                            }}
                           />
                         ))}
                         {editColumns.length < 4 && (
-                          <AddColumnButton
-                            onAddColumn={() => {
-                              const arrayWithColumn = [...editColumns];
-                              arrayWithColumn.push({
-                                title: '',
-                                color: colors[Math.floor(Math.random() * colors.length)],
-                                cards: [],
-                              });
-                              setEditColumns(arrayWithColumn);
-                            }}
-                          />
+                          <AddColumnButton onAddColumn={handleAddColumn} />
                         )}
                       </Flex>
                     </ColumnSettings>
