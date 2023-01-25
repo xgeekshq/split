@@ -4,18 +4,10 @@ import { ComponentStory } from '@storybook/react';
 import Button from '@/components/Primitives/Button';
 import Sprite from '@/components/icons/Sprite';
 import Icon from '@/components/icons/Icon';
+import Flex from '@/components/Primitives/Flex';
+import { ButtonVariantType, SizeType } from './types/PrimitiveTypes';
 
-type VariantType =
-  | 'primary'
-  | 'primaryOutline'
-  | 'light'
-  | 'lightOutline'
-  | 'danger'
-  | 'dangerOutline';
-
-type SizeType = 'sm' | 'md' | 'lg';
-
-const VARIANT_OPTIONS: VariantType[] = [
+const VARIANT_OPTIONS: ButtonVariantType[] = [
   'primary',
   'primaryOutline',
   'light',
@@ -80,7 +72,6 @@ export default {
       description: 'The component text size.',
       table: {
         type: { summary: SIZE_OPTIONS.join('|') },
-        defaultValue: { summary: 'md' },
       },
     },
     size: {
@@ -103,61 +94,33 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <div
-    style={{
-      display: 'grid',
-      gap: '20px',
-      gridTemplateColumns: `repeat(${VARIANT_OPTIONS.length}, 1fr)`,
-      justifyItems: 'center',
-    }}
-  >
+  <Flex justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
-      <div key={variant} style={{ textAlign: 'center' }}>
+      <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
         <h4>Variant {variant}</h4>
         {SIZE_OPTIONS.map((size) => (
-          <div
-            style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}
-            key={size}
-          >
-            <Button variant={variant} size={size} disabled={disabled}>
-              {children}
-            </Button>
-          </div>
+          <Button variant={variant} size={size} disabled={disabled} key={size}>
+            {children}
+          </Button>
         ))}
-      </div>
+      </Flex>
     ))}
-  </div>
+  </Flex>
 );
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
-  <div
-    style={{
-      display: 'grid',
-      gap: '20px',
-      gridTemplateColumns: `repeat(${SIZE_OPTIONS.length}, 1fr)`,
-      justifyItems: 'center',
-    }}
-  >
+  <Flex justify="evenly" wrap="wrap">
     <Sprite />
     {SIZE_OPTIONS.map((size) => (
-      <div
-        style={{
-          marginBottom: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          textAlign: 'center',
-        }}
-        key={size}
-      >
+      <Flex direction="column" justify="center" align="center" gap={20} key={size}>
         <h4>Size {size}</h4>
         <Button isIcon size={size}>
           <Icon name="close" css={{ color: 'black' }} />
         </Button>
-      </div>
+      </Flex>
     ))}
-  </div>
+  </Flex>
 );
 
 Variants.argTypes = {
