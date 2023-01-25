@@ -109,6 +109,11 @@ export default class BoardDto {
 	@IsBoolean()
 	slackEnable?: boolean;
 
+	@ApiPropertyOptional({ default: false })
+	@IsOptional()
+	@IsBoolean()
+	addCards?: boolean;
+
 	@ApiProperty({ type: String, isArray: true })
 	responsibles!: string[];
 }

@@ -67,6 +67,9 @@ export default class Board extends BaseModel {
 
 	@Prop({ type: String, nullable: true, default: null })
 	slackChannelId?: string;
+
+	@Prop({ type: Boolean, nullable: true, default: true })
+	addCards: boolean;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
