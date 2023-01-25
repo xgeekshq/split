@@ -68,7 +68,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			boards.map(async (board) => {
 				board.addCards = true;
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, true);
+				const { _id } = await this.createBoard(board, userId, true, false);
 
 				if (!isEmpty(users)) {
 					this.saveBoardUsers(users, _id);
@@ -103,6 +103,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				...boardData,
 				createdBy: userId,
 				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
+				addCards: false,
 				isSubBoard
 			});
 		}
@@ -248,12 +249,13 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const team = await this.getTeamService.getTeam(teamId);
 		const responsibles = [];
+		const today = new Date();
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
 				`${team.name}-mainboard-${new Intl.DateTimeFormat('en-US', {
 					month: 'long'
-				}).format(configs.date)}-${configs.date?.getFullYear()}`
+				}).format(today)}-${configs.date?.getFullYear()}`
 			).board,
 			users: [],
 			team: teamId,
