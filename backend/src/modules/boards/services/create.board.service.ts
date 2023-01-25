@@ -354,11 +354,33 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		let availableUsers = [...teamMembers];
-		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
 
+		const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+		const responsiblesAvailable: TeamUser[] = [];
+		while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
+			const idx = Math.floor(Math.random() * isNotNewJoiners.length);
+			const randomUser = isNotNewJoiners[idx];
+
+			if (randomUser && !responsiblesAvailable.includes(randomUser)) {
+				responsiblesAvailable.push(randomUser);
+				isNotNewJoiners.splice(idx, 1);
+			}
+		}
+
+		availableUsers = availableUsers.filter((user) => !responsiblesAvailable.includes(user));
+
+		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
 		let leftOverUsers = teamMembers.length % maxTeams;
 
 		new Array(maxTeams).fill(0).forEach((_, i) => {
+			if (responsiblesAvailable.length > 0) {
+				const removedUser = responsiblesAvailable.shift();
+
+				if (removedUser) {
+					availableUsers.push(removedUser);
+				}
+			}
+
 			const numberOfUsersByGroup = leftOverUsers-- > 0 ? usersPerTeam + 1 : usersPerTeam;
 
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);

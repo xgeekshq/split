@@ -10,6 +10,7 @@ import Flex from '@/components/Primitives/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';
 import LoadingPage from '@/components/loadings/LoadingPage';
+import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
@@ -47,12 +48,14 @@ const NewBoard: NextPage = () => {
           What kind of retro do you want to create?
         </Text>
         <Flex gap={40}>
-          {/* <BoxColumnContainer
-            iconName="blob-team-retro"
-            title="Regular retro"
-            description="Make a retro with one team and the usual setup as you are used to it."
-            route="/boards/newRegularBoard"
-          /> */}
+          {NEXT_PUBLIC_REGULAR_BOARD && (
+            <BoxColumnContainer
+              iconName="blob-team-retro"
+              title="Regular retro"
+              description="Make a retro with one team and the usual setup as you are used to it."
+              route="/boards/newRegularBoard"
+            />
+          )}
 
           <BoxColumnContainer
             iconName="blob-split-retro"
