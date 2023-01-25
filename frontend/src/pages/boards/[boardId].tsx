@@ -125,8 +125,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
-      const columnTitles = data.board.columns.map((column) => column.title);
-      setEditColumns(columnTitles);
+      setEditColumns(data.board.columns);
     }
   }, [data, setEditColumns, setRecoilBoard]);
 

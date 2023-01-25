@@ -22,12 +22,14 @@ import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
 import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
+import ColumnType, { CreateColumn } from '@/types/column';
 import { ConfigurationSwitchSettings } from './partials/ConfigurationSettings/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 import { ColumnSettings } from './partials/Columns';
 import { AddColumnButton } from './partials/Columns/AddColumnButton';
+import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
 
@@ -36,6 +38,7 @@ const StyledForm = styled('form', { height: 'calc(100% - 89px)' });
 export type UpdateColumn = {
   id: string;
   title: string;
+  color: string;
 };
 
 type Props = {
@@ -84,7 +87,7 @@ const BoardSettings = ({
     maxVotes: boardMaxVotes,
     users,
     isPublic,
-    columns,
+    columns: editColumns,
   };
 
   const [data, setData] = useState<UpdateBoardType>(initialData);
@@ -130,10 +133,10 @@ const BoardSettings = ({
     defaultValues: {
       title: data.title,
       maxVotes: data.maxVotes,
-      column1title: editColumns[0],
-      column2title: editColumns[1],
-      column3title: editColumns[2],
-      column4title: editColumns[3],
+      column1title: editColumns[0].title,
+      column2title: editColumns[1]?.title,
+      column3title: editColumns[2]?.title,
+      column4title: editColumns[3]?.title,
     },
   });
 
@@ -148,16 +151,17 @@ const BoardSettings = ({
       ...prev,
       title: boardTitle,
       maxVotes: boardMaxVotes,
+      columns: editColumns,
       hideCards,
       hideVotes,
       isPublic,
     }));
     methods.setValue('title', boardTitle);
     methods.setValue('maxVotes', boardMaxVotes ?? null);
-    methods.setValue('column1title', editColumns[0]);
-    methods.setValue('column2title', editColumns[1]);
-    methods.setValue('column3title', editColumns[2]);
-    methods.setValue('column4title', editColumns[3]);
+    methods.setValue('column1title', editColumns[0].title);
+    methods.setValue('column2title', editColumns[1]?.title);
+    methods.setValue('column3title', editColumns[2]?.title);
+    methods.setValue('column4title', editColumns[3]?.title);
 
     setSwitchesState((prev) => ({
       ...prev,
@@ -175,6 +179,7 @@ const BoardSettings = ({
     isOpen,
     isPublic,
     methods,
+    // setEditColumns,
     editColumns,
   ]);
 
@@ -234,24 +239,29 @@ const BoardSettings = ({
     }));
   };
 
-  const updateBoard = (title: string, maxVotes?: number | null) => {
+  const updateBoard = (
+    title: string,
+    maxVotes?: number | null,
+    updatedColumns?: (ColumnType | CreateColumn)[],
+  ) => {
     mutate(
       {
         ...data,
         title,
         maxVotes,
-        columns,
+        columns: updatedColumns,
         socketId,
       },
       {
-        onSuccess: () =>
+        onSuccess: () => {
           setSwitchesState({
             hideCards: false,
             maxVotes: false,
             hideVotes: false,
             responsible: false,
             isPublic: false,
-          }),
+          });
+        },
       },
     );
     setIsOpen(false);
@@ -319,16 +329,19 @@ const BoardSettings = ({
         <StyledForm
           onSubmit={methods.handleSubmit(
             ({ title, maxVotes, column1title, column2title, column3title, column4title }) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const updatedColumns = [column1title, column2title, column3title, column4title];
-              updateBoard(title, maxVotes);
+              const updatedColumnTitles = [column1title, column2title, column3title, column4title];
+              const updatedColumns = [...editColumns];
+              updatedColumns.forEach((column, index) => {
+                updatedColumns[index] = {
+                  ...column,
+                  title: updatedColumnTitles[index] as string,
+                };
+              });
+              updateBoard(title, maxVotes, updatedColumns);
             },
           )}
         >
-          <Flex
-            direction="column"
-            css={{ justifyContent: 'space-between', height: '100%', marginTop: '-4.025%' }}
-          >
+          <Flex direction="column" css={{ justifyContent: 'space-between', height: '100%' }}>
             <ScrollableContent direction="column" justify="start" ref={scrollRef}>
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
@@ -482,16 +495,15 @@ const BoardSettings = ({
                   )}
                   {isRegularBoard && (
                     <ColumnSettings>
-                      {/* '44vh' */}
                       <Flex css={{ height: '$310' }} direction="column">
-                        {editColumns.map((title, index) => (
+                        {editColumns.map((column, index) => (
                           <ColumnBoxAndDelete
-                            title={title}
+                            title={column.title}
                             index={index}
                             key={`column${index + 1}`}
                             disableDeleteColumn={editColumns.length === 1}
                             handleDeleteColumn={() => {
-                              const arrayWithoutColumn = editColumns.map((column) => column);
+                              const arrayWithoutColumn = [...editColumns];
                               arrayWithoutColumn.splice(index, 1);
                               setEditColumns(arrayWithoutColumn);
                             }}
@@ -500,8 +512,12 @@ const BoardSettings = ({
                         {editColumns.length < 4 && (
                           <AddColumnButton
                             onAddColumn={() => {
-                              const arrayWithColumn = editColumns.map((column) => column);
-                              arrayWithColumn.push('');
+                              const arrayWithColumn = [...editColumns];
+                              arrayWithColumn.push({
+                                title: '',
+                                color: colors[Math.floor(Math.random() * colors.length)],
+                                cards: [],
+                              });
                               setEditColumns(arrayWithColumn);
                             }}
                           />

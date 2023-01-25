@@ -10,7 +10,7 @@ interface ColumnType {
   isDefaultText?: boolean;
 }
 
-export interface CreateColumn extends Omit<ColumnType, '_id' | 'cards' | 'color'> {
+export interface CreateColumn extends Omit<ColumnType, '_id' | 'cards'> {
   cards: never[];
 }
 
