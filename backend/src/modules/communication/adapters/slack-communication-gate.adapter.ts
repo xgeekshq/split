@@ -6,7 +6,6 @@ import { CreateChannelError } from 'src/modules/communication/errors/create-chan
 import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
 import { InviteUsersError } from 'src/modules/communication/errors/invite-users.error';
-import { PostMessageError } from 'src/modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'src/modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'src/modules/communication/errors/profile-without-email.error';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
@@ -206,7 +205,6 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return { ok, ts };
 		} catch (error) {
 			this.logger.error(error);
-			throw new PostMessageError();
 		}
 	}
 }

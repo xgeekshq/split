@@ -40,7 +40,9 @@
 			"**/*.spec.tsx",
 			"**/__tests__/*",
 			"**/factories/*",
-			"**/testUtils/*"
+			"**/testUtils/*",
+			"**/*.stories.*",
+			"**/.storybook/**/*.*"
 		  ]
 		}
 	  ]

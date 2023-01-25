@@ -21,7 +21,6 @@ import { CreateChannelError } from 'src/modules/communication/errors/create-chan
 import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
 import { InviteUsersError } from 'src/modules/communication/errors/invite-users.error';
-import { PostMessageError } from 'src/modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'src/modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'src/modules/communication/errors/profile-without-email.error';
 import { SlackCommunicationGateAdapter } from './slack-communication-gate.adapter';
@@ -314,16 +313,6 @@ describe('SlackCommunicationGateAdapter', () => {
 
 			await expect(adapterWithErrors.getEmailByUserId(userId)).rejects.toThrowError(
 				GetProfileError
-			);
-			expect(LoggerErrorMock).toBeCalledTimes(1);
-		});
-
-		it('should throw "PostMessageError" when call "addMessageToChannel"', async () => {
-			const channelId = 'any_channel_id';
-			const message = 'any_message';
-
-			await expect(adapterWithErrors.addMessageToChannel(channelId, message)).rejects.toThrowError(
-				PostMessageError
 			);
 			expect(LoggerErrorMock).toBeCalledTimes(1);
 		});

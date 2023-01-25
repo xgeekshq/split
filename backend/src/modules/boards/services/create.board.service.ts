@@ -66,8 +66,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	async createDividedBoards(boards: BoardDto[], userId: string) {
 		const newBoardsIds = await Promise.allSettled(
 			boards.map(async (board) => {
+				board.addCards = true;
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, true);
+				const { _id } = await this.createBoard(board, userId, true, false);
 
 				if (!isEmpty(users)) {
 					this.saveBoardUsers(users, _id);
@@ -102,6 +103,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				...boardData,
 				createdBy: userId,
 				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
+				addCards: false,
 				isSubBoard
 			});
 		}
@@ -156,7 +158,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		await this.saveBoardUsers(newUsers, newBoard._id);
 
-		if (newBoard && recurrent && team && maxUsers) {
+		const teamData = await this.getTeamService.getTeam(team);
+
+		if (newBoard && recurrent && team && maxUsers && teamData.name === 'xgeeks') {
 			const addCronJobDto: AddCronJobDto = {
 				boardId: newBoard._id.toString(),
 				ownerId: userId,
@@ -171,7 +175,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-		if (slackEnable) {
+		if (slackEnable && team && teamData.name === 'xgeeks') {
 			const populatedBoard = await this.getBoardService.getBoardData(newBoard._id);
 
 			if (populatedBoard) {
@@ -245,12 +249,13 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		const team = await this.getTeamService.getTeam(teamId);
 		const responsibles = [];
+		const today = new Date();
 
 		const boardData: BoardDto = {
 			...generateBoardDtoData(
 				`${team.name}-mainboard-${new Intl.DateTimeFormat('en-US', {
 					month: 'long'
-				}).format(configs.date)}-${configs.date?.getFullYear()}`
+				}).format(today)}-${configs.date?.getFullYear()}`
 			).board,
 			users: [],
 			team: teamId,
@@ -351,11 +356,33 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const splitUsers: BoardUserDto[][] = new Array(maxTeams).fill([]);
 
 		let availableUsers = [...teamMembers];
-		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
 
+		const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+		const responsiblesAvailable: TeamUser[] = [];
+		while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
+			const idx = Math.floor(Math.random() * isNotNewJoiners.length);
+			const randomUser = isNotNewJoiners[idx];
+
+			if (randomUser && !responsiblesAvailable.includes(randomUser)) {
+				responsiblesAvailable.push(randomUser);
+				isNotNewJoiners.splice(idx, 1);
+			}
+		}
+
+		availableUsers = availableUsers.filter((user) => !responsiblesAvailable.includes(user));
+
+		const usersPerTeam = Math.floor(teamMembers.length / maxTeams);
 		let leftOverUsers = teamMembers.length % maxTeams;
 
 		new Array(maxTeams).fill(0).forEach((_, i) => {
+			if (responsiblesAvailable.length > 0) {
+				const removedUser = responsiblesAvailable.shift();
+
+				if (removedUser) {
+					availableUsers.push(removedUser);
+				}
+			}
+
 			const numberOfUsersByGroup = leftOverUsers-- > 0 ? usersPerTeam + 1 : usersPerTeam;
 
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
