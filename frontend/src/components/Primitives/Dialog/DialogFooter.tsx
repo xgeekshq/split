@@ -4,7 +4,6 @@ import Button from '../Button';
 type FooterProps = {
   affirmativeLabel?: string;
   handleAffirmative?: () => void;
-  handleNegative?: () => void;
   setIsOpen: (isOpen: boolean) => void;
   buttonRef?: React.RefObject<HTMLButtonElement>;
   showSeparator?: boolean;
@@ -14,7 +13,6 @@ const Footer: React.FC<FooterProps> = (props) => {
   const {
     children,
     handleAffirmative,
-    handleNegative,
     setIsOpen,
     affirmativeLabel,
     buttonRef,
@@ -35,10 +33,7 @@ const Footer: React.FC<FooterProps> = (props) => {
       <Button
         css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
         variant="primaryOutline"
-        onClick={() => {
-          if (handleNegative) handleNegative();
-          setIsOpen(false);
-        }}
+        onClick={() => setIsOpen(false)}
         type="button"
       >
         Cancel

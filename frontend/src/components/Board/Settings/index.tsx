@@ -177,7 +177,6 @@ const BoardSettings = ({
     columns,
     hideCards,
     hideVotes,
-    isOpen,
     isPublic,
     methods,
     editColumns,
@@ -341,10 +340,6 @@ const BoardSettings = ({
       cards: [],
     });
     setEditColumns(arrayWithNewColumn);
-  };
-
-  const handleCloseDialog = () => {
-    setEditColumns(columns);
   };
 
   return (
@@ -545,12 +540,7 @@ const BoardSettings = ({
                 </Accordion>
               </Flex>
             </ScrollableContent>
-            <Dialog.Footer
-              setIsOpen={setIsOpen}
-              affirmativeLabel="Save"
-              buttonRef={submitBtnRef}
-              handleNegative={isRegularBoard ? handleCloseDialog : undefined}
-            />
+            <Dialog.Footer setIsOpen={setIsOpen} affirmativeLabel="Save" buttonRef={submitBtnRef} />
           </Flex>
         </StyledForm>
       </FormProvider>
