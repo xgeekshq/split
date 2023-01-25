@@ -2,6 +2,8 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import Button from '@/components/Primitives/Button';
+import Sprite from '@/components/icons/Sprite';
+import Icon from '@/components/icons/Icon';
 
 type VariantType =
   | 'primary'
@@ -31,6 +33,7 @@ export default {
     controls: {
       expanded: true,
       exclude: ['ref', 'as', 'css'],
+      sort: 'requiredFirst',
     },
     docs: {
       description: {
@@ -42,6 +45,15 @@ export default {
     children: 'Lorem',
   },
   argTypes: {
+    disabled: {
+      control: { type: 'boolean' },
+      description: 'Disable the button.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      defaultValue: false,
+    },
     variant: {
       options: VARIANT_OPTIONS,
       control: { type: 'select' },
@@ -52,13 +64,13 @@ export default {
       },
     },
     isIcon: {
-      options: 'boolean',
       control: { type: 'boolean' },
       description: 'Whether the component is an icon.',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },
       },
+      defaultValue: false,
     },
     textSize: {
       options: SIZE_OPTIONS,
@@ -115,7 +127,55 @@ export const Variants: ComponentStory<typeof Button> = ({ children, ...args }) =
   </div>
 );
 
+export const Icons: ComponentStory<typeof Button> = () => (
+  <div
+    style={{
+      display: 'grid',
+      gap: '20px',
+      gridTemplateColumns: `repeat(${SIZE_OPTIONS.length}, 1fr)`,
+      justifyItems: 'center',
+    }}
+  >
+    <Sprite />
+    {SIZE_OPTIONS.map((size) => (
+      <div
+        style={{
+          marginBottom: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          textAlign: 'center',
+        }}
+        key={size}
+      >
+        <h4>Size {size}</h4>
+        <Button isIcon size={size}>
+          <Icon name="close" />
+        </Button>
+      </div>
+    ))}
+  </div>
+);
+
 Variants.argTypes = {
+  variant: {
+    control: false,
+  },
+  isIcon: {
+    control: false,
+  },
+  textSize: {
+    control: false,
+  },
+  size: {
+    control: false,
+  },
+};
+
+Icons.argTypes = {
+  children: {
+    control: false,
+  },
   variant: {
     control: false,
   },
