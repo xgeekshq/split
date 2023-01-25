@@ -102,7 +102,7 @@ const Template: ComponentStory<typeof Button> = ({ children, ...args }) => (
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Variants: ComponentStory<typeof Button> = ({ children, ...args }) => (
+export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
   <div
     style={{
       display: 'grid',
@@ -119,7 +119,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, ...args }) =
             style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center' }}
             key={size}
           >
-            <Button variant={variant} size={size} {...args}>
+            <Button variant={variant} size={size} disabled={disabled}>
               {children}
             </Button>
           </div>
