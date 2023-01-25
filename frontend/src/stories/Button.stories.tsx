@@ -43,6 +43,8 @@ export default {
   },
   args: {
     children: 'Lorem',
+    variant: 'primary',
+    size: 'md',
   },
   argTypes: {
     disabled: {
