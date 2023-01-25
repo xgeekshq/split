@@ -127,7 +127,8 @@ export const Variants: ComponentStory<typeof Button> = ({ children, ...args }) =
   </div>
 );
 
-export const Icons: ComponentStory<typeof Button> = () => (
+/* eslint-disable @typescript-eslint/no-unused-vars */
+export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
   <div
     style={{
       display: 'grid',
@@ -150,7 +151,7 @@ export const Icons: ComponentStory<typeof Button> = () => (
       >
         <h4>Size {size}</h4>
         <Button isIcon size={size}>
-          <Icon name="close" />
+          <Icon name="close" css={{ color: 'black' }} />
         </Button>
       </div>
     ))}
