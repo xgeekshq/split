@@ -45,7 +45,7 @@ const SelectComponent = ({
       py: '$12',
       height: '$64',
       borderRadius: '$4',
-      backgroundColor: 'white',
+      backgroundColor: numberOfTeams <= 0 ? 'transparent' : 'white',
       border:
         currentSelectTeamState === 'error' ? '1px solid $dangerBase' : '1px solid $primary200',
     }}
