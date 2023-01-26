@@ -22,7 +22,7 @@ type OptionsMenuProps = {
   isDefaultText?: boolean;
 };
 
-const colors = [
+export const colors = [
   '$highlight1Light',
   '$highlight2Light',
   '$highlight3Light',

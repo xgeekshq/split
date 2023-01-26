@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import DragDropArea from '@/components/Board/DragDropArea';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
@@ -25,6 +25,11 @@ const RegularBoard = ({ socketId }: RegularBoardProps) => {
 
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
+  const setEditColumns = useSetRecoilState(editColumnsState);
+
+  useMemo(() => {
+    if (!isOpen) setEditColumns(board.columns);
+  }, [board.columns, isOpen, setEditColumns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });

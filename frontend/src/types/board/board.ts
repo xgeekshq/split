@@ -85,6 +85,6 @@ export type UpdateBoardType = {
   maxVotes?: number | null;
   users?: BoardUser[];
   isPublic: boolean;
-  columns?: ColumnType[];
+  columns?: (ColumnType | CreateColumn)[];
   addCards: boolean;
 };
