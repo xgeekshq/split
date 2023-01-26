@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import Avatar from '@/components/Primitives/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
@@ -24,7 +23,6 @@ type CardAvatarProps = {
   myBoards?: boolean;
   haveError?: boolean;
   isBoardsPage?: boolean;
-  isRegularBoardNoTeam?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
@@ -37,7 +35,6 @@ const CardAvatars = React.memo<CardAvatarProps>(
     responsible,
     myBoards,
     isBoardsPage,
-    isRegularBoardNoTeam,
   }) => {
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
     const [viewAllUsers, setViewAllUsers] = useState(false);
@@ -172,24 +169,8 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return 1;
     }, [myBoards]);
 
-    const boardMembers = useMemo(
-      () =>
-        listUsers.map((member) => ({
-          ...member,
-          user: member.user as User,
-        })),
-      [listUsers],
-    );
-
     return (
       <>
-        <ListBoardMembers
-          boardMembers={boardMembers}
-          isOpen={dialogIsOpen}
-          setIsOpen={setDialogIsOpen}
-          isSubBoard={!stakeholders}
-          isRegularBoardNoTeam={isRegularBoardNoTeam}
-        />
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
           {haveError
             ? ['-', '-', '-'].map((value, index) =>
