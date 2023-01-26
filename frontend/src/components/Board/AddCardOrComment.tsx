@@ -208,18 +208,18 @@ const AddCard = React.memo<AddCardProps>(
             id="text"
             placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
-          {!isCard && (
-            <Checkbox
-              id={colId + cardId}
-              label="Add anonymously"
-              size="16"
-              checked={anonymous}
-              setCheckedTerms={() => {
-                setIsCommentAnonymous(!isCommentAnonymous);
-              }}
-            />
-          )}
           <Flex css={{ width: '100%' }} justify="end">
+            {!isCard && (
+              <Checkbox
+                id={colId + cardId}
+                label="Add anonymously"
+                size="16"
+                checked={anonymous}
+                setCheckedTerms={() => {
+                  setIsCommentAnonymous(!isCommentAnonymous);
+                }}
+              />
+            )}
             {!isEditing && (
               <Checkbox
                 id={colId}
