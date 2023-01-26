@@ -205,6 +205,8 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return { ok, ts };
 		} catch (error) {
 			this.logger.error(error);
+
+			return { ok: false };
 		}
 	}
 }

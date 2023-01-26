@@ -310,7 +310,7 @@ export default class BoardsController {
 		}
 
 		if (socketId) {
-			this.socketService.sendUpdatedAllBoard(socketId);
+			this.socketService.sendUpdatedAllBoard(boardId, socketId);
 		}
 
 		return result;
