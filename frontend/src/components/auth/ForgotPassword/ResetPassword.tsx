@@ -91,14 +91,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
           placeholder="Repeat password"
           type="password"
         />
-        <Button
-          size="lg"
-          type="submit"
-          css={{
-            fontWeight: '$medium',
-            fontSize: '$18',
-          }}
-        >
+        <Button size="lg" type="submit">
           Recover password
         </Button>
       </FormProvider>

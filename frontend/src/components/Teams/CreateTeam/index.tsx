@@ -89,8 +89,8 @@ const CreateTeam = () => {
         <Text color="primary800" heading={3} weight="bold">
           Create New Team
         </Text>
-        <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-          <Icon name="close" />
+        <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
+          <Icon css={{ color: '$primaryBase' }} name="close" />
         </Button>
       </PageHeader>
       <ContentWrapper>

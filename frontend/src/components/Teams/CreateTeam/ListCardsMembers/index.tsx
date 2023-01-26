@@ -41,7 +41,7 @@ const TeamMembersList = () => {
           </Text>
         </ButtonAddMember>
       </Flex>
-      <ScrollableContent direction="column" justify="start">
+      <ScrollableContent direction="column" justify="start" gap="8">
         {membersList?.map((member) => (
           <CardMember
             key={member.user._id}

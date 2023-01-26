@@ -4,7 +4,8 @@ import Link from 'next/link';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { AddNewBoardButton, ContentSection } from './styles';
+import Button from '@/components/Primitives/Button';
+import { ContentSection } from './styles';
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -28,18 +29,18 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
           {isUsers && <Text heading="1">Users</Text>}
           {(isDashboard || isBoards) && (
             <Link href="/boards/new">
-              <AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-                <Icon css={{ color: 'white' }} name="plus" />
+              <Button size={isDashboard ? 'sm' : 'md'}>
+                <Icon name="plus" />
                 Add new board
-              </AddNewBoardButton>
+              </Button>
             </Link>
           )}
           {isTeams && (
             <Link href="/teams/new">
-              <AddNewBoardButton size={isDashboard ? 'sm' : 'md'}>
-                <Icon css={{ color: 'white' }} name="plus" />
+              <Button size="md">
+                <Icon name="plus" />
                 Create new team
-              </AddNewBoardButton>
+              </Button>
             </Link>
           )}
         </Flex>

@@ -1,6 +1,5 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 
 export const ContainerSection = styled('div', {
@@ -39,5 +38,3 @@ export const BannerContainer = styled(Flex, {
   left: '112px',
   top: '72px',
 });
-
-export const GoBackButton = styled('a', Button, {});

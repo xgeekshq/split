@@ -144,12 +144,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           type="submit"
           css={{
             mt: '$24',
-            fontWeight: '$medium',
-            fontSize: '$18',
-            '& svg': {
-              height: '$40 !important',
-              width: '$40 !important',
-            },
           }}
         >
           Sign up

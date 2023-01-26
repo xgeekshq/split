@@ -3,7 +3,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 const Button = styled('button', {
   fontFamily: '$body',
   borderRadius: '$12',
-  height: '$56',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -18,7 +17,7 @@ const Button = styled('button', {
   '&:disabled': {
     '@hover': {
       '&:hover': {
-        cursor: 'default',
+        cursor: 'not-allowed',
       },
     },
     '&:active': {
@@ -28,7 +27,7 @@ const Button = styled('button', {
   variants: {
     variant: {
       primary: {
-        color: 'white',
+        color: '$white',
         backgroundColor: '$primaryBase',
         '@hover': {
           '&:hover': {
@@ -39,32 +38,35 @@ const Button = styled('button', {
           backgroundColor: '$primary600',
           boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.8)',
         },
-
         '&:disabled': {
           backgroundColor: '$primary200',
         },
       },
       primaryOutline: {
-        backgroundColor: 'transparent',
+        color: '$primaryBase',
+        backgroundColor: '$transparent',
         border: '2px solid $primaryBase',
-        boxSizing: 'border-box',
         '@hover': {
           '&:hover': {
             color: 'white',
-            border: '2px solid $primary600',
+            borderColor: '$primary600',
             backgroundColor: '$primary600',
           },
         },
         '&:active': {
           color: 'white',
           backgroundColor: '$primary600',
+          borderColor: '$primary600',
           boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.5)',
         },
         '&:disabled': {
-          backgroundColor: '2px solid $primary100',
+          color: '$primary200',
+          borderColor: '$primary200',
+          backgroundColor: '$transparent',
         },
       },
       light: {
+        color: '$primaryBase',
         backgroundColor: '$primary100',
         '@hover': {
           '&:hover': {
@@ -75,34 +77,38 @@ const Button = styled('button', {
           backgroundColor: '$primary200',
           boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
         },
-
         '&:disabled': {
+          color: '$primary200',
           backgroundColor: '$primary50',
           opacity: 0.8,
         },
       },
       lightOutline: {
-        backgroundColor: 'transparent',
         color: '$primary300',
-        border: '2px solid $primary200',
-        boxSizing: 'border-box',
+        backgroundColor: '$transparent',
+        border: '2px solid $primary100',
         '@hover': {
           '&:hover': {
+            color: '$primaryBase',
+            borderColor: '$primary200',
             backgroundColor: '$primary200',
-            color: '$primary800',
           },
         },
         '&:active': {
+          color: '$primaryBase',
           backgroundColor: '$primary200',
+          borderColor: '$primary200',
           boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
         },
         '&:disabled': {
-          backgroundColor: '2px solid $primary100',
+          color: '$primary600',
+          backgroundColor: '$transparent',
+          borderColor: '$primary100',
           opacity: 0.3,
         },
       },
       danger: {
-        color: 'white',
+        color: '$white',
         backgroundColor: '$dangerBase',
         '@hover': {
           '&:hover': {
@@ -111,9 +117,8 @@ const Button = styled('button', {
         },
         '&:active': {
           backgroundColor: '$danger700',
-          boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
+          boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.2)',
         },
-
         '&:disabled': {
           backgroundColor: '$danger400',
           opacity: 0.3,
@@ -121,44 +126,47 @@ const Button = styled('button', {
       },
       dangerOutline: {
         color: '$dangerBase',
-        backgroundColor: 'transparent',
-        border: '2px solid $danger500',
-        boxSizing: 'border-box',
+        backgroundColor: '$transparent',
+        border: '2px solid $dangerBase',
         '@hover': {
           '&:hover': {
-            color: 'white',
-            border: '2px solid $danger700',
+            color: '$white',
+            borderColor: '$danger700',
             backgroundColor: '$danger700',
           },
         },
         '&:active': {
           color: 'white',
           backgroundColor: '$danger700',
-          border: '2px solid $danger700',
+          borderColor: '$danger700',
           boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
         },
         '&:disabled': {
-          backgroundColor: '1px solid $dangerBase',
+          color: '$danger500',
+          backgroundColor: '$transparent',
+          borderColor: '$danger500',
           opacity: 0.3,
         },
       },
     },
     isIcon: {
       true: {
-        padding: '0',
-        backgroundColor: 'transparent',
+        padding: '0 !important',
+        width: 'auto !important',
+        height: 'auto !important',
+        backgroundColor: '$transparent !important',
         '@hover': {
           '&:hover': {
-            backgroundColor: '$transparent',
+            backgroundColor: '$transparent !important',
           },
         },
         '&:active': {
-          backgroundColor: '$transparent',
+          backgroundColor: '$transparent !important',
           boxShadow: 'none',
         },
-
         '&:disabled': {
-          backgroundColor: '$transparent',
+          backgroundColor: '$transparent !important',
+          border: 'none',
         },
       },
     },
@@ -179,7 +187,7 @@ const Button = styled('button', {
     size: {
       lg: {
         height: '$56',
-        fontWeight: '$bold',
+        fontWeight: '$medium',
         fontSize: '$18',
         lineHeight: '$24',
         px: '$24',
@@ -195,7 +203,7 @@ const Button = styled('button', {
       },
       md: {
         height: '$48',
-        fontWeight: '$bold',
+        fontWeight: '$medium',
         fontSize: '$16',
         lineHeight: '$20',
         px: '$24',
@@ -211,16 +219,12 @@ const Button = styled('button', {
       },
       sm: {
         height: '$36',
-        fontWeight: '$bold',
+        fontWeight: '$medium',
         fontSize: '$14',
         lineHeight: '$16',
         px: '$16',
         py: '$10',
         '& svg': {
-          height: '$16 !important',
-          width: '$16 !important',
-        },
-        '& span': {
           height: '$16 !important',
           width: '$16 !important',
         },
@@ -232,21 +236,30 @@ const Button = styled('button', {
       size: 'lg',
       isIcon: 'true',
       css: {
-        p: '$16',
+        '& svg': {
+          height: '$40 !important',
+          width: '$40 !important',
+        },
       },
     },
     {
       size: 'md',
       isIcon: 'true',
       css: {
-        p: '$14',
+        '& svg': {
+          height: '$24 !important',
+          width: '$24 !important',
+        },
       },
     },
     {
       size: 'sm',
       isIcon: 'true',
       css: {
-        p: '$10',
+        '& svg': {
+          height: '$20 !important',
+          width: '$20 !important',
+        },
       },
     },
   ],

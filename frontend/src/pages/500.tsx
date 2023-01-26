@@ -1,15 +1,11 @@
 import Link from 'next/link';
 
-import {
-  BannerContainer,
-  ContainerSection,
-  GoBackButton,
-  ImageBackground,
-} from '@/styles/pages/error.styles';
+import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pages/error.styles';
 
 import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text';
 import SecondaryBanner from '@/components/icons/SecondaryBanner';
+import Button from '@/components/Primitives/Button';
 
 const Custom500 = () => (
   <ImageBackground>
@@ -31,9 +27,9 @@ const Custom500 = () => (
         Try to refresh this page or feel free to contact us if the problem persists.
       </Text>
       <Link href="/">
-        <GoBackButton css={{ mt: '$26' }} size="md" style={{ width: '100%' }} variant="primary">
+        <Button css={{ mt: '$26' }} size="md">
           Go to Home
-        </GoBackButton>
+        </Button>
       </Link>
     </ContainerSection>
   </ImageBackground>

@@ -84,14 +84,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
           password.
         </Text>
         <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
-        <Button
-          size="lg"
-          type="submit"
-          css={{
-            fontWeight: '$medium',
-            fontSize: '$18',
-          }}
-        >
+        <Button size="lg" type="submit">
           Recover password
         </Button>
         <GoBackWrapper align="center" gap="8" onClick={handleShowTroubleLogginIn}>

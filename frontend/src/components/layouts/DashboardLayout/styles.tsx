@@ -1,6 +1,5 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 
 const ContentSection = styled('section', Flex, {
@@ -8,13 +7,4 @@ const ContentSection = styled('section', Flex, {
   height: '100%',
 });
 
-const AddNewBoardButton = styled('button', Button, {
-  width: 'fit-content',
-  display: 'flex',
-  position: 'relative',
-  height: '$48',
-  fontWeight: '$medium !important',
-  lineHeight: '$20 !important',
-});
-
-export { AddNewBoardButton, ContentSection };
+export { ContentSection };

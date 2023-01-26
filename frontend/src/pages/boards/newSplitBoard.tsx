@@ -242,8 +242,8 @@ const NewSplitBoard: NextPage = () => {
               Add new SPLIT board
             </Text>
 
-            <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-              <Icon name="close" />
+            <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
+              <Icon css={{ color: '$primaryBase' }} name="close" />
             </Button>
           </PageHeader>
           <ContentWrapper>

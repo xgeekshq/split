@@ -5,7 +5,6 @@ import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
 import {
   ButtonsContainer,
-  StyledDialogCloseButton,
   StyledDialogContainer,
   StyledDialogContent,
   StyledDialogOverlay,
@@ -132,9 +131,9 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
               <StyledDialogTitle>
                 <Text heading="4">{btnTitle}</Text>
                 <DialogClose asChild>
-                  <StyledDialogCloseButton isIcon size="lg">
-                    <Icon css={{ color: '$primary400' }} name="close" size={24} />
-                  </StyledDialogCloseButton>
+                  <Button isIcon size="md">
+                    <Icon css={{ color: '$primary400' }} name="close" />
+                  </Button>
                 </DialogClose>
               </StyledDialogTitle>
               <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
@@ -179,7 +178,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                   ))}
                 </Flex>
               </ScrollableContent>
-              <ButtonsContainer gap={24} justify="end">
+              <ButtonsContainer gap={24} justify="end" align="center">
                 {searchMember.length <= 0 && (
                   <Checkbox
                     checked={isCheckAll}
@@ -190,18 +189,10 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                     hasSelectAll
                   />
                 )}
-                <Button
-                  css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-                  variant="primaryOutline"
-                  onClick={handleClose}
-                >
+                <Button variant="primaryOutline" onClick={handleClose}>
                   Cancel
                 </Button>
-                <Button
-                  css={{ marginRight: '$32', padding: '$16 $24' }}
-                  variant="primary"
-                  onClick={handleUpdateUsers}
-                >
+                <Button variant="primary" onClick={handleUpdateUsers}>
                   Update
                 </Button>
               </ButtonsContainer>
