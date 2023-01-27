@@ -1,22 +1,22 @@
 {
-	"name": "split",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"prepare": "concurrently \"npm:prepare:backend\" \"npm:prepare:frontend\" \"husky install\"",
-		"prepare:backend": "cd backend && npm i",
-		"prepare:frontend": "cd frontend && npm i",
-		"dev": "concurrently \"npm:backend\" \"npm:frontend\"",
-		"frontend": "npm run dev --prefix frontend/",
-		"backend": "npm run start:dev --prefix backend",
-		"pre-commit": "concurrently \"npm:pre-commit:backend\" \"npm:pre-commit:frontend\"",
-		"pre-commit:backend": "npm run pre-commit --prefix backend",
-		"pre-commit:frontend": "npm run pre-commit --prefix frontend"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^17.4.0",
-		"@commitlint/config-conventional": "^17.4.0",
-		"concurrently": "^7.6.0",
-		"husky": "^8.0.1"
-	}
+  "name": "split",
+  "version": "v0.1.2",
+  "private": true,
+  "scripts": {
+    "prepare": "concurrently \"npm:prepare:backend\" \"npm:prepare:frontend\" \"husky install\"",
+    "prepare:backend": "cd backend && npm i",
+    "prepare:frontend": "cd frontend && npm i",
+    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
+    "frontend": "npm run dev --prefix frontend/",
+    "backend": "npm run start:dev --prefix backend",
+    "pre-commit": "concurrently \"npm:pre-commit:backend\" \"npm:pre-commit:frontend\"",
+    "pre-commit:backend": "npm run pre-commit --prefix backend",
+    "pre-commit:frontend": "npm run pre-commit --prefix frontend"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.0",
+    "@commitlint/config-conventional": "^17.4.0",
+    "concurrently": "^7.6.0",
+    "husky": "^8.0.1"
+  }
 }
