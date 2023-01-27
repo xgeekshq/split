@@ -16,7 +16,7 @@ const LoginSSO = ({ handleLoginAzure }: LoginSSOProps) => (
     <Text css={{ mt: '$24' }} heading="1">
       Welcome
     </Text>
-    <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+    <Text size="md" color="primary500" css={{ mt: '$8' }}>
       Choose your preferred login method.
     </Text>
     <Flex align="center" direction="column" justify="center" css={{ mt: '$32' }}>

@@ -104,7 +104,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         <Text css={{ mt: '$24' }} heading="1">
           Welcome
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email and password to log in.
         </Text>
         <Input

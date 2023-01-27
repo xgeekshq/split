@@ -20,7 +20,7 @@ const Custom500 = () => (
     <ContainerSection>
       <LogoIcon />
 
-      <Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
+      <Text css={{ mt: '$29' }} display="3">
         500
       </Text>
 

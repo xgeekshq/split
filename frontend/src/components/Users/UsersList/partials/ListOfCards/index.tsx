@@ -85,7 +85,7 @@ const ListOfCards = React.memo(() => {
   return (
     <>
       <Flex>
-        <Text css={{ fontWeight: '$bold', flex: 1, mt: '$36' }}>
+        <Text fontWeight="bold" css={{ flex: 1, mt: '$36' }}>
           {users.amount} registered users
         </Text>
         <Flex css={{ width: '460px' }}>

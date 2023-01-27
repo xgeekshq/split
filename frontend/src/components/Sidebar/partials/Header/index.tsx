@@ -49,8 +49,8 @@ const Header = ({ firstName, lastName, email }: Props) => {
         </Flex>
         <Flex direction="column" css={{ width: '80%' }}>
           <Text
+            color="white"
             css={{
-              color: '$white',
               textOverflow: 'ellipsis',
               width: '100%',
               overflow: 'hidden',
@@ -62,8 +62,8 @@ const Header = ({ firstName, lastName, email }: Props) => {
             {`${firstName} ${lastName}`}
           </Text>
           <Text
+            color="primary200"
             css={{
-              color: '$primary200',
               textOverflow: 'ellipsis',
               width: '100%',
               overflow: 'hidden',
