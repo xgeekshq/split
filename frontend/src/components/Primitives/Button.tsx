@@ -163,6 +163,7 @@ const Button = styled('button', {
         '&:disabled': {
           color: '$primary200',
           backgroundColor: '$transparent',
+          textDecoration: 'none',
         },
       },
     },
