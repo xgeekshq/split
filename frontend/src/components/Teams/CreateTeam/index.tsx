@@ -81,6 +81,10 @@ const CreateTeam = () => {
     if (status === 'success') {
       router.push('/teams');
     }
+
+    if (status === 'error') {
+      setSubmitButtonState(false);
+    }
   }, [status, router]);
 
   return (

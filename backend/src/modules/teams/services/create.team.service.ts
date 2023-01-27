@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamUserDto from '../dto/team.user.dto';
@@ -7,6 +7,7 @@ import TeamUser from '../entities/team.user.schema';
 import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
 import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
 import { TYPES } from '../interfaces/types';
+import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 
 @Injectable()
 export default class CreateTeamService implements CreateTeamServiceInterface {
@@ -33,6 +34,13 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 
 	async create(teamData: CreateTeamDto) {
 		const { users, name } = teamData;
+
+		const isTeamAlreadyCreated = await this.teamRepository.findOneByField({ name });
+
+		if (isTeamAlreadyCreated) {
+			throw new HttpException(TEAM_ALREADY_EXISTS, HttpStatus.CONFLICT);
+		}
+
 		const newTeam = await this.teamRepository.create({
 			name
 		});
