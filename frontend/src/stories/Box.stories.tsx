@@ -3,11 +3,21 @@ import { ComponentStory } from '@storybook/react';
 
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
+import Text from '@/components/Primitives/Text';
 import { ElevationType, BoxVariantType } from './types/PrimitiveTypes';
 import { capitalize } from './utils';
 
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
 const VARIANT_OPTIONS: BoxVariantType[] = ['bordered', 'dropdown'];
+
+const DISABLE_ARG_TYPES = {
+  elevation: {
+    control: false,
+  },
+  variant: {
+    control: false,
+  },
+};
 
 export default {
   title: 'Primitives/Box',
@@ -56,45 +66,30 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Elevations: ComponentStory<typeof Box> = ({ children, ...args }) => (
-  <Flex direction="column" gap={8}>
+  <Flex direction="column" gap={20}>
     {ELEVATION_OPTIONS.map((elevation) => (
-      <div key={elevation}>
-        <h4>Elevation {elevation}</h4>
+      <Flex direction="column" gap={8} key={elevation}>
+        <Text heading="4">Elevation {elevation}</Text>
         <Box elevation={elevation} {...args}>
           {children}
         </Box>
-      </div>
+      </Flex>
     ))}
   </Flex>
 );
 
-Elevations.argTypes = {
-  elevation: {
-    control: false,
-  },
-  variant: {
-    control: false,
-  },
-};
-
 export const Variants: ComponentStory<typeof Box> = ({ children, ...args }) => (
-  <Flex direction="column" gap={8}>
+  <Flex direction="column" gap={20}>
     {VARIANT_OPTIONS.map((variant) => (
-      <div key={variant}>
-        <h4>{capitalize(variant)} variant</h4>
+      <Flex direction="column" gap={8} key={variant}>
+        <Text heading="4">{capitalize(variant)} variant</Text>
         <Box variant={variant} {...args}>
           {children}
         </Box>
-      </div>
+      </Flex>
     ))}
   </Flex>
 );
 
-Variants.argTypes = {
-  elevation: {
-    control: false,
-  },
-  variant: {
-    control: false,
-  },
-};
+Elevations.argTypes = DISABLE_ARG_TYPES;
+Variants.argTypes = DISABLE_ARG_TYPES;
