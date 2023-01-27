@@ -136,7 +136,7 @@ const DragDropArea: React.FC<Props> = ({
             socketId={socketId}
             title={column.title}
             userId={userId}
-            boardUser={board.users.find((boardUser) => boardUser.user._id === userId)}
+            boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
             isRegularBoard={isRegularBoard}
             hasAdminRole={hasAdminRole}
             addCards={board.addCards}

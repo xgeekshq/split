@@ -129,7 +129,7 @@ const CardBody = React.memo<CardBodyProps>(
       const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
 
       if (team) {
-        myUser = team.users.find((user) => String(user.user._id) === String(userId));
+        myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
         const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
         const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
@@ -161,7 +161,7 @@ const CardBody = React.memo<CardBodyProps>(
           mainBoardTitle={board.title}
         />
       ),
-      [countDividedBoards, isDashboard, board._id, board.title, socketId, userId],
+      [countDividedBoards, isDashboard, board._id, board.title, socketId, userId, isSAdmin],
     );
 
     const iconLockConditions =

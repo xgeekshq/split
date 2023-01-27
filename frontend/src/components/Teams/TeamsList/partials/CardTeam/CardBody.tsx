@@ -42,12 +42,12 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
 
   const { _id: id, users } = team;
 
-  const userFound: TeamUser | undefined = users.find((member) => member.user._id === userId);
+  const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
 
   const userRole = userFound?.role;
 
   const userIsParticipating = useMemo(
-    () => users.some((user) => user.user._id === userId),
+    () => users.some((user) => user.user?._id === userId),
     [users, userId],
   );
 

@@ -30,7 +30,7 @@ export default class BoardDto {
 
 	@ApiProperty({ type: ColumnDto, isArray: true })
 	@ArrayNotEmpty()
-	@ArrayMinSize(3)
+	@ArrayMinSize(1)
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	@Type(() => ColumnDto)

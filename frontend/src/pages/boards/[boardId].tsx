@@ -3,7 +3,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
@@ -15,7 +15,7 @@ import AlertBox from '@/components/Primitives/AlertBox';
 import Flex from '@/components/Primitives/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
-import { boardInfoState, editColumnsState, newBoardState } from '@/store/board/atoms/board.atom';
+import { boardInfoState, newBoardState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
@@ -44,12 +44,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
     // TODO: adapt boardId to accept personal boards :)
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
-    const boardUser = data?.board?.users.find((user) => user.user._id === session?.user.id);
+    const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
-    const userFound = data?.board.users.find((teamUser) => teamUser.user._id === session?.user.id);
+    const userFound = data?.board.users.find((teamUser) => teamUser.user?._id === session?.user.id);
 
     const teamUserFound = data?.board.team?.users.find(
-      (teamUser) => teamUser.user._id === session?.user.id,
+      (teamUser) => teamUser.user?._id === session?.user.id,
     );
 
     if (
@@ -94,7 +94,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Recoil States
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
-  const setEditColumns = useSetRecoilState(editColumnsState);
 
   // Session Details
   const { data: session } = useSession();
@@ -125,10 +124,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
-      const columnTitles = data.board.columns.map((column) => column.title);
-      setEditColumns(columnTitles);
     }
-  }, [data, setEditColumns, setRecoilBoard]);
+  }, [data, setRecoilBoard]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
@@ -142,7 +139,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         : board?.team.users.some(
             (boardUser) =>
               [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
-              boardUser.user._id === userId,
+              boardUser.user?._id === userId,
           ),
     [board, isPersonalBoard, userId],
   );
@@ -153,9 +150,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         ? [
             board.users.some(
               (boardUser) =>
-                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user._id === userId,
+                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user?._id === userId,
             ),
-            board.createdBy._id === userId,
+            board.createdBy?._id === userId,
           ]
         : [false, false],
     [board, userId],

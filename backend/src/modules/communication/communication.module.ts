@@ -1,8 +1,9 @@
 import { BullModule } from '@nestjs/bull';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { configuration } from 'src/infrastructure/config/configuration';
 import BoardsModule from 'src/modules/boards/boards.module';
 import {
+	AddUserIntoChannelApplication,
 	ArchiveChannelApplication,
 	ArchiveChannelService,
 	ChatHandler,
@@ -18,8 +19,10 @@ import { SlackArchiveChannelConsumer } from 'src/modules/communication/consumers
 import { SlackCommunicationConsumer } from 'src/modules/communication/consumers/slack-communication.consumer';
 import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
+import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consummer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
+import { SlackAddUserToChannelProducer } from './producers/slack-add-user-channel.producer';
 import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';
 import { SlackResponsibleProducer } from './producers/slack-responsible.producer';
 
@@ -71,6 +74,17 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 							removeOnComplete: SlackArchiveChannelProducer.REMOVE_ON_COMPLETE,
 							priority: SlackArchiveChannelProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackAddUserToChannelProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackAddUserToChannelProducer.ATTEMPTS,
+							backoff: SlackAddUserToChannelProducer.BACKOFF,
+							delay: SlackAddUserToChannelProducer.DELAY,
+							removeOnFail: SlackAddUserToChannelProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackAddUserToChannelProducer.REMOVE_ON_COMPLETE,
+							priority: SlackAddUserToChannelProducer.PRIORITY
+						}
 					})
 			  ]
 			: [])
@@ -88,6 +102,7 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 					ArchiveChannelApplication,
 					ResponsibleApplication,
 					MergeBoardApplication,
+					AddUserIntoChannelApplication,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
 					SlackResponsibleProducer,
@@ -95,7 +110,9 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 					SlackMergeBoardProducer,
 					SlackMergeBoardConsumer,
 					SlackArchiveChannelProducer,
-					SlackArchiveChannelConsumer
+					SlackArchiveChannelConsumer,
+					SlackAddUserToChannelConsumer,
+					SlackAddUserToChannelProducer
 			  ]
 			: [])
 	],

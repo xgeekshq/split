@@ -26,7 +26,7 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const didMountRef = useRef(false);
 
-  const user = membersList.find((member) => member.user._id === session?.user.id);
+  const user = membersList.find((member) => member.user?._id === session?.user.id);
 
   const handleOpen = (event: MouseEvent) => {
     event.preventDefault();
@@ -63,16 +63,18 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
         css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
         gap="8"
       >
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-            isTeamMember={isTeamMember}
-            isOpen={isOpen}
-          />
-        ))}
+        {membersList?.map((member) =>
+          member.user ? (
+            <CardMember
+              key={member.user._id}
+              isTeamPage
+              isTeamCreator={member.user._id === session?.user.id}
+              member={member}
+              isTeamMember={isTeamMember}
+              isOpen={isOpen}
+            />
+          ) : null,
+        )}
       </ScrollableContent>
       <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
     </Flex>

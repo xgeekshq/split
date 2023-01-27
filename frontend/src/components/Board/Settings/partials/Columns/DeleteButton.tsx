@@ -16,10 +16,11 @@ interface Props {
 const DeleteColumnButton = ({ columnTitle, columnIndex, disableDeleteColumn }: Props) => {
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
   const handleDeleteColumn = () => {
-    const arrayWithoutColumn = editColumns.map((column) => column);
+    const arrayWithoutColumn = [...editColumns];
     arrayWithoutColumn.splice(columnIndex, 1);
     setEditColumns(arrayWithoutColumn);
   };
+
   return (
     <Flex direction="column">
       <Flex css={{ alignItems: 'center' }}>

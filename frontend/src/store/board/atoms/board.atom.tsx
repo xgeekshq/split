@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 
 import BoardType, { BoardInfoType } from '@/types/board/board';
+import ColumnType, { CreateColumn } from '@/types/column';
 
 export const boardState = atom<BoardType | undefined>({
   key: 'board',
@@ -22,7 +23,7 @@ export const filterTeamBoardsState = atom<string>({
   default: 'all',
 });
 
-export const editColumnsState = atom<string[]>({
+export const editColumnsState = atom<(ColumnType | CreateColumn)[]>({
   key: 'editColumns',
   default: [],
 });
