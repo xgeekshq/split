@@ -104,7 +104,7 @@ const CardMember = React.memo<CardBodyProps>(
             )}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
-                <Text size="sm" weight="medium">
+                <Text size="sm" fontWeight="medium">
                   New Joiner
                 </Text>
                 <Tooltip

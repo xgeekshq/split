@@ -150,7 +150,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           <Flex align="center" direction="column" justify="center">
             <OrSeparator>
               <hr />
-              <Text color="primary300" size="sm" weight="medium">
+              <Text color="primary300" size="sm" fontWeight="medium">
                 or
               </Text>
               <hr />

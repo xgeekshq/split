@@ -25,7 +25,7 @@ export default function Custom404() {
           404
         </Text>
 
-        <Text css={{ mt: '$10' }} heading="2" weight="medium">
+        <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
           Page Not Found
         </Text>
         <Text color="primary500" css={{ mt: '$24' }} size="md">

@@ -43,7 +43,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
               right: '0',
             }}
           />
-          <Text color="primary800" css={{ zIndex: 1 }} size="md" weight="bold">
+          <Text color="primary800" css={{ zIndex: 1 }} size="md" fontWeight="bold">
             {initialLetters}
           </Text>
         </Flex>
@@ -57,7 +57,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
               wordBreak: 'keep-all',
             }}
             size="sm"
-            weight="medium"
+            fontWeight="medium"
           >
             {`${firstName} ${lastName}`}
           </Text>
@@ -69,7 +69,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
               overflow: 'hidden',
             }}
             size="xs"
-            weight="medium"
+            fontWeight="medium"
           >
             {email}
           </Text>

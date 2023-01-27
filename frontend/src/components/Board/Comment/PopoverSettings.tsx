@@ -32,7 +32,7 @@ const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
             height: '$20',
           }}
         />
-        <Text size="sm" weight="medium">
+        <Text size="sm" fontWeight="medium">
           Edit comment
         </Text>
       </PopoverItem>
@@ -44,7 +44,7 @@ const PopoverCommentSettingsContent: React.FC<PopoverSettingsContentProps> = ({
             height: '$20',
           }}
         />
-        <Text size="sm" weight="medium">
+        <Text size="sm" fontWeight="medium">
           Delete comment
         </Text>
       </PopoverItem>

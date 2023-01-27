@@ -67,7 +67,7 @@ const UserHeader = ({
                   lineHeight: '$8',
                 }}
                 size="sm"
-                weight="medium"
+                fontWeight="medium"
               >
                 SUPER ADMIN
               </Text>

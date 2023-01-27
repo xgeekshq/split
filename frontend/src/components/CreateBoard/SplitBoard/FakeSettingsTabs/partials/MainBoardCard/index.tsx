@@ -89,7 +89,7 @@ const FakeMainBoardCard = () => (
         </Flex>
       </Flex>
       <Flex align="center" gap="8">
-        <Text size="sm" weight="medium">
+        <Text size="sm" fontWeight="medium">
           -----
         </Text>
         <FakeCardAvatars />

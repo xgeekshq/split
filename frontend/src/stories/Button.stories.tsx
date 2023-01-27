@@ -5,7 +5,7 @@ import Button from '@/components/Primitives/Button';
 import Sprite from '@/components/icons/Sprite';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { ButtonVariantType, SizeType } from './types/PrimitiveTypes';
+import { ButtonVariantType, ButtonSizeType } from './types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [
   'primary',
@@ -16,7 +16,7 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [
   'dangerOutline',
 ];
 
-const SIZE_OPTIONS: SizeType[] = ['sm', 'md', 'lg'];
+const SIZE_OPTIONS: ButtonSizeType[] = ['sm', 'md', 'lg'];
 
 export default {
   title: 'Primitives/Button',

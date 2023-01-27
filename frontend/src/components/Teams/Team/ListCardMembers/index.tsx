@@ -54,7 +54,7 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           <ButtonAddMember onClick={handleOpen}>
             <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
             <Text
-              weight="medium"
+              fontWeight="medium"
               css={{
                 ml: '$10',
                 fontSize: '$14',

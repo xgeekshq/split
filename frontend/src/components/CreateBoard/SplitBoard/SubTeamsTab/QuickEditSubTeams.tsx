@@ -187,7 +187,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               height: '$16',
             }}
           />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Quick edit sub-teams configurations
           </Text>
         </Flex>

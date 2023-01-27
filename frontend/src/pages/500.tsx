@@ -24,7 +24,7 @@ const Custom500 = () => (
         500
       </Text>
 
-      <Text css={{ mt: '$10' }} heading="2" weight="medium">
+      <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
         Server Error
       </Text>
       <Text color="primary500" css={{ mt: '$24' }} size="md">

@@ -35,7 +35,7 @@ const NewBoard: NextPage = () => {
   return (
     <Container>
       <PageHeader>
-        <Text color="primary800" heading={3} weight="bold">
+        <Text color="primary800" heading={3} fontWeight="bold">
           Add new board
         </Text>
         <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
@@ -44,7 +44,7 @@ const NewBoard: NextPage = () => {
       </PageHeader>
 
       <ContentContainer>
-        <Text heading={3} color="primary800" weight="bold">
+        <Text heading={3} color="primary800" fontWeight="bold">
           What kind of retro do you want to create?
         </Text>
         <Flex gap={40}>
