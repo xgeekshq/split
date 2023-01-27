@@ -70,7 +70,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 			providerAccountCreatedAt: userFromAzure.value[0].createdDateTime
 		});
 
-		this.slackCommunicationService.executeAddUserMainChannel({ email });
+		this.slackCommunicationService.executeAddUserMainChannel({ email: emailOrUniqueName });
 
 		if (!createdUser) return null;
 
