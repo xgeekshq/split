@@ -3,7 +3,8 @@ export const TYPES = {
 		SlackCommunicationApplication: 'SlackCommunicationApplication',
 		SlackMergeBoardApplication: 'SlackMergeBoardApplication',
 		SlackResponsibleApplication: 'SlackResponsibleApplication',
-		SlackArchiveChannelApplication: 'SlackArchiveChannelApplication'
+		SlackArchiveChannelApplication: 'SlackArchiveChannelApplication',
+		SlackAddUserIntoChannelApplication: 'SlackAddUserIntoChannelApplication'
 	},
 	services: {
 		SlackCommunicationService: 'SlackCommunicationService',

@@ -42,7 +42,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       const team = teamId as string;
 
       const addedUsers = selectedUsers.filter(
-        (user) => !listOfUsers.some((teamUser) => teamUser.user._id === user._id),
+        (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
@@ -53,7 +53,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       }));
 
       const removedUsers = listOfUsers.filter((teamUser) =>
-        unselectedUsers.some((user) => teamUser.user._id === user._id),
+        unselectedUsers.some((user) => teamUser.user?._id === user._id),
       );
       const removedUsersIds = removedUsers.map((user) => user._id);
       if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {

@@ -1,5 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChangeResponsibleType, MergeBoardType } from 'src/modules/communication/dto/types';
+import {
+	AddUserMainChannelType,
+	ChangeResponsibleType,
+	MergeBoardType
+} from 'src/modules/communication/dto/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 
 @Injectable()
@@ -20,6 +24,14 @@ export class SlackDisabledCommunicationService implements CommunicationServiceIn
 		this.logger.warn(
 			`Call "executeMergeBoardNotification" method with SLACK_ENABLE "false" with: "${JSON.stringify(
 				mergeBoard
+			)}"`
+		);
+	}
+
+	public async executeAddUserMainChannel(user: AddUserMainChannelType): Promise<void> {
+		this.logger.warn(
+			`Call "executeAddUserMainChannel" method with SLACK_ENABLE "false" with: "${JSON.stringify(
+				user.email
 			)}"`
 		);
 	}
