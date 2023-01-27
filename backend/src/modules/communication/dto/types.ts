@@ -79,3 +79,7 @@ export type ArchiveChannelData = {
 	data: PartialBoardType | string;
 	cascade?: boolean;
 };
+
+export type AddUserMainChannelType = {
+	email: string;
+};
