@@ -29,7 +29,6 @@ import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 import { ColumnSettings } from './partials/Columns';
-import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
