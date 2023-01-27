@@ -44,9 +44,9 @@ const TeamMembersList = () => {
       <ScrollableContent direction="column" justify="start">
         {membersList?.map((member) => (
           <CardMember
-            key={member.user._id}
+            key={member.user?._id}
             isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
+            isTeamCreator={member.user?._id === session?.user.id}
             member={member}
           />
         ))}

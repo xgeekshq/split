@@ -13,7 +13,7 @@ export type TeamDocument = Team & Document;
 	toObject: { virtuals: true }
 })
 export default class Team extends BaseModel {
-	@Prop({ nullable: false })
+	@Prop({ nullable: false, required: true, unique: true })
 	name!: string;
 
 	boards?: Board[];
