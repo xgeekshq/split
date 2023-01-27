@@ -16,6 +16,7 @@ import Text from '@/components/Primitives/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
+import Button from '@/components/Primitives/Button';
 
 interface QuickEditSubTeamsProps {
   team: Team;
@@ -165,32 +166,10 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Flex
-          align="center"
-          gap="8"
-          justify="end"
-          css={{
-            py: '$14',
-            cursor: 'pointer',
-            transition: 'text-decoration 0.2s ease-in-out',
-            '&:hover': {
-              '&>span': {
-                textDecoration: 'underline',
-              },
-            },
-          }}
-        >
-          <Icon
-            name="edit"
-            css={{
-              width: '$16',
-              height: '$16',
-            }}
-          />
-          <Text size="sm" weight="medium">
-            Quick edit sub-teams configurations
-          </Text>
-        </Flex>
+        <Button variant="link" size="sm" css={{ py: '$24' }}>
+          <Icon name="edit" />
+          Quick edit sub-teams configurations
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent css={{ left: '35% !important', top: '200px', flexDirection: 'column' }}>
         <Flex align="center" css={{ px: '$32', py: '$24' }} justify="between">

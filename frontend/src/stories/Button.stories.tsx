@@ -14,6 +14,7 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [
   'lightOutline',
   'danger',
   'dangerOutline',
+  'link',
 ];
 
 const SIZE_OPTIONS: SizeType[] = ['sm', 'md', 'lg'];

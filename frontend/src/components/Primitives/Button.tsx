@@ -148,6 +148,23 @@ const Button = styled('button', {
           opacity: 0.3,
         },
       },
+      link: {
+        color: '$primaryBase',
+        backgroundColor: '$transparent',
+        border: 'none',
+        '@hover': {
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        },
+        '&:active': {
+          textDecoration: 'underline',
+        },
+        '&:disabled': {
+          color: '$primary200',
+          backgroundColor: '$transparent',
+        },
+      },
     },
     isIcon: {
       true: {

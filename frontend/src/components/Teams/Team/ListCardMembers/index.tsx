@@ -8,8 +8,8 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import CardMember from '@/components/Teams/CreateTeam/CardMember';
-import { ButtonAddMember } from '@/components/Primitives/Dialog/styles';
 import Icon from '@/components/icons/Icon';
+import Button from '@/components/Primitives/Button';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
 
@@ -51,19 +51,10 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           Team Members
         </Text>
         {(!isTeamMember || isSAdmin) && (
-          <ButtonAddMember onClick={handleOpen}>
-            <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-            <Text
-              weight="medium"
-              css={{
-                ml: '$10',
-                fontSize: '$14',
-                lineHeight: '$18',
-              }}
-            >
-              Add/remove members
-            </Text>
-          </ButtonAddMember>
+          <Button variant="link" size="sm" onClick={handleOpen}>
+            <Icon name="plus" />
+            Add/remove members
+          </Button>
         )}
       </Flex>
       <ScrollableContent

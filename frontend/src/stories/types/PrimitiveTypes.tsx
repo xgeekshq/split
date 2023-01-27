@@ -9,7 +9,8 @@ export type ButtonVariantType =
   | 'light'
   | 'lightOutline'
   | 'danger'
-  | 'dangerOutline';
+  | 'dangerOutline'
+  | 'link';
 export type SizeType = 'sm' | 'md' | 'lg';
 
 // Primitive/Flex
