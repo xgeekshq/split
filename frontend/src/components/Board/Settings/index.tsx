@@ -71,6 +71,7 @@ const BoardSettings = ({
       addCards,
     },
   } = useRecoilValue(boardInfoState);
+
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
 
   // State used to change values
@@ -82,7 +83,7 @@ const BoardSettings = ({
     maxVotes: boardMaxVotes,
     users,
     isPublic,
-    columns: editColumns,
+    columns: isRegularBoard ? editColumns : columns,
     addCards,
   };
 
@@ -132,7 +133,7 @@ const BoardSettings = ({
     defaultValues: {
       title: data.title,
       maxVotes: data.maxVotes,
-      column1title: editColumns[0].title,
+      column1title: editColumns[0]?.title,
       column2title: editColumns[1]?.title,
       column3title: editColumns[2]?.title,
       column4title: editColumns[3]?.title,
@@ -150,7 +151,7 @@ const BoardSettings = ({
       ...prev,
       title: boardTitle,
       maxVotes: boardMaxVotes,
-      columns: editColumns,
+      columns: isRegularBoard ? editColumns : columns,
       hideCards,
       hideVotes,
       isPublic,
@@ -158,10 +159,12 @@ const BoardSettings = ({
     }));
     methods.setValue('title', boardTitle);
     methods.setValue('maxVotes', boardMaxVotes ?? null);
-    methods.setValue('column1title', editColumns[0].title);
-    methods.setValue('column2title', editColumns[1]?.title);
-    methods.setValue('column3title', editColumns[2]?.title);
-    methods.setValue('column4title', editColumns[3]?.title);
+    if (isRegularBoard) {
+      methods.setValue('column1title', editColumns[0]?.title);
+      methods.setValue('column2title', editColumns[1]?.title);
+      methods.setValue('column3title', editColumns[2]?.title);
+      methods.setValue('column4title', editColumns[3]?.title);
+    }
 
     setSwitchesState((prev) => ({
       ...prev,
@@ -181,6 +184,7 @@ const BoardSettings = ({
     methods,
     editColumns,
     addCards,
+    isRegularBoard,
   ]);
 
   const handleHideCardsChange = () => {
@@ -260,7 +264,7 @@ const BoardSettings = ({
         ...data,
         title,
         maxVotes,
-        columns: updatedColumns,
+        columns: isRegularBoard ? updatedColumns : data.columns,
         socketId,
       },
       {
@@ -351,15 +355,24 @@ const BoardSettings = ({
         <StyledForm
           onSubmit={methods.handleSubmit(
             ({ title, maxVotes, column1title, column2title, column3title, column4title }) => {
-              const updatedColumnTitles = [column1title, column2title, column3title, column4title];
-              const updatedColumns = [...editColumns];
-              updatedColumns.forEach((column, index) => {
-                updatedColumns[index] = {
-                  ...column,
-                  title: updatedColumnTitles[index] as string,
-                };
-              });
-              updateBoard(title, maxVotes, updatedColumns);
+              if (isRegularBoard) {
+                const updatedColumnTitles = [
+                  column1title,
+                  column2title,
+                  column3title,
+                  column4title,
+                ];
+                const updatedColumns = [...editColumns];
+                updatedColumns.forEach((column, index) => {
+                  updatedColumns[index] = {
+                    ...column,
+                    title: updatedColumnTitles[index] as string,
+                  };
+                });
+                updateBoard(title, maxVotes, updatedColumns);
+              } else {
+                updateBoard(title, maxVotes);
+              }
             },
           )}
         >
