@@ -147,9 +147,11 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		let newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+		let teamData;
 
 		if (team) {
 			await this.saveBoardUsersFromTeam(newUsers, team, boardData.responsibles);
+			teamData = await this.getTeamService.getTeam(team);
 		}
 
 		if (!haveDividedBoards && !team) {
@@ -157,8 +159,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		}
 
 		await this.saveBoardUsers(newUsers, newBoard._id);
-
-		const teamData = await this.getTeamService.getTeam(team);
 
 		if (newBoard && recurrent && team && maxUsers && teamData.name === 'xgeeks') {
 			const addCronJobDto: AddCronJobDto = {
