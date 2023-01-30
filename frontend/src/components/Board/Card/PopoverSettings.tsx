@@ -88,6 +88,7 @@ interface PopoverSettingsProps {
   hideCards: boolean;
   userId: string;
   item: CardItemType;
+  hasAdminRole: boolean;
   handleEditing: () => void;
   handleDeleteCard?: () => void;
 }
@@ -126,6 +127,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     item,
     userId,
     hideCards,
+    hasAdminRole,
   }) => {
     const { removeFromMergeCard } = useCards();
 
@@ -162,7 +164,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
         <PopoverSettingsContent
           isItem={isItem}
-          isOwner={item.createdBy?._id === userId}
+          isOwner={item.createdBy?._id === userId || hasAdminRole}
           setDeleteCard={handleDeleteCard}
           setEditCard={handleEditing}
           unmergeCard={unmergeCard}

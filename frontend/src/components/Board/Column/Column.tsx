@@ -171,6 +171,7 @@ const Column = React.memo<ColumMemoProps>(
                       maxVotes={maxVotes}
                       socketId={socketId}
                       userId={userId}
+                      hasAdminRole={hasAdminRole}
                     />
                     {provided.placeholder}
                   </CardsContainer>

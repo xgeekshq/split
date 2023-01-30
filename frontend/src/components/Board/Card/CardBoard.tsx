@@ -40,6 +40,7 @@ interface CardBoardProps {
   hideCards: boolean;
   isDefaultText: boolean;
   cardText?: string;
+  hasAdminRole: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -57,6 +58,7 @@ const CardBoard = React.memo<CardBoardProps>(
     isSubmited,
     hideCards,
     isDefaultText,
+    hasAdminRole,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -163,11 +165,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       >
                         {card.text}
                       </Text>
-                      {isSubmited && (
-                        <Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
-                      )}
-
-                      {!isSubmited && userId === card?.createdBy?._id && (
+                      {!isSubmited && (userId === card?.createdBy?._id || hasAdminRole) && (
                         <PopoverCardSettings
                           boardId={boardId}
                           cardGroupId={card._id}
@@ -182,6 +180,7 @@ const CardBoard = React.memo<CardBoardProps>(
                           newPosition={0}
                           socketId={socketId}
                           userId={userId}
+                          hasAdminRole={hasAdminRole}
                         />
                       )}
                     </Flex>
@@ -200,6 +199,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       socketId={socketId}
                       userId={userId}
                       isDefaultText={isDefaultText}
+                      hasAdminRole={hasAdminRole}
                     />
                   )}
                   <CardFooter
@@ -243,6 +243,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 userId={userId}
                 columnId={colId}
                 isDefaultText={isDefaultText}
+                hasAdminRole={hasAdminRole}
               />
             )}
           </Flex>

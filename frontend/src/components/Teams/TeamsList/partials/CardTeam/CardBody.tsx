@@ -120,7 +120,13 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
                 Team admin
               </Text>
 
-              <CardAvatars teamAdmins listUsers={team.users} responsible={false} userId={userId} />
+              <CardAvatars
+                stakeholders
+                teamAdmins
+                listUsers={team.users}
+                responsible={false}
+                userId={userId}
+              />
             </Flex>
             <Separator
               orientation="vertical"

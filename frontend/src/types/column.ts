@@ -47,6 +47,7 @@ export interface ColumnInnerList {
   hideCards: boolean;
   cardText?: string;
   isDefaultText?: boolean;
+  hasAdminRole: boolean;
 }
 
 export type ColumnDragItem = {

@@ -82,6 +82,11 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				new Date().getUTCMonth() === 11 && newMonth === 0
 					? new Date().getFullYear() + 1
 					: new Date().getFullYear();
+
+			const job = new CronJob(`${minutes} ${hours} ${day} ${newMonth} *`, () =>
+				this.handleComplete(String(ownerId), teamId, String(boardId))
+			);
+
 			const cronJobDoc = await this.schedulesModel.create({
 				board: String(boardId),
 				team: String(teamId),
@@ -92,9 +97,6 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 			if (!cronJobDoc) throw Error('CronJob not created');
 
-			const job = new CronJob(`${minutes} ${hours} ${day} ${newMonth} *`, () =>
-				this.handleComplete(String(ownerId), teamId, cronJobDoc.board.toString())
-			);
 			this.schedulerRegistry.addCronJob(String(boardId), job);
 			job.start();
 		} catch (e) {
