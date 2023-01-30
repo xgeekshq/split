@@ -95,10 +95,6 @@ const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
       <Button
         size="lg"
         type="button"
-        css={{
-          fontWeight: '$medium',
-          fontSize: '$18',
-        }}
         onClick={() => {
           handleRecoverPassword(userEmail);
         }}

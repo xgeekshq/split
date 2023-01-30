@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/icons/Icon';
 import Avatar from '@/components/Primitives/Avatar';
 import Button from '@/components/Primitives/Button';
@@ -30,30 +28,6 @@ interface FooterProps {
   maxVotes?: number;
   hideCards: boolean;
 }
-
-const StyledButtonIcon = styled(Button, {
-  m: '0 !important',
-  p: '0 !important',
-  lineHeight: '0 !important',
-  height: 'fit-content !important',
-  backgroundColor: 'transparent !important',
-  '& svg': {
-    color: '$primary500',
-  },
-  '@hover': {
-    '&:hover': {
-      backgroundColor: 'transparent !important',
-    },
-  },
-  '&:active': {
-    boxShadow: 'none !important',
-  },
-  '&:disabled': {
-    svg: {
-      opacity: '0.2',
-    },
-  },
-});
 
 const CardFooter = ({
   boardId,
@@ -206,7 +180,11 @@ const CardFooter = ({
               filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
-            <StyledButtonIcon
+            <Button
+              isIcon
+              variant="light"
+              size="sm"
+              css={{ color: '$primary500' }}
               disabled={
                 !isMainboard ||
                 (maxVotes && user?.votesCount === maxVotes) ||
@@ -215,7 +193,7 @@ const CardFooter = ({
               onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
-            </StyledButtonIcon>
+            </Button>
             <Text
               size="xs"
               css={{
@@ -235,7 +213,11 @@ const CardFooter = ({
               filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
-            <StyledButtonIcon
+            <Button
+              isIcon
+              variant="light"
+              size="sm"
+              css={{ color: '$primary500' }}
               disabled={
                 !isMainboard ||
                 votesInThisCard.length === 0 ||
@@ -246,7 +228,7 @@ const CardFooter = ({
               onClick={handleDeleteVote}
             >
               <Icon name="thumbs-down" />
-            </StyledButtonIcon>
+            </Button>
           </Flex>
 
           <Flex
@@ -256,12 +238,16 @@ const CardFooter = ({
               filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
-            <StyledButtonIcon
+            <Button
+              isIcon
+              variant="light"
+              size="sm"
+              css={{ color: '$primary500' }}
               disabled={hideCards && createdBy?._id !== userId}
               onClick={setOpenComments}
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
-            </StyledButtonIcon>
+            </Button>
             <Text css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }} size="xs">
               {comments.length}
             </Text>

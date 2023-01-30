@@ -16,15 +16,6 @@ import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '../icons/Icon';
 
-const ActionButton = styled(Button, {
-  padding: '$10 $14 !important',
-
-  svg: {
-    width: '$16',
-    height: '$16',
-  },
-});
-
 const StyledForm = styled('form', Flex, { width: '100%' });
 
 type AddCardProps = {
@@ -175,7 +166,6 @@ const AddCard = React.memo<AddCardProps>(
           css={{
             mx: '$20',
             display: 'flex',
-            fontWeight: '$medium',
           }}
           onClick={() => setIsOpen(true)}
         >
@@ -218,18 +208,18 @@ const AddCard = React.memo<AddCardProps>(
             id="text"
             placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
-          {!isCard && (
-            <Checkbox
-              id={colId + cardId}
-              label="Add anonymously"
-              size="16"
-              checked={anonymous}
-              setCheckedTerms={() => {
-                setIsCommentAnonymous(!isCommentAnonymous);
-              }}
-            />
-          )}
-          <Flex css={{ width: '100%' }} gap="4" justify="end">
+          <Flex css={{ width: '100%' }} justify="end">
+            {!isCard && (
+              <Checkbox
+                id={colId + cardId}
+                label="Add anonymously"
+                size="16"
+                checked={anonymous}
+                setCheckedTerms={() => {
+                  setIsCommentAnonymous(!isCommentAnonymous);
+                }}
+              />
+            )}
             {!isEditing && (
               <Checkbox
                 id={colId}
@@ -241,23 +231,25 @@ const AddCard = React.memo<AddCardProps>(
                 }}
               />
             )}
-            <ActionButton
-              css={{ width: '$48', height: '$36' }}
-              size="sm"
-              variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
-              onClick={handleClear}
-            >
-              <Icon name="close" />
-            </ActionButton>
-            <ActionButton
-              css={{ width: '$48', height: '$36' }}
-              disabled={disabledButton}
-              size="sm"
-              type="submit"
-              variant="primary"
-            >
-              <Icon name="check" />
-            </ActionButton>
+            <Flex gap="8">
+              <Button
+                css={{ width: '$52', height: '$36' }}
+                size="sm"
+                variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
+                onClick={handleClear}
+              >
+                <Icon name="close" />
+              </Button>
+              <Button
+                css={{ width: '$52', height: '$36' }}
+                disabled={disabledButton}
+                size="sm"
+                type="submit"
+                variant="primary"
+              >
+                <Icon name="check" />
+              </Button>
+            </Flex>
           </Flex>
         </FormProvider>
       </StyledForm>

@@ -215,7 +215,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
           {hasAdminRole && !board?.submitedAt && (
             <>
-              <Button onClick={handleOpen} variant="primaryOutline" css={{ fontWeight: '$medium' }}>
+              <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
                 Board settings
                 <Icon name="arrow-down" />

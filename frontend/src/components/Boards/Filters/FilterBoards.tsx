@@ -12,14 +12,10 @@ export interface OptionType {
 }
 
 const StyledButton = styled(Button, {
-  border: '1px solid $colors$primary100',
+  border: '1px solid $primary100',
   borderRadius: '0px',
-  height: '$36 !important',
   backgroundColor: '$white !important',
   color: '$primary300 !important',
-  fontSize: '$14 !important',
-  lineHeight: '$20 !important',
-  fontWeight: '$medium !important',
   '&[data-active="true"]': {
     borderColor: '$primary800',
     color: '$primary800 !important',
@@ -38,6 +34,7 @@ const FilterBoards: React.FC<FilterBoardsProps> = ({ teamNames }) => {
   return (
     <Flex css={{ zIndex: '10' }} justify="end">
       <StyledButton
+        size="sm"
         css={{ borderRadius: '12px 0 0 12px' }}
         data-active={filterState === 'all'}
         onClick={() => setFilterState('all')}
@@ -45,6 +42,7 @@ const FilterBoards: React.FC<FilterBoardsProps> = ({ teamNames }) => {
         All
       </StyledButton>
       <StyledButton
+        size="sm"
         data-active={filterState === 'personal'}
         onClick={() => setFilterState('personal')}
       >

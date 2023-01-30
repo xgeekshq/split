@@ -2,19 +2,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 
-const ButtonAddMember = styled('button', {
-  color: 'black',
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: 'transparent',
-  border: 0,
-  fontSize: '13px',
-  '&:hover': {
-    cursor: 'pointer',
-    textDecoration: 'underline',
-  },
-});
-
 const ScrollableContent = styled(Flex, {
   mt: '$24',
   height: 'calc(100vh - 390px)',
@@ -186,4 +173,4 @@ const StyledInput = styled('input', {
   },
 });
 
-export { ButtonAddMember, IconWrapper, PlaceholderText, ScrollableContent, StyledInput };
+export { IconWrapper, PlaceholderText, ScrollableContent, StyledInput };

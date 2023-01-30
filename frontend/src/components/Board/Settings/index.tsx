@@ -22,13 +22,13 @@ import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
 import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
+import Button from '@/components/Primitives/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
 import { ConfigurationSwitchSettings } from './partials/ConfigurationSettings/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
 import { ColumnSettings } from './partials/Columns';
-import { AddColumnButton } from './partials/Columns/AddColumnButton';
 import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
@@ -531,9 +531,14 @@ const BoardSettings = ({
                             disableDeleteColumn={editColumns.length === 1}
                           />
                         ))}
-                        {editColumns.length < 4 && (
-                          <AddColumnButton onAddColumn={handleAddColumn} />
-                        )}
+                        <Flex direction="row" justify="start">
+                          {editColumns.length < 4 && (
+                            <Button variant="link" size="sm" onClick={handleAddColumn}>
+                              <Icon name="plus" />
+                              Add new column
+                            </Button>
+                          )}
+                        </Flex>
                       </Flex>
                     </ColumnSettings>
                   )}

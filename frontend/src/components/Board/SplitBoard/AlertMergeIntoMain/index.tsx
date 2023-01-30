@@ -1,3 +1,4 @@
+import Icon from '@/components/icons/Icon';
 import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '@/components/Primitives/AlertDialog';
 import Button from '@/components/Primitives/Button';
@@ -23,15 +24,9 @@ const AlertMergeIntoMain: React.FC<Props> = ({ boardId, socketId }) => {
       }}
     >
       <AlertDialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="primaryOutline"
-          css={{
-            fontWeight: '$medium',
-            width: '$206',
-          }}
-        >
+        <Button size="sm" variant="primaryOutline">
           Merge into main board
+          <Icon name="merge" />
         </Button>
       </AlertDialogTrigger>
     </AlertCustomDialog>

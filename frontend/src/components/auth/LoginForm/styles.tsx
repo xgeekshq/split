@@ -1,17 +1,8 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
-
-const LoginButton = styled(Button, {
-  fontWeight: '$medium',
-  '& svg': {
-    height: '$40 !important',
-    width: '$40 !important',
-  },
-});
 
 const StyledHoverIconFlex = styled('div', Flex, {
   '&:hover': {
@@ -47,4 +38,4 @@ const OrSeparator = styled('div', {
   },
 });
 
-export { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex };
+export { OrSeparator, StyledForm, StyledHoverIconFlex };

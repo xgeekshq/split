@@ -14,9 +14,25 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [
   'lightOutline',
   'danger',
   'dangerOutline',
+  'link',
 ];
 
 const SIZE_OPTIONS: SizeType[] = ['sm', 'md', 'lg'];
+
+const DISABLE_ARG_TYPES = {
+  variant: {
+    control: false,
+  },
+  isIcon: {
+    control: false,
+  },
+  textSize: {
+    control: false,
+  },
+  size: {
+    control: false,
+  },
+};
 
 export default {
   title: 'Primitives/Button',
@@ -108,6 +124,23 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   </Flex>
 );
 
+export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
+  <Flex justify="evenly" wrap="wrap">
+    <Sprite />
+    {VARIANT_OPTIONS.map((variant) => (
+      <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
+        <h4>Variant {variant}</h4>
+        {SIZE_OPTIONS.map((size) => (
+          <Button variant={variant} size={size} disabled={disabled} key={size}>
+            <Icon name="plus" />
+            {children}
+          </Button>
+        ))}
+      </Flex>
+    ))}
+  </Flex>
+);
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
   <Flex justify="evenly" wrap="wrap">
@@ -123,35 +156,11 @@ export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
   </Flex>
 );
 
-Variants.argTypes = {
-  variant: {
-    control: false,
-  },
-  isIcon: {
-    control: false,
-  },
-  textSize: {
-    control: false,
-  },
-  size: {
-    control: false,
-  },
-};
-
+Variants.argTypes = DISABLE_ARG_TYPES;
+IconButton.argTypes = DISABLE_ARG_TYPES;
 Icons.argTypes = {
+  ...DISABLE_ARG_TYPES,
   children: {
-    control: false,
-  },
-  variant: {
-    control: false,
-  },
-  isIcon: {
-    control: false,
-  },
-  textSize: {
-    control: false,
-  },
-  size: {
     control: false,
   },
 };
