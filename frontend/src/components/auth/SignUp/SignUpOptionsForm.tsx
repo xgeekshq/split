@@ -50,7 +50,7 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
       </Button>
       <OrSeparator css={{ mt: '$22', mb: '$22' }}>
         <hr />
-        <Text color="primary300" size="sm" weight="medium">
+        <Text color="primary300" size="sm" fontWeight="medium">
           or
         </Text>
         <hr />

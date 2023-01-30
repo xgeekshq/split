@@ -214,7 +214,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleChangeCountTeams}
               />
               <Flex>
-                <Text hint css={{ color: values.teamError ? '$dangerBase' : '$primary800' }}>
+                <Text hint color={values.teamError ? 'dangerBase' : 'primary800'}>
                   Min {minTeams}, Max {maxTeams}{' '}
                   <Text hint color="primary300">
                     sub-teams
@@ -236,7 +236,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
                 onChange={handleMaxMembers}
               />
               <Flex>
-                <Text hint css={{ color: values.maxUserError ? '$dangerBase' : '$primary800' }}>
+                <Text hint color={values.maxUserError ? 'dangerBase' : 'primary800'}>
                   Min {minUsers}, Max {maxUsers}{' '}
                   <Text hint color="primary300">
                     members per team

@@ -50,7 +50,7 @@ const FakeTeamTab: React.FC = () => (
             color: '$primary200',
           }}
         />
-        <Text size="sm" weight="medium" color="primary200">
+        <Text size="sm" fontWeight="medium" color="primary200">
           Quick edit sub-teams configurations
         </Text>
       </Flex>

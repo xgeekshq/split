@@ -90,7 +90,7 @@ const CreateTeam = () => {
   return (
     <Container>
       <PageHeader>
-        <Text color="primary800" heading={3} weight="bold">
+        <Text color="primary800" heading={3} fontWeight="bold">
           Create New Team
         </Text>
         <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>

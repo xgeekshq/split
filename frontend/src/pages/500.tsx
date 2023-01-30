@@ -16,11 +16,11 @@ const Custom500 = () => (
     <ContainerSection>
       <LogoIcon />
 
-      <Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
+      <Text css={{ mt: '$29' }} display="3">
         500
       </Text>
 
-      <Text css={{ mt: '$10' }} heading="2" weight="medium">
+      <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
         Server Error
       </Text>
       <Text color="primary500" css={{ mt: '$24' }} size="md">

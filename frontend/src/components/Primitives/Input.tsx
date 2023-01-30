@@ -330,8 +330,8 @@ const Input: React.FC<InputProps> = ({
         {(!!currentValue || !currentValue) && (
           <Text
             hint
+            color={currentState === 'error' ? 'dangerBase' : 'primary300'}
             css={{
-              color: currentState === 'error' ? '$dangerBase' : '$primary300',
               mt: '$8',
             }}
           >

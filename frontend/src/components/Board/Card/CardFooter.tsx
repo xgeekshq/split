@@ -167,7 +167,7 @@ const CardFooter = ({
         </Flex>
       )}
       {createdByTeam && (
-        <Text size="xs" weight="medium">
+        <Text size="xs" fontWeight="medium">
           {createdByTeam}
         </Text>
       )}

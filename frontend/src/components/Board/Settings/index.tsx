@@ -449,12 +449,7 @@ const BoardSettings = ({
                             transition: 'all 0.25s ease-in-out',
                           }}
                         >
-                          <Text
-                            css={{
-                              mr: '$8',
-                              color: '$primary300',
-                            }}
-                          >
+                          <Text color="primary300" css={{ mr: '$8' }}>
                             Responsible Lottery
                           </Text>
                           <Separator

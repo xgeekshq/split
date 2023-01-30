@@ -79,7 +79,7 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
         <Text css={{ mt: '$24' }} heading="1">
           Trouble logging in?
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email address below, well email you instructions on how to change your
           password.
         </Text>

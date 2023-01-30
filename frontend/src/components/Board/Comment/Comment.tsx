@@ -99,7 +99,7 @@ const Comment: React.FC<CommentProps> = React.memo(
               {!comment.anonymous && (
                 <Text
                   size="xs"
-                  weight="medium"
+                  fontWeight="medium"
                   css={{
                     filter: commentBlur(hideCards, comment, userId),
                   }}

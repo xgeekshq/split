@@ -105,7 +105,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         <Text css={{ mt: '$24' }} heading="1">
           Welcome
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email and password to log in.
         </Text>
         <Input
@@ -151,7 +151,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           <Flex align="center" direction="column" justify="center">
             <OrSeparator>
               <hr />
-              <Text color="primary300" size="sm" weight="medium">
+              <Text color="primary300" size="sm" fontWeight="medium">
                 or
               </Text>
               <hr />

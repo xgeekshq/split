@@ -5,7 +5,8 @@ import Button from '@/components/Primitives/Button';
 import Sprite from '@/components/icons/Sprite';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { ButtonVariantType, SizeType } from './types/PrimitiveTypes';
+import Text from '@/components/Primitives/Text';
+import { ButtonVariantType, ButtonSizeType } from './types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [
   'primary',
@@ -17,7 +18,7 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [
   'link',
 ];
 
-const SIZE_OPTIONS: SizeType[] = ['sm', 'md', 'lg'];
+const SIZE_OPTIONS: ButtonSizeType[] = ['sm', 'md', 'lg'];
 
 const DISABLE_ARG_TYPES = {
   variant: {
@@ -113,7 +114,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   <Flex justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
-        <h4>Variant {variant}</h4>
+        <Text heading="4">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
             {children}
@@ -147,7 +148,7 @@ export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
     <Sprite />
     {SIZE_OPTIONS.map((size) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={size}>
-        <h4>Size {size}</h4>
+        <Text heading="4">Size {size}</Text>
         <Button isIcon size={size}>
           <Icon name="close" css={{ color: 'black' }} />
         </Button>

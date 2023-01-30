@@ -17,11 +17,11 @@ export default function Custom404() {
       <ContainerSection>
         <LogoIcon />
 
-        <Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
+        <Text css={{ mt: '$29' }} display="3">
           404
         </Text>
 
-        <Text css={{ mt: '$10' }} heading="2" weight="medium">
+        <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
           Board deleted
         </Text>
         <Text color="primary500" css={{ mt: '$24' }} size="md">

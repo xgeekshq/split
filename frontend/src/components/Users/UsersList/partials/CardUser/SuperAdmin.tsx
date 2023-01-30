@@ -67,7 +67,7 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: Supe
             lineHeight: '$8',
           }}
           size="sm"
-          weight="medium"
+          fontWeight="medium"
         >
           SUPER ADMIN
         </Text>

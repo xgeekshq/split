@@ -40,7 +40,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setEditCard}>
           <Icon name="edit" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Edit
           </Text>
         </PopoverItem>
@@ -59,7 +59,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
           }
         >
           <Icon name="arrow-long-right" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Unmerge card
           </Text>
         </PopoverItem>
@@ -67,7 +67,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setDeleteCard}>
           <Icon name="trash-alt" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Delete card
           </Text>
         </PopoverItem>

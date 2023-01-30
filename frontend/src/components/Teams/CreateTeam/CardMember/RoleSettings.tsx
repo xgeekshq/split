@@ -96,7 +96,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
                   handleSelectFunction(TeamUserRoles.MEMBER);
                 }}
               >
-                <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
+                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
                   Team Member
                 </Text>
 
@@ -113,7 +113,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
                   handleSelectFunction(TeamUserRoles.ADMIN);
                 }}
               >
-                <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
+                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
                   Team Admin
                 </Text>
                 <Text css={{ textAlign: 'end' }} size="sm">
@@ -130,7 +130,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
                   handleSelectFunction(TeamUserRoles.STAKEHOLDER);
                 }}
               >
-                <Text css={{ textAlign: 'end' }} size="sm" weight="medium">
+                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
                   Stakeholder
                 </Text>
                 <Text css={{ textAlign: 'end' }} size="sm">

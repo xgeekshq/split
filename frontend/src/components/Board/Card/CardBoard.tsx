@@ -145,7 +145,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     <Flex css={{ py: '$8' }} justify="between">
                       <Flex align="center" gap="4">
                         <Icon css={{ width: '$14', height: '$14' }} name="merge" />
-                        <Text size="xxs" weight="medium">
+                        <Text size="xxs" fontWeight="medium">
                           {card.items.length} merged cards
                         </Text>
                       </Flex>

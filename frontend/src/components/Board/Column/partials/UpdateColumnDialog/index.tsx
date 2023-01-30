@@ -142,7 +142,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
                   />
                 ) : (
                   <>
-                    <Text size="md" color="primary400" weight="regular">
+                    <Text size="md" color="primary400" fontWeight="regular">
                       This default text will be visible as placeholder when someone is creating a
                       new card.
                     </Text>
