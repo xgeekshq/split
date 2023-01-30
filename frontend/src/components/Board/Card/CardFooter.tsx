@@ -196,8 +196,8 @@ const CardFooter = ({
             </Button>
             <Text
               size="xs"
+              visible={votesInThisCard.length > 0}
               css={{
-                visibility: votesInThisCard.length > 0 ? 'visible' : 'hidden',
                 width: '10px',
               }}
             >
@@ -248,7 +248,7 @@ const CardFooter = ({
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
             </Button>
-            <Text css={{ visibility: comments.length > 0 ? 'visible' : 'hidden' }} size="xs">
+            <Text visible={comments.length > 0} size="xs">
               {comments.length}
             </Text>
           </Flex>
