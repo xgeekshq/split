@@ -23,10 +23,11 @@ const LoginSSO = ({ handleLoginAzure }: LoginSSOProps) => (
       {NEXT_PUBLIC_ENABLE_AZURE && (
         <Button
           variant="primaryOutline"
+          size="lg"
           onClick={handleLoginAzure}
-          css={{ display: 'flex', width: '100%', fontWeight: '$regular' }}
+          css={{ display: 'flex', width: '100%' }}
         >
-          <Icon css={{ width: '$60', height: '$60' }} name="microsoft" />
+          <Icon name="microsoft" />
           Login with Microsoft
         </Button>
       )}

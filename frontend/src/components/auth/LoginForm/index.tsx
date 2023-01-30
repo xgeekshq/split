@@ -24,7 +24,8 @@ import {
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
+import Button from '@/components/Primitives/Button';
+import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 
 interface LoginFormProps {
@@ -127,10 +128,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           type="password"
         />
 
-        <LoginButton disabled={loading.credentials} size="lg" type="submit">
+        <Button disabled={loading.credentials} size="lg" type="submit">
           {loading.credentials && <DotsLoading color="primary800" size={10} />}
           {!loading.credentials && 'Log in'}
-        </LoginButton>
+        </Button>
         <Text
           data-testid="forgot-password-button"
           size="sm"

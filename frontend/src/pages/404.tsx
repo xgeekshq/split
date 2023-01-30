@@ -1,15 +1,11 @@
 import Link from 'next/link';
 
-import {
-  BannerContainer,
-  ContainerSection,
-  GoBackButton,
-  ImageBackground,
-} from '@/styles/pages/error.styles';
+import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pages/error.styles';
 
 import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text';
 import SecondaryBanner from '@/components/icons/SecondaryBanner';
+import Button from '@/components/Primitives/Button';
 
 export default function Custom404() {
   return (
@@ -32,9 +28,9 @@ export default function Custom404() {
           The page you are looking for might have been removed or is temporarily unavailable
         </Text>
         <Link href="/">
-          <GoBackButton css={{ mt: '$26' }} size="md" style={{ width: '100%' }} variant="primary">
+          <Button css={{ mt: '$26' }} size="md">
             Go to Home
-          </GoBackButton>
+          </Button>
         </Link>
       </ContainerSection>
     </ImageBackground>

@@ -9,8 +9,9 @@ export type ButtonVariantType =
   | 'light'
   | 'lightOutline'
   | 'danger'
-  | 'dangerOutline';
-export type ButtonSizeType = 'sm' | 'md' | 'lg';
+  | 'dangerOutline'
+  | 'link';
+export type SizeType = 'sm' | 'md' | 'lg';
 
 // Primitive/Flex
 export type DirectionType = 'row' | 'column' | 'rowReverse' | 'columnReverse';

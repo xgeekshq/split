@@ -6,9 +6,8 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { usersListState } from '@/store/team/atom/team.atom';
 import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ButtonAddMember } from '@/components/Primitives/Dialog/styles';
 import Icon from '@/components/icons/Icon';
-import Text from '@/components/Primitives/Text';
+import Button from '@/components/Primitives/Button';
 import ListParticipants from '../ListParticipants';
 
 const SelectParticipants = () => {
@@ -57,19 +56,10 @@ const SelectParticipants = () => {
     <Flex direction="column" css={{ width: '100%' }}>
       <UsersBox haveError={false} participants={usersListNames} title="Participants" />
       <Flex justify="end" css={{ mt: '$10' }}>
-        <ButtonAddMember onClick={handleOpen}>
-          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-          <Text
-            fontWeight="medium"
-            css={{
-              ml: '$10',
-              fontSize: '$14',
-              lineHeight: '$18',
-            }}
-          >
-            Add/remove participants
-          </Text>
-        </ButtonAddMember>
+        <Button variant="link" size="sm" onClick={handleOpen}>
+          <Icon name="plus" />
+          Add/remove participants
+        </Button>
       </Flex>
       <ListParticipants isOpen={isOpen} setIsOpen={setIsOpen} />
     </Flex>

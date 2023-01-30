@@ -17,16 +17,6 @@ const PageHeader = styled('header', {
   justifyContent: 'space-between',
   padding: '$32 $40',
   backgroundColor: '$white',
-  button: {
-    '& svg': {
-      size: '$40 !important',
-      color: '$primary800',
-    },
-    transition: 'background-color 0.2s ease-in-out',
-    '&:hover': {
-      backgroundColor: '$primaryLightest',
-    },
-  },
 });
 
 const ContentContainer = styled('section', {

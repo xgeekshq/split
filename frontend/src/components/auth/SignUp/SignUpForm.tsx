@@ -115,18 +115,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           type="text"
         />
 
-        <Button
-          size="lg"
-          type="submit"
-          css={{
-            fontWeight: '$medium',
-            fontSize: '$18',
-            '& svg': {
-              height: '$40 !important',
-              width: '$40 !important',
-            },
-          }}
-        >
+        <Button size="lg" type="submit">
           Get Started
         </Button>
       </StyledForm>

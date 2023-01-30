@@ -43,12 +43,6 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
         type="submit"
         css={{
           mt: '$32',
-          fontWeight: '$medium',
-          fontSize: '$18',
-          '& svg': {
-            height: '$40 !important',
-            width: '$40 !important',
-          },
         }}
         onClick={loginAzure}
       >
