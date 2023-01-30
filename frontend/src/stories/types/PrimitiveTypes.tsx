@@ -11,7 +11,7 @@ export type ButtonVariantType =
   | 'danger'
   | 'dangerOutline'
   | 'link';
-export type SizeType = 'sm' | 'md' | 'lg';
+export type ButtonSizeType = 'sm' | 'md' | 'lg';
 
 // Primitive/Flex
 export type DirectionType = 'row' | 'column' | 'rowReverse' | 'columnReverse';
