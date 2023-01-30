@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { LeanDocument, Model } from 'mongoose';
-import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import {
 	Configs,
@@ -99,8 +98,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			this.schedulerRegistry.addCronJob(String(boardId), job);
 			job.start();
 		} catch (e) {
-			this.logger.log(e);
-			await this.schedulesModel.deleteOne({ board: boardId });
+			this.logger.error(e);
 		}
 	}
 
@@ -136,7 +134,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 			this.createSchedule(oldBoard, deletedSchedule, ownerId, teamId, oldBoardId);
 		} catch (e) {
-			throw Error(DELETE_FAILED);
+			this.logger.error(e);
 		}
 	}
 
