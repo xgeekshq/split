@@ -1,0 +1,54 @@
+import React from 'react';
+import { ComponentStory } from '@storybook/react';
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@/components/Primitives/AlertDialog';
+import Sprite from '@/components/icons/Sprite';
+import Flex from '@/components/Primitives/Flex';
+
+export default {
+  title: 'Primitives/AlertDialog',
+  component: AlertDialog,
+  parameters: {
+    controls: {
+      expanded: true,
+      exclude: ['ref', 'as', 'css'],
+      sort: 'requiredFirst',
+    },
+    docs: {
+      description: {
+        component: '', // Change main component description in docs page
+      },
+    },
+  },
+  args: {
+    title: 'Alert Dialog Title',
+    children:
+      'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos cum consequuntur quo beatae repudiandae quibusdam ratione dolorum, suscipit expedita nisi accusantium porro hic eligendi molestias dolore, quae officia nihil nemo.',
+  },
+};
+
+const Template: ComponentStory<typeof AlertDialog> = ({ children, ...args }) => (
+  <AlertDialog>
+    <Sprite />
+    {/* Button to Open the Dialog */}
+    <AlertDialogTrigger variant="primary">Open Alert Dialog</AlertDialogTrigger>
+
+    {/* Actual Dialog */}
+    <AlertDialogContent {...args}>
+      {children}
+      <Flex justify="end" gap="16">
+        <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
+        <AlertDialogAction>Action</AlertDialogAction>
+      </Flex>
+    </AlertDialogContent>
+  </AlertDialog>
+);
+
+export const Default = Template.bind({});
+Default.storyName = 'Basic Usage';
