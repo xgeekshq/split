@@ -24,15 +24,6 @@ import { SignUpEnum } from '@/utils/signUp.enum';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 
-const GoBackWrapper = styled(Flex, {
-  mt: '$24',
-  textAlign: 'center',
-  '&:hover': {
-    textDecorationLine: 'underline',
-    cursor: 'pointer',
-  },
-});
-
 interface RegisterFormProps {
   emailName: { email: string; goback: boolean };
   setShowSignUp: Dispatch<React.SetStateAction<SignUpEnum>>;
@@ -148,10 +139,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         >
           Sign up
         </Button>
-        <GoBackWrapper align="center" gap="8" onClick={handleShowSignUp}>
-          <Icon css={{ width: '$20', height: '$20' }} name="arrow-long-left" />
-          <Text>Go back</Text>
-        </GoBackWrapper>
+        <Flex>
+          <Button
+            variant="link"
+            css={{ pl: '0', mt: '$24', color: '$primary500' }}
+            onClick={handleShowSignUp}
+          >
+            <Icon name="arrow-long-left" />
+            Go Back
+          </Button>
+        </Flex>
       </StyledForm>
     </FormProvider>
   );

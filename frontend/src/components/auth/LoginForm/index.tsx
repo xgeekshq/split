@@ -132,21 +132,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           {loading.credentials && <DotsLoading color="primary800" size={10} />}
           {!loading.credentials && 'Log in'}
         </Button>
-        <Text
+        <Button
           data-testid="forgot-password-button"
+          variant="link"
           size="sm"
-          css={{
-            alignSelf: 'center',
-            mt: '$16',
-            '&:hover': {
-              textDecorationLine: 'underline',
-              cursor: 'pointer',
-            },
-          }}
+          css={{ color: '$primary500', mt: '$16' }}
           onClick={handleShowTroubleLogginIn}
         >
           Forgot password
-        </Text>
+        </Button>
         {AUTH_SSO && (
           <Flex align="center" direction="column" justify="center">
             <OrSeparator>

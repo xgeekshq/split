@@ -54,6 +54,9 @@ const DISABLE_ARG_TYPES = {
   size: {
     control: false,
   },
+  visible: {
+    control: false,
+  },
 };
 
 export default {
@@ -150,6 +153,15 @@ export default {
       table: {
         type: { summary: COLOR_OPTIONS.join('|') },
       },
+    },
+    visible: {
+      control: { type: 'boolean' },
+      description: 'Controls the component visibility.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+      },
+      defaultValue: true,
     },
   },
 };

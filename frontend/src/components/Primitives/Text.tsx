@@ -143,6 +143,14 @@ const Text = styled('span', {
         color: '$primary300',
       },
     },
+    visible: {
+      true: {
+        visibility: 'visible',
+      },
+      false: {
+        visibility: 'hidden',
+      },
+    },
     color: {
       white: {
         color: '$white',
