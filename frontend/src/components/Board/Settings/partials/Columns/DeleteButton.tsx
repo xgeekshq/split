@@ -1,12 +1,19 @@
 import Flex from '@/components/Primitives/Flex';
-import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
-import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
+import Text from '@/components/Primitives/Text';
+// import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Icon from '@/components/icons/Icon';
 import { deletedColumnsState, editColumnsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
-import ColumnType from '@/types/column';
-import { DisabledDeleteColumnButton } from './DisabledDeleteButton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from '@/components/Primitives/AlertDialog';
+import Button from '@/components/Primitives/Button';
+
 
 interface Props {
   columnTitle: string;
@@ -25,40 +32,35 @@ const DeleteColumnButton = ({ columnTitle, columnIndex, disableDeleteColumn }: P
   };
 
   return (
-    <Flex direction="column">
-      <Flex css={{ alignItems: 'center' }}>
-        <Flex align="center" css={{ ml: '$24' }} gap="24">
-          {disableDeleteColumn ? (
-            <DisabledDeleteColumnButton />
-          ) : (
-            <AlertCustomDialog
-              cancelText="Cancel"
-              confirmText="Delete"
-              css={undefined}
-              defaultOpen={false}
-              handleConfirm={handleDeleteColumn}
-              text={`Do you really want to delete the column ${columnTitle}?`}
-              title="Delete column"
-            >
-              <Tooltip content="Delete column">
-                <AlertDialogTrigger asChild>
-                  <Flex pointer>
-                    <Icon
-                      name="trash-alt"
-                      css={{
-                        color: '$primary400',
-                        mt: '$16',
-                        size: '$20',
-                      }}
-                    />
-                  </Flex>
-                </AlertDialogTrigger>
-              </Tooltip>
-            </AlertCustomDialog>
-          )}
+    <AlertDialog>
+      <Tooltip
+        content={
+          disableDeleteColumn ? 'Your board must have at least one column.' : 'Delete column'
+        }
+      >
+        <AlertDialogTrigger asChild onMouseDown={(e) => e.preventDefault()}>
+          <Button isIcon disabled={disableDeleteColumn}>
+            <Icon
+              name="trash-alt"
+              css={{
+                mt: '$16',
+                size: '$20',
+              }}
+            />
+          </Button>
+        </AlertDialogTrigger>
+      </Tooltip>
+
+      <AlertDialogContent title="Delete column">
+        <Text>
+          Do you really want to delete the column <Text fontWeight="bold">{columnTitle}</Text>?
+        </Text>
+        <Flex gap="16" justify="end" css={{ mt: '$24' }}>
+          <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteColumn}>Delete</AlertDialogAction>
         </Flex>
-      </Flex>
-    </Flex>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

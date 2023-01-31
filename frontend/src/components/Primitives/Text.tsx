@@ -151,6 +151,16 @@ const Text = styled('span', {
         visibility: 'hidden',
       },
     },
+    ellipsis: {
+      true: {
+        display: '-webkit-box',
+        '-webkit-box-orient': 'vertical',
+        '-webkit-line-clamp': 3,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'pre-wrap',
+      },
+    },
     color: {
       white: {
         color: '$white',

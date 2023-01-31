@@ -142,15 +142,14 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
   </Flex>
 );
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
+export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
   <Flex justify="evenly" wrap="wrap">
     <Sprite />
     {SIZE_OPTIONS.map((size) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={size}>
         <Text heading="4">Size {size}</Text>
-        <Button isIcon size={size}>
-          <Icon name="close" css={{ color: 'black' }} />
+        <Button isIcon size={size} disabled={disabled}>
+          <Icon name="close" />
         </Button>
       </Flex>
     ))}
