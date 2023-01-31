@@ -2,7 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.2...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.5...HEAD)
+
+## [v0.1.5](https://github.com/xgeekshq/split/compare/v0.1.4...v0.1.5) - 2023-01-30
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: settings in a split board @nunocaseiro (#955)
+- feat: text primitive story \& fixes @StereoPT (#953)
+- fix: button primitive component normalization @JoaoSaIvador (#949)
+
+## 📄 Documentation
+
+- feat: text primitive story \& fixes @StereoPT (#953)
+
+## [v0.1.4](https://github.com/xgeekshq/split/compare/v0.1.3...v0.1.4) - 2023-01-27
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: use unique name or email to add a user into slack main channel @nunocaseiro (#952)
+
+## [v0.1.3](https://github.com/xgeekshq/split/compare/v0.1.2...v0.1.3) - 2023-01-27
+
+### What Changed 👀
+
+### 🚀 Features
+
+- refactor: protect team names duplication @nunocaseiro (#951)
 
 ## [v0.1.2](https://github.com/xgeekshq/split/compare/v0.1.1...v0.1.2) - 2023-01-27
 

@@ -129,6 +129,8 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     hideCards,
     hasAdminRole,
   }) => {
+    const [openPopover, setOpenPopover] = useState(false);
+
     const { removeFromMergeCard } = useCards();
 
     const unmergeCard = () => {
@@ -143,8 +145,15 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
       });
     };
 
+    const handleOpenPopover = (value: boolean) => setOpenPopover(value);
+
+    const handleDelete = () => {
+      setOpenPopover(false);
+      if (handleDeleteCard) handleDeleteCard();
+    };
+
     return (
-      <Popover>
+      <Popover open={openPopover} onOpenChange={handleOpenPopover}>
         <PopoverTriggerStyled
           disabled={hideCards && item.createdBy?._id !== userId}
           css={{

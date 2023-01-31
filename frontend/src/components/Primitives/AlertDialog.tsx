@@ -7,6 +7,9 @@ import { overlayShow } from '@/animations/DialogShow';
 import Box from './Box';
 import Button from './Button';
 import Flex from './Flex';
+import Text from './Text';
+import Icon from '../icons/Icon';
+import Separator from './Separator';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   backdropFilter: 'blur(3px)',
@@ -34,15 +37,21 @@ const StyledContent = styled(AlertDialogPrimitive.Content, Flex, Box, {
   '&:focus': { outline: 'none' },
 });
 
-export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
-export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {
-  '@hover': { '&:hover': { cursor: 'pointer' } },
+const StyledTitleContainer = styled(Flex, { px: '$32', py: '$24' });
+const StyledDescription = styled(Flex, {
+  px: '$32',
+  py: '$24',
+  flexDirection: 'column !important',
+  gap: '$8',
 });
+
+export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
+export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
 
-type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void };
+type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void; title?: string };
 
-const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props }) => {
+const Content: React.FC<ContentProps> = ({ children, css, handleClose, title, ...props }) => {
   Content.defaultProps = {
     css: undefined,
     children: undefined,
@@ -52,7 +61,18 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props 
     <AlertDialogPrimitive.Portal>
       <StyledOverlay />
       <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
-        {children}
+        {title && (
+          <>
+            <StyledTitleContainer align="center" justify="between">
+              <Text heading="4">{title}</Text>
+              <AlertDialogCancel isIcon onClick={handleClose}>
+                <Icon name="close" css={{ color: '$primary400' }} />
+              </AlertDialogCancel>
+            </StyledTitleContainer>
+            <Separator css={{ backgroundColor: '$primary100' }} />
+          </>
+        )}
+        <StyledDescription>{children}</StyledDescription>
       </StyledContent>
     </AlertDialogPrimitive.Portal>
   );
@@ -60,4 +80,3 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, ...props 
 
 export const AlertDialog = AlertDialogPrimitive.Root;
 export const AlertDialogContent = Content;
-export const AlertDialogTitle = AlertDialogPrimitive.Title;

@@ -172,6 +172,7 @@ const Button = styled('button', {
         padding: '0 !important',
         width: 'auto !important',
         height: 'auto !important',
+        color: '$primary800 !important',
         backgroundColor: '$transparent !important',
         '@hover': {
           '&:hover': {
@@ -185,6 +186,9 @@ const Button = styled('button', {
         '&:disabled': {
           backgroundColor: '$transparent !important',
           border: 'none',
+          '& svg': {
+            color: '$primary200 !important',
+          },
         },
       },
     },
