@@ -152,6 +152,7 @@ const CardFooter = ({
           gap="4"
           css={{
             filter: cardFooterBlur(hideCards, createdBy, userId),
+            maxWidth: '$226',
           }}
         >
           <Avatar
@@ -160,8 +161,16 @@ const CardFooter = ({
             id={createdBy?._id}
             isDefaultColor={createdBy?._id === userId}
             size={20}
+            css={{ flexShrink: 0 }}
           />
-          <Text size="xs">
+          <Text
+            size="xs"
+            css={{
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {createdBy?.firstName} {createdBy?.lastName}
           </Text>
         </Flex>

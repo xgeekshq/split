@@ -48,7 +48,13 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
             <Text color="primary300" size="sm">
               Team admin
             </Text>
-            <CardAvatars teamAdmins listUsers={team.users} responsible={false} userId={userId} />
+            <CardAvatars
+              teamAdmins
+              stakeholders
+              listUsers={team.users}
+              responsible={false}
+              userId={userId}
+            />
           </Flex>
         )}
         {!hasTeam && users && (

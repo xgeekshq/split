@@ -17,6 +17,7 @@ interface CardItemListProps {
   isSubmited: boolean;
   hideCards: boolean;
   isDefaultText: boolean;
+  hasAdminRole: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -32,6 +33,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
   isSubmited,
   hideCards,
   isDefaultText,
+  hasAdminRole,
 }) => (
   <Flex direction="column">
     {items.map((item, idx) => (
@@ -63,6 +65,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
           socketId={socketId}
           userId={userId}
           isDefaultText={isDefaultText}
+          hasAdminRole={hasAdminRole}
         />
       </Flex>
     ))}

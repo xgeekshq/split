@@ -63,7 +63,7 @@ const AddCard = React.memo<AddCardProps>(
       mode: 'onSubmit',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: '',
+        text: cardText === 'Write your comment here...' ? '' : cardText,
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
