@@ -22,7 +22,7 @@ export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType>
   fetchData(`/boards`, { method: 'POST', data: newBoard });
 
 export const updateBoardRequest = (
-  board: UpdateBoardType & { socketId: string },
+  board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
 ): Promise<BoardType> => fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
 
 export const getBoardRequest = (

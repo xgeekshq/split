@@ -80,6 +80,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		session.startTransaction();
 		try {
 			await this.deletedVotesFromCard(boardId, cardId);
+
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -88,7 +89,10 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					},
 					{
 						$pull: {
-							'columns.$[].cards': { _id: cardId, createdBy: userId }
+							'columns.$[].cards': {
+								_id: cardId,
+								createdBy: userId
+							}
 						}
 					},
 					{ new: true }
@@ -163,6 +167,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 				const newComments = [...card.comments, ...cardItems[0].comments];
 				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems);
 			}
+
 			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
@@ -172,7 +177,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					{
 						$pull: {
 							'columns.$.cards.$[card].items': {
-								_id: cardItemId,
+								_id: cardId,
 								createdBy: userId
 							}
 						}

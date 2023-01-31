@@ -1,3 +1,4 @@
+import { DeleteCardService } from './../../cards/interfaces/services/delete.card.service.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -15,6 +16,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Cards from 'src/modules/cards/interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -36,7 +38,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		private socketService: SocketGateway
+		private socketService: SocketGateway,
+		@Inject(Cards.TYPES.services.DeleteCardService)
+		private deleteCardService: DeleteCardService
 	) {}
 
 	/**
@@ -83,6 +87,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		// Destructuring board variables
 		const { isSubBoard } = board;
+
+		if (boardData.deletedColumns && !isEmpty(boardData.deletedColumns)) {
+			const cardsToDelete = boardData.deletedColumns.flatMap((deletedColumnId: string) => {
+				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
+			});
+
+			cardsToDelete.forEach(async (card) => {
+				await this.deleteCardService.delete(board.id, card._id, card.createdBy.toString());
+			});
+		}
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
 		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };

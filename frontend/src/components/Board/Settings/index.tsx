@@ -13,7 +13,11 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
-import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
+import {
+  boardInfoState,
+  deletedColumnsState,
+  editColumnsState,
+} from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -73,6 +77,7 @@ const BoardSettings = ({
   } = useRecoilValue(boardInfoState);
 
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
+  const deletedColumns = useRecoilValue(deletedColumnsState);
 
   // State used to change values
   const initialData: UpdateBoardType = {
@@ -265,6 +270,7 @@ const BoardSettings = ({
         title,
         maxVotes,
         columns: isRegularBoard ? updatedColumns : data.columns,
+        deletedColumns,
         socketId,
       },
       {
