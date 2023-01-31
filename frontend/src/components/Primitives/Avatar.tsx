@@ -58,7 +58,7 @@ type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
 const Avatar: React.FC<AvatarProps> = ({
   src,
   size,
-  colors,
+  colors = undefined,
   fallbackText,
   css,
   isBoardPage,
