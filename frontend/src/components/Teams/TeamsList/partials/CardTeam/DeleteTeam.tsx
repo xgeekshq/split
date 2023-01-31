@@ -34,11 +34,11 @@ const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, teamUserId, i
     <AlertDialog>
       <Tooltip content="Delete team">
         <AlertDialogTrigger asChild onMouseDown={(e) => e.preventDefault()}>
-          <Button isIcon>
+          <Button isIcon size="sm">
             <Icon
               name="trash-alt"
               css={{
-                size: '$20',
+                color: '$primary400',
               }}
             />
           </Button>

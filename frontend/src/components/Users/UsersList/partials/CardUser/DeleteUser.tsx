@@ -37,7 +37,6 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ userId, firstName, lastName }) 
               name="trash-alt"
               css={{
                 color: '$primary400',
-                size: '$20',
               }}
             />
           </Button>
