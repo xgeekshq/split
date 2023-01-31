@@ -1,4 +1,3 @@
-import { DeleteCardService } from './../../cards/interfaces/services/delete.card.service.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -16,7 +15,6 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Votes from 'src/modules/votes/interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
@@ -41,8 +39,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
-		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardService,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
 		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
