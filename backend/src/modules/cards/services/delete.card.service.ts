@@ -156,6 +156,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		try {
 			await this.deletedVotesFromCardItem(boardId, cardItemId);
 			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
 			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
 
 			if (
