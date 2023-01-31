@@ -1,11 +1,13 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Card from '../../schemas/card.schema';
 
 export interface DeleteCardService {
 	delete(
 		boardId: string,
 		cardId: string,
-		userId: string
+		userId: string,
+		card?: Card
 	): Promise<LeanDocument<BoardDocument> | null>;
 
 	deleteFromCardGroup(

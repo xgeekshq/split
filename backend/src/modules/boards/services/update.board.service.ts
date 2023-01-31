@@ -94,7 +94,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			});
 
 			cardsToDelete.forEach(async (card) => {
-				await this.deleteCardService.delete(board.id, card._id, card.createdBy.toString());
+				await this.deleteCardService.delete(board.id, card._id, card.createdBy.toString(), card);
 			});
 		}
 
