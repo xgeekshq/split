@@ -1,9 +1,16 @@
 import Icon from '@/components/icons/Icon';
-import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
-import { AlertDialogTrigger } from '@/components/Primitives/AlertDialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from '@/components/Primitives/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
 import useBoard from '@/hooks/useBoard';
+import Button from '@/components/Primitives/Button';
+import Text from '@/components/Primitives/Text';
 
 type DeleteBoardProps = {
   boardId: string;
@@ -24,30 +31,30 @@ const DeleteBoard: React.FC<DeleteBoardProps> = ({ boardId, boardName, socketId,
   };
 
   return (
-    <AlertCustomDialog
-      cancelText="Cancel"
-      confirmText="Delete"
-      css={undefined}
-      defaultOpen={false}
-      handleConfirm={handleDelete}
-      text={`Do you really want to delete the board “${boardName}”?`}
-      title="Delete board"
-    >
+    <AlertDialog>
       <Tooltip content="Delete board">
-        <AlertDialogTrigger asChild>
-          <Flex pointer>
+        <AlertDialogTrigger asChild onMouseDown={(e) => e.preventDefault()}>
+          <Button isIcon>
             <Icon
               name="trash-alt"
               css={{
-                color: '$primary400',
-                width: '$20',
-                height: '$20',
+                size: '$20',
               }}
             />
-          </Flex>
+          </Button>
         </AlertDialogTrigger>
       </Tooltip>
-    </AlertCustomDialog>
+
+      <AlertDialogContent title="Delete board">
+        <Text>
+          Do you really want to delete the board <Text fontWeight="bold">{boardName}</Text>?
+        </Text>
+        <Flex gap="16" justify="end" css={{ mt: '$24' }}>
+          <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+        </Flex>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

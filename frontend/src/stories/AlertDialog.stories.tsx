@@ -10,6 +10,7 @@ import {
 } from '@/components/Primitives/AlertDialog';
 import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Flex';
+import Button from '@/components/Primitives/Button';
 
 export default {
   title: 'Primitives/AlertDialog',
@@ -37,7 +38,9 @@ const Template: ComponentStory<typeof AlertDialog> = ({ children, ...args }) => 
   <AlertDialog>
     <Sprite />
     {/* Button to Open the Dialog */}
-    <AlertDialogTrigger variant="primary">Open Alert Dialog</AlertDialogTrigger>
+    <AlertDialogTrigger asChild>
+      <Button>Open Alert Dialog</Button>
+    </AlertDialogTrigger>
 
     {/* Actual Dialog */}
     <AlertDialogContent {...args}>

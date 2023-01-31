@@ -11,7 +11,6 @@ import {
   AlertDialogTrigger,
 } from '@/components/Primitives/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
@@ -171,86 +170,71 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           Quick edit sub-teams configurations
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent css={{ left: '35% !important', top: '200px', flexDirection: 'column' }}>
-        <Flex align="center" css={{ px: '$32', py: '$24' }} justify="between">
-          <Text heading="4">Quick edit sub-teams configurations</Text>
-          <AlertDialogCancel asChild isIcon css={{ p: 0, height: '$24' }}>
-            <Flex
-              css={{
-                '& svg': {
-                  color: '$primary400',
-                  width: '$24 !important',
-                  height: '$24 !important',
-                },
-              }}
-            >
-              <Icon name="close" />
-            </Flex>
-          </AlertDialogCancel>
+
+      <AlertDialogContent
+        css={{ left: '35% !important', top: '200px', flexDirection: 'column' }}
+        title="Quick edit sub-teams configurations"
+      >
+        <Flex>
+          <Flex css={{ position: 'relative', top: '3px' }}>
+            <Icon css={{ width: '$16', height: '$16', color: '$primary500' }} name="info" />
+          </Flex>
+          <Text color="primary500" css={{ pl: '$8' }} size="md">
+            Note, if you change any of the two values below, the other value will adjust
+            accordingly.
+          </Text>
         </Flex>
-        <Separator css={{ backgroundColor: '$primary100' }} />
-        <Flex css={{ pt: '$29', px: '$32', pb: '$32' }} direction="column">
-          <Flex>
-            <Flex css={{ position: 'relative', top: '3px' }}>
-              <Icon css={{ width: '$16', height: '$16', color: '$primary500' }} name="info" />
-            </Flex>
-            <Text color="primary500" css={{ pl: '$8' }} size="md">
-              Note, if you change any of the two values below, the other value will adjust
-              accordingly.
-            </Text>
-          </Flex>
-          <Flex css={{ mt: '$24', width: '100%' }} gap="24">
-            <Flex css={{ width: '100%' }} direction="column" gap="8">
-              <Text label>Sub-teams count</Text>
-              <StyledInput
-                css={{ mb: 0 }}
-                id="teamsCount"
-                variant={values.teamError ? 'error' : 'default'}
-                max={maxTeams}
-                min={minTeams}
-                placeholder=" "
-                type="number"
-                value={values.teamsCount}
-                onChange={handleChangeCountTeams}
-              />
-              <Flex>
-                <Text hint color={values.teamError ? 'dangerBase' : 'primary800'}>
-                  Min {minTeams}, Max {maxTeams}{' '}
-                  <Text hint color="primary300">
-                    sub-teams
-                  </Text>
+        <Flex css={{ mt: '$24', width: '100%' }} gap="24">
+          <Flex css={{ width: '100%' }} direction="column" gap="8">
+            <Text label>Sub-teams count</Text>
+            <StyledInput
+              css={{ mb: 0 }}
+              id="teamsCount"
+              variant={values.teamError ? 'error' : 'default'}
+              max={maxTeams}
+              min={minTeams}
+              placeholder=" "
+              type="number"
+              value={values.teamsCount}
+              onChange={handleChangeCountTeams}
+            />
+            <Flex>
+              <Text hint color={values.teamError ? 'dangerBase' : 'primary800'}>
+                Min {minTeams}, Max {maxTeams}{' '}
+                <Text hint color="primary300">
+                  sub-teams
                 </Text>
-              </Flex>
+              </Text>
             </Flex>
-            <Flex css={{ width: '100%' }} direction="column" gap="8">
-              <Text label>Max sub-team members count</Text>
-              <StyledInput
-                css={{ mb: 0 }}
-                id="maxUsers"
-                variant={values.maxUserError ? 'error' : 'default'}
-                max={maxUsers}
-                min={minUsers}
-                placeholder=" "
-                type="number"
-                value={values.maxUsersCount}
-                onChange={handleMaxMembers}
-              />
-              <Flex>
-                <Text hint color={values.maxUserError ? 'dangerBase' : 'primary800'}>
-                  Min {minUsers}, Max {maxUsers}{' '}
-                  <Text hint color="primary300">
-                    members per team
-                  </Text>
+          </Flex>
+          <Flex css={{ width: '100%' }} direction="column" gap="8">
+            <Text label>Max sub-team members count</Text>
+            <StyledInput
+              css={{ mb: 0 }}
+              id="maxUsers"
+              variant={values.maxUserError ? 'error' : 'default'}
+              max={maxUsers}
+              min={minUsers}
+              placeholder=" "
+              type="number"
+              value={values.maxUsersCount}
+              onChange={handleMaxMembers}
+            />
+            <Flex>
+              <Text hint color={values.maxUserError ? 'dangerBase' : 'primary800'}>
+                Min {minUsers}, Max {maxUsers}{' '}
+                <Text hint color="primary300">
+                  members per team
                 </Text>
-              </Flex>
+              </Text>
             </Flex>
           </Flex>
-          <Flex css={{ mt: '$32' }} gap="24" justify="end">
-            <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
-              Save configurations
-            </AlertDialogAction>
-          </Flex>
+        </Flex>
+        <Flex css={{ mt: '$32' }} gap="24" justify="end">
+          <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
+            Save configurations
+          </AlertDialogAction>
         </Flex>
       </AlertDialogContent>
     </AlertDialog>

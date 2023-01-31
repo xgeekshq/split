@@ -42,10 +42,10 @@ const StyledDescription = styled(Flex, {
   px: '$32',
   py: '$24',
   flexDirection: 'column !important',
-  gap: '$24',
+  gap: '$8',
 });
 
-export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, Button, {});
+export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
 
@@ -65,7 +65,7 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, title, ..
           <>
             <StyledTitleContainer align="center" justify="between">
               <Text heading="4">{title}</Text>
-              <AlertDialogCancel isIcon>
+              <AlertDialogCancel isIcon onClick={handleClose}>
                 <Icon name="close" css={{ color: '$primary400' }} />
               </AlertDialogCancel>
             </StyledTitleContainer>
@@ -80,5 +80,3 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, title, ..
 
 export const AlertDialog = AlertDialogPrimitive.Root;
 export const AlertDialogContent = Content;
-
-// export const AlertDialogTitle = AlertDialogPrimitive.Title;
