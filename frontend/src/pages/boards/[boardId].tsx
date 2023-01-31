@@ -3,7 +3,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Container } from '@/styles/pages/boards/board.styles';
 import { getBoardRequest } from '@/api/boardService';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
@@ -13,7 +13,12 @@ import AlertBox from '@/components/Primitives/AlertBox';
 import Flex from '@/components/Primitives/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
-import { boardInfoState, newBoardState } from '@/store/board/atoms/board.atom';
+import {
+  boardInfoState,
+  deletedColumnsState,
+  editColumnsState,
+  newBoardState,
+} from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
@@ -92,6 +97,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Recoil States
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
+  const setEditColumns = useSetRecoilState(editColumnsState);
+  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
   // Session Details
   const { data: session } = useSession();
@@ -122,8 +129,10 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
+      setEditColumns(data.board.columns);
+      setDeletedColumns([]);
     }
-  }, [data, setRecoilBoard]);
+  }, [data, setDeletedColumns, setEditColumns, setRecoilBoard]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
