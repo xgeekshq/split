@@ -1,6 +1,5 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-// import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Icon from '@/components/icons/Icon';
 import { deletedColumnsState, editColumnsState } from '@/store/board/atoms/board.atom';
@@ -13,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/Primitives/AlertDialog';
 import Button from '@/components/Primitives/Button';
+import ColumnType from '@/types/column';
 
 interface Props {
   columnTitle: string;
