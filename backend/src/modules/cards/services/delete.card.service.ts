@@ -12,6 +12,7 @@ import { DeleteCardService } from '../interfaces/services/delete.card.service.in
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import CardItem from '../schemas/card.item.schema';
+import Card from '../schemas/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -42,8 +43,8 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 	}
 
-	async deletedVotesFromCard(boardId: string, cardId: string) {
-		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
+	async deletedVotesFromCard(boardId: string, cardId: string, card?: Card) {
+		const getCard = !card ? await this.getCardService.getCardFromBoard(boardId, cardId) : card;
 
 		if (!getCard) {
 			throw Error(UPDATE_FAILED);
@@ -75,11 +76,11 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 	}
 
-	async delete(boardId: string, cardId: string, userId: string) {
+	async delete(boardId: string, cardId: string, userId: string, card?: Card) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
-			await this.deletedVotesFromCard(boardId, cardId);
+			await this.deletedVotesFromCard(boardId, cardId, card);
 
 			const board = await this.boardModel
 				.findOneAndUpdate(
