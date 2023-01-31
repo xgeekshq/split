@@ -4,9 +4,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState } from 'recoil';
-
 import { Container } from '@/styles/pages/boards/board.styles';
-
 import { getBoardRequest } from '@/api/boardService';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import DragDropArea from '@/components/Board/DragDropArea';
