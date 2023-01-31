@@ -122,7 +122,7 @@ const NewRegularBoard: NextPage = () => {
     reValidateMode: 'onBlur',
     defaultValues: {
       text: '',
-      maxVotes: 2,
+      maxVotes: boardState.board.maxVotes,
       slackEnable: false,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
@@ -181,7 +181,7 @@ const NewRegularBoard: NextPage = () => {
     mutate({
       ...boardState.board,
       users: isEmpty(boardState.users) ? users : boardState.users,
-      title: title || boardState.board.title,
+      title: title || defaultBoard.board.title,
       dividedBoards: [],
       maxVotes,
       slackEnable,
@@ -200,7 +200,7 @@ const NewRegularBoard: NextPage = () => {
     mutate({
       ...boardState.board,
       users: isEmpty(boardState.users) ? users : boardState.users,
-      title: boardState.board.title,
+      title: 'Default Board',
       dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
