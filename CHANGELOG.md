@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.6...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.7...HEAD)
+
+## [v0.1.7](https://github.com/xgeekshq/split/compare/v0.1.6...v0.1.7) - 2023-01-31
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: participants @nunocaseiro (#978)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.6...v0.1.7
 
 ## [v0.1.6](https://github.com/xgeekshq/split/compare/v0.1.5...v0.1.6) - 2023-01-31
 
