@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.5...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.6...HEAD)
+
+## [v0.1.6](https://github.com/xgeekshq/split/compare/v0.1.5...v0.1.6) - 2023-01-31
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: recent issues @nunocaseiro (#970)
+- fix: close popover when modal is opened @CatiaAntunes96 (#972)
+- fix: create regular board working @patricia-mdias (#962)
+- fix: text primitive tech debt @JoaoSaIvador (#959)
+
+### 📄 Documentation
+
+- feat: alertdialog story @JoaoSaIvador (#974)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.5...v0.1.6
 
 ## [v0.1.5](https://github.com/xgeekshq/split/compare/v0.1.4...v0.1.5) - 2023-01-30
 
@@ -11,12 +28,12 @@ All notable changes to this project will be documented in this file.
 ### 🐛 Bug Fixes
 
 - fix: settings in a split board @nunocaseiro (#955)
-- feat: text primitive story \& fixes @StereoPT (#953)
+- feat: text primitive story & fixes @StereoPT (#953)
 - fix: button primitive component normalization @JoaoSaIvador (#949)
 
 ## 📄 Documentation
 
-- feat: text primitive story \& fixes @StereoPT (#953)
+- feat: text primitive story & fixes @StereoPT (#953)
 
 ## [v0.1.4](https://github.com/xgeekshq/split/compare/v0.1.3...v0.1.4) - 2023-01-27
 
@@ -216,6 +233,5 @@ All notable changes to this project will be documented in this file.
 - chore(deps-dev): bump concurrently from 7.3.0 to 7.6.0 @dependabot (#643)
 - chore(deps): bump amannn/action-semantic-pull-request from 4.5.0 to 5.0.2 @dependabot (#642)
 - chore(deps): bump actions/setup-node from 2 to 3 @dependabot (#641)
-
 </details>
 **Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.1...v0.1.2
