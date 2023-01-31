@@ -17,6 +17,7 @@ import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { getInitials } from '@/utils/getInitials';
 
 interface SubCardBoardProps {
   index: number;
@@ -168,7 +169,10 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
             </Flex>
             <Avatar
               css={{ position: 'relative', minWidth: '$34' }}
-              fallbackText={`${responsible?.firstName[0]}${responsible?.lastName[0]}`}
+              fallbackText={getInitials(
+                responsible?.firstName ?? '-',
+                responsible?.lastName ?? '-',
+              )}
               size={32}
               colors={{
                 bg: highlight2Colors.highlight2Lighter,
