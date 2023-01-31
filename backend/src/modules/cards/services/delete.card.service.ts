@@ -178,7 +178,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					{
 						$pull: {
 							'columns.$.cards.$[card].items': {
-								_id: cardId,
+								_id: cardItemId,
 								createdBy: userId
 							}
 						}

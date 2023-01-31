@@ -19,12 +19,14 @@ import {
 	updateBoardService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
+import { VotesModule } from '../votes/votes.module';
 
 @Module({
 	imports: [
 		UsersModule,
 		forwardRef(() => TeamsModule),
 		CardsModule,
+		VotesModule,
 		SchedulesModule,
 		CommunicationModule,
 		mongooseBoardModule,
