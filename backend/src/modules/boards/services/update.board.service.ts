@@ -17,6 +17,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -27,6 +28,7 @@ import { BoardDataPopulate } from '../utils/populate-board';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -40,7 +42,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardService
+		private deleteCardService: DeleteCardService,
+		@Inject(Votes.TYPES.services.DeleteVoteService)
+		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	/**
@@ -93,8 +97,24 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
 			});
 
-			cardsToDelete.forEach(async (card) => {
-				await this.deleteCardService.delete(board.id, card._id, card.createdBy.toString(), card);
+			cardsToDelete.forEach((cards) => {
+				cards.items.forEach(async (card) => {
+					const votesByUser = new Map<string, number>();
+
+					card.votes.forEach((userId) => {
+						if (!votesByUser.has(userId.toString())) {
+							votesByUser.set(userId.toString(), 1);
+						} else {
+							const count = votesByUser.get(userId.toString());
+
+							votesByUser.set(userId.toString(), count + 1);
+						}
+					});
+
+					votesByUser.forEach(async (votesCount, userId) => {
+						await this.deleteVoteService.decrementVoteUser(board.id, userId, -votesCount);
+					});
+				});
 			});
 		}
 
