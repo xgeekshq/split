@@ -174,7 +174,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
         <PopoverSettingsContent
           isItem={isItem}
           isOwner={item.createdBy?._id === userId || hasAdminRole}
-          setDeleteCard={handleDeleteCard}
+          setDeleteCard={handleDelete}
           setEditCard={handleEditing}
           unmergeCard={unmergeCard}
         />
