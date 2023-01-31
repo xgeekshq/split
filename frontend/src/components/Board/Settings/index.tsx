@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
@@ -77,6 +77,7 @@ const BoardSettings = ({
   } = useRecoilValue(boardInfoState);
 
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
+  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
   const deletedColumns = useRecoilValue(deletedColumnsState);
 
   // State used to change values
@@ -339,7 +340,11 @@ const BoardSettings = ({
 
     window?.addEventListener('keydown', keyDownHandler);
 
-    return () => window?.removeEventListener('keydown', keyDownHandler);
+    return () => {
+      window?.removeEventListener('keydown', keyDownHandler);
+      setEditColumns(columns);
+      setDeletedColumns([]);
+    };
   }, []);
 
   const handleAddColumn = () => {
