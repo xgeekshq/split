@@ -81,9 +81,11 @@ const OptionsMenu = ({
     setOpenPopover(false);
   };
 
+  const handleOpenPopover = (value: boolean) => setOpenPopover(value);
+
   return (
     <>
-      <Popover open={openPopover} onOpenChange={(value: boolean) => setOpenPopover(value)}>
+      <Popover open={openPopover} onOpenChange={handleOpenPopover}>
         <PopoverTriggerStyled disabled={disabled} css={{ ml: '$8' }}>
           <Icon name="menu-dots" size={24} />
         </PopoverTriggerStyled>
