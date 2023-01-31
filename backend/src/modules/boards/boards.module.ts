@@ -1,3 +1,4 @@
+import { CardsModule } from 'src/modules/cards/cards.module';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
@@ -23,6 +24,7 @@ import BoardsController from './controller/boards.controller';
 	imports: [
 		UsersModule,
 		forwardRef(() => TeamsModule),
+		CardsModule,
 		SchedulesModule,
 		CommunicationModule,
 		mongooseBoardModule,

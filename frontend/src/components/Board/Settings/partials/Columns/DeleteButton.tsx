@@ -3,8 +3,9 @@ import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
 import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Icon from '@/components/icons/Icon';
-import { editColumnsState } from '@/store/board/atoms/board.atom';
+import { deletedColumnsState, editColumnsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
+import ColumnType from '@/types/column';
 import { DisabledDeleteColumnButton } from './DisabledDeleteButton';
 
 interface Props {
@@ -15,10 +16,12 @@ interface Props {
 
 const DeleteColumnButton = ({ columnTitle, columnIndex, disableDeleteColumn }: Props) => {
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
+  const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
   const handleDeleteColumn = () => {
     const arrayWithoutColumn = [...editColumns];
-    arrayWithoutColumn.splice(columnIndex, 1);
+    const column = arrayWithoutColumn.splice(columnIndex, 1)[0] as ColumnType;
     setEditColumns(arrayWithoutColumn);
+    if (column._id) setDeletedColumns([...deletedColumns, column._id]);
   };
 
   return (
