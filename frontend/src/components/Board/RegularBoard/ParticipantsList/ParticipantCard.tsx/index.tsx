@@ -4,8 +4,6 @@ import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/icons/Icon';
 import { InnerContainer, StyledMemberTitle } from '@/components/Teams/CreateTeam/CardMember/styles';
 import { BoardUser } from '@/types/board/board.user';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DeleteColumnButton } from '@/components/Board/Settings/partials/Columns/DeleteButton';
 import Tooltip from '@/components/Primitives/Tooltip';
 
 type CardBodyProps = {
@@ -16,8 +14,7 @@ type CardBodyProps = {
 };
 
 const ParticipantCard = React.memo<CardBodyProps>(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ({ member, isBoardCreator, isBoardMember, isOpen }) => (
+  ({ member, /* isBoardCreator, isBoardMember, */ isOpen }) => (
     <Flex css={{ flex: '1 1 1' }} direction="column">
       <Flex>
         <InnerContainer

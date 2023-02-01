@@ -24,6 +24,7 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
         <Flex justify="between">
           {isDashboard && <Text heading="1">Welcome, {firstName}</Text>}
           {isBoards && <Text heading="1">Boards</Text>}
+          {/* {isParticipants && <Text heading="1">Participants</Text>} */}
           {isTeams && <Text heading="1">Teams</Text>}
           {isUsers && <Text heading="1">Users</Text>}
           {(isDashboard || isBoards) && (
@@ -42,6 +43,12 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
               </AddNewBoardButton>
             </Link>
           )}
+          {/* {isParticipants && (
+            <AddNewBoardButton size="md">
+              <Icon css={{ color: 'white' }} name="plus" />
+              Add participants
+            </AddNewBoardButton>
+          )} */}
         </Flex>
         {children}
       </Flex>
