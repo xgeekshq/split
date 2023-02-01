@@ -8,14 +8,26 @@ import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
 import {
+	afterUserPausedTimerSubscriber,
+	afterUserRequestedTimerStateSubscriber,
+	afterUserStartedTimerSubscriber,
+	afterUserStoppedTimerSubscriber,
+	afterUserUpdatedDurationSubscriber,
+	boardTimerRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
 	getBoardService,
+	pauseBoardTimerService,
+	sendBoardTimerStateService,
+	startBoardTimerService,
+	stopBoardTimerService,
 	updateBoardApplication,
-	updateBoardService
+	updateBoardService,
+	updateBoardTimerDurationService,
+	updateBoardTimerTimeLeftService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 
@@ -36,7 +48,19 @@ import BoardsController from './controller/boards.controller';
 		createBoardApplication,
 		updateBoardApplication,
 		deleteBoardApplication,
-		getBoardApplication
+		getBoardApplication,
+		boardTimerRepository,
+		sendBoardTimerStateService,
+		startBoardTimerService,
+		pauseBoardTimerService,
+		stopBoardTimerService,
+		updateBoardTimerTimeLeftService,
+		updateBoardTimerDurationService,
+		afterUserPausedTimerSubscriber,
+		afterUserStartedTimerSubscriber,
+		afterUserStoppedTimerSubscriber,
+		afterUserUpdatedDurationSubscriber,
+		afterUserRequestedTimerStateSubscriber
 	],
 	controllers: [BoardsController],
 	exports: [
