@@ -27,7 +27,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
             py: '$22',
             maxHeight: '$76',
             ml: 0,
-            width: '100%',
+            // width: '100%',
           }}
         >
           <Flex align="center" css={{ width: '100%' }} gap="8">
