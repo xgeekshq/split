@@ -92,7 +92,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
             </SwitchThumb>
           </Switch>
           <Flex direction="column">
-            <Text size="md" weight="medium">
+            <Text size="md" fontWeight="medium">
               Hide cards from others
             </Text>
             <Text color="primary500" size="sm">
@@ -116,7 +116,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
             </SwitchThumb>
           </Switch>
           <Flex direction="column">
-            <Text size="md" weight="medium">
+            <Text size="md" fontWeight="medium">
               Hide votes from others
             </Text>
             <Text color="primary500" size="sm">
@@ -140,7 +140,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
             </SwitchThumb>
           </Switch>
           <Flex direction="column">
-            <Text size="md" weight="medium">
+            <Text size="md" fontWeight="medium">
               Limit votes
             </Text>
             <Text color="primary500" size="sm">
@@ -172,7 +172,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
               </SwitchThumb>
             </Switch>
             <Flex direction="column">
-              <Text size="md" weight="medium">
+              <Text size="md" fontWeight="medium">
                 Make board public
               </Text>
               <Text color="primary500" size="sm">

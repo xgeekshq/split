@@ -63,7 +63,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary300" size="sm">
             {boardTypeCaption} |
           </Text>
-          <Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
+          <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
             {boardOwnerName}
           </Text>
           <CardAvatars

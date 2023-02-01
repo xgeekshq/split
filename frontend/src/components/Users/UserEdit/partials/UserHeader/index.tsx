@@ -3,8 +3,8 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';
-import { AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
 import Icon from '@/components/icons/Icon';
+import Button from '@/components/Primitives/Button';
 import { TitleSection } from './styles';
 import { ListTeams } from '../TeamsDialog';
 
@@ -67,16 +67,16 @@ const UserHeader = ({
                   lineHeight: '$8',
                 }}
                 size="sm"
-                weight="medium"
+                fontWeight="medium"
               >
                 SUPER ADMIN
               </Text>
             )}
           </Flex>
-          <AddNewBoardButton size="sm" onClick={handleOpen}>
-            <Icon css={{ color: 'white' }} name="plus" />
+          <Button size="sm" onClick={handleOpen}>
+            <Icon name="plus" />
             Add user to new team
-          </AddNewBoardButton>
+          </Button>
         </TitleSection>
       </Flex>
       <Flex justify="end" css={{ mt: '$40' }}>

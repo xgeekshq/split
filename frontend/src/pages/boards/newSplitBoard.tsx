@@ -238,12 +238,12 @@ const NewSplitBoard: NextPage = () => {
       <QueryError>
         <Container style={isLoading ? { opacity: 0.5 } : undefined}>
           <PageHeader>
-            <Text color="primary800" heading={3} weight="bold">
+            <Text color="primary800" heading={3} fontWeight="bold">
               Add new SPLIT board
             </Text>
 
-            <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-              <Icon name="close" />
+            <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
+              <Icon css={{ color: '$primaryBase' }} name="close" />
             </Button>
           </PageHeader>
           <ContentWrapper>

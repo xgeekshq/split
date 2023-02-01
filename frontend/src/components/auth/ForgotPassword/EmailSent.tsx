@@ -55,38 +55,24 @@ const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
       </Text>
       <Text
         size="md"
+        color="primary500"
         css={{
-          mt: '$16',
-          color: '$primary500',
-          margin: '8px auto 32px 0',
+          margin: '12px auto 32px 0',
         }}
       >
         A link to reset your password has been sent to{' '}
-        <Text css={{ mt: '$16', color: '$primary500', fontWeight: '500' }} size="md">
+        <Text size="md" fontWeight="bold" color="primary500">
           {userEmail}
-          <Text
-            size="md"
-            css={{
-              mt: '$16',
-              color: '$primary500',
-              margin: '8px auto 32px 0',
-              letterSpacing: '-1px',
-            }}
-          >
-            . Please allow a few minutes for the email to get to you and then follow the
-            instructions in the email.
-          </Text>
         </Text>
+        . Please allow a few minutes for the email to get to you and then follow the instructions in
+        the email.
       </Text>
 
       <Separator />
       <Text
-        size="md"
+        label
         css={{
-          mt: '$16',
-          color: '$primary300',
-          letterSpacing: '-1px',
-          margin: '24px auto 24px',
+          margin: '24px auto',
         }}
       >
         If you dont see the email, check other places it might be, like your junk, spam, social, or
@@ -95,10 +81,6 @@ const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
       <Button
         size="lg"
         type="button"
-        css={{
-          fontWeight: '$medium',
-          fontSize: '$18',
-        }}
         onClick={() => {
           handleRecoverPassword(userEmail);
         }}

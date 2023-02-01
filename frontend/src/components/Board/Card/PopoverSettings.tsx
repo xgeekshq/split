@@ -40,7 +40,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setEditCard}>
           <Icon name="edit" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Edit
           </Text>
         </PopoverItem>
@@ -59,7 +59,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
           }
         >
           <Icon name="arrow-long-right" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Unmerge card
           </Text>
         </PopoverItem>
@@ -67,7 +67,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
       {isOwner && (
         <PopoverItem align="center" gap="8" onClick={setDeleteCard}>
           <Icon name="trash-alt" />
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             Delete card
           </Text>
         </PopoverItem>
@@ -88,6 +88,7 @@ interface PopoverSettingsProps {
   hideCards: boolean;
   userId: string;
   item: CardItemType;
+  hasAdminRole: boolean;
   handleEditing: () => void;
   handleDeleteCard?: () => void;
 }
@@ -126,7 +127,10 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     item,
     userId,
     hideCards,
+    hasAdminRole,
   }) => {
+    const [openPopover, setOpenPopover] = useState(false);
+
     const { removeFromMergeCard } = useCards();
 
     const unmergeCard = () => {
@@ -141,8 +145,15 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
       });
     };
 
+    const handleOpenPopover = (value: boolean) => setOpenPopover(value);
+
+    const handleDelete = () => {
+      setOpenPopover(false);
+      if (handleDeleteCard) handleDeleteCard();
+    };
+
     return (
-      <Popover>
+      <Popover open={openPopover} onOpenChange={handleOpenPopover}>
         <PopoverTriggerStyled
           disabled={hideCards && item.createdBy?._id !== userId}
           css={{
@@ -162,8 +173,8 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
         <PopoverSettingsContent
           isItem={isItem}
-          isOwner={item.createdBy?._id === userId}
-          setDeleteCard={handleDeleteCard}
+          isOwner={item.createdBy?._id === userId || hasAdminRole}
+          setDeleteCard={handleDelete}
           setEditCard={handleEditing}
           unmergeCard={unmergeCard}
         />

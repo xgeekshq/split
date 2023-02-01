@@ -17,7 +17,7 @@ const EmptyPersonalBoards = () => (
           pathname: `/boards/new`,
         }}
       >
-        <StyledNewBoardLink underline weight="medium">
+        <StyledNewBoardLink underline fontWeight="medium">
           Add a new personal board
         </StyledNewBoardLink>
       </Link>{' '}

@@ -44,12 +44,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
     // TODO: adapt boardId to accept personal boards :)
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
-    const boardUser = data?.board?.users.find((user) => user.user._id === session?.user.id);
+    const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
-    const userFound = data?.board.users.find((teamUser) => teamUser.user._id === session?.user.id);
+    const userFound = data?.board.users.find((teamUser) => teamUser.user?._id === session?.user.id);
 
     const teamUserFound = data?.board.team?.users.find(
-      (teamUser) => teamUser.user._id === session?.user.id,
+      (teamUser) => teamUser.user?._id === session?.user.id,
     );
 
     if (
@@ -139,7 +139,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         : board?.team.users.some(
             (boardUser) =>
               [TeamUserRoles.STAKEHOLDER, TeamUserRoles.ADMIN].includes(boardUser.role) &&
-              boardUser.user._id === userId,
+              boardUser.user?._id === userId,
           ),
     [board, isPersonalBoard, userId],
   );
@@ -150,9 +150,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         ? [
             board.users.some(
               (boardUser) =>
-                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user._id === userId,
+                boardUser.role === BoardUserRoles.RESPONSIBLE && boardUser.user?._id === userId,
             ),
-            board.createdBy._id === userId,
+            board.createdBy?._id === userId,
           ]
         : [false, false],
     [board, userId],
@@ -215,7 +215,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
           {hasAdminRole && !board?.submitedAt && (
             <>
-              <Button onClick={handleOpen} variant="primaryOutline" css={{ fontWeight: '$medium' }}>
+              <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
                 Board settings
                 <Icon name="arrow-down" />

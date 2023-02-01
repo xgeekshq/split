@@ -5,10 +5,10 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
 import Icon from '@/components/icons/Icon';
+import Button from '@/components/Primitives/Button';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';
 import { ScrollableContent } from './styles';
-import { ButtonAddMember } from '../ListMembersDialog/styles';
 
 const TeamMembersList = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,26 +27,17 @@ const TeamMembersList = () => {
         <Text css={{ flex: 1 }} heading="3">
           Team Members
         </Text>
-        <ButtonAddMember onClick={handleOpen}>
-          <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-          <Text
-            weight="medium"
-            css={{
-              ml: '$10',
-              fontSize: '$14',
-              lineHeight: '$18',
-            }}
-          >
-            Add/remove members
-          </Text>
-        </ButtonAddMember>
+        <Button variant="link" size="sm" onClick={handleOpen}>
+          <Icon name="plus" />
+          Add/remove members
+        </Button>
       </Flex>
-      <ScrollableContent direction="column" justify="start">
+      <ScrollableContent direction="column" justify="start" gap="8">
         {membersList?.map((member) => (
           <CardMember
-            key={member.user._id}
+            key={member.user?._id}
             isNewTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
+            isTeamCreator={member.user?._id === session?.user.id}
             member={member}
           />
         ))}

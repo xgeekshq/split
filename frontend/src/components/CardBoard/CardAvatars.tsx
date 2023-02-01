@@ -53,6 +53,12 @@ const CardAvatars = React.memo<CardAvatarProps>(
           .filter((user) => user.role === BoardUserRoles.RESPONSIBLE)
           .map((user) => user.user);
 
+      if (teamAdmins && stakeholders) {
+        return listUsers
+          .filter((user) => ![TeamUserRoles.MEMBER, BoardUserRoles.MEMBER].includes(user.role))
+          .map((user) => user.user);
+      }
+
       if (teamAdmins)
         return listUsers
           .filter((user) => user.role === TeamUserRoles.ADMIN)
@@ -174,12 +180,16 @@ const CardAvatars = React.memo<CardAvatarProps>(
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
           {haveError
             ? ['-', '-', '-'].map((value, index) =>
-                renderAvatar(value, stakeholders ? stakeholdersColors : undefined, index),
+                renderAvatar(
+                  value,
+                  stakeholders && !teamAdmins ? stakeholdersColors : undefined,
+                  index,
+                ),
               )
             : (data.slice(0, numberOfAvatars) as User[]).map((user: User, index: number) =>
                 renderAvatar(
                   getInitials(user, index),
-                  stakeholders ? stakeholdersColors : undefined,
+                  stakeholders && !teamAdmins ? stakeholdersColors : undefined,
                   index,
                 ),
               )}

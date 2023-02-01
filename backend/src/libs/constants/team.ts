@@ -1,0 +1,1 @@
+export const TEAM_ALREADY_EXISTS = 'INVALID_NAME';

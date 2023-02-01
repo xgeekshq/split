@@ -165,7 +165,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
             <Icon css={{ width: '$24', height: '$24' }} name="info" />
 
-            <Text hint css={{ color: '$dangerBase' }}>
+            <Text hint color="dangerBase">
               In order to create a team board, you must be team-admin or stakeholder of at least one
               team.
             </Text>
@@ -180,10 +180,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
               <Icon css={{ width: '$24', height: '$24' }} name="info" />
             )}
             {!isHelperEmpty && (
-              <Text
-                hint
-                css={{ color: currentSelectTeamState === 'error' ? '$dangerBase' : '$primary300' }}
-              >
+              <Text hint color={currentSelectTeamState === 'error' ? 'dangerBase' : 'primary300'}>
                 {message}
               </Text>
             )}

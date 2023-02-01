@@ -51,7 +51,9 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const avatarColor = useAvatarColor(id, isDefaultColor);
   if (colors === undefined) colors = avatarColor;
-
+  if (fallbackText.includes('undefined')) {
+    fallbackText = '--';
+  }
   return (
     <AvatarRoot
       css={{

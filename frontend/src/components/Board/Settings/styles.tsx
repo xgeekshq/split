@@ -4,7 +4,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/icons/Icon';
-import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 
 /**
@@ -68,18 +67,6 @@ const StyledDialogTitle = styled('div', DialogPrimitive.Title, {
     fontSize: '$20',
     lineHeight: '$24',
     color: '#000',
-  },
-});
-
-const StyledDialogCloseButton = styled(Button, {
-  color: '$primary400',
-  height: '40px !important',
-  padding: '10px !important',
-
-  transition: 'all 0.25s ease-in-out',
-
-  '&:hover': {
-    backgroundColor: '$primary50 !important',
   },
 });
 
@@ -205,7 +192,6 @@ export {
   StyledAccordionIcon,
   StyledAccordionItem,
   StyledAccordionTrigger,
-  StyledDialogCloseButton,
   StyledDialogContainer,
   StyledDialogContent,
   StyledDialogOverlay,

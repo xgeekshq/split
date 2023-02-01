@@ -3,6 +3,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { TeamUser } from '@/types/team/team.user';
 import { Team } from '@/types/team/team';
+import { AxiosError } from 'axios';
+import { INVALID_NAME } from '@/errors/teams/errors';
 import {
   addAndRemoveTeamUserRequest,
   createTeamRequest,
@@ -114,10 +116,13 @@ const useTeam = ({
         type: ToastStateEnum.SUCCESS,
       });
     },
-    onError: () => {
+    onError: (error: AxiosError) => {
       setToastState({
         open: true,
-        content: 'Error creating the board',
+        content:
+          error.response?.data.message === 'INVALID_NAME'
+            ? INVALID_NAME
+            : 'Error creating the team',
         type: ToastStateEnum.ERROR,
       });
     },
@@ -258,7 +263,7 @@ const useTeam = ({
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error deleting the team',
+        content: 'Error deleting the team user',
         type: ToastStateEnum.ERROR,
       });
     },

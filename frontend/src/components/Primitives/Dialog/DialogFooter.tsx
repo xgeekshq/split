@@ -30,21 +30,11 @@ const Footer: React.FC<FooterProps> = (props) => {
       }}
     >
       {children}
-      <Button
-        css={{ margin: '0 $24 0 auto', padding: '$16 $24' }}
-        variant="primaryOutline"
-        onClick={() => setIsOpen(false)}
-        type="button"
-      >
+      <Button variant="primaryOutline" onClick={() => setIsOpen(false)} type="button">
         Cancel
       </Button>
       {(handleAffirmative || affirmativeLabel) && (
-        <Button
-          css={{ marginRight: '$32', padding: '$16 $24' }}
-          variant="primary"
-          onClick={handleAffirmative}
-          ref={buttonRef}
-        >
+        <Button onClick={handleAffirmative} ref={buttonRef}>
           {affirmativeLabel}
         </Button>
       )}

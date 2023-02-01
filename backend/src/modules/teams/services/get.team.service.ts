@@ -30,8 +30,8 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			const userA = a.user as User;
 			const userB = b.user as User;
 
-			const fullNameA = `${userA.firstName.toLowerCase()} ${userA.lastName.toLowerCase()}`;
-			const fullNameB = `${userB.firstName.toLowerCase()} ${userB.lastName.toLowerCase()}`;
+			const fullNameA = `${userA?.firstName.toLowerCase()} ${userA?.lastName.toLowerCase()}`;
+			const fullNameB = `${userB?.firstName.toLowerCase()} ${userB?.lastName.toLowerCase()}`;
 
 			return fullNameA < fullNameB ? -1 : 1;
 		});

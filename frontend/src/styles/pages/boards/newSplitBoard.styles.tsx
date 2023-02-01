@@ -17,23 +17,8 @@ const PageHeader = styled('header', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-
   padding: '$32 $40',
-
   backgroundColor: '$white',
-
-  button: {
-    '& svg': {
-      size: '$40 !important',
-      color: '$primary800',
-    },
-
-    transition: 'background-color 0.2s ease-in-out',
-
-    '&:hover': {
-      backgroundColor: '$primaryLightest',
-    },
-  },
 });
 
 const ContentWrapper = styled('section', {

@@ -5,7 +5,8 @@ import Button from '@/components/Primitives/Button';
 import Sprite from '@/components/icons/Sprite';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { ButtonVariantType, SizeType } from './types/PrimitiveTypes';
+import Text from '@/components/Primitives/Text';
+import { ButtonVariantType, ButtonSizeType } from './types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [
   'primary',
@@ -14,9 +15,25 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [
   'lightOutline',
   'danger',
   'dangerOutline',
+  'link',
 ];
 
-const SIZE_OPTIONS: SizeType[] = ['sm', 'md', 'lg'];
+const SIZE_OPTIONS: ButtonSizeType[] = ['sm', 'md', 'lg'];
+
+const DISABLE_ARG_TYPES = {
+  variant: {
+    control: false,
+  },
+  isIcon: {
+    control: false,
+  },
+  textSize: {
+    control: false,
+  },
+  size: {
+    control: false,
+  },
+};
 
 export default {
   title: 'Primitives/Button',
@@ -97,7 +114,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   <Flex justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
-        <h4>Variant {variant}</h4>
+        <Text heading="4">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
             {children}
@@ -108,50 +125,42 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   </Flex>
 );
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-export const Icons: ComponentStory<typeof Button> = ({ ...args }) => (
+export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
+  <Flex justify="evenly" wrap="wrap">
+    <Sprite />
+    {VARIANT_OPTIONS.map((variant) => (
+      <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
+        <h4>Variant {variant}</h4>
+        {SIZE_OPTIONS.map((size) => (
+          <Button variant={variant} size={size} disabled={disabled} key={size}>
+            <Icon name="plus" />
+            {children}
+          </Button>
+        ))}
+      </Flex>
+    ))}
+  </Flex>
+);
+
+export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
   <Flex justify="evenly" wrap="wrap">
     <Sprite />
     {SIZE_OPTIONS.map((size) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={size}>
-        <h4>Size {size}</h4>
-        <Button isIcon size={size}>
-          <Icon name="close" css={{ color: 'black' }} />
+        <Text heading="4">Size {size}</Text>
+        <Button isIcon size={size} disabled={disabled}>
+          <Icon name="close" />
         </Button>
       </Flex>
     ))}
   </Flex>
 );
 
-Variants.argTypes = {
-  variant: {
-    control: false,
-  },
-  isIcon: {
-    control: false,
-  },
-  textSize: {
-    control: false,
-  },
-  size: {
-    control: false,
-  },
-};
-
+Variants.argTypes = DISABLE_ARG_TYPES;
+IconButton.argTypes = DISABLE_ARG_TYPES;
 Icons.argTypes = {
+  ...DISABLE_ARG_TYPES,
   children: {
-    control: false,
-  },
-  variant: {
-    control: false,
-  },
-  isIcon: {
-    control: false,
-  },
-  textSize: {
-    control: false,
-  },
-  size: {
     control: false,
   },
 };

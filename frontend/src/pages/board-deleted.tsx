@@ -1,15 +1,11 @@
 import Link from 'next/link';
 
-import {
-  BannerContainer,
-  ContainerSection,
-  GoBackButton,
-  ImageBackground,
-} from '@/styles/pages/error.styles';
+import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pages/error.styles';
 
 import Banner from '@/components/icons/Banner';
 import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text';
+import Button from '@/components/Primitives/Button';
 
 export default function Custom404() {
   return (
@@ -21,20 +17,20 @@ export default function Custom404() {
       <ContainerSection>
         <LogoIcon />
 
-        <Text css={{ mt: '$29', fontSize: '$48' }} heading="1" size="xl">
+        <Text css={{ mt: '$29' }} display="3">
           404
         </Text>
 
-        <Text css={{ mt: '$10' }} heading="2" weight="medium">
+        <Text css={{ mt: '$10' }} heading="2" fontWeight="medium">
           Board deleted
         </Text>
         <Text color="primary500" css={{ mt: '$24' }} size="md">
           The board was deleted by a board admin
         </Text>
         <Link href="/dashboard">
-          <GoBackButton css={{ mt: '$26' }} size="md" style={{ width: '100%' }} variant="primary">
+          <Button css={{ mt: '$26' }} size="md">
             Go to Dashboard
-          </GoBackButton>
+          </Button>
         </Link>
       </ContainerSection>
     </ImageBackground>

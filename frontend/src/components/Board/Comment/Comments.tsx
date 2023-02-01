@@ -20,6 +20,7 @@ interface CommentsListProps {
   userId: string;
   columnId: string;
   isDefaultText: boolean;
+  hasAdminRole: boolean;
 }
 
 const Comments = React.memo(
@@ -34,6 +35,7 @@ const Comments = React.memo(
     userId,
     columnId,
     isDefaultText,
+    hasAdminRole,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -67,6 +69,7 @@ const Comments = React.memo(
               userId={userId}
               columnId={columnId}
               isDefaultText={isDefaultText}
+              hasAdminRole={hasAdminRole}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)

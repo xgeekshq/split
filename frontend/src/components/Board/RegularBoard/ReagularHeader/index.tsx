@@ -89,8 +89,8 @@ const RegularBoardHeader = () => {
                 <Text
                   color="primary800"
                   size="sm"
+                  fontWeight="medium"
                   css={{
-                    fontWeight: 500,
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',

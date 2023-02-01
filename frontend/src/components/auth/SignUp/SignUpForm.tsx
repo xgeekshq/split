@@ -103,7 +103,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
         <Text css={{ mt: '$24' }} heading="1">
           Sign up
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email address to proceed further
         </Text>
 
@@ -115,18 +115,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           type="text"
         />
 
-        <Button
-          size="lg"
-          type="submit"
-          css={{
-            fontWeight: '$medium',
-            fontSize: '$18',
-            '& svg': {
-              height: '$40 !important',
-              width: '$40 !important',
-            },
-          }}
-        >
+        <Button size="lg" type="submit">
           Get Started
         </Button>
       </StyledForm>

@@ -37,8 +37,7 @@ const Container = styled(Flex, Box, {
 
 const OuterContainer = styled(Flex, {
   height: 'fit-content',
-
-  flex: '1',
+  flex: '1 1 0',
   flexGrow: 1,
   flexShrink: 0,
   width: '100%',

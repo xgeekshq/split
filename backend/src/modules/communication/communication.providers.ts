@@ -21,6 +21,7 @@ import { UsersHandlerInterface } from 'src/modules/communication/interfaces/user
 import { SlackArchiveChannelService } from 'src/modules/communication/services/slack-archive-channel.service';
 import { SlackCommunicationService } from 'src/modules/communication/services/slack-communication.service';
 import { SlackDisabledCommunicationService } from 'src/modules/communication/services/slack-disabled-communication.service';
+import { SlackAddUserIntoChannelApplication } from './applications/slack-add-user-channel.application';
 import { UsersSlackHandler } from './handlers/users-slack.handler';
 
 export const CommunicationGateAdapter = {
@@ -81,6 +82,27 @@ export const CommunicationApplication = {
 		);
 	},
 	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
+};
+
+export const AddUserIntoChannelApplication = {
+	provide: TYPES.application.SlackAddUserIntoChannelApplication,
+	useFactory: (
+		configService: ConfigService,
+		conversationsHandler: ConversationsHandlerInterface,
+		usersHandler: UsersHandlerInterface
+	) => {
+		return new SlackAddUserIntoChannelApplication(
+			{
+				slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
+				slackMasterChannelId: configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+				slackChannelPrefix: configService.getOrThrow(SLACK_CHANNEL_PREFIX),
+				frontendUrl: configService.getOrThrow(FRONTEND_URL)
+			},
+			conversationsHandler,
+			usersHandler
+		);
+	},
+	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler]
 };
 
 export const ArchiveChannelApplication = {

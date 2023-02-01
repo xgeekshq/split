@@ -28,6 +28,7 @@ interface CardItemProps {
   isSubmited: boolean;
   hideCards: boolean;
   isDefaultText: boolean;
+  hasAdminRole: boolean;
 }
 
 const Container = styled(Flex, {
@@ -53,6 +54,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     isSubmited,
     hideCards,
     isDefaultText,
+    hasAdminRole,
   }) => {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -111,6 +113,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                   newPosition={cardGroupPosition}
                   socketId={socketId}
                   userId={userId}
+                  hasAdminRole={hasAdminRole}
                 />
               )}
             </Flex>
