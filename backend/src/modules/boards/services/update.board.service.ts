@@ -152,7 +152,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					hideCards: boardData.hideCards,
 					addCards: boardData.addCards,
 					hideVotes: boardData.hideVotes,
-					title: boardData.title
+					title: boardData.title,
+					users: boardData.users
 				},
 				{
 					new: true
