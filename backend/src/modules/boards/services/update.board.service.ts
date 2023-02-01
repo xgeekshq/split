@@ -27,6 +27,7 @@ import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import Column from '../schemas/column.schema';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -172,17 +173,51 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			}
 		}
 
+		/**
+		 * Only updates the
+		 *
+		 * */
+
+		board.title = boardData.title;
+		board.maxVotes = boardData.maxVotes;
+		board.hideCards = boardData.hideCards;
+		board.addCards = boardData.addCards;
+		board.hideVotes = boardData.hideVotes;
+
+		/**
+		 * Only the regular boards will have their columns updated
+		 *
+		 * */
+
+		if (!isSubBoard && isEmpty(boardData.dividedBoards)) {
+			board.columns = boardData.columns.flatMap((col) => {
+				if (col._id) {
+					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
+
+					if (columnBoard) {
+						return [{ ...col, title: columnBoard.title }];
+					}
+
+					const columnToDelete = boardData.deletedColumns.some(
+						(colId) => colId === col._id.toString()
+					);
+
+					if (columnToDelete) {
+						return [];
+					}
+				}
+
+				return [{ ...col }];
+			}) as Column[];
+		}
+
 		const updatedBoard = await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: boardId
 				},
 				{
-					maxVotes: boardData.maxVotes,
-					hideCards: boardData.hideCards,
-					addCards: boardData.addCards,
-					hideVotes: boardData.hideVotes,
-					title: boardData.title,
+					...board,
 					users: boardData.users
 				},
 				{
