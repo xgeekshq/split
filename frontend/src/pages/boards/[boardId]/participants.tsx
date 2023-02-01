@@ -16,7 +16,7 @@ const BoardParticipants = () => {
         <ContentSection gap="36" justify="between">
           <Flex css={{ width: '100%' }} direction="column">
             <Flex justify="between">
-              <RegularBoardHeader />
+              <RegularBoardHeader isParticipantsPage />
             </Flex>
             <ParticipantsList />
           </Flex>

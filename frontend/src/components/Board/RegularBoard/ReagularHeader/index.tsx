@@ -24,7 +24,11 @@ import {
   TitleSection,
 } from '../../SplitBoard/Header/styles';
 
-const RegularBoardHeader = () => {
+interface Props {
+  isParticipantsPage?: boolean;
+}
+
+const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
   const { data: session } = useSession({ required: true });
 
   // Atoms
@@ -41,16 +45,31 @@ const RegularBoardHeader = () => {
   const isRegularBoardWithNoTeam = !team && users.length > 1;
 
   // Set breadcrumbs
-  const breadcrumbItems: BreadcrumbType = [
-    {
-      title: 'Boards',
-      link: '/boards',
-    },
-    {
-      title,
-      isActive: true,
-    },
-  ];
+  const breadcrumbItems: BreadcrumbType = isParticipantsPage
+    ? [
+        {
+          title: 'Boards',
+          link: '/boards',
+        },
+        {
+          title,
+          link: `/boards/${_id}`,
+        },
+        {
+          title: 'Participants',
+          isActive: true,
+        },
+      ]
+    : [
+        {
+          title: 'Boards',
+          link: '/boards',
+        },
+        {
+          title,
+          isActive: true,
+        },
+      ];
 
   return (
     <StyledHeader>
@@ -151,7 +170,7 @@ const RegularBoardHeader = () => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            <Link href={`${_id}/participants`}>
+            <Link href={`/boards/${_id}/participants`}>
               <Flex>
                 <Flex align="center" gap="10">
                   <StyledBoardTitle>
