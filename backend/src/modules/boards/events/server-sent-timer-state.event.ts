@@ -1,4 +1,4 @@
-import { BoardTimerStateDto } from 'src/modules/common/dtos/board-timer-state.dto';
+import BoardTimerStateDto from 'src/modules/common/dtos/board-timer-state.dto';
 import TimeDto from 'src/modules/common/dtos/time.dto';
 import TimerStatusDto from 'src/modules/common/dtos/timer-status.dto';
 
