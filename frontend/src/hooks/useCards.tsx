@@ -209,7 +209,7 @@ const useCards = () => {
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error mergint the board',
+        content: 'Error merging the board',
         type: ToastStateEnum.ERROR,
       });
     },
