@@ -1,5 +1,6 @@
 import Icon from '@/components/icons/Icon';
-import { ContentSection, AddNewBoardButton } from '@/components/layouts/DashboardLayout/styles';
+import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
+import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 
@@ -10,14 +11,14 @@ const ParticipantsLayout: React.FC = ({ children }) => {
       <Flex
         css={{ width: '100%', marginLeft: '152px', marginRight: '152px', mt: '50px' }}
         direction="column"
-        gap="40"
+        gap="20"
       >
         <Flex justify="between">
           <Text heading="1">Participants</Text>
-          <AddNewBoardButton size="md" onClick={handleOnClick}>
+          <Button size="md" onClick={handleOnClick}>
             <Icon css={{ color: 'white' }} name="plus" />
             Add participants
-          </AddNewBoardButton>
+          </Button>
         </Flex>
         {children}
       </Flex>

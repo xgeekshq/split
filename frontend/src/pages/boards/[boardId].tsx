@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
-    // TODO: adapt boardId to accept personal boards :)
+
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
     const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
