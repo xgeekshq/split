@@ -2,7 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.7...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.8...HEAD)
+
+## [v0.1.8](https://github.com/xgeekshq/split/compare/v0.1.7...v0.1.8) - 2023-02-01
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: main board settings @CatiaAntunes96 (#983)
+
+### 📄 Documentation
+
+- feat: avatar primitive story @JoaoSaIvador (#980)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.7...v0.1.8
 
 ## [v0.1.7](https://github.com/xgeekshq/split/compare/v0.1.6...v0.1.7) - 2023-01-31
 
