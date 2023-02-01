@@ -28,6 +28,7 @@ import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Column from '../schemas/column.schema';
+import ColumnDto from '../dto/column/column.dto';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -190,12 +191,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * */
 
 		if (!isSubBoard && isEmpty(boardData.dividedBoards)) {
-			board.columns = boardData.columns.flatMap((col) => {
+			board.columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
 				if (col._id) {
 					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
 
 					if (columnBoard) {
-						return [{ ...col, title: columnBoard.title }];
+						return [{ ...columnBoard, title: col.title }];
 					}
 
 					const columnToDelete = boardData.deletedColumns.some(
