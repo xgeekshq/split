@@ -10,7 +10,7 @@ export class SlackMergeBoardApplication implements MergeBoardApplicationInterfac
 
 	async execute(data: MergeBoardType): Promise<MergeBoardType | null> {
 		const { responsiblesChannelId, teamNumber, isLastSubBoard } = data;
-		const message = `<!channel>, The board of team ${teamNumber} is ready`;
+		const message = `<!here>, The board of team ${teamNumber} is ready`;
 		this.chatHandler.postMessage(responsiblesChannelId, message);
 
 		if (isLastSubBoard) {

@@ -34,6 +34,10 @@ export type ColorType =
   | 'primary400'
   | 'primary500'
   | 'primary800';
+  
+// Primitive/Popover
+export type PopoverVariantType = 'dark' | 'light';
+export type PopoverSizeType = 'sm' | 'md';
 
 // Primitive/RadioGroup
 export type RadioGroupDirectionType = 'row' | 'column';
