@@ -27,3 +27,8 @@ export const editColumnsState = atom<(ColumnType | CreateColumn)[]>({
   key: 'editColumns',
   default: [],
 });
+
+export const deletedColumnsState = atom<string[]>({
+  key: 'deletedColumns',
+  default: [],
+});

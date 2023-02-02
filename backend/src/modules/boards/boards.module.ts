@@ -7,6 +7,7 @@ import { CommunicationModule } from 'src/modules/communication/communication.mod
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
+import { VotesModule } from '../votes/votes.module';
 import {
 	createBoardApplication,
 	createBoardService,
@@ -23,6 +24,7 @@ import BoardsController from './controller/boards.controller';
 	imports: [
 		UsersModule,
 		forwardRef(() => TeamsModule),
+		VotesModule,
 		SchedulesModule,
 		CommunicationModule,
 		mongooseBoardModule,

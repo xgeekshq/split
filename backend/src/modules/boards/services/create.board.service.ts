@@ -144,7 +144,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
-		let newUsers = [];
+		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 		let teamData;
@@ -155,7 +155,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		}
 
 		if (!haveDividedBoards && !team) {
-			newUsers = [...users];
+			users.forEach((user) =>
+				newUsers.push({
+					...user,
+					votesCount: 0
+				})
+			);
 		}
 
 		await this.saveBoardUsers(newUsers, newBoard._id);
