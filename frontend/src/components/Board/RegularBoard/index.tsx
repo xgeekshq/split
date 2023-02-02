@@ -1,17 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import DragDropArea from '@/components/Board/DragDropArea';
+import { BoardSettings } from '@/components/Board/Settings';
+import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
+import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import { useSocketIO } from '@/hooks/useSocketIO';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/icons/Icon';
-import { BoardSettings } from '@/components/Board/Settings';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
@@ -29,7 +29,7 @@ const RegularBoard = () => {
   const userId = session?.user.id;
 
   // Socket IO Hook
-  const socketId = useSocketIO(board?._id);
+  const { socketId } = useSocketIO(board?._id);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
