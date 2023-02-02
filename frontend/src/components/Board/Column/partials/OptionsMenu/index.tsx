@@ -23,6 +23,7 @@ type OptionsMenuProps = {
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
+  handleDialogChange: (openName: boolean, openDelete: boolean) => void;
   isDefaultText?: boolean;
 };
 
@@ -45,11 +46,11 @@ const OptionsMenu = ({
   boardId,
   isDefaultText,
   setOpenDialogName,
+  handleDialogChange,
 }: OptionsMenuProps) => {
   const [openPopover, setOpenPopover] = useState(false);
 
   // Update Board Hook
-
   const {
     updateColumn: { mutate: mutateColumn },
   } = useColumn();
@@ -117,7 +118,7 @@ const OptionsMenu = ({
                 disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
-            <PopoverItem>
+            <PopoverItem onClick={() => handleDialogChange(false, true)}>
               <Icon name="trash-alt" />
               <Text size="sm">Delete column</Text>
             </PopoverItem>
