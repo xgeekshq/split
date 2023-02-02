@@ -206,7 +206,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 *
 		 * */
 
-		if (!isSubBoard && isEmpty(boardData.dividedBoards)) {
+		if (!isSubBoard && isEmpty(board.dividedBoards)) {
 			board.columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
 				if (col._id) {
 					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
