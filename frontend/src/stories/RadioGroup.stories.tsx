@@ -100,7 +100,11 @@ const Template: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeig
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
+export const Multiline: ComponentStory<typeof RadioGroup> = ({
+  direction,
+  size,
+  fontWeight,
+}: any) => (
   <RadioGroup
     direction={direction}
     defaultValue="default"
