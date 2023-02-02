@@ -1,10 +1,10 @@
 import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
 import PauseBoardTimerServiceImpl from 'src/modules/boards/services/pause-board-timer.service';
 import SendBoardTimerStateServiceImpl from 'src/modules/boards/services/send-board-timer-state.service';
+import SendBoardTimerTimeLeftServiceImpl from 'src/modules/boards/services/send-board-timer-time-left.service';
 import StartBoardTimerServiceImpl from 'src/modules/boards/services/start-board-timer.service';
 import StopBoardTimerServiceImpl from 'src/modules/boards/services/stop-board-timer.service';
 import UpdateBoardTimerDurationServiceImpl from 'src/modules/boards/services/update-board-timer-duration.service';
-import UpdateBoardTimerTimeLeftServiceImpl from 'src/modules/boards/services/update-board-timer-time-left.service';
 import AfterUserPausedTimerSubscriber from 'src/modules/boards/subscribers/after-user-paused-timer.subscriber';
 import AfterUserRequestedTimerStateSubscriber from 'src/modules/boards/subscribers/after-user-requested-timer-state.subscriber';
 import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/after-user-started-timer.subscriber';
@@ -90,9 +90,9 @@ export const updateBoardTimerDurationService = {
 	useClass: UpdateBoardTimerDurationServiceImpl
 };
 
-export const updateBoardTimerTimeLeftService = {
-	provide: TYPES.services.UpdateBardTimerTimeLeftService,
-	useClass: UpdateBoardTimerTimeLeftServiceImpl
+export const sendBoardTimerTimeLeftService = {
+	provide: TYPES.services.SendBardTimerTimeLeftService,
+	useClass: SendBoardTimerTimeLeftServiceImpl
 };
 
 export const afterUserUpdatedDurationSubscriber = {
