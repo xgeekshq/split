@@ -16,8 +16,17 @@ import { useRecoilValue } from 'recoil';
 type AlertDeleteColumnProps = {
   socketId: string;
   columnId: string;
+  columnTitle: string;
+  isOpen: boolean;
+  handleDialogChange: (openName: boolean, openDelete: boolean) => void;
 };
-const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({ columnId, socketId }) => {
+const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
+  columnId,
+  socketId,
+  columnTitle,
+  isOpen,
+  handleDialogChange,
+}) => {
   // Recoil State used on [boardId].tsx
   const { board } = useRecoilValue(boardInfoState);
 
@@ -34,7 +43,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({ columnId, socketI
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="primaryOutline" size="sm">
           Delete column
@@ -42,11 +51,21 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({ columnId, socketI
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent title="Merge board into main board">
-        <Text>Do you really want to delete the column --TITLE?</Text>
+      <AlertDialogContent
+        title="Merge board into main board"
+        handleClose={() => handleDialogChange(false, false)}
+      >
+        <Text>Do you really want to delete the column &quot;{columnTitle}&quot;?</Text>
         <Flex gap="16" justify="end" css={{ mt: '$24' }}>
-          <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteColumn}>Delete Column</AlertDialogAction>
+          <AlertDialogCancel
+            variant="primaryOutline"
+            onClick={() => handleDialogChange(false, false)}
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction variant="danger" onClick={handleDeleteColumn}>
+            Delete Column
+          </AlertDialogAction>
         </Flex>
       </AlertDialogContent>
     </AlertDialog>

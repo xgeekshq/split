@@ -13,6 +13,7 @@ import SortMenu from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import AlertDeleteColumn from './partials/AlertDeleteColumn';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -51,8 +52,8 @@ const Column = React.memo<ColumMemoProps>(
       setDialogType(type);
     };
 
-    const handleDialogChange = (open: boolean) => {
-      setOpenDialog({ columnName: open, deleteColumn: !open });
+    const handleDialogChange = (openName: boolean, openDelete: boolean) => {
+      setOpenDialog({ columnName: openName, deleteColumn: openDelete });
     };
 
     const filteredCards = useCallback(() => {
@@ -127,6 +128,7 @@ const Column = React.memo<ColumMemoProps>(
                         columnId={columnId}
                         boardId={boardId}
                         setOpenDialogName={handleDialogNameChange}
+                        handleDialogChange={handleDialogChange}
                         isDefaultText={isDefaultText}
                         color={color}
                       />
@@ -195,6 +197,13 @@ const Column = React.memo<ColumMemoProps>(
           cardText={cardText}
           isDefaultText={isDefaultText}
           type={dialogType}
+        />
+        <AlertDeleteColumn
+          socketId={socketId}
+          columnId={columnId}
+          columnTitle={title}
+          isOpen={openDialog.deleteColumn}
+          handleDialogChange={handleDialogChange}
         />
       </>
     );
