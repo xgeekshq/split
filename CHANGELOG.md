@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.8...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.9...HEAD)
+
+## [v0.1.9](https://github.com/xgeekshq/split/compare/v0.1.8...v0.1.9) - 2023-02-02
+
+### What Changed 👀
+
+- docs: fix typo @dpompeu-xgeeks (#987)
+
+### 🐛 Bug Fixes
+
+- fix: slack channels @CatiaAntunes96 (#992)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.8...v0.1.9
 
 ## [v0.1.8](https://github.com/xgeekshq/split/compare/v0.1.7...v0.1.8) - 2023-02-01
 

@@ -9,7 +9,7 @@ import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
-import { SortMenu } from './partials/SortMenu';
+import SortMenu from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';

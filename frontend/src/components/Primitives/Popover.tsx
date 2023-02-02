@@ -43,6 +43,8 @@ const StyledContent = styled(PopoverPrimitive.Content, {
 const StyledPopoverItem = styled(Flex, {
   pl: '$16',
   py: '$8',
+  gap: '$8',
+  alignItems: 'center',
   '& svg': {
     color: '$primary400',
     size: '$16',
@@ -59,6 +61,14 @@ const StyledPopoverItem = styled(Flex, {
       },
     },
   },
+  variants: {
+    active: {
+      true: {
+        backgroundColor: '$primary50',
+        '&>*': { color: '$primary800' },
+      },
+    },
+  },
 });
 
 const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
@@ -68,21 +78,63 @@ const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
   border: 'none',
   backgroundColor: 'transparent',
   borderRadius: '$round',
+  position: 'relative',
+  cursor: 'pointer',
   '&:active': {
     border: 'none',
   },
   '&:focus': {
     border: 'none',
   },
-  '@hover': {
-    '&:hover': {
-      backgroundColor: '$primary100',
+  '&:disabled': {
+    cursor: 'not-allowed',
+  },
+  variants: {
+    variant: {
+      dark: {
+        '&:hover&:enabled': {
+          backgroundColor: '$primary500',
+          color: 'white',
+        },
+      },
+      light: {
+        color: '$primary300',
+        '&:hover&:enabled, &[data-state="open"]': {
+          backgroundColor: '$primary100',
+          color: '$primary300',
+        },
+        '&:disabled': {
+          opacity: '0.5',
+        },
+      },
+    },
+    size: {
+      sm: {
+        width: '$20',
+        height: '$20',
+        '& svg': {
+          size: '$20',
+        },
+      },
+      md: {
+        width: '$24',
+        height: '$24',
+        '& svg': {
+          size: '$24',
+        },
+      },
     },
   },
 });
 
+const StyledClosePopover = styled(PopoverPrimitive.Close, {
+  width: '100%',
+  border: 'none',
+  backgroundColor: 'transparent',
+  padding: 0,
+});
+
 const StyledRootPopover = styled(PopoverPrimitive.Root);
-const StyledClosePopover = styled(PopoverPrimitive.Close);
 
 // Exports
 export const Popover = StyledRootPopover;

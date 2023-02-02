@@ -28,7 +28,7 @@ import { Configs, CreateBoardService } from '../interfaces/services/create.board
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
-import { addMonths, isAfter } from 'date-fns';
+import { addDays, addMonths, isAfter } from 'date-fns';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -206,7 +206,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
-		const dateToCompare = providerAccountCreatedAt || joinedAt;
+		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
+
+		dateToCompare = addDays(dateToCompare, 15);
 
 		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
 

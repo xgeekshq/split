@@ -2,7 +2,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Box from '@/components/Primitives/Box';
 import Text from '@/components/Primitives/Text';
-import { PopoverClose, PopoverItem, PopoverTrigger } from '@/components/Primitives/Popover';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',
@@ -16,38 +15,6 @@ const StyledMemberTitle = styled(Text, {
   letterSpacing: '$0-17',
   '&[data-disabled="true"]': { opacity: 0.4 },
   wordBreak: 'break-word',
-});
-
-const PopoverTriggerStyled = styled(PopoverTrigger, {
-  variants: {
-    disabled: {
-      false: {
-        '&:hover': {
-          backgroundColor: '$primary500',
-          color: 'white',
-          cursor: 'pointer',
-        },
-      },
-      true: {
-        '&:hover': {
-          backgroundColor: '$transparent',
-        },
-      },
-    },
-  },
-  defaultVariants: { disabled: false },
-});
-
-const PopoverCloseStyled = styled(PopoverClose, {
-  border: 'none',
-  backgroundColor: 'transparent',
-  padding: 0,
-});
-
-const PopoverItemStyled = styled(PopoverItem, {
-  backgroundColor: '$primary50',
-  pr: '$16',
-  height: '$100',
 });
 
 const IconButton = styled('button', {
@@ -64,11 +31,4 @@ const IconButton = styled('button', {
   boxShadow: `0 2px 10px $primaryBase`,
 });
 
-export {
-  IconButton,
-  InnerContainer,
-  PopoverCloseStyled,
-  PopoverItemStyled,
-  PopoverTriggerStyled,
-  StyledMemberTitle,
-};
+export { IconButton, InnerContainer, StyledMemberTitle };
