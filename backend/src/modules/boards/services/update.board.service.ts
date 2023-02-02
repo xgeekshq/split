@@ -15,6 +15,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -25,6 +26,9 @@ import { BoardDataPopulate } from '../utils/populate-board';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import Column from '../schemas/column.schema';
+import ColumnDto from '../dto/column/column.dto';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -36,7 +40,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		private socketService: SocketGateway
+		private socketService: SocketGateway,
+		@Inject(Votes.TYPES.services.DeleteVoteService)
+		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	/**
@@ -165,6 +171,64 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		board.hideVotes = boardData.hideVotes;
 
 		/**
+		 * Validate if:
+		 * - have columns to delete
+		 * Returns the votes to the user
+		 */
+		if (boardData.deletedColumns && !isEmpty(boardData.deletedColumns)) {
+			const cardsToDelete = boardData.deletedColumns.flatMap((deletedColumnId: string) => {
+				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
+			});
+
+			cardsToDelete.forEach((cards) => {
+				cards.items.forEach(async (card) => {
+					const votesByUser = new Map<string, number>();
+
+					card.votes.forEach((userId) => {
+						if (!votesByUser.has(userId.toString())) {
+							votesByUser.set(userId.toString(), 1);
+						} else {
+							const count = votesByUser.get(userId.toString());
+
+							votesByUser.set(userId.toString(), count + 1);
+						}
+					});
+
+					votesByUser.forEach(async (votesCount, userId) => {
+						await this.deleteVoteService.decrementVoteUser(board.id, userId, -votesCount);
+					});
+				});
+			});
+		}
+
+		/**
+		 * Only the regular boards will have their columns updated
+		 *
+		 * */
+
+		if (!isSubBoard && isEmpty(boardData.dividedBoards)) {
+			board.columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
+				if (col._id) {
+					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
+
+					if (columnBoard) {
+						return [{ ...columnBoard, title: col.title }];
+					}
+
+					const columnToDelete = boardData.deletedColumns.some(
+						(colId) => colId === col._id.toString()
+					);
+
+					if (columnToDelete) {
+						return [];
+					}
+				}
+
+				return [{ ...col }];
+			}) as Column[];
+		}
+
+		/**
 		 * Only can change the maxVotes if:
 		 * - new maxVotes not empty
 		 * - current highest votes equals to zero
@@ -196,6 +260,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			)
 			.lean()
 			.exec();
+
+		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
+
+		if (boardData.socketId) {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		}
 
 		if (
 			updatedBoard &&

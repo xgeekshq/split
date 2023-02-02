@@ -12,6 +12,7 @@ import {
 	updateBoardService
 } from 'src/modules/boards/boards.providers';
 import BoardsController from 'src/modules/boards/controller/boards.controller';
+import { getCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
@@ -26,6 +27,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
+import { deleteVoteService } from 'src/modules/votes/votes.providers';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -52,6 +54,8 @@ describe('BoardsController', () => {
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
+				deleteVoteService,
+				getCardService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
