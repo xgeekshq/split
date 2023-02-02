@@ -48,8 +48,10 @@ const OptionsMenu = ({
 }: OptionsMenuProps) => {
   const [openPopover, setOpenPopover] = useState(false);
 
+  // Update Board Hook
+
   const {
-    updateColumn: { mutate },
+    updateColumn: { mutate: mutateColumn },
   } = useColumn();
 
   const handleDefaultTextCheck = () => {
@@ -63,7 +65,7 @@ const OptionsMenu = ({
       isDefaultText: !isDefaultText,
     };
 
-    mutate(column);
+    mutateColumn(column);
   };
 
   const handleColorChange = (selectedColor: string) => {
@@ -77,7 +79,7 @@ const OptionsMenu = ({
       isDefaultText,
     };
 
-    mutate(column);
+    mutateColumn(column);
   };
 
   const handleOpen = (type: string) => {
