@@ -1,8 +1,13 @@
 import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { Popover, PopoverPortal } from '@radix-ui/react-popover';
 
-import { PopoverContent } from '@/components/Primitives/Popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverItem,
+  PopoverClose,
+} from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
 
 import { membersListState, userTeamsListState } from '@/store/team/atom/team.atom';
@@ -12,7 +17,6 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useTeam from '@/hooks/useTeam';
 import Icon from '@/components/icons/Icon';
 import { useRouter } from 'next/router';
-import { PopoverCloseStyled, PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 interface PopoverRoleSettingsProps {
   userId: string | undefined;
@@ -73,73 +77,64 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
     return (
       <Popover>
-        <PopoverTriggerStyled
-          css={{
-            position: 'relative',
-          }}
-        >
-          <Icon
-            name="arrow-down"
-            css={{
-              width: '$20',
-              height: '$20',
-            }}
-          />
-        </PopoverTriggerStyled>
-        <PopoverPortal>
-          <PopoverContent css={{ width: '$360', height: '$316' }}>
-            <PopoverCloseStyled>
-              <PopoverItemStyled
-                align="end"
-                direction="column"
-                onClick={() => {
-                  handleSelectFunction(TeamUserRoles.MEMBER);
-                }}
-              >
-                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
-                  Team Member
-                </Text>
+        <PopoverTrigger variant="dark" size="sm">
+          <Icon name="arrow-down" />
+        </PopoverTrigger>
+        <PopoverContent css={{ width: '$360', height: '$316' }}>
+          <PopoverClose>
+            <PopoverItem
+              align="end"
+              direction="column"
+              css={{ pr: '$16', height: '$100' }}
+              onClick={() => {
+                handleSelectFunction(TeamUserRoles.MEMBER);
+              }}
+            >
+              <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+                Team Member
+              </Text>
 
-                <Text css={{ textAlign: 'end' }} size="sm">
-                  The team member can create boards and can create teams.
-                </Text>
-              </PopoverItemStyled>
-            </PopoverCloseStyled>
-            <PopoverCloseStyled>
-              <PopoverItemStyled
-                align="end"
-                direction="column"
-                onClick={() => {
-                  handleSelectFunction(TeamUserRoles.ADMIN);
-                }}
-              >
-                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
-                  Team Admin
-                </Text>
-                <Text css={{ textAlign: 'end' }} size="sm">
-                  The team admin can nominate team admins / stakeholder and can create/delete/edit
-                  team boards.
-                </Text>
-              </PopoverItemStyled>
-            </PopoverCloseStyled>
-            <PopoverCloseStyled>
-              <PopoverItemStyled
-                align="end"
-                direction="column"
-                onClick={() => {
-                  handleSelectFunction(TeamUserRoles.STAKEHOLDER);
-                }}
-              >
-                <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
-                  Stakeholder
-                </Text>
-                <Text css={{ textAlign: 'end' }} size="sm">
-                  Stakeholders will not be included in sub-team SPLIT retrospectives.
-                </Text>
-              </PopoverItemStyled>
-            </PopoverCloseStyled>
-          </PopoverContent>
-        </PopoverPortal>
+              <Text css={{ textAlign: 'end' }} size="sm">
+                The team member can create boards and can create teams.
+              </Text>
+            </PopoverItem>
+          </PopoverClose>
+          <PopoverClose>
+            <PopoverItem
+              align="end"
+              direction="column"
+              css={{ pr: '$16', height: '$100' }}
+              onClick={() => {
+                handleSelectFunction(TeamUserRoles.ADMIN);
+              }}
+            >
+              <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+                Team Admin
+              </Text>
+              <Text css={{ textAlign: 'end' }} size="sm">
+                The team admin can nominate team admins / stakeholder and can create/delete/edit
+                team boards.
+              </Text>
+            </PopoverItem>
+          </PopoverClose>
+          <PopoverClose>
+            <PopoverItem
+              align="end"
+              direction="column"
+              css={{ pr: '$16', height: '$100' }}
+              onClick={() => {
+                handleSelectFunction(TeamUserRoles.STAKEHOLDER);
+              }}
+            >
+              <Text css={{ textAlign: 'end' }} size="sm" fontWeight="medium">
+                Stakeholder
+              </Text>
+              <Text css={{ textAlign: 'end' }} size="sm">
+                Stakeholders will not be included in sub-team SPLIT retrospectives.
+              </Text>
+            </PopoverItem>
+          </PopoverClose>
+        </PopoverContent>
       </Popover>
     );
   },

@@ -1,6 +1,11 @@
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { Popover, PopoverContent } from '@/components/Primitives/Popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverItem,
+} from '@/components/Primitives/Popover';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useColumn from '@/hooks/useColumn';
@@ -8,7 +13,6 @@ import CardType from '@/types/card/card';
 import { useState } from 'react';
 import ColorSquare from '../ColorSquare';
 import { SwitchDefaultText } from '../SwitchDefaultText';
-import { PopoverItemStyled, PopoverTriggerStyled } from './styles';
 
 type OptionsMenuProps = {
   disabled?: boolean;
@@ -86,37 +90,35 @@ const OptionsMenu = ({
   return (
     <>
       <Popover open={openPopover} onOpenChange={handleOpenPopover}>
-        <PopoverTriggerStyled disabled={disabled} css={{ ml: '$8' }}>
-          <Icon name="menu-dots" size={24} />
-        </PopoverTriggerStyled>
+        <PopoverTrigger variant="light" size="md" disabled={disabled} css={{ ml: '$8' }}>
+          <Icon name="menu-dots" />
+        </PopoverTrigger>
         {!disabled && (
           <PopoverContent>
-            <PopoverItemStyled onClick={() => handleOpen('ColumnName')}>
-              <Icon name="boards" size={24} />
+            <PopoverItem onClick={() => handleOpen('ColumnName')}>
+              <Icon name="boards" />
               <Text size="sm">Edit column name </Text>
-            </PopoverItemStyled>
-            <PopoverItemStyled onClick={() => handleColorChange('$highlight4Light')}>
-              <Icon name="recurring" size={24} />
+            </PopoverItem>
+            <PopoverItem onClick={() => handleColorChange('$highlight4Light')}>
+              <Icon name="recurring" />
               <Text size="sm">Empty column cards</Text>
-            </PopoverItemStyled>
-            <PopoverItemStyled>
-              <Flex align="center" gap={8}>
-                <Icon name="file-alt" size={24} />
-                <Text onClick={() => handleOpen('CardText')} size="sm">
-                  Activate card default text
-                </Text>
+            </PopoverItem>
+            <PopoverItem>
+              <Icon name="file-alt" />
+              <Text onClick={() => handleOpen('CardText')} size="sm">
+                Activate card default text
+              </Text>
 
-                <SwitchDefaultText
-                  handleCheckedChange={handleDefaultTextCheck}
-                  isChecked={!isDefaultText}
-                  disabled={cardText === 'Write your comment here...'}
-                />
-              </Flex>
-            </PopoverItemStyled>
-            <PopoverItemStyled>
-              <Icon name="trash-alt" size={24} />
+              <SwitchDefaultText
+                handleCheckedChange={handleDefaultTextCheck}
+                isChecked={!isDefaultText}
+                disabled={cardText === 'Write your comment here...'}
+              />
+            </PopoverItem>
+            <PopoverItem>
+              <Icon name="trash-alt" />
               <Text size="sm">Delete column</Text>
-            </PopoverItemStyled>
+            </PopoverItem>
             <Separator orientation="horizontal" css={{ mt: '$5' }} />
             <Flex gap={8} css={{ pb: '$8', pt: '$20', pl: '$18' }}>
               <Text size="xs" color="primary800" fontWeight="medium">
