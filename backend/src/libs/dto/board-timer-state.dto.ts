@@ -1,6 +1,6 @@
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import TimeDto from 'src/libs/dto/time.dto';
-import TimerStatusDto from 'src/modules/common/dtos/timer-status.dto';
+import TimerStatusDto from 'src/libs/dto/timer-status.dto';
 
 export default interface BoardTimerStateDto extends BoardTimerDto {
 	status: TimerStatusDto | null;
