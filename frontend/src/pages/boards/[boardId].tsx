@@ -117,10 +117,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const isRegularOrPersonalBoard =
     (!data?.board.isSubBoard && !!data?.board.team && !data?.board.dividedBoards.length) ||
     !data?.board.team;
-  // console.log('isRegularBoard', isRegularBoard);
 
   // Socket IO Hook
-  const socketId = useSocketIO(boardId);
+  const { socketId, emitEvent, listenEvent } = useSocketIO(boardId);
 
   // Use effect to set recoil state using data from API
   useEffect(() => {
@@ -216,7 +215,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
           )}
 
           <Flex css={{ flex: 1 }}>
-            <Timer />
+            <Timer
+              boardId={boardId}
+              isAdmin={hasAdminRole}
+              emitEvent={emitEvent}
+              listenEvent={listenEvent}
+            />
           </Flex>
 
           {hasAdminRole && !board?.submitedAt && (
