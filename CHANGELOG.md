@@ -2,7 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.9...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.10...HEAD)
+
+## [v0.1.10](https://github.com/xgeekshq/split/compare/v0.1.9...v0.1.10) - 2023-02-02
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: new responsible validation @nunocaseiro (#1001)
+- fix: isNewJoiner period and votes @CatiaAntunes96 (#1000)
+
+### 📄 Documentation
+
+- feat: popover primitive refactor and story @JoaoSaIvador (#993)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.9...v0.1.10
 
 ## [v0.1.9](https://github.com/xgeekshq/split/compare/v0.1.8...v0.1.9) - 2023-02-02
 
