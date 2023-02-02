@@ -125,13 +125,44 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - is a sub-board
 		 * - and the logged user isn't the current responsible
 		 */
-		if (isSubBoard && boardData.users) {
+		if (boardData.users) {
 			const boardUserFound = boardData.users?.find(
 				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
 			).user as unknown as User;
 
 			newResponsible.email = boardUserFound.email;
 			newResponsible.id = boardUserFound._id;
+
+			if (isSubBoard) {
+				const promises = boardData.users
+					.filter((boardUser) =>
+						[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
+							(boardUser.user as unknown as User)._id
+						)
+					)
+					.map(async (boardUser) => {
+						const typedBoardUser = boardUser.user as unknown as User;
+
+						return this.boardUserModel
+							.findOneAndUpdate(
+								{
+									user: typedBoardUser._id,
+									board: boardId
+								},
+								{
+									role: boardUser.role
+								}
+							)
+							.exec();
+					});
+				await Promise.all(promises);
+			}
+
+			const mainBoardId = await this.boardModel
+				.findOne({ dividedBoards: { $in: boardId } })
+				.select('_id')
+				.exec();
+
 			const promises = boardData.users
 				.filter((boardUser) =>
 					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
@@ -145,7 +176,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 						.findOneAndUpdate(
 							{
 								user: typedBoardUser._id,
-								board: boardId
+								board: mainBoardId
 							},
 							{
 								role: boardUser.role
@@ -175,7 +206,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 
 		/**
-		 * Only updates the
+		 * Updates the board's settings fields
 		 *
 		 * */
 
@@ -218,8 +249,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					_id: boardId
 				},
 				{
-					...board,
-					users: boardData.users
+					...board
 				},
 				{
 					new: true
@@ -227,6 +257,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			)
 			.lean()
 			.exec();
+
+		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
+
+		if (boardData.socketId) {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		}
 
 		if (
 			updatedBoard &&
