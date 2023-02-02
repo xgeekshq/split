@@ -43,12 +43,16 @@ const Column = React.memo<ColumMemoProps>(
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
-    const [openDialogName, setOpenDialogName] = useState(false);
+    const [openDialog, setOpenDialog] = useState({ columnName: false, deleteColumn: false });
     const [dialogType, setDialogType] = useState('ColumnName');
 
     const handleDialogNameChange = (open: boolean, type: string) => {
-      setOpenDialogName(open);
+      setOpenDialog({ columnName: open, deleteColumn: false });
       setDialogType(type);
+    };
+
+    const handleDialogChange = (open: boolean) => {
+      setOpenDialog({ columnName: open, deleteColumn: !open });
     };
 
     const filteredCards = useCallback(() => {
@@ -182,8 +186,8 @@ const Column = React.memo<ColumMemoProps>(
         </OuterContainer>
         <UpdateColumnDialog
           boardId={boardId}
-          isOpen={openDialogName}
-          setIsOpen={setOpenDialogName}
+          isOpen={openDialog.columnName}
+          setIsOpen={handleDialogChange}
           columnId={columnId}
           columnTitle={title}
           columnColor={color}
