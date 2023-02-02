@@ -100,7 +100,7 @@ const Template: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeig
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction }: any) => (
+export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
   <RadioGroup
     direction={direction}
     defaultValue="default"
@@ -112,7 +112,7 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction }: any)
       </RadioGroupItem>
       <Label htmlFor="r1">
         <Flex direction="column">
-          <Text color="primary800" fontWeight="bold" size="sm">
+          <Text color="primary800" fontWeight={fontWeight} size={size}>
             Default
           </Text>
           <Text size="sm" color="primary500">
@@ -127,7 +127,7 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction }: any)
       </RadioGroupItem>
       <Label htmlFor="r2">
         <Flex direction="column">
-          <Text color="primary800" fontWeight="bold" size="sm">
+          <Text color="primary800" fontWeight={fontWeight} size={size}>
             Comfortable
           </Text>
           <Text size="sm" color="primary500">
@@ -142,7 +142,7 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction }: any)
       </RadioGroupItem>
       <Label htmlFor="r3">
         <Flex direction="column">
-          <Text color="primary800" fontWeight="bold" size="sm">
+          <Text color="primary800" fontWeight={fontWeight} size={size}>
             Compact
           </Text>
           <Text size="sm" color="primary500">
@@ -156,13 +156,4 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({ direction }: any)
 
 Multiline.args = {
   direction: 'row',
-};
-
-Multiline.argTypes = {
-  size: {
-    control: false,
-  },
-  fontWeight: {
-    control: false,
-  },
 };
