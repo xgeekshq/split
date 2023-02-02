@@ -29,6 +29,83 @@ export default {
     myBoards: false,
     isBoardsPage: false,
   },
+  argTypes: {
+    listUsers: {
+      control: { type: 'object' },
+      description: 'List of users in a Board.',
+      table: {
+        type: {
+          summary: '{ user: User | string, role: TeamUserRoles | BoardUserRoles, _id: string }',
+        },
+      },
+    },
+    teamAdmins: {
+      control: { type: 'boolean' },
+      description: 'Shows only the Team Admins. Only works for SPLIT Boards.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+        category: 'filter',
+      },
+    },
+    stakeholders: {
+      control: { type: 'boolean' },
+      description: 'Shows only the Stakeholders. Only works for SPLIT Boards.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+        category: 'filter',
+      },
+    },
+    userId: {
+      control: { type: 'text' },
+      description: 'Logged in User ID.',
+      table: {
+        type: {
+          summary: 'string',
+        },
+      },
+    },
+    haveError: {
+      control: { type: 'boolean' },
+      description: 'Displays an Error Avatar Group.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+    responsible: {
+      control: { type: 'boolean' },
+      description: 'Shows only the Responsibles. Only works for Regular Boards.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+        category: 'filter',
+      },
+    },
+    myBoards: {
+      control: { type: 'boolean' },
+      description: 'Displays Logged in User Avatar.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+    isBoardsPage: {
+      control: { type: 'boolean' },
+      description: 'Used to allow the Avatar Group to have a Drawer with all the Users',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+  },
 };
 
 const Template: ComponentStory<typeof AvatarGroup> = ({ ...args }) => <AvatarGroup {...args} />;
