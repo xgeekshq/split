@@ -3,9 +3,9 @@ import {
 	BOARD_TIMER_SECONDS_DEFAULT,
 	ONE_SECOND
 } from 'src/libs/constants/timer';
+import TimeDto from 'src/libs/dto/time.dto';
+import TimerStatusDto from 'src/libs/dto/timer-status.dto';
 import TimerStatusHelper from 'src/modules/boards/helpers/timer-status.helper';
-import TimeDto from 'src/modules/common/dtos/time.dto';
-import TimerStatusDto from 'src/modules/common/dtos/timer-status.dto';
 
 type TimeLeftUpdateCallback = (timeLeft: TimeDto) => void;
 type TimerExpiredCallback = () => void;

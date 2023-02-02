@@ -1,4 +1,4 @@
-import TimerStatusDto from 'src/modules/common/dtos/timer-status.dto';
+import TimerStatusDto from 'src/libs/dto/timer-status.dto';
 
 export default class TimerStatusHelper {
 	private _status: TimerStatusDto = TimerStatusDto.STOPPED;
