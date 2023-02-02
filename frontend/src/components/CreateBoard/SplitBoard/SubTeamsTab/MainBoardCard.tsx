@@ -1,7 +1,6 @@
 import React from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Checkbox from '@/components/Primitives/Checkbox';
@@ -13,6 +12,7 @@ import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/cre
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {});
@@ -142,7 +142,8 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
           <Text size="sm" fontWeight="medium">
             {team.name}
           </Text>
-          <CardAvatars
+          <AvatarGroup
+            isBoardsPage
             haveError={haveError}
             listUsers={team.users}
             responsible={false}

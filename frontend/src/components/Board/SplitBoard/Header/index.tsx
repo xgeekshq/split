@@ -4,7 +4,6 @@ import { useRecoilValue } from 'recoil';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
@@ -19,6 +18,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -158,7 +158,7 @@ const BoardHeader = () => {
             >
               {isSubBoard ? `Sub-team ${boardNumber}` : team.name}
             </Text>
-            <CardAvatars
+            <AvatarGroup
               isBoardsPage
               listUsers={isSubBoard ? users : teamUsers}
               responsible={false}
@@ -175,7 +175,7 @@ const BoardHeader = () => {
                   <Text color="primary300" size="sm">
                     Team admins
                   </Text>
-                  <CardAvatars
+                  <AvatarGroup
                     isBoardsPage
                     teamAdmins
                     listUsers={isSubBoard ? users : teamUsers}
@@ -198,7 +198,7 @@ const BoardHeader = () => {
                   <Text color="primary300" size="sm">
                     Stakeholders
                   </Text>
-                  <CardAvatars
+                  <AvatarGroup
                     isBoardsPage
                     stakeholders
                     listUsers={isSubBoard ? users : teamUsers}
@@ -217,7 +217,7 @@ const BoardHeader = () => {
                 <Text color="primary300" size="sm">
                   Responsible
                 </Text>
-                <CardAvatars
+                <AvatarGroup
                   isBoardsPage
                   responsible
                   listUsers={users}
