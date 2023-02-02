@@ -93,13 +93,44 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - is a sub-board
 		 * - and the logged user isn't the current responsible
 		 */
-		if (isSubBoard && boardData.users) {
+		if (boardData.users) {
 			const boardUserFound = boardData.users?.find(
 				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
 			).user as unknown as User;
 
 			newResponsible.email = boardUserFound.email;
 			newResponsible.id = boardUserFound._id;
+
+			if (isSubBoard) {
+				const promises = boardData.users
+					.filter((boardUser) =>
+						[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
+							(boardUser.user as unknown as User)._id
+						)
+					)
+					.map(async (boardUser) => {
+						const typedBoardUser = boardUser.user as unknown as User;
+
+						return this.boardUserModel
+							.findOneAndUpdate(
+								{
+									user: typedBoardUser._id,
+									board: boardId
+								},
+								{
+									role: boardUser.role
+								}
+							)
+							.exec();
+					});
+				await Promise.all(promises);
+			}
+
+			const mainBoardId = await this.boardModel
+				.findOne({ dividedBoards: { $in: boardId } })
+				.select('_id')
+				.exec();
+
 			const promises = boardData.users
 				.filter((boardUser) =>
 					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
@@ -113,7 +144,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 						.findOneAndUpdate(
 							{
 								user: typedBoardUser._id,
-								board: boardId
+								board: mainBoardId
 							},
 							{
 								role: boardUser.role
@@ -123,6 +154,17 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				});
 			await Promise.all(promises);
 		}
+
+		/**
+		 * Updates the board's settings fields
+		 *
+		 * */
+
+		board.title = boardData.title;
+		board.maxVotes = boardData.maxVotes;
+		board.hideCards = boardData.hideCards;
+		board.addCards = boardData.addCards;
+		board.hideVotes = boardData.hideVotes;
 
 		/**
 		 * Only can change the maxVotes if:
@@ -148,12 +190,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					_id: boardId
 				},
 				{
-					maxVotes: boardData.maxVotes,
-					hideCards: boardData.hideCards,
-					addCards: boardData.addCards,
-					hideVotes: boardData.hideVotes,
-					title: boardData.title,
-					users: boardData.users
+					...board
 				},
 				{
 					new: true
