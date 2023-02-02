@@ -87,4 +87,5 @@ export type UpdateBoardType = {
   isPublic: boolean;
   columns?: (ColumnType | CreateColumn)[];
   addCards: boolean;
+  responsible?: BoardUser;
 };

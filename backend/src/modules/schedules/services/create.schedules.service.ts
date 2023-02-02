@@ -99,6 +99,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 			this.schedulerRegistry.addCronJob(String(boardId), job);
 			job.start();
+			this.logger.log(`Job created for ${boardId}`);
 		} catch (e) {
 			this.logger.error(e);
 		}

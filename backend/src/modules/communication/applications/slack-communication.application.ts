@@ -131,19 +131,21 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 
 		errors.forEach((i) => this.logger.warn(i));
 
-		success.forEach(({ id: channelId, name: channelName }) => {
-			const board = teams.find((i) =>
-				channelName.includes(
-					`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}`
-				)
-			);
+		return success.flatMap(({ id: channelId, name: channelName }) => {
+			const team = teams.find((i) => {
+				return String(channelName).includes(
+					`${i.normalName}${
+						i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''
+					}-${month}-${year}`
+				);
+			});
 
-			if (board) {
-				board.channelId = channelId;
+			if (team) {
+				team.channelId = channelId;
 			}
-		});
 
-		return teams;
+			return team ?? [];
+		});
 	}
 
 	private async addSlackIdOnTeams(teams: TeamDto[]): Promise<TeamDto[]> {

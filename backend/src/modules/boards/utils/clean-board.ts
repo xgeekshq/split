@@ -52,7 +52,7 @@ export const replaceCard = (
 	hideVotes: boolean
 ): Card | CardItem => {
 	let { text, comments, votes, createdBy } = input;
-	const { anonymous } = input;
+	const { anonymous, createdByTeam } = input;
 	const createdByAsUserDocument = createdBy as UserDocument;
 
 	if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
@@ -64,7 +64,7 @@ export const replaceCard = (
 		comments = replaceComments(hideCards, createdByAsUserDocument, input.comments, userId);
 	}
 
-	if (anonymous) {
+	if (anonymous || createdByTeam) {
 		createdBy = replaceUser(createdByAsUserDocument, userId);
 	}
 

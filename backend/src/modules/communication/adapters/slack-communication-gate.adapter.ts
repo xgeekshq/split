@@ -100,7 +100,7 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return { ok };
 		} catch (error) {
 			if (typeof error.data?.ok === 'boolean' && !error.data?.ok) {
-				this.logger.warn(error);
+				this.logger.error(error);
 
 				if (error.data.error === 'already_in_channel') {
 					return { ok: true };
