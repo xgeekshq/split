@@ -75,6 +75,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
+		const { responsible } = boardData;
+
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
@@ -85,7 +87,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const { isSubBoard } = board;
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
-		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
+		const newResponsible: ResponsibleType = {
+			id: (responsible?.user as User)._id,
+			email: (responsible?.user as User).email
+		};
 
 		/**
 		 * Validate if:
@@ -93,14 +98,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - is a sub-board
 		 * - and the logged user isn't the current responsible
 		 */
-		if (boardData.users) {
-			const boardUserFound = boardData.users?.find(
-				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
-			).user as unknown as User;
-
-			newResponsible.email = boardUserFound.email;
-			newResponsible.id = boardUserFound._id;
-
+		if (boardData.users && currentResponsible.id !== newResponsible.id) {
 			if (isSubBoard) {
 				const promises = boardData.users
 					.filter((boardUser) =>
@@ -108,7 +106,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 							(boardUser.user as unknown as User)._id
 						)
 					)
-					.map(async (boardUser) => {
+					.map((boardUser) => {
 						const typedBoardUser = boardUser.user as unknown as User;
 
 						return this.boardUserModel
@@ -137,7 +135,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 						(boardUser.user as unknown as User)._id
 					)
 				)
-				.map(async (boardUser) => {
+				.map((boardUser) => {
 					const typedBoardUser = boardUser.user as unknown as User;
 
 					return this.boardUserModel
@@ -201,7 +199,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		if (
 			updatedBoard &&
-			String(currentResponsible?.id) !== newResponsible.id &&
+			currentResponsible.id !== newResponsible.id &&
 			board.slackChannelId &&
 			updatedBoard.slackEnable &&
 			updatedBoard.isSubBoard

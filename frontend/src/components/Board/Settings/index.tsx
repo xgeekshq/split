@@ -266,6 +266,7 @@ const BoardSettings = ({
         maxVotes,
         columns: isRegularBoard ? updatedColumns : data.columns,
         socketId,
+        responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       },
       {
         onSuccess: () => {
