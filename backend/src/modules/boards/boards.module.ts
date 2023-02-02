@@ -22,12 +22,12 @@ import {
 	getBoardService,
 	pauseBoardTimerService,
 	sendBoardTimerStateService,
+	sendBoardTimerTimeLeftService,
 	startBoardTimerService,
 	stopBoardTimerService,
 	updateBoardApplication,
 	updateBoardService,
-	updateBoardTimerDurationService,
-	updateBoardTimerTimeLeftService
+	updateBoardTimerDurationService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 
@@ -54,7 +54,7 @@ import BoardsController from './controller/boards.controller';
 		startBoardTimerService,
 		pauseBoardTimerService,
 		stopBoardTimerService,
-		updateBoardTimerTimeLeftService,
+		sendBoardTimerTimeLeftService,
 		updateBoardTimerDurationService,
 		afterUserPausedTimerSubscriber,
 		afterUserStartedTimerSubscriber,

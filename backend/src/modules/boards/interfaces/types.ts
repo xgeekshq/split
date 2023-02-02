@@ -8,7 +8,7 @@ export const TYPES = {
 		StartBoardTimerService: 'StartBoardTimerService',
 		PauseBoardTimerService: 'PauseBoardTimerService',
 		StopBoardTimerService: 'StopBoardTimerService',
-		UpdateBardTimerTimeLeftService: 'UpdateBardTimerTimeLeftService',
+		SendBardTimerTimeLeftService: 'SendBardTimerTimeLeftService',
 		UpdateBoardTimerDurationService: 'UpdateBoardTimerDurationService'
 	},
 	applications: {
