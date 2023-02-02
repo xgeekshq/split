@@ -182,37 +182,41 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            <Link href={`/boards/${_id}/participants`}>
-              <Flex>
-                <Flex align="center" gap="10">
-                  <StyledBoardTitle>
-                    <Text size="sm">Participants</Text>
-                  </StyledBoardTitle>
-                  <CardAvatars
-                    isBoardsPage
-                    responsible={false}
-                    listUsers={users}
-                    teamAdmins={false}
-                    userId={session!.user.id}
-                  />
-                </Flex>
-                <Flex align="center" gap="20" css={{ margin: '12px' }}>
-                  <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
-                </Flex>
-                <Flex align="center" gap="10">
-                  <Text color="primary300" size="sm">
-                    Board Creator
-                  </Text>
-                  <CardAvatars
-                    isBoardsPage
-                    responsible
-                    listUsers={users}
-                    teamAdmins={false}
-                    userId={session!.user.id}
-                  />
-                </Flex>
+            <Flex>
+              <Flex align="center" gap="10">
+                {isParticipantsPage ? (
+                  <Text size="sm">Participants</Text>
+                ) : (
+                  <Link href={`/boards/${_id}/participants`}>
+                    <StyledBoardTitle>
+                      <Text size="sm">Participants</Text>
+                    </StyledBoardTitle>
+                  </Link>
+                )}
+                <CardAvatars
+                  isBoardsPage
+                  responsible={false}
+                  listUsers={users}
+                  teamAdmins={false}
+                  userId={session!.user.id}
+                />
               </Flex>
-            </Link>
+              <Flex align="center" gap="20" css={{ margin: '$12' }}>
+                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              </Flex>
+              <Flex align="center" gap="10">
+                <Text color="primary300" size="sm">
+                  Board Creator
+                </Text>
+                <CardAvatars
+                  isBoardsPage
+                  responsible
+                  listUsers={users}
+                  teamAdmins={false}
+                  userId={session!.user.id}
+                />
+              </Flex>
+            </Flex>
           )}
           {isPersonalBoard && (
             <>
