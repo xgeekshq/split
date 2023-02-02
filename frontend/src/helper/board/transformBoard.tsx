@@ -113,6 +113,7 @@ export const handleDeleteCard = (board: BoardType, data: DeleteCardDto): BoardTy
   }
 
   const boardUserIdx = boardData.users.findIndex((bUser) => bUser.user._id === userId);
+
   if (boardUserIdx > -1) {
     boardData.users[boardUserIdx].votesCount -= votesOfUser;
   }
