@@ -5,10 +5,9 @@ import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import LoadingPage from '@/components/loadings/LoadingPage';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
@@ -32,8 +31,8 @@ const BoardParticipants = () => {
       });
     },
   }).data;
-  const boardInfo = useRecoilValue(boardInfoState);
-  const boardMembers: BoardUser[] = boardInfo.board.users;
+
+  const boardParticipants = useRecoilValue(boardParticipantsState);
   const setUsersListState = useSetRecoilState(usersListState);
 
   const handleMembersList = useCallback(() => {
@@ -41,7 +40,7 @@ const BoardParticipants = () => {
 
     const checkboxUsersList = usersData
       .map((user): UserList => {
-        const userIsTeamMember = boardMembers.some(
+        const userIsTeamMember = boardParticipants.some(
           (teamMember) => teamMember.user?._id === user._id,
         );
         return { ...user, isChecked: userIsTeamMember };
@@ -49,7 +48,7 @@ const BoardParticipants = () => {
       .sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
 
     setUsersListState(checkboxUsersList);
-  }, [boardMembers, setUsersListState, usersData]);
+  }, [boardParticipants, setUsersListState, usersData]);
 
   useEffect(() => {
     handleMembersList();
