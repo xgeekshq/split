@@ -110,11 +110,15 @@ const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
     },
     size: {
       sm: {
+        width: '$20',
+        height: '$20',
         '& svg': {
           size: '$20',
         },
       },
       md: {
+        width: '$24',
+        height: '$24',
         '& svg': {
           size: '$24',
         },
