@@ -16,6 +16,8 @@ import {
 	BOARD_TIMER_USER_STARTED,
 	BOARD_TIMER_USER_STOPPED
 } from 'src/libs/constants/timer';
+import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
+import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import { hideText } from 'src/libs/utils/hideText';
 import Board from 'src/modules/boards/schemas/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
@@ -27,8 +29,6 @@ import UpdateCardDto from 'src/modules/cards/dto/update.card.dto';
 import CreateCommentDto from 'src/modules/comments/dto/create.comment.dto';
 import DeleteCommentDto from 'src/modules/comments/dto/delete.comment.dto';
 import UpdateCardCommentDto from 'src/modules/comments/dto/update.comment.dto';
-import BoardTimerDurationDto from 'src/modules/common/dtos/board-timer-duration.dto';
-import BoardTimerTimeLeftDto from 'src/modules/common/dtos/board-timer-time-left.dto';
 import UserPausedTimerEvent from 'src/modules/socket/events/user-paused-timer.event';
 import UserRequestedTimerStateEvent from 'src/modules/socket/events/user-requested-timer-state.event';
 import UserStartedTimerEvent from 'src/modules/socket/events/user-started-timer.event';
@@ -147,7 +147,10 @@ export default class SocketGateway
 
 	@SubscribeMessage(BOARD_TIMER_USER_REQUESTED_TIMER_STATE)
 	handleUserRequestedTimerStateEvent(client: Socket, payload: BoardTimerDurationDto) {
+		this.logger.log(`Socket handling "${BOARD_TIMER_USER_STOPPED}". Client "${client.id})"`);
+
 		payload.clientId = client.id;
+
 		this.eventEmitter.emit(
 			BOARD_TIMER_USER_REQUESTED_TIMER_STATE,
 			new UserRequestedTimerStateEvent(payload)
@@ -156,7 +159,12 @@ export default class SocketGateway
 
 	@SubscribeMessage(BOARD_TIMER_USER_DURATION_UPDATED)
 	handleUserUpdatedTimerDurationEvent(client: Socket, payload: BoardTimerDurationDto) {
+		this.logger.log(
+			`Socket handling "${BOARD_TIMER_USER_DURATION_UPDATED}". Board: "${payload.boardId})"`
+		);
+
 		payload.clientId = client.id;
+
 		this.eventEmitter.emit(
 			BOARD_TIMER_USER_DURATION_UPDATED,
 			new UserUpdatedTimerDurationEvent(payload)
@@ -165,19 +173,28 @@ export default class SocketGateway
 
 	@SubscribeMessage(BOARD_TIMER_USER_STARTED)
 	handleUserStartedTimerEvent(client: Socket, payload: BoardTimerDurationDto) {
+		this.logger.log(`Socket handling "${BOARD_TIMER_USER_STARTED}". Board: "${payload.boardId})"`);
+
 		payload.clientId = client.id;
+
 		this.eventEmitter.emit(BOARD_TIMER_USER_STARTED, new UserStartedTimerEvent(payload));
 	}
 
 	@SubscribeMessage(BOARD_TIMER_USER_PAUSED)
 	handleUserPausedTimerEvent(client: Socket, payload: BoardTimerTimeLeftDto) {
+		this.logger.log(`Socket handling "${BOARD_TIMER_USER_PAUSED}". Board: "${payload.boardId})"`);
+
 		payload.clientId = client.id;
+
 		this.eventEmitter.emit(BOARD_TIMER_USER_PAUSED, new UserPausedTimerEvent(payload));
 	}
 
 	@SubscribeMessage(BOARD_TIMER_USER_STOPPED)
 	handleUserStoppedTimerEvent(client: Socket, payload: BoardTimerDurationDto) {
+		this.logger.log(`Socket handling "${BOARD_TIMER_USER_STOPPED}". Board: "${payload.boardId})"`);
+
 		payload.clientId = client.id;
+
 		this.eventEmitter.emit(BOARD_TIMER_USER_STOPPED, new UserStoppedTimerEvent(payload));
 	}
 

@@ -1,12 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_STOPPED } from 'src/libs/constants/timer';
+import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import StopBoardTimerService from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerDurationDto from 'src/modules/common/dtos/board-timer-duration.dto';
 
 @Injectable()
 export default class AfterUserStoppedTimerSubscriber {
+	private logger: Logger = new Logger(AfterUserStoppedTimerSubscriber.name);
+
 	constructor(
 		@Inject(TYPES.services.StopBoardTimerService)
 		private readonly stopBoardTimerService: StopBoardTimerService
@@ -14,6 +16,8 @@ export default class AfterUserStoppedTimerSubscriber {
 
 	@OnEvent(BOARD_TIMER_USER_STOPPED)
 	handleUserStoppedTimeEvent(payload: BoardTimerDurationDto) {
+		this.logger.log(`Board handling "${BOARD_TIMER_USER_STOPPED}". Board: "${payload.boardId})"`);
+
 		this.stopBoardTimerService.stopTimer(payload);
 	}
 }

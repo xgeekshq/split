@@ -1,8 +1,11 @@
-import BoardTimerStateDto from 'src/modules/common/dtos/board-timer-state.dto';
-import TimeDto from 'src/modules/common/dtos/time.dto';
-import TimerStatusDto from 'src/modules/common/dtos/timer-status.dto';
+import { Logger } from '@nestjs/common';
+import BoardTimerStateDto from 'src/libs/dto/board-timer-state.dto';
+import TimeDto from 'src/libs/dto/time.dto';
+import TimerStatusDto from 'src/libs/dto/timer-status.dto';
 
 export default class ServerSentTimerStateEvent {
+	private logger: Logger = new Logger(ServerSentTimerStateEvent.name);
+
 	boardId: string;
 	clientId: string;
 	duration: TimeDto;
@@ -15,5 +18,7 @@ export default class ServerSentTimerStateEvent {
 		this.duration = payload.duration;
 		this.timeLeft = payload.timeLeft;
 		this.status = payload.status;
+
+		this.logger.log(`${ServerSentTimerStateEvent.name} emitted.`);
 	}
 }
