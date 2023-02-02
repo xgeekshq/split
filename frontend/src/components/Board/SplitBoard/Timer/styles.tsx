@@ -18,21 +18,15 @@ const TimerContainer = styled('div', {
   height: '64px',
   paddingTop: '$8',
   width: '202px',
-});
 
-const ControlPanel = styled('div', {
-  display: 'flex',
-  gap: '$4',
-  gridArea: 'buttons',
-  marginRight: '$12',
-});
-
-const Line = styled('div', {
-  borderBottom: '2px solid $highlight2Base',
-  gridArea: 'line',
-  marginLeft: '$2',
-  marginTop: '$4',
-  width: '98%',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    alignSelf: 'end',
+    justifySelf: 'center',
+    width: '186px',
+    borderBottom: '2px solid $highlight2Base',
+  },
 });
 
 const ClockPanel = styled('div', {
@@ -62,22 +56,21 @@ const TimePanel = styled('div', {
   justifyContent: 'center',
 });
 
-const TextControlButtonContainer = styled('div', {
-  marginTop: '$4',
-  marginBottom: '$1',
-});
-
-const TimeButtonText = styled('div', {
+const TimeButtonTitle = styled('div', {
   writingMode: 'vertical-rl',
   marginTop: '0',
 });
 
-export {
-  TimerContainer,
-  ClockPanel,
-  TimePanel,
-  ControlPanel,
-  Line,
-  TimeButtonText,
-  TextControlButtonContainer,
-};
+const TimePanelText = styled('div', {
+  marginTop: '$4',
+  marginBottom: '$1',
+});
+
+const ControlPanel = styled('div', {
+  display: 'flex',
+  gap: '$4',
+  gridArea: 'buttons',
+  marginRight: '$12',
+});
+
+export { TimerContainer, ClockPanel, TimePanel, TimeButtonTitle, TimePanelText, ControlPanel };
