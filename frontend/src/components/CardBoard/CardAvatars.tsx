@@ -7,6 +7,7 @@ import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { IconButton } from './styles';
+import { ListBoardMembers } from '../Boards/MyBoards/ListBoardMembers';
 
 type ListUsersType = {
   user: User | string;
@@ -23,6 +24,7 @@ type CardAvatarProps = {
   myBoards?: boolean;
   haveError?: boolean;
   isBoardsPage?: boolean;
+  isSubBoardPage?: boolean;
 };
 
 const CardAvatars = React.memo<CardAvatarProps>(
@@ -35,6 +37,7 @@ const CardAvatars = React.memo<CardAvatarProps>(
     responsible,
     myBoards,
     isBoardsPage,
+    isSubBoardPage,
   }) => {
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
     const [viewAllUsers, setViewAllUsers] = useState(false);
@@ -175,8 +178,25 @@ const CardAvatars = React.memo<CardAvatarProps>(
       return 1;
     }, [myBoards]);
 
+    const boardMembers = useMemo(
+      () =>
+        listUsers.map((member) => ({
+          ...member,
+          user: member.user as User,
+        })),
+      [listUsers],
+    );
+
     return (
       <>
+        {isSubBoardPage && (
+          <ListBoardMembers
+            boardMembers={boardMembers}
+            isOpen={dialogIsOpen}
+            setIsOpen={setDialogIsOpen}
+            isSubBoard
+          />
+        )}
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
           {haveError
             ? ['-', '-', '-'].map((value, index) =>
