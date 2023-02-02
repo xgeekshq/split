@@ -72,12 +72,13 @@ export default class SocketGateway
 		this.server.to(teamId).except(excludedClient).emit('teamId');
 	}
 
-	sendUpdatedAllBoard(excludedClient: string) {
-		this.server.except(excludedClient).emit('updateAllBoard');
+	sendUpdatedAllBoard(boardId: string, excludedClient: string) {
+		this.server.to(boardId).except(excludedClient).emit('updateAllBoard');
 	}
 
 	sendUpdateCardPosition(excludedClient: string, updateCardPositionDto: UpdateCardPositionDto) {
 		this.server
+			.to(updateCardPositionDto.boardId)
 			.except(excludedClient)
 			.emit(`${updateCardPositionDto.boardId}cardPosition`, updateCardPositionDto);
 	}
@@ -85,42 +86,62 @@ export default class SocketGateway
 	sendUpdateVotes(excludedClient: string, voteDto: VoteDto) {
 		voteDto.fromRequest = false;
 		voteDto.userId = hideText(voteDto.userId);
-		this.server.except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
+		this.server.to(voteDto.boardId).except(excludedClient).emit(`${voteDto.boardId}vote`, voteDto);
 	}
 
 	sendUnmergeCards(excludedClient: string, unmergeDto: UnmergeCardsDto) {
-		this.server.except(excludedClient).emit(`${unmergeDto.boardId}unmerge`, unmergeDto);
+		this.server
+			.to(unmergeDto.boardId)
+			.except(excludedClient)
+			.emit(`${unmergeDto.boardId}unmerge`, unmergeDto);
 	}
 
 	sendMergeCards(excludedClient: string, mergeDto: MergeCardDto) {
-		this.server.except(excludedClient).emit(`${mergeDto.boardId}merge`, mergeDto);
+		this.server
+			.to(mergeDto.boardId)
+			.except(excludedClient)
+			.emit(`${mergeDto.boardId}merge`, mergeDto);
 	}
 
 	sendAddCard(excludedClient: string, createCardDto: CreateCardDto) {
-		this.server.except(excludedClient).emit(`${createCardDto.boardId}addCard`, createCardDto);
+		this.server
+			.to(createCardDto.boardId)
+			.except(excludedClient)
+			.emit(`${createCardDto.boardId}addCard`, createCardDto);
 	}
 
 	sendDeleteCard(excludedClient: string, deleteCardDto: DeleteCardDto) {
-		this.server.except(excludedClient).emit(`${deleteCardDto.boardId}deleteCard`, deleteCardDto);
+		this.server
+			.to(deleteCardDto.boardId)
+			.except(excludedClient)
+			.emit(`${deleteCardDto.boardId}deleteCard`, deleteCardDto);
 	}
 
 	sendUpdateCard(excludedClient: string, updateCardDto: UpdateCardDto) {
-		this.server.except(excludedClient).emit(`${updateCardDto.boardId}updateCard`, updateCardDto);
+		this.server
+			.to(updateCardDto.boardId)
+			.except(excludedClient)
+			.emit(`${updateCardDto.boardId}updateCard`, updateCardDto);
 	}
 
 	sendAddComment(excludedClient: string, addCommentDto: CreateCommentDto) {
-		this.server.except(excludedClient).emit(`${addCommentDto.boardId}addComment`, addCommentDto);
+		this.server
+			.to(addCommentDto.boardId)
+			.except(excludedClient)
+			.emit(`${addCommentDto.boardId}addComment`, addCommentDto);
 	}
 
 	sendUpdateComment(excludedClient: string, updateCommentDto: UpdateCardCommentDto) {
 		this.server
 			.except(excludedClient)
+			.to(updateCommentDto.boardId)
 			.emit(`${updateCommentDto.boardId}updateComment`, updateCommentDto);
 	}
 
 	sendDeleteComment(excludedClient: string, deleteCommentDto: DeleteCommentDto) {
 		this.server
 			.except(excludedClient)
+			.to(deleteCommentDto.boardId)
 			.emit(`${deleteCommentDto.boardId}deleteComment`, deleteCommentDto);
 	}
 

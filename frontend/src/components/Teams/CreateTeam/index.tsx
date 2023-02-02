@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
@@ -12,10 +11,14 @@ import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/icons/Icon';
 import {
-  ButtonsContainer,
+  Container,
+  PageHeader,
+  ContentWrapper,
+  ContentContainer,
+  SubContainer,
   InnerContent,
   StyledForm,
-  SubContainer,
+  ButtonsContainer,
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
 import TipBar from './TipBar';
@@ -78,50 +81,57 @@ const CreateTeam = () => {
     if (status === 'success') {
       router.push('/teams');
     }
+
+    if (status === 'error') {
+      setSubmitButtonState(false);
+    }
   }, [status, router]);
 
   return (
     <Container>
       <PageHeader>
-        <Text color="primary800" heading={3} weight="bold">
+        <Text color="primary800" heading={3} fontWeight="bold">
           Create New Team
         </Text>
-        <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-          <Icon name="close" />
+        <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
+          <Icon css={{ color: '$primaryBase' }} name="close" />
         </Button>
       </PageHeader>
-      <ContentContainer>
-        <SubContainer>
-          <StyledForm
-            direction="column"
-            onSubmit={methods.handleSubmit(({ text }) => {
-              saveTeam(text);
-              setSubmitButtonState(true);
-            })}
-          >
-            <InnerContent direction="column">
-              <FormProvider {...methods}>
-                <TeamName teamName={teamName} />
-                <TeamMembersList />
-              </FormProvider>
-            </InnerContent>
-            <ButtonsContainer gap="24" justify="end">
-              <Button
-                disabled={isBackButtonDisable}
-                type="button"
-                variant="lightOutline"
-                onClick={handleBack}
-              >
-                Cancel
-              </Button>
-              <Button disabled={isSubmitButtonDisable} type="submit">
-                Create team
-              </Button>
-            </ButtonsContainer>
-          </StyledForm>
-        </SubContainer>
-        <TipBar />
-      </ContentContainer>
+      <ContentWrapper>
+        <ContentContainer>
+          <SubContainer>
+            <StyledForm
+              id="hook-form"
+              direction="column"
+              onSubmit={methods.handleSubmit(({ text }) => {
+                saveTeam(text);
+                setSubmitButtonState(true);
+              })}
+            >
+              <InnerContent direction="column">
+                <FormProvider {...methods}>
+                  <TeamName teamName={teamName} />
+                  <TeamMembersList />
+                </FormProvider>
+              </InnerContent>
+            </StyledForm>
+          </SubContainer>
+          <TipBar />
+        </ContentContainer>
+      </ContentWrapper>
+      <ButtonsContainer gap="24" justify="end">
+        <Button
+          disabled={isBackButtonDisable}
+          type="button"
+          variant="lightOutline"
+          onClick={handleBack}
+        >
+          Cancel
+        </Button>
+        <Button form="hook-form" disabled={isSubmitButtonDisable} type="submit">
+          Create team
+        </Button>
+      </ButtonsContainer>
     </Container>
   );
 };

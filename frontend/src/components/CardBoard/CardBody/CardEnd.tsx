@@ -38,13 +38,13 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 
     const boardTypeCaption = useMemo(() => {
       if (isSubBoard && !isDashboard) return 'Responsible';
-      if (isSubBoard && !team && isDashboard) return 'Team';
+      if (isSubBoard && isDashboard) return 'Team';
       if (team) return 'Team';
       return 'Personal';
     }, [isDashboard, isSubBoard, team]);
 
     const boardOwnerName = useMemo(() => {
-      if (team) {
+      if (team && !isSubBoard) {
         return team?.name;
       }
       if (isSubBoard && isDashboard && index !== undefined) {
@@ -63,11 +63,11 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary300" size="sm">
             {boardTypeCaption} |
           </Text>
-          <Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
+          <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
             {boardOwnerName}
           </Text>
           <CardAvatars
-            listUsers={!team ? users : team.users}
+            listUsers={!team || isSubBoard ? users : team.users}
             responsible={false}
             teamAdmins={false}
             userId={userId}

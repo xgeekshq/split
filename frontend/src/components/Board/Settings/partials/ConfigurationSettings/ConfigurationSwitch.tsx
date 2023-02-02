@@ -50,7 +50,7 @@ const ConfigurationSwitchSettings = ({
       </Switch>
     )}
     <Flex direction="column">
-      <Text size="md" weight="medium">
+      <Text size="md" fontWeight="medium">
         {title}
       </Text>
       <Text color="primary500" size="sm">

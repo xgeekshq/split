@@ -4,7 +4,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/icons/Icon';
-import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 
 /**
@@ -41,12 +40,9 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   position: 'fixed',
   top: 0,
   right: 0,
-  overflow: 'auto',
   height: '100vh',
   width: '592px',
-
   padding: 0,
-
   backgroundColor: 'white',
   zIndex: 10,
 
@@ -71,18 +67,6 @@ const StyledDialogTitle = styled('div', DialogPrimitive.Title, {
     fontSize: '$20',
     lineHeight: '$24',
     color: '#000',
-  },
-});
-
-const StyledDialogCloseButton = styled(Button, {
-  color: '$primary400',
-  height: '40px !important',
-  padding: '10px !important',
-
-  transition: 'all 0.25s ease-in-out',
-
-  '&:hover': {
-    backgroundColor: '$primary50 !important',
   },
 });
 
@@ -176,6 +160,7 @@ const StyledAccordionItem = styled(AccordionPrimitive.Item, {
       },
       others: {
         borderTop: '1px solid $colors$primary100',
+        mb: '$40',
       },
     },
   },
@@ -189,13 +174,12 @@ const StyledAccordionItem = styled(AccordionPrimitive.Item, {
  * Custom styles
  */
 const ButtonsContainer = styled(Flex, {
-  borderTop: '1px solid $colors$primary100',
   py: '$24',
   px: '$32',
   width: '100%',
   bottom: 0,
   right: 0,
-
+  borderTop: '1px solid $colors$primary100',
   '&>button': {
     margin: 0,
   },
@@ -208,7 +192,6 @@ export {
   StyledAccordionIcon,
   StyledAccordionItem,
   StyledAccordionTrigger,
-  StyledDialogCloseButton,
   StyledDialogContainer,
   StyledDialogContent,
   StyledDialogOverlay,

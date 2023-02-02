@@ -21,6 +21,10 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import { BoardDataPopulate } from '../utils/populate-board';
+import { UpdateColumnDto } from '../dto/column/update-column.dto';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -31,7 +35,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>
+		private boardUserModel: Model<BoardUserDocument>,
+		private socketService: SocketGateway
 	) {}
 
 	/**
@@ -143,7 +148,12 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					_id: boardId
 				},
 				{
-					...boardData
+					maxVotes: boardData.maxVotes,
+					hideCards: boardData.hideCards,
+					addCards: boardData.addCards,
+					hideVotes: boardData.hideVotes,
+					title: boardData.title,
+					users: boardData.users
 				},
 				{
 					new: true
@@ -322,5 +332,36 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				this.boardModel.updateOne({ _id: team.boardId }, { slackChannelId: team.channelId })
 			)
 		);
+	}
+
+	updateColumn(boardId: string, column: UpdateColumnDto) {
+		const board = this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns._id': column._id
+				},
+				{
+					$set: {
+						'columns.$[column].color': column.color,
+						'columns.$[column].title': column.title,
+						'columns.$[column].cardText': column.cardText,
+						'columns.$[column].isDefaultText': column.isDefaultText
+					}
+				},
+				{
+					arrayFilters: [{ 'column._id': column._id }],
+					new: true
+				}
+			)
+			.populate(BoardDataPopulate)
+			.lean()
+			.exec();
+
+		if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
+
+		return board;
 	}
 }

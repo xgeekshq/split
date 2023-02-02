@@ -38,6 +38,9 @@ interface CardBoardProps {
   maxVotes?: number;
   isSubmited: boolean;
   hideCards: boolean;
+  isDefaultText: boolean;
+  cardText?: string;
+  hasAdminRole: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -54,6 +57,8 @@ const CardBoard = React.memo<CardBoardProps>(
     maxVotes,
     isSubmited,
     hideCards,
+    isDefaultText,
+    hasAdminRole,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -133,6 +138,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   colId={colId}
                   socketId={socketId}
                   anonymous={card.anonymous}
+                  isDefaultText={isDefaultText}
                 />
               )}
               {!editing && (
@@ -141,7 +147,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     <Flex css={{ py: '$8' }} justify="between">
                       <Flex align="center" gap="4">
                         <Icon css={{ width: '$14', height: '$14' }} name="merge" />
-                        <Text size="xxs" weight="medium">
+                        <Text size="xxs" fontWeight="medium">
                           {card.items.length} merged cards
                         </Text>
                       </Flex>
@@ -159,11 +165,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       >
                         {card.text}
                       </Text>
-                      {isSubmited && (
-                        <Icon css={{ width: '$20', height: '$20' }} name="menu-dots" />
-                      )}
-
-                      {!isSubmited && userId === card?.createdBy?._id && (
+                      {!isSubmited && (userId === card?.createdBy?._id || hasAdminRole) && (
                         <PopoverCardSettings
                           boardId={boardId}
                           cardGroupId={card._id}
@@ -178,6 +180,7 @@ const CardBoard = React.memo<CardBoardProps>(
                           newPosition={0}
                           socketId={socketId}
                           userId={userId}
+                          hasAdminRole={hasAdminRole}
                         />
                       )}
                     </Flex>
@@ -195,6 +198,8 @@ const CardBoard = React.memo<CardBoardProps>(
                       items={card.items}
                       socketId={socketId}
                       userId={userId}
+                      isDefaultText={isDefaultText}
+                      hasAdminRole={hasAdminRole}
                     />
                   )}
                   <CardFooter
@@ -237,6 +242,8 @@ const CardBoard = React.memo<CardBoardProps>(
                 socketId={socketId}
                 userId={userId}
                 columnId={colId}
+                isDefaultText={isDefaultText}
+                hasAdminRole={hasAdminRole}
               />
             )}
           </Flex>

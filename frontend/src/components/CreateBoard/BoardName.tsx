@@ -16,7 +16,7 @@ const BoardName = ({ mainBoardName }: Props) => {
   return (
     <>
       <Text heading="3">Main Board Name</Text>
-      <Text css={{ mt: '$8', mb: '$16', color: '$primary500' }}>
+      <Text color="primary500" css={{ mt: '$8', mb: '$16' }}>
         The main board is the board into which all sub-team boards will be merged.
       </Text>
       <Input

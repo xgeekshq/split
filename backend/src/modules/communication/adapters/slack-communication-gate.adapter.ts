@@ -1,11 +1,11 @@
 import { Logger } from '@nestjs/common';
 import { WebClient } from '@slack/web-api';
 import { ConfigurationType } from 'src/modules/communication/dto/types';
+import { ArchiveChannelError } from 'src/modules/communication/errors/archive-channel.error';
 import { CreateChannelError } from 'src/modules/communication/errors/create-channel.error';
 import { GetProfileError } from 'src/modules/communication/errors/get-profile.error';
 import { GetUsersFromChannelError } from 'src/modules/communication/errors/get-users-from-channel.error';
 import { InviteUsersError } from 'src/modules/communication/errors/invite-users.error';
-import { PostMessageError } from 'src/modules/communication/errors/post-message.error';
 import { ProfileNotFoundError } from 'src/modules/communication/errors/profile-not-found.error';
 import { ProfileWithoutEmailError } from 'src/modules/communication/errors/profile-without-email.error';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
@@ -24,6 +24,30 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 
 	private getClient(): WebClient {
 		return this.client;
+	}
+
+	public async archive(channelId: string): Promise<{ ok: boolean; error?: string }> {
+		try {
+			// https://api.slack.com/methods/conversations.archive  (!! 20+ per minute)
+			const { ok } = await this.getClient().conversations.archive({ channel: channelId });
+
+			return {
+				ok
+			};
+		} catch (error) {
+			if (typeof error.data?.ok === 'boolean' && !error.data?.ok) {
+				this.logger.warn(error);
+
+				if (error.data.error === 'already_archived') {
+					return { ok: true };
+				}
+
+				return { ok: error.data.ok, error: error.data.error };
+			}
+
+			this.logger.error(error);
+			throw new ArchiveChannelError();
+		}
 	}
 
 	public async addChannel(name: string, errorCount = 0): Promise<{ id: string; name: string }> {
@@ -181,7 +205,8 @@ export class SlackCommunicationGateAdapter implements CommunicationGateAdapterIn
 			return { ok, ts };
 		} catch (error) {
 			this.logger.error(error);
-			throw new PostMessageError();
+
+			return { ok: false };
 		}
 	}
 }

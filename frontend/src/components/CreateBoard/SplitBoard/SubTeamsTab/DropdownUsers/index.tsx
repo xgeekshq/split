@@ -14,7 +14,7 @@ const DropdownUsers = ({ children, users }: DropdownUsersProps) => (
     <DropdownContent>
       {users.map((user) => (
         <DropdownItem key={user._id} justify="between" align="center">
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             {`${user.firstName} ${user.lastName} `}
           </Text>
           <Text size="xs" color="primary300">{`(${user.email})`}</Text>

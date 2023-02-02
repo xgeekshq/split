@@ -11,6 +11,8 @@ import * as UserType from 'src/modules/users/interfaces/types';
 import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
 import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
 import { TYPES } from '../interfaces/types';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 
 type AzureUserFound = {
 	mail?: string;
@@ -36,7 +38,9 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 		@Inject(AuthType.TYPES.services.GetTokenAuthService)
 		private readonly getTokenService: GetTokenAuthService,
 		@Inject(TYPES.services.CronAzureService)
-		private readonly cronAzureService: CronAzureService
+		private readonly cronAzureService: CronAzureService,
+		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
+		private slackCommunicationService: CommunicationServiceInterface
 	) {}
 
 	async loginOrRegisterAzureToken(azureToken: string) {
@@ -65,6 +69,8 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 			lastName,
 			providerAccountCreatedAt: userFromAzure.value[0].createdDateTime
 		});
+
+		//this.slackCommunicationService.executeAddUserMainChannel({ email: emailOrUniqueName });
 
 		if (!createdUser) return null;
 

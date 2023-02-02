@@ -22,7 +22,7 @@ const EmptyTeamBoards = ({ teamId }: EmptyTeamBoardsProps) => (
           query: { team: teamId },
         }}
       >
-        <StyledNewBoardLink underline weight="medium">
+        <StyledNewBoardLink underline fontWeight="medium">
           Add a new team board
         </StyledNewBoardLink>
       </Link>{' '}

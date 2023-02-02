@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
@@ -9,27 +9,32 @@ import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import { useSocketIO } from '@/hooks/useSocketIO';
-import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
-const RegularBoard = () => {
+type RegularBoardProps = {
+  socketId?: string;
+};
+
+const RegularBoard = ({ socketId }: RegularBoardProps) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
 
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
+  const setEditColumns = useSetRecoilState(editColumnsState);
+
+  useMemo(() => {
+    if (!isOpen) setEditColumns(board.columns);
+  }, [board.columns, isOpen, setEditColumns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });
 
   const userId = session?.user.id;
-
-  // Socket IO Hook
-  const { socketId } = useSocketIO(board?._id);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(

@@ -1,4 +1,11 @@
-import AlertCustomDialog from '@/components/Primitives/AlertCustomDialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+} from '@/components/Primitives/AlertDialog';
+import Flex from '@/components/Primitives/Flex';
+import Text from '@/components/Primitives/Text';
 import useCards from '@/hooks/useCards';
 
 interface DeleteProps {
@@ -42,21 +49,22 @@ const DeleteCard = ({
   };
 
   return (
-    <AlertCustomDialog
-      defaultOpen
-      addEllipsis={cardTitle.length > 100}
-      cancelText="Cancel"
-      confirmText="Delete card"
-      handleClose={handleClose}
-      handleConfirm={handleDelete}
-      title="Delete card"
-      variant="danger"
-      text={
-        <>
-          Do you really want to delete <span>{cardTitle}</span> card?
-        </>
-      }
-    />
+    <AlertDialog defaultOpen>
+      <AlertDialogContent title="Delete card">
+        <Text>Do you really want to delete the following card?</Text>
+        <Text ellipsis fontWeight="bold">
+          {cardTitle}
+        </Text>
+        <Flex gap="16" justify="end" css={{ mt: '$24' }}>
+          <AlertDialogCancel variant="primaryOutline" onClick={handleClose}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction variant="danger" onClick={handleDelete}>
+            Delete card
+          </AlertDialogAction>
+        </Flex>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

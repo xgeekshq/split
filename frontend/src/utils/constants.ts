@@ -17,6 +17,9 @@ export const NEXT_PUBLIC_ENABLE_AZURE = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_A
 export const NEXT_PUBLIC_ENABLE_GIT = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_GIT === 'true';
 export const NEXT_PUBLIC_ENABLE_GOOGLE = publicRuntimeConfig.NEXT_PUBLIC_ENABLE_GOOGLE === 'true';
 export const NEXT_PUBLIC_LOGIN_SSO_ONLY = publicRuntimeConfig.NEXT_PUBLIC_LOGIN_SSO_ONLY === 'true';
+export const NEXT_PUBLIC_REGULAR_BOARD = publicRuntimeConfig.NEXT_PUBLIC_REGULAR_BOARD
+  ? publicRuntimeConfig.NEXT_PUBLIC_REGULAR_BOARD === 'true'
+  : true;
 
 export const AUTH_SSO =
   NEXT_PUBLIC_ENABLE_AZURE || NEXT_PUBLIC_ENABLE_GIT || NEXT_PUBLIC_ENABLE_GOOGLE;

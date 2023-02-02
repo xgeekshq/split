@@ -30,7 +30,7 @@ export default class BoardDto {
 
 	@ApiProperty({ type: ColumnDto, isArray: true })
 	@ArrayNotEmpty()
-	@ArrayMinSize(3)
+	@ArrayMinSize(1)
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
 	@Type(() => ColumnDto)
@@ -108,6 +108,11 @@ export default class BoardDto {
 	@IsOptional()
 	@IsBoolean()
 	slackEnable?: boolean;
+
+	@ApiPropertyOptional({ default: false })
+	@IsOptional()
+	@IsBoolean()
+	addCards?: boolean;
 
 	@ApiProperty({ type: String, isArray: true })
 	responsibles!: string[];

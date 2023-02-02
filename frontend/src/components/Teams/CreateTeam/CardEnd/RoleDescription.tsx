@@ -12,7 +12,7 @@ const RoleDescription = ({ role }: RoleDescriptionProps) => (
     <Text color="primary200" size="sm">
       Role |
     </Text>
-    <Text color="primary800" css={{ mx: '$8' }} size="sm" weight="medium">
+    <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
       {role === TeamUserRoles.STAKEHOLDER && role[0].toUpperCase() + role.substring(1)}
       {(role === TeamUserRoles.ADMIN || role === TeamUserRoles.MEMBER) &&
         `Team ${role[0].toUpperCase()}${role.substring(1)}`}

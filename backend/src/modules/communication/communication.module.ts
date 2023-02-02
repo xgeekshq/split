@@ -3,6 +3,9 @@ import { Module, forwardRef } from '@nestjs/common';
 import { configuration } from 'src/infrastructure/config/configuration';
 import BoardsModule from 'src/modules/boards/boards.module';
 import {
+	AddUserIntoChannelApplication,
+	ArchiveChannelApplication,
+	ArchiveChannelService,
 	ChatHandler,
 	CommunicationApplication,
 	CommunicationGateAdapter,
@@ -12,10 +15,14 @@ import {
 	ResponsibleApplication,
 	UsersHandler
 } from 'src/modules/communication/communication.providers';
+import { SlackArchiveChannelConsumer } from 'src/modules/communication/consumers/slack-archive-channel.consumer';
 import { SlackCommunicationConsumer } from 'src/modules/communication/consumers/slack-communication.consumer';
+import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
+import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consummer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
+import { SlackAddUserToChannelProducer } from './producers/slack-add-user-channel.producer';
 import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';
 import { SlackResponsibleProducer } from './producers/slack-responsible.producer';
 
@@ -56,12 +63,35 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 							removeOnComplete: SlackMergeBoardProducer.REMOVE_ON_COMPLETE,
 							priority: SlackMergeBoardProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackArchiveChannelProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackArchiveChannelProducer.ATTEMPTS,
+							backoff: SlackArchiveChannelProducer.BACKOFF,
+							delay: SlackArchiveChannelProducer.DELAY,
+							removeOnFail: SlackArchiveChannelProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackArchiveChannelProducer.REMOVE_ON_COMPLETE,
+							priority: SlackArchiveChannelProducer.PRIORITY
+						}
+					}),
+					BullModule.registerQueue({
+						name: SlackAddUserToChannelProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackAddUserToChannelProducer.ATTEMPTS,
+							backoff: SlackAddUserToChannelProducer.BACKOFF,
+							delay: SlackAddUserToChannelProducer.DELAY,
+							removeOnFail: SlackAddUserToChannelProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackAddUserToChannelProducer.REMOVE_ON_COMPLETE,
+							priority: SlackAddUserToChannelProducer.PRIORITY
+						}
 					})
 			  ]
 			: [])
 	],
 	providers: [
 		CommunicationService,
+		ArchiveChannelService,
 		...(configuration().slack.enable
 			? [
 					CommunicationGateAdapter,
@@ -69,17 +99,23 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 					ConversationsHandler,
 					UsersHandler,
 					CommunicationApplication,
+					ArchiveChannelApplication,
 					ResponsibleApplication,
 					MergeBoardApplication,
+					AddUserIntoChannelApplication,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
 					SlackResponsibleProducer,
 					SlackResponsibleConsumer,
 					SlackMergeBoardProducer,
-					SlackMergeBoardConsumer
+					SlackMergeBoardConsumer,
+					SlackArchiveChannelProducer,
+					SlackArchiveChannelConsumer,
+					SlackAddUserToChannelConsumer,
+					SlackAddUserToChannelProducer
 			  ]
 			: [])
 	],
-	exports: [CommunicationService]
+	exports: [CommunicationService, ArchiveChannelService]
 })
 export class CommunicationModule {}

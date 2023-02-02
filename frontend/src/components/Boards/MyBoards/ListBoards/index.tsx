@@ -11,6 +11,7 @@ import { Socket } from 'socket.io-client';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import Button from '@/components/Primitives/Button';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 
@@ -38,19 +39,25 @@ const ListBoards = React.memo<ListBoardsProps>(
 
       return team.users.find(
         (user) =>
-          user.user._id === userId &&
+          user.user?._id === userId &&
           [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(user.role),
       );
     };
 
     return (
-      <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam]) => {
+      <ScrollableContent
+        direction="column"
+        justify="start"
+        ref={scrollRef}
+        onScroll={onScroll}
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+      >
+        {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
           const teamFound = allTeamsList.find((team) => team._id === teamId);
           if (filter !== 'all' && teamId !== filter) return null;
           return (
-            <Flex key={teamId} css={{ mb: '$32' }} direction="column">
+            <Flex key={teamId} css={{ mt: index !== 0 ? '$32' : '' }} direction="column">
               <Flex
                 direction="column"
                 css={{
@@ -73,42 +80,12 @@ const ListBoards = React.memo<ListBoardsProps>(
                       query: { team: teamId },
                     }}
                   >
-                    <Flex
-                      css={{
-                        position: 'relative',
-                        zIndex: '9',
-                        '& svg': { size: '$16' },
-                        right: 0,
-                        top: '-$12',
-                      }}
-                      gap="8"
-                    >
-                      <Icon
-                        name="plus"
-                        css={{
-                          width: '$16',
-                          height: '$32',
-                          marginRight: '$5',
-                        }}
-                      />
-                      <Text
-                        heading="6"
-                        css={{
-                          width: 'fit-content',
-                          display: 'flex',
-                          alignItems: 'center',
-                          '@hover': {
-                            '&:hover': {
-                              cursor: 'pointer',
-                            },
-                          },
-                        }}
-                      >
-                        {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
-                          ? 'Add new personal board'
-                          : 'Add new team board'}
-                      </Text>
-                    </Flex>
+                    <Button variant="link" size="sm" css={{ zIndex: '9' }}>
+                      <Icon name="plus" />
+                      {!Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)
+                        ? 'Add new personal board'
+                        : 'Add new team board'}
+                    </Button>
                   </Link>
                 )}
               </Flex>

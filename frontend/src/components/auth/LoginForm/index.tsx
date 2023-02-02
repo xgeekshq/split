@@ -24,7 +24,8 @@ import {
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { LoginButton, OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
+import Button from '@/components/Primitives/Button';
+import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 
 interface LoginFormProps {
@@ -104,7 +105,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         <Text css={{ mt: '$24' }} heading="1">
           Welcome
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email and password to log in.
         </Text>
         <Input
@@ -127,30 +128,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           type="password"
         />
 
-        <LoginButton disabled={loading.credentials} size="lg" type="submit">
+        <Button disabled={loading.credentials} size="lg" type="submit">
           {loading.credentials && <DotsLoading color="primary800" size={10} />}
           {!loading.credentials && 'Log in'}
-        </LoginButton>
-        <Text
+        </Button>
+        <Button
           data-testid="forgot-password-button"
+          variant="link"
           size="sm"
-          css={{
-            alignSelf: 'center',
-            mt: '$16',
-            '&:hover': {
-              textDecorationLine: 'underline',
-              cursor: 'pointer',
-            },
-          }}
+          css={{ color: '$primary500', mt: '$16' }}
           onClick={handleShowTroubleLogginIn}
         >
           Forgot password
-        </Text>
+        </Button>
         {AUTH_SSO && (
           <Flex align="center" direction="column" justify="center">
             <OrSeparator>
               <hr />
-              <Text color="primary300" size="sm" weight="medium">
+              <Text color="primary300" size="sm" fontWeight="medium">
                 or
               </Text>
               <hr />

@@ -1,5 +1,5 @@
 <img src=".github/IMAGES/split-repo-img.png" alt="SPLIT" />
-<h4 align="center">The retrospective tool fro big teams</h4>
+<h4 align="center">The retrospective tool for big teams</h4>
 
 <br>
 

@@ -32,7 +32,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
                     marginRight: '$5',
                   }}
                 />
-                <Text css={{ ml: '$8' }} size="sm" weight="medium">
+                <Text css={{ ml: '$8' }} size="sm" fontWeight="medium">
                   Create first team board
                 </Text>
               </Flex>
@@ -40,7 +40,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
           </Link>
         )}
         {!teamAdminOrStakeholder && (
-          <Text css={{ ml: '$14' }} size="sm" weight="medium">
+          <Text css={{ ml: '$14' }} size="sm" fontWeight="medium">
             0 boards
           </Text>
         )}
@@ -57,7 +57,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
         }}
       >
         <StyledBoardTitle>
-          <Text css={{ ml: '$14' }} size="sm" weight="medium">
+          <Text css={{ ml: '$14' }} size="sm" fontWeight="medium">
             {team.boardsCount} team boards
           </Text>
         </StyledBoardTitle>

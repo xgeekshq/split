@@ -25,6 +25,22 @@ const AvatarImage = styled(AvatarPrimitive.Image, {
 
 const AvatarFallback = styled(AvatarPrimitive.Fallback, {
   textAlign: 'center',
+  fontFamily: 'DM Sans',
+  '& span': '',
+  variants: {
+    isBoardPage: {
+      true: {
+        fontSize: '$10',
+        lineHeight: '$12',
+        fontWeight: '$regular',
+      },
+      false: {
+        fontSize: '$12',
+        lineHeight: '$16',
+        fontWeight: '$medium',
+      },
+    },
+  },
 });
 
 type AvatarType = {
@@ -42,7 +58,7 @@ type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
 const Avatar: React.FC<AvatarProps> = ({
   src,
   size,
-  colors,
+  colors = undefined,
   fallbackText,
   css,
   isBoardPage,
@@ -51,26 +67,24 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
   const avatarColor = useAvatarColor(id, isDefaultColor);
   if (colors === undefined) colors = avatarColor;
-
+  if (fallbackText.includes('undefined')) {
+    fallbackText = '--';
+  }
   return (
     <AvatarRoot
       css={{
         size,
         backgroundColor: colors?.bg,
         border: colors?.border ? '1px solid $primary200' : undefined,
-        ...css,
         filter: 'drop-shadow(0px 1px 4px rgba(18, 25, 34, 0.05))',
+        ...css,
       }}
     >
       <AvatarImage src={src} />
       <AvatarFallback
+        isBoardPage={isBoardPage}
         css={{
-          fontSize: !isBoardPage ? '$12' : '$10',
-          lineHeight: !isBoardPage ? '$16' : '$12',
-          fontWeight: !isBoardPage ? '$medium' : '$regular',
-          fontFamily: 'DM Sans',
           color: colors?.fontColor,
-          '& span': '',
         }}
       >
         {fallbackText}

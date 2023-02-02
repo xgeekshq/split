@@ -62,7 +62,7 @@ const CardMember = React.memo<CardBodyProps>(
       isTeamPage ? updateIsNewJoinerStatus(checked) : handleIsNewJoiner(checked);
 
     return (
-      <Flex css={{ flex: '1 1 1', marginBottom: '$10' }} direction="column" gap="12">
+      <Flex css={{ flex: '1 1 1' }} direction="column">
         <Flex>
           <InnerContainer
             align="center"
@@ -104,7 +104,7 @@ const CardMember = React.memo<CardBodyProps>(
             )}
             {!isSAdmin && isTeamMember && member.isNewJoiner && (
               <Flex align="center" css={{ width: '35%' }} gap="8" justify="end">
-                <Text size="sm" weight="medium">
+                <Text size="sm" fontWeight="medium">
                   New Joiner
                 </Text>
                 <Tooltip

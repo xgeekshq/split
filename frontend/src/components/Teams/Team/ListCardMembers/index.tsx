@@ -8,8 +8,8 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import CardMember from '@/components/Teams/CreateTeam/CardMember';
-import { ButtonAddMember } from '@/components/Primitives/Dialog/styles';
 import Icon from '@/components/icons/Icon';
+import Button from '@/components/Primitives/Button';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
 
@@ -26,7 +26,7 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const didMountRef = useRef(false);
 
-  const user = membersList.find((member) => member.user._id === session?.user.id);
+  const user = membersList.find((member) => member.user?._id === session?.user.id);
 
   const handleOpen = (event: MouseEvent) => {
     event.preventDefault();
@@ -51,32 +51,30 @@ const TeamMembersList = ({ handleMembersList }: TeamMemberListProps) => {
           Team Members
         </Text>
         {(!isTeamMember || isSAdmin) && (
-          <ButtonAddMember onClick={handleOpen}>
-            <Icon css={{ width: '$16', height: '$16' }} name="plus" />{' '}
-            <Text
-              weight="medium"
-              css={{
-                ml: '$10',
-                fontSize: '$14',
-                lineHeight: '$18',
-              }}
-            >
-              Add/remove members
-            </Text>
-          </ButtonAddMember>
+          <Button variant="link" size="sm" onClick={handleOpen}>
+            <Icon name="plus" />
+            Add/remove members
+          </Button>
         )}
       </Flex>
-      <ScrollableContent direction="column" justify="start">
-        {membersList?.map((member) => (
-          <CardMember
-            key={member.user._id}
-            isTeamPage
-            isTeamCreator={member.user._id === session?.user.id}
-            member={member}
-            isTeamMember={isTeamMember}
-            isOpen={isOpen}
-          />
-        ))}
+      <ScrollableContent
+        direction="column"
+        justify="start"
+        css={{ height: 'calc(100vh - 225px)', paddingBottom: '$8' }}
+        gap="8"
+      >
+        {membersList?.map((member) =>
+          member.user ? (
+            <CardMember
+              key={member.user._id}
+              isTeamPage
+              isTeamCreator={member.user._id === session?.user.id}
+              member={member}
+              isTeamMember={isTeamMember}
+              isOpen={isOpen}
+            />
+          ) : null,
+        )}
       </ScrollableContent>
       <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} isTeamPage />
     </Flex>

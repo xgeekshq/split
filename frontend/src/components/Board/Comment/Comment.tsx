@@ -20,10 +20,24 @@ interface CommentProps {
   hideCards: boolean;
   userId: string;
   columnId: string;
+  isDefaultText: boolean;
+  hasAdminRole: boolean;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
-  ({ comment, cardId, cardItemId, boardId, socketId, isSubmited, hideCards, userId, columnId }) => {
+  ({
+    comment,
+    cardId,
+    cardItemId,
+    boardId,
+    socketId,
+    isSubmited,
+    hideCards,
+    userId,
+    columnId,
+    isDefaultText,
+    hasAdminRole,
+  }) => {
     const { deleteComment } = useComments();
     const [editing, setEditing] = useState(false);
 
@@ -76,20 +90,23 @@ const Comment: React.FC<CommentProps> = React.memo(
                   }}
                 />
               )}
-              {!isSubmited && userId === comment.createdBy._id && (
+              {!isSubmited && (userId === comment.createdBy._id || hasAdminRole) && (
                 <PopoverCommentSettings
                   handleDeleteComment={handleDeleteComment}
                   handleEditing={handleEditing}
                 />
               )}
             </Flex>
-            <Flex align="center" css={{ minHeight: '$24' }}>
+            <Flex align="center" css={{ minHeight: '$24', maxWidth: '$226' }}>
               {!comment.anonymous && (
                 <Text
                   size="xs"
-                  weight="medium"
+                  fontWeight="medium"
                   css={{
                     filter: commentBlur(hideCards, comment, userId),
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {comment.createdBy.firstName} {comment.createdBy.lastName}
@@ -112,6 +129,7 @@ const Comment: React.FC<CommentProps> = React.memo(
             isCard={false}
             socketId={socketId}
             anonymous={comment.anonymous}
+            isDefaultText={isDefaultText}
           />
         )}
       </Flex>

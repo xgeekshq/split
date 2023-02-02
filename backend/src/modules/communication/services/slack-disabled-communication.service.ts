@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
-	BoardType,
+	AddUserMainChannelType,
 	ChangeResponsibleType,
 	MergeBoardType
 } from 'src/modules/communication/dto/types';
@@ -28,9 +28,17 @@ export class SlackDisabledCommunicationService implements CommunicationServiceIn
 		);
 	}
 
-	public async execute(board: BoardType): Promise<void> {
+	public async executeAddUserMainChannel(user: AddUserMainChannelType): Promise<void> {
 		this.logger.warn(
-			`Call execute method with SLACK_ENABLE "false" for board with id: "${board.id}"`
+			`Call "executeAddUserMainChannel" method with SLACK_ENABLE "false" with: "${JSON.stringify(
+				user.email
+			)}"`
+		);
+	}
+
+	public async execute(...args: any): Promise<void> {
+		this.logger.warn(
+			`Call execute method with SLACK_ENABLE "false". Arguments "${JSON.stringify(args)}"`
 		);
 	}
 }

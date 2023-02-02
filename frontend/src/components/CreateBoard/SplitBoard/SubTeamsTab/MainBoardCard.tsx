@@ -139,7 +139,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
           </Flex>
         </Flex>
         <Flex align="center" gap="8">
-          <Text size="sm" weight="medium">
+          <Text size="sm" fontWeight="medium">
             {team.name}
           </Text>
           <CardAvatars
@@ -153,14 +153,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
       </MainContainer>
       <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
       <Box>
-        {/* onClick={slackEnableHandler} */}
-        <Checkbox
-          // checked={board.slackEnable}
-          shouldUseForm
-          id="slackEnable"
-          label="Create Slack group for each sub-team"
-          size="16"
-        />
+        <Checkbox id="slackEnable" label="Create Slack group for each sub-team" size="16" />
       </Box>
     </Flex>
   );

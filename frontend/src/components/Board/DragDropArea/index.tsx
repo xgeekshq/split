@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
-
 import Flex from '@/components/Primitives/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';
@@ -125,7 +124,9 @@ const DragDropArea: React.FC<Props> = ({
             boardId={board._id}
             cards={column.cards}
             color={column.color}
+            cardText={column.cardText}
             columnId={column._id}
+            isDefaultText={column.isDefaultText}
             countAllCards={countAllCards}
             hideCards={board.hideCards}
             index={index}
@@ -135,9 +136,10 @@ const DragDropArea: React.FC<Props> = ({
             socketId={socketId}
             title={column.title}
             userId={userId}
-            boardUser={board.users.find((boardUser) => boardUser.user._id === userId)}
+            boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
             isRegularBoard={isRegularBoard}
             hasAdminRole={hasAdminRole}
+            addCards={board.addCards}
           />
         ))}
       </DragDropContext>

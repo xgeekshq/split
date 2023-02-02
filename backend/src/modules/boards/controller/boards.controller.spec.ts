@@ -83,6 +83,12 @@ describe('BoardsController', () => {
 					useValue: {
 						execute: jest.fn()
 					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
+					useValue: {
+						execute: jest.fn()
+					}
 				}
 			]
 		}).compile();

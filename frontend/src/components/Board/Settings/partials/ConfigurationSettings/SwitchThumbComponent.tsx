@@ -1,11 +1,11 @@
 import Icon from '@/components/icons/Icon';
 import { SwitchThumb } from '@/components/Primitives/Switch';
 
-type Props = {
+interface Props {
   isChecked: boolean;
   iconName: string;
   color: string | undefined;
-};
+}
 
 const SwitchThumbComponent = ({ isChecked, iconName, color }: Props) => (
   <SwitchThumb variant="sm">

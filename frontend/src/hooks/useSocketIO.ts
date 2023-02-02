@@ -19,8 +19,24 @@ import ListenEvent from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
 import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { useQueryClient } from '@tanstack/react-query';
+import isEmpty from '@/utils/isEmpty';
+import { useRecoilValue } from 'recoil';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useComments from './useComments';
 import useVotes from './useVotes';
+
+enum BoardAction {
+  UPDATECARDPOSITION,
+  VOTE,
+  UNMERGE,
+  MERGE,
+  ADDCARD,
+  UPDATECARD,
+  DELETECARD,
+  ADDCOMMENT,
+  DELETECOMMENT,
+  UPDATECOMMENT,
+}
 
 interface SocketInterface {
   socketId?: string;
@@ -42,6 +58,9 @@ export const useSocketIO = (boardId: string): SocketInterface => {
   const { updateVote } = useVotes();
   const { setQueryDataAddComment, setQueryDataDeleteComment, setQueryDataUpdateComment } =
     useComments();
+
+  const [queue, setQueue] = useState<{ action: BoardAction; dto: any }[]>([]);
+  const ready = useRecoilValue(operationsQueueAtom);
 
   useEffect(() => {
     const newSocket: Socket = io(NEXT_PUBLIC_BACKEND_URL ?? 'http://127.0.0.1:3200', {
@@ -69,47 +88,92 @@ export const useSocketIO = (boardId: string): SocketInterface => {
     });
 
     socket?.on(`${boardId}cardPosition`, (updateCardPositionDto: UpdateCardPositionDto) => {
-      setQueryDataUpdateCardPosition(updateCardPositionDto);
+      setQueue((prev) => [
+        ...prev,
+        { action: BoardAction.UPDATECARDPOSITION, dto: updateCardPositionDto },
+      ]);
     });
 
     socket?.on(`${boardId}vote`, (votesDto: VoteDto) => {
-      updateVote(votesDto);
+      setQueue((prev) => [...prev, { action: BoardAction.VOTE, dto: votesDto }]);
     });
 
     socket?.on(`${boardId}unmerge`, (unmergeDto: RemoveFromCardGroupDto) => {
-      setQueryDataUnmergeCard(unmergeDto);
+      setQueue((prev) => [...prev, { action: BoardAction.UNMERGE, dto: unmergeDto }]);
     });
 
     socket?.on(`${boardId}merge`, (mergeDto: MergeCardsDto) => {
-      setQueryDataMergeCard(mergeDto);
+      setQueue((prev) => [...prev, { action: BoardAction.MERGE, dto: mergeDto }]);
     });
 
     socket?.on(`${boardId}addCard`, (addCardDto: AddCardDto) => {
       addCardDto.user = undefined;
-      setQueryDataAddCard(addCardDto);
+      setQueue((prev) => [...prev, { action: BoardAction.ADDCARD, dto: addCardDto }]);
     });
 
     socket?.on(`${boardId}updateCard`, (updateCardDto: UpdateCardDto) => {
-      setQueryDataUpdateCard(updateCardDto);
+      setQueue((prev) => [...prev, { action: BoardAction.UPDATECARD, dto: updateCardDto }]);
     });
 
     socket?.on(`${boardId}deleteCard`, (deleteCardDto: DeleteCardDto) => {
-      setQueryDataDeleteCard(deleteCardDto);
+      setQueue((prev) => [...prev, { action: BoardAction.DELETECARD, dto: deleteCardDto }]);
     });
 
     socket?.on(`${boardId}addComment`, (addCommentDto: AddCommentDto) => {
       addCommentDto.fromSocket = true;
-      setQueryDataAddComment(addCommentDto);
+      setQueue((prev) => [...prev, { action: BoardAction.ADDCOMMENT, dto: addCommentDto }]);
     });
 
     socket?.on(`${boardId}deleteComment`, (deleteCommentDto: DeleteCommentDto) => {
-      setQueryDataDeleteComment(deleteCommentDto);
+      setQueue((prev) => [...prev, { action: BoardAction.DELETECOMMENT, dto: deleteCommentDto }]);
     });
 
     socket?.on(`${boardId}updateComment`, (updateCommentDto: UpdateCommentDto) => {
-      setQueryDataUpdateComment(updateCommentDto);
+      setQueue((prev) => [...prev, { action: BoardAction.UPDATECOMMENT, dto: updateCommentDto }]);
     });
   }, [queryClient, socket, boardId]);
+
+  useEffect(() => {
+    if (!isEmpty(queue) && ready) {
+      const { dto } = queue[0];
+      switch (queue[0].action) {
+        case BoardAction.UPDATECARDPOSITION:
+          setQueryDataUpdateCardPosition(dto);
+          break;
+        case BoardAction.VOTE:
+          updateVote(dto);
+          break;
+        case BoardAction.UNMERGE:
+          setQueryDataUnmergeCard(dto);
+          break;
+        case BoardAction.MERGE:
+          setQueryDataMergeCard(dto);
+          break;
+        case BoardAction.ADDCARD:
+          setQueryDataAddCard(dto);
+          break;
+        case BoardAction.UPDATECARD:
+          setQueryDataUpdateCard(dto);
+          break;
+        case BoardAction.DELETECARD:
+          setQueryDataDeleteCard(dto);
+          break;
+        case BoardAction.ADDCOMMENT:
+          setQueryDataAddComment(dto);
+          break;
+        case BoardAction.DELETECOMMENT:
+          setQueryDataDeleteComment(dto);
+          break;
+        case BoardAction.UPDATECOMMENT:
+          setQueryDataUpdateComment(dto);
+          break;
+        default:
+          break;
+      }
+      queue.splice(0, 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardId, queryClient, queue, ready]);
 
   const listenEvent = (eventName: string, callback: EventCallback) => {
     socket?.on(eventName, callback);

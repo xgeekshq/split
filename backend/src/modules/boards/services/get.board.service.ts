@@ -215,7 +215,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		});
 	}
 
-	private async getBoardData(boardId: string) {
+	async getBoardData(boardId: string) {
 		const board = await this.boardModel
 			.findById(boardId)
 			.populate(BoardDataPopulate)

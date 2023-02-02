@@ -10,6 +10,7 @@ export interface GetBoardResponse {
     id: string;
     title: string;
     team: Team;
+    addCards: boolean;
     dividedBoards: {
       _id: string;
       title: string;
@@ -41,6 +42,7 @@ export default interface BoardType {
   submitedAt?: Date;
   slackEnable?: boolean;
   responsibles?: string[];
+  addCards: boolean;
 }
 
 export interface BoardInfoType {
@@ -50,6 +52,7 @@ export interface BoardInfoType {
     id: string;
     title: string;
     team: Team;
+    addCards: boolean;
     dividedBoards: {
       _id: string;
       title: string;
@@ -82,4 +85,6 @@ export type UpdateBoardType = {
   maxVotes?: number | null;
   users?: BoardUser[];
   isPublic: boolean;
+  columns?: (ColumnType | CreateColumn)[];
+  addCards: boolean;
 };

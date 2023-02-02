@@ -17,36 +17,24 @@ const PageHeader = styled('header', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-
   padding: '$32 $40',
-
   backgroundColor: '$white',
+});
 
-  button: {
-    '& svg': {
-      size: '$40 !important',
-      color: '$primary800',
-    },
-
-    transition: 'background-color 0.2s ease-in-out',
-
-    '&:hover': {
-      backgroundColor: '$primaryLightest',
-    },
-  },
+const ContentWrapper = styled('section', {
+  position: 'relative',
+  height: 'calc(100vh - $sizes$92 - $sizes$81)',
+  overflowY: 'auto',
 });
 
 const ContentContainer = styled('section', {
   display: 'flex',
-  width: '100%',
-  minHeight: 'calc(100vh - $sizes$92)',
+  height: 'auto',
 });
 
 const InnerContent = styled(Flex, {
   flex: '1 1 auto',
-  width: '100%',
   height: '100%',
-  overflow: 'auto',
 });
 
 const StyledForm = styled('form', Flex, {
@@ -76,7 +64,7 @@ const StyledForm = styled('form', Flex, {
 
 const SubContainer = styled('div', {
   width: 'calc(100vw - $sizes$384)', // remove space from tipbar
-  minHeight: 'calc(100vh - $sizes$92)', // remove size of header
+  minHeight: 'calc(100vh - $sizes$92 - $sizes$81)', // remove size of header
   marginRight: 'auto',
   display: 'flex',
   gap: '$20',
@@ -98,6 +86,7 @@ const ButtonsContainer = styled(Flex, {
 export {
   ButtonsContainer,
   Container,
+  ContentWrapper,
   ContentContainer,
   InnerContent,
   PageHeader,

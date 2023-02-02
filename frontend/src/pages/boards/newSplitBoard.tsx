@@ -29,6 +29,7 @@ import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,
   PageHeader,
+  ContentWrapper,
   ContentContainer,
   SubContainer,
   InnerContent,
@@ -41,6 +42,8 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import { defaultColumns } from '@/helper/board/defaultColumns';
+import Link from 'next/link';
 
 const defaultBoard = {
   users: [],
@@ -51,11 +54,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Main Board -',
-    columns: [
-      { title: 'Went well', color: '$highlight1Light', cards: [] },
-      { title: 'To improve', color: '$highlight4Light', cards: [] },
-      { title: 'Action points', color: '$highlight3Light', cards: [] },
-    ],
+    columns: defaultColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],
@@ -67,6 +66,7 @@ const defaultBoard = {
     hideCards: false,
     hideVotes: false,
     slackEnable: false,
+    addCards: true,
   },
 };
 
@@ -109,23 +109,26 @@ const NewSplitBoard: NextPage = () => {
   /**
    * React Hook Form
    */
-  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable?: boolean }>(
-    {
-      mode: 'onBlur',
-      reValidateMode: 'onBlur',
-      defaultValues: {
-        text: '',
-        maxVotes: boardState.board.maxVotes,
-        slackEnable: false,
-        team: undefined,
-      },
-      resolver: joiResolver(SchemaCreateBoard),
+  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+    defaultValues: {
+      text: '',
+      maxVotes: boardState.board.maxVotes,
+      team: undefined,
+      slackEnable: boardState.board.slackEnable,
     },
-  );
+    resolver: joiResolver(SchemaCreateBoard),
+  });
 
   const mainBoardName = useWatch({
     control: methods.control,
     name: 'text',
+  });
+
+  const slackEnable = useWatch({
+    control: methods.control,
+    name: 'slackEnable',
   });
 
   if (routerTeam && !selectedTeam) {
@@ -153,7 +156,7 @@ const NewSplitBoard: NextPage = () => {
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, team: string, maxVotes?: number, slackEnable?: boolean) => {
+  const saveBoard = (title: string, team: string, maxVotes?: number) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -182,12 +185,15 @@ const NewSplitBoard: NextPage = () => {
       title,
       dividedBoards: newDividedBoards,
       maxVotes,
-      slackEnable,
       maxUsers: boardState.count.maxUsersCount,
       team,
       responsibles,
     });
   };
+
+  useEffect(() => {
+    setBoardState((prev) => ({ ...prev, board: { ...prev.board, slackEnable } }));
+  }, [setBoardState, slackEnable]);
 
   useEffect(() => {
     if (teamsData && allTeamsData && session) {
@@ -232,60 +238,65 @@ const NewSplitBoard: NextPage = () => {
       <QueryError>
         <Container style={isLoading ? { opacity: 0.5 } : undefined}>
           <PageHeader>
-            <Text color="primary800" heading={3} weight="bold">
+            <Text color="primary800" heading={3} fontWeight="bold">
               Add new SPLIT board
             </Text>
 
-            <Button isIcon disabled={isBackButtonDisable} onClick={handleBack}>
-              <Icon name="close" />
+            <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
+              <Icon css={{ color: '$primaryBase' }} name="close" />
             </Button>
           </PageHeader>
-          <ContentContainer>
-            <SubContainer>
-              {haveError && (
-                <AlertBox
-                  text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be splitted into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
-                  title="No team yet!"
-                  type="error"
-                  css={{
-                    marginTop: '$20',
-                  }}
-                />
-              )}
-
+          <ContentWrapper>
+            <ContentContainer>
               <StyledForm
-                direction="column"
+                id="hook-form"
                 onSubmit={
                   !haveError
-                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
-                        saveBoard(text, team, maxVotes, slackEnable);
+                    ? methods.handleSubmit(({ text, team, maxVotes }) => {
+                        saveBoard(text, team, maxVotes);
                       })
                     : undefined
                 }
               >
-                <InnerContent direction="column">
-                  <FormProvider {...methods}>
-                    <BoardName mainBoardName={mainBoardName} />
-                    <SettingsTabs />
-                  </FormProvider>
-                </InnerContent>
-                <ButtonsContainer gap="24" justify="end">
-                  <Button
-                    disabled={isBackButtonDisable}
-                    type="button"
-                    variant="lightOutline"
-                    onClick={handleCancelBtn}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isBackButtonDisable || haveError}>
-                    Create board
-                  </Button>
-                </ButtonsContainer>
+                <SubContainer>
+                  {haveError && (
+                    <AlertBox
+                      text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+                      title="No team yet!"
+                      type="error"
+                      css={{ flexWrap: 'wrap', gap: '$16' }}
+                    >
+                      <Link href="/teams/new">
+                        <Button size="sm" css={{ px: '$40' }}>
+                          Create team
+                        </Button>
+                      </Link>
+                    </AlertBox>
+                  )}
+                  <InnerContent direction="column">
+                    <FormProvider {...methods}>
+                      <BoardName mainBoardName={mainBoardName} />
+                      <SettingsTabs />
+                    </FormProvider>
+                  </InnerContent>
+                </SubContainer>
               </StyledForm>
-            </SubContainer>
-            <TipBar isSplitBoard />
-          </ContentContainer>
+              <TipBar isSplitBoard />
+            </ContentContainer>
+          </ContentWrapper>
+          <ButtonsContainer gap="24" justify="end">
+            <Button
+              disabled={isBackButtonDisable}
+              type="button"
+              variant="lightOutline"
+              onClick={handleCancelBtn}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" form="hook-form" disabled={isBackButtonDisable || haveError}>
+              Create board
+            </Button>
+          </ButtonsContainer>
         </Container>
       </QueryError>
     </Suspense>

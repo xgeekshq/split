@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-
 import Button from '@/components/Primitives/Button';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
@@ -16,15 +15,6 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '../icons/Icon';
-
-const ActionButton = styled(Button, {
-  padding: '$10 $14 !important',
-
-  svg: {
-    width: '$16',
-    height: '$16',
-  },
-});
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 
@@ -42,6 +32,7 @@ type AddCardProps = {
   defaultOpen?: boolean;
   isEditing?: boolean;
   anonymous: boolean;
+  isDefaultText: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -53,6 +44,7 @@ const AddCard = React.memo<AddCardProps>(
     cardId,
     cardItemId,
     cardText,
+    isDefaultText,
     cancelUpdate,
     isCard,
     commentId,
@@ -71,7 +63,7 @@ const AddCard = React.memo<AddCardProps>(
       mode: 'onSubmit',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText || '',
+        text: cardText === 'Write your comment here...' ? '' : cardText,
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
@@ -182,6 +174,8 @@ const AddCard = React.memo<AddCardProps>(
         </Button>
       );
 
+    const placeholder = cardText || '';
+
     return (
       <StyledForm
         {...props}
@@ -212,20 +206,20 @@ const AddCard = React.memo<AddCardProps>(
             floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
-            placeholder="Write your comment here..."
+            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
-          {!isCard && (
-            <Checkbox
-              id={colId + cardId}
-              label="Add anonymously"
-              size="16"
-              checked={anonymous}
-              setCheckedTerms={() => {
-                setIsCommentAnonymous(!isCommentAnonymous);
-              }}
-            />
-          )}
-          <Flex css={{ width: '100%' }} gap="4" justify="end">
+          <Flex css={{ width: '100%' }} justify="end">
+            {!isCard && (
+              <Checkbox
+                id={colId + cardId}
+                label="Add anonymously"
+                size="16"
+                checked={anonymous}
+                setCheckedTerms={() => {
+                  setIsCommentAnonymous(!isCommentAnonymous);
+                }}
+              />
+            )}
             {!isEditing && (
               <Checkbox
                 id={colId}
@@ -237,23 +231,25 @@ const AddCard = React.memo<AddCardProps>(
                 }}
               />
             )}
-            <ActionButton
-              css={{ width: '$48', height: '$36' }}
-              size="sm"
-              variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
-              onClick={handleClear}
-            >
-              <Icon name="close" />
-            </ActionButton>
-            <ActionButton
-              css={{ width: '$48', height: '$36' }}
-              disabled={disabledButton}
-              size="sm"
-              type="submit"
-              variant="primary"
-            >
-              <Icon name="check" />
-            </ActionButton>
+            <Flex gap="8">
+              <Button
+                css={{ width: '$52', height: '$36' }}
+                size="sm"
+                variant={!isUpdate && isCard ? 'lightOutline' : 'primaryOutline'}
+                onClick={handleClear}
+              >
+                <Icon name="close" />
+              </Button>
+              <Button
+                css={{ width: '$52', height: '$36' }}
+                disabled={disabledButton}
+                size="sm"
+                type="submit"
+                variant="primary"
+              >
+                <Icon name="check" />
+              </Button>
+            </Flex>
           </Flex>
         </FormProvider>
       </StyledForm>

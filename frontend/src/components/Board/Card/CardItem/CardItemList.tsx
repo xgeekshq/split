@@ -16,6 +16,8 @@ interface CardItemListProps {
   isMainboard: boolean;
   isSubmited: boolean;
   hideCards: boolean;
+  isDefaultText: boolean;
+  hasAdminRole: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -30,6 +32,8 @@ const CardItemList: React.FC<CardItemListProps> = ({
   isMainboard,
   isSubmited,
   hideCards,
+  isDefaultText,
+  hasAdminRole,
 }) => (
   <Flex direction="column">
     {items.map((item, idx) => (
@@ -60,6 +64,8 @@ const CardItemList: React.FC<CardItemListProps> = ({
           lastOne={idx + 1 === items.length}
           socketId={socketId}
           userId={userId}
+          isDefaultText={isDefaultText}
+          hasAdminRole={hasAdminRole}
         />
       </Flex>
     ))}

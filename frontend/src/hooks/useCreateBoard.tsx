@@ -3,6 +3,7 @@ import { useRecoilState, useResetRecoilState } from 'recoil';
 
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
+import { defaultColumns } from '@/helper/board/defaultColumns';
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
@@ -26,11 +27,7 @@ const useCreateBoard = (team?: Team) => {
   const generateSubBoard = useCallback(
     (index: number, users: BoardUserToAdd[] = []): BoardToAdd => ({
       title: `Sub-team board ${index}`,
-      columns: [
-        { title: 'Went well', color: '$highlight1Light', cards: [] },
-        { title: 'To improve', color: '$highlight4Light', cards: [] },
-        { title: 'Action points', color: '$highlight3Light', cards: [] },
-      ],
+      columns: defaultColumns,
       isPublic: false,
       dividedBoards: [],
       recurrent: false,
@@ -41,6 +38,7 @@ const useCreateBoard = (team?: Team) => {
       maxVotes: undefined,
       hideCards: false,
       hideVotes: false,
+      addCards: true,
     }),
     [],
   );
@@ -145,10 +143,31 @@ const useCreateBoard = (team?: Team) => {
       const splitUsers: BoardUserToAdd[][] = new Array(maxTeams).fill([]);
 
       let availableUsers = [...teamMembers];
+
+      const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+      const responsiblesAvailable: TeamUser[] = [];
+      while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
+        const idx = Math.floor(Math.random() * isNotNewJoiners.length);
+        const randomUser = isNotNewJoiners[idx];
+        if (randomUser && !responsiblesAvailable.includes(randomUser)) {
+          responsiblesAvailable.push(randomUser);
+          isNotNewJoiners.splice(idx, 1);
+        }
+      }
+
+      availableUsers = availableUsers.filter((user) => !responsiblesAvailable.includes(user));
+
       const usersPerTeam = Math.floor(teamMembersLength / maxTeams);
       let leftOverUsers = teamMembersLength % maxTeams;
 
       new Array(maxTeams).fill(0).forEach((_, i) => {
+        if (responsiblesAvailable.length > 0) {
+          const removedUser = responsiblesAvailable.shift();
+          if (removedUser) {
+            availableUsers.push(removedUser);
+          }
+        }
+
         const numberOfUsersByGroup = leftOverUsers-- > 0 ? usersPerTeam + 1 : usersPerTeam;
 
         splitUsers[i] = getRandomGroup(numberOfUsersByGroup, availableUsers);
@@ -184,7 +203,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleAddTeam = () => {
     if (!canAdd) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount + 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,
@@ -202,7 +221,7 @@ const useCreateBoard = (team?: Team) => {
 
   const handleRemoveTeam = () => {
     if (!canReduce) return;
-    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(2);
+    const countUsers = (teamMembersLength / (dividedBoardsCount - 1)).toFixed(0);
 
     setCreateBoardData((prev) => ({
       ...prev,

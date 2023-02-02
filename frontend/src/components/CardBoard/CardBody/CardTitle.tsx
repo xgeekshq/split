@@ -76,7 +76,7 @@ const CardTitle: React.FC<CardTitleProps> = ({
 
   if (isSubBoard) {
     return (
-      <Tooltip content="It’s a sub-team board. A huge team got splitted into sub teams.">
+      <Tooltip content="It’s a sub-team board. A huge team got split into sub teams.">
         {getTitle()}
       </Tooltip>
     );

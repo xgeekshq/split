@@ -9,8 +9,14 @@ const Text = styled('span', {
   height: 'fit-content',
   variants: {
     fontWeight: {
+      regular: {
+        fontWeight: '$regular',
+      },
       medium: {
         fontWeight: '$medium',
+      },
+      bold: {
+        fontWeight: '$bold',
       },
     },
     display: {
@@ -23,7 +29,7 @@ const Text = styled('span', {
       2: {
         fontWeight: '$bold',
         fontSize: '$64',
-        letterSpacing: '$2',
+        letterSpacing: '$-2',
         lineHeight: '$72',
       },
       3: {
@@ -43,7 +49,7 @@ const Text = styled('span', {
       2: {
         fontWeight: '$bold',
         fontSize: '$28',
-        letterSpacing: '$-0.35',
+        letterSpacing: '$0-35',
         lineHeight: '$32',
       },
       3: {
@@ -91,21 +97,6 @@ const Text = styled('span', {
         lineHeight: '$14',
       },
     },
-    weight: {
-      regular: {
-        fontWeight: '$regular',
-      },
-      medium: {
-        fontWeight: '$medium',
-      },
-      bold: { fontWeight: '$bold' },
-      semiBold: {
-        fontWeight: '$semiBold',
-      },
-      extraBold: {
-        fontWeight: '$extrabold',
-      },
-    },
     size: {
       xl: {
         fontSize: '$24',
@@ -150,6 +141,24 @@ const Text = styled('span', {
         fontSize: '$12',
         lineHeight: '$16',
         color: '$primary300',
+      },
+    },
+    visible: {
+      true: {
+        visibility: 'visible',
+      },
+      false: {
+        visibility: 'hidden',
+      },
+    },
+    ellipsis: {
+      true: {
+        display: '-webkit-box',
+        '-webkit-box-orient': 'vertical',
+        '-webkit-line-clamp': 3,
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'pre-wrap',
       },
     },
     color: {

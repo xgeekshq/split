@@ -42,12 +42,12 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
 
   const { _id: id, users } = team;
 
-  const userFound: TeamUser | undefined = users.find((member) => member.user._id === userId);
+  const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
 
   const userRole = userFound?.role;
 
   const userIsParticipating = useMemo(
-    () => users.some((user) => user.user._id === userId),
+    () => users.some((user) => user.user?._id === userId),
     [users, userId],
   );
 
@@ -66,7 +66,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
   }, [isSAdmin, team, userId]);
 
   return (
-    <Flex css={{ flex: '1 1 1' }} direction="column" gap="12">
+    <Flex css={{ flex: '1 1 1' }} direction="column">
       <InnerContainer
         align="center"
         elevation="1"
@@ -120,7 +120,13 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
                 Team admin
               </Text>
 
-              <CardAvatars teamAdmins listUsers={team.users} responsible={false} userId={userId} />
+              <CardAvatars
+                stakeholders
+                teamAdmins
+                listUsers={team.users}
+                responsible={false}
+                userId={userId}
+              />
             </Flex>
             <Separator
               orientation="vertical"

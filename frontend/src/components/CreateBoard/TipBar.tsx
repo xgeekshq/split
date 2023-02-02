@@ -4,7 +4,6 @@ import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 
-const TextWhite = styled(Text, { color: 'white', mt: '$24' });
 const LiWhite = styled('li', Text, { color: '$primary100', fontSize: '$14', lineHeight: '$20' });
 const UnorderedList = styled('ul', { paddingInlineStart: '$26' });
 
@@ -17,7 +16,6 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
   <Flex
     direction="column"
     css={{
-      minHeight: 'calc(100vh - $sizes$92)',
       backgroundColor: '$primary800',
       padding: '$32',
       pt: '$100',
@@ -25,7 +23,6 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
       right: 0,
       top: 0,
       bottom: 0,
-      zIndex: 1,
     }}
   >
     <Icon
@@ -37,15 +34,19 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
     />
     {isSplitBoard && (
       <>
-        <TextWhite heading="6">Sub-teams</TextWhite>
+        <Text heading="6" color="white" css={{ mt: '$24' }}>
+          Sub-teams
+        </Text>
         <UnorderedList>
           <LiWhite>The participants of the sub-teams are generated randomly.</LiWhite>
 
-          <LiWhite>The number of participants is splitted equally between all sub-teams.</LiWhite>
+          <LiWhite>The number of participants is split equally between all sub-teams.</LiWhite>
 
           <LiWhite>For each sub-team there is one responsible selected.</LiWhite>
         </UnorderedList>
-        <TextWhite heading="6">Responsibles</TextWhite>
+        <Text heading="6" color="white" css={{ mt: '$24' }}>
+          Responsibles
+        </Text>
         <UnorderedList>
           <LiWhite>
             Responsibles are normal users with the rights to merge the cards at the end of each
@@ -57,24 +58,34 @@ const CreateBoardTipBar = ({ isSplitBoard, isRegularBoard }: CreateBoardTipBarPr
             retrospective.
           </LiWhite>
         </UnorderedList>
-        <TextWhite css={{ mb: '$8' }} heading="6">
+        <Text css={{ mt: '$24' }} heading="6" color="white">
           Stakeholder
-        </TextWhite>
-        <LiWhite as="span">The stakeholder will not be assigned to any sub-team.</LiWhite>
+        </Text>
+        <UnorderedList>
+          <LiWhite>The stakeholder will not be assigned to any sub-team.</LiWhite>
+        </UnorderedList>
       </>
     )}
     {isRegularBoard && (
       <>
-        <TextWhite heading="6">Quick create board</TextWhite>
-        <LiWhite as="span">
-          If you want to jump the settings you can just hit the button <b>Create board</b>. You can
-          still adjust all the settings later on inside the board itself.
-        </LiWhite>
-        <TextWhite heading="6">Columns</TextWhite>
-        <LiWhite as="span">
-          We will set the columns by default to 3. If you want to have more or less you can later,
-          inside the actual board, still adjust the columns.
-        </LiWhite>
+        <Text color="white" heading="6" css={{ mt: '$24' }}>
+          Quick create board
+        </Text>
+        <UnorderedList>
+          <LiWhite>
+            If you want to jump the settings you can just hit the button <b>Create board</b>. You
+            can still adjust all the settings later on inside the board itself.
+          </LiWhite>
+        </UnorderedList>
+        <Text color="white" heading="6" css={{ mt: '$24' }}>
+          Columns
+        </Text>
+        <UnorderedList>
+          <LiWhite>
+            We will set the columns by default to 3. If you want to have more or less you can later,
+            inside the actual board, still adjust the columns.
+          </LiWhite>
+        </UnorderedList>
       </>
     )}
   </Flex>

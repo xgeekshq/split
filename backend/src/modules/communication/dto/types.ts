@@ -3,6 +3,11 @@ export enum BoardRoles {
 	RESPONSIBLE = 'responsible'
 }
 
+export enum ArchiveChannelDataOptions {
+	CHANNEL_ID = 'CHANNEL_ID',
+	BOARD = 'BOARD'
+}
+
 export type ProfileType = {
 	id: string;
 	email: string;
@@ -33,6 +38,7 @@ export type BoardType = {
 		users: UserRoleType[];
 	} | null;
 	users: UserRoleType[];
+	slackChannelId?: string;
 };
 
 export type ConfigurationType = {
@@ -58,4 +64,22 @@ export type MergeBoardType = {
 	isLastSubBoard: boolean;
 	boardId: string;
 	mainBoardId: string;
+};
+
+export type ArchiveChannelResult = { channelId: string; result: boolean };
+
+export type PartialBoardType = {
+	id: string;
+	dividedBoards?: Omit<PartialBoardType, 'dividedBoards'>[];
+	slackChannelId: string;
+};
+
+export type ArchiveChannelData = {
+	type: ArchiveChannelDataOptions;
+	data: PartialBoardType | string;
+	cascade?: boolean;
+};
+
+export type AddUserMainChannelType = {
+	email: string;
 };

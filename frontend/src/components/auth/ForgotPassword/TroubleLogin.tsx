@@ -21,15 +21,6 @@ const MainContainer = styled('form', Flex, {
   width: '100%',
 });
 
-const GoBackWrapper = styled(Flex, {
-  mt: '$24',
-  textAlign: 'center',
-  '&:hover': {
-    textDecorationLine: 'underline',
-    cursor: 'pointer',
-  },
-});
-
 interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
@@ -79,25 +70,24 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
         <Text css={{ mt: '$24' }} heading="1">
           Trouble logging in?
         </Text>
-        <Text css={{ mt: '$8', color: '$primary500' }} size="md">
+        <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email address below, well email you instructions on how to change your
           password.
         </Text>
         <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
-        <Button
-          size="lg"
-          type="submit"
-          css={{
-            fontWeight: '$medium',
-            fontSize: '$18',
-          }}
-        >
+        <Button size="lg" type="submit">
           Recover password
         </Button>
-        <GoBackWrapper align="center" gap="8" onClick={handleShowTroubleLogginIn}>
-          <Icon name="arrow-left" />
-          <Text>Go back</Text>
-        </GoBackWrapper>
+        <Flex>
+          <Button
+            variant="link"
+            css={{ pl: '0', mt: '$24', color: '$primary500' }}
+            onClick={handleShowTroubleLogginIn}
+          >
+            <Icon name="arrow-long-left" />
+            Go Back
+          </Button>
+        </Flex>
       </FormProvider>
     </MainContainer>
   );
