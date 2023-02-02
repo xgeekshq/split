@@ -34,3 +34,8 @@ export type ColorType =
   | 'primary400'
   | 'primary500'
   | 'primary800';
+
+// Primitive/RadioGroup
+export type RadioGroupDirectionType = 'row' | 'column';
+export type RadioGroupSizeType = 'sm' | 'md' | 'lg';
+export type RadioGroupFontWeightType = 'regular' | 'medium' | 'bold';

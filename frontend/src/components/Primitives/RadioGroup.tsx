@@ -1,14 +1,26 @@
-import * as RadioGroup from '@radix-ui/react-radio-group';
+import { Root, Item, Indicator } from '@radix-ui/react-radio-group';
 import { styled } from '@/styles/stitches/stitches.config';
 
-const RadioGroupRoot = styled(RadioGroup.Root, {
+const RadioGroup = styled(Root, {
   display: 'flex',
-  flexDirection: 'row',
   gap: '$10',
   justifyContent: 'space-between',
+  variants: {
+    direction: {
+      row: {
+        flexDirection: 'row',
+      },
+      column: {
+        flexDirection: 'column',
+      },
+    },
+  },
+  defaultVariants: {
+    direction: 'column',
+  },
 });
 
-const RadioGroupItem = styled(RadioGroup.Item, {
+const RadioGroupItem = styled(Item, {
   all: 'unset',
   backgroundColor: '$background',
   width: '$16',
@@ -22,7 +34,7 @@ const RadioGroupItem = styled(RadioGroup.Item, {
   },
 });
 
-const RadioGroupIndicator = styled(RadioGroup.Indicator, {
+const RadioGroupIndicator = styled(Indicator, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -69,6 +81,10 @@ const Label = styled('label', {
       },
     },
   },
+  defaultVariants: {
+    size: 'sm',
+    fontWeight: 'regular',
+  },
 });
 
-export { RadioGroupRoot, RadioGroupItem, RadioGroupIndicator, Label };
+export { RadioGroup, RadioGroupItem, RadioGroupIndicator, Label };

@@ -2,7 +2,7 @@ import Flex from '@/components/Primitives/Flex';
 import {
   RadioGroupIndicator,
   RadioGroupItem,
-  RadioGroupRoot,
+  RadioGroup,
   Label,
 } from '@/components/Primitives/RadioGroup';
 import Text from '@/components/Primitives/Text';
@@ -23,9 +23,14 @@ const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps
   };
 
   return (
-    <Flex direction="column" css={{ width: '100%', mt: '$32' }}>
+    <Flex css={{ width: '100%', mt: '$32' }}>
       <FormStyled>
-        <RadioGroupRoot defaultValue="team" aria-label="View density" onValueChange={handleSelect}>
+        <RadioGroup
+          direction="row"
+          defaultValue="team"
+          aria-label="View density"
+          onValueChange={handleSelect}
+        >
           <Flex>
             <RadioGroupItem value="team" id="selectTeam">
               <RadioGroupIndicator />
@@ -56,7 +61,7 @@ const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps
               </Flex>
             </Label>
           </Flex>
-        </RadioGroupRoot>
+        </RadioGroup>
       </FormStyled>
     </Flex>
   );
