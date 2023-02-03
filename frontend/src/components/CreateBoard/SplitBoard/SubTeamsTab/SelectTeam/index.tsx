@@ -116,7 +116,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       ];
     });
 
-    if (previousTeam !== selectedTeam._id) {
+    if (previousTeam !== selectedTeam.id) {
       setCreateBoardData((prev) => ({
         ...prev,
         users,

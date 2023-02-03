@@ -72,7 +72,7 @@ const SelectTeam = () => {
     setCreateBoardData((prev) => ({
       ...prev,
       users,
-      board: { ...prev.board, team: selectedTeam._id },
+      board: { ...prev.board, team: selectedTeam.id },
       count: {
         ...prev.count,
         teamsCount,
