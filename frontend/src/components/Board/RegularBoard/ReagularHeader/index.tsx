@@ -40,9 +40,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
   // Get Team users
   const teamUsers = team?.users ? team.users : [];
 
-  const isPersonalBoard = !team && users.length <= 1;
-
-  const isRegularBoardWithNoTeam = !team && users.length > 1;
+  const isRegularBoardWithNoTeam = !team;
 
   // Set breadcrumbs
   const breadcrumbItems: BreadcrumbType = isParticipantsPage
@@ -217,22 +215,6 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                 />
               </Flex>
             </Flex>
-          )}
-          {isPersonalBoard && (
-            <>
-              <Flex align="center" gap="10">
-                <Text color="primary300" size="sm">
-                  Board Creator
-                </Text>
-                <CardAvatars
-                  isBoardsPage
-                  responsible
-                  listUsers={users}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                />
-              </Flex>
-            </>
           )}
         </Flex>
       </Flex>
