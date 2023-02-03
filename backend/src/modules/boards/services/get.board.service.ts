@@ -104,7 +104,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				.sort({ updatedAt: 'desc' })
 				.skip(allBoards ? 0 : page * size)
 				.limit(allBoards ? count : size)
-				.select('-__v -createdAt -id')
+				.select(
+					'-__v -createdAt  -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments'
+				)
 				.populate({ path: 'createdBy', select: 'firstName lastName' })
 				.populate({
 					path: 'team',
@@ -120,7 +122,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				})
 				.populate({
 					path: 'dividedBoards',
-					select: '-__v -createdAt -id -columns.cards.text',
+					select:
+						'-__v -createdAt -submitedAt -id -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments',
 					populate: [
 						{
 							path: 'users',
@@ -128,19 +131,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 							populate: {
 								path: 'user',
 								model: 'User',
-								select: 'firstName email lastName joinedAt'
-							}
-						},
-						{
-							path: 'team',
-							select: 'name users _id',
-							populate: {
-								path: 'users',
-								select: 'user role',
-								populate: {
-									path: 'user',
-									select: '_id firstName lastName joinedAt'
-								}
+								select: 'firstName email lastName'
 							}
 						}
 					]
@@ -150,7 +141,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					select: 'user role -board',
 					populate: {
 						path: 'user',
-						select: 'firstName email lastName joinedAt'
+						select: '_id firstName email lastName'
 					}
 				})
 				.lean({ virtuals: true })

@@ -128,7 +128,7 @@ const CardBody = React.memo<CardBodyProps>(
 
       const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
 
-      if (team) {
+      if (team && !isSubBoard) {
         myUser = team.users.find((user) => String(user.user?._id) === String(userId));
 
         const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
@@ -139,7 +139,7 @@ const CardBody = React.memo<CardBodyProps>(
       }
 
       return myUserIsOwnerMainBoard;
-    }, [isSAdmin, team, userId, board.createdBy]);
+    }, [isSAdmin, board.createdBy, userId, team, isSubBoard]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();
