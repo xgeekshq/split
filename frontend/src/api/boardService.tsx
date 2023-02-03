@@ -14,7 +14,7 @@ import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
 import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
-import ColumnType from '@/types/column';
+import ColumnType, { ColumnDeleteCards } from '@/types/column';
 
 // #region BOARD
 
@@ -79,9 +79,9 @@ export const updateColumnRequest = (
   });
 
 export const deleteCardsFromColumnRequest = (
-  columnData: ColumnType & { boardId: string; socketId: string },
+  columnData: ColumnDeleteCards & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column/${columnData._id}/cards`, {
+  fetchData(`/boards/${columnData.boardId}/column/${columnData.id}/cards`, {
     method: 'PUT',
     data: columnData,
   });

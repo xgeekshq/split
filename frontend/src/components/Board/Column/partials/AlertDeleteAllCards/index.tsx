@@ -7,7 +7,6 @@ import {
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import useColumn from '@/hooks/useColumn';
-import CardType from '@/types/card/card';
 
 type AlertDeleteAllCardsProps = {
   socketId: string;
@@ -19,18 +18,12 @@ type AlertDeleteAllCardsProps = {
     openDeleteCards: boolean,
   ) => void;
   columnId: string;
-  columnTitle: string;
-  columnColor: string;
-  cards: CardType[];
   boardId: string;
 };
 const AlertDeleteAllCards: React.FC<AlertDeleteAllCardsProps> = ({
   socketId,
   isOpen,
-  columnColor,
   columnId,
-  columnTitle,
-  cards,
   boardId,
   handleDialogChange,
 }) => {
@@ -41,10 +34,7 @@ const AlertDeleteAllCards: React.FC<AlertDeleteAllCardsProps> = ({
 
   const handleDeleteCards = () => {
     mutateBoard({
-      _id: columnId,
-      title: columnTitle,
-      color: columnColor,
-      cards,
+      id: columnId,
       boardId,
       socketId,
     });
