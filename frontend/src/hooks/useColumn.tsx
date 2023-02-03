@@ -68,27 +68,8 @@ const useColumn = () => {
   });
 
   const deleteCardsFromColumn = useMutation(deleteCardsFromColumnRequest, {
-    onMutate: async (data) => {
-      const prevBoard = await getPrevData(data.boardId);
-
-      if (prevBoard) {
-        const columnsWithUpdate = prevBoard.columns.map((column) =>
-          column._id === data._id
-            ? {
-                ...data,
-              }
-            : column,
-        );
-
-        updateBoardColumns(data.boardId, columnsWithUpdate);
-      }
-
-      return { previousBoard: prevBoard, data };
-    },
-    onSuccess: async (data) => {
-      const prevBoard = await getPrevData(data._id);
-
-      return { previousBoard: prevBoard, data };
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['board', { id: data._id }]);
     },
     onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));
