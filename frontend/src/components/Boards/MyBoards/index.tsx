@@ -86,7 +86,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
           boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
-          if (board.team) teams.set(`${board.team?._id}`, board.team);
+          if (board.team) teams.set(`${board.team?.id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);

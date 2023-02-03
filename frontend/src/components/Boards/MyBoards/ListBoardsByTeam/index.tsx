@@ -61,8 +61,8 @@ const ListBoardsByTeam = ({
         const boardsOfTeam = boardsTeamAndDate.get(`${board.team.id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id}`, new Map([[date, [board]]]));
-          teams.set(`${board.team?._id}`, board.team);
+          boardsTeamAndDate.set(`${board.team?.id}`, new Map([[date, [board]]]));
+          teams.set(`${board.team?.id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
