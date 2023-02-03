@@ -30,7 +30,7 @@ const SelectTeam = () => {
   const numberOfTeams = teams?.length ?? 0;
 
   const handleTeamChange = (value: string) => {
-    const foundTeam = teams.find((team) => team._id === value);
+    const foundTeam = teams.find((team) => team.id === value);
 
     setSelectedTeam(foundTeam);
   };
@@ -39,7 +39,7 @@ const SelectTeam = () => {
     () =>
       teams.map((team) => ({
         label: `${team.name} (${team.users.length} members)`,
-        value: team._id,
+        value: team.id,
       })),
     [teams],
   );
@@ -83,7 +83,7 @@ const SelectTeam = () => {
 
   useEffect(() => {
     if (routerTeam) {
-      const foundTeam = teams.find((team) => team._id === routerTeam);
+      const foundTeam = teams.find((team) => team.id === routerTeam);
       setSelectedTeam(foundTeam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -67,7 +67,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
   const handleTeamChange = (value: string) => {
     clearErrors();
-    const foundTeam = teams.find((team) => team._id === value);
+    const foundTeam = teams.find((team) => team.id === value);
 
     setValue('team', foundTeam?._id);
 
@@ -80,7 +80,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         .filter((team) => isAdminOrStakeholder(team))
         .map((team) => ({
           label: `${team.name} (${team.users.length} members)`,
-          value: team._id,
+          value: team.id,
         })),
     [teams],
   );

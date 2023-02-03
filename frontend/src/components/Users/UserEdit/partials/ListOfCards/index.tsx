@@ -20,13 +20,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ userId, isLoading }) => {
     <ScrollableContent direction="column" gap="24" justify="start">
       <Flex direction="column" gap="8">
         {teamsOfUsers?.map((team: Team) => (
-          <CardBody
-            key={team._id}
-            team={team}
-            userId={userId}
-            isTeamPage={false}
-            teamId={team._id}
-          />
+          <CardBody key={team.id} team={team} userId={userId} isTeamPage={false} teamId={team.id} />
         ))}
       </Flex>
       {isLoading && (

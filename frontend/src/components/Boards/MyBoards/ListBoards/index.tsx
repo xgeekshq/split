@@ -54,7 +54,7 @@ const ListBoards = React.memo<ListBoardsProps>(
       >
         {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
-          const teamFound = allTeamsList.find((team) => team._id === teamId);
+          const teamFound = allTeamsList.find((team) => team.id === teamId);
           if (filter !== 'all' && teamId !== filter) return null;
           return (
             <Flex key={teamId} css={{ mt: index !== 0 ? '$32' : '' }} direction="column">

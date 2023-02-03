@@ -55,7 +55,7 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
 
   const handleChecked = (id: string) => {
     teamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
-      team._id === id ? { ...team, isChecked: !team.isChecked } : team,
+      team.id === id ? { ...team, isChecked: !team.isChecked } : team,
     );
   };
 
@@ -65,7 +65,7 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
       return {
         user: userId as string,
         role: TeamUserRoles.MEMBER,
-        team: team._id,
+        team: team.id,
         isNewJoiner: verifyIfIsNewJoiner(joinedAt, providerAccountCreatedAt || undefined),
       };
     });
@@ -108,12 +108,12 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
       <ScrollableContent direction="column" justify="start">
         <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
           {filteredTeams?.map((team) => (
-            <Flex key={team._id} align="center" justify="between">
+            <Flex key={team.id} align="center" justify="between">
               <Flex css={{ width: '50%' }}>
                 <Checkbox
                   checked={false}
                   handleChange={handleChecked}
-                  id={team._id}
+                  id={team.id}
                   label={team.name}
                   size="16"
                 />

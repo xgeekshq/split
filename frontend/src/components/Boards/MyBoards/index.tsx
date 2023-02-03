@@ -110,14 +110,14 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   };
 
   const teamNames: OptionType[] = userTeamsList.map((team) => ({
-    value: team._id,
+    value: team.id,
     label: team.name,
   }));
 
   if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
     return <EmptyBoards />;
 
-  const filteredTeam: Team | undefined = userTeamsList.find((team) => team._id === filterState);
+  const filteredTeam: Team | undefined = userTeamsList.find((team) => team.id === filterState);
 
   return (
     <>

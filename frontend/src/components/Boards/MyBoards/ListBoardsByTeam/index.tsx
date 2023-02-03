@@ -58,7 +58,7 @@ const ListBoardsByTeam = ({
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team._id}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team.id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
           boardsTeamAndDate.set(`${board.team?._id}`, new Map([[date, [board]]]));
