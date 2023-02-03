@@ -18,10 +18,10 @@ export default class Column {
 	@Prop({ nullable: false, type: [CardSchema] })
 	cards!: Card[];
 
-	@Prop({ nullable: false })
+	@Prop({ nullable: false, default: 'Write your comment here...' })
 	cardText!: string;
 
-	@Prop({ nullable: false })
+	@Prop({ nullable: false, default: true })
 	isDefaultText!: boolean;
 }
 
