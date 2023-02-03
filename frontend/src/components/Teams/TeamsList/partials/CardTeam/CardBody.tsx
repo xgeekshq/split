@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
@@ -15,6 +14,7 @@ import { useRouter } from 'next/router';
 import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
 import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 import { TeamUser } from '@/types/team/team.user';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import BoardsInfo from './BoardsInfo';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -91,14 +91,13 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
 
           <CardTitle teamId={id} title={team.name} isTeamPage={isTeamPage} />
         </Flex>
-
         <Flex align="center" css={{ justifyContent: 'start', pl: '$10' }} gap="8">
           <Flex align="center" css={{ width: '$160' }}>
             <Text color="primary300" size="sm">
               Members
             </Text>
 
-            <CardAvatars
+            <AvatarGroup
               listUsers={team.users}
               responsible={false}
               teamAdmins={false}
@@ -120,7 +119,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
                 Team admin
               </Text>
 
-              <CardAvatars
+              <AvatarGroup
                 stakeholders
                 teamAdmins
                 listUsers={team.users}
