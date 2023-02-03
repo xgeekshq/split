@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/icons/Icon';
 import {
   Popover,
@@ -38,7 +36,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
   return (
     <PopoverContent>
       {isOwner && (
-        <PopoverItem align="center" gap="8" onClick={setEditCard}>
+        <PopoverItem onClick={setEditCard}>
           <Icon name="edit" />
           <Text size="sm" fontWeight="medium">
             Edit
@@ -47,8 +45,6 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
       )}
       {isItem && (
         <PopoverItem
-          align="center"
-          gap="8"
           onClick={
             unmergeClickLock
               ? () => {
@@ -65,7 +61,7 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
         </PopoverItem>
       )}
       {isOwner && (
-        <PopoverItem align="center" gap="8" onClick={setDeleteCard}>
+        <PopoverItem onClick={setDeleteCard}>
           <Icon name="trash-alt" />
           <Text size="sm" fontWeight="medium">
             Delete card
@@ -92,25 +88,6 @@ interface PopoverSettingsProps {
   handleEditing: () => void;
   handleDeleteCard?: () => void;
 }
-
-const PopoverTriggerStyled = styled(PopoverTrigger, {
-  variants: {
-    disabled: {
-      false: {
-        '&:hover': {
-          backgroundColor: '$primary500',
-          color: 'white',
-        },
-      },
-      true: {
-        '&:hover': {
-          backgroundColor: '$transparent',
-        },
-      },
-    },
-  },
-  defaultVariants: { disabled: false },
-});
 
 const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
   ({
@@ -154,22 +131,21 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
     return (
       <Popover open={openPopover} onOpenChange={handleOpenPopover}>
-        <PopoverTriggerStyled
+        <PopoverTrigger
+          variant="dark"
+          size="sm"
           disabled={hideCards && item.createdBy?._id !== userId}
           css={{
-            position: 'relative',
             top: firstOne ? '-35px' : 0,
           }}
         >
           <Icon
             name="menu-dots"
             css={{
-              width: '$20',
-              height: '$20',
               filter: cardItemBlur(hideCards, item as CardItemType, userId),
             }}
           />
-        </PopoverTriggerStyled>
+        </PopoverTrigger>
 
         <PopoverSettingsContent
           isItem={isItem}

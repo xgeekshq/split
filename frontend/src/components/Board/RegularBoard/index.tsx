@@ -6,7 +6,11 @@ import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
-import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
+import {
+  boardInfoState,
+  deletedColumnsState,
+  editColumnsState,
+} from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
@@ -26,10 +30,14 @@ const RegularBoard = ({ socketId }: RegularBoardProps) => {
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
   const setEditColumns = useSetRecoilState(editColumnsState);
+  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
   useMemo(() => {
-    if (!isOpen) setEditColumns(board.columns);
-  }, [board.columns, isOpen, setEditColumns]);
+    if (!isOpen) {
+      setEditColumns(board.columns);
+      setDeletedColumns([]);
+    }
+  }, [board.columns, isOpen, setDeletedColumns, setEditColumns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });

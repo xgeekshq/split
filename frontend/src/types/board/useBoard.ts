@@ -7,7 +7,7 @@ export default interface UseBoardType {
   updateBoard: UseMutationResult<
     BoardType,
     unknown,
-    UpdateBoardType & { socketId: string },
+    UpdateBoardType & { socketId: string; deletedColumns?: string[] },
     unknown
   >;
   deleteBoard: UseMutationResult<

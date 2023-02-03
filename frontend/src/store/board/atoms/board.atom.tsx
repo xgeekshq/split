@@ -33,3 +33,8 @@ export const boardParticipantsState = atom<BoardUser[]>({
   key: 'boardParticipants',
   default: [],
 });
+
+export const deletedColumnsState = atom<string[]>({
+  key: 'deletedColumns',
+  default: [],
+});

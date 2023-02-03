@@ -235,16 +235,8 @@ export default class BoardsController {
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId')
-	async updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
-		const board = await this.updateBoardApp.update(boardId, boardData);
-
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-
-		if (boardData.socketId) {
-			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
-		}
-
-		return board;
+	updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
+		return this.updateBoardApp.update(boardId, boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })

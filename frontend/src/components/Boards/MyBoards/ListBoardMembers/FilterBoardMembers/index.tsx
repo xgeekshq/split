@@ -4,6 +4,7 @@ import Avatar from '@/components/Primitives/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { User } from '@/types/user/user';
+import { getInitials } from '@/utils/getInitials';
 
 type FilterBoardMembersProps = {
   title: string;
@@ -21,9 +22,8 @@ const FilterBoardMembers = ({ title, users }: FilterBoardMembersProps) => (
           <Flex key={member._id} align="center">
             <Avatar
               key={`${member}-${member._id}-${Math.random()}`}
-              colors={undefined}
               css={{ position: 'relative', mr: '$10' }}
-              fallbackText={`${member.firstName[0]}${member.lastName[0]}`}
+              fallbackText={getInitials(member.firstName ?? '-', member.lastName ?? '-')}
               size={32}
             />
             <Text color="primary800" size="sm">

@@ -12,6 +12,7 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
+import { getInitials } from '@/utils/getInitials';
 
 interface FooterProps {
   boardId: string;
@@ -157,7 +158,7 @@ const CardFooter = ({
         >
           <Avatar
             isBoardPage
-            fallbackText={`${createdBy?.firstName[0]}${createdBy?.lastName[0]}`}
+            fallbackText={getInitials(createdBy?.firstName ?? '-', createdBy?.lastName ?? '-')}
             id={createdBy?._id}
             isDefaultColor={createdBy?._id === userId}
             size={20}

@@ -114,7 +114,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
   <Flex justify="evenly" wrap="wrap">
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
-        <Text heading="4">Variant {variant}</Text>
+        <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
             {children}
@@ -130,7 +130,7 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
     <Sprite />
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
-        <h4>Variant {variant}</h4>
+        <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
             <Icon name="plus" />
@@ -147,7 +147,7 @@ export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
     <Sprite />
     {SIZE_OPTIONS.map((size) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={size}>
-        <Text heading="4">Size {size}</Text>
+        <Text heading="5">Size {size}</Text>
         <Button isIcon size={size} disabled={disabled}>
           <Icon name="close" />
         </Button>

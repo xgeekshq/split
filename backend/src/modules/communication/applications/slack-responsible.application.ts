@@ -22,7 +22,7 @@ export class SlackResponsibleApplication implements ResponsibleApplicationInterf
 
 		const newResponsibleId = await this.usersHandler.getSlackUserIdByEmail(newResponsibleEmail);
 
-		const message = `<!channel>, <@${newResponsibleId}> is the new responsible for the team ${teamNumber}`;
+		const message = `<!here>, <@${newResponsibleId}> is the new responsible for the team ${teamNumber}`;
 
 		if (mainChannelId) {
 			await this.chatHandler.postMessage(mainChannelId, message);
