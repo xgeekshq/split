@@ -6,6 +6,7 @@ import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } fr
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
+import { Session } from 'next-auth/core/types';
 import { membersListState, teamsListState, usersListState } from '../store/team/atom/team.atom';
 import { TeamUser } from '../types/team/team.user';
 import { ToastStateEnum } from '../utils/enums/toast-types';
@@ -22,6 +23,7 @@ type TeamUtilsType = {
   setTeamsList: SetterOrUpdater<Team[]>;
   usersList: UserList[];
   userId: string | undefined;
+  session: Session | null;
 };
 
 const useTeamUtils = (): TeamUtilsType => {
@@ -55,6 +57,7 @@ const useTeamUtils = (): TeamUtilsType => {
     setTeamsList,
     usersList,
     userId: Array.isArray(userId) ? userId[0] : userId,
+    session,
   };
 };
 

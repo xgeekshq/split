@@ -1,6 +1,6 @@
 import { ReactElement, Suspense, useEffect } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -8,39 +8,30 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
-import { teamsListState, userTeamsListState } from '@/store/team/atom/team.atom';
+import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });
-  const setUserTeamsList = useSetRecoilState(userTeamsListState);
-  const setAllTeamsList = useSetRecoilState(teamsListState);
+  const setTeamsList = useSetRecoilState(teamsListState);
 
   const {
-    fetchTeamsOfUser: { data },
-    fetchAllTeams: { data: dataAllTeams },
+    fetchUserBasedTeams: { data },
   } = useTeam();
 
   useEffect(() => {
-    if (data) {
-      setUserTeamsList(data);
-    }
-  }, [data, setUserTeamsList]);
+    if (data) setTeamsList(data);
+  }, [data, setTeamsList]);
 
-  useEffect(() => {
-    if (dataAllTeams) {
-      setAllTeamsList(dataAllTeams);
-    }
-  }, [dataAllTeams, setAllTeamsList]);
+  if (!session || !data) return null;
 
-  if (!session) return null;
   return (
     <Flex direction="column">
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <MyBoards isSuperAdmin={session.user.isSAdmin} userId={session.user.id} />
+          <MyBoards isSuperAdmin={session?.user.isSAdmin} userId={session?.user.id} />
         </QueryError>
       </Suspense>
     </Flex>
@@ -53,9 +44,18 @@ Boards.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
+    // CHECK: 'getServerSession' should be used instead of 'getSession'
+    // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
+    const session = await getSession({ req: context.req });
+
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+
+    if (session?.user.isSAdmin) {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
+    } else {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
+    }
+
     return {
       props: {
         dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
