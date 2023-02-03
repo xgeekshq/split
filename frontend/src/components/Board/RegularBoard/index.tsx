@@ -9,7 +9,11 @@ import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import { boardInfoState, editColumnsState } from '@/store/board/atoms/board.atom';
+import {
+  boardInfoState,
+  deletedColumnsState,
+  editColumnsState,
+} from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
@@ -26,10 +30,14 @@ const RegularBoard = ({ socketId }: RegularBoardProps) => {
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
   const setEditColumns = useSetRecoilState(editColumnsState);
+  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
   useMemo(() => {
-    if (!isOpen) setEditColumns(board.columns);
-  }, [board.columns, isOpen, setEditColumns]);
+    if (!isOpen) {
+      setEditColumns(board.columns);
+      setDeletedColumns([]);
+    }
+  }, [board.columns, isOpen, setDeletedColumns, setEditColumns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });

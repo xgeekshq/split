@@ -28,7 +28,7 @@ import { Configs, CreateBoardService } from '../interfaces/services/create.board
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
-import { addMonths, isAfter } from 'date-fns';
+import { addDays, addMonths, isAfter } from 'date-fns';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -144,7 +144,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
-		let newUsers = [];
+		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 		let teamData;
@@ -155,7 +155,12 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		}
 
 		if (!haveDividedBoards && !team) {
-			newUsers = [...users];
+			users.forEach((user) =>
+				newUsers.push({
+					...user,
+					votesCount: 0
+				})
+			);
 		}
 
 		await this.saveBoardUsers(newUsers, newBoard._id);
@@ -201,7 +206,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	}
 
 	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
-		const dateToCompare = providerAccountCreatedAt || joinedAt;
+		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
+
+		dateToCompare = addDays(dateToCompare, 15);
 
 		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
 

@@ -71,12 +71,12 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		const generalText = {
 			member: (
 				boardId: string
-			) => `<!channel> In order to proceed with the retro of this month, here is the board link: \n\n
+			) => `<!here> In order to proceed with the retro of this month, here is the board link: \n\n
       ${this.config.frontendUrl}/boards/${boardId}
       `,
 			responsible: (
 				boardId: string
-			) => `<!channel> In order to proceed with the retro of this month, here is the main board link: \n\n
+			) => `<!here> In order to proceed with the retro of this month, here is the main board link: \n\n
       ${this.config.frontendUrl}/boards/${boardId}
       `
 		};
@@ -131,19 +131,21 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 
 		errors.forEach((i) => this.logger.warn(i));
 
-		success.forEach(({ id: channelId, name: channelName }) => {
-			const board = teams.find((i) =>
-				channelName.includes(
-					`${i.normalName}${i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''}`
-				)
-			);
+		return success.flatMap(({ id: channelId, name: channelName }) => {
+			const team = teams.find((i) => {
+				return String(channelName).includes(
+					`${i.normalName}${
+						i.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''
+					}-${month}-${year}`
+				);
+			});
 
-			if (board) {
-				board.channelId = channelId;
+			if (team) {
+				team.channelId = channelId;
 			}
-		});
 
-		return teams;
+			return team ?? [];
+		});
 	}
 
 	private async addSlackIdOnTeams(teams: TeamDto[]): Promise<TeamDto[]> {

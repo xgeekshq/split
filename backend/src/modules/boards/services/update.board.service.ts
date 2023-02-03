@@ -15,6 +15,7 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Votes from 'src/modules/votes/interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -25,6 +26,9 @@ import { BoardDataPopulate } from '../utils/populate-board';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
+import Column from '../schemas/column.schema';
+import ColumnDto from '../dto/column/column.dto';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -36,7 +40,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private slackCommunicationService: CommunicationServiceInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		private socketService: SocketGateway
+		private socketService: SocketGateway,
+		@Inject(Votes.TYPES.services.DeleteVoteService)
+		private deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	/**
@@ -75,6 +81,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
+		const { responsible } = boardData;
+
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
@@ -85,7 +93,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const { isSubBoard } = board;
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
-		const newResponsible: ResponsibleType = { id: currentResponsible?.id, email: '' };
+		const newResponsible: ResponsibleType = {
+			id: (responsible?.user as User)._id,
+			email: (responsible?.user as User).email
+		};
 
 		/**
 		 * Validate if:
@@ -93,27 +104,51 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - is a sub-board
 		 * - and the logged user isn't the current responsible
 		 */
-		if (isSubBoard && boardData.users) {
-			const boardUserFound = boardData.users?.find(
-				(userFound) => userFound.role === BoardRoles.RESPONSIBLE
-			).user as unknown as User;
+		if (boardData.users && String(currentResponsible.id) !== String(newResponsible.id)) {
+			if (isSubBoard) {
+				const promises = boardData.users
+					.filter((boardUser) =>
+						[getIdFromObjectId(String(currentResponsible?.id)), String(newResponsible.id)].includes(
+							(boardUser.user as unknown as User)._id
+						)
+					)
+					.map((boardUser) => {
+						const typedBoardUser = boardUser.user as unknown as User;
 
-			newResponsible.email = boardUserFound.email;
-			newResponsible.id = boardUserFound._id;
+						return this.boardUserModel
+							.findOneAndUpdate(
+								{
+									user: typedBoardUser._id,
+									board: boardId
+								},
+								{
+									role: boardUser.role
+								}
+							)
+							.exec();
+					});
+				await Promise.all(promises);
+			}
+
+			const mainBoardId = await this.boardModel
+				.findOne({ dividedBoards: { $in: boardId } })
+				.select('_id')
+				.exec();
+
 			const promises = boardData.users
 				.filter((boardUser) =>
 					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
 						(boardUser.user as unknown as User)._id
 					)
 				)
-				.map(async (boardUser) => {
+				.map((boardUser) => {
 					const typedBoardUser = boardUser.user as unknown as User;
 
 					return this.boardUserModel
 						.findOneAndUpdate(
 							{
 								user: typedBoardUser._id,
-								board: boardId
+								board: mainBoardId
 							},
 							{
 								role: boardUser.role
@@ -122,6 +157,75 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 						.exec();
 				});
 			await Promise.all(promises);
+		}
+
+		/**
+		 * Updates the board's settings fields
+		 *
+		 * */
+
+		board.title = boardData.title;
+		board.maxVotes = boardData.maxVotes;
+		board.hideCards = boardData.hideCards;
+		board.addCards = boardData.addCards;
+		board.hideVotes = boardData.hideVotes;
+
+		/**
+		 * Validate if:
+		 * - have columns to delete
+		 * Returns the votes to the user
+		 */
+		if (boardData.deletedColumns && !isEmpty(boardData.deletedColumns)) {
+			const cardsToDelete = boardData.deletedColumns.flatMap((deletedColumnId: string) => {
+				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
+			});
+
+			cardsToDelete.forEach((cards) => {
+				cards.items.forEach(async (card) => {
+					const votesByUser = new Map<string, number>();
+
+					card.votes.forEach((userId) => {
+						if (!votesByUser.has(userId.toString())) {
+							votesByUser.set(userId.toString(), 1);
+						} else {
+							const count = votesByUser.get(userId.toString());
+
+							votesByUser.set(userId.toString(), count + 1);
+						}
+					});
+
+					votesByUser.forEach(async (votesCount, userId) => {
+						await this.deleteVoteService.decrementVoteUser(board.id, userId, -votesCount);
+					});
+				});
+			});
+		}
+
+		/**
+		 * Only the regular boards will have their columns updated
+		 *
+		 * */
+
+		if (!isSubBoard && isEmpty(board.dividedBoards)) {
+			board.columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
+				if (col._id) {
+					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
+
+					if (columnBoard) {
+						return [{ ...columnBoard, title: col.title }];
+					}
+
+					const columnToDelete = boardData.deletedColumns.some(
+						(colId) => colId === col._id.toString()
+					);
+
+					if (columnToDelete) {
+						return [];
+					}
+				}
+
+				return [{ ...col }];
+			}) as Column[];
 		}
 
 		/**
@@ -148,12 +252,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					_id: boardId
 				},
 				{
-					maxVotes: boardData.maxVotes,
-					hideCards: boardData.hideCards,
-					addCards: boardData.addCards,
-					hideVotes: boardData.hideVotes,
-					title: boardData.title,
-					users: boardData.users
+					...board
 				},
 				{
 					new: true
@@ -162,9 +261,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
+		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
+
+		if (boardData.socketId) {
+			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
+		}
+
 		if (
 			updatedBoard &&
-			String(currentResponsible?.id) !== newResponsible.id &&
+			newResponsible &&
+			String(currentResponsible.id) !== String(newResponsible.id) &&
 			board.slackChannelId &&
 			updatedBoard.slackEnable &&
 			updatedBoard.isSubBoard
