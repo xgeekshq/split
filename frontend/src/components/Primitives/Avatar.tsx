@@ -43,6 +43,26 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
   },
 });
 
+export const AvatarButton = styled('button', {
+  border: 'none',
+  backgroundColor: 'transparent',
+  padding: 0,
+  variants: {
+    isBoardsPage: {
+      true: {
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+      false: {
+        '&:hover': {
+          cursor: 'default',
+        },
+      },
+    },
+  },
+});
+
 type AvatarType = {
   fallbackText: string;
   colors?: { bg: string; fontColor: string; border?: boolean };
@@ -61,7 +81,7 @@ const Avatar: React.FC<AvatarProps> = ({
   colors = undefined,
   fallbackText,
   css,
-  isBoardPage,
+  isBoardPage = false,
   id,
   isDefaultColor,
 }) => {

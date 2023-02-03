@@ -5,7 +5,6 @@ import { deepClone } from 'fast-json-patch';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 import { styled } from '@/styles/stitches/stitches.config';
 
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/icons/Icon';
 import Avatar from '@/components/Primitives/Avatar';
@@ -18,6 +17,7 @@ import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 
 interface SubCardBoardProps {
   index: number;
@@ -184,7 +184,13 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
         <Flex align="center" gap="8" justify="center">
           <Text size="sm">Sub team {index + 1}</Text>
-          <CardAvatars listUsers={board.users} responsible={false} teamAdmins={false} userId="1" />
+          <AvatarGroup
+            isBoardsPage
+            listUsers={board.users}
+            responsible={false}
+            teamAdmins={false}
+            userId="1"
+          />
         </Flex>
       </Container>
     </Flex>

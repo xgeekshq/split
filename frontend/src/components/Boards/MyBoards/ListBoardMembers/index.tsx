@@ -52,10 +52,10 @@ const ListBoardMembers = ({
         <Text heading="4">Board Members</Text>
       </Dialog.Header>
       <ScrollableContent direction="column" justify="start">
-        {!isEmpty(members) && (
+        {!isEmpty(admin) && (
           <FilterBoardMembers
-            title={isRegularBoardNoTeam ? 'Participants' : 'Team Members'}
-            users={members}
+            title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
+            users={admin}
           />
         )}
         {!isEmpty(responsible) && isSubBoard && (
@@ -70,10 +70,10 @@ const ListBoardMembers = ({
             users={stakeholders}
           />
         )}
-        {!isEmpty(admin) && (
+        {!isEmpty(members) && (
           <FilterBoardMembers
-            title={admin.length > 1 ? 'Team Admins' : 'Team Admin'}
-            users={admin}
+            title={isRegularBoardNoTeam ? 'Participants' : 'Team Members'}
+            users={members}
           />
         )}
       </ScrollableContent>

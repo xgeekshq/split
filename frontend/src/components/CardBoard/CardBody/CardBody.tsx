@@ -11,7 +11,7 @@ import Tooltip from '@/components/Primitives/Tooltip';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';
-import CardAvatars from '../CardAvatars';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import CardIcon from '../CardIcon';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -229,7 +229,7 @@ const CardBody = React.memo<CardBodyProps>(
                   )}
 
                   {!isDashboard && isSubBoard && (
-                    <CardAvatars
+                    <AvatarGroup
                       listUsers={isSubBoard ? users : team.users}
                       responsible={false}
                       teamAdmins={false}

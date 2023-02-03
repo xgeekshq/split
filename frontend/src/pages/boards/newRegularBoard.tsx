@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Icon from '@/components/icons/Icon';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
@@ -83,15 +83,9 @@ const NewRegularBoard: NextPage = () => {
   const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
-  /**
-   * Team  Hook
-   */
+  // Team  Hook
   const {
-    fetchTeamsOfUser: { data: teamsData },
-  } = useTeam();
-
-  const {
-    fetchAllTeams: { data: allTeamsData },
+    fetchUserBasedTeams: { data },
   } = useTeam();
 
   const { data: allUsers } = useQuery(['users'], () => getAllUsers(), {
@@ -105,6 +99,29 @@ const NewRegularBoard: NextPage = () => {
       });
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      const availableTeams = data.filter((team) =>
+        team.users?.find(
+          (teamUser) =>
+            teamUser.user._id === session?.user.id &&
+            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+        ),
+      );
+
+      setTeams(session?.user.isSAdmin ? data : availableTeams);
+    }
+
+    if (allUsers) {
+      const usersWithChecked = allUsers.map((user) => ({
+        ...user,
+        isChecked: user._id === session?.user.id,
+      }));
+
+      setUsersList(usersWithChecked);
+    }
+  }, [data, setTeams, allUsers, setUsersList, session]);
 
   /**
    * Board  Hook
@@ -122,7 +139,7 @@ const NewRegularBoard: NextPage = () => {
     reValidateMode: 'onBlur',
     defaultValues: {
       text: '',
-      maxVotes: 2,
+      maxVotes: boardState.board.maxVotes,
       slackEnable: false,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
@@ -181,7 +198,7 @@ const NewRegularBoard: NextPage = () => {
     mutate({
       ...boardState.board,
       users: isEmpty(boardState.users) ? users : boardState.users,
-      title: title || boardState.board.title,
+      title: title || defaultBoard.board.title,
       dividedBoards: [],
       maxVotes,
       slackEnable,
@@ -200,7 +217,7 @@ const NewRegularBoard: NextPage = () => {
     mutate({
       ...boardState.board,
       users: isEmpty(boardState.users) ? users : boardState.users,
-      title: boardState.board.title,
+      title: defaultBoard.board.title,
       dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
@@ -208,25 +225,6 @@ const NewRegularBoard: NextPage = () => {
   };
 
   useEffect(() => {
-    if (teamsData && allTeamsData && session && allUsers) {
-      const availableTeams = teamsData.filter((team) =>
-        team.users?.find(
-          (teamUser) =>
-            teamUser.user._id === session?.user.id &&
-            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ),
-      );
-
-      setTeams(session?.user.isSAdmin ? allTeamsData : availableTeams);
-
-      const usersWithChecked = allUsers.map((user) => ({
-        ...user,
-        isChecked: user._id === session?.user.id,
-      }));
-
-      setUsersList(usersWithChecked);
-    }
-
     if (status === 'success') {
       setIsLoading(true);
       setToastState({
@@ -244,21 +242,9 @@ const NewRegularBoard: NextPage = () => {
       setBoardState(defaultBoard);
       setSelectedTeam(undefined);
     };
-  }, [
-    router,
-    setToastState,
-    session,
-    teamsData,
-    setTeams,
-    allTeamsData,
-    setSelectedTeam,
-    setBoardState,
-    allUsers,
-    setUsersList,
-    status,
-  ]);
+  }, [router, setToastState, setSelectedTeam, setBoardState, status]);
 
-  if (!session || !teamsData || !allTeamsData) return null;
+  if (!session || !data) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>
@@ -338,9 +324,18 @@ const NewRegularBoard: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
+    // CHECK: 'getServerSession' should be used instead of 'getSession'
+    // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
+    const session = await getSession({ req: context.req });
+
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+
+    if (session?.user.isSAdmin) {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
+    } else {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
+    }
+
     await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
 
     return {

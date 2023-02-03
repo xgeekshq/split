@@ -41,9 +41,4 @@ export default class ColumnDto {
 	@IsOptional()
 	@IsBoolean()
 	isDefaultText?: boolean;
-
-	@ApiProperty()
-	@IsOptional()
-	@IsString()
-	socketId?: string;
 }

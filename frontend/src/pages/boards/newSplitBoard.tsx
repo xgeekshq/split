@@ -1,8 +1,8 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { getSession, useSession } from 'next-auth/react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
@@ -84,9 +84,8 @@ const NewSplitBoard: NextPage = () => {
   const setToastState = useSetRecoilState(toastState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
-  const setTeams = useSetRecoilState(teamsOfUser);
+  const [teams, setTeams] = useRecoilState(teamsOfUser);
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
-  const teams = useRecoilValue(teamsOfUser);
 
   /**
    * User Board Hook
@@ -95,16 +94,16 @@ const NewSplitBoard: NextPage = () => {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
 
-  /**
-   * Team  Hook
-   */
+  // Team  Hook
   const {
-    fetchTeamsOfUser: { data: teamsData },
+    fetchUserBasedTeams: { data },
   } = useTeam();
 
-  const {
-    fetchAllTeams: { data: allTeamsData },
-  } = useTeam();
+  useEffect(() => {
+    if (data) {
+      setTeams(data);
+    }
+  }, [data, setTeams]);
 
   /**
    * React Hook Form
@@ -196,10 +195,6 @@ const NewSplitBoard: NextPage = () => {
   }, [setBoardState, slackEnable]);
 
   useEffect(() => {
-    if (teamsData && allTeamsData && session) {
-      setTeams(session?.user.isSAdmin ? allTeamsData : teamsData);
-    }
-
     if (status === 'success') {
       setIsLoading(true);
       setToastState({
@@ -218,20 +213,9 @@ const NewSplitBoard: NextPage = () => {
       setSelectedTeam(undefined);
       setHaveError(false);
     };
-  }, [
-    status,
-    router,
-    setToastState,
-    session,
-    teamsData,
-    setTeams,
-    allTeamsData,
-    setSelectedTeam,
-    setBoardState,
-    setHaveError,
-  ]);
+  }, [status, router, setToastState, setSelectedTeam, setBoardState, setHaveError]);
 
-  if (!session || !teamsData || !allTeamsData) return null;
+  if (!session || !data) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>
@@ -305,9 +289,17 @@ const NewSplitBoard: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
+    // CHECK: 'getServerSession' should be used instead of 'getSession'
+    // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
+    const session = await getSession({ req: context.req });
+
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['teams'], () => getTeamsOfUser(undefined, context));
-    await queryClient.prefetchQuery(['allTeams'], () => getAllTeams(context));
+
+    if (session?.user.isSAdmin) {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
+    } else {
+      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
+    }
 
     return {
       props: {

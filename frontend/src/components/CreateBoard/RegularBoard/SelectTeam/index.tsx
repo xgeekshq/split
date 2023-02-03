@@ -9,8 +9,14 @@ import Flex from '@/components/Primitives/Flex';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
-import SelectComponent from '@/components/CreateBoard/Select';
 import { useSession } from 'next-auth/react';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectIcon,
+  SelectContent,
+} from '@/components/Primitives/Select';
 import { HelperTextWrapper } from '../../SplitBoard/SubTeamsTab/SelectTeam/styles';
 
 const SelectTeam = () => {
@@ -97,12 +103,27 @@ const SelectTeam = () => {
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
-      <SelectComponent
-        teamsNames={teamsNames}
-        selectedTeam={selectedTeam}
-        handleTeamChange={handleTeamChange}
-        numberOfTeams={numberOfTeams}
-      />
+      <Select
+        disabled={numberOfTeams === 0}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?._id)?.value}
+        onValueChange={(selectedOption: string) => {
+          handleTeamChange(selectedOption);
+        }}
+        css={{ width: '100%', height: '$64' }}
+      >
+        <SelectTrigger css={{ padding: '$24' }}>
+          <Flex direction="column">
+            <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
+              {numberOfTeams === 0 ? 'No teams available' : 'Select Team'}
+            </Text>
+            <SelectValue />
+          </Flex>
+          <SelectIcon className="SelectIcon" asChild>
+            <Icon name="arrow-down" />
+          </SelectIcon>
+        </SelectTrigger>
+        <SelectContent options={teamsNames} />
+      </Select>
       {numberOfTeams === 0 && (
         <Flex justify="start">
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">

@@ -4,7 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
-import CardAvatars from '../CardBoard/CardAvatars';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 
 interface TeamHeaderProps {
   team?: Team;
@@ -15,7 +15,7 @@ interface TeamHeaderProps {
 const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
   const hasTeam = !!team;
   return (
-    <Flex align="center" css={{ mb: '$16' }} justify="between">
+    <Flex align="center" css={{ mb: '$16' }} justify="start">
       <Flex align="center">
         <Text
           css={{
@@ -34,7 +34,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
               <Text color="primary300" size="sm">
                 Members
               </Text>
-              <CardAvatars
+              <AvatarGroup
                 listUsers={team.users}
                 responsible={false}
                 teamAdmins={false}
@@ -48,7 +48,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
             <Text color="primary300" size="sm">
               Team admin
             </Text>
-            <CardAvatars
+            <AvatarGroup
               teamAdmins
               stakeholders
               listUsers={team.users}
@@ -59,7 +59,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
         )}
         {!hasTeam && users && (
           <Flex css={{ ml: '$12' }}>
-            <CardAvatars
+            <AvatarGroup
               myBoards
               listUsers={users}
               responsible={false}

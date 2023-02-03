@@ -56,6 +56,7 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
+import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -340,5 +341,39 @@ export default class BoardsController {
 	@Put(':boardId/column/:columnId')
 	updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
 		return this.updateBoardApp.updateColumn(boardId, columnData);
+	}
+
+	@ApiOperation({ summary: 'Delete all cards from a column on a board' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiBody({ type: ColumnDeleteCardsDto })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Cards deleted successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(BoardUserGuard)
+	@Put(':boardId/column/:columnId/cards')
+	deleteCardsFromColumn(@Param() { boardId }: BaseParam, @Body() column: ColumnDeleteCardsDto) {
+		return this.updateBoardApp.deleteCardsFromColumn(boardId, column);
 	}
 }

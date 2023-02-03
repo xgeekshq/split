@@ -1,11 +1,12 @@
 import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
+import UserDto from 'src/modules/users/dto/user.dto';
 import { TeamDocument } from '../../entities/teams.schema';
 
 export interface GetTeamApplicationInterface {
 	countTeams(userId: string): Promise<number>;
 
-	getAllTeams(): Promise<LeanDocument<TeamDocument>[]>;
+	getAllTeams(user: UserDto): Promise<LeanDocument<TeamDocument>[]>;
 
 	getTeam(
 		teamId: string,
