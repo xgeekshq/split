@@ -69,7 +69,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     clearErrors();
     const foundTeam = teams.find((team) => team.id === value);
 
-    setValue('team', foundTeam?._id);
+    setValue('team', foundTeam?.id);
 
     setSelectedTeam(foundTeam);
   };

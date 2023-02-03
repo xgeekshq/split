@@ -72,8 +72,8 @@ const SelectComponent = ({
       options={teamsNames}
       placeholder={numberOfTeams === 0 ? 'No teams available' : 'Select Team'}
       controlShouldRenderValue={!!selectedTeam}
-      defaultValue={{ label: selectedTeam?.name, value: selectedTeam?._id }}
-      value={teamsNames.find((option) => option.value === selectedTeam?._id)}
+      defaultValue={{ label: selectedTeam?.name, value: selectedTeam?.id }}
+      value={teamsNames.find((option) => option.value === selectedTeam?.id)}
       onChange={(selectedOption) => {
         handleTeamChange((selectedOption as OptionType)?.value);
       }}
