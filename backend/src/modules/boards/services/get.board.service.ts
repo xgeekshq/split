@@ -9,7 +9,7 @@ import { GetBoardServiceInterface } from '../interfaces/services/get.board.servi
 import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
-import { BoardDataPopulate } from '../utils/populate-board';
+import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -164,8 +164,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { boards: [], hasNextPage, page };
 	}
 
-	getBoardFromRepo(boardId: string) {
-		return this.boardModel.findById(boardId).lean().exec();
+	async getBoardFromRepo(boardId: string) {
+		const board = await this.boardModel
+			.findById(boardId)
+			.populate(BoardDataPopulate)
+			.lean({ virtuals: true })
+			.exec();
+
+		return board as Board;
 	}
 
 	async getMainBoardData(boardId: string) {
@@ -218,7 +224,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async getBoardData(boardId: string) {
 		const board = await this.boardModel
 			.findById(boardId)
-			.populate(BoardDataPopulate)
+			.select('-slackEnable -slackChannelId -boardNumber -recurrent -submitedAt -__v')
+			.populate(GetBoardDataPopulate)
 			.lean({ virtuals: true })
 			.exec();
 
