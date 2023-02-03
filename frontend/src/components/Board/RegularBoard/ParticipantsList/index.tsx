@@ -9,10 +9,8 @@ import ParticipantsLayout from './ParticipantsLayout';
 
 const ParticipantsList = () => {
   const { data: session } = useSession({ required: true });
-  // const boardInfo = useRecoilValue(boardInfoState);
 
   const boardParticipants = useRecoilValue(boardParticipantsState);
-  // const boardMembers: BoardUser[] = boardInfo.board.users;
 
   return (
     <ParticipantsLayout>
