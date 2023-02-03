@@ -215,7 +215,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async getBoardData(boardId: string) {
 		const board = await this.boardModel
 			.findById(boardId)
-			.select('-slackEnable -slackChannelId -boardNumber -recurrent -submitedAt -__v')
+			.select('-slackEnable -slackChannelId -boardNumber -recurrent -__v')
 			.populate(GetBoardDataPopulate)
 			.lean({ virtuals: true })
 			.exec();

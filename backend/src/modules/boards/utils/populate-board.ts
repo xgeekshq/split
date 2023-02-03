@@ -82,6 +82,6 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 	},
 	{
 		path: 'dividedBoards',
-		select: 'title _id'
+		select: 'title _id submitedAt'
 	}
 ];
