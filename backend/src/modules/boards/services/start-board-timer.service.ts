@@ -57,7 +57,7 @@ export default class StartBoardTimerServiceImpl implements StartBoardTimerServic
 			this.stopBoardTimerService.stopTimer(boardTimerDurationDto);
 		});
 
-		boardTimer.timerHelper.setIntervalAndCleanCallback(ONE_HOUR, () => {
+		boardTimer.timerHelper.setCleanTimerCallback(ONE_HOUR, () => {
 			this.boardTimerRepository.removeTimer(boardId);
 		});
 

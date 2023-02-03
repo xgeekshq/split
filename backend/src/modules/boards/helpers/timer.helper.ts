@@ -127,8 +127,8 @@ export default class TimerHelper {
 		this.onTimerSyncCallback = callback;
 	}
 
-	setIntervalAndCleanCallback(interval = oneHour, callback: CleanTimerCallback) {
-		setInterval(callback, interval);
+	setCleanTimerCallback(timeOut = oneHour, callback: CleanTimerCallback) {
+		setTimeout(callback, timeOut);
 	}
 
 	private handleTimeUpdated() {
