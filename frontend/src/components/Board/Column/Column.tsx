@@ -222,9 +222,6 @@ const Column = React.memo<ColumMemoProps>(
           socketId={socketId}
           boardId={boardId}
           columnId={columnId}
-          columnTitle={title}
-          columnColor={color}
-          cards={cards}
           isOpen={openDialog.deleteCards}
           handleDialogChange={handleDialogChange}
         />
