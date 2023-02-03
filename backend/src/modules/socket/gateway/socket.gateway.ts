@@ -147,7 +147,9 @@ export default class SocketGateway
 
 	@SubscribeMessage(BOARD_TIMER_USER_REQUESTED_TIMER_STATE)
 	handleUserRequestedTimerStateEvent(client: Socket, payload: BoardTimerDurationDto) {
-		this.logger.log(`Socket handling "${BOARD_TIMER_USER_STOPPED}". Client "${client.id})"`);
+		this.logger.log(
+			`Socket handling "${BOARD_TIMER_USER_REQUESTED_TIMER_STATE}". Client "${client.id})"`
+		);
 
 		payload.clientId = client.id;
 

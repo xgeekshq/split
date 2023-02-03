@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BOARD_TIMER_SERVER_STOPPED } from 'src/libs/constants/timer';
-import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
+import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import ServerStoppedTimerEvent from 'src/modules/boards/events/server-stopped-timer.event';
 import StopBoardTimerService from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
@@ -18,14 +18,16 @@ export default class StopBoardTimerServiceImpl implements StopBoardTimerService 
 		private eventEmitter: EventEmitter2
 	) {}
 
-	stopTimer(boardTimerDuration: BoardTimerDurationDto) {
-		this.logger.log(`Will stop timer. Board: "${boardTimerDuration.boardId})"`);
+	stopTimer(boardTimerDto: BoardTimerDto) {
+		this.logger.log(`Will stop timer. Board: "${boardTimerDto.boardId})"`);
 
-		this.boardTimerRepository.removeTimer(boardTimerDuration.boardId);
+		const boardTimer = this.boardTimerRepository.findBoardTimerByBoardId(boardTimerDto.boardId);
+
+		boardTimer.timerHelper.stop();
 
 		this.eventEmitter.emit(
 			BOARD_TIMER_SERVER_STOPPED,
-			new ServerStoppedTimerEvent(boardTimerDuration)
+			new ServerStoppedTimerEvent({ ...boardTimerDto, ...boardTimer.timerHelper.state })
 		);
 	}
 }

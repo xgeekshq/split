@@ -1,5 +1,5 @@
-import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
+import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 
 export default interface PauseBoardTimerService {
-	pauseTimer(boartTimeLeft: BoardTimerTimeLeftDto): void;
+	pauseTimer(boartTimeLeft: BoardTimerDto): void;
 }

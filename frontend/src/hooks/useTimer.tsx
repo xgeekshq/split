@@ -48,7 +48,8 @@ interface TimerProps {
 const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): TimerInterface => {
   const [minutes, setMinutes] = useState<number>(5);
   const [seconds, setSeconds] = useState<number>(0);
-  const [isFirstRender, setFirstRender] = useState<boolean>(true);
+  const [shallSendStatusUpdate, setShallSendStatusUpdate] = useState<boolean>(false);
+  const [shallSendDurationUpdate, setShallSendDurationUpdate] = useState<boolean>(false);
   const [minutesLeft, setMinutesLeft] = useState<number>(minutes);
   const [secondsLeft, setSecondsLeft] = useState<number>(seconds);
   const [status, setStatus] = useState<TimerStatus>();
@@ -62,57 +63,60 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
 
   const startTimer = useCallback(() => {
     setStatus(TimerStatus.RUNNING);
+    setShallSendStatusUpdate(true);
   }, []);
 
   const pauseTimer = useCallback(() => {
     setStatus(TimerStatus.PAUSED);
+    setShallSendStatusUpdate(true);
   }, []);
 
   const stopTimer = useCallback(() => {
     setMinutesLeft(minutes);
     setSecondsLeft(seconds);
     setStatus(TimerStatus.STOPPED);
+    setShallSendStatusUpdate(true);
   }, [minutes, seconds]);
 
   useEffect(() => {
+    const updateDuration = (duration: TimeDto) => {
+      if (duration) {
+        setMinutes(duration.minutes || 0);
+        setSeconds(duration.seconds || 0);
+      }
+    };
+    const updateTimeLeft = (timeLeft: TimeDto) => {
+      if (timeLeft) {
+        setMinutesLeft(timeLeft.minutes || 0);
+        setSecondsLeft(timeLeft.seconds || 0);
+      }
+    };
+
     listenEvent(BOARD_TIMER_SERVER_SENT_TIMER_STATE, (payload: TimerStateDto) => {
-      if (!payload) {
-        return;
-      }
-      const { duration, timeLeft } = payload;
-      if (duration && duration.minutes !== minutes && duration.seconds !== seconds) {
-        setMinutes(duration.minutes);
-        setSeconds(duration.seconds);
-      }
-      if (timeLeft && timeLeft.minutes !== minutesLeft && timeLeft.seconds !== secondsLeft) {
-        setMinutesLeft(timeLeft.minutes);
-        setSecondsLeft(timeLeft.seconds);
-      }
-      if (payload.status && payload.status !== status) {
+      updateDuration(payload.duration);
+      updateTimeLeft(payload.timeLeft);
+
+      if (payload.status) {
         setStatus(payload.status);
       }
     });
 
-    listenEvent(BOARD_TIMER_SERVER_STARTED, (payload: TimeDto) => {
-      setMinutes(payload.minutes);
-      setSeconds(payload.seconds);
-      setMinutesLeft(payload.minutes);
-      setSecondsLeft(payload.seconds);
+    listenEvent(BOARD_TIMER_SERVER_STARTED, (payload: TimerStateDto) => {
+      updateDuration(payload.duration);
+      updateTimeLeft(payload.timeLeft);
       setStatus(TimerStatus.RUNNING);
     });
 
-    listenEvent(BOARD_TIMER_SERVER_PAUSED, (payload: TimeDto) => {
-      setMinutesLeft(payload.minutes);
-      setSecondsLeft(payload.seconds);
-      pauseTimer();
+    listenEvent(BOARD_TIMER_SERVER_PAUSED, (payload: TimerStateDto) => {
+      updateDuration(payload.duration);
+      updateTimeLeft(payload.timeLeft);
+      setStatus(TimerStatus.PAUSED);
     });
 
-    listenEvent(BOARD_TIMER_SERVER_STOPPED, (payload: TimeDto) => {
-      setMinutes(payload.minutes);
-      setSeconds(payload.seconds);
-      setMinutesLeft(payload.minutes);
-      setSecondsLeft(payload.seconds);
-      stopTimer();
+    listenEvent(BOARD_TIMER_SERVER_STOPPED, (payload: TimerStateDto) => {
+      updateDuration(payload.duration);
+      updateTimeLeft(payload.timeLeft);
+      setStatus(TimerStatus.STOPPED);
     });
 
     listenEvent(BOARD_TIMER_SERVER_TIME_LEFT_UPDATED, (payload: TimeDto) => {
@@ -168,7 +172,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
       setTimerVariant('show');
     }
 
-    if (isAdmin) {
+    if (isAdmin && shallSendStatusUpdate) {
       if (isRunning()) {
         emitEvent(BOARD_TIMER_USER_STARTED, { boardId, duration: { minutes, seconds } });
       } else if (isPaused()) {
@@ -177,18 +181,18 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
           timeLeft: { minutes: minutesLeft, seconds: secondsLeft },
         });
       } else if (isStopped()) {
-        emitEvent(BOARD_TIMER_USER_STOPPED, { boardId, duration: { minutes, seconds } });
+        emitEvent(BOARD_TIMER_USER_STOPPED, { boardId });
       }
+      setShallSendStatusUpdate(false);
     }
   }, [status]);
 
   useEffect(() => {
     setMinutesLeft(minutes);
     setSecondsLeft(seconds);
-    if (isAdmin && !isFirstRender) {
+    if (isAdmin && shallSendDurationUpdate) {
       emitEvent(BOARD_TIMER_USER_DURATION_UPDATED, { boardId, duration: { minutes, seconds } });
-    } else {
-      setFirstRender(false);
+      setShallSendDurationUpdate(false);
     }
   }, [minutes, seconds]);
 
@@ -196,12 +200,14 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
     if (minutes < 59) {
       setMinutes((prevMin) => prevMin + 1);
     }
+    setShallSendDurationUpdate(true);
   }, [minutes]);
 
   const decrementOneMinute = useCallback(() => {
     if (minutes > 0) {
       setMinutes((prevMin) => prevMin - 1);
     }
+    setShallSendDurationUpdate(true);
   }, [minutes]);
 
   const incrementFiveSeconds = useCallback(() => {
@@ -211,6 +217,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
       incrementOneMinute();
       setSeconds(0);
     }
+    setShallSendDurationUpdate(true);
   }, [seconds, minutes]);
 
   const decrementFiveSeconds = useCallback(() => {
@@ -220,6 +227,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
       decrementOneMinute();
       setSeconds(55);
     }
+    setShallSendDurationUpdate(true);
   }, [seconds, minutes]);
 
   return {

@@ -21,8 +21,7 @@ export default class UpdateBoardTimerDurationServiceImpl
 	) {}
 
 	updateDuration(boardTimerDuration: BoardTimerDurationDto) {
-		this.logger.log(`Will update timer duration. Board: "${boardTimerDuration.boardId})"`);
-
+		this.logger.log(`Will update timer duration. Board: "${boardId})"`);
 		const { boardId, clientId, duration } = boardTimerDuration;
 
 		const boardTimer = this.boardTimerRepository.getOrCreateBoardTimer(boardId, clientId);
@@ -31,7 +30,10 @@ export default class UpdateBoardTimerDurationServiceImpl
 
 		this.eventEmitter.emit(
 			BOARD_TIMER_SERVER_DURATION_UPDATED,
-			new ServerUpdatedTimerDurationEvent(boardTimerDuration)
+			new ServerUpdatedTimerDurationEvent({
+				...boardTimerDuration,
+				...boardTimer.timerHelper.duration
+			})
 		);
 	}
 }

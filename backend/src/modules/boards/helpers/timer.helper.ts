@@ -9,27 +9,57 @@ import TimerStatusHelper from 'src/modules/boards/helpers/timer-status.helper';
 
 type TimeLeftUpdateCallback = (timeLeft: TimeDto) => void;
 type TimerExpiredCallback = () => void;
-type TimerStateType = { status: TimerStatusDto; duration: TimeDto; timeLeft: TimeDto };
+type CleanTimerCallback = () => void;
+type TimerStateType = {
+	status: TimerStatusDto;
+	previousStatus: TimerStatusDto;
+	duration: TimeDto;
+	timeLeft: TimeDto;
+};
+
+const fifteenSeconds = 15;
+
+const oneHour = 1 * 60 * 60 * 1000;
 
 export default class TimerHelper {
 	private readonly statusHelper: TimerStatusHelper = new TimerStatusHelper();
+
 	private _duration: TimeDto;
+	get duration(): TimeDto {
+		return this._duration;
+	}
+	setDuration(duration: TimeDto) {
+		this._duration = { ...duration };
+	}
+
 	private _timeLeft: TimeDto;
+	get timeLeft(): TimeDto {
+		return this._timeLeft;
+	}
+	setTimeLeft(timeLeft: TimeDto) {
+		this._timeLeft = timeLeft;
+	}
+
 	private interval: any;
 	private timerSyncInterval: number;
 	private onTimerSyncCallback: TimeLeftUpdateCallback;
 	private onExpiredCallback: TimerExpiredCallback;
 
 	constructor() {
-		this._duration = {
+		this.setDuration({
 			minutes: BOARD_TIMER_MINUTES_DEFAULT,
 			seconds: BOARD_TIMER_SECONDS_DEFAULT
-		};
-		this._timeLeft = this._duration;
+		});
+		this.setTimeLeft(this.duration);
 	}
 
 	get state(): TimerStateType {
-		return { status: this.statusHelper.status, duration: this._duration, timeLeft: this.timeLeft };
+		return {
+			status: this.statusHelper.status,
+			previousStatus: this.statusHelper.previousStatus,
+			duration: this._duration,
+			timeLeft: this.timeLeft
+		};
 	}
 
 	get isRunning(): boolean {
@@ -40,22 +70,14 @@ export default class TimerHelper {
 		return this.statusHelper.isStopped;
 	}
 
-	setDuration(duration: TimeDto) {
-		this._duration = duration;
-	}
-
-	get duration(): TimeDto {
-		return this._duration;
+	get isPaused(): boolean {
+		return this.statusHelper.isPaused;
 	}
 
 	start(duration: TimeDto) {
 		this.setDuration(duration);
-		this._timeLeft = duration;
+		this.setTimeLeft(duration);
 		this.runTimer();
-	}
-
-	get timeLeft(): TimeDto {
-		return this._timeLeft;
 	}
 
 	pause() {
@@ -64,19 +86,19 @@ export default class TimerHelper {
 	}
 
 	stop() {
+		this.setTimeLeft(this.duration);
 		this.clearInterval();
-		this._timeLeft = this.duration;
 		this.statusHelper.stop();
+	}
+
+	resume() {
+		this.runTimer();
 	}
 
 	private clearInterval() {
 		if (this.interval) {
 			clearInterval(this.interval);
 		}
-	}
-
-	resume() {
-		this.runTimer();
 	}
 
 	private runTimer() {
@@ -100,9 +122,13 @@ export default class TimerHelper {
 		}
 	}
 
-	setTimerSyncIntervalAndCallback(interval = 15, callback: TimeLeftUpdateCallback) {
+	setTimerSyncIntervalAndCallback(interval = fifteenSeconds, callback: TimeLeftUpdateCallback) {
 		this.timerSyncInterval = interval;
 		this.onTimerSyncCallback = callback;
+	}
+
+	setIntervalAndCleanCallback(interval = oneHour, callback: CleanTimerCallback) {
+		setInterval(callback, interval);
 	}
 
 	private handleTimeUpdated() {

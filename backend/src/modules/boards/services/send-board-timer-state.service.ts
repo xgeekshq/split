@@ -20,7 +20,7 @@ export default class SendBoardTimerStateServiceImpl implements SendBoardTimerSta
 	) {}
 
 	sendBoardTimerState(boardTimerDto: BoardTimerDto) {
-		this.logger.log(`Will send state to client "${boardTimerDto.clientId})"`);
+		this.logger.log(`Will send timer state to client "${boardTimerDto.clientId})"`);
 
 		const boardTimer = this.boardTimerRepository.findBoardTimerByBoardId(boardTimerDto.boardId);
 
@@ -29,7 +29,13 @@ export default class SendBoardTimerStateServiceImpl implements SendBoardTimerSta
 		if (boardTimer?.timerHelper?.state) {
 			boardTimerState = { ...boardTimerDto, ...boardTimer.timerHelper.state };
 		} else {
-			boardTimerState = { ...boardTimerDto, status: null, duration: null, timeLeft: null };
+			boardTimerState = {
+				...boardTimerDto,
+				status: null,
+				previousStatus: null,
+				duration: null,
+				timeLeft: null
+			};
 		}
 
 		this.eventEmitter.emit(

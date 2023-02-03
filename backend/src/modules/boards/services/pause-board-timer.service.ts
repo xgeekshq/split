@@ -19,15 +19,16 @@ export default class PauseBoardTimerServiceImpl implements PauseBoardTimerServic
 	) {}
 
 	pauseTimer(boardTimeLeftDto: BoardTimerTimeLeftDto) {
-		this.logger.log(`Will pause timer. Board: "${boardTimeLeftDto.boardId})"`);
+		this.logger.log(`Will pause timer. Board: "${boardTimeLeftDto.boardId})`);
 
 		const boardTimer = this.boardTimerRepository.findBoardTimerByBoardId(boardTimeLeftDto.boardId);
 
 		if (boardTimer?.timerHelper?.isRunning) {
 			boardTimer.timerHelper.pause();
+
 			this.eventEmitter.emit(
 				BOARD_TIMER_SERVER_PAUSED,
-				new ServerPausedTimerEvent(boardTimeLeftDto)
+				new ServerPausedTimerEvent({ ...boardTimeLeftDto, ...boardTimer.timerHelper.state })
 			);
 		}
 	}

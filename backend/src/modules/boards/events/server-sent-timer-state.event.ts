@@ -8,16 +8,18 @@ export default class ServerSentTimerStateEvent {
 
 	boardId: string;
 	clientId: string;
+	status: TimerStatusDto;
+	previousStatus: TimerStatusDto;
 	duration: TimeDto;
 	timeLeft: TimeDto;
-	status: TimerStatusDto;
 
 	constructor(payload: BoardTimerStateDto) {
 		this.boardId = payload.boardId;
 		this.clientId = payload.clientId;
+		this.status = payload.status;
+		this.previousStatus = payload.status;
 		this.duration = payload.duration;
 		this.timeLeft = payload.timeLeft;
-		this.status = payload.status;
 
 		this.logger.log(`${ServerSentTimerStateEvent.name} emitted.`);
 	}

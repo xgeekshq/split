@@ -12,15 +12,16 @@ export default class AfterServerSentTimerStateSubscriber {
 
 	@OnEvent(BOARD_TIMER_SERVER_SENT_TIMER_STATE)
 	handleServerSentTimerStateEvent(payload: BoardTimerStateDto) {
-		this.logger.log(
-			`Socket handling "${BOARD_TIMER_SERVER_SENT_TIMER_STATE}". Client: "${payload.boardId})"`
-		);
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { clientId, boardId, ...timerState } = payload;
 
-		const { status, duration, timeLeft, clientId } = payload;
+		this.logger.log(
+			`Socket handling "${BOARD_TIMER_SERVER_SENT_TIMER_STATE}". Client: "${clientId})"`
+		);
 
 		this.socketService.sendEvent({
 			event: BOARD_TIMER_SERVER_SENT_TIMER_STATE,
-			payload: { status, duration, timeLeft },
+			payload: timerState,
 			to: clientId
 		});
 	}
