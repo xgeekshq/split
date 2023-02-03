@@ -19,6 +19,7 @@ import CenterMainBoard from './CenterMainBoard';
 import CountCards from './CountCards';
 import LeftArrow from './LeftArrow';
 import SubBoards from './SubBoards';
+import { Team } from '@/types/team/team';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',
@@ -92,6 +93,7 @@ type CardBodyProps = {
   isSAdmin?: boolean;
   socketId?: string;
   mainBoardTitle?: string;
+  mainBoardTeam?: Team;
 };
 
 const CardBody = React.memo<CardBodyProps>(
@@ -105,6 +107,7 @@ const CardBody = React.memo<CardBodyProps>(
     isSAdmin,
     socketId,
     mainBoardTitle,
+    mainBoardTeam,
   }) => {
     const { _id: id, columns, users, team, dividedBoards, isSubBoard } = board;
     const countDividedBoards = dividedBoardsCount || dividedBoards.length;
@@ -128,8 +131,10 @@ const CardBody = React.memo<CardBodyProps>(
 
       const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
 
-      if (team && !isSubBoard) {
-        myUser = team.users.find((user) => String(user.user?._id) === String(userId));
+      if (team || mainBoardTeam) {
+        myUser = (mainBoardTeam ?? team).users.find(
+          (user) => String(user.user?._id) === String(userId),
+        );
 
         const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
         const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
@@ -139,7 +144,7 @@ const CardBody = React.memo<CardBodyProps>(
       }
 
       return myUserIsOwnerMainBoard;
-    }, [isSAdmin, board.createdBy, userId, team, isSubBoard]);
+    }, [isSAdmin, board.createdBy, userId, team, mainBoardTeam]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
       e.preventDefault();
@@ -159,9 +164,20 @@ const CardBody = React.memo<CardBodyProps>(
           userId={userId}
           isSAdmin={isSAdmin}
           mainBoardTitle={board.title}
+          mainBoardTeam={!isSubBoard ? team : undefined}
         />
       ),
-      [countDividedBoards, isDashboard, board._id, board.title, socketId, userId, isSAdmin],
+      [
+        countDividedBoards,
+        isDashboard,
+        board._id,
+        board.title,
+        socketId,
+        userId,
+        isSAdmin,
+        isSubBoard,
+        team,
+      ],
     );
 
     const iconLockConditions =
