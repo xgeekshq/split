@@ -27,3 +27,5 @@ export const BOARD_TIMER_MINUTES_DEFAULT = 5;
 export const BOARD_TIMER_SECONDS_DEFAULT = 0;
 
 export const ONE_SECOND = 1000;
+
+export const ONE_HOUR = 1 * 60 * 60 * ONE_SECOND;
