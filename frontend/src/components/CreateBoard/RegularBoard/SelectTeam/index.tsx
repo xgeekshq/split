@@ -109,15 +109,16 @@ const SelectTeam = () => {
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}
+        css={{ width: '100%', height: '$64' }}
       >
-        <SelectTrigger>
+        <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
             <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
               {numberOfTeams === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
           </Flex>
-          <SelectIcon className="SelectIcon">
+          <SelectIcon className="SelectIcon" asChild>
             <Icon name="arrow-down" />
           </SelectIcon>
         </SelectTrigger>

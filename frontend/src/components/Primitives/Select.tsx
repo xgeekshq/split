@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { styled } from '@/styles/stitches/stitches.config';
+import { styled, CSS } from '@/styles/stitches/stitches.config';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 import Box from './Box';
 import Flex from './Flex';
@@ -10,15 +10,15 @@ export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  borderRadius: 4,
+  borderRadius: '$4',
   lineHeight: '$24',
   backgroundColor: '$transparent',
   color: '$primary800',
   width: '100%',
   height: '100%',
   cursor: 'pointer',
-  padding: '$24',
   boxSizing: 'border-box',
+  gap: '$8',
   '&[data-placeholder]': {
     fontSize: '$16',
     color: '$primary300',
@@ -36,6 +36,7 @@ const StyledContent = styled(SelectPrimitive.Content, {
   width: 'var(--radix-select-trigger-width)',
   maxHeight: 'var(--radix-select-content-available-height)',
   borderRadius: '5px',
+  overflow: 'auto',
 });
 
 export const SelectItem = styled(SelectPrimitive.Item, {
@@ -94,7 +95,11 @@ type Option = {
 type ContentProps = { options: Option[] };
 
 export const SelectContent: React.FC<ContentProps> = ({ options }) => (
-  <StyledContent position="popper" collisionPadding={100} className="SelectContent">
+  <StyledContent
+    position="popper"
+    collisionPadding={{ bottom: 100, top: 100 }}
+    className="SelectContent"
+  >
     <ScrollArea.Root className="ScrollAreaRoot" type="auto">
       <SelectPrimitive.Viewport asChild>
         <ScrollArea.Viewport>
@@ -112,12 +117,19 @@ export const SelectContent: React.FC<ContentProps> = ({ options }) => (
   </StyledContent>
 );
 
-type SelectProps = { children: ReactNode; disabled: boolean; hasError?: boolean; [x: string]: any };
+type SelectProps = {
+  children: ReactNode;
+  disabled: boolean;
+  hasError?: boolean;
+  css?: CSS;
+  [x: string]: any;
+};
 
 export const Select: React.FC<SelectProps> = ({
   children,
   disabled,
   hasError = false,
+  css,
   ...props
 }) => {
   const StyledBox = styled(Flex, Box, {});
@@ -125,8 +137,7 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <StyledBox
       css={{
-        width: '100%',
-        height: '$64',
+        ...css,
         borderRadius: '$4',
         backgroundColor: disabled ? 'transparent' : 'white',
         border: hasError ? '1px solid $dangerBase' : '1px solid $primary200',
