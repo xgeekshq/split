@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Icon from '@/components/icons/Icon';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import Button from '@/components/Primitives/Button';
@@ -8,7 +7,6 @@ import ListMembersDialog from '@/components/Teams/CreateTeam/ListMembersDialog';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import { BoardUserToAdd } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -30,34 +28,6 @@ const ParticipantsLayout: React.FC = ({ children }) => {
   const saveParticipants = (checkedUserList: UserList[]) => {
     const listOfUsers = [...boardParticipants];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
-    // const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
-
-    // const team = teamId as string;
-
-    // const addedUsers = selectedUsers.filter(
-    //   (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
-    // );
-
-    // const addedUsersToSend: BoardUserToAdd[] = addedUsers.map((user) => ({
-    //   user,
-    //   role: BoardUserRoles.MEMBER,
-    //   votesCount: 0,
-    // }));
-
-    // const removedUsers = listOfUsers.filter((boardUser) =>
-    //   unselectedUsers.some((user) => boardUser.user?._id === user._id),
-    // );
-    // const removedUsersIds = removedUsers.map((user) => user._id);
-
-    // if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {
-    //   const usersToUpdate: BoardUserAddAndRemove = {
-    //     addUsers: addedUsersToSend,
-    //     removeUsers: removedUsersIds,
-    //     team,
-    //   };
-
-    //   mutate(usersToUpdate);
-    // }
     const updatedListWithAdded = selectedUsers.map(
       (user) =>
         listOfUsers.find((member) => member.user._id === user._id) || {

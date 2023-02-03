@@ -31,8 +31,8 @@ const ListBoardsByTeam = ({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchBoardsByTeam = useInfiniteQuery(
-    ['boards', filteredTeam._id],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam._id),
+    ['boards', filteredTeam.id],
+    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam.id),
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -88,7 +88,7 @@ const ListBoardsByTeam = ({
   if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
+        <Flex key={filteredTeam.id} css={{ mb: '$24' }} direction="column">
           <Flex
             direction="column"
             css={{
@@ -100,7 +100,7 @@ const ListBoardsByTeam = ({
           >
             <TeamHeader team={filteredTeam} userId={userId} users={filteredTeam.users} />
           </Flex>
-          <EmptyTeamBoards teamId={filteredTeam._id} />
+          <EmptyTeamBoards teamId={filteredTeam.id} />
         </Flex>
       </ScrollableContent>
     );
@@ -113,7 +113,7 @@ const ListBoardsByTeam = ({
       dataByTeamAndDate={dataByTeamAndDate}
       scrollRef={scrollRef}
       onScroll={onScroll}
-      filter={filteredTeam._id}
+      filter={filteredTeam.id}
       isLoading={isLoading}
       socket={socket}
     />

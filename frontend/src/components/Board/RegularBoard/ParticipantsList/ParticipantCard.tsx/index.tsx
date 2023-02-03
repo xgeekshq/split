@@ -20,9 +20,6 @@ const ParticipantCard = React.memo<CardBodyProps>(({ member, isBoardCreator, isO
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
   const [usersList, setUsersListState] = useRecoilState(usersListState);
   const handleRemove = () => {
-    // const participantToRemove = boardParticipants.find(
-    //   (boardUser) => boardUser.user._id === member.user._id,
-    // ) as BoardUser;
     const updateParticipantsList = [...boardParticipants];
     const updateUsersList = [...usersList];
 
