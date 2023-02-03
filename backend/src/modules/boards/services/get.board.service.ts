@@ -120,7 +120,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				})
 				.populate({
 					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
+					select: '-__v -createdAt -id -columns.cards.text',
 					populate: [
 						{
 							path: 'users',
