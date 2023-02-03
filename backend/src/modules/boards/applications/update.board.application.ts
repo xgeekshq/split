@@ -23,4 +23,7 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 	updateColumn(boardId: string, column: UpdateColumnDto) {
 		return this.updateBoardService.updateColumn(boardId, column);
 	}
+	deleteCardsFromColumn(boardId: string, column: UpdateColumnDto) {
+		return this.updateBoardService.deleteCardsFromColumn(boardId, column);
+	}
 }

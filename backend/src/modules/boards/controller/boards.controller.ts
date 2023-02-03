@@ -341,4 +341,38 @@ export default class BoardsController {
 	updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
 		return this.updateBoardApp.updateColumn(boardId, columnData);
 	}
+
+	@ApiOperation({ summary: 'Delete all cards from a column on a board' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiBody({ type: ColumnDto })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Cards deleted successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(BoardUserGuard)
+	@Put(':boardId/column/:columnId/cards')
+	deleteCardsFromColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
+		return this.updateBoardApp.deleteCardsFromColumn(boardId, columnData);
+	}
 }

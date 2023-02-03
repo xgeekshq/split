@@ -11,4 +11,9 @@ export interface UpdateBoardApplicationInterface {
 		boardId: string,
 		column: UpdateColumnDto
 	): Promise<LeanDocument<BoardDocument> | null>;
+
+	deleteCardsFromColumn(
+		boardId: string,
+		column: UpdateColumnDto
+	): Promise<LeanDocument<BoardDocument> | null>;
 }

@@ -24,7 +24,7 @@ import Board, { BoardDocument } from '../schemas/board.schema';
 import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { BoardDataPopulate } from '../utils/populate-board';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Column from '../schemas/column.schema';
@@ -469,5 +469,66 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
 		return board;
+	}
+
+	async deleteCardsFromColumn(boardId: string, column: UpdateColumnDto) {
+		const boardSession = await this.boardModel.db.startSession();
+
+		boardSession.startTransaction();
+
+		try {
+			column.cards.forEach((cards) => {
+				cards.items.forEach(async (card) => {
+					const votesByUser = new Map<string, number>();
+
+					card.votes.forEach((userId) => {
+						if (!votesByUser.has(userId.toString())) {
+							votesByUser.set(userId.toString(), 1);
+						} else {
+							const count = votesByUser.get(userId.toString());
+
+							votesByUser.set(userId.toString(), count + 1);
+						}
+					});
+
+					votesByUser.forEach(async (votesCount, userId) => {
+						await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+					});
+				});
+			});
+
+			const board = this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId,
+						'columns._id': column._id
+					},
+					{
+						$set: {
+							'columns.$[column].cards': []
+						}
+					},
+					{
+						arrayFilters: [{ 'column._id': column._id }],
+						new: true
+					}
+				)
+				.populate(BoardDataPopulate)
+				.lean()
+				.exec();
+
+			if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+			if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
+
+			await boardSession.commitTransaction();
+
+			return board;
+		} catch (e) {
+			await boardSession.abortTransaction();
+		} finally {
+			await boardSession.endSession();
+		}
+		throw new BadRequestException(DELETE_FAILED);
 	}
 }
