@@ -59,7 +59,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
   const { data, isLoading } = fetchBoards;
 
-  const teamSocketId = data?.pages[0]?.boards[0]?.team?._id;
+  const teamSocketId = data?.pages[0]?.boards[0]?.team?.id;
 
   // socketId
   const { socket, queryClient } = useSocketBoardIO(teamSocketId);
@@ -82,10 +82,10 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?._id ?? `personal`}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?.id ?? `personal`}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
+          boardsTeamAndDate.set(`${board.team?.id ?? `personal`}`, new Map([[date, [board]]]));
           if (board.team) teams.set(`${board.team?.id}`, board.team);
           return;
         }

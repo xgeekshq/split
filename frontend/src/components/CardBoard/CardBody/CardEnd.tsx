@@ -99,7 +99,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
                 }}
               />
 
-              <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?._id} />
+              <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?.id} />
             </Flex>
           )}
         </Flex>
