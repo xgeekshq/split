@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import Team from '../entities/teams.schema';
 import { TYPES } from '../interfaces/types';
 import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
 import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -59,7 +60,9 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return this.teamUserRepository.findOneByField({ user: userId, team: teamId });
 	}
 
-	async getAllTeams() {
+	async getAllTeams(user: UserDto) {
+		if (!user.isSAdmin) throw new ForbiddenException();
+
 		const teams = await this.teamRepository.getAllTeams();
 
 		return teams.map((team) => {
