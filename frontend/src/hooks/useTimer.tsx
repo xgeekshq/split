@@ -19,25 +19,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import TimeDto from '../types/timer/time.dto';
 
-export interface TimerInterface {
-  minutes: string;
-  seconds: string;
-
-  isPaused(): boolean;
-  isRunning(): boolean;
-
-  incrementOneMinute(): void;
-  decrementOneMinute(): void;
-  incrementFiveSeconds(): void;
-  decrementFiveSeconds(): void;
-
-  startTimer(): void;
-  pauseTimer(): void;
-  stopTimer(): void;
-
-  timerVariant: 'show' | 'hidden';
-}
-
 interface TimerProps {
   boardId: string;
   isAdmin: boolean;
@@ -45,14 +26,19 @@ interface TimerProps {
   emitEvent: EmitEvent;
 }
 
-const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): TimerInterface => {
-  const [minutes, setMinutes] = useState<number>(5);
-  const [seconds, setSeconds] = useState<number>(0);
+const DEFAULT_TIMER_START_MINUTES = 5;
+const DEFAULT_TIMER_START_SECONDS = 0;
+const PROGRESS_WIDTH = 186;
+
+const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps) => {
+  const [minutes, setMinutes] = useState<number>(DEFAULT_TIMER_START_MINUTES || 5);
+  const [seconds, setSeconds] = useState<number>(DEFAULT_TIMER_START_SECONDS) || 0;
+  const [minutesLeft, setMinutesLeft] = useState<number>(DEFAULT_TIMER_START_MINUTES || 5);
+  const [secondsLeft, setSecondsLeft] = useState<number>(DEFAULT_TIMER_START_SECONDS) || 0;
+  const [progressWidth, setProgress] = useState<number>(PROGRESS_WIDTH);
+  const [status, setStatus] = useState<TimerStatus>();
   const [shallSendStatusUpdate, setShallSendStatusUpdate] = useState<boolean>(false);
   const [shallSendDurationUpdate, setShallSendDurationUpdate] = useState<boolean>(false);
-  const [minutesLeft, setMinutesLeft] = useState<number>(minutes);
-  const [secondsLeft, setSecondsLeft] = useState<number>(seconds);
-  const [status, setStatus] = useState<TimerStatus>();
   const [timerVariant, setTimerVariant] = useState<'show' | 'hidden'>('show');
 
   const timeToString = useCallback((time: number) => (time < 10 ? '0' : '') + time, []);
@@ -76,6 +62,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
     setSecondsLeft(seconds);
     setStatus(TimerStatus.STOPPED);
     setShallSendStatusUpdate(true);
+    setProgress(PROGRESS_WIDTH);
   }, [minutes, seconds]);
 
   useEffect(() => {
@@ -117,6 +104,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
       updateDuration(payload.duration);
       updateTimeLeft(payload.timeLeft);
       setStatus(TimerStatus.STOPPED);
+      setProgress(PROGRESS_WIDTH);
     });
 
     listenEvent(BOARD_TIMER_SERVER_TIME_LEFT_UPDATED, (payload: TimeDto) => {
@@ -156,6 +144,17 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
           } else {
             stopTimer();
           }
+          setProgress(() => {
+            const leftTime = minutesLeft * 60 + secondsLeft;
+
+            if ((isRunning || isPaused) && leftTime > 0) {
+              const duration = minutes * 60 + seconds;
+
+              return Math.round(PROGRESS_WIDTH - (1 - leftTime / duration) * PROGRESS_WIDTH);
+            }
+
+            return PROGRESS_WIDTH;
+          });
         } else if (isPaused()) {
           toggleTimerVariant();
         }
@@ -247,6 +246,7 @@ const useTimer = ({ boardId, isAdmin, listenEvent, emitEvent }: TimerProps): Tim
     stopTimer,
 
     timerVariant,
+    progressWidth: `${progressWidth}px`,
   };
 };
 

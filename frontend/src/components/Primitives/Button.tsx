@@ -279,7 +279,7 @@ const Button = styled('button', {
         },
       },
       xs: {
-        height: '$8',
+        height: '$10',
         fontWeight: '$bold',
         fontSize: '$12',
         lineHeight: '$1',

@@ -37,6 +37,7 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
     stopTimer,
 
     timerVariant,
+    progressWidth,
   } = useTimer({ boardId, isAdmin, emitEvent, listenEvent });
 
   const buildTimeButton = (action: string, onClick: any) => (
@@ -73,7 +74,7 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
   const buildStopButton = () => buildControlButton('stop', stopTimer);
 
   return (
-    <TimerContainer>
+    <TimerContainer variant={timerVariant} css={{ $$w: `${progressWidth}` }}>
       <ClockPanel variant={timerVariant}>
         {buildMinutesPanel()}:{buildSecondsPanel()}
       </ClockPanel>
