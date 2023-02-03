@@ -77,6 +77,14 @@ export const updateColumnRequest = (
     method: 'PUT',
     data: columnData,
   });
+
+export const deleteCardsFromColumnRequest = (
+  columnData: ColumnType & { boardId: string; socketId: string },
+): Promise<BoardType> =>
+  fetchData(`/boards/${columnData.boardId}/column/${columnData._id}/cards`, {
+    method: 'PUT',
+    data: columnData,
+  });
 // #endRegion
 
 // #region CARD
