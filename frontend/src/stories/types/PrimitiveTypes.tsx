@@ -38,3 +38,8 @@ export type ColorType =
 // Primitive/Popover
 export type PopoverVariantType = 'dark' | 'light';
 export type PopoverSizeType = 'sm' | 'md';
+
+// Primitive/RadioGroup
+export type RadioGroupDirectionType = 'row' | 'column';
+export type RadioGroupSizeType = 'sm' | 'md' | 'lg';
+export type RadioGroupFontWeightType = 'regular' | 'medium' | 'bold';
