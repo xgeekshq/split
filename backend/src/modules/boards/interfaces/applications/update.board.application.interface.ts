@@ -1,4 +1,5 @@
 import { LeanDocument } from 'mongoose';
+import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 import { UpdateColumnDto } from '../../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../../dto/update-board.dto';
 import { BoardDocument } from '../../schemas/board.schema';
@@ -14,6 +15,6 @@ export interface UpdateBoardApplicationInterface {
 
 	deleteCardsFromColumn(
 		boardId: string,
-		column: UpdateColumnDto
+		column: ColumnDeleteCardsDto
 	): Promise<LeanDocument<BoardDocument> | null>;
 }

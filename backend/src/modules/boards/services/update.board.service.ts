@@ -29,6 +29,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Column from '../schemas/column.schema';
 import ColumnDto from '../dto/column/column.dto';
+import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -471,8 +472,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return board;
 	}
 
-	async deleteCardsFromColumn(boardId: string, column: UpdateColumnDto) {
-		column.cards.forEach((cards) => {
+	async deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
+		const board = await this.boardModel.findById(boardId).exec();
+
+		if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+		const columnUpdate = board.columns.find((col) => String(col._id) === column.id)?.cards;
+
+		columnUpdate.forEach((cards) => {
 			cards.items.forEach(async (card) => {
 				const votesByUser = new Map<string, number>();
 
@@ -492,11 +499,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			});
 		});
 
-		const board = await this.boardModel
+		const updateBoard = await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: boardId,
-					'columns._id': column._id
+					'columns._id': column.id
 				},
 				{
 					$set: {
@@ -504,7 +511,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					}
 				},
 				{
-					arrayFilters: [{ 'column._id': column._id }],
+					arrayFilters: [{ 'column._id': column.id }],
 					new: true
 				}
 			)
@@ -512,10 +519,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
+		if (!updateBoard) throw new BadRequestException(UPDATE_FAILED);
 
 		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
-		return board;
+		return updateBoard;
 	}
 }
