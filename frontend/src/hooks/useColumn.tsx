@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import BoardType from '@/types/board/board';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { updateColumnRequest } from '@/api/boardService';
+import { deleteCardsFromColumnRequest, updateColumnRequest } from '@/api/boardService';
 import useBoardUtils from './useBoardUtils';
 
 const useColumn = () => {
@@ -67,8 +67,42 @@ const useColumn = () => {
     },
   });
 
+  const deleteCardsFromColumn = useMutation(deleteCardsFromColumnRequest, {
+    onMutate: async (data) => {
+      const prevBoard = await getPrevData(data.boardId);
+
+      if (prevBoard) {
+        const columnsWithUpdate = prevBoard.columns.map((column) =>
+          column._id === data._id
+            ? {
+                ...data,
+              }
+            : column,
+        );
+
+        updateBoardColumns(data.boardId, columnsWithUpdate);
+      }
+
+      return { previousBoard: prevBoard, data };
+    },
+    onSuccess: async (data) => {
+      const prevBoard = await getPrevData(data._id);
+
+      return { previousBoard: prevBoard, data };
+    },
+    onError: (_, variables) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      setToastState({
+        open: true,
+        content: 'Error updating the column',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   return {
     updateColumn,
+    deleteCardsFromColumn,
   };
 };
 

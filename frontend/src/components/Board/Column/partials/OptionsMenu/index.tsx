@@ -23,7 +23,11 @@ type OptionsMenuProps = {
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
-  handleDialogChange: (openName: boolean, openDelete: boolean) => void;
+  handleDialogChange: (
+    openName: boolean,
+    openDeleteColumn: boolean,
+    openDeleteCards: boolean,
+  ) => void;
   isDefaultText?: boolean;
 };
 
@@ -102,7 +106,7 @@ const OptionsMenu = ({
               <Icon name="boards" />
               <Text size="sm">Edit column name </Text>
             </PopoverItem>
-            <PopoverItem onClick={() => handleColorChange('$highlight4Light')}>
+            <PopoverItem onClick={() => handleDialogChange(false, false, true)}>
               <Icon name="recurring" />
               <Text size="sm">Empty column cards</Text>
             </PopoverItem>
@@ -118,7 +122,7 @@ const OptionsMenu = ({
                 disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
-            <PopoverItem onClick={() => handleDialogChange(false, true)}>
+            <PopoverItem onClick={() => handleDialogChange(false, true, false)}>
               <Icon name="trash-alt" />
               <Text size="sm">Delete column</Text>
             </PopoverItem>

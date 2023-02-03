@@ -14,6 +14,7 @@ import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
 import AlertDeleteColumn from './partials/AlertDeleteColumn';
+import AlertDeleteAllCards from './partials/AlertDeleteAllCards';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -44,16 +45,28 @@ const Column = React.memo<ColumMemoProps>(
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
-    const [openDialog, setOpenDialog] = useState({ columnName: false, deleteColumn: false });
+    const [openDialog, setOpenDialog] = useState({
+      columnName: false,
+      deleteColumn: false,
+      deleteCards: false,
+    });
     const [dialogType, setDialogType] = useState('ColumnName');
 
     const handleDialogNameChange = (open: boolean, type: string) => {
-      setOpenDialog({ columnName: open, deleteColumn: false });
+      setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
       setDialogType(type);
     };
 
-    const handleDialogChange = (openName: boolean, openDelete: boolean) => {
-      setOpenDialog({ columnName: openName, deleteColumn: openDelete });
+    const handleDialogChange = (
+      openName: boolean,
+      openDeleteColumn: boolean,
+      openDeleteCards: boolean,
+    ) => {
+      setOpenDialog({
+        columnName: openName,
+        deleteColumn: openDeleteColumn,
+        deleteCards: openDeleteCards,
+      });
     };
 
     const filteredCards = useCallback(() => {
@@ -203,6 +216,16 @@ const Column = React.memo<ColumMemoProps>(
           columnId={columnId}
           columnTitle={title}
           isOpen={openDialog.deleteColumn}
+          handleDialogChange={handleDialogChange}
+        />
+        <AlertDeleteAllCards
+          socketId={socketId}
+          boardId={boardId}
+          columnId={columnId}
+          columnTitle={title}
+          columnColor={color}
+          cards={cards}
+          isOpen={openDialog.deleteCards}
           handleDialogChange={handleDialogChange}
         />
       </>

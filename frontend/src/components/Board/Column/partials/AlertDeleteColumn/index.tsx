@@ -17,7 +17,11 @@ type AlertDeleteColumnProps = {
   columnId: string;
   columnTitle: string;
   isOpen: boolean;
-  handleDialogChange: (openName: boolean, openDelete: boolean) => void;
+  handleDialogChange: (
+    openName: boolean,
+    openDeleteColumn: boolean,
+    openDeleteCards: boolean,
+  ) => void;
 };
 const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
   columnId,
@@ -56,7 +60,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
 
   const boardData = initialData;
 
-  // Update Board/Column Hook
+  // Update Column Hook
   const {
     updateBoard: { mutate: mutateBoard },
   } = useBoard({ autoFetchBoard: false });
@@ -81,14 +85,14 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent
-        title="Merge board into main board"
-        handleClose={() => handleDialogChange(false, false)}
+        title="Delete column"
+        handleClose={() => handleDialogChange(false, false, false)}
       >
         <Text>Do you really want to delete the column &quot;{columnTitle}&quot;?</Text>
         <Flex gap="16" justify="end" css={{ mt: '$24' }}>
           <AlertDialogCancel
             variant="primaryOutline"
-            onClick={() => handleDialogChange(false, false)}
+            onClick={() => handleDialogChange(false, false, false)}
           >
             Cancel
           </AlertDialogCancel>
