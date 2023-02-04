@@ -172,7 +172,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
       </AlertDialogTrigger>
 
       <AlertDialogContent
-        css={{ left: '35% !important', top: '200px', flexDirection: 'column' }}
+        css={{ top: '200px', flexDirection: 'column' }}
         title="Quick edit sub-teams configurations"
       >
         <Flex>
