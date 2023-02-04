@@ -146,7 +146,7 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		const board = await this.deleteCardApp.delete(boardId, cardId, request.user._id);
+		const board = await this.deleteCardApp.delete(boardId, cardId);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
@@ -181,12 +181,7 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId, itemId } = params;
-		const board = await this.deleteCardApp.deleteFromCardGroup(
-			boardId,
-			cardId,
-			itemId,
-			request.user._id
-		);
+		const board = await this.deleteCardApp.deleteFromCardGroup(boardId, cardId, itemId);
 
 		if (!board) throw new BadRequestException(DELETE_FAILED);
 		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
