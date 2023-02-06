@@ -79,16 +79,15 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
-		const { responsible } = boardData;
-
 		const board = await this.boardModel.findById(boardId).exec();
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
 		}
 
-		// Destructuring board variables
+		// Destructuring board/boardData variables
 		const { isSubBoard } = board;
+		const { responsible } = boardData;
 
 		const currentResponsible = await this.getBoardResponsibleInfo(boardId);
 		const newResponsible: ResponsibleType = {
@@ -99,8 +98,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		/**
 		 * Validate if:
 		 * - have users on request
-		 * - is a sub-board
-		 * - and the logged user isn't the current responsible
+		 * - and the current responsible isn't the new responsible
 		 */
 		if (boardData.users && String(currentResponsible.id) !== String(newResponsible.id)) {
 			if (isSubBoard) {
@@ -173,43 +171,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		board.hideVotes = boardData.hideVotes;
 
 		/**
-		 * Validate if:
-		 * - have columns to delete
-		 * Returns the votes to the user
-		 */
-		if (boardData.deletedColumns && !isEmpty(boardData.deletedColumns)) {
-			const cardsToDelete = boardData.deletedColumns.flatMap((deletedColumnId: string) => {
-				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
-			});
-
-			await this.deleteCardService.deleteCardsFromColumn(boardId, cardsToDelete);
-		}
-
-		/**
-		 * Only the regular boards will have their columns updated
+		 * If the board is a regular, then updates its columns
 		 *
 		 * */
-
 		if (!isSubBoard && isEmpty(board.dividedBoards)) {
-			board.columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
-				if (col._id) {
-					const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
-
-					if (columnBoard) {
-						return [{ ...columnBoard, title: col.title }];
-					}
-
-					const columnToDelete = boardData.deletedColumns.some(
-						(colId) => colId === col._id.toString()
-					);
-
-					if (columnToDelete) {
-						return [];
-					}
-				}
-
-				return [{ ...col }];
-			}) as Column[];
+			board.columns = await this.updateRegularBoard(boardId, boardData, board);
 		}
 
 		/**
@@ -269,6 +235,48 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 
 		return updatedBoard;
+	}
+
+	async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: BoardDocument) {
+		/**
+		 * Validate if:
+		 * - have columns to delete
+		 * Returns the votes to the user
+		 */
+		if (boardData.deletedColumns && !isEmpty(boardData.deletedColumns)) {
+			const cardsToDelete = boardData.deletedColumns.flatMap((deletedColumnId: string) => {
+				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
+			});
+
+			await this.deleteCardService.deleteCardsFromColumn(boardId, cardsToDelete);
+		}
+
+		/**
+		 * Updates the columns
+		 *
+		 * */
+
+		const columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
+			if (col._id) {
+				const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
+
+				if (columnBoard) {
+					return [{ ...columnBoard, title: col.title }];
+				}
+
+				const columnToDelete = boardData.deletedColumns.some(
+					(colId) => colId === col._id.toString()
+				);
+
+				if (columnToDelete) {
+					return [];
+				}
+			}
+
+			return [{ ...col }];
+		}) as Column[];
+
+		return columns;
 	}
 
 	private async handleResponsibleSlackMessage(
