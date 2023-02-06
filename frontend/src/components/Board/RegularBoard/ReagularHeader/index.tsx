@@ -152,10 +152,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   ),
                 ) && (
                   <>
-                    <Separator
-                      css={{ height: '$24 !important', width: '1px' }}
-                      data-orientation="vertical"
-                    />
+                    <Separator orientation="vertical" size="lg" />
 
                     <Flex align="center" gap="10">
                       <Text color="primary300" size="sm">
@@ -177,7 +174,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            <Flex>
+            <Flex gap="24">
               <Flex align="center" gap="10">
                 {isParticipantsPage ? (
                   <Text size="sm">Participants</Text>
@@ -196,11 +193,8 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   userId={session!.user.id}
                 />
               </Flex>
-              <Flex align="center" gap="20" css={{ margin: '$20' }}>
-                <Separator
-                  css={{ height: '$24 !important', width: '1px' }}
-                  data-orientation="vertical"
-                />
+              <Flex align="center">
+                <Separator orientation="vertical" size="lg" />
               </Flex>
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">
