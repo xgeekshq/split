@@ -1,11 +1,11 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { mockListUsers } from './mocks/avatarGroup_listUsers';
 
 export default {
-  title: 'Primitives/AvatarGroup',
+  title: 'Primitives/Avatar/AvatarGroup',
   component: AvatarGroup,
   parameters: {
     controls: {

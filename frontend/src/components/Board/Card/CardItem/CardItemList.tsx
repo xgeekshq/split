@@ -40,12 +40,12 @@ const CardItemList: React.FC<CardItemListProps> = ({
       <Flex key={item._id} css={{ width: '100%' }} direction="column">
         {idx !== 0 && (
           <Flex align="center" css={{ width: '100%' }}>
-            <Separator css={{ backgroundColor: 'white' }} orientation="horizontal" />
+            <Separator css={{ backgroundColor: 'white' }} />
             <Icon
               css={{ width: '$14', height: '$14', borderRadius: '$round' }}
               name="double-vertical-separator"
             />
-            <Separator css={{ backgroundColor: 'white' }} orientation="horizontal" />
+            <Separator css={{ backgroundColor: 'white' }} />
           </Flex>
         )}
         <CardItem

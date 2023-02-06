@@ -18,7 +18,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -105,7 +105,7 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator css={{ height: '$14 !important' }} data-orientation="vertical" />
+                <Separator css={{ height: '$14' }} orientation="vertical" />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -169,7 +169,7 @@ const BoardHeader = () => {
           {!isEmpty(teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)) &&
             !isSubBoard && (
               <>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                <Separator orientation="vertical" size="lg" />
 
                 <Flex align="center" gap="10">
                   <Text color="primary300" size="sm">
@@ -192,7 +192,7 @@ const BoardHeader = () => {
               ),
             ) && (
               <>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                <Separator orientation="vertical" size="lg" />
 
                 <Flex align="center" gap="10">
                   <Text color="primary300" size="sm">
@@ -211,7 +211,7 @@ const BoardHeader = () => {
             )}
           {isSubBoard && (
             <>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Separator orientation="vertical" size="lg" />
 
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">

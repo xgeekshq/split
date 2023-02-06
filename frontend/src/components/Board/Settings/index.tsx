@@ -6,7 +6,7 @@ import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
 
 import Icon from '@/components/icons/Icon';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Separator from '@/components/Primitives/Separator';
@@ -472,15 +472,7 @@ const BoardSettings = ({
                           <Text color="primary300" css={{ mr: '$8' }}>
                             Responsible Lottery
                           </Text>
-                          <Separator
-                            orientation="vertical"
-                            css={{
-                              '&[data-orientation=vertical]': {
-                                height: '$12',
-                                width: 1,
-                              },
-                            }}
-                          />
+                          <Separator orientation="vertical" size="md" />
 
                           <Flex
                             align="center"

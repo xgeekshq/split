@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import Avatar, { AvatarButton } from '@/components/Primitives/Avatar';
+import Avatar, { AvatarButton } from '@/components/Primitives/Avatar/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { User } from '@/types/user/user';

@@ -69,7 +69,7 @@ const Content: React.FC<ContentProps> = ({ children, css, handleClose, title, ..
                 <Icon name="close" css={{ color: '$primary400' }} />
               </AlertDialogCancel>
             </StyledTitleContainer>
-            <Separator css={{ backgroundColor: '$primary100' }} />
+            <Separator />
           </>
         )}
         <StyledDescription>{children}</StyledDescription>
