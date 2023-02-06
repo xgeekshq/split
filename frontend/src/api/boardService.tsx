@@ -71,7 +71,7 @@ export const deleteBoardRequest = async ({
 // #endregion
 
 // #region PARTICIPANTS
-export const getBoardParticipants = (boardId: string): Promise<BoardUser[]> =>
+export const getBoardParticipantsRequest = (boardId: string): Promise<BoardUser[]> =>
   fetchData(`/boards/${boardId}/participants`, {
     method: 'GET',
   });
