@@ -8,7 +8,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/Primitives/AlertDialog';
-import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Flex';
 import Button from '@/components/Primitives/Button';
 
@@ -21,11 +20,6 @@ export default {
       exclude: ['ref', 'as', 'css'],
       sort: 'requiredFirst',
     },
-    docs: {
-      description: {
-        component: '', // Change main component description in docs page
-      },
-    },
   },
   args: {
     title: 'Alert Dialog Title',
@@ -36,7 +30,6 @@ export default {
 
 const Template: ComponentStory<typeof AlertDialog> = ({ children, ...args }) => (
   <AlertDialog>
-    <Sprite />
     {/* Button to Open the Dialog */}
     <AlertDialogTrigger asChild>
       <Button>Open Alert Dialog</Button>

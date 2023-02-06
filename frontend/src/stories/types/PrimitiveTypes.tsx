@@ -47,3 +47,6 @@ export type RadioGroupFontWeightType = 'regular' | 'medium' | 'bold';
 // Primitive/Separator
 export type SeparatorOrientationType = 'horizontal' | 'vertical';
 export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';
+
+// Primitive/Svg
+export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32;
