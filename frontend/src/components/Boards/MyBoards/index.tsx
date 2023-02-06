@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getBoardsRequest } from '@/api/boardService';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
-import { useSocketBoardIO } from '@/hooks/useSocketBoardIO';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
@@ -59,18 +58,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
   const { data, isLoading } = fetchBoards;
 
-  const teamSocketId = data?.pages[0]?.boards[0]?.team?._id;
-
-  // socketId
-  const { socket, queryClient } = useSocketBoardIO(teamSocketId);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on('teamId', () => {
-      queryClient.invalidateQueries(['boards']);
-    });
-  }, [socket, queryClient]);
-
   useEffect(() => {
     if (routerTeam) setFilterState(routerTeam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,15 +111,10 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
       <FilterBoards teamNames={teamNames} />
 
       {!['all', 'personal'].includes(filterState) && filteredTeam && (
-        <ListBoardsByTeam
-          filteredTeam={filteredTeam}
-          userId={userId}
-          isSuperAdmin={isSuperAdmin}
-          socket={socket}
-        />
+        <ListBoardsByTeam filteredTeam={filteredTeam} userId={userId} isSuperAdmin={isSuperAdmin} />
       )}
       {filterState === 'personal' && (
-        <ListPersonalBoards userId={userId} isSuperAdmin={isSuperAdmin} socket={socket} />
+        <ListPersonalBoards userId={userId} isSuperAdmin={isSuperAdmin} />
       )}
       {filterState === 'all' && (
         <ListBoards
@@ -143,7 +125,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
           onScroll={onScroll}
           filter={filterState}
           isLoading={isLoading}
-          socket={socket}
         />
       )}
     </>

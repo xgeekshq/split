@@ -5,7 +5,6 @@ import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { cardFooterBlur } from '@/helper/board/blurFilter';
 import { getCardVotes } from '@/helper/board/votes';
 import useVotes from '@/hooks/useVotes';
 import { BoardUser } from '@/types/board/board.user';
@@ -152,7 +151,6 @@ const CardFooter = ({
           align="center"
           gap="4"
           css={{
-            filter: cardFooterBlur(hideCards, createdBy, userId),
             maxWidth: '$226',
           }}
         >
@@ -183,13 +181,7 @@ const CardFooter = ({
       )}
       {!isItem && comments && (
         <Flex align="center" gap="10">
-          <Flex
-            align="center"
-            gap="2"
-            css={{
-              filter: cardFooterBlur(hideCards, createdBy, userId),
-            }}
-          >
+          <Flex align="center" gap="2">
             <Button
               isIcon
               variant="light"
@@ -220,7 +212,6 @@ const CardFooter = ({
             gap="2"
             css={{
               mr: '$10',
-              filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
             <Button
@@ -241,13 +232,7 @@ const CardFooter = ({
             </Button>
           </Flex>
 
-          <Flex
-            align="center"
-            gap="2"
-            css={{
-              filter: cardFooterBlur(hideCards, createdBy, userId),
-            }}
-          >
+          <Flex align="center" gap="2">
             <Button
               isIcon
               variant="light"
