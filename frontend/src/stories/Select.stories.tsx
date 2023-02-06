@@ -8,7 +8,6 @@ import {
   SelectIcon,
   SelectContent,
 } from '@/components/Primitives/Select';
-import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/icons/Icon';
@@ -57,7 +56,6 @@ export default {
 
 const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
   <Flex>
-    <Sprite />
     <Select disabled={disabled} hasError={hasError} css={{ width: '$300' }}>
       <SelectTrigger css={{ padding: '$16' }}>
         <Flex direction="column">
@@ -77,7 +75,6 @@ Default.storyName = 'Basic Usage';
 
 export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
   <Flex>
-    <Sprite />
     <Select disabled={disabled} hasError={hasError} css={{ width: '$300', height: '$64' }}>
       <SelectTrigger css={{ padding: '$16' }}>
         <Flex direction="column">
