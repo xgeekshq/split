@@ -162,7 +162,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       <Select
         disabled={numberOfTeams === 0}
         hasError={currentSelectTeamState === 'error'}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?._id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}
