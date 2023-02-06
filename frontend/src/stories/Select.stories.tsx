@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import {
@@ -75,10 +75,18 @@ Default.storyName = 'Basic Usage';
 
 export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
   <Flex>
-    <Select disabled={disabled} hasError={hasError} css={{ width: '$300', height: '$64' }}>
-      <SelectTrigger css={{ padding: '$16' }}>
+    <Select
+      disabled={disabled}
+      hasError={hasError}
+      css={{ width: '$300', height: '$64' }}
+      defaultValue={selectedItem}
+      onValueChange={(selectedOption: string) => {
+        setSelectedItem(selectedOption);
+      }}
+    >
+      <SelectTrigger css={{ padding: '$24' }}>
         <Flex direction="column">
-          <Text size="sm" color="primary300">
+          <Text size={selectedItem ? 'sm' : 'md'} color="primary300">
             Choose a fruit
           </Text>
           <SelectValue />

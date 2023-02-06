@@ -90,10 +90,7 @@ const Settings = () => {
           Configurations
         </StyledTextTab>
       </Flex>
-      <Separator
-        css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
-        orientation="horizontal"
-      />
+      <Separator css={{ position: 'relative', top: '-1px', zIndex: '-1' }} />
       {currentTab === 1 && <TeamSubTeamsConfigurations previousTeam={prevTeam} />}
       {currentTab === 2 && <BoardConfigurations />}
     </Flex>

@@ -23,7 +23,13 @@ type OptionsMenuProps = {
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
+  handleDialogChange: (
+    openName: boolean,
+    openDeleteColumn: boolean,
+    openDeleteCards: boolean,
+  ) => void;
   isDefaultText?: boolean;
+  socketId: string;
 };
 
 export const colors = [
@@ -44,12 +50,15 @@ const OptionsMenu = ({
   cardText,
   boardId,
   isDefaultText,
+  socketId,
   setOpenDialogName,
+  handleDialogChange,
 }: OptionsMenuProps) => {
   const [openPopover, setOpenPopover] = useState(false);
 
+  // Update Board Hook
   const {
-    updateColumn: { mutate },
+    updateColumn: { mutate: mutateColumn },
   } = useColumn();
 
   const handleDefaultTextCheck = () => {
@@ -61,9 +70,10 @@ const OptionsMenu = ({
       cardText,
       boardId,
       isDefaultText: !isDefaultText,
+      socketId,
     };
 
-    mutate(column);
+    mutateColumn(column);
   };
 
   const handleColorChange = (selectedColor: string) => {
@@ -75,9 +85,10 @@ const OptionsMenu = ({
       cardText,
       boardId,
       isDefaultText,
+      socketId,
     };
 
-    mutate(column);
+    mutateColumn(column);
   };
 
   const handleOpen = (type: string) => {
@@ -99,7 +110,7 @@ const OptionsMenu = ({
               <Icon name="boards" />
               <Text size="sm">Edit column name </Text>
             </PopoverItem>
-            <PopoverItem onClick={() => handleColorChange('$highlight4Light')}>
+            <PopoverItem onClick={() => handleDialogChange(false, false, true)}>
               <Icon name="recurring" />
               <Text size="sm">Empty column cards</Text>
             </PopoverItem>
@@ -115,11 +126,11 @@ const OptionsMenu = ({
                 disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
-            <PopoverItem>
+            <PopoverItem onClick={() => handleDialogChange(false, true, false)}>
               <Icon name="trash-alt" />
               <Text size="sm">Delete column</Text>
             </PopoverItem>
-            <Separator orientation="horizontal" css={{ mt: '$5' }} />
+            <Separator css={{ mt: '$5' }} />
             <Flex gap={8} css={{ pb: '$8', pt: '$20', pl: '$18' }}>
               <Text size="xs" color="primary800" fontWeight="medium">
                 Cards color

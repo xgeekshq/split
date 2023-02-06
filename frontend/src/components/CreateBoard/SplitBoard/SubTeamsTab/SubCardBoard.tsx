@@ -7,7 +7,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/icons/Icon';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
@@ -17,7 +17,7 @@ import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 
 interface SubCardBoardProps {
   index: number;
@@ -94,10 +94,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
         <Flex align="center" justify="start" css={{ width: '50%' }}>
           <Flex align="center" css={{ minWidth: '$160' }}>
             <Text css={{ mr: '$8' }}>Responsible Lottery</Text>
-            <Separator
-              css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
-              orientation="vertical"
-            />
+            <Separator orientation="vertical" size="md" />
           </Flex>
 
           <Flex align="center" css={{ minWidth: 0 }}>

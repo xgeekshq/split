@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { User } from '@/types/user/user';

@@ -2,7 +2,7 @@ import HeaderBannerIcon from '@/components/icons/HeaderBanner';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Separator from '../Separator';
+import Separator from '@/components/Primitives/Separator';
 import { StyledHeader } from './styles';
 
 type Props = { firstName: string; lastName: string; email: string };
@@ -15,7 +15,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
       <Flex align="center" css={{ p: '$40' }} justify="center">
         <HeaderBannerIcon />
       </Flex>
-      <Separator />
+      <Separator css={{ backgroundColor: '$primary600' }} />
       <Flex
         align="center"
         gap="12"
@@ -75,7 +75,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
           </Text>
         </Flex>
       </Flex>
-      <Separator />
+      <Separator css={{ backgroundColor: '$primary600' }} />
     </StyledHeader>
   );
 };
