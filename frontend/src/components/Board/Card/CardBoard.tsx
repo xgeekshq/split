@@ -106,7 +106,7 @@ const CardBoard = React.memo<CardBoardProps>(
         key={card._id}
         draggableId={card._id}
         index={index}
-        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || hideCards}
+        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || (isMainboard && hideCards)}
       >
         {(provided) => (
           <Flex
