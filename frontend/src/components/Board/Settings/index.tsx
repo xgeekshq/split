@@ -77,7 +77,7 @@ const BoardSettings = ({
   } = useRecoilValue(boardInfoState);
 
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
-  const deletedColumns = useRecoilValue(deletedColumnsState);
+  const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
 
   // State used to change values
   const initialData: UpdateBoardType = {
@@ -340,7 +340,11 @@ const BoardSettings = ({
 
     window?.addEventListener('keydown', keyDownHandler);
 
-    return () => window?.removeEventListener('keydown', keyDownHandler);
+    return () => {
+      window?.removeEventListener('keydown', keyDownHandler);
+      setEditColumns([]);
+      setDeletedColumns([]);
+    };
   }, []);
 
   const handleAddColumn = () => {
