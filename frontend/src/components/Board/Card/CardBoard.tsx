@@ -123,6 +123,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 backgroundColor: color,
                 py: !isCardGroup ? '$16' : '$8',
                 mb: isCardGroup ? '$12' : 'none',
+                filter: cardBlur(hideCards, card as CardType, userId),
               }}
             >
               {editing && !isSubmited && (
@@ -154,13 +155,18 @@ const CardBoard = React.memo<CardBoardProps>(
                     </Flex>
                   )}
                   {!isCardGroup && (
-                    <Flex css={{ mb: '$14', '& > div': { zIndex: 2 } }} justify="between">
+                    <Flex
+                      css={{
+                        mb: '$14',
+                        '& > div': { zIndex: 2 },
+                      }}
+                      justify="between"
+                    >
                       <Text
                         size="md"
                         css={{
                           wordBreak: 'break-word',
                           whiteSpace: 'pre-line',
-                          filter: cardBlur(hideCards, card as CardType, userId),
                         }}
                       >
                         {card.text}
