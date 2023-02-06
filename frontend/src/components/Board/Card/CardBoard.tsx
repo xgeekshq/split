@@ -256,6 +256,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 columnId={colId}
                 isDefaultText={isDefaultText}
                 hasAdminRole={hasAdminRole}
+                isMainboard={isMainboard}
               />
             )}
           </Flex>
