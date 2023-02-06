@@ -43,3 +43,6 @@ export type PopoverSizeType = 'sm' | 'md';
 export type RadioGroupDirectionType = 'row' | 'column';
 export type RadioGroupSizeType = 'sm' | 'md' | 'lg';
 export type RadioGroupFontWeightType = 'regular' | 'medium' | 'bold';
+
+// Primitive/Svg
+export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32;
