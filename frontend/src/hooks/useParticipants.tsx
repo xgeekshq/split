@@ -1,6 +1,10 @@
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { getBoardParticipantsRequest } from '@/api/boardService';
-import { useQuery } from '@tanstack/react-query';
+import {
+  addAndRemoveBoardParticipantsRequest,
+  getBoardParticipantsRequest,
+} from '@/api/boardService';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -27,8 +31,32 @@ const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps)
     },
   );
 
+  const addAndRemoveBoardParticipants = useMutation(addAndRemoveBoardParticipantsRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+      setToastState({
+        open: true,
+        content: 'The board was successfully updated.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: (error: AxiosError) => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+      const errorMessage = error.response?.data.message.includes('max votes')
+        ? error.response?.data.message
+        : 'Error updating the board';
+
+      setToastState({
+        open: true,
+        content: errorMessage,
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   return {
     fetchBoardParticipants,
+    addAndRemoveBoardParticipants,
   };
 };
 

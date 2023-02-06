@@ -19,10 +19,6 @@ import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-// interface BoardParticipantsProps {
-//   boardId: string;
-// }
-
 const BoardParticipants = () => {
   const { data: session } = useSession({ required: true });
   const setToastState = useSetRecoilState(toastState);

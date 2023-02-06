@@ -4,13 +4,16 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import ListMembersDialog from '@/components/Teams/CreateTeam/ListMembersDialog';
+import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { BoardUserAddAndRemove, BoardUserToAdd } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -20,14 +23,46 @@ const ParticipantsLayout: React.FC = ({ children }) => {
     setIsOpen(true);
   };
   const setToastState = useSetRecoilState(toastState);
+  const {
+    addAndRemoveBoardParticipants: { mutate },
+  } = useParticipants({ autoFetchBoardParticipants: false });
+  const router = useRouter();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
   const { data: session } = useSession({ required: true });
+  const boardId = router.query.boardId as string;
 
   const saveParticipants = (checkedUserList: UserList[]) => {
     const listOfUsers = [...boardParticipants];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+    const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
+
+    const addedUsers = selectedUsers.filter(
+      (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
+    );
+
+    const addedBoardUsersToSend: BoardUserToAdd[] = addedUsers.map((user) => ({
+      user,
+      role: BoardUserRoles.MEMBER,
+      votesCount: 0,
+    }));
+
+    const removedBoardUsers = listOfUsers.filter((boardUser) =>
+      unselectedUsers.some((user) => boardUser.user?._id === user._id),
+    );
+    const removedBoardUsersIds: string[] = removedBoardUsers.map((user) => user._id as string);
+
+    if (addedBoardUsersToSend.length > 0 || removedBoardUsersIds.length > 0) {
+      const boardUsersToUpdate: BoardUserAddAndRemove = {
+        addBoardUsers: addedBoardUsersToSend,
+        removeBoardUsers: removedBoardUsersIds,
+        boardId,
+      };
+
+      mutate(boardUsersToUpdate);
+    }
+
     const updatedListWithAdded = selectedUsers.map(
       (user) =>
         listOfUsers.find((member) => member.user._id === user._id) || {

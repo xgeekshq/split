@@ -28,3 +28,8 @@ export interface BoardUserDto {
   user: string;
   role: BoardUserRoles;
 }
+export interface BoardUserAddAndRemove {
+  addBoardUsers: BoardUserToAdd[];
+  removeBoardUsers: string[];
+  boardId: string;
+}
