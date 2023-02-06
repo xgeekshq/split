@@ -30,9 +30,7 @@ export default class BoardTimerRepository {
 	}
 
 	findBoardTimerByBoardId(boardId: string): BoardTimer | null {
-		const found = this.boardTimers.find((boardTimer) => boardTimer.boardId === boardId);
-
-		return found;
+		return this.boardTimers.find((boardTimer) => boardTimer.boardId === boardId);
 	}
 
 	removeTimer(boardId: string): void {
