@@ -106,7 +106,7 @@ const CardBoard = React.memo<CardBoardProps>(
         key={card._id}
         draggableId={card._id}
         index={index}
-        isDragDisabled={isSubmited || hideCards}
+        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || hideCards}
       >
         {(provided) => (
           <Flex
@@ -176,24 +176,25 @@ const CardBoard = React.memo<CardBoardProps>(
                       >
                         {card.text}
                       </Text>
-                      {!isSubmited && (userId === card?.createdBy?._id || hasAdminRole) && (
-                        <PopoverCardSettings
-                          boardId={boardId}
-                          cardGroupId={card._id}
-                          columnId={colId}
-                          firstOne={false}
-                          handleDeleteCard={handleDeleting}
-                          handleEditing={handleEditing}
-                          hideCards={hideCards}
-                          isItem={false}
-                          item={card}
-                          itemId={card.items[0]._id}
-                          newPosition={0}
-                          socketId={socketId}
-                          userId={userId}
-                          hasAdminRole={hasAdminRole}
-                        />
-                      )}
+                      {!isSubmited &&
+                        ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                          <PopoverCardSettings
+                            boardId={boardId}
+                            cardGroupId={card._id}
+                            columnId={colId}
+                            firstOne={false}
+                            handleDeleteCard={handleDeleting}
+                            handleEditing={handleEditing}
+                            hideCards={hideCards}
+                            isItem={false}
+                            item={card}
+                            itemId={card.items[0]._id}
+                            newPosition={0}
+                            socketId={socketId}
+                            userId={userId}
+                            hasAdminRole={hasAdminRole}
+                          />
+                        )}
                     </Flex>
                   )}
                   {card.items && isCardGroup && (
