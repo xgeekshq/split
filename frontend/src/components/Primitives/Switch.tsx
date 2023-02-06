@@ -3,43 +3,7 @@ import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from './Flex';
-
-const StyledSwitch = styled(SwitchPrimitive.Root, {
-  all: 'unset',
-  display: 'flex',
-  backgroundColor: '$primary200',
-  borderRadius: '9999px',
-  position: 'relative',
-  cursor: 'pointer',
-  WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
-  '&[data-state="checked"]': { backgroundColor: '$successBase' },
-  boxSizing: 'border-box',
-  variants: {
-    variant: {
-      xs: {
-        flex: '0 0 $sizes$24',
-        width: '$24',
-        height: '$14',
-      },
-      sm: {
-        flex: '0 0 $sizes$35',
-        width: '$35',
-        height: '$20',
-      },
-      md: { flex: '0 0 $sizes$42', width: '$42', height: '$24' },
-      disabled: {
-        '&[data-state="checked"]': { backgroundColor: '$successBase', opacity: 0.5 },
-        cursor: 'none',
-        flex: '0 0 $sizes$35',
-        width: '$35',
-        height: '$20',
-      },
-    },
-  },
-  defaultVariants: {
-    variant: 'md',
-  },
-});
+import Icon from '../icons/Icon';
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   justifyContent: 'center',
@@ -47,23 +11,94 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   top: '50%',
   position: 'absolute',
   backgroundColor: 'white',
-  borderRadius: '9999px',
+  borderRadius: '$round',
   transition: 'transform 100ms',
   transform: 'translate(5%, -50%)',
   willChange: 'transform',
   cursor: 'pointer',
-  '&[data-state="checked"]': { transform: 'translate(90%, -50%)' },
+  '&[data-state="checked"]': {
+    transform: 'translate(90%, -50%)',
+  },
+  '&[data-disabled]': {
+    cursor: 'not-allowed',
+  },
+});
+
+type SwitchThumbProps = {
+  checked: boolean;
+  icon: string;
+};
+
+const SwitchThumb = ({ checked, icon }: SwitchThumbProps) => (
+  <StyledThumb>
+    {checked && (
+      <Icon
+        name={icon}
+        css={{
+          color: '$successBase !important',
+        }}
+      />
+    )}
+  </StyledThumb>
+);
+
+const StyledSwitch = styled(SwitchPrimitive.Root, {
+  all: 'unset',
+  display: 'flex',
+  backgroundColor: '$primary200',
+  borderRadius: '$pill',
+  position: 'relative',
+  cursor: 'pointer',
+  WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
+  boxSizing: 'border-box',
+  '&[data-state="checked"]': {
+    backgroundColor: '$successBase',
+  },
+  '&[data-disabled]': {
+    cursor: 'not-allowed',
+    opacity: 0.5,
+  },
   variants: {
     variant: {
       xs: {
-        width: '$12',
-        height: '$12',
+        flex: '0 0 $sizes$24',
+        width: '$24',
+        height: '$14',
+        '& span': {
+          width: '$12',
+          height: '$12',
+        },
+        '& svg': {
+          height: '$8 ',
+          width: '$8',
+        },
       },
       sm: {
-        width: '$17',
-        height: '$17',
+        flex: '0 0 $sizes$35',
+        width: '$35',
+        height: '$20',
+        '& span': {
+          width: '$17',
+          height: '$17',
+        },
+        '& svg': {
+          height: '$10 ',
+          width: '$10',
+        },
       },
-      md: { width: '$21', height: '$21' },
+      md: {
+        flex: '0 0 $sizes$42',
+        width: '$42',
+        height: '$24',
+        '& span': {
+          width: '$21',
+          height: '$21',
+        },
+        '& svg': {
+          height: '$12 ',
+          width: '$12',
+        },
+      },
     },
   },
   defaultVariants: {
@@ -71,5 +106,20 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   },
 });
 
-export const Switch = StyledSwitch;
-export const SwitchThumb = StyledThumb;
+type SwitchProps = {
+  checked: boolean;
+  variant?: 'xs' | 'sm' | 'md';
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  required?: boolean;
+  name?: string;
+  defaultChecked?: boolean;
+  asChild?: boolean;
+  icon?: string;
+};
+
+export const Switch = ({ checked, icon = 'check', ...props }: SwitchProps) => (
+  <StyledSwitch checked={checked} {...props}>
+    <SwitchThumb checked={checked} icon={icon} />
+  </StyledSwitch>
+);

@@ -102,7 +102,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
         <Flex align="center" gap="24">
           {!isEmpty(teamUsers) && (
             <Link href={`/teams/${team.id}`}>
-              <Flex>
+              <Flex gap="24" align="center">
                 <Flex align="center" gap="10">
                   <StyledBoardTitle>
                     <Text
@@ -130,11 +130,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
                 ) && (
                   <>
-                    <Separator
-                      css={{ height: '$24 !important', width: '1px' }}
-                      data-orientation="vertical"
-                      size="lg"
-                    />
+                    <Separator orientation="vertical" size="lg" />
 
                     <Flex align="center" css={{ width: '100%' }} gap="10">
                       <Text color="primary300" size="sm">
