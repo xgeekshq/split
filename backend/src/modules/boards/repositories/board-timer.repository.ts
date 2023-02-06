@@ -18,9 +18,7 @@ export default class BoardTimerRepository {
 			return boardTimerFound;
 		}
 
-		const newBoardTimer = this.createTimer(boardId, clientId);
-
-		return newBoardTimer;
+		return this.createTimer(boardId, clientId);
 	}
 
 	private createTimer(boardId: string, clientId: string) {
