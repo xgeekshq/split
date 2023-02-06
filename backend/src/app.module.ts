@@ -19,6 +19,7 @@ import SocketModule from 'src/modules/socket/socket.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
 import { VotesModule } from 'src/modules/votes/votes.module';
+import { ColumnsModule } from './modules/columns/columns.module';
 
 const imports = [
 	AppConfigModule,
@@ -28,6 +29,7 @@ const imports = [
 	BoardsModule,
 	SocketModule,
 	CardsModule,
+	ColumnsModule,
 	CommentsModule,
 	VotesModule,
 	EmailModule,

@@ -34,6 +34,6 @@ import CardsController from './controller/cards.controller';
 		mergeCardApplication,
 		unmergeCardApplication
 	],
-	exports: [getCardService]
+	exports: [getCardService, deleteCardService]
 })
 export class CardsModule {}

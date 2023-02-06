@@ -12,6 +12,7 @@ import { DeleteCardService } from '../interfaces/services/delete.card.service.in
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import CardItem from '../schemas/card.item.schema';
+import Card from '../schemas/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -194,5 +195,27 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 
 		return null;
+	}
+
+	async deleteCardsFromColumn(boardId: string, cards: Card[]) {
+		cards.forEach((cards) => {
+			cards.items.forEach(async (card) => {
+				const votesByUser = new Map<string, number>();
+
+				card.votes.forEach((userId) => {
+					if (!votesByUser.has(userId.toString())) {
+						votesByUser.set(userId.toString(), 1);
+					} else {
+						const count = votesByUser.get(userId.toString());
+
+						votesByUser.set(userId.toString(), count + 1);
+					}
+				});
+
+				votesByUser.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			});
+		});
 	}
 }

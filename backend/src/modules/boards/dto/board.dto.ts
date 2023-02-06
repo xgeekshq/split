@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import { CheckUniqueUsers } from 'src/libs/validators/check-unique-users';
 import BoardUserDto from './board.user.dto';
-import ColumnDto from './column/column.dto';
+import ColumnDto from '../../columns/dto/column.dto';
 
 export default class BoardDto {
 	@ApiPropertyOptional()

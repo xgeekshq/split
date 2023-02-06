@@ -4,7 +4,7 @@ import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import BaseModel from 'src/libs/models/base.model';
 import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
-import Column, { ColumnSchema } from './column.schema';
+import Column, { ColumnSchema } from '../../columns/schemas/column.schema';
 
 export type BoardDocument = Board & Document;
 
