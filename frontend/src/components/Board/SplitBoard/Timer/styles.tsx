@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react';
+import { styled } from '@/styles/stitches/stitches.config';
 
 const TimerContainer = styled('div', {
   alignItems: 'center',
