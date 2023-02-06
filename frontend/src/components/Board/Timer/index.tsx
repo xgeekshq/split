@@ -5,7 +5,7 @@ import {
   TimePanel,
   TimePanelText,
   TimerContainer,
-} from '@/components/Board/SplitBoard/Timer/styles';
+} from '@/components/Board/Timer/styles';
 import Icon from '@/components/icons/Icon';
 import Button from '@/components/Primitives/Button';
 import useTimer from '@/hooks/useTimer';

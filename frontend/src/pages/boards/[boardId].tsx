@@ -14,7 +14,7 @@ import { BoardSettings } from '@/components/Board/Settings';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
-import Timer from '@/components/Board/SplitBoard/Timer';
+import Timer from '@/components/Board/Timer';
 import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import AlertBox from '@/components/Primitives/AlertBox';
@@ -202,7 +202,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   if (!recoilBoard) return <LoadingPage />;
 
-  if (isRegularOrPersonalBoard) return <RegularBoard socketId={socketId} />;
+  if (isRegularOrPersonalBoard)
+    return <RegularBoard socketId={socketId} emitEvent={emitEvent} listenEvent={listenEvent} />;
 
   return board && userId && socketId ? (
     <>
