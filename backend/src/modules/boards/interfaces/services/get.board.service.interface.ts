@@ -1,3 +1,4 @@
+import { BoardUserDocument } from './../../schemas/board.user.schema';
 import { Document, LeanDocument } from 'mongoose';
 import Board, { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
@@ -51,5 +52,5 @@ export interface GetBoardServiceInterface {
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
 
-	getBoardParticipants(boardId: string): Promise<LeanDocument<any>[]>;
+	getBoardParticipants(boardId: string): Promise<LeanDocument<BoardUserDocument>[]>;
 }
