@@ -22,7 +22,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ teams, userId, isLoading }) =
   >
     <Flex direction="column" gap="8">
       {teams.map((team: Team) => (
-        <CardBody key={team._id} team={team} userId={userId} isTeamPage />
+        <CardBody key={team.id} team={team} userId={userId} isTeamPage />
       ))}
     </Flex>
 

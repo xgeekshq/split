@@ -24,8 +24,8 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchBoardsByTeam = useInfiniteQuery(
-    ['boards', filteredTeam._id],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam._id),
+    ['boards', filteredTeam.id],
+    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam.id),
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -51,11 +51,11 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team._id}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team.id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id}`, new Map([[date, [board]]]));
-          teams.set(`${board.team?._id}`, board.team);
+          boardsTeamAndDate.set(`${board.team?.id}`, new Map([[date, [board]]]));
+          teams.set(`${board.team?.id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -81,7 +81,7 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
   if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
+        <Flex key={filteredTeam.id} css={{ mb: '$24' }} direction="column">
           <Flex
             direction="column"
             css={{
@@ -93,7 +93,7 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
           >
             <TeamHeader team={filteredTeam} userId={userId} users={filteredTeam.users} />
           </Flex>
-          <EmptyTeamBoards teamId={filteredTeam._id} />
+          <EmptyTeamBoards teamId={filteredTeam.id} />
         </Flex>
       </ScrollableContent>
     );
@@ -106,7 +106,7 @@ const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTe
       dataByTeamAndDate={dataByTeamAndDate}
       scrollRef={scrollRef}
       onScroll={onScroll}
-      filter={filteredTeam._id}
+      filter={filteredTeam.id}
       isLoading={isLoading}
     />
   );

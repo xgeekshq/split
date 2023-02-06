@@ -18,6 +18,10 @@ import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
+import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
+import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
+import { useMemo, useState } from 'react';
+import { User } from '@/types/user/user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   BoardCounter,
@@ -35,6 +39,7 @@ import {
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
   const router = useRouter();
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   // Atoms
   const boardData = useRecoilValue(boardInfoState);
@@ -96,6 +101,19 @@ const BoardHeader = () => {
     });
   }
 
+  const handleOpenDialog = () => {
+    setDialogIsOpen(!dialogIsOpen);
+  };
+
+  const boardMembers = useMemo(
+    () =>
+      users.map((member) => ({
+        ...member,
+        user: member.user as User,
+      })),
+    [users],
+  );
+
   return (
     <StyledHeader>
       <Flex align="center" gap="20" justify="between">
@@ -105,7 +123,10 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator css={{ height: '$14' }} orientation="vertical" />
+                <Separator
+                  css={{ height: '$14 !important', width: '1px' }}
+                  data-orientation="vertical"
+                />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -144,90 +165,135 @@ const BoardHeader = () => {
             )}
           </TitleSection>
         </Flex>
-        <Flex align="center" gap="24">
-          <Flex align="center" gap="10">
-            <Text
-              color="primary800"
-              size="sm"
-              fontWeight="medium"
-              css={{
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-              }}
-            >
-              {isSubBoard ? `Sub-team ${boardNumber}` : team.name}
-            </Text>
-            <AvatarGroup
-              isBoardsPage
-              listUsers={isSubBoard ? users : teamUsers}
-              responsible={false}
-              teamAdmins={false}
-              userId={session!.user.id}
+        {isSubBoard ? (
+          <Flex align="center" gap="24">
+            <Flex align="center" gap="10">
+              <StyledBoardTitle onClick={handleOpenDialog}>
+                <Text
+                  color="primary800"
+                  size="sm"
+                  fontWeight="medium"
+                  css={{
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {`Sub-team ${boardNumber}`}
+                </Text>
+              </StyledBoardTitle>
+              <AvatarGroup
+                isBoardsPage
+                listUsers={users}
+                responsible={false}
+                teamAdmins={false}
+                userId={session!.user.id}
+                isSubBoardPage
+              />
+            </Flex>
+            <Separator
+              css={{ height: '$24 !important', width: '1px' }}
+              data-orientation="vertical"
+            />
+
+            <Flex align="center" gap="10">
+              <Text color="primary300" size="sm">
+                Responsible
+              </Text>
+              <AvatarGroup
+                isBoardsPage
+                responsible
+                listUsers={users}
+                teamAdmins={false}
+                userId={session!.user.id}
+                isSubBoardPage
+              />
+            </Flex>
+            <ListBoardMembers
+              boardMembers={boardMembers}
+              isOpen={dialogIsOpen}
+              setIsOpen={setDialogIsOpen}
+              isSubBoard
             />
           </Flex>
-          {!isEmpty(teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)) &&
-            !isSubBoard && (
-              <>
-                <Separator orientation="vertical" size="lg" />
-
-                <Flex align="center" gap="10">
-                  <Text color="primary300" size="sm">
-                    Team admins
-                  </Text>
-                  <AvatarGroup
-                    isBoardsPage
-                    teamAdmins
-                    listUsers={isSubBoard ? users : teamUsers}
-                    responsible={false}
-                    userId={session!.user.id}
-                  />
-                </Flex>
-              </>
-            )}
-          {!isSubBoard &&
-            !isEmpty(
-              boardData.board.team.users.filter(
-                (user: TeamUser) => user.role === TeamUserRoles.STAKEHOLDER,
-              ),
-            ) && (
-              <>
-                <Separator orientation="vertical" size="lg" />
-
-                <Flex align="center" gap="10">
-                  <Text color="primary300" size="sm">
-                    Stakeholders
-                  </Text>
-                  <AvatarGroup
-                    isBoardsPage
-                    stakeholders
-                    listUsers={isSubBoard ? users : teamUsers}
-                    responsible={false}
-                    teamAdmins={false}
-                    userId={session!.user.id}
-                  />
-                </Flex>
-              </>
-            )}
-          {isSubBoard && (
-            <>
-              <Separator orientation="vertical" size="lg" />
-
+        ) : (
+          <Link href={`/teams/${team.id}`}>
+            <Flex align="center" gap="24">
               <Flex align="center" gap="10">
-                <Text color="primary300" size="sm">
-                  Responsible
-                </Text>
+                <StyledBoardTitle>
+                  <Text
+                    color="primary800"
+                    size="sm"
+                    fontWeight="medium"
+                    css={{
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {team.name}
+                  </Text>
+                </StyledBoardTitle>
                 <AvatarGroup
                   isBoardsPage
-                  responsible
-                  listUsers={users}
+                  listUsers={teamUsers}
+                  responsible={false}
                   teamAdmins={false}
                   userId={session!.user.id}
                 />
               </Flex>
-            </>
-          )}
-        </Flex>
+              {!isEmpty(
+                teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
+              ) && (
+                <>
+                  <Separator
+                    css={{ height: '$24 !important', width: '1px' }}
+                    data-orientation="vertical"
+                  />
+
+                  <Flex align="center" gap="10">
+                    <Text color="primary300" size="sm">
+                      Team admins
+                    </Text>
+                    <AvatarGroup
+                      isBoardsPage
+                      teamAdmins
+                      listUsers={teamUsers}
+                      responsible={false}
+                      userId={session!.user.id}
+                    />
+                  </Flex>
+                </>
+              )}
+              {!isEmpty(
+                boardData.board.team.users.filter(
+                  (user: TeamUser) => user.role === TeamUserRoles.STAKEHOLDER,
+                ),
+              ) && (
+                <>
+                  <Separator
+                    css={{ height: '$24 !important', width: '1px' }}
+                    data-orientation="vertical"
+                  />
+
+                  <Flex align="center" gap="10">
+                    <Text color="primary300" size="sm">
+                      Stakeholders
+                    </Text>
+                    <AvatarGroup
+                      isBoardsPage
+                      stakeholders
+                      listUsers={teamUsers}
+                      responsible={false}
+                      teamAdmins={false}
+                      userId={session!.user.id}
+                    />
+                  </Flex>
+                </>
+              )}
+            </Flex>
+          </Link>
+        )}
       </Flex>
 
       {!isSubBoard && (

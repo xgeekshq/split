@@ -17,6 +17,7 @@ import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
 import {
   boardInfoState,
+  boardParticipantsState,
   deletedColumnsState,
   editColumnsState,
   newBoardState,
@@ -28,9 +29,10 @@ import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import { GetBoardResponse } from '@/types/board/board';
 import { BoardSettings } from '@/components/Board/Settings';
-import BoardHeader from '@/components/Board/SplitBoard/Header';
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import RegularBoard from '@/components/Board/RegularBoard';
+import { BoardUser } from '@/types/board/board.user';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -47,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
-    // TODO: adapt boardId to accept personal boards :)
+
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
     const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
@@ -99,6 +101,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Recoil States
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
+  const setBoardParticipants = useSetRecoilState(boardParticipantsState);
   const setEditColumns = useSetRecoilState(editColumnsState);
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
@@ -133,8 +136,23 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       setRecoilBoard(data);
       setEditColumns(data.board.columns);
       setDeletedColumns([]);
+
+      const boardUsers: BoardUser[] = [...data.board.users];
+
+      // this insures that the team creator stays always in first
+      const userAdminIndex = boardUsers.findIndex((member) => member.user._id === session?.user.id);
+
+      boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
+      setBoardParticipants(boardUsers);
     }
-  }, [data, setDeletedColumns, setEditColumns, setRecoilBoard]);
+  }, [
+    data,
+    session?.user.id,
+    setDeletedColumns,
+    setEditColumns,
+    setBoardParticipants,
+    setRecoilBoard,
+  ]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(

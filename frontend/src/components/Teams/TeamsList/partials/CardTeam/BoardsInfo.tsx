@@ -19,7 +19,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
           <Link
             href={{
               pathname: `/boards/new`,
-              query: { team: team._id },
+              query: { team: team.id },
             }}
           >
             <StyledBoardTitle>
@@ -53,7 +53,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
       <Link
         href={{
           pathname: `/boards`,
-          query: { team: team._id },
+          query: { team: team.id },
         }}
       >
         <StyledBoardTitle>
