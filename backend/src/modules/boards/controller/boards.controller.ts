@@ -205,6 +205,30 @@ export default class BoardsController {
 		return board;
 	}
 
+	@ApiOperation({ summary: 'Retrieve participants of a board by board id' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiOkResponse({ type: BoardDto, description: 'Board Participants retrieved successfully!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Board not found!'
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get(':boardId/participants')
+	async getBoardParticipants(@Param() { boardId }: BaseParam) {
+		return this.getBoardApp.getBoardParticipants(boardId);
+	}
+
 	@ApiOperation({ summary: 'Update a specific board' })
 	@ApiParam({ type: String, name: 'boardId', required: true })
 	@ApiBody({ type: BoardDto })

@@ -1,6 +1,7 @@
 import { Document, LeanDocument } from 'mongoose';
 import Board, { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
+// import { BoardUserDocument } from '../../schemas/board.user.schema';
 
 export interface GetBoardServiceInterface {
 	getUserBoardsOfLast3Months(
@@ -49,4 +50,6 @@ export interface GetBoardServiceInterface {
 	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
+
+	getBoardParticipants(boardId: string): Promise<LeanDocument<any>[]>;
 }
