@@ -31,9 +31,7 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
     const haveError = useRecoilValue(createBoardError);
 
     useEffect(() => {
-      const isTeamsValid = Array.isArray(teams) && teams.length > 0;
-
-      if (isTeamsValid && selectedTeam) {
+      if (selectedTeam) {
         const isStakeholder = (userTeam: TeamUser): boolean =>
           userTeam.role === TeamUserRoles.STAKEHOLDER;
         const getStakeholder = ({ user }: TeamUser): User => user;

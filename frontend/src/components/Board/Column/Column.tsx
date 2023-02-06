@@ -13,6 +13,8 @@ import SortMenu from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import AlertDeleteColumn from './partials/AlertDeleteColumn';
+import AlertDeleteAllCards from './partials/AlertDeleteAllCards';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -43,12 +45,28 @@ const Column = React.memo<ColumMemoProps>(
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
-    const [openDialogName, setOpenDialogName] = useState(false);
+    const [openDialog, setOpenDialog] = useState({
+      columnName: false,
+      deleteColumn: false,
+      deleteCards: false,
+    });
     const [dialogType, setDialogType] = useState('ColumnName');
 
     const handleDialogNameChange = (open: boolean, type: string) => {
-      setOpenDialogName(open);
+      setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
       setDialogType(type);
+    };
+
+    const handleDialogChange = (
+      openName: boolean,
+      openDeleteColumn: boolean,
+      openDeleteCards: boolean,
+    ) => {
+      setOpenDialog({
+        columnName: openName,
+        deleteColumn: openDeleteColumn,
+        deleteCards: openDeleteCards,
+      });
     };
 
     const filteredCards = useCallback(() => {
@@ -123,8 +141,10 @@ const Column = React.memo<ColumMemoProps>(
                         columnId={columnId}
                         boardId={boardId}
                         setOpenDialogName={handleDialogNameChange}
+                        handleDialogChange={handleDialogChange}
                         isDefaultText={isDefaultText}
                         color={color}
+                        socketId={socketId}
                       />
                     )}
                   </Flex>
@@ -182,8 +202,8 @@ const Column = React.memo<ColumMemoProps>(
         </OuterContainer>
         <UpdateColumnDialog
           boardId={boardId}
-          isOpen={openDialogName}
-          setIsOpen={setOpenDialogName}
+          isOpen={openDialog.columnName}
+          setIsOpen={handleDialogChange}
           columnId={columnId}
           columnTitle={title}
           columnColor={color}
@@ -191,6 +211,21 @@ const Column = React.memo<ColumMemoProps>(
           cardText={cardText}
           isDefaultText={isDefaultText}
           type={dialogType}
+          socketId={socketId}
+        />
+        <AlertDeleteColumn
+          socketId={socketId}
+          columnId={columnId}
+          columnTitle={title}
+          isOpen={openDialog.deleteColumn}
+          handleDialogChange={handleDialogChange}
+        />
+        <AlertDeleteAllCards
+          socketId={socketId}
+          boardId={boardId}
+          columnId={columnId}
+          isOpen={openDialog.deleteCards}
+          handleDialogChange={handleDialogChange}
         />
       </>
     );

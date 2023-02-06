@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
-import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
+import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
 import Icon from '@/components/icons/Icon';
@@ -306,24 +306,26 @@ const BoardHeader = () => {
               } of {dividedBoards.length} sub-team boards merged
             </BoardCounter>
           </PopoverTrigger>
-          <StyledPopoverContent>
-            <Flex direction="column">
-              {dividedBoards.map((board: BoardType) => (
-                <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
-                  <p>{board.title}</p>
+          <PopoverPortal>
+            <StyledPopoverContent>
+              <Flex direction="column">
+                {dividedBoards.map((board: BoardType) => (
+                  <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
+                    <p>{board.title}</p>
 
-                  <div>
-                    {board.submitedAt ? 'Merged' : 'Unmerged'}
-                    <MergeIconContainer isMerged={!!board.submitedAt}>
-                      <Icon name="merge" />
-                    </MergeIconContainer>{' '}
-                  </div>
-                </StyledPopoverItem>
-              ))}
-            </Flex>
+                    <div>
+                      {board.submitedAt ? 'Merged' : 'Unmerged'}
+                      <MergeIconContainer isMerged={!!board.submitedAt}>
+                        <Icon name="merge" />
+                      </MergeIconContainer>{' '}
+                    </div>
+                  </StyledPopoverItem>
+                ))}
+              </Flex>
 
-            <StyledPopoverArrow />
-          </StyledPopoverContent>
+              <StyledPopoverArrow />
+            </StyledPopoverContent>
+          </PopoverPortal>
         </Popover>
       )}
     </StyledHeader>

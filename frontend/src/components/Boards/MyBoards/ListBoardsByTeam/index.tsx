@@ -8,7 +8,6 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
-import { Socket } from 'socket.io-client';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 import EmptyTeamBoards from './EmptyTeamBoards';
@@ -18,15 +17,9 @@ interface ListBoardsByTeamProps {
   filteredTeam: Team;
   userId: string;
   isSuperAdmin: boolean;
-  socket: Socket | null;
 }
 
-const ListBoardsByTeam = ({
-  filteredTeam,
-  userId,
-  isSuperAdmin,
-  socket,
-}: ListBoardsByTeamProps) => {
+const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTeamProps) => {
   const setToastState = useSetRecoilState(toastState);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -115,7 +108,6 @@ const ListBoardsByTeam = ({
       onScroll={onScroll}
       filter={filteredTeam.id}
       isLoading={isLoading}
-      socket={socket}
     />
   );
 };

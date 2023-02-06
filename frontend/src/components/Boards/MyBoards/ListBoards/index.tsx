@@ -7,7 +7,6 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/icons/Icon';
 import { teamsListState } from '@/store/team/atom/team.atom';
-import { Socket } from 'socket.io-client';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -26,11 +25,10 @@ interface ListBoardsProps {
   onScroll: () => void;
   filter: string;
   isLoading: boolean;
-  socket: Socket | null;
 }
 
 const ListBoards = React.memo<ListBoardsProps>(
-  ({ userId, isSuperAdmin, dataByTeamAndDate, scrollRef, onScroll, filter, isLoading, socket }) => {
+  ({ userId, isSuperAdmin, dataByTeamAndDate, scrollRef, onScroll, filter, isLoading }) => {
     const currentDate = new Date().toDateString();
     const allTeamsList = useRecoilValue(teamsListState);
     const isTeamAdmin = (boards: Map<string, BoardType[]>) => {
@@ -121,7 +119,6 @@ const ListBoards = React.memo<ListBoardsProps>(
                             dividedBoardsCount={board.dividedBoards.length}
                             isDashboard={false}
                             isSAdmin={isSuperAdmin}
-                            socketId={socket?.id}
                             userId={userId}
                           />
                         ))}
