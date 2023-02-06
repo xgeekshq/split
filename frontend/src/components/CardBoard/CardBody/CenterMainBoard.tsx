@@ -19,8 +19,9 @@ const CenterMainBoard = ({
       Sub-team boards{' '}
     </Text>
     <Separator
-      css={{ ml: '$8', backgroundColor: '$primary300', height: '$12 !important' }}
+      css={{ ml: '$8', backgroundColor: '$primary300' }}
       orientation="vertical"
+      size="md"
     />
     <Text color="primary800" css={{ display: 'flex', ml: '$8' }} size="md">
       {countDividedBoards}{' '}

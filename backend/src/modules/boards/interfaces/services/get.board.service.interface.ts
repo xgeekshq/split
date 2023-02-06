@@ -21,7 +21,7 @@ export interface GetBoardServiceInterface {
 		size?: number
 	): Promise<BoardsAndPage | null>;
 
-	getBoardFromRepo(boardId: string): Promise<LeanDocument<BoardDocument> | null>;
+	getBoardFromRepo(boardId: string): Promise<Board | null>;
 
 	getBoardData(boardId: string): Promise<Board>;
 

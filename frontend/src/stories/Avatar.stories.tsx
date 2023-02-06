@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 
 const FLEX_CONTROLS = [
   'align',
@@ -15,7 +15,7 @@ const FLEX_CONTROLS = [
 ];
 
 export default {
-  title: 'Primitives/Avatar',
+  title: 'Primitives/Avatar/Avatar',
   component: Avatar,
   parameters: {
     controls: {

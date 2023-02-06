@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { commentBlur } from '@/helper/board/blurFilter';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
@@ -32,7 +31,6 @@ const Comment: React.FC<CommentProps> = React.memo(
     boardId,
     socketId,
     isSubmited,
-    hideCards,
     userId,
     columnId,
     isDefaultText,
@@ -74,7 +72,6 @@ const Comment: React.FC<CommentProps> = React.memo(
               <Text
                 size="xs"
                 css={{
-                  filter: commentBlur(hideCards, comment, userId),
                   wordBreak: 'break-word',
                   whiteSpace: 'pre-line',
                 }}
@@ -103,7 +100,6 @@ const Comment: React.FC<CommentProps> = React.memo(
                   size="xs"
                   fontWeight="medium"
                   css={{
-                    filter: commentBlur(hideCards, comment, userId),
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',

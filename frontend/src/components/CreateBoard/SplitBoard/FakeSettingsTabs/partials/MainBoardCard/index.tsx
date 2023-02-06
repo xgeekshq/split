@@ -4,7 +4,7 @@ import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.c
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/icons/Icon';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
@@ -29,10 +29,7 @@ const FakeMainBoardCard = () => (
           <Text color="primary300" css={{ mr: '$8' }} size="sm">
             Sub-teams/-boards
           </Text>
-          <Separator
-            css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
-            orientation="vertical"
-          />
+          <Separator orientation="vertical" size="md" />
           <Text css={{ ml: '$8' }}>2</Text>
           <Flex css={{ ml: '$12' }} gap="4">
             <Flex
@@ -118,12 +115,7 @@ const FakeMainBoardCard = () => (
             <Text heading="5">Sub-team board 1</Text>
             <Flex align="center">
               <Text css={{ ml: '$40', mr: '$8' }}>Responsible Lottery</Text>
-              <Separator
-                orientation="vertical"
-                css={{
-                  '&[data-orientation=vertical]': { height: '$12', width: 1 },
-                }}
-              />
+              <Separator orientation="vertical" size="md" />
               <Flex
                 align="center"
                 justify="center"
@@ -187,12 +179,7 @@ const FakeMainBoardCard = () => (
             <Text heading="5">Sub-team board 2</Text>
             <Flex align="center">
               <Text css={{ ml: '$40', mr: '$8' }}>Responsible Lottery</Text>
-              <Separator
-                orientation="vertical"
-                css={{
-                  '&[data-orientation=vertical]': { height: '$12', width: 1 },
-                }}
-              />
+              <Separator orientation="vertical" size="md" />
               <Flex
                 align="center"
                 justify="center"

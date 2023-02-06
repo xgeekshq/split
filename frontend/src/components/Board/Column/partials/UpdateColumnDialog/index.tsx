@@ -24,10 +24,11 @@ type UpdateColumnNameProps = {
   columnColor: string;
   cards: CardType[];
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  setIsOpen: (openName: boolean, openDeleteColumn: boolean, openDeleteCards: boolean) => void;
   cardText?: string;
   isDefaultText?: boolean;
   type: string;
+  socketId: string;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
@@ -43,6 +44,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   setIsOpen,
   isDefaultText,
   type,
+  socketId,
 }) => {
   const {
     updateColumn: { mutate },
@@ -72,7 +74,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClose = () => {
-    setIsOpen(false);
+    setIsOpen(false, false, false);
   };
 
   const handleConfirm = (title: string, text: string) => {
@@ -84,6 +86,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
       cardText: text,
       boardId,
       isDefaultText: type === 'ColumnName' ? isDefaultText : false,
+      socketId,
     };
 
     mutate(columnUpdate);

@@ -110,7 +110,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(
 				oldBoardId
 			);
-			const oldBoard = await this.getBoardService.getBoardData(oldBoardId);
+			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);

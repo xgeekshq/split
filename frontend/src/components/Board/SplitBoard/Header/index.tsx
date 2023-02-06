@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
-import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
+import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
 import Icon from '@/components/icons/Icon';
@@ -18,7 +18,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -105,7 +105,7 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator css={{ height: '$14 !important' }} data-orientation="vertical" />
+                <Separator css={{ height: '$14' }} orientation="vertical" />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -169,7 +169,7 @@ const BoardHeader = () => {
           {!isEmpty(teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)) &&
             !isSubBoard && (
               <>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                <Separator orientation="vertical" size="lg" />
 
                 <Flex align="center" gap="10">
                   <Text color="primary300" size="sm">
@@ -192,7 +192,7 @@ const BoardHeader = () => {
               ),
             ) && (
               <>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                <Separator orientation="vertical" size="lg" />
 
                 <Flex align="center" gap="10">
                   <Text color="primary300" size="sm">
@@ -211,7 +211,7 @@ const BoardHeader = () => {
             )}
           {isSubBoard && (
             <>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Separator orientation="vertical" size="lg" />
 
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">
@@ -240,24 +240,26 @@ const BoardHeader = () => {
               } of {dividedBoards.length} sub-team boards merged
             </BoardCounter>
           </PopoverTrigger>
-          <StyledPopoverContent>
-            <Flex direction="column">
-              {dividedBoards.map((board: BoardType) => (
-                <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
-                  <p>{board.title}</p>
+          <PopoverPortal>
+            <StyledPopoverContent>
+              <Flex direction="column">
+                {dividedBoards.map((board: BoardType) => (
+                  <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
+                    <p>{board.title}</p>
 
-                  <div>
-                    {board.submitedAt ? 'Merged' : 'Unmerged'}
-                    <MergeIconContainer isMerged={!!board.submitedAt}>
-                      <Icon name="merge" />
-                    </MergeIconContainer>{' '}
-                  </div>
-                </StyledPopoverItem>
-              ))}
-            </Flex>
+                    <div>
+                      {board.submitedAt ? 'Merged' : 'Unmerged'}
+                      <MergeIconContainer isMerged={!!board.submitedAt}>
+                        <Icon name="merge" />
+                      </MergeIconContainer>{' '}
+                    </div>
+                  </StyledPopoverItem>
+                ))}
+              </Flex>
 
-            <StyledPopoverArrow />
-          </StyledPopoverContent>
+              <StyledPopoverArrow />
+            </StyledPopoverContent>
+          </PopoverPortal>
         </Popover>
       )}
     </StyledHeader>

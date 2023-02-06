@@ -6,7 +6,6 @@ import AddCardOrComment from '@/components/Board/AddCardOrComment';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { cardItemBlur } from '@/helper/board/blurFilter';
 import { CardItemType } from '@/types/card/cardItem';
 import CardFooter from '../CardFooter';
 import DeleteCard from '../DeleteCard';
@@ -76,7 +75,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                 css={{
                   wordBreak: 'break-word',
                   whiteSpace: 'pre-line',
-                  filter: cardItemBlur(hideCards, item as CardItemType, userId),
                 }}
               >
                 {item.text}
@@ -86,7 +84,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                   css={{
                     position: 'relative',
                     top: firstOne ? '-35px' : 0,
-                    filter: cardItemBlur(hideCards, item as CardItemType, userId),
                   }}
                 >
                   <Icon

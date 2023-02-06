@@ -86,7 +86,7 @@ const RegularBoard = ({ socketId }: RegularBoardProps) => {
     <>
       <RegularBoardHeader />
       <Container direction="column">
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="between">
+        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
           {hasAdminRole && !board?.submitedAt && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">

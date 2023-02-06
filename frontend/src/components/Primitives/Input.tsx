@@ -187,6 +187,7 @@ interface InputProps extends StyledInpupProps {
   currentValue?: string;
   maxChars?: string;
   showCount?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -205,6 +206,7 @@ const Input: React.FC<InputProps> = ({
   maxChars,
   min,
   showCount,
+  onChange,
 }) => {
   Input.defaultProps = {
     state: undefined,
@@ -308,6 +310,7 @@ const Input: React.FC<InputProps> = ({
             inputRef.current = e;
           }}
           onFocus={clearErrorCode}
+          onChange={onChange}
         />
         <PlaceholderText as="label" data-iconposition={iconPosition} htmlFor={id}>
           {placeholder}

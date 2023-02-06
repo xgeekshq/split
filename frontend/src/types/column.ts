@@ -57,4 +57,9 @@ export type ColumnDragItem = {
   type: 'COLUMN';
 };
 
+export type ColumnDeleteCards = {
+  id: string;
+  socketId: string;
+};
+
 export default ColumnType;

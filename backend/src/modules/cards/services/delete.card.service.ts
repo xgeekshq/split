@@ -75,7 +75,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 	}
 
-	async delete(boardId: string, cardId: string, userId: string) {
+	async delete(boardId: string, cardId: string) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
@@ -88,7 +88,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					},
 					{
 						$pull: {
-							'columns.$[].cards': { _id: cardId, createdBy: userId }
+							'columns.$[].cards': { _id: cardId }
 						}
 					},
 					{ new: true }
@@ -146,7 +146,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		if (!board) throw Error(UPDATE_FAILED);
 	}
 
-	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string, userId: string) {
+	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string) {
 		const session = await this.boardModel.db.startSession();
 		session.startTransaction();
 		try {
@@ -172,8 +172,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 					{
 						$pull: {
 							'columns.$.cards.$[card].items': {
-								_id: cardItemId,
-								createdBy: userId
+								_id: cardItemId
 							}
 						}
 					},
