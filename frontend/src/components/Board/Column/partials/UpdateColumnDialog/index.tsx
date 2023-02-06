@@ -28,6 +28,7 @@ type UpdateColumnNameProps = {
   cardText?: string;
   isDefaultText?: boolean;
   type: string;
+  socketId: string;
 };
 
 const StyledForm = styled('form', Flex, { width: '100%', backgroundColor: 'transparent' });
@@ -43,6 +44,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   setIsOpen,
   isDefaultText,
   type,
+  socketId,
 }) => {
   const {
     updateColumn: { mutate },
@@ -84,6 +86,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
       cardText: text,
       boardId,
       isDefaultText: type === 'ColumnName' ? isDefaultText : false,
+      socketId,
     };
 
     mutate(columnUpdate);

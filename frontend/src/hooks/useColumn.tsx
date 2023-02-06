@@ -3,6 +3,7 @@ import BoardType from '@/types/board/board';
 import ColumnType from '@/types/column';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { deleteCardsFromColumnRequest, updateColumnRequest } from '@/api/boardService';
+import { BoardUser } from '@/types/board/board.user';
 import useBoardUtils from './useBoardUtils';
 
 const useColumn = () => {
@@ -17,7 +18,7 @@ const useColumn = () => {
     return prevData?.board;
   };
 
-  const updateBoardColumns = (id: string, columns: ColumnType[]) => {
+  const updateBoard = (id: string, columns: ColumnType[], users: BoardUser[]) => {
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(id),
       (old: { board: BoardType } | undefined) => {
@@ -26,6 +27,7 @@ const useColumn = () => {
             board: {
               ...old.board,
               columns,
+              users,
             },
           };
 
@@ -47,13 +49,15 @@ const useColumn = () => {
             : column,
         );
 
-        updateBoardColumns(data.boardId, columnsWithUpdate);
+        updateBoard(data.boardId, columnsWithUpdate, prevBoard.users);
       }
 
       return { previousBoard: prevBoard, data };
     },
     onSuccess: async (data) => {
       const prevBoard = await getPrevData(data._id);
+
+      updateBoard(data._id, data.columns, data.users);
 
       return { previousBoard: prevBoard, data };
     },
@@ -68,8 +72,11 @@ const useColumn = () => {
   });
 
   const deleteCardsFromColumn = useMutation(deleteCardsFromColumnRequest, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(['board', { id: data._id }]);
+    onSuccess: async (data) => {
+      const prevBoard = await getPrevData(data._id);
+      updateBoard(data._id, data.columns, data.users);
+
+      return { previousBoard: prevBoard, data };
     },
     onError: (_, variables) => {
       queryClient.invalidateQueries(getBoardQuery(variables.boardId));

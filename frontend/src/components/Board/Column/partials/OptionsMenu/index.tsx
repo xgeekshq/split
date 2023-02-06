@@ -29,6 +29,7 @@ type OptionsMenuProps = {
     openDeleteCards: boolean,
   ) => void;
   isDefaultText?: boolean;
+  socketId: string;
 };
 
 export const colors = [
@@ -49,6 +50,7 @@ const OptionsMenu = ({
   cardText,
   boardId,
   isDefaultText,
+  socketId,
   setOpenDialogName,
   handleDialogChange,
 }: OptionsMenuProps) => {
@@ -68,6 +70,7 @@ const OptionsMenu = ({
       cardText,
       boardId,
       isDefaultText: !isDefaultText,
+      socketId,
     };
 
     mutateColumn(column);
@@ -82,6 +85,7 @@ const OptionsMenu = ({
       cardText,
       boardId,
       isDefaultText,
+      socketId,
     };
 
     mutateColumn(column);

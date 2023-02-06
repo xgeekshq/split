@@ -144,6 +144,7 @@ const Column = React.memo<ColumMemoProps>(
                         handleDialogChange={handleDialogChange}
                         isDefaultText={isDefaultText}
                         color={color}
+                        socketId={socketId}
                       />
                     )}
                   </Flex>
@@ -210,6 +211,7 @@ const Column = React.memo<ColumMemoProps>(
           cardText={cardText}
           isDefaultText={isDefaultText}
           type={dialogType}
+          socketId={socketId}
         />
         <AlertDeleteColumn
           socketId={socketId}
