@@ -29,6 +29,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import Column from '../schemas/column.schema';
 import ColumnDto from '../dto/column/column.dto';
+import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -469,5 +470,59 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
 		return board;
+	}
+
+	async deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
+		const board = await this.boardModel.findById(boardId).exec();
+
+		if (!board) throw new BadRequestException(UPDATE_FAILED);
+
+		const columnUpdate = board.columns.find((col) => String(col._id) === column.id)?.cards;
+
+		columnUpdate.forEach((cards) => {
+			cards.items.forEach(async (card) => {
+				const votesByUser = new Map<string, number>();
+
+				card.votes.forEach((userId) => {
+					if (!votesByUser.has(userId.toString())) {
+						votesByUser.set(userId.toString(), 1);
+					} else {
+						const count = votesByUser.get(userId.toString());
+
+						votesByUser.set(userId.toString(), count + 1);
+					}
+				});
+
+				votesByUser.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			});
+		});
+
+		const updateBoard = await this.boardModel
+			.findOneAndUpdate(
+				{
+					_id: boardId,
+					'columns._id': column.id
+				},
+				{
+					$set: {
+						'columns.$[column].cards': []
+					}
+				},
+				{
+					arrayFilters: [{ 'column._id': column.id }],
+					new: true
+				}
+			)
+			.populate(BoardDataPopulate)
+			.lean()
+			.exec();
+
+		if (!updateBoard) throw new BadRequestException(UPDATE_FAILED);
+
+		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
+
+		return updateBoard;
 	}
 }

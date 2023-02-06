@@ -4,6 +4,7 @@ import TeamUser from '../../entities/team.user.schema';
 import Team from '../../entities/teams.schema';
 import { UserWithTeams } from '../../../users/interfaces/type-user-with-teams';
 import User from 'src/modules/users/entities/user.schema';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 export interface GetTeamServiceInterface {
 	countTeams(userId: string): Promise<number>;
@@ -18,7 +19,7 @@ export interface GetTeamServiceInterface {
 
 	getTeamUser(userId: string, teamId: string): Promise<TeamUser | null>;
 
-	getAllTeams(): Promise<LeanDocument<Team>[]>;
+	getAllTeams(user: UserDto): Promise<LeanDocument<Team>[]>;
 
 	getUsersOnlyWithTeams(users: User[]): Promise<LeanDocument<UserWithTeams>[]>;
 

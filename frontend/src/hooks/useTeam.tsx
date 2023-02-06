@@ -24,6 +24,7 @@ interface AutoFetchProps {
   autoFetchTeam?: boolean;
   autoFetchAllTeams?: boolean;
   autoFetchTeamsOfUser?: boolean;
+  autoFetchUserBasedTeams?: boolean;
   autoFetchTeamsOfSpecificUser?: boolean;
   autoFetchTeamsUserIsNotMember?: boolean;
 }
@@ -32,11 +33,20 @@ const useTeam = ({
   autoFetchTeam = false,
   autoFetchAllTeams = false,
   autoFetchTeamsOfUser = false,
+  autoFetchUserBasedTeams = false,
   autoFetchTeamsOfSpecificUser = false,
   autoFetchTeamsUserIsNotMember = false,
 }: AutoFetchProps = {}): UseTeamType => {
-  const { teamId, setToastState, queryClient, teamsList, setTeamsList, usersList, userId } =
-    useTeamUtils();
+  const {
+    teamId,
+    setToastState,
+    queryClient,
+    teamsList,
+    setTeamsList,
+    usersList,
+    userId,
+    session,
+  } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
     enabled: autoFetchAllTeams,
@@ -49,6 +59,27 @@ const useTeam = ({
       });
     },
   });
+
+  const fetchUserBasedTeams = useQuery(
+    ['userBasedTeams'],
+    () => {
+      if (session?.user.isSAdmin) {
+        return getAllTeams();
+      }
+      return getTeamsOfUser();
+    },
+    {
+      enabled: autoFetchUserBasedTeams,
+      refetchOnWindowFocus: false,
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the teams',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
 
   const fetchTeam = useQuery(['team', teamId], () => getTeamRequest(teamId), {
     enabled: autoFetchTeam,
@@ -271,6 +302,7 @@ const useTeam = ({
 
   return {
     fetchAllTeams,
+    fetchUserBasedTeams,
     fetchTeamsOfUser,
     createTeam,
     fetchTeam,

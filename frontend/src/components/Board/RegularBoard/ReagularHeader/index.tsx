@@ -2,7 +2,6 @@ import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
@@ -16,6 +15,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import {
   MergeIconContainer,
   RecurrentIconContainer,
@@ -118,7 +118,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                       {team?.name}
                     </Text>
                   </StyledBoardTitle>
-                  <CardAvatars
+                  <AvatarGroup
                     isBoardsPage
                     listUsers={isSubBoard ? users : teamUsers}
                     responsible={false}
@@ -139,7 +139,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                       <Text color="primary300" size="sm">
                         Team admins
                       </Text>
-                      <CardAvatars
+                      <AvatarGroup
                         isBoardsPage
                         teamAdmins
                         listUsers={isSubBoard ? users : teamUsers}
@@ -164,7 +164,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                       <Text color="primary300" size="sm">
                         Stakeholders
                       </Text>
-                      <CardAvatars
+                      <AvatarGroup
                         isBoardsPage
                         stakeholders
                         listUsers={isSubBoard ? users : teamUsers}
@@ -191,7 +191,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                     </StyledBoardTitle>
                   </Link>
                 )}
-                <CardAvatars
+                <AvatarGroup
                   isBoardsPage
                   responsible={false}
                   listUsers={users}
@@ -206,7 +206,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                 <Text color="primary300" size="sm">
                   Board Creator
                 </Text>
-                <CardAvatars
+                <AvatarGroup
                   isBoardsPage
                   responsible
                   listUsers={users}

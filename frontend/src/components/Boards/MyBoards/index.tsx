@@ -11,7 +11,7 @@ import { Team } from '@/types/team/team';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import { userTeamsListState } from '@/store/team/atom/team.atom';
+import { teamsListState } from '@/store/team/atom/team.atom';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
@@ -34,7 +34,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const routerTeam = router.query.team as string;
-  const userTeamsList = useRecoilValue(userTeamsListState);
+  const userTeamsList = useRecoilValue(teamsListState);
 
   const fetchBoards = useInfiniteQuery(
     ['boards'],

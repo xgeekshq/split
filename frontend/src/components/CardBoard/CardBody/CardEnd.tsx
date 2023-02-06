@@ -4,7 +4,7 @@ import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import BoardType from '@/types/board/board';
-import CardAvatars from '../CardAvatars';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import DeleteBoard from '../DeleteBoard';
 import CountCards from './CountCards';
 
@@ -66,7 +66,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
             {boardOwnerName}
           </Text>
-          <CardAvatars
+          <AvatarGroup
             listUsers={!team || isSubBoard ? users : team.users}
             responsible={false}
             teamAdmins={false}
@@ -84,7 +84,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <CardAvatars responsible listUsers={users} teamAdmins={false} userId={userId} />
+              <AvatarGroup responsible listUsers={users} teamAdmins={false} userId={userId} />
             </Flex>
           )}
           <CountCards columns={columns} />

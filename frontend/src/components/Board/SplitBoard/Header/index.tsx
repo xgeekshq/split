@@ -4,7 +4,6 @@ import { useRecoilValue } from 'recoil';
 import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
-import CardAvatars from '@/components/CardBoard/CardAvatars';
 import Icon from '@/components/icons/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
@@ -23,6 +22,7 @@ import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/part
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
+import AvatarGroup from '@/components/Primitives/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -179,7 +179,7 @@ const BoardHeader = () => {
                   {`Sub-team ${boardNumber}`}
                 </Text>
               </StyledBoardTitle>
-              <CardAvatars
+              <AvatarGroup
                 isBoardsPage
                 listUsers={users}
                 responsible={false}
@@ -194,7 +194,7 @@ const BoardHeader = () => {
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <CardAvatars
+              <AvatarGroup
                 isBoardsPage
                 responsible
                 listUsers={users}
@@ -228,7 +228,7 @@ const BoardHeader = () => {
                     {team.name}
                   </Text>
                 </StyledBoardTitle>
-                <CardAvatars
+                <AvatarGroup
                   isBoardsPage
                   listUsers={teamUsers}
                   responsible={false}
@@ -246,7 +246,7 @@ const BoardHeader = () => {
                     <Text color="primary300" size="sm">
                       Team admins
                     </Text>
-                    <CardAvatars
+                    <AvatarGroup
                       isBoardsPage
                       teamAdmins
                       listUsers={teamUsers}
@@ -268,7 +268,7 @@ const BoardHeader = () => {
                     <Text color="primary300" size="sm">
                       Stakeholders
                     </Text>
-                    <CardAvatars
+                    <AvatarGroup
                       isBoardsPage
                       stakeholders
                       listUsers={teamUsers}

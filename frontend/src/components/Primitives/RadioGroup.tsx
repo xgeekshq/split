@@ -1,45 +1,90 @@
-import * as RadioGroup from '@radix-ui/react-radio-group';
-import { styled } from '@stitches/react';
+import { Root, Item, Indicator } from '@radix-ui/react-radio-group';
+import { styled } from '@/styles/stitches/stitches.config';
 
-const RadioGroupRoot = styled(RadioGroup.Root, {
+const RadioGroup = styled(Root, {
   display: 'flex',
-  flexDirection: 'row',
-  gap: 10,
+  gap: '$10',
   justifyContent: 'space-between',
+  variants: {
+    direction: {
+      row: {
+        flexDirection: 'row',
+      },
+      column: {
+        flexDirection: 'column',
+      },
+    },
+  },
+  defaultVariants: {
+    direction: 'column',
+  },
 });
 
-const RadioGroupItem = styled(RadioGroup.Item, {
+const RadioGroupItem = styled(Item, {
   all: 'unset',
   backgroundColor: '$background',
-  width: 15,
-  height: 15,
+  width: '$16',
+  height: '$16',
   borderRadius: '100%',
-  border: '1px solid $colors$primary300',
+  margin: '$4 $10',
+  '&[data-state="unchecked"]': {
+    width: '$14',
+    height: '$14',
+    border: '1px solid $colors$primary300',
+  },
 });
 
-const RadioGroupIndicator = styled(RadioGroup.Indicator, {
+const RadioGroupIndicator = styled(Indicator, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   width: '100%',
   height: '100%',
   position: 'relative',
-
   '&::after': {
-    content: '""',
+    content: '',
     display: 'block',
-    width: 11,
-    height: 11,
+    width: '$8',
+    height: '$8',
     borderRadius: '50%',
-    background: '$primary800',
+    border: '4px solid $primary800',
   },
 });
 
 const Label = styled('label', {
-  fontSize: 15,
-  lineHeight: 1,
   userSelect: 'none',
-  paddingLeft: 15,
+  cursor: 'pointer',
+  variants: {
+    size: {
+      lg: {
+        fontSize: '$20',
+        lineHeight: '$28',
+      },
+      md: {
+        fontSize: '$16',
+        lineHeight: '$24',
+      },
+      sm: {
+        fontSize: '$14',
+        lineHeight: '$20',
+      },
+    },
+    fontWeight: {
+      regular: {
+        fontWeight: '$regular',
+      },
+      medium: {
+        fontWeight: '$medium',
+      },
+      bold: {
+        fontWeight: '$bold',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'sm',
+    fontWeight: 'regular',
+  },
 });
 
-export { RadioGroupRoot, RadioGroupItem, RadioGroupIndicator, Label };
+export { RadioGroup, RadioGroupItem, RadioGroupIndicator, Label };

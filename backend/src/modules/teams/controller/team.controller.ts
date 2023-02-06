@@ -138,8 +138,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Get()
-	getAllTeams() {
-		return this.getTeamApp.getAllTeams();
+	getAllTeams(@Req() request: RequestWithUser) {
+		return this.getTeamApp.getAllTeams(request.user);
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })

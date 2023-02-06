@@ -18,6 +18,8 @@ import { useSocketIO } from '@/hooks/useSocketIO';
 import {
   boardInfoState,
   boardParticipantsState,
+  deletedColumnsState,
+  editColumnsState,
   newBoardState,
 } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -100,6 +102,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
   const setBoardParticipants = useSetRecoilState(boardParticipantsState);
+  const setEditColumns = useSetRecoilState(editColumnsState);
+  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
   // Session Details
   const { data: session } = useSession();
@@ -130,6 +134,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
+      setEditColumns(data.board.columns);
+      setDeletedColumns([]);
 
       const boardUsers: BoardUser[] = [...data.board.users];
 
@@ -139,7 +145,14 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
       setBoardParticipants(boardUsers);
     }
-  }, [data, session?.user.id, setBoardParticipants, setRecoilBoard]);
+  }, [
+    data,
+    session?.user.id,
+    setDeletedColumns,
+    setEditColumns,
+    setBoardParticipants,
+    setRecoilBoard,
+  ]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(

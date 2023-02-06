@@ -2,10 +2,13 @@ import React from 'react';
 
 import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/icons/Icon';
-import { InnerContainer, StyledMemberTitle } from '@/components/Teams/CreateTeam/CardMember/styles';
+import {
+  IconButton,
+  InnerContainer,
+  StyledMemberTitle,
+} from '@/components/Teams/CreateTeam/CardMember/styles';
 import { BoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
-import { IconButton } from '@/components/CardBoard/styles';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
 import { usersListState } from '@/store/team/atom/team.atom';
