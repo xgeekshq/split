@@ -10,7 +10,6 @@ import {
 } from '@/components/Primitives/Popover';
 import Icon from '@/components/icons/Icon';
 import Text from '@/components/Primitives/Text';
-import Sprite from '@/components/icons/Sprite';
 import { PopoverVariantType, PopoverSizeType } from './types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: PopoverVariantType[] = ['dark', 'light'];
@@ -71,7 +70,6 @@ export default {
 
 const Template: ComponentStory<typeof Popover> = ({ variant, size, disabled, active }: any) => (
   <>
-    <Sprite />
     <Popover>
       <PopoverTrigger variant={variant} size={size} disabled={disabled}>
         <Icon name="menu-dots" />

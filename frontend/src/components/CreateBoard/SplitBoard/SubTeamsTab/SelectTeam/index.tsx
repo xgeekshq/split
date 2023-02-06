@@ -73,9 +73,9 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
   const handleTeamChange = (value: string) => {
     clearErrors();
-    const foundTeam = teams.find((team) => team._id === value);
+    const foundTeam = teams.find((team) => team.id === value);
 
-    setValue('team', foundTeam?._id);
+    setValue('team', foundTeam?.id);
 
     setSelectedTeam(foundTeam);
   };
@@ -86,7 +86,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         .filter((team) => isAdminOrStakeholder(team))
         .map((team) => ({
           label: `${team.name} (${team.users.length} members)`,
-          value: team._id,
+          value: team.id,
         })),
     [teams],
   );
@@ -122,7 +122,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       ];
     });
 
-    if (previousTeam !== selectedTeam._id) {
+    if (previousTeam !== selectedTeam.id) {
       setCreateBoardData((prev) => ({
         ...prev,
         users,
@@ -162,7 +162,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       <Select
         disabled={numberOfTeams === 0}
         hasError={currentSelectTeamState === 'error'}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?._id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}

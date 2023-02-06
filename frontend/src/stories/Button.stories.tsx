@@ -2,7 +2,6 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import Button from '@/components/Primitives/Button';
-import Sprite from '@/components/icons/Sprite';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
@@ -43,11 +42,6 @@ export default {
       expanded: true,
       exclude: ['ref', 'as', 'css'],
       sort: 'requiredFirst',
-    },
-    docs: {
-      description: {
-        component: '', // Change main component description in docs page
-      },
     },
   },
   args: {
@@ -127,7 +121,6 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
 
 export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
   <Flex justify="evenly" wrap="wrap">
-    <Sprite />
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
         <Text heading="5">Variant {variant}</Text>
@@ -144,7 +137,6 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
 
 export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
   <Flex justify="evenly" wrap="wrap">
-    <Sprite />
     {SIZE_OPTIONS.map((size) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={size}>
         <Text heading="5">Size {size}</Text>

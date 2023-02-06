@@ -26,7 +26,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Flex align="center" css={{ ml: '$24' }} gap="24">
             <DeleteTeam
               teamName={name}
-              teamId={team._id}
+              teamId={team.id}
               teamUserId={teamUserId}
               isTeamPage={isTeamPage}
             />

@@ -39,7 +39,7 @@ const Settings = () => {
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
   const selectedTeam = useRecoilValue(createBoardTeam);
-  const prevTeam = usePrevious(selectedTeam?._id);
+  const prevTeam = usePrevious(selectedTeam?.id);
 
   const handleChangeTab = (value: number) => {
     if (haveError) return;

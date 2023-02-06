@@ -69,11 +69,11 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?._id ?? `personal`}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?.id ?? `personal`}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id ?? `personal`}`, new Map([[date, [board]]]));
-          if (board.team) teams.set(`${board.team?._id}`, board.team);
+          boardsTeamAndDate.set(`${board.team?.id ?? `personal`}`, new Map([[date, [board]]]));
+          if (board.team) teams.set(`${board.team?.id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -97,14 +97,14 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   };
 
   const teamNames: OptionType[] = userTeamsList.map((team) => ({
-    value: team._id,
+    value: team.id,
     label: team.name,
   }));
 
   if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
     return <EmptyBoards />;
 
-  const filteredTeam: Team | undefined = userTeamsList.find((team) => team._id === filterState);
+  const filteredTeam: Team | undefined = userTeamsList.find((team) => team.id === filterState);
 
   return (
     <>

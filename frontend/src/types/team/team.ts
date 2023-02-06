@@ -1,7 +1,7 @@
 import { CreateTeamUser, TeamUser } from './team.user';
 
 export interface Team {
-  _id: string;
+  id: string;
   name: string;
   users: TeamUser[];
   boardsCount?: number;
