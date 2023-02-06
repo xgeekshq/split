@@ -12,6 +12,7 @@ import { newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { Team } from '@/types/team/team';
 import CardIcon from '../CardIcon';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -19,7 +20,6 @@ import CenterMainBoard from './CenterMainBoard';
 import CountCards from './CountCards';
 import LeftArrow from './LeftArrow';
 import SubBoards from './SubBoards';
-import { Team } from '@/types/team/team';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',

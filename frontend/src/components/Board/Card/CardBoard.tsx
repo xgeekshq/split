@@ -102,7 +102,12 @@ const CardBoard = React.memo<CardBoardProps>(
     }, [card._id, draggedCard]);
 
     return (
-      <Draggable key={card._id} draggableId={card._id} index={index} isDragDisabled={isSubmited}>
+      <Draggable
+        key={card._id}
+        draggableId={card._id}
+        index={index}
+        isDragDisabled={isSubmited || hideCards}
+      >
         {(provided) => (
           <Flex
             ref={provided.innerRef}
