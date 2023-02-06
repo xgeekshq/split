@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
 import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 import { TeamUser } from '@/types/team/team.user';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import BoardsInfo from './BoardsInfo';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -104,14 +104,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
               userId={userId}
             />
           </Flex>
-          <Separator
-            orientation="vertical"
-            css={{
-              ml: '$20',
-              backgroundColor: '$primary100',
-              height: '$24 !important',
-            }}
-          />
+          <Separator orientation="vertical" size="lg" css={{ ml: '$20' }} />
 
           <Flex align="center" css={{ ml: '$20', alignItems: 'center' }} gap="8">
             <Flex align="center" css={{ width: '$160' }}>
@@ -127,14 +120,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
                 userId={userId}
               />
             </Flex>
-            <Separator
-              orientation="vertical"
-              css={{
-                ml: '$20',
-                backgroundColor: '$primary100',
-                height: '$24 !important',
-              }}
-            />
+            <Separator orientation="vertical" size="lg" css={{ ml: '$20' }} />
             {router.pathname.includes('users') ? (
               <Flex align="center" css={{ width: '$237' }} justify="end">
                 <RoleDescription role={userRole} />

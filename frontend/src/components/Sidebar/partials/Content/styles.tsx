@@ -2,7 +2,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Separator from '../Separator';
 
 const StyledMenuItem = styled(Flex, {
   variants: {
@@ -58,6 +57,4 @@ const StyledText = styled(Text, {
   lineHeight: '$20',
 });
 
-const StyledSeparator = styled(Separator, { marginTop: '$16', marginBottom: '$16' });
-
-export { StyledMenuItem, StyledSeparator, StyledText };
+export { StyledMenuItem, StyledText };

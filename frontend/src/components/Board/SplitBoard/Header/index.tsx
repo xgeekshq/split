@@ -22,7 +22,7 @@ import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/part
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -123,7 +123,10 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator css={{ height: '$14 !important' }} data-orientation="vertical" />
+                <Separator
+                  css={{ height: '$14 !important', width: '1px' }}
+                  data-orientation="vertical"
+                />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -188,7 +191,10 @@ const BoardHeader = () => {
                 isSubBoardPage
               />
             </Flex>
-            <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+            <Separator
+              css={{ height: '$24 !important', width: '1px' }}
+              data-orientation="vertical"
+            />
 
             <Flex align="center" gap="10">
               <Text color="primary300" size="sm">
@@ -240,7 +246,10 @@ const BoardHeader = () => {
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
               ) && (
                 <>
-                  <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                  <Separator
+                    css={{ height: '$24 !important', width: '1px' }}
+                    data-orientation="vertical"
+                  />
 
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">
@@ -262,7 +271,10 @@ const BoardHeader = () => {
                 ),
               ) && (
                 <>
-                  <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+                  <Separator
+                    css={{ height: '$24 !important', width: '1px' }}
+                    data-orientation="vertical"
+                  />
 
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">

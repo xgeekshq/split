@@ -15,7 +15,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   MergeIconContainer,
   RecurrentIconContainer,
@@ -131,8 +131,9 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                 ) && (
                   <>
                     <Separator
-                      css={{ height: '$24 !important', margin: '0 $14 0 $12' }}
+                      css={{ height: '$24 !important', width: '1px' }}
                       data-orientation="vertical"
+                      size="lg"
                     />
 
                     <Flex align="center" css={{ width: '100%' }} gap="10">
@@ -156,7 +157,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                 ) && (
                   <>
                     <Separator
-                      css={{ height: '$24 !important', margin: '0 $14 0 $12' }}
+                      css={{ height: '$24 !important', width: '1px' }}
                       data-orientation="vertical"
                     />
 
@@ -199,8 +200,11 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   userId={session!.user.id}
                 />
               </Flex>
-              <Flex align="center" gap="20" css={{ margin: '$12' }}>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Flex align="center" gap="20" css={{ margin: '$20' }}>
+                <Separator
+                  css={{ height: '$24 !important', width: '1px' }}
+                  data-orientation="vertical"
+                />
               </Flex>
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">

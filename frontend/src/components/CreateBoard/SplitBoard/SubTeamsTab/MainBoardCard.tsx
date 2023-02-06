@@ -12,7 +12,7 @@ import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/cre
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {});
@@ -77,10 +77,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
             <Text color="primary300" css={{ mr: '$8' }} size="sm">
               Sub-teams/-boards
             </Text>
-            <Separator
-              css={{ '&[data-orientation=vertical]': { height: '$12', width: 1 } }}
-              orientation="vertical"
-            />
+            <Separator orientation="vertical" size="md" />
             <Text css={{ ml: '$8' }}>{board.dividedBoards.length}</Text>
             <Flex css={{ ml: '$12' }} gap="4">
               <Flex

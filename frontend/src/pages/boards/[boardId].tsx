@@ -29,10 +29,10 @@ import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import { GetBoardResponse } from '@/types/board/board';
 import { BoardSettings } from '@/components/Board/Settings';
-import BoardHeader from '@/components/Board/SplitBoard/Header';
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardUser } from '@/types/board/board.user';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);

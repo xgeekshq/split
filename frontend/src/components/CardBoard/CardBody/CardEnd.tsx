@@ -4,7 +4,7 @@ import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import BoardType from '@/types/board/board';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import DeleteBoard from '../DeleteBoard';
 import CountCards from './CountCards';
 
@@ -90,14 +90,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <CountCards columns={columns} />
           {(havePermissions || userSAdmin) && !isSubBoard && (
             <Flex align="center" css={{ ml: '$24' }} gap="24">
-              <Separator
-                orientation="vertical"
-                css={{
-                  ml: '$8',
-                  backgroundColor: '$primary100',
-                  height: '$24 !important',
-                }}
-              />
+              <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
 
               <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?.id} />
             </Flex>
