@@ -129,7 +129,7 @@ const Column = React.memo<ColumMemoProps>(
                     )}
                   </Flex>
                 </Flex>
-                <Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
+                <Separator css={{ mb: '$20' }} />
                 <Flex direction="column">
                   {!isSubmited && (
                     <Flex

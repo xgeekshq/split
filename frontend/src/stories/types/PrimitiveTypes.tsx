@@ -43,3 +43,7 @@ export type PopoverSizeType = 'sm' | 'md';
 export type RadioGroupDirectionType = 'row' | 'column';
 export type RadioGroupSizeType = 'sm' | 'md' | 'lg';
 export type RadioGroupFontWeightType = 'regular' | 'medium' | 'bold';
+
+// Primitive/Separator
+export type SeparatorOrientationType = 'horizontal' | 'vertical';
+export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';

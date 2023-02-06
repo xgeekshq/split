@@ -46,15 +46,9 @@ const Comments = React.memo(
     return (
       <Flex align="center" css={{ width: '100%', pb: '$16' }} direction="column">
         <Flex align="center" css={{ width: '100%', mb: '$12' }} gap="4">
-          <Separator
-            css={{ backgroundColor: 'black', width: '$8 !important' }}
-            orientation="horizontal"
-          />
+          <Separator css={{ backgroundColor: 'black' }} orientation="horizontal" size="sm" />
           <Text size="xxs">Comments</Text>
-          <Separator
-            css={{ backgroundColor: 'black', width: '100% !important' }}
-            orientation="horizontal"
-          />
+          <Separator css={{ backgroundColor: 'black' }} />
         </Flex>
         <Flex css={{ px: '$16', mb: '$12', width: '100%' }} direction="column" gap="8">
           {comments.map((comment) => (

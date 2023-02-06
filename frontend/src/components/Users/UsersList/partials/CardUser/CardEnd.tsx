@@ -12,14 +12,7 @@ type CardEndProps = {
 
 const CardEnd: React.FC<CardEndProps> = React.memo(({ user }) => (
   <Flex css={{ alignItems: 'center' }}>
-    <Separator
-      orientation="vertical"
-      css={{
-        ml: '$20',
-        backgroundColor: '$primary100',
-        height: '$24 !important',
-      }}
-    />
+    <Separator orientation="vertical" size="lg" css={{ ml: '$20' }} />
     <Flex align="center" css={{ ml: '$24' }} gap="24">
       <EditUser user={user} />
     </Flex>

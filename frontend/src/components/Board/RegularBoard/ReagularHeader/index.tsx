@@ -13,7 +13,7 @@ import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   MergeIconContainer,
   RecurrentIconContainer,
@@ -104,7 +104,7 @@ const RegularBoardHeader = () => {
           </Flex>
           {!isEmpty(teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN)) && (
             <>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Separator orientation="vertical" size="lg" />
 
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">
@@ -126,7 +126,7 @@ const RegularBoardHeader = () => {
             ),
           ) && (
             <>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Separator orientation="vertical" size="lg" />
 
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">
@@ -157,7 +157,7 @@ const RegularBoardHeader = () => {
                   userId={session!.user.id}
                 />
               </Flex>
-              <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Separator orientation="vertical" size="lg" />
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">
                   Board Creator
