@@ -187,11 +187,7 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={
-                !isMainboard ||
-                (maxVotes && user?.votesCount === maxVotes) ||
-                (hideCards && createdBy?._id !== userId)
-              }
+              disabled={!isMainboard || (maxVotes && user?.votesCount === maxVotes) || hideCards}
               onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
@@ -224,7 +220,7 @@ const CardFooter = ({
                 votesInThisCard.length === 0 ||
                 (maxVotes && userVotes === 0) ||
                 votesOfUserInThisCard === 0 ||
-                (hideCards && createdBy?._id !== userId)
+                hideCards
               }
               onClick={handleDeleteVote}
             >
@@ -238,7 +234,7 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={hideCards && createdBy?._id !== userId}
+              disabled={hideCards}
               onClick={setOpenComments}
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />

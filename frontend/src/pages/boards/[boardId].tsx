@@ -140,7 +140,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       const boardUsers: BoardUser[] = [...data.board.users];
 
       // this insures that the team creator stays always in first
-      const userAdminIndex = boardUsers.findIndex((member) => member.user._id === session?.user.id);
+      const userAdminIndex = boardUsers.findIndex(
+        (member) => member?.user?._id === session?.user.id,
+      );
 
       boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
       setBoardParticipants(boardUsers);

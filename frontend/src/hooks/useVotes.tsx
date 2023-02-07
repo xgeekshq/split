@@ -90,7 +90,7 @@ const useVotes = () => {
     count: number,
   ) => {
     boardData.users = boardData.users.map((boardUser) => {
-      if (boardUser.user._id !== currentUser) return boardUser;
+      if (boardUser.user?._id !== currentUser) return boardUser;
 
       return {
         ...boardUser,

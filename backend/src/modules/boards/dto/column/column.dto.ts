@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, TransformFnParams } from 'class-transformer';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
 	IsBoolean,
 	IsMongoId,
@@ -30,6 +30,7 @@ export default class ColumnDto {
 	@ApiProperty({ type: CardDto, isArray: true })
 	@IsNotEmpty()
 	@ValidateNested({ each: true })
+	@Type(() => CardDto)
 	cards!: CardDto[];
 
 	@ApiProperty()
