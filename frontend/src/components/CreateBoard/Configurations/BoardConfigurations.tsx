@@ -1,10 +1,9 @@
 import { useFormContext } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
-import { Switch, SwitchThumb } from '@/components/Primitives/Switch';
+import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 
@@ -77,20 +76,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
       </Text>
       <Flex direction="column" gap="24">
         <Flex gap="16">
-          <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange}>
-            <SwitchThumb>
-              {board.hideCards && (
-                <Icon
-                  name="check"
-                  css={{
-                    width: '$14',
-                    height: '$14',
-                    color: '$successBase',
-                  }}
-                />
-              )}
-            </SwitchThumb>
-          </Switch>
+          <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange} />
           <Flex direction="column">
             <Text size="md" fontWeight="medium">
               Hide cards from others
@@ -101,20 +87,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
           </Flex>
         </Flex>
         <Flex gap="16">
-          <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange}>
-            <SwitchThumb>
-              {board.hideVotes && (
-                <Icon
-                  name="check"
-                  css={{
-                    width: '$14',
-                    height: '$14',
-                    color: '$successBase',
-                  }}
-                />
-              )}
-            </SwitchThumb>
-          </Switch>
+          <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange} />
           <Flex direction="column">
             <Text size="md" fontWeight="medium">
               Hide votes from others
@@ -125,20 +98,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
           </Flex>
         </Flex>
         <Flex gap="16">
-          <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange}>
-            <SwitchThumb>
-              {!!board.maxVotes && (
-                <Icon
-                  name="check"
-                  css={{
-                    width: '$14',
-                    height: '$14',
-                    color: '$successBase',
-                  }}
-                />
-              )}
-            </SwitchThumb>
-          </Switch>
+          <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange} />
           <Flex direction="column">
             <Text size="md" fontWeight="medium">
               Limit votes
@@ -157,20 +117,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
         </Flex>
         {isRegularBoard && (
           <Flex gap="16">
-            <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange}>
-              <SwitchThumb>
-                {board.isPublic && (
-                  <Icon
-                    name="check"
-                    css={{
-                      width: '$14',
-                      height: '$14',
-                      color: '$successBase',
-                    }}
-                  />
-                )}
-              </SwitchThumb>
-            </Switch>
+            <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange} />
             <Flex direction="column">
               <Text size="md" fontWeight="medium">
                 Make board public
