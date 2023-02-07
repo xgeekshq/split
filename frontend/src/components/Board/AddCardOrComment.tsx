@@ -210,7 +210,6 @@ const AddCard = React.memo<AddCardProps>(
       >
         <FormProvider {...methods}>
           <TextArea
-            floatPlaceholder={false}
             // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
             placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
