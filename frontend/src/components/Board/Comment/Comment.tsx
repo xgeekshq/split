@@ -132,6 +132,7 @@ const Comment: React.FC<CommentProps> = React.memo(
             anonymous={comment.anonymous}
             isDefaultText={isDefaultText}
             postAnonymously={postAnonymously}
+            isOwner={userId === comment.createdBy?._id}
           />
         )}
       </Flex>

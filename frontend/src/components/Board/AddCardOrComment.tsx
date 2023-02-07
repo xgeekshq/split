@@ -31,9 +31,10 @@ type AddCardProps = {
   cancelUpdate?: () => void;
   defaultOpen?: boolean;
   isEditing?: boolean;
-  anonymous: boolean;
+  anonymous?: boolean;
   isDefaultText: boolean;
   postAnonymously: boolean;
+  isOwner?: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -53,13 +54,16 @@ const AddCard = React.memo<AddCardProps>(
     defaultOpen,
     anonymous,
     postAnonymously,
+    isOwner,
     ...props
   }) => {
     const { addCardInColumn, updateCard } = useCards();
     const { addCommentInCard, updateComment } = useComments();
     const [isOpen, setIsOpen] = useState(!!isUpdate || !!cancelUpdate || defaultOpen);
-    const [isAnonymous, setIsAnonymous] = useState(postAnonymously ?? false);
-    const [isCommentAnonymous, setIsCommentAnonymous] = useState(postAnonymously ?? false);
+    const [isAnonymous, setIsAnonymous] = useState(anonymous ?? postAnonymously ?? false);
+    const [isCommentAnonymous, setIsCommentAnonymous] = useState(
+      anonymous ?? postAnonymously ?? false,
+    );
 
     const methods = useForm<{ text: string }>({
       mode: 'onSubmit',
@@ -117,8 +121,8 @@ const AddCard = React.memo<AddCardProps>(
     };
 
     useEffect(() => {
-      setIsAnonymous(postAnonymously ?? false);
-      setIsCommentAnonymous(postAnonymously ?? false);
+      setIsAnonymous(anonymous ?? postAnonymously ?? false);
+      setIsCommentAnonymous(anonymous ?? postAnonymously ?? false);
     }, [anonymous, postAnonymously]);
 
     const handleAddComment = (text: string) => {
@@ -216,7 +220,7 @@ const AddCard = React.memo<AddCardProps>(
             placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
           <Flex css={{ width: '100%' }} justify="end">
-            {!isCard && (
+            {!isCard && (isOwner || !commentId) && (
               <Checkbox
                 id={colId + cardId}
                 label="Post anonymously"

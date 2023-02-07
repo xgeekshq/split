@@ -125,6 +125,7 @@ export const replaceComments = (
 		if (anonymous) {
 			return {
 				...comment,
+				text: hideCards ? hideText(text) : comment.text,
 				createdBy: replaceUser(comment.createdBy as UserDocument, userId)
 			};
 		}
