@@ -6,6 +6,7 @@ import Text from '@/components/Primitives/Text';
 
 const CardsContainer = styled(Flex, {
   mt: '$20',
+  mb: '$8',
   px: '$20',
 
   '&::-webkit-scrollbar': {
@@ -29,7 +30,6 @@ const Container = styled(Flex, Box, {
   borderRadius: '$12',
   flexShrink: 0,
   flex: '1',
-  pb: '$24',
   width: '100%',
   boxShadow: '0px 2px 8px rgba(18, 25, 34, 0.05)',
   backgroundColor: '$surface',

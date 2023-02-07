@@ -95,24 +95,25 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                   />
                 </Flex>
               )}
-              {!isSubmited && (
-                <PopoverCardSettings
-                  isItem
-                  boardId={boardId}
-                  cardGroupId={cardGroupId}
-                  columnId={columnId}
-                  firstOne={firstOne}
-                  handleDeleteCard={handleDeleting}
-                  handleEditing={handleEditing}
-                  hideCards={hideCards}
-                  item={item}
-                  itemId={item._id}
-                  newPosition={cardGroupPosition}
-                  socketId={socketId}
-                  userId={userId}
-                  hasAdminRole={hasAdminRole}
-                />
-              )}
+              {!isSubmited &&
+                ((userId === item?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                  <PopoverCardSettings
+                    isItem
+                    boardId={boardId}
+                    cardGroupId={cardGroupId}
+                    columnId={columnId}
+                    firstOne={firstOne}
+                    handleDeleteCard={handleDeleting}
+                    handleEditing={handleEditing}
+                    hideCards={hideCards}
+                    item={item}
+                    itemId={item._id}
+                    newPosition={cardGroupPosition}
+                    socketId={socketId}
+                    userId={userId}
+                    hasAdminRole={hasAdminRole}
+                  />
+                )}
             </Flex>
 
             {!lastOne && (
