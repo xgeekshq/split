@@ -39,3 +39,5 @@ yarn-error.log*
 #cypress
 /src/cypress/screenshots/
 /src/cypress/videos/
+
+/public/storybook
