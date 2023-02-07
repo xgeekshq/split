@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
-import { Switch } from '@/components/Primitives/Switch';
+import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 

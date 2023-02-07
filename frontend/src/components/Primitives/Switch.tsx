@@ -59,7 +59,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
     opacity: 0.5,
   },
   variants: {
-    variant: {
+    size: {
       xs: {
         flex: '0 0 $sizes$24',
         width: '$24',
@@ -102,13 +102,13 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
     },
   },
   defaultVariants: {
-    variant: 'md',
+    size: 'md',
   },
 });
 
 type SwitchProps = {
   checked: boolean;
-  variant?: 'xs' | 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
   required?: boolean;
@@ -118,8 +118,10 @@ type SwitchProps = {
   icon?: string;
 };
 
-export const Switch = ({ checked, icon = 'check', ...props }: SwitchProps) => (
+const Switch = ({ checked, icon = 'check', ...props }: SwitchProps) => (
   <StyledSwitch checked={checked} {...props}>
     <SwitchThumb checked={checked} icon={icon} />
   </StyledSwitch>
 );
+
+export default Switch;

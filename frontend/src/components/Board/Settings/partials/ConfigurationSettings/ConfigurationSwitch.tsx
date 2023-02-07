@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 import Flex from '@/components/Primitives/Flex';
-import { Switch } from '@/components/Primitives/Switch';
+import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
 
@@ -30,14 +30,14 @@ const ConfigurationSwitchSettings = ({
         <Flex>
           <Switch
             checked={isChecked}
-            variant="sm"
+            size="sm"
             onCheckedChange={handleCheckedChange}
             disabled={disabled}
           />
         </Flex>
       </Tooltip>
     ) : (
-      <Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange} />
+      <Switch checked={isChecked} size="sm" onCheckedChange={handleCheckedChange} />
     )}
     <Flex direction="column">
       <Text size="md" fontWeight="medium">
