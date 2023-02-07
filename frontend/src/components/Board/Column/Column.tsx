@@ -169,7 +169,7 @@ const Column = React.memo<ColumMemoProps>(
                           defaultOpen={countAllCards === 0}
                           isUpdate={false}
                           socketId={socketId}
-                          anonymous={false}
+                          anonymous={undefined}
                           cardText={cardText}
                           isDefaultText={isDefaultText ?? true}
                           postAnonymously={postAnonymously}
