@@ -98,10 +98,10 @@ const CardBoard = React.memo<CardBoardProps>(
     };
 
     useEffect(() => {
-      if (card._id === draggedCard) {
+      if (card._id === draggedCard || hideCards) {
         setOpenComments(false);
       }
-    }, [card._id, draggedCard]);
+    }, [card._id, draggedCard, hideCards]);
 
     return (
       <Draggable
