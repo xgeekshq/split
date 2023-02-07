@@ -1,4 +1,4 @@
-ARG TAG=18.14.0-alpine
+ARG TAG=18.12.1-alpine
 
 # Install dependencies only when needed
 FROM node:$TAG AS development
