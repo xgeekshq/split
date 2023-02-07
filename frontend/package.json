@@ -12,7 +12,7 @@
     "cy:ci": "start-server-and-test dev http-get://localhost:3000 cy:run",
     "jest": "jest",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook -o ./public/storybook --preview-url=/storybook/iframe.html --force-build-preview"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.2.0",
