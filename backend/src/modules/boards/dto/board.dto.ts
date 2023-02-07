@@ -114,6 +114,11 @@ export default class BoardDto {
 	@IsBoolean()
 	addCards?: boolean;
 
+	@ApiPropertyOptional({ default: false })
+	@IsOptional()
+	@IsBoolean()
+	postAnonymously?: boolean;
+
 	@ApiProperty({ type: String, isArray: true })
 	responsibles!: string[];
 }

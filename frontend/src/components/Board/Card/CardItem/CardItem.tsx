@@ -28,6 +28,7 @@ interface CardItemProps {
   hideCards: boolean;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const Container = styled(Flex, {
@@ -54,6 +55,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     hideCards,
     isDefaultText,
     hasAdminRole,
+    postAnonymously,
   }) => {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -144,6 +146,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             socketId={socketId}
             anonymous={item.anonymous}
             isDefaultText={isDefaultText}
+            postAnonymously={postAnonymously}
           />
         )}
         {deleting && (

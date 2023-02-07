@@ -22,6 +22,7 @@ interface CommentProps {
   isDefaultText: boolean;
   hasAdminRole: boolean;
   isMainboard: boolean;
+  postAnonymously: boolean;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
@@ -37,6 +38,7 @@ const Comment: React.FC<CommentProps> = React.memo(
     isDefaultText,
     hasAdminRole,
     isMainboard,
+    postAnonymously,
   }) => {
     const { deleteComment } = useComments();
     const [editing, setEditing] = useState(false);
@@ -129,6 +131,7 @@ const Comment: React.FC<CommentProps> = React.memo(
             socketId={socketId}
             anonymous={comment.anonymous}
             isDefaultText={isDefaultText}
+            postAnonymously={postAnonymously}
           />
         )}
       </Flex>
