@@ -58,8 +58,8 @@ const AddCard = React.memo<AddCardProps>(
     const { addCardInColumn, updateCard } = useCards();
     const { addCommentInCard, updateComment } = useComments();
     const [isOpen, setIsOpen] = useState(!!isUpdate || !!cancelUpdate || defaultOpen);
-    const [isAnonymous, setIsAnonymous] = useState(anonymous);
-    const [isCommentAnonymous, setIsCommentAnonymous] = useState(anonymous);
+    const [isAnonymous, setIsAnonymous] = useState(postAnonymously ?? false);
+    const [isCommentAnonymous, setIsCommentAnonymous] = useState(postAnonymously ?? false);
 
     const methods = useForm<{ text: string }>({
       mode: 'onSubmit',
@@ -117,9 +117,9 @@ const AddCard = React.memo<AddCardProps>(
     };
 
     useEffect(() => {
-      setIsAnonymous(postAnonymously);
-      setIsCommentAnonymous(postAnonymously);
-    }, [postAnonymously]);
+      setIsAnonymous(postAnonymously ?? false);
+      setIsCommentAnonymous(postAnonymously ?? false);
+    }, [anonymous, postAnonymously]);
 
     const handleAddComment = (text: string) => {
       if (!cardId || !cancelUpdate) return;
@@ -135,6 +135,7 @@ const AddCard = React.memo<AddCardProps>(
         columnId: colId,
         fromSocket: false,
       };
+
       addCommentInCard.mutate(commentDto);
       cancelUpdate();
     };

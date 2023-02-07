@@ -115,7 +115,6 @@ const CardBoard = React.memo<CardBoardProps>(
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
-            draggable
             direction="column"
             css={{
               backgroundColor: color,
