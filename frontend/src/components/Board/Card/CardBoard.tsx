@@ -119,6 +119,7 @@ const CardBoard = React.memo<CardBoardProps>(
               backgroundColor: color,
               borderRadius: '$8',
               mb: '$12',
+              pointerEvents: hideCards ? 'none' : 'auto',
             }}
           >
             <Container
@@ -129,6 +130,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 py: !isCardGroup ? '$16' : '$8',
                 mb: isCardGroup ? '$12' : 'none',
                 filter: cardBlur(hideCards, card as CardType, userId),
+                transform: 'translate3d(1, 1, 1)',
               }}
             >
               {editing && !isSubmited && (
