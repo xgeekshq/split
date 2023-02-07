@@ -20,6 +20,7 @@ type ColumMemoProps = {
   isRegularBoard?: boolean;
   hasAdminRole: boolean;
   addCards: boolean;
+  postAnonymously: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -42,6 +43,7 @@ const Column = React.memo<ColumMemoProps>(
     isRegularBoard,
     hasAdminRole,
     addCards,
+    postAnonymously,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -170,6 +172,7 @@ const Column = React.memo<ColumMemoProps>(
                           anonymous={false}
                           cardText={cardText}
                           isDefaultText={isDefaultText ?? true}
+                          postAnonymously={postAnonymously}
                         />
                       )}
                     </Flex>
@@ -192,6 +195,7 @@ const Column = React.memo<ColumMemoProps>(
                       socketId={socketId}
                       userId={userId}
                       hasAdminRole={hasAdminRole}
+                      postAnonymously={postAnonymously}
                     />
                     {provided.placeholder}
                   </CardsContainer>
@@ -219,6 +223,7 @@ const Column = React.memo<ColumMemoProps>(
           columnTitle={title}
           isOpen={openDialog.deleteColumn}
           handleDialogChange={handleDialogChange}
+          postAnonymously={postAnonymously}
         />
         <AlertDeleteAllCards
           socketId={socketId}

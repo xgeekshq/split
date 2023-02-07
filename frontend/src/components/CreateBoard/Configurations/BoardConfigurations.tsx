@@ -40,6 +40,16 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
     }));
   };
 
+  const handlePostAnonymouslyChange = (checked: boolean) => {
+    setCreateBoardData((prev) => ({
+      ...prev,
+      board: {
+        ...prev.board,
+        postAnonymously: checked,
+      },
+    }));
+  };
+
   const handleLimitVotesChange = (checked: boolean) => {
     setCreateBoardData((prev) => ({
       ...prev,
@@ -94,6 +104,17 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
             </Text>
             <Text color="primary500" size="sm">
               Participants can not see the votes from other participants of this retrospective.
+            </Text>
+          </Flex>
+        </Flex>
+        <Flex gap="16">
+          <Switch checked={board.postAnonymously} onCheckedChange={handlePostAnonymouslyChange} />
+          <Flex direction="column">
+            <Text size="md" fontWeight="medium">
+              Post anonymously
+            </Text>
+            <Text color="primary500" size="sm">
+              The option to post anonymously is checked by default.
             </Text>
           </Flex>
         </Flex>

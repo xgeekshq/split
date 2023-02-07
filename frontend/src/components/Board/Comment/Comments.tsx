@@ -22,6 +22,7 @@ interface CommentsListProps {
   isDefaultText: boolean;
   hasAdminRole: boolean;
   isMainboard: boolean;
+  postAnonymously: boolean;
 }
 
 const Comments = React.memo(
@@ -38,6 +39,7 @@ const Comments = React.memo(
     isDefaultText,
     hasAdminRole,
     isMainboard,
+    postAnonymously,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -67,6 +69,7 @@ const Comments = React.memo(
               isDefaultText={isDefaultText}
               hasAdminRole={hasAdminRole}
               isMainboard={isMainboard}
+              postAnonymously={postAnonymously}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -91,6 +94,7 @@ const Comments = React.memo(
               socketId={socketId}
               anonymous={false}
               isDefaultText={isDefaultText}
+              postAnonymously={postAnonymously}
             />
           </Flex>
         )}

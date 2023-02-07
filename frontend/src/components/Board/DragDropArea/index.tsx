@@ -140,6 +140,7 @@ const DragDropArea: React.FC<Props> = ({
             isRegularBoard={isRegularBoard}
             hasAdminRole={hasAdminRole}
             addCards={board.addCards}
+            postAnonymously={board.postAnonymously}
           />
         ))}
       </DragDropContext>

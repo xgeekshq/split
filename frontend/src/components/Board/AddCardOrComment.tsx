@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Button';
@@ -33,6 +33,7 @@ type AddCardProps = {
   isEditing?: boolean;
   anonymous: boolean;
   isDefaultText: boolean;
+  postAnonymously: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -51,6 +52,7 @@ const AddCard = React.memo<AddCardProps>(
     isEditing = false,
     defaultOpen,
     anonymous,
+    postAnonymously,
     ...props
   }) => {
     const { addCardInColumn, updateCard } = useCards();
@@ -113,6 +115,11 @@ const AddCard = React.memo<AddCardProps>(
       updateCard.mutate(cardUpdated);
       cancelUpdate();
     };
+
+    useEffect(() => {
+      setIsAnonymous(postAnonymously);
+      setIsCommentAnonymous(postAnonymously);
+    }, [postAnonymously]);
 
     const handleAddComment = (text: string) => {
       if (!cardId || !cancelUpdate) return;
@@ -212,9 +219,9 @@ const AddCard = React.memo<AddCardProps>(
             {!isCard && (
               <Checkbox
                 id={colId + cardId}
-                label="Add anonymously"
+                label="Post anonymously"
                 size="16"
-                checked={anonymous}
+                checked={isCommentAnonymous || postAnonymously}
                 setCheckedTerms={() => {
                   setIsCommentAnonymous(!isCommentAnonymous);
                 }}
@@ -225,7 +232,7 @@ const AddCard = React.memo<AddCardProps>(
                 id={colId}
                 label="Post anonymously"
                 size="16"
-                checked={anonymous}
+                checked={isAnonymous || postAnonymously}
                 setCheckedTerms={() => {
                   setIsAnonymous(!isAnonymous);
                 }}

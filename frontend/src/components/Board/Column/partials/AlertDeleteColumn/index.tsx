@@ -17,6 +17,7 @@ type AlertDeleteColumnProps = {
   columnId: string;
   columnTitle: string;
   isOpen: boolean;
+  postAnonymously: boolean;
   handleDialogChange: (
     openName: boolean,
     openDeleteColumn: boolean,
@@ -29,6 +30,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
   columnTitle,
   isOpen,
   handleDialogChange,
+  postAnonymously,
 }) => {
   // Recoil State used on [boardId].tsx
   const {
@@ -56,6 +58,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
     isPublic,
     columns,
     addCards,
+    postAnonymously,
   };
 
   const boardData = initialData;

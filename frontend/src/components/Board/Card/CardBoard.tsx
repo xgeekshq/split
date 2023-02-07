@@ -41,6 +41,7 @@ interface CardBoardProps {
   isDefaultText: boolean;
   cardText?: string;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -59,6 +60,7 @@ const CardBoard = React.memo<CardBoardProps>(
     hideCards,
     isDefaultText,
     hasAdminRole,
+    postAnonymously,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -119,6 +121,7 @@ const CardBoard = React.memo<CardBoardProps>(
               backgroundColor: color,
               borderRadius: '$8',
               mb: '$12',
+              pointerEvents: hideCards && card.createdBy?._id !== userId ? 'none' : 'auto',
             }}
           >
             <Container
@@ -129,6 +132,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 py: !isCardGroup ? '$16' : '$8',
                 mb: isCardGroup ? '$12' : 'none',
                 filter: cardBlur(hideCards, card as CardType, userId),
+                transform: 'translate3d(0.1, 0.1, 0.1)',
               }}
             >
               {editing && !isSubmited && (
@@ -145,6 +149,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   socketId={socketId}
                   anonymous={card.anonymous}
                   isDefaultText={isDefaultText}
+                  postAnonymously={postAnonymously}
                 />
               )}
               {!editing && (
@@ -212,6 +217,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       userId={userId}
                       isDefaultText={isDefaultText}
                       hasAdminRole={hasAdminRole}
+                      postAnonymously={postAnonymously}
                     />
                   )}
                   <CardFooter
@@ -256,6 +262,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 columnId={colId}
                 isDefaultText={isDefaultText}
                 hasAdminRole={hasAdminRole}
+                postAnonymously={postAnonymously}
                 isMainboard={isMainboard}
               />
             )}
