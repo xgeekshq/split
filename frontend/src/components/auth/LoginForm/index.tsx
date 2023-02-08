@@ -53,6 +53,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     setLoginErrorCode(-1);
   };
 
+  const handleInputChange = (e: any) => {
+    const { id } = e.target;
+    const { value } = e.target;
+    methods.setValue(id, value);
+  };
+
   const handleLoginAzure = () => {
     if (loading.sso) return;
     setLoading((prevState) => ({ ...prevState, sso: true }));
@@ -116,6 +122,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           placeholder="Email address"
           state={loginErrorCode > 0 ? 'error' : undefined}
           type="text"
+          onChange={handleInputChange}
         />
         <Input
           clearErrorCode={clearErrors}
@@ -126,6 +133,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
           placeholder="Password"
           state={loginErrorCode > 0 ? 'error' : undefined}
           type="password"
+          onChange={handleInputChange}
         />
 
         <Button disabled={loading.credentials} size="lg" type="submit">
