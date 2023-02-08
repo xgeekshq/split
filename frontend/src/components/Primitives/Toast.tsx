@@ -43,23 +43,11 @@ const StyledToast = styled(ToastPrimitive.Root, {
   direction: 'raw',
 });
 
-const StyledTitle = styled(ToastPrimitive.Title, {
-  gridArea: 'title',
-  marginBottom: 5,
-  fontWeight: 500,
-  color: '$primary800',
-  fontSize: 15,
-});
-
 const StyledDescription = styled(ToastPrimitive.Description, {
   display: 'flex',
   gap: '$8',
   margin: 0,
   alignItems: 'center',
-});
-
-const StyledAction = styled(ToastPrimitive.Action, {
-  gridArea: 'action',
 });
 
 const StyledClose = styled(ToastPrimitive.Close, {
@@ -76,18 +64,13 @@ const StyledClose = styled(ToastPrimitive.Close, {
 // Exports
 export const ToastProvider = ToastPrimitive.Provider;
 export const ToastViewport = StyledViewport;
-export const ToastRoot = StyledToast;
-export const ToastTitle = StyledTitle;
-export const ToastDescription = StyledDescription;
-export const ToastAction = StyledAction;
-export const ToastClose = StyledClose;
 
 const Toast: React.FC = () => {
   const [currentToastState, setToastState] = useRecoilState(toastState);
   const { open, type, content } = currentToastState;
 
   const router = useRouter();
-  const VIEWPORT_PADDING = router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
+  const VIEWPORT_PADDING = router && router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
 
   const slideIn = keyframes({
     from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
@@ -107,7 +90,7 @@ const Toast: React.FC = () => {
   }, [router]);
 
   return (
-    <ToastRoot
+    <StyledToast
       duration={7000}
       open={open}
       type="foreground"
@@ -133,7 +116,7 @@ const Toast: React.FC = () => {
       }}
       onOpenChange={(e) => setToastState({ open: e, type, content })}
     >
-      <ToastDescription>
+      <StyledDescription>
         {type === ToastStateEnum.ERROR && (
           <Icon css={{ width: '31px', height: '$32' }} name="blob-error" />
         )}
@@ -147,8 +130,8 @@ const Toast: React.FC = () => {
           <Icon css={{ width: '31px', height: '$32' }} name="blob-info" />
         )}
         <Text size="sm">{content}</Text>
-      </ToastDescription>
-      <ToastClose
+      </StyledDescription>
+      <StyledClose
         aria-label="Close"
         css={{
           '&:hover': {
@@ -157,8 +140,8 @@ const Toast: React.FC = () => {
         }}
       >
         <Icon css={{ width: '$16', height: '$16', color: '$primary800' }} name="close" />
-      </ToastClose>
-    </ToastRoot>
+      </StyledClose>
+    </StyledToast>
   );
 };
 
