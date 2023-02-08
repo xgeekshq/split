@@ -80,77 +80,75 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
   };
 
   return (
-    <Flex direction="column">
-      <Text color="primary500" css={{ py: '$32' }}>
+    <Flex direction="column" gap="24">
+      <Text color="primary500">
         You can change the board configurations still later inside your retro board.
       </Text>
-      <Flex direction="column" gap="24">
-        <Flex gap="16">
-          <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange} />
-          <Flex direction="column">
-            <Text size="md" fontWeight="medium">
-              Hide cards from others
-            </Text>
-            <Text color="primary500" size="sm">
-              Participants can not see the cards from other participants of this retrospective.
-            </Text>
-          </Flex>
+      <Flex gap="16">
+        <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange} />
+        <Flex direction="column">
+          <Text size="md" fontWeight="medium">
+            Hide cards from others
+          </Text>
+          <Text color="primary500" size="sm">
+            Participants can not see the cards from other participants of this retrospective.
+          </Text>
         </Flex>
-        <Flex gap="16">
-          <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange} />
-          <Flex direction="column">
-            <Text size="md" fontWeight="medium">
-              Hide votes from others
-            </Text>
-            <Text color="primary500" size="sm">
-              Participants can not see the votes from other participants of this retrospective.
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex gap="16">
-          <Switch checked={board.postAnonymously} onCheckedChange={handlePostAnonymouslyChange} />
-          <Flex direction="column">
-            <Text size="md" fontWeight="medium">
-              Post anonymously
-            </Text>
-            <Text color="primary500" size="sm">
-              The option to post anonymously is checked by default.
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex gap="16">
-          <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange} />
-          <Flex direction="column">
-            <Text size="md" fontWeight="medium">
-              Limit votes
-            </Text>
-            <Text color="primary500" size="sm">
-              Make votes more significant by limiting them.
-            </Text>
-            <Input
-              css={{ mt: '$8', mb: 0 }}
-              disabled={!board.maxVotes}
-              id="maxVotes"
-              placeholder="Max votes"
-              type="number"
-            />
-          </Flex>
-        </Flex>
-        {isRegularBoard && (
-          <Flex gap="16">
-            <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange} />
-            <Flex direction="column">
-              <Text size="md" fontWeight="medium">
-                Make board public
-              </Text>
-              <Text color="primary500" size="sm">
-                If you make this board public anyone with the link to the board can access it. Where
-                to find the link? Just copy the URL of the board itself and share it.
-              </Text>
-            </Flex>
-          </Flex>
-        )}
       </Flex>
+      <Flex gap="16">
+        <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange} />
+        <Flex direction="column">
+          <Text size="md" fontWeight="medium">
+            Hide votes from others
+          </Text>
+          <Text color="primary500" size="sm">
+            Participants can not see the votes from other participants of this retrospective.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex gap="16">
+        <Switch checked={board.postAnonymously} onCheckedChange={handlePostAnonymouslyChange} />
+        <Flex direction="column">
+          <Text size="md" fontWeight="medium">
+            Post anonymously
+          </Text>
+          <Text color="primary500" size="sm">
+            The option to post anonymously is checked by default.
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex gap="16">
+        <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange} />
+        <Flex direction="column">
+          <Text size="md" fontWeight="medium">
+            Limit votes
+          </Text>
+          <Text color="primary500" size="sm">
+            Make votes more significant by limiting them.
+          </Text>
+          <Input
+            css={{ mt: '$8', mb: 0 }}
+            disabled={!board.maxVotes}
+            id="maxVotes"
+            placeholder="Max votes"
+            type="number"
+          />
+        </Flex>
+      </Flex>
+      {isRegularBoard && (
+        <Flex gap="16">
+          <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange} />
+          <Flex direction="column">
+            <Text size="md" fontWeight="medium">
+              Make board public
+            </Text>
+            <Text color="primary500" size="sm">
+              If you make this board public anyone with the link to the board can access it. Where
+              to find the link? Just copy the URL of the board itself and share it.
+            </Text>
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 };
