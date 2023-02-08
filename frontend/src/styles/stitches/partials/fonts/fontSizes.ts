@@ -9,6 +9,7 @@ const fontSizes = {
   24: '1.5rem',
   28: '1.75rem',
   32: '2rem',
+  38: '2.5rem',
   48: '3rem',
   64: '4rem',
   72: '4.5rem',

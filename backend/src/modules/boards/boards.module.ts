@@ -9,14 +9,26 @@ import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
 import { VotesModule } from '../votes/votes.module';
 import {
+	afterUserPausedTimerSubscriber,
+	afterUserRequestedTimerStateSubscriber,
+	afterUserStartedTimerSubscriber,
+	afterUserStoppedTimerSubscriber,
+	afterUserUpdatedDurationSubscriber,
+	boardTimerRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
 	getBoardService,
+	pauseBoardTimerService,
+	sendBoardTimerStateService,
+	sendBoardTimerTimeLeftService,
+	startBoardTimerService,
+	stopBoardTimerService,
 	updateBoardApplication,
-	updateBoardService
+	updateBoardService,
+	updateBoardTimerDurationService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 
@@ -38,7 +50,19 @@ import BoardsController from './controller/boards.controller';
 		createBoardApplication,
 		updateBoardApplication,
 		deleteBoardApplication,
-		getBoardApplication
+		getBoardApplication,
+		boardTimerRepository,
+		sendBoardTimerStateService,
+		startBoardTimerService,
+		pauseBoardTimerService,
+		stopBoardTimerService,
+		sendBoardTimerTimeLeftService,
+		updateBoardTimerDurationService,
+		afterUserPausedTimerSubscriber,
+		afterUserStartedTimerSubscriber,
+		afterUserStoppedTimerSubscriber,
+		afterUserUpdatedDurationSubscriber,
+		afterUserRequestedTimerStateSubscriber
 	],
 	controllers: [BoardsController],
 	exports: [
