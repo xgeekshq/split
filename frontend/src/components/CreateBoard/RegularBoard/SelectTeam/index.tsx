@@ -105,7 +105,7 @@ const SelectTeam = () => {
     <Flex direction="column" css={{ width: '100%' }}>
       <Select
         disabled={numberOfTeams === 0}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?._id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}

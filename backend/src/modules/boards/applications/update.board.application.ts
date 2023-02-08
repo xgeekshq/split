@@ -1,3 +1,4 @@
+import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 import { UpdateColumnDto } from '../dto/column/update-column.dto';
@@ -26,5 +27,9 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 	}
 	deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
 		return this.updateBoardService.deleteCardsFromColumn(boardId, column);
+	}
+
+	updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
+		return this.updateBoardService.updateBoardParticipants(addUsers, removeUsers);
 	}
 }

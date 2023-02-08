@@ -15,7 +15,6 @@ import fetchData from '@/utils/fetchData';
 import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
 import ColumnType from '@/types/column';
-import { BoardUser, BoardUserAddAndRemove } from '@/types/board/board.user';
 
 // #region BOARD
 
@@ -69,21 +68,6 @@ export const deleteBoardRequest = async ({
   fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId, teamId } });
 
 // #endregion
-
-// #region PARTICIPANTS
-export const getBoardParticipantsRequest = (boardId: string): Promise<BoardUser[]> =>
-  fetchData(`/boards/${boardId}/participants`, {
-    method: 'GET',
-  });
-
-export const addAndRemoveBoardParticipantsRequest = (
-  boardUsers: BoardUserAddAndRemove,
-): Promise<BoardUser[]> =>
-  fetchData(`/boards/${boardUsers.boardId}/participants`, {
-    method: 'PUT',
-    data: boardUsers,
-  });
-// #endRegion
 
 // #region COLUMN
 export const updateColumnRequest = (
