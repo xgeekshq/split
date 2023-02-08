@@ -20,8 +20,8 @@ import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
-import Board, { BoardDocument } from '../schemas/board.schema';
-import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import Board, { BoardDocument } from '../entities/board.schema';
+import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/schemas/column.schema';
@@ -258,7 +258,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		const columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
 			if (col._id) {
-				const columnBoard = board.columns.find((colBoard) => colBoard._id === col._id.toString());
+				const columnBoard = board.columns.find(
+					(colBoard) => colBoard._id.toString() === col._id.toString()
+				);
 
 				if (columnBoard) {
 					return [{ ...columnBoard, title: col.title }];
