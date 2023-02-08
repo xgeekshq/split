@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
 import Tab, { TabContent } from '@/components/Primitives/Tab';
+import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import ParticipantsTab from '../ParticipantsTab';
 import BoardConfigurations from '../../Configurations/BoardConfigurations';
 
@@ -16,9 +18,11 @@ const SettingsTabs = () => {
   const initialTabValue = tabList[0].value;
 
   const [activeTab, setActiveTab] = useState(initialTabValue);
+
   /**
    * Recoil Atoms
    */
+  const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
 
   const {
@@ -26,6 +30,7 @@ const SettingsTabs = () => {
   } = useFormContext();
 
   const handleTabChange = (newTab: string) => {
+    if (haveError) return;
     setActiveTab(newTab);
   };
 
