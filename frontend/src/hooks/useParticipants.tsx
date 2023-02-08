@@ -73,6 +73,7 @@ const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps)
       return { previousBoardParticipants };
     },
     onSettled: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
       queryClient.invalidateQueries(['participants', { id: boardId }]);
     },
     onError: (error, variables, context) => {
