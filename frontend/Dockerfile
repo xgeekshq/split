@@ -13,11 +13,13 @@ COPY . .
 
 # Rebuild the source code only when needed
 FROM node:$TAG AS builder
+ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=development /app/node_modules ./node_modules
 COPY . .
 
 RUN npm run build
+RUN npm run build-storybook
 RUN npm prune --omit=dev
 
 # Production image, copy all the files and run next

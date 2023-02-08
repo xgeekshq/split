@@ -56,7 +56,7 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
     }, [teams, selectedTeam]);
 
     return (
-      <Flex css={{ mt: '$32' }} direction="column">
+      <Flex direction="column">
         <Flex css={{ width: '100%' }} gap="22" justify="between">
           <SelectTeam previousTeam={previousTeam} />
 

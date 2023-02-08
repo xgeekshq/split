@@ -12,7 +12,9 @@ import Text from '@/components/Primitives/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Flex';
 import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';
-import StyledImage from '@/components/Primitives/Image';
+import { styled } from '@/styles/stitches/stitches.config';
+
+const StyledImage = styled('img', {});
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);

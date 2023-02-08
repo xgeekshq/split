@@ -170,6 +170,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		board.hideCards = boardData.hideCards;
 		board.addCards = boardData.addCards;
 		board.hideVotes = boardData.hideVotes;
+		board.postAnonymously = boardData.postAnonymously;
 
 		/**
 		 * Validate if:

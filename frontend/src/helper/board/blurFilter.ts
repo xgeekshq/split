@@ -4,7 +4,9 @@ import CommentType from '@/types/comment/comment';
 import { User } from '@/types/user/user';
 
 export function cardBlur(hideCards: boolean, card: CardType, userId: string) {
-  return hideCards && card.createdBy?._id !== userId ? 'blur($sizes$6)' : 'none';
+  return hideCards && (card.createdBy?._id !== userId || card.createdByTeam)
+    ? 'blur($sizes$6)'
+    : 'none';
 }
 
 export function cardFooterBlur(hideCards: boolean, createdBy?: User, userId?: string) {

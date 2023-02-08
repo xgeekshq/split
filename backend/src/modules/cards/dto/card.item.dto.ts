@@ -24,10 +24,6 @@ export default class CardItemDto {
 	text!: string;
 
 	@ApiPropertyOptional({ description: 'User Id' })
-	@IsNotEmpty()
-	@IsMongoId()
-	@IsString()
-	@IsMongoId()
 	createdBy?: string;
 
 	@ApiProperty({ type: CommentDto, isArray: true })
@@ -38,7 +34,6 @@ export default class CardItemDto {
 
 	@ApiProperty({ type: String, isArray: true })
 	@IsNotEmpty()
-	@ValidateNested({ each: true })
 	votes!: string[];
 
 	@ApiProperty({ default: false })

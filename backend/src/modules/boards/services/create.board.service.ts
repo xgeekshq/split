@@ -96,7 +96,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
 				...dividedBoard,
 				team,
-				slackEnable: boardData.slackEnable
+				slackEnable: boardData.slackEnable,
+				hideCards: true,
+				postAnonymously: true
 			}));
 
 			return this.boardModel.create({
@@ -269,7 +271,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
-			hideCards: configs.hideCards ?? false,
+			hideCards: true,
+			postAnonymously: configs.postAnonymously,
 			hideVotes: configs.hideVotes ?? false,
 			maxUsers: Math.ceil(configs.maxUsersPerTeam),
 			slackEnable: configs.slackEnable,

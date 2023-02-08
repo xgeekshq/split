@@ -21,6 +21,8 @@ interface CommentsListProps {
   columnId: string;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  isMainboard: boolean;
+  postAnonymously: boolean;
 }
 
 const Comments = React.memo(
@@ -36,6 +38,8 @@ const Comments = React.memo(
     columnId,
     isDefaultText,
     hasAdminRole,
+    isMainboard,
+    postAnonymously,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -64,6 +68,8 @@ const Comments = React.memo(
               columnId={columnId}
               isDefaultText={isDefaultText}
               hasAdminRole={hasAdminRole}
+              isMainboard={isMainboard}
+              postAnonymously={postAnonymously}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -86,12 +92,13 @@ const Comments = React.memo(
               isCard={false}
               isUpdate={false}
               socketId={socketId}
-              anonymous={false}
+              anonymous={undefined}
               isDefaultText={isDefaultText}
+              postAnonymously={postAnonymously}
             />
           </Flex>
         )}
-        {!isCreateCommentOpened && !isSubmited && (
+        {!isCreateCommentOpened && !isSubmited && (!isMainboard || hasAdminRole) && (
           <Flex
             css={{ '@hover': { '&:hover': { cursor: 'pointer' } } }}
             onClick={handleSetCreateComment}

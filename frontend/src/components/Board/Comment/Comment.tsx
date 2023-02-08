@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import useComments from '@/hooks/useComments';
@@ -21,6 +20,8 @@ interface CommentProps {
   columnId: string;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  isMainboard: boolean;
+  postAnonymously: boolean;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
@@ -35,6 +36,8 @@ const Comment: React.FC<CommentProps> = React.memo(
     columnId,
     isDefaultText,
     hasAdminRole,
+    isMainboard,
+    postAnonymously,
   }) => {
     const { deleteComment } = useComments();
     const [editing, setEditing] = useState(false);
@@ -78,21 +81,13 @@ const Comment: React.FC<CommentProps> = React.memo(
               >
                 {comment.text}
               </Text>
-              {isSubmited && userId === comment.createdBy._id && (
-                <Icon
-                  name="menu-dots"
-                  css={{
-                    width: '$20',
-                    height: '$20',
-                  }}
-                />
-              )}
-              {!isSubmited && (userId === comment.createdBy._id || hasAdminRole) && (
-                <PopoverCommentSettings
-                  handleDeleteComment={handleDeleteComment}
-                  handleEditing={handleEditing}
-                />
-              )}
+              {!isSubmited &&
+                ((userId === comment.createdBy._id && !isMainboard) || hasAdminRole) && (
+                  <PopoverCommentSettings
+                    handleDeleteComment={handleDeleteComment}
+                    handleEditing={handleEditing}
+                  />
+                )}
             </Flex>
             <Flex align="center" css={{ minHeight: '$24', maxWidth: '$226' }}>
               {!comment.anonymous && (
@@ -126,6 +121,8 @@ const Comment: React.FC<CommentProps> = React.memo(
             socketId={socketId}
             anonymous={comment.anonymous}
             isDefaultText={isDefaultText}
+            postAnonymously={postAnonymously}
+            isOwner={userId === comment.createdBy?._id}
           />
         )}
       </Flex>

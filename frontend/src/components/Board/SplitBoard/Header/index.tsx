@@ -123,10 +123,7 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator
-                  css={{ height: '$14 !important', width: '1px' }}
-                  data-orientation="vertical"
-                />
+                <Separator css={{ height: '$14 !important' }} orientation="vertical" />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -191,11 +188,7 @@ const BoardHeader = () => {
                 isSubBoardPage
               />
             </Flex>
-            <Separator
-              css={{ height: '$24 !important', width: '1px' }}
-              data-orientation="vertical"
-            />
-
+            <Separator orientation="vertical" size="lg" />
             <Flex align="center" gap="10">
               <Text color="primary300" size="sm">
                 Responsible
@@ -246,11 +239,7 @@ const BoardHeader = () => {
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
               ) && (
                 <>
-                  <Separator
-                    css={{ height: '$24 !important', width: '1px' }}
-                    data-orientation="vertical"
-                  />
-
+                  <Separator orientation="vertical" size="lg" />
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">
                       Team admins
@@ -271,11 +260,7 @@ const BoardHeader = () => {
                 ),
               ) && (
                 <>
-                  <Separator
-                    css={{ height: '$24 !important', width: '1px' }}
-                    data-orientation="vertical"
-                  />
-
+                  <Separator orientation="vertical" size="lg" />
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">
                       Stakeholders

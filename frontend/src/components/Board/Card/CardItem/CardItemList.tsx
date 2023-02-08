@@ -18,6 +18,7 @@ interface CardItemListProps {
   hideCards: boolean;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -34,6 +35,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
   hideCards,
   isDefaultText,
   hasAdminRole,
+  postAnonymously,
 }) => (
   <Flex direction="column">
     {items.map((item, idx) => (
@@ -66,6 +68,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
           userId={userId}
           isDefaultText={isDefaultText}
           hasAdminRole={hasAdminRole}
+          postAnonymously={postAnonymously}
         />
       </Flex>
     ))}

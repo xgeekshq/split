@@ -1,20 +1,17 @@
 import { ReactNode } from 'react';
 
 import Flex from '@/components/Primitives/Flex';
-import { Switch } from '@/components/Primitives/Switch';
+import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
-import SwitchThumbComponent from './SwitchThumbComponent';
 
 type Props = {
   title: string;
-  text: string;
+  text?: string;
   isChecked: boolean;
   handleCheckedChange: (checked: boolean) => void;
   children?: ReactNode;
-  color?: string;
   disabled?: boolean;
-  styleVariant?: boolean;
   disabledInfo?: string;
 };
 
@@ -24,38 +21,33 @@ const ConfigurationSwitchSettings = ({
   isChecked,
   handleCheckedChange,
   children,
-  color,
   disabled,
-  styleVariant,
   disabledInfo,
 }: Props) => (
   <Flex gap={20}>
-    {styleVariant && (
+    {disabledInfo ? (
       <Tooltip content={disabledInfo}>
         <Flex>
           <Switch
             checked={isChecked}
-            variant="disabled"
+            size="sm"
             onCheckedChange={handleCheckedChange}
             disabled={disabled}
-          >
-            <SwitchThumbComponent isChecked={isChecked} iconName="check" color={color} />
-          </Switch>
+          />
         </Flex>
       </Tooltip>
-    )}
-    {!styleVariant && (
-      <Switch checked={isChecked} variant="sm" onCheckedChange={handleCheckedChange}>
-        <SwitchThumbComponent isChecked={isChecked} iconName="check" color={color} />
-      </Switch>
+    ) : (
+      <Switch checked={isChecked} size="sm" onCheckedChange={handleCheckedChange} />
     )}
     <Flex direction="column">
       <Text size="md" fontWeight="medium">
         {title}
       </Text>
-      <Text color="primary500" size="sm">
-        {text}
-      </Text>
+      {text && (
+        <Text color="primary500" size="sm">
+          {text}
+        </Text>
+      )}
       {children}
     </Flex>
   </Flex>

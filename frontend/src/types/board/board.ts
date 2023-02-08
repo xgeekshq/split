@@ -43,6 +43,7 @@ export default interface BoardType {
   slackEnable?: boolean;
   responsibles?: string[];
   addCards: boolean;
+  postAnonymously: boolean;
 }
 
 export interface BoardInfoType {
@@ -88,4 +89,5 @@ export type UpdateBoardType = {
   columns?: (ColumnType | CreateColumn)[];
   addCards: boolean;
   responsible?: BoardUser;
+  postAnonymously: boolean;
 };

@@ -19,6 +19,7 @@ const CardsList = React.memo<ColumnInnerList>(
     hideCards,
     isDefaultText,
     hasAdminRole,
+    postAnonymously,
   }) => (
     <>
       {cards.map((card: CardType, idx) => (
@@ -38,6 +39,7 @@ const CardsList = React.memo<ColumnInnerList>(
           userId={userId}
           isDefaultText={isDefaultText || true}
           hasAdminRole={hasAdminRole}
+          postAnonymously={postAnonymously}
         />
       ))}
     </>

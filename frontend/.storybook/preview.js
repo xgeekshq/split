@@ -1,4 +1,5 @@
 import Sprite from '@/components/icons/Sprite';
+import { RecoilRoot } from 'recoil';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -8,13 +9,24 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  backgrounds: {
+    default: 'split',
+    values: [
+      {
+        name: 'split',
+        value: '#F4F7F8'
+      }
+    ]
+  }
 };
 
 export const decorators = [
   (Story) => (
     <>
       <Sprite />
-      <Story />
+      <RecoilRoot>
+        <Story />
+      </RecoilRoot>
     </>
   ),
 ];
