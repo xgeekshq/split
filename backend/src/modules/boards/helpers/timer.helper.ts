@@ -41,6 +41,7 @@ export default class TimerHelper {
 	}
 
 	private interval: any;
+	private timeOut: any;
 	private timerSyncInterval: number;
 	private onTimerSyncCallback: TimeLeftUpdateCallback;
 	private onExpiredCallback: TimerExpiredCallback;
@@ -127,8 +128,11 @@ export default class TimerHelper {
 		this.onTimerSyncCallback = callback;
 	}
 
-	setCleanTimerCallback(timeOut = oneHour, callback: CleanTimerCallback) {
-		setTimeout(callback, timeOut);
+	setCleanTimerCallback(time = oneHour, callback: CleanTimerCallback) {
+		this.timeOut = setTimeout(() => {
+			callback();
+			clearTimeout(this.timeOut);
+		}, time);
 	}
 
 	private handleTimeUpdated() {
