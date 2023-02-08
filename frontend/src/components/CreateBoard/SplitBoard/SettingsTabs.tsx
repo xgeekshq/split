@@ -5,21 +5,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
-import Tab, { TabContent } from '@/components/Primitives/Tab';
+import Tab from '@/components/Primitives/Tab';
 import { usePrevious } from '@/utils/previousState';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
 import BoardConfigurations from '../Configurations/BoardConfigurations';
 
 const Settings = () => {
-  const tabList = [
-    { value: 'teams', text: 'Team/Sub-teams configurations' },
-    { value: 'config', text: 'Configurations' },
-  ];
-  const initialTabValue = tabList[0].value;
-
-  const [activeTab, setActiveTab] = useState(initialTabValue);
-
   /**
    * Recoil Atoms
    */
@@ -28,6 +20,22 @@ const Settings = () => {
 
   const selectedTeam = useRecoilValue(createBoardTeam);
   const prevTeam = usePrevious(selectedTeam?.id);
+
+  const tabList = [
+    {
+      value: 'teams',
+      text: 'Team/Sub-teams configurations',
+      content: <TeamSubTeamsConfigurations previousTeam={prevTeam} />,
+    },
+    {
+      value: 'config',
+      text: 'Configurations',
+      content: <BoardConfigurations />,
+    },
+  ];
+  const initialTabValue = tabList[0].value;
+
+  const [activeTab, setActiveTab] = useState(initialTabValue);
 
   const {
     formState: { errors },
@@ -63,14 +71,7 @@ const Settings = () => {
         defaultValue={initialTabValue}
         activeValue={activeTab}
         onChangeActiveValue={handleTabChange}
-      >
-        <TabContent value="teams">
-          <TeamSubTeamsConfigurations previousTeam={prevTeam} />
-        </TabContent>
-        <TabContent value="config">
-          <BoardConfigurations />
-        </TabContent>
-      </Tab>
+      />
     </>
   );
 };

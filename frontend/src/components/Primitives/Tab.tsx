@@ -2,6 +2,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
+import { ReactNode } from 'react';
 import Flex from './Flex';
 import Text from './Text';
 
@@ -32,6 +33,7 @@ const StyledTabsTrigger = styled(Tabs.Trigger, Text, {
 type TabList = {
   value: string;
   text: string;
+  content: ReactNode;
 };
 
 type TabType = {
@@ -67,6 +69,11 @@ const Tab: React.FC<TabProps> = ({
         ))}
       </StyledTabsList>
       <Flex direction="column" css={{ mt: '$24' }}>
+        {tabList.map((tab) => (
+          <Tabs.Content value={tab.value} key={tab.value}>
+            {tab.content}
+          </Tabs.Content>
+        ))}
         {children}
       </Flex>
     </StyledTabsRoot>
@@ -74,4 +81,3 @@ const Tab: React.FC<TabProps> = ({
 };
 
 export default Tab;
-export const TabContent = Tabs.Content;
