@@ -9,7 +9,7 @@ export default {
   parameters: {
     controls: {
       expanded: true,
-      exclude: ['ref', 'as', 'css'],
+      exclude: ['ref', 'as', 'css', 'asChild'],
       sort: 'requiredFirst',
     },
   },
@@ -18,6 +18,22 @@ export default {
       { value: 'participants', text: 'Participants' },
       { value: 'config', text: 'Configurations' },
     ],
+    defaultValue: 'config',
+  },
+  argTypes: {
+    activeValue: {
+      control: { type: 'string' },
+      description: 'Used to Control the active Tab',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    onChangeActiveValue: {
+      description: 'Function used to set the new active Tab',
+      table: {
+        type: { summary: '(newTab: string) => void' },
+      },
+    },
   },
 };
 
