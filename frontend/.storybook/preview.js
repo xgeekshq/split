@@ -1,4 +1,5 @@
 import Sprite from '@/components/icons/Sprite';
+import { RecoilRoot } from 'recoil';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -23,7 +24,9 @@ export const decorators = [
   (Story) => (
     <>
       <Sprite />
-      <Story />
+      <RecoilRoot>
+        <Story />
+      </RecoilRoot>
     </>
   ),
 ];
