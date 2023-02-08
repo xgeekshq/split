@@ -20,6 +20,7 @@ export interface BoardUserToAdd {
   user: User;
   role: BoardUserRoles;
   votesCount: number;
+  board?: string;
   isNewJoiner?: boolean;
   _id?: string;
 }
@@ -27,4 +28,10 @@ export interface BoardUserToAdd {
 export interface BoardUserDto {
   user: string;
   role: BoardUserRoles;
+}
+
+export interface BoardUserAddAndRemove {
+  addBoardUsers: BoardUserToAdd[];
+  removeBoardUsers: string[];
+  boardId: string;
 }
