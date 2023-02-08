@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import useComments from '@/hooks/useComments';
@@ -82,15 +81,6 @@ const Comment: React.FC<CommentProps> = React.memo(
               >
                 {comment.text}
               </Text>
-              {isSubmited && userId === comment.createdBy._id && (
-                <Icon
-                  name="menu-dots"
-                  css={{
-                    width: '$20',
-                    height: '$20',
-                  }}
-                />
-              )}
               {!isSubmited &&
                 ((userId === comment.createdBy._id && !isMainboard) || hasAdminRole) && (
                   <PopoverCommentSettings

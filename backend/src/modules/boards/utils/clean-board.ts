@@ -55,9 +55,9 @@ export const replaceCard = (
 	const { anonymous, createdByTeam } = input;
 	const createdByAsUserDocument = createdBy as UserDocument;
 
-	if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
+	if (hideCards && String(createdByAsUserDocument?._id) !== String(userId)) {
 		text = hideText(input.text);
-		createdBy = replaceUser(createdByAsUserDocument, userId);
+		createdBy = createdByAsUserDocument ? replaceUser(createdByAsUserDocument, userId) : null;
 	}
 
 	if (comments?.length > 0) {
@@ -101,9 +101,9 @@ export const filterVotes = (input: Card | CardItem, userId: string) => {
 export const replaceUser = (input: UserDocument, userId: string): LeanDocument<UserDocument> => {
 	return {
 		...input,
-		_id: String(userId) === String(input._id) ? input._id : undefined,
-		firstName: hideText(input.firstName),
-		lastName: hideText(input.lastName)
+		_id: String(userId) === String(input?._id) ? input?._id : undefined,
+		firstName: hideText(input?.firstName),
+		lastName: hideText(input?.lastName)
 	};
 };
 
@@ -133,7 +133,10 @@ export const replaceComments = (
 		if (hideCards && String(createdByAsUserDocument._id) !== String(userId)) {
 			return {
 				...comment,
-				createdBy: replaceUser(comment.createdBy as UserDocument, userId),
+				createdBy:
+					comment.createdBy && userId
+						? replaceUser(comment.createdBy as UserDocument, userId)
+						: null,
 				text: hideText(text)
 			};
 		}

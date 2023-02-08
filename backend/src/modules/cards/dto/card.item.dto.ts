@@ -24,7 +24,6 @@ export default class CardItemDto {
 	text!: string;
 
 	@ApiPropertyOptional({ description: 'User Id' })
-	@IsNotEmpty()
 	createdBy?: string;
 
 	@ApiProperty({ type: CommentDto, isArray: true })

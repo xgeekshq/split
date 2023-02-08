@@ -7,6 +7,7 @@ import { getCardVotes } from '@/helper/board/votes';
 import { ColumnBoardType } from '@/types/column';
 import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
+import { countColumnCards } from '@/helper/board/countCards';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
@@ -127,7 +128,7 @@ const Column = React.memo<ColumMemoProps>(
                         py: '$2',
                       }}
                     >
-                      {cards.length} cards
+                      {countColumnCards(cards)} cards
                     </Text>
                   </Flex>
                   <Flex>
