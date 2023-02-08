@@ -5,7 +5,6 @@ import { TYPES } from '../interfaces/types';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import * as Cards from 'src/modules/cards/interfaces/types';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { UpdateColumnService } from '../interfaces/services/update.column.service.interface';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.dto';
@@ -24,34 +23,14 @@ export default class UpdateColumnServiceImpl implements UpdateColumnService {
 		private deleteCardService: DeleteCardService
 	) {}
 
-	updateColumn(boardId: string, column: UpdateColumnDto) {
-		// const board = this.boardModel
-		// 	.findOneAndUpdate(
-		// 		{
-		// 			_id: boardId,
-		// 			'columns._id': column._id
-		// 		},
-		// 		{
-		// 			$set: {
-		// 				'columns.$[column].color': column.color,
-		// 				'columns.$[column].title': column.title,
-		// 				'columns.$[column].cardText': column.cardText,
-		// 				'columns.$[column].isDefaultText': column.isDefaultText
-		// 			}
-		// 		},
-		// 		{
-		// 			arrayFilters: [{ 'column._id': column._id }],
-		// 			new: true
-		// 		}
-		// 	)
-		// 	.populate(BoardDataPopulate)
-		// 	.lean()
-		// 	.exec();
-		const board = this.columnRepository.updateColumn(boardId, column);
+	async updateColumn(boardId: string, column: UpdateColumnDto) {
+		const board = await this.columnRepository.updateColumn(boardId, column);
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
+		if (board === null) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
 
-		// if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
+		if (column.socketId) this.socketService.sendUpdatedBoard(boardId, column.socketId);
 
 		return board;
 	}
@@ -65,25 +44,7 @@ export default class UpdateColumnServiceImpl implements UpdateColumnService {
 
 		await this.deleteCardService.deleteCardsFromColumn(boardId, cardsToUpdate);
 
-		const updateBoard = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns._id': column.id
-				},
-				{
-					$set: {
-						'columns.$[column].cards': []
-					}
-				},
-				{
-					arrayFilters: [{ 'column._id': column.id }],
-					new: true
-				}
-			)
-			.populate(BoardDataPopulate)
-			.lean()
-			.exec();
+		const updateBoard = this.columnRepository.deleteCards(boardId, column.id);
 
 		if (!updateBoard) throw new BadRequestException(UPDATE_FAILED);
 

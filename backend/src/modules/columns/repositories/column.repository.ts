@@ -37,4 +37,23 @@ export class ColumnRepository
 			BoardDataPopulate
 		);
 	}
+
+	deleteCards(boardId: string, columnId: string): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId,
+				'columns._id': columnId
+			},
+			{
+				$set: {
+					'columns.$[column].cards': []
+				}
+			},
+			{
+				arrayFilters: [{ 'column._id': columnId }],
+				new: true
+			},
+			BoardDataPopulate
+		);
+	}
 }

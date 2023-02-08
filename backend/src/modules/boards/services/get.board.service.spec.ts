@@ -4,7 +4,7 @@ import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Document, LeanDocument, Types } from 'mongoose';
-import { BoardFactoryMock } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import {
@@ -16,7 +16,7 @@ import {
 import { getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
-const fakeBoards = BoardFactoryMock.createMany(2);
+const fakeBoards = BoardFactory.createMany(2);
 
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
