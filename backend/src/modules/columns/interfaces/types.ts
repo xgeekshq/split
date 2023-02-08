@@ -4,5 +4,8 @@ export const TYPES = {
 	},
 	applications: {
 		UpdateColumnApplication: 'UpdateColumnApplication'
+	},
+	repositories: {
+		ColumnRepository: 'ColumnRepository'
 	}
 };

@@ -47,7 +47,7 @@ import { MergeCardApplication } from '../interfaces/applications/merge.card.appl
 import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.application.interface';
 import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
-import Board from 'src/modules/boards/schemas/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
 import Card from '../schemas/card.schema';

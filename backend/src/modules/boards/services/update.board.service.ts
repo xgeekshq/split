@@ -24,7 +24,7 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import Column from '../../columns/schemas/column.schema';
+import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
 import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 

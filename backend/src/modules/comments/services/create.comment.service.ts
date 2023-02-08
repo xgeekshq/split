@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { CreateCommentServiceInterface } from '../interfaces/services/create.comment.service.interface';
 

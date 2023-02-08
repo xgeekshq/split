@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { hideText } from 'src/libs/utils/hideText';
-import Board from 'src/modules/boards/schemas/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
 import DeleteCardDto from 'src/modules/cards/dto/delete.card.dto';
 import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';

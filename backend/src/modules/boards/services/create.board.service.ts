@@ -25,8 +25,8 @@ import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
-import Board, { BoardDocument } from '../schemas/board.schema';
-import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import Board, { BoardDocument } from '../entities/board.schema';
+import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 

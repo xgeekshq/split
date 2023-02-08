@@ -16,8 +16,8 @@ import * as Teams from 'src/modules/teams/interfaces/types';
 import { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
-import Board, { BoardDocument } from '../schemas/board.schema';
-import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
+import Board, { BoardDocument } from '../entities/board.schema';
+import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 

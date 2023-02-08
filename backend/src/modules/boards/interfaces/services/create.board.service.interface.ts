@@ -1,5 +1,5 @@
 import BoardDto from '../../dto/board.dto';
-import { BoardDocument } from '../../schemas/board.schema';
+import { BoardDocument } from '../../entities/board.schema';
 
 export interface Configs {
 	recurrent: boolean;

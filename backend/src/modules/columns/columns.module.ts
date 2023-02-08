@@ -7,7 +7,11 @@ import BoardsModule from '../boards/boards.module';
 import { CardsModule } from '../cards/cards.module';
 import SocketModule from '../socket/socket.module';
 import TeamsModule from '../teams/teams.module';
-import { updateColumnApplication, updateColumnService } from './columns.providers';
+import {
+	columnRepository,
+	updateColumnApplication,
+	updateColumnService
+} from './columns.providers';
 import ColumnsController from './controller/columns.controller';
 
 @Module({
@@ -20,6 +24,6 @@ import ColumnsController from './controller/columns.controller';
 		forwardRef(() => SocketModule)
 	],
 	controllers: [ColumnsController],
-	providers: [updateColumnService, updateColumnApplication]
+	providers: [updateColumnService, updateColumnApplication, columnRepository]
 })
 export class ColumnsModule {}

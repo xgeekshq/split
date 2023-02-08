@@ -3,8 +3,9 @@
 import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Document, LeanDocument } from 'mongoose';
-import Board from 'src/modules/boards/schemas/board.schema';
+import { Document, LeanDocument, Types } from 'mongoose';
+import { BoardFactoryMock } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import Board from 'src/modules/boards/entities/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import {
 	getTeamService,
@@ -14,6 +15,8 @@ import {
 } from 'src/modules/teams/providers';
 import { getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
+
+const fakeBoards = BoardFactoryMock.createMany(2);
 
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
@@ -35,8 +38,18 @@ describe('GetBoardServiceImpl', () => {
 					useValue: {}
 				},
 				{
-					provide: getModelToken('Board'),
-					useValue: {}
+					provide: getModelToken(Board.name),
+					useValue: {
+						findById: (boardId: string) => ({
+							populate: () => ({
+								lean: () => ({
+									exec: jest.fn().mockImplementation(() => {
+										return Promise.resolve(fakeBoards.find((item) => item._id === boardId));
+									})
+								})
+							})
+						})
+					}
 				},
 				{
 					provide: getModelToken('BoardUser'),
@@ -115,5 +128,13 @@ describe('GetBoardServiceImpl', () => {
 			],
 			hideVotes: true
 		});
+	});
+
+	it.only('should return a board', async () => {
+		const boardId = fakeBoards[1]._id;
+
+		const result = await service.getBoardData(boardId);
+
+		expect(result).toMatchObject(fakeBoards[1]);
 	});
 });

@@ -1,6 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { UpdateBoardDto } from '../../dto/update-board.dto';
-import { BoardDocument } from '../../schemas/board.schema';
+import { BoardDocument } from '../../entities/board.schema';
 
 export interface UpdateBoardApplicationInterface {
 	update(boardId: string, boardData: UpdateBoardDto): Promise<LeanDocument<BoardDocument> | null>;

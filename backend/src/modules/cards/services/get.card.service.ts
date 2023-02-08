@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isEmpty } from 'class-validator';
 import { Model, Types } from 'mongoose';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import CardItem from '../schemas/card.item.schema';
 import Card from '../schemas/card.schema';
