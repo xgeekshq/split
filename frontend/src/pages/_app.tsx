@@ -12,10 +12,11 @@ import globalStyles from '@/styles/globals';
 
 import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
-import { JWT_EXPIRATION_TIME } from '@/utils/constants';
+import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 import { Session } from 'next-auth';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import RecoilDevTools from '@/components/RecoilDevTools/RecoilDevTools';
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -56,6 +57,7 @@ function Root({
               <RecoilRoot>
                 {getLayout(<Component {...pageProps} />)}
                 <Toast />
+                {RECOIL_DEV_TOOLS && <RecoilDevTools />}
               </RecoilRoot>
               <ToastViewport
                 css={{

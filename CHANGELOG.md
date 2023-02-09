@@ -2,7 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.11...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.12...HEAD)
+
+## [v0.1.12](https://github.com/xgeekshq/split/compare/v0.1.11...v0.1.12) - 2023-02-08
+
+### What Changed 👀
+
+- feat: call archive slack channels service when a board is deleted @mourabraz (#1050)
+- feat: storybook deployment @JoaoSaIvador (#1036)
+
+### 🚀 Features
+
+- feat: tab primitive storybook @StereoPT (#1046)
+
+### 🐛 Bug Fixes
+
+- fix: update comments as responsible @nunocaseiro (#1051)
+- fix: input onChange handler @StereoPT (#1040)
+- fix: clean board and hide comments updating the cards visibility @nunocaseiro (#1044)
+- fix: class validator @nunocaseiro (#1043)
+- fix: blur, hide cards, hide text, post anonymously @nunocaseiro (#1037)
+- fix: disable card drag on mainboard @StereoPT (#1032)
+
+### 📄 Documentation
+
+- feat: toast primitive story @JoaoSaIvador (#1049)
+- feat: textarea primitive story @JoaoSaIvador (#1042)
+- feat: switch primitive refactor and story @JoaoSaIvador (#1033)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump class-validator from 0.13.2 to 0.14.0 in /backend @dependabot (#854)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.11...v0.1.12
 
 ## [v0.1.11](https://github.com/xgeekshq/split/compare/v0.1.10...v0.1.11) - 2023-02-06
 

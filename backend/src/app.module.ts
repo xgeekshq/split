@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import AppConfigModule from 'src/infrastructure/config/config.module';
 import { configuration } from 'src/infrastructure/config/configuration';
@@ -35,7 +36,8 @@ const imports = [
 	mongooseResetModule,
 	mongooseUserModule,
 	ScheduleModule.forRoot(),
-	QueueModule
+	QueueModule,
+	EventEmitterModule.forRoot()
 ];
 
 if (configuration().azure.enabled) {

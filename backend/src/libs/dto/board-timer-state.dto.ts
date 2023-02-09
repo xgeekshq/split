@@ -1,0 +1,10 @@
+import BoardTimerDto from 'src/libs/dto/board-timer.dto';
+import TimeDto from 'src/libs/dto/time.dto';
+import TimerStatusDto from 'src/libs/dto/timer-status.dto';
+
+export default interface BoardTimerStateDto extends BoardTimerDto {
+	status: TimerStatusDto | null;
+	previousStatus: TimerStatusDto | null;
+	duration: TimeDto | null;
+	timeLeft: TimeDto | null;
+}
