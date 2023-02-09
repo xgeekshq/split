@@ -174,7 +174,6 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            // <Flex>
             <Flex gap="24">
               <Flex align="center" gap="10">
                 {isParticipantsPage ? (

@@ -2,7 +2,6 @@ import { BoardUserDocument } from './../../schemas/board.user.schema';
 import { Document, LeanDocument } from 'mongoose';
 import Board, { BoardDocument } from '../../schemas/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
-// import { BoardUserDocument } from '../../schemas/board.user.schema';
 
 export interface GetBoardServiceInterface {
 	getUserBoardsOfLast3Months(
