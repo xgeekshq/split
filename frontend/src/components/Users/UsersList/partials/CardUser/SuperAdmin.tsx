@@ -15,7 +15,6 @@ type SuperAdminProps = {
 
 const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: SuperAdminProps) => {
   const [checkedState, setCheckedState] = useState(userSAdmin);
-  const isDisabledState = true;
 
   const {
     updateUserIsAdmin: { mutateAsync },
@@ -41,11 +40,9 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: Supe
         <ConfigurationSwitchSettings
           handleCheckedChange={handleSuperAdminChange}
           isChecked={checkedState}
-          text=""
           title="Super Admin"
-          disabled={loggedUserId !== userId ? undefined : isDisabledState}
-          styleVariant={loggedUserId !== userId ? undefined : isDisabledState}
-          disabledInfo="Can't change your own role"
+          disabled={loggedUserId === userId}
+          disabledInfo={loggedUserId !== userId ? undefined : "Can't change your own role"}
         />
       </Flex>
     );

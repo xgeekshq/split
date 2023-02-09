@@ -15,7 +15,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   MergeIconContainer,
   RecurrentIconContainer,
@@ -130,10 +130,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
                 ) && (
                   <>
-                    <Separator
-                      css={{ height: '$24 !important', margin: '0 $14 0 $12' }}
-                      data-orientation="vertical"
-                    />
+                    <Separator orientation="vertical" size="lg" />
 
                     <Flex align="center" css={{ width: '100%' }} gap="10">
                       <Text color="primary300" size="sm">
@@ -155,10 +152,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   ),
                 ) && (
                   <>
-                    <Separator
-                      css={{ height: '$24 !important', margin: '0 $14 0 $12' }}
-                      data-orientation="vertical"
-                    />
+                    <Separator orientation="vertical" size="lg" />
 
                     <Flex align="center" gap="10">
                       <Text color="primary300" size="sm">
@@ -180,7 +174,8 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            <Flex>
+            // <Flex>
+            <Flex gap="24">
               <Flex align="center" gap="10">
                 {isParticipantsPage ? (
                   <Text size="sm">Participants</Text>
@@ -199,8 +194,8 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   userId={session!.user.id}
                 />
               </Flex>
-              <Flex align="center" gap="20" css={{ margin: '$12' }}>
-                <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
+              <Flex align="center">
+                <Separator orientation="vertical" size="lg" />
               </Flex>
               <Flex align="center" gap="10">
                 <Text color="primary300" size="sm">

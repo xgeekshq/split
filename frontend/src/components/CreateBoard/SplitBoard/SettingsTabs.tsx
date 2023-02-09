@@ -2,36 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import Text from '@/components/Primitives/Text';
+import Tab, { TabContent } from '@/components/Primitives/Tab';
 import { usePrevious } from '@/utils/previousState';
-import BoardConfigurations from '../Configurations/BoardConfigurations';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
-
-const StyledTextTab = styled(Text, {
-  pb: '$12 !important',
-  lineHeight: '$20',
-  '&:hover': {
-    cursor: 'pointer',
-  },
-  '&[data-activetab="true"]': {
-    boxSizing: 'border-box',
-    borderBottom: '2px solid $colors$primary800',
-    fontWeight: '$bold',
-    fontSize: '$16',
-    letterSpacing: '$0-2',
-    color: '$primary800',
-  },
-});
+import BoardConfigurations from '../Configurations/BoardConfigurations';
 
 const Settings = () => {
-  const [currentTab, setCurrentTab] = useState(1);
+  const tabList = [
+    { value: 'teams', text: 'Team/Sub-teams configurations' },
+    { value: 'config', text: 'Configurations' },
+  ];
+  const initialTabValue = tabList[0].value;
+
+  const [activeTab, setActiveTab] = useState(initialTabValue);
 
   /**
    * Recoil Atoms
@@ -41,62 +28,49 @@ const Settings = () => {
   const selectedTeam = useRecoilValue(createBoardTeam);
   const prevTeam = usePrevious(selectedTeam?.id);
 
-  const handleChangeTab = (value: number) => {
-    if (haveError) return;
-    setCurrentTab(value);
-  };
-
   const {
     formState: { errors },
   } = useFormContext();
 
+  const handleTabChange = (newTab: string) => {
+    if (haveError) return;
+    setActiveTab(newTab);
+  };
+
   useEffect(() => {
     if (errors.maxVotes) {
-      setCurrentTab(2);
+      handleTabChange('config');
     }
 
-    if (errors.team && currentTab === 2) {
+    if (errors.team && activeTab === 'config') {
+      handleTabChange('teams');
       setToastState({
         open: true,
         content: 'Please choose a team in the "Team/-Sub-teams configuration" tab',
         type: ToastStateEnum.ERROR,
       });
     }
-  }, [currentTab, errors.maxVotes, errors.team, setToastState]);
+  }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 
   return (
-    <Flex direction="column">
-      <Text heading={3} css={{ mb: '$24', mt: '$32' }}>
+    <>
+      <Text heading={3} css={{ mb: '$16', mt: '$32' }}>
         Settings
       </Text>
-      <Flex css={{ width: '100%', borderBottom: '1px solid $primary200' }} gap="24">
-        <StyledTextTab
-          css={{ marginBottom: '-1.5px' }}
-          color="primary300"
-          data-activetab={currentTab === 1}
-          size="md"
-          onClick={() => handleChangeTab(1)}
-        >
-          Team/-Sub-teams configurations
-        </StyledTextTab>
-
-        <StyledTextTab
-          css={{ marginBottom: '-1.5px' }}
-          color="primary300"
-          data-activetab={currentTab === 2}
-          size="md"
-          onClick={() => handleChangeTab(2)}
-        >
-          Configurations
-        </StyledTextTab>
-      </Flex>
-      <Separator
-        css={{ position: 'relative', top: '-1px', zIndex: '-1' }}
-        orientation="horizontal"
-      />
-      {currentTab === 1 && <TeamSubTeamsConfigurations previousTeam={prevTeam} />}
-      {currentTab === 2 && <BoardConfigurations />}
-    </Flex>
+      <Tab
+        tabList={tabList}
+        defaultValue={initialTabValue}
+        activeValue={activeTab}
+        onChangeActiveValue={handleTabChange}
+      >
+        <TabContent value="teams">
+          <TeamSubTeamsConfigurations previousTeam={prevTeam} />
+        </TabContent>
+        <TabContent value="config">
+          <BoardConfigurations />
+        </TabContent>
+      </Tab>
+    </>
   );
 };
 

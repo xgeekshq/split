@@ -21,7 +21,6 @@ const StyledTextArea = styled('textarea', {
   },
 
   // Custom
-
   fontSize: '$16',
   lineHeight: '$20',
   resize: 'none',
@@ -76,14 +75,11 @@ const StyledTextArea = styled('textarea', {
 interface ResizableTextAreaProps {
   id: string;
   placeholder: string;
-  helperText?: string;
   disabled?: boolean;
-  floatPlaceholder?: boolean;
 }
 
 const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled }) => {
   TextArea.defaultProps = {
-    helperText: undefined,
     disabled: false,
   };
 

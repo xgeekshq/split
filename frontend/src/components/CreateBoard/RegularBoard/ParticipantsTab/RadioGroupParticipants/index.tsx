@@ -23,7 +23,7 @@ const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps
   };
 
   return (
-    <Flex css={{ width: '100%', mt: '$32' }}>
+    <Flex css={{ width: '100%' }}>
       <FormStyled>
         <RadioGroup
           direction="row"

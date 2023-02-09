@@ -6,6 +6,7 @@ import { signOut } from 'next-auth/react';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
+import Separator from '@/components/Primitives/Separator';
 import {
   ACCOUNT_ROUTE,
   BOARDS_ROUTE,
@@ -15,7 +16,7 @@ import {
   TEAMS_ROUTE,
   USERS_ROUTE,
 } from '@/utils/routes';
-import { StyledMenuItem, StyledSeparator, StyledText } from './styles';
+import { StyledMenuItem, StyledText } from './styles';
 
 interface SidebarContentProps {
   strategy: string;
@@ -66,7 +67,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
           <StyledText>Teams</StyledText>
         </StyledMenuItem>
       </Link>
-      <StyledSeparator />
+      <Separator css={{ marginTop: '$16', marginBottom: '$16', backgroundColor: '$primary600' }} />
       <Tooltip color="primary100" content="Coming Soon">
         <StyledMenuItem disabled align="center" data-active={active === ACCOUNT_ROUTE}>
           <Icon name="user-circle" />
@@ -86,7 +87,7 @@ const SideBarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
         </StyledMenuItem>
       </Tooltip>
 
-      <StyledSeparator />
+      <Separator css={{ marginTop: '$16', marginBottom: '$16', backgroundColor: '$primary600' }} />
       <StyledMenuItem align="center" css={{ mt: '$16' }} onClick={handleSignOut}>
         <Icon name="log-out" />
         <StyledText>Log out</StyledText>

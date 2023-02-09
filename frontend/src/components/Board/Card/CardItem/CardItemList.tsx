@@ -18,6 +18,7 @@ interface CardItemListProps {
   hideCards: boolean;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({
@@ -34,18 +35,19 @@ const CardItemList: React.FC<CardItemListProps> = ({
   hideCards,
   isDefaultText,
   hasAdminRole,
+  postAnonymously,
 }) => (
   <Flex direction="column">
     {items.map((item, idx) => (
       <Flex key={item._id} css={{ width: '100%' }} direction="column">
         {idx !== 0 && (
           <Flex align="center" css={{ width: '100%' }}>
-            <Separator css={{ backgroundColor: 'white' }} orientation="horizontal" />
+            <Separator css={{ backgroundColor: 'white' }} />
             <Icon
               css={{ width: '$14', height: '$14', borderRadius: '$round' }}
               name="double-vertical-separator"
             />
-            <Separator css={{ backgroundColor: 'white' }} orientation="horizontal" />
+            <Separator css={{ backgroundColor: 'white' }} />
           </Flex>
         )}
         <CardItem
@@ -66,6 +68,7 @@ const CardItemList: React.FC<CardItemListProps> = ({
           userId={userId}
           isDefaultText={isDefaultText}
           hasAdminRole={hasAdminRole}
+          postAnonymously={postAnonymously}
         />
       </Flex>
     ))}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import {
@@ -8,7 +8,6 @@ import {
   SelectIcon,
   SelectContent,
 } from '@/components/Primitives/Select';
-import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/icons/Icon';
@@ -57,7 +56,6 @@ export default {
 
 const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
   <Flex>
-    <Sprite />
     <Select disabled={disabled} hasError={hasError} css={{ width: '$300' }}>
       <SelectTrigger css={{ padding: '$16' }}>
         <Flex direction="column">
@@ -75,22 +73,33 @@ const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
-  <Flex>
-    <Sprite />
-    <Select disabled={disabled} hasError={hasError} css={{ width: '$300', height: '$64' }}>
-      <SelectTrigger css={{ padding: '$16' }}>
-        <Flex direction="column">
-          <Text size="sm" color="primary300">
-            Choose a fruit
-          </Text>
-          <SelectValue />
-        </Flex>
-        <SelectIcon className="SelectIcon" asChild>
-          <Icon name="arrow-down" />
-        </SelectIcon>
-      </SelectTrigger>
-      <SelectContent options={DUMMY_OPTIONS} />
-    </Select>
-  </Flex>
-);
+export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
+  const [selectedItem, setSelectedItem] = useState<String | null>();
+
+  return (
+    <Flex>
+      <Select
+        disabled={disabled}
+        hasError={hasError}
+        css={{ width: '$300', height: '$64' }}
+        defaultValue={selectedItem}
+        onValueChange={(selectedOption: string) => {
+          setSelectedItem(selectedOption);
+        }}
+      >
+        <SelectTrigger css={{ padding: '$24' }}>
+          <Flex direction="column">
+            <Text size={selectedItem ? 'sm' : 'md'} color="primary300">
+              Choose a fruit
+            </Text>
+            <SelectValue />
+          </Flex>
+          <SelectIcon className="SelectIcon" asChild>
+            <Icon name="arrow-down" />
+          </SelectIcon>
+        </SelectTrigger>
+        <SelectContent options={DUMMY_OPTIONS} />
+      </Select>
+    </Flex>
+  );
+};

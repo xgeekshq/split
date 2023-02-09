@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
-import { Popover, PopoverTrigger } from '@radix-ui/react-popover';
+import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
 import Icon from '@/components/icons/Icon';
@@ -22,7 +22,7 @@ import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/part
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -123,7 +123,7 @@ const BoardHeader = () => {
 
             {!isSubBoard && !!getSubBoard() && (
               <Flex align="center" gap={10}>
-                <Separator css={{ height: '$14 !important' }} data-orientation="vertical" />
+                <Separator css={{ height: '$14 !important' }} orientation="vertical" />
                 <Link
                   href={{
                     pathname: `[boardId]`,
@@ -188,8 +188,8 @@ const BoardHeader = () => {
                 isSubBoardPage
               />
             </Flex>
-            <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
 
+            <Separator orientation="vertical" size="lg" />
             <Flex align="center" gap="10">
               <Text color="primary300" size="sm">
                 Responsible
@@ -240,8 +240,7 @@ const BoardHeader = () => {
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
               ) && (
                 <>
-                  <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
-
+                  <Separator orientation="vertical" size="lg" />
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">
                       Team admins
@@ -262,8 +261,7 @@ const BoardHeader = () => {
                 ),
               ) && (
                 <>
-                  <Separator css={{ height: '$24 !important' }} data-orientation="vertical" />
-
+                  <Separator orientation="vertical" size="lg" />
                   <Flex align="center" gap="10">
                     <Text color="primary300" size="sm">
                       Stakeholders
@@ -294,24 +292,26 @@ const BoardHeader = () => {
               } of {dividedBoards.length} sub-team boards merged
             </BoardCounter>
           </PopoverTrigger>
-          <StyledPopoverContent>
-            <Flex direction="column">
-              {dividedBoards.map((board: BoardType) => (
-                <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
-                  <p>{board.title}</p>
+          <PopoverPortal>
+            <StyledPopoverContent>
+              <Flex direction="column">
+                {dividedBoards.map((board: BoardType) => (
+                  <StyledPopoverItem key={board.title.toLowerCase().split(' ').join('-')}>
+                    <p>{board.title}</p>
 
-                  <div>
-                    {board.submitedAt ? 'Merged' : 'Unmerged'}
-                    <MergeIconContainer isMerged={!!board.submitedAt}>
-                      <Icon name="merge" />
-                    </MergeIconContainer>{' '}
-                  </div>
-                </StyledPopoverItem>
-              ))}
-            </Flex>
+                    <div>
+                      {board.submitedAt ? 'Merged' : 'Unmerged'}
+                      <MergeIconContainer isMerged={!!board.submitedAt}>
+                        <Icon name="merge" />
+                      </MergeIconContainer>{' '}
+                    </div>
+                  </StyledPopoverItem>
+                ))}
+              </Flex>
 
-            <StyledPopoverArrow />
-          </StyledPopoverContent>
+              <StyledPopoverArrow />
+            </StyledPopoverContent>
+          </PopoverPortal>
         </Popover>
       )}
     </StyledHeader>

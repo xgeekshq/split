@@ -7,17 +7,21 @@ import { getCardVotes } from '@/helper/board/votes';
 import { ColumnBoardType } from '@/types/column';
 import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
+import { countColumnCards } from '@/helper/board/countCards';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
+import AlertDeleteColumn from './partials/AlertDeleteColumn';
+import AlertDeleteAllCards from './partials/AlertDeleteAllCards';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
   hasAdminRole: boolean;
   addCards: boolean;
+  postAnonymously: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -40,15 +44,32 @@ const Column = React.memo<ColumMemoProps>(
     isRegularBoard,
     hasAdminRole,
     addCards,
+    postAnonymously,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
-    const [openDialogName, setOpenDialogName] = useState(false);
+    const [openDialog, setOpenDialog] = useState({
+      columnName: false,
+      deleteColumn: false,
+      deleteCards: false,
+    });
     const [dialogType, setDialogType] = useState('ColumnName');
 
     const handleDialogNameChange = (open: boolean, type: string) => {
-      setOpenDialogName(open);
+      setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
       setDialogType(type);
+    };
+
+    const handleDialogChange = (
+      openName: boolean,
+      openDeleteColumn: boolean,
+      openDeleteCards: boolean,
+    ) => {
+      setOpenDialog({
+        columnName: openName,
+        deleteColumn: openDeleteColumn,
+        deleteCards: openDeleteCards,
+      });
     };
 
     const filteredCards = useCallback(() => {
@@ -107,7 +128,7 @@ const Column = React.memo<ColumMemoProps>(
                         py: '$2',
                       }}
                     >
-                      {cards.length} cards
+                      {countColumnCards(cards)} cards
                     </Text>
                   </Flex>
                   <Flex>
@@ -123,13 +144,15 @@ const Column = React.memo<ColumMemoProps>(
                         columnId={columnId}
                         boardId={boardId}
                         setOpenDialogName={handleDialogNameChange}
+                        handleDialogChange={handleDialogChange}
                         isDefaultText={isDefaultText}
                         color={color}
+                        socketId={socketId}
                       />
                     )}
                   </Flex>
                 </Flex>
-                <Separator css={{ backgroundColor: '$primary100', mb: '$20' }} />
+                <Separator css={{ mb: '$20' }} />
                 <Flex direction="column">
                   {!isSubmited && (
                     <Flex
@@ -147,9 +170,10 @@ const Column = React.memo<ColumMemoProps>(
                           defaultOpen={countAllCards === 0}
                           isUpdate={false}
                           socketId={socketId}
-                          anonymous={false}
+                          anonymous={undefined}
                           cardText={cardText}
                           isDefaultText={isDefaultText ?? true}
+                          postAnonymously={postAnonymously}
                         />
                       )}
                     </Flex>
@@ -172,6 +196,7 @@ const Column = React.memo<ColumMemoProps>(
                       socketId={socketId}
                       userId={userId}
                       hasAdminRole={hasAdminRole}
+                      postAnonymously={postAnonymously}
                     />
                     {provided.placeholder}
                   </CardsContainer>
@@ -182,8 +207,8 @@ const Column = React.memo<ColumMemoProps>(
         </OuterContainer>
         <UpdateColumnDialog
           boardId={boardId}
-          isOpen={openDialogName}
-          setIsOpen={setOpenDialogName}
+          isOpen={openDialog.columnName}
+          setIsOpen={handleDialogChange}
           columnId={columnId}
           columnTitle={title}
           columnColor={color}
@@ -191,6 +216,22 @@ const Column = React.memo<ColumMemoProps>(
           cardText={cardText}
           isDefaultText={isDefaultText}
           type={dialogType}
+          socketId={socketId}
+        />
+        <AlertDeleteColumn
+          socketId={socketId}
+          columnId={columnId}
+          columnTitle={title}
+          isOpen={openDialog.deleteColumn}
+          handleDialogChange={handleDialogChange}
+          postAnonymously={postAnonymously}
+        />
+        <AlertDeleteAllCards
+          socketId={socketId}
+          boardId={boardId}
+          columnId={columnId}
+          isOpen={openDialog.deleteCards}
+          handleDialogChange={handleDialogChange}
         />
       </>
     );

@@ -9,6 +9,7 @@ export interface Configs {
 	maxUsersPerTeam: number;
 	slackEnable?: boolean;
 	date?: Date;
+	postAnonymously: boolean;
 }
 
 export interface CreateBoardService {

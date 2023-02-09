@@ -1,69 +1,77 @@
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import * as Tabs from '@radix-ui/react-tabs';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from './Flex';
+import Text from './Text';
 
-const StyledTabs = styled(TabsPrimitive.Root, {
-  boxShadow: '0px 4px 54px rgba(0, 0, 0, 0.5)',
-  borderRadius: '$12',
-  backgroundColor: '$white',
+const StyledTabsRoot = styled(Tabs.Root, Flex, {});
+
+const StyledTabsList = styled(Tabs.List, Flex, {
+  borderBottom: '1px solid $primary200',
+  gap: '$24',
 });
 
-const StyledList = styled(TabsPrimitive.List, {
-  flexShrink: 0,
-  display: 'flex',
-  borderBottom: `1px solid var(--color-black)`,
-  pb: '$48',
-});
-
-const StyledTrigger = styled(TabsPrimitive.Trigger, {
-  all: 'unset',
-  fontFamily: 'DM Sans',
-  backgroundColor: 'white',
-  boxSizing: 'border-box',
-  flex: 1,
-  display: 'flex',
-  height: '$74',
-  alignItems: 'center',
-  justifyContent: 'center',
-  userSelect: 'none',
+const StyledTabsTrigger = styled(Tabs.Trigger, Text, {
+  border: 'none',
+  background: 'none',
+  p: '$12',
+  lineHeight: '$20',
+  color: '$primary300',
   '&:hover': {
     cursor: 'pointer',
   },
-  '&:first-child': { borderTopLeftRadius: '$12' },
-  '&:last-child': { borderTopRightRadius: '$12' },
-  borderBottom: '1px solid var(--colors-primary100)',
   '&[data-state="active"]': {
-    color: '$black',
-    borderBottom: '2px solid var(--colors-primaryBase)',
-  },
-  '&[data-state="inactive"]': {
-    '& span': {
-      color: '$primary300',
-      fontStyle: 'normal',
-      fontWeight: '$regular',
-      lineHeight: '$28',
-      letterSpacing: '0px',
-    },
+    color: '$primaryBase',
+    fontWeight: '$bold',
+    borderBottom: '2px solid $primaryBase',
+    marginBottom: '-1.5px',
   },
 });
 
-const StyledContent = styled(TabsPrimitive.Content, Flex, {
-  boxSizing: 'border-box',
-  backgroundColor: 'white',
-  justifyContent: 'center',
-  outline: 'none',
-  borderRadius: '$12',
-  px: '$32',
-  pb: '$48',
-  '&[data-state="inactive"]': {
-    pt: '0',
-    pb: '0',
-  },
-});
+type TabList = {
+  value: string;
+  text: string;
+};
 
-export const TabsRoot = StyledTabs;
-export const TabsList = StyledList;
-export const TabsTrigger = StyledTrigger;
-export const TabsContent = StyledContent;
+type TabType = {
+  tabList: TabList[];
+  defaultValue?: string;
+  activeValue?: string;
+  onChangeActiveValue?: (newTab: string) => void;
+};
+
+type TabProps = TabType & React.ComponentProps<typeof Tabs.Root>;
+
+const Tab: React.FC<TabProps> = ({
+  tabList,
+  defaultValue,
+  activeValue,
+  onChangeActiveValue,
+  children,
+}) => {
+  const initialValue = defaultValue ?? tabList[0].value;
+
+  return (
+    <StyledTabsRoot
+      direction="column"
+      defaultValue={initialValue}
+      value={activeValue}
+      onValueChange={onChangeActiveValue}
+    >
+      <StyledTabsList>
+        {tabList.map((tab) => (
+          <StyledTabsTrigger value={tab.value} key={tab.value}>
+            {tab.text}
+          </StyledTabsTrigger>
+        ))}
+      </StyledTabsList>
+      <Flex direction="column" css={{ mt: '$24' }}>
+        {children}
+      </Flex>
+    </StyledTabsRoot>
+  );
+};
+
+export default Tab;
+export const TabContent = Tabs.Content;

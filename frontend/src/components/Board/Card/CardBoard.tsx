@@ -41,6 +41,7 @@ interface CardBoardProps {
   isDefaultText: boolean;
   cardText?: string;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -59,6 +60,7 @@ const CardBoard = React.memo<CardBoardProps>(
     hideCards,
     isDefaultText,
     hasAdminRole,
+    postAnonymously,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -96,24 +98,29 @@ const CardBoard = React.memo<CardBoardProps>(
     };
 
     useEffect(() => {
-      if (card._id === draggedCard) {
+      if (card._id === draggedCard || hideCards) {
         setOpenComments(false);
       }
-    }, [card._id, draggedCard]);
+    }, [card._id, draggedCard, hideCards]);
 
     return (
-      <Draggable key={card._id} draggableId={card._id} index={index} isDragDisabled={isSubmited}>
+      <Draggable
+        key={card._id}
+        draggableId={card._id}
+        index={index}
+        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || (isMainboard && hideCards)}
+      >
         {(provided) => (
           <Flex
             ref={provided.innerRef}
             {...provided.dragHandleProps}
             {...provided.draggableProps}
-            draggable
             direction="column"
             css={{
               backgroundColor: color,
               borderRadius: '$8',
               mb: '$12',
+              pointerEvents: hideCards && card.createdBy?._id !== userId ? 'none' : 'auto',
             }}
           >
             <Container
@@ -123,6 +130,8 @@ const CardBoard = React.memo<CardBoardProps>(
                 backgroundColor: color,
                 py: !isCardGroup ? '$16' : '$8',
                 mb: isCardGroup ? '$12' : 'none',
+                filter: cardBlur(hideCards, card as CardType, userId),
+                transform: 'translate3d(0.1, 0.1, 0.1)',
               }}
             >
               {editing && !isSubmited && (
@@ -139,6 +148,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   socketId={socketId}
                   anonymous={card.anonymous}
                   isDefaultText={isDefaultText}
+                  postAnonymously={postAnonymously}
                 />
               )}
               {!editing && (
@@ -154,35 +164,41 @@ const CardBoard = React.memo<CardBoardProps>(
                     </Flex>
                   )}
                   {!isCardGroup && (
-                    <Flex css={{ mb: '$14', '& > div': { zIndex: 2 } }} justify="between">
+                    <Flex
+                      css={{
+                        mb: '$14',
+                        '& > div': { zIndex: 2 },
+                      }}
+                      justify="between"
+                    >
                       <Text
                         size="md"
                         css={{
                           wordBreak: 'break-word',
                           whiteSpace: 'pre-line',
-                          filter: cardBlur(hideCards, card as CardType, userId),
                         }}
                       >
                         {card.text}
                       </Text>
-                      {!isSubmited && (userId === card?.createdBy?._id || hasAdminRole) && (
-                        <PopoverCardSettings
-                          boardId={boardId}
-                          cardGroupId={card._id}
-                          columnId={colId}
-                          firstOne={false}
-                          handleDeleteCard={handleDeleting}
-                          handleEditing={handleEditing}
-                          hideCards={hideCards}
-                          isItem={false}
-                          item={card}
-                          itemId={card.items[0]._id}
-                          newPosition={0}
-                          socketId={socketId}
-                          userId={userId}
-                          hasAdminRole={hasAdminRole}
-                        />
-                      )}
+                      {!isSubmited &&
+                        ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                          <PopoverCardSettings
+                            boardId={boardId}
+                            cardGroupId={card._id}
+                            columnId={colId}
+                            firstOne={false}
+                            handleDeleteCard={handleDeleting}
+                            handleEditing={handleEditing}
+                            hideCards={hideCards}
+                            isItem={false}
+                            item={card}
+                            itemId={card.items[0]._id}
+                            newPosition={0}
+                            socketId={socketId}
+                            userId={userId}
+                            hasAdminRole={hasAdminRole}
+                          />
+                        )}
                     </Flex>
                   )}
                   {card.items && isCardGroup && (
@@ -200,6 +216,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       userId={userId}
                       isDefaultText={isDefaultText}
                       hasAdminRole={hasAdminRole}
+                      postAnonymously={postAnonymously}
                     />
                   )}
                   <CardFooter
@@ -244,6 +261,8 @@ const CardBoard = React.memo<CardBoardProps>(
                 columnId={colId}
                 isDefaultText={isDefaultText}
                 hasAdminRole={hasAdminRole}
+                postAnonymously={postAnonymously}
+                isMainboard={isMainboard}
               />
             )}
           </Flex>

@@ -189,7 +189,7 @@ const useCards = () => {
       setToastState({
         open: true,
         type: ToastStateEnum.SUCCESS,
-        content: 'Card deleted with success!',
+        content: 'Card deleted!',
       });
     },
     onError: (_, variables) => {

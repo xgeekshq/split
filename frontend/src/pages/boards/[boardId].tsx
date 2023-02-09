@@ -29,10 +29,10 @@ import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import { GetBoardResponse } from '@/types/board/board';
 import { BoardSettings } from '@/components/Board/Settings';
-import BoardHeader from '@/components/Board/SplitBoard/Header';
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardUser } from '@/types/board/board.user';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -140,7 +140,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       const boardUsers: BoardUser[] = [...data.board.users];
 
       // this insures that the team creator stays always in first
-      const userAdminIndex = boardUsers.findIndex((member) => member.user._id === session?.user.id);
+      const userAdminIndex = boardUsers.findIndex(
+        (member) => member?.user?._id === session?.user.id,
+      );
 
       boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
       setBoardParticipants(boardUsers);

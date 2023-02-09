@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import Icon from '@/components/icons/Icon';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { cardFooterBlur } from '@/helper/board/blurFilter';
 import { getCardVotes } from '@/helper/board/votes';
 import useVotes from '@/hooks/useVotes';
 import { BoardUser } from '@/types/board/board.user';
@@ -152,7 +151,6 @@ const CardFooter = ({
           align="center"
           gap="4"
           css={{
-            filter: cardFooterBlur(hideCards, createdBy, userId),
             maxWidth: '$226',
           }}
         >
@@ -183,23 +181,13 @@ const CardFooter = ({
       )}
       {!isItem && comments && (
         <Flex align="center" gap="10">
-          <Flex
-            align="center"
-            gap="2"
-            css={{
-              filter: cardFooterBlur(hideCards, createdBy, userId),
-            }}
-          >
+          <Flex align="center" gap="2">
             <Button
               isIcon
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={
-                !isMainboard ||
-                (maxVotes && user?.votesCount === maxVotes) ||
-                (hideCards && createdBy?._id !== userId)
-              }
+              disabled={!isMainboard || (maxVotes && user?.votesCount === maxVotes) || hideCards}
               onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
@@ -220,7 +208,6 @@ const CardFooter = ({
             gap="2"
             css={{
               mr: '$10',
-              filter: cardFooterBlur(hideCards, createdBy, userId),
             }}
           >
             <Button
@@ -233,7 +220,7 @@ const CardFooter = ({
                 votesInThisCard.length === 0 ||
                 (maxVotes && userVotes === 0) ||
                 votesOfUserInThisCard === 0 ||
-                (hideCards && createdBy?._id !== userId)
+                hideCards
               }
               onClick={handleDeleteVote}
             >
@@ -241,19 +228,13 @@ const CardFooter = ({
             </Button>
           </Flex>
 
-          <Flex
-            align="center"
-            gap="2"
-            css={{
-              filter: cardFooterBlur(hideCards, createdBy, userId),
-            }}
-          >
+          <Flex align="center" gap="2">
             <Button
               isIcon
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={hideCards && createdBy?._id !== userId}
+              disabled={hideCards}
               onClick={setOpenComments}
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />

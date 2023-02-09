@@ -6,7 +6,7 @@ import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
 
 import Icon from '@/components/icons/Icon';
-import Avatar from '@/components/Primitives/Avatar';
+import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Separator from '@/components/Primitives/Separator';
@@ -73,11 +73,12 @@ const BoardSettings = ({
       isPublic,
       columns,
       addCards,
+      postAnonymously,
     },
   } = useRecoilValue(boardInfoState);
 
   const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
-  const deletedColumns = useRecoilValue(deletedColumnsState);
+  const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
 
   // State used to change values
   const initialData: UpdateBoardType = {
@@ -90,6 +91,7 @@ const BoardSettings = ({
     isPublic,
     columns: isRegularBoard ? editColumns : columns,
     addCards,
+    postAnonymously,
   };
 
   const [data, setData] = useState<UpdateBoardType>(initialData);
@@ -106,6 +108,7 @@ const BoardSettings = ({
     hideVotes: boolean;
     isPublic: boolean;
     addCards: boolean;
+    postAnonymously: boolean;
   }>({
     maxVotes: false,
     responsible: false,
@@ -113,6 +116,7 @@ const BoardSettings = ({
     hideVotes: false,
     isPublic: false,
     addCards: false,
+    postAnonymously: false,
   });
 
   // User Board Hook
@@ -161,6 +165,7 @@ const BoardSettings = ({
       hideVotes,
       isPublic,
       addCards,
+      postAnonymously,
     }));
     methods.setValue('title', boardTitle);
     methods.setValue('maxVotes', boardMaxVotes ?? null);
@@ -178,6 +183,7 @@ const BoardSettings = ({
       maxVotes: !isEmpty(boardMaxVotes),
       isPublic,
       addCards,
+      postAnonymously,
     }));
   }, [
     boardMaxVotes,
@@ -190,6 +196,7 @@ const BoardSettings = ({
     editColumns,
     addCards,
     isRegularBoard,
+    postAnonymously,
   ]);
 
   const handleHideCardsChange = () => {
@@ -259,6 +266,17 @@ const BoardSettings = ({
     }));
   };
 
+  const handlePostAnonymouslyChange = () => {
+    setData((prev) => ({
+      ...prev,
+      postAnonymously: !prev.postAnonymously,
+    }));
+    setSwitchesState((prev) => ({
+      ...prev,
+      postAnonymously: !prev.postAnonymously,
+    }));
+  };
+
   const updateBoard = (
     title: string,
     maxVotes?: number | null,
@@ -283,6 +301,7 @@ const BoardSettings = ({
             responsible: false,
             isPublic: false,
             addCards: false,
+            postAnonymously: false,
           });
         },
       },
@@ -340,8 +359,12 @@ const BoardSettings = ({
 
     window?.addEventListener('keydown', keyDownHandler);
 
-    return () => window?.removeEventListener('keydown', keyDownHandler);
-  }, []);
+    return () => {
+      window?.removeEventListener('keydown', keyDownHandler);
+      setEditColumns(columns);
+      setDeletedColumns([]);
+    };
+  }, [columns, setDeletedColumns, setEditColumns]);
 
   const handleAddColumn = () => {
     const arrayWithNewColumn = [...editColumns];
@@ -412,8 +435,14 @@ const BoardSettings = ({
                     <ConfigurationSwitchSettings
                       handleCheckedChange={handleAddCardsChange}
                       isChecked={switchesState.addCards}
-                      text="Allow users to add cards"
+                      text="Allow users to add cards."
                       title="Add cards"
+                    />
+                    <ConfigurationSwitchSettings
+                      handleCheckedChange={handlePostAnonymouslyChange}
+                      isChecked={switchesState.postAnonymously}
+                      text=" The option to post anonymously is checked by default."
+                      title="Post anonymously"
                     />
 
                     {!isSubBoard && (
@@ -472,15 +501,7 @@ const BoardSettings = ({
                           <Text color="primary300" css={{ mr: '$8' }}>
                             Responsible Lottery
                           </Text>
-                          <Separator
-                            orientation="vertical"
-                            css={{
-                              '&[data-orientation=vertical]': {
-                                height: '$12',
-                                width: 1,
-                              },
-                            }}
-                          />
+                          <Separator orientation="vertical" size="md" />
 
                           <Flex
                             align="center"

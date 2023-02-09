@@ -4,7 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
-import AvatarGroup from '@/components/Primitives/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 
 interface TeamHeaderProps {
   team?: Team;
@@ -41,10 +41,7 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
                 userId={userId}
               />
             </Flex>
-            <Separator
-              css={{ backgroundColor: '$primary300', height: '$12 !important' }}
-              orientation="vertical"
-            />
+            <Separator css={{ backgroundColor: '$primary300' }} orientation="vertical" size="md" />
             <Text color="primary300" size="sm">
               Team admin
             </Text>

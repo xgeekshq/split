@@ -21,6 +21,8 @@ interface CommentsListProps {
   columnId: string;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  isMainboard: boolean;
+  postAnonymously: boolean;
 }
 
 const Comments = React.memo(
@@ -36,6 +38,8 @@ const Comments = React.memo(
     columnId,
     isDefaultText,
     hasAdminRole,
+    isMainboard,
+    postAnonymously,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -46,15 +50,9 @@ const Comments = React.memo(
     return (
       <Flex align="center" css={{ width: '100%', pb: '$16' }} direction="column">
         <Flex align="center" css={{ width: '100%', mb: '$12' }} gap="4">
-          <Separator
-            css={{ backgroundColor: 'black', width: '$8 !important' }}
-            orientation="horizontal"
-          />
+          <Separator css={{ backgroundColor: 'black' }} orientation="horizontal" size="sm" />
           <Text size="xxs">Comments</Text>
-          <Separator
-            css={{ backgroundColor: 'black', width: '100% !important' }}
-            orientation="horizontal"
-          />
+          <Separator css={{ backgroundColor: 'black' }} />
         </Flex>
         <Flex css={{ px: '$16', mb: '$12', width: '100%' }} direction="column" gap="8">
           {comments.map((comment) => (
@@ -70,6 +68,8 @@ const Comments = React.memo(
               columnId={columnId}
               isDefaultText={isDefaultText}
               hasAdminRole={hasAdminRole}
+              isMainboard={isMainboard}
+              postAnonymously={postAnonymously}
               cardItemId={
                 cardItems.find((item) => {
                   if (item && item.comments)
@@ -92,12 +92,13 @@ const Comments = React.memo(
               isCard={false}
               isUpdate={false}
               socketId={socketId}
-              anonymous={false}
+              anonymous={undefined}
               isDefaultText={isDefaultText}
+              postAnonymously={postAnonymously}
             />
           </Flex>
         )}
-        {!isCreateCommentOpened && !isSubmited && (
+        {!isCreateCommentOpened && !isSubmited && (!isMainboard || hasAdminRole) && (
           <Flex
             css={{ '@hover': { '&:hover': { cursor: 'pointer' } } }}
             onClick={handleSetCreateComment}

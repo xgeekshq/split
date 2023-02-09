@@ -2,7 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.10...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.11...HEAD)
+
+## [v0.1.11](https://github.com/xgeekshq/split/compare/v0.1.10...v0.1.11) - 2023-02-06
+
+### What Changed 👀
+
+- feat: delete board columns/handle votes @CatiaAntunes96 (#994)
+
+### 🚀 Features
+
+- feat: show board participants frontend @patricia-mdias (#1007)
+- feat: delete column/cards on a board @CatiaAntunes96 (#1018)
+- feat: delete all card from a column @CatiaAntunes96 (#1016)
+
+### 🐛 Bug Fixes
+
+- fix: populates @nunocaseiro (#1027)
+- fix: adding a column doesn't affect previous edited columns @patricia-mdias (#1011)
+- fix: teams page has all teams in application @StereoPT (#1013)
+- fix: regular board votes and quick create @CatiaAntunes96 (#996)
+- fix: order board members @StereoPT (#999)
+
+### 📄 Documentation
+
+- feat: svg primitive story @JoaoSaIvador (#1029)
+- feat: separator primitive refactor and story @JoaoSaIvador (#1025)
+- feat: select primitive refactor and story @JoaoSaIvador (#1015)
+- feat: radiogroup primitive refactor and story @JoaoSaIvador (#1005)
+- feat: avatar group story and refactor @StereoPT (#998)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump docker/build-push-action from 3 to 4 @dependabot (#1022)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.10...v0.1.11
 
 ## [v0.1.10](https://github.com/xgeekshq/split/compare/v0.1.9...v0.1.10) - 2023-02-02
 

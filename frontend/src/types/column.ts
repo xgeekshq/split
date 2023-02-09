@@ -48,6 +48,7 @@ export interface ColumnInnerList {
   cardText?: string;
   isDefaultText?: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 export type ColumnDragItem = {
@@ -55,6 +56,11 @@ export type ColumnDragItem = {
   id: string;
   column: ColumnType;
   type: 'COLUMN';
+};
+
+export type ColumnDeleteCards = {
+  id: string;
+  socketId: string;
 };
 
 export default ColumnType;

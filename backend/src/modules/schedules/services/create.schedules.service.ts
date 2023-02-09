@@ -110,7 +110,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(
 				oldBoardId
 			);
-			const oldBoard = await this.getBoardService.getBoardData(oldBoardId);
+			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
@@ -157,6 +157,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			maxVotes: oldBoard.maxVotes,
 			hideCards: oldBoard.hideCards,
 			hideVotes: oldBoard.hideVotes,
+			postAnonymously: oldBoard.postAnonymously,
 			maxUsersPerTeam: deletedSchedule.maxUsers,
 			slackEnable: oldBoard.slackEnable ?? false,
 			date: new Date(new Date().getFullYear(), month, day)

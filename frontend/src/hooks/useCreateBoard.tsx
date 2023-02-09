@@ -39,6 +39,7 @@ const useCreateBoard = (team?: Team) => {
       hideCards: false,
       hideVotes: false,
       addCards: true,
+      postAnonymously: true,
     }),
     [],
   );

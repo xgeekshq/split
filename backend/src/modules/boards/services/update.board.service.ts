@@ -106,7 +106,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		 * - is a sub-board
 		 * - and the logged user isn't the current responsible
 		 */
-		if (boardData.users && String(currentResponsible.id) !== String(newResponsible.id)) {
+		if (boardData.users && String(currentResponsible?.id) !== String(newResponsible?.id)) {
 			if (isSubBoard) {
 				const promises = boardData.users
 					.filter((boardUser) =>
@@ -171,6 +171,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		board.hideCards = boardData.hideCards;
 		board.addCards = boardData.addCards;
 		board.hideVotes = boardData.hideVotes;
+		board.postAnonymously = boardData.postAnonymously;
 
 		/**
 		 * Validate if:
@@ -272,7 +273,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		if (
 			updatedBoard &&
 			newResponsible &&
-			String(currentResponsible.id) !== String(newResponsible.id) &&
+			currentResponsible &&
+			String(currentResponsible?.id) !== String(newResponsible?.id) &&
 			board.slackChannelId &&
 			updatedBoard.slackEnable &&
 			updatedBoard.isSubBoard
