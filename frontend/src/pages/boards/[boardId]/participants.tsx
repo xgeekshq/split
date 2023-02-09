@@ -1,3 +1,4 @@
+import { getBoardRequest } from '@/api/boardService';
 import { getAllUsers } from '@/api/userService';
 import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
 import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
@@ -5,7 +6,8 @@ import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import LoadingPage from '@/components/loadings/LoadingPage';
-import { boardParticipantsState } from '@/store/board/atoms/board.atom';
+import useBoard from '@/hooks/useBoard';
+import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { UserList } from '@/types/team/userList';
@@ -14,11 +16,27 @@ import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 const BoardParticipants = () => {
   const { data: session } = useSession({ required: true });
   const setToastState = useSetRecoilState(toastState);
+  const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
+  const setRecoilBoard = useSetRecoilState(boardInfoState);
+
+  // Hooks
+  const {
+    fetchBoard: { data: boardData },
+  } = useBoard({
+    autoFetchBoard: true,
+  });
+
+  useEffect(() => {
+    if (boardData) {
+      setRecoilBoard(boardData);
+      setBoardParticipants(boardData.board.users);
+    }
+  }, [boardData, setBoardParticipants, setRecoilBoard]);
 
   const usersData = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -32,7 +50,6 @@ const BoardParticipants = () => {
     },
   }).data;
 
-  const boardParticipants = useRecoilValue(boardParticipantsState);
   const setUsersListState = useSetRecoilState(usersListState);
 
   const handleMembersList = useCallback(() => {
@@ -82,6 +99,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   try {
     await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    await queryClient.fetchQuery(['board', { id: boardId }], () =>
+      getBoardRequest(boardId, context),
+    );
   } catch (e) {
     return {
       redirect: {

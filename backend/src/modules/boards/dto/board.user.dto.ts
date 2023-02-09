@@ -28,6 +28,12 @@ export default class BoardUserDto {
 	@IsNotEmpty()
 	user!: string;
 
+	@ApiProperty()
+	@IsMongoId()
+	@IsString()
+	@IsOptional()
+	board?: string;
+
 	@ApiPropertyOptional({ default: 0 })
 	@IsOptional()
 	@IsNumber()

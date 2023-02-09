@@ -57,6 +57,7 @@ import { UpdateBoardApplicationInterface } from '../interfaces/applications/upda
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
+import AddRemoveBoardUserDto from '../dto/add.remove.board.user.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -238,6 +239,43 @@ export default class BoardsController {
 	@Put(':boardId')
 	updateBoard(@Param() { boardId }: BaseParam, @Body() boardData: UpdateBoardDto) {
 		return this.updateBoardApp.update(boardId, boardData);
+	}
+
+	@ApiOperation({ summary: 'Update participants of a specific board' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiBody({ type: BoardDto })
+	@ApiOkResponse({
+		type: BoardDto,
+		description: 'Board participants updated successfully!'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Not found!'
+	})
+	@ApiForbiddenResponse({
+		description: 'Forbidden',
+		type: ForbiddenResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(BoardUserGuard)
+	@Put(':boardId/participants')
+	updateBoardParticipants(@Body() boardData: AddRemoveBoardUserDto) {
+		return this.updateBoardApp.updateBoardParticipants(
+			boardData.addBoardUsers,
+			boardData.removeBoardUsers
+		);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })
