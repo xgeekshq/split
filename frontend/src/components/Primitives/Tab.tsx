@@ -30,9 +30,9 @@ const StyledTabsTrigger = styled(Tabs.Trigger, Text, {
   },
 });
 
-type TabList = {
+export type TabList = {
   value: string;
-  text: string;
+  label: string;
   content: ReactNode;
 };
 
@@ -64,7 +64,7 @@ const Tab: React.FC<TabProps> = ({
       <StyledTabsList>
         {tabList.map((tab) => (
           <StyledTabsTrigger value={tab.value} key={tab.value}>
-            {tab.text}
+            {tab.label}
           </StyledTabsTrigger>
         ))}
       </StyledTabsList>

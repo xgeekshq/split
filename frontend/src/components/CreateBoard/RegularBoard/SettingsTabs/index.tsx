@@ -5,21 +5,21 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
-import Tab from '@/components/Primitives/Tab';
+import Tab, { TabList } from '@/components/Primitives/Tab';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import ParticipantsTab from '../ParticipantsTab';
 import BoardConfigurations from '../../Configurations/BoardConfigurations';
 
 const SettingsTabs = () => {
-  const tabList = [
+  const tabList: TabList[] = [
     {
       value: 'participants',
-      text: 'Participants',
+      label: 'Participants',
       content: <ParticipantsTab />,
     },
     {
       value: 'config',
-      text: 'Configurations',
+      label: 'Configurations',
       content: <BoardConfigurations isRegularBoard />,
     },
   ];

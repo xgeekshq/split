@@ -5,7 +5,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
-import Tab from '@/components/Primitives/Tab';
+import Tab, { TabList } from '@/components/Primitives/Tab';
 import { usePrevious } from '@/utils/previousState';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
@@ -21,15 +21,15 @@ const Settings = () => {
   const selectedTeam = useRecoilValue(createBoardTeam);
   const prevTeam = usePrevious(selectedTeam?.id);
 
-  const tabList = [
+  const tabList: TabList[] = [
     {
       value: 'teams',
-      text: 'Team/Sub-teams configurations',
+      label: 'Team/Sub-teams configurations',
       content: <TeamSubTeamsConfigurations previousTeam={prevTeam} />,
     },
     {
       value: 'config',
-      text: 'Configurations',
+      label: 'Configurations',
       content: <BoardConfigurations />,
     },
   ];
