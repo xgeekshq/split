@@ -1,7 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import Tab, { TabContent } from '@/components/Primitives/Tab';
+import Tab from '@/components/Primitives/Tab';
+import Flex from '@/components/Primitives/Flex';
 
 export default {
   title: 'Primitives/Tab',
@@ -15,8 +16,16 @@ export default {
   },
   args: {
     tabList: [
-      { value: 'participants', text: 'Participants' },
-      { value: 'config', text: 'Configurations' },
+      {
+        value: 'participants',
+        label: 'Participants',
+        content: <Flex>Participants Tab Content</Flex>,
+      },
+      {
+        value: 'config',
+        label: 'Configurations',
+        content: <Flex>Config Tab Content</Flex>,
+      },
     ],
     defaultValue: 'config',
   },
@@ -37,12 +46,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Tab> = ({ ...args }) => (
-  <Tab {...args}>
-    <TabContent value="participants">Content For Tab 1</TabContent>
-    <TabContent value="config">Content For Tab 2</TabContent>
-  </Tab>
-);
+const Template: ComponentStory<typeof Tab> = ({ ...args }) => <Tab {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
