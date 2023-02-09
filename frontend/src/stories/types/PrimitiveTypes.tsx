@@ -53,3 +53,7 @@ export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32;
 
 // Primitive/Switch
 export type SwitchSizeType = 'xs' | 'sm' | 'md';
+
+// Primitive/Checkbox
+export type CheckboxSizeType = 'sm' | 'md';
+export type CheckboxVariantType = 'default' | 'error';
