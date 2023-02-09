@@ -4,11 +4,11 @@ import Board from 'src/modules/boards/entities/board.schema';
 
 const userId = faker.datatype.uuid();
 
-const mockBoardData = (params?: Partial<Board>) => {
+const mockBoardData = (countColumns = 2, countCards = 1, params?: Partial<Board>) => {
 	return {
 		_id: faker.datatype.uuid(),
 		title: faker.lorem.words(),
-		columns: ColumnFactory.createMany(2),
+		columns: ColumnFactory.createMany(countColumns, countCards),
 		isPublic: faker.datatype.boolean(),
 		maxVotes: String(faker.datatype.number({ min: 0, max: 6 })),
 		maxUsers: 0,
@@ -31,7 +31,8 @@ const mockBoardData = (params?: Partial<Board>) => {
 };
 
 export const BoardFactory = {
-	create: (params?: Partial<Board>) => mockBoardData(params),
-	createMany: (count = 1, params?: Partial<Board>) =>
-		Array.from({ length: count }).map(() => BoardFactory.create(params))
+	create: (countColumns = 1, countCards = 1, params?: Partial<Board>) =>
+		mockBoardData(countColumns, countCards, params),
+	createMany: (count = 1, countColumns = 2, countCards = 1, params?: Partial<Board>) =>
+		Array.from({ length: count }).map(() => BoardFactory.create(countColumns, countCards, params))
 };

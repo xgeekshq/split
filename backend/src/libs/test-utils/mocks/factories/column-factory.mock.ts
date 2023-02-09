@@ -1,45 +1,15 @@
 import faker from '@faker-js/faker';
 import Column from 'src/modules/columns/entities/column.schema';
+import { CardFactory } from './card-factory.mock';
 
-// const userId = faker.datatype.uuid();
-// const cardId = faker.datatype.uuid();
 const cardText = faker.lorem.words();
 
-const mockColumnData = (params: Partial<Column>): Column => {
+const mockColumnData = (params: Partial<Column>, cardsCount = 1): Column => {
 	return {
 		_id: faker.datatype.uuid(),
 		title: faker.lorem.words(),
 		color: '#aaaaaa',
-		cards: [
-			// {
-			// 	_id: cardId,
-			// 	text: cardText,
-			// 	createdBy: userId,
-			// 	comments: [
-			// 		{
-			// 			text: commentText,
-			// 			createdBy: new ObjectId(userId)
-			// 		}
-			// 	],
-			// 	votes: [],
-			// 	anonymous: false,
-			// 	items: [
-			// 		{
-			// 			_id: cardId,
-			// 			text: cardText,
-			// 			createdBy: userId,
-			// 			comments: [
-			// 				{
-			// 					text: commentText,
-			// 					createdBy: new ObjectId(userId)
-			// 				}
-			// 			],
-			// 			votes: [],
-			// 			anonymous: false
-			// 		}
-			// 	]
-			// }
-		],
+		cards: CardFactory.createMany(cardsCount),
 		cardText: cardText,
 		isDefaultText: faker.datatype.boolean(),
 		...params
@@ -47,7 +17,8 @@ const mockColumnData = (params: Partial<Column>): Column => {
 };
 
 export const ColumnFactory = {
-	create: (params: Partial<Column> = {}): Column => mockColumnData(params),
-	createMany: (amount: number, params: Partial<Column> = {}): Column[] =>
-		Array.from({ length: amount }).map(() => ColumnFactory.create(params))
+	create: (params: Partial<Column> = {}, cardsCount = 1): Column =>
+		mockColumnData(params, cardsCount),
+	createMany: (amount: number, cardsCount = 1, params: Partial<Column> = {}): Column[] =>
+		Array.from({ length: amount }).map(() => ColumnFactory.create(params, cardsCount))
 };
