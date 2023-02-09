@@ -225,7 +225,7 @@ const AddCard = React.memo<AddCardProps>(
                 id={[colId, cardId, commentId].join('_')}
                 label="Post anonymously"
                 size="md"
-                checked={isCommentAnonymous && postAnonymously}
+                checked={isCommentAnonymous}
                 handleChange={() => {
                   setIsCommentAnonymous(!isCommentAnonymous);
                 }}
@@ -237,7 +237,7 @@ const AddCard = React.memo<AddCardProps>(
                 id={colId}
                 label="Post anonymously"
                 size="md"
-                checked={isAnonymous && postAnonymously}
+                checked={isAnonymous}
                 handleChange={() => {
                   setIsAnonymous(!isAnonymous);
                 }}
