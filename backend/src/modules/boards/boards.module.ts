@@ -9,6 +9,7 @@ import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
 import { CardsModule } from '../cards/cards.module';
 import {
+	boardRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -38,7 +39,8 @@ import BoardsController from './controller/boards.controller';
 		createBoardApplication,
 		updateBoardApplication,
 		deleteBoardApplication,
-		getBoardApplication
+		getBoardApplication,
+		boardRepository
 	],
 	controllers: [BoardsController],
 	exports: [

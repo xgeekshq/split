@@ -20,12 +20,15 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
 	constructor(
 		@InjectModel(Board.name)
 		private boardModel: Model<BoardDocument>,
+		@Inject(Boards.TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
@@ -105,7 +108,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	}
 
 	async delete(boardId: string) {
-		const board = await this.boardModel.findById(boardId).exec();
+		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');

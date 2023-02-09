@@ -197,7 +197,7 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		return null;
 	}
 
-	async deleteCardsFromColumn(boardId: string, cards: Card[]) {
+	async deleteCardVotesFromColumn(boardId: string, cards: Card[]) {
 		cards.forEach((cards) => {
 			cards.items.forEach(async (card) => {
 				const votesByUser = new Map<string, number>();

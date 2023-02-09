@@ -16,6 +16,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Boards from '../interfaces/types';
 import User, { UserDocument } from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -27,6 +28,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
 import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -40,7 +42,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardService
+		private deleteCardService: DeleteCardService,
+		@Inject(Boards.TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface
 	) {}
 
 	/**
@@ -79,7 +83,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
-		const board = await this.boardModel.findById(boardId).exec();
+		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
@@ -237,7 +241,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return updatedBoard;
 	}
 
-	async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: BoardDocument) {
+	async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: Board) {
 		/**
 		 * Validate if:
 		 * - have columns to delete
@@ -248,7 +252,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				return board.columns.find((column) => column._id.toString() === deletedColumnId)?.cards;
 			});
 
-			await this.deleteCardService.deleteCardsFromColumn(boardId, cardsToDelete);
+			await this.deleteCardService.deleteCardVotesFromColumn(boardId, cardsToDelete);
 		}
 
 		/**
@@ -301,7 +305,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	async mergeBoards(subBoardId: string, userId: string) {
 		const [subBoard, board] = await Promise.all([
-			this.boardModel.findById(subBoardId).lean().exec(),
+			this.boardRepository.getBoard(subBoardId),
 			this.boardModel
 				.findOne({ dividedBoards: { $in: [subBoardId] } })
 				.lean()

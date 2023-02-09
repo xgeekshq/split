@@ -10,5 +10,8 @@ export const TYPES = {
 		DeleteBoardApplication: 'DeleteBoardApplication',
 		UpdateBoardApplication: 'UpdateBoardApplication',
 		GetBoardApplication: 'GetBoardApplication'
+	},
+	repositories: {
+		BoardRepository: 'BoardRepository'
 	}
 };

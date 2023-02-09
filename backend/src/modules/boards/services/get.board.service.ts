@@ -4,12 +4,14 @@ import { Model } from 'mongoose';
 import { BOARDS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate } from '../utils/populate-board';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -17,6 +19,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
+		@Inject(Boards.TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface
 	) {}
@@ -165,7 +169,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	}
 
 	getBoardFromRepo(boardId: string) {
-		return this.boardModel.findById(boardId).lean().exec();
+		return this.boardRepository.getBoard(boardId);
 	}
 
 	async getMainBoardData(boardId: string) {
