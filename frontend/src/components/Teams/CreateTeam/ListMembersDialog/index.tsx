@@ -156,13 +156,14 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                     <Flex key={user._id} align="center" justify="between">
                       <Flex css={{ width: '50%' }}>
                         <Checkbox
-                          checked={user.isChecked}
-                          disabled={user._id === session?.user.id}
-                          handleChange={handleChecked}
                           id={user._id}
+                          checked={user.isChecked}
+                          handleChange={() => {
+                            handleChecked(user._id);
+                          }}
+                          disabled={user._id === session?.user.id}
                           label={`${user.firstName} ${user.lastName}`}
-                          size="16"
-                          hasSelectAll
+                          size="md"
                         />
                       </Flex>
                       <Flex css={{ width: '50%' }}>
@@ -181,12 +182,11 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
               <ButtonsContainer gap={24} justify="end" align="center">
                 {searchMember.length <= 0 && (
                   <Checkbox
-                    checked={isCheckAll}
-                    handleSelectAll={handleSelectAll}
                     id="selectAll"
+                    checked={isCheckAll}
+                    handleChange={handleSelectAll}
                     label="Select all"
-                    size="16"
-                    hasSelectAll
+                    size="md"
                   />
                 )}
                 <Button variant="primaryOutline" onClick={handleClose}>

@@ -13,6 +13,7 @@ import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { useFormContext } from 'react-hook-form';
 import SubCardBoard from './SubCardBoard';
 
 const MainContainer = styled(Flex, Box, {});
@@ -39,6 +40,8 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
    * Recoil Atoms
    */
   const haveError = useRecoilValue(createBoardError);
+
+  const { setValue, getValues } = useFormContext();
 
   const {
     handleAddTeam,
@@ -151,7 +154,15 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
       </MainContainer>
       <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
       <Box>
-        <Checkbox id="slackEnable" label="Create Slack group for each sub-team" size="16" />
+        <Checkbox
+          id="slackEnable"
+          label="Create Slack group for each sub-team"
+          size="md"
+          checked={getValues('slackEnable')}
+          handleChange={(checked) => {
+            setValue('slackEnable', checked);
+          }}
+        />
       </Box>
     </Flex>
   );

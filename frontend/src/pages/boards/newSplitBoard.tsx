@@ -126,7 +126,7 @@ const NewSplitBoard: NextPage = () => {
     name: 'text',
   });
 
-  const slackEnable = useWatch({
+  useWatch({
     control: methods.control,
     name: 'slackEnable',
   });
@@ -156,7 +156,7 @@ const NewSplitBoard: NextPage = () => {
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, team: string, maxVotes?: number) => {
+  const saveBoard = (title: string, team: string, slackEnable: boolean, maxVotes?: number) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -188,12 +188,9 @@ const NewSplitBoard: NextPage = () => {
       maxUsers: boardState.count.maxUsersCount,
       team,
       responsibles,
+      slackEnable,
     });
   };
-
-  useEffect(() => {
-    setBoardState((prev) => ({ ...prev, board: { ...prev.board, slackEnable } }));
-  }, [setBoardState, slackEnable]);
 
   useEffect(() => {
     if (status === 'success') {
@@ -237,8 +234,8 @@ const NewSplitBoard: NextPage = () => {
                 id="hook-form"
                 onSubmit={
                   !haveError
-                    ? methods.handleSubmit(({ text, team, maxVotes }) => {
-                        saveBoard(text, team, maxVotes);
+                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
+                        saveBoard(text, team, slackEnable, maxVotes);
                       })
                     : undefined
                 }

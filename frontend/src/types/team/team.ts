@@ -15,7 +15,5 @@ export interface CreateTeamDto {
 export interface TeamChecked {
   _id: string;
   name: string;
-  users: TeamUser[];
-  boardsCount?: number;
   isChecked?: boolean;
 }

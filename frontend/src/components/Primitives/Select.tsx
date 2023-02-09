@@ -95,12 +95,8 @@ type Option = {
 type ContentProps = { options: Option[] };
 
 export const SelectContent: React.FC<ContentProps> = ({ options }) => (
-  <StyledContent
-    position="popper"
-    collisionPadding={{ bottom: 100, top: 100 }}
-    className="SelectContent"
-  >
-    <ScrollArea.Root className="ScrollAreaRoot" type="auto">
+  <StyledContent position="popper" collisionPadding={{ bottom: 100, top: 100 }}>
+    <ScrollArea.Root type="auto">
       <SelectPrimitive.Viewport asChild>
         <ScrollArea.Viewport>
           {options.map((option) => (
@@ -110,8 +106,8 @@ export const SelectContent: React.FC<ContentProps> = ({ options }) => (
           ))}
         </ScrollArea.Viewport>
       </SelectPrimitive.Viewport>
-      <ScrollArea.Scrollbar className="ScrollAreaScrollbar" orientation="vertical">
-        <ScrollArea.Thumb className="ScrollAreaThumb" />
+      <ScrollArea.Scrollbar orientation="vertical">
+        <ScrollArea.Thumb />
       </ScrollArea.Scrollbar>
     </ScrollArea.Root>
   </StyledContent>
