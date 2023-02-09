@@ -52,9 +52,6 @@ const useParticipants = () => {
 
       return { previousBoard };
     },
-    onSettled: () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
-    },
     onError: (error, variables, context) => {
       queryClient.setQueryData(['board', { id: boardId }], context?.previousBoard);
       setToastState({
