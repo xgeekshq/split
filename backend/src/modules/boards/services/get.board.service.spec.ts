@@ -13,7 +13,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { getBoardService } from '../boards.providers';
+import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
 const fakeBoards = BoardFactory.createMany(2);
@@ -28,6 +28,7 @@ describe('GetBoardServiceImpl', () => {
 				getBoardService,
 				teamUserRepository,
 				teamRepository,
+				boardRepository,
 				updateTeamService,
 				{
 					provide: getModelToken('Team'),

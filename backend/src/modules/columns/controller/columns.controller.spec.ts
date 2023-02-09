@@ -2,6 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
+	boardRepository,
 	getBoardApplication,
 	getBoardService,
 	updateBoardApplication,
@@ -17,7 +18,11 @@ import {
 	teamUserRepository
 } from 'src/modules/teams/providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
-import { updateColumnApplication, updateColumnService } from '../columns.providers';
+import {
+	columnRepository,
+	updateColumnApplication,
+	updateColumnService
+} from '../columns.providers';
 import ColumnsController from './columns.controller';
 
 describe('ColumnsController', () => {
@@ -43,6 +48,8 @@ describe('ColumnsController', () => {
 				teamRepository,
 				teamUserRepository,
 				deleteVoteService,
+				columnRepository,
+				boardRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

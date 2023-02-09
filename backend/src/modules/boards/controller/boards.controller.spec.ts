@@ -2,6 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
+	boardRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -57,6 +58,7 @@ describe('BoardsController', () => {
 				getCardService,
 				deleteCardService,
 				deleteVoteService,
+				boardRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

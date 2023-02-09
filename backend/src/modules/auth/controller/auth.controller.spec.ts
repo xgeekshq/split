@@ -16,7 +16,11 @@ import {
 	registerAuthService
 } from 'src/modules/auth/auth.providers';
 import AuthController from 'src/modules/auth/controller/auth.controller';
-import { getBoardApplication, getBoardService } from 'src/modules/boards/boards.providers';
+import {
+	boardRepository,
+	getBoardApplication,
+	getBoardService
+} from 'src/modules/boards/boards.providers';
 import EmailModule from 'src/modules/mailer/mailer.module';
 import {
 	createTeamService,
@@ -68,6 +72,7 @@ describe('AuthController', () => {
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
+				boardRepository,
 				ConfigService,
 				{
 					provide: ConfigService,
