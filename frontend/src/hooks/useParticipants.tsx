@@ -54,10 +54,9 @@ const useParticipants = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries(['board', { id: boardId }]);
-      queryClient.invalidateQueries(['participants', { id: boardId }]);
     },
     onError: (error, variables, context) => {
-      queryClient.setQueryData(['participants', { id: boardId }], context?.previousBoard);
+      queryClient.setQueryData(['board', { id: boardId }], context?.previousBoard);
       setToastState({
         open: true,
         content: 'Error while updating board participants.',
