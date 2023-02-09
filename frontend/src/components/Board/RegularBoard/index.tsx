@@ -93,15 +93,16 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
       <Container direction="column">
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
           <Flex css={{ flex: 1 }} />
-          <Flex css={{ flex: 1 }}>
-            <Timer
-              boardId={board._id}
-              isAdmin={hasAdminRole}
-              emitEvent={emitEvent}
-              listenEvent={listenEvent}
-            />
-          </Flex>
-
+          {!board?.submitedAt && (
+            <Flex css={{ flex: 1 }}>
+              <Timer
+                boardId={board._id}
+                isAdmin={hasAdminRole}
+                emitEvent={emitEvent}
+                listenEvent={listenEvent}
+              />
+            </Flex>
+          )}
           {hasAdminRole && !board?.submitedAt && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
