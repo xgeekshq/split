@@ -126,11 +126,6 @@ const NewSplitBoard: NextPage = () => {
     name: 'text',
   });
 
-  useWatch({
-    control: methods.control,
-    name: 'slackEnable',
-  });
-
   if (routerTeam && !selectedTeam) {
     const foundTeam = teams.find((team) => team.id === routerTeam);
     setSelectedTeam(foundTeam);
