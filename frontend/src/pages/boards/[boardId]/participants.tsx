@@ -1,4 +1,4 @@
-import { getBoardParticipantsRequest, getBoardRequest } from '@/api/boardService';
+import { getBoardRequest } from '@/api/boardService';
 import { getAllUsers } from '@/api/userService';
 import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
 import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
@@ -7,7 +7,6 @@ import Flex from '@/components/Primitives/Flex';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import useBoard from '@/hooks/useBoard';
-import useParticipants from '@/hooks/useParticipants';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -27,24 +26,17 @@ const BoardParticipants = () => {
 
   // Hooks
   const {
-    fetchBoardParticipants: { data },
-  } = useParticipants({
-    autoFetchBoardParticipants: true,
-  });
-  const {
     fetchBoard: { data: boardData },
   } = useBoard({
     autoFetchBoard: true,
   });
 
   useEffect(() => {
-    if (data) {
-      setBoardParticipants(data);
-    }
     if (boardData) {
       setRecoilBoard(boardData);
+      setBoardParticipants(boardData.board.users);
     }
-  }, [boardData, data, setBoardParticipants, setRecoilBoard]);
+  }, [boardData, setBoardParticipants, setRecoilBoard]);
 
   const usersData = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -107,9 +99,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   try {
     await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
-    await queryClient.prefetchQuery(['participants', { id: boardId }], () =>
-      getBoardParticipantsRequest(boardId),
-    );
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );

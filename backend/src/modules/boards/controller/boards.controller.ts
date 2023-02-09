@@ -226,11 +226,6 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Get(':boardId/participants')
-	async getBoardParticipants(@Param() { boardId }: BaseParam) {
-		return this.getBoardApp.getBoardParticipants(boardId);
-	}
-
 	@ApiOperation({ summary: 'Update a specific board' })
 	@ApiParam({ type: String, name: 'boardId', required: true })
 	@ApiBody({ type: BoardDto })

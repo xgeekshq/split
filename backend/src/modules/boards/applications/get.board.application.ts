@@ -48,8 +48,4 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 	getAllBoardIdsAndTeamIdsOfUser(userId: string) {
 		return this.getBoardService.getAllBoardIdsAndTeamIdsOfUser(userId);
 	}
-
-	getBoardParticipants(boardId: string) {
-		return this.getBoardService.getBoardParticipants(boardId);
-	}
 }

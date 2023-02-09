@@ -226,16 +226,4 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	getAllBoardsByTeamId(teamId: string) {
 		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
 	}
-
-	async getBoardParticipants(boardId: string) {
-		return this.boardUserModel
-			.find({ board: boardId })
-			.select('user')
-			.populate({
-				path: 'user',
-				select: '_id firstName lastName email joinedAt isSAdmin'
-			})
-			.lean({ virtuals: true })
-			.exec();
-	}
 }

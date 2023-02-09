@@ -1,49 +1,23 @@
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import {
-  addAndRemoveBoardParticipantsRequest,
-  getBoardParticipantsRequest,
-} from '@/api/boardService';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { addAndRemoveBoardParticipantsRequest } from '@/api/boardService';
+import { useMutation } from '@tanstack/react-query';
 import { BoardUser } from '@/types/board/board.user';
+import { GetBoardResponse } from '@/types/board/board';
 import useBoardUtils from './useBoardUtils';
 
-interface AutoFetchProps {
-  autoFetchBoardParticipants: boolean;
-}
-
-const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps) => {
+const useParticipants = () => {
   const { boardId, queryClient, setToastState, usersList } = useBoardUtils();
-
-  const fetchBoardParticipants = useQuery(
-    ['participants', { id: boardId }],
-    () => getBoardParticipantsRequest(boardId),
-    {
-      enabled: autoFetchBoardParticipants,
-      refetchOnWindowFocus: true,
-      onError: () => {
-        queryClient.invalidateQueries(['participants', { id: boardId }]);
-        setToastState({
-          open: true,
-          content: 'Error getting the board',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
 
   const addAndRemoveBoardParticipants = useMutation(addAndRemoveBoardParticipantsRequest, {
     onMutate: async (addedAndRemovedMembers) => {
-      await queryClient.cancelQueries(['participants', { id: boardId }]);
+      await queryClient.cancelQueries(['board', { id: boardId }]);
 
-      const previousBoardParticipants = queryClient.getQueryData<BoardUser[]>([
-        'participants',
-        { id: boardId },
-      ]);
+      const previousBoard = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
 
-      queryClient.setQueryData<BoardUser[]>(
-        ['participants', { id: boardId }],
-        (oldBoardUsers: BoardUser[] | undefined) => {
-          if (!oldBoardUsers) return oldBoardUsers;
+      queryClient.setQueryData<GetBoardResponse>(
+        ['board', { id: boardId }],
+        (oldBoard: GetBoardResponse | undefined) => {
+          if (!oldBoard) return oldBoard;
           const removedBoardUserIds = addedAndRemovedMembers.removeBoardUsers;
           const createdBoardUsers: BoardUser[] = addedAndRemovedMembers.addBoardUsers.map(
             (boardUser) => ({
@@ -51,7 +25,7 @@ const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps)
               user: usersList.filter((user) => user._id === boardUser.user._id)[0],
             }),
           );
-          const usersFromParticipantsList = oldBoardUsers.filter(
+          const usersFromParticipantsList = oldBoard.board.users.filter(
             (participant) => !removedBoardUserIds.includes(participant._id as string),
           );
 
@@ -66,21 +40,24 @@ const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps)
             type: ToastStateEnum.SUCCESS,
           });
 
-          return finalParticipantsList;
+          return {
+            mainBoardData: oldBoard.mainBoardData,
+            board: {
+              ...oldBoard.board,
+              users: finalParticipantsList,
+            },
+          };
         },
       );
 
-      return { previousBoardParticipants };
+      return { previousBoard };
     },
     onSettled: () => {
       queryClient.invalidateQueries(['board', { id: boardId }]);
       queryClient.invalidateQueries(['participants', { id: boardId }]);
     },
     onError: (error, variables, context) => {
-      queryClient.setQueryData(
-        ['participants', { id: boardId }],
-        context?.previousBoardParticipants,
-      );
+      queryClient.setQueryData(['participants', { id: boardId }], context?.previousBoard);
       setToastState({
         open: true,
         content: 'Error while updating board participants.',
@@ -90,7 +67,6 @@ const useParticipants = ({ autoFetchBoardParticipants = false }: AutoFetchProps)
   });
 
   return {
-    fetchBoardParticipants,
     addAndRemoveBoardParticipants,
   };
 };
