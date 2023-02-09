@@ -17,7 +17,7 @@ import { useRecoilValue } from 'recoil';
 const ParticipantsLayout: React.FC = ({ children }) => {
   const {
     addAndRemoveBoardParticipants: { mutate },
-  } = useParticipants({ autoFetchBoardParticipants: false });
+  } = useParticipants();
 
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
