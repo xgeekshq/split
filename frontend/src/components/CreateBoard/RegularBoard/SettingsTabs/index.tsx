@@ -5,15 +5,23 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import Text from '@/components/Primitives/Text';
-import Tab, { TabContent } from '@/components/Primitives/Tab';
+import Tab, { TabList } from '@/components/Primitives/Tab';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import ParticipantsTab from '../ParticipantsTab';
 import BoardConfigurations from '../../Configurations/BoardConfigurations';
 
 const SettingsTabs = () => {
-  const tabList = [
-    { value: 'participants', text: 'Participants' },
-    { value: 'config', text: 'Configurations' },
+  const tabList: TabList[] = [
+    {
+      value: 'participants',
+      label: 'Participants',
+      content: <ParticipantsTab />,
+    },
+    {
+      value: 'config',
+      label: 'Configurations',
+      content: <BoardConfigurations isRegularBoard />,
+    },
   ];
   const initialTabValue = tabList[0].value;
 
@@ -59,14 +67,7 @@ const SettingsTabs = () => {
         defaultValue={initialTabValue}
         activeValue={activeTab}
         onChangeActiveValue={handleTabChange}
-      >
-        <TabContent value="participants">
-          <ParticipantsTab />
-        </TabContent>
-        <TabContent value="config">
-          <BoardConfigurations isRegularBoard />
-        </TabContent>
-      </Tab>
+      />
     </>
   );
 };
