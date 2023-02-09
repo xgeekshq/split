@@ -24,7 +24,7 @@ type AvatarGroupProps = {
   myBoards?: boolean;
   haveError?: boolean;
   isBoardsPage?: boolean;
-  isRegularBoardNoTeam?: boolean;
+  isSubBoardPage?: boolean;
 };
 
 const AVATAR_AMOUNT = 3;
@@ -39,7 +39,7 @@ const AvatarGroup = React.memo<AvatarGroupProps>(
     responsible,
     myBoards,
     isBoardsPage,
-    isRegularBoardNoTeam,
+    isSubBoardPage,
   }) => {
     const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
@@ -172,13 +172,12 @@ const AvatarGroup = React.memo<AvatarGroupProps>(
 
     return (
       <>
-        {isBoardsPage && (
+        {isSubBoardPage && (
           <ListBoardMembers
             boardMembers={boardMembers}
             isOpen={dialogIsOpen}
             setIsOpen={setDialogIsOpen}
-            isSubBoard={!stakeholders}
-            isRegularBoardNoTeam={isRegularBoardNoTeam}
+            isSubBoard
           />
         )}
         <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>

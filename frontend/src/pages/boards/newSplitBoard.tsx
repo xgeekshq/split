@@ -67,6 +67,7 @@ const defaultBoard = {
     hideVotes: false,
     slackEnable: false,
     addCards: true,
+    postAnonymously: false,
   },
 };
 
@@ -131,7 +132,7 @@ const NewSplitBoard: NextPage = () => {
   });
 
   if (routerTeam && !selectedTeam) {
-    const foundTeam = teams.find((team) => team._id === routerTeam);
+    const foundTeam = teams.find((team) => team.id === routerTeam);
     setSelectedTeam(foundTeam);
   }
 

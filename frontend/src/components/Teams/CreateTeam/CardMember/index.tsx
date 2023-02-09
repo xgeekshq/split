@@ -97,7 +97,6 @@ const CardMember = React.memo<CardBodyProps>(
                 <ConfigurationSwitchSettings
                   handleCheckedChange={handleSelectFunction}
                   isChecked={member.isNewJoiner}
-                  text=""
                   title="New Joiner"
                 />
               </Flex>

@@ -2,19 +2,22 @@ import { useEffect, useState } from 'react';
 
 import { io, Socket } from 'socket.io-client';
 
-import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
-import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import useCards from '@/hooks/useCards';
-import VoteDto from '@/types/vote/vote.dto';
 import BoardType from '@/types/board/board';
-import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
+import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import UpdateCardDto from '@/types/card/updateCard.dto';
+import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
-import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
+import UpdateCommentDto from '@/types/comment/updateComment.dto';
+import EmitEvent from '@/types/events/emit-event.type';
+import EventCallback from '@/types/events/event-callback.type';
+import ListenEvent from '@/types/events/listen-event.type';
+import VoteDto from '@/types/vote/vote.dto';
+import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { useQueryClient } from '@tanstack/react-query';
 import isEmpty from '@/utils/isEmpty';
 import { useRecoilValue } from 'recoil';
@@ -35,7 +38,13 @@ enum BoardAction {
   UPDATECOMMENT,
 }
 
-export const useSocketIO = (boardId: string): string | undefined => {
+interface SocketInterface {
+  socketId?: string;
+  listenEvent: ListenEvent;
+  emitEvent: EmitEvent;
+}
+
+export const useSocketIO = (boardId: string): SocketInterface => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
   const {
@@ -166,5 +175,13 @@ export const useSocketIO = (boardId: string): string | undefined => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardId, queryClient, queue, ready]);
 
-  return socket?.id;
+  const listenEvent = (eventName: string, callback: EventCallback) => {
+    socket?.on(eventName, callback);
+  };
+
+  const emitEvent = (eventName: string, payload?: any) => {
+    socket?.emit(eventName, payload);
+  };
+
+  return { socketId: socket?.id, listenEvent, emitEvent };
 };

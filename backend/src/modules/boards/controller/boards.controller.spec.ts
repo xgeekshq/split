@@ -1,3 +1,4 @@
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
@@ -35,6 +36,7 @@ describe('BoardsController', () => {
 
 	beforeEach(async () => {
 		const module = await Test.createTestingModule({
+			imports: [EventEmitterModule.forRoot()],
 			controllers: [BoardsController],
 			providers: [
 				SchedulerRegistry,

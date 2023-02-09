@@ -100,6 +100,10 @@ const Checkbox: React.FC<{
   );
 
   useEffect(() => {
+    setCurrentCheckValue(checked);
+  }, [checked]);
+
+  useEffect(() => {
     if (id === 'slackEnable' && formContext) {
       setCurrentCheckValue(formContext.getValues(id));
     }

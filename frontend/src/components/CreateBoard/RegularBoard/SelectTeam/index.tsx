@@ -36,7 +36,7 @@ const SelectTeam = () => {
   const numberOfTeams = teams?.length ?? 0;
 
   const handleTeamChange = (value: string) => {
-    const foundTeam = teams.find((team) => team._id === value);
+    const foundTeam = teams.find((team) => team.id === value);
 
     setSelectedTeam(foundTeam);
   };
@@ -45,7 +45,7 @@ const SelectTeam = () => {
     () =>
       teams.map((team) => ({
         label: `${team.name} (${team.users.length} members)`,
-        value: team._id,
+        value: team.id,
       })),
     [teams],
   );
@@ -78,7 +78,7 @@ const SelectTeam = () => {
     setCreateBoardData((prev) => ({
       ...prev,
       users,
-      board: { ...prev.board, team: selectedTeam._id },
+      board: { ...prev.board, team: selectedTeam.id },
       count: {
         ...prev.count,
         teamsCount,
@@ -89,7 +89,7 @@ const SelectTeam = () => {
 
   useEffect(() => {
     if (routerTeam) {
-      const foundTeam = teams.find((team) => team._id === routerTeam);
+      const foundTeam = teams.find((team) => team.id === routerTeam);
       setSelectedTeam(foundTeam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,7 +105,7 @@ const SelectTeam = () => {
     <Flex direction="column" css={{ width: '100%' }}>
       <Select
         disabled={numberOfTeams === 0}
-        defaultValue={teamsNames.find((option) => option.value === selectedTeam?._id)?.value}
+        defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
         }}

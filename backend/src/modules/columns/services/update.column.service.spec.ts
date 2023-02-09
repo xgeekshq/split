@@ -1,3 +1,4 @@
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
@@ -28,6 +29,7 @@ describe('UpdateColumnService', () => {
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [EventEmitterModule.forRoot()],
 			providers: [
 				UpdateColumnServiceImpl,
 				DeleteCardServiceImpl,

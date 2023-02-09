@@ -40,17 +40,7 @@ describe('GetBoardServiceImpl', () => {
 				},
 				{
 					provide: getModelToken(Board.name),
-					useValue: {
-						findById: (boardId: string) => ({
-							populate: () => ({
-								lean: () => ({
-									exec: jest.fn().mockImplementation(() => {
-										return Promise.resolve(fakeBoards.find((item) => item._id === boardId));
-									})
-								})
-							})
-						})
-					}
+					useValue: {}
 				},
 				{
 					provide: getModelToken('BoardUser'),
@@ -129,13 +119,5 @@ describe('GetBoardServiceImpl', () => {
 			],
 			hideVotes: true
 		});
-	});
-
-	it.only('should return a board', async () => {
-		const boardId = fakeBoards[1]._id;
-
-		const result = await service.getBoardData(boardId);
-
-		expect(result).toMatchObject(fakeBoards[1]);
 	});
 });

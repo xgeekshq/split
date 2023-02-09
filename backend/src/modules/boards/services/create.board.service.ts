@@ -96,7 +96,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
 				...dividedBoard,
 				team,
-				slackEnable: boardData.slackEnable
+				slackEnable: boardData.slackEnable,
+				hideCards: true,
+				postAnonymously: true
 			}));
 
 			return this.boardModel.create({
@@ -181,7 +183,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable && team && teamData.name === 'xgeeks') {
-			const populatedBoard = await this.getBoardService.getBoardData(newBoard._id);
+			const populatedBoard = await this.getBoardService.getBoardFromRepo(newBoard._id);
 
 			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
@@ -248,7 +250,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = Math.ceil(teamLength / Number(maxUsersPerTeam));
+		const maxTeams = Math.floor(teamLength / Number(maxUsersPerTeam));
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -269,7 +271,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
 			recurrent: configs.recurrent,
 			maxVotes: configs.maxVotes ?? null,
-			hideCards: configs.hideCards ?? false,
+			hideCards: true,
+			postAnonymously: configs.postAnonymously,
 			hideVotes: configs.hideVotes ?? false,
 			maxUsers: Math.ceil(configs.maxUsersPerTeam),
 			slackEnable: configs.slackEnable,

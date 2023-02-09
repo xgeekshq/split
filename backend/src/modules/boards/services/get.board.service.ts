@@ -4,14 +4,12 @@ import { Model } from 'mongoose';
 import { BOARDS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
-import { BoardDataPopulate } from '../utils/populate-board';
-import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -19,8 +17,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(Boards.TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface
 	) {}
@@ -108,7 +104,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				.sort({ updatedAt: 'desc' })
 				.skip(allBoards ? 0 : page * size)
 				.limit(allBoards ? count : size)
-				.select('-__v -createdAt -id')
+				.select(
+					'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments'
+				)
 				.populate({ path: 'createdBy', select: 'firstName lastName' })
 				.populate({
 					path: 'team',
@@ -124,7 +122,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 				})
 				.populate({
 					path: 'dividedBoards',
-					select: '-__v -createdAt -id',
+					select:
+						'-__v -createdAt -slackEnable -slackChannelId -submitedAt -id -columns.id -submitedByUser -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments',
 					populate: [
 						{
 							path: 'users',
@@ -132,19 +131,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 							populate: {
 								path: 'user',
 								model: 'User',
-								select: 'firstName email lastName joinedAt'
-							}
-						},
-						{
-							path: 'team',
-							select: 'name users _id',
-							populate: {
-								path: 'users',
-								select: 'user role',
-								populate: {
-									path: 'user',
-									select: '_id firstName lastName joinedAt'
-								}
+								select: 'firstName email lastName'
 							}
 						}
 					]
@@ -154,7 +141,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					select: 'user role -board',
 					populate: {
 						path: 'user',
-						select: 'firstName email lastName joinedAt'
+						select: '_id firstName email lastName'
 					}
 				})
 				.lean({ virtuals: true })
@@ -168,8 +155,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { boards: [], hasNextPage, page };
 	}
 
-	getBoardFromRepo(boardId: string) {
-		return this.boardRepository.getBoard(boardId);
+	async getBoardFromRepo(boardId: string) {
+		const board = await this.boardModel
+			.findById(boardId)
+			.populate(BoardDataPopulate)
+			.lean({ virtuals: true })
+			.exec();
+
+		return board as Board;
 	}
 
 	async getMainBoardData(boardId: string) {
@@ -222,7 +215,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async getBoardData(boardId: string) {
 		const board = await this.boardModel
 			.findById(boardId)
-			.populate(BoardDataPopulate)
+			.select('-slackEnable -slackChannelId -recurrent -__v')
+			.populate(GetBoardDataPopulate)
 			.lean({ virtuals: true })
 			.exec();
 

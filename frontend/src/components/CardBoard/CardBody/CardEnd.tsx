@@ -92,7 +92,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
             <Flex align="center" css={{ ml: '$24' }} gap="24">
               <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
 
-              <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?._id} />
+              <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?.id} />
             </Flex>
           )}
         </Flex>

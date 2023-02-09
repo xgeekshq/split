@@ -43,7 +43,7 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
   // after fetching data, add the field "isChecked", to be used in the Add button
   teamsUserIsNotMember = (
     queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', userId]) || []
-  ).map((team) => ({ ...team, isChecked: false }));
+  ).map((team) => ({ ...team, _id: team.id, isChecked: false }));
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTeam(event.target.value);

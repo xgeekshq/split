@@ -8,7 +8,6 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
-import { Socket } from 'socket.io-client';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 import EmptyTeamBoards from './EmptyTeamBoards';
@@ -18,21 +17,15 @@ interface ListBoardsByTeamProps {
   filteredTeam: Team;
   userId: string;
   isSuperAdmin: boolean;
-  socket: Socket | null;
 }
 
-const ListBoardsByTeam = ({
-  filteredTeam,
-  userId,
-  isSuperAdmin,
-  socket,
-}: ListBoardsByTeamProps) => {
+const ListBoardsByTeam = ({ filteredTeam, userId, isSuperAdmin }: ListBoardsByTeamProps) => {
   const setToastState = useSetRecoilState(toastState);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchBoardsByTeam = useInfiniteQuery(
-    ['boards', filteredTeam._id],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam._id),
+    ['boards', filteredTeam.id],
+    ({ pageParam = 0 }) => getBoardsRequest(pageParam, filteredTeam.id),
     {
       enabled: true,
       refetchOnWindowFocus: false,
@@ -58,11 +51,11 @@ const ListBoardsByTeam = ({
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team._id}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team.id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?._id}`, new Map([[date, [board]]]));
-          teams.set(`${board.team?._id}`, board.team);
+          boardsTeamAndDate.set(`${board.team?.id}`, new Map([[date, [board]]]));
+          teams.set(`${board.team?.id}`, board.team);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -88,7 +81,7 @@ const ListBoardsByTeam = ({
   if (dataByTeamAndDate.boardsTeamAndDate.size === 0 && !isLoading) {
     return (
       <ScrollableContent direction="column" justify="start" ref={scrollRef} onScroll={onScroll}>
-        <Flex key={filteredTeam._id} css={{ mb: '$24' }} direction="column">
+        <Flex key={filteredTeam.id} css={{ mb: '$24' }} direction="column">
           <Flex
             direction="column"
             css={{
@@ -100,7 +93,7 @@ const ListBoardsByTeam = ({
           >
             <TeamHeader team={filteredTeam} userId={userId} users={filteredTeam.users} />
           </Flex>
-          <EmptyTeamBoards teamId={filteredTeam._id} />
+          <EmptyTeamBoards teamId={filteredTeam.id} />
         </Flex>
       </ScrollableContent>
     );
@@ -113,9 +106,8 @@ const ListBoardsByTeam = ({
       dataByTeamAndDate={dataByTeamAndDate}
       scrollRef={scrollRef}
       onScroll={onScroll}
-      filter={filteredTeam._id}
+      filter={filteredTeam.id}
       isLoading={isLoading}
-      socket={socket}
     />
   );
 };

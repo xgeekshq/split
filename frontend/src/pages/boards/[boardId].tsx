@@ -1,36 +1,39 @@
-import React, { useEffect, useMemo, useState } from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import { getBoardRequest } from '@/api/boardService';
-import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import DragDropArea from '@/components/Board/DragDropArea';
+import RegularBoard from '@/components/Board/RegularBoard';
+import { BoardSettings } from '@/components/Board/Settings';
+import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
+import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
+import BoardHeader from '@/components/Board/SplitBoard/Header';
+import Timer from '@/components/Board/Timer';
+import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import AlertBox from '@/components/Primitives/AlertBox';
+import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
 import {
   boardInfoState,
+  boardParticipantsState,
   deletedColumnsState,
   editColumnsState,
   newBoardState,
 } from '@/store/board/atoms/board.atom';
+import { GetBoardResponse } from '@/types/board/board';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/icons/Icon';
-import { GetBoardResponse } from '@/types/board/board';
-import { BoardSettings } from '@/components/Board/Settings';
-import BoardHeader from '@/components/Board/SplitBoard/Header';
-import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
-import RegularBoard from '@/components/Board/RegularBoard';
+import { BoardUser } from '@/types/board/board.user';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -47,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
-    // TODO: adapt boardId to accept personal boards :)
+
     const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
     const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
@@ -99,6 +102,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Recoil States
   const [newBoard, setNewBoard] = useRecoilState(newBoardState);
   const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
+  const setBoardParticipants = useSetRecoilState(boardParticipantsState);
   const setEditColumns = useSetRecoilState(editColumnsState);
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
@@ -125,7 +129,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     !data?.board.team;
 
   // Socket IO Hook
-  const socketId = useSocketIO(boardId);
+  const { socketId, emitEvent, listenEvent } = useSocketIO(boardId);
 
   // Use effect to set recoil state using data from API
   useEffect(() => {
@@ -133,8 +137,25 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       setRecoilBoard(data);
       setEditColumns(data.board.columns);
       setDeletedColumns([]);
+
+      const boardUsers: BoardUser[] = [...data.board.users];
+
+      // this insures that the team creator stays always in first
+      const userAdminIndex = boardUsers.findIndex(
+        (member) => member?.user?._id === session?.user.id,
+      );
+
+      boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
+      setBoardParticipants(boardUsers);
     }
-  }, [data, setDeletedColumns, setEditColumns, setRecoilBoard]);
+  }, [
+    data,
+    session?.user.id,
+    setDeletedColumns,
+    setEditColumns,
+    setBoardParticipants,
+    setRecoilBoard,
+  ]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
@@ -201,7 +222,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   if (!recoilBoard) return <LoadingPage />;
 
-  if (isRegularOrPersonalBoard) return <RegularBoard socketId={socketId} />;
+  if (isRegularOrPersonalBoard)
+    return <RegularBoard socketId={socketId} emitEvent={emitEvent} listenEvent={listenEvent} />;
 
   return board && userId && socketId ? (
     <>
@@ -221,6 +243,15 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               )}
             </Flex>
           )}
+
+          <Flex css={{ flex: 1 }}>
+            <Timer
+              boardId={boardId}
+              isAdmin={hasAdminRole}
+              emitEvent={emitEvent}
+              listenEvent={listenEvent}
+            />
+          </Flex>
 
           {hasAdminRole && !board?.submitedAt && (
             <>

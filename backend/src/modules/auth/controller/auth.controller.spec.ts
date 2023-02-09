@@ -1,3 +1,4 @@
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -49,7 +50,7 @@ describe('AuthController', () => {
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
-			imports: [EmailModule],
+			imports: [EmailModule, EventEmitterModule.forRoot()],
 			controllers: [AuthController],
 			providers: [
 				registerAuthApplication,

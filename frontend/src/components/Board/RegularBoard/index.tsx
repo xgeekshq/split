@@ -1,28 +1,33 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
 import DragDropArea from '@/components/Board/DragDropArea';
+import { BoardSettings } from '@/components/Board/Settings';
+import Timer from '@/components/Board/Timer';
+import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
+import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import {
   boardInfoState,
   deletedColumnsState,
   editColumnsState,
 } from '@/store/board/atoms/board.atom';
+import EmitEvent from '@/types/events/emit-event.type';
+import ListenEvent from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/icons/Icon';
-import { BoardSettings } from '@/components/Board/Settings';
 import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
 type RegularBoardProps = {
   socketId?: string;
+  listenEvent: ListenEvent;
+  emitEvent: EmitEvent;
 };
 
-const RegularBoard = ({ socketId }: RegularBoardProps) => {
+const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
@@ -86,7 +91,17 @@ const RegularBoard = ({ socketId }: RegularBoardProps) => {
     <>
       <RegularBoardHeader />
       <Container direction="column">
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="between">
+        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
+          <Flex css={{ flex: 1 }} />
+          <Flex css={{ flex: 1 }}>
+            <Timer
+              boardId={board._id}
+              isAdmin={hasAdminRole}
+              emitEvent={emitEvent}
+              listenEvent={listenEvent}
+            />
+          </Flex>
+
           {hasAdminRole && !board?.submitedAt && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">

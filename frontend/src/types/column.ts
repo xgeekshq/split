@@ -48,6 +48,7 @@ export interface ColumnInnerList {
   cardText?: string;
   isDefaultText?: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 export type ColumnDragItem = {

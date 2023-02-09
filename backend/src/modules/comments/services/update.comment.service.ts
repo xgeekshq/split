@@ -22,8 +22,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 			.findOneAndUpdate(
 				{
 					_id: boardId,
-					'columns.cards.items.comments._id': commentId,
-					'columns.cards.items.comments.createdBy': userId
+					'columns.cards.items.comments._id': commentId
 				},
 				{
 					$set: {
@@ -32,11 +31,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 					}
 				},
 				{
-					arrayFilters: [
-						{ 'c._id': cardId },
-						{ 'i._id': cardItemId },
-						{ 'com._id': commentId, 'com.createdBy': userId }
-					],
+					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }, { 'com._id': commentId }],
 					new: true
 				}
 			)
@@ -66,7 +61,7 @@ export default class UpdateCommentServiceImpl implements UpdateCommentService {
 					}
 				},
 				{
-					arrayFilters: [{ 'c._id': cardId }, { 'com._id': commentId, 'com.createdBy': userId }],
+					arrayFilters: [{ 'c._id': cardId }, { 'com._id': commentId }],
 					new: true
 				}
 			)

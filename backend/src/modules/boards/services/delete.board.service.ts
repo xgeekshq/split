@@ -19,7 +19,10 @@ import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
+import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
@@ -36,7 +39,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => Boards.TYPES.services.GetBoardService))
-		private getBoardService: GetBoardServiceInterface
+		private getBoardService: GetBoardServiceInterface,
+		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
+		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
 	private async getTeamUser(
@@ -104,7 +109,11 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 
 		if (!result) throw Error(DELETE_FAILED);
 
-		return { dividedBoards: result.dividedBoards, _id: result._id };
+		return {
+			dividedBoards: result.dividedBoards,
+			_id: result._id,
+			slackEnable: result.slackEnable
+		};
 	}
 
 	async delete(boardId: string) {
@@ -141,7 +150,10 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		boardSession.startTransaction();
 		boardUserSession.startTransaction();
 		try {
-			const { _id, dividedBoards } = await this.deleteBoard(boardId.toString(), boardSession);
+			const { _id, dividedBoards, slackEnable } = await this.deleteBoard(
+				boardId.toString(),
+				boardSession
+			);
 			this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
 
 			if (isMainBoard && !isEmpty(dividedBoards)) {
@@ -150,6 +162,26 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 				await this.deleteBoardUsers(dividedBoards, boardUserSession, _id);
 			} else {
 				await this.deleteSimpleBoardUsers(boardUserSession, _id);
+			}
+
+			// if slack is enable for the deleted board
+			if (slackEnable) {
+				// archive all related channels
+				// for that we need to fecth the board with all dividedBoards
+				const board = await this.getBoardService.getBoardFromRepo(boardId);
+
+				this.archiveChannelService.execute({
+					type: ArchiveChannelDataOptions.BOARD,
+					data: {
+						id: board._id,
+						slackChannelId: board.slackChannelId,
+						dividedBoards: board.dividedBoards.map((i) => ({
+							id: i._id,
+							slackChannelId: i.slackChannelId
+						}))
+					},
+					cascade: true
+				});
 			}
 
 			await boardSession.commitTransaction();

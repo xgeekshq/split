@@ -40,7 +40,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
 
   const isSAdmin = session?.user.isSAdmin;
 
-  const { _id: id, users } = team;
+  const { id, users } = team;
 
   const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
 

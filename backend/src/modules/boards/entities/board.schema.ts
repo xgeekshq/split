@@ -70,6 +70,9 @@ export default class Board extends BaseModel {
 
 	@Prop({ type: Boolean, nullable: true, default: true })
 	addCards: boolean;
+
+	@Prop({ type: Boolean, nullable: true, default: false })
+	postAnonymously: boolean;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

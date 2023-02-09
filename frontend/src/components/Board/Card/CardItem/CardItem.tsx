@@ -3,10 +3,8 @@ import React, { useState } from 'react';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import AddCardOrComment from '@/components/Board/AddCardOrComment';
-import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { cardItemBlur } from '@/helper/board/blurFilter';
 import { CardItemType } from '@/types/card/cardItem';
 import CardFooter from '../CardFooter';
 import DeleteCard from '../DeleteCard';
@@ -29,6 +27,7 @@ interface CardItemProps {
   hideCards: boolean;
   isDefaultText: boolean;
   hasAdminRole: boolean;
+  postAnonymously: boolean;
 }
 
 const Container = styled(Flex, {
@@ -55,6 +54,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     hideCards,
     isDefaultText,
     hasAdminRole,
+    postAnonymously,
   }) => {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -76,46 +76,29 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                 css={{
                   wordBreak: 'break-word',
                   whiteSpace: 'pre-line',
-                  filter: cardItemBlur(hideCards, item as CardItemType, userId),
                 }}
               >
                 {item.text}
               </Text>
-              {isSubmited && (
-                <Flex
-                  css={{
-                    position: 'relative',
-                    top: firstOne ? '-35px' : 0,
-                    filter: cardItemBlur(hideCards, item as CardItemType, userId),
-                  }}
-                >
-                  <Icon
-                    name="menu-dots"
-                    css={{
-                      width: '$20',
-                      height: '$20',
-                    }}
+              {!isSubmited &&
+                ((userId === item?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                  <PopoverCardSettings
+                    isItem
+                    boardId={boardId}
+                    cardGroupId={cardGroupId}
+                    columnId={columnId}
+                    firstOne={firstOne}
+                    handleDeleteCard={handleDeleting}
+                    handleEditing={handleEditing}
+                    hideCards={hideCards}
+                    item={item}
+                    itemId={item._id}
+                    newPosition={cardGroupPosition}
+                    socketId={socketId}
+                    userId={userId}
+                    hasAdminRole={hasAdminRole}
                   />
-                </Flex>
-              )}
-              {!isSubmited && (
-                <PopoverCardSettings
-                  isItem
-                  boardId={boardId}
-                  cardGroupId={cardGroupId}
-                  columnId={columnId}
-                  firstOne={firstOne}
-                  handleDeleteCard={handleDeleting}
-                  handleEditing={handleEditing}
-                  hideCards={hideCards}
-                  item={item}
-                  itemId={item._id}
-                  newPosition={cardGroupPosition}
-                  socketId={socketId}
-                  userId={userId}
-                  hasAdminRole={hasAdminRole}
-                />
-              )}
+                )}
             </Flex>
 
             {!lastOne && (
@@ -146,6 +129,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             socketId={socketId}
             anonymous={item.anonymous}
             isDefaultText={isDefaultText}
+            postAnonymously={postAnonymously}
           />
         )}
         {deleting && (

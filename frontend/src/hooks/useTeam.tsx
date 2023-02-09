@@ -259,7 +259,7 @@ const useTeam = ({
       queryClient.invalidateQueries(['teams']);
 
       // updates the teamsList recoil
-      const teams = teamsList.filter((team) => team._id !== variables.id);
+      const teams = teamsList.filter((team) => team.id !== variables.id);
 
       setTeamsList(teams);
 

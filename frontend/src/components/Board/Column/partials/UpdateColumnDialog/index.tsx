@@ -127,11 +127,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
                   This default text will be visible as placeholder when someone is creating a new
                   card.
                 </Text>
-                <TextArea
-                  floatPlaceholder={false}
-                  id="text"
-                  placeholder={columnTextCard || 'Write your comment here...'}
-                />
+                <TextArea id="text" placeholder={columnTextCard || 'Write your comment here...'} />
               </>
             )}
             <Flex gap="16" justify="end">

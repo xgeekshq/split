@@ -8,7 +8,6 @@ import {
   PopoverTrigger,
 } from '@/components/Primitives/Popover';
 import Text from '@/components/Primitives/Text';
-import { cardItemBlur } from '@/helper/board/blurFilter';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
 
@@ -139,12 +138,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
             top: firstOne ? '-35px' : 0,
           }}
         >
-          <Icon
-            name="menu-dots"
-            css={{
-              filter: cardItemBlur(hideCards, item as CardItemType, userId),
-            }}
-          />
+          <Icon name="menu-dots" />
         </PopoverTrigger>
 
         <PopoverSettingsContent
