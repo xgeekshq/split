@@ -13,7 +13,7 @@ export default class Comment extends BaseModel {
 	text!: string;
 
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-	createdBy!: User | mongoose.Schema.Types.ObjectId;
+	createdBy!: User | mongoose.Schema.Types.ObjectId | string;
 
 	@Prop({ nullable: false })
 	anonymous!: boolean;

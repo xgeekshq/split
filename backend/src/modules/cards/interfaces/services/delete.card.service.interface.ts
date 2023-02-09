@@ -16,5 +16,5 @@ export interface DeleteCardService {
 		userId: string
 	): Promise<LeanDocument<BoardDocument> | null>;
 
-	deleteCardsFromColumn(boardId: string, cards: Card[]): Promise<void>;
+	deleteCardVotesFromColumn(boardId: string, cards: Card[]): Promise<void>;
 }

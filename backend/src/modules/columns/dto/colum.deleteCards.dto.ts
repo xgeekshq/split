@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
-import { BaseDto } from '../../../libs/dto/base.dto';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class ColumnDeleteCardsDto extends BaseDto {
+export class ColumnDeleteCardsDto {
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsString()
 	id!: string;
+
+	@ApiProperty()
+	@IsString()
+	@IsOptional()
+	socketId?: string;
 }
