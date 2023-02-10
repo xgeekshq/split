@@ -221,11 +221,12 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 				});
 			});
 
-			const votesByUserOnCard = this.getVotesByUser(cards.votes);
-
-			votesByUserOnCard.forEach(async (votesCount, userId) => {
-				await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
-			});
+			if (cards.votes.length > 0) {
+				const votesByUserOnCard = this.getVotesByUser(cards.votes);
+				votesByUserOnCard.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			}
 		});
 	}
 }
