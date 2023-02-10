@@ -23,6 +23,7 @@ import {
   StyledLogo,
   TitleSection,
 } from '../../SplitBoard/Header/styles';
+import HeaderParticipants from './HeaderParticipants';
 
 interface Props {
   isParticipantsPage?: boolean;
@@ -174,40 +175,16 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           )}
 
           {isRegularBoardWithNoTeam && (
-            <Flex gap="24">
-              <Flex align="center" gap="10">
-                {isParticipantsPage ? (
-                  <Text size="sm">Participants</Text>
-                ) : (
-                  <Link href={`/boards/${_id}/participants`}>
-                    <StyledBoardTitle>
-                      <Text size="sm">Participants</Text>
-                    </StyledBoardTitle>
-                  </Link>
-                )}
-                <AvatarGroup
-                  isBoardsPage
-                  responsible={false}
-                  listUsers={users}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                />
-              </Flex>
-              <Flex align="center">
-                <Separator orientation="vertical" size="lg" />
-              </Flex>
-              <Flex align="center" gap="10">
-                <Text color="primary300" size="sm">
-                  Board Creator
-                </Text>
-                <AvatarGroup
-                  isBoardsPage
-                  responsible
-                  listUsers={users}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                />
-              </Flex>
+            <Flex>
+              {isParticipantsPage ? (
+                <HeaderParticipants isParticipantsPage />
+              ) : (
+                <Link href={`/boards/${_id}/participants`}>
+                  <Flex>
+                    <HeaderParticipants />
+                  </Flex>
+                </Link>
+              )}
             </Flex>
           )}
         </Flex>
