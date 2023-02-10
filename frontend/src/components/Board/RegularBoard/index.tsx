@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import { Container } from '@/styles/pages/boards/board.styles';
 
@@ -10,11 +10,7 @@ import Icon from '@/components/icons/Icon';
 import LoadingPage from '@/components/loadings/LoadingPage';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import {
-  boardInfoState,
-  deletedColumnsState,
-  editColumnsState,
-} from '@/store/board/atoms/board.atom';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -34,15 +30,6 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
 
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
-  const setEditColumns = useSetRecoilState(editColumnsState);
-  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
-
-  useMemo(() => {
-    if (!isOpen) {
-      setEditColumns(board.columns);
-      setDeletedColumns([]);
-    }
-  }, [board.columns, isOpen, setDeletedColumns, setEditColumns]);
 
   // Session Details
   const { data: session } = useSession({ required: true });
