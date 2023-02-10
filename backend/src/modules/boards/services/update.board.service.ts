@@ -531,24 +531,24 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	async updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
 		try {
-			let createdTeamUsers: BoardUser[] = [];
+			let createdBoardUsers: BoardUser[] = [];
 
-			if (addUsers.length > 0) createdTeamUsers = await this.addBoardUsers(addUsers);
+			if (addUsers.length > 0) createdBoardUsers = await this.addBoardUsers(addUsers);
 
 			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
 
-			return createdTeamUsers;
+			return createdBoardUsers;
 		} catch (error) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 	}
 
 	private async addBoardUsers(boardUsers: BoardUserDto[]) {
-		const createdTeamUsers = await this.boardUserModel.insertMany(boardUsers);
+		const createdBoardUsers = await this.boardUserModel.insertMany(boardUsers);
 
-		if (createdTeamUsers.length < 1) throw new Error(INSERT_FAILED);
+		if (createdBoardUsers.length < 1) throw new Error(INSERT_FAILED);
 
-		return createdTeamUsers;
+		return createdBoardUsers;
 	}
 
 	private async deleteBoardUsers(boardUsers: string[]) {

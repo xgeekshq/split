@@ -9,6 +9,14 @@ export interface BoardUser {
   votesCount: number;
 }
 
+export interface CreatedBoardUser {
+  id: any;
+  user: string;
+  role: BoardUserRoles;
+  _id: string;
+  votesCount: number;
+}
+
 export interface BoardUserNoPopulated {
   _id: string;
   board: string;
