@@ -13,7 +13,7 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   cursor: 'pointer',
   boxSizing: 'border-box',
   borderRadius: '$2',
-  border: '1px solid $primaryBase',
+  border: '1px solid',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -101,6 +101,7 @@ const Checkbox: React.FC<{
         width: '100%',
         boxSizing: 'border-box',
       }}
+      gap={8}
     >
       <StyledCheckbox
         id={id}
@@ -119,8 +120,6 @@ const Checkbox: React.FC<{
         as="label"
         color={disabled ? 'primary200' : 'primary800'}
         css={{
-          paddingLeft: '$8',
-          width: '100%',
           cursor: 'pointer',
           wordBreak: 'break-word',
         }}
