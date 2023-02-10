@@ -7,11 +7,10 @@ import {
   InnerContainer,
   StyledMemberTitle,
 } from '@/components/Teams/CreateTeam/CardMember/styles';
-import { BoardUser } from '@/types/board/board.user';
+import { BoardUser, BoardUserAddAndRemove } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
-import { boardParticipantsState } from '@/store/board/atoms/board.atom';
-import { useRecoilState } from 'recoil';
-import { usersListState } from '@/store/team/atom/team.atom';
+import useParticipants from '@/hooks/useParticipants';
+import { useRouter } from 'next/router';
 
 type CardBodyProps = {
   member: BoardUser;
@@ -20,22 +19,23 @@ type CardBodyProps = {
 };
 
 const ParticipantCard = React.memo<CardBodyProps>(({ member, isBoardCreator, isOpen }) => {
-  const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
-  const [usersList, setUsersListState] = useRecoilState(usersListState);
+  const {
+    addAndRemoveBoardParticipants: { mutate },
+  } = useParticipants();
+
+  const router = useRouter();
+  const boardId = router.query.boardId as string;
+
   const handleRemove = () => {
-    const updateParticipantsList = [...boardParticipants];
-    const updateUsersList = [...usersList];
+    if (!member._id) return;
 
-    const userIdx = updateUsersList.findIndex((user) => user._id === member.user._id);
-    const participantIdx = updateParticipantsList.findIndex(
-      (boardUser) => boardUser.user._id === member.user._id,
-    );
+    const boardUsersToUpdate: BoardUserAddAndRemove = {
+      addBoardUsers: [],
+      removeBoardUsers: [member._id],
+      boardId,
+    };
 
-    updateParticipantsList.splice(participantIdx, 1);
-    updateUsersList.splice(userIdx, 1);
-
-    setUsersListState(usersList);
-    setBoardParticipants(updateParticipantsList);
+    mutate(boardUsersToUpdate);
   };
   return (
     <Flex css={{ flex: '1 1 1' }} direction="column">

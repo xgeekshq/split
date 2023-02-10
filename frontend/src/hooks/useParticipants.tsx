@@ -52,6 +52,47 @@ const useParticipants = () => {
 
       return { previousBoard };
     },
+    onSettled: (data, error, variables) => {
+      queryClient.setQueryData<GetBoardResponse>(
+        ['board', { id: boardId }],
+        (oldBoard: GetBoardResponse | undefined) => {
+          if (!oldBoard) return oldBoard;
+          if (!data) return undefined;
+
+          const boardUsersWithoutId = variables.addBoardUsers.map(
+            (addedBoardUser) => addedBoardUser.user._id,
+          );
+
+          const boardUsersWithId: BoardUser[] = oldBoard.board.users.filter(
+            (boardUser) => !boardUsersWithoutId.includes(boardUser.user._id),
+          );
+
+          data.forEach((newBoardUser) => {
+            const userFound = usersList.find((user) => user._id === newBoardUser.user);
+            if (!userFound) return;
+            const newBoardUserWithUser = {
+              ...newBoardUser,
+              user: userFound,
+            };
+            boardUsersWithId.push(newBoardUserWithUser);
+          });
+
+          setToastState({
+            open: true,
+            content: 'Board participants successfully updated.',
+            type: ToastStateEnum.SUCCESS,
+          });
+
+          return {
+            mainBoardData: oldBoard.mainBoardData,
+            board: {
+              ...oldBoard.board,
+              users: boardUsersWithId,
+            },
+          };
+        },
+      );
+    },
     onError: (error, variables, context) => {
       queryClient.setQueryData(['board', { id: boardId }], context?.previousBoard);
       setToastState({
