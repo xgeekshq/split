@@ -9,7 +9,6 @@ import Flex from './Flex';
 import Text from './Text';
 
 const StyledInputWrapper = styled(Flex, {
-  // outline: '1px solid #ff00ff', // Debug Only
   px: '$16',
   boxShadow: '0',
   border: '1px solid $primary200',
@@ -92,9 +91,27 @@ const HelperTextWrapper = styled(Flex, {
     flex: '0 0 16px',
     height: '$16 ',
     width: '$16 ',
-    color: '$dangerBase',
   },
-  '& *:not(svg)': { flex: '1 1 auto' },
+  variants: {
+    color: {
+      error: {
+        [`& ${Text}`]: {
+          color: '$dangerBase',
+        },
+        '& svg': {
+          color: '$dangerBase',
+        },
+      },
+      hint: {
+        [`& ${Text}`]: {
+          color: '$primary300',
+        },
+        '& svg': {
+          color: '$primary300',
+        },
+      },
+    },
+  },
 });
 
 const StyledInput = styled('input', {
@@ -135,7 +152,6 @@ const StyledInput = styled('input', {
   },
 
   // Custom
-
   fontSize: '$16',
   lineHeight: '$20',
   outline: 'none',
@@ -169,87 +185,68 @@ type StyledInpupProps = React.ComponentProps<typeof StyledInput>;
 
 interface InputProps extends StyledInpupProps {
   id: string;
-  state?: 'default' | 'error' | 'valid';
   type: 'text' | 'password' | 'email' | 'number';
   placeholder: string;
   icon?: string;
-  helperText?: string;
   iconPosition?: 'left' | 'right';
-  forceState?: boolean;
+  helperText?: string;
   disabled?: boolean;
-  clearErrorCode?: () => void;
-  currentValue?: string;
   maxChars?: string;
   showCount?: boolean;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input: React.FC<InputProps> = ({
   id,
   placeholder,
-  state,
   icon,
   iconPosition,
   helperText,
   type,
   disabled,
   css,
-  forceState,
-  clearErrorCode,
-  currentValue,
   maxChars,
   min,
   showCount,
-  onChange,
 }) => {
   Input.defaultProps = {
-    state: undefined,
     iconPosition: undefined,
     icon: undefined,
     helperText: '',
     disabled: false,
-    clearErrorCode: undefined,
-    currentValue: undefined,
     maxChars: undefined,
-    forceState: false,
     showCount: false,
   };
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentType, setType] = useState(type);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const {
     register,
     getValues,
     clearErrors,
-    formState: { errors, touchedFields },
+    trigger: revalidateInput,
+    formState: { errors, dirtyFields },
   } = useFormContext();
-  const { ref, ...rest } = register(id);
+  const { ref, onChange, ...rest } = register(id);
 
-  const message = errors[id]?.message;
+  const errorMessage = errors[id]?.message;
 
   const value = getValues()[id];
   const isValueEmpty = isEmpty(value);
 
-  const autoState = useMemo(() => {
+  const getCurrentState = useMemo(() => {
+    if (!dirtyFields[id]) return 'default';
+
     if (errors[id]) return 'error';
-    if (!message && !isValueEmpty) return 'valid';
-    return undefined;
-  }, [errors, message, isValueEmpty]);
+    if (!isValueEmpty) return 'valid';
+    return 'default';
+  }, [dirtyFields[id], errors[id], isValueEmpty]);
 
-  const currentState = useMemo(() => {
-    if (disabled && !touchedFields[id] && !forceState) return 'default';
-    if (state && forceState && !touchedFields[id]) return autoState;
-    return autoState;
-  }, [autoState, disabled, forceState, id, state, touchedFields]);
-
-  const isHelperEmpty = isEmpty(helperText) && isEmpty(message);
-
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-
-  const handleVisibility = () => setIsVisible((prevState) => !prevState);
+  const isHelperEmpty = isEmpty(helperText) && isEmpty(errorMessage);
 
   const handleOnClickIcon = () => {
-    handleVisibility();
+    setIsVisible((prevState) => !prevState);
+
     if (type === 'text') return;
     setType(currentType === 'password' ? 'text' : 'password');
   };
@@ -274,7 +271,7 @@ const Input: React.FC<InputProps> = ({
     >
       <StyledInputWrapper
         gap="8"
-        variant={currentState}
+        variant={getCurrentState}
         data-iconposition={iconPosition}
         disabled={disabled}
       >
@@ -293,7 +290,7 @@ const Input: React.FC<InputProps> = ({
             {...rest}
             autoComplete="off"
             data-iconposition={iconPosition}
-            data-state={currentState}
+            data-state={getCurrentState}
             disabled={disabled}
             id={id}
             min={min}
@@ -303,7 +300,11 @@ const Input: React.FC<InputProps> = ({
               ref(e);
               inputRef.current = e;
             }}
-            onFocus={clearErrorCode}
+            onFocus={() => {
+              if (!isValueEmpty) {
+                revalidateInput(id);
+              }
+            }}
             onChange={onChange}
           />
           <PlaceholderText as="label" data-iconposition={iconPosition} htmlFor={id}>
@@ -311,33 +312,25 @@ const Input: React.FC<InputProps> = ({
           </PlaceholderText>
         </Flex>
       </StyledInputWrapper>
-      <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
-        {!isHelperEmpty && (
-          <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            {currentState === 'error' && <Icon name="info" />}
-            <Text
-              hint
-              css={{
-                color: currentState === 'error' ? '$dangerBase' : '$primary300',
-              }}
-            >
-              {!isEmpty(helperText) ? helperText : message}
-            </Text>
-          </HelperTextWrapper>
-        )}
-        {(!!currentValue || !currentValue) && (
-          <Text
-            hint
-            color={currentState === 'error' ? 'dangerBase' : 'primary300'}
-            css={{
-              mt: '$8',
-            }}
-          >
-            {showCount && !currentValue && `0/${maxChars}`}
-            {!!currentValue && `${currentValue.length}/${maxChars}`}
-          </Text>
-        )}
-      </Flex>
+      {(!isEmpty(helperText) || !isEmpty(errorMessage)) && (
+        <HelperTextWrapper
+          css={{ mt: '$8', px: '$4' }}
+          justify={!isHelperEmpty ? 'between' : 'end'}
+          color={getCurrentState === 'error' ? 'error' : 'hint'}
+        >
+          {!isHelperEmpty && (
+            <Flex gap="4" css={{ flexGrow: '1' }}>
+              {!isEmpty(errorMessage) && getCurrentState === 'error' && <Icon name="error" />}
+              {!isEmpty(helperText) && getCurrentState !== 'error' && <Icon name="info" />}
+
+              <Text hint>
+                {!isEmpty(helperText) && getCurrentState !== 'error' ? helperText : errorMessage}
+              </Text>
+            </Flex>
+          )}
+          {showCount && <Text hint>{`${value.length}/${maxChars}`}</Text>}
+        </HelperTextWrapper>
+      )}
     </Flex>
   );
 };

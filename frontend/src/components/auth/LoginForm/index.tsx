@@ -35,29 +35,16 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
   const setToastState = useSetRecoilState(toastState);
-  const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser();
   const methods = useForm<LoginUser>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
     },
     resolver: joiResolver(SchemaLoginForm),
   });
-
-  const clearErrors = () => {
-    setToastState((prev) => ({ ...prev, open: false }));
-    setLoading({ credentials: false, sso: false });
-    setLoginErrorCode(-1);
-  };
-
-  const handleInputChange = (e: any) => {
-    const { id } = e.target;
-    const { value } = e.target;
-    methods.setValue(id, value);
-  };
 
   const handleLoginAzure = () => {
     if (loading.sso) return;
@@ -78,10 +65,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
       return;
     }
 
-    setLoginErrorCode(result.status);
     if (result.error) {
-      methods.setError('email', { type: 'custom', message: '' });
-      methods.setError('password', { type: 'custom', message: '' });
+      methods.reset();
       setToastState({
         open: true,
         type: ToastStateEnum.ERROR,
@@ -114,26 +99,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email and password to log in.
         </Text>
+        <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
         <Input
-          clearErrorCode={clearErrors}
-          css={{ mt: '$32' }}
-          forceState={loginErrorCode > 0}
-          id="email"
-          placeholder="Email address"
-          state={loginErrorCode > 0 ? 'error' : undefined}
-          type="text"
-          onChange={handleInputChange}
-        />
-        <Input
-          clearErrorCode={clearErrors}
-          forceState={loginErrorCode > 0}
           icon="eye"
           iconPosition="right"
           id="password"
           placeholder="Password"
-          state={loginErrorCode > 0 ? 'error' : undefined}
           type="password"
-          onChange={handleInputChange}
         />
 
         <Button disabled={loading.credentials} size="lg" type="submit">
