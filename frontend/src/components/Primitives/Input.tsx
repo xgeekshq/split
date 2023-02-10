@@ -178,7 +178,7 @@ interface InputProps extends StyledInpupProps {
   state?: 'default' | 'error' | 'valid';
   type: 'text' | 'password' | 'email' | 'number';
   placeholder: string;
-  icon?: 'eye' | 'eyeclosed' | 'search';
+  icon?: string;
   helperText?: string;
   iconPosition?: 'left' | 'right';
   forceState?: boolean;
@@ -260,6 +260,14 @@ const Input: React.FC<InputProps> = ({
     setType(currentType === 'password' ? 'text' : 'password');
   };
 
+  const iconToShow = () => {
+    if (type === 'password') {
+      return isVisible ? 'eye' : 'eye-slash';
+    }
+
+    return icon ?? '';
+  };
+
   return (
     <Flex
       css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto', ...css }}
@@ -272,25 +280,12 @@ const Input: React.FC<InputProps> = ({
     >
       {!!icon && (
         <IconWrapper data-iconposition={iconPosition} data-type={type} onClick={handleOnClickIcon}>
-          {icon === 'eye' && (
-            <Icon
-              name={isVisible ? 'eye' : 'eye-slash'}
-              css={{
-                width: '$24',
-                height: '$24',
-                color: '$primary300',
-              }}
-            />
-          )}
-          {icon === 'search' && (
-            <Icon
-              name="search"
-              css={{
-                width: '$24',
-                height: '$24',
-              }}
-            />
-          )}
+          <Icon
+            name={iconToShow()}
+            css={{
+              color: '$primary300',
+            }}
+          />
         </IconWrapper>
       )}
       <Flex>
@@ -319,7 +314,7 @@ const Input: React.FC<InputProps> = ({
       <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
         {!isHelperEmpty && (
           <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            {currentState === 'error' && <Icon css={{ width: '$24', height: '$24' }} name="info" />}
+            {currentState === 'error' && <Icon name="info" />}
             <Text
               hint
               css={{
