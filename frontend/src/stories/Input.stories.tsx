@@ -36,7 +36,7 @@ const StorybookFormProvider: VFC<{ children: ReactNode }> = ({ children }) => {
 
 const Template: ComponentStory<typeof Input> = ({ ...args }) => (
   <StorybookFormProvider>
-    <Input {...args} />
+    <Input {...args} css={{ width: '$300' }} />
   </StorybookFormProvider>
 );
 
