@@ -11,10 +11,15 @@ import { BoardUserAddAndRemove, BoardUserToAdd } from '@/types/board/board.user'
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-const ParticipantsLayout: React.FC = ({ children }) => {
+interface Props {
+  children: ReactNode;
+  hasPermissionsToEdit: boolean;
+}
+
+const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
   const {
     addAndRemoveBoardParticipants: { mutate },
   } = useParticipants();
@@ -75,10 +80,12 @@ const ParticipantsLayout: React.FC = ({ children }) => {
       >
         <Flex justify="between">
           <Text heading="1">Participants</Text>
-          <Button size="md" onClick={handleOpen}>
-            <Icon css={{ color: 'white' }} name="plus" />
-            Add/remove participants
-          </Button>
+          {hasPermissionsToEdit && (
+            <Button size="md" onClick={handleOpen}>
+              <Icon css={{ color: 'white' }} name="plus" />
+              Add/remove participants
+            </Button>
+          )}
         </Flex>
         {children}
       </Flex>
