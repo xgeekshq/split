@@ -77,12 +77,6 @@ const useParticipants = () => {
             boardUsersWithId.push(newBoardUserWithUser);
           });
 
-          setToastState({
-            open: true,
-            content: 'Board participants successfully updated.',
-            type: ToastStateEnum.SUCCESS,
-          });
-
           return {
             mainBoardData: oldBoard.mainBoardData,
             board: {
