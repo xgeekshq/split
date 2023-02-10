@@ -196,24 +196,35 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		return null;
 	}
 
-	async deleteCardVotesFromColumn(boardId: string, cards: Card[]) {
-		cards.forEach((cards) => {
+	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
+		const votesByUser = new Map<string, number>();
+
+		votes.forEach((userId) => {
+			if (!votesByUser.has(userId.toString())) {
+				votesByUser.set(userId.toString(), 1);
+			} else {
+				const count = votesByUser.get(userId.toString());
+				votesByUser.set(userId.toString(), count + 1);
+			}
+		});
+
+		return votesByUser;
+	}
+
+	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
+		cardsArray.forEach((cards) => {
 			cards.items.forEach(async (card) => {
-				const votesByUser = new Map<string, number>();
+				const votesByUserOnCardItems = this.getVotesByUser(card.votes);
 
-				card.votes.forEach((userId) => {
-					if (!votesByUser.has(userId.toString())) {
-						votesByUser.set(userId.toString(), 1);
-					} else {
-						const count = votesByUser.get(userId.toString());
-
-						votesByUser.set(userId.toString(), count + 1);
-					}
-				});
-
-				votesByUser.forEach(async (votesCount, userId) => {
+				votesByUserOnCardItems.forEach(async (votesCount, userId) => {
 					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
 				});
+			});
+
+			const votesByUserOnCard = this.getVotesByUser(cards.votes);
+
+			votesByUserOnCard.forEach(async (votesCount, userId) => {
+				await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
 			});
 		});
 	}
