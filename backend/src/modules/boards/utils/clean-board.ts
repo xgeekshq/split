@@ -122,7 +122,7 @@ export const replaceComments = (
 	return input.map((comment) => {
 		const { anonymous, text } = comment;
 
-		if (anonymous) {
+		if (anonymous && String(createdByAsUserDocument._id) !== String(userId)) {
 			return {
 				...comment,
 				text: hideCards ? hideText(text) : comment.text,
