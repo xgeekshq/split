@@ -27,7 +27,7 @@ describe('UpdateColumnService', () => {
 	let repositoryBoard: BoardRepository;
 	let socketService: SocketGateway;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			providers: [

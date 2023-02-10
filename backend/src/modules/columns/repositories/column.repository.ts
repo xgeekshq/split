@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
+import { GetBoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnRepositoryInterface } from './column.repository.interface';
 
@@ -34,7 +34,7 @@ export class ColumnRepository
 				arrayFilters: [{ 'column._id': column._id }],
 				new: true
 			},
-			BoardDataPopulate
+			GetBoardDataPopulate
 		);
 	}
 
@@ -53,7 +53,7 @@ export class ColumnRepository
 				arrayFilters: [{ 'column._id': columnId }],
 				new: true
 			},
-			BoardDataPopulate
+			GetBoardDataPopulate
 		);
 	}
 }

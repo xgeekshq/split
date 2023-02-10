@@ -29,7 +29,7 @@ import ColumnsController from './columns.controller';
 describe('ColumnsController', () => {
 	let controller: ColumnsController;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const module = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			controllers: [ColumnsController],
