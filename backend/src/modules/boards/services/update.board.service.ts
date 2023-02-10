@@ -1,3 +1,4 @@
+import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import {
 	BadRequestException,
 	Inject,
@@ -23,7 +24,7 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -438,5 +439,35 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				this.boardModel.updateOne({ _id: team.boardId }, { slackChannelId: team.channelId })
 			)
 		);
+	}
+
+	async updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
+		try {
+			let createdTeamUsers: BoardUser[] = [];
+
+			if (addUsers.length > 0) createdTeamUsers = await this.addBoardUsers(addUsers);
+
+			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
+
+			return createdTeamUsers;
+		} catch (error) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	private async addBoardUsers(boardUsers: BoardUserDto[]) {
+		const createdTeamUsers = await this.boardUserModel.insertMany(boardUsers);
+
+		if (createdTeamUsers.length < 1) throw new Error(INSERT_FAILED);
+
+		return createdTeamUsers;
+	}
+
+	private async deleteBoardUsers(boardUsers: string[]) {
+		const { deletedCount } = await this.boardUserModel.deleteMany({
+			_id: { $in: boardUsers }
+		});
+
+		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}
 }

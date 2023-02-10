@@ -1,3 +1,4 @@
+import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
@@ -17,5 +18,9 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 
 	mergeBoards(subBoardId: string, userId: string) {
 		return this.updateBoardService.mergeBoards(subBoardId, userId);
+	}
+
+	updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
+		return this.updateBoardService.updateBoardParticipants(addUsers, removeUsers);
 	}
 }

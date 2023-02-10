@@ -361,10 +361,10 @@ const BoardSettings = ({
 
     return () => {
       window?.removeEventListener('keydown', keyDownHandler);
-      setEditColumns([]);
+      setEditColumns(columns);
       setDeletedColumns([]);
     };
-  }, []);
+  }, [columns, setDeletedColumns, setEditColumns]);
 
   const handleAddColumn = () => {
     const arrayWithNewColumn = [...editColumns];

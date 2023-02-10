@@ -4,62 +4,64 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import ListMembersDialog from '@/components/Teams/CreateTeam/ListMembersDialog';
+import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
+import { BoardUserAddAndRemove, BoardUserToAdd } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 const ParticipantsLayout: React.FC = ({ children }) => {
+  const {
+    addAndRemoveBoardParticipants: { mutate },
+  } = useParticipants();
+
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  const usersList = useRecoilValue(usersListState);
+  const boardParticipants = useRecoilValue(boardParticipantsState);
+  const boardId = router.query.boardId as string;
+
   const handleOpen = () => {
     setIsOpen(true);
   };
-  const setToastState = useSetRecoilState(toastState);
-
-  const [usersList, setUsersList] = useRecoilState(usersListState);
-  const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
-  const { data: session } = useSession({ required: true });
 
   const saveParticipants = (checkedUserList: UserList[]) => {
     const listOfUsers = [...boardParticipants];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
-    const updatedListWithAdded = selectedUsers.map(
-      (user) =>
-        listOfUsers.find((member) => member.user._id === user._id) || {
-          user,
-          role: BoardUserRoles.MEMBER,
-          votesCount: 0,
-        },
+    const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
+
+    const addedUsers = selectedUsers.filter(
+      (user) => !listOfUsers.some((boardUser) => boardUser.user._id === user._id),
     );
 
-    // Sort by Name
-    updatedListWithAdded.sort((a, b) => {
-      const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
-      const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+    const addedBoardUsersToSend: BoardUserToAdd[] = addedUsers.map((user) => ({
+      user,
+      board: boardId,
+      role: BoardUserRoles.MEMBER,
+      votesCount: 0,
+    }));
 
-      return aFullName < bFullName ? -1 : 1;
-    });
-
-    // this insures that the team creator stays always in first
-    const userAdminIndex = updatedListWithAdded.findIndex(
-      (member) => member.user._id === session?.user.id,
+    const removedBoardUsers = listOfUsers.filter((boardUser) =>
+      unselectedUsers.some((user) => boardUser.user._id === user._id),
+    );
+    const removedBoardUsersIds: string[] = removedBoardUsers.map(
+      (boardUser) => boardUser._id as string,
     );
 
-    updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
+    if (addedBoardUsersToSend.length > 0 || removedBoardUsersIds.length > 0) {
+      const boardUsersToUpdate: BoardUserAddAndRemove = {
+        addBoardUsers: addedBoardUsersToSend,
+        removeBoardUsers: removedBoardUsersIds,
+        boardId,
+      };
 
-    setBoardParticipants(updatedListWithAdded);
-    setUsersList(checkedUserList);
-
-    setToastState({
-      open: true,
-      content: 'Team member/s successfully updated',
-      type: ToastStateEnum.SUCCESS,
-    });
+      mutate(boardUsersToUpdate);
+    }
 
     setIsOpen(false);
   };

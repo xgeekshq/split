@@ -30,10 +30,10 @@ import {
   newBoardState,
 } from '@/store/board/atoms/board.atom';
 import { GetBoardResponse } from '@/types/board/board';
+import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { BoardUser } from '@/types/board/board.user';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -244,14 +244,16 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </Flex>
           )}
 
-          <Flex css={{ flex: 1 }}>
-            <Timer
-              boardId={boardId}
-              isAdmin={hasAdminRole}
-              emitEvent={emitEvent}
-              listenEvent={listenEvent}
-            />
-          </Flex>
+          {!board?.submitedAt && (
+            <Flex css={{ flex: 1 }}>
+              <Timer
+                boardId={boardId}
+                isAdmin={hasAdminRole}
+                emitEvent={emitEvent}
+                listenEvent={listenEvent}
+              />
+            </Flex>
+          )}
 
           {hasAdminRole && !board?.submitedAt && (
             <>

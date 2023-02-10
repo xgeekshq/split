@@ -28,6 +28,8 @@ export const REFRESH_TOKEN_ERROR = 'REFRESH_TOKEN_ERROR';
 
 export const MIN_MEMBERS = 4;
 
+export const RECOIL_DEV_TOOLS = true;
+
 // -------------------------------
 
 export const ONE_SECOND = 1000;

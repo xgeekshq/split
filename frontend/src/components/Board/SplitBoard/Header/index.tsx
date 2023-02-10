@@ -188,6 +188,7 @@ const BoardHeader = () => {
                 isSubBoardPage
               />
             </Flex>
+
             <Separator orientation="vertical" size="lg" />
             <Flex align="center" gap="10">
               <Text color="primary300" size="sm">

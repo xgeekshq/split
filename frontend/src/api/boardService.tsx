@@ -14,6 +14,7 @@ import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
 import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
+import { BoardUser, BoardUserAddAndRemove } from '@/types/board/board.user';
 import ColumnType, { ColumnDeleteCards } from '@/types/column';
 
 // #region BOARD
@@ -68,6 +69,16 @@ export const deleteBoardRequest = async ({
   fetchData(`/boards/${id}`, { method: 'DELETE', params: { socketId, teamId } });
 
 // #endregion
+
+// #region PARTICIPANTS
+export const addAndRemoveBoardParticipantsRequest = (
+  boardUsers: BoardUserAddAndRemove,
+): Promise<BoardUser[]> =>
+  fetchData(`/boards/${boardUsers.boardId}/participants`, {
+    method: 'PUT',
+    data: boardUsers,
+  });
+// #endRegion
 
 // #region COLUMN
 export const updateColumnRequest = (
