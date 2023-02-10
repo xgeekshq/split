@@ -26,7 +26,7 @@ export default class UpdateColumnServiceImpl implements UpdateColumnService {
 	async updateColumn(boardId: string, column: UpdateColumnDto) {
 		const board = await this.columnRepository.updateColumn(boardId, column);
 
-		if (board === null) {
+		if (!board) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 
@@ -38,7 +38,7 @@ export default class UpdateColumnServiceImpl implements UpdateColumnService {
 	async deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
 		const board = await this.boardRepository.getBoard(boardId);
 
-		if (board === null) {
+		if (!board) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 
