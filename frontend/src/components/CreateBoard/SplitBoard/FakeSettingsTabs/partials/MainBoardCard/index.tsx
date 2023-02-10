@@ -224,7 +224,7 @@ const FakeMainBoardCard = () => (
     </Flex>
     <Tooltip color="primary800" content="First select a team">
       <Flex css={{ width: 'fit-content' }}>
-        <Checkbox id="slack" label="Create Slack group for each sub-team" size="16" disabled />
+        <Checkbox id="slack" label="Create Slack group for each sub-team" size="md" disabled />
       </Flex>
     </Tooltip>
   </Flex>

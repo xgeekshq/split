@@ -215,29 +215,30 @@ const AddCard = React.memo<AddCardProps>(
       >
         <FormProvider {...methods}>
           <TextArea
-            // variant={!isEmpty(cardText) ? default : undefined} }
             id="text"
             placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
           />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
+              // This is when you are editing a card / comment
               <Checkbox
-                id={colId + cardId}
+                id={[colId, cardId, commentId].join('_')}
                 label="Post anonymously"
-                size="16"
-                checked={isCommentAnonymous || postAnonymously}
-                setCheckedTerms={() => {
+                size="md"
+                checked={isCommentAnonymous}
+                handleChange={() => {
                   setIsCommentAnonymous(!isCommentAnonymous);
                 }}
               />
             )}
             {!isEditing && (
+              // This is when you are Creating a new Card
               <Checkbox
                 id={colId}
                 label="Post anonymously"
-                size="16"
-                checked={isAnonymous || postAnonymously}
-                setCheckedTerms={() => {
+                size="md"
+                checked={isAnonymous}
+                handleChange={() => {
                   setIsAnonymous(!isAnonymous);
                 }}
               />
