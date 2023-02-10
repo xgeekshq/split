@@ -29,9 +29,10 @@ export interface BaseInterfaceRepository<T> {
 	countDocuments(): Promise<number>;
 
 	findOneByFieldAndUpdate(
-		value: ModelProps<T>,
+		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
-		options?: QueryOptions<T>
+		options?: QueryOptions<T>,
+		populate?: PopulateType
 	): Promise<T>;
 
 	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T>;

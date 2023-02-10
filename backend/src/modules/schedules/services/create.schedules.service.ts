@@ -10,7 +10,7 @@ import {
 } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';

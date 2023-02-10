@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
-import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 
 @Injectable()

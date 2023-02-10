@@ -47,8 +47,6 @@ import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import BoardDto from '../dto/board.dto';
-import ColumnDto from '../dto/column/column.dto';
-import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
@@ -56,7 +54,6 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
-import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 import AddRemoveBoardUserDto from '../dto/add.remove.board.user.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
@@ -345,73 +342,5 @@ export default class BoardsController {
 		}
 
 		return result;
-	}
-
-	@ApiOperation({ summary: 'Update a specific column from a board' })
-	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiBody({ type: ColumnDto })
-	@ApiOkResponse({
-		type: BoardDto,
-		description: 'Column updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(BoardUserGuard)
-	@Put(':boardId/column/:columnId')
-	updateColumn(@Param() { boardId }: BaseParam, @Body() columnData: UpdateColumnDto) {
-		return this.updateBoardApp.updateColumn(boardId, columnData);
-	}
-
-	@ApiOperation({ summary: 'Delete all cards from a column on a board' })
-	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiBody({ type: ColumnDeleteCardsDto })
-	@ApiOkResponse({
-		type: BoardDto,
-		description: 'Cards deleted successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(BoardUserGuard)
-	@Put(':boardId/column/:columnId/cards')
-	deleteCardsFromColumn(@Param() { boardId }: BaseParam, @Body() column: ColumnDeleteCardsDto) {
-		return this.updateBoardApp.deleteCardsFromColumn(boardId, column);
 	}
 }

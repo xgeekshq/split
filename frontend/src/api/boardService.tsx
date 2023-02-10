@@ -84,7 +84,7 @@ export const addAndRemoveBoardParticipantsRequest = (
 export const updateColumnRequest = (
   columnData: ColumnType & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column/${columnData._id}`, {
+  fetchData(`/columns/${columnData.boardId}/column/${columnData._id}`, {
     method: 'PUT',
     data: columnData,
   });
@@ -92,7 +92,7 @@ export const updateColumnRequest = (
 export const deleteCardsFromColumnRequest = (
   columnData: ColumnDeleteCards & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column/${columnData.id}/cards`, {
+  fetchData(`/columns/${columnData.boardId}/column/${columnData.id}/cards`, {
     method: 'PUT',
     data: columnData,
   });

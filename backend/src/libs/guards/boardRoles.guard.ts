@@ -1,5 +1,5 @@
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import BoardUser, { BoardUserDocument } from 'src/modules/boards/schemas/board.user.schema';
+import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -12,7 +12,7 @@ import { Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 
 @Injectable()

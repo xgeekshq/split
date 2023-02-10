@@ -18,7 +18,8 @@ export const TYPES = {
 		GetBoardApplication: 'GetBoardApplication'
 	},
 	repositories: {
-		BoardTimerRepository: 'BoardTimerRepository'
+		BoardTimerRepository: 'BoardTimerRepository',
+		BoardRepository: 'BoardRepository'
 	},
 	subscribers: {
 		AfterUserPausedTimerSubscriber: 'AfterUserPausedTimerSubscriber',

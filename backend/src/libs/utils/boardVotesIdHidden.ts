@@ -1,4 +1,4 @@
-import Board from 'src/modules/boards/schemas/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { hideText } from './hideText';
 
 export const boardVotesIdHidden = (input: Board, userId: string): Board => {

@@ -5,7 +5,7 @@ import CardItem from 'src/modules/cards/schemas/card.item.schema';
 import Card from 'src/modules/cards/schemas/card.schema';
 import Comment from 'src/modules/comments/schemas/comment.schema';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
-import Board from '../schemas/board.schema';
+import Board from '../entities/board.schema';
 
 /**
  * Method to (if flags are true) replace cards/comments or hide votes

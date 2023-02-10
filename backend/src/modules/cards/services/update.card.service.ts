@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CARD_NOT_INSERTED, CARD_NOT_REMOVED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UpdateCardService } from '../interfaces/services/update.card.service.interface';
