@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { useSetRecoilState } from 'recoil';
@@ -28,10 +28,9 @@ interface SignUpFormProps {
 
 const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, emailName }) => {
   const setToastState = useSetRecoilState(toastState);
-  const [valueState, setValueState] = useState(false);
   const methods = useForm<EmailUser>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: emailName.email,
     },
@@ -58,7 +57,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
         }
 
         methods.setError('email', { type: 'custom', message: 'This email already exists' });
-        setValueState(true);
       },
 
       onError: (error: Error) => {
@@ -107,13 +105,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ setShowSignUp, setEmailName, em
           Enter your email address to proceed further
         </Text>
 
-        <Input
-          css={{ mt: '$32' }}
-          id="email"
-          placeholder="Email address"
-          state={!valueState ? 'default' : 'error'}
-          type="text"
-        />
+        <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
 
         <Button size="lg" type="submit">
           Get Started
