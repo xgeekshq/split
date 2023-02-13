@@ -20,13 +20,6 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		return this.updateBoardService.mergeBoards(subBoardId, userId);
 	}
 
-	updateColumn(boardId: string, column: UpdateColumnDto) {
-		return this.updateBoardService.updateColumn(boardId, column);
-	}
-	deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
-		return this.updateBoardService.deleteCardsFromColumn(boardId, column);
-	}
-
 	updateBoardParticipants(boardData: UpdateBoardUserDto) {
 		const { addBoardUsers, removeBoardUsers, boardUserToUpdateRole } = boardData;
 
