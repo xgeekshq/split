@@ -1,0 +1,179 @@
+import { styled } from '@/styles/stitches/stitches.config';
+
+import Flex from '../Flex';
+import Text from '../Text';
+
+const StyledInputWrapper = styled(Flex, {
+  px: '$16',
+  boxShadow: '0',
+  border: '1px solid $primary200',
+  outline: 'none',
+  width: '100%',
+  borderRadius: '$4',
+  backgroundColor: '$white',
+  alignItems: 'center',
+  '&[data-iconposition="left"]': {
+    flexDirection: 'row',
+    //   '&:not(:placeholder-shown) ~ label': {
+    //     transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
+    //   },
+    //   '&:focus ~ label': {
+    //     transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
+    //   },
+  },
+  '&[data-iconposition="right"]': {
+    flexDirection: 'row-reverse',
+  },
+  variants: {
+    variant: {
+      default: {
+        '&:focus': {
+          borderColor: '$primary400',
+          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
+        },
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
+        },
+      },
+      valid: {
+        borderColor: '$success700',
+        boxShadow: '0px 0px 0px 2px $colors$successLightest',
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$successLightest',
+        },
+      },
+      error: {
+        borderColor: '$danger700',
+        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
+        '&:-webkit-autofill': {
+          '-webkit-box-shadow':
+            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$dangerLightest',
+        },
+      },
+    },
+    disabled: {
+      true: {
+        backgroundColor: '$primary50',
+      },
+    },
+  },
+});
+
+const PlaceholderText = styled(Text, {
+  color: '$primary300',
+  position: 'absolute',
+  pointerEvents: 'none',
+  transformOrigin: '0 0',
+  transition: 'all .2s ease-in-out',
+  py: '$16',
+});
+
+const IconWrapper = styled(Flex, {
+  alignItems: 'center',
+  cursor: 'default',
+  p: '$2',
+  '&[data-type="password"]': {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+});
+
+const HelperTextWrapper = styled(Flex, {
+  '& svg': {
+    flex: '0 0 16px',
+    height: '$16 ',
+    width: '$16 ',
+  },
+  variants: {
+    color: {
+      error: {
+        [`& ${Text}`]: {
+          color: '$dangerBase',
+        },
+        '& svg': {
+          color: '$dangerBase',
+        },
+      },
+      hint: {
+        [`& ${Text}`]: {
+          color: '$primary300',
+        },
+        '& svg': {
+          color: '$primary300',
+        },
+      },
+    },
+  },
+});
+
+const StyledInput = styled('input', {
+  // Reset
+  appearance: 'none',
+  borderWidth: '0',
+  boxShadow: '0',
+  boxSizing: 'border-box',
+  margin: '0',
+  outlineOffset: '0',
+  padding: '0',
+  fontFamily: '$body',
+  WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+  backgroundColor: '$transparent',
+  '&::before': {
+    boxSizing: 'border-box',
+  },
+  '&::after': {
+    boxSizing: 'border-box',
+  },
+  '&:-internal-autofill-selected': {
+    backgroundColor: '$transparent',
+  },
+
+  '&:-webkit-autofill,&:-webkit-autofill:active,&:-webkit-autofill:focus': {
+    '-webkit-box-shadow': '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$successLightest',
+  },
+
+  '&:-webkit-autofill::first-line': {
+    color: '$dangerBase',
+    fontFamily: '$body',
+    fontSize: '$16',
+  },
+
+  ':-internal-autofill-previewed': {
+    fontFamily: '$body',
+    fontSize: '$16',
+  },
+
+  // Custom
+  fontSize: '$16',
+  lineHeight: '$20',
+  outline: 'none',
+  width: '100%',
+  height: '$56',
+  pt: '$28',
+  pb: '$8',
+  '&::-webkit-input-placeholder': {
+    fontSize: '22px !important',
+    color: '$primary300',
+  },
+  color: '$primaryBase',
+  '&::placeholder': {
+    '&:disabled': {
+      color: '$primaryBase',
+    },
+    color: '$primary300',
+  },
+  '&:not(:placeholder-shown) ~ label': {
+    transform: `scale(0.875) translateX(0.2rem) translateY(-0.5rem)`,
+  },
+  '&:-internal-autofill-selected ~ label': {
+    transform: `scale(0.875) translateX(0.2rem) translateY(-0.5rem)`,
+  },
+  '&:focus ~ label': {
+    transform: `scale(0.875) translateX(0.2rem) translateY(-0.5rem)`,
+  },
+});
+
+export { StyledInputWrapper, PlaceholderText, IconWrapper, HelperTextWrapper, StyledInput };
