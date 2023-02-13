@@ -273,12 +273,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					return [{ ...columnBoard, title: col.title }];
 				}
 
-				const columnToDelete = boardData.deletedColumns.some(
-					(colId) => colId === col._id.toString()
-				);
+				if (boardData.deletedColumns) {
+					const columnToDelete = boardData.deletedColumns.some(
+						(colId) => colId === col._id.toString()
+					);
 
-				if (columnToDelete) {
-					return [];
+					if (columnToDelete) {
+						return [];
+					}
 				}
 			}
 
