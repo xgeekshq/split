@@ -57,7 +57,7 @@ import { UpdateBoardApplicationInterface } from '../interfaces/applications/upda
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
-import AddRemoveBoardUserDto from '../dto/add.remove.board.user.dto';
+import UpdateBoardUserDto from '../dto/update-board-user.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -271,11 +271,8 @@ export default class BoardsController {
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(BoardUserGuard)
 	@Put(':boardId/participants')
-	updateBoardParticipants(@Body() boardData: AddRemoveBoardUserDto) {
-		return this.updateBoardApp.updateBoardParticipants(
-			boardData.addBoardUsers,
-			boardData.removeBoardUsers
-		);
+	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
+		return this.updateBoardApp.updateBoardParticipants(boardData);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific board' })

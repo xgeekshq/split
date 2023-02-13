@@ -529,6 +529,23 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return updateBoard;
 	}
 
+	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
+		const updatedBoardUsers = await this.boardUserModel
+			.findOneAndUpdate(
+				{
+					_id: boardUserToUpdateRole._id
+				},
+				{
+					role: boardUserToUpdateRole.role
+				}
+			)
+			.exec();
+
+		if (!updatedBoardUsers) throw new BadRequestException(UPDATE_FAILED);
+
+		return updatedBoardUsers;
+	}
+
 	async updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
 		try {
 			let createdBoardUsers: BoardUser[] = [];

@@ -1,10 +1,10 @@
 import BoardUser from './../../schemas/board.user.schema';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import { LeanDocument } from 'mongoose';
 import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 import { UpdateColumnDto } from '../../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../../dto/update-board.dto';
 import { BoardDocument } from '../../schemas/board.schema';
+import UpdateBoardUserDto from '../../dto/update-board-user.dto';
 
 export interface UpdateBoardApplicationInterface {
 	update(boardId: string, boardData: UpdateBoardDto): Promise<LeanDocument<BoardDocument> | null>;
@@ -21,8 +21,5 @@ export interface UpdateBoardApplicationInterface {
 		column: ColumnDeleteCardsDto
 	): Promise<LeanDocument<BoardDocument> | null>;
 
-	updateBoardParticipants(
-		addUsers: BoardUserDto[],
-		removeUsers: string[]
-	): Promise<BoardUser[] | null>;
+	updateBoardParticipants(boardData: UpdateBoardUserDto): Promise<BoardUser[] | BoardUser | null>;
 }
