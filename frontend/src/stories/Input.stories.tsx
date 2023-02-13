@@ -21,7 +21,14 @@ export default {
   },
   args: {
     id: 'inputId',
-    type: 'password',
+    type: 'text',
+    disabled: false,
+    helperText: "I'm the Helper Text",
+    icon: 'search',
+    iconPosition: 'left',
+    maxChars: '50',
+    placeholder: 'Input Text Box',
+    showCount: false,
   },
 };
 

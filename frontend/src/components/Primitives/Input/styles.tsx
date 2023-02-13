@@ -8,7 +8,6 @@ const StyledInputWrapper = styled(Flex, {
   boxShadow: '0',
   border: '1px solid $primary200',
   outline: 'none',
-  width: '100%',
   borderRadius: '$4',
   backgroundColor: '$white',
   alignItems: 'center',
