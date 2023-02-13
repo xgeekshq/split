@@ -345,6 +345,7 @@ const BoardSettings = ({
   /**
    * Use Effect to submit the board settings form when press enter key
    * (Note: Radix Dialog close when pressing enter)
+   * CHECK: Adding Keyboard Events on useEffect is not very Good.
    */
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
