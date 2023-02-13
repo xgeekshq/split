@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -46,11 +46,6 @@ const CreateTeam = () => {
       text: '',
     },
     resolver: joiResolver(SchemaCreateTeam),
-  });
-
-  const teamName = useWatch({
-    control: methods.control,
-    name: 'text',
   });
 
   const resetListUsersState = useCallback(() => {
@@ -110,7 +105,7 @@ const CreateTeam = () => {
             >
               <InnerContent direction="column">
                 <FormProvider {...methods}>
-                  <TeamName teamName={teamName} />
+                  <TeamName />
                   <TeamMembersList />
                 </FormProvider>
               </InnerContent>
