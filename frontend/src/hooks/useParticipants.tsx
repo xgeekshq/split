@@ -3,6 +3,7 @@ import { addAndRemoveBoardParticipantsRequest } from '@/api/boardService';
 import { useMutation } from '@tanstack/react-query';
 import { BoardUser } from '@/types/board/board.user';
 import { GetBoardResponse } from '@/types/board/board';
+import { User } from '@/types/user/user';
 import useBoardUtils from './useBoardUtils';
 
 const useParticipants = () => {
@@ -24,7 +25,7 @@ const useParticipants = () => {
           const removedBoardUserIds = removeBoardUsers;
           const createdBoardUsers: BoardUser[] = addBoardUsers.map((boardUser) => ({
             ...boardUser,
-            user: usersList.filter((user) => user._id === boardUser.user._id)[0],
+            user: usersList.find((user) => user._id === boardUser.user._id) as User,
           }));
           const usersFromParticipantsList = oldBoard.board.users.filter(
             (participant) => !removedBoardUserIds.includes(participant._id as string),

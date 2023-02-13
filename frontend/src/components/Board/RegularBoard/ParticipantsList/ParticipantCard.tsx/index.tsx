@@ -47,19 +47,12 @@ const ParticipantCard = React.memo<CardBodyProps>(
     };
 
     const updateIsResponsibleStatus = (checked: boolean) => {
-      let role: BoardUserRoles;
-      if (checked) {
-        role = BoardUserRoles.RESPONSIBLE;
-      } else {
-        role = BoardUserRoles.MEMBER;
-      }
-
       const boardUserToUpdate: UpdateBoardUser = {
         addBoardUsers: [],
         removeBoardUsers: [],
         boardUserToUpdateRole: {
           ...member,
-          role,
+          role: checked ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
         },
         boardId,
       };
