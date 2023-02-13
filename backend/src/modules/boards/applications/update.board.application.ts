@@ -1,9 +1,9 @@
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TYPES } from '../interfaces/types';
+import UpdateBoardUserDto from '../dto/update-board-user.dto';
 
 @Injectable()
 export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
@@ -20,7 +20,13 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		return this.updateBoardService.mergeBoards(subBoardId, userId);
 	}
 
-	updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
-		return this.updateBoardService.updateBoardParticipants(addUsers, removeUsers);
+	updateBoardParticipants(boardData: UpdateBoardUserDto) {
+		const { addBoardUsers, removeBoardUsers, boardUserToUpdateRole } = boardData;
+
+		if (boardUserToUpdateRole) {
+			return this.updateBoardService.updateBoardParticipantsRole(boardUserToUpdateRole);
+		}
+
+		return this.updateBoardService.updateBoardParticipants(addBoardUsers, removeBoardUsers);
 	}
 }

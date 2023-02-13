@@ -15,4 +15,6 @@ export interface UpdateBoardServiceInterface {
 		addUsers: BoardUserDto[],
 		removeUsers: string[]
 	): Promise<BoardUser[] | null>;
+
+	updateBoardParticipantsRole(boardUserToUpdate: BoardUserDto): Promise<BoardUser>;
 }

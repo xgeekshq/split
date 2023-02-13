@@ -7,7 +7,7 @@ import ListMembersDialog from '@/components/Teams/CreateTeam/ListMembersDialog';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
-import { BoardUserAddAndRemove, BoardUserToAdd } from '@/types/board/board.user';
+import { BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRouter } from 'next/router';
@@ -59,7 +59,7 @@ const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
     );
 
     if (addedBoardUsersToSend.length > 0 || removedBoardUsersIds.length > 0) {
-      const boardUsersToUpdate: BoardUserAddAndRemove = {
+      const boardUsersToUpdate: UpdateBoardUser = {
         addBoardUsers: addedBoardUsersToSend,
         removeBoardUsers: removedBoardUsersIds,
         boardId,
