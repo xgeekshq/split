@@ -9,7 +9,7 @@ const useParticipants = () => {
   const { boardId, queryClient, setToastState, usersList } = useBoardUtils();
 
   const addAndRemoveBoardParticipants = useMutation(addAndRemoveBoardParticipantsRequest, {
-    onMutate: async (addedAndRemovedMembers) => {
+    onMutate: async (updateBoardParticipants) => {
       await queryClient.cancelQueries(['board', { id: boardId }]);
 
       const previousBoard = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
@@ -17,17 +17,25 @@ const useParticipants = () => {
       queryClient.setQueryData<GetBoardResponse>(
         ['board', { id: boardId }],
         (oldBoard: GetBoardResponse | undefined) => {
+          const { addBoardUsers, removeBoardUsers, boardUserToUpdateRole } =
+            updateBoardParticipants;
+
           if (!oldBoard) return oldBoard;
-          const removedBoardUserIds = addedAndRemovedMembers.removeBoardUsers;
-          const createdBoardUsers: BoardUser[] = addedAndRemovedMembers.addBoardUsers.map(
-            (boardUser) => ({
-              ...boardUser,
-              user: usersList.filter((user) => user._id === boardUser.user._id)[0],
-            }),
-          );
+          const removedBoardUserIds = removeBoardUsers;
+          const createdBoardUsers: BoardUser[] = addBoardUsers.map((boardUser) => ({
+            ...boardUser,
+            user: usersList.filter((user) => user._id === boardUser.user._id)[0],
+          }));
           const usersFromParticipantsList = oldBoard.board.users.filter(
             (participant) => !removedBoardUserIds.includes(participant._id as string),
           );
+
+          if (boardUserToUpdateRole) {
+            const participantToUpdateIdx = usersFromParticipantsList.findIndex(
+              (participant) => participant._id === boardUserToUpdateRole._id,
+            );
+            usersFromParticipantsList.splice(participantToUpdateIdx, 1, boardUserToUpdateRole);
+          }
 
           const finalParticipantsList: BoardUser[] = [
             ...usersFromParticipantsList,
@@ -56,8 +64,10 @@ const useParticipants = () => {
       queryClient.setQueryData<GetBoardResponse>(
         ['board', { id: boardId }],
         (oldBoard: GetBoardResponse | undefined) => {
-          if (!oldBoard) return oldBoard;
           if (!data) return undefined;
+          // Endpoint returns array if there were Board users created.
+          // Otherwise it returns a Board User with the updated role.
+          if (!oldBoard || !Array.isArray(data)) return oldBoard;
 
           const boardUsersWithoutId = variables.addBoardUsers.map(
             (addedBoardUser) => addedBoardUser.user._id,

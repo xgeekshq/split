@@ -8,14 +8,12 @@ import {
   InnerContainer,
   StyledMemberTitle,
 } from '@/components/Teams/CreateTeam/CardMember/styles';
-import { BoardUser, BoardUserAddAndRemove } from '@/types/board/board.user';
+import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
-import useParticipants from '@/hooks/useParticipants';
 import { useRouter } from 'next/router';
 import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useRecoilState } from 'recoil';
-import { boardParticipantsState } from '@/store/board/atoms/board.atom';
+import useParticipants from '@/hooks/useParticipants';
 
 type CardBodyProps = {
   member: BoardUser;
@@ -33,14 +31,13 @@ const ParticipantCard = React.memo<CardBodyProps>(
 
     const router = useRouter();
     const boardId = router.query.boardId as string;
-    const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
 
     const isMemberResponsible = member.role === BoardUserRoles.RESPONSIBLE;
 
     const handleRemove = () => {
       if (!member._id) return;
 
-      const boardUsersToUpdate: BoardUserAddAndRemove = {
+      const boardUsersToUpdate: UpdateBoardUser = {
         addBoardUsers: [],
         removeBoardUsers: [member._id],
         boardId,
@@ -50,33 +47,23 @@ const ParticipantCard = React.memo<CardBodyProps>(
     };
 
     const updateIsResponsibleStatus = (checked: boolean) => {
-      // if (member.team) {
-      //   const updateTeamUser: TeamUserUpdate = {
-      //     team: member.team,
-      //     user: member.user._id,
-      //     role: member.role,
-      //     isNewJoiner: checked,
-      //   };
-
-      //   mutate(updateTeamUser);
-      // }
-      const participantsList = [...boardParticipants];
-      const idxParticipantToUpdate = participantsList.findIndex(
-        (boardUser) => boardUser._id === member._id,
-      );
-      participantsList.splice(idxParticipantToUpdate, 1);
+      let role: BoardUserRoles;
       if (checked) {
-        participantsList.splice(idxParticipantToUpdate, 0, {
-          ...member,
-          role: BoardUserRoles.RESPONSIBLE,
-        });
+        role = BoardUserRoles.RESPONSIBLE;
       } else {
-        participantsList.splice(idxParticipantToUpdate, 0, {
-          ...member,
-          role: BoardUserRoles.MEMBER,
-        });
+        role = BoardUserRoles.MEMBER;
       }
-      setBoardParticipants(participantsList);
+
+      const boardUserToUpdate: UpdateBoardUser = {
+        addBoardUsers: [],
+        removeBoardUsers: [],
+        boardUserToUpdateRole: {
+          ...member,
+          role,
+        },
+        boardId,
+      };
+      mutate(boardUserToUpdate);
     };
 
     const handleSelectFunction = (checked: boolean) => updateIsResponsibleStatus(checked);

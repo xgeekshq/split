@@ -30,10 +30,10 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 	}
 
 	updateBoardParticipants(boardData: UpdateBoardUserDto) {
-		const { addBoardUsers, removeBoardUsers, boardUserToUpdate } = boardData;
+		const { addBoardUsers, removeBoardUsers, boardUserToUpdateRole } = boardData;
 
-		if (boardUserToUpdate) {
-			return this.updateBoardService.updateBoardParticipantsRole(boardUserToUpdate);
+		if (boardUserToUpdateRole) {
+			return this.updateBoardService.updateBoardParticipantsRole(boardUserToUpdateRole);
 		}
 
 		return this.updateBoardService.updateBoardParticipants(addBoardUsers, removeBoardUsers);

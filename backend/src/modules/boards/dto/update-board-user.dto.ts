@@ -13,5 +13,5 @@ export default class UpdateBoardUserDto {
 
 	@ApiPropertyOptional()
 	@IsOptional()
-	boardUserToUpdate?: BoardUserDto;
+	boardUserToUpdateRole?: BoardUserDto;
 }
