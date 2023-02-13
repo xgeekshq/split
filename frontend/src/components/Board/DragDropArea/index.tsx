@@ -1,17 +1,25 @@
 import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult, BeforeCapture } from '@hello-pangea/dnd';
+import { DragDropContext, DropResult, BeforeCapture, Droppable } from '@hello-pangea/dnd';
 import Flex from '@/components/Primitives/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import BoardType from '@/types/board/board';
+import BoardType, { UpdateBoardType } from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import Column from '@/components/Board/Column/Column';
+
+import { styled } from '@/styles/stitches/stitches.config';
+import useBoard from '@/hooks/useBoard';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import ColumnType from '@/types/column';
+
+const Container = styled(Flex, { minHeight: '100vh', width: '100%', display: 'inline-flex' });
 
 type Props = {
   userId: string;
@@ -28,10 +36,46 @@ const DragDropArea: React.FC<Props> = ({
   isRegularBoard,
   hasAdminRole,
 }) => {
+  // Hooks to mutate cards/column
   const { updateCardPosition, mergeCards } = useCards();
+  const {
+    updateBoard: { mutate: mutateBoard },
+  } = useBoard({ autoFetchBoard: false });
+
   const setToastState = useSetRecoilState(toastState);
   const setOnDragCard = useSetRecoilState(onDragCardStart);
   const filteredColumns = useRecoilValue(filteredColumnsState);
+
+  // Recoil State used on [boardId].tsx
+  const {
+    board: {
+      maxVotes: boardMaxVotes,
+      title: boardTitle,
+      _id,
+      hideCards,
+      hideVotes,
+      users,
+      isPublic,
+      columns,
+      addCards,
+      postAnonymously,
+    },
+  } = useRecoilValue(boardInfoState);
+
+  const initialData: UpdateBoardType = {
+    _id,
+    hideCards,
+    hideVotes,
+    title: boardTitle,
+    maxVotes: boardMaxVotes,
+    users,
+    isPublic,
+    columns,
+    addCards,
+    postAnonymously,
+  };
+
+  const boardData = initialData;
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
@@ -73,78 +117,132 @@ const DragDropArea: React.FC<Props> = ({
     }
   };
 
-  const onDragEnd = ({ destination, source, combine, draggableId }: DropResult) => {
+  const handleSubmitDragColumnType = (
+    columnsArray: ColumnType[],
+    sourceIndex: number,
+    destinationIndex: number,
+    column: ColumnType,
+  ) => {
+    columnsArray.splice(sourceIndex, 1);
+    columnsArray.splice(destinationIndex, 0, column);
+
+    mutateBoard({
+      ...boardData,
+      columns: columnsArray,
+      responsible: users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+      socketId,
+    });
+  };
+
+  const handleSubmitDragCardType = (changes: UpdateCardPositionDto) => {
+    updateCardPosition.mutate(changes);
+    setOnDragCard('');
+  };
+
+  const onDragEnd = ({ destination, source, combine, draggableId, type }: DropResult) => {
     if (!source || (!combine && !destination) || !board?._id || !socketId) {
       return;
     }
+
     const { droppableId: sourceDroppableId, index: sourceIndex } = source;
 
-    if (combine && userId) {
-      const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
-
-      handleCombine(
-        combineDroppableId,
-        combineDraggableId,
-        sourceDroppableId,
-        draggableId,
-        sourceIndex,
-        filteredColumns.includes(sourceDroppableId),
-      );
-    }
-
-    if (!combine && destination) {
+    if (destination) {
       const { droppableId: destinationDroppableId, index: destinationIndex } = destination;
 
       if (destinationDroppableId === sourceDroppableId && destinationIndex === sourceIndex) {
         return;
       }
 
-      const changes: UpdateCardPositionDto = {
-        colIdOfCard: source.droppableId,
-        targetColumnId: destinationDroppableId,
-        newPosition: destinationIndex,
-        cardPosition: sourceIndex,
-        cardId: draggableId,
-        boardId: board?._id,
-        socketId,
-        sorted: filteredColumns.includes(source.droppableId),
-      };
+      if (type === 'COLUMN') {
+        const column = board.columns.find((col) => col._id === draggableId);
 
-      updateCardPosition.mutate(changes);
-      setOnDragCard('');
+        if (!column) {
+          return;
+        }
+
+        handleSubmitDragColumnType([...board.columns], sourceIndex, destinationIndex, column);
+
+        return;
+      }
+
+      if (type === 'CARD' && !combine) {
+        const changes: UpdateCardPositionDto = {
+          colIdOfCard: source.droppableId,
+          targetColumnId: destinationDroppableId,
+          newPosition: destinationIndex,
+          cardPosition: sourceIndex,
+          cardId: draggableId,
+          boardId: board?._id,
+          socketId,
+          sorted: filteredColumns.includes(source.droppableId),
+        };
+
+        handleSubmitDragCardType(changes);
+      }
+    }
+
+    if (type === 'CARD') {
+      if (!combine && !destination) {
+        return;
+      }
+
+      if (combine && userId) {
+        const { droppableId: combineDroppableId, draggableId: combineDraggableId } = combine;
+
+        handleCombine(
+          combineDroppableId,
+          combineDraggableId,
+          sourceDroppableId,
+          draggableId,
+          sourceIndex,
+          filteredColumns.includes(sourceDroppableId),
+        );
+      }
     }
   };
 
+  const ColumnnContainer = (
+    <Droppable droppableId="column" direction="horizontal" type="COLUMN">
+      {(provided) => (
+        <Container ref={provided.innerRef} {...provided.droppableProps} gap={24}>
+          {board.columns.map((column, index) => (
+            <Column
+              key={column._id}
+              boardId={board._id}
+              cards={column.cards}
+              color={column.color}
+              cardText={column.cardText}
+              columnId={column._id}
+              isDefaultText={column.isDefaultText}
+              countAllCards={countAllCards}
+              hideCards={board.hideCards}
+              index={index}
+              isMainboard={!board.isSubBoard && board.dividedBoards.length > 0}
+              isSubmited={!!board.submitedByUser}
+              maxVotes={Number(board.maxVotes)}
+              socketId={socketId}
+              title={column.title}
+              userId={userId}
+              boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
+              isRegularBoard={isRegularBoard}
+              hasAdminRole={hasAdminRole}
+              addCards={board.addCards}
+              postAnonymously={board.postAnonymously}
+              columnIndex={index}
+            />
+          ))}
+          {provided.placeholder}
+        </Container>
+      )}
+    </Droppable>
+  );
+
   return (
-    <Flex css={{ width: '100%' }} gap="24">
+    <>
       <DragDropContext onDragEnd={onDragEnd} onBeforeCapture={onDragStart}>
-        {board.columns.map((column, index) => (
-          <Column
-            key={column._id}
-            boardId={board._id}
-            cards={column.cards}
-            color={column.color}
-            cardText={column.cardText}
-            columnId={column._id}
-            isDefaultText={column.isDefaultText}
-            countAllCards={countAllCards}
-            hideCards={board.hideCards}
-            index={index}
-            isMainboard={!board.isSubBoard && board.dividedBoards.length > 0}
-            isSubmited={!!board.submitedByUser}
-            maxVotes={Number(board.maxVotes)}
-            socketId={socketId}
-            title={column.title}
-            userId={userId}
-            boardUser={board.users.find((boardUser) => boardUser.user?._id === userId)}
-            isRegularBoard={isRegularBoard}
-            hasAdminRole={hasAdminRole}
-            addCards={board.addCards}
-            postAnonymously={board.postAnonymously}
-          />
-        ))}
+        {ColumnnContainer}
       </DragDropContext>
-    </Flex>
+    </>
   );
 };
 

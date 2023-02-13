@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Droppable } from '@hello-pangea/dnd';
+import { Draggable, Droppable } from '@hello-pangea/dnd';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
@@ -8,6 +8,7 @@ import { ColumnBoardType } from '@/types/column';
 import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
+import Icon from '@/components/icons/Icon';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
@@ -22,6 +23,7 @@ type ColumMemoProps = {
   hasAdminRole: boolean;
   addCards: boolean;
   postAnonymously: boolean;
+  columnIndex: number;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -45,6 +47,7 @@ const Column = React.memo<ColumMemoProps>(
     hasAdminRole,
     addCards,
     postAnonymously,
+    columnIndex,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -111,100 +114,109 @@ const Column = React.memo<ColumMemoProps>(
 
     return (
       <>
-        <OuterContainer>
-          <Droppable isCombineEnabled droppableId={columnId} type="CARD">
-            {(provided) => (
-              <Container direction="column" elevation="2">
-                <Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
-                  <Flex>
-                    <Title heading="4">{title}</Title>
-                    <Text
-                      color="primary400"
-                      size="xs"
-                      css={{
-                        borderRadius: '$4',
-                        border: '1px solid $colors$primary100',
-                        px: '$8',
-                        py: '$2',
-                      }}
-                    >
-                      {countColumnCards(cards)} cards
-                    </Text>
-                  </Flex>
-                  <Flex>
-                    {isMainboard && (
-                      <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
-                    )}
-                    {hasAdminRole && isRegularBoard && (
-                      <OptionsMenu
-                        disabled={false}
-                        title={title}
-                        cards={cards}
-                        cardText={cardText}
-                        columnId={columnId}
-                        boardId={boardId}
-                        setOpenDialogName={handleDialogNameChange}
-                        handleDialogChange={handleDialogChange}
-                        isDefaultText={isDefaultText}
-                        color={color}
-                        socketId={socketId}
-                      />
-                    )}
-                  </Flex>
-                </Flex>
-                <Separator css={{ mb: '$20' }} />
-                <Flex direction="column">
-                  {!isSubmited && (
-                    <Flex
-                      align="center"
-                      css={{
-                        '&>*': { flex: '1 1 auto' },
-                        '&>form': { px: '$20' },
-                      }}
-                    >
-                      {addCards && (
-                        <AddCardOrComment
-                          isCard
+        <Draggable key={columnId} draggableId={columnId} index={columnIndex}>
+          {(providedColumn) => (
+            <OuterContainer ref={providedColumn.innerRef} {...providedColumn.draggableProps}>
+              <Droppable isCombineEnabled droppableId={columnId} type="CARD">
+                {(provided) => (
+                  <Container direction="column" elevation="2">
+                    <Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
+                      <Flex>
+                        {hasAdminRole && isRegularBoard && (
+                          <Flex {...providedColumn.dragHandleProps}>
+                            <Icon name="arrange" size={24} />
+                          </Flex>
+                        )}
+                        <Title heading="4">{title}</Title>
+                        <Text
+                          color="primary400"
+                          size="xs"
+                          css={{
+                            borderRadius: '$4',
+                            border: '1px solid $colors$primary100',
+                            px: '$8',
+                            py: '$2',
+                          }}
+                        >
+                          {countColumnCards(cards)} cards
+                        </Text>
+                      </Flex>
+                      <Flex>
+                        {isMainboard && (
+                          <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
+                        )}
+                        {hasAdminRole && isRegularBoard && (
+                          <OptionsMenu
+                            disabled={false}
+                            title={title}
+                            cards={cards}
+                            cardText={cardText}
+                            columnId={columnId}
+                            boardId={boardId}
+                            setOpenDialogName={handleDialogNameChange}
+                            handleDialogChange={handleDialogChange}
+                            isDefaultText={isDefaultText}
+                            color={color}
+                            socketId={socketId}
+                          />
+                        )}
+                      </Flex>
+                    </Flex>
+                    <Separator css={{ mb: '$20' }} />
+                    <Flex direction="column">
+                      {!isSubmited && (
+                        <Flex
+                          align="center"
+                          css={{
+                            '&>*': { flex: '1 1 auto' },
+                            '&>form': { px: '$20' },
+                          }}
+                        >
+                          {addCards && (
+                            <AddCardOrComment
+                              isCard
+                              boardId={boardId}
+                              colId={columnId}
+                              defaultOpen={countAllCards === 0}
+                              isUpdate={false}
+                              socketId={socketId}
+                              anonymous={undefined}
+                              cardText={cardText}
+                              isDefaultText={isDefaultText ?? true}
+                              postAnonymously={postAnonymously}
+                            />
+                          )}
+                        </Flex>
+                      )}
+                      <CardsContainer
+                        direction="column"
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        <CardsList
                           boardId={boardId}
+                          boardUser={boardUser}
+                          cards={filteredCards()}
                           colId={columnId}
-                          defaultOpen={countAllCards === 0}
-                          isUpdate={false}
+                          color={color}
+                          hideCards={hideCards}
+                          isMainboard={isMainboard}
+                          isSubmited={isSubmited}
+                          maxVotes={maxVotes}
                           socketId={socketId}
-                          anonymous={undefined}
-                          cardText={cardText}
-                          isDefaultText={isDefaultText ?? true}
+                          userId={userId}
+                          hasAdminRole={hasAdminRole}
                           postAnonymously={postAnonymously}
                         />
-                      )}
+                        {provided.placeholder}
+                      </CardsContainer>
                     </Flex>
-                  )}
-                  <CardsContainer
-                    direction="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    <CardsList
-                      boardId={boardId}
-                      boardUser={boardUser}
-                      cards={filteredCards()}
-                      colId={columnId}
-                      color={color}
-                      hideCards={hideCards}
-                      isMainboard={isMainboard}
-                      isSubmited={isSubmited}
-                      maxVotes={maxVotes}
-                      socketId={socketId}
-                      userId={userId}
-                      hasAdminRole={hasAdminRole}
-                      postAnonymously={postAnonymously}
-                    />
-                    {provided.placeholder}
-                  </CardsContainer>
-                </Flex>
-              </Container>
-            )}
-          </Droppable>
-        </OuterContainer>
+                  </Container>
+                )}
+              </Droppable>
+            </OuterContainer>
+          )}
+        </Draggable>
         <UpdateColumnDialog
           boardId={boardId}
           isOpen={openDialog.columnName}
