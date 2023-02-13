@@ -39,7 +39,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	}
 
 	findAllWithQuery(
-		query: any,
+		query: FilterQuery<T>,
 		selectedValues?: SelectedValues<T>,
 		populate?: PopulateType
 	): Promise<T[]> {
@@ -64,11 +64,16 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	}
 
 	findOneByFieldAndUpdate(
-		value: ModelProps<T>,
+		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
-		options?: QueryOptions<T>
+		options?: QueryOptions<T>,
+		populate?: PopulateType
 	): Promise<T> {
-		return this._repository.findOneAndUpdate(value, query, options).exec();
+		return this._repository
+			.findOneAndUpdate(value, query, options)
+			.populate(populate)
+			.lean()
+			.exec() as unknown as Promise<T>;
 	}
 
 	findOneAndRemove(id: string, withSession = false): Promise<T> {

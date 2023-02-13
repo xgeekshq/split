@@ -3,6 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
+	boardRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -13,7 +14,7 @@ import {
 	updateBoardService
 } from 'src/modules/boards/boards.providers';
 import BoardsController from 'src/modules/boards/controller/boards.controller';
-import { getCardService } from 'src/modules/cards/cards.providers';
+import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
@@ -56,8 +57,10 @@ describe('BoardsController', () => {
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
-				deleteVoteService,
 				getCardService,
+				deleteCardService,
+				deleteVoteService,
+				boardRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

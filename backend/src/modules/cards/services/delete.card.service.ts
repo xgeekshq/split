@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
@@ -12,6 +12,7 @@ import { DeleteCardService } from '../interfaces/services/delete.card.service.in
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import CardItem from '../schemas/card.item.schema';
+import Card from '../schemas/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {
@@ -193,5 +194,39 @@ export default class DeleteCardServiceImpl implements DeleteCardService {
 		}
 
 		return null;
+	}
+
+	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
+		const votesByUser = new Map<string, number>();
+
+		votes.forEach((userId) => {
+			if (!votesByUser.has(userId.toString())) {
+				votesByUser.set(userId.toString(), 1);
+			} else {
+				const count = votesByUser.get(userId.toString());
+				votesByUser.set(userId.toString(), count + 1);
+			}
+		});
+
+		return votesByUser;
+	}
+
+	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
+		cardsArray.forEach((cards) => {
+			cards.items.forEach(async (card) => {
+				const votesByUserOnCardItems = this.getVotesByUser(card.votes);
+
+				votesByUserOnCardItems.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			});
+
+			if (cards.votes.length > 0) {
+				const votesByUserOnCard = this.getVotesByUser(cards.votes);
+				votesByUserOnCard.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			}
+		});
 	}
 }

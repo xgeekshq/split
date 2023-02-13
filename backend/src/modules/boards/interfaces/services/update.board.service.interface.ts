@@ -1,26 +1,15 @@
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import { LeanDocument } from 'mongoose';
-import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
-import { UpdateColumnDto } from '../../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../../dto/update-board.dto';
-import { BoardDocument } from '../../schemas/board.schema';
-import BoardUser from '../../schemas/board.user.schema';
+import { BoardDocument } from '../../entities/board.schema';
+import BoardUser from '../../entities/board.user.schema';
 
 export interface UpdateBoardServiceInterface {
 	update(boardId: string, boardData: UpdateBoardDto): Promise<LeanDocument<BoardDocument> | null>;
 
 	mergeBoards(subBoardId: string, userId: string): Promise<LeanDocument<BoardDocument> | null>;
 	updateChannelId(teams: TeamDto[]);
-	updateColumn(
-		boardId: string,
-		column: UpdateColumnDto
-	): Promise<LeanDocument<BoardDocument> | null>;
-
-	deleteCardsFromColumn(
-		boardId: string,
-		column: ColumnDeleteCardsDto
-	): Promise<LeanDocument<BoardDocument> | null>;
 
 	updateBoardParticipants(
 		addUsers: BoardUserDto[],

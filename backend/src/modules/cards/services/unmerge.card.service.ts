@@ -7,7 +7,7 @@ import {
 	CARD_NOT_REMOVED,
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
 import { TYPES } from '../interfaces/types';

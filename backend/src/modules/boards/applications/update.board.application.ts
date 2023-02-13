@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
-import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
