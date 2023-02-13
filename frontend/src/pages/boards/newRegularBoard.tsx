@@ -25,7 +25,7 @@ import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRow
 import Flex from '@/components/Primitives/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
 import BoardName from '@/components/CreateBoard/BoardName';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import TipBar from '@/components/CreateBoard/TipBar';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
@@ -136,19 +136,14 @@ const NewRegularBoard: NextPage = () => {
   };
 
   const methods = useForm<{ text?: string; maxVotes?: number; slackEnable?: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
       slackEnable: false,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
-  });
-
-  const mainBoardName = useWatch({
-    control: methods.control,
-    name: 'text',
   });
 
   const resetListUsersState = useCallback(() => {
@@ -274,7 +269,7 @@ const NewRegularBoard: NextPage = () => {
                     >
                       <InnerContent direction="column">
                         <FormProvider {...methods}>
-                          <BoardName mainBoardName={mainBoardName} />
+                          <BoardName />
                           <SettingsTabs />
                         </FormProvider>
                       </InnerContent>

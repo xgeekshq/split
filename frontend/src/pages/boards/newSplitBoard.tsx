@@ -1,5 +1,5 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -110,8 +110,8 @@ const NewSplitBoard: NextPage = () => {
    * React Hook Form
    */
   const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
@@ -119,11 +119,6 @@ const NewSplitBoard: NextPage = () => {
       slackEnable: boardState.board.slackEnable,
     },
     resolver: joiResolver(SchemaCreateBoard),
-  });
-
-  const mainBoardName = useWatch({
-    control: methods.control,
-    name: 'text',
   });
 
   if (routerTeam && !selectedTeam) {
@@ -252,7 +247,7 @@ const NewSplitBoard: NextPage = () => {
                   )}
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
-                      <BoardName mainBoardName={mainBoardName} />
+                      <BoardName />
                       <SettingsTabs />
                     </FormProvider>
                   </InnerContent>

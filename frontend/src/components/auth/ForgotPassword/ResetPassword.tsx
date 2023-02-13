@@ -28,8 +28,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
   const setToastState = useSetRecoilState(toastState);
   const router = useRouter();
   const methods = useForm<NewPassword>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       password: '',
       passwordConf: '',

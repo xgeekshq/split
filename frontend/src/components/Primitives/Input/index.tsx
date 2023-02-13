@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/icons/Icon';
 import isEmpty from '@/utils/isEmpty';
@@ -52,7 +52,6 @@ const Input: React.FC<InputProps> = ({
 
   const {
     register,
-    getValues,
     clearErrors,
     trigger: revalidateInput,
     formState: { errors, dirtyFields },
@@ -60,7 +59,7 @@ const Input: React.FC<InputProps> = ({
   const { ref, onChange, ...rest } = register(id);
 
   const errorMessage = errors[id]?.message;
-  const value = getValues()[id];
+  const value = useWatch({ name: id });
   const isValueEmpty = isEmpty(value);
 
   const getCurrentState = useMemo(() => {
@@ -161,7 +160,7 @@ const Input: React.FC<InputProps> = ({
               </Text>
             </Flex>
           )}
-          {showCount && <Text hint>{`${value.length}/${maxChars}`}</Text>}
+          {showCount && <Text hint>{`${value?.length ?? '0'}/${maxChars}`}</Text>}
         </HelperTextWrapper>
       )}
     </Flex>

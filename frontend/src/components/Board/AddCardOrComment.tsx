@@ -66,7 +66,7 @@ const AddCard = React.memo<AddCardProps>(
     );
 
     const methods = useForm<{ text: string }>({
-      mode: 'onSubmit',
+      mode: 'onChange',
       reValidateMode: 'onChange',
       defaultValues: {
         text: cardText === 'Write your comment here...' ? '' : cardText,

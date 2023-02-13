@@ -40,8 +40,8 @@ const CreateTeam = () => {
   const [usersList, setUsersList] = useRecoilState(usersListState);
 
   const methods = useForm<{ text: string }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
     },
