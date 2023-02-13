@@ -50,32 +50,15 @@ const ParticipantCard = React.memo<CardBodyProps>(
     };
 
     const updateIsResponsibleStatus = (checked: boolean) => {
-      // if (member.team) {
-      //   const updateTeamUser: TeamUserUpdate = {
-      //     team: member.team,
-      //     user: member.user._id,
-      //     role: member.role,
-      //     isNewJoiner: checked,
-      //   };
-
-      //   mutate(updateTeamUser);
-      // }
       const participantsList = [...boardParticipants];
       const idxParticipantToUpdate = participantsList.findIndex(
         (boardUser) => boardUser._id === member._id,
       );
       participantsList.splice(idxParticipantToUpdate, 1);
-      if (checked) {
-        participantsList.splice(idxParticipantToUpdate, 0, {
-          ...member,
-          role: BoardUserRoles.RESPONSIBLE,
-        });
-      } else {
-        participantsList.splice(idxParticipantToUpdate, 0, {
-          ...member,
-          role: BoardUserRoles.MEMBER,
-        });
-      }
+      participantsList.splice(idxParticipantToUpdate, 0, {
+        ...member,
+        role: checked ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+      });
       setBoardParticipants(participantsList);
     };
 
