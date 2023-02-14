@@ -114,7 +114,12 @@ const Column = React.memo<ColumMemoProps>(
 
     return (
       <>
-        <Draggable key={columnId} draggableId={columnId} index={columnIndex}>
+        <Draggable
+          key={columnId}
+          draggableId={columnId}
+          index={columnIndex}
+          isDragDisabled={isMainboard || !hasAdminRole}
+        >
           {(providedColumn) => (
             <OuterContainer ref={providedColumn.innerRef} {...providedColumn.draggableProps}>
               <Droppable isCombineEnabled droppableId={columnId} type="CARD">
@@ -142,8 +147,12 @@ const Column = React.memo<ColumMemoProps>(
                         </Text>
                       </Flex>
                       <Flex>
-                        {isMainboard && (
-                          <SortMenu disabled={!isMainboard} filter={filter} setFilter={setFilter} />
+                        {(isMainboard || isRegularBoard) && (
+                          <SortMenu
+                            disabled={!isMainboard && !isRegularBoard}
+                            filter={filter}
+                            setFilter={setFilter}
+                          />
                         )}
                         {hasAdminRole && isRegularBoard && (
                           <OptionsMenu
@@ -207,6 +216,7 @@ const Column = React.memo<ColumMemoProps>(
                           userId={userId}
                           hasAdminRole={hasAdminRole}
                           postAnonymously={postAnonymously}
+                          isRegularBoard={isRegularBoard}
                         />
                         {provided.placeholder}
                       </CardsContainer>
