@@ -13,12 +13,6 @@ const StyledInputWrapper = styled(Flex, {
   alignItems: 'center',
   '&[data-iconposition="left"]': {
     flexDirection: 'row',
-    //   '&:not(:placeholder-shown) ~ label': {
-    //     transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
-    //   },
-    //   '&:focus ~ label': {
-    //     transform: `scale(0.875) translateX(0.5rem) translateY(-0.5rem)`,
-    //   },
   },
   '&[data-iconposition="right"]': {
     flexDirection: 'row-reverse',
