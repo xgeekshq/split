@@ -24,6 +24,7 @@ type ColumMemoProps = {
   addCards: boolean;
   postAnonymously: boolean;
   columnIndex: number;
+  isSubBoard?: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -48,6 +49,7 @@ const Column = React.memo<ColumMemoProps>(
     addCards,
     postAnonymously,
     columnIndex,
+    isSubBoard,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -118,7 +120,7 @@ const Column = React.memo<ColumMemoProps>(
           key={columnId}
           draggableId={columnId}
           index={columnIndex}
-          isDragDisabled={isMainboard || !hasAdminRole}
+          isDragDisabled={isMainboard || !hasAdminRole || isSubBoard}
         >
           {(providedColumn) => (
             <OuterContainer ref={providedColumn.innerRef} {...providedColumn.draggableProps}>

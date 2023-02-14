@@ -18,7 +18,7 @@ import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ColumnType from '@/types/column';
 
-const Container = styled(Flex, { minHeight: '100vh', width: '100%', display: 'inline-flex' });
+const Container = styled(Flex, { maxHeight: '100vh', width: '100%', display: 'inline-flex' });
 
 type Props = {
   userId: string;
@@ -46,7 +46,7 @@ const DragDropArea: React.FC<Props> = ({
   const setOnDragCard = useSetRecoilState(onDragCardStart);
   const filteredColumns = useRecoilValue(filteredColumnsState);
 
-  const [boardSate, setBoardState] = useRecoilState(boardInfoState);
+  const [boardState, setBoardState] = useRecoilState(boardInfoState);
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
@@ -99,15 +99,15 @@ const DragDropArea: React.FC<Props> = ({
 
     setBoardState({
       board: {
-        ...boardSate.board,
+        ...boardState.board,
         columns: columnsArray,
       },
     });
 
     mutateBoard({
-      ...boardSate.board,
+      ...boardState.board,
       columns: columnsArray,
-      responsible: boardSate.board.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+      responsible: boardState.board.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       socketId,
     });
   };
@@ -203,6 +203,7 @@ const DragDropArea: React.FC<Props> = ({
               hideCards={board.hideCards}
               index={index}
               isMainboard={isMainboard}
+              isSubBoard={board.isSubBoard}
               isSubmited={!!board.submitedByUser}
               maxVotes={Number(board.maxVotes)}
               socketId={socketId}
