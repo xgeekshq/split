@@ -9,7 +9,7 @@ export const parameters = {
       date: /Date$/,
     },
     expanded: true,
-    exclude: ['ref', 'as', 'css', 'asChild'],
+    exclude: ['ref', 'as', 'css', 'asChild', 'media'],
     sort: 'requiredFirst',
   },
   layout: 'centered',
