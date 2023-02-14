@@ -132,20 +132,18 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		errors.forEach((i) => this.logger.warn(i));
 
 		return teams.map((team) => {
-			const channelObj = success.find(({ name: channelName }) => {
-				return String(channelName).includes(
+			const channelFound = success.find(({ name: channelName }) =>
+				channelName.includes(
 					`${team.normalName}${
 						team.for === BoardRoles.RESPONSIBLE ? '-responsibles' : ''
 					}-${month}-${year}`
-				);
-			});
+				)
+			);
 
-			if (channelObj) {
-				return {
-					...team,
-					channelId: channelObj?.id
-				};
-			}
+			return {
+				...team,
+				channelId: channelFound?.id
+			};
 		});
 	}
 
