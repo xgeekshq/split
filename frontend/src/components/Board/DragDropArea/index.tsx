@@ -1,18 +1,17 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { DragDropContext, DropResult, BeforeCapture, Droppable } from '@hello-pangea/dnd';
 import Flex from '@/components/Primitives/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import BoardType, { UpdateBoardType } from '@/types/board/board';
+import BoardType from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import Column from '@/components/Board/Column/Column';
-
 import { styled } from '@/styles/stitches/stitches.config';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
@@ -42,40 +41,12 @@ const DragDropArea: React.FC<Props> = ({
     updateBoard: { mutate: mutateBoard },
   } = useBoard({ autoFetchBoard: false });
 
+  // Recoil States
   const setToastState = useSetRecoilState(toastState);
   const setOnDragCard = useSetRecoilState(onDragCardStart);
   const filteredColumns = useRecoilValue(filteredColumnsState);
 
-  // Recoil State used on [boardId].tsx
-  const {
-    board: {
-      maxVotes: boardMaxVotes,
-      title: boardTitle,
-      _id,
-      hideCards,
-      hideVotes,
-      users,
-      isPublic,
-      columns,
-      addCards,
-      postAnonymously,
-    },
-  } = useRecoilValue(boardInfoState);
-
-  const initialData: UpdateBoardType = {
-    _id,
-    hideCards,
-    hideVotes,
-    title: boardTitle,
-    maxVotes: boardMaxVotes,
-    users,
-    isPublic,
-    columns,
-    addCards,
-    postAnonymously,
-  };
-
-  const boardData = initialData;
+  const [boardSate, setBoardState] = useRecoilState(boardInfoState);
 
   const countAllCards = React.useMemo(
     () => (board.columns ? countBoardCards(board.columns) : 0),
@@ -126,10 +97,17 @@ const DragDropArea: React.FC<Props> = ({
     columnsArray.splice(sourceIndex, 1);
     columnsArray.splice(destinationIndex, 0, column);
 
+    setBoardState({
+      board: {
+        ...boardSate.board,
+        columns: columnsArray,
+      },
+    });
+
     mutateBoard({
-      ...boardData,
+      ...boardSate.board,
       columns: columnsArray,
-      responsible: users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+      responsible: boardSate.board.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       socketId,
     });
   };
@@ -201,8 +179,15 @@ const DragDropArea: React.FC<Props> = ({
     }
   };
 
+  const isMainboard = !board.isSubBoard && board.dividedBoards.length > 0;
+
   const ColumnnContainer = (
-    <Droppable droppableId="column" direction="horizontal" type="COLUMN">
+    <Droppable
+      droppableId="column"
+      direction="horizontal"
+      type="COLUMN"
+      isDropDisabled={isMainboard || !hasAdminRole}
+    >
       {(provided) => (
         <Container ref={provided.innerRef} {...provided.droppableProps} gap={24}>
           {board.columns.map((column, index) => (
@@ -217,7 +202,7 @@ const DragDropArea: React.FC<Props> = ({
               countAllCards={countAllCards}
               hideCards={board.hideCards}
               index={index}
-              isMainboard={!board.isSubBoard && board.dividedBoards.length > 0}
+              isMainboard={isMainboard}
               isSubmited={!!board.submitedByUser}
               maxVotes={Number(board.maxVotes)}
               socketId={socketId}
