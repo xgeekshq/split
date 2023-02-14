@@ -3,10 +3,9 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import useAvatarColor from '@/hooks/useAvatarColor';
-import Flex from '../Flex';
 
-const AvatarRoot = styled(AvatarPrimitive.Root, Flex, {
-  border: '1px solid $colors$white',
+const AvatarRoot = styled(AvatarPrimitive.Root, {
+  border: '1px solid $white',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
