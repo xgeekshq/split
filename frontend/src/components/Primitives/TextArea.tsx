@@ -47,7 +47,9 @@ const StyledTextArea = styled('textarea', {
   '&:disabled': {
     backgroundColor: '$primary50',
   },
-  color: '$primaryBase',
+  '&:focus': {
+    color: '$primaryBase',
+  },
   '&::-webkit-input-placeholder': {
     color: '$primary300',
   },
@@ -76,11 +78,21 @@ interface ResizableTextAreaProps {
   id: string;
   placeholder: string;
   disabled?: boolean;
+  state?: 'valid' | 'default' | 'error';
+  textColor?: '$primaryBase' | '$primary300';
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled }) => {
+const TextArea: React.FC<ResizableTextAreaProps> = ({
+  id,
+  placeholder,
+  disabled,
+  state,
+  textColor,
+}) => {
   TextArea.defaultProps = {
     disabled: false,
+    state: undefined,
+    textColor: '$primaryBase',
   };
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -110,8 +122,9 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled 
 
   const currentState = useMemo(() => {
     if (disabled && !touchedFields[id]) return 'default';
+    if (state) return state;
     return autoState;
-  }, [autoState, disabled, id, touchedFields]);
+  }, [autoState, disabled, id, state, touchedFields]);
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
@@ -120,7 +133,13 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled 
   return (
     <StyledTextArea
       {...rest}
-      css={{ minHeight: '$80', backgroundColor: '$primary50', py: '$12', px: '$16' }}
+      css={{
+        minHeight: '$80',
+        backgroundColor: '$primary50',
+        py: '$12',
+        px: '$16',
+        color: textColor,
+      }}
       disabled={disabled}
       id={id}
       placeholder={placeholder}

@@ -65,17 +65,34 @@ const AddCard = React.memo<AddCardProps>(
       anonymous ?? postAnonymously ?? false,
     );
 
+    const textPlaceholder = cardText === `Description: \n\nHow to improve:` ? cardText : '';
+
     const methods = useForm<{ text: string }>({
-      mode: 'onChange',
+      mode: 'onTouched',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText === `Description: \n\nHow to improve:` ? cardText : '',
+        text: textPlaceholder,
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
 
     const watchCardTextInput = methods.watch();
-    const disabledButton = watchCardTextInput.text?.trim().length === 0;
+
+    // allows the use of the template on "To Improve" column on th SPLIT board
+    const placeholderColor =
+      watchCardTextInput.text === `Description: \n\nHow to improve:`
+        ? '$primary300'
+        : '$primaryBase';
+
+    const state =
+      watchCardTextInput.text === `Description: \n\nHow to improve:` &&
+      methods.formState.touchedFields
+        ? 'default'
+        : undefined;
+
+    const disabledButton =
+      watchCardTextInput.text?.trim().length === 0 ||
+      watchCardTextInput.text === `Description: \n\nHow to improve:`;
 
     const handleAddCard = (text: string) => {
       if (text.trim().length === 0) return;
@@ -101,7 +118,7 @@ const AddCard = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
-      methods.reset({ text: '' });
+      methods.reset({ text: textPlaceholder });
     };
 
     const handleUpdateCard = (text: string) => {
@@ -170,7 +187,7 @@ const AddCard = React.memo<AddCardProps>(
         return;
       }
 
-      methods.reset({ text: placeholder });
+      methods.reset({ text: textPlaceholder });
       setIsOpen(false);
     };
 
@@ -214,7 +231,12 @@ const AddCard = React.memo<AddCardProps>(
         })}
       >
         <FormProvider {...methods}>
-          <TextArea id="text" placeholder={placeholder} />
+          <TextArea
+            id="text"
+            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
+            textColor={placeholderColor}
+            state={state}
+          />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment
