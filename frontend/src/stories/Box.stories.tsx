@@ -25,11 +25,6 @@ export default {
   title: 'Primitives/Box',
   component: Box,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
         component: dedent`
