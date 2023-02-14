@@ -1,10 +1,9 @@
 import { ReactNode } from 'react';
+
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
-
 import { CSS, styled } from '@/styles/stitches/stitches.config';
-
 import { overlayShow } from '@/animations/DialogShow';
-import Box from './Box';
+
 import Button from './Button';
 import Flex from './Flex';
 import Text from './Text';
@@ -22,10 +21,11 @@ const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   zIndex: '100',
 });
 
-const StyledContent = styled(AlertDialogPrimitive.Content, Flex, Box, {
-  flexDirection: 'column !important',
-  backgroundColor: 'white !important',
-  borderRadius: '$12 !important',
+const StyledContent = styled(AlertDialogPrimitive.Content, {
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: 'white',
+  borderRadius: '$12',
   position: 'fixed',
   top: '20%',
   left: '50%',
@@ -38,10 +38,11 @@ const StyledContent = styled(AlertDialogPrimitive.Content, Flex, Box, {
 });
 
 const StyledTitleContainer = styled(Flex, { px: '$32', py: '$24' });
-const StyledDescription = styled(Flex, {
+const StyledDescription = styled('div', {
   px: '$32',
   py: '$24',
-  flexDirection: 'column !important',
+  display: 'flex',
+  flexDirection: 'column',
   gap: '$8',
 });
 

@@ -1,3 +1,5 @@
+// CHECK: Create Base Button
+// Export Button & IconButton
 import { styled } from '@/styles/stitches/stitches.config';
 
 const Button = styled('button', {
@@ -194,31 +196,6 @@ const Button = styled('button', {
         },
       },
     },
-    isIcon: {
-      true: {
-        padding: '0 !important',
-        width: 'auto !important',
-        height: 'auto !important',
-        color: '$primary800 !important',
-        backgroundColor: '$transparent !important',
-        '@hover': {
-          '&:hover': {
-            backgroundColor: '$transparent !important',
-          },
-        },
-        '&:active': {
-          backgroundColor: '$transparent !important',
-          boxShadow: 'none',
-        },
-        '&:disabled': {
-          backgroundColor: '$transparent !important',
-          border: 'none',
-          '& svg': {
-            color: '$primary200 !important',
-          },
-        },
-      },
-    },
     textSize: {
       lg: {
         fontSize: '$18',
@@ -242,12 +219,12 @@ const Button = styled('button', {
         px: '$24',
         py: '$16',
         '& svg': {
-          height: '$24 !important',
-          width: '$24 !important',
+          height: '$24',
+          width: '$24',
         },
         '& span': {
-          height: '$24 !important',
-          width: '$24 !important',
+          height: '$24',
+          width: '$24',
         },
       },
       md: {
@@ -258,12 +235,12 @@ const Button = styled('button', {
         px: '$24',
         py: '$14',
         '& svg': {
-          height: '$20 !important',
-          width: '$20 !important',
+          height: '$20',
+          width: '$20',
         },
         '& span': {
-          height: '$20 !important',
-          width: '$20 !important',
+          height: '$20',
+          width: '$20',
         },
       },
       sm: {
@@ -274,8 +251,8 @@ const Button = styled('button', {
         px: '$16',
         py: '$10',
         '& svg': {
-          height: '$16 !important',
-          width: '$16 !important',
+          height: '$16',
+          width: '$16',
         },
       },
       xs: {
@@ -286,20 +263,44 @@ const Button = styled('button', {
         px: '$1',
         py: '$1',
         '& span': {
-          height: '$10 !important',
-          width: '$10 !important',
+          height: '$10',
+          width: '$10',
+        },
+      },
+    },
+    isIcon: {
+      true: {
+        padding: '0 !important',
+        height: 'auto !important',
+        color: '$primary800',
+        backgroundColor: '$transparent',
+        '@hover': {
+          '&:hover': {
+            backgroundColor: '$transparent',
+          },
+        },
+        '&:active': {
+          backgroundColor: '$transparent',
+          boxShadow: 'none',
+        },
+        '&:disabled': {
+          backgroundColor: '$transparent',
+          border: 'none',
+          '& svg': {
+            color: '$primary200',
+          },
         },
       },
     },
   },
   compoundVariants: [
     {
-      size: 'lg',
       isIcon: 'true',
+      size: 'lg',
       css: {
         '& svg': {
-          height: '$40 !important',
-          width: '$40 !important',
+          height: '$40',
+          width: '$40',
         },
       },
     },
@@ -308,18 +309,18 @@ const Button = styled('button', {
       isIcon: 'true',
       css: {
         '& svg': {
-          height: '$24 !important',
-          width: '$24 !important',
+          height: '$24',
+          width: '$24',
         },
       },
     },
     {
-      size: 'sm',
       isIcon: 'true',
+      size: 'sm',
       css: {
         '& svg': {
-          height: '$20 !important',
-          width: '$20 !important',
+          height: '$20',
+          width: '$20',
         },
       },
     },
