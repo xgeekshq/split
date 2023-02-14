@@ -136,8 +136,8 @@ const BoardSettings = ({
     column3title?: string;
     column4title?: string;
   }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     resolver: joiResolver(SchemaUpdateBoard),
     defaultValues: {
       title: data.title,
@@ -345,6 +345,7 @@ const BoardSettings = ({
   /**
    * Use Effect to submit the board settings form when press enter key
    * (Note: Radix Dialog close when pressing enter)
+   * CHECK: Adding Keyboard Events on useEffect is not very Good.
    */
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -411,14 +412,7 @@ const BoardSettings = ({
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
                   <Text heading="4">Board Name</Text>
-                  <Input
-                    forceState
-                    id="title"
-                    maxChars="30"
-                    placeholder="Board Name"
-                    state="default"
-                    type="text"
-                  />
+                  <Input id="title" maxChars="30" placeholder="Board Name" type="text" showCount />
                 </Flex>
 
                 <Text css={{ display: 'block', px: '$32' }} heading="4">
