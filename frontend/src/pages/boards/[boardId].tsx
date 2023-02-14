@@ -30,10 +30,10 @@ import {
   newBoardState,
 } from '@/store/board/atoms/board.atom';
 import { GetBoardResponse } from '@/types/board/board';
-import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
@@ -135,18 +135,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
-      setEditColumns(data.board.columns);
-      setDeletedColumns([]);
-
-      const boardUsers: BoardUser[] = [...data.board.users];
-
-      // this insures that the team creator stays always in first
-      const userAdminIndex = boardUsers.findIndex(
-        (member) => member?.user?._id === session?.user.id,
-      );
-
-      boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
-      setBoardParticipants(boardUsers);
+      if (!data.board.team) {
+        setEditColumns(data.board.columns);
+        setDeletedColumns([]);
+        sortParticipantsList([...data.board.users], setBoardParticipants);
+      }
     }
   }, [
     data,

@@ -10,13 +10,35 @@ import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+
+// Sorts participants list to show responsibles first and then regular board members
+export const sortParticipantsList = (
+  boardUsers: BoardUser[],
+  setBoardParticipants: SetterOrUpdater<BoardUser[]>,
+) => {
+  boardUsers.sort((a, b) => {
+    const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+    const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+
+    return aFullName < bFullName ? -1 : 1;
+  });
+  const orderedResponsiblesList = boardUsers.filter(
+    (boardUser) => boardUser.role === BoardUserRoles.RESPONSIBLE,
+  );
+  const orderedParticipantsList = boardUsers.filter(
+    (boardUser) => boardUser.role === BoardUserRoles.MEMBER,
+  );
+  setBoardParticipants([...orderedResponsiblesList, ...orderedParticipantsList]);
+};
 
 const BoardParticipants = () => {
   const { data: session } = useSession({ required: true });
@@ -34,7 +56,8 @@ const BoardParticipants = () => {
   useEffect(() => {
     if (boardData) {
       setRecoilBoard(boardData);
-      setBoardParticipants(boardData.board.users);
+      if (!boardData.board.team)
+        sortParticipantsList([...boardData.board.users], setBoardParticipants);
     }
   }, [boardData, setBoardParticipants, setRecoilBoard]);
 
