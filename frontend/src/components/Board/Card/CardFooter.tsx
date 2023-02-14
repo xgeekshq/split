@@ -27,6 +27,7 @@ interface FooterProps {
   boardUser?: BoardUser;
   maxVotes?: number;
   hideCards: boolean;
+  isRegularBoard?: boolean;
 }
 
 const CardFooter = ({
@@ -43,6 +44,7 @@ const CardFooter = ({
   setOpenComments,
   isCommentsOpened,
   hideCards,
+  isRegularBoard,
 }: FooterProps) => {
   const createdBy = useMemo(() => {
     if (Object.hasOwnProperty.call(card, 'items')) {
@@ -144,6 +146,8 @@ const CardFooter = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
+  const disableVotes = !((!isMainboard && isRegularBoard) || (isMainboard && !isRegularBoard));
+
   return (
     <Flex align="center" gap="6" justify={!anonymous || createdByTeam ? 'between' : 'end'}>
       {!anonymous && !createdByTeam && (
@@ -187,7 +191,7 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={!isMainboard || (maxVotes && user?.votesCount === maxVotes) || hideCards}
+              disabled={disableVotes || (maxVotes && user?.votesCount === maxVotes) || hideCards}
               onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
@@ -216,7 +220,7 @@ const CardFooter = ({
               size="sm"
               css={{ color: '$primary500' }}
               disabled={
-                !isMainboard ||
+                disableVotes ||
                 votesInThisCard.length === 0 ||
                 (maxVotes && userVotes === 0) ||
                 votesOfUserInThisCard === 0 ||

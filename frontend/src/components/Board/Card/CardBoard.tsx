@@ -42,6 +42,7 @@ interface CardBoardProps {
   cardText?: string;
   hasAdminRole: boolean;
   postAnonymously: boolean;
+  isRegularBoard?: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -61,6 +62,7 @@ const CardBoard = React.memo<CardBoardProps>(
     isDefaultText,
     hasAdminRole,
     postAnonymously,
+    isRegularBoard,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -233,6 +235,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     setOpenComments={handleOpenComments}
                     socketId={socketId}
                     userId={userId}
+                    isRegularBoard={isRegularBoard}
                   />
                 </Flex>
               )}
