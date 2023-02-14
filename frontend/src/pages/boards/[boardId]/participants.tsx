@@ -56,8 +56,7 @@ const BoardParticipants = () => {
   useEffect(() => {
     if (boardData) {
       setRecoilBoard(boardData);
-      if (!boardData.board.team)
-        sortParticipantsList([...boardData.board.users], setBoardParticipants);
+      sortParticipantsList([...boardData.board.users], setBoardParticipants);
     }
   }, [boardData, setBoardParticipants, setRecoilBoard]);
 
