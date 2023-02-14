@@ -120,11 +120,11 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                     </Text>
                   </StyledBoardTitle>
                   <AvatarGroup
-                    isBoardsPage
                     listUsers={isSubBoard ? users : teamUsers}
                     responsible={false}
                     teamAdmins={false}
                     userId={session!.user.id}
+                    isClickable
                   />
                 </Flex>
                 {!isEmpty(
@@ -138,11 +138,11 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                         Team admins
                       </Text>
                       <AvatarGroup
-                        isBoardsPage
                         teamAdmins
                         listUsers={isSubBoard ? users : teamUsers}
                         responsible={false}
                         userId={session!.user.id}
+                        isClickable
                       />
                     </Flex>
                   </>
@@ -160,12 +160,12 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                         Stakeholders
                       </Text>
                       <AvatarGroup
-                        isBoardsPage
                         stakeholders
                         listUsers={isSubBoard ? users : teamUsers}
                         responsible={false}
                         teamAdmins={false}
                         userId={session!.user.id}
+                        isClickable
                       />
                     </Flex>
                   </>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { mockListUsers } from './mocks/avatarGroup_listUsers';
 
@@ -8,30 +10,31 @@ export default {
   title: 'Primitives/Avatar/AvatarGroup',
   component: AvatarGroup,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
-        component: '', // Change main component description in docs page
+        component: dedent`
+        Used to display a group of Avatars.
+
+        **File Path:**
+        \`@/components/primitives/Avatar/AvatarGroup.tsx\`
+        `,
       },
     },
   },
   args: {
-    listUsers: mockListUsers,
+    listUsers: mockListUsers.splice(0, 4),
     teamAdmins: false,
     stakeholders: false,
     userId: '63bfe966f36aa91d9bdc08c7',
     haveError: false,
     responsible: false,
     myBoards: false,
-    isBoardsPage: false,
+    isClickable: false,
+    hasDrawer: false,
   },
   argTypes: {
     listUsers: {
-      control: { type: 'object' },
+      control: false,
       description: 'List of users in a Board.',
       table: {
         type: {
@@ -60,7 +63,7 @@ export default {
       },
     },
     userId: {
-      control: { type: 'text' },
+      control: false,
       description: 'Logged in User ID.',
       table: {
         type: {
@@ -96,9 +99,19 @@ export default {
         },
       },
     },
-    isBoardsPage: {
+    isClickable: {
       control: { type: 'boolean' },
-      description: 'Used to allow the Avatar Group to have a Drawer with all the Users',
+      description: 'Used to allow the Avatar Group to be clickable.',
+      table: {
+        type: {
+          summary: 'boolean',
+        },
+      },
+    },
+    hasDrawer: {
+      control: { type: 'boolean' },
+      description:
+        'Used to allow the Avatar Group to have a Drawer with all the Users. For this to work `isClickable` must be true.',
       table: {
         type: {
           summary: 'boolean',
@@ -118,10 +131,14 @@ export const AvatarGroupWithList: ComponentStory<typeof AvatarGroup> = ({ ...arg
 );
 
 AvatarGroupWithList.args = {
-  isBoardsPage: true,
+  isClickable: true,
+  hasDrawer: true,
 };
 AvatarGroupWithList.argTypes = {
-  isBoardsPage: {
+  isClickable: {
+    control: false,
+  },
+  hasDrawer: {
     control: false,
   },
 };

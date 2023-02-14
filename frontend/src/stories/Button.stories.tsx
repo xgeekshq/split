@@ -37,13 +37,6 @@ const DISABLE_ARG_TYPES = {
 export default {
   title: 'Primitives/Button',
   component: Button,
-  parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
-  },
   args: {
     children: 'Lorem',
     variant: 'primary',
@@ -105,7 +98,7 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap">
+  <Flex justify="evenly" wrap="wrap" gap={20}>
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
         <Text heading="5">Variant {variant}</Text>
@@ -120,7 +113,7 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
 );
 
 export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap">
+  <Flex justify="evenly" wrap="wrap" gap={20}>
     {VARIANT_OPTIONS.map((variant) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
         <Text heading="5">Variant {variant}</Text>
