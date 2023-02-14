@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
@@ -30,7 +32,10 @@ export default {
     },
     docs: {
       description: {
-        component: '', // Change main component description in docs page
+        component: dedent`
+        **File Path:**
+        \`@/components/Primitives/Box.tsx\`
+        `,
       },
     },
   },
@@ -53,6 +58,12 @@ export default {
       description: 'The component variations.',
       table: {
         type: { summary: VARIANT_OPTIONS.join('|') },
+      },
+    },
+    children: {
+      description: 'Contains content to be rendered inside the box.',
+      table: {
+        type: { summary: 'React.ReactNode' },
       },
     },
   },

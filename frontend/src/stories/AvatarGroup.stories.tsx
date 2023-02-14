@@ -16,7 +16,7 @@ export default {
         Used to display a group of Avatars.
 
         **File Path:**
-        \`@/components/primitives/Avatar/AvatarGroup.tsx\`
+        \`@/components/Primitives/Avatar/AvatarGroup.tsx\`
         `,
       },
     },
