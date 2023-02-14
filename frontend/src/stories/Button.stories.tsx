@@ -1,48 +1,50 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/icons/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { ButtonVariantType, ButtonSizeType } from './types/PrimitiveTypes';
+import {
+  ButtonVariantType,
+  ButtonSizeType,
+  ButtonVariant,
+  ButtonSize,
+} from './types/PrimitiveTypes';
 
-const VARIANT_OPTIONS: ButtonVariantType[] = [
-  'primary',
-  'primaryOutline',
-  'light',
-  'lightOutline',
-  'danger',
-  'dangerOutline',
-  'link',
-];
-
-const SIZE_OPTIONS: ButtonSizeType[] = ['sm', 'md', 'lg'];
-
-const DISABLE_ARG_TYPES = {
-  variant: {
-    control: false,
-  },
-  isIcon: {
-    control: false,
-  },
-  textSize: {
-    control: false,
-  },
-  size: {
-    control: false,
-  },
-};
+const VARIANT_OPTIONS: ButtonVariantType[] = [...ButtonVariant];
+const SIZE_OPTIONS: ButtonSizeType[] = [...ButtonSize];
 
 export default {
   title: 'Primitives/Button',
   component: Button,
+  parameters: {
+    docs: {
+      description: {
+        component: dedent`
+        Interactive element activated by a user. Once activated, it then performs an action.
+
+        **File Path:**
+        \`@/components/Primitives/Button.tsx\`
+        `,
+      },
+    },
+  },
   args: {
     children: 'Lorem',
     variant: 'primary',
     size: 'md',
   },
   argTypes: {
+    children: {
+      control: { type: 'string' },
+      description: 'Contains content to be rendered in the Button.',
+      table: {
+        type: { summary: 'React.ReactNode | string' },
+      },
+    },
     disabled: {
       control: { type: 'boolean' },
       description: 'Disable the button.',
@@ -98,9 +100,9 @@ export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
 export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap" gap={20}>
+  <Flex justify="evenly" wrap="wrap" gap={32}>
     {VARIANT_OPTIONS.map((variant) => (
-      <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
+      <Flex direction="column" justify="center" align="center" gap={16} key={variant}>
         <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
@@ -113,9 +115,9 @@ export const Variants: ComponentStory<typeof Button> = ({ children, disabled }) 
 );
 
 export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }) => (
-  <Flex justify="evenly" wrap="wrap" gap={20}>
+  <Flex justify="evenly" wrap="wrap" gap={32}>
     {VARIANT_OPTIONS.map((variant) => (
-      <Flex direction="column" justify="center" align="center" gap={20} key={variant}>
+      <Flex direction="column" justify="center" align="center" gap={16} key={variant}>
         <Text heading="5">Variant {variant}</Text>
         {SIZE_OPTIONS.map((size) => (
           <Button variant={variant} size={size} disabled={disabled} key={size}>
@@ -129,9 +131,9 @@ export const IconButton: ComponentStory<typeof Button> = ({ children, disabled }
 );
 
 export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
-  <Flex justify="evenly" wrap="wrap">
+  <Flex justify="evenly" wrap="wrap" gap={32}>
     {SIZE_OPTIONS.map((size) => (
-      <Flex direction="column" justify="center" align="center" gap={20} key={size}>
+      <Flex direction="column" justify="start" align="center" gap={16} key={size}>
         <Text heading="5">Size {size}</Text>
         <Button isIcon size={size} disabled={disabled}>
           <Icon name="close" />
@@ -140,6 +142,21 @@ export const Icons: ComponentStory<typeof Button> = ({ disabled }) => (
     ))}
   </Flex>
 );
+
+const DISABLE_ARG_TYPES = {
+  variant: {
+    control: false,
+  },
+  isIcon: {
+    control: false,
+  },
+  textSize: {
+    control: false,
+  },
+  size: {
+    control: false,
+  },
+};
 
 Variants.argTypes = DISABLE_ARG_TYPES;
 IconButton.argTypes = DISABLE_ARG_TYPES;
