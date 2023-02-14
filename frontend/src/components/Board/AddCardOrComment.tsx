@@ -69,7 +69,7 @@ const AddCard = React.memo<AddCardProps>(
       mode: 'onChange',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText === 'Write your comment here...' ? '' : cardText,
+        text: cardText === `Description: \n\nHow to improve:` ? cardText : '',
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
@@ -162,13 +162,15 @@ const AddCard = React.memo<AddCardProps>(
       cancelUpdate();
     };
 
+    const placeholder = cardText || '';
+
     const handleClear = () => {
       if ((isUpdate || !isCard) && cancelUpdate) {
         cancelUpdate();
         return;
       }
 
-      methods.reset({ text: '' });
+      methods.reset({ text: placeholder });
       setIsOpen(false);
     };
 
@@ -185,8 +187,6 @@ const AddCard = React.memo<AddCardProps>(
           Add new card
         </Button>
       );
-
-    const placeholder = cardText || '';
 
     return (
       <StyledForm
@@ -214,10 +214,7 @@ const AddCard = React.memo<AddCardProps>(
         })}
       >
         <FormProvider {...methods}>
-          <TextArea
-            id="text"
-            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
-          />
+          <TextArea id="text" placeholder={placeholder} />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment
