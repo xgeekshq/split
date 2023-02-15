@@ -175,6 +175,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		board.addCards = boardData.addCards;
 		board.hideVotes = boardData.hideVotes;
 		board.postAnonymously = boardData.postAnonymously;
+		board.isPublic = boardData.isPublic;
 
 		/**
 		 * If the board is a regular, then updates its columns
