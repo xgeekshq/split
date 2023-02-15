@@ -273,7 +273,7 @@ const Button = styled('button', {
         padding: '0 !important',
         height: 'auto !important',
         color: '$primary800',
-        backgroundColor: '$transparent',
+        backgroundColor: '$transparent !important',
         '@hover': {
           '&:hover': {
             backgroundColor: '$transparent',

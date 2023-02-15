@@ -26,6 +26,20 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback, {
   textAlign: 'center',
   fontFamily: 'DM Sans',
   '& span': '',
+  variants: {
+    isBoardPage: {
+      true: {
+        fontSize: '$10',
+        lineHeight: '$12',
+        fontWeight: '$regular',
+      },
+      false: {
+        fontSize: '$12',
+        lineHeight: '$16',
+        fontWeight: '$medium',
+      },
+    },
+  },
 });
 
 export const AvatarButton = styled('button', {
@@ -56,6 +70,7 @@ type AvatarType = {
   isClickable?: boolean;
   id?: string;
   isDefaultColor?: boolean;
+  isBoardPage?: boolean;
 };
 
 type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
@@ -68,6 +83,7 @@ const Avatar: React.FC<AvatarProps> = ({
   css,
   id,
   isDefaultColor,
+  isBoardPage = false,
 }) => {
   const avatarColor = useAvatarColor(id, isDefaultColor);
   if (colors === undefined) colors = avatarColor;
@@ -86,6 +102,7 @@ const Avatar: React.FC<AvatarProps> = ({
     >
       <AvatarImage src={src} />
       <AvatarFallback
+        isBoardPage={isBoardPage}
         css={{
           color: colors?.fontColor,
         }}
