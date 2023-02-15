@@ -412,7 +412,7 @@ const BoardSettings = ({
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
                   <Text heading="4">Board Name</Text>
-                  <Input id="title" maxChars="30" placeholder="Board Name" type="text" showCount />
+                  <Input id="title" maxChars="45" placeholder="Board Name" type="text" showCount />
                 </Flex>
 
                 <Text css={{ display: 'block', px: '$32' }} heading="4">
