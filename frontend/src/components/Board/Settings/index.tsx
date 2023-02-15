@@ -552,7 +552,7 @@ const BoardSettings = ({
                   )}
                   {isRegularBoard && (
                     <ColumnSettings>
-                      <Flex css={{ height: '$310' }} direction="column">
+                      <Flex css={{ height: '$347' }} direction="column">
                         {editColumns.map((column, index) => (
                           <ColumnBoxAndDelete
                             title={column.title}
