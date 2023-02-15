@@ -42,8 +42,9 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { defaultColumns } from '@/helper/board/defaultColumns';
+
 import Link from 'next/link';
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -54,7 +55,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Main Board -',
-    columns: defaultColumns,
+    columns: defaultSplitColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],

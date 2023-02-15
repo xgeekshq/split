@@ -1,9 +1,8 @@
 import { atom } from 'recoil';
-
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserDto } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
-import { defaultColumns } from '@/helper/board/defaultColumns';
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 
 export const createBoardError = atom({
   key: 'haveCreateBoardError',
@@ -42,7 +41,7 @@ export const createBoardDataState = atom<CreateBoardData>({
     },
     board: {
       title: 'Main Board -',
-      columns: defaultColumns,
+      columns: defaultSplitColumns,
       isPublic: false,
       maxVotes: undefined,
       dividedBoards: [],
