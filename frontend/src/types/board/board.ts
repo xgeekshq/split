@@ -23,7 +23,7 @@ export default interface BoardType {
   title: string;
   creationDate?: string;
   updatedAt: string;
-  columns: ColumnType[];
+  columns: (ColumnType | CreateColumn)[];
   isPublic: boolean;
   password?: string;
   dividedBoards: BoardType[];

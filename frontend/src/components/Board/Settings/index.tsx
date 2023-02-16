@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
@@ -13,11 +13,7 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
-import {
-  boardInfoState,
-  deletedColumnsState,
-  editColumnsState,
-} from '@/store/board/atoms/board.atom';
+import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -77,7 +73,6 @@ const BoardSettings = ({
     },
   } = useRecoilValue(boardInfoState);
 
-  const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
   const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
 
   // State used to change values
@@ -89,12 +84,15 @@ const BoardSettings = ({
     maxVotes: boardMaxVotes,
     users,
     isPublic,
-    columns: isRegularBoard ? editColumns : columns,
+    columns,
     addCards,
     postAnonymously,
   };
 
   const [data, setData] = useState<UpdateBoardType>(initialData);
+
+  const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
 
   // References
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -110,13 +108,13 @@ const BoardSettings = ({
     addCards: boolean;
     postAnonymously: boolean;
   }>({
-    maxVotes: false,
-    responsible: false,
-    hideCards: false,
-    hideVotes: false,
-    isPublic: false,
-    addCards: false,
-    postAnonymously: false,
+    maxVotes: !!initialData?.maxVotes,
+    responsible: !!initialData.responsible,
+    hideCards: initialData.hideCards,
+    hideVotes: initialData.hideVotes,
+    isPublic: initialData.isPublic,
+    addCards: initialData.addCards,
+    postAnonymously: initialData.postAnonymously,
   });
 
   // User Board Hook
@@ -124,80 +122,26 @@ const BoardSettings = ({
     updateBoard: { mutate },
   } = useBoard({ autoFetchBoard: false });
 
-  const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
-  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
-
   // Use Form Hook
   const methods = useForm<{
     title: string;
     maxVotes?: number | null;
-    column1title?: string;
-    column2title?: string;
-    column3title?: string;
-    column4title?: string;
+    formColumns: (ColumnType | CreateColumn)[];
   }>({
     mode: 'onChange',
     reValidateMode: 'onChange',
     resolver: joiResolver(SchemaUpdateBoard),
     defaultValues: {
-      title: data.title,
-      maxVotes: data.maxVotes,
-      column1title: editColumns[0]?.title,
-      column2title: editColumns[1]?.title,
-      column3title: editColumns[2]?.title,
-      column4title: editColumns[3]?.title,
+      title: boardTitle,
+      maxVotes: boardMaxVotes,
+      formColumns: data.columns,
     },
   });
 
-  /**
-   * Use Effect to run when board change
-   * to set title and validate if
-   * the value of max votes is not undefined,
-   * if yes set the input with this value
-   */
-  useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      title: boardTitle,
-      maxVotes: boardMaxVotes,
-      columns: isRegularBoard ? editColumns : columns,
-      hideCards,
-      hideVotes,
-      isPublic,
-      addCards,
-      postAnonymously,
-    }));
-    methods.setValue('title', boardTitle);
-    methods.setValue('maxVotes', boardMaxVotes ?? null);
-    if (isRegularBoard) {
-      methods.setValue('column1title', editColumns[0]?.title);
-      methods.setValue('column2title', editColumns[1]?.title);
-      methods.setValue('column3title', editColumns[2]?.title);
-      methods.setValue('column4title', editColumns[3]?.title);
-    }
-
-    setSwitchesState((prev) => ({
-      ...prev,
-      hideVotes,
-      hideCards,
-      maxVotes: !isEmpty(boardMaxVotes),
-      isPublic,
-      addCards,
-      postAnonymously,
-    }));
-  }, [
-    boardMaxVotes,
-    boardTitle,
-    columns,
-    hideCards,
-    hideVotes,
-    isPublic,
-    methods,
-    editColumns,
-    addCards,
-    isRegularBoard,
-    postAnonymously,
-  ]);
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: 'formColumns',
+  });
 
   const handleHideCardsChange = () => {
     setData((prev) => ({
@@ -280,32 +224,28 @@ const BoardSettings = ({
   const updateBoard = (
     title: string,
     maxVotes?: number | null,
-    updatedColumns?: (ColumnType | CreateColumn)[],
+    formColumns?: (ColumnType | CreateColumn)[],
   ) => {
-    mutate(
-      {
-        ...data,
-        title,
-        maxVotes,
-        columns: isRegularBoard ? updatedColumns : data.columns,
-        deletedColumns,
-        socketId,
-        responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
-      },
-      {
-        onSuccess: () => {
-          setSwitchesState({
-            hideCards: false,
-            maxVotes: false,
-            hideVotes: false,
-            responsible: false,
-            isPublic: false,
-            addCards: false,
-            postAnonymously: false,
-          });
-        },
-      },
+    const updatedColumns = [...formColumns!].flatMap((column) =>
+      column
+        ? {
+            ...column,
+            title: column.title as string,
+          }
+        : [],
     );
+
+    mutate({
+      ...data,
+      title,
+      maxVotes,
+      columns: updatedColumns,
+      deletedColumns,
+      socketId,
+      responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+    });
+
+    setDeletedColumns([]);
     setIsOpen(false);
   };
 
@@ -342,39 +282,14 @@ const BoardSettings = ({
     }));
   };
 
-  /**
-   * Use Effect to submit the board settings form when press enter key
-   * (Note: Radix Dialog close when pressing enter)
-   * CHECK: Adding Keyboard Events on useEffect is not very Good.
-   */
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
+  const handleAddColumn = (e: any) => {
+    e.preventDefault();
 
-        if (submitBtnRef.current) {
-          submitBtnRef.current.click();
-        }
-      }
-    };
-
-    window?.addEventListener('keydown', keyDownHandler);
-
-    return () => {
-      window?.removeEventListener('keydown', keyDownHandler);
-      setEditColumns(columns);
-      setDeletedColumns([]);
-    };
-  }, [columns, setDeletedColumns, setEditColumns]);
-
-  const handleAddColumn = () => {
-    const arrayWithNewColumn = [...editColumns];
-    arrayWithNewColumn.push({
+    append({
       title: '',
       color: colors[Math.floor(Math.random() * colors.length)],
       cards: [],
     });
-    setEditColumns(arrayWithNewColumn);
   };
 
   return (
@@ -384,28 +299,9 @@ const BoardSettings = ({
       </Dialog.Header>
       <FormProvider {...methods}>
         <StyledForm
-          onSubmit={methods.handleSubmit(
-            ({ title, maxVotes, column1title, column2title, column3title, column4title }) => {
-              if (isRegularBoard) {
-                const updatedColumnTitles = [
-                  column1title,
-                  column2title,
-                  column3title,
-                  column4title,
-                ];
-                const updatedColumns = [...editColumns];
-                updatedColumns.forEach((column, index) => {
-                  updatedColumns[index] = {
-                    ...column,
-                    title: updatedColumnTitles[index] as string,
-                  };
-                });
-                updateBoard(title, maxVotes, updatedColumns);
-              } else {
-                updateBoard(title, maxVotes);
-              }
-            },
-          )}
+          onSubmit={methods.handleSubmit(({ title, maxVotes, formColumns }) => {
+            updateBoard(title, maxVotes, formColumns);
+          })}
         >
           <Flex direction="column" css={{ justifyContent: 'space-between', height: '100%' }}>
             <ScrollableContent direction="column" justify="start" ref={scrollRef}>
@@ -552,17 +448,18 @@ const BoardSettings = ({
                   )}
                   {isRegularBoard && (
                     <ColumnSettings>
-                      <Flex css={{ height: '$310' }} direction="column">
-                        {editColumns.map((column, index) => (
+                      <Flex css={{ height: '$400' }} direction="column">
+                        {fields.map((column, index) => (
                           <ColumnBoxAndDelete
+                            key={column.id}
                             title={column.title}
                             index={index}
-                            key={`column${index + 1}`}
-                            disableDeleteColumn={editColumns.length === 1}
+                            disableDeleteColumn={fields.length <= 1}
+                            remove={remove}
                           />
                         ))}
                         <Flex direction="row" justify="start">
-                          {editColumns.length < 4 && (
+                          {fields.length < 4 && (
                             <Button variant="link" size="sm" onClick={handleAddColumn}>
                               <Icon name="plus" />
                               Add new column
