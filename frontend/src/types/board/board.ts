@@ -90,4 +90,5 @@ export type UpdateBoardType = {
   addCards: boolean;
   responsible?: BoardUser;
   postAnonymously: boolean;
+  team?: string;
 };
