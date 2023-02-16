@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Button';
@@ -14,6 +14,7 @@ import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
+import { CARD_TEXT_DEFAULT } from '@/utils/constants';
 import Icon from '../icons/Icon';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
@@ -27,6 +28,7 @@ type AddCardProps = {
   cardId?: string;
   cardItemId?: string;
   cardText?: string;
+  cardTextDefault?: string;
   commentId?: string;
   cancelUpdate?: () => void;
   defaultOpen?: boolean;
@@ -35,6 +37,8 @@ type AddCardProps = {
   isDefaultText: boolean;
   postAnonymously: boolean;
   isOwner?: boolean;
+  columnName?: string;
+  isRegularBoard?: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -46,6 +50,7 @@ const AddCard = React.memo<AddCardProps>(
     cardId,
     cardItemId,
     cardText,
+    cardTextDefault,
     isDefaultText,
     cancelUpdate,
     isCard,
@@ -55,6 +60,8 @@ const AddCard = React.memo<AddCardProps>(
     anonymous,
     postAnonymously,
     isOwner,
+    columnName,
+    isRegularBoard,
     ...props
   }) => {
     const { addCardInColumn, updateCard } = useCards();
@@ -64,18 +71,62 @@ const AddCard = React.memo<AddCardProps>(
     const [isCommentAnonymous, setIsCommentAnonymous] = useState(
       anonymous ?? postAnonymously ?? false,
     );
+    const placeholder = cardTextDefault || '';
+
+    const textAreaText = useMemo(() => {
+      if (isDefaultText && !cardText && columnName === 'To improve' && !isRegularBoard) {
+        return cardTextDefault;
+      }
+      if (isDefaultText && !cardText) {
+        return '';
+      }
+      if (!isDefaultText && !cardText) {
+        return cardTextDefault;
+      }
+
+      return cardText;
+    }, [cardText, cardTextDefault, columnName, isDefaultText, isRegularBoard]);
+
+    const placeholderToDisplay = useMemo(() => {
+      if (isDefaultText && !cardText) {
+        return CARD_TEXT_DEFAULT;
+      }
+      if (!isDefaultText && !cardText) {
+        return placeholder;
+      }
+
+      return cardText ?? '';
+    }, [cardText, isDefaultText, placeholder]);
 
     const methods = useForm<{ text: string }>({
       mode: 'onChange',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText === 'Write your comment here...' ? '' : cardText,
+        text: textAreaText,
+      },
+      values: {
+        text: textAreaText || '',
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
 
     const watchCardTextInput = methods.watch();
-    const disabledButton = watchCardTextInput.text?.trim().length === 0;
+
+    // allows the use of the template
+    const placeholderColor =
+      watchCardTextInput.text !== CARD_TEXT_DEFAULT && watchCardTextInput.text === placeholder
+        ? '$primary300'
+        : '$primaryBase';
+
+    const state =
+      watchCardTextInput.text !== CARD_TEXT_DEFAULT &&
+      watchCardTextInput.text === placeholder &&
+      methods.formState.touchedFields
+        ? 'default'
+        : undefined;
+
+    const disabledButton =
+      watchCardTextInput.text?.trim().length === 0 || watchCardTextInput.text === placeholder;
 
     const handleAddCard = (text: string) => {
       if (text.trim().length === 0) return;
@@ -101,7 +152,7 @@ const AddCard = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
-      methods.reset({ text: '' });
+      methods.reset({ text: textAreaText });
     };
 
     const handleUpdateCard = (text: string) => {
@@ -168,7 +219,7 @@ const AddCard = React.memo<AddCardProps>(
         return;
       }
 
-      methods.reset({ text: '' });
+      methods.reset({ text: textAreaText });
       setIsOpen(false);
     };
 
@@ -185,8 +236,6 @@ const AddCard = React.memo<AddCardProps>(
           Add new card
         </Button>
       );
-
-    const placeholder = cardText || '';
 
     return (
       <StyledForm
@@ -216,7 +265,9 @@ const AddCard = React.memo<AddCardProps>(
         <FormProvider {...methods}>
           <TextArea
             id="text"
-            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
+            placeholder={placeholderToDisplay}
+            textColor={placeholderColor}
+            state={state}
           />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (

@@ -20,7 +20,7 @@ const BoardName = () => {
       <Input
         disabled={haveError}
         id="text"
-        maxChars="30"
+        maxChars="45"
         showCount
         placeholder="Main board name"
         type="text"

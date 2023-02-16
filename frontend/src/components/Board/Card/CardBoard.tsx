@@ -35,6 +35,7 @@ interface CardBoardProps {
   socketId: string;
   isMainboard: boolean;
   boardUser?: BoardUser;
+  cardTextDefault?: string;
   maxVotes?: number;
   isSubmited: boolean;
   hideCards: boolean;
@@ -42,6 +43,7 @@ interface CardBoardProps {
   cardText?: string;
   hasAdminRole: boolean;
   postAnonymously: boolean;
+  isRegularBoard?: boolean;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -61,6 +63,8 @@ const CardBoard = React.memo<CardBoardProps>(
     isDefaultText,
     hasAdminRole,
     postAnonymously,
+    isRegularBoard,
+    cardTextDefault,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -144,6 +148,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   cardId={card._id}
                   cardItemId={card.items[0]._id}
                   cardText={card.text}
+                  cardTextDefault={cardTextDefault}
                   colId={colId}
                   socketId={socketId}
                   anonymous={card.anonymous}
@@ -217,6 +222,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       isDefaultText={isDefaultText}
                       hasAdminRole={hasAdminRole}
                       postAnonymously={postAnonymously}
+                      cardTextDefault={cardTextDefault}
                     />
                   )}
                   <CardFooter
@@ -233,6 +239,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     setOpenComments={handleOpenComments}
                     socketId={socketId}
                     userId={userId}
+                    isRegularBoard={isRegularBoard}
                   />
                 </Flex>
               )}

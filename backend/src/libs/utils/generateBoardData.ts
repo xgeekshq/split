@@ -17,7 +17,7 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 				title: 'To improve',
 				color: '$highlight4Light',
 				cards: [],
-				cardText: 'Write your comment here...',
+				cardText: `Description: \n\nHow to improve:`,
 				isDefaultText: true
 			},
 			{
@@ -60,7 +60,7 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 					title: 'To improve',
 					color: '$highlight4Light',
 					cards: [],
-					cardText: 'Write your comment here...',
+					cardText: `Description: \n\nHow to improve:`,
 					isDefaultText: true
 				},
 				{

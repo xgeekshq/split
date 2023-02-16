@@ -42,7 +42,7 @@ import useBoard from '@/hooks/useBoard';
 import isEmpty from '@/utils/isEmpty';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
-import { defaultColumns } from '@/helper/board/defaultColumns';
+import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -53,7 +53,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Default Board',
-    columns: defaultColumns,
+    columns: defaultRegularColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],
@@ -193,6 +193,7 @@ const NewRegularBoard: NextPage = () => {
 
     mutate({
       ...boardState.board,
+      columns: defaultRegularColumns,
       users: isEmpty(boardState.users) ? users : boardState.users,
       title: title || defaultBoard.board.title,
       dividedBoards: [],
@@ -212,6 +213,7 @@ const NewRegularBoard: NextPage = () => {
 
     mutate({
       ...boardState.board,
+      columns: defaultRegularColumns,
       users: isEmpty(boardState.users) ? users : boardState.users,
       title: defaultBoard.board.title,
       dividedBoards: [],

@@ -345,6 +345,7 @@ const BoardSettings = ({
   /**
    * Use Effect to submit the board settings form when press enter key
    * (Note: Radix Dialog close when pressing enter)
+   * CHECK: Adding Keyboard Events on useEffect is not very Good.
    */
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -411,7 +412,7 @@ const BoardSettings = ({
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
                   <Text heading="4">Board Name</Text>
-                  <Input id="title" maxChars="30" placeholder="Board Name" type="text" showCount />
+                  <Input id="title" maxChars="45" placeholder="Board Name" type="text" showCount />
                 </Flex>
 
                 <Text css={{ display: 'block', px: '$32' }} heading="4">
@@ -551,7 +552,7 @@ const BoardSettings = ({
                   )}
                   {isRegularBoard && (
                     <ColumnSettings>
-                      <Flex css={{ height: '$310' }} direction="column">
+                      <Flex css={{ height: '$347' }} direction="column">
                         {editColumns.map((column, index) => (
                           <ColumnBoxAndDelete
                             title={column.title}

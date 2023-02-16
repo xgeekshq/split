@@ -55,3 +55,7 @@ export const BOARD_TIMER_SERVER_TIME_LEFT_UPDATED = 'board-timer.server.time-lef
 export const BOARD_TIMER_USER_REQUESTED_TIMER_STATE = 'board-timer.user.requested.timer-state';
 
 export const BOARD_TIMER_SERVER_SENT_TIMER_STATE = 'board-timer.server.sent.timer-state';
+
+export const CARD_TEXT_DEFAULT = 'Write your comment here...';
+
+export const CARD_TEXT_TO_IMPROVE_SPLIT_COLUMN = `Description: \n\nHow to improve:`;

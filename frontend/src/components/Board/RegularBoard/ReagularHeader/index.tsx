@@ -103,7 +103,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
         <Flex align="center" gap="24">
           {!isEmpty(teamUsers) && (
             <Link href={`/teams/${team.id}`}>
-              <Flex>
+              <Flex align="center" gap="24">
                 <Flex align="center" gap="10">
                   <StyledBoardTitle>
                     <Text
@@ -133,7 +133,7 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
                   <>
                     <Separator orientation="vertical" size="lg" />
 
-                    <Flex align="center" css={{ width: '100%' }} gap="10">
+                    <Flex align="center" gap="10">
                       <Text color="primary300" size="sm">
                         Team admins
                       </Text>

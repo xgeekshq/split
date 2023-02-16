@@ -17,7 +17,7 @@ type InputProps = {
   id: string;
   type: 'text' | 'password' | 'email' | 'number';
   placeholder: string;
-  icon?: string;
+  icon?: 'eye' | 'eye-slash' | 'search';
   iconPosition?: 'left' | 'right';
   helperText?: string;
   disabled?: boolean;
@@ -63,8 +63,8 @@ const Input: React.FC<InputProps> = ({
   const isValueEmpty = isEmpty(value);
 
   const getCurrentState = useMemo(() => {
-    if (!dirtyFields[id]) return 'default';
     if (errors[id]) return 'error';
+    if (!dirtyFields[id]) return 'default';
     if (!isValueEmpty) return 'valid';
 
     return 'default';
