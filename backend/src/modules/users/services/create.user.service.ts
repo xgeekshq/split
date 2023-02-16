@@ -4,6 +4,7 @@ import User from '../entities/user.schema';
 import { CreateUserService } from '../interfaces/services/create.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
+import CreateGuestUserDto from '../dto/create.guest.user.dto';
 
 @Injectable()
 export default class CreateUserServiceImpl implements CreateUserService {
@@ -15,6 +16,22 @@ export default class CreateUserServiceImpl implements CreateUserService {
 	create(userData: CreateUserDto) {
 		const user: User = {
 			...userData,
+			strategy: '',
+			isSAdmin: false,
+			isDeleted: false,
+			joinedAt: new Date()
+		};
+
+		return this.userRepository.create(user);
+	}
+
+	createGuest(guestUserData: CreateGuestUserDto) {
+		const { firstName, lastName } = guestUserData;
+		const user: User = {
+			firstName,
+			lastName: lastName ?? '',
+			password: '',
+			email: '',
 			strategy: '',
 			isSAdmin: false,
 			isDeleted: false,

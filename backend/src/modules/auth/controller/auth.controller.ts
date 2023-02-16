@@ -55,6 +55,7 @@ import { RegisterAuthApplication } from '../interfaces/applications/register.aut
 import { TYPES } from '../interfaces/types';
 import { signIn } from '../shared/login.auth';
 import { LoginResponse } from '../swagger/login.swagger';
+import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -317,5 +318,22 @@ export default class AuthController {
 		]);
 
 		return { usersCount, teamsCount, boardsCount };
+	}
+
+	@ApiOperation({ summary: 'Create new guest user' })
+	@ApiCreatedResponse({ type: UserDto, description: 'Guest user successfully created!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Post('registerGuest')
+	async registerGuest(@Body() guestUserData: CreateGuestUserDto) {
+		const { _id } = await this.registerAuthApp.createGuestUser(guestUserData);
+
+		return { user: _id, board: guestUserData.board };
 	}
 }

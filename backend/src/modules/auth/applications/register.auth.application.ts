@@ -1,3 +1,4 @@
+import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { RegisterAuthApplication } from '../interfaces/applications/register.auth.application.interface';
@@ -13,5 +14,9 @@ export class RegisterAuthApplicationImpl implements RegisterAuthApplication {
 
 	register(registrationData: CreateUserDto) {
 		return this.registerAuthService.register(registrationData);
+	}
+
+	createGuestUser(guestUserData: CreateGuestUserDto) {
+		return this.registerAuthService.createGuest(guestUserData);
 	}
 }
