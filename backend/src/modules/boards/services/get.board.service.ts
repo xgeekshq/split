@@ -243,4 +243,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	getAllBoardsByTeamId(teamId: string) {
 		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
 	}
+
+	async isBoardPublic(boardId: string) {
+		const { isPublic } = await this.boardModel.findById(boardId).lean().exec();
+
+		return isPublic;
+	}
 }

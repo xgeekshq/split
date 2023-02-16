@@ -1,5 +1,5 @@
 import { UserParams } from './../../../libs/dto/param/user.param';
-import { Body, Controller, Get, Inject, Param, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiInternalServerErrorResponse,
@@ -25,6 +25,26 @@ export default class PublicBoardsController {
 		@Inject(TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface
 	) {}
+
+	@ApiOperation({ summary: 'Retrieve a boolean that checks if board is public' })
+	@ApiParam({ type: String, name: 'boardId', required: true })
+	@ApiOkResponse({ type: BoardDto, description: 'Public status retrieved successfully!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiNotFoundResponse({
+		type: NotFoundResponse,
+		description: 'Board not found!'
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Get(':boardId/publicStatus')
+	async getPublicStatus(@Param() { boardId }: BaseParam) {
+		return await this.getBoardApp.isBoardPublic(boardId);
+	}
 
 	@ApiOperation({ summary: 'Retrieve one public board by id' })
 	@ApiParam({ type: String, name: 'boardId', required: true })
