@@ -192,9 +192,11 @@ const Column = React.memo<ColumMemoProps>(
                               isUpdate={false}
                               socketId={socketId}
                               anonymous={undefined}
-                              cardText={cardText}
+                              cardTextDefault={cardText}
                               isDefaultText={isDefaultText ?? true}
                               postAnonymously={postAnonymously}
+                              columnName={title}
+                              isRegularBoard={isRegularBoard}
                             />
                           )}
                         </Flex>
@@ -219,6 +221,7 @@ const Column = React.memo<ColumMemoProps>(
                           hasAdminRole={hasAdminRole}
                           postAnonymously={postAnonymously}
                           isRegularBoard={isRegularBoard}
+                          cardTextDefault={cardText}
                         />
                         {provided.placeholder}
                       </CardsContainer>

@@ -6,6 +6,7 @@ import CardBoard from '../Card/CardBoard';
 
 type CardListProps = {
   isRegularBoard?: boolean;
+  cardTextDefault?: string;
 } & ColumnInnerList;
 
 const CardsList = React.memo<CardListProps>(
@@ -25,6 +26,7 @@ const CardsList = React.memo<CardListProps>(
     hasAdminRole,
     postAnonymously,
     isRegularBoard,
+    cardTextDefault,
   }) => (
     <>
       {cards.map((card: CardType, idx) => (
@@ -46,6 +48,7 @@ const CardsList = React.memo<CardListProps>(
           hasAdminRole={hasAdminRole}
           postAnonymously={postAnonymously}
           isRegularBoard={isRegularBoard}
+          cardTextDefault={cardTextDefault}
         />
       ))}
     </>
