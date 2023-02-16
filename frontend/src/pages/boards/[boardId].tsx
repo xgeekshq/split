@@ -4,9 +4,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-
 import { Container } from '@/styles/pages/boards/board.styles';
-
 import { getBoardRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
@@ -47,11 +45,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 
   try {
-    await queryClient.fetchQuery(['board', { id: boardId }], () =>
-      getBoardRequest(boardId, context),
-    );
-
-    const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
+    let data;
+    try {
+      // // if (context.req.cookies)
+      // await queryClient.fetchQuery(
+      //   ['publicBoard', { boardId, userId: '63ee65f66de17f52228e3da8' }],
+      //   () => getPublicBoardRequest(boardId, context),
+      // );
+      // data = queryClient.getQueryData<GetBoardResponse>([
+      //   'publicBoard',
+      //   { boardId, userId: '63ee65f66de17f52228e3da8' },
+      // ]);
+      // if (!session && data?.board.isPublic) {
+      //   return {
+      //     redirect: {
+      //       query: { board: boardId },
+      //       permanent: false,
+      //       destination: `/login-guest-user`,
+      //     },
+      //   };
+      // }
+    } catch (e) {
+      if (!session)
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/dashboard',
+          },
+        };
+      await queryClient.fetchQuery(['board', { id: boardId }], () =>
+        getBoardRequest(boardId, context),
+      );
+      data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
+    }
     const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
     const userFound = data?.board.users.find((teamUser) => teamUser.user?._id === session?.user.id);

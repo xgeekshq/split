@@ -36,6 +36,10 @@ export interface EmailUser {
   email: string;
 }
 
+export interface LoginGuestUser {
+  username: Nullable<string>;
+}
+
 export interface RegisterUser {
   email: string;
   firstName: string;

@@ -16,6 +16,7 @@ import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
 import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import ColumnType, { ColumnDeleteCards } from '@/types/column';
+import fetchPublicData from '@/utils/fetchPublicData';
 
 // #region BOARD
 
@@ -31,6 +32,15 @@ export const getBoardRequest = (
   context?: GetServerSidePropsContext,
 ): Promise<GetBoardResponse> =>
   fetchData<GetBoardResponse>(`/boards/${id}`, { context, serverSide: !!context });
+
+export const getPublicBoardRequest = (
+  data: { boardId: string; userId: string },
+  context?: GetServerSidePropsContext,
+): Promise<GetBoardResponse> =>
+  fetchPublicData<GetBoardResponse>(`/publicBoards/${data.boardId}?userId=${data.userId}`, {
+    context,
+    serverSide: !!context,
+  });
 
 export const getDashboardBoardsRequest = (
   pageParam: number,

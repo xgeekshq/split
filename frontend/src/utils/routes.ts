@@ -7,6 +7,7 @@ export const RESET_PASSWORD_ROUTE = '/reset-password';
 export const ACCOUNT_ROUTE = '/account';
 export const SETTINGS_ROUTE = '/settings';
 export const ERROR_500_PAGE = '/500';
+export const GUEST_USER_LOGIN_PAGE = '/login-guest-user';
 
 export const ROUTES = {
   START_PAGE_ROUTE,
@@ -19,6 +20,7 @@ export const ROUTES = {
   TeamPage: (teamId: string): string => `/teams/${teamId}`,
   Users: USERS_ROUTE,
   UserEdit: (userId: string) => `/users/${userId}`,
+  UserGuest: (boardId: string) => `/login-guest-user/${boardId}`,
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined =>
