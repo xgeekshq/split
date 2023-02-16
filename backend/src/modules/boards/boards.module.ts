@@ -1,5 +1,4 @@
 import { userRepository } from 'src/modules/users/users.providers';
-import { UserRepository } from './../users/repository/user.repository';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,

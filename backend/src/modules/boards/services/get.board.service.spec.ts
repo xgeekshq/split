@@ -13,6 +13,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
+import { userRepository } from 'src/modules/users/users.providers';
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
@@ -30,6 +31,7 @@ describe('GetBoardServiceImpl', () => {
 				teamRepository,
 				boardRepository,
 				updateTeamService,
+				userRepository,
 				{
 					provide: getModelToken('Team'),
 					useValue: {}
@@ -44,6 +46,10 @@ describe('GetBoardServiceImpl', () => {
 				},
 				{
 					provide: getModelToken('BoardUser'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('User'),
 					useValue: {}
 				},
 				GetBoardServiceImpl

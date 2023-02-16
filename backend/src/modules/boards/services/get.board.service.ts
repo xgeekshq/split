@@ -1,15 +1,15 @@
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
+	ForbiddenException,
 	Inject,
 	Injectable,
 	Logger,
-	forwardRef,
 	NotFoundException,
-	ForbiddenException
+	forwardRef
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BOARDS_NOT_FOUND, NOT_FOUND, FORBIDDEN } from 'src/libs/exceptions/messages';
+import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -19,7 +19,6 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
-import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {

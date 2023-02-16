@@ -19,6 +19,7 @@ import {
 import AuthController from 'src/modules/auth/controller/auth.controller';
 import {
 	boardRepository,
+	createBoardService,
 	getBoardApplication,
 	getBoardService
 } from 'src/modules/boards/boards.providers';
@@ -39,6 +40,12 @@ import {
 	updateUserService,
 	userRepository
 } from 'src/modules/users/users.providers';
+import {
+	createSchedulesService,
+	deleteSchedulesService
+} from 'src/modules/schedules/schedules.providers';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 describe('AuthController', () => {
 	let app: INestApplication;
@@ -74,7 +81,29 @@ describe('AuthController', () => {
 				teamUserRepository,
 				updateTeamService,
 				boardRepository,
+				createBoardService,
+				createSchedulesService,
+				deleteSchedulesService,
+				SchedulerRegistry,
 				ConfigService,
+				{
+					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
+				{
+					provide: getModelToken('Schedules'),
+					useValue: {
+						find: jest.fn().mockResolvedValue([])
+					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
 				{
 					provide: ConfigService,
 					useValue: configService
