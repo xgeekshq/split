@@ -64,8 +64,6 @@ export default class PublicBoardsController {
 	})
 	@Get(':boardId')
 	async getBoard(@Param() { boardId }: BaseParam, @Query() { userId }: UserParams) {
-		const board = await this.getBoardApp.getBoard(boardId, userId);
-
-		return board;
+		return await this.getBoardApp.getBoard(boardId, userId);
 	}
 }
