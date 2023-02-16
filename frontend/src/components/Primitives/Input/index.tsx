@@ -62,6 +62,16 @@ const Input: React.FC<InputProps> = ({
   const value = useWatch({ name: id });
   const isValueEmpty = isEmpty(value);
 
+  // const isDynamicInput = id.indexOf('.') !== -1;
+  // let errorMessage = '';
+  // if (isDynamicInput) {
+  //   const [formName, idx, iName] = id.split('.');
+  //   const customError: any = errors!;
+  //   errorMessage = customError[formName][idx][iName].message! as string;
+  // } else {
+  //   errorMessage = errors[id]?.message as string;
+  // }
+
   const getCurrentState = useMemo(() => {
     if (errors[id]) return 'error';
     if (!dirtyFields[id]) return 'default';
