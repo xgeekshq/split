@@ -3,7 +3,7 @@ import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
 
-import { resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
   EmailUser,
   NewPassword,
@@ -13,6 +13,7 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { useRouter } from 'next/router';
 import { deleteUserRequest, updateUserIsAdminRequest, getUser } from '../api/userService';
 import useUserUtils from './useUserUtils';
 
@@ -22,6 +23,24 @@ interface AutoFetchProps {
 
 const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
   const { setToastState, queryClient, userId } = useUserUtils();
+  const router = useRouter();
+
+  const registerGuestUser = useMutation(registerGuest, {
+    onSuccess: (data) => {
+      // const guestUserCookie = getCookie('guest-user-session');
+      // if(guestUserCookie){
+      //   setCookie('guest-user-session', )
+      // }
+      router.push({ pathname: `/boards/[boardId]`, query: { boardId: data.board } });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Error login guest user',
+      });
+    },
+  });
 
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
@@ -103,7 +122,15 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
     },
   });
 
-  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin, deleteUser, getUserById };
+  return {
+    loginAzure,
+    resetToken,
+    resetPassword,
+    updateUserIsAdmin,
+    deleteUser,
+    getUserById,
+    registerGuestUser,
+  };
 };
 
 export default useUser;

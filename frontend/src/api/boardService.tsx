@@ -42,6 +42,15 @@ export const getPublicBoardRequest = (
     serverSide: !!context,
   });
 
+export const getPublicStatusRequest = (
+  boardId: string,
+  context?: GetServerSidePropsContext,
+): Promise<boolean> =>
+  fetchPublicData<boolean>(`/publicBoards/${boardId}/publicStatus`, {
+    context,
+    serverSide: !!context,
+  });
+
 export const getDashboardBoardsRequest = (
   pageParam: number,
   context?: GetServerSidePropsContext,

@@ -2,9 +2,10 @@ import { GetServerSidePropsContext } from 'next';
 
 import { HeaderInfo } from '@/types/dashboard/header.info';
 import { Token } from '@/types/token';
-import { CreateOrLogin } from '@/types/user/create-login.user';
+import { CreateGuestUser, CreateOrLogin } from '@/types/user/create-login.user';
 import {
   EmailUser,
+  GuestUser,
   LoginUser,
   NewPassword,
   RegisterUser,
@@ -13,6 +14,7 @@ import {
   User,
 } from '@/types/user/user';
 import fetchData from '@/utils/fetchData';
+import fetchPublicData from '@/utils/fetchPublicData';
 
 export const getDashboardHeaderInfo = (context?: GetServerSidePropsContext): Promise<HeaderInfo> =>
   fetchData(`auth/statistics`, { context, serverSide: !!context });
@@ -47,3 +49,6 @@ export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordRes
     method: 'PATCH',
     data: params,
   });
+
+export const registerGuest = (newGuestUser: CreateGuestUser): Promise<GuestUser> =>
+  fetchPublicData('/auth/registerGuest', { method: 'POST', data: newGuestUser });

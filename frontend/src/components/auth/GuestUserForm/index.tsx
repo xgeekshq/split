@@ -8,13 +8,17 @@ import { START_PAGE_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
+import useUser from '@/hooks/useUser';
+import { getUsername } from '@/utils/getUsername';
 import { OrSeparator, StyledForm } from '../LoginForm/styles';
 
 const GuestUserForm = () => {
   const router = useRouter();
+  const board = router.query.boardId;
 
-  //   const [loading, setLoading] = useState({ credentials: false, sso: false });
-  //   const setToastState = useSetRecoilState(toastState);
+  const {
+    registerGuestUser: { mutate },
+  } = useUser();
 
   const methods = useForm<LoginGuestUser>({
     mode: 'onChange',
@@ -25,30 +29,11 @@ const GuestUserForm = () => {
     resolver: joiResolver(SchemaLoginGuestForm),
   });
 
-  //   const handleLogin = async (credentials: LoginGuestUser) => {
-  //     setLoading((prevState) => ({ ...prevState, credentials: true }));
-  //     const result = await signIn<RedirectableProviderType>('credentials', {
-  //       ...credentials,
-  //       callbackUrl: DASHBOARD_ROUTE,
-  //       redirect: false,
-  //     });
-  //     if (!result?.error) {
-  //       setToastState((prev) => ({ ...prev, open: false }));
-  //       router.push(DASHBOARD_ROUTE);
-  //       return;
-  //     }
+  const handleLogin = (username: string) => {
+    const user = getUsername(username);
 
-  //     if (result.error) {
-  //       methods.reset();
-  //       setToastState({
-  //         open: true,
-  //         type: ToastStateEnum.ERROR,
-  //         content: result.error,
-  //       });
-  //     }
-
-  //     setLoading((prevState) => ({ ...prevState, credentials: false }));
-  //   };
+    mutate({ board: String(board), firstName: user.firstName, lastName: user.lastName });
+  };
 
   const handleClick = () => {
     router.push(START_PAGE_ROUTE);
@@ -58,7 +43,14 @@ const GuestUserForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <StyledForm autoComplete="off" direction="column" style={{ width: '100%' }}>
+      <StyledForm
+        autoComplete="off"
+        direction="column"
+        style={{ width: '100%' }}
+        onSubmit={methods.handleSubmit(({ username }) => {
+          handleLogin(username);
+        })}
+      >
         <Text css={{ mt: '$24' }} heading="1">
           Guest User
         </Text>

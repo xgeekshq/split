@@ -11,3 +11,9 @@ export interface CreateOrLogin {
   isSAdmin: boolean;
   providerAccountCreatedAt?: string;
 }
+
+export interface CreateGuestUser {
+  firstName: string;
+  lastName?: string;
+  board: string;
+}

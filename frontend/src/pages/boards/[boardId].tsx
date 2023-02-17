@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Container } from '@/styles/pages/boards/board.styles';
-import { getBoardRequest } from '@/api/boardService';
+import { getBoardRequest, getPublicStatusRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
@@ -44,63 +44,57 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {},
     };
 
-  try {
-    let data;
+  // Verifies if the board is public
+  await queryClient.fetchQuery(['statusPublic', boardId], () =>
+    getPublicStatusRequest(boardId, context),
+  );
+
+  const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
+
+  if (!isPublic) {
     try {
-      // // if (context.req.cookies)
-      // await queryClient.fetchQuery(
-      //   ['publicBoard', { boardId, userId: '63ee65f66de17f52228e3da8' }],
-      //   () => getPublicBoardRequest(boardId, context),
-      // );
-      // data = queryClient.getQueryData<GetBoardResponse>([
-      //   'publicBoard',
-      //   { boardId, userId: '63ee65f66de17f52228e3da8' },
-      // ]);
-      // if (!session && data?.board.isPublic) {
-      //   return {
-      //     redirect: {
-      //       query: { board: boardId },
-      //       permanent: false,
-      //       destination: `/login-guest-user`,
-      //     },
-      //   };
-      // }
-    } catch (e) {
-      if (!session)
-        return {
-          redirect: {
-            permanent: false,
-            destination: '/dashboard',
-          },
-        };
       await queryClient.fetchQuery(['board', { id: boardId }], () =>
         getBoardRequest(boardId, context),
       );
-      data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
+
+      const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
+      const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
+
+      const userFound = data?.board.users.find(
+        (teamUser) => teamUser.user?._id === session?.user.id,
+      );
+
+      const teamUserFound = data?.board.team?.users.find(
+        (teamUser) => teamUser.user?._id === session?.user.id,
+      );
+
+      if (
+        !boardUser &&
+        !(
+          [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) ||
+          [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN)
+        ) &&
+        !session?.user.isSAdmin
+      ) {
+        throw Error();
+      }
+    } catch (e) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/dashboard',
+        },
+      };
     }
-    const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
+  }
 
-    const userFound = data?.board.users.find((teamUser) => teamUser.user?._id === session?.user.id);
+  const cookiesGuestUser = context.req.cookies['guest-user-session'];
 
-    const teamUserFound = data?.board.team?.users.find(
-      (teamUser) => teamUser.user?._id === session?.user.id,
-    );
-
-    if (
-      !boardUser &&
-      !(
-        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) ||
-        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN)
-      ) &&
-      !session?.user.isSAdmin
-    ) {
-      throw Error();
-    }
-  } catch (e) {
+  if (!cookiesGuestUser && !session) {
     return {
       redirect: {
         permanent: false,
-        destination: '/dashboard',
+        destination: `/login-guest-user/${boardId}`,
       },
     };
   }
