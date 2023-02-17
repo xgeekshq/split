@@ -121,6 +121,16 @@ const AddCard = React.memo<AddCardProps>(
     const disabledButton =
       watchCardTextInput.text?.trim().length === 0 || watchCardTextInput.text === placeholder;
 
+    const handleClear = () => {
+      if ((isUpdate || !isCard) && cancelUpdate) {
+        cancelUpdate();
+        return;
+      }
+
+      methods.reset({ text: textAreaText });
+      setIsOpen(false);
+    };
+
     const handleAddCard = (text: string) => {
       if (text.trim().length === 0) return;
       const newCard: CardToAdd = {
@@ -145,7 +155,7 @@ const AddCard = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
-      methods.reset({ text: textAreaText });
+      handleClear();
     };
 
     const handleUpdateCard = (text: string) => {
@@ -204,16 +214,6 @@ const AddCard = React.memo<AddCardProps>(
 
       updateComment.mutate(updateCommentDto);
       cancelUpdate();
-    };
-
-    const handleClear = () => {
-      if ((isUpdate || !isCard) && cancelUpdate) {
-        cancelUpdate();
-        return;
-      }
-
-      methods.reset({ text: textAreaText });
-      setIsOpen(false);
     };
 
     if (!isOpen)
