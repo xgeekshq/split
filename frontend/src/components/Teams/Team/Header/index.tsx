@@ -1,4 +1,4 @@
-import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
+import Breadcrumb from '@/components/Primitives/Breadcrumb';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
