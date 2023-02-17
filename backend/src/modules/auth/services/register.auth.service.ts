@@ -1,4 +1,4 @@
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
@@ -44,12 +44,17 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 	public async loginGuest(guestUserData: CreateGuestUserDto) {
 		const { board, user } = guestUserData;
-		await this.createGuestBoardUser(guestUserData.board, guestUserData.user);
+
+		await this.createGuestBoardUser(board, user);
 
 		return { board, user };
 	}
 
 	private async createGuestBoardUser(board: string, user: string) {
+		const boardUserFound = await this.boardUserModel.findOne({ board, user });
+
+		if (boardUserFound) throw new BadRequestException(BOARD_USER_EXISTS);
+
 		const boardUser = {
 			role: BoardRoles.MEMBER,
 			board,
