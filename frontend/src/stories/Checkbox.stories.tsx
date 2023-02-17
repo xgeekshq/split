@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
 import { CheckboxSizeType, CheckboxVariantType } from './types/PrimitiveTypes';
@@ -12,10 +14,15 @@ export default {
   title: 'Primitives/Checkbox',
   component: Checkbox,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        A control that allows the user to toggle between checked and not checked.
+
+        **File Path:**
+        \`@/components/Primitives/Checkbox.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -43,6 +50,7 @@ export default {
     },
     id: {
       control: false,
+      description: "Checkbox's id. Identifies the checkbox in the form.",
     },
     label: {
       control: { type: 'text' },
@@ -54,6 +62,7 @@ export default {
     },
     disabled: {
       control: { type: 'boolean' },
+      description: 'Disable the checkbox.',
     },
     handleChange: {
       description: 'Event handler called when the checked state of the checkbox changes.',
@@ -67,7 +76,7 @@ const Template: ComponentStory<typeof Checkbox> = ({ size, variant, label, disab
   return (
     <Flex>
       <Checkbox
-        id="myTextBox"
+        id="myCheckbox"
         label={label}
         size={size}
         variant={variant}

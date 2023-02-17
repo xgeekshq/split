@@ -125,6 +125,9 @@ const StyledPopoverTrigger = styled(PopoverPrimitive.Trigger, {
       },
     },
   },
+  defaultVariants: {
+    size: 'md',
+  },
 });
 
 const StyledClosePopover = styled(PopoverPrimitive.Close, {

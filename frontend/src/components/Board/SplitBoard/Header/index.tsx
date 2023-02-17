@@ -180,12 +180,11 @@ const BoardHeader = () => {
                 </Text>
               </StyledBoardTitle>
               <AvatarGroup
-                isBoardsPage
                 listUsers={users}
                 responsible={false}
                 teamAdmins={false}
                 userId={session!.user.id}
-                isSubBoardPage
+                hasDrawer
               />
             </Flex>
 
@@ -195,12 +194,11 @@ const BoardHeader = () => {
                 Responsible
               </Text>
               <AvatarGroup
-                isBoardsPage
                 responsible
                 listUsers={users}
                 teamAdmins={false}
                 userId={session!.user.id}
-                isSubBoardPage
+                hasDrawer
               />
             </Flex>
             <ListBoardMembers
@@ -229,11 +227,11 @@ const BoardHeader = () => {
                   </Text>
                 </StyledBoardTitle>
                 <AvatarGroup
-                  isBoardsPage
                   listUsers={teamUsers}
                   responsible={false}
                   teamAdmins={false}
                   userId={session!.user.id}
+                  isClickable
                 />
               </Flex>
               {!isEmpty(
@@ -246,11 +244,11 @@ const BoardHeader = () => {
                       Team admins
                     </Text>
                     <AvatarGroup
-                      isBoardsPage
                       teamAdmins
                       listUsers={teamUsers}
                       responsible={false}
                       userId={session!.user.id}
+                      isClickable
                     />
                   </Flex>
                 </>
@@ -267,12 +265,12 @@ const BoardHeader = () => {
                       Stakeholders
                     </Text>
                     <AvatarGroup
-                      isBoardsPage
                       stakeholders
                       listUsers={teamUsers}
                       responsible={false}
                       teamAdmins={false}
                       userId={session!.user.id}
+                      isClickable
                     />
                   </Flex>
                 </>

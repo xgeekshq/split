@@ -3,15 +3,19 @@ export type ElevationType = 0 | 1 | 2 | 3 | 4;
 export type BoxVariantType = 'bordered' | 'dropdown';
 
 // Primitive/Button
-export type ButtonVariantType =
-  | 'primary'
-  | 'primaryOutline'
-  | 'light'
-  | 'lightOutline'
-  | 'danger'
-  | 'dangerOutline'
-  | 'link';
-export type ButtonSizeType = 'sm' | 'md' | 'lg';
+export const ButtonVariant = [
+  'primary',
+  'primaryOutline',
+  'light',
+  'lightOutline',
+  'danger',
+  'dangerOutline',
+  'link',
+] as const;
+export type ButtonVariantType = typeof ButtonVariant[number];
+
+export const ButtonSize = ['sm', 'md', 'lg'] as const;
+export type ButtonSizeType = typeof ButtonSize[number];
 
 // Primitive/Flex
 export type DirectionType = 'row' | 'column' | 'rowReverse' | 'columnReverse';

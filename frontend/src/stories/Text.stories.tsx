@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import {
@@ -63,14 +65,12 @@ export default {
   title: 'Primitives/Text',
   component: Text,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
-        component: '', // Change main component description in docs page
+        component: dedent`
+        **File Path:**
+        \`@/components/Primitives/Text.tsx\`
+        `,
       },
     },
   },
@@ -78,6 +78,9 @@ export default {
     children: 'Lorem Ipsum',
   },
   argTypes: {
+    children: {
+      description: 'Text content.',
+    },
     fontWeight: {
       options: FONT_WEIGHT_OPTIONS,
       control: { type: 'select' },
@@ -140,6 +143,15 @@ export default {
     hint: {
       control: { type: 'boolean' },
       description: 'Transforms the component into a hint.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      defaultValue: false,
+    },
+    ellipsis: {
+      control: { type: 'boolean' },
+      description: 'When true will display an ellipsis to represent clipped text.',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },

@@ -11,7 +11,6 @@ interface Props {
 const ColumnBoxAndDelete = ({ title, index, disableDeleteColumn }: Props) => (
   <Flex gap="20">
     <Input
-      css={{ mb: '$6' }}
       id={`column${index + 1}title`}
       maxChars="30"
       placeholder={`Column ${index + 1}`}

@@ -3,10 +3,9 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import useAvatarColor from '@/hooks/useAvatarColor';
-import Flex from '../Flex';
 
-const AvatarRoot = styled(AvatarPrimitive.Root, Flex, {
-  border: '1px solid $colors$white',
+const AvatarRoot = styled(AvatarPrimitive.Root, {
+  border: '1px solid $white',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -48,7 +47,7 @@ export const AvatarButton = styled('button', {
   backgroundColor: 'transparent',
   padding: 0,
   variants: {
-    isBoardsPage: {
+    isClickable: {
       true: {
         '&:hover': {
           cursor: 'pointer',
@@ -68,9 +67,10 @@ type AvatarType = {
   colors?: { bg: string; fontColor: string; border?: boolean };
   src?: string;
   size?: number;
-  isBoardPage?: boolean;
+  isClickable?: boolean;
   id?: string;
   isDefaultColor?: boolean;
+  isBoardPage?: boolean;
 };
 
 type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
@@ -81,9 +81,9 @@ const Avatar: React.FC<AvatarProps> = ({
   colors = undefined,
   fallbackText,
   css,
-  isBoardPage = false,
   id,
   isDefaultColor,
+  isBoardPage = false,
 }) => {
   const avatarColor = useAvatarColor(id, isDefaultColor);
   if (colors === undefined) colors = avatarColor;

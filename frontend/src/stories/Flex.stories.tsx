@@ -3,6 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import Flex from '@/components/Primitives/Flex';
 import Button from '@/components/Primitives/Button';
+import dedent from 'ts-dedent';
 import { DirectionType, AlignType, JustifyType, WrapType, GapType } from './types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: DirectionType[] = ['row', 'column', 'rowReverse', 'columnReverse'];
@@ -19,19 +20,20 @@ export default {
   title: 'Primitives/Flex',
   component: Flex,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css', 'media'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
-        component: '', // Change main component description in docs page
+        component: dedent`
+        Flex element, allows you to control how the elements are displayed in the page.
+
+        **File Path:**
+        \`@/components/Primitives/Flex.tsx\`
+        `,
       },
     },
   },
   args: {
     direction: 'row',
+    gap: 16,
   },
   argTypes: {
     direction: {
