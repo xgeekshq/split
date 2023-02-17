@@ -5,6 +5,7 @@ import { CreateUserService } from '../interfaces/services/create.user.service.in
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import CreateGuestUserDto from '../dto/create.guest.user.dto';
+import faker from '@faker-js/faker';
 
 @Injectable()
 export default class CreateUserServiceImpl implements CreateUserService {
@@ -19,7 +20,8 @@ export default class CreateUserServiceImpl implements CreateUserService {
 			strategy: '',
 			isSAdmin: false,
 			isDeleted: false,
-			joinedAt: new Date()
+			joinedAt: new Date(),
+			isAnonymous: false
 		};
 
 		return this.userRepository.create(user);
@@ -27,15 +29,18 @@ export default class CreateUserServiceImpl implements CreateUserService {
 
 	createGuest(guestUserData: CreateGuestUserDto) {
 		const { firstName, lastName } = guestUserData;
+
+		const email = faker.internet.email(firstName, lastName, '', { allowSpecialCharacters: true });
 		const user: User = {
 			firstName,
 			lastName: lastName ?? '',
 			password: '',
-			email: '',
+			email: email,
 			strategy: '',
 			isSAdmin: false,
 			isDeleted: false,
-			joinedAt: new Date()
+			joinedAt: new Date(),
+			isAnonymous: true
 		};
 
 		return this.userRepository.create(user);
