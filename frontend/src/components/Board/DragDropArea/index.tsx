@@ -190,7 +190,7 @@ const DragDropArea: React.FC<Props> = ({
       isDropDisabled={isMainboard || !hasAdminRole}
     >
       {(provided) => (
-        <Container ref={provided.innerRef} {...provided.droppableProps}>
+        <Container css={{ gap: '$24' }} ref={provided.innerRef} {...provided.droppableProps}>
           {board.columns.map((column, index) => (
             <Column
               key={column._id}
