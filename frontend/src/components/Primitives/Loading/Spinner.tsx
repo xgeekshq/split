@@ -9,12 +9,14 @@ const spinner = keyframes({
   },
 });
 
-const Loading = styled('div', {
+const Spinner = styled('div', {
+  borderRadius: '50%',
+  animation: `${spinner} 2s linear infinite`,
   variants: {
     size: {
       50: {
-        width: '50px',
-        height: '50px',
+        width: '$50',
+        height: '$50',
       },
       80: {
         width: '$80',
@@ -25,12 +27,12 @@ const Loading = styled('div', {
         height: '$100',
       },
       150: {
-        width: '150px',
-        height: '150px',
+        width: '$150',
+        height: '$150',
       },
-      220: {
-        width: '$220',
-        height: '$220',
+      200: {
+        width: '$200',
+        height: '$200',
       },
     },
     color: {
@@ -38,20 +40,16 @@ const Loading = styled('div', {
         border: '$sizes$8 solid rgba(0,0,0,0.02)',
         borderTop: '$sizes$8 solid $colors$primary800',
       },
-      white: {
+      light: {
         border: '$sizes$8 solid rgba(255,255,255,.02)',
         borderTop: '$sizes$8 solid $colors$white',
       },
     },
   },
-
   defaultVariants: {
     size: '80',
     color: 'dark',
   },
-
-  borderRadius: '50%',
-  animation: `${spinner} 2s linear infinite`,
 });
 
-export { Loading };
+export default Spinner;

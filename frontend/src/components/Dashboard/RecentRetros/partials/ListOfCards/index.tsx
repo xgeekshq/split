@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
-import { DotsLoading } from '@/components/loadings/DotsLoading';
+import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Flex';
 import BoardType from '@/types/board/board';
 import { LastUpdatedText } from './styles';
@@ -88,7 +88,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ data, userId, fetchBoards, is
 
       {isLoading && (
         <Flex justify="center">
-          <DotsLoading />
+          <Dots />
         </Flex>
       )}
     </Flex>
