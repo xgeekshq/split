@@ -40,19 +40,21 @@ const Template: ComponentStory<typeof Dialog> = () => {
         Click me
       </Button>
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Flex direction="column" css={{ height: '100%' }}>
-          <Dialog.Header title="Dialog Title" />
-          <Flex align="center" justify="center" css={{ height: '100%', overflow: 'auto' }}>
-            Dialog Content
-          </Flex>
-
-          <Dialog.Footer
-            handleClose={() => {
-              setIsOpen(false);
-            }}
-            affirmativeLabel="Confirm"
-          />
+        <Dialog.Header title="Dialog Title" />
+        <Flex
+          align="center"
+          justify="center"
+          direction="column"
+          css={{ height: '100%', overflow: 'auto' }}
+        >
+          Dialog Content
         </Flex>
+        <Dialog.Footer
+          handleClose={() => {
+            setIsOpen(false);
+          }}
+          affirmativeLabel="Confirm"
+        />
       </Dialog>
     </>
   );
