@@ -61,3 +61,11 @@ export type SwitchSizeType = 'xs' | 'sm' | 'md';
 // Primitive/Checkbox
 export type CheckboxSizeType = 'sm' | 'md';
 export type CheckboxVariantType = 'default' | 'error';
+
+// Primitive/Loading/Spinner
+export type SpinnerSizeType = 50 | 80 | 100 | 150 | 200;
+export type SpinnerColorType = 'light' | 'dark';
+
+// Primitive/Loading/Dots
+export type DotsSizeType = 8 | 4 | 10 | 15 | 50 | 80 | 100;
+export type DotsColorType = 'primary800' | 'primary200' | 'white';

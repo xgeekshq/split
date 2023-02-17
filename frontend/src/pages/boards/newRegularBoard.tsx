@@ -6,7 +6,7 @@ import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,

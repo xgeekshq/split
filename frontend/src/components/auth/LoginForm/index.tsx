@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import Icon from '@/components/icons/Icon';
-import { DotsLoading } from '@/components/loadings/DotsLoading';
+import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
@@ -109,7 +109,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         />
 
         <Button disabled={loading.credentials} size="lg" type="submit">
-          {loading.credentials && <DotsLoading color="primary800" size={10} />}
+          {loading.credentials && <Dots color="primary800" size={10} />}
           {!loading.credentials && 'Log in'}
         </Button>
         <Button

@@ -9,7 +9,7 @@ import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import { ContainerTeamPage } from '@/components/layouts/Layout/styles';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
 import { Sidebar } from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
