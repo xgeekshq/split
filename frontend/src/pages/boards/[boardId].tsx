@@ -33,6 +33,7 @@ import { GetBoardResponse } from '@/types/board/board';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -187,6 +188,16 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Show button in sub boards to merge into main
   const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
+  // Show button in main board to start voting if is Admin
+  const showButtonToVote = !!(
+    !isSubBoard &&
+    hasAdminRole &&
+    !board?.submitedByUser &&
+    (board?.columns[0].cards.length ||
+      board?.columns[1].cards.length ||
+      board?.columns[2].cards.length)
+  );
+
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
     !isSubBoard &&
@@ -208,6 +219,14 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       route.push('/board-deleted');
     }
   }, [data, route]);
+
+  // Use effect to recieve value from websocket
+  /* useEffect(() => {
+    listenEvent('board-voting.user.started', (_payload) => {
+      //console.log('websocker do servidor');
+      //console.log(payload);
+    });
+  }, []); */
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -233,6 +252,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                   title="No sub-team has merged into this main board yet."
                   type="info"
                 />
+              )}
+              {showButtonToVote && (
+                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
             </Flex>
           )}
