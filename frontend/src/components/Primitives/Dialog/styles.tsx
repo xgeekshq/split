@@ -30,7 +30,7 @@ const StyledDialogContent = styled(DialogPrimitive.Content, {
   top: 0,
   right: 0,
   height: '100vh',
-  width: '592px',
+  width: '$592',
   padding: 0,
   backgroundColor: 'white',
   zIndex: 10,
