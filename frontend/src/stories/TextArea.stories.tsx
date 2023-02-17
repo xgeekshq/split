@@ -2,21 +2,24 @@ import React, { VFC, ReactNode } from 'react';
 import { ComponentStory } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import dedent from 'ts-dedent';
+
 import TextArea from '@/components/Primitives/TextArea';
 
 export default {
   title: 'Primitives/TextArea',
   component: TextArea,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
-        component:
-          'The border color of the TextArea component is controlled by the react hook form validator that is used.',
+        component: dedent`
+        A multi-line text input control.
+
+        The border color of the TextArea component is controlled by the react hook form validator that is used.
+
+        **File Path:**
+        \`@/components/Primitives/TextArea.tsx\`
+        `,
       },
     },
   },
@@ -26,10 +29,11 @@ export default {
   argTypes: {
     id: {
       control: false,
+      description: "Textarea's id. Identifies the text area in the form.",
     },
     placeholder: {
       control: false,
-      description: 'Placeholder text that appears in the textarea',
+      description: 'Placeholder text that will appear when the text area is empty.',
       table: {
         type: { summary: 'string' },
       },
@@ -37,7 +41,7 @@ export default {
     },
     disabled: {
       control: { type: 'boolean' },
-      description: 'Disable the textarea.',
+      description: 'Disable the text area.',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },

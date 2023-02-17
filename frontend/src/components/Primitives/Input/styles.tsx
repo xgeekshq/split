@@ -148,7 +148,6 @@ const StyledInput = styled('input', {
   pt: '$28',
   pb: '$8',
   '&::-webkit-input-placeholder': {
-    fontSize: '22px !important',
     color: '$primary300',
   },
   color: '$primaryBase',

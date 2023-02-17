@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import { useSetRecoilState } from 'recoil';
+import dedent from 'ts-dedent';
 
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
 import Button from '@/components/Primitives/Button';
@@ -18,14 +19,17 @@ export default {
   title: 'Primitives/Toast',
   component: Toast,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       source: {
         type: 'code',
+      },
+      description: {
+        component: dedent`
+        A succinct message that is displayed temporarily.
+
+        **File Path:**
+        \`@/components/Primitives/Toast.tsx\`
+        `,
       },
     },
   },

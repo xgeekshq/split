@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Svg from '@/components/Primitives/Svg';
 import Flex from '@/components/Primitives/Flex';
 import { SvgSizeType } from './types/PrimitiveTypes';
@@ -11,10 +13,13 @@ export default {
   title: 'Primitives/Svg',
   component: Svg,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        **File Path:**
+        \`@/components/Primitives/Svg.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -32,9 +37,9 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Svg> = ({ size, ...args }) => (
+const Template: ComponentStory<typeof Svg> = ({ size }) => (
   <Flex>
-    <Svg size={size} {...args}>
+    <Svg size={size}>
       <use href="#user" />
     </Svg>
   </Flex>

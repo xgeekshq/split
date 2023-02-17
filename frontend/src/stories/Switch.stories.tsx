@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Switch from '@/components/Primitives/Switch';
 import { SwitchSizeType } from './types/PrimitiveTypes';
 
@@ -11,9 +13,17 @@ export default {
   component: Switch,
   parameters: {
     controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css', 'asChild', 'defaultChecked', 'icon', 'name', 'required'],
-      sort: 'requiredFirst',
+      exclude: ['asChild', 'defaultChecked', 'icon', 'name', 'required'],
+    },
+    docs: {
+      description: {
+        component: dedent`
+        A control that allows the user to toggle between checked and not checked.
+
+        **File Path:**
+        \`@/components/Primitives/Switch.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -39,11 +49,11 @@ export default {
     },
     checked: {
       control: false,
-      description: "Switch's state variable.",
+      description: 'The controlled checked state of the switch.',
     },
     onCheckedChange: {
       control: false,
-      description: 'Executes every time the switch changes state.',
+      description: 'Event handler called when the checked state of the switch changes.',
     },
   },
 };

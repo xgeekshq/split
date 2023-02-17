@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import {
   Select,
   SelectTrigger,
@@ -39,36 +41,92 @@ export default {
   title: 'Primitives/Select',
   component: Select,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
-    },
     docs: {
       description: {
-        component:
-          'Notes: The Select component also accepts other props, such as an onValueChange function and a defaultValue. For more information check the Radix UI documentation under Select.Root.', // Change main component description in docs page
+        component: dedent`
+        Displays a list of options for the user to pick from.
+
+        **File Path:**
+        \`@/components/Primitives/Select.tsx\`
+        `,
       },
     },
   },
-  args: {},
+  argTypes: {
+    disabled: {
+      control: { type: 'boolean' },
+      description: 'Disable the select.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      defaultValue: false,
+    },
+    hasError: {
+      control: { type: 'boolean' },
+      description: 'Whether the select has an error.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      defaultValue: false,
+    },
+    onValueChange: {
+      description: 'Event handler called when an option is selected.',
+      table: {
+        type: { summary: '(value: string) => void' },
+      },
+    },
+    defaultValue: {
+      description: 'Initial value of the select.',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    placeholder: {
+      description:
+        'Placeholder text that will appear when no option has been selected. This is passed to `SelectValue`',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    options: {
+      description:
+        'Options array from where the user is able to choose from. This is passed to `SelectContent`.',
+      table: {
+        type: { summary: '{ label: string, value: string | number }[]' },
+      },
+    },
+  },
 };
 
-const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => (
-  <Flex>
-    <Select disabled={disabled} hasError={hasError} css={{ width: '$300' }}>
-      <SelectTrigger css={{ padding: '$16' }}>
-        <Flex direction="column">
-          <SelectValue placeholder="Choose a fruit" />
-        </Flex>
-        <SelectIcon className="SelectIcon" asChild>
-          <Icon name="arrow-down" />
-        </SelectIcon>
-      </SelectTrigger>
-      <SelectContent options={DUMMY_OPTIONS} />
-    </Select>
-  </Flex>
-);
+const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
+  const [selectedOption, setSelectedOption] = useState<String | null>();
+
+  return (
+    <Flex>
+      <Select
+        disabled={disabled}
+        hasError={hasError}
+        css={{ width: '$300' }}
+        defaultValue={selectedOption}
+        onValueChange={(newSelectedOption: string) => {
+          setSelectedOption(newSelectedOption);
+        }}
+      >
+        <SelectTrigger css={{ padding: '$16' }}>
+          <Flex direction="column">
+            <SelectValue placeholder="Choose a fruit" />
+          </Flex>
+          <SelectIcon className="SelectIcon" asChild>
+            <Icon name="arrow-down" />
+          </SelectIcon>
+        </SelectTrigger>
+        <SelectContent options={DUMMY_OPTIONS} />
+      </Select>
+    </Flex>
+  );
+};
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

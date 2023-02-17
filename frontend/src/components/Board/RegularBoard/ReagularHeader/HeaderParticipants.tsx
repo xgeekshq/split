@@ -32,11 +32,11 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
           </StyledBoardTitle>
         )}
         <AvatarGroup
-          isBoardsPage
           responsible={false}
           listUsers={users}
           teamAdmins={false}
           userId={session!.user.id}
+          isClickable
         />
       </Flex>
       <Flex align="center">
@@ -47,11 +47,11 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
           Board Creator
         </Text>
         <AvatarGroup
-          isBoardsPage
           responsible
           listUsers={users}
           teamAdmins={false}
           userId={session!.user.id}
+          isClickable
         />
       </Flex>
     </Flex>

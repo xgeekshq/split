@@ -99,7 +99,7 @@ const AddCard = React.memo<AddCardProps>(
     }, [cardText, isDefaultText, placeholder]);
 
     const methods = useForm<{ text: string }>({
-      mode: 'all',
+      mode: 'onChange',
       reValidateMode: 'onChange',
       defaultValues: {
         text: textAreaText,

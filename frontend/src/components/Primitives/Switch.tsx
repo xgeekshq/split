@@ -35,7 +35,7 @@ const SwitchThumb = ({ checked, icon }: SwitchThumbProps) => (
       <Icon
         name={icon}
         css={{
-          color: '$successBase !important',
+          color: '$successBase',
         }}
       />
     )}
