@@ -17,7 +17,7 @@ export default {
         Loading Page, used when a page is loading.
 
         **File Path:**
-        \`@/components/Primitives/Loading/Spinner.tsx\`
+        \`@/components/Primitives/Loading/Page.tsx\`
         `,
       },
     },
