@@ -1,12 +1,9 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
-import {
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-} from '@/components/Board/Settings/styles';
+import { StyledDialogContainer, StyledDialogContent, StyledDialogOverlay } from './styles';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
+import Flex from '../Flex';
 
 type Props = {
   isOpen: boolean;
@@ -24,7 +21,9 @@ const Dialog = ({ isOpen, setIsOpen, children }: Props) => (
             e.preventDefault();
           }}
         >
-          {children}
+          <Flex direction="column" css={{ height: '100%' }}>
+            {children}
+          </Flex>
         </StyledDialogContent>
       </Portal>
     </RadixDialog>
