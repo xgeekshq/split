@@ -15,7 +15,24 @@ const scale = keyframes({
   },
 });
 
-const Dots = styled('div', {
+const StyledDots = styled('div', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '$2',
+  span: {
+    display: 'inline-block',
+    borderRadius: '100%',
+    animationFillMode: 'both',
+    '&:nth-of-type(1)': {
+      animation: `${scale} 1s calc((1 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
+    },
+    '&:nth-of-type(2)': {
+      animation: `${scale} 1s calc((2 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
+    },
+    '&:nth-of-type(3)': {
+      animation: `${scale} 1s calc((3 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
+    },
+  },
   variants: {
     size: {
       4: {
@@ -38,14 +55,14 @@ const Dots = styled('div', {
       },
       15: {
         span: {
-          width: '15px',
-          height: '15px',
+          width: '$15',
+          height: '$15',
         },
       },
       50: {
         span: {
-          width: '50px',
-          height: '50px',
+          width: '$50',
+          height: '$50',
         },
       },
       80: {
@@ -79,35 +96,10 @@ const Dots = styled('div', {
       },
     },
   },
-
   defaultVariants: {
     size: 15,
     color: 'primary800',
   },
-
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: '$2',
-
-  span: {
-    display: 'inline-block',
-
-    borderRadius: '100%',
-
-    animationFillMode: 'both',
-
-    '&:nth-of-type(1)': {
-      animation: `${scale} 1s calc((1 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
-    },
-
-    '&:nth-of-type(2)': {
-      animation: `${scale} 1s calc((2 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
-    },
-
-    '&:nth-of-type(3)': {
-      animation: `${scale} 1s calc((3 * 0.12s) - (0.12s * 3)) infinite cubic-bezier(.2,.68,.18,1.08)`,
-    },
-  },
 });
 
-export { Dots };
+export default StyledDots;
