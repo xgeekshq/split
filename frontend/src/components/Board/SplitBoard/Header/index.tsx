@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
-import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
+import Breadcrumb from '@/components/Primitives/Breadcrumb';
 import Icon from '@/components/icons/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
