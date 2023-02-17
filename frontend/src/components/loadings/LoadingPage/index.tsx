@@ -1,15 +1,15 @@
 import { CSSProps } from '@/styles/stitches/stitches.config';
 
-import { Loading } from '../Loading';
+import Spinner from '../../Primitives/Loading/Spinner';
 import { Overlay } from './styles';
 
 type Props = CSSProps & {
-  size?: 50 | 80 | 100 | 150 | 220;
+  size?: 50 | 80 | 100 | 150 | 200;
 };
 
 const LoadingPage = ({ size, css, ...props }: Props) => (
   <Overlay align="center" css={css} justify="center" {...props}>
-    <Loading color="white" size={size} />
+    <Spinner color="light" size={size} />
   </Overlay>
 );
 
