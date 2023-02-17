@@ -37,6 +37,9 @@ export default class User extends BaseModel {
 
 	@Prop({ nullable: true })
 	providerAccountCreatedAt?: Date;
+
+	@Prop({ default: false })
+	isAnonymous: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

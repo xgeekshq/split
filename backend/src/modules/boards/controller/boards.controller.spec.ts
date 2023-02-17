@@ -29,6 +29,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
+import { userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 
 describe('BoardsController', () => {
@@ -61,6 +62,8 @@ describe('BoardsController', () => {
 				deleteCardService,
 				deleteVoteService,
 				boardRepository,
+				userRepository,
+				updateTeamService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
