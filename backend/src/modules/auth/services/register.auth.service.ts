@@ -20,10 +20,6 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
 
-	public async loginGuest(guestUserData: CreateGuestUserDto) {
-		await this.createGuestBoardUser(guestUserData.board, guestUserData.user);
-	}
-
 	public async register(registrationData: CreateUserDto) {
 		const hashedPassword = await encrypt(registrationData.password);
 
@@ -39,9 +35,18 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		if (!guestUserCreated) throw new BadRequestException(INSERT_FAILED);
 
-		await this.createGuestBoardUser(board, guestUserCreated._id);
+		const { _id: user } = guestUserCreated;
 
-		return guestUserCreated;
+		await this.createGuestBoardUser(board, user);
+
+		return { board, user };
+	}
+
+	public async loginGuest(guestUserData: CreateGuestUserDto) {
+		const { board, user } = guestUserData;
+		await this.createGuestBoardUser(guestUserData.board, guestUserData.user);
+
+		return { board, user };
 	}
 
 	private async createGuestBoardUser(board: string, user: string) {

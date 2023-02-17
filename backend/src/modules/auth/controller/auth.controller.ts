@@ -332,11 +332,6 @@ export default class AuthController {
 	})
 	@Post('loginGuest')
 	async loginGuest(@Body() guestUserData: CreateGuestUserDto) {
-		const { board } = guestUserData;
-		const userCreated = await this.registerAuthApp.createGuestUser(guestUserData);
-
-		if (!userCreated) return { user: guestUserData.user, board };
-
-		return { user: userCreated._id, board };
+		return await this.registerAuthApp.createGuestUser(guestUserData);
 	}
 }

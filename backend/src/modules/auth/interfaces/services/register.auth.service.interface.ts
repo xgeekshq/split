@@ -1,9 +1,10 @@
+import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import User from 'src/modules/users/entities/user.schema';
 
 export interface RegisterAuthService {
 	register(registrationData: CreateUserDto): Promise<User>;
-	createGuest(guestUserData: CreateGuestUserDto): Promise<User>;
-	loginGuest(guestUserData: CreateGuestUserDto): Promise<void>;
+	createGuest(guestUserData: CreateGuestUserDto): Promise<LoginGuestUserResponse>;
+	loginGuest(guestUserData: CreateGuestUserDto): Promise<LoginGuestUserResponse>;
 }
