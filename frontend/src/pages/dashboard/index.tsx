@@ -7,7 +7,7 @@ import { getDashboardHeaderInfo } from '@/api/authService';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Text from '@/components/Primitives/Text';
 import Tiles from '@/components/Dashboard/Tiles';
 import RecentRetros from '@/components/Dashboard/RecentRetros';

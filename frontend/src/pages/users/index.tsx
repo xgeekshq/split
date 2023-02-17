@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
 import UsersList from '@/components/Users/UsersList';
 

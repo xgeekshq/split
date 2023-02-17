@@ -9,7 +9,7 @@ import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
 
 const NewBoard: NextPage = () => {

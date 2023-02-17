@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import Dots from '@/components/Primitives/Loading/Dots';
 import dedent from 'ts-dedent';
-import { DotsColorType, DotsSizeType } from './types/PrimitiveTypes';
+import { DotsColorType, DotsSizeType } from '../types/PrimitiveTypes';
 
 const COLOR_OPTIONS: DotsColorType[] = ['primary800', 'primary200', 'white'];
 const SIZE_OPTIONS: DotsSizeType[] = [8, 4, 10, 15, 50, 80, 100];

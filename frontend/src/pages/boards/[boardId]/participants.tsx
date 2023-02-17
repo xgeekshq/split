@@ -5,7 +5,7 @@ import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Flex';
 import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
