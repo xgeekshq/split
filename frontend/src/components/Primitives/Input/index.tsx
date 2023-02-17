@@ -55,20 +55,22 @@ const Input: React.FC<InputProps> = ({
     clearErrors,
     trigger: revalidateInput,
     formState: { errors, dirtyFields },
+    getFieldState,
   } = useFormContext();
   const { ref, onChange, ...rest } = register(id);
 
-  const errorMessage = errors[id]?.message;
+  const { error, isDirty } = getFieldState(id);
+  const errorMessage = error?.message;
   const value = useWatch({ name: id });
   const isValueEmpty = isEmpty(value);
 
   const getCurrentState = useMemo(() => {
-    if (errors[id]) return 'error';
-    if (!dirtyFields[id]) return 'default';
+    if (error) return 'error';
+    if (!isDirty) return 'default';
     if (!isValueEmpty) return 'valid';
 
     return 'default';
-  }, [dirtyFields[id], errors[id], isValueEmpty]);
+  }, [errors, dirtyFields, error, isDirty, isValueEmpty]);
 
   const isHelperEmpty = isEmpty(helperText) && isEmpty(errorMessage);
 

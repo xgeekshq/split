@@ -3,16 +3,16 @@ import Input from '@/components/Primitives/Input';
 import { DeleteColumnButton } from './DeleteButton';
 
 interface Props {
+  remove: (index?: number | number[]) => void;
   title: string;
   index: number;
   disableDeleteColumn?: boolean;
 }
 
-const ColumnBoxAndDelete = ({ title, index, disableDeleteColumn }: Props) => (
+const ColumnBoxAndDelete = ({ remove, title, index, disableDeleteColumn }: Props) => (
   <Flex gap="20">
     <Input
-      css={{ mb: '0px' }}
-      id={`column${index + 1}title`}
+      id={`formColumns.${index}.title`}
       maxChars="30"
       placeholder={`Column ${index + 1}`}
       showCount
@@ -23,6 +23,7 @@ const ColumnBoxAndDelete = ({ title, index, disableDeleteColumn }: Props) => (
         columnTitle={title}
         columnIndex={index}
         disableDeleteColumn={disableDeleteColumn}
+        remove={remove}
       />
     </Flex>
   </Flex>

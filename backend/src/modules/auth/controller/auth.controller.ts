@@ -330,11 +330,8 @@ export default class AuthController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@Post('registerGuest')
-	async registerGuest(@Body() guestUserData: CreateGuestUserDto) {
-		const { board } = guestUserData;
-		const { _id: user } = await this.registerAuthApp.createGuestUser(guestUserData);
-
-		return { user, board };
+	@Post('loginGuest')
+	async loginGuest(@Body() guestUserData: CreateGuestUserDto) {
+		return await this.registerAuthApp.createGuestUser(guestUserData);
 	}
 }

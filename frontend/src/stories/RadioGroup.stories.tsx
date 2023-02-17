@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import {
   RadioGroup,
   RadioGroupItem,
@@ -26,10 +28,15 @@ export default {
   title: 'Primitives/RadioGroup',
   component: RadioGroup,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css', 'asChild'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        A set of checkable buttons, known as radio buttons, where no more than one of the buttons can be checked at a time.
+
+        **File Path:**
+        \`@/components/Primitives/RadioGroup.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -69,7 +76,7 @@ export default {
 };
 
 const Template: ComponentStory<typeof RadioGroup> = ({ direction, size, fontWeight }: any) => (
-  <RadioGroup direction={direction} defaultValue="default" css={{ maxWidth: '40%' }}>
+  <RadioGroup direction={direction} defaultValue="default">
     <Flex align="center">
       <RadioGroupItem value="default" id="r1">
         <RadioGroupIndicator />
@@ -105,16 +112,12 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({
   size,
   fontWeight,
 }: any) => (
-  <RadioGroup
-    direction={direction}
-    defaultValue="default"
-    css={{ maxWidth: '50%', flexWrap: 'wrap' }}
-  >
+  <RadioGroup direction={direction} defaultValue="default" css={{ flexWrap: 'wrap' }}>
     <Flex>
-      <RadioGroupItem value="default" id="r1">
+      <RadioGroupItem value="default" id="r4">
         <RadioGroupIndicator />
       </RadioGroupItem>
-      <Label htmlFor="r1">
+      <Label htmlFor="r4">
         <Flex direction="column">
           <Text color="primary800" fontWeight={fontWeight} size={size}>
             Default
@@ -126,10 +129,10 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({
       </Label>
     </Flex>
     <Flex>
-      <RadioGroupItem value="comfortable" id="r2">
+      <RadioGroupItem value="comfortable" id="r5">
         <RadioGroupIndicator />
       </RadioGroupItem>
-      <Label htmlFor="r2">
+      <Label htmlFor="r5">
         <Flex direction="column">
           <Text color="primary800" fontWeight={fontWeight} size={size}>
             Comfortable
@@ -141,10 +144,10 @@ export const Multiline: ComponentStory<typeof RadioGroup> = ({
       </Label>
     </Flex>
     <Flex>
-      <RadioGroupItem value="compact" id="r3">
+      <RadioGroupItem value="compact" id="r6">
         <RadioGroupIndicator />
       </RadioGroupItem>
-      <Label htmlFor="r3">
+      <Label htmlFor="r6">
         <Flex direction="column">
           <Text color="primary800" fontWeight={fontWeight} size={size}>
             Compact

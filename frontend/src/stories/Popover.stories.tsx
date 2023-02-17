@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ComponentStory } from '@storybook/react';
+
+import dedent from 'ts-dedent';
 
 import {
   Popover,
@@ -20,10 +22,15 @@ export default {
   title: 'Primitives/Popover',
   component: Popover,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        Displays rich content in a portal, triggered by a button.
+
+        **File Path:**
+        \`@/components/Primitives/Popover.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -41,7 +48,7 @@ export default {
       defaultValue: false,
     },
     active: {
-      control: { type: 'boolean' },
+      control: false,
       description: "Maintain item's state as active",
       table: {
         type: { summary: 'boolean' },
@@ -52,7 +59,7 @@ export default {
     variant: {
       options: VARIANT_OPTIONS,
       control: { type: 'select' },
-      description: 'The component variations.',
+      description: 'The component variations. It changes the style of the popover trigger.',
       table: {
         type: { summary: VARIANT_OPTIONS.join('|') },
       },
@@ -63,40 +70,55 @@ export default {
       description: 'The component size.',
       table: {
         type: { summary: SIZE_OPTIONS.join('|') },
+        defaultValue: { summary: 'md' },
       },
+      defaultValue: 'md',
     },
   },
 };
 
-const Template: ComponentStory<typeof Popover> = ({ variant, size, disabled, active }: any) => (
-  <>
-    <Popover>
-      <PopoverTrigger variant={variant} size={size} disabled={disabled}>
-        <Icon name="menu-dots" />
-      </PopoverTrigger>
-      <PopoverContent>
-        <PopoverClose>
-          <PopoverItem>
-            <Icon name="sort_desc" />
-            <Text size="sm">Sort (desc)</Text>
-          </PopoverItem>
-        </PopoverClose>
-        <PopoverClose>
-          <PopoverItem>
-            <Icon name="sort_asc" />
-            <Text size="sm">Sort (asc)</Text>
-          </PopoverItem>
-        </PopoverClose>
-        <PopoverClose>
-          <PopoverItem active={active}>
-            <Icon name="sort" />
-            <Text size="sm">No sorting</Text>
-          </PopoverItem>
-        </PopoverClose>
-      </PopoverContent>
-    </Popover>
-  </>
-);
+const Template: ComponentStory<typeof Popover> = ({ variant, size, disabled }: any) => {
+  const [selectedOption, setSelectedOption] = useState('sort');
+
+  return (
+    <>
+      <Popover>
+        <PopoverTrigger variant={variant} size={size} disabled={disabled}>
+          <Icon name="menu-dots" />
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverClose>
+            <PopoverItem
+              active={selectedOption === 'sort_desc'}
+              onClick={() => setSelectedOption('sort_desc')}
+            >
+              <Icon name="sort_desc" />
+              <Text size="sm">Sort (desc)</Text>
+            </PopoverItem>
+          </PopoverClose>
+          <PopoverClose>
+            <PopoverItem
+              active={selectedOption === 'sort_asc'}
+              onClick={() => setSelectedOption('sort_asc')}
+            >
+              <Icon name="sort_asc" />
+              <Text size="sm">Sort (asc)</Text>
+            </PopoverItem>
+          </PopoverClose>
+          <PopoverClose>
+            <PopoverItem
+              active={selectedOption === 'sort'}
+              onClick={() => setSelectedOption('sort')}
+            >
+              <Icon name="sort" />
+              <Text size="sm">No sorting</Text>
+            </PopoverItem>
+          </PopoverClose>
+        </PopoverContent>
+      </Popover>
+    </>
+  );
+};
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

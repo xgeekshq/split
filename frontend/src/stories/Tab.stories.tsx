@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import Tab from '@/components/Primitives/Tab';
 import Flex from '@/components/Primitives/Flex';
 
@@ -8,10 +10,15 @@ export default {
   title: 'Primitives/Tab',
   component: Tab,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css', 'asChild'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        A set of layered sections of content, also known as tab panels, that are displayed one at a time.
+
+        **File Path:**
+        \`@/components/Primitives/Tab.tsx\`
+        `,
+      },
     },
   },
   args: {
@@ -32,16 +39,25 @@ export default {
   argTypes: {
     activeValue: {
       control: { type: 'string' },
-      description: 'Used to Control the active Tab',
+      description: 'The controlled value of the tab to activate.',
       table: {
         type: { summary: 'string' },
       },
     },
     onChangeActiveValue: {
-      description: 'Function used to set the new active Tab',
+      description: 'Event handler called when the value changes.',
       table: {
         type: { summary: '(newTab: string) => void' },
       },
+    },
+    tabList: {
+      description: 'List of the tabs that will be displayed.',
+      table: {
+        type: { summary: '{ value: string, label: string, content: ReactNode }[]' },
+      },
+    },
+    defaultValue: {
+      control: false,
     },
   },
 };

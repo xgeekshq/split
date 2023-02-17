@@ -4,7 +4,7 @@ import Flex from '@/components/Primitives/Flex';
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import CardBody from '@/components/Teams/TeamsList/partials/CardTeam/CardBody';
 import { Team } from '@/types/team/team';
-import { DotsLoading } from '@/components/loadings/DotsLoading';
+import Dots from '@/components/Primitives/Loading/Dots';
 import { useRecoilValue } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
 
@@ -25,7 +25,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ userId, isLoading }) => {
       </Flex>
       {isLoading && (
         <Flex justify="center">
-          <DotsLoading />
+          <Dots />
         </Flex>
       )}
     </ScrollableContent>

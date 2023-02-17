@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { styled } from '@/styles/stitches/stitches.config';
 import isEmpty from '@/utils/isEmpty';
@@ -59,16 +59,16 @@ const StyledTextArea = styled('textarea', {
       default: {
         '&:focus': {
           borderColor: '$primary400',
-          boxShadow: '0px 0px 0px 2px $colors$primaryLightest)',
+          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
         },
       },
       valid: {
         borderColor: '$success700',
-        boxShadow: '0px 0px 0px 2px $colors$successLightest)',
+        boxShadow: '0px 0px 0px 2px $colors$successLightest',
       },
       error: {
         borderColor: '$danger700',
-        boxShadow: '0px 0px 0px 2px $colors$dangerLightest)',
+        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
       },
     },
   },
@@ -78,20 +78,12 @@ interface ResizableTextAreaProps {
   id: string;
   placeholder: string;
   disabled?: boolean;
-  state?: 'valid' | 'default' | 'error';
   textColor?: '$primaryBase' | '$primary300';
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({
-  id,
-  placeholder,
-  disabled,
-  state,
-  textColor,
-}) => {
+const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled, textColor }) => {
   TextArea.defaultProps = {
     disabled: false,
-    state: undefined,
     textColor: '$primaryBase',
   };
 
@@ -104,50 +96,52 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
   }
 
   const {
-    register,
     getValues,
-    formState: { errors, touchedFields },
+    control,
+    formState: { errors, dirtyFields },
   } = useFormContext();
-  const { ref, ...rest } = register(id);
 
-  const message = errors[id]?.message;
-  const value = getValues()[id];
-  const isValueEmpty = isEmpty(value);
+  const currentValue = getValues()[id];
+  const isValueEmpty = isEmpty(currentValue);
 
-  const autoState = useMemo(() => {
-    if (message) return 'error';
-    if (isValueEmpty || (value && !touchedFields.text)) return 'default';
-    return 'valid';
-  }, [message, isValueEmpty, value, touchedFields.text]);
+  const getCurrentState = useMemo(() => {
+    if (errors[id]) return 'error';
+    if (!dirtyFields[id]) return 'default';
+    if (!isValueEmpty) return 'valid';
 
-  const currentState = useMemo(() => {
-    if (disabled && !touchedFields[id]) return 'default';
-    if (state) return state;
-    return autoState;
-  }, [autoState, disabled, id, state, touchedFields]);
+    return 'default';
+  }, [dirtyFields[id], errors[id], id, isValueEmpty]);
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
-  }, [value]);
+  }, [currentValue]);
 
   return (
-    <StyledTextArea
-      {...rest}
-      css={{
-        minHeight: '$80',
-        backgroundColor: '$primary50',
-        py: '$12',
-        px: '$16',
-        color: textColor,
-      }}
-      disabled={disabled}
-      id={id}
-      placeholder={placeholder}
-      variant={currentState}
-      ref={(e) => {
-        if (ref) ref(e);
-        textareaRef.current = e;
-      }}
+    <Controller
+      render={({ field: { onChange, value, ref } }) => (
+        <StyledTextArea
+          css={{
+            minHeight: '$80',
+            backgroundColor: '$primary50',
+            py: '$12',
+            px: '$16',
+            color: textColor,
+          }}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          id={id}
+          placeholder={placeholder}
+          variant={getCurrentState}
+          ref={(e) => {
+            if (ref) ref(e);
+            textareaRef.current = e;
+          }}
+        />
+      )}
+      control={control}
+      name={id}
+      defaultValue={placeholder}
     />
   );
 };

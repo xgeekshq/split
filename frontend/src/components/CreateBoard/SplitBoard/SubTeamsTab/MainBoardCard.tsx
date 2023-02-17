@@ -148,7 +148,6 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
             {team.name}
           </Text>
           <AvatarGroup
-            isBoardsPage
             haveError={haveError}
             listUsers={team.users}
             responsible={false}

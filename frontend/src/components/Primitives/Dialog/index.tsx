@@ -19,7 +19,13 @@ const Dialog = ({ isOpen, setIsOpen, children }: Props) => (
     <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
       <Portal>
         <StyledDialogOverlay />
-        <StyledDialogContent>{children}</StyledDialogContent>
+        <StyledDialogContent
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+        >
+          {children}
+        </StyledDialogContent>
       </Portal>
     </RadixDialog>
   </StyledDialogContainer>

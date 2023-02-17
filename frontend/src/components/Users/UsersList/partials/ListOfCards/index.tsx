@@ -8,7 +8,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAllUsersWithTeams } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { ScrollableContent } from '../../../../Boards/MyBoards/styles';
 import CardBody from '../CardUser/CardBody';
 

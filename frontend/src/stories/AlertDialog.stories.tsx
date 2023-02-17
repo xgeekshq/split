@@ -1,6 +1,8 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -15,16 +17,35 @@ export default {
   title: 'Primitives/AlertDialog',
   component: AlertDialog,
   parameters: {
-    controls: {
-      expanded: true,
-      exclude: ['ref', 'as', 'css'],
-      sort: 'requiredFirst',
+    docs: {
+      description: {
+        component: dedent`
+        A modal dialog that interrupts the user with important content and expects a response.
+
+        **File Path:**
+        \`@/components/Primitives/AlertDialog.tsx\`
+        `,
+      },
     },
   },
   args: {
     title: 'Alert Dialog Title',
     children:
       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos cum consequuntur quo beatae repudiandae quibusdam ratione dolorum, suscipit expedita nisi accusantium porro hic eligendi molestias dolore, quae officia nihil nemo.',
+  },
+  argTypes: {
+    title: {
+      description: 'An accessible name to be announced when the dialog is opened.',
+      table: {
+        type: { summary: 'string' },
+      },
+    },
+    children: {
+      description: 'Contains content to be rendered when the dialog is open.',
+      table: {
+        type: { summary: 'React.ReactNode' },
+      },
+    },
   },
 };
 
