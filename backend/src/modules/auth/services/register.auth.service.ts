@@ -21,7 +21,6 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	) {}
 
 	public async loginGuest(guestUserData: CreateGuestUserDto) {
-		console.log('guestUser board');
 		await this.createGuestBoardUser(guestUserData.board, guestUserData.user);
 	}
 
@@ -35,7 +34,6 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	}
 
 	public async createGuest(guestUserData: CreateGuestUserDto) {
-		console.log('guestUser user and board');
 		const { board } = guestUserData;
 		const guestUserCreated = await this.createUserService.createGuest(guestUserData);
 
