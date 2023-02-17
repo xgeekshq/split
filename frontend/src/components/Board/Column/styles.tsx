@@ -41,7 +41,6 @@ const OuterContainer = styled(Flex, {
   flexGrow: 1,
   flexShrink: 0,
   width: '100%',
-  mx: '$12',
 });
 
 const Title = styled(Text, {

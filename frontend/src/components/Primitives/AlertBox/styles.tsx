@@ -6,8 +6,8 @@ const AlertStyle = styled(Flex, {
   variants: {
     type: {
       warning: {
-        backgroundColor: '$infoLightest',
-        border: '1px solid $colors$infoBase',
+        backgroundColor: '$warningLightest',
+        border: '1px solid $colors$warningBase',
       },
       error: {
         backgroundColor: '$dangerLightest',
