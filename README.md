@@ -41,6 +41,7 @@ The backend will run on `http://localhost:BACKEND_PORT` and the frontend on `htt
 - `/teams/[teamId]`: team page
 - `/users`: users list
 - `/users/[userId]`: user page
+- `/storybook`: storybook page
 
 ## 📝 License
 
