@@ -110,7 +110,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled,
     if (!isValueEmpty) return 'valid';
 
     return 'default';
-  }, [dirtyFields, errors, id, isValueEmpty]);
+  }, [dirtyFields[id], errors[id], id, isValueEmpty]);
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
