@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { styled } from '@/styles/stitches/stitches.config';
 import isEmpty from '@/utils/isEmpty';
@@ -96,14 +96,13 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled,
   }
 
   const {
-    register,
     getValues,
+    control,
     formState: { errors, dirtyFields },
   } = useFormContext();
-  const { ref, ...rest } = register(id);
 
-  const value = getValues()[id];
-  const isValueEmpty = isEmpty(value);
+  const currentValue = getValues()[id];
+  const isValueEmpty = isEmpty(currentValue);
 
   const getCurrentState = useMemo(() => {
     if (errors[id]) return 'error';
@@ -111,30 +110,38 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled,
     if (!isValueEmpty) return 'valid';
 
     return 'default';
-  }, [errors[id], dirtyFields[id], isValueEmpty]);
+  }, [dirtyFields[id], errors[id], id, isValueEmpty]);
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
-  }, [value]);
+  }, [currentValue]);
 
   return (
-    <StyledTextArea
-      {...rest}
-      css={{
-        minHeight: '$80',
-        backgroundColor: '$primary50',
-        py: '$12',
-        px: '$16',
-        color: textColor,
-      }}
-      disabled={disabled}
-      id={id}
-      placeholder={placeholder}
-      variant={getCurrentState}
-      ref={(e) => {
-        if (ref) ref(e);
-        textareaRef.current = e;
-      }}
+    <Controller
+      render={({ field: { onChange, value, ref } }) => (
+        <StyledTextArea
+          css={{
+            minHeight: '$80',
+            backgroundColor: '$primary50',
+            py: '$12',
+            px: '$16',
+            color: textColor,
+          }}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          id={id}
+          placeholder={placeholder}
+          variant={getCurrentState}
+          ref={(e) => {
+            if (ref) ref(e);
+            textareaRef.current = e;
+          }}
+        />
+      )}
+      control={control}
+      name={id}
+      defaultValue={placeholder}
     />
   );
 };
