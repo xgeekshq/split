@@ -46,34 +46,6 @@ function Root({
   const router = useRouter();
   globalStyles();
 
-  useEffect(() => {
-    (function (m, a, z, e) {
-      let s;
-      let t;
-      try {
-        t = m.sessionStorage.getItem('maze-us');
-      } catch (err) {}
-
-      if (!t) {
-        t = new Date().getTime();
-        try {
-          m.sessionStorage.setItem('maze-us', String(t));
-        } catch (err) {}
-      }
-
-      s = a.createElement('script');
-      s.src = z + '?t=' + t + '&apiKey=' + e;
-      s.async = true;
-      a.getElementsByTagName('head')[0].appendChild(s);
-      m.mazeUniversalSnippetApiKey = e;
-    })(
-      window,
-      document,
-      'https://snippet.maze.co/maze-universal-loader.js',
-      '3023cbc3-dd28-4294-9b9f-154ca2b3e7b0',
-    );
-  });
-
   return (
     <>
       <Head>
