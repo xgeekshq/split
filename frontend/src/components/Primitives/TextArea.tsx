@@ -59,16 +59,16 @@ const StyledTextArea = styled('textarea', {
       default: {
         '&:focus': {
           borderColor: '$primary400',
-          boxShadow: '0px 0px 0px 2px $colors$primaryLightest)',
+          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
         },
       },
       valid: {
         borderColor: '$success700',
-        boxShadow: '0px 0px 0px 2px $colors$successLightest)',
+        boxShadow: '0px 0px 0px 2px $colors$successLightest',
       },
       error: {
         borderColor: '$danger700',
-        boxShadow: '0px 0px 0px 2px $colors$dangerLightest)',
+        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
       },
     },
   },
@@ -78,20 +78,12 @@ interface ResizableTextAreaProps {
   id: string;
   placeholder: string;
   disabled?: boolean;
-  state?: 'valid' | 'default' | 'error';
   textColor?: '$primaryBase' | '$primary300';
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({
-  id,
-  placeholder,
-  disabled,
-  state,
-  textColor,
-}) => {
+const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled, textColor }) => {
   TextArea.defaultProps = {
     disabled: false,
-    state: undefined,
     textColor: '$primaryBase',
   };
 
@@ -106,25 +98,20 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
   const {
     register,
     getValues,
-    formState: { errors, touchedFields },
+    formState: { errors, dirtyFields },
   } = useFormContext();
   const { ref, ...rest } = register(id);
 
-  const message = errors[id]?.message;
   const value = getValues()[id];
   const isValueEmpty = isEmpty(value);
 
-  const autoState = useMemo(() => {
-    if (message) return 'error';
-    if (isValueEmpty || (value && !touchedFields.text)) return 'default';
-    return 'valid';
-  }, [message, isValueEmpty, value, touchedFields.text]);
+  const getCurrentState = useMemo(() => {
+    if (errors[id]) return 'error';
+    if (!dirtyFields[id]) return 'default';
+    if (!isValueEmpty) return 'valid';
 
-  const currentState = useMemo(() => {
-    if (disabled && !touchedFields[id]) return 'default';
-    if (state) return state;
-    return autoState;
-  }, [autoState, disabled, id, state, touchedFields]);
+    return 'default';
+  }, [errors[id], dirtyFields[id], isValueEmpty]);
 
   useEffect(() => {
     textAreaAdjust(textareaRef.current);
@@ -143,7 +130,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({
       disabled={disabled}
       id={id}
       placeholder={placeholder}
-      variant={currentState}
+      variant={getCurrentState}
       ref={(e) => {
         if (ref) ref(e);
         textareaRef.current = e;

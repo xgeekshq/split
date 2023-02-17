@@ -118,13 +118,6 @@ const AddCard = React.memo<AddCardProps>(
         ? '$primary300'
         : '$primaryBase';
 
-    const state =
-      watchCardTextInput.text !== CARD_TEXT_DEFAULT &&
-      watchCardTextInput.text === placeholder &&
-      methods.formState.touchedFields
-        ? 'default'
-        : undefined;
-
     const disabledButton =
       watchCardTextInput.text?.trim().length === 0 || watchCardTextInput.text === placeholder;
 
@@ -263,12 +256,7 @@ const AddCard = React.memo<AddCardProps>(
         })}
       >
         <FormProvider {...methods}>
-          <TextArea
-            id="text"
-            placeholder={placeholderToDisplay}
-            textColor={placeholderColor}
-            state={state}
-          />
+          <TextArea id="text" placeholder={placeholderToDisplay} textColor={placeholderColor} />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment
