@@ -11,10 +11,10 @@ export default {
     docs: {
       description: {
         component: dedent`
-        Dots element, it's used for Loading.
+        Breadcrumbs allow users to navigate back to previous linked pages.
 
         **File Path:**
-        \`@/components/Primitives/Loading/Dots/index.tsx\` and \`@/components/Primitives/Loading/Dots/styles.tsx\`
+        \`@/components/Primitives/Breadcrumb/index.tsx\` and \`@/components/Primitives/Breadcrumb/styles.tsx\`
         `,
       },
     },
@@ -34,6 +34,17 @@ export default {
         isActive: true,
       },
     ],
+  },
+  argTypes: {
+    items: {
+      control: { type: 'array' },
+      description: 'List of previous pages that are linked.',
+      table: {
+        type: {
+          summary: '{ items: [ title: string, link?: string, isActive?: boolean ] }',
+        },
+      },
+    },
   },
 };
 
