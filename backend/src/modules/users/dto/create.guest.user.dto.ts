@@ -5,10 +5,10 @@ import { IsMongoId, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-va
 export default class CreateGuestUserDto {
 	@ApiProperty()
 	@IsString()
-	@IsNotEmpty()
+	@IsOptional()
 	@MinLength(2)
 	@Transform(({ value }: TransformFnParams) => value.trim())
-	firstName!: string;
+	firstName?: string;
 
 	@ApiProperty()
 	@IsString()
@@ -22,4 +22,11 @@ export default class CreateGuestUserDto {
 	@IsMongoId()
 	@IsString()
 	board!: string;
+
+	@ApiProperty()
+	@IsNotEmpty()
+	@IsOptional()
+	@IsMongoId()
+	@IsString()
+	user?: string;
 }
