@@ -48,8 +48,6 @@ const SelectParticipants = () => {
       users,
       board: { ...prev.board, team: null },
     }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

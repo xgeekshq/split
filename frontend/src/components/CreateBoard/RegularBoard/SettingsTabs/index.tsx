@@ -11,11 +11,15 @@ import ParticipantsTab from '../ParticipantsTab';
 import BoardConfigurations from '../../Configurations/BoardConfigurations';
 
 const SettingsTabs = () => {
+  const [optionSelected, setOptionSelected] = useState('team');
+
   const tabList: TabList[] = [
     {
       value: 'participants',
       label: 'Participants',
-      content: <ParticipantsTab />,
+      content: (
+        <ParticipantsTab optionSelected={optionSelected} setOptionSelected={setOptionSelected} />
+      ),
     },
     {
       value: 'config',
