@@ -332,8 +332,9 @@ export default class AuthController {
 	})
 	@Post('registerGuest')
 	async registerGuest(@Body() guestUserData: CreateGuestUserDto) {
-		const { _id } = await this.registerAuthApp.createGuestUser(guestUserData);
+		const { board } = guestUserData;
+		const { _id: user } = await this.registerAuthApp.createGuestUser(guestUserData);
 
-		return { user: _id, board: guestUserData.board };
+		return { user, board };
 	}
 }
