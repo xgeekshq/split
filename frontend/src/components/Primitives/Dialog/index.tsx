@@ -1,10 +1,6 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
-import {
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-} from '@/components/Board/Settings/styles';
+import { StyledDialogContainer, StyledDialogContent, StyledDialogOverlay } from './styles';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
 

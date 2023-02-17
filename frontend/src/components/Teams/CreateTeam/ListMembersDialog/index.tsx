@@ -1,18 +1,9 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Dialog, DialogClose, Portal } from '@radix-ui/react-dialog';
-import Icon from '@/components/icons/Icon';
+import Dialog from '@/components/Primitives/Dialog';
 import Text from '@/components/Primitives/Text';
-import {
-  ButtonsContainer,
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-  StyledDialogTitle,
-} from '@/components/Board/Settings/styles';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
-import Button from '@/components/Primitives/Button';
 import { UserList } from '@/types/team/userList';
 import { ScrollableContent } from './styles';
 import SearchInput from './SearchInput';
@@ -38,7 +29,6 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
 
     // References
     const scrollRef = useRef<HTMLDivElement>(null);
-    const dialogContainerRef = useRef<HTMLSpanElement>(null);
 
     const sortUserList = () => {
       const listToBeSorted = [...usersList];
@@ -123,83 +113,69 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     }, [setIsCheckAll, usersChecked]);
 
     return (
-      <StyledDialogContainer ref={dialogContainerRef}>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <Portal>
-            <StyledDialogOverlay />
-            <StyledDialogContent onPointerDownOutside={handleClose}>
-              <StyledDialogTitle>
-                <Text heading="4">{btnTitle}</Text>
-                <DialogClose asChild>
-                  <Button isIcon size="md">
-                    <Icon css={{ color: '$primary400' }} name="close" />
-                  </Button>
-                </DialogClose>
-              </StyledDialogTitle>
-              <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-                <SearchInput
-                  currentValue={searchMember}
-                  handleChange={handleSearchChange}
-                  handleClear={handleClearSearch}
-                  icon="search"
-                  iconPosition="both"
-                  id="search"
-                  placeholder="Search member"
-                />
-              </Flex>
-              <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-                {title}
-              </Text>
-              <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-                <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
-                  {filteredList?.map((user) => (
-                    <Flex key={user._id} align="center" justify="between">
-                      <Flex css={{ width: '50%' }}>
-                        <Checkbox
-                          id={user._id}
-                          checked={user.isChecked}
-                          handleChange={() => {
-                            handleChecked(user._id);
-                          }}
-                          disabled={user._id === session?.user.id}
-                          label={`${user.firstName} ${user.lastName}`}
-                          size="md"
-                        />
-                      </Flex>
-                      <Flex css={{ width: '50%' }}>
-                        <Text
-                          color="primary300"
-                          css={{ textAlign: 'left', width: '50%' }}
-                          size="sm"
-                        >
-                          {user.email}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  ))}
-                </Flex>
-              </ScrollableContent>
-              <ButtonsContainer gap={24} justify="end" align="center">
-                {searchMember.length <= 0 && (
+      <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Dialog.Header title={btnTitle} />
+        <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+          <SearchInput
+            currentValue={searchMember}
+            handleChange={handleSearchChange}
+            handleClear={handleClearSearch}
+            icon="search"
+            iconPosition="both"
+            id="search"
+            placeholder="Search member"
+          />
+        </Flex>
+        <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+          {title}
+        </Text>
+        <ScrollableContent direction="column" justify="start" ref={scrollRef}>
+          <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
+            {filteredList?.map((user) => (
+              <Flex key={user._id} align="center" justify="between">
+                <Flex css={{ width: '50%' }}>
                   <Checkbox
-                    id="selectAll"
-                    checked={isCheckAll}
-                    handleChange={handleSelectAll}
-                    label="Select all"
+                    id={user._id}
+                    checked={user.isChecked}
+                    handleChange={() => {
+                      handleChecked(user._id);
+                    }}
+                    disabled={user._id === session?.user.id}
+                    label={`${user.firstName} ${user.lastName}`}
                     size="md"
                   />
-                )}
-                <Button variant="primaryOutline" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button variant="primary" onClick={handleUpdateUsers}>
-                  Update
-                </Button>
-              </ButtonsContainer>
-            </StyledDialogContent>
-          </Portal>
-        </Dialog>
-      </StyledDialogContainer>
+                </Flex>
+                <Flex css={{ width: '50%' }}>
+                  <Text color="primary300" css={{ textAlign: 'left', width: '50%' }} size="sm">
+                    {user.email}
+                  </Text>
+                </Flex>
+              </Flex>
+            ))}
+          </Flex>
+        </ScrollableContent>
+        <Flex
+          justify="between"
+          align="center"
+          css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
+        >
+          {searchMember.length <= 0 && (
+            <Checkbox
+              id="selectAll"
+              checked={isCheckAll}
+              handleChange={handleSelectAll}
+              label="Select all"
+              size="md"
+            />
+          )}
+          <Dialog.Footer
+            handleAffirmative={handleUpdateUsers}
+            handleClose={handleClose}
+            affirmativeLabel="Update"
+            showSeparator={false}
+          />
+        </Flex>
+      </Dialog>
     );
   },
 );

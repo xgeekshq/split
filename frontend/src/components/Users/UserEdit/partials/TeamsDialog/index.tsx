@@ -87,9 +87,7 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header>
-        <Text heading="4">Add new team</Text>
-      </Dialog.Header>
+      <Dialog.Header title="Add new team" />
       <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
         <SearchInput
           currentValue={searchTeam}
@@ -124,7 +122,9 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
         </Flex>
       </ScrollableContent>
       <Dialog.Footer
-        setIsOpen={setIsOpen}
+        handleClose={() => {
+          setIsOpen(false);
+        }}
         handleAffirmative={handleAddTeams}
         affirmativeLabel="Add"
       />

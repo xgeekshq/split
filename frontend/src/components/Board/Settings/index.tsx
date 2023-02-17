@@ -33,7 +33,7 @@ import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
 
-const StyledForm = styled('form', { height: 'calc(100% - 89px)' });
+const StyledForm = styled('form', { height: '100%' });
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -294,9 +294,6 @@ const BoardSettings = ({
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header>
-        <Text heading="4">Board Settings</Text>
-      </Dialog.Header>
       <FormProvider {...methods}>
         <StyledForm
           onSubmit={methods.handleSubmit(({ title, maxVotes, formColumns }) => {
@@ -304,6 +301,7 @@ const BoardSettings = ({
           })}
         >
           <Flex direction="column" css={{ justifyContent: 'space-between', height: '100%' }}>
+            <Dialog.Header title="Board Settings" />
             <ScrollableContent direction="column" justify="start" ref={scrollRef}>
               <Flex direction="column">
                 <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
@@ -472,7 +470,13 @@ const BoardSettings = ({
                 </Accordion>
               </Flex>
             </ScrollableContent>
-            <Dialog.Footer setIsOpen={setIsOpen} affirmativeLabel="Save" buttonRef={submitBtnRef} />
+            <Dialog.Footer
+              handleClose={() => {
+                setIsOpen(false);
+              }}
+              affirmativeLabel="Save"
+              buttonRef={submitBtnRef}
+            />
           </Flex>
         </StyledForm>
       </FormProvider>
