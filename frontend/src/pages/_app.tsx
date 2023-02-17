@@ -18,6 +18,7 @@ import { JWT_EXPIRATION_TIME } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 import { Session } from 'next-auth';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import RecoilDevTools from '@/components/RecoilDevTools/RecoilDevTools';
 
 type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -87,6 +88,7 @@ function Root({
               <RecoilRoot>
                 {getLayout(<Component {...pageProps} />)}
                 <Toast />
+                <RecoilDevTools />
               </RecoilRoot>
               <ToastViewport
                 css={{
