@@ -1,3 +1,4 @@
+import { mongooseBoardUserModule } from './../../infrastructure/database/mongoose.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -32,7 +33,8 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		PassportModule,
 		ConfigModule,
 		mongooseResetModule,
-		mongooseUserModule
+		mongooseUserModule,
+		mongooseBoardUserModule,
 	],
 	providers: [
 		getTokenAuthService,

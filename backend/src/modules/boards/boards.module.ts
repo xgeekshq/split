@@ -1,7 +1,9 @@
+import { userRepository } from 'src/modules/users/users.providers';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
-	mongooseBoardUserModule
+	mongooseBoardUserModule,
+	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
@@ -32,6 +34,7 @@ import {
 	updateBoardTimerDurationService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
+import PublicBoardsController from './controller/public.boards.controller';
 
 @Module({
 	imports: [
@@ -41,7 +44,8 @@ import BoardsController from './controller/boards.controller';
 		CommunicationModule,
 		CardsModule,
 		mongooseBoardModule,
-		mongooseBoardUserModule
+		mongooseBoardUserModule,
+		mongooseUserModule
 	],
 	providers: [
 		createBoardService,
@@ -64,9 +68,10 @@ import BoardsController from './controller/boards.controller';
 		afterUserStoppedTimerSubscriber,
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
-		boardRepository
+		boardRepository,
+		userRepository
 	],
-	controllers: [BoardsController],
+	controllers: [BoardsController, PublicBoardsController],
 	exports: [
 		getBoardApplication,
 		createBoardService,

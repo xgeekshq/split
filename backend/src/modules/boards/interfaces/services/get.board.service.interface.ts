@@ -49,4 +49,6 @@ export interface GetBoardServiceInterface {
 	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
+
+	isBoardPublic(boardId: string): Promise<boolean>;
 }

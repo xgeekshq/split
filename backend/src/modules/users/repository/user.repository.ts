@@ -46,10 +46,11 @@ export class UserRepository
 	}
 
 	getAllWithPagination(page: number, size: number, searchUser?: string) {
-		let query: FilterQuery<UserDocument>;
+		let query: FilterQuery<UserDocument> = { isAnonymous: false || undefined };
 
 		if (searchUser) {
 			query = {
+				isAnonymous: false || undefined,
 				$or: [
 					{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
 					{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },

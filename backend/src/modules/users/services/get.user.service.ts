@@ -43,7 +43,8 @@ export default class GetUserServiceImpl implements GetUserService {
 		return this.userRepository.findAll(
 			{
 				password: 0,
-				currentHashedRefreshToken: 0
+				currentHashedRefreshToken: 0,
+				isAnonymous: 0
 			},
 			{ firstName: 'asc', lastName: 'asc' }
 		);
