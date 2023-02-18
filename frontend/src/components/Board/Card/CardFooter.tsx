@@ -249,7 +249,7 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={hideCards}
+              disabled={hideCards && card.createdBy?._id !== userId}
               onClick={setOpenComments}
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />
