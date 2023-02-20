@@ -20,7 +20,10 @@ export default {
       description: {
         component: dedent`List of Icons that can be used in the \`Icon\` Primitive.`,
       },
-    },
+  source: {
+    code: null,
+  },
+},  
   },
 };
 
