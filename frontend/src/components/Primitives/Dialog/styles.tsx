@@ -11,10 +11,6 @@ const contentShow = keyframes({
   '100%': { opacity: 1, transform: 'translateX(0%)' },
 });
 
-const StyledDialogContainer = styled('span', {
-  marginLeft: 'auto',
-});
-
 const StyledDialogOverlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: 'rgba(0,0,0,0.75)',
   position: 'fixed',
@@ -48,4 +44,4 @@ const StyledDialogTitle = styled('div', DialogPrimitive.Title, {
   borderBottom: '1px solid $colors$primary100',
 });
 
-export { StyledDialogContainer, StyledDialogContent, StyledDialogOverlay, StyledDialogTitle };
+export { StyledDialogContent, StyledDialogOverlay, StyledDialogTitle };
