@@ -33,12 +33,19 @@ const SelectParticipants = () => {
   useEffect(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user._id === session?.user.id || user.isChecked,
     }));
 
     const users = updateCheckedUser.flatMap((user) =>
-      user._id === session?.user.id
-        ? [{ role: BoardUserRoles.RESPONSIBLE, user: user._id, votesCount: 0 }]
+      user.isChecked
+        ? [
+            {
+              role:
+                user._id === session?.user.id ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+              user: user._id,
+              votesCount: 0,
+            },
+          ]
         : [],
     );
     setUsersList(updateCheckedUser);
@@ -48,8 +55,6 @@ const SelectParticipants = () => {
       users,
       board: { ...prev.board, team: null },
     }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
