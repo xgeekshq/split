@@ -6,7 +6,7 @@ import { START_PAGE_ROUTE } from '@/utils/routes';
 function requireAuthentication(gssp: GetServerSideProps) {
   return async (ctx: GetServerSidePropsContext) => {
     const session = await getSession(ctx);
-    console.log('Auth: \t\t', session);
+
     if (!session) {
       return {
         redirect: {

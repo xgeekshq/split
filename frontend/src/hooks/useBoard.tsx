@@ -25,23 +25,10 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   const setNewBoard = useSetRecoilState(newBoardState);
   // #region BOARD
 
-  const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
-    enabled: autoFetchBoard,
-    refetchOnWindowFocus: true,
-    onError: () => {
-      queryClient.invalidateQueries(['board', { id: boardId }]);
-      setToastState({
-        open: true,
-        content: 'Error getting the board',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
-
   const fetchBasedBoard = useQuery(
-    ['basedBoard', { boardId, userId }],
+    ['board', { id: boardId }],
     () => {
-      if (!session?.user) {
+      if (!session && userId) {
         return getPublicBoardRequest({ boardId, userId });
       }
       return getBoardRequest(boardId);
@@ -50,24 +37,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
       enabled: autoFetchBoard,
       refetchOnWindowFocus: true,
       onError: () => {
-        queryClient.invalidateQueries(['basedBoard', { boardId, userId }]);
-        setToastState({
-          open: true,
-          content: 'Error getting the board',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
-  console.log('hereeeeeeee', boardId, userId);
-  const fetchPublicBoard = useQuery(
-    ['publicBoard', { boardId, userId }],
-    () => getPublicBoardRequest({ boardId, userId }),
-    {
-      enabled: autoFetchBoard,
-      refetchOnWindowFocus: true,
-      onError: () => {
-        queryClient.invalidateQueries(['publicBoard', { boardId, userId }]);
+        queryClient.invalidateQueries(['board', { id: boardId }]);
         setToastState({
           open: true,
           content: 'Error getting the board',
@@ -155,12 +125,10 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   return {
-    fetchBoard,
     createBoard,
     deleteBoard,
     updateBoard,
     fetchBasedBoard,
-    fetchPublicBoard,
   };
 };
 

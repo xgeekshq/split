@@ -5,9 +5,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
+
 import { getGuestUserCookies } from './useUser';
-import { getCookie, getCookies } from 'cookies-next';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
 
 const useBoardUtils = () => {
   const router = useRouter();
@@ -15,11 +14,9 @@ const useBoardUtils = () => {
 
   const queryClient = useQueryClient();
 
-  const guestUserCookie = getCookies();
-  console.log('guest suer cookies useboardutils', session);
-  let userId = session?.user.id;
-  // if (!session && guestUserCookie) userId = guestUserCookie[0].user;
-  // else userId = session?.user.id;
+  const guestUserCookie = getGuestUserCookies();
+
+  const userId = !session && guestUserCookie ? guestUserCookie[0].user : undefined;
 
   const setToastState = useSetRecoilState(toastState);
 

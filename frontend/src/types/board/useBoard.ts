@@ -16,7 +16,5 @@ export default interface UseBoardType {
     { id: string; socketId?: string; teamId?: string },
     unknown
   >;
-  fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
   fetchBasedBoard: UseQueryResult<GetBoardResponse | null, unknown>;
-  fetchPublicBoard: UseQueryResult<GetBoardResponse | null, unknown>;
 }

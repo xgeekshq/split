@@ -34,7 +34,7 @@ import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { getGuestUserCookies } from '@/hooks/useUser';
 import axios from 'axios';
-import { getCookies, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { sortParticipantsList } from './[boardId]/participants';
@@ -56,7 +56,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   );
 
   const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
-  console.log(context.req.cookies);
 
   // if not public, get board from private endpoint
   if (!isPublic) {
@@ -104,26 +103,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cookiesGuestUser: GuestUser[] = getGuestUserCookies({ req, res }, true);
 
   if (!session) {
-    if (!cookiesGuestUser)
+    if (!cookiesGuestUser) {
       return {
         redirect: {
           permanent: false,
           destination: `/login-guest-user/${boardId}`,
         },
       };
+    }
 
     let guestUserHasCurrentBoard = cookiesGuestUser.find((cookie) => cookie.board === boardId);
-    console.log('before: ', cookiesGuestUser);
-    console.log(guestUserHasCurrentBoard);
 
     if (!guestUserHasCurrentBoard) {
-      console.log('here');
       try {
         const { data } = await axios.post('http://localhost:3200/auth/loginGuest', {
           user: cookiesGuestUser[0].user,
           board: boardId,
         });
-        console.log('data', data);
+
         if (data) {
           const guestUserCookieArray = getGuestUserCookies({ req, res }, true);
           guestUserCookieArray.push(data);
@@ -131,15 +128,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           guestUserHasCurrentBoard = data;
         }
       } catch (error) {
-        console.log('error', error);
-        /* empty */
+        return {
+          redirect: {
+            permanent: false,
+            destination: '/dashboard',
+          },
+        };
       }
     }
 
-    console.log('after: ', getGuestUserCookies({ req, res }, true));
-
     if (!guestUserHasCurrentBoard) {
-      console.log('I"m not supposed to be here');
       return {
         redirect: {
           permanent: false,
@@ -150,18 +148,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { board, user } = guestUserHasCurrentBoard;
 
-    await queryClient.fetchQuery(['publicBoard', { boardId: board, userId: user }], () =>
+    await queryClient.fetchQuery(['board', { id: board }], () =>
       getPublicBoardRequest({ boardId: board, userId: user }, context),
     );
-
-    const data = queryClient.getQueryData<GetBoardResponse>([
-      'publicBoard',
-      { boardId: board, userId: user },
-    ]);
-    console.log('last step', data);
   }
-  console.log('em principio vem');
-  console.log(queryClient);
 
   return {
     props: {
@@ -191,57 +181,47 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
   // Session Details
-  const { data: session } = useSession();
-  console.log('cookie please T.T', document.cookie);
+  const { data: session } = useSession({ required: false });
+
   const guestUserCookies = getGuestUserCookies();
-  console.log('user cokkie T.T', getCookies());
-  let userId;
-  if (!session && guestUserCookies) userId = guestUserCookies[0].user;
-  else userId = session?.user?.id;
-  console.log(userId);
+
+  const userId: string | undefined =
+    !session && guestUserCookies ? guestUserCookies[0].user : session?.user?.id;
 
   // Hooks
   const {
-    fetchPublicBoard: { data },
+    fetchBasedBoard: { data },
   } = useBoard({
-    autoFetchBoard: true,
+    autoFetchBoard: !!userId,
   });
-
-  console.log('dataaaaa', data);
 
   const board = data?.board;
   const isSubBoard = board?.isSubBoard;
   const route = useRouter();
-  console.log('ROUTER', route);
 
   const isPersonalBoard = !data?.board.team; // personal boards don't have teams
 
-  // regular boards have teams but no subboards (divided boards)
+  // // regular boards have teams but no subboards (divided boards)
   const isRegularOrPersonalBoard =
     (!data?.board.isSubBoard && !!data?.board.team && !data?.board.dividedBoards.length) ||
     !data?.board.team;
 
-  // Socket IO Hook
+  // // Socket IO Hook
   const { socketId, emitEvent, listenEvent } = useSocketIO(boardId);
 
   // Use effect to set recoil state using data from API
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
+
       if (!data.board.team) {
         setEditColumns(data.board.columns);
         setDeletedColumns([]);
         sortParticipantsList([...data.board.users], setBoardParticipants);
       }
     }
-  }, [
-    data,
-    session?.user.id,
-    setDeletedColumns,
-    setEditColumns,
-    setBoardParticipants,
-    setRecoilBoard,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, userId]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
@@ -306,12 +286,22 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     setIsOpen(true);
   };
 
-  if (!recoilBoard) return <LoadingPage />;
+  if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
+    return <LoadingPage />;
+  }
 
   if (isRegularOrPersonalBoard)
-    return <RegularBoard socketId={socketId} emitEvent={emitEvent} listenEvent={listenEvent} />;
+    return (
+      <RegularBoard
+        socketId={socketId}
+        emitEvent={emitEvent}
+        listenEvent={listenEvent}
+        userId={userId}
+        userSAdmin={session?.user.isSAdmin}
+      />
+    );
 
-  return board && userId && socketId ? (
+  return (
     <>
       <BoardHeader />
       <Container direction="column">
@@ -375,8 +365,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         />
       </Container>
     </>
-  ) : (
-    <LoadingPage />
   );
 };
 

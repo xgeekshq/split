@@ -19,6 +19,7 @@ import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+import { getGuestUserCookies } from '@/hooks/useUser';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (
@@ -46,11 +47,17 @@ const BoardParticipants = () => {
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
   const setRecoilBoard = useSetRecoilState(boardInfoState);
 
+  const guestUserCookies = getGuestUserCookies();
+
+  let userId: string | undefined;
+  if (!session && guestUserCookies) userId = guestUserCookies[0].user;
+  else userId = session?.user?.id;
+
   // Hooks
   const {
-    fetchBoard: { data: boardData },
+    fetchBasedBoard: { data: boardData },
   } = useBoard({
-    autoFetchBoard: true,
+    autoFetchBoard: !!userId,
   });
 
   useEffect(() => {

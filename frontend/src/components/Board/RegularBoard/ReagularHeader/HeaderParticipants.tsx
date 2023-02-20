@@ -13,7 +13,7 @@ interface Props {
 }
 
 const HeaderParticipants = ({ isParticipantsPage }: Props) => {
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
 
   // Atoms
   const boardData = useRecoilValue(boardInfoState);
@@ -35,7 +35,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
           responsible={false}
           listUsers={users}
           teamAdmins={false}
-          userId={session!.user.id}
+          userId={session?.user.id}
           isClickable
         />
       </Flex>
@@ -50,7 +50,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
           responsible
           listUsers={users}
           teamAdmins={false}
-          userId={session!.user.id}
+          userId={session?.user.id}
           isClickable
         />
       </Flex>
