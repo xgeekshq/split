@@ -1,6 +1,4 @@
-/* eslint-disable */
-// @ts-nocheck
-import { ReactElement, ReactNode, useEffect } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { DehydratedState, Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { NextPage } from 'next';
@@ -14,7 +12,7 @@ import globalStyles from '@/styles/globals';
 
 import Sprite from '@/components/icons/Sprite';
 import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
-import { JWT_EXPIRATION_TIME } from '@/utils/constants';
+import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 import { Session } from 'next-auth';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -60,7 +58,7 @@ function Root({
               <RecoilRoot>
                 {getLayout(<Component {...pageProps} />)}
                 <Toast />
-                <RecoilDevTools />
+                {RECOIL_DEV_TOOLS && <RecoilDevTools />}
               </RecoilRoot>
               <ToastViewport
                 css={{
