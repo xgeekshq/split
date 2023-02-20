@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.13...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.14...HEAD)
+
+## [v0.1.14](https://github.com/xgeekshq/split/compare/v0.1.13...v0.1.14) - 2023-02-20
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: timer position @nunocaseiro (#1130)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.13...v0.1.14
 
 ## [v0.1.13](https://github.com/xgeekshq/split/compare/v0.1.12...v0.1.13) - 2023-02-20
 
