@@ -27,6 +27,7 @@ export interface UseUserType {
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
   getUserById: UseQueryResult<User, unknown>;
   registerGuestUser: UseMutationResult<GuestUser, unknown, CreateGuestUser, unknown>;
+  loginGuestUser: UseMutationResult<GuestUser, unknown, GuestUser, unknown>;
 }
 
 export interface LoginUser {

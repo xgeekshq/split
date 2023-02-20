@@ -52,3 +52,6 @@ export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordRes
 
 export const registerGuest = (newGuestUser: CreateGuestUser): Promise<GuestUser> =>
   fetchPublicData('/auth/registerGuest', { method: 'POST', data: newGuestUser });
+
+export const loginGuest = (guestUser: GuestUser): Promise<GuestUser> =>
+  fetchPublicData('/auth/registerGuest', { method: 'POST', data: guestUser });

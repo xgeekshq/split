@@ -3,7 +3,7 @@ import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
 
-import { registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
   EmailUser,
   NewPassword,
@@ -13,7 +13,9 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { useRouter } from 'next/router';
+import { getCookie, setCookie } from 'cookies-next';
+import { OptionsType } from 'cookies-next/lib/types';
+import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { deleteUserRequest, updateUserIsAdminRequest, getUser } from '../api/userService';
 import useUserUtils from './useUserUtils';
 
@@ -21,17 +23,43 @@ interface AutoFetchProps {
   autoFetchGetUser?: boolean;
 }
 
+export const getGuestUserCookies = (options?: OptionsType, isServerSide: boolean = false) => {
+  const cookie = isServerSide
+    ? getCookie(GUEST_USER_COOKIE, options)
+    : getCookie(GUEST_USER_COOKIE);
+  return cookie ? JSON.parse(cookie as string) : cookie;
+};
+
 const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
-  const { setToastState, queryClient, userId } = useUserUtils();
-  const router = useRouter();
+  const { setToastState, queryClient, userId, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
     onSuccess: (data) => {
-      // const guestUserCookie = getCookie('guest-user-session');
-      // if(guestUserCookie){
-      //   setCookie('guest-user-session', )
-      // }
+      const guestUserCookie = getGuestUserCookies();
+
+      if (!guestUserCookie) {
+        setCookie(GUEST_USER_COOKIE, [data]);
+      } else {
+        const guestUserCookieArray = getGuestUserCookies();
+        guestUserCookieArray.push(data);
+        setCookie(GUEST_USER_COOKIE, guestUserCookieArray);
+      }
       router.push({ pathname: `/boards/[boardId]`, query: { boardId: data.board } });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Error login guest user',
+      });
+    },
+  });
+
+  const loginGuestUser = useMutation(loginGuest, {
+    onSuccess: (data) => {
+      const guestUserCookieArray = getGuestUserCookies();
+      guestUserCookieArray.push(data);
+      setCookie(GUEST_USER_COOKIE, guestUserCookieArray);
     },
     onError: () => {
       setToastState({
@@ -130,6 +158,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
     deleteUser,
     getUserById,
     registerGuestUser,
+    loginGuestUser,
   };
 };
 

@@ -7,6 +7,7 @@ import {
   deleteBoardRequest,
   getBoardRequest,
   updateBoardRequest,
+  getPublicBoardRequest,
 } from '@/api/boardService';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
@@ -19,7 +20,7 @@ interface AutoFetchProps {
 }
 
 const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
-  const { boardId, queryClient, setToastState } = useBoardUtils();
+  const { boardId, queryClient, setToastState, userId, session } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
   // #region BOARD
@@ -36,6 +37,45 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
       });
     },
   });
+
+  const fetchBasedBoard = useQuery(
+    ['basedBoard', { boardId, userId }],
+    () => {
+      if (!session?.user) {
+        return getPublicBoardRequest({ boardId, userId });
+      }
+      return getBoardRequest(boardId);
+    },
+    {
+      enabled: autoFetchBoard,
+      refetchOnWindowFocus: true,
+      onError: () => {
+        queryClient.invalidateQueries(['basedBoard', { boardId, userId }]);
+        setToastState({
+          open: true,
+          content: 'Error getting the board',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+  console.log('hereeeeeeee', boardId, userId);
+  const fetchPublicBoard = useQuery(
+    ['publicBoard', { boardId, userId }],
+    () => getPublicBoardRequest({ boardId, userId }),
+    {
+      enabled: autoFetchBoard,
+      refetchOnWindowFocus: true,
+      onError: () => {
+        queryClient.invalidateQueries(['publicBoard', { boardId, userId }]);
+        setToastState({
+          open: true,
+          content: 'Error getting the board',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
 
   const createBoard = useMutation(createBoardRequest, {
     onSuccess: (data) => setNewBoard(data._id),
@@ -119,6 +159,8 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     createBoard,
     deleteBoard,
     updateBoard,
+    fetchBasedBoard,
+    fetchPublicBoard,
   };
 };
 

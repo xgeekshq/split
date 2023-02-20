@@ -17,4 +17,6 @@ export default interface UseBoardType {
     unknown
   >;
   fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
+  fetchBasedBoard: UseQueryResult<GetBoardResponse | null, unknown>;
+  fetchPublicBoard: UseQueryResult<GetBoardResponse | null, unknown>;
 }

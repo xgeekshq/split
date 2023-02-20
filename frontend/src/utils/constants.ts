@@ -59,3 +59,5 @@ export const BOARD_TIMER_SERVER_SENT_TIMER_STATE = 'board-timer.server.sent.time
 export const CARD_TEXT_DEFAULT = 'Write your comment here...';
 
 export const CARD_TEXT_TO_IMPROVE_SPLIT_COLUMN = `Description: \n\nHow to improve:`;
+
+export const GUEST_USER_COOKIE = 'guest-user-session';
