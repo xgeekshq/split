@@ -1,6 +1,6 @@
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 
 const DisabledDeleteColumnButton = () => (
   <Tooltip content="Your board must have at least one column.">

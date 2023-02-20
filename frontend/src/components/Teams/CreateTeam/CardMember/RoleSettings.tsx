@@ -15,7 +15,7 @@ import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import useTeam from '@/hooks/useTeam';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { useRouter } from 'next/router';
 
 interface PopoverRoleSettingsProps {

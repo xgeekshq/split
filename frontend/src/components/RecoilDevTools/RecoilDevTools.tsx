@@ -1,5 +1,5 @@
 import { useRecoilCallback } from 'recoil';
-import Icon from '../icons/Icon';
+import Icon from '../Primitives/Icon';
 import Button from '../Primitives/Button';
 
 const RecoilDevTools = () => {

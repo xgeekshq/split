@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { HeaderInfo } from '@/types/dashboard/header.info';
 import { BOARDS_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';

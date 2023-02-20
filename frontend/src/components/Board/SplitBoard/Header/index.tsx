@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
 import Breadcrumb from '@/components/Primitives/Breadcrumb';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';

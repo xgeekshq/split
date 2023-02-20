@@ -6,7 +6,7 @@ import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.c
 import { styled } from '@/styles/stitches/stitches.config';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';

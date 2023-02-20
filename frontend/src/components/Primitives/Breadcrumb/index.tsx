@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { Fragment } from 'react';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { BreadcrumbItemType, BreadcrumbType } from '@/types/board/Breadcrumb';
 import { StyledList, StyledBreadcrumbItem } from './styles';
 

@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import { CardItemType } from '@/types/card/cardItem';

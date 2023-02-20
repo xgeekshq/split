@@ -15,7 +15,7 @@ import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';

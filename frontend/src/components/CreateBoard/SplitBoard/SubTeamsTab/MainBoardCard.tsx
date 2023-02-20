@@ -1,7 +1,7 @@
 import React from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Box from '@/components/Primitives/Box';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Separator from '@/components/Primitives/Separator';
