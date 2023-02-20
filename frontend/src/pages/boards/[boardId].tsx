@@ -213,6 +213,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     setIsOpen(true);
   };
 
+  const shouldShowLeftSection =
+    !showMessageIfMerged && (showButtonToMerge || showMessageHaveSubBoardsMerged);
+
   if (!recoilBoard) return <LoadingPage />;
 
   if (isRegularOrPersonalBoard)
@@ -222,8 +225,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     <>
       <BoardHeader />
       <Container direction="column">
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="between">
-          {!showMessageIfMerged && (
+        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
+          {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
               {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
 
@@ -238,7 +241,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
           )}
 
           {!board?.submitedAt && (
-            <Flex css={{ flex: 1 }}>
+            <Flex css={{ flex: shouldShowLeftSection ? 1 : 0 }}>
               <Timer
                 boardId={boardId}
                 isAdmin={hasAdminRole}
