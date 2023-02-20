@@ -1,6 +1,7 @@
 /* eslint react/no-unknown-property: 0 */
 const Sprite = () => (
   <svg
+    id="iconSprite"
     focusable="false"
     preserveAspectRatio="xMidYMid meet"
     style={{ visibility: 'hidden', position: 'absolute', pointerEvents: 'none' }}
