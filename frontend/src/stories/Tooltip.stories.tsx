@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Button from '@/components/Primitives/Button';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 
 export default {
   title: 'Primitives/Tooltip',

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';

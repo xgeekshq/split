@@ -6,7 +6,7 @@ import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';

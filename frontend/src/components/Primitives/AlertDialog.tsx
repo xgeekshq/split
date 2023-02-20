@@ -7,7 +7,7 @@ import { overlayShow } from '@/animations/DialogShow';
 import Button from './Button';
 import Flex from './Flex';
 import Text from './Text';
-import Icon from '../icons/Icon';
+import Icon from './Icon';
 import Separator from './Separator';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {

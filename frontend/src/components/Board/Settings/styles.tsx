@@ -2,7 +2,7 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 
 /**
  * Accordion Animations

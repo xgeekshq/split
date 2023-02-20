@@ -15,7 +15,7 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
-import Icon from '../icons/Icon';
+import Icon from '../Primitives/Icon';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 

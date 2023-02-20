@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { membersListState } from '@/store/team/atom/team.atom';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import CardMember from '../CardMember';
 import { ListMembers } from '../ListMembers';

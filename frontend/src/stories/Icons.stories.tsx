@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import Sprite from '@/components/icons/Sprite';
 import dedent from 'ts-dedent';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Input from '@/components/Primitives/Input';

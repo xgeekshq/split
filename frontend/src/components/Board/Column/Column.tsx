@@ -8,7 +8,7 @@ import { ColumnBoardType } from '@/types/column';
 import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';

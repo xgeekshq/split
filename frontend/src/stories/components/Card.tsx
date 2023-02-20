@@ -2,13 +2,17 @@ import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import React from 'react';
 
-const Card = ({ display, children }: any) => (
+const Card = ({ display, backgroundColor, children }: any) => (
   <Box variant="bordered" css={{ width: '$260' }}>
     <Flex
-      css={{ py: '$24', backgroundColor: '$white', borderRadius: '$8 $8 0 0' }}
+      css={{
+        py: display ? '$24' : '$64',
+        backgroundColor: backgroundColor || '$white',
+        borderRadius: '$8 $8 0 0',
+      }}
       justify="center"
     >
-      {display}
+      {display && display}
     </Flex>
     <Flex direction="column" css={{ p: '$12', borderTop: '1px solid $primary100' }}>
       {children}

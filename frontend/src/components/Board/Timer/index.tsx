@@ -6,7 +6,7 @@ import {
   TimePanelText,
   TimerContainer,
 } from '@/components/Board/Timer/styles';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import useTimer from '@/hooks/useTimer';
 import EmitEvent from '@/types/events/emit-event.type';
