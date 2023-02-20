@@ -1,6 +1,6 @@
 import React from 'react';
 
-const HeaderBannerIcon = () => (
+const BannerIcon = () => (
   <svg fill="none" height="26" viewBox="0 0 124 26" width="124" xmlns="http://www.w3.org/2000/svg">
     <path
       clipRule="evenodd"
@@ -11,4 +11,4 @@ const HeaderBannerIcon = () => (
   </svg>
 );
 
-export default HeaderBannerIcon;
+export default BannerIcon;

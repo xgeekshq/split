@@ -1,8 +1,10 @@
-import HeaderBannerIcon from '@/components/icons/HeaderBanner';
+import BannerIcon from '@/components/Sidebar/partials/Header/Banner';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Separator from '@/components/Primitives/Separator';
+import Link from 'next/link';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { StyledHeader } from './styles';
 
 type Props = { firstName: string; lastName: string; email: string };
@@ -13,7 +15,11 @@ const Header = ({ firstName, lastName, email }: Props) => {
   return (
     <StyledHeader direction="column">
       <Flex align="center" css={{ p: '$40' }} justify="center">
-        <HeaderBannerIcon />
+        <Link href={DASHBOARD_ROUTE}>
+          <Flex pointer>
+            <BannerIcon />
+          </Flex>
+        </Link>
       </Flex>
       <Separator css={{ backgroundColor: '$primary600' }} />
       <Flex
