@@ -216,6 +216,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const shouldShowLeftSection =
     !showMessageIfMerged && (showButtonToMerge || showMessageHaveSubBoardsMerged);
 
+  const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
+
   if (!recoilBoard) return <LoadingPage />;
 
   if (isRegularOrPersonalBoard)
@@ -240,8 +242,19 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </Flex>
           )}
 
+          {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
+
           {!board?.submitedAt && (
-            <Flex css={{ flex: shouldShowLeftSection ? 1 : 0 }}>
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent:
+                  ((!shouldShowLeftSection || !shouldShowRightSection) && shouldShowLeftSection) ||
+                  (!shouldShowLeftSection && !shouldShowRightSection)
+                    ? 'center'
+                    : 'normal',
+              }}
+            >
               <Timer
                 boardId={boardId}
                 isAdmin={hasAdminRole}
@@ -250,8 +263,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               />
             </Flex>
           )}
-
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldShowRightSection && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
@@ -272,9 +284,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </>
           )}
 
-          {showMessageIfMerged ? (
+          {!shouldShowRightSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
+
+          {showMessageIfMerged && (
             <AlertGoToMainBoard mainBoardId={mainBoardId} submitedAt={board.submitedAt as Date} />
-          ) : null}
+          )}
         </Flex>
 
         <DragDropArea
