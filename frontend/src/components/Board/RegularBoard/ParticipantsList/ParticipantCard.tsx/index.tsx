@@ -2,7 +2,7 @@ import React from 'react';
 
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import {
   IconButton,
   InnerContainer,

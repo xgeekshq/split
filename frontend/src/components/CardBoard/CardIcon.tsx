@@ -1,4 +1,4 @@
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Tooltip from '@/components/Primitives/Tooltip';
 import BoardType from '@/types/board/board';
 import isEmpty from '@/utils/isEmpty';

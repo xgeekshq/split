@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import isEmpty from '@/utils/isEmpty';
 import Flex from '../Flex';
 import Text from '../Text';

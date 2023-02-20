@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { CSSProps } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '../Flex';
 import Text from '../Text';
 import { AlertIconStyle, AlertStyle, AlertText } from './styles';

@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
 import Tooltip from '@/components/Primitives/Tooltip';

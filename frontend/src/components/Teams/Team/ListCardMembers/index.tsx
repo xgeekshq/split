@@ -8,7 +8,7 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import CardMember from '@/components/Teams/CreateTeam/CardMember';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import { ListMembers } from '../../CreateTeam/ListMembers';
 import { ScrollableContent } from './styles';
