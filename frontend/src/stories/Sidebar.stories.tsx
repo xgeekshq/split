@@ -89,7 +89,7 @@ export const Item: ComponentStory<typeof SidebarItem> = ({
   label,
   active,
 }) => (
-  <Flex css={{ backgroundColor: '$primary800', width: '256px' }}>
+  <Flex direction="column" css={{ backgroundColor: '$primary800', width: '256px' }}>
     <SidebarItem
       disabled={disabled}
       link={link}
