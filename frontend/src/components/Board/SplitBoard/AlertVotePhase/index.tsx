@@ -1,5 +1,4 @@
 import { updateBoardPhaseRequest } from '@/api/boardService';
-import Icon from '@/components/icons/Icon';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,6 +8,7 @@ import {
 } from '@/components/Primitives/AlertDialog';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
+import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { UpdateBoardPhase } from '@/types/board/board';
 import EmitEvent from '@/types/events/emit-event.type';
