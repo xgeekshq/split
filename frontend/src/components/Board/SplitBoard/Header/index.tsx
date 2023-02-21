@@ -288,13 +288,13 @@ const BoardHeader = () => {
               <Icon name="info" />
               {boardData.board.phase === BoardPhases.ADDCARDS ||
               boardData.board.phase === undefined ? (
-                <text>
+                <div>
                   {
                     dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt)
                       .length
                   }{' '}
                   of {dividedBoards.length} sub-team boards merged
-                </text>
+                </div>
               ) : null}
               {boardData.board.phase === BoardPhases.VOTINGPHASE ? <text>Voting Phase</text> : null}
               {boardData.board.phase === BoardPhases.SUBMITED ? <text>Submited</text> : null}

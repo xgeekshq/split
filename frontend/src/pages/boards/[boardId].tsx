@@ -229,7 +229,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   };
 
   const shouldShowLeftSection =
-    !showMessageIfMerged && (showButtonToMerge || showMessageHaveSubBoardsMerged);
+    !showMessageIfMerged &&
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote);
 
   const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
 
