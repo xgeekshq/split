@@ -18,7 +18,6 @@ import {
 } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
-import BoardVotePhaseDto from 'src/libs/dto/board-vote-phase.dto';
 import { hideText } from 'src/libs/utils/hideText';
 import Board from 'src/modules/boards/entities/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
@@ -38,7 +37,6 @@ import UserUpdatedTimerDurationEvent from 'src/modules/socket/events/user-update
 import JoinPayload from 'src/modules/socket/interfaces/joinPayload.interface';
 import JoinPayloadBoards from 'src/modules/socket/interfaces/joinPayloadBoards.interface';
 import VoteDto from 'src/modules/votes/dto/vote.dto';
-import UserStartedVoteEvent from '../events/user-started-vote-phase.event';
 
 type SendEventToBoardType = {
 	event: string;
@@ -200,21 +198,6 @@ export default class SocketGateway
 		payload.clientId = client.id;
 
 		this.eventEmitter.emit(BOARD_TIMER_USER_STOPPED, new UserStoppedTimerEvent(payload));
-	}
-
-	@SubscribeMessage('board-voting.user.started')
-	handleUserStartedVotingPahse(client: Socket, payload: BoardVotePhaseDto) {
-		payload.clientId = client.id;
-
-		this.logger.log(
-			`Socket handling "${'board-voting.user.started'}". Board: "${payload.boardId})"`
-		);
-
-		this.sendEvent({
-			event: 'board-voting.user.started',
-			payload: new UserStartedVoteEvent(payload),
-			to: payload.boardId
-		});
 	}
 
 	afterInit() {
