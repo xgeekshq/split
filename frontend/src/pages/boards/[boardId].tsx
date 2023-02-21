@@ -191,6 +191,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Show button in main board to start voting if is Admin
   const showButtonToVote = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
     board?.phase === BoardPhases.ADDCARDS &&
     !isSubBoard &&
     hasAdminRole &&
