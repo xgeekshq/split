@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.14...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.15...HEAD)
+
+## [v0.1.15](https://github.com/xgeekshq/split/compare/v0.1.14...v0.1.15) - 2023-02-21
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: board number when the responsible is changed @nunocaseiro (#1131)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.14...v0.1.15
 
 ## [v0.1.14](https://github.com/xgeekshq/split/compare/v0.1.13...v0.1.14) - 2023-02-20
 
