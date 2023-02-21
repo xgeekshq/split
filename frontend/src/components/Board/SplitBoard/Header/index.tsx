@@ -23,6 +23,7 @@ import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers'
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -285,9 +286,18 @@ const BoardHeader = () => {
           <PopoverTrigger asChild>
             <BoardCounter>
               <Icon name="info" />
-              {
-                dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length
-              } of {dividedBoards.length} sub-team boards merged
+              {boardData.board.phase === BoardPhases.ADDCARDS ||
+              boardData.board.phase === undefined ? (
+                <text>
+                  {
+                    dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt)
+                      .length
+                  }{' '}
+                  of {dividedBoards.length} sub-team boards merged
+                </text>
+              ) : null}
+              {boardData.board.phase === BoardPhases.VOTINGPHASE ? <text>Voting Phase</text> : null}
+              {boardData.board.phase === BoardPhases.SUBMITED ? <text>Submited</text> : null}
             </BoardCounter>
           </PopoverTrigger>
           <PopoverPortal>
