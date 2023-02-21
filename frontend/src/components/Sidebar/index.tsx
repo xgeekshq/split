@@ -1,4 +1,4 @@
-import SideBarContent from './partials/Content';
+import SidebarContent from './partials/Content';
 import Header from './partials/Header';
 import { StyledSidebar } from './styles';
 
@@ -13,7 +13,7 @@ type SideBarProps = {
 const Sidebar = ({ firstName, lastName, email, strategy }: SideBarProps) => (
   <StyledSidebar>
     <Header email={email} firstName={firstName} lastName={lastName} />
-    <SideBarContent strategy={strategy} />
+    <SidebarContent strategy={strategy} />
   </StyledSidebar>
 );
 
