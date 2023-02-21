@@ -80,7 +80,8 @@ import { configuration } from './configuration';
 				REDIS_USER: Joi.string(),
 				REDIS_PASSWORD: Joi.string(),
 				REDIS_HOST: Joi.string().required(),
-				REDIS_PORT: Joi.number().required()
+				REDIS_PORT: Joi.number().required(),
+				AZURE_STORAGE_CONNECTION_STRING: Joi.string().required()
 			})
 		})
 	],

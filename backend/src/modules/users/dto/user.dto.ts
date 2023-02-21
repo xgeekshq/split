@@ -37,4 +37,8 @@ export default class UserDto {
 	@IsOptional()
 	@IsDateString()
 	providerAccountCreatedAt?: Date;
+
+	@ApiPropertyOptional({ default: '' })
+	@IsOptional()
+	avatar?: string;
 }
