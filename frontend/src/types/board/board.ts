@@ -44,6 +44,7 @@ export default interface BoardType {
   responsibles?: string[];
   addCards: boolean;
   postAnonymously: boolean;
+  phase?: string;
 }
 
 export interface BoardInfoType {
@@ -91,4 +92,10 @@ export type UpdateBoardType = {
   responsible?: BoardUser;
   postAnonymously: boolean;
   team?: string;
+  phase?: string;
+};
+
+export type UpdateBoardPhase = {
+  _id: string;
+  phase: string;
 };
