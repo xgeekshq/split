@@ -34,6 +34,7 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -190,6 +191,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Show button in main board to start voting if is Admin
   const showButtonToVote = !!(
+    board?.phase === BoardPhases.ADDCARDS &&
     !isSubBoard &&
     hasAdminRole &&
     !board?.submitedByUser &&
