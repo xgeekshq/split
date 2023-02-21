@@ -237,8 +237,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				newResponsible,
 				currentResponsible,
 				board._id,
-				board.title,
-				board.slackChannelId
+				board.slackChannelId,
+				board.boardNumber
 			);
 		}
 
@@ -295,8 +295,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		newResponsible: ResponsibleType,
 		currentResponsible: ResponsibleType | undefined,
 		boardId: string,
-		boardTitle: string,
-		slackChannelId: string
+		slackChannelId: string,
+		boardNumber: number
 	) {
 		this.slackCommunicationService.executeResponsibleChange({
 			newResponsibleEmail: newResponsible.email,
@@ -304,7 +304,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			subTeamChannelId: slackChannelId,
 			responsiblesChannelId: (await this.boardModel.findOne({ dividedBoards: { $in: [boardId] } }))
 				?.slackChannelId,
-			teamNumber: Number(boardTitle[boardTitle.length - 1]),
+			teamNumber: boardNumber,
 			email: newResponsible.email
 		});
 	}
