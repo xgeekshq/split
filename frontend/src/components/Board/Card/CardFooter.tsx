@@ -12,6 +12,7 @@ import CardType from '@/types/card/card';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
 import { getInitials } from '@/utils/getInitials';
+import { BoardPhases } from '@/utils/enums/board.phases';
 
 interface FooterProps {
   boardId: string;
@@ -28,6 +29,7 @@ interface FooterProps {
   maxVotes?: number;
   hideCards: boolean;
   isRegularBoard?: boolean;
+  phase?: string;
 }
 
 const CardFooter = ({
@@ -45,6 +47,7 @@ const CardFooter = ({
   isCommentsOpened,
   hideCards,
   isRegularBoard,
+  phase,
 }: FooterProps) => {
   const createdBy = useMemo(() => {
     if (Object.hasOwnProperty.call(card, 'items')) {
@@ -191,7 +194,13 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={disableVotes || (maxVotes && user?.votesCount === maxVotes) || hideCards}
+              disabled={
+                disableVotes ||
+                (maxVotes && user?.votesCount === maxVotes) ||
+                hideCards ||
+                phase === BoardPhases.VOTINGPHASE ||
+                phase === BoardPhases.SUBMITED
+              }
               onClick={handleAddVote}
             >
               <Icon name="thumbs-up" />
@@ -224,7 +233,9 @@ const CardFooter = ({
                 votesInThisCard.length === 0 ||
                 (maxVotes && userVotes === 0) ||
                 votesOfUserInThisCard === 0 ||
-                hideCards
+                hideCards ||
+                phase === BoardPhases.VOTINGPHASE ||
+                phase === BoardPhases.SUBMITED
               }
               onClick={handleDeleteVote}
             >

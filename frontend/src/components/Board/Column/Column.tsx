@@ -25,6 +25,7 @@ type ColumMemoProps = {
   postAnonymously: boolean;
   columnIndex: number;
   isSubBoard?: boolean;
+  phase?: string;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -50,6 +51,7 @@ const Column = React.memo<ColumMemoProps>(
     postAnonymously,
     columnIndex,
     isSubBoard,
+    phase,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -222,6 +224,7 @@ const Column = React.memo<ColumMemoProps>(
                           postAnonymously={postAnonymously}
                           isRegularBoard={isRegularBoard}
                           cardTextDefault={cardText}
+                          phase={phase}
                         />
                         {provided.placeholder}
                       </CardsContainer>

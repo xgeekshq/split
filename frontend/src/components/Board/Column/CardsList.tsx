@@ -7,6 +7,7 @@ import CardBoard from '../Card/CardBoard';
 type CardListProps = {
   isRegularBoard?: boolean;
   cardTextDefault?: string;
+  phase?: string;
 } & ColumnInnerList;
 
 const CardsList = React.memo<CardListProps>(
@@ -27,6 +28,7 @@ const CardsList = React.memo<CardListProps>(
     postAnonymously,
     isRegularBoard,
     cardTextDefault,
+    phase,
   }) => (
     <>
       {cards.map((card: CardType, idx) => (
@@ -49,6 +51,7 @@ const CardsList = React.memo<CardListProps>(
           postAnonymously={postAnonymously}
           isRegularBoard={isRegularBoard}
           cardTextDefault={cardTextDefault}
+          phase={phase}
         />
       ))}
     </>

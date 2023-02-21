@@ -44,6 +44,7 @@ interface CardBoardProps {
   hasAdminRole: boolean;
   postAnonymously: boolean;
   isRegularBoard?: boolean;
+  phase?: string;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -65,6 +66,7 @@ const CardBoard = React.memo<CardBoardProps>(
     postAnonymously,
     isRegularBoard,
     cardTextDefault,
+    phase,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -240,6 +242,7 @@ const CardBoard = React.memo<CardBoardProps>(
                     socketId={socketId}
                     userId={userId}
                     isRegularBoard={isRegularBoard}
+                    phase={phase}
                   />
                 </Flex>
               )}
