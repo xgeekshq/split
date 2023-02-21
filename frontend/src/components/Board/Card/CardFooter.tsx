@@ -198,7 +198,7 @@ const CardFooter = ({
                 disableVotes ||
                 (maxVotes && user?.votesCount === maxVotes) ||
                 hideCards ||
-                phase === BoardPhases.VOTINGPHASE ||
+                phase === BoardPhases.ADDCARDS ||
                 phase === BoardPhases.SUBMITED
               }
               onClick={handleAddVote}
