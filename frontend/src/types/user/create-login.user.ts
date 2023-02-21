@@ -10,4 +10,5 @@ export interface CreateOrLogin {
   lastName: string;
   isSAdmin: boolean;
   providerAccountCreatedAt?: string;
+  avatar?: string;
 }

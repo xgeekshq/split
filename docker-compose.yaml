@@ -79,6 +79,37 @@ services:
     env_file:
       - ./database/redis/.env
 
+  azurite:
+    container_name: azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - '${FORWARD_AZURITE_BLOB_PORT:-10000}:10000'
+    command: azurite-blob --blobHost 0.0.0.0 --disableProductStyleUrl
+    volumes:
+      - azurite:/data
+    networks:
+      - split-network
+    depends_on:
+      - azurite-init
+  
+  azurite-init:
+    image: curlimages/curl:7.87.0
+    entrypoint:
+    - /bin/sh
+    - -c
+    - |
+      echo "Waiting for Azurite to start..."
+      while ! nc -z azurite 10000; do sleep 1; done
+      curl --request PUT \
+      --url 'http://azurite:10000/devstoreaccount1/split-images?restype=container&sv=2021-10-04&ss=btqf&srt=sco&st=2022-12-14T16%3A22%3A03Z&se=2119-01-15T16%3A22%3A00Z&sp=rwdxftlacup&sig=uXt%2FXqfK1iFnNeDP60UD1CwJueWVoADE9gOLqkkI3NM%3D' \
+      --header 'x-ms-blob-public-access: blob'
+    networks:
+      - split-network
+
 networks:
   split-network:
     driver: bridge
+
+volumes:
+  azurite:
+    driver: local

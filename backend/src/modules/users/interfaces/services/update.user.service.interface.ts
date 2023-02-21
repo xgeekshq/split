@@ -15,4 +15,6 @@ export interface UpdateUserService {
 	checkEmail(token: string): Promise<string>;
 
 	updateSuperAdmin(user: UpdateUserDto, requestUser: UserDto): Promise<LeanDocument<UserDocument>>;
+
+	updateUserAvatar(avatar: string, userId: string): Promise<LeanDocument<UserDocument>>;
 }

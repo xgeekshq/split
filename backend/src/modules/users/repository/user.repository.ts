@@ -41,6 +41,14 @@ export class UserRepository
 		return this.findOneByFieldAndUpdate({ _id: userId }, { $set: { isSAdmin } }, { new: true });
 	}
 
+	updateUserAvatar(userId: string, avatarUrl: string): Promise<User> {
+		return this.findOneByFieldAndUpdate(
+			{ _id: userId },
+			{ $set: { avatar: avatarUrl } },
+			{ new: true }
+		);
+	}
+
 	deleteUser(userId: string, withSession: boolean) {
 		return this.findOneAndRemove(userId, withSession);
 	}

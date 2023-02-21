@@ -107,6 +107,7 @@ export default NextAuth({
           _id,
           isSAdmin,
           providerAccountCreatedAt,
+          avatar,
         } = data;
         user.firstName = firstName;
         user.lastName = lastName;
@@ -117,6 +118,7 @@ export default NextAuth({
         user.id = _id;
         user.isSAdmin = isSAdmin;
         user.providerAccountCreatedAt = providerAccountCreatedAt;
+        user.avatar = avatar;
       }
 
       return true;
@@ -135,6 +137,7 @@ export default NextAuth({
             email: user.email ?? '',
             isSAdmin: user.isSAdmin,
             refreshToken: user.refreshToken,
+            avatar: user.avatar,
           },
           strategy: user.strategy ?? 'local',
           error: '',
