@@ -220,14 +220,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     }
   }, [data, route]);
 
-  // Use effect to recieve value from websocket
-  /* useEffect(() => {
-    listenEvent('board-voting.user.started', (_payload) => {
-      //console.log('websocker do servidor');
-      //console.log(payload);
-    });
-  }, []); */
-
   const handleOpen = () => {
     setIsOpen(true);
   };
@@ -254,7 +246,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                 />
               )}
               {showButtonToVote && (
-                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
+                <AlertVotingPhase
+                  socketId={socketId}
+                  boardId={boardId}
+                  isAdmin={hasAdminRole}
+                  emitEvent={emitEvent}
+                />
               )}
             </Flex>
           )}

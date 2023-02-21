@@ -1,3 +1,4 @@
+// import { updateBoardPhaseRequest } from '@/api/boardService';
 import Icon from '@/components/icons/Icon';
 import {
   AlertDialog,
@@ -9,18 +10,28 @@ import {
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
+// import { boardInfoState } from '@/store/board/atoms/board.atom';
+// import { UpdateBoardPhase, UpdateBoardType } from '@/types/board/board';
 import EmitEvent from '@/types/events/emit-event.type';
+import fetchData from '@/utils/fetchData';
 
 type Props = {
   boardId: string;
   isAdmin: boolean;
   emitEvent: EmitEvent;
+  socketId: string;
 };
 
-const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin, emitEvent }) => {
+const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin, socketId }) => {
   const handleVoteClick = () => {
     if (isAdmin) {
-      emitEvent('board-voting.user.started', { boardId });
+      // TODO: Change fetch data to updateBoardPhaseRequest sending phase
+      // const updateBoardPhase: UpdateBoardPhase = {
+      //   _id: boardId,
+      //   phase: 'addcards',
+      // };
+      // updateBoardPhaseRequest(updateBoardPhase);
+      fetchData(`/boards/${boardId}/phase`, { method: 'PUT', data: { socketId } });
     }
   };
 
