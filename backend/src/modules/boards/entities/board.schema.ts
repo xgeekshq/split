@@ -78,8 +78,7 @@ export default class Board extends BaseModel {
 	@Prop({
 		type: String,
 		nullable: true,
-		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED],
-		default: 'addcards'
+		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
 	})
 	phase?: string;
 }

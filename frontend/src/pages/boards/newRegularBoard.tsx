@@ -202,6 +202,7 @@ const NewRegularBoard: NextPage = () => {
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
       responsibles,
+      phase: undefined,
     });
   };
 
