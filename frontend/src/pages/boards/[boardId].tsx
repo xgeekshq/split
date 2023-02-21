@@ -33,10 +33,10 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { getGuestUserCookies } from '@/hooks/useUser';
-import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
+import fetchPublicData from '@/utils/fetchPublicData';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
 
-  // if not public, get board from private endpoint
+  // if not public, get board from protected endpoint
   if (!isPublic) {
     try {
       await queryClient.fetchQuery(['board', { id: boardId }], () =>
@@ -89,20 +89,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return {
         redirect: {
           permanent: false,
-          destination: '/dashboard',
+          destination: DASHBOARD_ROUTE,
         },
       };
     }
   }
+
+  // if board is public
   const { req, res } = context;
 
-  // if public
-
-  // check if there are cookies and if the cookies have the board he's trying to access
-
+  // check if there are cookies and if the cookies have the board the user is trying to access
   const cookiesGuestUser: GuestUser[] = getGuestUserCookies({ req, res }, true);
 
   if (!session) {
+    // if there isn´t cookies, the guest user is registered
     if (!cookiesGuestUser) {
       return {
         redirect: {
@@ -112,20 +112,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    let guestUserHasCurrentBoard = cookiesGuestUser.find((cookie) => cookie.board === boardId);
+    let guestUserCurrentBoard = cookiesGuestUser.find((cookie) => cookie.board === boardId);
 
-    if (!guestUserHasCurrentBoard) {
+    // if the user doesn't have access to the board, he is added as a board user
+    if (!guestUserCurrentBoard) {
       try {
-        const { data } = await axios.post('http://localhost:3200/auth/loginGuest', {
-          user: cookiesGuestUser[0].user,
-          board: boardId,
+        const data = await fetchPublicData<GuestUser>('/auth/loginGuest', {
+          method: 'POST',
+          data: {
+            user: cookiesGuestUser[0].user,
+            board: boardId,
+          },
         });
 
         if (data) {
           const guestUserCookieArray = getGuestUserCookies({ req, res }, true);
           guestUserCookieArray.push(data);
           setCookie(GUEST_USER_COOKIE, guestUserCookieArray, { req, res });
-          guestUserHasCurrentBoard = data;
+          guestUserCurrentBoard = data;
         }
       } catch (error) {
         return {
@@ -136,17 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
       }
     }
-
-    if (!guestUserHasCurrentBoard) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: DASHBOARD_ROUTE,
-        },
-      };
-    }
-
-    const { board, user } = guestUserHasCurrentBoard;
+    const { board, user } = guestUserCurrentBoard as GuestUser;
 
     await queryClient.fetchQuery(['board', { id: board }], () =>
       getPublicBoardRequest({ boardId: board, userId: user }, context),
@@ -192,7 +186,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const {
     fetchBasedBoard: { data },
   } = useBoard({
-    autoFetchBoard: !!userId,
+    autoFetchBoard: true,
   });
 
   const board = data?.board;

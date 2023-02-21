@@ -34,7 +34,7 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		ConfigModule,
 		mongooseResetModule,
 		mongooseUserModule,
-		mongooseBoardUserModule,
+		mongooseBoardUserModule
 	],
 	providers: [
 		getTokenAuthService,

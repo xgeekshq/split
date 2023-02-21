@@ -13,6 +13,9 @@ import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import BoardType from '@/types/board/board';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { BoardUser } from '@/types/board/board.user';
+import { handleNewBoardUser } from '@/helper/board/transformBoard';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -23,6 +26,32 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   const { boardId, queryClient, setToastState, userId, session } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
+  const setReady = useSetRecoilState(operationsQueueAtom);
+
+  const getBoardQuery = (id: string | undefined) => ['board', { id }];
+
+  const setQueryDataAddBoardUser = (data: BoardUser) => {
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.board),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleNewBoardUser(old.board, data);
+
+          return {
+            board: {
+              ...old.board,
+              users: boardData.users,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+    setReady(true);
+  };
+
   // #region BOARD
 
   const fetchBasedBoard = useQuery(
@@ -129,6 +158,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     deleteBoard,
     updateBoard,
     fetchBasedBoard,
+    setQueryDataAddBoardUser,
   };
 };
 
