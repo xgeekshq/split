@@ -1,7 +1,7 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
 import {

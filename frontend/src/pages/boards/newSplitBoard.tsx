@@ -7,7 +7,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';

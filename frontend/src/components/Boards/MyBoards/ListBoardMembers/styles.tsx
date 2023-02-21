@@ -3,7 +3,7 @@ import Flex from '../../../Primitives/Flex';
 
 const ScrollableContent = styled(Flex, {
   py: '$24',
-  height: 'calc(100vh - 89px)',
+  height: '100%',
   overflowY: 'auto',
   pr: '$10',
 });

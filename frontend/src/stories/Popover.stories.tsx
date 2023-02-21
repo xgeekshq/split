@@ -10,7 +10,7 @@ import {
   PopoverItem,
   PopoverClose,
 } from '@/components/Primitives/Popover';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { PopoverVariantType, PopoverSizeType } from './types/PrimitiveTypes';
 

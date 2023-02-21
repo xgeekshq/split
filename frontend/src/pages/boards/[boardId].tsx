@@ -13,7 +13,7 @@ import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
@@ -279,6 +279,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const handleOpen = () => {
     setIsOpen(true);
   };
+  
+   const shouldShowLeftSection =
+    !showMessageIfMerged && (showButtonToMerge || showMessageHaveSubBoardsMerged);
+
+  const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;
@@ -299,8 +304,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     <>
       <BoardHeader />
       <Container direction="column">
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="between">
-          {!showMessageIfMerged && (
+        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
+          {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
               {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
 
@@ -314,8 +319,19 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </Flex>
           )}
 
+          {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
+
           {!board?.submitedAt && (
-            <Flex css={{ flex: 1 }}>
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent:
+                  ((!shouldShowLeftSection || !shouldShowRightSection) && shouldShowLeftSection) ||
+                  (!shouldShowLeftSection && !shouldShowRightSection)
+                    ? 'center'
+                    : 'normal',
+              }}
+            >
               <Timer
                 boardId={boardId}
                 isAdmin={hasAdminRole}
@@ -324,8 +340,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               />
             </Flex>
           )}
-
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldShowRightSection && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
@@ -346,9 +361,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </>
           )}
 
-          {showMessageIfMerged ? (
+          {!shouldShowRightSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
+
+          {showMessageIfMerged && (
             <AlertGoToMainBoard mainBoardId={mainBoardId} submitedAt={board.submitedAt as Date} />
-          ) : null}
+          )}
         </Flex>
 
         <DragDropArea

@@ -11,10 +11,14 @@ import { useSetRecoilState } from 'recoil';
 import { FormStyled } from './styles';
 
 type RadioGroupParticipantsProps = {
+  optionSelected: string;
   handleSelection: (value: string) => void;
 };
 
-const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps) => {
+const RadioGroupParticipants = ({
+  optionSelected,
+  handleSelection,
+}: RadioGroupParticipantsProps) => {
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   const handleSelect = (value: string) => {
@@ -30,6 +34,7 @@ const RadioGroupParticipants = ({ handleSelection }: RadioGroupParticipantsProps
           defaultValue="team"
           aria-label="View density"
           onValueChange={handleSelect}
+          value={optionSelected}
         >
           <Flex>
             <RadioGroupItem value="team" id="selectTeam">

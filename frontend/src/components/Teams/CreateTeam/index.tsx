@@ -9,7 +9,7 @@ import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import {
   Container,
   PageHeader,

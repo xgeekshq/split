@@ -6,7 +6,7 @@ import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';

@@ -4,7 +4,7 @@ import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
@@ -64,6 +64,8 @@ const RegularBoard = ({
   // Show board settings button if current user is allowed to edit
   const hasAdminRole = isStakeholderOrAdmin || userSAdmin || isOwner || isResponsible;
 
+  const shouldRenderBoardSettings = hasAdminRole && !board?.submitedAt;
+
   const userIsInBoard = useMemo(
     () => board.users.find((user) => user.user._id === userId),
     [board.users, userId],
@@ -79,9 +81,14 @@ const RegularBoard = ({
       <RegularBoardHeader />
       <Container direction="column">
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
-          <Flex css={{ flex: 1 }} />
+          {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
           {!board?.submitedAt && (
-            <Flex css={{ flex: 1 }}>
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent: shouldRenderBoardSettings ? 'normal' : 'center',
+              }}
+            >
               <Timer
                 boardId={board._id}
                 isAdmin={hasAdminRole}
@@ -90,7 +97,7 @@ const RegularBoard = ({
               />
             </Flex>
           )}
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldRenderBoardSettings && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />

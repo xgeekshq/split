@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
@@ -238,7 +238,7 @@ const CardFooter = ({
               variant="light"
               size="sm"
               css={{ color: '$primary500' }}
-              disabled={hideCards}
+              disabled={hideCards && card.createdBy?._id !== userId}
               onClick={setOpenComments}
             >
               <Icon name={isCommentsOpened ? 'comment-filled' : 'comment'} />

@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
 
-import Text from '@/components/Primitives/Text';
 import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -48,9 +47,7 @@ const ListBoardMembers = ({
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header>
-        <Text heading="4">Board Members</Text>
-      </Dialog.Header>
+      <Dialog.Header title="Board Members" />
       <ScrollableContent direction="column" justify="start">
         {!isEmpty(admin) && (
           <FilterBoardMembers
