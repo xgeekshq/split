@@ -246,12 +246,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                 />
               )}
               {showButtonToVote && (
-                <AlertVotingPhase
-                  socketId={socketId}
-                  boardId={boardId}
-                  isAdmin={hasAdminRole}
-                  emitEvent={emitEvent}
-                />
+                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
             </Flex>
           )}

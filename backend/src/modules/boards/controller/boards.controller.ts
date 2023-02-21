@@ -350,10 +350,10 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/phase')
-	async startVoting(@Param() { boardId }: BaseParam, @Body('socketId') socketId) {
+	async updateBoardPhase(@Param() { boardId }: BaseParam, @Body('phase') phase) {
 		const payload = {
 			boardId: boardId,
-			clientId: socketId
+			phase: phase
 		};
 		this.updateBoardApp.updateVotingPhase(payload);
 	}

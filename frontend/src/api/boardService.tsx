@@ -1,6 +1,11 @@
 import { GetServerSidePropsContext } from 'next';
 
-import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from '@/types/board/board';
+import BoardType, {
+  CreateBoardDto,
+  GetBoardResponse,
+  UpdateBoardPhase,
+  UpdateBoardType,
+} from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -25,6 +30,9 @@ export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType>
 export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
 ): Promise<BoardType> => fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
+
+export const updateBoardPhaseRequest = (board: UpdateBoardPhase): Promise<BoardType> =>
+  fetchData(`/boards/${board._id}/phase`, { method: 'PUT', data: { phase: board.phase } });
 
 export const getBoardRequest = (
   id: string,

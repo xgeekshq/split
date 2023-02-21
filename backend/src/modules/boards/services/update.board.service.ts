@@ -24,7 +24,12 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import {
+	DELETE_FAILED,
+	INSERT_FAILED,
+	PHASE_NOT_EXISTS,
+	UPDATE_FAILED
+} from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -481,6 +486,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async updateVotingPhase(payload: BoardVotePhaseDto) {
+		if (
+			payload.phase !== BoardPhases.ADDCARDS &&
+			payload.phase !== BoardPhases.VOTINGPHASE &&
+			payload.phase !== BoardPhases.SUBMITED
+		) {
+			throw new BadRequestException(PHASE_NOT_EXISTS);
+		}
 		try {
 			await this.boardModel
 				.findOneAndUpdate(
@@ -488,7 +500,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 						_id: payload.boardId
 					},
 					{
-						phase: BoardPhases.VOTINGPHASE
+						phase: payload.phase
 					}
 				)
 				.exec();
