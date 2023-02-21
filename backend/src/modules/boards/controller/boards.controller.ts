@@ -340,4 +340,21 @@ export default class BoardsController {
 
 		return result;
 	}
+
+	@ApiOperation({ summary: 'Update board phase' })
+	@ApiOkResponse({
+		description: 'Board in voting phase'
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Put(':boardId/phase')
+	async startVoting(@Param() { boardId }: BaseParam, @Body('socketId') socketId) {
+		const payload = {
+			boardId: boardId,
+			clientId: socketId
+		};
+		this.updateBoardApp.updateVotingPhase(payload);
+	}
 }

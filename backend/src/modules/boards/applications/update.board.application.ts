@@ -4,6 +4,7 @@ import { UpdateBoardApplicationInterface } from '../interfaces/applications/upda
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
+import BoardVotePhaseDto from 'src/libs/dto/board-vote-phase.dto';
 
 @Injectable()
 export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
@@ -28,5 +29,9 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		}
 
 		return this.updateBoardService.updateBoardParticipants(addBoardUsers, removeBoardUsers);
+	}
+
+	updateVotingPhase(payload: BoardVotePhaseDto) {
+		this.updateBoardService.updateVotingPhase(payload);
 	}
 }
