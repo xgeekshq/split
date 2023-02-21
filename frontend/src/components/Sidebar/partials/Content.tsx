@@ -15,9 +15,9 @@ import {
 } from '@/utils/routes';
 import SidebarItem from './Item';
 
-interface SidebarContentProps {
+type SidebarContentProps = {
   strategy: string;
-}
+};
 
 const sidebarItems = [
   { link: DASHBOARD_ROUTE, iconName: 'dashboard', label: 'Dashboard' },
@@ -26,7 +26,7 @@ const sidebarItems = [
   { link: TEAMS_ROUTE, iconName: 'team', label: 'Teams' },
 ];
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ strategy }) => {
+const SidebarContent = ({ strategy }: SidebarContentProps) => {
   const router = useRouter();
   const [active, setActive] = useState(router.asPath);
   const isStrategyLocal = strategy === 'local';
