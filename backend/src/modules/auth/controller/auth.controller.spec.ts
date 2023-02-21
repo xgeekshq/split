@@ -46,6 +46,7 @@ import {
 } from 'src/modules/schedules/schedules.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 describe('AuthController', () => {
 	let app: INestApplication;
@@ -84,6 +85,7 @@ describe('AuthController', () => {
 				createBoardService,
 				createSchedulesService,
 				deleteSchedulesService,
+				SocketGateway,
 				SchedulerRegistry,
 				ConfigService,
 				{
