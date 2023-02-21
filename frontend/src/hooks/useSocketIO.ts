@@ -17,7 +17,7 @@ import EmitEvent from '@/types/events/emit-event.type';
 import EventCallback from '@/types/events/event-callback.type';
 import ListenEvent from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
-import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
+import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { useQueryClient } from '@tanstack/react-query';
 import isEmpty from '@/utils/isEmpty';
 import { useRecoilValue } from 'recoil';
@@ -130,6 +130,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
 
     socket?.on(`${boardId}updateComment`, (updateCommentDto: UpdateCommentDto) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATECOMMENT, dto: updateCommentDto }]);
+    });
+
+    socket?.on(BOARD_PHASE_SERVER_SENT, (payload) => {
+      queryClient.invalidateQueries(['board', { id: payload.boardId }]);
     });
   }, [queryClient, socket, boardId]);
 
