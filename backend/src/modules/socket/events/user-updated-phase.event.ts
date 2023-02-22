@@ -1,6 +1,6 @@
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
-export default class UserStartedVoteEvent {
+export default class PhaseChangeEvent {
 	boardId: string;
 	phase: string;
 

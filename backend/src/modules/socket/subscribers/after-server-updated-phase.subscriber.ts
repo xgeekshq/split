@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import UserStartedVoteEvent from '../events/user-started-vote-phase.event';
+import PhaseChangeEvent from '../events/user-updated-phase.event';
 
 @Injectable()
 export default class AfterServerUpdatedPhaseSubscriber {
@@ -19,7 +19,7 @@ export default class AfterServerUpdatedPhaseSubscriber {
 
 		this.socketService.sendEvent({
 			event: BOARD_PHASE_SERVER_UPDATED,
-			payload: new UserStartedVoteEvent(boardPhaseDto),
+			payload: new PhaseChangeEvent(boardPhaseDto),
 			to: boardPhaseDto.boardId
 		});
 	}

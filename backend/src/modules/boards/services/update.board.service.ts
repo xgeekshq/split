@@ -38,7 +38,7 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
-import UserStartedVoteEvent from 'src/modules/socket/events/user-started-vote-phase.event';
+import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 
 @Injectable()
@@ -506,7 +506,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				)
 				.exec();
 
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new UserStartedVoteEvent(boardPhaseDto));
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
