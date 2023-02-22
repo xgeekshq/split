@@ -6,7 +6,7 @@ import Tooltip from '@/components/Primitives/Tooltip';
 
 import { StyledMenuItem } from '../styles';
 
-export type SidebarItemType = {
+export type SidebarItemProps = {
   link?: string;
   active?: string;
   iconName: string;
@@ -15,7 +15,7 @@ export type SidebarItemType = {
   onClick?: () => void;
 };
 
-const SidebarItem = ({ link, active, iconName, label, disabled, onClick }: SidebarItemType) => {
+const SidebarItem = ({ link, active, iconName, label, disabled, onClick }: SidebarItemProps) => {
   const renderStyledMenuItem = () => (
     <StyledMenuItem
       data-testid="sidebarItem"
