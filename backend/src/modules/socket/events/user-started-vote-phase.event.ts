@@ -1,11 +1,11 @@
-import BoardVotePhaseDto from 'src/libs/dto/board-vote-phase.dto';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 export default class UserStartedVoteEvent {
 	boardId: string;
 	phase: string;
 
-	constructor(payload: BoardVotePhaseDto) {
-		this.boardId = payload.boardId;
-		this.phase = payload.phase;
+	constructor(boardPhaseDto: BoardPhaseDto) {
+		this.boardId = boardPhaseDto.boardId;
+		this.phase = boardPhaseDto.phase;
 	}
 }

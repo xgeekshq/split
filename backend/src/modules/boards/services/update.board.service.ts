@@ -37,7 +37,7 @@ import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import BoardVotePhaseDto from 'src/libs/dto/board-vote-phase.dto';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import UserStartedVoteEvent from 'src/modules/socket/events/user-started-vote-phase.event';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 
@@ -486,11 +486,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 	}
 
-	async updateVotingPhase(payload: BoardVotePhaseDto) {
+	async updateVotingPhase(boardPhaseDto: BoardPhaseDto) {
 		if (
-			payload.phase !== BoardPhases.ADDCARDS &&
-			payload.phase !== BoardPhases.VOTINGPHASE &&
-			payload.phase !== BoardPhases.SUBMITED
+			boardPhaseDto.phase !== BoardPhases.ADDCARDS &&
+			boardPhaseDto.phase !== BoardPhases.VOTINGPHASE &&
+			boardPhaseDto.phase !== BoardPhases.SUBMITED
 		) {
 			throw new BadRequestException(PHASE_NOT_EXISTS);
 		}
@@ -498,15 +498,15 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			await this.boardModel
 				.findOneAndUpdate(
 					{
-						_id: payload.boardId
+						_id: boardPhaseDto.boardId
 					},
 					{
-						phase: payload.phase
+						phase: boardPhaseDto.phase
 					}
 				)
 				.exec();
 
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new UserStartedVoteEvent(payload));
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new UserStartedVoteEvent(boardPhaseDto));
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
