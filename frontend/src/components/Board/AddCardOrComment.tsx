@@ -15,7 +15,7 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
-import Icon from '../icons/Icon';
+import Icon from '../Primitives/Icon';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 
@@ -118,15 +118,18 @@ const AddCard = React.memo<AddCardProps>(
         ? '$primary300'
         : '$primaryBase';
 
-    const state =
-      watchCardTextInput.text !== CARD_TEXT_DEFAULT &&
-      watchCardTextInput.text === placeholder &&
-      methods.formState.touchedFields
-        ? 'default'
-        : undefined;
-
     const disabledButton =
       watchCardTextInput.text?.trim().length === 0 || watchCardTextInput.text === placeholder;
+
+    const handleClear = () => {
+      if ((isUpdate || !isCard) && cancelUpdate) {
+        cancelUpdate();
+        return;
+      }
+
+      methods.reset({ text: textAreaText });
+      setIsOpen(false);
+    };
 
     const handleAddCard = (text: string) => {
       if (text.trim().length === 0) return;
@@ -152,7 +155,7 @@ const AddCard = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
-      methods.reset({ text: textAreaText });
+      handleClear();
     };
 
     const handleUpdateCard = (text: string) => {
@@ -213,16 +216,6 @@ const AddCard = React.memo<AddCardProps>(
       cancelUpdate();
     };
 
-    const handleClear = () => {
-      if ((isUpdate || !isCard) && cancelUpdate) {
-        cancelUpdate();
-        return;
-      }
-
-      methods.reset({ text: textAreaText });
-      setIsOpen(false);
-    };
-
     if (!isOpen)
       return (
         <Button
@@ -263,12 +256,7 @@ const AddCard = React.memo<AddCardProps>(
         })}
       >
         <FormProvider {...methods}>
-          <TextArea
-            id="text"
-            placeholder={placeholderToDisplay}
-            textColor={placeholderColor}
-            state={state}
-          />
+          <TextArea id="text" placeholder={placeholderToDisplay} textColor={placeholderColor} />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment

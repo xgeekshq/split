@@ -6,7 +6,7 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { usersListState } from '@/store/team/atom/team.atom';
 import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import ListParticipants from '../ListParticipants';
 
@@ -33,12 +33,19 @@ const SelectParticipants = () => {
   useEffect(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user._id === session?.user.id || user.isChecked,
     }));
 
     const users = updateCheckedUser.flatMap((user) =>
-      user._id === session?.user.id
-        ? [{ role: BoardUserRoles.RESPONSIBLE, user: user._id, votesCount: 0 }]
+      user.isChecked
+        ? [
+            {
+              role:
+                user._id === session?.user.id ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+              user: user._id,
+              votesCount: 0,
+            },
+          ]
         : [],
     );
     setUsersList(updateCheckedUser);
@@ -48,8 +55,6 @@ const SelectParticipants = () => {
       users,
       board: { ...prev.board, team: null },
     }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

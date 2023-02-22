@@ -1,9 +1,18 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
+import {
+	ForbiddenException,
+	Inject,
+	Injectable,
+	Logger,
+	NotFoundException,
+	forwardRef
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BOARDS_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
+import * as Users from 'src/modules/users/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
@@ -18,7 +27,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
-		private getTeamService: GetTeamServiceInterface
+		private getTeamService: GetTeamServiceInterface,
+		@Inject(Users.TYPES.repository)
+		private readonly userRepository: UserRepositoryInterface
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
@@ -194,7 +205,13 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async getBoard(boardId: string, userId: string) {
 		let board = await this.getBoardData(boardId);
 
-		if (!board) return null;
+		if (!board) throw new NotFoundException(NOT_FOUND);
+
+		const userFound = await this.userRepository.getById(userId);
+
+		if (!userFound) throw new NotFoundException(NOT_FOUND);
+
+		if (!userFound.email && !board.isPublic) throw new ForbiddenException(FORBIDDEN);
 
 		board = cleanBoard(board, userId);
 
@@ -225,5 +242,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	getAllBoardsByTeamId(teamId: string) {
 		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
+	}
+
+	async isBoardPublic(boardId: string) {
+		const { isPublic } = await this.boardModel.findById(boardId).lean().exec();
+
+		return isPublic;
 	}
 }

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
 import Separator from '@/components/Primitives/Separator';

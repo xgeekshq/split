@@ -6,8 +6,8 @@ import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import Icon from '@/components/Primitives/Icon';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
@@ -64,6 +64,8 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
   // Show board settings button if current user is allowed to edit
   const hasAdminRole = isStakeholderOrAdmin || session?.user.isSAdmin || isOwner || isResponsible;
 
+  const shouldRenderBoardSettings = hasAdminRole && !board?.submitedAt;
+
   const userIsInBoard = useMemo(
     () => board.users.find((user) => user.user._id === userId),
     [board.users, userId],
@@ -79,9 +81,14 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
       <RegularBoardHeader />
       <Container direction="column">
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
-          <Flex css={{ flex: 1 }} />
+          {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
           {!board?.submitedAt && (
-            <Flex css={{ flex: 1 }}>
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent: shouldRenderBoardSettings ? 'normal' : 'center',
+              }}
+            >
               <Timer
                 boardId={board._id}
                 isAdmin={hasAdminRole}
@@ -90,7 +97,7 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
               />
             </Flex>
           )}
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldRenderBoardSettings && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />

@@ -35,9 +35,11 @@ export default class updateUserServiceImpl implements UpdateUserService {
 	async setPassword(userEmail: string, newPassword: string, newPasswordConf: string) {
 		const password = await encrypt(newPassword);
 
-		if (newPassword !== newPasswordConf)
+		if (newPassword !== newPasswordConf) {
 			throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
-		const user = this.userRepository.updateUserPassword(userEmail, password);
+		}
+
+		const user = await this.userRepository.updateUserPassword(userEmail, password);
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
 
@@ -48,7 +50,9 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		const userFromDb = await this.resetModel.findOne({ token });
 
 		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
+
 		this.tokenValidator(userFromDb.updatedAt);
+
 		const user = await this.userRepository.findOneByField({ email: userFromDb.emailAddress });
 
 		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
@@ -68,6 +72,7 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		if (requestUser._id.toString() === user._id) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
+
 		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
 
 		if (!userUpdated) {
@@ -75,5 +80,15 @@ export default class updateUserServiceImpl implements UpdateUserService {
 		}
 
 		return userUpdated;
+	}
+
+	async updateUserAvatar(userId: string, avatarUrl: string) {
+		const user = await this.userRepository.updateUserAvatar(userId, avatarUrl);
+
+		if (!user) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return user;
 	}
 }

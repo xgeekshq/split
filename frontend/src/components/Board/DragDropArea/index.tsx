@@ -18,7 +18,7 @@ import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ColumnType from '@/types/column';
 
-const Container = styled(Flex, { maxHeight: '100vh', width: '100%', display: 'inline-flex' });
+const Container = styled(Flex, { width: '100%', display: 'inline-flex', mb: '$32' });
 
 type Props = {
   userId: string;
@@ -190,7 +190,7 @@ const DragDropArea: React.FC<Props> = ({
       isDropDisabled={isMainboard || !hasAdminRole}
     >
       {(provided) => (
-        <Container ref={provided.innerRef} {...provided.droppableProps}>
+        <Container css={{ gap: '$24' }} ref={provided.innerRef} {...provided.droppableProps}>
           {board.columns.map((column, index) => (
             <Column
               key={column._id}

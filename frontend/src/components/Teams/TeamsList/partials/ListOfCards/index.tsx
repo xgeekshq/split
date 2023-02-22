@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DotsLoading } from '@/components/loadings/DotsLoading';
+import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Flex';
 import { Team } from '@/types/team/team';
 
@@ -28,7 +28,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ teams, userId, isLoading }) =
 
     {isLoading && (
       <Flex justify="center">
-        <DotsLoading />
+        <Dots />
       </Flex>
     )}
   </ScrollableContent>

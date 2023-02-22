@@ -4,6 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
 	boardRepository,
+	createBoardService,
 	getBoardApplication,
 	getBoardService,
 	updateBoardApplication,
@@ -11,13 +12,19 @@ import {
 } from 'src/modules/boards/boards.providers';
 import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import {
+	createSchedulesService,
+	deleteSchedulesService
+} from 'src/modules/schedules/schedules.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
 	getTeamApplication,
 	getTeamService,
 	teamRepository,
-	teamUserRepository
+	teamUserRepository,
+	updateTeamService
 } from 'src/modules/teams/providers';
+import { userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 import {
 	columnRepository,
@@ -52,6 +59,11 @@ describe('ColumnsController', () => {
 				deleteVoteService,
 				columnRepository,
 				boardRepository,
+				userRepository,
+				createSchedulesService,
+				deleteSchedulesService,
+				createBoardService,
+				updateTeamService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

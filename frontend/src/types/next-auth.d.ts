@@ -12,6 +12,7 @@ declare module 'next-auth' {
       isSAdmin: boolean;
       accessToken: Token;
       refreshToken?: Token;
+      avatar?: string;
     } & DefaultSession['user'];
     strategy: string;
     error: string;
@@ -26,6 +27,7 @@ declare module 'next-auth' {
     lastName: string;
     isSAdmin: boolean;
     providerAccountCreatedAt?: string;
+    avatar?: string;
   }
 }
 
@@ -39,6 +41,7 @@ declare module 'next-auth/jwt' {
       email: string;
       id: string;
       isSAdmin: boolean;
+      avatar?: string;
     };
     error: string;
     strategy: string;

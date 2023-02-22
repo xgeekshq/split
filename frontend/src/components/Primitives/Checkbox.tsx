@@ -5,7 +5,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from './Flex';
 import Text from './Text';
-import Icon from '../icons/Icon';
+import Icon from './Icon';
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: 'unset',

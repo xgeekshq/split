@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import {
   AlertDialog,
   AlertDialogAction,

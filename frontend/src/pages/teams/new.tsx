@@ -11,7 +11,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { Suspense, useEffect } from 'react';
 
 const NewTeam: NextPage = () => {
