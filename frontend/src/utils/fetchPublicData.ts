@@ -27,11 +27,7 @@ const fetchPublicData = async <T>(url: string, options?: Options): Promise<T> =>
       ...options?.headers,
     };
   }
-  const { data } =
-    //     !serverSide
-    // ? await instance(instanceOptions)
-    //         :
-    await serverSideInstance(instanceOptions);
+  const { data } = await serverSideInstance(instanceOptions);
   return data;
 };
 export default fetchPublicData;

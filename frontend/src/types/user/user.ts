@@ -81,6 +81,6 @@ export interface DeleteUser {
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';
 
 export type GuestUser = {
-  board: string;
+  accessToken: Token;
   user: string;
 };

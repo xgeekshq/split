@@ -34,17 +34,8 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const { setToastState, queryClient, userId, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
-    onSuccess: (data) => {
-      const guestUserCookie = getGuestUserCookies();
-
-      if (!guestUserCookie) {
-        setCookie(GUEST_USER_COOKIE, [data]);
-      } else {
-        const guestUserCookieArray = getGuestUserCookies();
-        guestUserCookieArray.push(data);
-        setCookie(GUEST_USER_COOKIE, guestUserCookieArray);
-      }
-      router.push({ pathname: `/boards/[boardId]`, query: { boardId: data.board } });
+    onSuccess: (_data, variables) => {
+      router.push({ pathname: `/boards/[boardId]`, query: { boardId: variables.board } });
     },
     onError: () => {
       setToastState({
@@ -57,9 +48,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const loginGuestUser = useMutation(loginGuest, {
     onSuccess: (data) => {
-      const guestUserCookieArray = getGuestUserCookies();
-      guestUserCookieArray.push(data);
-      setCookie(GUEST_USER_COOKIE, guestUserCookieArray);
+      setCookie(GUEST_USER_COOKIE, data);
     },
     onError: () => {
       setToastState({

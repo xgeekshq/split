@@ -16,7 +16,7 @@ const useBoardUtils = () => {
 
   const guestUserCookie = getGuestUserCookies();
 
-  const userId = !session && guestUserCookie ? guestUserCookie[0].user : undefined;
+  const userId = !session && guestUserCookie ? guestUserCookie.user : undefined;
 
   const setToastState = useSetRecoilState(toastState);
 

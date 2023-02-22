@@ -1,9 +1,5 @@
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
-import {
-	BOARD_USER_EXISTS,
-	BOARD_USER_NOT_FOUND,
-	INSERT_FAILED
-} from 'src/libs/exceptions/messages';
+import { BOARD_USER_NOT_FOUND, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
@@ -75,31 +71,11 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	}
 
 	public async createGuest(guestUserData: CreateGuestUserDto) {
-		const { board } = guestUserData;
 		const guestUserCreated = await this.createUserService.createGuest(guestUserData);
 
 		if (!guestUserCreated) throw new BadRequestException(INSERT_FAILED);
 
-		const { _id: user } = guestUserCreated;
-
-		const createdGuestBoardUser = await this.createGuestBoardUser(board, user);
-
-		const createdBoardUserWithPopulatedGuestUser = {
-			role: createdGuestBoardUser.role,
-			board: String(createdGuestBoardUser.board),
-			votesCount: createdGuestBoardUser.votesCount,
-			user: {
-				_id: String(guestUserCreated._id),
-				firstName: guestUserCreated.firstName,
-				lastName: guestUserCreated.lastName
-			}
-		};
-
-		const { accessToken } = await this.getTokenAuthService.getTokens(guestUserCreated._id);
-
-		this.socketService.sendUpdateBoardUsers(createdBoardUserWithPopulatedGuestUser);
-
-		return { accessToken, user };
+		return guestUserCreated;
 	}
 
 	public async loginGuest(guestUserData: CreateGuestUserDto) {
@@ -116,7 +92,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	private async createGuestBoardUser(board: string, user: string) {
 		const boardUserFound = await this.boardUserModel.findOne({ board, user });
 
-		if (boardUserFound) throw new BadRequestException(BOARD_USER_EXISTS);
+		if (boardUserFound) return;
 
 		const boardUser = {
 			role: BoardRoles.MEMBER,

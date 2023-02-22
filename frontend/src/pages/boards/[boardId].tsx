@@ -99,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req, res } = context;
 
   // check if there are cookies and if the cookies have the board the user is trying to access
-  const cookiesGuestUser: GuestUser[] = getGuestUserCookies({ req, res }, true);
+  const cookiesGuestUser: GuestUser = getGuestUserCookies({ req, res }, true);
 
   if (!session) {
     // if there isn´t cookies, the guest user is registered
@@ -112,38 +112,34 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    let guestUserCurrentBoard = cookiesGuestUser.find((cookie) => cookie.board === boardId);
-
     // if the user doesn't have access to the board, he is added as a board user
-    if (!guestUserCurrentBoard) {
-      try {
-        const data = await fetchPublicData<GuestUser>('/auth/loginGuest', {
-          method: 'POST',
-          data: {
-            user: cookiesGuestUser[0].user,
-            board: boardId,
-          },
-        });
 
-        if (data) {
-          const guestUserCookieArray = getGuestUserCookies({ req, res }, true);
-          guestUserCookieArray.push(data);
-          setCookie(GUEST_USER_COOKIE, guestUserCookieArray, { req, res });
-          guestUserCurrentBoard = data;
-        }
-      } catch (error) {
-        return {
-          redirect: {
-            permanent: false,
-            destination: '/dashboard',
-          },
-        };
+    try {
+      const data = await fetchPublicData<GuestUser>('/auth/loginGuest', {
+        method: 'POST',
+        data: {
+          user: cookiesGuestUser.user,
+          board: boardId,
+        },
+      });
+
+      if (data) {
+        setCookie(GUEST_USER_COOKIE, data, { req, res });
       }
+    } catch (error) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/dashboard',
+        },
+      };
     }
-    const { board, user } = guestUserCurrentBoard as GuestUser;
 
-    await queryClient.fetchQuery(['board', { id: board }], () =>
-      getPublicBoardRequest({ boardId: board, userId: user }, context),
+    await queryClient.fetchQuery(['board', { id: boardId }], () =>
+      getPublicBoardRequest(
+        { boardId, userId: getGuestUserCookies({ req, res }, true).user },
+        context,
+      ),
     );
   }
 
@@ -180,7 +176,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const guestUserCookies = getGuestUserCookies();
 
   const userId: string | undefined =
-    !session && guestUserCookies ? guestUserCookies[0].user : session?.user?.id;
+    !session && guestUserCookies ? guestUserCookies.user : session?.user?.id;
 
   // Hooks
   const {

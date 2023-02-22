@@ -50,7 +50,7 @@ const BoardParticipants = () => {
   const guestUserCookies = getGuestUserCookies();
 
   let userId: string | undefined;
-  if (!session && guestUserCookies) userId = guestUserCookies[0].user;
+  if (!session && guestUserCookies) userId = guestUserCookies.user;
   else userId = session?.user?.id;
 
   // Hooks
