@@ -1,5 +1,4 @@
 import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/Primitives/Icon';
 
 const GridContainer = styled('section', {
@@ -10,16 +9,11 @@ const GridContainer = styled('section', {
 
 const StyledTile = styled('div', {
   position: 'relative',
-
-  padding: '$20 $24',
   borderRadius: '$12',
-
   color: '$primary50',
   backgroundColor: '$primary800',
-
   h3: {
     margin: 0,
-
     color: 'white',
     fontSize: '$32',
     lineHeight: '$36',
@@ -32,10 +26,15 @@ const StyledTile = styled('div', {
 
 const TileArrow = styled(Icon, {
   position: 'absolute',
-  bottom: '$28',
-  right: '$28',
-
-  color: '#000',
+  right: '20px',
+  top: '50%',
+  bottom: '-1px',
+  color: '$black',
 });
 
-export { GridContainer, StyledTile, TileArrow };
+const TileBlob = styled(Icon, {
+  position: 'absolute',
+  right: '-1px',
+});
+
+export { GridContainer, StyledTile, TileArrow, TileBlob };

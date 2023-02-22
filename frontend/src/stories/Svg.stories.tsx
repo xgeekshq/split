@@ -7,7 +7,7 @@ import Svg from '@/components/Primitives/Svg';
 import Flex from '@/components/Primitives/Flex';
 import { SvgSizeType } from './types/PrimitiveTypes';
 
-const SIZE_OPTIONS: SvgSizeType[] = [12, 16, 18, 20, 24, 32];
+const SIZE_OPTIONS: SvgSizeType[] = [12, 16, 18, 20, 24, 32, 100];
 
 export default {
   title: 'Primitives/Svg',
