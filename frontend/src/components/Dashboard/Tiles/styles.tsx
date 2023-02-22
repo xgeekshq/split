@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icon';
 
-const GridContainer = styled('section', {
+const TileContainer = styled('section', {
   display: 'grid',
   gap: '$29',
   gridTemplateColumns: 'repeat(3, 1fr)',
@@ -37,4 +37,4 @@ const TileBlob = styled(Icon, {
   right: '-1px',
 });
 
-export { GridContainer, StyledTile, TileArrow, TileBlob };
+export { TileContainer, StyledTile, TileArrow, TileBlob };

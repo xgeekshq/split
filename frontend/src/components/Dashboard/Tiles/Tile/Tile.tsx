@@ -1,9 +1,9 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Link from 'next/link';
-import { StyledTile, TileArrow, TileBlob } from './styles';
+import { StyledTile, TileArrow, TileBlob } from '../styles';
 
-type TileProps = {
+export type TileProps = {
   link: string;
   title: string;
   count: number;
@@ -26,7 +26,7 @@ const Tile = ({ link, title, count, color }: TileProps) => {
 
   return (
     <Link href={link}>
-      <StyledTile>
+      <StyledTile data-testid="tile">
         <Flex direction="column" css={{ width: '80%', py: '$20', px: '$24' }}>
           <Text color="white" size="md">
             {title}

@@ -1,9 +1,9 @@
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
-import Tile from '@/components/Dashboard/Tiles/Tile';
+import Tile from '@/components/Dashboard/Tiles/Tile/Tile';
 
 export default {
-  title: 'Components/Tile',
+  title: 'Dashboard/Tiles/Tile',
   component: Tile,
   parameters: {
     docs: {
