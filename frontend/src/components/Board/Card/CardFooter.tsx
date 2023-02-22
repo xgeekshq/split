@@ -234,7 +234,7 @@ const CardFooter = ({
                 (maxVotes && userVotes === 0) ||
                 votesOfUserInThisCard === 0 ||
                 hideCards ||
-                phase === BoardPhases.VOTINGPHASE ||
+                phase === BoardPhases.ADDCARDS ||
                 phase === BoardPhases.SUBMITED
               }
               onClick={handleDeleteVote}
