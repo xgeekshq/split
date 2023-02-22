@@ -1,31 +1,31 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import Dots from '@/components/Primitives/Loading/Dots';
+import Spinner from '@/components/Primitives/Loading/Spinner';
 import dedent from 'ts-dedent';
-import { DotsColorType, DotsSizeType } from '../types/PrimitiveTypes';
+import { SpinnerColorType, SpinnerSizeType } from '../../types/PrimitiveTypes';
 
-const COLOR_OPTIONS: DotsColorType[] = ['primary800', 'primary200', 'white'];
-const SIZE_OPTIONS: DotsSizeType[] = [8, 4, 10, 15, 50, 80, 100];
+const COLOR_OPTIONS: SpinnerColorType[] = ['light', 'dark'];
+const SIZE_OPTIONS: SpinnerSizeType[] = [50, 80, 100, 150, 200];
 
 export default {
-  title: 'Primitives/Loading/Dots',
-  component: Dots,
+  title: 'Primitives/Loading/Spinner',
+  component: Spinner,
   parameters: {
     docs: {
       description: {
         component: dedent`
-        Dots element, it's used for Loading.
+        Spinner element, it spins forever.
 
         **File Path:**
-        \`@/components/Primitives/Loading/Dots/index.tsx\` and \`@/components/Primitives/Loading/Dots/styles.tsx\`
+        \`@/components/Primitives/Loading/Spinner.tsx\`
         `,
       },
     },
   },
   args: {
-    size: 15,
-    color: 'primary800',
+    size: 80,
+    color: 'dark',
   },
   argTypes: {
     color: {
@@ -34,7 +34,7 @@ export default {
       description: 'The component color.',
       table: {
         type: { summary: COLOR_OPTIONS.join('|') },
-        defaultValue: { summary: 'primary800' },
+        defaultValue: { summary: 'dark' },
       },
     },
     size: {
@@ -43,13 +43,13 @@ export default {
       description: 'The component size.',
       table: {
         type: { summary: SIZE_OPTIONS.join('|') },
-        defaultValue: { summary: 15 },
+        defaultValue: { summary: 80 },
       },
     },
   },
 };
 
-const Template: ComponentStory<typeof Dots> = ({ ...args }) => <Dots {...args} />;
+const Template: ComponentStory<typeof Spinner> = ({ ...args }) => <Spinner {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

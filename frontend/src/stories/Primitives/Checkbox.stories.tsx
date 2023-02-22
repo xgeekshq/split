@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
-import { CheckboxSizeType, CheckboxVariantType } from './types/PrimitiveTypes';
+import { CheckboxSizeType, CheckboxVariantType } from '../types/PrimitiveTypes';
 
 const SIZE_OPTIONS: CheckboxSizeType[] = ['sm', 'md'];
 const VARIANT_OPTIONS: CheckboxVariantType[] = ['default', 'error'];

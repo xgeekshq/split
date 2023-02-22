@@ -12,7 +12,7 @@ import {
   HeadingType,
   Overline,
   TextSizeType,
-} from './types/PrimitiveTypes';
+} from '../types/PrimitiveTypes';
 
 const FONT_WEIGHT_OPTIONS: FontWeightType[] = ['regular', 'medium', 'bold'];
 
@@ -206,7 +206,7 @@ export const Headings: ComponentStory<typeof Text> = ({ color, underline }) => (
 );
 
 export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, underline }) => (
-  <Flex justify="evenly" wrap="wrap">
+  <Flex justify="evenly" wrap="wrap" gap="32">
     {FONT_WEIGHT_OPTIONS.map((fontWeight) => (
       <Flex direction="column" justify="center" align="center" gap={20} key={fontWeight}>
         <Text heading="4">Font Weight {fontWeight}</Text>
@@ -221,7 +221,7 @@ export const SizesAndWeights: ComponentStory<typeof Text> = ({ children, color, 
 );
 
 export const Other: ComponentStory<typeof Text> = ({ children, underline }) => (
-  <Flex justify="evenly" wrap="wrap">
+  <Flex justify="evenly" wrap="wrap" gap="32">
     <Flex direction="column" align="center" gap={20}>
       <Text heading="4">Overline</Text>
       {OVERLINE_OPTIONS.map((overline) => (

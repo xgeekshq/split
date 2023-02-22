@@ -1,19 +1,24 @@
-import HeaderBannerIcon from '@/components/icons/HeaderBanner';
+import BannerIcon from '@/components/Sidebar/partials/Banner';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Separator from '@/components/Primitives/Separator';
-import { StyledHeader } from './styles';
+import Link from 'next/link';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 
-type Props = { firstName: string; lastName: string; email: string };
+export type SidebarHeaderProps = { firstName: string; lastName: string; email: string };
 
-const Header = ({ firstName, lastName, email }: Props) => {
+const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
   const initialLetters = firstName.charAt(0) + lastName.charAt(0);
 
   return (
-    <StyledHeader direction="column">
+    <Flex direction="column" data-testid="sidebarHeader">
       <Flex align="center" css={{ p: '$40' }} justify="center">
-        <HeaderBannerIcon />
+        <Link href={DASHBOARD_ROUTE}>
+          <Flex pointer>
+            <BannerIcon />
+          </Flex>
+        </Link>
       </Flex>
       <Separator css={{ backgroundColor: '$primary600' }} />
       <Flex
@@ -76,7 +81,7 @@ const Header = ({ firstName, lastName, email }: Props) => {
         </Flex>
       </Flex>
       <Separator css={{ backgroundColor: '$primary600' }} />
-    </StyledHeader>
+    </Flex>
   );
 };
 

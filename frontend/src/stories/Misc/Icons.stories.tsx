@@ -8,7 +8,7 @@ import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Input from '@/components/Primitives/Input';
 import { FormProvider, useForm } from 'react-hook-form';
-import Card from './components/Card';
+import Card from '../components/Card';
 
 export default {
   title: 'Misc/Icons',

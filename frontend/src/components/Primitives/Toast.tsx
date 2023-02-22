@@ -70,7 +70,7 @@ const Toast: React.FC = () => {
   const { open, type, content } = currentToastState;
 
   const router = useRouter();
-  const VIEWPORT_PADDING = router && router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
+  const VIEWPORT_PADDING = router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
 
   const slideIn = keyframes({
     from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
