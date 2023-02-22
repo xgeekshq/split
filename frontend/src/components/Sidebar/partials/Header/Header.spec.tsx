@@ -1,6 +1,7 @@
 import { RouterContext } from 'next/dist/shared/lib/router-context';
 import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
 import { createMockRouter } from '@/utils/testing/mocks';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Header, { SidebarHeaderProps } from './Header';
 
 const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
@@ -23,7 +24,7 @@ describe('Components/Sidebar/Header', () => {
 
     // Assert
     expect(getByText(`${headerProps.firstName} ${headerProps.lastName}`)).toBeInTheDocument();
-    expect(getByText('first.last@mail.com')).toBeInTheDocument();
+    expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
     expect(userIcon).toHaveAttribute('href', `#userIcon`);
     expect(
@@ -45,7 +46,7 @@ describe('Components/Sidebar/Header', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith('/dashboard', '/dashboard', expect.anything());
+      expect(router.push).toHaveBeenCalledWith(DASHBOARD_ROUTE, DASHBOARD_ROUTE, expect.anything());
     });
   });
 });

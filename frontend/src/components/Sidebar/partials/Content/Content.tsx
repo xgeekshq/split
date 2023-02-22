@@ -12,6 +12,7 @@ import {
   START_PAGE_ROUTE,
   TEAMS_ROUTE,
   USERS_ROUTE,
+  AZURE_LOGOUT_ROUTE,
 } from '@/utils/routes';
 import SidebarItem from '../Item/Item';
 
@@ -33,7 +34,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
   const handleSignOut = async () => {
     const result = await signOut({
-      callbackUrl: isStrategyLocal ? START_PAGE_ROUTE : '/logoutAzure',
+      callbackUrl: isStrategyLocal ? START_PAGE_ROUTE : AZURE_LOGOUT_ROUTE,
       redirect: !isStrategyLocal,
     });
     if (result && isStrategyLocal) {

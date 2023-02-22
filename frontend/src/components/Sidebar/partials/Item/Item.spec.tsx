@@ -1,6 +1,7 @@
 import { RouterContext } from 'next/dist/shared/lib/router-context';
 import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
 import { createMockRouter } from '@/utils/testing/mocks';
+import { BOARDS_ROUTE } from '@/utils/routes';
 import Item, { SidebarItemProps } from './Item';
 
 const DEFAULT_PROPS = { iconName: 'user', label: 'Users' };
@@ -28,7 +29,7 @@ describe('Components/Sidebar/Item', () => {
 
   it('should redirect correctly', async () => {
     // Arrange
-    const itemProps = { ...DEFAULT_PROPS, link: '/boards' };
+    const itemProps = { ...DEFAULT_PROPS, link: BOARDS_ROUTE };
 
     // Act
     const { getByTestId } = render(itemProps);
@@ -36,7 +37,7 @@ describe('Components/Sidebar/Item', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith('/boards', '/boards', expect.anything());
+      expect(router.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
     });
   });
 });
