@@ -1,3 +1,4 @@
+import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import {
 	BOARD_USER_EXISTS,
 	BOARD_USER_NOT_FOUND,
@@ -8,6 +9,7 @@ import { encrypt } from 'src/libs/utils/bcrypt';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
+import * as AUTH_TYPES from 'src/modules/auth/interfaces/types';
 import { RegisterAuthService } from '../interfaces/services/register.auth.service.interface';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -25,7 +27,9 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 		private createUserService: CreateUserService,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		private socketService: SocketGateway
+		private socketService: SocketGateway,
+		@Inject(AUTH_TYPES.TYPES.services.GetTokenAuthService)
+		private getTokenAuthService: GetTokenAuthService
 	) {}
 
 	public async register(registrationData: CreateUserDto) {
@@ -40,7 +44,6 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
 		const userFound = await this.boardUserModel
 			.findOne({ board, user })
-			.select('role board votesCount')
 			.populate({
 				path: 'user',
 				select: '_id firstName lastName '
@@ -79,21 +82,35 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		const { _id: user } = guestUserCreated;
 
-		await this.createGuestBoardUser(board, user);
+		const createdGuestBoardUser = await this.createGuestBoardUser(board, user);
 
-		await this.sendGuestBoardUser(board, user);
+		const createdBoardUserWithPopulatedGuestUser = {
+			role: createdGuestBoardUser.role,
+			board: String(createdGuestBoardUser.board),
+			votesCount: createdGuestBoardUser.votesCount,
+			user: {
+				_id: String(guestUserCreated._id),
+				firstName: guestUserCreated.firstName,
+				lastName: guestUserCreated.lastName
+			}
+		};
 
-		return { board, user };
+		const { accessToken } = await this.getTokenAuthService.getTokens(guestUserCreated._id);
+
+		this.socketService.sendUpdateBoardUsers(createdBoardUserWithPopulatedGuestUser);
+
+		return { accessToken, user };
 	}
 
 	public async loginGuest(guestUserData: CreateGuestUserDto) {
 		const { board, user } = guestUserData;
+		const { accessToken } = await this.getTokenAuthService.getTokens(user);
 
 		await this.createGuestBoardUser(board, user);
 
 		await this.sendGuestBoardUser(board, user);
 
-		return { board, user };
+		return { accessToken, user };
 	}
 
 	private async createGuestBoardUser(board: string, user: string) {

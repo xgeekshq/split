@@ -40,6 +40,9 @@ export default class User extends BaseModel {
 
 	@Prop({ default: false })
 	isAnonymous: boolean;
+
+	@Prop({ nullable: true })
+	updatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
