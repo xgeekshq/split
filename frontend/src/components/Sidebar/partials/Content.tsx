@@ -15,7 +15,7 @@ import {
 } from '@/utils/routes';
 import SidebarItem from './Item';
 
-type SidebarContentProps = {
+export type SidebarContentProps = {
   strategy: string;
 };
 
@@ -46,7 +46,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
   }, [router.asPath]);
 
   return (
-    <Flex direction="column" css={{ mt: '$16' }}>
+    <Flex direction="column" css={{ mt: '$16' }} data-testid="sidebarContent">
       {sidebarItems.map((item) => (
         <SidebarItem {...item} active={active} key={item.label} />
       ))}
