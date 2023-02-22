@@ -195,11 +195,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
       board?.dividedBoards?.length &&
     board?.phase === BoardPhases.ADDCARDS &&
     !isSubBoard &&
-    hasAdminRole &&
-    !board?.submitedByUser &&
-    (board?.columns[0].cards.length ||
-      board?.columns[1].cards.length ||
-      board?.columns[2].cards.length)
+    hasAdminRole
   );
 
   // Show Alert message if any sub-board wasn't merged
