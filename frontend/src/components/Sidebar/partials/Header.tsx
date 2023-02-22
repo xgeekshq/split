@@ -6,13 +6,13 @@ import Separator from '@/components/Primitives/Separator';
 import Link from 'next/link';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 
-type Props = { firstName: string; lastName: string; email: string };
+export type SidebarHeaderProps = { firstName: string; lastName: string; email: string };
 
-const Header = ({ firstName, lastName, email }: Props) => {
+const Header = ({ firstName, lastName, email }: SidebarHeaderProps) => {
   const initialLetters = firstName.charAt(0) + lastName.charAt(0);
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" data-testid="sidebarHeader">
       <Flex align="center" css={{ p: '$40' }} justify="center">
         <Link href={DASHBOARD_ROUTE}>
           <Flex pointer>
