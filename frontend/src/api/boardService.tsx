@@ -31,8 +31,8 @@ export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
 ): Promise<BoardType> => fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
 
-export const updateBoardPhaseRequest = (board: UpdateBoardPhase): Promise<BoardType> =>
-  fetchData(`/boards/${board._id}/phase`, { method: 'PUT', data: { phase: board.phase } });
+export const updateBoardPhaseRequest = (updateBoardPhase: UpdateBoardPhase): Promise<BoardType> =>
+  fetchData(`/boards/${updateBoardPhase.boardId}/phase`, { method: 'PUT', data: updateBoardPhase });
 
 export const getBoardRequest = (
   id: string,

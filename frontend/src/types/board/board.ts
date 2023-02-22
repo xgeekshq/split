@@ -96,6 +96,6 @@ export type UpdateBoardType = {
 };
 
 export type UpdateBoardPhase = {
-  _id: string;
+  boardId: string;
   phase: string;
 };

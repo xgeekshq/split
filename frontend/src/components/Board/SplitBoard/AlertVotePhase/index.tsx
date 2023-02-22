@@ -24,7 +24,7 @@ const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
   const handleVoteClick = () => {
     if (isAdmin) {
       const updateBoardPhase: UpdateBoardPhase = {
-        _id: boardId,
+        boardId,
         phase: BoardPhases.VOTINGPHASE,
       };
       updateBoardPhaseRequest(updateBoardPhase);
