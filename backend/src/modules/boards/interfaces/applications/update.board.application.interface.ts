@@ -12,5 +12,5 @@ export interface UpdateBoardApplicationInterface {
 
 	updateBoardParticipants(boardData: UpdateBoardUserDto): Promise<BoardUser[] | BoardUser | null>;
 
-	updateVotingPhase(payload: BoardPhaseDto);
+	updatePhase(payload: BoardPhaseDto);
 }

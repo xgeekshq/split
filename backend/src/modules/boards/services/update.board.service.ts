@@ -486,7 +486,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 	}
 
-	async updateVotingPhase(boardPhaseDto: BoardPhaseDto) {
+	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		if (
 			boardPhaseDto.phase !== BoardPhases.ADDCARDS &&
 			boardPhaseDto.phase !== BoardPhases.VOTINGPHASE &&

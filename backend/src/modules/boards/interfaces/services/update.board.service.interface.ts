@@ -19,5 +19,5 @@ export interface UpdateBoardServiceInterface {
 
 	updateBoardParticipantsRole(boardUserToUpdate: BoardUserDto): Promise<BoardUser>;
 
-	updateVotingPhase(payload: BoardPhaseDto);
+	updatePhase(payload: BoardPhaseDto);
 }

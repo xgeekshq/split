@@ -31,7 +31,7 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		return this.updateBoardService.updateBoardParticipants(addBoardUsers, removeBoardUsers);
 	}
 
-	updateVotingPhase(payload: BoardPhaseDto) {
-		this.updateBoardService.updateVotingPhase(payload);
+	updatePhase(payload: BoardPhaseDto) {
+		this.updateBoardService.updatePhase(payload);
 	}
 }

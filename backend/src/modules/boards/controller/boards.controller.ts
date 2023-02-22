@@ -355,6 +355,6 @@ export default class BoardsController {
 			boardId: boardId,
 			phase: phase
 		};
-		this.updateBoardApp.updateVotingPhase(payload);
+		this.updateBoardApp.updatePhase(payload);
 	}
 }
