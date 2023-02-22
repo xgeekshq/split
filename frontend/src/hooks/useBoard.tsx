@@ -7,7 +7,6 @@ import {
   deleteBoardRequest,
   getBoardRequest,
   updateBoardRequest,
-  getPublicBoardRequest,
 } from '@/api/boardService';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
@@ -23,7 +22,7 @@ interface AutoFetchProps {
 }
 
 const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
-  const { boardId, queryClient, setToastState, userId, session } = useBoardUtils();
+  const { boardId, queryClient, setToastState } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
   const setReady = useSetRecoilState(operationsQueueAtom);
@@ -54,27 +53,18 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   // #region BOARD
 
-  const fetchBasedBoard = useQuery(
-    ['board', { id: boardId }],
-    () => {
-      if (!session && userId) {
-        return getPublicBoardRequest({ boardId, userId });
-      }
-      return getBoardRequest(boardId);
+  const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
+    enabled: autoFetchBoard,
+    refetchOnWindowFocus: true,
+    onError: () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+      setToastState({
+        open: true,
+        content: 'Error getting the board',
+        type: ToastStateEnum.ERROR,
+      });
     },
-    {
-      enabled: autoFetchBoard,
-      refetchOnWindowFocus: true,
-      onError: () => {
-        queryClient.invalidateQueries(['board', { id: boardId }]);
-        setToastState({
-          open: true,
-          content: 'Error getting the board',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
+  });
 
   const createBoard = useMutation(createBoardRequest, {
     onSuccess: (data) => setNewBoard(data._id),
@@ -157,7 +147,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     createBoard,
     deleteBoard,
     updateBoard,
-    fetchBasedBoard,
+    fetchBoard,
     setQueryDataAddBoardUser,
   };
 };

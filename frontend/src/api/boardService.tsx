@@ -31,13 +31,7 @@ export const getBoardRequest = (
   id: string,
   context?: GetServerSidePropsContext,
 ): Promise<GetBoardResponse> =>
-  fetchData<GetBoardResponse>(`/boards/${id}`, { context, serverSide: !!context });
-
-export const getPublicBoardRequest = (
-  data: { boardId: string; userId: string },
-  context?: GetServerSidePropsContext,
-): Promise<GetBoardResponse> =>
-  fetchPublicData<GetBoardResponse>(`/publicBoards/${data.boardId}?userId=${data.userId}`, {
+  fetchData<GetBoardResponse>(`/boards/${id}`, {
     context,
     serverSide: !!context,
   });

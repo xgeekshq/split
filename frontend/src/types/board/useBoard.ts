@@ -17,6 +17,6 @@ export default interface UseBoardType {
     { id: string; socketId?: string; teamId?: string },
     unknown
   >;
-  fetchBasedBoard: UseQueryResult<GetBoardResponse | null, unknown>;
+  fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
   setQueryDataAddBoardUser: (data: BoardUser) => void;
 }

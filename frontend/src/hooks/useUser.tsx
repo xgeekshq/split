@@ -13,22 +13,14 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { getCookie, setCookie } from 'cookies-next';
-import { OptionsType } from 'cookies-next/lib/types';
+import { setCookie } from 'cookies-next';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import { deleteUserRequest, updateUserIsAdminRequest, getUser } from '../api/userService';
+import { deleteUserRequest, getUser, updateUserIsAdminRequest } from '@/api/userService';
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
   autoFetchGetUser?: boolean;
 }
-
-export const getGuestUserCookies = (options?: OptionsType, isServerSide: boolean = false) => {
-  const cookie = isServerSide
-    ? getCookie(GUEST_USER_COOKIE, options)
-    : getCookie(GUEST_USER_COOKIE);
-  return cookie ? JSON.parse(cookie as string) : cookie;
-};
 
 const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
   const { setToastState, queryClient, userId, router } = useUserUtils();

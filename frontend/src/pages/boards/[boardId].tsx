@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Container } from '@/styles/pages/boards/board.styles';
-import { getBoardRequest, getPublicBoardRequest, getPublicStatusRequest } from '@/api/boardService';
+import { getBoardRequest, getPublicStatusRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
@@ -32,15 +32,16 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
-import { getGuestUserCookies } from '@/hooks/useUser';
 import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import fetchPublicData from '@/utils/fetchPublicData';
+import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
+  const { req, res } = context;
   const queryClient = new QueryClient();
 
   const session = await getSession(context);
@@ -96,7 +97,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   // if board is public
-  const { req, res } = context;
 
   // check if there are cookies and if the cookies have the board the user is trying to access
   const cookiesGuestUser: GuestUser = getGuestUserCookies({ req, res }, true);
@@ -134,14 +134,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       };
     }
-
-    await queryClient.fetchQuery(['board', { id: boardId }], () =>
-      getPublicBoardRequest(
-        { boardId, userId: getGuestUserCookies({ req, res }, true).user },
-        context,
-      ),
-    );
   }
+
+  await queryClient.fetchQuery(['board', { id: boardId }], () => getBoardRequest(boardId, context));
 
   return {
     props: {
@@ -180,7 +175,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   // Hooks
   const {
-    fetchBasedBoard: { data },
+    fetchBoard: { data },
   } = useBoard({
     autoFetchBoard: true,
   });

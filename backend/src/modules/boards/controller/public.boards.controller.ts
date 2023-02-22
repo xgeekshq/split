@@ -1,5 +1,4 @@
-import { UserParams } from './../../../libs/dto/param/user.param';
-import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Param } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiInternalServerErrorResponse,
@@ -7,7 +6,6 @@ import {
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
-	ApiQuery,
 	ApiTags
 } from '@nestjs/swagger';
 import { BaseParam } from 'src/libs/dto/param/base.param';
@@ -44,26 +42,5 @@ export default class PublicBoardsController {
 	@Get(':boardId/publicStatus')
 	async getPublicStatus(@Param() { boardId }: BaseParam) {
 		return await this.getBoardApp.isBoardPublic(boardId);
-	}
-
-	@ApiOperation({ summary: 'Retrieve one public board by id' })
-	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiQuery({ type: String, name: 'userId', required: true })
-	@ApiOkResponse({ type: BoardDto, description: 'Board retrieved successfully!' })
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Board not found!'
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@Get(':boardId')
-	async getBoard(@Param() { boardId }: BaseParam, @Query() { userId }: UserParams) {
-		return await this.getBoardApp.getBoard(boardId, userId);
 	}
 }
