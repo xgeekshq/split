@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import { mockListUsers } from './mocks/avatarGroup_listUsers';
+import { mockListUsers } from '../../mocks/avatarGroup_listUsers';
 
 export default {
   title: 'Primitives/Avatar/AvatarGroup',

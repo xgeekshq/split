@@ -11,7 +11,7 @@ import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
 import { ContainerTeamPage } from '@/components/layouts/Layout/styles';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
-import { Sidebar } from '@/components/Sidebar';
+import Sidebar from '@/components/Sidebar';
 import TeamHeader from '@/components/Teams/Team/Header';
 import TeamMembersList from '@/components/Teams/Team/ListCardMembers';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';

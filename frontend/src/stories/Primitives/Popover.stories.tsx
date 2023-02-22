@@ -12,7 +12,7 @@ import {
 } from '@/components/Primitives/Popover';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
-import { PopoverVariantType, PopoverSizeType } from './types/PrimitiveTypes';
+import { PopoverVariantType, PopoverSizeType } from '../types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: PopoverVariantType[] = ['dark', 'light'];
 
