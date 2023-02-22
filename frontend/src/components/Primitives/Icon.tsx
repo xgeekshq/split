@@ -4,7 +4,7 @@ import Svg from '@/components/Primitives/Svg';
 
 type Props = CSSProps & {
   name: string;
-  size?: 32 | 28 | 24 | 20 | 18 | 16 | 12;
+  size?: 100 | 32 | 28 | 24 | 20 | 18 | 16 | 12;
 };
 
 const Icon = ({ name, size, css, ...props }: Props) => (

@@ -43,6 +43,9 @@ export default class User extends BaseModel {
 
 	@Prop({ nullable: true })
 	updatedAt?: Date;
+
+	@Prop({ default: '' })
+	avatar?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

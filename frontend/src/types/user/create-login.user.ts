@@ -10,6 +10,7 @@ export interface CreateOrLogin {
   lastName: string;
   isSAdmin: boolean;
   providerAccountCreatedAt?: string;
+  avatar?: string;
 }
 
 export interface CreateGuestUser {
