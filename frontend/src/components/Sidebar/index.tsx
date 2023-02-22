@@ -1,8 +1,8 @@
-import SidebarContent from './partials/Content';
-import Header from './partials/Header';
+import SidebarContent from './partials/Content/Content';
+import Header from './partials/Header/Header';
 import { StyledSidebar } from './styles';
 
-type SideBarProps = {
+export type SidebarProps = {
   firstName: string;
   lastName: string;
   email: string;
@@ -10,11 +10,11 @@ type SideBarProps = {
   strategy: string;
 };
 
-const Sidebar = ({ firstName, lastName, email, strategy }: SideBarProps) => (
+const Sidebar = ({ firstName, lastName, email, strategy }: SidebarProps) => (
   <StyledSidebar>
     <Header email={email} firstName={firstName} lastName={lastName} />
     <SidebarContent strategy={strategy} />
   </StyledSidebar>
 );
 
-export { Sidebar };
+export default Sidebar;

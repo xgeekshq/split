@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-import { Sidebar } from '@/components/Sidebar';
-import SidebarHeader from '@/components/Sidebar/partials/Header';
-import SidebarContent from '@/components/Sidebar/partials/Content';
+import Sidebar from '@/components/Sidebar';
+import SidebarHeader from '@/components/Sidebar/partials/Header/Header';
+import SidebarContent from '@/components/Sidebar/partials/Content/Content';
 import Flex from '@/components/Primitives/Flex';
-import SidebarItem from '@/components/Sidebar/partials/Item';
+import SidebarItem from '@/components/Sidebar/partials/Item/Item';
 
 export default {
   title: 'Navigation/Sidebar',

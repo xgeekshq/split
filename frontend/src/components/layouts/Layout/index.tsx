@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 
 import LoadingPage from '@/components/Primitives/Loading/Page';
-import { Sidebar } from '@/components/Sidebar';
+import Sidebar from '@/components/Sidebar';
 import { REFRESH_TOKEN_ERROR } from '@/utils/constants';
 import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
 import DashboardLayout from '../DashboardLayout';

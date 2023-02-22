@@ -4,7 +4,7 @@ import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
 
-import { StyledMenuItem } from '../styles';
+import { StyledMenuItem } from '../../styles';
 
 export type SidebarItemProps = {
   link?: string;
