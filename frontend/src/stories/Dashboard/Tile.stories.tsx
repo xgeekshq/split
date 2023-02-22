@@ -9,10 +9,8 @@ export default {
     docs: {
       description: {
         component: dedent`
-        Displays rich content in a portal, triggered by a button.
-
         **File Path:**
-        \`@/components/Dashboard/Tiles/Tile.tsx\`
+        \`@/components/Dashboard/Tiles/Tile/Tile.tsx\`
         `,
       },
     },

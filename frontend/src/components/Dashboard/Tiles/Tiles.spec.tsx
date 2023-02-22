@@ -1,14 +1,14 @@
 import { render as rtlRender } from '@testing-library/react';
-import DashboardTiles, { DashboardTilesProps } from './index';
+import Tiles, { TilesProps } from './index';
 
-const DEFAULT_PROPS: DashboardTilesProps = {
+const DEFAULT_PROPS: TilesProps = {
   data: {
     boardsCount: 99,
     usersCount: 99,
     teamsCount: 99,
   },
 };
-const render = (props = DEFAULT_PROPS) => rtlRender(<DashboardTiles {...props} />);
+const render = (props = DEFAULT_PROPS) => rtlRender(<Tiles {...props} />);
 
 describe('Components/Dashboard/Tiles/Tile', () => {
   it('should render correctly', () => {

@@ -3,11 +3,11 @@ import { BOARDS_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
 import { TileContainer } from './styles';
 import Tile from './Tile/Tile';
 
-export type DashboardTilesProps = {
+export type TilesProps = {
   data: HeaderInfo;
 };
 
-const DashboardTiles = ({ data }: DashboardTilesProps) => (
+const Tiles = ({ data }: TilesProps) => (
   <TileContainer>
     <Tile link={BOARDS_ROUTE} title="Your boards" count={data.boardsCount} color="purple" />
     <Tile link={TEAMS_ROUTE} title="Your teams" count={data.teamsCount} color="blue" />
@@ -15,4 +15,4 @@ const DashboardTiles = ({ data }: DashboardTilesProps) => (
   </TileContainer>
 );
 
-export default DashboardTiles;
+export default Tiles;
