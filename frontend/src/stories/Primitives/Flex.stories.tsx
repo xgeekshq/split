@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import Flex from '@/components/Primitives/Flex';
 import Button from '@/components/Primitives/Button';
 import dedent from 'ts-dedent';
-import { DirectionType, AlignType, JustifyType, WrapType, GapType } from './types/PrimitiveTypes';
+import { DirectionType, AlignType, JustifyType, WrapType, GapType } from '../types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: DirectionType[] = ['row', 'column', 'rowReverse', 'columnReverse'];
 

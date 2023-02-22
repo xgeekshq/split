@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Switch from '@/components/Primitives/Switch';
-import { SwitchSizeType } from './types/PrimitiveTypes';
+import { SwitchSizeType } from '../types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SwitchSizeType[] = ['xs', 'sm', 'md'];
 

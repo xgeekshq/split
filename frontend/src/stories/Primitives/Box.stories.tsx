@@ -6,8 +6,8 @@ import dedent from 'ts-dedent';
 import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import { ElevationType, BoxVariantType } from './types/PrimitiveTypes';
-import { capitalize } from './utils';
+import { ElevationType, BoxVariantType } from '../types/PrimitiveTypes';
+import { capitalize } from '../utils';
 
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
 const VARIANT_OPTIONS: BoxVariantType[] = ['bordered', 'dropdown'];
