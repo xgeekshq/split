@@ -65,6 +65,12 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 		};
 	}
 
+	private async sendGuestBoardUser(board: string, user: string) {
+		const boardUser = await this.getGuestBoardUser(board, user);
+
+		this.socketService.sendUpdateBoardUsers(boardUser);
+	}
+
 	public async createGuest(guestUserData: CreateGuestUserDto) {
 		const { board } = guestUserData;
 		const guestUserCreated = await this.createUserService.createGuest(guestUserData);
@@ -75,9 +81,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		await this.createGuestBoardUser(board, user);
 
-		const boardUser = await this.getGuestBoardUser(board, user);
-
-		this.socketService.sendUpdateBoardUsers(boardUser);
+		await this.sendGuestBoardUser(board, user);
 
 		return { board, user };
 	}
@@ -87,9 +91,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		await this.createGuestBoardUser(board, user);
 
-		const boardUser = await this.getGuestBoardUser(board, user);
-
-		this.socketService.sendUpdateBoardUsers(boardUser);
+		await this.sendGuestBoardUser(board, user);
 
 		return { board, user };
 	}
