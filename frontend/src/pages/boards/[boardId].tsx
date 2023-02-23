@@ -75,8 +75,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if (
         !(
           (
-            (boardUser &&
-              [BoardUserRoles.RESPONSIBLE, BoardUserRoles.STAKEHOLDER].includes(boardUser.role)) || // check if board user is responsible
             (teamUserFound &&
               [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUserFound?.role)) || // check if team user is admin or stakeholder
             boardUser || // check if it is a board user
