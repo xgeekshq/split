@@ -30,7 +30,7 @@ interface Props {
 }
 
 const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
-  const { data: session } = useSession();
+  const { data: session } = useSession({ required: false });
 
   // Atoms
   const boardData = useRecoilValue(boardInfoState);
