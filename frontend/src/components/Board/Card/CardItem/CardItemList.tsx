@@ -20,6 +20,7 @@ interface CardItemListProps {
   hasAdminRole: boolean;
   postAnonymously: boolean;
   cardTextDefault?: string;
+  isRegularBoard?: boolean;
 }
 
 const CardItemList: React.FC<CardItemListProps> = ({

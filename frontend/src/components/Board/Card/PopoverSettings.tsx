@@ -133,7 +133,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
         <PopoverTrigger
           variant="dark"
           size="sm"
-          disabled={hideCards && item.createdBy?._id !== userId}
+          disabled={hideCards && item.createdBy?._id !== userId && isItem}
           css={{
             top: firstOne ? '-35px' : 0,
           }}
