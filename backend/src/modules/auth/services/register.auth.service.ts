@@ -1,5 +1,4 @@
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
-import { userRepository } from 'src/modules/users/users.providers';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { BOARD_USER_NOT_FOUND, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';

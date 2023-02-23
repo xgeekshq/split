@@ -17,7 +17,7 @@ const GuestUserForm = () => {
   const board = router.query.boardId;
 
   const {
-    registerGuestUser: { mutate },
+    registerGuestUser: { mutate, status },
   } = useUser();
 
   const methods = useForm<LoginGuestUser>({
@@ -57,7 +57,7 @@ const GuestUserForm = () => {
         </Text>
         <Input css={{ mt: '$32' }} id="username" placeholder="Guest user name" type="text" />
 
-        <Button size="lg" type="submit">
+        <Button disabled={status !== 'idle'} size="lg" type="submit">
           Log in as guest
         </Button>
         <Flex align="center" direction="column" justify="center">
