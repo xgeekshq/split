@@ -40,4 +40,17 @@ describe('Components/Sidebar/Item', () => {
       expect(router.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
     });
   });
+
+  it('should handle onClick events', () => {
+    // Arrange
+    const mockOnClick = jest.fn();
+    const contentProps = { ...DEFAULT_PROPS, onClick: mockOnClick };
+
+    // Act
+    const { getByTestId } = render(contentProps);
+    fireEvent.click(getByTestId('sidebarItem'));
+
+    // Assert
+    expect(mockOnClick).toBeCalled();
+  });
 });

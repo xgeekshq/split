@@ -2,6 +2,7 @@ import { RouterContext } from 'next/dist/shared/lib/router-context';
 import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
 import { createMockRouter } from '@/utils/testing/mocks';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { getInitials } from '@/utils/getInitials';
 import Header, { SidebarHeaderProps } from './Header';
 
 const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
@@ -27,12 +28,7 @@ describe('Components/Sidebar/Header', () => {
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
     expect(userIcon).toHaveAttribute('href', `#userIcon`);
-    expect(
-      getByText(
-        headerProps.firstName.charAt(0).toUpperCase() +
-          headerProps.lastName.charAt(0).toUpperCase(),
-      ),
-    );
+    expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });
 
   it('should redirect correctly', async () => {
