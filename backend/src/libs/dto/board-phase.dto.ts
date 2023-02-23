@@ -12,5 +12,5 @@ export class BoardPhaseDto {
 	@IsString()
 	@IsNotEmpty()
 	@IsEnum(BoardPhases, { each: true })
-	phase: string;
+	phase: BoardPhases;
 }
