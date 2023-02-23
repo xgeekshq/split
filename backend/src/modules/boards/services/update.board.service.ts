@@ -30,6 +30,10 @@ import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
 import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
+import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -45,7 +49,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		@Inject(Cards.TYPES.services.DeleteCardService)
 		private deleteCardService: DeleteCardService,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface
+		private readonly boardRepository: BoardRepositoryInterface,
+		private eventEmitter: EventEmitter2
 	) {}
 
 	/**
@@ -471,6 +476,26 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 			return createdBoardUsers;
 		} catch (error) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	async updatePhase(boardPhaseDto: BoardPhaseDto) {
+		try {
+			const { boardId, phase } = boardPhaseDto;
+			await this.boardModel
+				.findOneAndUpdate(
+					{
+						_id: boardId
+					},
+					{
+						phase
+					}
+				)
+				.exec();
+
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 	}

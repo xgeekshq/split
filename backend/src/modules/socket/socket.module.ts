@@ -6,6 +6,7 @@ import {
 	afterServerSentTimerStateSubscriber,
 	afterServerStaredTimerSubscriber,
 	afterServerStoppedTimerSubscriber,
+	afterServerUpdatedPhaseSubscriber,
 	afterServerUpdatedTimeLeftSubscriber,
 	afterServerUpdatedTimerDurationSubscriber
 } from './socket.providers';
@@ -20,7 +21,8 @@ import {
 		afterServerStaredTimerSubscriber,
 		afterServerStoppedTimerSubscriber,
 		afterServerUpdatedTimeLeftSubscriber,
-		afterServerSentTimerStateSubscriber
+		afterServerSentTimerStateSubscriber,
+		afterServerUpdatedPhaseSubscriber
 	],
 	exports: [SocketGateway]
 })

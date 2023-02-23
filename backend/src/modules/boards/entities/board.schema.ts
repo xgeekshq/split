@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 import BaseModel from 'src/libs/models/base.model';
 import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
@@ -73,6 +74,13 @@ export default class Board extends BaseModel {
 
 	@Prop({ type: Boolean, nullable: true, default: false })
 	postAnonymously: boolean;
+
+	@Prop({
+		type: String,
+		nullable: true,
+		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
+	})
+	phase?: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

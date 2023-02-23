@@ -216,6 +216,7 @@ const DragDropArea: React.FC<Props> = ({
               addCards={board.addCards}
               postAnonymously={board.postAnonymously}
               columnIndex={index}
+              phase={board.phase}
             />
           ))}
           {provided.placeholder}

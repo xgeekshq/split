@@ -4,6 +4,7 @@ import {
 	ArrayMinSize,
 	ArrayNotEmpty,
 	IsBoolean,
+	IsEnum,
 	IsMongoId,
 	IsNotEmpty,
 	IsNumber,
@@ -15,6 +16,7 @@ import {
 import { CheckUniqueUsers } from 'src/libs/validators/check-unique-users';
 import BoardUserDto from './board.user.dto';
 import ColumnDto from '../../columns/dto/column.dto';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 
 export default class BoardDto {
 	@ApiPropertyOptional()
@@ -122,4 +124,10 @@ export default class BoardDto {
 
 	@ApiProperty({ type: String, isArray: true })
 	responsibles!: string[];
+
+	@ApiProperty({ type: String, enum: BoardPhases, enumName: 'Phase' })
+	@IsString()
+	@IsOptional()
+	@IsEnum(BoardPhases, { each: true })
+	phase?: string;
 }

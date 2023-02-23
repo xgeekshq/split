@@ -55,6 +55,7 @@ import { UpdateBoardApplicationInterface } from '../interfaces/applications/upda
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -339,5 +340,18 @@ export default class BoardsController {
 		}
 
 		return result;
+	}
+
+	@ApiOperation({ summary: 'Update board phase' })
+	@ApiOkResponse({
+		description: 'Board in voting phase'
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Put(':boardId/phase')
+	async updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
+		this.updateBoardApp.updatePhase(boardPhaseDto);
 	}
 }
