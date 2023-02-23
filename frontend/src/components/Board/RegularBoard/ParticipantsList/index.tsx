@@ -22,6 +22,21 @@ const ParticipantsList = () => {
 
   const isSAdmin = !!session?.user.isSAdmin;
 
+  const responsiblesList = boardParticipants.filter(
+    (boardUser) => boardUser.role === BoardUserRoles.RESPONSIBLE,
+  );
+
+  const responsibleGuestUsers = responsiblesList.filter((boardUser) => boardUser.user.isAnonymous);
+
+  const responsibleSignedUpUsers = responsiblesList.filter(
+    (boardUser) => !boardUser.user.isAnonymous,
+  );
+
+  const condition =
+    responsiblesList.length < 2 ||
+    responsibleGuestUsers.length === responsiblesList.length ||
+    responsibleSignedUpUsers.length < 2;
+
   return (
     <ParticipantsLayout hasPermissionsToEdit={isResponsible || isSAdmin}>
       <Flex direction="column">
@@ -38,6 +53,7 @@ const ParticipantsList = () => {
               isMemberCurrentUser={member.user._id === userId}
               isCurrentUserResponsible={isResponsible}
               isCurrentUserSAdmin={isSAdmin}
+              responibleToggleDisabled={condition}
             />
           ))}
         </ScrollableContent>

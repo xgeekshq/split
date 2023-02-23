@@ -152,7 +152,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 					select: 'user role -board',
 					populate: {
 						path: 'user',
-						select: '_id firstName email lastName'
+						select: '_id firstName email lastName isAnonymous'
 					}
 				})
 				.lean({ virtuals: true })

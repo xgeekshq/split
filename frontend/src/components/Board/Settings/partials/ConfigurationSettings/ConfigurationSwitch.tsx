@@ -37,7 +37,12 @@ const ConfigurationSwitchSettings = ({
         </Flex>
       </Tooltip>
     ) : (
-      <Switch checked={isChecked} size="sm" onCheckedChange={handleCheckedChange} />
+      <Switch
+        checked={isChecked}
+        size="sm"
+        onCheckedChange={handleCheckedChange}
+        disabled={disabled}
+      />
     )}
     <Flex direction="column">
       <Text size="md" fontWeight="medium">
