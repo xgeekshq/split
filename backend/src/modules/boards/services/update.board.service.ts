@@ -24,12 +24,7 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
-import {
-	DELETE_FAILED,
-	INSERT_FAILED,
-	PHASE_NOT_EXISTS,
-	UPDATE_FAILED
-} from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -39,7 +34,6 @@ import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
-import { BoardPhases } from 'src/libs/enum/board.phases';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -487,13 +481,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
-		if (
-			boardPhaseDto.phase !== BoardPhases.ADDCARDS &&
-			boardPhaseDto.phase !== BoardPhases.VOTINGPHASE &&
-			boardPhaseDto.phase !== BoardPhases.SUBMITED
-		) {
-			throw new BadRequestException(PHASE_NOT_EXISTS);
-		}
 		try {
 			await this.boardModel
 				.findOneAndUpdate(
