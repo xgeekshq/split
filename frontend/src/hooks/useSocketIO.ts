@@ -141,7 +141,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
     socket?.on(`${boardId}updateBoardUsers`, (addBoardUser: BoardUser) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEBOARDUSERS, dto: addBoardUser }]);
     });
-    
+
     socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: UpdateBoardPhase) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
     });
