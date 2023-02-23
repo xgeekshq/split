@@ -24,6 +24,7 @@ import {
   TitleSection,
 } from '../../SplitBoard/Header/styles';
 import HeaderParticipants from './HeaderParticipants';
+import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 
 interface Props {
   isParticipantsPage?: boolean;
@@ -42,6 +43,9 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
   const teamUsers = team?.users ? team.users : [];
 
   const isRegularBoardWithNoTeam = !team;
+
+  // User id
+  const userId = getGuestUserCookies() ? getGuestUserCookies().user : session?.user.id;
 
   // Set breadcrumbs
   const breadcrumbItems: BreadcrumbType = isParticipantsPage
@@ -101,92 +105,17 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
           </TitleSection>
         </Flex>
         <Flex align="center" gap="24">
-          {!isEmpty(teamUsers) && (
-            <Link href={`/teams/${team.id}`}>
-              <Flex align="center" gap="24">
-                <Flex align="center" gap="10">
-                  <StyledBoardTitle>
-                    <Text
-                      color="primary800"
-                      size="sm"
-                      fontWeight="medium"
-                      css={{
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {team?.name}
-                    </Text>
-                  </StyledBoardTitle>
-                  <AvatarGroup
-                    listUsers={isSubBoard ? users : teamUsers}
-                    responsible={false}
-                    teamAdmins={false}
-                    userId={session!.user.id}
-                    isClickable
-                  />
+          <Flex>
+            {isParticipantsPage ? (
+              <HeaderParticipants isParticipantsPage />
+            ) : (
+              <Link href={`/boards/${_id}/participants`}>
+                <Flex>
+                  <HeaderParticipants />
                 </Flex>
-                {!isEmpty(
-                  teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
-                ) && (
-                  <>
-                    <Separator orientation="vertical" size="lg" />
-
-                    <Flex align="center" gap="10">
-                      <Text color="primary300" size="sm">
-                        Team admins
-                      </Text>
-                      <AvatarGroup
-                        teamAdmins
-                        listUsers={isSubBoard ? users : teamUsers}
-                        responsible={false}
-                        userId={session!.user.id}
-                        isClickable
-                      />
-                    </Flex>
-                  </>
-                )}
-                {!isEmpty(
-                  boardData.board.team?.users.filter(
-                    (user: TeamUser) => user.role === TeamUserRoles.STAKEHOLDER,
-                  ),
-                ) && (
-                  <>
-                    <Separator orientation="vertical" size="lg" />
-
-                    <Flex align="center" gap="10">
-                      <Text color="primary300" size="sm">
-                        Stakeholders
-                      </Text>
-                      <AvatarGroup
-                        stakeholders
-                        listUsers={isSubBoard ? users : teamUsers}
-                        responsible={false}
-                        teamAdmins={false}
-                        userId={session!.user.id}
-                        isClickable
-                      />
-                    </Flex>
-                  </>
-                )}
-              </Flex>
-            </Link>
-          )}
-
-          {isRegularBoardWithNoTeam && (
-            <Flex>
-              {isParticipantsPage ? (
-                <HeaderParticipants isParticipantsPage />
-              ) : (
-                <Link href={`/boards/${_id}/participants`}>
-                  <Flex>
-                    <HeaderParticipants />
-                  </Flex>
-                </Link>
-              )}
-            </Flex>
-          )}
+              </Link>
+            )}
+          </Flex>
         </Flex>
       </Flex>
     </StyledHeader>

@@ -13,7 +13,8 @@ const ParticipantsList = () => {
   const boardParticipants = useRecoilValue(boardParticipantsState);
   const { data: session } = useSession();
 
-  const userId = session ? session.user.id : getGuestUserCookies().user;
+  // User Id
+  const userId = getGuestUserCookies() ? getGuestUserCookies().user : session?.user.id;
 
   const isResponsible = !!boardParticipants.find(
     (boardUser) => boardUser.user._id === userId && boardUser.role === BoardUserRoles.RESPONSIBLE,
