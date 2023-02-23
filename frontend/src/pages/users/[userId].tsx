@@ -6,7 +6,7 @@ import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
 import UsersEdit from '@/components/Users/UserEdit';
-import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
+import { ContentSection } from '@/components/layouts/Layout/styles';
 import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
 
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
