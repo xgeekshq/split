@@ -13,6 +13,7 @@ import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import BoardType, { UpdateBoardPhase } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -24,6 +25,8 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   const setNewBoard = useSetRecoilState(newBoardState);
   // #region BOARD
+
+  const setReady = useSetRecoilState(operationsQueueAtom);
 
   const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
@@ -116,6 +119,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const updateBoardPhase = (data: UpdateBoardPhase) => {
+    setReady(false);
     const getBoardQuery = (id: string | undefined) => ['board', { id }];
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
@@ -138,6 +142,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
         return old;
       },
     );
+    setReady(true);
   };
 
   return {
