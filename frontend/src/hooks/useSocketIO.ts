@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import useCards from '@/hooks/useCards';
-import BoardType from '@/types/board/board';
+import BoardType, { UpdateBoardPhase } from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -24,6 +24,7 @@ import { useRecoilValue } from 'recoil';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useComments from './useComments';
 import useVotes from './useVotes';
+import useBoard from './useBoard';
 
 enum BoardAction {
   UPDATECARDPOSITION,
@@ -36,6 +37,7 @@ enum BoardAction {
   ADDCOMMENT,
   DELETECOMMENT,
   UPDATECOMMENT,
+  UPDATEPHASE,
 }
 
 interface SocketInterface {
@@ -47,6 +49,7 @@ interface SocketInterface {
 export const useSocketIO = (boardId: string): SocketInterface => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
+  const { updateBoardPhase } = useBoard({ autoFetchBoard: true });
   const {
     setQueryDataUpdateCardPosition,
     setQueryDataUnmergeCard,
@@ -132,8 +135,8 @@ export const useSocketIO = (boardId: string): SocketInterface => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATECOMMENT, dto: updateCommentDto }]);
     });
 
-    socket?.on(BOARD_PHASE_SERVER_SENT, (payload) => {
-      queryClient.invalidateQueries(['board', { id: payload.boardId }]);
+    socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: UpdateBoardPhase) => {
+      setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
     });
   }, [queryClient, socket, boardId]);
 
@@ -171,6 +174,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
         case BoardAction.UPDATECOMMENT:
           setQueryDataUpdateComment(dto);
           break;
+        case BoardAction.UPDATEPHASE:
+          updateBoardPhase(dto);
+          break;
+
         default:
           break;
       }
