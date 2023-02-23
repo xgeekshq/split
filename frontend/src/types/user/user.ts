@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
 import { Token } from '../token';
+import { CreateGuestUser } from './create-login.user';
 
 export interface User {
   _id: string;
@@ -25,6 +26,8 @@ export interface UseUserType {
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
   getUserById: UseQueryResult<User, unknown>;
+  registerGuestUser: UseMutationResult<User, unknown, CreateGuestUser, unknown>;
+  loginGuestUser: UseMutationResult<GuestUser, unknown, GuestUser, unknown>;
 }
 
 export interface LoginUser {
@@ -34,6 +37,10 @@ export interface LoginUser {
 
 export interface EmailUser {
   email: string;
+}
+
+export interface LoginGuestUser {
+  username: string;
 }
 
 export interface RegisterUser {
@@ -72,3 +79,8 @@ export interface DeleteUser {
 }
 
 export type UserZod = 'name' | 'email' | 'password' | 'passwordConf';
+
+export type GuestUser = {
+  accessToken: Token;
+  user: string;
+};

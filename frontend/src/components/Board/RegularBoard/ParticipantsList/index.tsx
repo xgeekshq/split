@@ -10,7 +10,7 @@ import ParticipantCard from './ParticipantCard.tsx';
 
 const ParticipantsList = () => {
   const boardParticipants = useRecoilValue(boardParticipantsState);
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession();
 
   const isResponsible = !!boardParticipants.find(
     (boardUser) =>

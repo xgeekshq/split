@@ -11,6 +11,8 @@ import {
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { BoardUser } from '@/types/board/board.user';
+import { handleNewBoardUser } from '@/helper/board/transformBoard';
 import BoardType, { UpdateBoardPhase } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
@@ -24,9 +26,33 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   const { boardId, queryClient, setToastState } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
-  // #region BOARD
-
   const setReady = useSetRecoilState(operationsQueueAtom);
+
+  const getBoardQuery = (id: string | undefined) => ['board', { id }];
+
+  const setQueryDataAddBoardUser = (data: BoardUser) => {
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.board),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleNewBoardUser(old.board, data);
+
+          return {
+            board: {
+              ...old.board,
+              users: boardData.users,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+    setReady(true);
+  };
+
+  // #region BOARD
 
   const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
@@ -120,7 +146,6 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   const updateBoardPhase = (data: UpdateBoardPhase) => {
     setReady(false);
-    const getBoardQuery = (id: string | undefined) => ['board', { id }];
     queryClient.setQueryData<{ board: BoardType } | undefined>(
       getBoardQuery(data.boardId),
       (old: { board: BoardType } | undefined) => {
@@ -146,10 +171,11 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   };
 
   return {
-    fetchBoard,
     createBoard,
     deleteBoard,
     updateBoard,
+    fetchBoard,
+    setQueryDataAddBoardUser,
     updateBoardPhase,
   };
 };

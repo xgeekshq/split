@@ -41,7 +41,7 @@ export const sortParticipantsList = (
 };
 
 const BoardParticipants = () => {
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession({ required: false });
   const setToastState = useSetRecoilState(toastState);
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
   const setRecoilBoard = useSetRecoilState(boardInfoState);

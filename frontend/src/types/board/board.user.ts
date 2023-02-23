@@ -7,6 +7,7 @@ export interface BoardUser {
   role: BoardUserRoles;
   _id?: string;
   votesCount: number;
+  board?: string;
 }
 
 export interface CreatedBoardUser {

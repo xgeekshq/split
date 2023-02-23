@@ -12,6 +12,7 @@ import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { addElementAtIndex, removeElementAtIndex } from '@/utils/array';
 import AddCardDto from '@/types/card/addCard.dto';
+import { BoardUser } from '@/types/board/board.user';
 
 // avoid read only error
 export const removeReadOnly = (board: BoardType): BoardType => JSON.parse(JSON.stringify(board));
@@ -67,6 +68,18 @@ export const handleNewCard = (board: BoardType, colIdToAdd: string, cardDto: Add
       column.cards = removeElementAtIndex(column.cards, cardIdx);
     }
     column.cards = addElementAtIndex(column.cards, 0, cardDto.newCard ?? generateNewCard(cardDto));
+  }
+
+  return boardData;
+};
+
+export const handleNewBoardUser = (board: BoardType, boardUser: BoardUser) => {
+  const boardData = removeReadOnly(board);
+
+  const userExists = boardData.users.find((user) => user._id === boardUser._id);
+
+  if (!userExists) {
+    boardData.users.push(boardUser);
   }
 
   return boardData;

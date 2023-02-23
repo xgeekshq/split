@@ -27,7 +27,7 @@ type ToastStateType = {
 
 const useVotes = () => {
   const { queryClient, setToastState } = useBoardUtils();
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession({ required: false });
   const userId = session?.user?.id || '';
 
   const setReady = useSetRecoilState(operationsQueueAtom);

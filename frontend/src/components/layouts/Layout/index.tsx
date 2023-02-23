@@ -11,7 +11,8 @@ import MainPageHeader from './partials/MainPageHeader';
 import { Container, ContentSection } from './styles';
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: session } = useSession({ required: true });
+  const { data: session } = useSession({ required: false });
+
   const router = useRouter();
 
   if (session?.error === REFRESH_TOKEN_ERROR) {
