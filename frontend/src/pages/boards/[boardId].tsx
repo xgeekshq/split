@@ -99,9 +99,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // if board is public
 
   // check if there are cookies and if the cookies have the board the user is trying to access
-  const cookiesGuestUser: GuestUser = getGuestUserCookies({ req, res }, true);
-
-  console.log(cookiesGuestUser);
+  const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
 
   if (!session) {
     // if there isn´t cookies, the guest user is registered

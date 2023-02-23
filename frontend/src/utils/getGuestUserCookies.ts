@@ -6,6 +6,6 @@ export const getGuestUserCookies = (options?: OptionsType, isServerSide: boolean
   const cookie = isServerSide
     ? getCookie(GUEST_USER_COOKIE, options)
     : getCookie(GUEST_USER_COOKIE);
-  console.log(cookie);
+
   return cookie ? JSON.parse(cookie as string) : cookie;
 };
