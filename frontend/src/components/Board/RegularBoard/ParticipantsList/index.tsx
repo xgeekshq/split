@@ -32,7 +32,7 @@ const ParticipantsList = () => {
     (boardUser) => !boardUser.user.isAnonymous,
   );
 
-  const condition =
+  const haveInvalidNumberOfResponsibles =
     responsiblesList.length < 2 ||
     responsibleGuestUsers.length === responsiblesList.length ||
     responsibleSignedUpUsers.length < 2;
@@ -53,7 +53,7 @@ const ParticipantsList = () => {
               isMemberCurrentUser={member.user._id === userId}
               isCurrentUserResponsible={isResponsible}
               isCurrentUserSAdmin={isSAdmin}
-              responibleToggleDisabled={condition}
+              haveInvalidNumberOfResponsibles={haveInvalidNumberOfResponsibles}
             />
           ))}
         </ScrollableContent>

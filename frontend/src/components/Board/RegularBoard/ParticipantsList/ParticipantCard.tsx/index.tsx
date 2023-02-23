@@ -20,7 +20,7 @@ type CardBodyProps = {
   isCurrentUserResponsible: boolean;
   isCurrentUserSAdmin: boolean;
   isMemberCurrentUser: boolean;
-  responibleToggleDisabled: boolean;
+  haveInvalidNumberOfResponsibles: boolean;
   isOpen?: boolean;
 };
 
@@ -31,7 +31,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
     isCurrentUserSAdmin,
     isMemberCurrentUser,
     isOpen,
-    responibleToggleDisabled,
+    haveInvalidNumberOfResponsibles,
   }) => {
     const {
       addAndRemoveBoardParticipants: { mutate },
@@ -108,9 +108,8 @@ const ParticipantCard = React.memo<CardBodyProps>(
                       isChecked={isMemberResponsible}
                       text=""
                       title="Responsible"
-                      disabled={
-                        responibleToggleDisabled && isMemberCurrentUser && !isCurrentUserSAdmin
-                      }
+                      disabledInfo="Select another responsible for the board"
+                      disabled={haveInvalidNumberOfResponsibles && isMemberResponsible}
                     />
                   </Flex>
                 )}

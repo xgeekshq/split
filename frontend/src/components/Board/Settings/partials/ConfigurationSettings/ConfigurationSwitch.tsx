@@ -25,7 +25,7 @@ const ConfigurationSwitchSettings = ({
   disabledInfo,
 }: Props) => (
   <Flex gap={20}>
-    {disabledInfo ? (
+    {disabledInfo && disabled ? (
       <Tooltip content={disabledInfo}>
         <Flex>
           <Switch
