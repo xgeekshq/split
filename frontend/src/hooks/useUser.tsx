@@ -26,8 +26,12 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
   const { setToastState, queryClient, userId, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
+      console.log('hereee');
+      console.log(router);
+      setCookie(GUEST_USER_COOKIE, data._id);
       router.push({ pathname: `/boards/[boardId]`, query: { boardId: variables.board } });
+      console.log(router);
     },
     onError: () => {
       setToastState({

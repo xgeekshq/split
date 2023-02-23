@@ -1,3 +1,5 @@
+import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
+import { userRepository } from 'src/modules/users/users.providers';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { BOARD_USER_NOT_FOUND, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
@@ -6,6 +8,7 @@ import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import * as AUTH_TYPES from 'src/modules/auth/interfaces/types';
+import * as USER_TYPES from 'src/modules/users/interfaces/types';
 import { RegisterAuthService } from '../interfaces/services/register.auth.service.interface';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -25,7 +28,9 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
 		@Inject(AUTH_TYPES.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthService
+		private getTokenAuthService: GetTokenAuthService,
+		@Inject(USER_TYPES.TYPES.repository)
+		private userRepository: UserRepositoryInterface
 	) {}
 
 	public async register(registrationData: CreateUserDto) {
@@ -81,6 +86,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 	public async loginGuest(guestUserData: CreateGuestUserDto) {
 		const { board, user } = guestUserData;
 		const { accessToken } = await this.getTokenAuthService.getTokens(user);
+		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
 
 		await this.createGuestBoardUser(board, user);
 
