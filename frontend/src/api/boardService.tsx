@@ -16,7 +16,6 @@ import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
 import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import ColumnType, { ColumnDeleteCards } from '@/types/column';
-import fetchPublicData from '@/utils/fetchPublicData';
 
 // #region BOARD
 
@@ -40,9 +39,10 @@ export const getPublicStatusRequest = (
   boardId: string,
   context?: GetServerSidePropsContext,
 ): Promise<boolean> =>
-  fetchPublicData<boolean>(`/publicBoards/${boardId}/publicStatus`, {
+  fetchData<boolean>(`/publicBoards/${boardId}/publicStatus`, {
     context,
     serverSide: !!context,
+    isPublicRequest: true,
   });
 
 export const getDashboardBoardsRequest = (

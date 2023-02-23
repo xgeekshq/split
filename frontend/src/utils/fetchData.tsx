@@ -20,18 +20,25 @@ export const getToken = async (context?: GetServerSidePropsContext) => {
   const session = await getSession(context);
 
   // accessing cookies depends on where it is called (server side or client side)
-  let guestUserCookie: GuestUser;
-  if (context) {
-    const { req, res } = context;
-    guestUserCookie = getGuestUserCookies({ req, res }, true);
-  } else guestUserCookie = getGuestUserCookies();
+
+  if (!session) {
+    let guestUserCookie: GuestUser;
+    if (context) {
+      const { req, res } = context;
+      guestUserCookie = getGuestUserCookies({ req, res }, true);
+    } else {
+      guestUserCookie = getGuestUserCookies();
+    }
+
+    // when user is a guest, the token is accessed through cookie
+    if (!session && guestUserCookie) return `Bearer ${guestUserCookie.accessToken.token}`;
+  }
 
   // when user is logged in, the token is accessed through session
   if (session) {
     return `Bearer ${session?.user.accessToken.token}`;
   }
-  // when user is a guest, the token is accessed through cookie
-  if (!session && guestUserCookie) return `Bearer ${guestUserCookie.accessToken.token}`;
+
   return 'Bearer ';
 };
 
@@ -52,10 +59,11 @@ type Options = {
   refreshToken?: string;
   serverSide?: boolean;
   context?: GetServerSidePropsContext;
+  isPublicRequest?: boolean;
 } & AxiosRequestConfig;
 
 const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
-  const { method = 'GET', context, refreshToken, serverSide } = options ?? {};
+  const { method = 'GET', context, refreshToken, serverSide, isPublicRequest } = options ?? {};
   const instanceOptions: AxiosRequestConfig = {
     url,
     method,
@@ -63,10 +71,14 @@ const fetchData = async <T,>(url: string, options?: Options): Promise<T> => {
   };
 
   if (context || refreshToken) {
-    instanceOptions.headers = {
-      ...options?.headers,
-      Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
-    };
+    instanceOptions.headers = !isPublicRequest
+      ? {
+          ...options?.headers,
+          Authorization: refreshToken ? `Bearer ${refreshToken}` : await getToken(context),
+        }
+      : {
+          ...options?.headers,
+        };
   }
 
   const { data } = !serverSide

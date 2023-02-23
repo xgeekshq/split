@@ -14,7 +14,6 @@ import {
   User,
 } from '@/types/user/user';
 import fetchData from '@/utils/fetchData';
-import fetchPublicData from '@/utils/fetchPublicData';
 
 export const getDashboardHeaderInfo = (context?: GetServerSidePropsContext): Promise<HeaderInfo> =>
   fetchData(`auth/statistics`, { context, serverSide: !!context });
@@ -51,7 +50,11 @@ export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordRes
   });
 
 export const registerGuest = (newGuestUser: CreateGuestUser): Promise<User> =>
-  fetchPublicData('/auth/loginGuest', { method: 'POST', data: newGuestUser });
+  fetchData('/auth/loginGuest', {
+    isPublicRequest: true,
+    method: 'POST',
+    data: newGuestUser,
+  });
 
 export const loginGuest = (guestUser: GuestUser): Promise<GuestUser> =>
-  fetchPublicData('/auth/loginGuest', { method: 'POST', data: guestUser });
+  fetchData('/auth/loginGuest', { isPublicRequest: true, method: 'POST', data: guestUser });

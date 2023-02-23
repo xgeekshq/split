@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
 	IsBoolean,
 	IsEnum,
@@ -21,6 +22,7 @@ export default class BoardGuestUserDto {
 	role!: string;
 
 	@IsNotEmpty()
+	@Type(() => GuestUserDto)
 	user!: GuestUserDto;
 
 	@IsMongoId()

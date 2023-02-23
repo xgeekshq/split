@@ -39,8 +39,6 @@ const GuestUserForm = () => {
     router.push(START_PAGE_ROUTE);
   };
 
-  // TODO check submit btn from loggin page
-
   return (
     <FormProvider {...methods}>
       <StyledForm

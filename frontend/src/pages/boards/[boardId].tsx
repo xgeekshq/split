@@ -35,8 +35,8 @@ import { GuestUser } from '@/types/user/user';
 import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import fetchPublicData from '@/utils/fetchPublicData';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
+import fetchData from '@/utils/fetchData';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
 
   // if not public, get board from protected endpoint
-  if (!isPublic) {
+  if (session || !isPublic) {
     try {
       await queryClient.fetchQuery(['board', { id: boardId }], () =>
         getBoardRequest(boardId, context),
@@ -68,21 +68,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
       const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
-      const userFound = data?.board.users.find(
-        (teamUser) => teamUser.user?._id === session?.user.id,
-      );
-
-      const teamUserFound = data?.board.team?.users.find(
-        (teamUser) => teamUser.user?._id === session?.user.id,
-      );
-
       if (
-        !boardUser &&
         !(
-          [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) ||
-          [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN)
-        ) &&
-        !session?.user.isSAdmin
+          (boardUser &&
+            [BoardUserRoles.RESPONSIBLE, BoardUserRoles.STAKEHOLDER].includes(boardUser.role)) ||
+          session?.user.isSAdmin
+        )
       ) {
         throw Error();
       }
@@ -113,9 +104,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     // if the user doesn't have access to the board, he is added as a board user
-
     try {
-      const data = await fetchPublicData<GuestUser>('/auth/loginGuest', {
+      const data = await fetchData<GuestUser>('/auth/loginGuest', {
+        isPublicRequest: true,
         method: 'POST',
         data: {
           user: cookiesGuestUser.user,
@@ -186,12 +177,12 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   const isPersonalBoard = !data?.board.team; // personal boards don't have teams
 
-  // // regular boards have teams but no subboards (divided boards)
+  // regular boards have teams but no subboards (divided boards)
   const isRegularOrPersonalBoard =
     (!data?.board.isSubBoard && !!data?.board.team && !data?.board.dividedBoards.length) ||
     !data?.board.team;
 
-  // // Socket IO Hook
+  // Socket IO Hook
   const { socketId, emitEvent, listenEvent } = useSocketIO(boardId);
 
   // Use effect to set recoil state using data from API
