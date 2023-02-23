@@ -1,11 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 
-import BoardType, {
-  CreateBoardDto,
-  GetBoardResponse,
-  UpdateBoardPhase,
-  UpdateBoardType,
-} from '@/types/board/board';
+import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -21,6 +16,7 @@ import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
 import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import ColumnType, { ColumnDeleteCards } from '@/types/column';
+import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
 
 // #region BOARD
 
@@ -31,8 +27,11 @@ export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
 ): Promise<BoardType> => fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
 
-export const updateBoardPhaseRequest = (updateBoardPhase: UpdateBoardPhase): Promise<void> =>
-  fetchData(`/boards/${updateBoardPhase.boardId}/phase`, { method: 'PUT', data: updateBoardPhase });
+export const updateBoardPhaseRequest = (updateBoardPhaseDto: UpdateBoardPhaseDto): Promise<void> =>
+  fetchData(`/boards/${updateBoardPhaseDto.boardId}/phase`, {
+    method: 'PUT',
+    data: updateBoardPhaseDto,
+  });
 
 export const getBoardRequest = (
   id: string,
