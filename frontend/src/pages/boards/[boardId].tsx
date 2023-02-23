@@ -68,13 +68,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
       const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
 
+      const teamUserFound = data?.board.team?.users.find(
+        (teamUser) => teamUser.user?._id === session?.user.id,
+      );
+
       if (
         !(
-          (boardUser &&
-            [BoardUserRoles.RESPONSIBLE, BoardUserRoles.STAKEHOLDER].includes(boardUser.role)) ||
-          boardUser ||
-          session?.user.isSAdmin
-        )
+          (
+            (boardUser &&
+              [BoardUserRoles.RESPONSIBLE, BoardUserRoles.STAKEHOLDER].includes(boardUser.role)) || // check if board user is responsible
+            (teamUserFound &&
+              [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUserFound?.role)) || // check if team user is admin or stakeholder
+            boardUser || // check if it is a board user
+            session?.user.isSAdmin
+          ) // check if it is super admin
+        ) // if it is none of these roles, user cant access the board
       ) {
         throw Error();
       }
