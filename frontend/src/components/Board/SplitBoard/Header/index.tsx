@@ -296,8 +296,8 @@ const BoardHeader = () => {
                   of {dividedBoards.length} sub-team boards merged
                 </div>
               ) : null}
-              {boardData.board.phase === BoardPhases.VOTINGPHASE ? <text>Voting Phase</text> : null}
-              {boardData.board.phase === BoardPhases.SUBMITED ? <text>Submited</text> : null}
+              {boardData.board.phase === BoardPhases.VOTINGPHASE ? 'Voting Phase' : null}
+              {boardData.board.phase === BoardPhases.SUBMITED ? 'Submited' : null}
             </BoardCounter>
           </PopoverTrigger>
           <PopoverPortal>
