@@ -15,6 +15,7 @@ describe('Components/Sidebar/Content', () => {
 
     // Assert
     expect(items).toHaveLength(7);
+    // TODO: Improve this Test:
     expect(getByText('Dashboard')).toBeInTheDocument();
     expect(getByText('Boards')).toBeInTheDocument();
     expect(getByText('Users')).toBeInTheDocument();
