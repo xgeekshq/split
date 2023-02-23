@@ -5,6 +5,7 @@ export const TYPES = {
 		AfterServerStaredTimerSubscriber: 'AfterServerStaredTimerSubscriber',
 		AfterServerStoppedTimerSubscriber: 'AfterServerStoppedTimerSubscriber',
 		AfterServerUpdatedTimeLeftSubscriber: 'AfterServerUpdatedTimeLeftSubscriber',
-		AfterServerSentTimerStateSubscriber: 'AfterServerSentTimerStateSubscriber'
+		AfterServerSentTimerStateSubscriber: 'AfterServerSentTimerStateSubscriber',
+		AfterServerUpdatedPhaseSubscriber: 'AfterServerUpdatedPhaseSubscriber'
 	}
 };

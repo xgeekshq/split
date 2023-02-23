@@ -11,10 +11,11 @@ import {
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import BoardType from '@/types/board/board';
-import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
+import BoardType, { UpdateBoardPhase } from '@/types/board/board';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -143,12 +144,39 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
+  const updateBoardPhase = (data: UpdateBoardPhase) => {
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          setToastState({
+            open: true,
+            content: `${data.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''} ${
+              old.board.title
+            } ${data.phase === BoardPhases.SUBMITED ? ' was submited' : ''}`,
+            type: ToastStateEnum.SUCCESS,
+          });
+          return {
+            board: {
+              ...old.board,
+              phase: data.phase,
+            },
+          };
+        }
+        return old;
+      },
+    );
+    setReady(true);
+  };
+
   return {
     createBoard,
     deleteBoard,
     updateBoard,
     fetchBoard,
     setQueryDataAddBoardUser,
+    updateBoardPhase,
   };
 };
 

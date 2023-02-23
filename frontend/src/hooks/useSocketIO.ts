@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import useCards from '@/hooks/useCards';
-import BoardType from '@/types/board/board';
+import BoardType, { UpdateBoardPhase } from '@/types/board/board';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -17,7 +17,7 @@ import EmitEvent from '@/types/events/emit-event.type';
 import EventCallback from '@/types/events/event-callback.type';
 import ListenEvent from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
-import { NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
+import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { useQueryClient } from '@tanstack/react-query';
 import isEmpty from '@/utils/isEmpty';
 import { useRecoilValue } from 'recoil';
@@ -39,6 +39,7 @@ enum BoardAction {
   DELETECOMMENT,
   UPDATECOMMENT,
   UPDATEBOARDUSERS,
+  UPDATEPHASE,
 }
 
 interface SocketInterface {
@@ -50,6 +51,7 @@ interface SocketInterface {
 export const useSocketIO = (boardId: string): SocketInterface => {
   const queryClient = useQueryClient();
   const [socket, setSocket] = useState<Socket | null>(null);
+  const { updateBoardPhase } = useBoard({ autoFetchBoard: true });
   const {
     setQueryDataUpdateCardPosition,
     setQueryDataUnmergeCard,
@@ -139,6 +141,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
     socket?.on(`${boardId}updateBoardUsers`, (addBoardUser: BoardUser) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEBOARDUSERS, dto: addBoardUser }]);
     });
+    
+    socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: UpdateBoardPhase) => {
+      setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
+    });
   }, [queryClient, socket, boardId]);
 
   useEffect(() => {
@@ -178,6 +184,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
         case BoardAction.UPDATEBOARDUSERS:
           setQueryDataAddBoardUser(dto);
           break;
+        case BoardAction.UPDATEPHASE:
+          updateBoardPhase(dto);
+          break;
+
         default:
           break;
       }

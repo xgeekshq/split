@@ -37,6 +37,9 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import fetchData from '@/utils/fetchData';
+import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
+import { BoardPhases } from '@/utils/enums/board.phases';
+
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -243,6 +246,15 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Show button in sub boards to merge into main
   const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
+  // Show button in main board to start voting if is Admin
+  const showButtonToVote = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
+    board?.phase === BoardPhases.ADDCARDS &&
+    !isSubBoard &&
+    hasAdminRole
+  );
+
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
     !isSubBoard &&
@@ -270,7 +282,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   };
 
   const shouldShowLeftSection =
-    !showMessageIfMerged && (showButtonToMerge || showMessageHaveSubBoardsMerged);
+    !showMessageIfMerged &&
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote);
 
   const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
 
@@ -304,6 +317,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                   title="No sub-team has merged into this main board yet."
                   type="info"
                 />
+              )}
+              {showButtonToVote && (
+                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
             </Flex>
           )}
