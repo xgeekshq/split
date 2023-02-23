@@ -23,6 +23,7 @@ import { SlackCommunicationService } from 'src/modules/communication/services/sl
 import { SlackDisabledCommunicationService } from 'src/modules/communication/services/slack-disabled-communication.service';
 import { SlackAddUserIntoChannelApplication } from './applications/slack-add-user-channel.application';
 import { UsersSlackHandler } from './handlers/users-slack.handler';
+import { SlackSendMessagesService } from './services/slack-send-messages.service';
 
 export const CommunicationGateAdapter = {
 	provide: SlackCommunicationGateAdapter,
@@ -144,5 +145,12 @@ export const ArchiveChannelService = {
 	provide: TYPES.services.SlackArchiveChannelService,
 	useClass: configuration().slack.enable
 		? SlackArchiveChannelService
+		: SlackDisabledCommunicationService
+};
+
+export const SendMessageService = {
+	provide: TYPES.services.SlackCommunicationService,
+	useClass: configuration().slack.enable
+		? SlackSendMessagesService
 		: SlackDisabledCommunicationService
 };
