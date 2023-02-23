@@ -39,6 +39,7 @@ export type BoardType = {
 	} | null;
 	users: UserRoleType[];
 	slackChannelId?: string;
+	boardNumber: number;
 };
 
 export type ConfigurationType = {

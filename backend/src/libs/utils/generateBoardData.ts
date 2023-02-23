@@ -4,7 +4,7 @@ import { CreateBoardDto } from 'src/modules/boards/services/create.board.service
 
 export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = []): BoardDto => {
 	return {
-		title: `Sub-team board ${index}`,
+		title: `Sub-team ${index} board`,
 		columns: [
 			{
 				title: 'Went well',

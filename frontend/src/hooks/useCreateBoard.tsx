@@ -24,7 +24,7 @@ const useCreateBoard = (team?: Team) => {
 
   const generateSubBoard = useCallback(
     (index: number, users: BoardUserToAdd[] = []): BoardToAdd => ({
-      title: `Sub-team board ${index}`,
+      title: `Sub-team ${index} board`,
       columns: defaultSplitColumns,
       isPublic: false,
       dividedBoards: [],

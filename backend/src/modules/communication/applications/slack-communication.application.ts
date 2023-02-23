@@ -34,7 +34,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		const textGeneralTeams = teams
 			.filter((i) => i.for === BoardRoles.MEMBER)
 			.reduce((text, team) => {
-				text += `\n${team.name}:\n`;
+				text += `\nSub-team ${team.teamNumber}:\n`;
 				team.participants.forEach((i, idx) => {
 					text += `${idx + 1}. ${i.firstName} ${i.lastName}`;
 
@@ -184,7 +184,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 			const fullName = `${this.config.slackChannelPrefix}${name}`;
 
 			return fullName
-				.replace(/\s/, '_')
+				.replace(/\s/, '-')
 				.replace(/[^a-zA-Z0-9-_]/g, '')
 				.substring(0, 80)
 				.toLowerCase();
@@ -197,6 +197,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				boardId: board.id,
 				type: board.isSubBoard ? 'sub-team' : 'team',
 				for: BoardRoles.RESPONSIBLE,
+				teamNumber: 0,
 				participants: board.isSubBoard
 					? ([this.getUsersInBoardByRole(board, BoardRoles.RESPONSIBLE)].filter(
 							(i) => !!i
@@ -216,11 +217,12 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 
 			teams.push({
 				name: subBoard.title,
-				normalName: normalizeName(board.team.name + '-' + subBoard.title.replace(' board ', '-')),
+				normalName: normalizeName(board.team.name + '-' + subBoard.title.replace(' board', '')),
 				boardId: subBoard.id,
 				type: 'sub-team',
 				for: BoardRoles.MEMBER,
-				participants
+				participants,
+				teamNumber: subBoard.boardNumber
 			});
 		});
 
