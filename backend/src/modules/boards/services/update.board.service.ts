@@ -482,13 +482,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
+			const { boardId, phase } = boardPhaseDto;
 			await this.boardModel
 				.findOneAndUpdate(
 					{
-						_id: boardPhaseDto.boardId
+						_id: boardId
 					},
 					{
-						phase: boardPhaseDto.phase
+						phase
 					}
 				)
 				.exec();
