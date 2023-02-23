@@ -72,6 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         !(
           (boardUser &&
             [BoardUserRoles.RESPONSIBLE, BoardUserRoles.STAKEHOLDER].includes(boardUser.role)) ||
+          boardUser ||
           session?.user.isSAdmin
         )
       ) {
