@@ -82,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             boardUser || // check if it is a board user
             session?.user.isSAdmin
           ) // check if it is super admin
-        ) // if it is none of these roles, user cant access the board
+        ) // if it has none of these roles, user cant access the board
       ) {
         throw Error();
       }
