@@ -30,8 +30,9 @@ export class SlackSendMessageProducer {
 	async send(data: SlackMessageType): Promise<Job<SlackMessageType>> {
 		const job = await this.queue.add(data);
 
-		this.logger.verbose(`Add SlackMessage with SlackChannelid: "${data.slackChannelId}" 
-    to queue with Job id: "${job.id}"`);
+		this.logger.verbose(
+			`Add SlackMessage with SlackChannelid: "${data.slackChannelId}" to queue with Job id: "${job.id}"`
+		);
 
 		return job;
 	}
