@@ -16,7 +16,7 @@ export const UserFactory = buildTestFactory<User>(() => {
   const isSAdmin = faker.datatype.boolean();
   const joinedAt = faker.datatype.datetime().toString();
 
-  return {
+  const user: User = {
     _id,
     firstName,
     lastName,
@@ -24,6 +24,29 @@ export const UserFactory = buildTestFactory<User>(() => {
     isSAdmin,
     joinedAt,
   };
+
+  return user;
+});
+
+export const SessionUserFactory = buildTestFactory(() => {
+  const id = faker.database.mongodbObjectId();
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+  const email = faker.internet.email(firstName, lastName);
+  const isSAdmin = faker.datatype.boolean();
+  const joinedAt = faker.datatype.datetime().toString();
+
+  const user = {
+    id,
+    firstName,
+    lastName,
+    email,
+    isSAdmin,
+    joinedAt,
+    isMember: false,
+  };
+
+  return user;
 });
 
 export const BoardUserFactory = buildTestFactory<BoardUser>(() => {

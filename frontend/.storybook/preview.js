@@ -8,6 +8,7 @@ import { RecoilRoot } from 'recoil';
 
 import { mockAuthPreviewToolbarItem, withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { previewMockAuthStates } from '@tomfreudenberg/next-auth-mock/storybook/preview-mock-auth-states';
+import { sadmin } from './previewMockAuthStates';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -35,10 +36,10 @@ export const parameters = {
 export const globalTypes = {
   ...mockAuthPreviewToolbarItem({
     description: 'Select Session',
-    defaultValue: null,
+    defaultValue: 'sadmin',
     icon: 'user',
-    items: previewMockAuthStates
-  })
+    items: previewMockAuthStates,
+  }),
 };
 
 const queryClient = new QueryClient({
@@ -62,5 +63,5 @@ export const decorators = [
       </QueryClientProvider>
     </>
   ),
-  withMockAuth
+  withMockAuth,
 ];
