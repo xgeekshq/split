@@ -72,7 +72,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			$and: [{ isSubBoard: false }, { $or: [{ _id: { $in: boardIds } }, { team: { $ne: null } }] }]
 		};
 
-		return this.getBoards(true, query, page, size);
+		return this.getBoards(false, query, page, size);
 	}
 
 	async getUsersBoards(userId: string, page: number, size?: number) {
