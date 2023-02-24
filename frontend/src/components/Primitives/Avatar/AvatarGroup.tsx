@@ -8,6 +8,7 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
+import { CSS } from '@stitches/react';
 
 type ListUsersType = {
   user: User | string;
@@ -25,6 +26,7 @@ type AvatarGroupProps = {
   haveError?: boolean;
   isClickable?: boolean;
   hasDrawer?: boolean;
+  css?: CSS;
 };
 
 const AVATAR_AMOUNT = 3;
@@ -39,6 +41,7 @@ const AvatarGroup = ({
   myBoards,
   isClickable = false,
   hasDrawer = false,
+  css,
 }: AvatarGroupProps) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
@@ -177,7 +180,7 @@ const AvatarGroup = ({
           isSubBoard
         />
       )}
-      <Flex align="center" css={{ height: 'fit-content', overflow: 'hidden' }}>
+      <Flex align="center" css={{ ...css, height: 'fit-content', overflow: 'hidden' }}>
         {haveError
           ? ['-', '-', '-']
               .slice(0, numberOfAvatars)

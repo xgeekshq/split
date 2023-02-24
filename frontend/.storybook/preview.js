@@ -1,6 +1,9 @@
 import Sprite from '@/components/icons/Sprite';
 import { RecoilRoot } from 'recoil';
 
+import { mockAuthPreviewToolbarItem, withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
+import { previewMockAuthStates } from '@tomfreudenberg/next-auth-mock/storybook/preview-mock-auth-states';
+
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
@@ -24,6 +27,16 @@ export const parameters = {
   },
 };
 
+export const globalTypes = {
+  ...mockAuthPreviewToolbarItem({
+    description: 'Select Session',
+    defaultValue: null,
+    icon: 'user',
+    items: previewMockAuthStates
+  })
+};
+
+
 export const decorators = [
   (Story) => (
     <>
@@ -33,4 +46,5 @@ export const decorators = [
       </RecoilRoot>
     </>
   ),
+  withMockAuth
 ];

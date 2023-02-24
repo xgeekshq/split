@@ -16,13 +16,16 @@ import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSe
 import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import BoardsInfo from './BoardsInfo';
-import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
+import DeleteTeam from './DeleteTeam';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',
+  py: '$22',
   backgroundColor: '$white',
   borderRadius: '$12',
+  position: 'relative',
+  maxHeight: '$76',
 });
 
 type CardBodyProps = {
@@ -40,16 +43,9 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
 
   const isSAdmin = session?.user.isSAdmin;
 
-  const { id, users } = team;
-
+  const { id, users, name } = team;
   const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
-
   const userRole = userFound?.role;
-
-  const userIsParticipating = useMemo(
-    () => users.some((user) => user.user?._id === userId),
-    [users, userId],
-  );
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
@@ -66,87 +62,78 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
   }, [isSAdmin, team, userId]);
 
   return (
-    <Flex css={{ flex: '1 1 1' }} direction="column">
-      <InnerContainer
-        align="center"
-        elevation="1"
-        justify="between"
-        css={{
-          position: 'relative',
-          py: '$22',
-          maxHeight: '$76',
-          ml: 0,
-        }}
-      >
-        <Flex align="center" css={{ width: '25%' }} gap="8">
+    <Flex direction="column">
+      <InnerContainer align="center" elevation="1" gap="40">
+        <Flex align="center" gap="8" css={{ flex: '1' }}>
           <Icon
             name="blob-team"
+            size={32}
             css={{
-              width: '$32',
-              height: '$32',
               zIndex: 1,
               flexShrink: 0,
             }}
           />
 
-          <CardTitle teamId={id} title={team.name} isTeamPage={isTeamPage} />
+          <CardTitle teamId={id} title={name} isTeamPage={isTeamPage} />
         </Flex>
-        <Flex align="center" css={{ justifyContent: 'start', pl: '$10' }} gap="8">
-          <Flex align="center" css={{ width: '$160' }}>
+        <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
+          <Flex align="center" gap="8">
             <Text color="primary300" size="sm">
               Members
             </Text>
 
             <AvatarGroup
-              listUsers={team.users}
+              listUsers={users}
               responsible={false}
               teamAdmins={false}
               userId={userId}
+              css={{ minWidth: '$88' }}
             />
           </Flex>
-          <Separator orientation="vertical" size="lg" css={{ ml: '$20' }} />
 
-          <Flex align="center" css={{ ml: '$20', alignItems: 'center' }} gap="8">
-            <Flex align="center" css={{ width: '$160' }}>
-              <Text color="primary300" css={{ mr: '$2' }} size="sm">
-                Team admin
-              </Text>
+          <Separator orientation="vertical" size="lg" />
 
-              <AvatarGroup
-                stakeholders
-                teamAdmins
-                listUsers={team.users}
-                responsible={false}
-                userId={userId}
-              />
-            </Flex>
-            <Separator orientation="vertical" size="lg" css={{ ml: '$20' }} />
+          <Flex align="center" gap="8">
+            <Text color="primary300" size="sm">
+              Team admin
+            </Text>
+
+            <AvatarGroup
+              stakeholders
+              teamAdmins
+              listUsers={users}
+              responsible={false}
+              userId={userId}
+              css={{ minWidth: '$88' }}
+            />
+          </Flex>
+
+          <Separator orientation="vertical" size="lg" />
+
+          <Flex align="center">
             {router.pathname.includes('users') ? (
-              <Flex align="center" css={{ width: '$237' }} justify="end">
+              <>
                 <RoleDescription role={userRole} />
-
                 <PopoverRoleSettings userId={userId} isTeamPage teamId={teamId} />
-              </Flex>
+              </>
             ) : (
-              <Flex align="center" css={{ width: '$237' }} justify="start">
-                <BoardsInfo
-                  team={team}
-                  teamAdminOrStakeholder={havePermissions}
-                  userSAdmin={isSAdmin}
-                />
-              </Flex>
+              <BoardsInfo
+                team={team}
+                teamAdminOrStakeholder={havePermissions}
+                userSAdmin={isSAdmin}
+              />
             )}
           </Flex>
         </Flex>
-        <Flex css={{ width: '20%' }} justify="end">
-          <CardEnd
-            havePermissions={havePermissions}
-            team={team}
-            teamUserId={userFound?._id}
-            userIsParticipating={userIsParticipating}
-            userSAdmin={isSAdmin}
-            isTeamPage={isTeamPage}
-          />
+        <Flex css={{ flex: '0' }}>
+          {havePermissions && (
+            <DeleteTeam
+              teamName={name}
+              teamId={id}
+              teamUserId={userFound?._id}
+              isTeamPage={isTeamPage}
+            />
+          )}
         </Flex>
       </InnerContainer>
     </Flex>

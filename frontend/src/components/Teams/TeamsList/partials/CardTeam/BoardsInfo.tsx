@@ -14,7 +14,7 @@ type BoardsInfoProps = {
 const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProps) => {
   if (team.boardsCount === 0) {
     return (
-      <Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
+      <Flex align="center">
         {(userSAdmin || teamAdminOrStakeholder) && (
           <Link
             href={{
@@ -33,14 +33,14 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
                   }}
                 />
                 <Text css={{ ml: '$8' }} size="sm" fontWeight="medium">
-                  Create first team board
+                  Create first board
                 </Text>
               </Flex>
             </StyledBoardTitle>
           </Link>
         )}
         {!teamAdminOrStakeholder && (
-          <Text css={{ ml: '$14' }} size="sm" fontWeight="medium">
+          <Text size="sm" fontWeight="medium">
             0 boards
           </Text>
         )}
@@ -49,7 +49,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
   }
 
   return (
-    <Flex css={{ ml: '$20', display: 'flex', alignItems: 'center' }}>
+    <Flex align="center">
       <Link
         href={{
           pathname: `/boards`,
@@ -57,7 +57,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
         }}
       >
         <StyledBoardTitle>
-          <Text css={{ ml: '$14' }} size="sm" fontWeight="medium">
+          <Text size="sm" fontWeight="medium">
             {team.boardsCount} team boards
           </Text>
         </StyledBoardTitle>

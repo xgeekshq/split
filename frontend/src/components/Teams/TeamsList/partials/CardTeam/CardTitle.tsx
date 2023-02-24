@@ -1,7 +1,5 @@
 import Link from 'next/link';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Text from '@/components/Primitives/Text';
 
 type CardTitleProps = {
@@ -10,52 +8,28 @@ type CardTitleProps = {
   isTeamPage?: boolean;
 };
 
-const StyledBoardTitle = styled(Text, {
-  fontWeight: '$bold',
-  fontSize: '$14',
-  letterSpacing: '$0-17',
-  wordBreak: 'break-word',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  maxWidth: '$260',
-  '&[data-disabled="true"]': { opacity: 0.4 },
-  '@hover': {
-    '&:hover': {
-      '&[data-disabled="true"]': {
-        textDecoration: 'none',
-        cursor: 'default',
-      },
-      textDecoration: 'underline',
-      cursor: 'pointer',
-    },
-  },
-});
-
-const CardTitle: React.FC<CardTitleProps> = ({ teamId, title, isTeamPage }) =>
-  isTeamPage ? (
-    <Link
-      key={teamId}
-      href={{
-        pathname: `teams/[teamId]`,
-        query: { teamId },
-      }}
-    >
-      <StyledBoardTitle>{title}</StyledBoardTitle>
-    </Link>
-  ) : (
-    <StyledBoardTitle
-      css={{
-        '@hover': {
-          '&:hover': {
-            textDecoration: 'none',
-            cursor: 'auto',
-          },
-        },
-      }}
-    >
+const CardTitle = ({ teamId, title, isTeamPage }: CardTitleProps) => {
+  const renderTitle = () => (
+    <Text link={isTeamPage} size="sm" fontWeight="bold" overflow="wrap">
       {title}
-    </StyledBoardTitle>
+    </Text>
   );
+
+  if (isTeamPage) {
+    return (
+      <Link
+        key={teamId}
+        href={{
+          pathname: `teams/[teamId]`,
+          query: { teamId },
+        }}
+      >
+        {renderTitle()}
+      </Link>
+    );
+  }
+
+  return renderTitle();
+};
 
 export default CardTitle;
