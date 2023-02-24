@@ -23,6 +23,7 @@ import { SlackCommunicationProducer } from 'src/modules/communication/producers/
 import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consummer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
+import { SlackSendMessageConsumer } from './consumers/slack-send-message.consumer';
 import { SlackAddUserToChannelProducer } from './producers/slack-add-user-channel.producer';
 import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';
 import { SlackResponsibleProducer } from './producers/slack-responsible.producer';
@@ -117,6 +118,7 @@ import { SlackSendMessageProducer } from './producers/slack-send-message-channel
 					ResponsibleApplication,
 					MergeBoardApplication,
 					AddUserIntoChannelApplication,
+					SlackSendMessageConsumer,
 					SlackSendMessageProducer,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
