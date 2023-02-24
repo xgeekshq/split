@@ -197,6 +197,7 @@ export default class BoardsController {
 	@Get(':boardId')
 	async getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
 		const board = await this.getBoardApp.getBoard(boardId, request.user._id);
+		console.log(board);
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);

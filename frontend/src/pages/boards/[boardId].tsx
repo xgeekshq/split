@@ -181,6 +181,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     autoFetchBoard: true,
   });
 
+  console.log(data?.mainBoard);
+
   const board = data?.board;
   const isSubBoard = board?.isSubBoard;
   const route = useRouter();

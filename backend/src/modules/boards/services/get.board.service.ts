@@ -202,6 +202,16 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return mainBoard;
 	}
 
+	async getMainBoard(boardId: string) {
+		const mainBoard = await this.boardModel
+			.findOne({ dividedBoards: { $in: boardId } })
+			.select('title')
+			.lean()
+			.exec();
+
+		return mainBoard;
+	}
+
 	async getBoard(boardId: string, userId: string) {
 		let board = await this.getBoardData(boardId);
 
@@ -214,6 +224,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		if (!userFound.email && !board.isPublic) throw new ForbiddenException(FORBIDDEN);
 
 		board = cleanBoard(board, userId);
+
+		if (board.isSubBoard) {
+			const mainBoard = await this.getMainBoard(boardId);
+
+			return { board, mainBoard };
+		}
 
 		return { board };
 	}

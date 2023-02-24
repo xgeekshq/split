@@ -79,16 +79,15 @@ const BoardHeader = () => {
     },
   ];
 
-  const { mainBoardTitle, mainBoardId } = router.query;
-
-  const mainTitle = mainBoardTitle as string;
-  const mainId = mainBoardId as string;
+  // const mainTitle = mainBoardTitle as string;
+  // const mainId = mainBoardId as string;
 
   if (isSubBoard) {
+    const { _id: mainBoardId, title: mainBoardTitle } = boardData.mainBoard!;
     breadcrumbItems.push(
       {
-        title: mainTitle ?? title,
-        link: `/boards/${mainId}`,
+        title: mainBoardTitle ?? title,
+        link: `/boards/${mainBoardId}`,
       },
       {
         title,
