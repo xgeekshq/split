@@ -34,6 +34,7 @@ import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
+import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -43,6 +44,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
+		private slackSendMessageService: SendMessageServiceInterface,
+
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
@@ -495,6 +499,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.exec();
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+
+			this.slackSendMessageService.execute({ slackChannelId: 'teste', message: 'teste' });
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
