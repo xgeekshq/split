@@ -25,7 +25,7 @@ const ConfigurationSwitchSettings = ({
   disabledInfo,
 }: Props) => (
   <Flex gap={20}>
-    {disabledInfo ? (
+    {disabledInfo && disabled ? (
       <Tooltip content={disabledInfo}>
         <Flex>
           <Switch
@@ -37,7 +37,12 @@ const ConfigurationSwitchSettings = ({
         </Flex>
       </Tooltip>
     ) : (
-      <Switch checked={isChecked} size="sm" onCheckedChange={handleCheckedChange} />
+      <Switch
+        checked={isChecked}
+        size="sm"
+        onCheckedChange={handleCheckedChange}
+        disabled={disabled}
+      />
     )}
     <Flex direction="column">
       <Text size="md" fontWeight="medium">

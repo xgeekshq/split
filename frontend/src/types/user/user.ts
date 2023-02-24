@@ -17,6 +17,7 @@ export interface User {
   isSAdmin: boolean;
   joinedAt: string;
   providerAccountCreatedAt?: string;
+  isAnonymous?: boolean;
 }
 
 export interface UseUserType {

@@ -44,7 +44,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
       </Flex>
       <Flex align="center" gap="10">
         <Text color="primary300" size="sm">
-          Board Creator
+          Responsibles
         </Text>
         <AvatarGroup
           responsible

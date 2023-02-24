@@ -54,7 +54,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);
 		}
 
-		const { _id, firstName, lastName } = userFound.user as User;
+		const { _id, firstName, lastName, isAnonymous } = userFound.user as User;
 
 		return {
 			role: userFound.role,
@@ -63,7 +63,8 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 			user: {
 				_id: String(_id),
 				firstName,
-				lastName
+				lastName,
+				isAnonymous
 			}
 		};
 	}
