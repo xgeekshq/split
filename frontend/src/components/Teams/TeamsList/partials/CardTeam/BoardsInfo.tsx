@@ -41,7 +41,7 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
         )}
         {!teamAdminOrStakeholder && (
           <Text size="sm" fontWeight="medium">
-            0 boards
+            No boards
           </Text>
         )}
       </Flex>

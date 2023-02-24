@@ -6,6 +6,7 @@ import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ListUsersType } from '@/components/Primitives/Avatar/AvatarGroup';
+import { TeamUser } from '@/types/team/team.user';
 
 export const UserFactory = buildTestFactory<User>(() => {
   const _id = faker.database.mongodbObjectId();
@@ -60,5 +61,21 @@ export const AvatarGroupUsersFactory = buildTestFactory<ListUsersType>(() => {
     _id,
     user,
     role,
+  };
+});
+
+export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
+  const user = UserFactory.create();
+  const role = faker.helpers.arrayElement([
+    TeamUserRoles.ADMIN,
+    TeamUserRoles.MEMBER,
+    TeamUserRoles.STAKEHOLDER,
+  ]);
+  const isNewJoiner = faker.datatype.boolean();
+
+  return {
+    user,
+    role,
+    isNewJoiner,
   };
 });

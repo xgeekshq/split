@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import CardBody from '@/components/Teams/TeamsList/partials/CardTeam/CardBody';
-import { mockTeam } from '../mocks/teamCard_team';
+import { TeamFactory } from '@/utils/factories/team';
 
 export default {
   title: 'Teams/CardBody',
@@ -17,14 +17,13 @@ export default {
   },
   args: {
     userId: '63bfe967f36aa91d9bdc08cf',
-    teamId: '63d25ad49f8fe5f504de6229',
-    team: mockTeam,
+    team: TeamFactory.create(),
     isTeamPage: false,
   },
 };
 
-const Template: ComponentStory<typeof CardBody> = ({ userId, teamId, team, isTeamPage }) => (
-  <CardBody userId={userId} teamId={teamId} team={team} isTeamPage={isTeamPage} />
+const Template: ComponentStory<typeof CardBody> = ({ userId, team, isTeamPage }) => (
+  <CardBody userId={userId} team={team} isTeamPage={isTeamPage} />
 );
 
 export const Default = Template.bind({});

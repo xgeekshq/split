@@ -5,6 +5,9 @@ import SidebarHeader from '@/components/Sidebar/partials/Header/Header';
 import SidebarContent from '@/components/Sidebar/partials/Content/Content';
 import Flex from '@/components/Primitives/Flex';
 import SidebarItem from '@/components/Sidebar/partials/Item/Item';
+import { UserFactory } from '@/utils/factories/user';
+
+const user = UserFactory.create();
 
 export default {
   title: 'Navigation/Sidebar',
@@ -17,9 +20,9 @@ export default {
     },
   },
   args: {
-    firstName: 'Guido',
-    lastName: 'Pereira',
-    email: 'g.pereira@kigroup.de',
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
     strategy: 'local',
   },
   argTypes: {

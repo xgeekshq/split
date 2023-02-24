@@ -30,13 +30,12 @@ const InnerContainer = styled(Flex, Box, {
 
 type CardBodyProps = {
   userId: string | undefined;
-  teamId?: string | undefined;
   team: Team;
   index?: number;
   isTeamPage?: boolean;
 };
 
-const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }) => {
+const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -114,7 +113,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, teamId, team, isTeamPage }
             {router.pathname.includes('users') ? (
               <>
                 <RoleDescription role={userRole} />
-                <PopoverRoleSettings userId={userId} isTeamPage teamId={teamId} />
+                <PopoverRoleSettings userId={userId} isTeamPage teamId={id} />
               </>
             ) : (
               <BoardsInfo
