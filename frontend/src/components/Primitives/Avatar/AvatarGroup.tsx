@@ -10,7 +10,7 @@ import { getInitials } from '@/utils/getInitials';
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { CSS } from '@stitches/react';
 
-type ListUsersType = {
+export type ListUsersType = {
   user: User | string;
   role: TeamUserRoles | BoardUserRoles;
   _id?: string;

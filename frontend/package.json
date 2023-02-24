@@ -42,6 +42,7 @@
     "@testing-library/dom": "^8.13.0",
     "@testing-library/react": "^12.1.5",
     "axios": "^0.26.1",
+    "axios-mock-adapter": "^1.21.2",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.0",
     "fast-json-patch": "^3.1.1",
@@ -60,6 +61,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
+    "@faker-js/faker": "^7.6.0",
     "@storybook/addon-actions": "^6.5.15",
     "@storybook/addon-essentials": "^6.5.15",
     "@storybook/addon-interactions": "^6.5.15",

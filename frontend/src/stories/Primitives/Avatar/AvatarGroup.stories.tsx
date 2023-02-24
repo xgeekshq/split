@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import { mockListUsers } from '../../mocks/avatarGroup_listUsers';
+import { AvatarGroupUsersFactory } from '@/utils/factories/user';
 
 export default {
   title: 'Primitives/Avatar/AvatarGroup',
@@ -22,7 +22,7 @@ export default {
     },
   },
   args: {
-    listUsers: mockListUsers.splice(0, 4),
+    listUsers: AvatarGroupUsersFactory.createMany(),
     teamAdmins: false,
     stakeholders: false,
     userId: '63bfe966f36aa91d9bdc08c7',
