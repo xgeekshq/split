@@ -1,6 +1,6 @@
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { TeamUserFactory } from '../../utils/factories/user';
+import { TeamUserFactory } from '@/utils/factories/user';
 
 export const createTeamUser = (user: any, team: Team) => {
   const foundUser = team.users.findIndex((u) => String(u.user._id) === String(user.id));
