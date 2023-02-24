@@ -26,16 +26,11 @@ const ParticipantsList = () => {
     (boardUser) => boardUser.role === BoardUserRoles.RESPONSIBLE,
   );
 
-  const responsibleGuestUsers = responsiblesList.filter((boardUser) => boardUser.user.isAnonymous);
-
   const responsibleSignedUpUsers = responsiblesList.filter(
     (boardUser) => !boardUser.user.isAnonymous,
   );
 
-  const haveInvalidNumberOfResponsibles =
-    responsiblesList.length < 2 ||
-    responsibleGuestUsers.length === responsiblesList.length ||
-    responsibleSignedUpUsers.length < 2;
+  const haveInvalidNumberOfResponsibles = responsibleSignedUpUsers.length < 2;
 
   return (
     <ParticipantsLayout hasPermissionsToEdit={isResponsible || isSAdmin}>
@@ -54,6 +49,7 @@ const ParticipantsList = () => {
               isCurrentUserResponsible={isResponsible}
               isCurrentUserSAdmin={isSAdmin}
               haveInvalidNumberOfResponsibles={haveInvalidNumberOfResponsibles}
+              responsibleSignedUpUsers={responsibleSignedUpUsers}
             />
           ))}
         </ScrollableContent>
