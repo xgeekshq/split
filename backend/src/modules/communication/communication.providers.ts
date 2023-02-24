@@ -149,7 +149,7 @@ export const ArchiveChannelService = {
 };
 
 export const SendMessageService = {
-	provide: TYPES.services.SlackCommunicationService,
+	provide: TYPES.services.SlackSendMessageService,
 	useClass: configuration().slack.enable
 		? SlackSendMessageService
 		: SlackDisabledCommunicationService

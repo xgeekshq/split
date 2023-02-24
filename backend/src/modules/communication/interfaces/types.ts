@@ -8,6 +8,7 @@ export const TYPES = {
 	},
 	services: {
 		SlackCommunicationService: 'SlackCommunicationService',
-		SlackArchiveChannelService: 'SlackArchiveChannelService'
+		SlackArchiveChannelService: 'SlackArchiveChannelService',
+		SlackSendMessageService: 'SlackSendMessageService'
 	}
 };
