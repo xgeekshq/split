@@ -527,13 +527,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				{
 					month: 'long'
 				}
-			)} Retro Board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+			)} retro board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 
 		if (phase == BoardPhases.SUBMITED) {
 			return `Hello team, the  ${today.toLocaleString('default', {
 				month: 'long'
-			})} Retro Board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+			})} retro board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 	}
 
