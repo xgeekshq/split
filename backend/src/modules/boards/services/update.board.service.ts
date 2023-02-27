@@ -39,6 +39,7 @@ import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
+import Team from 'src/modules/teams/entities/teams.schema';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -491,22 +492,23 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
-			const { boardId, phase: newPhase } = boardPhaseDto;
-			const { slackEnable, phase, team } = await this.boardRepository.updatePhase(
-				boardId,
-				newPhase
-			);
+			const { boardId, phase } = boardPhaseDto;
+			const {
+				slackEnable,
+				phase: currentPhase,
+				team
+			} = await this.boardRepository.updatePhase(boardId, phase);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
 
 			//Sends message to SLACK
 			if (
-				team['name'] === 'xgeeks' &&
+				(team as Team).name === 'xgeeks' &&
 				slackEnable === true &&
-				phase !== BoardPhases.ADDCARDS &&
+				currentPhase !== BoardPhases.ADDCARDS &&
 				this.configService.getOrThrow(SLACK_ENABLE)
 			) {
-				const message = this.generateMessage(phase, boardId);
+				const message = this.generateMessage(currentPhase, boardId);
 				const slackMessageDto = new SlackMessageDto(
 					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
 					message
