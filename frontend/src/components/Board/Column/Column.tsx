@@ -26,6 +26,7 @@ type ColumMemoProps = {
   columnIndex: number;
   isSubBoard?: boolean;
   phase?: string;
+  hasMoreThanThreeColumns: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -52,6 +53,7 @@ const Column = React.memo<ColumMemoProps>(
     columnIndex,
     isSubBoard,
     phase,
+    hasMoreThanThreeColumns,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -130,13 +132,20 @@ const Column = React.memo<ColumMemoProps>(
                 {(provided) => (
                   <Container direction="column" elevation="2">
                     <Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
-                      <Flex>
+                      <Flex css={{ width: '100%' }}>
                         {hasAdminRole && isRegularBoard && (
                           <Flex {...providedColumn.dragHandleProps}>
                             <Icon name="arrange" size={24} />
                           </Flex>
                         )}
-                        <Title heading="4">{title}</Title>
+                        <Flex
+                          css={{
+                            width: hasMoreThanThreeColumns ? '$130' : '70%',
+                            '@media (min-width: 1750px)': { width: 'fit-content' },
+                          }}
+                        >
+                          <Title heading="4">{title}</Title>
+                        </Flex>
                         <Text
                           color="primary400"
                           size="xs"
@@ -145,6 +154,7 @@ const Column = React.memo<ColumMemoProps>(
                             border: '1px solid $colors$primary100',
                             px: '$8',
                             py: '$2',
+                            ml: '$10',
                           }}
                         >
                           {countColumnCards(cards)} cards

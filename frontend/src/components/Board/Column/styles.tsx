@@ -45,6 +45,9 @@ const OuterContainer = styled(Flex, {
 
 const Title = styled(Text, {
   px: '$8',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
 });
 
 export { CardsContainer, Container, OuterContainer, Title };

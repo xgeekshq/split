@@ -18,7 +18,10 @@ import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ColumnType from '@/types/column';
 
-const Container = styled(Flex, { width: '100%', display: 'inline-flex', mb: '$32' });
+const Container = styled(Flex, {
+  display: 'inline-flex',
+  mb: '$32',
+});
 
 type Props = {
   userId: string;
@@ -181,6 +184,7 @@ const DragDropArea: React.FC<Props> = ({
   };
 
   const isMainboard = !board.isSubBoard && board.dividedBoards.length > 0;
+  const hasMoreThanThreeColumns = !!(board.columns.length > 3);
 
   const ColumnnContainer = (
     <Droppable
@@ -190,10 +194,18 @@ const DragDropArea: React.FC<Props> = ({
       isDropDisabled={isMainboard || !hasAdminRole}
     >
       {(provided) => (
-        <Container css={{ gap: '$24' }} ref={provided.innerRef} {...provided.droppableProps}>
+        <Container
+          css={{
+            gap: '$24',
+            width: '100%',
+          }}
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
           {board.columns.map((column, index) => (
             <Column
               key={column._id}
+              hasMoreThanThreeColumns={hasMoreThanThreeColumns}
               boardId={board._id}
               cards={column.cards}
               color={column.color}
