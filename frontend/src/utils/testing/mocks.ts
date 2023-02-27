@@ -34,7 +34,7 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
 
 export function createMockSession(): Session {
   return {
-    user: SessionUserFactory.create(),
+    user: SessionUserFactory.create({ isSAdmin: false }),
     expires: new Date().toISOString(),
     strategy: 'local',
     error: '',

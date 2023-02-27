@@ -6,16 +6,15 @@ import { Team } from '@/types/team/team';
 import Link from 'next/link';
 
 type TeamBoardsProps = {
-  userSAdmin: boolean | undefined;
-  teamAdminOrStakeholder: boolean;
+  havePermissions: boolean;
   team: Team;
 };
 
-const TeamBoards = ({ userSAdmin, teamAdminOrStakeholder, team }: TeamBoardsProps) => {
+const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
   if (team.boardsCount === 0) {
     return (
-      <Flex align="center">
-        {(userSAdmin || teamAdminOrStakeholder) && (
+      <Flex align="center" data-testid="teamitemBoards">
+        {havePermissions && (
           <Link
             href={{
               pathname: `/boards/new`,
@@ -39,7 +38,7 @@ const TeamBoards = ({ userSAdmin, teamAdminOrStakeholder, team }: TeamBoardsProp
             </StyledBoardTitle>
           </Link>
         )}
-        {!teamAdminOrStakeholder && (
+        {!havePermissions && (
           <Text size="sm" fontWeight="medium">
             No boards
           </Text>
@@ -49,7 +48,7 @@ const TeamBoards = ({ userSAdmin, teamAdminOrStakeholder, team }: TeamBoardsProp
   }
 
   return (
-    <Flex align="center">
+    <Flex align="center" data-testid="teamitemBoards">
       <Link
         href={{
           pathname: `/boards`,

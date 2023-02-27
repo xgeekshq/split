@@ -116,11 +116,7 @@ const TeamItem = React.memo<TeamItemProps>(({ userId, team, isTeamPage }) => {
                 <PopoverRoleSettings userId={userId} isTeamPage teamId={id} />
               </Flex>
             ) : (
-              <TeamBoards
-                team={team}
-                teamAdminOrStakeholder={havePermissions}
-                userSAdmin={isSAdmin}
-              />
+              <TeamBoards team={team} havePermissions={havePermissions} />
             )}
           </Flex>
         </Flex>
