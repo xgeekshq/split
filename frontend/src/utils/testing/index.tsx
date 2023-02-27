@@ -1,16 +1,25 @@
 import { FixedLengthArray, ObjectOfAny } from '@/types/utils';
 import range from '@/utils/range';
 
+const DEFAULT_CREATE_MANY_COUNT = 10;
+
+export type BuildTestFactoryCountValue = number | 'random';
+
 export type BuildTestFactoryGetterProps<TModel extends unknown> = (
   index: number,
 ) => Partial<TModel>;
+
 export type BuildTestFactoryArrayProps<
   TModel extends unknown,
   TCount extends number,
 > = FixedLengthArray<Partial<TModel>, TCount>;
-type BuildTestFactoryProps<TModel extends unknown, TCount extends number> =
-  | BuildTestFactoryGetterProps<TModel>
-  | BuildTestFactoryArrayProps<TModel, TCount>;
+
+type BuildTestFactoryProps<
+  TModel extends unknown,
+  TCount extends BuildTestFactoryCountValue,
+> = TCount extends number
+  ? BuildTestFactoryGetterProps<TModel> | BuildTestFactoryArrayProps<TModel, TCount>
+  : BuildTestFactoryGetterProps<TModel>;
 
 const isGetterProps = <TModel extends unknown>(
   props: unknown,
@@ -33,6 +42,12 @@ const getOverrideProps = <TModel extends unknown, TCount extends number>(
   }
   return overrideProps;
 };
+
+function getItemCount(count?: BuildTestFactoryCountValue): number {
+  if (!count) return DEFAULT_CREATE_MANY_COUNT;
+  if (count === 'random') return Math.floor(Math.random() * 100) + 1;
+  return count;
+}
 
 /**
  * Provides functions to create items from a given factory.
@@ -57,9 +72,12 @@ export const buildTestFactory = <TModel extends ObjectOfAny>(
   factory: (index?: number) => TModel,
 ) => ({
   create: (props?: Partial<TModel>): TModel => ({ ...factory(), ...props }),
-  createMany: <TCount extends number>(
-    count = 10 as TCount,
+  createMany: <TCount extends BuildTestFactoryCountValue>(
+    count?: TCount,
     props?: BuildTestFactoryProps<TModel, TCount>,
   ): TModel[] =>
-    range(1, count).map((_, index) => ({ ...factory(index), ...getOverrideProps(props, index) })),
+    range(1, getItemCount(count)).map((_, index) => ({
+      ...factory(index),
+      ...getOverrideProps(props, index),
+    })),
 });

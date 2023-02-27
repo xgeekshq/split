@@ -22,7 +22,7 @@ export function renderWithProviders(
     wrapper: ({ children }: { children: ReactNode }) => {
       const router = createMockRouter(options?.routerOptions);
       const queryClient = options?.queryClient ?? new QueryClient();
-      const session = createMockSession();
+      const session = createMockSession(options?.sessionOptions);
 
       return (
         <RouterContext.Provider value={router}>

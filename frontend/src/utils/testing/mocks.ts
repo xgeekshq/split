@@ -32,11 +32,12 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
   };
 }
 
-export function createMockSession(): Session {
+export function createMockSession(session?: Partial<Session>): Session {
   return {
     user: SessionUserFactory.create({ isSAdmin: false }),
     expires: new Date().toISOString(),
     strategy: 'local',
     error: '',
+    ...session,
   };
 }
