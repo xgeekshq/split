@@ -15,9 +15,10 @@ import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescripti
 import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import BoardsInfo from './BoardsInfo';
-import CardTitle from './CardTitle';
-import DeleteTeam from './DeleteTeam';
+
+import TeamBoards from './partials/TeamBoards';
+import TeamTitle from './partials/TeamTitle';
+import DeleteTeam from './partials/DeleteTeam';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',
@@ -28,14 +29,14 @@ const InnerContainer = styled(Flex, Box, {
   maxHeight: '$76',
 });
 
-type CardBodyProps = {
+type TeamItemProps = {
   userId: string | undefined;
   team: Team;
   index?: number;
   isTeamPage?: boolean;
 };
 
-const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
+const TeamItem = React.memo<TeamItemProps>(({ userId, team, isTeamPage }) => {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -73,7 +74,7 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
             }}
           />
 
-          <CardTitle teamId={id} title={name} isTeamPage={isTeamPage} />
+          <TeamTitle teamId={id} title={name} isTeamPage={isTeamPage} />
         </Flex>
         <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
           <Flex align="center" gap="8">
@@ -111,12 +112,12 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
 
           <Flex align="center">
             {router.pathname.includes('users') ? (
-              <>
+              <Flex align="start" gap="8">
                 <RoleDescription role={userRole} />
                 <PopoverRoleSettings userId={userId} isTeamPage teamId={id} />
-              </>
+              </Flex>
             ) : (
-              <BoardsInfo
+              <TeamBoards
                 team={team}
                 teamAdminOrStakeholder={havePermissions}
                 userSAdmin={isSAdmin}
@@ -139,4 +140,4 @@ const CardBody = React.memo<CardBodyProps>(({ userId, team, isTeamPage }) => {
   );
 });
 
-export default CardBody;
+export default TeamItem;

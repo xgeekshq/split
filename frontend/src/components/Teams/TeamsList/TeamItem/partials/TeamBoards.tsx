@@ -5,13 +5,13 @@ import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
 
-type BoardsInfoProps = {
+type TeamBoardsProps = {
   userSAdmin: boolean | undefined;
   teamAdminOrStakeholder: boolean;
   team: Team;
 };
 
-const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProps) => {
+const TeamBoards = ({ userSAdmin, teamAdminOrStakeholder, team }: TeamBoardsProps) => {
   if (team.boardsCount === 0) {
     return (
       <Flex align="center">
@@ -66,4 +66,4 @@ const BoardsInfo = ({ userSAdmin, teamAdminOrStakeholder, team }: BoardsInfoProp
   );
 };
 
-export default BoardsInfo;
+export default TeamBoards;

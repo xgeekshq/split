@@ -8,7 +8,6 @@ import { RecoilRoot } from 'recoil';
 
 import { mockAuthPreviewToolbarItem, withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { previewMockAuthStates } from '@tomfreudenberg/next-auth-mock/storybook/preview-mock-auth-states';
-import { sadmin } from './previewMockAuthStates';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

@@ -20,7 +20,7 @@ module.exports = {
     },
   },
   member: {
-    title: 'Member',
+    title: 'Member User',
     session: {
       data: {
         user: SessionUserFactory.create({ isSAdmin: false, isMember: true }),

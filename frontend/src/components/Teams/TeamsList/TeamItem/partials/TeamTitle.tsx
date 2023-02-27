@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 import Text from '@/components/Primitives/Text';
 
-type CardTitleProps = {
+type TeamTitleProps = {
   title: string;
   teamId: string;
   isTeamPage?: boolean;
 };
 
-const CardTitle = ({ teamId, title, isTeamPage }: CardTitleProps) => {
+const TeamTitle = ({ teamId, title, isTeamPage }: TeamTitleProps) => {
   const renderTitle = () => (
     <Text link={isTeamPage} size="sm" fontWeight="bold" overflow="wrap">
       {title}
@@ -32,4 +32,4 @@ const CardTitle = ({ teamId, title, isTeamPage }: CardTitleProps) => {
   return renderTitle();
 };
 
-export default CardTitle;
+export default TeamTitle;
