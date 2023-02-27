@@ -54,15 +54,21 @@ export class UserRepository
 	}
 
 	getAllWithPagination(page: number, size: number, searchUser?: string) {
-		let query: FilterQuery<UserDocument> = { isAnonymous: false || undefined };
+		let query: FilterQuery<UserDocument> = {
+			$or: [{ isAnonymous: false }, { isAnonymous: undefined }]
+		};
 
 		if (searchUser) {
 			query = {
-				isAnonymous: false || undefined,
-				$or: [
-					{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
-					{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
-					{ email: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } }
+				$and: [
+					{ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] },
+					{
+						$or: [
+							{ firstName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+							{ lastName: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } },
+							{ email: { $regex: new RegExp('^.*' + searchUser + '.*$'), $options: 'i' } }
+						]
+					}
 				]
 			};
 		}
@@ -77,14 +83,14 @@ export class UserRepository
 
 	getAllSignedUpUsers() {
 		return this.model
-			.find({ isAnonymous: false || undefined })
+			.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
 			.sort({ firstName: 1, lastName: 1 })
 			.exec();
 	}
 
 	getSignedUpUsersCount() {
 		return this.model
-			.find({ isAnonymous: false || undefined })
+			.find({ $or: [{ isAnonymous: false }, { isAnonymous: undefined }] })
 			.count()
 			.exec();
 	}
