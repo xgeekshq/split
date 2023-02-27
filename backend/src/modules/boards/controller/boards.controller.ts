@@ -56,6 +56,7 @@ import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
+import BoardUserDto from '../dto/board.user.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -353,5 +354,21 @@ export default class BoardsController {
 	@Put(':boardId/phase')
 	async updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
 		this.updateBoardApp.updatePhase(boardPhaseDto);
+	}
+
+	@ApiOperation({ summary: 'Create new board user' })
+	@ApiCreatedResponse({ type: BoardUserDto, description: 'Board user successfully created!' })
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Post(':boardId/createBoardUser')
+	async createBoardUser(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
+		// return this.createBoardApp.create();
+		return this.createBoardApp.createBoardUser(boardId, request.user._id);
 	}
 }

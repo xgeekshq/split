@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -29,6 +29,7 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -61,6 +62,24 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return Promise.all(
 			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
 		);
+	}
+
+	async createBoardUser(board: string, user: string) {
+		const boardUserFound = await this.boardUserModel.findOne({ board, user });
+
+		if (boardUserFound) return;
+
+		const boardUser = {
+			role: BoardRoles.MEMBER,
+			board,
+			user,
+			votesCount: 0
+		};
+		const boardUserCreated = await this.boardUserModel.create(boardUser);
+
+		if (!boardUserCreated) throw new BadRequestException(INSERT_FAILED);
+
+		return boardUserCreated;
 	}
 
 	async createDividedBoards(boards: BoardDto[], userId: string) {

@@ -4,6 +4,7 @@ import { CreateBoardApplicationInterface } from '../interfaces/applications/crea
 import { CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardDocument } from '../entities/board.schema';
+import { BoardUserDocument } from '../entities/board.user.schema';
 
 @Injectable()
 export class CreateBoardApplication implements CreateBoardApplicationInterface {
@@ -11,6 +12,10 @@ export class CreateBoardApplication implements CreateBoardApplicationInterface {
 		@Inject(TYPES.services.CreateBoardService)
 		private createBoardService: CreateBoardService
 	) {}
+
+	createBoardUser(board: string, user: string): Promise<BoardUserDocument> {
+		return this.createBoardService.createBoardUser(board, user);
+	}
 
 	create(board: BoardDto, userId: string): Promise<BoardDocument> {
 		return this.createBoardService.create(board, userId);

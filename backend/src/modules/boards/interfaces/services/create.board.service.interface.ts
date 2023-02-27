@@ -20,4 +20,6 @@ export interface CreateBoardService {
 	splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null>;
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string): Promise<BoardUserDocument[]>;
+
+	createBoardUser(board: string, user: string): Promise<BoardUserDocument>;
 }
