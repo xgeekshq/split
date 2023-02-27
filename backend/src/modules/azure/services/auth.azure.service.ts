@@ -65,7 +65,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 				headers: { ConsistencyLevel: 'eventual' }
 			},
 			authProvider: async (done) => {
-				if (this.authCredentials?.expiresOn <= new Date()) {
+				if (this.authCredentials?.expiresOn >= new Date()) {
 					return done(null, this.authCredentials.accessToken);
 				}
 
