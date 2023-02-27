@@ -35,6 +35,10 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
+import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
+import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { ConfigService } from '@nestjs/config';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -54,7 +58,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private deleteCardService: DeleteCardService,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		private eventEmitter: EventEmitter2
+		private eventEmitter: EventEmitter2,
+		private configService: ConfigService
 	) {}
 
 	/**
@@ -487,7 +492,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
 			const { boardId, phase } = boardPhaseDto;
-			await this.boardModel
+			const board = await this.boardModel
 				.findOneAndUpdate(
 					{
 						_id: boardId
@@ -500,9 +505,42 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
 
-			this.slackSendMessageService.execute({ slackChannelId: 'teste', message: 'teste' });
+			const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
+
+			//Sends message to SLACK
+			if (
+				team.name === 'xgeeks' &&
+				board.slackEnable === true &&
+				board.phase !== BoardPhases.ADDCARDS &&
+				this.configService.getOrThrow(SLACK_ENABLE)
+			) {
+				const message = this.generateMessage(phase, boardId);
+				const slackMessageDto = new SlackMessageDto(
+					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+					message
+				);
+				this.slackSendMessageService.execute(slackMessageDto);
+			}
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+	private generateMessage(phase: string, boardId: string): string {
+		const today = new Date();
+
+		if (phase === BoardPhases.VOTINGPHASE) {
+			return `Hello team, <https://split.kigroup.de/boards/${boardId}|here> is the ${today.toLocaleString(
+				'default',
+				{
+					month: 'long'
+				}
+			)} Retro Board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+		}
+
+		if (phase == BoardPhases.SUBMITED) {
+			return `Hello team, the  ${today.toLocaleString('default', {
+				month: 'long'
+			})} Retro Board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 	}
 
