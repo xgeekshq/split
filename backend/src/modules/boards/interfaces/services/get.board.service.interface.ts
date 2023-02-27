@@ -33,7 +33,7 @@ export interface GetBoardServiceInterface {
 		| null
 		| {
 				board: LeanDocument<BoardDocument>;
-				mainBoardData: LeanDocument<BoardDocument>;
+				mainBoard: LeanDocument<BoardDocument>;
 		  }
 		| null
 	>;
