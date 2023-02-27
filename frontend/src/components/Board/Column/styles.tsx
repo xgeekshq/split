@@ -43,6 +43,11 @@ const OuterContainer = styled(Flex, {
   width: '100%',
 });
 
+const TitleContainer = styled(Flex, {
+  '@media (min-width: 1750px)': { width: 'fit-content' },
+  '@media (max-width: 1300px)': { width: '$150' },
+});
+
 const Title = styled(Text, {
   px: '$8',
   whiteSpace: 'nowrap',
@@ -50,4 +55,4 @@ const Title = styled(Text, {
   overflow: 'hidden',
 });
 
-export { CardsContainer, Container, OuterContainer, Title };
+export { CardsContainer, Container, OuterContainer, TitleContainer, Title };

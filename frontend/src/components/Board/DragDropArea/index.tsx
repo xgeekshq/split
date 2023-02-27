@@ -19,8 +19,18 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ColumnType from '@/types/column';
 
 const Container = styled(Flex, {
-  display: 'inline-flex',
-  mb: '$32',
+  boxSizing: 'border-box',
+  marginBottom: '$32',
+  overflowY: 'scroll',
+  width: '100%',
+  position: 'relative',
+  '@media (max-width: 1350px)': {
+    overflowY: 'auto',
+    minHeight: '62vh',
+  },
+  '@media (min-height: 800px)': {
+    minHeight: '75vh',
+  },
 });
 
 type Props = {
@@ -197,7 +207,6 @@ const DragDropArea: React.FC<Props> = ({
         <Container
           css={{
             gap: '$24',
-            width: '100%',
           }}
           ref={provided.innerRef}
           {...provided.droppableProps}

@@ -119,26 +119,13 @@ const RegularBoard = ({
             </>
           )}
         </Flex>
-        <Flex
-          css={{
-            width: '100%',
-            '@media (max-width: 1200px)': {
-              overflowY: 'auto',
-              minHeight: '60vh',
-            },
-            '@media (min-height: 800px)': {
-              minHeight: '75vh',
-            },
-          }}
-        >
-          <DragDropArea
-            board={board}
-            socketId={socketId}
-            userId={userId}
-            isRegularBoard
-            hasAdminRole={hasAdminRole}
-          />
-        </Flex>
+        <DragDropArea
+          board={board}
+          socketId={socketId}
+          userId={userId}
+          isRegularBoard
+          hasAdminRole={hasAdminRole}
+        />
       </Container>
     </>
   ) : (

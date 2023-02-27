@@ -9,10 +9,11 @@ import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
 import Icon from '@/components/Primitives/Icon';
+import Tooltip from '@/components/Primitives/Tooltip';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
-import { CardsContainer, Container, OuterContainer, Title } from './styles';
+import { CardsContainer, Container, OuterContainer, Title, TitleContainer } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
 import AlertDeleteColumn from './partials/AlertDeleteColumn';
@@ -138,14 +139,15 @@ const Column = React.memo<ColumMemoProps>(
                             <Icon name="arrange" size={24} />
                           </Flex>
                         )}
-                        <Flex
+                        <TitleContainer
                           css={{
-                            width: hasMoreThanThreeColumns ? '$130' : '70%',
-                            '@media (min-width: 1750px)': { width: 'fit-content' },
+                            width: hasMoreThanThreeColumns ? '$130' : '$237',
                           }}
                         >
-                          <Title heading="4">{title}</Title>
-                        </Flex>
+                          <Tooltip content={title}>
+                            <Title heading="4">{title}</Title>
+                          </Tooltip>
+                        </TitleContainer>
                         <Text
                           color="primary400"
                           size="xs"
