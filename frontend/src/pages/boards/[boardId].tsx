@@ -34,12 +34,11 @@ import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
+import { GUEST_USER_COOKIE, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import fetchData from '@/utils/fetchData';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
-
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -62,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
 
   // if not public, get board from protected endpoint
-  if (session || !isPublic) {
+  if (!isPublic) {
     try {
       await queryClient.fetchQuery(['board', { id: boardId }], () =>
         getBoardRequest(boardId, context),
@@ -97,13 +96,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  // if board is public
+  // if session and board is public, create board user
+  if (session) {
+    try {
+      await fetch(`${NEXT_PUBLIC_BACKEND_URL}/boards/${boardId}/createBoardUser`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${session.user.accessToken.token}`,
+        },
+      });
+    } catch (error) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/boards',
+        },
+      };
+    }
+  }
 
-  // check if there are cookies and if the cookies have the board the user is trying to access
-  const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
-
+  // if board is public and no session
   if (!session) {
-    // if there isn´t cookies, the guest user is registered
+    // check if there are guest user cookies
+    const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
+    // if there isn´t cookies, the guest user is not registered
     if (!cookiesGuestUser) {
       return {
         redirect: {
