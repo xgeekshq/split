@@ -71,7 +71,7 @@ const SidebarContent = ({ strategy }: SidebarContentProps) => {
 
       <Separator css={{ my: '$16', backgroundColor: '$primary600' }} />
 
-      <SidebarItem iconName="log-out" label="Log out" onClick={handleSignOut} />
+      <SidebarItem iconName="log-out" label="Log out" active={active} onClick={handleSignOut} />
     </Flex>
   );
 };
