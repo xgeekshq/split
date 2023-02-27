@@ -368,7 +368,6 @@ export default class BoardsController {
 	})
 	@Post(':boardId/createBoardUser')
 	async createBoardUser(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		// return this.createBoardApp.create();
 		return this.createBoardApp.createBoardUser(boardId, request.user._id);
 	}
 }
