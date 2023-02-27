@@ -10,7 +10,7 @@ type TeamTitleProps = {
 
 const TeamTitle = ({ teamId, title, isTeamPage }: TeamTitleProps) => {
   const renderTitle = () => (
-    <Text link={isTeamPage} size="sm" fontWeight="bold" overflow="wrap">
+    <Text link={isTeamPage} size="sm" fontWeight="bold" overflow="wrap" data-testid="teamitemTitle">
       {title}
     </Text>
   );

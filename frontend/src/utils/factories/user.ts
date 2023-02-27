@@ -35,6 +35,10 @@ export const SessionUserFactory = buildTestFactory(() => {
   const email = faker.internet.email(firstName, lastName);
   const isSAdmin = faker.datatype.boolean();
   const joinedAt = faker.datatype.datetime().toString();
+  const accessToken = {
+    token: faker.commerce.product(),
+    expiresIn: faker.date.soon().toString(),
+  };
 
   const user = {
     id,
@@ -43,6 +47,7 @@ export const SessionUserFactory = buildTestFactory(() => {
     email,
     isSAdmin,
     joinedAt,
+    accessToken,
     isMember: false,
   };
 

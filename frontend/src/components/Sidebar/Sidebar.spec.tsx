@@ -9,7 +9,7 @@ const DEFAULT_PROPS = {
 };
 const render = (props: SidebarProps = DEFAULT_PROPS) => rtlRender(<Sidebar {...props} />);
 
-describe('Components/Sidebar/Header', () => {
+describe('Components/Sidebar', () => {
   it('should render correctly', () => {
     // Arrange
     const sidebarProps = { ...DEFAULT_PROPS };

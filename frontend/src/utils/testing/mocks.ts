@@ -1,4 +1,6 @@
+import { Session } from 'next-auth/core/types';
 import { NextRouter } from 'next/router';
+import { SessionUserFactory } from '../factories/user';
 
 export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
   return {
@@ -27,5 +29,14 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
     locale: 'en',
     locales: ['en'],
     ...router,
+  };
+}
+
+export function createMockSession(): Session {
+  return {
+    user: SessionUserFactory.create(),
+    expires: new Date().toISOString(),
+    strategy: 'local',
+    error: '',
   };
 }

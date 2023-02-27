@@ -29,10 +29,9 @@ const InnerContainer = styled(Flex, Box, {
   maxHeight: '$76',
 });
 
-type TeamItemProps = {
+export type TeamItemProps = {
   userId: string | undefined;
   team: Team;
-  index?: number;
   isTeamPage?: boolean;
 };
 

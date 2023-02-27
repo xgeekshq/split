@@ -1,5 +1,6 @@
 import { Team } from '@/types/team/team';
 import { faker } from '@faker-js/faker';
+
 import { buildTestFactory } from '@/utils/testing';
 import { TeamUserFactory } from './user';
 

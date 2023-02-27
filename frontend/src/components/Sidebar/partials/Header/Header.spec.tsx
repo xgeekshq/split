@@ -1,17 +1,14 @@
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { createMockRouter } from '@/utils/testing/mocks';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Header, { SidebarHeaderProps } from './Header';
 
 const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
+
 const router = createMockRouter({});
 const render = (props: SidebarHeaderProps = DEFAULT_PROPS) =>
-  rtlRender(
-    <RouterContext.Provider value={router}>
-      <Header {...props} />
-    </RouterContext.Provider>,
-  );
+  renderWithProviders(<Header {...props} />, { routerOptions: router });
 
 describe('Components/Sidebar/Header', () => {
   it('should render correctly', () => {
