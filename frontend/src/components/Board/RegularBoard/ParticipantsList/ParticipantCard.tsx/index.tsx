@@ -20,11 +20,21 @@ type CardBodyProps = {
   isCurrentUserResponsible: boolean;
   isCurrentUserSAdmin: boolean;
   isMemberCurrentUser: boolean;
+  haveInvalidNumberOfResponsibles: boolean;
+  responsibleSignedUpUsers: BoardUser[];
   isOpen?: boolean;
 };
 
 const ParticipantCard = React.memo<CardBodyProps>(
-  ({ member, isCurrentUserResponsible, isCurrentUserSAdmin, isMemberCurrentUser, isOpen }) => {
+  ({
+    member,
+    isCurrentUserResponsible,
+    isCurrentUserSAdmin,
+    isMemberCurrentUser,
+    isOpen,
+    haveInvalidNumberOfResponsibles,
+    responsibleSignedUpUsers,
+  }) => {
     const {
       addAndRemoveBoardParticipants: { mutate },
     } = useParticipants();
@@ -60,6 +70,14 @@ const ParticipantCard = React.memo<CardBodyProps>(
     };
 
     const handleSelectFunction = (checked: boolean) => updateIsResponsibleStatus(checked);
+
+    let memberOnlySignedUpResponsible: boolean = false;
+
+    if (haveInvalidNumberOfResponsibles) {
+      memberOnlySignedUpResponsible = !!responsibleSignedUpUsers.find(
+        (boardUser) => boardUser.user._id === member.user._id,
+      );
+    }
 
     return (
       <Flex css={{ flex: '1 1 1' }} direction="column">
@@ -100,6 +118,8 @@ const ParticipantCard = React.memo<CardBodyProps>(
                       isChecked={isMemberResponsible}
                       text=""
                       title="Responsible"
+                      disabledInfo="Select another responsible for the board"
+                      disabled={memberOnlySignedUpResponsible && !isCurrentUserSAdmin}
                     />
                   </Flex>
                 )}

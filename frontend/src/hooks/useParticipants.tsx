@@ -46,7 +46,7 @@ const useParticipants = () => {
           });
 
           return {
-            mainBoardData: oldBoard.mainBoardData,
+            mainBoard: oldBoard.mainBoard,
             board: {
               ...oldBoard.board,
               users: finalParticipantsList,
@@ -85,7 +85,7 @@ const useParticipants = () => {
           });
 
           return {
-            mainBoardData: oldBoard.mainBoardData,
+            mainBoard: oldBoard.mainBoard,
             board: {
               ...oldBoard.board,
               users: boardUsersWithId,

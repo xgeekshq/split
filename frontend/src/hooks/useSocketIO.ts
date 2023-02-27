@@ -22,6 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import isEmpty from '@/utils/isEmpty';
 import { useRecoilValue } from 'recoil';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { BoardUser } from '@/types/board/board.user';
 import useComments from './useComments';
 import useVotes from './useVotes';
 import useBoard from './useBoard';
@@ -37,6 +38,7 @@ enum BoardAction {
   ADDCOMMENT,
   DELETECOMMENT,
   UPDATECOMMENT,
+  UPDATEBOARDUSERS,
   UPDATEPHASE,
 }
 
@@ -61,6 +63,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
   const { updateVote } = useVotes();
   const { setQueryDataAddComment, setQueryDataDeleteComment, setQueryDataUpdateComment } =
     useComments();
+  const { setQueryDataAddBoardUser } = useBoard({ autoFetchBoard: true });
 
   const [queue, setQueue] = useState<{ action: BoardAction; dto: any }[]>([]);
   const ready = useRecoilValue(operationsQueueAtom);
@@ -135,6 +138,10 @@ export const useSocketIO = (boardId: string): SocketInterface => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATECOMMENT, dto: updateCommentDto }]);
     });
 
+    socket?.on(`${boardId}updateBoardUsers`, (addBoardUser: BoardUser) => {
+      setQueue((prev) => [...prev, { action: BoardAction.UPDATEBOARDUSERS, dto: addBoardUser }]);
+    });
+
     socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: UpdateBoardPhase) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
     });
@@ -173,6 +180,9 @@ export const useSocketIO = (boardId: string): SocketInterface => {
           break;
         case BoardAction.UPDATECOMMENT:
           setQueryDataUpdateComment(dto);
+          break;
+        case BoardAction.UPDATEBOARDUSERS:
+          setQueryDataAddBoardUser(dto);
           break;
         case BoardAction.UPDATEPHASE:
           updateBoardPhase(dto);

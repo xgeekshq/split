@@ -17,7 +17,6 @@ import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { useRouter } from 'next/router';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
@@ -39,7 +38,6 @@ import {
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
-  const router = useRouter();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   // Atoms
@@ -79,16 +77,12 @@ const BoardHeader = () => {
     },
   ];
 
-  const { mainBoardTitle, mainBoardId } = router.query;
-
-  const mainTitle = mainBoardTitle as string;
-  const mainId = mainBoardId as string;
-
-  if (isSubBoard) {
+  if (isSubBoard && boardData.mainBoard) {
+    const { _id: mainBoardId, title: mainBoardTitle } = boardData.mainBoard;
     breadcrumbItems.push(
       {
-        title: mainTitle ?? title,
-        link: `/boards/${mainId}`,
+        title: mainBoardTitle ?? title,
+        link: `/boards/${mainBoardId}`,
       },
       {
         title,

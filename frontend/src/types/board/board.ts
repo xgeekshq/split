@@ -5,16 +5,9 @@ import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
 
 export interface GetBoardResponse {
   board: BoardType;
-  mainBoardData: {
+  mainBoard: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 
@@ -49,16 +42,9 @@ export default interface BoardType {
 
 export interface BoardInfoType {
   board: BoardType;
-  mainBoardData?: {
+  mainBoard?: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 

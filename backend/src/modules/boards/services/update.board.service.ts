@@ -40,6 +40,7 @@ import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack'
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 
+
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
 	constructor(
@@ -60,6 +61,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private readonly boardRepository: BoardRepositoryInterface,
 		private eventEmitter: EventEmitter2,
 		private configService: ConfigService
+
 	) {}
 
 	/**
@@ -504,7 +506,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.exec();
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
-
 			const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
 
 			//Sends message to SLACK
@@ -525,6 +526,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 	}
+
 	private generateMessage(phase: string, boardId: string): string {
 		const today = new Date();
 

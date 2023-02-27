@@ -74,4 +74,18 @@ export class UserRepository
 			.sort({ firstName: 1, lastName: 1 })
 			.exec();
 	}
+
+	getAllSignedUpUsers() {
+		return this.model
+			.find({ isAnonymous: false || undefined })
+			.sort({ firstName: 1, lastName: 1 })
+			.exec();
+	}
+
+	getSignedUpUsersCount() {
+		return this.model
+			.find({ isAnonymous: false || undefined })
+			.count()
+			.exec();
+	}
 }

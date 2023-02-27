@@ -20,7 +20,7 @@ type ListMembersDialogProps = {
 
 const ListMembersDialog = React.memo<ListMembersDialogProps>(
   ({ usersList, isOpen, setIsOpen, saveUsers, title, btnTitle }) => {
-    const { data: session } = useSession({ required: true });
+    const { data: session } = useSession({ required: false });
     const [searchMember, setSearchMember] = useState<string>('');
 
     const [usersChecked, setUsersChecked] = useState(usersList);
