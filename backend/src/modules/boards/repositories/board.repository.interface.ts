@@ -3,4 +3,5 @@ import Board from 'src/modules/boards/entities/board.schema';
 
 export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board> {
 	getBoard(boardId: string): Promise<Board>;
+	updatePhase(boardId, phase): Promise<Board>;
 }

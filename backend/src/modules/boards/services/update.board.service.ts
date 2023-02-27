@@ -40,7 +40,6 @@ import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack'
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 
-
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
 	constructor(
@@ -61,7 +60,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private readonly boardRepository: BoardRepositoryInterface,
 		private eventEmitter: EventEmitter2,
 		private configService: ConfigService
-
 	) {}
 
 	/**
@@ -493,26 +491,19 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
-			const { boardId, phase } = boardPhaseDto;
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId
-					},
-					{
-						phase
-					}
-				)
-				.exec();
+			const { boardId, phase: newPhase } = boardPhaseDto;
+			const { slackEnable, phase, team } = await this.boardRepository.updatePhase(
+				boardId,
+				newPhase
+			);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
-			const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
 
 			//Sends message to SLACK
 			if (
-				team.name === 'xgeeks' &&
-				board.slackEnable === true &&
-				board.phase !== BoardPhases.ADDCARDS &&
+				team['name'] === 'xgeeks' &&
+				slackEnable === true &&
+				phase !== BoardPhases.ADDCARDS &&
 				this.configService.getOrThrow(SLACK_ENABLE)
 			) {
 				const message = this.generateMessage(phase, boardId);
