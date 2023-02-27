@@ -107,7 +107,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
             {type === 'ColumnName' ? (
               <Input
                 id="title"
-                maxChars="15"
+                maxChars="30"
                 placeholder="Column name"
                 type="text"
                 showCount
