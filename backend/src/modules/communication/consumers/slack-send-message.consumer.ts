@@ -5,7 +5,7 @@ import { TYPES } from 'src/modules/communication/interfaces/types';
 import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
-import { CommunicationApplicationInterface } from 'src/modules/communication/interfaces/communication.application.interface';
+import { SendMessageApplicationInterface } from '../interfaces/SendMessageApplication.interface';
 
 @Processor(SlackSendMessageProducer.QUEUE_NAME)
 export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
@@ -13,8 +13,8 @@ export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
 	SlackMessageType
 > {
 	constructor(
-		@Inject(TYPES.application.SlackCommunicationApplication)
-		private readonly application: CommunicationApplicationInterface
+		@Inject(TYPES.application.SlackSendMessageApplication)
+		private readonly application: SendMessageApplicationInterface
 	) {
 		const logger = new Logger(SlackSendMessageProducer.name);
 		super(logger);
@@ -28,6 +28,6 @@ export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
 			`execute communication for board with id: "${slackChannelId}" and Job id: "${job.id}" (pid ${process.pid})`
 		);
 
-		this.application.postMessageOnChannel(job.data);
+		this.application.execute(job.data);
 	}
 }

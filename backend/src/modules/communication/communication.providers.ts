@@ -22,6 +22,7 @@ import { SlackArchiveChannelService } from 'src/modules/communication/services/s
 import { SlackCommunicationService } from 'src/modules/communication/services/slack-communication.service';
 import { SlackDisabledCommunicationService } from 'src/modules/communication/services/slack-disabled-communication.service';
 import { SlackAddUserIntoChannelApplication } from './applications/slack-add-user-channel.application';
+import { SlackSendMessageApplication } from './applications/slack-send-message-channel.application';
 import { UsersSlackHandler } from './handlers/users-slack.handler';
 import { SlackSendMessageService } from './services/slack-send-messages.service';
 
@@ -83,6 +84,14 @@ export const CommunicationApplication = {
 		);
 	},
 	inject: [ConfigService, ConversationsSlackHandler, UsersSlackHandler, ChatSlackHandler]
+};
+
+export const SendMessageApplication = {
+	provide: TYPES.application.SlackSendMessageApplication,
+	useFactory: (chatHandler: ChatHandlerInterface) => {
+		return new SlackSendMessageApplication(chatHandler);
+	},
+	inject: [ChatSlackHandler]
 };
 
 export const AddUserIntoChannelApplication = {

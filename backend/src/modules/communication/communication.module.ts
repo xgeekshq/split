@@ -13,6 +13,7 @@ import {
 	ConversationsHandler,
 	MergeBoardApplication,
 	ResponsibleApplication,
+	SendMessageApplication,
 	SendMessageService,
 	UsersHandler
 } from 'src/modules/communication/communication.providers';
@@ -118,6 +119,7 @@ import { SlackSendMessageProducer } from './producers/slack-send-message-channel
 					ResponsibleApplication,
 					MergeBoardApplication,
 					AddUserIntoChannelApplication,
+					SendMessageApplication,
 					SlackSendMessageConsumer,
 					SlackSendMessageProducer,
 					SlackCommunicationProducer,
