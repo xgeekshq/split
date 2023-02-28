@@ -84,3 +84,8 @@ export type ArchiveChannelData = {
 export type AddUserMainChannelType = {
 	email: string;
 };
+
+export type SlackMessageType = {
+	slackChannelId: string;
+	message: string;
+};

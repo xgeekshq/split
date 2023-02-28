@@ -13,6 +13,8 @@ import {
 	ConversationsHandler,
 	MergeBoardApplication,
 	ResponsibleApplication,
+	SendMessageApplication,
+	SendMessageService,
 	UsersHandler
 } from 'src/modules/communication/communication.providers';
 import { SlackArchiveChannelConsumer } from 'src/modules/communication/consumers/slack-archive-channel.consumer';
@@ -22,9 +24,11 @@ import { SlackCommunicationProducer } from 'src/modules/communication/producers/
 import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consummer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
+import { SlackSendMessageConsumer } from './consumers/slack-send-message.consumer';
 import { SlackAddUserToChannelProducer } from './producers/slack-add-user-channel.producer';
 import { SlackMergeBoardProducer } from './producers/slack-merge-board.producer';
 import { SlackResponsibleProducer } from './producers/slack-responsible.producer';
+import { SlackSendMessageProducer } from './producers/slack-send-message-channel.producer';
 
 @Module({
 	imports: [
@@ -85,6 +89,17 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 							removeOnComplete: SlackAddUserToChannelProducer.REMOVE_ON_COMPLETE,
 							priority: SlackAddUserToChannelProducer.PRIORITY
 						}
+					}),
+					BullModule.registerQueue({
+						name: SlackSendMessageProducer.QUEUE_NAME,
+						defaultJobOptions: {
+							attempts: SlackSendMessageProducer.ATTEMPTS,
+							backoff: SlackSendMessageProducer.BACKOFF,
+							delay: SlackSendMessageProducer.DELAY,
+							removeOnFail: SlackSendMessageProducer.REMOVE_ON_FAIL,
+							removeOnComplete: SlackSendMessageProducer.REMOVE_ON_COMPLETE,
+							priority: SlackSendMessageProducer.PRIORITY
+						}
 					})
 			  ]
 			: [])
@@ -92,6 +107,7 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 	providers: [
 		CommunicationService,
 		ArchiveChannelService,
+		SendMessageService,
 		...(configuration().slack.enable
 			? [
 					CommunicationGateAdapter,
@@ -103,6 +119,9 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 					ResponsibleApplication,
 					MergeBoardApplication,
 					AddUserIntoChannelApplication,
+					SendMessageApplication,
+					SlackSendMessageConsumer,
+					SlackSendMessageProducer,
 					SlackCommunicationProducer,
 					SlackCommunicationConsumer,
 					SlackResponsibleProducer,
@@ -116,6 +135,6 @@ import { SlackResponsibleProducer } from './producers/slack-responsible.producer
 			  ]
 			: [])
 	],
-	exports: [CommunicationService, ArchiveChannelService]
+	exports: [CommunicationService, ArchiveChannelService, SendMessageService]
 })
 export class CommunicationModule {}

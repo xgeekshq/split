@@ -52,8 +52,6 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     setReady(true);
   };
 
-  // #region BOARD
-
   const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
     refetchOnWindowFocus: true,
