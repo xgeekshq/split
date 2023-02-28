@@ -13,7 +13,7 @@ const ColumnBoxAndDelete = ({ remove, title, index, disableDeleteColumn }: Props
   <Flex gap="20">
     <Input
       id={`formColumns.${index}.title`}
-      maxChars="30"
+      maxChars="15"
       placeholder={`Column ${index + 1}`}
       showCount
       type="text"

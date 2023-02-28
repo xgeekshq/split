@@ -16,10 +16,10 @@ const SchemaUpdateBoard = Joi.object({
     .items(
       Joi.object()
         .keys({
-          title: Joi.string().required().trim().max(30).messages({
+          title: Joi.string().required().trim().max(15).messages({
             'any.required': 'Please enter the Column name',
             'string.empty': 'Please enter the Column name',
-            'string.max': 'Maximum of 30 characters',
+            'string.max': 'Maximum of 15 characters',
           }),
         })
         .unknown(true),
