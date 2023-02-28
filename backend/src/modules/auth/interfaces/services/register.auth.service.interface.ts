@@ -5,6 +5,5 @@ import User from 'src/modules/users/entities/user.schema';
 
 export interface RegisterAuthService {
 	register(registrationData: CreateUserDto): Promise<User>;
-	createGuest(guestUserData: CreateGuestUserDto): Promise<User>;
-	loginGuest(guestUserData: CreateGuestUserDto): Promise<LoginGuestUserResponse>;
+	createGuest(guestUserData: CreateGuestUserDto): Promise<LoginGuestUserResponse>;
 }

@@ -27,7 +27,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
 
   const registerGuestUser = useMutation(registerGuest, {
     onSuccess: (data, variables) => {
-      setCookie(GUEST_USER_COOKIE, { user: data._id });
+      setCookie(GUEST_USER_COOKIE, data);
       router.push({ pathname: `/boards/[boardId]`, query: { boardId: variables.board } });
     },
     onError: () => {

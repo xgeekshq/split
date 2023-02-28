@@ -1,3 +1,4 @@
+import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
@@ -28,6 +29,11 @@ export interface GetBoardApplicationInterface {
 		| {
 				board: LeanDocument<BoardDocument>;
 				mainBoardData: LeanDocument<BoardDocument>;
+		  }
+		| null
+		| {
+				guestUser: LoginGuestUserResponse;
+				board: LeanDocument<BoardDocument>;
 		  }
 		| null
 	>;

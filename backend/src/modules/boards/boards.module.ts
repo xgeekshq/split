@@ -1,3 +1,5 @@
+import AuthModule from 'src/modules/auth/auth.module';
+import { getTokenAuthService } from './../auth/auth.providers';
 import { userRepository } from 'src/modules/users/users.providers';
 import { Module, forwardRef } from '@nestjs/common';
 import {
@@ -35,6 +37,7 @@ import {
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import PublicBoardsController from './controller/public.boards.controller';
+import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 
 @Module({
 	imports: [
@@ -43,11 +46,14 @@ import PublicBoardsController from './controller/public.boards.controller';
 		SchedulesModule,
 		CommunicationModule,
 		CardsModule,
+		forwardRef(() => AuthModule),
+		JwtRegister,
 		mongooseBoardModule,
 		mongooseBoardUserModule,
 		mongooseUserModule
 	],
 	providers: [
+		getTokenAuthService,
 		createBoardService,
 		updateBoardService,
 		deleteBoardService,

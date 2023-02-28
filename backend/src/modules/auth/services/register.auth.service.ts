@@ -83,18 +83,8 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		if (!guestUserCreated) throw new BadRequestException(INSERT_FAILED);
 
-		return guestUserCreated;
-	}
+		const { accessToken } = await this.getTokenAuthService.getTokens(guestUserCreated._id);
 
-	public async loginGuest(guestUserData: CreateGuestUserDto) {
-		const { board, user } = guestUserData;
-		const { accessToken } = await this.getTokenAuthService.getTokens(user);
-		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
-
-		await this.createBoardService.createBoardUser(board, user);
-
-		await this.sendGuestBoardUser(board, user);
-
-		return { accessToken, user };
+		return { accessToken, user: guestUserCreated._id };
 	}
 }

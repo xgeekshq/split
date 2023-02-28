@@ -1,3 +1,6 @@
+import TeamUser from 'src/modules/teams/entities/team.user.schema';
+import Team from 'src/modules/teams/entities/teams.schema';
+import { CreateBoardService } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	ForbiddenException,
@@ -11,14 +14,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Team from 'src/modules/teams/interfaces/types';
+import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
+import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
+import { TeamRoles } from 'src/libs/enum/team.roles';
+import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -26,10 +35,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
+		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Users.TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface
+		private readonly userRepository: UserRepositoryInterface,
+		@Inject(Boards.TYPES.services.CreateBoardService)
+		private createBoardService: CreateBoardService,
+		@Inject(Auth.TYPES.services.GetTokenAuthService)
+		private getTokenAuthService: GetTokenAuthService
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
@@ -212,6 +225,19 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return mainBoard;
 	}
 
+	/**
+	 *
+	 * @param boardId
+	 * @param userId
+	 * @returns board when
+	 * 			* board is private
+	 * 				- user is a board user
+	 * 				- user is team admin, stakeholder or super admin
+	 *			* board is public
+	 *				- user is signed in but not a board user (creates board user)
+	 *				- user is a guest but not a board user (creates board user): also returns accessToken
+	 *				- user is a board user
+	 */
 	async getBoard(boardId: string, userId: string) {
 		let board = await this.getBoardData(boardId);
 
@@ -221,9 +247,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		if (!userFound) throw new NotFoundException(NOT_FOUND);
 
-		if (!userFound.email && !board.isPublic) throw new ForbiddenException(FORBIDDEN);
+		const { guestUser, canSeeBoard } = await this.checkIfUserCanSeeBoardAndCreateBoardUsers(
+			board,
+			userFound
+		);
 
-		board = cleanBoard(board, userId);
+		if (!canSeeBoard) throw new ForbiddenException(FORBIDDEN);
+
+		board = cleanBoard(board, userFound._id);
 
 		if (board.isSubBoard) {
 			const mainBoard = await this.getMainBoard(boardId);
@@ -231,7 +262,66 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			return { board, mainBoard };
 		}
 
+		if (guestUser) return { guestUser, board };
+
 		return { board };
+	}
+
+	async getBoardUsers(board: string, user: string) {
+		return this.boardUserModel.find({ board, user });
+	}
+
+	async createBoardUserAndSendAccessToken(
+		board: string,
+		user: string
+	): Promise<LoginGuestUserResponse> {
+		const { accessToken } = await this.getTokenAuthService.getTokens(user);
+		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
+
+		await this.createBoardService.createBoardUser(board, user);
+
+		return { accessToken, user };
+	}
+
+	async checkIfUserCanSeeBoardAndCreateBoardUsers(board: Board, user: User) {
+		const boardUserFound = await this.getBoardUsers(board._id, user._id);
+		let guestUser: LoginGuestUserResponse;
+
+		if (!boardUserFound.length) {
+			if (board.isPublic) guestUser = await this.createPublicBoardUsers(board._id, user);
+			else {
+				const hasPermissions = this.isAllowedToSeePrivateBoard(board, user);
+
+				if (!hasPermissions) return { canSeeBoard: hasPermissions };
+			}
+		}
+
+		return { guestUser, canSeeBoard: true };
+	}
+
+	async createPublicBoardUsers(boardId: string, user: User) {
+		// if signed in user accesses the board but isn't a board user, create one
+		if (!user.isAnonymous) this.createBoardService.createBoardUser(boardId, user._id);
+
+		// if guest user is already registered but isn't a board user, create one
+		return await this.createBoardUserAndSendAccessToken(boardId, user._id);
+	}
+
+	isAllowedToSeePrivateBoard(board: Board, user: User) {
+		const teamUser = (board.team as Team).users.find(
+			(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === user._id.toString()
+		);
+
+		return (
+			!user.isAnonymous &&
+			(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
+		);
+
+		// if (
+		// 	user.isAnonymous ||
+		// 	!(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
+		// )
+		// 	return false;
 	}
 
 	async countBoards(userId: string) {
