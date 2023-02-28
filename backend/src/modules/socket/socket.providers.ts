@@ -5,6 +5,7 @@ import AfterServerStoppedTimerSubscriber from 'src/modules/socket/subscribers/af
 import AfterServerUpdatedTimeLeftSubscriber from 'src/modules/socket/subscribers/after-server-updated-time-left.subscriber';
 import AfterServerUpdatedTimerDurationSubscriber from 'src/modules/socket/subscribers/after-server-updated-timer-duration.subscriber';
 import { TYPES } from './interfaces/types';
+import AfterServerUpdatedPhaseSubscriber from './subscribers/after-server-updated-phase.subscriber';
 
 export const afterServerUpdatedTimerDurationSubscriber = {
 	provide: TYPES.subscribers.AfterServerUpdatedTimerDurationSubscriber,
@@ -34,4 +35,9 @@ export const afterServerUpdatedTimeLeftSubscriber = {
 export const afterServerSentTimerStateSubscriber = {
 	provide: TYPES.subscribers.AfterServerSentTimerStateSubscriber,
 	useClass: AfterServerSentTimerStateSubscriber
+};
+
+export const afterServerUpdatedPhaseSubscriber = {
+	provide: TYPES.subscribers.AfterServerUpdatedPhaseSubscriber,
+	useClass: AfterServerUpdatedPhaseSubscriber
 };

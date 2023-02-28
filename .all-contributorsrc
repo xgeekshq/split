@@ -203,6 +203,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "GoncaloCanteiro",
+      "name": "Gonçalo Abreu Canteiro",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58892791?v=4",
+      "profile": "https://github.com/GoncaloCanteiro",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

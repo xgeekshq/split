@@ -5,16 +5,9 @@ import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
 
 export interface GetBoardResponse {
   board: BoardType;
-  mainBoardData: {
+  mainBoard: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 
@@ -44,20 +37,14 @@ export default interface BoardType {
   responsibles?: string[];
   addCards: boolean;
   postAnonymously: boolean;
+  phase?: string;
 }
 
 export interface BoardInfoType {
   board: BoardType;
-  mainBoardData?: {
+  mainBoard?: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 
@@ -91,4 +78,10 @@ export type UpdateBoardType = {
   responsible?: BoardUser;
   postAnonymously: boolean;
   team?: string;
+  phase?: string;
+};
+
+export type UpdateBoardPhase = {
+  boardId: string;
+  phase: string;
 };

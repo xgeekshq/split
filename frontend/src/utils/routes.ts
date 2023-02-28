@@ -20,6 +20,7 @@ export const ROUTES = {
   TeamPage: (teamId: string): string => `/teams/${teamId}`,
   Users: USERS_ROUTE,
   UserEdit: (userId: string) => `/users/${userId}`,
+  UserGuest: (boardId: string) => `/login-guest-user/${boardId}`,
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined =>

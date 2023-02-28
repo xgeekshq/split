@@ -1,5 +1,5 @@
 import Icon from '@/components/Primitives/Icon';
-import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
+import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';

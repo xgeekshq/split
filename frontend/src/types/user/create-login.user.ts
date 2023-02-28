@@ -12,3 +12,9 @@ export interface CreateOrLogin {
   providerAccountCreatedAt?: string;
   avatar?: string;
 }
+
+export interface CreateGuestUser {
+  firstName: string;
+  lastName?: string;
+  board: string;
+}

@@ -1,4 +1,6 @@
+import { Token } from 'src/libs/interfaces/jwt/token.interface';
+
 export class LoginGuestUserResponse {
-	board: string;
+	accessToken: Token;
 	user: string;
 }

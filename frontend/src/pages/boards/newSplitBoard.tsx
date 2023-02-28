@@ -45,6 +45,7 @@ import isEmpty from '@/utils/isEmpty';
 
 import Link from 'next/link';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { BoardPhases } from '@/utils/enums/board.phases';
 
 const defaultBoard = {
   users: [],
@@ -180,6 +181,7 @@ const NewSplitBoard: NextPage = () => {
       team,
       responsibles,
       slackEnable,
+      phase: BoardPhases.ADDCARDS,
     });
   };
 

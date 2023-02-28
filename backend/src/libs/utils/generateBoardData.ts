@@ -4,7 +4,7 @@ import { CreateBoardDto } from 'src/modules/boards/services/create.board.service
 
 export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = []): BoardDto => {
 	return {
-		title: `Sub-team board ${index}`,
+		title: `Sub-team ${index} board`,
 		columns: [
 			{
 				title: 'Went well',
@@ -37,7 +37,8 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 		maxVotes: undefined,
 		hideCards: false,
 		hideVotes: false,
-		responsibles: []
+		responsibles: [],
+		phase: 'addcards'
 	};
 };
 
@@ -80,7 +81,8 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 			boardNumber: 0,
 			hideCards: false,
 			hideVotes: false,
-			responsibles: []
+			responsibles: [],
+			phase: 'addcards'
 		}
 	};
 };

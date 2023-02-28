@@ -1,3 +1,4 @@
+import { userRepository } from 'src/modules/users/users.providers';
 import { mongooseBoardUserModule } from './../../infrastructure/database/mongoose.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -34,7 +35,7 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		ConfigModule,
 		mongooseResetModule,
 		mongooseUserModule,
-		mongooseBoardUserModule,
+		mongooseBoardUserModule
 	],
 	providers: [
 		getTokenAuthService,
@@ -45,6 +46,7 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		createResetTokenAuthApplication,
 		createResetTokenAuthService,
 		UsersModule,
+		userRepository,
 		LocalStrategy,
 		JwtStrategy,
 		JwtRefreshTokenStrategy

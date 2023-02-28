@@ -41,6 +41,9 @@ export default class User extends BaseModel {
 	@Prop({ default: false })
 	isAnonymous: boolean;
 
+	@Prop({ nullable: true })
+	updatedAt?: Date;
+
 	@Prop({ default: '' })
 	avatar?: string;
 }

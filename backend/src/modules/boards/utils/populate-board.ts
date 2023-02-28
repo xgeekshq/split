@@ -4,7 +4,7 @@ export const BoardDataPopulate: PopulateOptions[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',
-		populate: { path: 'user', select: 'firstName email lastName _id' }
+		populate: { path: 'user', select: 'firstName email lastName _id isAnonymous' }
 	},
 	{
 		path: 'team',
@@ -49,7 +49,7 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 	{
 		path: 'users',
 		select: 'user role -board votesCount',
-		populate: { path: 'user', select: 'firstName email lastName _id' }
+		populate: { path: 'user', select: 'firstName email lastName _id isAnonymous' }
 	},
 	{
 		path: 'team',

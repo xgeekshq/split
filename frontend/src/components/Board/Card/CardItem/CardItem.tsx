@@ -83,7 +83,9 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                 {item.text}
               </Text>
               {!isSubmited &&
-                ((userId === item?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                ((userId === item?.createdBy?._id && !isMainboard) ||
+                  hasAdminRole ||
+                  !isMainboard) && (
                   <PopoverCardSettings
                     isItem
                     boardId={boardId}

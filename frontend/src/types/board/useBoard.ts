@@ -1,6 +1,12 @@
 import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
-import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from './board';
+import { BoardUser } from './board.user';
+import BoardType, {
+  CreateBoardDto,
+  GetBoardResponse,
+  UpdateBoardPhase,
+  UpdateBoardType,
+} from './board';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
@@ -17,4 +23,7 @@ export default interface UseBoardType {
     unknown
   >;
   fetchBoard: UseQueryResult<GetBoardResponse | null, unknown>;
+  setQueryDataAddBoardUser: (data: BoardUser) => void;
+
+  updateBoardPhase: (data: UpdateBoardPhase) => void;
 }

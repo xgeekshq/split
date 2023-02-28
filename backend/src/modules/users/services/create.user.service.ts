@@ -40,7 +40,8 @@ export default class CreateUserServiceImpl implements CreateUserService {
 			isSAdmin: false,
 			isDeleted: false,
 			joinedAt: new Date(),
-			isAnonymous: true
+			isAnonymous: true,
+			updatedAt: new Date()
 		};
 
 		return this.userRepository.create(user);

@@ -4,7 +4,7 @@ import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
 import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Flex';
-import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
+import { ContentSection } from '@/components/layouts/Layout/styles';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
@@ -16,7 +16,6 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -41,10 +40,9 @@ export const sortParticipantsList = (
 };
 
 const BoardParticipants = () => {
-  const { data: session } = useSession({ required: true });
   const setToastState = useSetRecoilState(toastState);
   const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
-  const setRecoilBoard = useSetRecoilState(boardInfoState);
+  const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
 
   // Hooks
   const {
@@ -93,8 +91,7 @@ const BoardParticipants = () => {
     handleMembersList();
   }, [handleMembersList]);
 
-  if (!session) return null;
-  return (
+  return recoilBoard ? (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         <ContentSection gap="36" justify="between">
@@ -107,6 +104,8 @@ const BoardParticipants = () => {
         </ContentSection>
       </QueryError>
     </Suspense>
+  ) : (
+    <LoadingPage />
   );
 };
 

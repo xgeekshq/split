@@ -1,6 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import { createMockRouter } from '@/utils/testing/mocks';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { getInitials } from '@/utils/getInitials';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Header, { SidebarHeaderProps } from './Header';
 
@@ -24,12 +25,7 @@ describe('Components/Sidebar/Header', () => {
     expect(getByText(headerProps.email)).toBeInTheDocument();
     expect(getByTestId('splitLogo')).toBeInTheDocument();
     expect(userIcon).toHaveAttribute('href', `#userIcon`);
-    expect(
-      getByText(
-        headerProps.firstName.charAt(0).toUpperCase() +
-          headerProps.lastName.charAt(0).toUpperCase(),
-      ),
-    );
+    expect(getByText(getInitials(headerProps.firstName, headerProps.lastName).toUpperCase()));
   });
 
   it('should redirect correctly', async () => {

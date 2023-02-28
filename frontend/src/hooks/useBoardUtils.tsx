@@ -12,8 +12,6 @@ const useBoardUtils = () => {
 
   const queryClient = useQueryClient();
 
-  const userId = session?.user.id;
-
   const setToastState = useSetRecoilState(toastState);
 
   const boardId = String(router.query.boardId);
@@ -21,12 +19,12 @@ const useBoardUtils = () => {
   const usersList = useRecoilValue(usersListState);
 
   return {
-    userId,
     boardId,
     queryClient,
     setToastState,
     router,
     usersList,
+    session,
   };
 };
 
