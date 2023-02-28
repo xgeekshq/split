@@ -34,7 +34,7 @@ import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { GUEST_USER_COOKIE, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
+import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import fetchData from '@/utils/fetchData';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
@@ -99,12 +99,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // if session and board is public, create board user
   if (session) {
     try {
-      await fetch(`${NEXT_PUBLIC_BACKEND_URL}/boards/${boardId}/createBoardUser`, {
+      await fetchData(`/boards/${boardId}/createBoardUser`, {
+        context,
         method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${session.user.accessToken.token}`,
-        },
+        serverSide: !!context,
       });
     } catch (error) {
       return {
