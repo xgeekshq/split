@@ -10,6 +10,7 @@ import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
 import Icon from '@/components/Primitives/Icon';
 import Tooltip from '@/components/Primitives/Tooltip';
+import { useResizeDetector } from 'react-resize-detector';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
@@ -64,6 +65,8 @@ const Column = React.memo<ColumMemoProps>(
       deleteCards: false,
     });
     const [dialogType, setDialogType] = useState('ColumnName');
+    const [showTooltip, setShowTooltip] = useState(false);
+    const { width, ref } = useResizeDetector({ handleWidth: true });
 
     const handleDialogNameChange = (open: boolean, type: string) => {
       setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
@@ -119,6 +122,14 @@ const Column = React.memo<ColumMemoProps>(
       }
     }, [columnId, filter, setFilteredColumns]);
 
+    useEffect(() => {
+      setShowTooltip(false);
+
+      if (ref.current && ref.current.offsetWidth < ref.current?.scrollWidth) {
+        setShowTooltip(true);
+      }
+    }, [ref, width]);
+
     return (
       <>
         <Draggable
@@ -144,9 +155,17 @@ const Column = React.memo<ColumMemoProps>(
                             width: hasMoreThanThreeColumns ? '$130' : '$237',
                           }}
                         >
-                          <Tooltip content={title}>
-                            <Title heading="4">{title}</Title>
-                          </Tooltip>
+                          {showTooltip ? (
+                            <Tooltip content={title}>
+                              <Title heading="4" ref={ref}>
+                                {title}
+                              </Title>
+                            </Tooltip>
+                          ) : (
+                            <Title heading="4" ref={ref}>
+                              {title}
+                            </Title>
+                          )}
                         </TitleContainer>
                         <Text
                           color="primary400"
