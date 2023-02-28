@@ -36,10 +36,9 @@ describe('Components/TeamItem', () => {
     const teamItemProps = { ...testProps };
 
     // Act
-    const { getByTestId, getByText } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemTitle')).toBeInTheDocument();
     expect(getByText(teamItemProps.team.name)).toBeInTheDocument();
   });
 
@@ -54,11 +53,10 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('3 team boards');
+    expect(getByText('3 team boards')).toBeInTheDocument();
   });
 
   it('should render no team boards', () => {
@@ -72,11 +70,10 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('No boards');
+    expect(getByText('No boards')).toBeInTheDocument();
   });
 
   it('should render create first board', () => {
@@ -91,10 +88,9 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps, { user: teamAdmin.user });
+    const { getByText } = render(teamItemProps, { user: teamAdmin.user });
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('Create first board');
+    expect(getByText('Create first board')).toBeInTheDocument();
   });
 });

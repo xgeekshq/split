@@ -16,7 +16,13 @@ const StyledBox = styled(Flex, Box, {
 });
 
 const EmptyTeams = () => (
-  <StyledBox align="center" direction="column" elevation="1" justify="center">
+  <StyledBox
+    align="center"
+    direction="column"
+    elevation="1"
+    justify="center"
+    data-testid="emptyTeams"
+  >
     <EmptyTeamsImage />
     <Text css={{ mt: '$40', textAlign: 'center' }} size="md">
       <Link href="/teams/new">

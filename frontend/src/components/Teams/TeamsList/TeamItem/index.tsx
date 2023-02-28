@@ -61,7 +61,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
   }, [isSAdmin, team, userId]);
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" data-testid="teamItem">
       <InnerContainer align="center" elevation="1" gap="40">
         <Flex align="center" gap="8" css={{ flex: '1' }}>
           <Icon
