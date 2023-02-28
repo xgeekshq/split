@@ -8,7 +8,6 @@ import { ChatHandlerInterface } from 'src/modules/communication/interfaces/chat.
 import { CommunicationApplicationInterface } from 'src/modules/communication/interfaces/communication.application.interface';
 import { ConversationsHandlerInterface } from 'src/modules/communication/interfaces/conversations.handler.interface';
 import { UsersHandlerInterface } from 'src/modules/communication/interfaces/users.handler.interface';
-import { SlackMessageDto } from '../dto/slack.message.dto';
 
 export class SlackCommunicationApplication implements CommunicationApplicationInterface {
 	private logger = new Logger(SlackCommunicationApplication.name);
@@ -29,10 +28,6 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 		await this.postMessageOnMasterChannel(teams);
 
 		return teams;
-	}
-
-	public async postMessageOnChannel(data: SlackMessageDto): Promise<void> {
-		this.chatHandler.postMessage(data.slackChannelId, data.message);
 	}
 
 	private async postMessageOnMasterChannel(teams: TeamDto[]): Promise<void> {
