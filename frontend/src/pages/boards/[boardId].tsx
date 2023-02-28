@@ -40,6 +40,7 @@ import fetchData from '@/utils/fetchData';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
 
+import AlertSubmitPhase from '@/components/Board/SplitBoard/AlertSubmitPhase';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -254,6 +255,13 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     !isSubBoard &&
     hasAdminRole
   );
+  const showButtonToSubmit = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
+    board?.phase === BoardPhases.VOTINGPHASE &&
+    !isSubBoard &&
+    hasAdminRole
+  );
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -283,7 +291,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
   const shouldShowLeftSection =
     !showMessageIfMerged &&
-    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote);
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
 
   const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
 
@@ -321,6 +329,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
               {showButtonToVote && (
                 <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
+              {showButtonToSubmit && <AlertSubmitPhase boardId={boardId} isAdmin={hasAdminRole} />}
             </Flex>
           )}
 
