@@ -15,6 +15,7 @@ import { DeleteBoardApplication } from './applications/delete.board.application'
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
+import { BoardUserRepository } from './repositories/board-user.repository';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardServiceImpl from './services/create.board.service';
 import DeleteBoardServiceImpl from './services/delete.board.service';
@@ -124,4 +125,9 @@ export const afterUserRequestedTimerStateSubscriber = {
 export const boardRepository = {
 	provide: TYPES.repositories.BoardRepository,
 	useClass: BoardRepository
+};
+
+export const boardUserRepository = {
+	provide: TYPES.repositories.BoardUserRepository,
+	useClass: BoardUserRepository
 };

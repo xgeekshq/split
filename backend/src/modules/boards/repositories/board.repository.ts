@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import { BoardDataPopulate } from '../utils/populate-board';
 import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
@@ -15,5 +16,9 @@ export class BoardRepository
 	}
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
+	}
+
+	getBoardFromRepo(boardId: string) {
+		return this.findOneById(boardId, {}, BoardDataPopulate);
 	}
 }

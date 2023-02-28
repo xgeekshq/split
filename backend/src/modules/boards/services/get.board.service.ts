@@ -19,6 +19,8 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
+import { TYPES } from '../interfaces/types';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -29,18 +31,16 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Users.TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface
+		private readonly userRepository: UserRepositoryInterface,
+		@Inject(TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
 
-	getAllBoardsIdsOfUser(userId: string) {
-		return this.boardUserModel.find({ user: userId }).select('board').lean().exec();
-	}
-
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
 		const [boardIds, teamIds] = await Promise.all([
-			this.getAllBoardsIdsOfUser(userId),
+			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
 			this.getTeamService.getTeamsOfUser(userId)
 		]);
 

@@ -19,7 +19,8 @@ export const TYPES = {
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',
-		BoardRepository: 'BoardRepository'
+		BoardRepository: 'BoardRepository',
+		BoardUserRepository: 'BoardUserRepository'
 	},
 	subscribers: {
 		AfterUserPausedTimerSubscriber: 'AfterUserPausedTimerSubscriber',

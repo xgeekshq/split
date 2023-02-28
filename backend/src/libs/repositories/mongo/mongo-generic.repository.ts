@@ -34,8 +34,8 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec() as Promise<T>;
 	}
 
-	findOneByField(value: ModelProps<T>): Promise<T> {
-		return this._repository.findOne(value).exec();
+	findOneByField(value: ModelProps<T>, selectedValues?: SelectedValues<T>): Promise<T> {
+		return this._repository.findOne(value).select(selectedValues).exec();
 	}
 
 	findAllWithQuery(

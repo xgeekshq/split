@@ -18,6 +18,7 @@ import {
 	afterUserUpdatedDurationSubscriber,
 	boardRepository,
 	boardTimerRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -69,6 +70,7 @@ import PublicBoardsController from './controller/public.boards.controller';
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository,
+		boardUserRepository,
 		userRepository
 	],
 	controllers: [BoardsController, PublicBoardsController],
