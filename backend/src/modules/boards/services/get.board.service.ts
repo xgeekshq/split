@@ -18,9 +18,10 @@ import { GetBoardServiceInterface } from '../interfaces/services/get.board.servi
 import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
-import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
+import { GetBoardDataPopulate } from '../utils/populate-board';
 import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -33,7 +34,9 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface
+		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
@@ -166,16 +169,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { boards: [], hasNextPage, page };
 	}
 
-	async getBoardFromRepo(boardId: string) {
-		const board = await this.boardModel
-			.findById(boardId)
-			.populate(BoardDataPopulate)
-			.lean({ virtuals: true })
-			.exec();
-
-		return board as Board;
-	}
-
 	async getMainBoardData(boardId: string) {
 		const mainBoard = await this.boardModel
 			.findOne({ dividedBoards: { $in: boardId } })
@@ -202,18 +195,15 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return mainBoard;
 	}
 
-	async getMainBoard(boardId: string) {
-		const mainBoard = await this.boardModel
-			.findOne({ dividedBoards: { $in: boardId } })
-			.select('title')
-			.lean()
-			.exec();
-
-		return mainBoard;
-	}
-
 	async getBoard(boardId: string, userId: string) {
 		let board = await this.getBoardData(boardId);
+
+		// TODO os resultados não estão iguas, quando vem do repositorio vem com mais campos: addCards, postAnonimously
+		/// console.log('board', board);
+
+		// let board1 = await this.boardRepository.getBoardData(boardId);
+
+		// console.log('board1', board1);
 
 		if (!board) throw new NotFoundException(NOT_FOUND);
 
@@ -226,7 +216,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		board = cleanBoard(board, userId);
 
 		if (board.isSubBoard) {
-			const mainBoard = await this.getMainBoard(boardId);
+			const mainBoard = await this.boardRepository.getMainBoard(boardId);
 
 			return { board, mainBoard };
 		}

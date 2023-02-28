@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import { BoardDataPopulate } from '../utils/populate-board';
+import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
 import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
@@ -18,7 +18,19 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 
-	getBoardFromRepo(boardId: string) {
+	getBoardPopulated(boardId: string) {
 		return this.findOneById(boardId, {}, BoardDataPopulate);
+	}
+
+	getMainBoard(boardId: string) {
+		return this.findOneByField({ dividedBoards: { $in: boardId } }, 'title');
+	}
+
+	getBoardData(boardId: string) {
+		return this.findOneById(
+			boardId,
+			'-slackEnable -slackChannelId -recurrent -__v',
+			GetBoardDataPopulate
+		);
 	}
 }

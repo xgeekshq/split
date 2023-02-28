@@ -167,8 +167,9 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 			// if slack is enable for the deleted board
 			if (slackEnable) {
 				// archive all related channels
-				// for that we need to fecth the board with all dividedBoards
-				const board = await this.getBoardService.getBoardFromRepo(boardId);
+				// for that we need to fetch the board with all dividedBoards
+
+				const board = await this.boardRepository.getBoardPopulated(boardId);
 
 				this.archiveChannelService.execute({
 					type: ArchiveChannelDataOptions.BOARD,

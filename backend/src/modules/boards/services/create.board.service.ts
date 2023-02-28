@@ -29,6 +29,7 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -54,7 +55,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface
+		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
@@ -183,7 +186,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable && team && teamData.name === 'xgeeks') {
-			const populatedBoard = await this.getBoardService.getBoardFromRepo(newBoard._id);
+			const populatedBoard = await this.boardRepository.getBoardPopulated(newBoard._id);
 
 			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);

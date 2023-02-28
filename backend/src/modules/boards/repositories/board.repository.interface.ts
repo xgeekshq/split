@@ -3,5 +3,7 @@ import Board from 'src/modules/boards/entities/board.schema';
 
 export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board> {
 	getBoard(boardId: string): Promise<Board>;
-	getBoardFromRepo(boardId: string): Promise<Board>;
+	getBoardPopulated(boardId: string): Promise<Board>;
+	getMainBoard(boardId: string): Promise<Board>;
+	getBoardData(boardId: string): Promise<Board>;
 }
