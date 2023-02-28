@@ -5,7 +5,7 @@ import Flex from '@/components/Primitives/Flex';
 import { Team } from '@/types/team/team';
 
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
-import CardBody from '../CardTeam/CardBody';
+import TeamItem from '@/components/Teams/TeamsList/TeamItem';
 
 type ListOfCardsProp = {
   teams: Team[];
@@ -22,7 +22,7 @@ const ListOfCards = React.memo<ListOfCardsProp>(({ teams, userId, isLoading }) =
   >
     <Flex direction="column" gap="8">
       {teams.map((team: Team) => (
-        <CardBody key={team.id} team={team} userId={userId} isTeamPage />
+        <TeamItem key={team.id} team={team} userId={userId} isTeamPage />
       ))}
     </Flex>
 

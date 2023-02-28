@@ -1,3 +1,4 @@
+// TODO: Storybook link & overflow variant
 import { styled } from '@/styles/stitches/stitches.config';
 
 const Text = styled('span', {
@@ -182,6 +183,22 @@ const Text = styled('span', {
       },
       primary800: {
         color: '$primary800',
+      },
+    },
+    link: {
+      true: {
+        '@hover': {
+          '&:hover': {
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          },
+        },
+      },
+    },
+    overflow: {
+      wrap: {
+        whiteSpace: 'wrap',
+        overflowWrap: 'break-word',
       },
     },
   },
