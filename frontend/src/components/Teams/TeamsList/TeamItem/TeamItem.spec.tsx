@@ -8,7 +8,6 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import TeamItem, { TeamItemProps } from './index';
 
 const DEFAULT_PROPS = {
-  userId: '',
   team: TeamFactory.create(),
 };
 
@@ -18,8 +17,13 @@ jest.mock('next/router', () => ({
   useRouter: () => router,
 }));
 
-const render = (props: TeamItemProps = DEFAULT_PROPS) =>
-  renderWithProviders(<TeamItem {...props} />, { routerOptions: router });
+const render = (props: TeamItemProps = DEFAULT_PROPS, options?: any) =>
+  renderWithProviders(<TeamItem {...props} />, {
+    routerOptions: router,
+    sessionOptions: {
+      user: options?.user,
+    },
+  });
 
 describe('Components/TeamItem', () => {
   let testProps: TeamItemProps;
@@ -79,7 +83,6 @@ describe('Components/TeamItem', () => {
     // Arrange
     const teamAdmin = TeamUserFactory.create({ role: TeamUserRoles.ADMIN });
     const teamItemProps = {
-      userId: teamAdmin.user._id,
       team: {
         ...testProps.team,
         boardsCount: 0,
@@ -88,7 +91,7 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByTestId } = render(teamItemProps, { user: teamAdmin.user });
 
     // Assert
     expect(getByTestId('teamitemBoards')).toBeInTheDocument();

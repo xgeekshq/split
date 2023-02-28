@@ -30,10 +30,18 @@ const Teams = () => {
   if (!session || !data) return null;
 
   return (
-    <Flex direction="column">
+    <Flex
+      direction="column"
+      css={{
+        height: '100%',
+        position: 'relative',
+        overflowY: 'auto',
+        pr: '$8',
+      }}
+    >
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <TeamsList isFetching={isFetching} teams={teamsList} userId={session.user.id} />
+          <TeamsList isLoading={isFetching} teams={teamsList} />
         </QueryError>
       </Suspense>
     </Flex>

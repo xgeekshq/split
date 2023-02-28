@@ -30,16 +30,16 @@ const InnerContainer = styled(Flex, Box, {
 });
 
 export type TeamItemProps = {
-  userId: string | undefined;
   team: Team;
   isTeamPage?: boolean;
 };
 
-const TeamItem = React.memo<TeamItemProps>(({ userId, team, isTeamPage }) => {
+const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
   const { data: session } = useSession();
 
   const router = useRouter();
 
+  const userId = session?.user.id;
   const isSAdmin = session?.user.isSAdmin;
 
   const { id, users, name } = team;

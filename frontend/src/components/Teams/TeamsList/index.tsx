@@ -1,19 +1,35 @@
 import React from 'react';
 
 import { Team } from '@/types/team/team';
+import Flex from '@/components/Primitives/Flex';
+import Dots from '@/components/Primitives/Loading/Dots';
 import EmptyTeams from './partials/EmptyTeams';
-import ListOfCards from './partials/ListOfCards';
+
+import TeamItem from './TeamItem';
 
 type TeamsListProps = {
-  userId: string;
   teams: Team[];
-  isFetching: boolean;
+  isLoading: boolean;
 };
 
-const TeamsList = ({ userId, teams, isFetching }: TeamsListProps) => {
+const TeamsList = ({ teams, isLoading }: TeamsListProps) => {
   if (teams?.length === 0) return <EmptyTeams />;
 
-  return <ListOfCards isLoading={isFetching} teams={teams} userId={userId} />;
+  return (
+    <>
+      <Flex direction="column" gap="8">
+        {teams.map((team: Team) => (
+          <TeamItem key={team.id} team={team} isTeamPage />
+        ))}
+      </Flex>
+
+      {isLoading && (
+        <Flex justify="center" css={{ mt: '$16' }}>
+          <Dots />
+        </Flex>
+      )}
+    </>
+  );
 };
 
 export default TeamsList;
