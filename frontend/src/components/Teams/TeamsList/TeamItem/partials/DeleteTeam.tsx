@@ -15,12 +15,11 @@ import useTeam from '@/hooks/useTeam';
 type DeleteTeamProps = {
   teamName: string;
   teamId: string;
-  socketId?: string;
   teamUserId?: string;
   isTeamPage?: boolean | undefined;
 };
 
-const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, teamUserId, isTeamPage }) => {
+const DeleteTeam = ({ teamName, teamId, teamUserId, isTeamPage }: DeleteTeamProps) => {
   const { deleteTeam, deleteTeamUser } = useTeam();
 
   const handleDelete = () => {
@@ -30,6 +29,7 @@ const DeleteTeam: React.FC<DeleteTeamProps> = ({ teamName, teamId, teamUserId, i
       deleteTeamUser.mutate({ teamUserId });
     }
   };
+
   return (
     <AlertDialog>
       <Tooltip content="Delete team">

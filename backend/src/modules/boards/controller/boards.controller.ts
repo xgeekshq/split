@@ -56,7 +56,7 @@ import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
-import BoardUserDto from '../dto/board.user.dto';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -344,30 +344,31 @@ export default class BoardsController {
 	}
 
 	@ApiOperation({ summary: 'Update board phase' })
+	@ApiBody({
+		schema: {
+			properties: {
+				boardId: { type: 'string' },
+				phase: {
+					enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED],
+					example: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
+				}
+			}
+		}
+	})
 	@ApiOkResponse({
-		description: 'Board in voting phase'
+		description: 'Phase successfully updated',
+		type: BoardPhaseDto
 	})
 	@ApiInternalServerErrorResponse({
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
 	})
 	@Put(':boardId/phase')
 	async updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
 		this.updateBoardApp.updatePhase(boardPhaseDto);
-	}
-
-	@ApiOperation({ summary: 'Create new board user' })
-	@ApiCreatedResponse({ type: BoardUserDto, description: 'Board user successfully created!' })
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@Post(':boardId/createBoardUser')
-	async createBoardUser(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		return this.createBoardApp.createBoardUser(boardId, request.user._id);
 	}
 }

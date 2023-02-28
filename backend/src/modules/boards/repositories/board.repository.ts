@@ -16,4 +16,19 @@ export class BoardRepository
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
 	}
+	updatePhase(boardId, phase): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId
+			},
+			{
+				phase
+			},
+			{ new: true },
+			{
+				path: 'team',
+				select: 'name -_id'
+			}
+		);
+	}
 }

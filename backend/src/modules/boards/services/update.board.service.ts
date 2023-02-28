@@ -34,6 +34,12 @@ import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
+import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
+import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
+import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { ConfigService } from '@nestjs/config';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import Team from 'src/modules/teams/entities/teams.schema';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -43,6 +49,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
+		private slackSendMessageService: SendMessageServiceInterface,
+
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
@@ -50,7 +59,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private deleteCardService: DeleteCardService,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		private eventEmitter: EventEmitter2
+		private eventEmitter: EventEmitter2,
+		private configService: ConfigService
 	) {}
 
 	/**
@@ -483,20 +493,49 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
 			const { boardId, phase } = boardPhaseDto;
-			await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId
-					},
-					{
-						phase
-					}
-				)
-				.exec();
+			const {
+				slackEnable,
+				phase: currentPhase,
+				team
+			} = await this.boardRepository.updatePhase(boardId, phase);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+
+			//Sends message to SLACK
+			if (
+				(team as Team).name === 'xgeeks' &&
+				slackEnable === true &&
+				currentPhase !== BoardPhases.ADDCARDS &&
+				this.configService.getOrThrow(SLACK_ENABLE)
+			) {
+				const message = this.generateMessage(currentPhase, boardId);
+				const slackMessageDto = new SlackMessageDto(
+					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+					message
+				);
+				this.slackSendMessageService.execute(slackMessageDto);
+			}
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	private generateMessage(phase: string, boardId: string): string {
+		const today = new Date();
+
+		if (phase === BoardPhases.VOTINGPHASE) {
+			return `Hello team, <https://split.kigroup.de/boards/${boardId}|here> is the ${today.toLocaleString(
+				'default',
+				{
+					month: 'long'
+				}
+			)} retro board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+		}
+
+		if (phase == BoardPhases.SUBMITED) {
+			return `Hello team, the  ${today.toLocaleString('default', {
+				month: 'long'
+			})} retro board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 	}
 

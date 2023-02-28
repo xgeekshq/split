@@ -39,6 +39,7 @@ export type BoardType = {
 	} | null;
 	users: UserRoleType[];
 	slackChannelId?: string;
+	boardNumber: number;
 };
 
 export type ConfigurationType = {
@@ -82,4 +83,9 @@ export type ArchiveChannelData = {
 
 export type AddUserMainChannelType = {
 	email: string;
+};
+
+export type SlackMessageType = {
+	slackChannelId: string;
+	message: string;
 };

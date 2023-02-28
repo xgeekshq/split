@@ -1,3 +1,5 @@
+import { ConfigService } from '@nestjs/config';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -85,6 +87,10 @@ describe('BoardsController', () => {
 					useValue: {}
 				},
 				{
+					provide: ConfigService,
+					useValue: configService
+				},
+				{
 					provide: getModelToken('Schedules'),
 					useValue: {
 						find: jest.fn().mockResolvedValue([])
@@ -98,6 +104,12 @@ describe('BoardsController', () => {
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
 					useValue: {
 						execute: jest.fn()
 					}
