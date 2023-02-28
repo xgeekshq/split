@@ -27,7 +27,7 @@ export class BoardRepository
 			{ new: true },
 			{
 				path: 'team',
-				select: 'name users -_id'
+				select: 'name -_id'
 			}
 		);
 	}
