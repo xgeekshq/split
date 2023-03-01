@@ -75,7 +75,7 @@ export default class BoardDto {
 	@ValidateNested({ each: true })
 	@Type(() => BoardDto)
 	@IsOptional()
-	dividedBoards!: BoardDto[];
+	dividedBoards?: BoardDto[] | string[];
 
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()

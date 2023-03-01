@@ -79,7 +79,10 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		return users;
 	}
 
-	async deleteSubBoards(dividedBoards: Board[] | ObjectId[], boardSession: ClientSession) {
+	async deleteSubBoards(
+		dividedBoards: Board[] | ObjectId[] | string[],
+		boardSession: ClientSession
+	) {
 		const { deletedCount } = await this.boardModel
 			.deleteMany({ _id: { $in: dividedBoards } }, { session: boardSession })
 			.exec();
@@ -88,7 +91,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	}
 
 	async deleteBoardUsers(
-		dividedBoards: Board[] | ObjectId[],
+		dividedBoards: Board[] | ObjectId[] | string[],
 		boardSession: ClientSession,
 		boardId: ObjectId
 	) {
