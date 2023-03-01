@@ -293,7 +293,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     !showMessageIfMerged &&
     (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
 
-  const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
+  const shouldShowRightSection =
+    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITED;
+  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITED;
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;
@@ -335,7 +337,7 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
 
           {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
 
-          {!board?.submitedAt && (
+          {shouldShowTimer && (
             <Flex
               css={{
                 flex: 1,
