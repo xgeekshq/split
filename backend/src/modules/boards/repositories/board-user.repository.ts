@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
+import Board from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { BoardUserRepositoryInterface } from './board-user.repository.interface';
 
@@ -15,5 +16,12 @@ export class BoardUserRepository
 	}
 	getAllBoardsIdsOfUser(userId: string) {
 		return this.model.find({ user: userId }).select('board').lean().exec();
+	}
+	deleteManyBoardUsers(
+		dividedBoards: Board[] | ObjectId[],
+		withSession: boolean,
+		boardId: ObjectId | string
+	) {
+		return this.deleteMany({ board: { $in: [...dividedBoards, boardId] } }, withSession);
 	}
 }

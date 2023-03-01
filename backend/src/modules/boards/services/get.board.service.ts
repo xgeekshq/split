@@ -7,19 +7,19 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
 import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import Board, { BoardDocument } from '../entities/board.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -44,7 +44,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		]);
 
 		return {
-			boardIds: boardIds.map((boardUser) => String(boardUser.board)),
+			boardIds: boardIds.map((boardUser) => boardUser.board),
 			teamIds: teamIds.map((team) => team._id)
 		};
 	}
@@ -106,56 +106,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	}
 
 	async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
-		const count = await this.boardModel.find(query).countDocuments().exec();
+		const count = await this.boardRepository.getCountPage(query);
+
 		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
 		try {
-			const boards = await this.boardModel
-				.find(query)
-				.sort({ updatedAt: 'desc' })
-				.skip(allBoards ? 0 : page * size)
-				.limit(allBoards ? count : size)
-				.select(
-					'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments'
-				)
-				.populate({ path: 'createdBy', select: 'firstName lastName' })
-				.populate({
-					path: 'team',
-					select: 'name users _id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: {
-							path: 'user',
-							select: '_id firstName lastName joinedAt'
-						}
-					}
-				})
-				.populate({
-					path: 'dividedBoards',
-					select:
-						'-__v -createdAt -slackEnable -slackChannelId -submitedAt -id -columns.id -submitedByUser -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments',
-					populate: [
-						{
-							path: 'users',
-							select: 'role user',
-							populate: {
-								path: 'user',
-								model: 'User',
-								select: 'firstName email lastName'
-							}
-						}
-					]
-				})
-				.populate({
-					path: 'users',
-					select: 'user role -board',
-					populate: {
-						path: 'user',
-						select: '_id firstName email lastName isAnonymous'
-					}
-				})
-				.lean({ virtuals: true })
-				.exec();
+			const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
 
 			return { boards: boards ?? [], hasNextPage, page };
 		} catch (e) {

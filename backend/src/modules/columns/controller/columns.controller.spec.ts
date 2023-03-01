@@ -4,6 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
 	boardRepository,
+	boardUserRepository,
 	createBoardService,
 	getBoardApplication,
 	getBoardService,
@@ -64,6 +65,7 @@ describe('ColumnsController', () => {
 				deleteSchedulesService,
 				createBoardService,
 				updateTeamService,
+				boardUserRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

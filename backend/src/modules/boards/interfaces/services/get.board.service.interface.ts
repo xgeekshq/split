@@ -36,7 +36,9 @@ export interface GetBoardServiceInterface {
 
 	countBoards(userId: string): Promise<number>;
 
-	getAllBoardIdsAndTeamIdsOfUser(userId: string): Promise<{ boardIds: any[]; teamIds: any[] }>;
+	getAllBoardIdsAndTeamIdsOfUser(
+		userId: string
+	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
 

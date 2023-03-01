@@ -19,6 +19,7 @@ import {
 import AuthController from 'src/modules/auth/controller/auth.controller';
 import {
 	boardRepository,
+	boardUserRepository,
 	createBoardService,
 	getBoardApplication,
 	getBoardService
@@ -85,6 +86,7 @@ describe('AuthController', () => {
 				createBoardService,
 				createSchedulesService,
 				deleteSchedulesService,
+				boardUserRepository,
 				SocketGateway,
 				SchedulerRegistry,
 				ConfigService,
