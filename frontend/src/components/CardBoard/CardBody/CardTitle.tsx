@@ -49,7 +49,7 @@ const CardTitle: React.FC<CardTitleProps> = ({
           key={boardId}
           href={{
             pathname: `boards/[boardId]`,
-            query: isSubBoard ? { boardId, mainBoardId, mainBoardTitle } : { boardId },
+            query: { boardId },
           }}
         >
           <StyledBoardTitle data-disabled={!userIsParticipating && !havePermissions}>
