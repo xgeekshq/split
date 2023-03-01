@@ -36,12 +36,9 @@ export type TeamItemProps = {
 
 const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
   const { data: session } = useSession();
-
   const router = useRouter();
 
-  const userId = session?.user.id;
-  const isSAdmin = session?.user.isSAdmin;
-
+  const { id: userId, isSAdmin } = { ...session?.user };
   const { id, users, name } = team;
   const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
   const userRole = userFound?.role;
