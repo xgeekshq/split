@@ -14,7 +14,7 @@ import {
 	updateTeamService
 } from 'src/modules/teams/providers';
 import { userRepository } from 'src/modules/users/users.providers';
-import { boardRepository, getBoardService } from '../boards.providers';
+import { boardRepository, boardUserRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
 const fakeBoards = BoardFactory.createMany(2);
@@ -30,6 +30,7 @@ describe('GetBoardServiceImpl', () => {
 				teamUserRepository,
 				teamRepository,
 				boardRepository,
+				boardUserRepository,
 				updateTeamService,
 				userRepository,
 				{

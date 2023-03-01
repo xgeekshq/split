@@ -19,6 +19,7 @@ import {
 import AuthController from 'src/modules/auth/controller/auth.controller';
 import {
 	boardRepository,
+	boardUserRepository,
 	createBoardService,
 	getBoardApplication,
 	getBoardService
@@ -82,6 +83,7 @@ describe('AuthController', () => {
 				teamUserRepository,
 				updateTeamService,
 				boardRepository,
+				boardUserRepository,
 				createBoardService,
 				createSchedulesService,
 				deleteSchedulesService,

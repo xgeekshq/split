@@ -1,3 +1,4 @@
+import { boardUserRepository } from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -59,6 +60,7 @@ describe('ColumnsController', () => {
 				deleteVoteService,
 				columnRepository,
 				boardRepository,
+				boardUserRepository,
 				userRepository,
 				createSchedulesService,
 				deleteSchedulesService,
