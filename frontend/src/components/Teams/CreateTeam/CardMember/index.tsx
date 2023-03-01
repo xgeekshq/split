@@ -10,11 +10,10 @@ import { membersListState } from '@/store/team/atom/team.atom';
 
 import Tooltip from '@/components/Primitives/Tooltip';
 import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
-import CardEndTeam from '@/components/Teams/Team/CardEnd';
 
 import useTeam from '@/hooks/useTeam';
 import { IconButton, InnerContainer, StyledMemberTitle } from './styles';
-import CardEndCreateTeam from '../CardEnd';
+import RoleSelector from '../../partials/RoleSelector';
 
 type CardBodyProps = {
   member: TeamUser;
@@ -22,11 +21,10 @@ type CardBodyProps = {
   isNewTeamPage?: boolean;
   isTeamPage?: boolean;
   isTeamMember?: boolean;
-  isOpen?: boolean;
 };
 
 const CardMember = React.memo<CardBodyProps>(
-  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMember, isOpen }) => {
+  ({ isNewTeamPage, isTeamPage, member, isTeamCreator, isTeamMember }) => {
     const { data: session } = useSession();
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
@@ -83,7 +81,7 @@ const CardMember = React.memo<CardBodyProps>(
                   width: '32px',
                   height: '$32',
                   zIndex: 1,
-                  opacity: isOpen ? 0.2 : 1,
+                  opacity: 1,
                 }}
               />
               <Flex align="center" gap="8">
@@ -135,19 +133,18 @@ const CardMember = React.memo<CardBodyProps>(
               </Flex>
             )}
             {isNewTeamPage && (
-              <CardEndCreateTeam
-                isTeamCreator={isTeamCreator}
+              <RoleSelector
                 role={member.role}
                 userId={member.user._id}
+                canChangeRole={!isTeamCreator}
               />
             )}
             {isTeamPage && (
-              <CardEndTeam
+              <RoleSelector
                 isTeamPage
-                isSAdmin={isSAdmin}
-                isTeamMember={isTeamMember}
                 role={member.role}
                 userId={member.user._id}
+                canChangeRole={!isTeamMember || isSAdmin}
               />
             )}
           </InnerContainer>

@@ -11,11 +11,10 @@ import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
-import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
-import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
 import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 
+import RoleSelector from '@/components/Teams/partials/RoleSelector';
 import TeamBoards from './partials/TeamBoards';
 import TeamTitle from './partials/TeamTitle';
 import DeleteTeam from './partials/DeleteTeam';
@@ -108,10 +107,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
 
           <Flex align="center">
             {router.pathname.includes('users') ? (
-              <Flex align="start" gap="8">
-                <RoleDescription role={userRole} />
-                <PopoverRoleSettings userId={userId} isTeamPage teamId={id} />
-              </Flex>
+              <RoleSelector role={userRole} userId={userId!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}

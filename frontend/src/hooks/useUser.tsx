@@ -15,14 +15,23 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { setCookie } from 'cookies-next';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import { deleteUserRequest, getUser, updateUserIsAdminRequest } from '@/api/userService';
+import {
+  deleteUserRequest,
+  getAllUsers,
+  getUser,
+  updateUserIsAdminRequest,
+} from '@/api/userService';
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
+  autoFetchUsers?: boolean;
   autoFetchGetUser?: boolean;
 }
 
-const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
+const useUser = ({
+  autoFetchUsers = false,
+  autoFetchGetUser = false,
+}: AutoFetchProps = {}): UseUserType => {
   const { setToastState, queryClient, userId, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
@@ -74,6 +83,18 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
       redirect: true,
     });
   };
+
+  const fetchUsers = useQuery(['users'], () => getAllUsers(), {
+    enabled: autoFetchUsers,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the users',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 
   const getUserById = useQuery(['userById', userId], () => getUser(userId), {
     enabled: autoFetchGetUser,
@@ -138,6 +159,7 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
+    fetchUsers,
     getUserById,
     registerGuestUser,
     loginGuestUser,

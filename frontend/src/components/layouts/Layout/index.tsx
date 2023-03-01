@@ -6,7 +6,11 @@ import Sidebar from '@/components/Sidebar';
 import { REFRESH_TOKEN_ERROR } from '@/utils/constants';
 import { Container, ContentSection } from './styles';
 
-const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
+type LayoutProps = {
+  children: ReactNode;
+};
+
+const Layout = ({ children }: LayoutProps) => {
   const { data: session } = useSession({ required: false });
 
   if (session?.error === REFRESH_TOKEN_ERROR) {
