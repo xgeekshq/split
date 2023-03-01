@@ -1,6 +1,6 @@
+import { CreateBoardUserService } from './../interfaces/services/create.board.user.service.interface';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
-import { CreateBoardService } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	ForbiddenException,
@@ -39,8 +39,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@Inject(Boards.TYPES.services.CreateBoardService)
-		private createBoardService: CreateBoardService,
+		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserService,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private getTokenAuthService: GetTokenAuthService
 	) {}
@@ -247,7 +247,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		if (!userFound) throw new NotFoundException(NOT_FOUND);
 
-		const { guestUser, canSeeBoard } = await this.checkIfUserCanSeeBoardAndCreateBoardUsers(
+		const { guestUser, canSeeBoard } = await this.checkIfUserCanSeeBoardAndCreatePublicBoardUsers(
 			board,
 			userFound
 		);
@@ -278,12 +278,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		const { accessToken } = await this.getTokenAuthService.getTokens(user);
 		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
 
-		await this.createBoardService.createBoardUser(board, user);
+		await this.createBoardUserService.createBoardUser(board, user);
 
 		return { accessToken, user };
 	}
 
-	async checkIfUserCanSeeBoardAndCreateBoardUsers(board: Board, user: User) {
+	async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
 		const boardUserFound = await this.getBoardUsers(board._id, user._id);
 		let guestUser: LoginGuestUserResponse;
 
@@ -301,7 +301,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	async createPublicBoardUsers(boardId: string, user: User) {
 		// if signed in user accesses the board but isn't a board user, create one
-		if (!user.isAnonymous) this.createBoardService.createBoardUser(boardId, user._id);
+		if (!user.isAnonymous) this.createBoardUserService.createBoardUser(boardId, user._id);
 
 		// if guest user is already registered but isn't a board user, create one
 		return await this.createBoardUserAndSendAccessToken(boardId, user._id);
@@ -316,12 +316,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			!user.isAnonymous &&
 			(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
 		);
-
-		// if (
-		// 	user.isAnonymous ||
-		// 	!(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
-		// )
-		// 	return false;
 	}
 
 	async countBoards(userId: string) {
@@ -348,11 +342,5 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	getAllBoardsByTeamId(teamId: string) {
 		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
-	}
-
-	async isBoardPublic(boardId: string) {
-		const { isPublic } = await this.boardModel.findById(boardId).lean().exec();
-
-		return isPublic;
 	}
 }

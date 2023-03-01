@@ -1,3 +1,8 @@
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { ConfigService } from '@nestjs/config';
+import { createBoardUserService } from './../boards.providers';
+import { JwtService } from '@nestjs/jwt';
+import { getTokenAuthService } from './../../auth/auth.providers';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-classes-per-file */
 import { Logger } from '@nestjs/common';
@@ -13,7 +18,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
@@ -25,6 +30,10 @@ describe('GetBoardServiceImpl', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
+				createBoardUserService,
+				updateUserService,
+				ConfigService,
+				getTokenAuthService,
 				getTeamService,
 				getBoardService,
 				teamUserRepository,
@@ -51,6 +60,14 @@ describe('GetBoardServiceImpl', () => {
 				{
 					provide: getModelToken('User'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				},
 				GetBoardServiceImpl
 			]

@@ -43,6 +43,4 @@ export interface GetBoardApplicationInterface {
 	getAllBoardIdsAndTeamIdsOfUser(
 		userId: string
 	): Promise<{ boardIds: LeanDocument<unknown>[]; teamIds: unknown[] }>;
-
-	isBoardPublic(boardId: string): Promise<boolean>;
 }

@@ -1,3 +1,4 @@
+import { createBoardUserService } from './../../boards/boards.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -26,7 +27,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 import {
 	columnRepository,
@@ -34,6 +35,9 @@ import {
 	updateColumnService
 } from '../columns.providers';
 import ColumnsController from './columns.controller';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
+import { JwtService } from '@nestjs/jwt';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 
 describe('ColumnsController', () => {
 	let controller: ColumnsController;
@@ -66,6 +70,9 @@ describe('ColumnsController', () => {
 				deleteSchedulesService,
 				createBoardService,
 				updateTeamService,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
@@ -95,6 +102,14 @@ describe('ColumnsController', () => {
 					useValue: {
 						find: jest.fn().mockResolvedValue([])
 					}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackCommunicationService,

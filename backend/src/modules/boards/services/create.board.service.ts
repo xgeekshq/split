@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { CreateBoardUserService } from './../interfaces/services/create.board.user.service.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -18,6 +18,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
@@ -29,7 +30,7 @@ import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -55,32 +56,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface
+		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserService
 	) {}
-
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
-		);
-	}
-
-	async createBoardUser(board: string, user: string) {
-		const boardUserFound = await this.boardUserModel.findOne({ board, user });
-
-		if (boardUserFound) return;
-
-		const boardUser = {
-			role: BoardRoles.MEMBER,
-			board,
-			user,
-			votesCount: 0
-		};
-		const boardUserCreated = await this.boardUserModel.create(boardUser);
-
-		if (!boardUserCreated) throw new BadRequestException(INSERT_FAILED);
-
-		return boardUserCreated;
-	}
 
 	async createDividedBoards(boards: BoardDto[], userId: string) {
 		const newBoardsIds = await Promise.allSettled(
@@ -90,7 +69,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				const { _id } = await this.createBoard(board, userId, true, false);
 
 				if (!isEmpty(users)) {
-					this.saveBoardUsers(users, _id);
+					this.createBoardUserService.saveBoardUsers(users, _id);
 				}
 
 				return _id;
@@ -184,7 +163,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			);
 		}
 
-		await this.saveBoardUsers(newUsers, newBoard._id);
+		await this.createBoardUserService.saveBoardUsers(newUsers, newBoard._id);
 
 		if (newBoard && recurrent && team && maxUsers && teamData.name === 'xgeeks') {
 			const addCronJobDto: AddCronJobDto = {
