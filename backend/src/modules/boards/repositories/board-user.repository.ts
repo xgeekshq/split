@@ -14,6 +14,6 @@ export class BoardUserRepository
 		super(model);
 	}
 	getAllBoardsIdsOfUser(userId: string) {
-		return this.model.find({ user: userId }).select('board').exec();
+		return this.model.find({ user: userId }).select('board').lean().exec();
 	}
 }

@@ -31,6 +31,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.findById(id)
 			.select(selectedValues)
 			.populate(populate)
+			.lean({ virtuals: true })
 			.exec() as Promise<T>;
 	}
 
@@ -49,13 +50,14 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	findAllWithQuery(
 		query: FilterQuery<T>,
 		selectedValues?: SelectedValues<T>,
-		populate?: PopulateType
+		populate?: PopulateType,
+		virtuals = true
 	): Promise<T[]> {
 		return this._repository
 			.find(query)
 			.select(selectedValues)
 			.populate(populate)
-			.lean({ virtuals: true })
+			.lean({ virtuals: virtuals })
 			.exec() as unknown as Promise<T[]>;
 	}
 

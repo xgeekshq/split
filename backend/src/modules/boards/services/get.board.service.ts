@@ -16,9 +16,7 @@ import * as Users from 'src/modules/users/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
-import { GetBoardDataPopulate } from '../utils/populate-board';
 import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
@@ -27,8 +25,6 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Users.TYPES.repository)
@@ -48,7 +44,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		]);
 
 		return {
-			boardIds: boardIds.map((boardUser) => boardUser.board),
+			boardIds: boardIds.map((boardUser) => String(boardUser.board)),
 			teamIds: teamIds.map((team) => team._id)
 		};
 	}
@@ -169,41 +165,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { boards: [], hasNextPage, page };
 	}
 
-	async getMainBoardData(boardId: string) {
-		const mainBoard = await this.boardModel
-			.findOne({ dividedBoards: { $in: boardId } })
-			.select('dividedBoards team title')
-			.populate({
-				path: 'dividedBoards',
-				select: '_id title'
-			})
-			.populate({
-				path: 'team',
-				select: 'name users _id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: {
-						path: 'user',
-						select: 'firstName email lastName joinedAt'
-					}
-				}
-			})
-			.lean({ virtuals: true })
-			.exec();
-
-		return mainBoard;
-	}
-
 	async getBoard(boardId: string, userId: string) {
-		let board = await this.getBoardData(boardId);
-
-		// TODO os resultados não estão iguas, quando vem do repositorio vem com mais campos: addCards, postAnonimously
-		/// console.log('board', board);
-
-		// let board1 = await this.boardRepository.getBoardData(boardId);
-
-		// console.log('board1', board1);
+		let board = await this.boardRepository.getBoardData(boardId);
 
 		if (!board) throw new NotFoundException(NOT_FOUND);
 
@@ -227,27 +190,19 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async countBoards(userId: string) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 
-		return this.boardModel.countDocuments({
-			$and: [
-				{ isSubBoard: false },
-				{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
-			]
-		});
-	}
-
-	async getBoardData(boardId: string) {
-		const board = await this.boardModel
-			.findById(boardId)
-			.select('-slackEnable -slackChannelId -recurrent -__v')
-			.populate(GetBoardDataPopulate)
-			.lean({ virtuals: true })
-			.exec();
-
-		return board as Board;
+		return await this.boardRepository.countBoards(boardIds, teamIds);
 	}
 
 	getAllBoardsByTeamId(teamId: string) {
-		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
+		return this.boardRepository.getAllBoardsByTeamId(teamId);
+	}
+
+	getBoardPopulated(boardId: string) {
+		return this.boardRepository.getBoardPopulated(boardId);
+	}
+
+	getBoardById(boardId: string) {
+		return this.boardRepository.getBoard(boardId);
 	}
 
 	async isBoardPublic(boardId: string) {

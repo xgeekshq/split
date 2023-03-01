@@ -169,7 +169,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 				// archive all related channels
 				// for that we need to fetch the board with all dividedBoards
 
-				const board = await this.boardRepository.getBoardPopulated(boardId);
+				const board = await this.getBoardService.getBoardPopulated(boardId);
 
 				this.archiveChannelService.execute({
 					type: ArchiveChannelDataOptions.BOARD,

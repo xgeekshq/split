@@ -1,4 +1,4 @@
-import { Document, LeanDocument } from 'mongoose';
+import { LeanDocument } from 'mongoose';
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 
@@ -21,8 +21,6 @@ export interface GetBoardServiceInterface {
 		size?: number
 	): Promise<BoardsAndPage | null>;
 
-	getBoardData(boardId: string): Promise<Board>;
-
 	getBoard(
 		boardId: string,
 		userId: string
@@ -36,17 +34,15 @@ export interface GetBoardServiceInterface {
 		| null
 	>;
 
-	getMainBoardData(
-		boardId: string
-	): Promise<LeanDocument<Board & Document<any, any, any> & { _id: any }> | null>;
-
 	countBoards(userId: string): Promise<number>;
 
-	getAllBoardIdsAndTeamIdsOfUser(
-		userId: string
-	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
+	getAllBoardIdsAndTeamIdsOfUser(userId: string): Promise<{ boardIds: any[]; teamIds: any[] }>;
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
 
+	getBoardPopulated(boardId: string): Promise<Board>;
+
 	isBoardPublic(boardId: string): Promise<boolean>;
+
+	getBoardById(boardId: string): Promise<Board>;
 }

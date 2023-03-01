@@ -6,4 +6,6 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 	getBoardPopulated(boardId: string): Promise<Board>;
 	getMainBoard(boardId: string): Promise<Board>;
 	getBoardData(boardId: string): Promise<Board>;
+	getAllBoardsByTeamId(teamId: string): Promise<Board[]>;
+	countBoards(boardIds: string[], teamIds: string[]): Promise<number>;
 }
