@@ -31,6 +31,7 @@ import ColumnDto from '../../columns/dto/column.dto';
 import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
@@ -496,7 +497,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			const {
 				slackEnable,
 				phase: currentPhase,
-				team
+				team,
+				createdAt,
+				columns
 			} = await this.boardRepository.updatePhase(boardId, phase);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
@@ -508,7 +511,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				currentPhase !== BoardPhases.ADDCARDS &&
 				this.configService.getOrThrow(SLACK_ENABLE)
 			) {
-				const message = this.generateMessage(currentPhase, boardId);
+				const message = this.generateMessage(currentPhase, boardId, createdAt, columns);
 				const slackMessageDto = new SlackMessageDto(
 					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
 					message
@@ -520,22 +523,33 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		}
 	}
 
-	private generateMessage(phase: string, boardId: string): string {
-		const today = new Date();
+	private generateMessage(phase: string, boardId: string, date: string, columns): string {
+		const createdAt = new Date(date);
+		const month = createdAt.toLocaleString('default', {
+			month: 'long'
+		});
+		const frontendUrl = this.configService.getOrThrow(FRONTEND_URL);
 
 		if (phase === BoardPhases.VOTINGPHASE) {
-			return `Hello team, <https://split.kigroup.de/boards/${boardId}|here> is the ${today.toLocaleString(
-				'default',
-				{
-					month: 'long'
-				}
-			)} retro board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+			return `Hello team, <${frontendUrl}/boards/${boardId}|here> is the ${month} retro board \n\n <${frontendUrl}/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 
-		if (phase == BoardPhases.SUBMITED) {
-			return `Hello team, the  ${today.toLocaleString('default', {
-				month: 'long'
-			})} retro board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+		if (phase === BoardPhases.SUBMITED) {
+			const { cards } = columns[2];
+			let actionPoints = '';
+
+			//Extracts the action points to a string
+			cards.map((card) => {
+				actionPoints += ` \u2022 ${card.text} \n`;
+			});
+
+			return (
+				`Hello team, the ${month} <${frontendUrl}/boards/${boardId}|board> was submitted` +
+				(actionPoints ? 'and these are the action points extracted:' : '') +
+				'\n' +
+				actionPoints +
+				'Thank you for your collaboration! :ok_hand: Keep rocking :rocket:'
+			);
 		}
 	}
 
