@@ -9,7 +9,6 @@ import { LoginUser } from '@/types/user/user';
 import {
   CLIENT_ID,
   CLIENT_SECRET,
-  GUEST_USER_COOKIE,
   NEXT_PUBLIC_NEXTAUTH_URL,
   REFRESH_TOKEN_ERROR,
   SECRET,
@@ -18,7 +17,6 @@ import {
 } from '@/utils/constants';
 import { DASHBOARD_ROUTE, ERROR_500_PAGE, START_PAGE_ROUTE } from '@/utils/routes';
 import { getAuthError } from '@/errors/auth-messages';
-import { deleteCookie, getCookie } from 'cookies-next';
 
 async function getNewAccessToken(prevToken: JWT): Promise<JWT> {
   try {
