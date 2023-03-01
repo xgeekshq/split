@@ -74,9 +74,6 @@ export default NextAuth({
             strategy: 'local',
           };
 
-          // deletes guest user cookies after login
-          if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
-
           return token;
         } catch (error: any) {
           const code = error.response.status;
