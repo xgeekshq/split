@@ -14,6 +14,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { useRecoilState } from 'recoil';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import TeamsList from '@/components/Teams/TeamsList';
+import Dots from '@/components/Primitives/Loading/Dots';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
@@ -30,10 +31,24 @@ const Teams = () => {
   if (!session || !data) return null;
 
   return (
-    <Flex direction="column">
+    <Flex
+      direction="column"
+      css={{
+        height: '100%',
+        position: 'relative',
+        overflowY: 'auto',
+        pr: '$8',
+      }}
+    >
       <Suspense fallback={<LoadingPage />}>
         <QueryError>
-          <TeamsList isFetching={isFetching} teams={teamsList} userId={session.user.id} />
+          {isFetching ? (
+            <Flex justify="center" css={{ mt: '$16' }}>
+              <Dots />
+            </Flex>
+          ) : (
+            <TeamsList teams={teamsList} />
+          )}
         </QueryError>
       </Suspense>
     </Flex>

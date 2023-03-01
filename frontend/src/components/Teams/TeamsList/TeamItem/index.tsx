@@ -30,18 +30,15 @@ const InnerContainer = styled(Flex, Box, {
 });
 
 export type TeamItemProps = {
-  userId: string | undefined;
   team: Team;
   isTeamPage?: boolean;
 };
 
-const TeamItem = React.memo<TeamItemProps>(({ userId, team, isTeamPage }) => {
+const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
   const { data: session } = useSession();
-
   const router = useRouter();
 
-  const isSAdmin = session?.user.isSAdmin;
-
+  const { id: userId, isSAdmin } = { ...session?.user };
   const { id, users, name } = team;
   const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
   const userRole = userFound?.role;
@@ -61,7 +58,7 @@ const TeamItem = React.memo<TeamItemProps>(({ userId, team, isTeamPage }) => {
   }, [isSAdmin, team, userId]);
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" data-testid="teamItem">
       <InnerContainer align="center" elevation="1" gap="40">
         <Flex align="center" gap="8" css={{ flex: '1' }}>
           <Icon
