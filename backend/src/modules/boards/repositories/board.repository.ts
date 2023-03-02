@@ -21,6 +21,14 @@ export class BoardRepository
 		const setValues =
 			phase === BoardPhases.ADDCARDS
 				? { phase, submitedAt: null }
+				: phase === BoardPhases.VOTINGPHASE
+				? {
+						phase,
+						submitedAt: null,
+						hideCards: false,
+						hideVotes: false,
+						addCards: false
+				  }
 				: {
 						phase,
 						submitedAt: new Date(),
