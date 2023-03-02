@@ -65,7 +65,6 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
             <Text
               size="sm"
               fontWeight="bold"
-              overflow="wrap"
             >{`${member.user.firstName} ${member.user.lastName}`}</Text>
           </Flex>
           <Flex align="center" gap="8">
