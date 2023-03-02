@@ -2,17 +2,10 @@ import { CreateBoardUserServiceInterface } from './../interfaces/services/create
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
-import {
-	ForbiddenException,
-	Inject,
-	Injectable,
-	Logger,
-	NotFoundException,
-	forwardRef
-} from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BOARDS_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -28,6 +21,7 @@ import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-to
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import User from 'src/modules/users/entities/user.schema';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -228,33 +222,20 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	/**
 	 *
 	 * @param boardId
-	 * @param userId
-	 * @returns board when
-	 * 			* board is private
-	 * 				- user is a board user
-	 * 				- user is team admin, stakeholder or super admin
-	 *			* board is public
-	 *				- user is signed in but not a board user (creates board user when use isn't a Super Admin )
-	 *				- user is a guest but not a board user (creates board user): also returns accessToken
-	 *				- user is a board user
+	 * @param user
+	 * when board is public
+	 *		- user is signed in but not a board user => creates board user when user isn't a Super Admin
+	 *		- user is a guest but not a board user => creates board user): also returns accessToken
+	 * @returns board
 	 */
-	async getBoard(boardId: string, userId: string) {
+	async getBoard(boardId: string, user: UserDto) {
 		let board = await this.getBoardData(boardId);
 
 		if (!board) throw new NotFoundException(NOT_FOUND);
 
-		const userFound = await this.userRepository.getById(userId);
+		const guestUser = await this.checkIfPublicBoardAndCreatePublicBoardUsers(board, user);
 
-		if (!userFound) throw new NotFoundException(NOT_FOUND);
-
-		const { guestUser, canSeeBoard } = await this.checkIfUserCanSeeBoardAndCreatePublicBoardUsers(
-			board,
-			userFound
-		);
-
-		if (!canSeeBoard) throw new ForbiddenException(FORBIDDEN);
-
-		board = cleanBoard(board, userFound._id);
+		board = cleanBoard(board, user._id);
 
 		if (board.isSubBoard) {
 			const mainBoard = await this.getMainBoard(boardId);
@@ -267,7 +248,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { board };
 	}
 
-	private async getBoardUsers(board: string, user: string) {
+	async getBoardUsers(board: string, user: string) {
 		return this.boardUserModel.find({ board, user });
 	}
 
@@ -283,26 +264,21 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { accessToken, user };
 	}
 
-	private async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
-		const boardUserFound = await this.getBoardUsers(board._id, user._id);
-		let guestUser: LoginGuestUserResponse;
+	private async checkIfPublicBoardAndCreatePublicBoardUsers(
+		{ _id: boardId, isPublic }: Board,
+		user: UserDto
+	) {
+		const boardUserFound = await this.getBoardUsers(boardId, user._id);
 
-		if (!boardUserFound.length) {
-			if (board.isPublic) guestUser = await this.createPublicBoardUsers(board._id, user);
-			else {
-				const hasPermissions = this.isAllowedToSeePrivateBoard(board, user);
-
-				if (!hasPermissions) return { canSeeBoard: hasPermissions };
-			}
-		}
-
-		return { guestUser, canSeeBoard: true };
+		return !boardUserFound.length && isPublic
+			? await this.createPublicBoardUsers(boardId, user)
+			: undefined;
 	}
 
-	private createPublicBoardUsers(boardId: string, user: User) {
-		// if signed in user accesses the board but isn't a board user, create one
+	private createPublicBoardUsers(boardId: string, user: UserDto) {
+		// if non-guest user accesses the board but isn't a board user, create one
 		if (!user.isAnonymous) {
-			// Super Admin shouldn't automatically be added to the board as a boardUser
+			// Super Admin shouldn't be automatically added to the board as a boardUser
 			if (!user.isSAdmin) this.createBoardUserService.createBoardUser(boardId, user._id);
 
 			return;
@@ -310,17 +286,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 		// if guest user is already registered but isn't a board user, create one
 		return this.createBoardUserAndSendAccessToken(boardId, user._id);
-	}
-
-	private isAllowedToSeePrivateBoard(board: Board, user: User) {
-		const teamUser = (board.team as Team).users.find(
-			(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === user._id.toString()
-		);
-
-		return (
-			!user.isAnonymous &&
-			(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
-		);
 	}
 
 	async countBoards(userId: string) {
