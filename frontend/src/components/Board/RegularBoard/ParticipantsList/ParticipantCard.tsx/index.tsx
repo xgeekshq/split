@@ -63,6 +63,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
         boardUserToUpdateRole: {
           ...member,
           role: checked ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+          board: boardId,
         },
         boardId,
       };

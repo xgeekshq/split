@@ -18,6 +18,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().lean().exec();
 	}
 
+	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number> {
+		return this._repository.countDocuments(filter, options).lean().exec();
+	}
+
 	findAll(
 		selectedValues?: SelectedValues<T>,
 		sort?: SortType,
@@ -69,7 +73,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.create(item);
 	}
 
-	insertMany(listOfItems: T[]): Promise<T[]> {
+	insertMany<Q>(listOfItems: Q[]): Promise<T[]> {
 		return this._repository.insertMany(listOfItems);
 	}
 

@@ -30,6 +30,7 @@ import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BoardDataPopulate } from '../utils/populate-board';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -186,7 +187,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable && team && teamData.name === 'xgeeks') {
-			const populatedBoard = await this.getBoardService.getBoardPopulated(newBoard._id);
+			const populatedBoard = await this.getBoardService.getBoardPopulated(
+				newBoard._id,
+				BoardDataPopulate
+			);
 
 			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);

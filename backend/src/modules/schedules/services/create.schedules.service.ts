@@ -23,6 +23,7 @@ import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.s
 import { TYPES } from '../interfaces/types';
 import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
 import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -114,7 +115,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				oldBoardId
 			);
 
-			const oldBoard = await this.boardRepository.getBoardPopulated(oldBoardId);
+			const oldBoard = await this.boardRepository.getBoardPopulated(oldBoardId, BoardDataPopulate);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);

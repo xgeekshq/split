@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
+import BaseModel from 'src/libs/models/base.model';
 import User from 'src/modules/users/entities/user.schema';
 
 export type BoardUserDocument = BoardUser & Document;
@@ -10,7 +11,7 @@ export type BoardUserDocument = BoardUser & Document;
 		virtuals: true
 	}
 })
-export default class BoardUser {
+export default class BoardUser extends BaseModel {
 	@Prop({
 		nullable: false,
 		type: String,

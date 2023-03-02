@@ -21,6 +21,7 @@ import { ArchiveChannelServiceInterface } from 'src/modules/communication/interf
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
@@ -124,7 +125,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 				// archive all related channels
 				// for that we need to fetch the board with all dividedBoards
 
-				const board = await this.getBoardService.getBoardPopulated(boardId);
+				const board = await this.getBoardService.getBoardPopulated(boardId, BoardDataPopulate);
 
 				this.archiveChannelService.execute({
 					type: ArchiveChannelDataOptions.BOARD,

@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, ObjectId } from 'mongoose';
 import { Model, PopulateOptions } from 'mongoose';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Column from 'src/modules/columns/entities/column.schema';
 import { QueryType } from '../interfaces/findQuery';
-import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
+import { GetBoardDataPopulate } from '../utils/populate-board';
 import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
@@ -17,14 +20,13 @@ export class BoardRepository
 		super(model);
 	}
 
-	/* Get Boards */
-
+	/* GET BOARD */
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
 	}
 
-	getBoardPopulated(boardId: string) {
-		return this.findOneById(boardId, {}, BoardDataPopulate);
+	getBoardPopulated(boardId: string, populate?: PopulateType) {
+		return this.findOneById(boardId, {}, populate);
 	}
 
 	getMainBoard(boardId: string) {
@@ -45,17 +47,6 @@ export class BoardRepository
 
 	getAllBoardsByTeamId(teamId: string) {
 		return this.findAllWithQuery({ team: teamId }, 'board', undefined, false);
-	}
-
-	countBoards(boardIds: string[] | ObjectId[], teamIds: string[]) {
-		return this.model
-			.countDocuments({
-				$and: [
-					{ isSubBoard: false },
-					{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
-				]
-			})
-			.exec();
 	}
 
 	getCountPage(query: QueryType) {
@@ -120,18 +111,16 @@ export class BoardRepository
 		return this.findOneByFieldWithQuery({ dividedBoards: { $in: [boardId] } }, 'slackChannelId');
 	}
 
-	/* Delete Boards */
-
-	deleteManySubBoards(dividedBoards: Board[] | ObjectId[], withSession: boolean): Promise<number> {
-		return this.deleteMany({ _id: { $in: dividedBoards } }, withSession);
+	countBoards(boardIds: string[] | ObjectId[], teamIds: string[]) {
+		return this.countDocumentsWithQuery({
+			$and: [
+				{ isSubBoard: false },
+				{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
+			]
+		});
 	}
 
-	deleteBoard(boardId: string, withSession: boolean) {
-		return this.findOneAndRemove(boardId, withSession);
-	}
-
-	/* Update Boards */
-
+	/* UPDATE BOARDS */
 	updateBoard(boardId: string, board: Board, isNew: boolean) {
 		return this.findOneByFieldAndUpdate(
 			{
@@ -158,5 +147,41 @@ export class BoardRepository
 				}
 			}
 		);
+	}
+
+	updateMergedBoard(boardId: string, newColumns: Column[]) {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId
+			},
+			{
+				$set: { columns: newColumns }
+			},
+			{ new: true }
+		);
+	}
+
+	updatedChannelId(boardId: string, channelId: string) {
+		return this.findOneByFieldAndUpdate({ _id: boardId }, { slackChannelId: channelId });
+	}
+
+	updateBoardPhase(boardId: string, phase: BoardPhases) {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId
+			},
+			{
+				phase
+			}
+		);
+	}
+
+	/* DELETE BOARD */
+	deleteManySubBoards(dividedBoards: Board[] | ObjectId[], withSession: boolean): Promise<number> {
+		return this.deleteMany({ _id: { $in: dividedBoards } }, withSession);
+	}
+
+	deleteBoard(boardId: string, withSession: boolean) {
+		return this.findOneAndRemove(boardId, withSession);
 	}
 }

@@ -20,6 +20,7 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import Board, { BoardDocument } from '../entities/board.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -152,8 +153,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.boardRepository.getAllBoardsByTeamId(teamId);
 	}
 
-	getBoardPopulated(boardId: string) {
-		return this.boardRepository.getBoardPopulated(boardId);
+	getBoardPopulated(boardId: string, populate?: PopulateType) {
+		return this.boardRepository.getBoardPopulated(boardId, populate);
 	}
 
 	getBoardById(boardId: string) {

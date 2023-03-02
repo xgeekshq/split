@@ -147,17 +147,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.map((boardUser) => {
 					const typedBoardUser = boardUser.user as unknown as User;
 
-					return this.boardUserModel
-						.findOneAndUpdate(
-							{
-								user: typedBoardUser._id,
-								board: mainBoardId
-							},
-							{
-								role: boardUser.role
-							}
-						)
-						.exec();
+					return this.boardUserRepository.updateBoardUserRole(
+						mainBoardId._id,
+						typedBoardUser._id,
+						boardUser.role
+					);
 				});
 			await Promise.all(promises);
 		}
@@ -314,33 +308,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
 
-		// this.boardModel
-		// 	.findOneAndUpdate(
-		// 		{
-		// 			_id: subBoardId
-		// 		},
-		// 		{
-		// 			$set: {
-		// 				submitedByUser: userId,
-		// 				submitedAt: new Date()
-		// 			}
-		// 		}
-		// 	)
-		// 	.lean()
-		// 	.exec();
-
-		const result = this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: board._id
-				},
-				{
-					$set: { columns: newColumns }
-				},
-				{ new: true }
-			)
-			.lean()
-			.exec();
+		const result = await this.boardRepository.updateMergedBoard(board._id, newColumns);
 
 		if (board.slackChannelId && board.slackEnable) {
 			this.slackCommunicationService.executeMergeBoardNotification({
@@ -356,7 +324,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	private async checkIfIsLastBoardToMerge(mainBoardId: string): Promise<boolean> {
-		const board = await this.boardModel.findById(mainBoardId).populate({ path: 'dividedBoards' });
+		const board = await this.boardRepository.getBoardPopulated(mainBoardId, {
+			path: 'dividedBoards'
+		});
 
 		if (!board) return false;
 
@@ -422,25 +392,22 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 	updateChannelId(teams: TeamDto[]) {
 		Promise.all(
-			teams.map((team) =>
-				this.boardModel.updateOne({ _id: team.boardId }, { slackChannelId: team.channelId })
-			)
+			teams.map((team) => this.boardRepository.updatedChannelId(team.boardId, team.channelId))
 		);
 	}
 
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
-		const updatedBoardUsers = await this.boardUserModel
-			.findOneAndUpdate(
-				{
-					_id: boardUserToUpdateRole._id
-				},
-				{
-					role: boardUserToUpdateRole.role
-				}
-			)
-			.exec();
+		const user = boardUserToUpdateRole.user as unknown as User;
 
-		if (!updatedBoardUsers) throw new BadRequestException(UPDATE_FAILED);
+		const updatedBoardUsers = await this.boardUserRepository.updateBoardUserRole(
+			boardUserToUpdateRole.board,
+			user._id,
+			boardUserToUpdateRole.role
+		);
+
+		if (!updatedBoardUsers) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
 
 		return updatedBoardUsers;
 	}
@@ -462,16 +429,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
 			const { boardId, phase } = boardPhaseDto;
-			await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId
-					},
-					{
-						phase
-					}
-				)
-				.exec();
+
+			await this.boardRepository.updateBoardPhase(boardId, phase);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
 		} catch (err) {
@@ -480,7 +439,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	private async addBoardUsers(boardUsers: BoardUserDto[]) {
-		const createdBoardUsers = await this.boardUserModel.insertMany(boardUsers);
+		const createdBoardUsers = await this.boardUserRepository.createBoardUsers(boardUsers);
 
 		if (createdBoardUsers.length < 1) throw new Error(INSERT_FAILED);
 
@@ -488,9 +447,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	private async deleteBoardUsers(boardUsers: string[]) {
-		const { deletedCount } = await this.boardUserModel.deleteMany({
-			_id: { $in: boardUsers }
-		});
+		const deletedCount = await this.boardUserRepository.deleteBoardUsers(boardUsers);
 
 		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}

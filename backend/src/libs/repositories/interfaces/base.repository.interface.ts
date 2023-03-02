@@ -28,6 +28,8 @@ export interface BaseInterfaceRepository<T> {
 
 	countDocuments(): Promise<number>;
 
+	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number>;
+
 	findOneByFieldAndUpdate(
 		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
