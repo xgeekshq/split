@@ -1,4 +1,4 @@
-import { CreateBoardUserService } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { LeanDocument, Model } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -58,10 +58,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserService
+		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
-	async createDividedBoards(boards: BoardDto[], userId: string) {
+	private async createDividedBoards(boards: BoardDto[], userId: string) {
 		const newBoardsIds = await Promise.allSettled(
 			boards.map(async (board) => {
 				board.addCards = true;
@@ -69,7 +69,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				const { _id } = await this.createBoard(board, userId, true, false);
 
 				if (!isEmpty(users)) {
-					this.createBoardUserService.saveBoardUsers(users, _id);
+					await this.createBoardUserService.saveBoardUsers(users, _id);
 				}
 
 				return _id;

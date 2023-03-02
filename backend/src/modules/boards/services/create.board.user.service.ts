@@ -1,19 +1,17 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import Board, { BoardDocument } from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import { CreateBoardUserService } from '../interfaces/services/create.board.user.service.interface';
+import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
 import { Model } from 'mongoose';
 import BoardUserDto from '../dto/board.user.dto';
 
 @Injectable()
-export default class CreateBoardUserServiceImpl implements CreateBoardUserService {
-	private logger = new Logger(CreateBoardUserServiceImpl.name);
+export default class CreateBoardUserService implements CreateBoardUserServiceInterface {
+	private logger = new Logger(CreateBoardUserService.name);
 
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -27,7 +25,7 @@ export default class CreateBoardUserServiceImpl implements CreateBoardUserServic
 	async createBoardUser(board: string, user: string) {
 		const boardUserFound = await this.boardUserModel.findOne({ board, user });
 
-		if (boardUserFound) return;
+		if (boardUserFound) throw new BadRequestException(BOARD_USER_EXISTS);
 
 		const boardUser = {
 			role: BoardRoles.MEMBER,

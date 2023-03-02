@@ -3,12 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { createBoardUserService } from './../boards.providers';
 import { JwtService } from '@nestjs/jwt';
 import { getTokenAuthService } from './../../auth/auth.providers';
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable max-classes-per-file */
 import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Document, LeanDocument, Types } from 'mongoose';
+import { Document, LeanDocument } from 'mongoose';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
@@ -22,6 +20,7 @@ import { updateUserService, userRepository } from 'src/modules/users/users.provi
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fakeBoards = BoardFactory.createMany(2);
 
 describe('GetBoardServiceImpl', () => {

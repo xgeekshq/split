@@ -1,4 +1,4 @@
-import { CreateBoardUserService } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
@@ -40,7 +40,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserService,
+		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private getTokenAuthService: GetTokenAuthService
 	) {}
@@ -267,11 +267,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { board };
 	}
 
-	async getBoardUsers(board: string, user: string) {
+	private async getBoardUsers(board: string, user: string) {
 		return this.boardUserModel.find({ board, user });
 	}
 
-	async createBoardUserAndSendAccessToken(
+	private async createBoardUserAndSendAccessToken(
 		board: string,
 		user: string
 	): Promise<LoginGuestUserResponse> {
@@ -283,7 +283,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { accessToken, user };
 	}
 
-	async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
+	private async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
 		const boardUserFound = await this.getBoardUsers(board._id, user._id);
 		let guestUser: LoginGuestUserResponse;
 
@@ -299,15 +299,15 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { guestUser, canSeeBoard: true };
 	}
 
-	async createPublicBoardUsers(boardId: string, user: User) {
+	private createPublicBoardUsers(boardId: string, user: User) {
 		// if signed in user accesses the board but isn't a board user, create one
 		if (!user.isAnonymous) this.createBoardUserService.createBoardUser(boardId, user._id);
 
 		// if guest user is already registered but isn't a board user, create one
-		return await this.createBoardUserAndSendAccessToken(boardId, user._id);
+		return this.createBoardUserAndSendAccessToken(boardId, user._id);
 	}
 
-	isAllowedToSeePrivateBoard(board: Board, user: User) {
+	private isAllowedToSeePrivateBoard(board: Board, user: User) {
 		const teamUser = (board.team as Team).users.find(
 			(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === user._id.toString()
 		);
