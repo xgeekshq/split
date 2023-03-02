@@ -17,11 +17,21 @@ export class BoardUserRepository
 	getAllBoardsIdsOfUser(userId: string) {
 		return this.model.find({ user: userId }).select('board').lean().exec();
 	}
-	deleteManyBoardUsers(
+
+	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[],
 		withSession: boolean,
 		boardId: ObjectId | string
 	) {
 		return this.deleteMany({ board: { $in: [...dividedBoards, boardId] } }, withSession);
+	}
+
+	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean) {
+		return this.deleteMany(
+			{
+				board: boardId
+			},
+			withSession
+		);
 	}
 }

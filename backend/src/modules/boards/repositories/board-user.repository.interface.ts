@@ -5,9 +5,11 @@ import BoardUser from '../entities/board.user.schema';
 
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;
-	deleteManyBoardUsers(
+	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[],
 		withSession: boolean,
 		boardId: ObjectId | string
 	): Promise<number>;
+
+	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
 }
