@@ -31,7 +31,7 @@ export class GetBoardGuard implements CanActivate {
 			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
 			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, user._id);
 
-			if (isPublic || boardUserFound) {
+			if (isPublic || boardUserFound.length) {
 				return true;
 			}
 
