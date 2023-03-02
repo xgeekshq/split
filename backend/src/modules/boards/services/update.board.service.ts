@@ -345,7 +345,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
 		}
 
-		this.boardModel
+		await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: subBoardId
@@ -360,7 +360,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			.lean()
 			.exec();
 
-		const result = this.boardModel
+		const result = await this.boardModel
 			.findOneAndUpdate(
 				{
 					_id: board._id
@@ -370,6 +370,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				},
 				{ new: true }
 			)
+			.populate({ path: 'dividedBoards' })
 			.lean()
 			.exec();
 
@@ -377,7 +378,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			this.slackCommunicationService.executeMergeBoardNotification({
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id),
+				isLastSubBoard: this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
 				boardId: subBoardId,
 				mainBoardId: board._id
 			});
@@ -386,22 +387,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return result;
 	}
 
-	private async checkIfIsLastBoardToMerge(mainBoardId: string): Promise<boolean> {
-		const board = await this.boardModel.findById(mainBoardId).populate({ path: 'dividedBoards' });
-
-		if (!board) return false;
-
-		const count = (board.dividedBoards as Board[]).reduce((prev, currentValue) => {
+	private checkIfIsLastBoardToMerge(dividedBoards: Board[]): boolean {
+		const count = dividedBoards.reduce((prev, currentValue) => {
 			if (currentValue.submitedByUser) {
-				prev -= 1;
-
-				return prev;
+				return prev + 1;
 			}
 
 			return prev;
-		}, board?.dividedBoards.length ?? 0);
+		}, 0);
 
-		return count === 0;
+		return count === dividedBoards.length;
 	}
 
 	private generateNewSubColumns(subBoard: Board) {
