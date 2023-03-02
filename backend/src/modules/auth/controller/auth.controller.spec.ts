@@ -1,3 +1,4 @@
+import { createBoardUserService } from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -85,6 +86,8 @@ describe('AuthController', () => {
 				createBoardService,
 				createSchedulesService,
 				deleteSchedulesService,
+				createBoardUserService,
+				updateUserService,
 				SocketGateway,
 				SchedulerRegistry,
 				ConfigService,

@@ -20,10 +20,16 @@ import CreateBoardServiceImpl from './services/create.board.service';
 import DeleteBoardServiceImpl from './services/delete.board.service';
 import GetBoardServiceImpl from './services/get.board.service';
 import UpdateBoardServiceImpl from './services/update.board.service';
+import CreateBoardUserService from './services/create.board.user.service';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
 	useClass: CreateBoardServiceImpl
+};
+
+export const createBoardUserService = {
+	provide: TYPES.services.CreateBoardUserService,
+	useClass: CreateBoardUserService
 };
 
 export const getBoardService = {

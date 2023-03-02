@@ -17,6 +17,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { LoginUser } from '@/types/user/user';
 import {
   AUTH_SSO,
+  GUEST_USER_COOKIE,
   NEXT_PUBLIC_ENABLE_AZURE,
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
@@ -25,6 +26,7 @@ import {
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Button';
+import { getCookie, deleteCookie } from 'cookies-next';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 
@@ -48,6 +50,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
 
   const handleLoginAzure = () => {
     if (loading.sso) return;
+    // deletes guest user cookies after login
+    if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
     setLoading((prevState) => ({ ...prevState, sso: true }));
     loginAzure();
   };
@@ -60,6 +64,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
       redirect: false,
     });
     if (!result?.error) {
+      // deletes guest user cookies after login
+      if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
       setToastState((prev) => ({ ...prev, open: false }));
       router.push(DASHBOARD_ROUTE);
       return;

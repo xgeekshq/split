@@ -1,6 +1,7 @@
 export const TYPES = {
 	services: {
 		CreateBoardService: 'CreateBoardService',
+		CreateBoardUserService: 'CreateBoardUserService',
 		DeleteBoardService: 'DeleteBoardService',
 		UpdateBoardService: 'UpdateBoardService',
 		GetBoardService: 'GetBoardService',

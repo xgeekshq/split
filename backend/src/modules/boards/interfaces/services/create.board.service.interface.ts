@@ -1,6 +1,4 @@
-import { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import BoardDto from '../../dto/board.dto';
-import BoardUserDto from '../../dto/board.user.dto';
 import { BoardDocument } from '../../entities/board.schema';
 
 export interface Configs {
@@ -18,6 +16,4 @@ export interface CreateBoardService {
 	create(boardData: BoardDto, userId: string): Promise<BoardDocument>;
 
 	splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null>;
-
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string): Promise<BoardUserDocument[]>;
 }

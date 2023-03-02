@@ -1,3 +1,4 @@
+import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import { Document, LeanDocument } from 'mongoose';
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
@@ -36,6 +37,11 @@ export interface GetBoardServiceInterface {
 				mainBoard: LeanDocument<BoardDocument>;
 		  }
 		| null
+		| {
+				guestUser: LoginGuestUserResponse;
+				board: LeanDocument<BoardDocument>;
+		  }
+		| null
 	>;
 
 	getMainBoardData(
@@ -49,6 +55,4 @@ export interface GetBoardServiceInterface {
 	): Promise<{ boardIds: LeanDocument<any>[]; teamIds: any[] }>;
 
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
-
-	isBoardPublic(boardId: string): Promise<boolean>;
 }

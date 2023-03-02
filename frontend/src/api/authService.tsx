@@ -49,7 +49,7 @@ export const resetUserPassword = (params: NewPassword): Promise<ResetPasswordRes
     data: params,
   });
 
-export const registerGuest = (newGuestUser: CreateGuestUser): Promise<User> =>
+export const registerGuest = (newGuestUser: CreateGuestUser): Promise<GuestUser> =>
   fetchData('/auth/loginGuest', {
     isPublicRequest: true,
     method: 'POST',

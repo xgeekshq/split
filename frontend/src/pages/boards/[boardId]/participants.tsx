@@ -18,6 +18,7 @@ import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (
@@ -119,15 +120,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   try {
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
+    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
   } catch (e) {
     return {
       redirect: {
         permanent: false,
-        destination: `/boards/${boardId}`,
+        destination: DASHBOARD_ROUTE,
       },
     };
   }

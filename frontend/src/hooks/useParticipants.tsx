@@ -46,6 +46,7 @@ const useParticipants = () => {
           });
 
           return {
+            guestUser: oldBoard.guestUser,
             mainBoard: oldBoard.mainBoard,
             board: {
               ...oldBoard.board,
@@ -85,6 +86,7 @@ const useParticipants = () => {
           });
 
           return {
+            guestUser: oldBoard.guestUser,
             mainBoard: oldBoard.mainBoard,
             board: {
               ...oldBoard.board,
