@@ -18,17 +18,23 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 	updatePhase(boardId, phase): Promise<Board> {
-		const submitedAt = phase !== BoardPhases.SUBMITED ? null : new Date();
+		const setValues =
+			phase === BoardPhases.ADDCARDS
+				? { phase, submitedAt: null }
+				: {
+						phase,
+						submitedAt: new Date(),
+						hideCards: false,
+						hideVotes: false,
+						addCards: false
+				  };
 
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: boardId
 			},
 			{
-				$set: {
-					phase,
-					submitedAt
-				}
+				$set: setValues
 			},
 			{ new: true },
 			{
