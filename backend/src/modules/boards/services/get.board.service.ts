@@ -234,7 +234,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	 * 				- user is a board user
 	 * 				- user is team admin, stakeholder or super admin
 	 *			* board is public
-	 *				- user is signed in but not a board user (creates board user)
+	 *				- user is signed in but not a board user (creates board user when use isn't a Super Admin )
 	 *				- user is a guest but not a board user (creates board user): also returns accessToken
 	 *				- user is a board user
 	 */
