@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { BoardRoles } from 'src/libs/enum/board.roles';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -18,7 +17,7 @@ import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/g
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from '../interfaces/types';
-import User, { UserDocument } from 'src/modules/users/entities/user.schema';
+import User from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
@@ -34,6 +33,7 @@ import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -50,6 +50,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private deleteCardService: DeleteCardService,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
+		@Inject(Boards.TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface,
 		private eventEmitter: EventEmitter2
 	) {}
 
@@ -60,16 +62,13 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @private
 	 */
 	private async getBoardResponsibleInfo(boardId: string): Promise<ResponsibleType | undefined> {
-		const boardUser = await this.boardUserModel
-			.findOne({ board: boardId, role: BoardRoles.RESPONSIBLE })
-			.populate({ path: 'user' })
-			.exec();
+		const boardUser = await this.boardUserRepository.getBoardResponsible(boardId);
 
 		if (!boardUser) {
 			return undefined;
 		}
 
-		const user = boardUser?.user as UserDocument;
+		const user = boardUser?.user as User;
 
 		return { id: user._id, email: user.email };
 	}
@@ -80,7 +79,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @return number
 	 */
 	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		const votesCount = await this.boardUserModel.find({ board: boardId }, ['votesCount']);
+		const votesCount = await this.boardUserRepository.getVotesCount(boardId);
 
 		return votesCount.reduce(
 			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
@@ -121,17 +120,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					.map((boardUser) => {
 						const typedBoardUser = boardUser.user as unknown as User;
 
-						return this.boardUserModel
-							.findOneAndUpdate(
-								{
-									user: typedBoardUser._id,
-									board: boardId
-								},
-								{
-									role: boardUser.role
-								}
-							)
-							.exec();
+						return this.boardUserRepository.updateBoardUserRole(
+							boardId,
+							typedBoardUser._id,
+							boardUser.role
+						);
 					});
 				await Promise.all(promises);
 			}
@@ -208,20 +201,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			}
 		}
 
-		const updatedBoard = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId
-				},
-				{
-					...board
-				},
-				{
-					new: true
-				}
-			)
-			.lean()
-			.exec();
+		const updatedBoard = await this.boardRepository.updateBoard(boardId, board, true);
 
 		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
 
@@ -307,7 +287,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			newResponsibleEmail: newResponsible.email,
 			previousResponsibleEmail: currentResponsible?.email ?? '',
 			subTeamChannelId: slackChannelId,
-			responsiblesChannelId: (await this.boardModel.findOne({ dividedBoards: { $in: [boardId] } }))
+			responsiblesChannelId: (await this.boardRepository.getResponsiblesSlackId(boardId))
 				?.slackChannelId,
 			teamNumber: boardNumber,
 			email: newResponsible.email
@@ -317,10 +297,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async mergeBoards(subBoardId: string, userId: string) {
 		const [subBoard, board] = await Promise.all([
 			this.boardRepository.getBoard(subBoardId),
-			this.boardModel
-				.findOne({ dividedBoards: { $in: [subBoardId] } })
-				.lean()
-				.exec()
+			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
 		]);
 
 		if (!subBoard || !board || subBoard.submitedByUser) return null;
@@ -335,20 +312,22 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
 		}
 
-		this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: subBoardId
-				},
-				{
-					$set: {
-						submitedByUser: userId,
-						submitedAt: new Date()
-					}
-				}
-			)
-			.lean()
-			.exec();
+		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
+
+		// this.boardModel
+		// 	.findOneAndUpdate(
+		// 		{
+		// 			_id: subBoardId
+		// 		},
+		// 		{
+		// 			$set: {
+		// 				submitedByUser: userId,
+		// 				submitedAt: new Date()
+		// 			}
+		// 		}
+		// 	)
+		// 	.lean()
+		// 	.exec();
 
 		const result = this.boardModel
 			.findOneAndUpdate(

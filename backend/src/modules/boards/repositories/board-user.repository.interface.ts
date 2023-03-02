@@ -12,4 +12,10 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 	): Promise<number>;
 
 	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
+
+	getBoardResponsible(boardId: string): Promise<BoardUser>;
+
+	getVotesCount(boardId: string): Promise<BoardUser[]>;
+
+	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
 }

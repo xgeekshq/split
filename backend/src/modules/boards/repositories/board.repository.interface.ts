@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import { FilterQuery, ObjectId } from 'mongoose';
 import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
 import Board from 'src/modules/boards/entities/board.schema';
 import { QueryType } from '../interfaces/findQuery';
@@ -18,7 +18,10 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 		size: number,
 		count: number
 	): Promise<Board[]>;
+	getResponsiblesSlackId(boardId: string): Promise<Board>;
+	getBoardByQuery(query: FilterQuery<any>): Promise<Board>;
 	deleteManySubBoards(dividedBoards: Board[] | ObjectId[], withSession: boolean): Promise<number>;
-
 	deleteBoard(boardId: string, withSession: boolean): Promise<Board>;
+	updateBoard(boardId: string, board: Board, isNew: boolean): Promise<Board>;
+	updateMergedSubBoard(subBoardId: string, userId: string): Promise<Board>;
 }

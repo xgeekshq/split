@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId } from 'mongoose';
+import { FilterQuery, ObjectId } from 'mongoose';
 import { Model, PopulateOptions } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
@@ -29,6 +29,10 @@ export class BoardRepository
 
 	getMainBoard(boardId: string) {
 		return this.findOneByFieldWithQuery({ dividedBoards: { $in: boardId } }, 'title');
+	}
+
+	getBoardByQuery(query: FilterQuery<any>) {
+		return this.findOneByFieldWithQuery(query);
 	}
 
 	getBoardData(boardId: string) {
@@ -112,6 +116,10 @@ export class BoardRepository
 			.exec() as unknown as Promise<Board[]>;
 	}
 
+	getResponsiblesSlackId(boardId: string) {
+		return this.findOneByFieldWithQuery({ dividedBoards: { $in: [boardId] } }, 'slackChannelId');
+	}
+
 	/* Delete Boards */
 
 	deleteManySubBoards(dividedBoards: Board[] | ObjectId[], withSession: boolean): Promise<number> {
@@ -120,5 +128,35 @@ export class BoardRepository
 
 	deleteBoard(boardId: string, withSession: boolean) {
 		return this.findOneAndRemove(boardId, withSession);
+	}
+
+	/* Update Boards */
+
+	updateBoard(boardId: string, board: Board, isNew: boolean) {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId
+			},
+			{
+				...board
+			},
+			{
+				new: isNew
+			}
+		);
+	}
+
+	updateMergedSubBoard(subBoardId: string, userId: string) {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: subBoardId
+			},
+			{
+				$set: {
+					submitedByUser: userId,
+					submitedAt: new Date()
+				}
+			}
+		);
 	}
 }
