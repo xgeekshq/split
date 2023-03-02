@@ -81,7 +81,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       key: boardId,
       dehydratedState: dehydrate(queryClient),
-      mainBoardId: context.query.mainBoardId ?? null,
       boardId,
     },
   };
@@ -89,10 +88,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 type Props = {
   boardId: string;
-  mainBoardId?: string;
 };
 
-const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
+const Board: NextPage<Props> = ({ boardId }) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
@@ -103,6 +101,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const setBoardParticipants = useSetRecoilState(boardParticipantsState);
   const setEditColumns = useSetRecoilState(editColumnsState);
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
+
+  // Main Board Id
+  const mainBoardId = recoilBoard?.mainBoard?._id;
 
   // Session Details
   const { data: session } = useSession({ required: false });

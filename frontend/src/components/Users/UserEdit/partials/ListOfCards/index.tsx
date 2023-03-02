@@ -9,18 +9,17 @@ import { useRecoilValue } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
 
 type ListOfCardsProp = {
-  userId: string | undefined;
   isLoading: boolean;
 };
 
-const ListOfCards = React.memo<ListOfCardsProp>(({ userId, isLoading }) => {
+const ListOfCards = React.memo<ListOfCardsProp>(({ isLoading }) => {
   const teamsOfUsers = useRecoilValue(userTeamsListState);
 
   return (
     <ScrollableContent direction="column" gap="24" justify="start">
       <Flex direction="column" gap="8">
         {teamsOfUsers?.map((team: Team) => (
-          <TeamItem key={team.id} team={team} userId={userId} isTeamPage={false} />
+          <TeamItem key={team.id} team={team} isTeamPage={false} />
         ))}
       </Flex>
       {isLoading && (

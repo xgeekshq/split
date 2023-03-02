@@ -119,7 +119,8 @@ const AddCard = React.memo<AddCardProps>(
         : '$primaryBase';
 
     const disabledButton =
-      watchCardTextInput.text?.trim().length === 0 || watchCardTextInput.text === placeholder;
+      watchCardTextInput.text?.trim().length === 0 ||
+      watchCardTextInput.text.trim() === placeholder;
 
     const handleClear = () => {
       if ((isUpdate || !isCard) && cancelUpdate) {

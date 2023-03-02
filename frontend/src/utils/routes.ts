@@ -8,19 +8,22 @@ export const ACCOUNT_ROUTE = '/account';
 export const SETTINGS_ROUTE = '/settings';
 export const ERROR_500_PAGE = '/500';
 export const AZURE_LOGOUT_ROUTE = '/logoutAzure';
+export const LOGIN_GUEST_USER = '/login-guest-user';
 
 export const ROUTES = {
   START_PAGE_ROUTE,
   Dashboard: DASHBOARD_ROUTE,
   Boards: BOARDS_ROUTE,
-  BoardPage: (boardId: string): string => `/boards/${boardId}`,
+  BoardPage: (boardId: string): string => `${BOARDS_ROUTE}/${boardId}`,
+  NewBoard: `${BOARDS_ROUTE}/new`,
   Token: RESET_PASSWORD_ROUTE,
-  TokenPage: (tokenId: string): string => `/reset-password/${tokenId}`,
+  TokenPage: (tokenId: string): string => `${RESET_PASSWORD_ROUTE}/${tokenId}`,
   Teams: TEAMS_ROUTE,
-  TeamPage: (teamId: string): string => `/teams/${teamId}`,
+  TeamPage: (teamId: string): string => `${TEAMS_ROUTE}/${teamId}`,
+  NewTeam: `${TEAMS_ROUTE}/new`,
   Users: USERS_ROUTE,
-  UserEdit: (userId: string) => `/users/${userId}`,
-  UserGuest: (boardId: string) => `/login-guest-user/${boardId}`,
+  UserEdit: (userId: string) => `${USERS_ROUTE}/${userId}`,
+  UserGuest: (boardId: string) => `${LOGIN_GUEST_USER}/${boardId}`,
 };
 
 export const GetPageTitleByUrl = (url: string): string | undefined =>

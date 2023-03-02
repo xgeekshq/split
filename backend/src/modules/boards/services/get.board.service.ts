@@ -1,6 +1,4 @@
 import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
-import Team from 'src/modules/teams/entities/teams.schema';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -19,8 +17,6 @@ import { cleanBoard } from '../utils/clean-board';
 import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
-import { TeamRoles } from 'src/libs/enum/team.roles';
-import User from 'src/modules/users/entities/user.schema';
 import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()

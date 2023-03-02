@@ -110,6 +110,7 @@ const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled,
     if (!isValueEmpty) return 'valid';
 
     return 'default';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dirtyFields[id], errors[id], id, isValueEmpty]);
 
   useEffect(() => {

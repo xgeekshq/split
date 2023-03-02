@@ -59,7 +59,7 @@ const UserDetails = () => {
                   joinedAt={user.joinedAt}
                 />
               </Flex>
-              {data && <UsersEdit userId={user._id} isLoading={isFetching} />}
+              {data && <UsersEdit isLoading={isFetching} />}
             </Flex>
           </ContentSection>
         </QueryError>

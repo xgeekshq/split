@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Flex from '@/components/Primitives/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import Sidebar from '@/components/Sidebar';
-import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
+import { ROUTES } from '@/utils/routes';
 import { REFRESH_TOKEN_ERROR } from '@/utils/constants';
 import MainPageHeader from './partials/MainPageHeader';
 import { Container, ContentSection } from './styles';
@@ -23,37 +23,37 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
     if (!session) return null;
 
     switch (router.pathname) {
-      case DASHBOARD_ROUTE:
+      case ROUTES.Dashboard:
         return (
           <MainPageHeader
             title={`Welcome, ${session.user.firstName}`}
             button={{
-              link: '/boards/new',
+              link: ROUTES.NewBoard,
               label: 'Add new board',
             }}
           />
         );
-      case BOARDS_ROUTE:
+      case ROUTES.Boards:
         return (
           <MainPageHeader
             title="Boards"
             button={{
-              link: '/boards/new',
+              link: ROUTES.NewBoard,
               label: 'Add new board',
             }}
           />
         );
-      case TEAMS_ROUTE:
+      case ROUTES.Teams:
         return (
           <MainPageHeader
             title="Teams"
             button={{
-              link: '/teams/new',
+              link: ROUTES.NewTeam,
               label: 'Create new team',
             }}
           />
         );
-      case USERS_ROUTE:
+      case ROUTES.Users:
         return <MainPageHeader title="Users" />;
       default:
         return null;
