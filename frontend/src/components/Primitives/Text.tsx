@@ -169,6 +169,9 @@ const Text = styled('span', {
       dangerBase: {
         color: '$dangerBase',
       },
+      primary100: {
+        color: '$primary100',
+      },
       primary200: {
         color: '$primary200',
       },

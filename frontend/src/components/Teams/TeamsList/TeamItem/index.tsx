@@ -1,10 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/Primitives/Icon';
-import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
@@ -13,20 +10,12 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
 import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { InnerContainer } from '@/components/Teams/styles';
 
 import RoleSelector from '@/components/Teams/partials/RoleSelector';
 import TeamBoards from './partials/TeamBoards';
 import TeamTitle from './partials/TeamTitle';
 import DeleteTeam from './partials/DeleteTeam';
-
-const InnerContainer = styled(Flex, Box, {
-  px: '$32',
-  py: '$22',
-  backgroundColor: '$white',
-  borderRadius: '$12',
-  position: 'relative',
-  maxHeight: '$76',
-});
 
 export type TeamItemProps = {
   team: Team;

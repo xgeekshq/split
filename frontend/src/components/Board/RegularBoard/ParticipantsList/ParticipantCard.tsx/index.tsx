@@ -3,17 +3,14 @@ import React from 'react';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
-import {
-  IconButton,
-  InnerContainer,
-  StyledMemberTitle,
-} from '@/components/Teams/CreateTeam/CardMember/styles';
+import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { useRouter } from 'next/router';
 import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
+import Button from '@/components/Primitives/Button';
 
 type CardBodyProps = {
   member: BoardUser;
@@ -105,9 +102,9 @@ const ParticipantCard = React.memo<CardBodyProps>(
                 }}
               />
               <Flex align="center" gap="8" justify="start" css={{ width: '50%' }}>
-                <StyledMemberTitle>
+                <Text size="sm" fontWeight="bold" overflow="wrap">
                   {`${member.user.firstName} ${member.user.lastName}`}
-                </StyledMemberTitle>
+                </Text>
               </Flex>
 
               <Flex css={{ width: '50%' }} justify="between">
@@ -127,22 +124,15 @@ const ParticipantCard = React.memo<CardBodyProps>(
                   <Flex align="center" justify="end">
                     <Tooltip content="Remove participant">
                       <Flex justify="end">
-                        <IconButton
-                          onClick={handleRemove}
-                          css={{
-                            '&:hover': {
-                              cursor: 'pointer',
-                            },
-                          }}
-                        >
+                        <Button isIcon onClick={handleRemove}>
                           <Icon
                             name="trash-alt"
+                            size={20}
                             css={{
                               color: '$primary400',
-                              size: '$20',
                             }}
                           />
-                        </IconButton>
+                        </Button>
                       </Flex>
                     </Tooltip>
                   </Flex>

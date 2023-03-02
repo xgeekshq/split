@@ -11,9 +11,7 @@ import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
 import {
-  Container,
   PageHeader,
-  ContentWrapper,
   ContentContainer,
   SubContainer,
   InnerContent,
@@ -21,9 +19,11 @@ import {
   ButtonsContainer,
 } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
-import TipBar from './TipBar';
+import TeamMembersList from '@/components/Teams/Team';
+import Flex from '@/components/Primitives/Flex';
+import TipBar from './partials/TipBar';
 import TeamName from './TeamName';
-import TeamMembersList from './ListCardsMembers';
+import { ListMembers } from './ListMembers';
 
 const CreateTeam = () => {
   const router = useRouter();
@@ -72,6 +72,13 @@ const CreateTeam = () => {
     router.back();
   }, [resetListUsersState, router]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     if (status === 'success') {
       router.push('/teams');
@@ -83,7 +90,7 @@ const CreateTeam = () => {
   }, [status, router]);
 
   return (
-    <Container>
+    <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
       <PageHeader>
         <Text color="primary800" heading={3} fontWeight="bold">
           Create New Team
@@ -92,7 +99,7 @@ const CreateTeam = () => {
           <Icon css={{ color: '$primaryBase' }} name="close" />
         </Button>
       </PageHeader>
-      <ContentWrapper>
+      <Flex css={{ height: '100%', position: 'relative', overflowY: 'auto' }} direction="column">
         <ContentContainer>
           <SubContainer>
             <StyledForm
@@ -106,14 +113,26 @@ const CreateTeam = () => {
               <InnerContent direction="column">
                 <FormProvider {...methods}>
                   <TeamName />
-                  <TeamMembersList />
+                  <Flex css={{ my: '$20' }} direction="column">
+                    <Flex>
+                      <Text css={{ flex: 1 }} heading="3">
+                        Team Members
+                      </Text>
+                      <Button variant="link" size="sm" onClick={handleOpen}>
+                        <Icon name="plus" />
+                        Add/remove members
+                      </Button>
+                    </Flex>
+                  </Flex>
+                  <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+                  <TeamMembersList users={listMembers} hasPermissions />
                 </FormProvider>
               </InnerContent>
             </StyledForm>
           </SubContainer>
           <TipBar />
         </ContentContainer>
-      </ContentWrapper>
+      </Flex>
       <ButtonsContainer gap="24" justify="end">
         <Button
           disabled={isBackButtonDisable}
@@ -127,7 +146,7 @@ const CreateTeam = () => {
           Create team
         </Button>
       </ButtonsContainer>
-    </Container>
+    </Flex>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { ReactElement, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { InnerContainer } from '@/styles/pages/dashboard.styles';
 import { getDashboardHeaderInfo } from '@/api/authService';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -39,7 +38,7 @@ const Dashboard = () => {
           label: 'Add new board',
         }}
       />
-      <InnerContainer direction="column">
+      <Flex direction="column" css={{ mt: '$40' }}>
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
             <Tiles data={data} />
@@ -53,7 +52,7 @@ const Dashboard = () => {
             <RecentRetros userId={session?.user.id as string} />
           </QueryError>
         </Suspense>
-      </InnerContainer>
+      </Flex>
     </Flex>
   );
 };

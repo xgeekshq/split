@@ -3,7 +3,7 @@ import React from 'react';
 import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Flex';
-import PopoverRoleSettings from '../CreateTeam/CardMember/RoleSettings';
+import PopoverRoleSettings from './PopoverRoleSettings';
 
 type RoleSelectorProps = {
   role: string | undefined;
@@ -20,7 +20,7 @@ const RoleSelector = ({
   teamId = undefined,
   canChangeRole = true,
 }: RoleSelectorProps) => (
-  <Flex align="start" gap="8">
+  <Flex gap="8">
     <Text color="primary200" size="sm">
       Role |
     </Text>

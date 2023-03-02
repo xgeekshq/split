@@ -1,49 +1,42 @@
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { LiWhite, TextWhite } from './styles';
+import Text from '@/components/Primitives/Text';
 
 const CreateTeamTipBar = () => (
   <Flex
     direction="column"
     justify="start"
     css={{
-      minHeight: 'calc(100vh - $sizes$92 - $sizes$81)',
       backgroundColor: '$primary800',
-      padding: '$32',
-      paddingTop: '$100',
+      p: '$32',
+      pt: '$100',
       maxWidth: '$384',
-      right: 0,
-      top: '$220',
-      bottom: 0,
     }}
   >
-    <Icon
-      name="blob-idea"
-      css={{
-        width: '47px',
-        height: '$48',
-      }}
-    />
-    <TextWhite heading="6">Team Admin</TextWhite>
+    <Icon name="blob-idea" size={48} />
 
-    <LiWhite as="span">
+    <Text heading="6" color="white" css={{ mt: '$24', mb: '$8' }}>
+      Team Admin
+    </Text>
+    <Text color="primary100" size="sm">
       You will be the team admin of this team. You can also choose other team admins later on out of
       your team members.
-    </LiWhite>
+    </Text>
 
-    <TextWhite css={{ mb: '$8' }} heading="6">
+    <Text heading="6" color="white" css={{ mt: '$24', mb: '$8' }}>
       Stakeholders
-    </TextWhite>
-    <LiWhite as="span">
+    </Text>
+    <Text color="primary100" size="sm">
       If you select the role <b>stakeholder</b>, this person will not be included in sub-team retros
       later on when you create a SPLIT retrospective.
-    </LiWhite>
-    <TextWhite css={{ mb: '$8' }} heading="6">
+    </Text>
+
+    <Text heading="6" color="white" css={{ mt: '$24', mb: '$8' }}>
       New Joiner
-    </TextWhite>
-    <LiWhite as="span">
+    </Text>
+    <Text color="primary100" size="sm">
       The new joiner will not be selected as a responsible for the SPLIT sub-teams.
-    </LiWhite>
+    </Text>
   </Flex>
 );
 

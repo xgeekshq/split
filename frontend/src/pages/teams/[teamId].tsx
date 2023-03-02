@@ -50,7 +50,7 @@ const Team = () => {
     });
 
     setUsers(checkedUsersData);
-  }, [teamData, setTeamUsers]);
+  }, [usersData, setUsers, teamData]);
 
   const { id: userId, isSAdmin } = { ...session?.user };
 
@@ -74,7 +74,7 @@ const Team = () => {
                 <Dots />
               </Flex>
             ) : (
-              <TeamMembersList users={teamUsers} userId={userId} isTeamMember={!hasPermissions} />
+              <TeamMembersList users={teamUsers} hasPermissions={hasPermissions} isTeamPage />
             )}
           </QueryError>
         </Suspense>
