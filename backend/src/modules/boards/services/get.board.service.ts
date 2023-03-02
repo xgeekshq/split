@@ -301,7 +301,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	private createPublicBoardUsers(boardId: string, user: User) {
 		// if signed in user accesses the board but isn't a board user, create one
-		if (!user.isAnonymous) this.createBoardUserService.createBoardUser(boardId, user._id);
+		if (!user.isAnonymous) {
+			// Super Admin shouldn't automatically be added to the board as a boardUser
+			if (!user.isSAdmin) this.createBoardUserService.createBoardUser(boardId, user._id);
+
+			return;
+		}
 
 		// if guest user is already registered but isn't a board user, create one
 		return this.createBoardUserAndSendAccessToken(boardId, user._id);
