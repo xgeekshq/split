@@ -531,7 +531,11 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		const frontendUrl = this.configService.getOrThrow(FRONTEND_URL);
 
 		if (phase === BoardPhases.VOTINGPHASE) {
-			return `Hello team, <${frontendUrl}/boards/${boardId}|here> is the ${month} retro board \n\n <${frontendUrl}/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+			return (
+				`<!here> Hello team :xgeeks:,\n\nThe ${month} Retro Board is now ready to vote <${frontendUrl}/boards/${boardId}|HERE>, take a look and please add your votes.\n\n` +
+				`If you spot any problem, remember to help the team, opening an issue on <https://github.com/xgeekshq/split/issues |split github repo> or reach out to the team using <#split_dev> Slack channel.\n\n` +
+				`Thank you for your collaboration! :ok_hand: Keep rocking :rocket:`
+			);
 		}
 
 		if (phase === BoardPhases.SUBMITED) {
@@ -544,7 +548,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			});
 
 			return (
-				`Hello team, the ${month} <${frontendUrl}/boards/${boardId}|board> was submitted` +
+				`Hello team :xgeeks:,\nthe ${month} <${frontendUrl}/boards/${boardId}|board> was submitted` +
 				(actionPoints ? 'and these are the action points extracted:' : '') +
 				'\n' +
 				actionPoints +
