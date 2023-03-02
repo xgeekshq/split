@@ -14,14 +14,20 @@ export class BoardUserRepository
 	constructor(@InjectModel(BoardUser.name) private model: Model<BoardUserDocument>) {
 		super(model);
 	}
+
 	getAllBoardsIdsOfUser(userId: string) {
 		return this.model.find({ user: userId }).select('board').lean().exec();
 	}
-	deleteManyBoardUsers(
+
+	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[],
 		withSession: boolean,
 		boardId: ObjectId | string
 	) {
 		return this.deleteMany({ board: { $in: [...dividedBoards, boardId] } }, withSession);
+	}
+
+	deleteBoardUsers(boardId: string, withSession: boolean) {
+		return this.deleteMany({ board: boardId }, withSession);
 	}
 }

@@ -28,7 +28,7 @@ export class BoardRepository
 	}
 
 	getMainBoard(boardId: string) {
-		return this.findOneByField({ dividedBoards: { $in: boardId } }, 'title');
+		return this.findOneByFieldWithQuery({ dividedBoards: { $in: boardId } }, 'title');
 	}
 
 	getBoardData(boardId: string) {
