@@ -20,10 +20,10 @@ export default class BoardUser extends BaseModel {
 	role!: string;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
-	user!: User | ObjectId;
+	user!: User | ObjectId | string;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'Board', nullable: false })
-	board!: ObjectId;
+	board!: ObjectId | string;
 
 	@Prop({ nullable: false })
 	votesCount!: number;

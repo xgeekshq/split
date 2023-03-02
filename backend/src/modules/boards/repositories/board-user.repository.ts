@@ -53,7 +53,7 @@ export class BoardUserRepository
 
 	/* DELETE BOARD USERS */
 	deleteDividedBoardUsers(
-		dividedBoards: Board[] | ObjectId[],
+		dividedBoards: Board[] | ObjectId[] | string[],
 		withSession: boolean,
 		boardId: ObjectId | string
 	) {

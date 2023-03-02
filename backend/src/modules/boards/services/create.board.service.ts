@@ -25,12 +25,13 @@ import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
+import Board from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 
 export interface CreateBoardDto {
 	maxUsers: number;
@@ -44,7 +45,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	private logger = new Logger(CreateBoardServiceImpl.name);
 
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
@@ -58,12 +58,15 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface
+		private readonly boardRepository: BoardRepositoryInterface,
+		@Inject(TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
 		return Promise.all(
-			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
+			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
+			// newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
 		);
 	}
 
@@ -90,7 +93,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		userId: string,
 		isSubBoard = false,
 		haveSubBoards = true
-	): Promise<BoardDocument> {
+	): Promise<Board> {
 		const { dividedBoards = [], team } = boardData;
 
 		if (haveSubBoards) {
@@ -105,7 +108,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				postAnonymously: true
 			}));
 
-			return this.boardModel.create({
+			return this.boardRepository.create({
 				...boardData,
 				createdBy: userId,
 				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
@@ -114,8 +117,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			});
 		}
 
-		return this.boardModel.create({
+		return this.boardRepository.create({
 			...boardData,
+			dividedBoards: [],
 			createdBy: userId,
 			isSubBoard
 		});
@@ -146,7 +150,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			: teamUser.role;
 	}
 
-	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<BoardDocument> {
+	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;

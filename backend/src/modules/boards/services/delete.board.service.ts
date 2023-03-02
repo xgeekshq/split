@@ -42,7 +42,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
-	async deleteSubBoards(dividedBoards: Board[] | ObjectId[], boardSession: boolean) {
+	async deleteSubBoards(dividedBoards: Board[] | ObjectId[] | string[], boardSession: boolean) {
 		const deletedCount = await this.boardRepository.deleteManySubBoards(
 			dividedBoards,
 			boardSession
@@ -52,7 +52,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	}
 
 	async deleteBoardUsers(
-		dividedBoards: Board[] | ObjectId[],
+		dividedBoards: Board[] | ObjectId[] | string[],
 		boardSession: boolean,
 		boardId: ObjectId | string
 	) {
@@ -78,7 +78,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	}
 
 	async delete(boardId: string) {
-		const board = await this.boardRepository.getBoard(boardId);
+		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');

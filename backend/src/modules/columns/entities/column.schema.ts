@@ -7,7 +7,7 @@ export type ColumnDocument = Column & mongoose.Document;
 
 @Schema()
 export default class Column {
-	_id: string;
+	_id?: string;
 
 	@Prop({ nullable: false })
 	title!: string;
@@ -15,8 +15,8 @@ export default class Column {
 	@Prop({ nullable: false })
 	color!: string;
 
-	@Prop({ nullable: false, type: [CardSchema] })
-	cards!: Card[];
+	@Prop({ nullable: true, type: [CardSchema] })
+	cards?: Card[];
 
 	@Prop({ nullable: false, default: 'Write your comment here...' })
 	cardText!: string;

@@ -177,7 +177,10 @@ export class BoardRepository
 	}
 
 	/* DELETE BOARD */
-	deleteManySubBoards(dividedBoards: Board[] | ObjectId[], withSession: boolean): Promise<number> {
+	deleteManySubBoards(
+		dividedBoards: Board[] | ObjectId[] | string[],
+		withSession: boolean
+	): Promise<number> {
 		return this.deleteMany({ _id: { $in: dividedBoards } }, withSession);
 	}
 
