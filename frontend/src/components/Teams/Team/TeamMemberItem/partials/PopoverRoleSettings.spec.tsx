@@ -14,7 +14,7 @@ jest.mock('next/router', () => ({
 const render = (props: PopoverRoleSettingsProps) =>
   renderWithProviders(<PopoverRoleSettings {...props} />, { routerOptions: router });
 
-describe('Components/PopoverRoleSettings', () => {
+describe('Components/Teams/Team/TeamMemberItem/PopoverRoleSettings', () => {
   it('should render correctly', () => {
     // Arrange
     const team = TeamFactory.create();

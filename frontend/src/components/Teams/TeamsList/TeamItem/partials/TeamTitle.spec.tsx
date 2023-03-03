@@ -14,7 +14,7 @@ const render = (props: TeamTitleProps) =>
     </RouterContext.Provider>,
   );
 
-describe('Components/TeamTitle', () => {
+describe('Components/Teams/TeamsList/TeamItem/TeamTitle', () => {
   let defaultProps: TeamTitleProps;
   beforeEach(() => {
     const team = TeamFactory.create();

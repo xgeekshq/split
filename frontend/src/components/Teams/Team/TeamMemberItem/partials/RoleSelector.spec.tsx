@@ -14,7 +14,7 @@ jest.mock('next/router', () => ({
 const render = (props: RoleSelectorProps) =>
   renderWithProviders(<RoleSelector {...props} />, { routerOptions: router });
 
-describe('Components/RoleSelector', () => {
+describe('Components/Teams/Team/TeamMemberItem/RoleSelector', () => {
   let defaultProps: RoleSelectorProps;
   beforeEach(() => {
     const team = TeamFactory.create();

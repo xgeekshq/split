@@ -9,7 +9,7 @@ const router = createMockRouter({});
 const render = (props: DeleteTeamProps) =>
   renderWithProviders(<DeleteTeam {...props} />, { routerOptions: router });
 
-describe('Components/DeleteTeam', () => {
+describe('Components/Teams/TeamsList/TeamItem/DeleteTeam', () => {
   it('should handle onClick events', () => {
     // Arrange
     const team = TeamFactory.create();

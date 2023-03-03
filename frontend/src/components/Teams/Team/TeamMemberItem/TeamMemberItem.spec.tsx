@@ -15,7 +15,7 @@ const DEFAULT_PROPS = {
 const render = (props: TeamMemberItemProps) =>
   renderWithProviders(<TeamMemberItem {...props} />, { routerOptions: router });
 
-describe('Components/Teams/TeamMemberItem', () => {
+describe('Components/Teams/Team/TeamMemberItem', () => {
   it('should render correctly', () => {
     // Arrange
     const teamMemberItemProps = { ...DEFAULT_PROPS };

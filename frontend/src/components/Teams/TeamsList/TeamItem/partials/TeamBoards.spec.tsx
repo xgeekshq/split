@@ -13,7 +13,7 @@ const render = (props: TeamBoardsProps) =>
     </RouterContext.Provider>,
   );
 
-describe('Components/Sidebar/Item', () => {
+describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
   it('should render No boards', () => {
     // Arrange
     const teamBoardsProps = {

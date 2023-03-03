@@ -11,7 +11,7 @@ const router = createMockRouter({});
 const render = (props: TeamHeaderProps) =>
   renderWithProviders(<TeamHeader {...props} />, { routerOptions: router });
 
-describe('Components/TeamHeader', () => {
+describe('Components/Teams/Team/TeamHeader', () => {
   let defaultProps: TeamHeaderProps;
   beforeEach(() => {
     const team = TeamFactory.create();
