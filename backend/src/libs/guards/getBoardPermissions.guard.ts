@@ -24,23 +24,23 @@ export class GetBoardGuard implements CanActivate {
 		const permissions = this.reflector.get<string>('permissions', context.getHandler());
 		const request = context.switchToHttp().getRequest();
 
-		const user = request.user;
+		const { _id: userId, isAnonymous, isSAdmin } = request.user;
 		const boardId: string = request.params.boardId;
 
 		try {
 			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
-			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, user._id);
+			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, userId);
 
 			if (isPublic || boardUserFound.length) {
 				return true;
 			}
 
 			if (!boardUserFound) {
-				const teamUser = (team as Team).users.find(
-					(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === user._id.toString()
+				const { role: teamRole } = (team as Team).users.find(
+					(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === userId.toString()
 				);
 
-				return !user.isAnonymous && (user.isSAdmin || permissions.includes(teamUser.role));
+				return !isAnonymous && (isSAdmin || permissions.includes(teamRole));
 			}
 		} catch (error) {
 			throw new ForbiddenException();
