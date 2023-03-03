@@ -294,8 +294,8 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
 
   const shouldShowRightSection =
-    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITED;
-  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITED;
+    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;

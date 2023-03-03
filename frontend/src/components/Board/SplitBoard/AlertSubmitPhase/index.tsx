@@ -25,7 +25,7 @@ const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
     if (isAdmin) {
       const updateBoardPhase: UpdateBoardPhase = {
         boardId,
-        phase: BoardPhases.SUBMITED,
+        phase: BoardPhases.SUBMITTED,
       };
       updateBoardPhaseMutation.mutate(updateBoardPhase);
     }

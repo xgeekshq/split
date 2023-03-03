@@ -199,7 +199,7 @@ const CardFooter = ({
                 (maxVotes && user?.votesCount === maxVotes) ||
                 hideCards ||
                 phase === BoardPhases.ADDCARDS ||
-                phase === BoardPhases.SUBMITED
+                phase === BoardPhases.SUBMITTED
               }
               onClick={handleAddVote}
             >
@@ -235,7 +235,7 @@ const CardFooter = ({
                 votesOfUserInThisCard === 0 ||
                 hideCards ||
                 phase === BoardPhases.ADDCARDS ||
-                phase === BoardPhases.SUBMITED
+                phase === BoardPhases.SUBMITTED
               }
               onClick={handleDeleteVote}
             >

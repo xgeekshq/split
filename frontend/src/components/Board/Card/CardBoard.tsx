@@ -119,7 +119,7 @@ const CardBoard = React.memo<CardBoardProps>(
           isSubmited ||
           (isMainboard && !hasAdminRole) ||
           (isMainboard && hideCards) ||
-          phase === BoardPhases.SUBMITED
+          phase === BoardPhases.SUBMITTED
         }
       >
         {(provided) => (
@@ -194,7 +194,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         {card.text}
                       </Text>
                       {!isSubmited &&
-                        phase !== BoardPhases.SUBMITED &&
+                        phase !== BoardPhases.SUBMITTED &&
                         ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
                           <PopoverCardSettings
                             boardId={boardId}

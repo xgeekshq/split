@@ -538,7 +538,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			);
 		}
 
-		if (phase === BoardPhases.SUBMITED) {
+		if (phase === BoardPhases.SUBMITTED) {
 			const { cards } = columns[2];
 			let actionPoints = '';
 

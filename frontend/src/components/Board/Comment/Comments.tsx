@@ -102,7 +102,7 @@ const Comments = React.memo(
             />
           </Flex>
         )}
-        {phase !== BoardPhases.SUBMITED &&
+        {phase !== BoardPhases.SUBMITTED &&
           !isCreateCommentOpened &&
           !isSubmited &&
           (!isMainboard || hasAdminRole) && (

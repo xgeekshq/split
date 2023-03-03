@@ -85,7 +85,7 @@ const Comment: React.FC<CommentProps> = React.memo(
                 {comment.text}
               </Text>
               {!isSubmited &&
-                phase !== BoardPhases.SUBMITED &&
+                phase !== BoardPhases.SUBMITTED &&
                 ((userId === comment.createdBy._id && !isMainboard) || hasAdminRole) && (
                   <PopoverCommentSettings
                     handleDeleteComment={handleDeleteComment}
