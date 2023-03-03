@@ -6,6 +6,7 @@ import {
   createBoardRequest,
   deleteBoardRequest,
   getBoardRequest,
+  updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
 import { newBoardState } from '@/store/board/atoms/board.atom';
@@ -142,30 +143,36 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
+  const updateBoardPhaseMutation = useMutation(updateBoardPhaseRequest, {
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+    },
+    onError: (_data, variables) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      setToastState({
+        open: true,
+        content: 'Error updating the phase',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
   const updateBoardPhase = (data: UpdateBoardPhase) => {
-    setReady(false);
-    queryClient.setQueryData<{ board: BoardType } | undefined>(
-      getBoardQuery(data.boardId),
-      (old: { board: BoardType } | undefined) => {
-        if (old) {
-          setToastState({
-            open: true,
-            content: `${data.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''} ${
-              old.board.title
-            } ${data.phase === BoardPhases.SUBMITED ? ' was submited' : ''}`,
-            type: ToastStateEnum.SUCCESS,
-          });
-          return {
-            board: {
-              ...old.board,
-              phase: data.phase,
-            },
-          };
-        }
-        return old;
-      },
-    );
-    setReady(true);
+    let phaseMessage: string = '';
+    if (data.phase === BoardPhases.ADDCARDS) {
+      phaseMessage = 'to add cards';
+    } else if (data.phase === BoardPhases.VOTINGPHASE) {
+      phaseMessage = 'to voting';
+    } else {
+      phaseMessage = 'to submitted';
+    }
+
+    setToastState({
+      open: true,
+      content: `Board phase updated ${phaseMessage}`,
+      type: ToastStateEnum.SUCCESS,
+    });
+    queryClient.invalidateQueries(['board', { id: data.boardId }]);
   };
 
   return {
@@ -175,6 +182,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     fetchBoard,
     setQueryDataAddBoardUser,
     updateBoardPhase,
+    updateBoardPhaseMutation,
   };
 };
 

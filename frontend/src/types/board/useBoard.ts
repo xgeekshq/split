@@ -7,6 +7,7 @@ import BoardType, {
   UpdateBoardPhase,
   UpdateBoardType,
 } from './board';
+import UpdateBoardPhaseDto from './updateBoardPhase.dto';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
@@ -27,4 +28,6 @@ export default interface UseBoardType {
   setQueryDataAddBoardUser: (data: BoardUser) => void;
 
   updateBoardPhase: (data: UpdateBoardPhase) => void;
+
+  updateBoardPhaseMutation: UseMutationResult<void, unknown, UpdateBoardPhaseDto, unknown>;
 }

@@ -1,4 +1,3 @@
-import { updateBoardPhaseRequest } from '@/api/boardService';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
+import useBoard from '@/hooks/useBoard';
 import { UpdateBoardPhase } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 
@@ -19,13 +19,15 @@ type Props = {
 };
 
 const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
-  const handleVoteClick = () => {
+  const { updateBoardPhaseMutation } = useBoard({ autoFetchBoard: false });
+
+  const handleSubmitClick = () => {
     if (isAdmin) {
       const updateBoardPhase: UpdateBoardPhase = {
         boardId,
         phase: BoardPhases.SUBMITED,
       };
-      updateBoardPhaseRequest(updateBoardPhase);
+      updateBoardPhaseMutation.mutate(updateBoardPhase);
     }
   };
 
@@ -46,7 +48,7 @@ const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
         </Text>
         <Flex gap="16" justify="end" css={{ mt: '$24' }}>
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleVoteClick}>submit</AlertDialogAction>
+          <AlertDialogAction onClick={handleSubmitClick}>submit</AlertDialogAction>
         </Flex>
       </AlertDialogContent>
     </AlertDialog>

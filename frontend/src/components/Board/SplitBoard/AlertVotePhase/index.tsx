@@ -1,4 +1,3 @@
-import { updateBoardPhaseRequest } from '@/api/boardService';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
+import useBoard from '@/hooks/useBoard';
 import { UpdateBoardPhase } from '@/types/board/board';
 import EmitEvent from '@/types/events/emit-event.type';
 import { BoardPhases } from '@/utils/enums/board.phases';
@@ -21,13 +21,14 @@ type Props = {
 };
 
 const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
+  const { updateBoardPhaseMutation } = useBoard({ autoFetchBoard: false });
   const handleVoteClick = () => {
     if (isAdmin) {
       const updateBoardPhase: UpdateBoardPhase = {
         boardId,
         phase: BoardPhases.VOTINGPHASE,
       };
-      updateBoardPhaseRequest(updateBoardPhase);
+      updateBoardPhaseMutation.mutate(updateBoardPhase);
     }
   };
 
