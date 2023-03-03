@@ -17,7 +17,8 @@ export class BoardRepository
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
 	}
-	updatePhase(boardId, phase): Promise<Board> {
+  
+	updatePhase(boardId: string, phase: BoardPhases): Promise<Board> {
 		const setValues =
 			phase === BoardPhases.ADDCARDS
 				? { phase, submitedAt: null }

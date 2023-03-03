@@ -9,10 +9,12 @@ import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
 import Icon from '@/components/Primitives/Icon';
+import Tooltip from '@/components/Primitives/Tooltip';
+import { useResizeDetector } from 'react-resize-detector';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';
 import SortMenu from './partials/SortMenu';
-import { CardsContainer, Container, OuterContainer, Title } from './styles';
+import { CardsContainer, Container, OuterContainer, Title, TitleContainer } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
 import AlertDeleteColumn from './partials/AlertDeleteColumn';
@@ -26,6 +28,7 @@ type ColumMemoProps = {
   columnIndex: number;
   isSubBoard?: boolean;
   phase?: string;
+  hasMoreThanThreeColumns: boolean;
 } & ColumnBoardType;
 
 const Column = React.memo<ColumMemoProps>(
@@ -52,6 +55,7 @@ const Column = React.memo<ColumMemoProps>(
     columnIndex,
     isSubBoard,
     phase,
+    hasMoreThanThreeColumns,
   }) => {
     const [filter, setFilter] = useState<'asc' | 'desc' | undefined>();
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
@@ -61,6 +65,8 @@ const Column = React.memo<ColumMemoProps>(
       deleteCards: false,
     });
     const [dialogType, setDialogType] = useState('ColumnName');
+    const [showTooltip, setShowTooltip] = useState(false);
+    const { width, ref } = useResizeDetector({ handleWidth: true });
 
     const handleDialogNameChange = (open: boolean, type: string) => {
       setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
@@ -116,6 +122,14 @@ const Column = React.memo<ColumMemoProps>(
       }
     }, [columnId, filter, setFilteredColumns]);
 
+    useEffect(() => {
+      setShowTooltip(false);
+
+      if (ref.current && ref.current.offsetWidth < ref.current?.scrollWidth) {
+        setShowTooltip(true);
+      }
+    }, [ref, width]);
+
     return (
       <>
         <Draggable
@@ -130,13 +144,29 @@ const Column = React.memo<ColumMemoProps>(
                 {(provided) => (
                   <Container direction="column" elevation="2">
                     <Flex css={{ pt: '$20', px: '$20', pb: '$16' }} justify="between">
-                      <Flex>
+                      <Flex css={{ width: '100%' }}>
                         {hasAdminRole && isRegularBoard && (
                           <Flex {...providedColumn.dragHandleProps}>
                             <Icon name="arrange" size={24} />
                           </Flex>
                         )}
-                        <Title heading="4">{title}</Title>
+                        <TitleContainer
+                          css={{
+                            width: hasMoreThanThreeColumns ? '$130' : '$237',
+                          }}
+                        >
+                          {showTooltip ? (
+                            <Tooltip content={title}>
+                              <Title heading="4" ref={ref}>
+                                {title}
+                              </Title>
+                            </Tooltip>
+                          ) : (
+                            <Title heading="4" ref={ref}>
+                              {title}
+                            </Title>
+                          )}
+                        </TitleContainer>
                         <Text
                           color="primary400"
                           size="xs"
@@ -145,6 +175,7 @@ const Column = React.memo<ColumMemoProps>(
                             border: '1px solid $colors$primary100',
                             px: '$8',
                             py: '$2',
+                            ml: '$10',
                           }}
                         >
                           {countColumnCards(cards)} cards

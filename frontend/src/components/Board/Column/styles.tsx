@@ -43,8 +43,19 @@ const OuterContainer = styled(Flex, {
   width: '100%',
 });
 
-const Title = styled(Text, {
-  px: '$8',
+const TitleContainer = styled(Flex, {
+  '@media (min-width: 1750px)': { width: 'fit-content !important' },
+  '@media (max-width: 1300px)': { width: '$150 !important' },
 });
 
-export { CardsContainer, Container, OuterContainer, Title };
+const Title = styled(Text, {
+  px: '$8',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  '@hover': {
+    cursor: 'default',
+  },
+});
+
+export { CardsContainer, Container, OuterContainer, TitleContainer, Title };

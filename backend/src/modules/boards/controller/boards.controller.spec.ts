@@ -1,3 +1,4 @@
+import { createBoardUserService } from './../boards.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -31,8 +32,11 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
+import { JwtService } from '@nestjs/jwt';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -66,6 +70,9 @@ describe('BoardsController', () => {
 				boardRepository,
 				userRepository,
 				updateTeamService,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
@@ -113,6 +120,14 @@ describe('BoardsController', () => {
 					useValue: {
 						execute: jest.fn()
 					}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				}
 			]
 		}).compile();

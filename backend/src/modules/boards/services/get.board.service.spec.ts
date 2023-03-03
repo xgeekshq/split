@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable max-classes-per-file */
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { ConfigService } from '@nestjs/config';
+import { createBoardUserService } from './../boards.providers';
+import { JwtService } from '@nestjs/jwt';
+import { getTokenAuthService } from './../../auth/auth.providers';
 import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Document, LeanDocument, Types } from 'mongoose';
+import { Document, LeanDocument } from 'mongoose';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
@@ -13,10 +16,11 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fakeBoards = BoardFactory.createMany(2);
 
 describe('GetBoardServiceImpl', () => {
@@ -25,6 +29,10 @@ describe('GetBoardServiceImpl', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
+				createBoardUserService,
+				updateUserService,
+				ConfigService,
+				getTokenAuthService,
 				getTeamService,
 				getBoardService,
 				teamUserRepository,
@@ -51,6 +59,14 @@ describe('GetBoardServiceImpl', () => {
 				{
 					provide: getModelToken('User'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				},
 				GetBoardServiceImpl
 			]

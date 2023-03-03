@@ -1,3 +1,4 @@
+import { User } from '@/types/user/user';
 import { Session } from 'next-auth/core/types';
 import { NextRouter } from 'next/router';
 import { SessionUserFactory } from '../factories/user';
@@ -32,9 +33,9 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
   };
 }
 
-export function createMockSession(session?: Partial<Session>): Session {
+export function createMockSession(session?: Partial<Session>, user?: User): Session {
   return {
-    user: SessionUserFactory.create({ isSAdmin: false }),
+    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: false }),
     expires: new Date().toISOString(),
     strategy: 'local',
     error: '',
