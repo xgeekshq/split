@@ -6,7 +6,7 @@ import Flex from '@/components/Primitives/Flex';
 import PopoverRoleSettings from './PopoverRoleSettings';
 
 type RoleSelectorProps = {
-  role: string | undefined;
+  role: TeamUserRoles | undefined;
   userId: string;
   isTeamPage?: boolean;
   teamId?: string;
