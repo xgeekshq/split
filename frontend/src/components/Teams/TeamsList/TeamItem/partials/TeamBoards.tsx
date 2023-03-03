@@ -5,7 +5,7 @@ import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
 
-type TeamBoardsProps = {
+export type TeamBoardsProps = {
   havePermissions: boolean;
   team: Team;
 };
