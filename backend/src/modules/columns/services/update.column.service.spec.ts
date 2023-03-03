@@ -1,3 +1,8 @@
+import { ConfigService } from '@nestjs/config';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
+import { createBoardUserService } from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
@@ -22,7 +27,8 @@ import UpdateColumnServiceImpl from './update.column.service';
 import DeleteCardServiceImpl from 'src/modules/cards/services/delete.card.service';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
+import { JwtService } from '@nestjs/jwt';
 
 const fakeBoards = BoardFactory.createMany(2, 3, 2);
 
@@ -53,6 +59,9 @@ describe('UpdateColumnService', () => {
 				boardUserRepository,
 				teamRepository,
 				teamUserRepository,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
 				{
 					provide: getModelToken(Board.name),
 					useValue: {}
@@ -72,6 +81,18 @@ describe('UpdateColumnService', () => {
 				{
 					provide: getModelToken('TeamUser'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
+				},
+				{
+					provide: ConfigService,
+					useValue: configService
 				}
 			]
 		}).compile();

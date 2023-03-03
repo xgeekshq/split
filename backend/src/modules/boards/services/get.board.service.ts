@@ -57,18 +57,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
 
-	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
-		const [boardIds, teamIds] = await Promise.all([
-			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
-			this.getTeamService.getTeamsOfUser(userId)
-		]);
-
-		return {
-			boardIds: boardIds.map((boardUser) => boardUser.board),
-			teamIds: teamIds.map((team) => team._id)
-		};
-	}
-
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 
@@ -125,21 +113,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.getBoards(false, query, page, size);
 	}
 
-	async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
-		const count = await this.boardRepository.getCountPage(query);
-
-		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
-		try {
-			const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
-
-			return { boards: boards ?? [], hasNextPage, page };
-		} catch (e) {
-			this.logger.error(BOARDS_NOT_FOUND);
-		}
-
-		return { boards: [], hasNextPage, page };
-	}
-
 	async getBoard(boardId: string, userId: string) {
 		let board = await this.boardRepository.getBoardData(boardId);
 
@@ -167,6 +140,53 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		if (guestUser) return { guestUser, board };
 
 		return { board };
+	}
+
+	async countBoards(userId: string) {
+		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
+
+		return await this.boardRepository.countBoards(boardIds, teamIds);
+	}
+
+	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
+		const [boardIds, teamIds] = await Promise.all([
+			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
+			this.getTeamService.getTeamsOfUser(userId)
+		]);
+
+		return {
+			boardIds: boardIds.map((boardUser) => boardUser.board),
+			teamIds: teamIds.map((team) => team._id)
+		};
+	}
+
+	getAllBoardsByTeamId(teamId: string) {
+		return this.boardRepository.getAllBoardsByTeamId(teamId);
+	}
+
+	getBoardPopulated(boardId: string, populate?: PopulateType) {
+		return this.boardRepository.getBoardPopulated(boardId, populate);
+	}
+
+	getBoardById(boardId: string) {
+		return this.boardRepository.getBoard(boardId);
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
+		const count = await this.boardRepository.getCountPage(query);
+
+		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
+		try {
+			const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
+
+			return { boards: boards ?? [], hasNextPage, page };
+		} catch (e) {
+			this.logger.error(BOARDS_NOT_FOUND);
+		}
+
+		return { boards: [], hasNextPage, page };
 	}
 
 	private async getBoardUsers(board: string, user: string) {
@@ -256,23 +276,5 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			!user.isAnonymous &&
 			(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
 		);
-	}
-
-	async countBoards(userId: string) {
-		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
-
-		return await this.boardRepository.countBoards(boardIds, teamIds);
-	}
-
-	getAllBoardsByTeamId(teamId: string) {
-		return this.boardRepository.getAllBoardsByTeamId(teamId);
-	}
-
-	getBoardPopulated(boardId: string, populate?: PopulateType) {
-		return this.boardRepository.getBoardPopulated(boardId, populate);
-	}
-
-	getBoardById(boardId: string) {
-		return this.boardRepository.getBoard(boardId);
 	}
 }

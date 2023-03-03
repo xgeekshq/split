@@ -36,41 +36,6 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
-	async deleteSubBoards(dividedBoards: Board[] | ObjectId[] | string[], boardSession: boolean) {
-		const deletedCount = await this.boardRepository.deleteManySubBoards(
-			dividedBoards,
-			boardSession
-		);
-
-		if (deletedCount !== dividedBoards.length) throw Error(DELETE_FAILED);
-	}
-
-	async deleteBoardUsers(
-		dividedBoards: Board[] | ObjectId[] | string[],
-		boardSession: boolean,
-		boardId: ObjectId | string
-	) {
-		const deletedCount = await this.boardUserRepository.deleteDividedBoardUsers(
-			dividedBoards,
-			boardSession,
-			boardId
-		);
-
-		if (deletedCount <= 0) throw Error(DELETE_FAILED);
-	}
-
-	async deleteBoard(boardId: string, boardSession: boolean) {
-		const result = await this.boardRepository.deleteBoard(boardId, boardSession);
-
-		if (!result) throw Error(DELETE_FAILED);
-
-		return {
-			dividedBoards: result.dividedBoards,
-			_id: result._id,
-			slackEnable: result.slackEnable
-		};
-	}
-
 	async delete(boardId: string) {
 		const board = await this.getBoardService.getBoardById(boardId);
 
@@ -97,6 +62,46 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		});
 
 		return true;
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async deleteSubBoards(
+		dividedBoards: Board[] | ObjectId[] | string[],
+		boardSession: boolean
+	) {
+		const deletedCount = await this.boardRepository.deleteManySubBoards(
+			dividedBoards,
+			boardSession
+		);
+
+		if (deletedCount !== dividedBoards.length) throw Error(DELETE_FAILED);
+	}
+
+	private async deleteBoardUsers(
+		dividedBoards: Board[] | ObjectId[] | string[],
+		boardSession: boolean,
+		boardId: ObjectId | string
+	) {
+		const deletedCount = await this.boardUserRepository.deleteDividedBoardUsers(
+			dividedBoards,
+			boardSession,
+			boardId
+		);
+
+		if (deletedCount <= 0) throw Error(DELETE_FAILED);
+	}
+
+	private async deleteBoard(boardId: string, boardSession: boolean) {
+		const result = await this.boardRepository.deleteBoard(boardId, boardSession);
+
+		if (!result) throw Error(DELETE_FAILED);
+
+		return {
+			dividedBoards: result.dividedBoards,
+			_id: result._id,
+			slackEnable: result.slackEnable
+		};
 	}
 
 	private async deleteBoardBoardUsersAndSchedules(boardId: string, isMainBoard: boolean) {

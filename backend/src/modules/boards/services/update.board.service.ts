@@ -60,38 +60,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private configService: ConfigService
 	) {}
 
-	/**
-	 * Method to get current responsible to a specific board
-	 * @param boardId String
-	 * @return Board User
-	 * @private
-	 */
-	private async getBoardResponsibleInfo(boardId: string): Promise<ResponsibleType | undefined> {
-		const boardUser = await this.boardUserRepository.getBoardResponsible(boardId);
-
-		if (!boardUser) {
-			return undefined;
-		}
-
-		const user = boardUser?.user as User;
-
-		return { id: user._id, email: user.email };
-	}
-
-	/**
-	 * Method to get the highest value of votesCount on Board Users
-	 * @param boardId String
-	 * @return number
-	 */
-	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		const votesCount = await this.boardUserRepository.getVotesCount(boardId);
-
-		return votesCount.reduce(
-			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
-			0
-		);
-	}
-
 	async update(boardId: string, boardData: UpdateBoardDto) {
 		const board = await this.boardRepository.getBoard(boardId);
 
@@ -226,7 +194,142 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return updatedBoard;
 	}
 
-	async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: Board) {
+	async mergeBoards(subBoardId: string, userId: string) {
+		const [subBoard, board] = await Promise.all([
+			this.boardRepository.getBoard(subBoardId),
+			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
+		]);
+
+		if (!subBoard || !board || subBoard.submitedByUser) return null;
+		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
+
+		if (!team) return null;
+
+		const newSubColumns = this.generateNewSubColumns(subBoard as Board);
+
+		const newColumns = [...(board as Board).columns];
+		for (let i = 0; i < newColumns.length; i++) {
+			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
+		}
+
+		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
+
+		const result = await this.boardRepository.updateMergedBoard(board._id, newColumns);
+
+		if (board.slackChannelId && board.slackEnable) {
+			this.slackCommunicationService.executeMergeBoardNotification({
+				responsiblesChannelId: board.slackChannelId,
+				teamNumber: subBoard.boardNumber,
+				isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
+				boardId: subBoardId,
+				mainBoardId: board._id
+			});
+		}
+
+		return result;
+	}
+
+	updateChannelId(teams: TeamDto[]) {
+		Promise.all(
+			teams.map((team) => this.boardRepository.updatedChannelId(team.boardId, team.channelId))
+		);
+	}
+
+	async updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
+		try {
+			let createdBoardUsers: BoardUser[] = [];
+
+			if (addUsers.length > 0) createdBoardUsers = await this.addBoardUsers(addUsers);
+
+			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
+
+			return createdBoardUsers;
+		} catch (error) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
+		const user = boardUserToUpdateRole.user as unknown as User;
+
+		const updatedBoardUsers = await this.boardUserRepository.updateBoardUserRole(
+			boardUserToUpdateRole.board,
+			user._id,
+			boardUserToUpdateRole.role
+		);
+
+		if (!updatedBoardUsers) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return updatedBoardUsers;
+	}
+
+	async updatePhase(boardPhaseDto: BoardPhaseDto) {
+		try {
+			const { boardId, phase } = boardPhaseDto;
+			const {
+				slackEnable,
+				phase: currentPhase,
+				team
+			} = await this.boardRepository.updatePhase(boardId, phase);
+
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+
+			//Sends message to SLACK
+			if (
+				(team as Team).name === 'xgeeks' &&
+				slackEnable === true &&
+				currentPhase !== BoardPhases.ADDCARDS &&
+				this.configService.getOrThrow(SLACK_ENABLE)
+			) {
+				const message = this.generateMessage(currentPhase, boardId);
+				const slackMessageDto = new SlackMessageDto(
+					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+					message
+				);
+				this.slackSendMessageService.execute(slackMessageDto);
+			}
+		} catch (err) {
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	/**
+	 * Method to get current responsible to a specific board
+	 * @param boardId String
+	 * @return Board User
+	 * @private
+	 */
+	private async getBoardResponsibleInfo(boardId: string): Promise<ResponsibleType | undefined> {
+		const boardUser = await this.boardUserRepository.getBoardResponsible(boardId);
+
+		if (!boardUser) {
+			return undefined;
+		}
+
+		const user = boardUser?.user as User;
+
+		return { id: user._id, email: user.email };
+	}
+
+	/**
+	 * Method to get the highest value of votesCount on Board Users
+	 * @param boardId String
+	 * @return number
+	 */
+	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
+		const votesCount = await this.boardUserRepository.getVotesCount(boardId);
+
+		return votesCount.reduce(
+			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
+			0
+		);
+	}
+
+	private async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: Board) {
 		/**
 		 * Validate if:
 		 * - have columns to delete
@@ -290,41 +393,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		});
 	}
 
-	async mergeBoards(subBoardId: string, userId: string) {
-		const [subBoard, board] = await Promise.all([
-			this.boardRepository.getBoard(subBoardId),
-			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
-		]);
-
-		if (!subBoard || !board || subBoard.submitedByUser) return null;
-		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
-
-		if (!team) return null;
-
-		const newSubColumns = this.generateNewSubColumns(subBoard as Board);
-
-		const newColumns = [...(board as Board).columns];
-		for (let i = 0; i < newColumns.length; i++) {
-			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
-		}
-
-		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
-
-		const result = await this.boardRepository.updateMergedBoard(board._id, newColumns);
-
-		if (board.slackChannelId && board.slackEnable) {
-			this.slackCommunicationService.executeMergeBoardNotification({
-				responsiblesChannelId: board.slackChannelId,
-				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
-				boardId: subBoardId,
-				mainBoardId: board._id
-			});
-		}
-
-		return result;
-	}
-
 	private checkIfIsLastBoardToMerge(dividedBoards: Board[]): boolean {
 		const count = dividedBoards.reduce((prev, currentValue) => {
 			if (currentValue.submitedByUser) {
@@ -382,72 +450,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 			return newColumn;
 		});
-	}
-
-	updateChannelId(teams: TeamDto[]) {
-		Promise.all(
-			teams.map((team) => this.boardRepository.updatedChannelId(team.boardId, team.channelId))
-		);
-	}
-
-	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
-		const user = boardUserToUpdateRole.user as unknown as User;
-
-		const updatedBoardUsers = await this.boardUserRepository.updateBoardUserRole(
-			boardUserToUpdateRole.board,
-			user._id,
-			boardUserToUpdateRole.role
-		);
-
-		if (!updatedBoardUsers) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		return updatedBoardUsers;
-	}
-
-	async updateBoardParticipants(addUsers: BoardUserDto[], removeUsers: string[]) {
-		try {
-			let createdBoardUsers: BoardUser[] = [];
-
-			if (addUsers.length > 0) createdBoardUsers = await this.addBoardUsers(addUsers);
-
-			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
-
-			return createdBoardUsers;
-		} catch (error) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-	}
-
-	async updatePhase(boardPhaseDto: BoardPhaseDto) {
-		try {
-			const { boardId, phase } = boardPhaseDto;
-			const {
-				slackEnable,
-				phase: currentPhase,
-				team
-			} = await this.boardRepository.updatePhase(boardId, phase);
-
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
-
-			//Sends message to SLACK
-			if (
-				(team as Team).name === 'xgeeks' &&
-				slackEnable === true &&
-				currentPhase !== BoardPhases.ADDCARDS &&
-				this.configService.getOrThrow(SLACK_ENABLE)
-			) {
-				const message = this.generateMessage(currentPhase, boardId);
-				const slackMessageDto = new SlackMessageDto(
-					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
-					message
-				);
-				this.slackSendMessageService.execute(slackMessageDto);
-			}
-		} catch (err) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
 	}
 
 	private generateMessage(phase: string, boardId: string): string {

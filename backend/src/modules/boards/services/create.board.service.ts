@@ -55,92 +55,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
-		);
-	}
-
-	async createDividedBoards(boards: BoardDto[], userId: string) {
-		const newBoardsIds = await Promise.allSettled(
-			boards.map(async (board) => {
-				board.addCards = true;
-				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, false);
-
-				if (!isEmpty(users)) {
-					await this.createBoardUserService.saveBoardUsers(users, _id);
-				}
-
-				return _id;
-			})
-		);
-
-		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
-	}
-
-	async createBoard(
-		boardData: BoardDto,
-		userId: string,
-		isSubBoard = false,
-		haveSubBoards = true
-	): Promise<Board> {
-		const { dividedBoards = [], team } = boardData;
-
-		if (haveSubBoards) {
-			/**
-			 * Add in each divided board the team id (from main board)
-			 */
-			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
-				...dividedBoard,
-				team,
-				slackEnable: boardData.slackEnable,
-				hideCards: true,
-				postAnonymously: true
-			}));
-
-			return this.boardRepository.create<BoardDto>({
-				...boardData,
-				createdBy: userId,
-				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
-				addCards: false,
-				isSubBoard
-			});
-		}
-
-		return this.boardRepository.create<BoardDto>({
-			...boardData,
-			dividedBoards: [],
-			createdBy: userId,
-			isSubBoard
-		});
-	}
-
-	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string, responsibles: string[]) {
-		const usersIds: string[] = [];
-		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
-
-		teamUsers.forEach((teamUser) => {
-			const user = teamUser.user as User;
-
-			if (!usersIds.includes(user._id.toString())) {
-				newUsers.push({
-					user: user._id.toString(),
-					role: responsibles.includes(user._id.toString())
-						? BoardRoles.RESPONSIBLE
-						: this.handleBoardUserRole(teamUser),
-					votesCount: 0
-				});
-			}
-		});
-	}
-
-	handleBoardUserRole(teamUser: TeamUser): string {
-		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
-			? BoardRoles.RESPONSIBLE
-			: teamUser.role;
-	}
-
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
@@ -200,24 +114,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		return newBoard;
 	}
-
-	createFirstCronJob(addCronJobDto: AddCronJobDto) {
-		this.createSchedulesService.addCronJob({
-			day: getDay(),
-			month: getNextMonth() - 1,
-			addCronJobDto
-		});
-	}
-
-	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
-		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
-
-		dateToCompare = addDays(dateToCompare, 15);
-
-		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
-
-		return isAfter(maxDateToBeNewJoiner, new Date());
-	};
 
 	async splitBoardByTeam(
 		ownerId: string,
@@ -288,7 +184,117 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return board._id.toString();
 	}
 
-	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
+		return Promise.all(
+			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
+		);
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async createDividedBoards(boards: BoardDto[], userId: string) {
+		const newBoardsIds = await Promise.allSettled(
+			boards.map(async (board) => {
+				board.addCards = true;
+				const { users } = board;
+				const { _id } = await this.createBoard(board, userId, true, false);
+
+				if (!isEmpty(users)) {
+					await this.createBoardUserService.saveBoardUsers(users, _id);
+				}
+
+				return _id;
+			})
+		);
+
+		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
+	}
+
+	private async createBoard(
+		boardData: BoardDto,
+		userId: string,
+		isSubBoard = false,
+		haveSubBoards = true
+	): Promise<Board> {
+		const { dividedBoards = [], team } = boardData;
+
+		if (haveSubBoards) {
+			/**
+			 * Add in each divided board the team id (from main board)
+			 */
+			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
+				...dividedBoard,
+				team,
+				slackEnable: boardData.slackEnable,
+				hideCards: true,
+				postAnonymously: true
+			}));
+
+			return this.boardRepository.create<BoardDto>({
+				...boardData,
+				createdBy: userId,
+				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
+				addCards: false,
+				isSubBoard
+			});
+		}
+
+		return this.boardRepository.create<BoardDto>({
+			...boardData,
+			dividedBoards: [],
+			createdBy: userId,
+			isSubBoard
+		});
+	}
+
+	private async saveBoardUsersFromTeam(
+		newUsers: BoardUserDto[],
+		team: string,
+		responsibles: string[]
+	) {
+		const usersIds: string[] = [];
+		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+
+		teamUsers.forEach((teamUser) => {
+			const user = teamUser.user as User;
+
+			if (!usersIds.includes(user._id.toString())) {
+				newUsers.push({
+					user: user._id.toString(),
+					role: responsibles.includes(user._id.toString())
+						? BoardRoles.RESPONSIBLE
+						: this.handleBoardUserRole(teamUser),
+					votesCount: 0
+				});
+			}
+		});
+	}
+
+	private handleBoardUserRole(teamUser: TeamUser): string {
+		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
+			? BoardRoles.RESPONSIBLE
+			: teamUser.role;
+	}
+
+	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
+		this.createSchedulesService.addCronJob({
+			day: getDay(),
+			month: getNextMonth() - 1,
+			addCronJobDto
+		});
+	}
+
+	private verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
+		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
+
+		dateToCompare = addDays(dateToCompare, 15);
+
+		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
+
+		return isAfter(maxDateToBeNewJoiner, new Date());
+	};
+
+	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users
 			.map((user) => {
 				return {
@@ -298,7 +304,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
-	getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+	private getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
 		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
 
 		// returns the user who has the oldest account date
@@ -317,7 +323,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return findSelectedAvailableUserArray;
 	};
 
-	getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
+	private getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
 		const randomGroupOfUsers = [];
 
 		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
@@ -357,9 +363,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return randomGroupOfUsers;
 	};
 
-	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
+	private getRandomUser = (list: TeamUser[]) =>
+		list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
-	handleSplitBoards = (
+	private handleSplitBoards = (
 		maxTeams: number,
 		teamMembers: LeanDocument<TeamUserDocument>[],
 		responsibles: string[]
@@ -411,7 +418,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return subBoards;
 	};
 
-	generateSubBoards(
+	private generateSubBoards(
 		maxTeams: number,
 		splitUsers: BoardUserDto[][],
 		subBoards: BoardDto[],
