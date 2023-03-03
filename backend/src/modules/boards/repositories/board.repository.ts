@@ -169,17 +169,6 @@ export class BoardRepository
 		return this.findOneByFieldAndUpdate({ _id: boardId }, { slackChannelId: channelId });
 	}
 
-	updateBoardPhase(boardId: string, phase: BoardPhases) {
-		return this.findOneByFieldAndUpdate(
-			{
-				_id: boardId
-			},
-			{
-				phase
-			}
-		);
-	}
-
 	updatePhase(boardId: string, phase: BoardPhases): Promise<Board> {
 		return this.findOneByFieldAndUpdate(
 			{

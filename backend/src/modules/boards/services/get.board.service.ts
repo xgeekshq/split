@@ -28,9 +28,7 @@ import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import Board from '../entities/board.schema';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import User from 'src/modules/users/entities/user.schema';
@@ -42,7 +40,6 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)

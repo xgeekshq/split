@@ -35,6 +35,5 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 	updateMergedSubBoard(subBoardId: string, userId: string): Promise<Board>;
 	updateMergedBoard(boardId: string, newColumns: Column[]): Promise<Board>;
 	updatedChannelId(boardId: string, channelId: string): Promise<Board>;
-	updateBoardPhase(boardId: string, phase: BoardPhases): Promise<Board>;
 	updatePhase(boardId: string, phase: BoardPhases): Promise<Board>;
 }
