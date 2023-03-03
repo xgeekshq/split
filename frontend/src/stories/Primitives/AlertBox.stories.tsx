@@ -4,6 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import AlertBox from '@/components/Primitives/AlertBox';
+import Button from '@/components/Primitives/Button';
 
 export default {
   title: 'Primitives/AlertBox',
@@ -48,9 +49,13 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof AlertBox> = ({ children, ...args }) => (
-  <AlertBox {...args}>{children}</AlertBox>
-);
+const Template: ComponentStory<typeof AlertBox> = ({ ...args }) => <AlertBox {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
+
+export const WithButton: ComponentStory<typeof AlertBox> = ({ ...args }) => (
+  <AlertBox {...args}>
+    <Button size="sm">Lorem Ipsum</Button>
+  </AlertBox>
+);

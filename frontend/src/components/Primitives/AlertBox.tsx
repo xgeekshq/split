@@ -28,7 +28,7 @@ const AlertStyle = styled(Flex, Box, {
   },
 });
 
-type AlertBoxProps = CSSProps & {
+export type AlertBoxProps = CSSProps & {
   type: 'warning' | 'info' | 'error';
   children?: React.ReactNode;
   title?: string;
@@ -36,7 +36,15 @@ type AlertBoxProps = CSSProps & {
 };
 
 const AlertBox = ({ type, title = undefined, text = undefined, children, css }: AlertBoxProps) => (
-  <AlertStyle align="center" justify="between" type={type} elevation="1" gap="24" css={css}>
+  <AlertStyle
+    align="center"
+    justify="between"
+    type={type}
+    elevation="1"
+    gap="24"
+    css={css}
+    data-testid="alertBox"
+  >
     <Flex align="center" gap="24">
       <Icon size={32} name={`blob-${type}`} />
       <Flex direction="column" align="start" gap="4">
