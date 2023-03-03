@@ -2,6 +2,7 @@ import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-gu
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 export interface GetBoardApplicationInterface {
 	getUserBoardsOfLast3Months(
@@ -22,7 +23,7 @@ export interface GetBoardApplicationInterface {
 
 	getBoard(
 		boardId: string,
-		userId: string
+		user: UserDto
 	): Promise<
 		| { board: LeanDocument<BoardDocument> }
 		| null

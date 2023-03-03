@@ -1,3 +1,4 @@
+import { GetBoardGuard } from './../../../libs/guards/getBoardPermissions.guard';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
@@ -195,9 +196,11 @@ export default class BoardsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@BoardUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@UseGuards(GetBoardGuard)
 	@Get(':boardId')
 	async getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		const board = await this.getBoardApp.getBoard(boardId, request.user._id);
+		const board = await this.getBoardApp.getBoard(boardId, request.user);
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
