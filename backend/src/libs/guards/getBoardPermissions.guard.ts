@@ -1,4 +1,5 @@
-import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { BoardUserRepository } from './../../modules/boards/repositories/board-user.repository';
+import { BoardRepository } from 'src/modules/boards/repositories/board.repository';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -16,8 +17,10 @@ import { Reflector } from '@nestjs/core';
 export class GetBoardGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		@Inject(Boards.TYPES.repositories.BoardRepository)
+		private boardRepository: BoardRepository,
+		@Inject(Boards.TYPES.repositories.BoardUserRepository)
+		private boardUserRepository: BoardUserRepository
 	) {}
 
 	async canActivate(context: ExecutionContext) {
@@ -28,19 +31,19 @@ export class GetBoardGuard implements CanActivate {
 		const boardId: string = request.params.boardId;
 
 		try {
-			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
-			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, userId);
+			const { isPublic, team } = await this.boardRepository.getBoardData(boardId);
+			const boardUserFound = await this.boardUserRepository.getBoardUsers(boardId, userId);
 
-			if (isPublic || boardUserFound.length) {
+			if (isPublic || boardUserFound.length || isSAdmin) {
 				return true;
 			}
 
-			if (!boardUserFound) {
+			if (!boardUserFound.length) {
 				const { role: teamRole } = (team as Team).users.find(
 					(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === userId.toString()
 				);
 
-				return !isAnonymous && (isSAdmin || permissions.includes(teamRole));
+				return !isAnonymous && permissions.includes(teamRole);
 			}
 		} catch (error) {
 			throw new ForbiddenException();
