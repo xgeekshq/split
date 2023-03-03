@@ -8,7 +8,7 @@ import { ROUTES } from '@/utils/routes';
 import { useState } from 'react';
 import { ListMembers } from '../ListMembers';
 
-type TeamHeaderProps = {
+export type TeamHeaderProps = {
   title: string;
   hasPermissions: boolean;
 };
@@ -27,7 +27,7 @@ const TeamHeader = ({ title, hasPermissions }: TeamHeaderProps) => {
   ];
 
   return (
-    <Flex align="center" justify="between">
+    <Flex align="center" justify="between" data-testid="teamHeader">
       <Flex direction="column" gap="12" css={{ width: '100%' }}>
         <Flex align="center">
           <Breadcrumb items={breadcrumbItems} />
