@@ -3,7 +3,7 @@ import React from 'react';
 import { TeamUser } from '@/types/team/team.user';
 import Flex from '@/components/Primitives/Flex';
 
-import TeamMemberItem from '@/components/Teams/Team/partials/TeamMemberItem';
+import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem';
 
 type TeamMemberListProps = {
   teamUsers: TeamUser[];
