@@ -8,7 +8,6 @@ import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
-import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
@@ -28,8 +27,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
 
   const { id: userId, isSAdmin } = { ...session?.user };
   const { id, users, name } = team;
-  const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
-  const userRole = userFound?.role;
+  const userFound = users.find((member) => member.user?._id === userId);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
@@ -95,8 +93,8 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
           <Separator orientation="vertical" size="lg" />
 
           <Flex align="center">
-            {router.pathname.includes('users') ? (
-              <RoleSelector role={userRole} userId={userId!} teamId={id} />
+            {router.pathname.includes('users') && userFound ? (
+              <RoleSelector role={userFound.role} userId={userId!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}

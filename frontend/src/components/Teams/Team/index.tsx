@@ -5,7 +5,7 @@ import Flex from '@/components/Primitives/Flex';
 
 import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem';
 
-type TeamMemberListProps = {
+export type TeamMembersListProps = {
   teamUsers: TeamUser[];
   hasPermissions: boolean;
   isTeamPage?: boolean;
@@ -15,7 +15,7 @@ const TeamMembersList = ({
   teamUsers,
   hasPermissions,
   isTeamPage = false,
-}: TeamMemberListProps) => (
+}: TeamMembersListProps) => (
   <Flex direction="column" gap="8">
     {teamUsers.map((teamUser) => (
       <TeamMemberItem

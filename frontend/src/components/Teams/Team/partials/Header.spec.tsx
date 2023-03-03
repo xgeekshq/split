@@ -4,12 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TEAMS_ROUTE } from '@/utils/routes';
-import { Team } from '@/types/team/team';
 import TeamHeader, { TeamHeaderProps } from './Header';
-
-const DEFAULT_PROPS = {
-  hasPermissions: true,
-};
 
 const router = createMockRouter({});
 
@@ -17,14 +12,18 @@ const render = (props: TeamHeaderProps) =>
   renderWithProviders(<TeamHeader {...props} />, { routerOptions: router });
 
 describe('Components/TeamHeader', () => {
-  let team: Team;
+  let defaultProps: TeamHeaderProps;
   beforeEach(() => {
-    team = TeamFactory.create();
+    const team = TeamFactory.create();
+    defaultProps = {
+      title: team.name,
+      hasPermissions: true,
+    };
   });
 
   it('should render correctly', () => {
     // Arrange
-    const teamHeaderProps = { ...DEFAULT_PROPS, title: team.name };
+    const teamHeaderProps = { ...defaultProps };
 
     // Act
     const { getByTestId } = render(teamHeaderProps);
@@ -36,7 +35,7 @@ describe('Components/TeamHeader', () => {
 
   it('should render breadcrumbs correctly', async () => {
     // Arrange
-    const teamHeaderProps = { ...DEFAULT_PROPS, title: team.name };
+    const teamHeaderProps = { ...defaultProps };
 
     // Act
     const { getByTestId } = render(teamHeaderProps);
@@ -55,15 +54,15 @@ describe('Components/TeamHeader', () => {
 
   it('should be able to open the team members dialog', async () => {
     // Arrange
-    const teamHeaderProps = { title: team.name, hasPermissions: true };
+    const teamHeaderProps = { ...defaultProps };
     const setState = jest.fn();
     const useStateMock: any = (initState: boolean) => [initState, setState];
     jest.spyOn(React, 'useState').mockImplementationOnce(useStateMock);
 
     // Act
     const { getByTestId } = render(teamHeaderProps);
-    const button = getByTestId('teamHeader').querySelector('button')!;
-    fireEvent.click(button);
+    const button = getByTestId('teamHeader').querySelector('button');
+    if (button) fireEvent.click(button);
 
     // Assert
     await waitFor(() => {

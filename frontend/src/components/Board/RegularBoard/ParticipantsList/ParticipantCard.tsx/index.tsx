@@ -7,7 +7,7 @@ import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { useRouter } from 'next/router';
-import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
 import Button from '@/components/Primitives/Button';
@@ -110,7 +110,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
               <Flex css={{ width: '50%' }} justify="between">
                 {(isCurrentUserSAdmin || isCurrentUserResponsible) && (
                   <Flex align="center" gap="8" justify="start">
-                    <ConfigurationSwitchSettings
+                    <ConfigurationSwitch
                       handleCheckedChange={handleSelectFunction}
                       isChecked={isMemberResponsible}
                       text=""
