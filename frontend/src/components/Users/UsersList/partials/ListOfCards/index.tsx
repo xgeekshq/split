@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Flex from '@/components/Primitives/Flex';
 import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
-import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
+import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
 import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAllUsersWithTeams } from '@/api/userService';

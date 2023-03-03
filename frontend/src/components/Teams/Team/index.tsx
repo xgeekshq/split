@@ -3,21 +3,25 @@ import React from 'react';
 import { TeamUser } from '@/types/team/team.user';
 import Flex from '@/components/Primitives/Flex';
 
-import TeamMemberItem from '@/components/Teams/partials/TeamMemberItem';
+import TeamMemberItem from '@/components/Teams/Team/partials/TeamMemberItem';
 
 type TeamMemberListProps = {
-  users: TeamUser[];
+  teamUsers: TeamUser[];
   hasPermissions: boolean;
   isTeamPage?: boolean;
 };
 
-const TeamMembersList = ({ users, hasPermissions, isTeamPage = false }: TeamMemberListProps) => (
+const TeamMembersList = ({
+  teamUsers,
+  hasPermissions,
+  isTeamPage = false,
+}: TeamMemberListProps) => (
   <Flex direction="column" gap="8">
-    {users.map((user) => (
+    {teamUsers.map((teamUser) => (
       <TeamMemberItem
-        key={user._id}
+        key={teamUser.user._id}
         isTeamPage={isTeamPage}
-        member={user}
+        member={teamUser}
         hasPermissions={hasPermissions}
       />
     ))}

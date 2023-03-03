@@ -2,14 +2,6 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 
-const ScrollableContent = styled(Flex, {
-  mt: '$24',
-  height: '100%',
-  overflowY: 'auto',
-  pr: '$10',
-  pb: '$10',
-});
-
 const PlaceholderText = styled(Text, {
   color: '$primary300',
   position: 'absolute',
@@ -173,4 +165,4 @@ const StyledInput = styled('input', {
   },
 });
 
-export { IconWrapper, PlaceholderText, ScrollableContent, StyledInput };
+export { IconWrapper, PlaceholderText, StyledInput };

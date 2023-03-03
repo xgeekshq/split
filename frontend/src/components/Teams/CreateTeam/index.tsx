@@ -10,13 +10,13 @@ import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
-import { InnerContent, StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
 import TeamMembersList from '@/components/Teams/Team';
 import Flex from '@/components/Primitives/Flex';
 import TipBar from './partials/TipBar';
 import TeamName from './partials/TeamName';
-import { ListMembers } from './ListMembers';
+import { ListMembers } from '../Team/ListMembers';
 import CreateTeamHeader from './partials/CreateTeamHeader';
 import CreateTeamFooter from './partials/CreateTeamFooter';
 
@@ -100,24 +100,22 @@ const CreateTeam = () => {
               setDisableButtons(true);
             })}
           >
-            <InnerContent direction="column">
-              <FormProvider {...methods}>
-                <TeamName />
-                <Flex css={{ my: '$20' }} direction="column">
-                  <Flex>
-                    <Text css={{ flex: 1 }} heading="3">
-                      Team Members
-                    </Text>
-                    <Button variant="link" size="sm" onClick={handleOpen}>
-                      <Icon name="plus" />
-                      Add/remove members
-                    </Button>
-                  </Flex>
+            <FormProvider {...methods}>
+              <TeamName />
+              <Flex css={{ my: '$20' }} direction="column">
+                <Flex>
+                  <Text css={{ flex: 1 }} heading="3">
+                    Team Members
+                  </Text>
+                  <Button variant="link" size="sm" onClick={handleOpen}>
+                    <Icon name="plus" />
+                    Add/remove members
+                  </Button>
                 </Flex>
-                <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
-                <TeamMembersList users={listMembers} hasPermissions />
-              </FormProvider>
-            </InnerContent>
+              </Flex>
+              <TeamMembersList teamUsers={listMembers} hasPermissions />
+              <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+            </FormProvider>
           </StyledForm>
           <TipBar />
         </Flex>

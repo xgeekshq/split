@@ -74,7 +74,7 @@ const Team = () => {
                 <Dots />
               </Flex>
             ) : (
-              <TeamMembersList users={teamUsers} hasPermissions={hasPermissions} isTeamPage />
+              <TeamMembersList teamUsers={teamUsers} hasPermissions={hasPermissions} isTeamPage />
             )}
           </QueryError>
         </Suspense>
@@ -108,7 +108,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       key: teamId,
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
     },
   };
 };

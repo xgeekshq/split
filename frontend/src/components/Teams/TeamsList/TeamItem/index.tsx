@@ -12,7 +12,7 @@ import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
-import RoleSelector from '@/components/Teams/partials/RoleSelector';
+import RoleSelector from '@/components/Teams/Team/partials/RoleSelector';
 import TeamBoards from './partials/TeamBoards';
 import TeamTitle from './partials/TeamTitle';
 import DeleteTeam from './partials/DeleteTeam';

@@ -13,8 +13,8 @@ import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partial
 
 import useTeam from '@/hooks/useTeam';
 import Button from '@/components/Primitives/Button';
-import { InnerContainer } from '../styles';
-import RoleSelector from './RoleSelector';
+import RoleSelector from '@/components/Teams/Team/partials/RoleSelector';
+import { InnerContainer } from '../../styles';
 
 type TeamMemberItemProps = {
   member: TeamUser;
