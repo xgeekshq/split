@@ -34,6 +34,11 @@ export class BoardUserRepository
 		return this.model.find({ board: boardId }, ['votesCount']).exec();
 	}
 
+	getBoardUsers(board: string, user: string) {
+		return this.findAllWithQuery({ board, user });
+	}
+
+	/* CREATE BOARD USERS */
 	createBoardUsers(boardUsers: BoardUserDto[]) {
 		return this.insertMany<BoardUserDto>(boardUsers);
 	}

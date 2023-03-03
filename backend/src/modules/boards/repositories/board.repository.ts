@@ -180,6 +180,22 @@ export class BoardRepository
 		);
 	}
 
+	updatePhase(boardId: string, phase: BoardPhases): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId
+			},
+			{
+				phase
+			},
+			{ new: true },
+			{
+				path: 'team',
+				select: 'name -_id'
+			}
+		);
+	}
+
 	/* DELETE BOARD */
 	deleteManySubBoards(
 		dividedBoards: Board[] | ObjectId[] | string[],

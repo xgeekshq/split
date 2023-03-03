@@ -8,7 +8,6 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import TeamItem, { TeamItemProps } from './index';
 
 const DEFAULT_PROPS = {
-  userId: '',
   team: TeamFactory.create(),
 };
 
@@ -18,8 +17,13 @@ jest.mock('next/router', () => ({
   useRouter: () => router,
 }));
 
-const render = (props: TeamItemProps = DEFAULT_PROPS) =>
-  renderWithProviders(<TeamItem {...props} />, { routerOptions: router });
+const render = (props: TeamItemProps = DEFAULT_PROPS, options?: any) =>
+  renderWithProviders(<TeamItem {...props} />, {
+    routerOptions: router,
+    sessionOptions: {
+      user: options?.user,
+    },
+  });
 
 describe('Components/TeamItem', () => {
   let testProps: TeamItemProps;
@@ -32,10 +36,9 @@ describe('Components/TeamItem', () => {
     const teamItemProps = { ...testProps };
 
     // Act
-    const { getByTestId, getByText } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemTitle')).toBeInTheDocument();
     expect(getByText(teamItemProps.team.name)).toBeInTheDocument();
   });
 
@@ -50,11 +53,10 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('3 team boards');
+    expect(getByText('3 team boards')).toBeInTheDocument();
   });
 
   it('should render no team boards', () => {
@@ -68,18 +70,16 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByText } = render(teamItemProps);
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('No boards');
+    expect(getByText('No boards')).toBeInTheDocument();
   });
 
   it('should render create first board', () => {
     // Arrange
     const teamAdmin = TeamUserFactory.create({ role: TeamUserRoles.ADMIN });
     const teamItemProps = {
-      userId: teamAdmin.user._id,
       team: {
         ...testProps.team,
         boardsCount: 0,
@@ -88,10 +88,9 @@ describe('Components/TeamItem', () => {
     };
 
     // Act
-    const { getByTestId } = render(teamItemProps);
+    const { getByText } = render(teamItemProps, { user: teamAdmin.user });
 
     // Assert
-    expect(getByTestId('teamitemBoards')).toBeInTheDocument();
-    expect(getByTestId('teamitemBoards')).toHaveTextContent('Create first board');
+    expect(getByText('Create first board')).toBeInTheDocument();
   });
 });

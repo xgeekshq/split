@@ -6,8 +6,7 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -21,7 +20,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
+import Board from '../entities/board.schema';
 import BoardUser from '../entities/board.user.schema';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
@@ -34,15 +33,22 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
+import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
+import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { ConfigService } from '@nestjs/config';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import Team from 'src/modules/teams/entities/teams.schema';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
+		private slackSendMessageService: SendMessageServiceInterface,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
 		private deleteCardService: DeleteCardService,
@@ -50,7 +56,8 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(Boards.TYPES.repositories.BoardUserRepository)
 		private readonly boardUserRepository: BoardUserRepositoryInterface,
-		private eventEmitter: EventEmitter2
+		private eventEmitter: EventEmitter2,
+		private configService: ConfigService
 	) {}
 
 	/**
@@ -309,7 +316,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			this.slackCommunicationService.executeMergeBoardNotification({
 				responsiblesChannelId: board.slackChannelId,
 				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(board._id),
+				isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
 				boardId: subBoardId,
 				mainBoardId: board._id
 			});
@@ -318,24 +325,16 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		return result;
 	}
 
-	private async checkIfIsLastBoardToMerge(mainBoardId: string): Promise<boolean> {
-		const board = await this.boardRepository.getBoardPopulated(mainBoardId, {
-			path: 'dividedBoards'
-		});
-
-		if (!board) return false;
-
-		const count = (board.dividedBoards as Board[]).reduce((prev, currentValue) => {
+	private checkIfIsLastBoardToMerge(dividedBoards: Board[]): boolean {
+		const count = dividedBoards.reduce((prev, currentValue) => {
 			if (currentValue.submitedByUser) {
-				prev -= 1;
-
-				return prev;
+				return prev + 1;
 			}
 
 			return prev;
-		}, board?.dividedBoards.length ?? 0);
+		}, 0);
 
-		return count === 0;
+		return count === dividedBoards.length;
 	}
 
 	private generateNewSubColumns(subBoard: Board) {
@@ -424,12 +423,49 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
 			const { boardId, phase } = boardPhaseDto;
-
-			await this.boardRepository.updateBoardPhase(boardId, phase);
+			const {
+				slackEnable,
+				phase: currentPhase,
+				team
+			} = await this.boardRepository.updatePhase(boardId, phase);
 
 			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+
+			//Sends message to SLACK
+			if (
+				(team as Team).name === 'xgeeks' &&
+				slackEnable === true &&
+				currentPhase !== BoardPhases.ADDCARDS &&
+				this.configService.getOrThrow(SLACK_ENABLE)
+			) {
+				const message = this.generateMessage(currentPhase, boardId);
+				const slackMessageDto = new SlackMessageDto(
+					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
+					message
+				);
+				this.slackSendMessageService.execute(slackMessageDto);
+			}
 		} catch (err) {
 			throw new BadRequestException(UPDATE_FAILED);
+		}
+	}
+
+	private generateMessage(phase: string, boardId: string): string {
+		const today = new Date();
+
+		if (phase === BoardPhases.VOTINGPHASE) {
+			return `Hello team, <https://split.kigroup.de/boards/${boardId}|here> is the ${today.toLocaleString(
+				'default',
+				{
+					month: 'long'
+				}
+			)} retro board \n\n <https://split.kigroup.de/boards/${boardId}> \n\n Take a look and please add your votes. \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
+		}
+
+		if (phase == BoardPhases.SUBMITED) {
+			return `Hello team, the  ${today.toLocaleString('default', {
+				month: 'long'
+			})} retro board was submited \n\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:`;
 		}
 	}
 

@@ -6,9 +6,9 @@ import BoardUser from '../entities/board.user.schema';
 
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;
-
 	getBoardResponsible(boardId: string): Promise<BoardUser>;
 	getVotesCount(boardId: string): Promise<BoardUser[]>;
+	getBoardUsers(board: string, user: string): Promise<BoardUser[]>;
 	createBoardUsers(boardUsers: BoardUserDto[]): Promise<BoardUser[]>;
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
 	deleteDividedBoardUsers(

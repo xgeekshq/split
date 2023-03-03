@@ -1,4 +1,3 @@
-import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { BOARD_USER_NOT_FOUND, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
@@ -7,10 +6,8 @@ import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import * as AUTH_TYPES from 'src/modules/auth/interfaces/types';
-import * as USER_TYPES from 'src/modules/users/interfaces/types';
 import { RegisterAuthService } from '../interfaces/services/register.auth.service.interface';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { BoardRoles } from 'src/libs/enum/board.roles';
 import { InjectModel } from '@nestjs/mongoose';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import { Model } from 'mongoose';
@@ -27,9 +24,7 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
 		@Inject(AUTH_TYPES.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthService,
-		@Inject(USER_TYPES.TYPES.repository)
-		private userRepository: UserRepositoryInterface
+		private getTokenAuthService: GetTokenAuthService
 	) {}
 
 	public async register(registrationData: CreateUserDto) {
@@ -80,36 +75,8 @@ export default class RegisterAuthServiceImpl implements RegisterAuthService {
 
 		if (!guestUserCreated) throw new BadRequestException(INSERT_FAILED);
 
-		return guestUserCreated;
-	}
+		const { accessToken } = await this.getTokenAuthService.getTokens(guestUserCreated._id);
 
-	public async loginGuest(guestUserData: CreateGuestUserDto) {
-		const { board, user } = guestUserData;
-		const { accessToken } = await this.getTokenAuthService.getTokens(user);
-		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
-
-		await this.createGuestBoardUser(board, user);
-
-		await this.sendGuestBoardUser(board, user);
-
-		return { accessToken, user };
-	}
-
-	private async createGuestBoardUser(board: string, user: string) {
-		const boardUserFound = await this.boardUserModel.findOne({ board, user });
-
-		if (boardUserFound) return;
-
-		const boardUser = {
-			role: BoardRoles.MEMBER,
-			board,
-			user,
-			votesCount: 0
-		};
-		const boardUserCreated = await this.boardUserModel.create(boardUser);
-
-		if (!boardUserCreated) throw new BadRequestException(INSERT_FAILED);
-
-		return boardUserCreated;
+		return { accessToken, user: guestUserCreated._id };
 	}
 }

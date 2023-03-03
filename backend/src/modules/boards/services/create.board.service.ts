@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
 import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
@@ -16,6 +16,7 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
@@ -29,6 +30,7 @@ import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
 @Injectable()
 export default class CreateBoardServiceImpl implements CreateBoardService {
@@ -45,6 +47,8 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
+		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(TYPES.repositories.BoardUserRepository)
@@ -65,7 +69,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				const { _id } = await this.createBoard(board, userId, true, false);
 
 				if (!isEmpty(users)) {
-					this.saveBoardUsers(users, _id);
+					await this.createBoardUserService.saveBoardUsers(users, _id);
 				}
 
 				return _id;
@@ -160,7 +164,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			);
 		}
 
-		await this.saveBoardUsers(newUsers, newBoard._id);
+		await this.createBoardUserService.saveBoardUsers(newUsers, newBoard._id);
 
 		if (newBoard && recurrent && team && maxUsers && teamData.name === 'xgeeks') {
 			const addCronJobDto: AddCronJobDto = {

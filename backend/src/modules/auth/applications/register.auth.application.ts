@@ -17,8 +17,6 @@ export class RegisterAuthApplicationImpl implements RegisterAuthApplication {
 	}
 
 	createGuestUser(guestUserData: CreateGuestUserDto) {
-		if (guestUserData.user) return this.registerAuthService.loginGuest(guestUserData);
-
 		return this.registerAuthService.createGuest(guestUserData);
 	}
 }

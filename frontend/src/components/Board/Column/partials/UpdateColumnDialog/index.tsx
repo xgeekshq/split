@@ -54,7 +54,11 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      title: columnTitle || '',
+      title: columnTitle,
+      text: cardText || 'Write your comment here...',
+    },
+    values: {
+      title: columnTitle,
       text: cardText || 'Write your comment here...',
     },
     resolver: joiResolver(SchemaChangeColumnName),

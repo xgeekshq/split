@@ -71,6 +71,7 @@ export default NextAuth({
             email,
             strategy: 'local',
           };
+
           return token;
         } catch (error: any) {
           const code = error.response.status;

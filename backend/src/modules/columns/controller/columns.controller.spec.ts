@@ -1,10 +1,12 @@
+import { createBoardUserService } from './../../boards/boards.providers';
+import { ConfigService } from '@nestjs/config';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
 	boardRepository,
-	boardUserRepository,
 	createBoardService,
 	getBoardApplication,
 	getBoardService,
@@ -25,7 +27,7 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { userRepository } from 'src/modules/users/users.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 import {
 	columnRepository,
@@ -33,6 +35,9 @@ import {
 	updateColumnService
 } from '../columns.providers';
 import ColumnsController from './columns.controller';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
+import { JwtService } from '@nestjs/jwt';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 
 describe('ColumnsController', () => {
 	let controller: ColumnsController;
@@ -65,7 +70,9 @@ describe('ColumnsController', () => {
 				deleteSchedulesService,
 				createBoardService,
 				updateTeamService,
-				boardUserRepository,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
@@ -87,10 +94,22 @@ describe('ColumnsController', () => {
 					useValue: {}
 				},
 				{
+					provide: ConfigService,
+					useValue: configService
+				},
+				{
 					provide: getModelToken('Schedules'),
 					useValue: {
 						find: jest.fn().mockResolvedValue([])
 					}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
@@ -100,6 +119,12 @@ describe('ColumnsController', () => {
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
 					useValue: {
 						execute: jest.fn()
 					}

@@ -119,7 +119,6 @@ const RegularBoard = ({
             </>
           )}
         </Flex>
-
         <DragDropArea
           board={board}
           socketId={socketId}

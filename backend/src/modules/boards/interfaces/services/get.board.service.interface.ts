@@ -1,5 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
+import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 
@@ -33,6 +34,11 @@ export interface GetBoardServiceInterface {
 				mainBoard: LeanDocument<BoardDocument>;
 		  }
 		| null
+		| {
+				guestUser: LoginGuestUserResponse;
+				board: LeanDocument<BoardDocument>;
+		  }
+		| null
 	>;
 
 	countBoards(userId: string): Promise<number>;
@@ -42,8 +48,6 @@ export interface GetBoardServiceInterface {
 	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
 
 	getBoardPopulated(boardId: string, populate?: PopulateType): Promise<Board>;
-
-	isBoardPublic(boardId: string): Promise<boolean>;
 
 	getBoardById(boardId: string): Promise<Board>;
 }

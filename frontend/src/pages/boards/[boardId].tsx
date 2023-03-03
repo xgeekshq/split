@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Container } from '@/styles/pages/boards/board.styles';
-import { getBoardRequest, getPublicStatusRequest } from '@/api/boardService';
+import { getBoardRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
@@ -27,19 +27,14 @@ import {
   editColumnsState,
   newBoardState,
 } from '@/store/board/atoms/board.atom';
-import { GetBoardResponse } from '@/types/board/board';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
-import { setCookie } from 'cookies-next';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
-import fetchData from '@/utils/fetchData';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
-
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -54,56 +49,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {},
     };
 
-  // Verifies if the board is public
-  await queryClient.fetchQuery(['statusPublic', boardId], () =>
-    getPublicStatusRequest(boardId, context),
-  );
-
-  const isPublic = queryClient.getQueryData<boolean>(['statusPublic', boardId]);
-
-  // if not public, get board from protected endpoint
-  if (session || !isPublic) {
-    try {
-      await queryClient.fetchQuery(['board', { id: boardId }], () =>
-        getBoardRequest(boardId, context),
-      );
-
-      const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
-      const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
-
-      const teamUserFound = data?.board.team?.users.find(
-        (teamUser) => teamUser.user?._id === session?.user.id,
-      );
-
-      if (
-        !(
-          (
-            (teamUserFound &&
-              [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUserFound?.role)) || // check if team user is admin or stakeholder
-            boardUser || // check if it is a board user
-            session?.user.isSAdmin
-          ) // check if it is super admin
-        ) // if it has none of these roles, user cant access the board
-      ) {
-        throw Error();
-      }
-    } catch (e) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: DASHBOARD_ROUTE,
-        },
-      };
-    }
-  }
-
-  // if board is public
-
-  // check if there are cookies and if the cookies have the board the user is trying to access
-  const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
-
+  // if board is public and no session
   if (!session) {
-    // if there isn´t cookies, the guest user is registered
+    // check if there are guest user cookies
+    const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
+    // if there isn´t cookies, the guest user is not registered
     if (!cookiesGuestUser) {
       return {
         redirect: {
@@ -112,38 +62,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
       };
     }
-
-    // if the user doesn't have access to the board, he is added as a board user
-    try {
-      const data = await fetchData<GuestUser>('/auth/loginGuest', {
-        isPublicRequest: true,
-        method: 'POST',
-        data: {
-          user: cookiesGuestUser.user,
-          board: boardId,
-        },
-      });
-
-      if (data) {
-        setCookie(GUEST_USER_COOKIE, data, { req, res });
-      }
-    } catch (error) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/dashboard',
-        },
-      };
-    }
   }
 
-  await queryClient.fetchQuery(['board', { id: boardId }], () => getBoardRequest(boardId, context));
+  try {
+    await queryClient.fetchQuery(['board', { id: boardId }], () =>
+      getBoardRequest(boardId, context),
+    );
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: DASHBOARD_ROUTE,
+      },
+    };
+  }
 
   return {
     props: {
       key: boardId,
       dehydratedState: dehydrate(queryClient),
-      mainBoardId: context.query.mainBoardId ?? null,
       boardId,
     },
   };
@@ -151,10 +88,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 type Props = {
   boardId: string;
-  mainBoardId?: string;
 };
 
-const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
+const Board: NextPage<Props> = ({ boardId }) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
@@ -165,6 +101,9 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const setBoardParticipants = useSetRecoilState(boardParticipantsState);
   const setEditColumns = useSetRecoilState(editColumnsState);
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
+
+  // Main Board Id
+  const mainBoardId = recoilBoard?.mainBoard?._id;
 
   // Session Details
   const { data: session } = useSession({ required: false });

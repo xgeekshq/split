@@ -1,9 +1,10 @@
-import { User } from '@/types/user/user';
+import { User, GuestUser } from '@/types/user/user';
 import ColumnType, { CreateColumn } from '../column';
 import { Team } from '../team/team';
 import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
 
 export interface GetBoardResponse {
+  guestUser: GuestUser;
   board: BoardType;
   mainBoard: {
     _id: string;

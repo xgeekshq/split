@@ -53,7 +53,7 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 	},
 	{
 		path: 'team',
-		select: 'name users -_id',
+		select: 'name users _id',
 		populate: {
 			path: 'users',
 			select: 'user role -_id',
