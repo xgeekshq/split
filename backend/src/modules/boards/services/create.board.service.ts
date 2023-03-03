@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -12,7 +11,6 @@ import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/ge
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
@@ -26,27 +24,17 @@ import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import Board from '../entities/board.schema';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 
-export interface CreateBoardDto {
-	maxUsers: number;
-	board: BoardDto;
-	team: TeamDto | null;
-	users: BoardUserDto[];
-}
-
 @Injectable()
 export default class CreateBoardServiceImpl implements CreateBoardService {
 	private logger = new Logger(CreateBoardServiceImpl.name);
 
 	constructor(
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
@@ -66,7 +54,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
 		return Promise.all(
 			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
-			// newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
 		);
 	}
 
@@ -108,7 +95,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 				postAnonymously: true
 			}));
 
-			return this.boardRepository.create({
+			return this.boardRepository.create<BoardDto>({
 				...boardData,
 				createdBy: userId,
 				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
@@ -117,7 +104,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			});
 		}
 
-		return this.boardRepository.create({
+		return this.boardRepository.create<BoardDto>({
 			...boardData,
 			dividedBoards: [],
 			createdBy: userId,

@@ -12,9 +12,10 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 	getBoard(boardId: string): Promise<Board>;
 	getBoardPopulated(boardId: string, populate?: PopulateType): Promise<Board>;
 	getMainBoard(boardId: string): Promise<Board>;
+	getMainBoardOfSubBoard(boardId: string): Promise<Board>;
 	getBoardData(boardId: string): Promise<Board>;
 	getAllBoardsByTeamId(teamId: string): Promise<Board[]>;
-	countBoards(boardIds: string[] | ObjectId[], teamIds: string[]): Promise<number>;
+	countBoards(boardIds: (string | ObjectId)[], teamIds: string[]): Promise<number>;
 	getCountPage(query: QueryType): Promise<number>;
 	getAllBoards(
 		allBoards: boolean,

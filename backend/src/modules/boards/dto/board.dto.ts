@@ -30,6 +30,11 @@ export default class BoardDto {
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	title!: string;
 
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsString()
+	createdBy?: string;
+
 	@ApiProperty({ type: ColumnDto, isArray: true })
 	@ArrayNotEmpty()
 	@ArrayMinSize(1)
@@ -44,7 +49,6 @@ export default class BoardDto {
 	isPublic!: boolean;
 
 	@ApiPropertyOptional({ type: String })
-	@IsNotEmpty()
 	@IsNumber()
 	@IsOptional()
 	maxVotes?: number | null;

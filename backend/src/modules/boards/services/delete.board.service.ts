@@ -5,15 +5,13 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
+import Board from '../entities/board.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
@@ -26,16 +24,12 @@ import { BoardDataPopulate } from '../utils/populate-board';
 @Injectable()
 export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
 	constructor(
-		@InjectModel(Board.name)
-		private boardModel: Model<BoardDocument>,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(Boards.TYPES.repositories.BoardUserRepository)
 		private readonly boardUserRepository: BoardUserRepositoryInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
 		private deleteSheduleService: DeleteSchedulesServiceInterface,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => Boards.TYPES.services.GetBoardService))
 		private getBoardService: GetBoardServiceInterface,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)

@@ -34,12 +34,12 @@ export default class ColumnDto {
 	cards!: CardDto[];
 
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsOptional()
 	@IsString()
-	cardText!: string;
+	cardText?: string;
 
 	@ApiProperty()
-	@IsNotEmpty()
+	@IsOptional()
 	@IsBoolean()
-	isDefaultText!: boolean;
+	isDefaultText?: boolean;
 }

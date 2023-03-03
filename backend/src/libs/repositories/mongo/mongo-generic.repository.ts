@@ -69,7 +69,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec() as unknown as Promise<T[]>;
 	}
 
-	create(item: T): Promise<T> {
+	create<Q>(item: Q): Promise<T> {
 		return this._repository.create(item);
 	}
 

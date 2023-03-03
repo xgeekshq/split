@@ -18,7 +18,7 @@ export interface BaseInterfaceRepository<T> {
 
 	findOneByField(fields: ModelProps<T>): Promise<T>;
 
-	create(item: T): Promise<T>;
+	create<Q>(item: Q): Promise<T>;
 
 	insertMany(listOfItems: T[]): Promise<T[]>;
 

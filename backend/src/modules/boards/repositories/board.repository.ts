@@ -33,6 +33,10 @@ export class BoardRepository
 		return this.findOneByFieldWithQuery({ dividedBoards: { $in: boardId } }, 'title');
 	}
 
+	getMainBoardOfSubBoard(boardId: string) {
+		return this.findOneByFieldWithQuery({ dividedBoards: { $in: boardId } }, '_id');
+	}
+
 	getBoardByQuery(query: FilterQuery<any>) {
 		return this.findOneByFieldWithQuery(query);
 	}
@@ -111,7 +115,7 @@ export class BoardRepository
 		return this.findOneByFieldWithQuery({ dividedBoards: { $in: [boardId] } }, 'slackChannelId');
 	}
 
-	countBoards(boardIds: string[] | ObjectId[], teamIds: string[]) {
+	countBoards(boardIds: (string | ObjectId)[], teamIds: string[]) {
 		return this.countDocumentsWithQuery({
 			$and: [
 				{ isSubBoard: false },

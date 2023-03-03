@@ -22,7 +22,7 @@ import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board, { BoardDocument } from '../entities/board.schema';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
+import BoardUser from '../entities/board.user.schema';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
@@ -43,8 +43,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
 		private deleteCardService: DeleteCardService,
@@ -131,12 +129,9 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 
 			/**
 			 * TODO:
-			 * When the mainBoardId starts to be returned by the board, remove this query to the boardModel
+			 * When the mainBoardId starts to be returned by the board, remove this query from the board repository
 			 */
-			const mainBoardId = await this.boardModel
-				.findOne({ dividedBoards: { $in: boardId } })
-				.select('_id')
-				.exec();
+			const mainBoardId = await this.boardRepository.getMainBoardOfSubBoard(boardId);
 
 			const promises = boardData.users
 				.filter((boardUser) =>

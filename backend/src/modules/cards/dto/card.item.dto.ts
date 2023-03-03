@@ -23,10 +23,9 @@ export default class CardItemDto {
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	text!: string;
 
-	@ApiProperty({ description: 'User Id' })
-	@IsNotEmpty()
-	@IsMongoId()
-	createdBy!: string;
+	@ApiPropertyOptional({ description: 'User Id' })
+	@IsOptional()
+	createdBy?: string;
 
 	@ApiProperty({ type: CommentDto, isArray: true })
 	@IsNotEmpty()
@@ -42,14 +41,4 @@ export default class CardItemDto {
 	@IsNotEmpty()
 	@IsBoolean()
 	anonymous!: boolean;
-
-	@ApiProperty({ description: 'Team Id' })
-	@IsNotEmpty()
-	@IsMongoId()
-	createdByTeam!: string;
-
-	@ApiProperty({ type: Date })
-	@IsNotEmpty()
-	@IsMongoId()
-	createdAt!: Date;
 }
