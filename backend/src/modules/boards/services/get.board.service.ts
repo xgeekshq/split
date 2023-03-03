@@ -155,8 +155,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.boardRepository.getBoard(boardId);
 	}
 
-	async getBoardUsers(board: string, user: string) {
-		return await this.boardUserRepository.getBoardUsers(board, user);
+	getBoardData(boardId: string) {
+		return this.boardRepository.getBoardData(boardId);
+	}
+
+	getBoardUsers(board: string, user: string) {
+		return this.boardUserRepository.getBoardUsers(board, user);
 	}
 
 	/* --------------- HELPERS --------------- */
@@ -238,11 +242,11 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	private async createPublicBoardUsers(boardId: string, user: UserDto) {
 		if (user.isAnonymous) {
 			const guestUser = await this.createBoardUserAndSendAccessToken(boardId, user._id);
-			this.sendGuestBoardUser(boardId, user._id);
+			await this.sendGuestBoardUser(boardId, user._id);
 
 			return guestUser;
 		}
-		this.createBoardUserService.createBoardUser(boardId, user._id);
-		this.sendGuestBoardUser(boardId, user._id);
+		await this.createBoardUserService.createBoardUser(boardId, user._id);
+		await this.sendGuestBoardUser(boardId, user._id);
 	}
 }
