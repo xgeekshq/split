@@ -9,6 +9,7 @@ export default {
   title: 'Primitives/AlertBox',
   component: AlertBox,
   parameters: {
+    layout: 'padded',
     docs: {
       description: {
         component: dedent`
@@ -21,6 +22,8 @@ export default {
     },
   },
   args: {
+    title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    text: 'Aut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     type: 'info',
   },
   argTypes: {
@@ -34,16 +37,19 @@ export default {
     },
     type: {
       description: 'Type of the component.',
+      control: { type: 'select' },
+    },
+    children: {
+      description: 'Contains content to be rendered inside the box.',
+      table: {
+        type: { summary: 'React.ReactNode' },
+      },
     },
   },
 };
 
-const Template: ComponentStory<typeof AlertBox> = ({ type }) => (
-  <AlertBox
-    title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    text="Aut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    type={type}
-  />
+const Template: ComponentStory<typeof AlertBox> = ({ children, ...args }) => (
+  <AlertBox {...args}>{children}</AlertBox>
 );
 
 export const Default = Template.bind({});
