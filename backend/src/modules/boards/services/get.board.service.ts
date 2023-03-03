@@ -3,6 +3,7 @@ import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
+	BadRequestException,
 	ForbiddenException,
 	Inject,
 	Injectable,
@@ -10,7 +11,12 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { BOARDS_NOT_FOUND, FORBIDDEN, NOT_FOUND } from 'src/libs/exceptions/messages';
+import {
+	BOARDS_NOT_FOUND,
+	BOARD_USER_NOT_FOUND,
+	FORBIDDEN,
+	NOT_FOUND
+} from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -30,6 +36,8 @@ import { TeamRoles } from 'src/libs/enum/team.roles';
 import User from 'src/modules/users/entities/user.schema';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import BoardGuestUserDto from '../dto/board.guest.user.dto';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -46,7 +54,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		@Inject(TYPES.repositories.BoardUserRepository)
 		private readonly boardUserRepository: BoardUserRepositoryInterface,
 		@Inject(TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface
+		private readonly boardRepository: BoardRepositoryInterface,
+		private socketService: SocketGateway
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
@@ -179,13 +188,51 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { accessToken, user };
 	}
 
+	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
+		const userFound = await this.boardUserRepository.getBoardUser(
+			board,
+			user,
+			{},
+			{
+				path: 'user',
+				select: '_id firstName lastName '
+			}
+		);
+
+		if (!userFound) {
+			throw new BadRequestException(BOARD_USER_NOT_FOUND);
+		}
+
+		const { _id, firstName, lastName, isAnonymous } = userFound.user as User;
+
+		return {
+			role: userFound.role,
+			board: String(userFound.board),
+			votesCount: userFound.votesCount,
+			user: {
+				_id: String(_id),
+				firstName,
+				lastName,
+				isAnonymous
+			}
+		};
+	}
+
+	private async sendGuestBoardUser(board: string, user: string) {
+		const boardUser = await this.getGuestBoardUser(board, user);
+
+		this.socketService.sendUpdateBoardUsers(boardUser);
+	}
+
 	private async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
 		const boardUserFound = await this.getBoardUsers(board._id, user._id);
 		let guestUser: LoginGuestUserResponse;
 
 		if (!boardUserFound.length) {
-			if (board.isPublic) guestUser = await this.createPublicBoardUsers(board._id, user);
-			else {
+			if (board.isPublic && !user.isSAdmin) {
+				guestUser = (await this.createPublicBoardUsers(board._id, user)) as LoginGuestUserResponse;
+				this.sendGuestBoardUser(board._id, user._id);
+			} else {
 				const hasPermissions = this.isAllowedToSeePrivateBoard(board, user);
 
 				if (!hasPermissions) return { canSeeBoard: hasPermissions };
@@ -195,17 +242,12 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { guestUser, canSeeBoard: true };
 	}
 
-	private createPublicBoardUsers(boardId: string, user: User) {
-		// if signed in user accesses the board but isn't a board user, create one
-		if (!user.isAnonymous) {
-			// Super Admin shouldn't automatically be added to the board as a boardUser
-			if (!user.isSAdmin) this.createBoardUserService.createBoardUser(boardId, user._id);
+	private async createPublicBoardUsers(boardId: string, user: User) {
+		const boardUserCreated = user.isAnonymous
+			? await this.createBoardUserAndSendAccessToken(boardId, user._id)
+			: await this.createBoardUserService.createBoardUser(boardId, user._id);
 
-			return;
-		}
-
-		// if guest user is already registered but isn't a board user, create one
-		return this.createBoardUserAndSendAccessToken(boardId, user._id);
+		if (user.isAnonymous) return boardUserCreated;
 	}
 
 	private isAllowedToSeePrivateBoard(board: Board, user: User) {
