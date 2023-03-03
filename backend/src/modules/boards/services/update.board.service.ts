@@ -548,11 +548,10 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			});
 
 			return (
-				`Hello team :xgeeks:,\nthe ${month} <${frontendUrl}/boards/${boardId}|board> was submitted` +
-				(actionPoints ? 'and these are the action points extracted:' : '') +
-				'\n' +
+				`Hello team :xgeeks:,\n\nThe ${month} <${frontendUrl}/boards/${boardId}|board> was submitted` +
+				(actionPoints ? ' and these are the action points extracted:\n\n' : '!\n') +
 				actionPoints +
-				'Thank you for your collaboration! :ok_hand: Keep rocking :rocket:'
+				'\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:'
 			);
 		}
 	}
