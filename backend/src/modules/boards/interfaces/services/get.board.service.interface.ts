@@ -3,6 +3,7 @@ import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.i
 import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 export interface GetBoardServiceInterface {
 	getUserBoardsOfLast3Months(
@@ -25,7 +26,7 @@ export interface GetBoardServiceInterface {
 
 	getBoard(
 		boardId: string,
-		userId: string
+		user: UserDto
 	): Promise<
 		| { board: LeanDocument<BoardDocument> }
 		| null

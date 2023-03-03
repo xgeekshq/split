@@ -33,6 +33,10 @@ export default class UserDto {
 	@IsOptional()
 	isSAdmin?: boolean;
 
+	@ApiPropertyOptional({ default: false })
+	@IsOptional()
+	isAnonymous?: boolean;
+
 	@ApiProperty()
 	@IsOptional()
 	@IsDateString()

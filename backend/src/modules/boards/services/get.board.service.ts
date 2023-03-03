@@ -1,22 +1,14 @@
 import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
-import Team from 'src/modules/teams/entities/teams.schema';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	BadRequestException,
-	ForbiddenException,
 	Inject,
 	Injectable,
 	Logger,
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import {
-	BOARDS_NOT_FOUND,
-	BOARD_USER_NOT_FOUND,
-	FORBIDDEN,
-	NOT_FOUND
-} from 'src/libs/exceptions/messages';
+import { BOARDS_NOT_FOUND, BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -30,12 +22,12 @@ import { BoardUserRepositoryInterface } from '../repositories/board-user.reposit
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
-import { TeamRoles } from 'src/libs/enum/team.roles';
 import User from 'src/modules/users/entities/user.schema';
-import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import BoardGuestUserDto from '../dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
@@ -113,23 +105,14 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.getBoards(false, query, page, size);
 	}
 
-	async getBoard(boardId: string, userId: string) {
+	async getBoard(boardId: string, user: UserDto) {
 		let board = await this.boardRepository.getBoardData(boardId);
 
 		if (!board) throw new NotFoundException(NOT_FOUND);
 
-		const userFound = await this.userRepository.getById(userId);
+		const guestUser = await this.checkIfPublicBoardAndCreatePublicBoardUsers(board, user);
 
-		if (!userFound) throw new NotFoundException(NOT_FOUND);
-
-		const { guestUser, canSeeBoard } = await this.checkIfUserCanSeeBoardAndCreatePublicBoardUsers(
-			board,
-			userFound
-		);
-
-		if (!canSeeBoard) throw new ForbiddenException(FORBIDDEN);
-
-		board = cleanBoard(board, userFound._id);
+		board = cleanBoard(board, user._id);
 
 		if (board.isSubBoard) {
 			const mainBoard = await this.boardRepository.getMainBoard(boardId);
@@ -172,6 +155,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.boardRepository.getBoard(boardId);
 	}
 
+	async getBoardUsers(board: string, user: string) {
+		return await this.boardUserRepository.getBoardUsers(board, user);
+	}
+
 	/* --------------- HELPERS --------------- */
 
 	private async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
@@ -187,10 +174,6 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		}
 
 		return { boards: [], hasNextPage, page };
-	}
-
-	private async getBoardUsers(board: string, user: string) {
-		return await this.boardUserRepository.getBoardUsers(board, user);
 	}
 
 	private async createBoardUserAndSendAccessToken(
@@ -241,40 +224,25 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		this.socketService.sendUpdateBoardUsers(boardUser);
 	}
 
-	private async checkIfUserCanSeeBoardAndCreatePublicBoardUsers(board: Board, user: User) {
-		const boardUserFound = await this.getBoardUsers(board._id, user._id);
-		let guestUser: LoginGuestUserResponse;
+	private async checkIfPublicBoardAndCreatePublicBoardUsers(
+		{ _id: boardId, isPublic }: Board,
+		user: UserDto
+	) {
+		const boardUserFound = await this.getBoardUsers(boardId, user._id);
 
-		if (!boardUserFound.length) {
-			if (board.isPublic && !user.isSAdmin) {
-				guestUser = (await this.createPublicBoardUsers(board._id, user)) as LoginGuestUserResponse;
-				this.sendGuestBoardUser(board._id, user._id);
-			} else {
-				const hasPermissions = this.isAllowedToSeePrivateBoard(board, user);
+		return !boardUserFound.length && isPublic && !user.isSAdmin
+			? await this.createPublicBoardUsers(boardId, user)
+			: undefined;
+	}
 
-				if (!hasPermissions) return { canSeeBoard: hasPermissions };
-			}
+	private async createPublicBoardUsers(boardId: string, user: UserDto) {
+		if (user.isAnonymous) {
+			const guestUser = await this.createBoardUserAndSendAccessToken(boardId, user._id);
+			this.sendGuestBoardUser(boardId, user._id);
+
+			return guestUser;
 		}
-
-		return { guestUser, canSeeBoard: true };
-	}
-
-	private async createPublicBoardUsers(boardId: string, user: User) {
-		const boardUserCreated = user.isAnonymous
-			? await this.createBoardUserAndSendAccessToken(boardId, user._id)
-			: await this.createBoardUserService.createBoardUser(boardId, user._id);
-
-		if (user.isAnonymous) return boardUserCreated;
-	}
-
-	private isAllowedToSeePrivateBoard(board: Board, user: User) {
-		const teamUser = (board.team as Team).users.find(
-			(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === user._id.toString()
-		);
-
-		return (
-			!user.isAnonymous &&
-			(user.isSAdmin || (TeamRoles.ADMIN, TeamRoles.STAKEHOLDER).includes(teamUser.role))
-		);
+		this.createBoardUserService.createBoardUser(boardId, user._id);
+		this.sendGuestBoardUser(boardId, user._id);
 	}
 }
