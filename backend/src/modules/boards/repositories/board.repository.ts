@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import { GetBoardDataPopulate } from '../utils/populate-board';
 import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class BoardRepository
 	getBoard(boardId: string): Promise<Board> {
 		return this.findOneById(boardId);
 	}
-  
+
 	updatePhase(boardId: string, phase: BoardPhases): Promise<Board> {
 		const setValues =
 			phase === BoardPhases.ADDCARDS
@@ -46,10 +47,7 @@ export class BoardRepository
 				$set: setValues
 			},
 			{ new: true },
-			{
-				path: 'team',
-				select: 'name -_id'
-			}
+			GetBoardDataPopulate
 		);
 	}
 }

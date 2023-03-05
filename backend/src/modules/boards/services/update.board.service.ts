@@ -34,13 +34,13 @@ import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
-import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import Team from 'src/modules/teams/entities/teams.schema';
+import BoardChangeEvent from 'src/modules/socket/events/user-updated-board.event';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -489,24 +489,18 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
 		try {
 			const { boardId, phase } = boardPhaseDto;
-			const {
-				slackEnable,
-				phase: currentPhase,
-				team,
-				createdAt,
-				columns
-			} = await this.boardRepository.updatePhase(boardId, phase);
+			const board = await this.boardRepository.updatePhase(boardId, phase);
 
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(boardPhaseDto));
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new BoardChangeEvent(board));
 
 			//Sends message to SLACK
 			if (
-				(team as Team).name === 'xgeeks' &&
-				slackEnable === true &&
-				currentPhase !== BoardPhases.ADDCARDS &&
+				(board.team as Team).name === 'xgeeks' &&
+				board.slackEnable === true &&
+				board.phase !== BoardPhases.ADDCARDS &&
 				this.configService.getOrThrow(SLACK_ENABLE)
 			) {
-				const message = this.generateMessage(currentPhase, boardId, createdAt, columns);
+				const message = this.generateMessage(board.phase, boardId, board.createdAt, board.columns);
 				const slackMessageDto = new SlackMessageDto(
 					this.configService.getOrThrow(SLACK_MASTER_CHANNEL_ID),
 					message

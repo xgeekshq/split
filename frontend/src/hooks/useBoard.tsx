@@ -14,7 +14,7 @@ import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { BoardUser } from '@/types/board/board.user';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
-import BoardType, { UpdateBoardPhase } from '@/types/board/board';
+import BoardType from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
@@ -157,22 +157,35 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
-  const updateBoardPhase = (data: UpdateBoardPhase) => {
-    let phaseMessage: string = '';
-    if (data.phase === BoardPhases.ADDCARDS) {
-      phaseMessage = 'to add cards';
-    } else if (data.phase === BoardPhases.VOTINGPHASE) {
-      phaseMessage = 'to voting';
-    } else {
-      phaseMessage = 'to submitted';
-    }
-
-    setToastState({
-      open: true,
-      content: `Board phase updated ${phaseMessage}`,
-      type: ToastStateEnum.SUCCESS,
-    });
-    queryClient.invalidateQueries(['board', { id: data.boardId }]);
+  const updateBoardPhase = (data: any) => {
+    const { board } = data;
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(board._id),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          setToastState({
+            open: true,
+            content: `${data.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''} ${
+              old.board.title
+            } ${data.phase === BoardPhases.SUBMITTED ? ' was submited' : ''}`,
+            type: ToastStateEnum.SUCCESS,
+          });
+          return {
+            board: {
+              ...old.board,
+              phase: board.phase,
+              hideCards: board.hideCards,
+              hideVotes: board.hideVotes,
+              addCards: board.addCards,
+              columns: board.columns,
+            },
+          };
+        }
+        return old;
+      },
+    );
+    setReady(true);
   };
 
   return {
