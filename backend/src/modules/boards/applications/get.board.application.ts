@@ -29,7 +29,7 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 	) {
 		if (teamId) return this.getBoardService.getTeamBoards(teamId, page, size);
 
-		if (isSuperAdmin) return this.getBoardService.getSuperAdminBoards(userId, page, size);
+		if (isSuperAdmin) return this.getBoardService.getSuperAdminBoards(page, size);
 
 		return this.getBoardService.getUsersBoards(userId, page, size);
 	}
