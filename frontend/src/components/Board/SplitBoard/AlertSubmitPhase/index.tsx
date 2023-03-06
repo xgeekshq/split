@@ -40,7 +40,7 @@ const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent title="Start voting phase">
+      <AlertDialogContent title="Submit">
         <Text>
           If you submit your board it will block the users from voting and it can not be edited
           anymore afterwards. <br />
