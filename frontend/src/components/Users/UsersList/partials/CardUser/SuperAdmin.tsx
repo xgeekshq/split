@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
-import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
 
 type SuperAdminProps = {
   userSAdmin: boolean;
@@ -37,7 +37,7 @@ const SuperAdmin = ({ userSAdmin, loggedUserSAdmin, userId, loggedUserId }: Supe
   if (loggedUserSAdmin) {
     return (
       <Flex css={{ ml: '$2', display: 'flex', alignItems: 'center' }}>
-        <ConfigurationSwitchSettings
+        <ConfigurationSwitch
           handleCheckedChange={handleSuperAdminChange}
           isChecked={checkedState}
           title="Super Admin"

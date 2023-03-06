@@ -31,6 +31,12 @@ export function renderWithProviders(
         options?.sessionOptions?.user,
       );
 
+      global.ResizeObserver = jest.fn().mockImplementation(() => ({
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      }));
+
       return (
         <RouterContext.Provider value={router}>
           <SessionProvider refetchInterval={300} session={session}>

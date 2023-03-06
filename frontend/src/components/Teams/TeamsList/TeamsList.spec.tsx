@@ -18,7 +18,7 @@ jest.mock('next/router', () => ({
 const render = (props: TeamsListProps = DEFAULT_PROPS) =>
   renderWithProviders(<TeamsList {...props} />, { routerOptions: router });
 
-describe('Components/TeamsList', () => {
+describe('Components/Teams/TeamsList', () => {
   let testProps: TeamsListProps;
   beforeEach(() => {
     testProps = { ...DEFAULT_PROPS };

@@ -42,3 +42,11 @@ export function createMockSession(session?: Partial<Session>, user?: User): Sess
     ...session,
   };
 }
+
+export function createMockResizeObserver() {
+  return {
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+  };
+}

@@ -20,6 +20,21 @@ export default {
     team: TeamFactory.create(),
     isTeamPage: false,
   },
+  argTypes: {
+    team: {
+      type: { required: true },
+      description: 'Team to be displayed',
+      table: {
+        type: { summary: 'Team' },
+      },
+    },
+    isTeamPage: {
+      description: 'If the component is being used in a Team Page',
+      table: {
+        type: { summary: 'boolean' },
+      },
+    },
+  },
 };
 
 const Template: ComponentStory<typeof TeamItem> = ({ team, isTeamPage }) => {

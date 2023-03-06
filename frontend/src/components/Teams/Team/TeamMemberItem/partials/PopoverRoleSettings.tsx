@@ -18,17 +18,16 @@ import useTeam from '@/hooks/useTeam';
 import Icon from '@/components/Primitives/Icon';
 import { useRouter } from 'next/router';
 
-interface PopoverRoleSettingsProps {
+export type PopoverRoleSettingsProps = {
   userId: string | undefined;
   teamId?: string | undefined;
   isTeamPage?: boolean;
-}
+};
 
 const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
   ({ userId, teamId, isTeamPage }) => {
     const membersList = useRecoilValue(membersListState);
     const setMembersList = useSetRecoilState(membersListState);
-
     const userTeamsList = useRecoilValue(userTeamsListState);
 
     const router = useRouter();
@@ -77,7 +76,7 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
 
     return (
       <Popover>
-        <PopoverTrigger variant="dark" size="sm">
+        <PopoverTrigger variant="dark" size="sm" data-testid="popoverRoleSettingsTrigger">
           <Icon name="arrow-down" />
         </PopoverTrigger>
         <PopoverContent css={{ width: '$360', height: '$316' }}>

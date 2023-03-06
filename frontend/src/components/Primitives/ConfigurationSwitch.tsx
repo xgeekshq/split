@@ -5,7 +5,7 @@ import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip';
 
-type Props = {
+type ConfigurationSwitchProps = {
   title: string;
   text?: string;
   isChecked: boolean;
@@ -15,7 +15,7 @@ type Props = {
   disabledInfo?: string;
 };
 
-const ConfigurationSwitchSettings = ({
+const ConfigurationSwitch = ({
   title,
   text,
   isChecked,
@@ -23,8 +23,8 @@ const ConfigurationSwitchSettings = ({
   children,
   disabled,
   disabledInfo,
-}: Props) => (
-  <Flex gap={20}>
+}: ConfigurationSwitchProps) => (
+  <Flex align="center" gap={20} data-testid="configurationSwitch">
     {disabledInfo && disabled ? (
       <Tooltip content={disabledInfo}>
         <Flex>
@@ -58,4 +58,4 @@ const ConfigurationSwitchSettings = ({
   </Flex>
 );
 
-export { ConfigurationSwitchSettings };
+export default ConfigurationSwitch;
