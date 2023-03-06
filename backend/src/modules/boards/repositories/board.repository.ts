@@ -16,9 +16,6 @@ export class BoardRepository
 	extends MongoGenericRepository<Board>
 	implements BoardRepositoryInterface
 {
-	selectDividedBoards =
-		'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments';
-
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
 		super(model);
 	}
@@ -61,6 +58,8 @@ export class BoardRepository
 	}
 
 	getAllBoards(allBoards: boolean, query: QueryType, page: number, size: number, count: number) {
+		const selectDividedBoards =
+			'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments';
 		const boardDataToPopulate: PopulateOptions[] = [
 			{ path: 'createdBy', select: 'firstName lastName' },
 			{
@@ -77,7 +76,7 @@ export class BoardRepository
 			},
 			{
 				path: 'dividedBoards',
-				select: this.selectDividedBoards,
+				select: selectDividedBoards,
 				populate: [
 					{
 						path: 'users',
@@ -105,7 +104,7 @@ export class BoardRepository
 			.sort({ updatedAt: 'desc' })
 			.skip(allBoards ? 0 : page * size)
 			.limit(allBoards ? count : size)
-			.select(this.selectDividedBoards)
+			.select(selectDividedBoards)
 			.populate(boardDataToPopulate)
 			.lean({ virtuals: true })
 			.exec() as unknown as Promise<Board[]>;
