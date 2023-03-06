@@ -11,6 +11,7 @@ import { Team } from '@/types/team/team';
 import Link from 'next/link';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Button from '@/components/Primitives/Button';
+import { User } from '@/types/user/user';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 
@@ -20,6 +21,7 @@ interface ListBoardsProps {
   dataByTeamAndDate: {
     boardsTeamAndDate: Map<string, Map<string, BoardType[]>>;
     teams: Map<string, Team>;
+    createdByUsers: Map<string, User>;
   };
   scrollRef: React.RefObject<HTMLDivElement>;
   onScroll: () => void;
@@ -53,7 +55,13 @@ const ListBoards = React.memo<ListBoardsProps>(
         {Array.from(dataByTeamAndDate.boardsTeamAndDate).map(([teamId, boardsOfTeam], index) => {
           const { users } = Array.from(boardsOfTeam)[0][1][0];
           const teamFound = allTeamsList.find((team) => team.id === teamId);
-          if (filter !== 'all' && teamId !== filter) return null;
+          if (!['all', 'personal'].includes(filter) && teamId !== filter) return null;
+          const boardCreator =
+            isSuperAdmin && teamId !== userId
+              ? dataByTeamAndDate.createdByUsers.get(teamId)
+              : undefined;
+
+          const isPersonalBoard = !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId);
           return (
             <Flex key={teamId} css={{ mt: index !== 0 ? '$32' : '' }} direction="column">
               <Flex
@@ -66,15 +74,24 @@ const ListBoards = React.memo<ListBoardsProps>(
                   marginBottom: '-5px',
                 }}
               >
-                <TeamHeader team={teamFound} userId={userId} users={users} />
+                <TeamHeader
+                  team={teamFound}
+                  userId={userId}
+                  users={users}
+                  personalBoardCreator={boardCreator}
+                />
               </Flex>
               <Flex justify="end" css={{ width: '100%', minHeight: '15px' }}>
-                {(isSuperAdmin ||
-                  isTeamAdmin(boardsOfTeam) ||
-                  !Array.from(dataByTeamAndDate.teams.keys()).includes(teamId)) && (
+                {/* when is super Admin, show 'add new board' on SA personal boards,
+                he can't add personal boards for anyone else */}
+                {((isSuperAdmin && ((isPersonalBoard && userId === teamId) || !isPersonalBoard)) ||
+                  // if not superAdmin, the endpoint will only return the current user's boards,
+                  // thus show 'add new board' to all personal boards
+                  (!isSuperAdmin && isPersonalBoard) ||
+                  isTeamAdmin(boardsOfTeam)) && (
                   <Link
                     href={{
-                      pathname: teamId === 'personal' ? `/boards/newRegularBoard` : `/boards/new`,
+                      pathname: teamId === userId ? `/boards/newRegularBoard` : `/boards/new`,
                       query: { team: teamId },
                     }}
                   >

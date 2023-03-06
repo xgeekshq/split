@@ -8,6 +8,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
+import { User } from '@/types/user/user';
 import ListBoards from '../ListBoards';
 import EmptyPersonalBoards from './EmptyPersonalBoards.tsx';
 
@@ -43,15 +44,17 @@ const ListPersonalBoards = ({ userId, isSuperAdmin }: ListBoardsByTeamProps) => 
   const { data, isLoading } = fetchBoardsByTeam;
 
   const dataByTeamAndDate = useMemo(() => {
+    const createdByUsers = new Map<string, User>();
     const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get('personal');
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.createdBy._id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set('personal', new Map([[date, [board]]]));
+          boardsTeamAndDate.set(`${board.createdBy._id}`, new Map([[date, [board]]]));
+          createdByUsers.set(`${board.createdBy._id}`, board.createdBy);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -62,7 +65,7 @@ const ListPersonalBoards = ({ userId, isSuperAdmin }: ListBoardsByTeamProps) => 
         boardsOfTeam.set(date, [board]);
       });
     });
-    return { boardsTeamAndDate, teams };
+    return { boardsTeamAndDate, teams, createdByUsers };
   }, [data?.pages]);
 
   const onScroll = () => {

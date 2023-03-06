@@ -12,6 +12,7 @@ import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
+import { User } from '@/types/user/user';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
 import ListBoards from './ListBoards';
@@ -64,16 +65,21 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
   }, []);
 
   const dataByTeamAndDate = useMemo(() => {
+    const createdByUsers = new Map<string, User>();
     const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
     data?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
-        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?.id ?? `personal`}`);
+        const boardsOfTeam = boardsTeamAndDate.get(`${board.team?.id ?? board.createdBy._id}`);
         const date = new Date(board.updatedAt).toDateString();
         if (!boardsOfTeam) {
-          boardsTeamAndDate.set(`${board.team?.id ?? `personal`}`, new Map([[date, [board]]]));
+          boardsTeamAndDate.set(
+            `${board.team?.id ?? board.createdBy._id}`,
+            new Map([[date, [board]]]),
+          );
           if (board.team) teams.set(`${board.team?.id}`, board.team);
+          else createdByUsers.set(`${board.createdBy._id}`, board.createdBy);
           return;
         }
         const boardsOfDay = boardsOfTeam.get(date);
@@ -84,7 +90,7 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
         boardsOfTeam.set(date, [board]);
       });
     });
-    return { boardsTeamAndDate, teams };
+    return { boardsTeamAndDate, teams, createdByUsers };
   }, [data?.pages]);
 
   const onScroll = () => {
