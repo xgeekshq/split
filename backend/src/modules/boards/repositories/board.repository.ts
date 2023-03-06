@@ -16,6 +16,9 @@ export class BoardRepository
 	extends MongoGenericRepository<Board>
 	implements BoardRepositoryInterface
 {
+	selectDividedBoards =
+		'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments';
+
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
 		super(model);
 	}
@@ -37,7 +40,7 @@ export class BoardRepository
 		return this.findOneByFieldWithQuery({ dividedBoards: { $in: boardId } }, '_id');
 	}
 
-	getBoardByQuery(query: FilterQuery<any>) {
+	getBoardByQuery<T>(query: FilterQuery<T>) {
 		return this.findOneByFieldWithQuery(query);
 	}
 
@@ -50,11 +53,11 @@ export class BoardRepository
 	}
 
 	getAllBoardsByTeamId(teamId: string) {
-		return this.findAllWithQuery({ team: teamId }, 'board', undefined, false);
+		return this.findAllWithQuery({ team: teamId }, null, 'board', undefined, false);
 	}
 
 	getCountPage(query: QueryType) {
-		return this.model.find(query).countDocuments().exec();
+		return this.countDocumentsWithQuery(query);
 	}
 
 	getAllBoards(allBoards: boolean, query: QueryType, page: number, size: number, count: number) {
@@ -74,8 +77,7 @@ export class BoardRepository
 			},
 			{
 				path: 'dividedBoards',
-				select:
-					'-__v -createdAt -slackEnable -slackChannelId -submitedAt -id -columns.id -submitedByUser -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments',
+				select: this.selectDividedBoards,
 				populate: [
 					{
 						path: 'users',
@@ -103,9 +105,7 @@ export class BoardRepository
 			.sort({ updatedAt: 'desc' })
 			.skip(allBoards ? 0 : page * size)
 			.limit(allBoards ? count : size)
-			.select(
-				'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments'
-			)
+			.select(this.selectDividedBoards)
 			.populate(boardDataToPopulate)
 			.lean({ virtuals: true })
 			.exec() as unknown as Promise<Board[]>;

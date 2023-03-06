@@ -1,6 +1,6 @@
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import { TeamDto } from './team.dto';
+import { TeamDto } from '../../communication/dto/team.dto';
 
 export interface CreateBoardDto {
 	maxUsers: number;

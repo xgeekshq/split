@@ -1,4 +1,11 @@
-import { ClientSession, FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
+import {
+	ClientSession,
+	FilterQuery,
+	Model,
+	ProjectionType,
+	QueryOptions,
+	UpdateQuery
+} from 'mongoose';
 import {
 	BaseInterfaceRepository,
 	PopulateType,
@@ -57,12 +64,13 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 
 	findAllWithQuery(
 		query: FilterQuery<T>,
+		projection?: ProjectionType<T>,
 		selectedValues?: SelectedValues<T>,
 		populate?: PopulateType,
 		virtuals = true
 	): Promise<T[]> {
 		return this._repository
-			.find(query)
+			.find(query, projection)
 			.select(selectedValues)
 			.populate(populate)
 			.lean({ virtuals: virtuals })

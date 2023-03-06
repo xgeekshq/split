@@ -128,7 +128,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	async countBoards(userId: string) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 
-		return await this.boardRepository.countBoards(boardIds, teamIds);
+		return this.boardRepository.countBoards(boardIds, teamIds);
 	}
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {

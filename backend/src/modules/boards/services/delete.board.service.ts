@@ -44,7 +44,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		}
 
 		try {
-			return await this.deleteBoardBoardUsersAndSchedules(boardId, true);
+			return this.deleteBoardBoardUsersAndSchedules(boardId, true);
 		} catch (error) {
 			throw new BadRequestException(DELETE_FAILED);
 		}

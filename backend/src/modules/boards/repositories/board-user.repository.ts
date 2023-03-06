@@ -21,19 +21,17 @@ export class BoardUserRepository
 
 	/* GET BOARD USERS */
 	getAllBoardsIdsOfUser(userId: string) {
-		return this.findAllWithQuery({ user: userId }, 'board');
+		return this.findAllWithQuery({ user: userId }, null, 'board');
 	}
 
 	getBoardResponsible(boardId: string) {
-		return this.findOneByFieldWithQuery(
-			{ board: boardId, role: BoardRoles.RESPONSIBLE },
-			{},
-			{ path: 'user' }
-		);
+		return this.findOneByFieldWithQuery({ board: boardId, role: BoardRoles.RESPONSIBLE }, null, {
+			path: 'user'
+		});
 	}
 
 	getVotesCount(boardId: string) {
-		return this.model.find({ board: boardId }, ['votesCount']).exec();
+		return this.findAllWithQuery({ board: boardId }, ['votesCount']);
 	}
 
 	getBoardUsers(board: string, user: string) {
