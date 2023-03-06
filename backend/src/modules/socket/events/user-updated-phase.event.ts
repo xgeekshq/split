@@ -8,6 +8,7 @@ export default class PhaseChangeEvent {
 	hideVotes: boolean;
 	addCards: boolean;
 	columns: Column[];
+	submitedAt: Date;
 
 	constructor(board: Board) {
 		this.boardId = board._id;
@@ -15,5 +16,6 @@ export default class PhaseChangeEvent {
 		this.hideCards = board.hideVotes;
 		this.addCards = board.addCards;
 		this.columns = board.columns;
+		this.submitedAt = board.submitedAt;
 	}
 }

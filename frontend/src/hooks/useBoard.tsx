@@ -178,6 +178,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
               hideVotes: board.hideVotes,
               addCards: board.addCards,
               columns: board.columns,
+              submitedAt: board.submitedAt,
             },
           };
         }

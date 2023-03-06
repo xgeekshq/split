@@ -94,4 +94,5 @@ export type PhaseChangeEventType = {
   hideVotes: boolean;
   addCards: boolean;
   columns: ColumnType[];
+  submitedAt: Date;
 };
