@@ -17,9 +17,8 @@ type CardBodyProps = {
   isCurrentUserResponsible: boolean;
   isCurrentUserSAdmin: boolean;
   isMemberCurrentUser: boolean;
-  haveInvalidNumberOfResponsibles: boolean;
-  responsibleSignedUpUsers: BoardUser[];
   isOpen?: boolean;
+  isCreatedByCurrentUser?: boolean;
 };
 
 const ParticipantCard = React.memo<CardBodyProps>(
@@ -29,8 +28,8 @@ const ParticipantCard = React.memo<CardBodyProps>(
     isCurrentUserSAdmin,
     isMemberCurrentUser,
     isOpen,
-    haveInvalidNumberOfResponsibles,
-    responsibleSignedUpUsers,
+
+    isCreatedByCurrentUser,
   }) => {
     const {
       addAndRemoveBoardParticipants: { mutate },
@@ -68,13 +67,14 @@ const ParticipantCard = React.memo<CardBodyProps>(
 
     const handleSelectFunction = (checked: boolean) => updateIsResponsibleStatus(checked);
 
-    let memberOnlySignedUpResponsible: boolean = false;
+    /* Has permission to delete, if the user is:
+      - superAdmin and is not the creator of the board
+      - responsible of the board and is not the current member and is not the creator of the board
+    */
 
-    if (haveInvalidNumberOfResponsibles) {
-      memberOnlySignedUpResponsible = !!responsibleSignedUpUsers.find(
-        (boardUser) => boardUser.user._id === member.user._id,
-      );
-    }
+    const hasPermissionsToDelete =
+      (isCurrentUserSAdmin && !isCreatedByCurrentUser) ||
+      (isCurrentUserResponsible && !isMemberCurrentUser && !isCreatedByCurrentUser);
 
     return (
       <Flex css={{ flex: '1 1 1' }} direction="column">
@@ -116,11 +116,11 @@ const ParticipantCard = React.memo<CardBodyProps>(
                       text=""
                       title="Responsible"
                       disabledInfo="Select another responsible for the board"
-                      disabled={memberOnlySignedUpResponsible && !isCurrentUserSAdmin}
+                      disabled={isCreatedByCurrentUser}
                     />
                   </Flex>
                 )}
-                {(isCurrentUserSAdmin || (isCurrentUserResponsible && !isMemberCurrentUser)) && (
+                {hasPermissionsToDelete && (
                   <Flex align="center" justify="end">
                     <Tooltip content="Remove participant">
                       <Flex justify="end">
