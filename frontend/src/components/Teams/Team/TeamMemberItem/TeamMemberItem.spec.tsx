@@ -5,7 +5,11 @@ import { TeamUserFactory } from '@/utils/factories/user';
 import { getFormattedUsername } from '@/utils/getFormattedUsername';
 import TeamMemberItem, { TeamMemberItemProps } from '.';
 
-const router = createMockRouter({});
+const router = createMockRouter({ pathname: '/teams' });
+
+jest.mock('next/router', () => ({
+  useRouter: () => router,
+}));
 
 const DEFAULT_PROPS = {
   member: TeamUserFactory.create(),

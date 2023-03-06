@@ -4,7 +4,11 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import TeamMembersList, { TeamMembersListProps } from '.';
 
-const router = createMockRouter({});
+const router = createMockRouter({ pathname: '/teams' });
+
+jest.mock('next/router', () => ({
+  useRouter: () => router,
+}));
 
 const render = (props: TeamMembersListProps) =>
   renderWithProviders(<TeamMembersList {...props} />, { routerOptions: router });
