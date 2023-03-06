@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Dialog from '@/components/Primitives/Dialog';
 import Text from '@/components/Primitives/Text';
@@ -21,13 +21,8 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
   ({ usersList, isOpen, setIsOpen, saveUsers, title, btnTitle }) => {
     const { data: session } = useSession({ required: false });
     const [searchMember, setSearchMember] = useState<string>('');
-
     const [usersChecked, setUsersChecked] = useState(usersList);
-
     const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
-
-    // References
-    const scrollRef = useRef<HTMLDivElement>(null);
 
     const sortUserList = () => {
       const listToBeSorted = [...usersList];
@@ -132,7 +127,6 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
           direction="column"
           justify="start"
           css={{ height: '100%', overflowY: 'auto', py: '$16' }}
-          ref={scrollRef}
         >
           <Flex css={{ px: '$32' }} direction="column" gap={16}>
             {filteredList?.map((user) => (
