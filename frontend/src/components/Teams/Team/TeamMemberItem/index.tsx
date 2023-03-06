@@ -24,7 +24,7 @@ export type TeamMemberItemProps = {
 const TeamMemberItem = React.memo<TeamMemberItemProps>(
   ({ isTeamPage = false, member, hasPermissions = false }) => {
     const { data: session } = useSession();
-    const canChangeRole = hasPermissions && !(session?.user.id === member._id);
+    const canChangeRole = hasPermissions && session?.user.id !== member.user._id;
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
