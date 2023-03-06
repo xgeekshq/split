@@ -74,6 +74,7 @@ describe('ColumnsController', () => {
 				getTokenAuthService,
 				updateUserService,
 				boardUserRepository,
+				createBoardUserService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

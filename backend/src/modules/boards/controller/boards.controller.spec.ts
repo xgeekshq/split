@@ -1,4 +1,3 @@
-import { createBoardUserService } from './../boards.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -10,6 +9,7 @@ import {
 	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
+	createBoardUserService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
@@ -75,6 +75,7 @@ describe('BoardsController', () => {
 				createBoardUserService,
 				getTokenAuthService,
 				updateUserService,
+				getBoardService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
