@@ -27,6 +27,7 @@ const SIZE_OPTIONS: TextSizeType[] = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'];
 const COLOR_OPTIONS: ColorType[] = [
   'white',
   'dangerBase',
+  'primary100',
   'primary200',
   'primary300',
   'primary400',

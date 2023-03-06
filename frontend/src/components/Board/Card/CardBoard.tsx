@@ -12,6 +12,7 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { useRecoilValue } from 'recoil';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import AddCardOrComment from '../AddCardOrComment';
 import Comments from '../Comment/Comments';
 import CardFooter from './CardFooter';
@@ -114,7 +115,12 @@ const CardBoard = React.memo<CardBoardProps>(
         key={card._id}
         draggableId={card._id}
         index={index}
-        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || (isMainboard && hideCards)}
+        isDragDisabled={
+          isSubmited ||
+          (isMainboard && !hasAdminRole) ||
+          (isMainboard && hideCards) ||
+          phase === BoardPhases.SUBMITTED
+        }
       >
         {(provided) => (
           <Flex
@@ -188,6 +194,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         {card.text}
                       </Text>
                       {!isSubmited &&
+                        phase !== BoardPhases.SUBMITTED &&
                         ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
                           <PopoverCardSettings
                             boardId={boardId}
@@ -273,6 +280,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 hasAdminRole={hasAdminRole}
                 postAnonymously={postAnonymously}
                 isMainboard={isMainboard}
+                phase={phase}
               />
             )}
           </Flex>

@@ -24,7 +24,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
-import { ConfigurationSwitchSettings } from './partials/ConfigurationSettings/ConfigurationSwitch';
+import ConfigurationSwitch from '../../Primitives/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
@@ -315,19 +315,19 @@ const BoardSettings = ({
               </Text>
               <Accordion type="multiple">
                 <ConfigurationSettings>
-                  <ConfigurationSwitchSettings
+                  <ConfigurationSwitch
                     handleCheckedChange={handleHideCardsChange}
                     isChecked={switchesState.hideCards}
                     text="Participants can not see the cards from other participants of this retrospective."
                     title="Hide cards from others"
                   />
-                  <ConfigurationSwitchSettings
+                  <ConfigurationSwitch
                     handleCheckedChange={handleAddCardsChange}
                     isChecked={switchesState.addCards}
                     text="Allow users to add cards."
                     title="Add cards"
                   />
-                  <ConfigurationSwitchSettings
+                  <ConfigurationSwitch
                     handleCheckedChange={handlePostAnonymouslyChange}
                     isChecked={switchesState.postAnonymously}
                     text=" The option to post anonymously is checked by default."
@@ -336,13 +336,13 @@ const BoardSettings = ({
 
                   {!isSubBoard && (
                     <>
-                      <ConfigurationSwitchSettings
+                      <ConfigurationSwitch
                         handleCheckedChange={handleHideVotesChange}
                         isChecked={switchesState.hideVotes}
                         text="Participants can not see the votes from other participants of this retrospective."
                         title="Hide votes from others"
                       />
-                      <ConfigurationSwitchSettings
+                      <ConfigurationSwitch
                         handleCheckedChange={handleMaxVotesChange}
                         isChecked={switchesState.maxVotes}
                         text="Make votes more significant by limiting them."
@@ -356,12 +356,12 @@ const BoardSettings = ({
                           placeholder="Max votes"
                           type="number"
                         />
-                      </ConfigurationSwitchSettings>
+                      </ConfigurationSwitch>
                     </>
                   )}
 
                   {isRegularBoard && hasPermissions && (
-                    <ConfigurationSwitchSettings
+                    <ConfigurationSwitch
                       handleCheckedChange={handleIsPublicChange}
                       isChecked={switchesState.isPublic}
                       text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
@@ -372,7 +372,7 @@ const BoardSettings = ({
 
                 {isSubBoard && hasPermissions && (
                   <TeamResponsibleSettings>
-                    <ConfigurationSwitchSettings
+                    <ConfigurationSwitch
                       isChecked={switchesState.responsible}
                       text="Change responsible participant for this board."
                       title="Team Responsible"
@@ -442,7 +442,7 @@ const BoardSettings = ({
                           )}
                         />
                       </Flex>
-                    </ConfigurationSwitchSettings>
+                    </ConfigurationSwitch>
                   </TeamResponsibleSettings>
                 )}
                 {isRegularBoard && (

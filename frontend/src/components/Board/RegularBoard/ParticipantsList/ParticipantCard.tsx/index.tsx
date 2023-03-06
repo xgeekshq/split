@@ -3,26 +3,22 @@ import React from 'react';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
-import {
-  IconButton,
-  InnerContainer,
-  StyledMemberTitle,
-} from '@/components/Teams/CreateTeam/CardMember/styles';
+import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip';
 import { useRouter } from 'next/router';
-import { ConfigurationSwitchSettings } from '@/components/Board/Settings/partials/ConfigurationSettings/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
+import Button from '@/components/Primitives/Button';
 
 type CardBodyProps = {
   member: BoardUser;
   isCurrentUserResponsible: boolean;
   isCurrentUserSAdmin: boolean;
   isMemberCurrentUser: boolean;
-  haveInvalidNumberOfResponsibles: boolean;
-  responsibleSignedUpUsers: BoardUser[];
   isOpen?: boolean;
+  isCreatedByCurrentUser?: boolean;
 };
 
 const ParticipantCard = React.memo<CardBodyProps>(
@@ -32,8 +28,8 @@ const ParticipantCard = React.memo<CardBodyProps>(
     isCurrentUserSAdmin,
     isMemberCurrentUser,
     isOpen,
-    haveInvalidNumberOfResponsibles,
-    responsibleSignedUpUsers,
+
+    isCreatedByCurrentUser,
   }) => {
     const {
       addAndRemoveBoardParticipants: { mutate },
@@ -72,13 +68,14 @@ const ParticipantCard = React.memo<CardBodyProps>(
 
     const handleSelectFunction = (checked: boolean) => updateIsResponsibleStatus(checked);
 
-    let memberOnlySignedUpResponsible: boolean = false;
+    /* Has permission to delete, if the user is:
+      - superAdmin and is not the creator of the board
+      - responsible of the board and is not the current member and is not the creator of the board
+    */
 
-    if (haveInvalidNumberOfResponsibles) {
-      memberOnlySignedUpResponsible = !!responsibleSignedUpUsers.find(
-        (boardUser) => boardUser.user._id === member.user._id,
-      );
-    }
+    const hasPermissionsToDelete =
+      (isCurrentUserSAdmin && !isCreatedByCurrentUser) ||
+      (isCurrentUserResponsible && !isMemberCurrentUser && !isCreatedByCurrentUser);
 
     return (
       <Flex css={{ flex: '1 1 1' }} direction="column">
@@ -106,44 +103,37 @@ const ParticipantCard = React.memo<CardBodyProps>(
                 }}
               />
               <Flex align="center" gap="8" justify="start" css={{ width: '50%' }}>
-                <StyledMemberTitle>
+                <Text size="sm" fontWeight="bold" overflow="wrap">
                   {`${member.user.firstName} ${member.user.lastName}`}
-                </StyledMemberTitle>
+                </Text>
               </Flex>
 
               <Flex css={{ width: '50%' }} justify="between">
                 {(isCurrentUserSAdmin || isCurrentUserResponsible) && (
                   <Flex align="center" gap="8" justify="start">
-                    <ConfigurationSwitchSettings
+                    <ConfigurationSwitch
                       handleCheckedChange={handleSelectFunction}
                       isChecked={isMemberResponsible}
                       text=""
                       title="Responsible"
                       disabledInfo="Select another responsible for the board"
-                      disabled={memberOnlySignedUpResponsible && !isCurrentUserSAdmin}
+                      disabled={isCreatedByCurrentUser}
                     />
                   </Flex>
                 )}
-                {(isCurrentUserSAdmin || (isCurrentUserResponsible && !isMemberCurrentUser)) && (
+                {hasPermissionsToDelete && (
                   <Flex align="center" justify="end">
                     <Tooltip content="Remove participant">
                       <Flex justify="end">
-                        <IconButton
-                          onClick={handleRemove}
-                          css={{
-                            '&:hover': {
-                              cursor: 'pointer',
-                            },
-                          }}
-                        >
+                        <Button isIcon onClick={handleRemove}>
                           <Icon
                             name="trash-alt"
+                            size={20}
                             css={{
                               color: '$primary400',
-                              size: '$20',
                             }}
                           />
-                        </IconButton>
+                        </Button>
                       </Flex>
                     </Tooltip>
                   </Flex>
