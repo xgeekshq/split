@@ -36,9 +36,11 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
           backgroundColor: '$dangerBase',
         },
         '&:disabled': {
-          borderColor: '$primary100',
+          borderColor: '$danger500',
+          opacity: 0.3,
           '&[data-state="checked"]': {
-            backgroundColor: '$primary100',
+            backgroundColor: '$danger400',
+            opacity: 0.3,
           },
         },
       },
@@ -78,7 +80,7 @@ const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
   justifyContent: 'center',
 });
 
-const Checkbox: React.FC<{
+export type CheckboxProps = {
   id: string;
   label: string;
   variant?: 'default' | 'error';
@@ -86,49 +88,43 @@ const Checkbox: React.FC<{
   checked?: boolean;
   handleChange?: (value: boolean) => void;
   disabled?: boolean;
-}> = ({ id, label, variant, size, checked, disabled, handleChange }) => {
-  Checkbox.defaultProps = {
-    checked: false,
-    disabled: false,
-    handleChange: undefined,
-  };
-
-  return (
-    <Flex
-      css={{
-        alignItems: 'center',
-        height: '$36',
-        width: '100%',
-        boxSizing: 'border-box',
-      }}
-      gap={8}
-    >
-      <StyledCheckbox
-        id={id}
-        checked={checked}
-        onCheckedChange={handleChange}
-        disabled={disabled}
-        name={id}
-        variant={variant}
-        size={size}
-      >
-        <StyledIndicator>
-          <Icon name="check" />
-        </StyledIndicator>
-      </StyledCheckbox>
-      <Text
-        as="label"
-        color={disabled ? 'primary200' : 'primary800'}
-        css={{
-          cursor: 'pointer',
-          wordBreak: 'break-word',
-        }}
-        htmlFor={id}
-        size="sm"
-      >
-        {label}
-      </Text>
-    </Flex>
-  );
 };
+
+const Checkbox = ({
+  id,
+  label,
+  variant,
+  size,
+  checked = false,
+  disabled = false,
+  handleChange,
+}: CheckboxProps) => (
+  <Flex align="center" gap={8} data-testid="checkBox">
+    <StyledCheckbox
+      id={id}
+      checked={checked}
+      onCheckedChange={handleChange}
+      disabled={disabled}
+      name={id}
+      variant={variant}
+      size={size}
+    >
+      <StyledIndicator>
+        <Icon name="check" />
+      </StyledIndicator>
+    </StyledCheckbox>
+    <Text
+      as="label"
+      color={disabled ? 'primary200' : 'primary800'}
+      css={{
+        cursor: 'pointer',
+        wordBreak: 'break-word',
+      }}
+      htmlFor={id}
+      size="sm"
+    >
+      {label}
+    </Text>
+  </Flex>
+);
 export default Checkbox;
