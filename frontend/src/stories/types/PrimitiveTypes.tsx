@@ -33,6 +33,7 @@ export type TextSizeType = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ColorType =
   | 'white'
   | 'dangerBase'
+  | 'primary100'
   | 'primary200'
   | 'primary300'
   | 'primary400'
@@ -53,7 +54,7 @@ export type SeparatorOrientationType = 'horizontal' | 'vertical';
 export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';
 
 // Primitive/Svg
-export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 100;
+export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 48 | 100;
 
 // Primitive/Switch
 export type SwitchSizeType = 'xs' | 'sm' | 'md';

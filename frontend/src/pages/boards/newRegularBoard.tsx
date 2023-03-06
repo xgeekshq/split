@@ -272,7 +272,11 @@ const NewRegularBoard: NextPage = () => {
                     >
                       <InnerContent direction="column">
                         <FormProvider {...methods}>
-                          <BoardName />
+                          <BoardName
+                            title="Board Name"
+                            description="Make it short and descriptive. It well help you to distinguish retrospectives from each
+        other."
+                          />
                           <SettingsTabs />
                         </FormProvider>
                       </InnerContent>

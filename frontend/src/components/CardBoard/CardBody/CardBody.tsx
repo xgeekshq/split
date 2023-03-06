@@ -13,6 +13,7 @@ import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { Team } from '@/types/team/team';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import CardIcon from '../CardIcon';
 import CardEnd from './CardEnd';
 import CardTitle from './CardTitle';
@@ -129,7 +130,11 @@ const CardBody = React.memo<CardBodyProps>(
 
       let myUser;
 
-      const myUserIsOwnerMainBoard = board.createdBy?._id === userId;
+      const myUserIsOwnerBoard = board.createdBy?._id === userId;
+
+      const myUserIsBoardResponsible = !!users.find(
+        (user) => user.user._id === userId && user.role === BoardUserRoles.RESPONSIBLE,
+      );
 
       if (team || mainBoardTeam) {
         myUser = (mainBoardTeam ?? team).users.find(
@@ -137,13 +142,13 @@ const CardBody = React.memo<CardBodyProps>(
         );
 
         const myUserIsOwnerSubBoard = String(board.createdBy) === userId;
-        const owner = myUserIsOwnerMainBoard || myUserIsOwnerSubBoard;
+        const owner = myUserIsOwnerBoard || myUserIsOwnerSubBoard;
         if (myUser?.role === 'admin' || myUser?.role === 'stakeholder' || owner) {
           return true;
         }
       }
 
-      return myUserIsOwnerMainBoard;
+      return myUserIsOwnerBoard || myUserIsBoardResponsible;
     }, [isSAdmin, board.createdBy, userId, team, mainBoardTeam]);
 
     const handleOpenSubBoards = (e: ClickEvent<HTMLDivElement, MouseEvent>) => {
