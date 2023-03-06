@@ -81,6 +81,7 @@ export type UpdateBoardType = {
   team?: string;
   phase?: string;
   createdBy?: string;
+  mainBoardId?: string;
 };
 
 export type UpdateBoardPhase = {

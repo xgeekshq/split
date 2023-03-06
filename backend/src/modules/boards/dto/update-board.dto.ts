@@ -14,4 +14,8 @@ export class UpdateBoardDto extends PartialType(BoardDto) {
 	@IsOptional()
 	@Type(() => String)
 	deletedColumns?: string[];
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	mainBoardId?: string;
 }
