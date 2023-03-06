@@ -95,8 +95,8 @@ const Checkbox: React.FC<{
 
   return (
     <Flex
+      align="center"
       css={{
-        alignItems: 'center',
         height: '$36',
         width: '100%',
         boxSizing: 'border-box',

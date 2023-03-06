@@ -5,8 +5,7 @@ import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import { UserList } from '@/types/team/userList';
-import { ScrollableContent } from './styles';
-import SearchInput from './SearchInput';
+import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
 
 type ListMembersDialogProps = {
   usersList: UserList[];
@@ -115,7 +114,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
     return (
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
         <Dialog.Header title={btnTitle} />
-        <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+        <Flex css={{ p: '$32' }} direction="column">
           <SearchInput
             currentValue={searchMember}
             handleChange={handleSearchChange}
@@ -129,11 +128,16 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
         <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
           {title}
         </Text>
-        <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-          <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
+        <Flex
+          direction="column"
+          justify="start"
+          css={{ height: '100%', overflowY: 'auto', py: '$16' }}
+          ref={scrollRef}
+        >
+          <Flex css={{ px: '$32' }} direction="column" gap={16}>
             {filteredList?.map((user) => (
-              <Flex key={user._id} align="center" justify="between">
-                <Flex css={{ width: '50%' }}>
+              <Flex key={user._id} align="center">
+                <Flex css={{ flex: 1 }}>
                   <Checkbox
                     id={user._id}
                     checked={user.isChecked}
@@ -145,15 +149,15 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                     size="md"
                   />
                 </Flex>
-                <Flex css={{ width: '50%' }}>
-                  <Text color="primary300" css={{ textAlign: 'left', width: '50%' }} size="sm">
+                <Flex css={{ flex: 1 }}>
+                  <Text color="primary300" size="sm">
                     {user.email}
                   </Text>
                 </Flex>
               </Flex>
             ))}
           </Flex>
-        </ScrollableContent>
+        </Flex>
         <Flex
           justify="between"
           align="center"

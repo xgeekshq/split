@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
 import Text from '@/components/Primitives/Text';
+import { ROUTES } from '@/utils/routes';
 
-type TeamTitleProps = {
+export type TeamTitleProps = {
   title: string;
   teamId: string;
   isTeamPage?: boolean;
@@ -17,13 +18,7 @@ const TeamTitle = ({ teamId, title, isTeamPage }: TeamTitleProps) => {
 
   if (isTeamPage) {
     return (
-      <Link
-        key={teamId}
-        href={{
-          pathname: `teams/[teamId]`,
-          query: { teamId },
-        }}
-      >
+      <Link key={teamId} href={ROUTES.TeamPage(teamId)}>
         {renderTitle()}
       </Link>
     );
