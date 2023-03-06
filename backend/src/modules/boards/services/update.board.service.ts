@@ -40,7 +40,7 @@ import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack'
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import Team from 'src/modules/teams/entities/teams.schema';
-import BoardChangeEvent from 'src/modules/socket/events/user-updated-board.event';
+import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -491,7 +491,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 			const { boardId, phase } = boardPhaseDto;
 			const board = await this.boardRepository.updatePhase(boardId, phase);
 
-			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new BoardChangeEvent(board));
+			this.eventEmitter.emit(BOARD_PHASE_SERVER_UPDATED, new PhaseChangeEvent(board));
 
 			//Sends message to SLACK
 			if (

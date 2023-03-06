@@ -10,7 +10,7 @@ import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';
-import { UpdateBoardPhase } from '@/types/board/board';
+import { UpdateBoardPhaseType } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 
 type Props = {
@@ -23,7 +23,7 @@ const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
 
   const handleSubmitClick = () => {
     if (isAdmin) {
-      const updateBoardPhase: UpdateBoardPhase = {
+      const updateBoardPhase: UpdateBoardPhaseType = {
         boardId,
         phase: BoardPhases.SUBMITTED,
       };

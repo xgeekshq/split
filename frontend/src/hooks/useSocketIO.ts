@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import useCards from '@/hooks/useCards';
-import BoardType, { UpdateBoardPhase } from '@/types/board/board';
+import BoardType, { PhaseChangeEventType } from '@/types/board/board';
+
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -142,7 +143,7 @@ export const useSocketIO = (boardId: string): SocketInterface => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEBOARDUSERS, dto: addBoardUser }]);
     });
 
-    socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: UpdateBoardPhase) => {
+    socket?.on(BOARD_PHASE_SERVER_SENT, (updateBoardPhaseDto: PhaseChangeEventType) => {
       setQueue((prev) => [...prev, { action: BoardAction.UPDATEPHASE, dto: updateBoardPhaseDto }]);
     });
   }, [queryClient, socket, boardId]);

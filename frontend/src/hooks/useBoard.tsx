@@ -14,7 +14,7 @@ import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { BoardUser } from '@/types/board/board.user';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
-import BoardType from '@/types/board/board';
+import BoardType, { PhaseChangeEventType } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
@@ -157,18 +157,17 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
-  const updateBoardPhase = (data: any) => {
-    const { board } = data;
+  const updateBoardPhase = (board: PhaseChangeEventType) => {
     setReady(false);
     queryClient.setQueryData<{ board: BoardType } | undefined>(
-      getBoardQuery(board._id),
+      getBoardQuery(board.boardId),
       (old: { board: BoardType } | undefined) => {
         if (old) {
           setToastState({
             open: true,
-            content: `${data.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''} ${
-              old.board.title
-            } ${data.phase === BoardPhases.SUBMITTED ? ' was submited' : ''}`,
+            content: `${
+              board.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''
+            } ${old.board.title} ${board.phase === BoardPhases.SUBMITTED ? ' was submited' : ''}`,
             type: ToastStateEnum.SUCCESS,
           });
           return {
