@@ -20,31 +20,26 @@ export class BoardRepository
 	}
 
 	updatePhase(boardId: string, phase: BoardPhases): Promise<Board> {
-		const setValues =
-			phase === BoardPhases.ADDCARDS
-				? { phase, submitedAt: null }
-				: phase === BoardPhases.VOTINGPHASE
-				? {
-						phase,
-						submitedAt: null,
-						hideCards: false,
-						hideVotes: false,
-						addCards: false
-				  }
-				: {
-						phase,
-						submitedAt: new Date(),
-						hideCards: false,
-						hideVotes: false,
-						addCards: false
-				  };
+		const getValues = () => {
+			if (phase === BoardPhases.ADDCARDS) {
+				return { phase, submitedAt: null };
+			} else {
+				return {
+					phase,
+					submitedAt: phase === BoardPhases.VOTINGPHASE ? null : new Date(),
+					hideCards: false,
+					hideVotes: false,
+					addCards: false
+				};
+			}
+		};
 
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: boardId
 			},
 			{
-				$set: setValues
+				$set: getValues()
 			},
 			{ new: true },
 			GetBoardDataPopulate
