@@ -250,7 +250,10 @@ const NewSplitBoard: NextPage = () => {
                   )}
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
-                      <BoardName />
+                      <BoardName
+                        title="Main Board Name"
+                        description="The main board is the board into which all sub-boards will be merged"
+                      />
                       <SettingsTabs />
                     </FormProvider>
                   </InnerContent>

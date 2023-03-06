@@ -140,7 +140,7 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
                     handleChange={() => {
                       handleChecked(user._id);
                     }}
-                    disabled={user._id === session?.user.id}
+                    disabled={user._id === session?.user.id && !session?.user.isSAdmin}
                     label={`${user.firstName} ${user.lastName}`}
                     size="md"
                   />
