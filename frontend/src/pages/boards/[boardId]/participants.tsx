@@ -100,7 +100,7 @@ const BoardParticipants = () => {
             <Flex justify="between">
               <RegularBoardHeader isParticipantsPage />
             </Flex>
-            <ParticipantsList />
+            <ParticipantsList createdBy={boardData?.board.createdBy._id} />
           </Flex>
         </ContentSection>
       </QueryError>

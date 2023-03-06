@@ -25,7 +25,7 @@ const render = (props: TeamItemProps = DEFAULT_PROPS, options?: any) =>
     },
   });
 
-describe('Components/TeamItem', () => {
+describe('Components/Teams/TeamsList/TeamItem', () => {
   let testProps: TeamItemProps;
   beforeEach(() => {
     testProps = { ...DEFAULT_PROPS };

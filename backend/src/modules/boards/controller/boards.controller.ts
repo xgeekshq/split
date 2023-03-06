@@ -352,8 +352,8 @@ export default class BoardsController {
 			properties: {
 				boardId: { type: 'string' },
 				phase: {
-					enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED],
-					example: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
+					enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITTED],
+					example: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITTED]
 				}
 			}
 		}

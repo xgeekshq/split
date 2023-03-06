@@ -38,28 +38,8 @@ const InnerContent = styled(Flex, {
 });
 
 const StyledForm = styled('form', Flex, {
-  variants: {
-    status: {
-      false: {
-        opacity: 0.5,
-        pointerEvents: 'none',
-
-        '&>div:first-child': {
-          padding: '$20 92px 57px 152px',
-        },
-      },
-      true: {
-        '&>div:first-child': {
-          padding: '64px 92px 57px 152px',
-        },
-      },
-    },
-  },
-
-  defaultVariants: {
-    status: true,
-  },
   flex: '1 1 auto',
+  padding: '64px 92px 57px 152px',
 });
 
 const SubContainer = styled('div', {

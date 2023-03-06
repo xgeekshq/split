@@ -12,7 +12,7 @@ import Flex from '@/components/Primitives/Flex';
 import Tooltip from '@/components/Primitives/Tooltip';
 import useTeam from '@/hooks/useTeam';
 
-type DeleteTeamProps = {
+export type DeleteTeamProps = {
   teamName: string;
   teamId: string;
   teamUserId?: string;
@@ -33,7 +33,11 @@ const DeleteTeam = ({ teamName, teamId, teamUserId, isTeamPage }: DeleteTeamProp
   return (
     <AlertDialog>
       <Tooltip content="Delete team">
-        <AlertDialogTrigger asChild onMouseDown={(e) => e.preventDefault()}>
+        <AlertDialogTrigger
+          asChild
+          onMouseDown={(e) => e.preventDefault()}
+          data-testid="deleteTeamTrigger"
+        >
           <Button isIcon size="sm">
             <Icon
               name="trash-alt"

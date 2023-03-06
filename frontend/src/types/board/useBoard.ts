@@ -1,12 +1,13 @@
 import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
-import { BoardUser } from './board.user';
-
 import BoardType, {
+  PhaseChangeEventType,
   CreateBoardDto,
   GetBoardResponse,
-  UpdateBoardPhase,
   UpdateBoardType,
-} from './board';
+} from '@/types/board/board';
+import { BoardUser } from './board.user';
+
+import UpdateBoardPhaseDto from './updateBoardPhase.dto';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
@@ -26,5 +27,7 @@ export default interface UseBoardType {
 
   setQueryDataAddBoardUser: (data: BoardUser) => void;
 
-  updateBoardPhase: (data: UpdateBoardPhase) => void;
+  updateBoardPhase: (data: PhaseChangeEventType) => void;
+
+  updateBoardPhaseMutation: UseMutationResult<void, unknown, UpdateBoardPhaseDto, unknown>;
 }

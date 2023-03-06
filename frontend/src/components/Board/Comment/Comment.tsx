@@ -5,6 +5,7 @@ import Text from '@/components/Primitives/Text';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import AddCardOrComment from '../AddCardOrComment';
 import PopoverCommentSettings from './PopoverSettings';
 
@@ -22,6 +23,7 @@ interface CommentProps {
   hasAdminRole: boolean;
   isMainboard: boolean;
   postAnonymously: boolean;
+  phase?: string;
 }
 
 const Comment: React.FC<CommentProps> = React.memo(
@@ -38,6 +40,7 @@ const Comment: React.FC<CommentProps> = React.memo(
     hasAdminRole,
     isMainboard,
     postAnonymously,
+    phase,
   }) => {
     const { deleteComment } = useComments();
     const [editing, setEditing] = useState(false);
@@ -82,6 +85,7 @@ const Comment: React.FC<CommentProps> = React.memo(
                 {comment.text}
               </Text>
               {!isSubmited &&
+                phase !== BoardPhases.SUBMITTED &&
                 ((userId === comment.createdBy._id && !isMainboard) || hasAdminRole) && (
                   <PopoverCommentSettings
                     handleDeleteComment={handleDeleteComment}

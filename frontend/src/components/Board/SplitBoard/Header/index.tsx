@@ -291,7 +291,7 @@ const BoardHeader = () => {
                 </div>
               ) : null}
               {boardData.board.phase === BoardPhases.VOTINGPHASE ? 'Voting Phase' : null}
-              {boardData.board.phase === BoardPhases.SUBMITED ? 'Submited' : null}
+              {boardData.board.phase === BoardPhases.SUBMITTED ? 'Submited' : null}
             </BoardCounter>
           </PopoverTrigger>
           <PopoverPortal>

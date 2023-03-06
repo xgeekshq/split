@@ -1,33 +1,20 @@
 import React, { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/Primitives/Icon';
-import Box from '@/components/Primitives/Box';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
-import RoleDescription from '@/components/Teams/CreateTeam/CardEnd/RoleDescription';
-import PopoverRoleSettings from '@/components/Teams/CreateTeam/CardMember/RoleSettings';
-import { TeamUser } from '@/types/team/team.user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { InnerContainer } from '@/components/Teams/styles';
 
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
 import TeamBoards from './partials/TeamBoards';
 import TeamTitle from './partials/TeamTitle';
 import DeleteTeam from './partials/DeleteTeam';
-
-const InnerContainer = styled(Flex, Box, {
-  px: '$32',
-  py: '$22',
-  backgroundColor: '$white',
-  borderRadius: '$12',
-  position: 'relative',
-  maxHeight: '$76',
-});
 
 export type TeamItemProps = {
   team: Team;
@@ -40,8 +27,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
 
   const { id: userId, isSAdmin } = { ...session?.user };
   const { id, users, name } = team;
-  const userFound: TeamUser | undefined = users.find((member) => member.user?._id === userId);
-  const userRole = userFound?.role;
+  const userFound = users.find((member) => member.user?._id === userId);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
@@ -107,11 +93,8 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
           <Separator orientation="vertical" size="lg" />
 
           <Flex align="center">
-            {router.pathname.includes('users') ? (
-              <Flex align="start" gap="8">
-                <RoleDescription role={userRole} />
-                <PopoverRoleSettings userId={userId} isTeamPage teamId={id} />
-              </Flex>
+            {router.pathname.includes('users') && userFound ? (
+              <RoleSelector role={userFound.role} userId={userId!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}

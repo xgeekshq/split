@@ -1,5 +1,5 @@
 export enum BoardPhases {
 	ADDCARDS = 'addcards',
 	VOTINGPHASE = 'votingphase',
-	SUBMITED = 'submited'
+	SUBMITTED = 'submitted'
 }

@@ -9,7 +9,11 @@ import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import ParticipantsLayout from './ParticipantsLayout';
 import ParticipantCard from './ParticipantCard.tsx';
 
-const ParticipantsList = () => {
+type ParticipantsListProps = {
+  createdBy?: string;
+};
+
+const ParticipantsList = ({ createdBy }: ParticipantsListProps) => {
   const boardParticipants = useRecoilValue(boardParticipantsState);
   const { data: session } = useSession();
 
@@ -21,16 +25,6 @@ const ParticipantsList = () => {
   );
 
   const isSAdmin = !!session?.user.isSAdmin;
-
-  const responsiblesList = boardParticipants.filter(
-    (boardUser) => boardUser.role === BoardUserRoles.RESPONSIBLE,
-  );
-
-  const responsibleSignedUpUsers = responsiblesList.filter(
-    (boardUser) => !boardUser.user.isAnonymous,
-  );
-
-  const haveInvalidNumberOfResponsibles = responsibleSignedUpUsers.length < 2;
 
   return (
     <ParticipantsLayout hasPermissionsToEdit={isResponsible || isSAdmin}>
@@ -48,8 +42,7 @@ const ParticipantsList = () => {
               isMemberCurrentUser={member.user._id === userId}
               isCurrentUserResponsible={isResponsible}
               isCurrentUserSAdmin={isSAdmin}
-              haveInvalidNumberOfResponsibles={haveInvalidNumberOfResponsibles}
-              responsibleSignedUpUsers={responsibleSignedUpUsers}
+              isCreatedByCurrentUser={createdBy === member.user._id}
             />
           ))}
         </ScrollableContent>

@@ -35,6 +35,7 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
+import AlertSubmitPhase from '@/components/Board/SplitBoard/AlertSubmitPhase';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -193,6 +194,13 @@ const Board: NextPage<Props> = ({ boardId }) => {
     !isSubBoard &&
     hasAdminRole
   );
+  const showButtonToSubmit = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
+    board?.phase === BoardPhases.VOTINGPHASE &&
+    !isSubBoard &&
+    hasAdminRole
+  );
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -222,9 +230,11 @@ const Board: NextPage<Props> = ({ boardId }) => {
 
   const shouldShowLeftSection =
     !showMessageIfMerged &&
-    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote);
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
 
-  const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
+  const shouldShowRightSection =
+    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;
@@ -260,12 +270,13 @@ const Board: NextPage<Props> = ({ boardId }) => {
               {showButtonToVote && (
                 <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
+              {showButtonToSubmit && <AlertSubmitPhase boardId={boardId} isAdmin={hasAdminRole} />}
             </Flex>
           )}
 
           {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
 
-          {!board?.submitedAt && (
+          {shouldShowTimer && (
             <Flex
               css={{
                 flex: 1,

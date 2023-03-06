@@ -78,9 +78,12 @@ export default class Board extends BaseModel {
 	@Prop({
 		type: String,
 		nullable: true,
-		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
+		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITTED]
 	})
 	phase?: string;
+
+	@Prop({ type: String })
+	createdAt: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
