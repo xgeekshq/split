@@ -19,6 +19,7 @@ import {
 	afterUserUpdatedDurationSubscriber,
 	boardRepository,
 	boardTimerRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
 	createBoardUserService,
@@ -74,6 +75,7 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository,
+		boardUserRepository,
 		userRepository
 	],
 	controllers: [BoardsController],

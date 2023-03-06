@@ -1,4 +1,3 @@
-import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -11,6 +10,7 @@ import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { Reflector } from '@nestjs/core';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
 export class GetBoardGuard implements CanActivate {
@@ -31,16 +31,16 @@ export class GetBoardGuard implements CanActivate {
 			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
 			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, userId);
 
-			if (isPublic || boardUserFound.length) {
+			if (isPublic || boardUserFound.length || isSAdmin) {
 				return true;
 			}
 
-			if (!boardUserFound) {
+			if (!boardUserFound.length) {
 				const { role: teamRole } = (team as Team).users.find(
 					(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === userId.toString()
 				);
 
-				return !isAnonymous && (isSAdmin || permissions.includes(teamRole));
+				return !isAnonymous && permissions.includes(teamRole);
 			}
 		} catch (error) {
 			throw new ForbiddenException();

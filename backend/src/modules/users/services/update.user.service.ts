@@ -9,14 +9,12 @@ import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import User, { UserDocument } from '../entities/user.schema';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import UserDto from '../dto/user.dto';
 
 @Injectable()
 export default class updateUserServiceImpl implements UpdateUserService {
 	constructor(
-		@InjectModel(User.name) private userModel: Model<UserDocument>,
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@InjectModel(ResetPassword.name)

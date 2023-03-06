@@ -9,18 +9,18 @@ import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.
 import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { ColumnRepositoryInterface } from '../repositories/column.repository.interface';
-import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
 export default class UpdateColumnServiceImpl implements UpdateColumnService {
 	constructor(
 		@Inject(Columns.TYPES.repositories.ColumnRepository)
 		private readonly columnRepository: ColumnRepositoryInterface,
-		@Inject(Boards.TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardService
+		private deleteCardService: DeleteCardService,
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
 	async updateColumn(boardId: string, column: UpdateColumnDto) {
@@ -36,7 +36,7 @@ export default class UpdateColumnServiceImpl implements UpdateColumnService {
 	}
 
 	async deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
-		const board = await this.boardRepository.getBoard(boardId);
+		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {
 			throw new BadRequestException(UPDATE_FAILED);

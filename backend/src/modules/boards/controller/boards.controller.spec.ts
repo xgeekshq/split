@@ -7,6 +7,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
 	boardRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -62,6 +63,7 @@ describe('BoardsController', () => {
 				createSchedulesService,
 				deleteSchedulesService,
 				teamRepository,
+				boardUserRepository,
 				teamUserRepository,
 				updateTeamService,
 				getCardService,

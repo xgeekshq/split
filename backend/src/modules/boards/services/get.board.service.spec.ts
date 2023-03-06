@@ -1,6 +1,7 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import { ConfigService } from '@nestjs/config';
-import { createBoardUserService } from './../boards.providers';
+import { boardUserRepository, createBoardUserService } from './../boards.providers';
 import { JwtService } from '@nestjs/jwt';
 import { getTokenAuthService } from './../../auth/auth.providers';
 import { Logger } from '@nestjs/common';
@@ -19,6 +20,7 @@ import {
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fakeBoards = BoardFactory.createMany(2);
@@ -40,6 +42,9 @@ describe('GetBoardServiceImpl', () => {
 				boardRepository,
 				updateTeamService,
 				userRepository,
+				boardUserRepository,
+				SocketGateway,
+				EventEmitter2,
 				{
 					provide: getModelToken('Team'),
 					useValue: {}

@@ -80,6 +80,7 @@ export type UpdateBoardType = {
   postAnonymously: boolean;
   team?: string;
   phase?: string;
+  createdBy?: string;
 };
 
 export type UpdateBoardPhaseType = {

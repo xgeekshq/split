@@ -26,6 +26,8 @@ const mockBoardData = (countColumns = 2, countCards = 1, params?: Partial<Board>
 		addCards: faker.datatype.boolean(),
 		responsibles: ['1'],
 		createdBy: userId,
+		addcards: faker.datatype.boolean(),
+		postAnonymously: faker.datatype.boolean(),
 		...params
 	};
 };
