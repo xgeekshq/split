@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,7 +8,7 @@ import {
 } from './AlertDialog';
 import Flex from './Flex';
 
-type ConfirmationDialogProps = {
+export type ConfirmationDialogProps = {
   trigger: React.ReactNode;
   description: string;
   confirmationHandler: () => void;

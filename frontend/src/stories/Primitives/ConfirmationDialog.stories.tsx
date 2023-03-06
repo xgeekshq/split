@@ -1,8 +1,10 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
+import dedent from 'ts-dedent';
+
 import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
-import Button from '@/components/Primitives/Button';
+import Icon from '@/components/Primitives/Icon';
 
 export default {
   title: 'Primitives/ConfirmationDialog',
@@ -10,16 +12,22 @@ export default {
   parameters: {
     docs: {
       description: {
-        component: '',
+        component: dedent`
+        A modal dialog that interrupts the user requesting some type of confirmation.
+
+        **File Path:**
+        \`@/components/Primitives/ConfirmationDialog.tsx\`
+        `,
       },
     },
   },
   args: {
-    trigger: <Button>Trigger</Button>,
+    trigger: <Icon name="user" />,
     title: 'Title',
     description: 'Are you sure you want to confirm?',
     confirmationHandler: () => alert('Confirmed!'),
     confirmationLabel: 'Confirm',
+    tooltip: 'Tooltip',
     variant: 'danger',
   },
   argTypes: {
