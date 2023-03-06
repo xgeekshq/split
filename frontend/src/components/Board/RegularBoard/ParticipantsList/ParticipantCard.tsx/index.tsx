@@ -67,6 +67,15 @@ const ParticipantCard = React.memo<CardBodyProps>(
 
     const handleSelectFunction = (checked: boolean) => updateIsResponsibleStatus(checked);
 
+    /* Has permission to delete, if the user is:
+      - superAdmin and is not the creator of the board
+      - responsible of the board and is not the current member and is not the creator of the board
+    */
+
+    const hasPermissionsToDelete =
+      (isCurrentUserSAdmin && !isCreatedByCurrentUser) ||
+      (isCurrentUserResponsible && !isMemberCurrentUser && !isCreatedByCurrentUser);
+
     return (
       <Flex css={{ flex: '1 1 1' }} direction="column">
         <Flex>
@@ -111,10 +120,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
                     />
                   </Flex>
                 )}
-                {((isCurrentUserSAdmin && !isCreatedByCurrentUser) ||
-                  (isCurrentUserResponsible &&
-                    !isMemberCurrentUser &&
-                    !isCreatedByCurrentUser)) && (
+                {hasPermissionsToDelete && (
                   <Flex align="center" justify="end">
                     <Tooltip content="Remove participant">
                       <Flex justify="end">
