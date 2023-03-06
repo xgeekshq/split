@@ -4,6 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Flex';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
+import Separator from '@/components/Primitives/Separator';
 import PopoverRoleSettings from './PopoverRoleSettings';
 
 export type RoleSelectorProps = {
@@ -21,10 +22,11 @@ const RoleSelector = ({
   teamId = undefined,
   canChangeRole = true,
 }: RoleSelectorProps) => (
-  <Flex gap="8" data-testid="roleSelector">
+  <Flex gap="8" align="center" data-testid="roleSelector">
     <Text color="primary200" size="sm">
-      Role |
+      Role
     </Text>
+    <Separator orientation="vertical" size="md" />
     <Text color="primary800" size="sm" fontWeight="medium">
       {getFormattedTeamUserRole(role)}
     </Text>

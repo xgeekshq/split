@@ -1,4 +1,3 @@
-import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
@@ -21,21 +20,19 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
               query: { team: team.id },
             }}
           >
-            <StyledBoardTitle>
-              <Flex css={{ alignItems: 'center' }}>
-                <Icon
-                  name="plus"
-                  css={{
-                    width: '$16',
-                    height: '$32',
-                    marginRight: '$5',
-                  }}
-                />
-                <Text css={{ ml: '$8' }} size="sm" fontWeight="medium">
-                  Create first board
-                </Text>
-              </Flex>
-            </StyledBoardTitle>
+            <Flex css={{ alignItems: 'center' }}>
+              <Icon
+                name="plus"
+                css={{
+                  width: '$16',
+                  height: '$32',
+                  marginRight: '$5',
+                }}
+              />
+              <Text css={{ ml: '$8' }} size="sm" fontWeight="medium" link>
+                Create first board
+              </Text>
+            </Flex>
           </Link>
         )}
         {!havePermissions && (
@@ -55,11 +52,9 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
           query: { team: team.id },
         }}
       >
-        <StyledBoardTitle>
-          <Text size="sm" fontWeight="medium">
-            {team.boardsCount} team boards
-          </Text>
-        </StyledBoardTitle>
+        <Text size="sm" fontWeight="medium" link>
+          {team.boardsCount} team boards
+        </Text>
       </Link>
     </Flex>
   );
