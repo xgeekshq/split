@@ -25,6 +25,16 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 
+	getAllMainBoards(): Promise<Board[]> {
+		return this.findAllWithQuery(
+			{
+				$and: [{ isSubBoard: false }]
+			},
+			null,
+			'team'
+		);
+	}
+
 	getBoardPopulated(boardId: string, populate?: PopulateType) {
 		return this.findOneById(boardId, {}, populate);
 	}
