@@ -1,5 +1,6 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ConfirmationDialog, { ConfirmationDialogProps } from './ConfirmationDialog';
 import Button from './Button';
@@ -7,13 +8,14 @@ import Button from './Button';
 const render = (props: Partial<ConfirmationDialogProps> = {}) =>
   renderWithProviders(
     <ConfirmationDialog
-      trigger={<Button>Trigger</Button>}
       title="Title"
       description="Description"
       confirmationHandler={jest.fn()}
       confirmationLabel="Confirm"
       {...props}
-    />,
+    >
+      <Button>Trigger</Button>
+    </ConfirmationDialog>,
   );
 
 describe('Components/Primitives/ConfirmationDialog', () => {
@@ -60,6 +62,21 @@ describe('Components/Primitives/ConfirmationDialog', () => {
       fireEvent.click(getByText('Confirm'));
 
       expect(mockConfirmationHandler).toBeCalled();
+    });
+  });
+
+  it('should open tooltip', async () => {
+    // Act
+    const { getByRole } = render({ tooltip: 'Tooltip' });
+
+    // Assert
+    expect(getByRole('button')).toBeInTheDocument();
+
+    userEvent.hover(getByRole('button'));
+
+    await waitFor(() => {
+      expect(getByRole('tooltip')).toBeInTheDocument();
+      expect(getByRole('tooltip')).toHaveTextContent('Tooltip');
     });
   });
 });

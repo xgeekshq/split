@@ -7,29 +7,44 @@ import {
   AlertDialogTrigger,
 } from './AlertDialog';
 import Flex from './Flex';
+import Tooltip from './Tooltip';
 
 export type ConfirmationDialogProps = {
-  trigger: React.ReactNode;
   description: string;
   confirmationHandler: () => void;
   confirmationLabel: string;
   title?: string;
   variant?: 'primary' | 'danger';
+  tooltip?: string;
+  children: React.ReactNode;
 };
 
 const ConfirmationDialog = ({
-  trigger,
   description,
   confirmationHandler,
   confirmationLabel,
   title,
   variant = 'primary',
+  tooltip,
+  children,
 }: ConfirmationDialogProps) => {
   const outlineVatiant = variant === 'primary' ? 'primaryOutline' : 'dangerOutline';
 
+  const renderTrigger = () => {
+    if (tooltip !== undefined) {
+      return (
+        <Tooltip content={tooltip}>
+          <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        </Tooltip>
+      );
+    }
+
+    return <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>;
+  };
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      {renderTrigger()}
       <AlertDialogContent title={title}>
         <Flex direction="column" css={{ mb: '$8' }}>
           {description}

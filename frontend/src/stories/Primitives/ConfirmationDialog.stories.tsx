@@ -5,6 +5,7 @@ import dedent from 'ts-dedent';
 
 import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icon';
+import Button from '@/components/Primitives/Button';
 
 export default {
   title: 'Primitives/ConfirmationDialog',
@@ -22,7 +23,6 @@ export default {
     },
   },
   args: {
-    trigger: <Icon name="user" />,
     title: 'Title',
     description: 'Are you sure you want to confirm?',
     confirmationHandler: () => alert('Confirmed!'),
@@ -31,7 +31,7 @@ export default {
     variant: 'danger',
   },
   argTypes: {
-    trigger: {
+    children: {
       control: false,
       description: 'A component used to trigger the dialog to open.',
       table: {
@@ -60,11 +60,19 @@ export default {
       control: { type: 'select' },
       description: 'Variant of the confirmation dialog buttons.',
     },
+    tooltip: {
+      description:
+        'The content to be displayed inside the tooltip. Controls whether the tooltip is shown.',
+    },
   },
 };
 
 const Template: ComponentStory<typeof ConfirmationDialog> = (args) => (
-  <ConfirmationDialog {...args} />
+  <ConfirmationDialog {...args}>
+    <Button isIcon>
+      <Icon name="user" />
+    </Button>
+  </ConfirmationDialog>
 );
 
 export const Default = Template.bind({});
