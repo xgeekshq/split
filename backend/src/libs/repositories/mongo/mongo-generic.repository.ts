@@ -98,12 +98,16 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
 		options?: QueryOptions<T>,
-		populate?: PopulateType
+		populate?: PopulateType,
+		withSession?: boolean
 	): Promise<T> {
 		return this._repository
-			.findOneAndUpdate(value, query, options)
+			.findOneAndUpdate(value, query, {
+				...options,
+				session: withSession ? this._session : undefined
+			})
 			.populate(populate)
-			.lean()
+			.lean({ virtuals: populate ? true : false })
 			.exec() as unknown as Promise<T>;
 	}
 
@@ -132,6 +136,21 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 				session: withSession ? this._session : undefined
 			})
 			.exec();
+	}
+
+	updateOneByField<Q>(
+		filter: FilterQuery<T>,
+		update: UpdateQuery<T>,
+		options?: QueryOptions<T>,
+		withSession?: boolean
+	): Promise<Q> {
+		return this._repository
+			.updateOne(filter, update, {
+				...options,
+				session: withSession ? this._session : undefined
+			})
+			.lean()
+			.exec() as unknown as Promise<Q>;
 	}
 
 	async deleteMany(field: FilterQuery<T>, withSession = false): Promise<number> {

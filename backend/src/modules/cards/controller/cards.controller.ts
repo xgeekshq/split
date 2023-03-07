@@ -346,12 +346,7 @@ export default class CardsController {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
 
-		const board = await this.mergeCardApp.mergeCards(
-			boardId,
-			draggedCardId,
-			targetCardId,
-			request.user._id.toString()
-		);
+		const board = await this.mergeCardApp.mergeCards(boardId, draggedCardId, targetCardId);
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 		this.socketService.sendMergeCards(socketId, mergeCardsDto);

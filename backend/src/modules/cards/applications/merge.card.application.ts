@@ -10,7 +10,7 @@ export class MergeCardApplicationImpl implements MergeCardApplication {
 		private mergeCardService: MergeCardService
 	) {}
 
-	mergeCards(boardId: string, draggedCardId: string, cardId: string, userId: string) {
-		return this.mergeCardService.mergeCards(boardId, draggedCardId, cardId, userId);
+	mergeCards(boardId: string, draggedCardId: string, cardId: string) {
+		return this.mergeCardService.mergeCards(boardId, draggedCardId, cardId);
 	}
 }
