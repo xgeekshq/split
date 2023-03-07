@@ -4,7 +4,7 @@ import { CreateVoteApplicationImpl } from './applications/create.vote.applicatio
 import { DeleteVoteApplicationImpl } from './applications/delete.vote.application';
 import { TYPES } from './interfaces/types';
 import CreateVoteService from './services/create.vote.service';
-import DeleteVoteServiceImpl from './services/delete.vote.service';
+import DeleteVoteService from './services/delete.vote.service';
 
 export const createVoteService = {
 	provide: TYPES.services.CreateVoteService,
@@ -13,7 +13,7 @@ export const createVoteService = {
 
 export const deleteVoteService = {
 	provide: TYPES.services.DeleteVoteService,
-	useClass: DeleteVoteServiceImpl
+	useClass: DeleteVoteService
 };
 
 export const createVoteApplication = {
