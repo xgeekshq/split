@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { CARD_NOT_FOUND, CARD_NOT_REMOVED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import { MergeCardService } from '../interfaces/services/merge.card.service.interface';
+import { MergeCardServiceInterface } from '../interfaces/services/merge.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
-export class MergeCardServiceImpl implements MergeCardService {
+export class MergeCardService implements MergeCardServiceInterface {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
 		private readonly getCardService: GetCardServiceInterface,

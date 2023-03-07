@@ -11,7 +11,7 @@ import { UpdateCardServiceInterface } from '../interfaces/services/update.card.s
 import { TYPES } from '../interfaces/types';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
-export class UnmergeCardServiceImpl implements UnmergeCardServiceInterface {
+export class UnmergeCardService implements UnmergeCardServiceInterface {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
 		private readonly cardService: GetCardServiceInterface,

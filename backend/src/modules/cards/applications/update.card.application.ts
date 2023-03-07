@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
+import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { UpdateCardServiceInterface } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class UpdateCardApplicationImpl implements UpdateCardApplication {
+export class UpdateCardApplication implements UpdateCardApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateCardService)
 		private updateCardService: UpdateCardServiceInterface

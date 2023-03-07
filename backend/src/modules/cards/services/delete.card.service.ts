@@ -8,14 +8,14 @@ import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
-import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
+import { DeleteCardServiceInterface } from '../interfaces/services/delete.card.service.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
 import CardItem from '../entities/card.item.schema';
 import Card from '../entities/card.schema';
 
 @Injectable()
-export default class DeleteCardServiceImpl implements DeleteCardService {
+export default class DeleteCardService implements DeleteCardServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)

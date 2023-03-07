@@ -6,7 +6,7 @@ import * as Cards from 'src/modules/cards/interfaces/types';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
 @Injectable()
-export default class UpdateCardServiceImpl implements UpdateCardServiceInterface {
+export default class UpdateCardService implements UpdateCardServiceInterface {
 	constructor(
 		@Inject(Cards.TYPES.services.GetCardService)
 		private readonly cardService: GetCardServiceInterface,

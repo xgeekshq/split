@@ -8,7 +8,7 @@ import { TYPES } from '../interfaces/types';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
 @Injectable()
-export default class CreateCardServiceImpl implements CreateCardServiceInterface {
+export default class CreateCardService implements CreateCardServiceInterface {
 	constructor(
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface

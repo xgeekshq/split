@@ -41,11 +41,11 @@ import DeleteCardDto from '../dto/delete.card.dto';
 import UnmergeCardsDto from '../dto/unmerge.dto';
 import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
-import { CreateCardApplication } from '../interfaces/applications/create.card.application.interface';
-import { DeleteCardApplication } from '../interfaces/applications/delete.card.application.interface';
-import { MergeCardApplication } from '../interfaces/applications/merge.card.application.interface';
-import { UnmergeCardApplication } from '../interfaces/applications/unmerge.card.application.interface';
-import { UpdateCardApplication } from '../interfaces/applications/update.card.application.interface';
+import { CreateCardApplicationInterface } from '../interfaces/applications/create.card.application.interface';
+import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
+import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
+import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
+import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/entities/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
@@ -60,15 +60,15 @@ import { hideText } from 'src/libs/utils/hideText';
 export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardApplication)
-		private createCardApp: CreateCardApplication,
+		private createCardApp: CreateCardApplicationInterface,
 		@Inject(TYPES.applications.UpdateCardApplication)
-		private updateCardApp: UpdateCardApplication,
+		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)
-		private deleteCardApp: DeleteCardApplication,
+		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.MergeCardApplication)
-		private mergeCardApp: MergeCardApplication,
+		private mergeCardApp: MergeCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardApplication)
-		private unmergeCardApp: UnmergeCardApplication,
+		private unmergeCardApp: UnmergeCardApplicationInterface,
 		private socketService: SocketGateway
 	) {}
 
