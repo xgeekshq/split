@@ -2,6 +2,7 @@ import {
 	ClientSession,
 	FilterQuery,
 	Model,
+	PipelineStage,
 	ProjectionType,
 	QueryOptions,
 	UpdateQuery
@@ -75,6 +76,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.populate(populate)
 			.lean({ virtuals: virtuals })
 			.exec() as unknown as Promise<T[]>;
+	}
+
+	aggregateByQuery<Q>(pipeline: PipelineStage[]): Promise<Q[]> {
+		return this._repository.aggregate(pipeline).exec();
 	}
 
 	create<Q>(item: Q): Promise<T> {

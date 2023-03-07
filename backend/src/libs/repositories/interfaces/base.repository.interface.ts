@@ -1,5 +1,6 @@
 import {
 	FilterQuery,
+	PipelineStage,
 	PopulateOptions,
 	ProjectionType,
 	QueryOptions,
@@ -31,6 +32,8 @@ export interface BaseInterfaceRepository<T> {
 		selectedValues?: SelectedValues<T>,
 		populate?: PopulateType
 	): Promise<T>;
+
+	aggregateByQuery<Q>(pipeline: PipelineStage[]): Promise<Q[]>;
 
 	create<Q>(item: Q): Promise<T>;
 

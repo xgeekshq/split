@@ -11,8 +11,8 @@ import * as Votes from 'src/modules/votes/interfaces/types';
 import { DeleteCardService } from '../interfaces/services/delete.card.service.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { TYPES } from '../interfaces/types';
-import CardItem from '../schemas/card.item.schema';
-import Card from '../schemas/card.schema';
+import CardItem from '../entities/card.item.schema';
+import Card from '../entities/card.schema';
 
 @Injectable()
 export default class DeleteCardServiceImpl implements DeleteCardService {

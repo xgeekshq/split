@@ -6,7 +6,7 @@ import isEmpty from 'src/libs/utils/isEmpty';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import CardDto from '../dto/card.dto';
 import { CreateCardService } from '../interfaces/services/create.card.service.interface';
-import CardItem from '../schemas/card.item.schema';
+import CardItem from '../entities/card.item.schema';
 import { pushCardIntoPosition } from '../shared/push.card';
 
 @Injectable()

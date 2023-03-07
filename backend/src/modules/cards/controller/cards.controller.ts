@@ -50,7 +50,7 @@ import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/entities/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
-import Card from '../schemas/card.schema';
+import Card from '../entities/card.schema';
 import { hideText } from 'src/libs/utils/hideText';
 
 @ApiBearerAuth('access-token')

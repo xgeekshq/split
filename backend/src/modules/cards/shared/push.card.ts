@@ -1,7 +1,7 @@
 import { ClientSession, Model } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import CardDto from '../dto/card.dto';
-import Card from '../schemas/card.schema';
+import Card from '../entities/card.schema';
 
 export const pushCardIntoPosition = async (
 	boardId: string,
