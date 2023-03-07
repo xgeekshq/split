@@ -38,9 +38,7 @@ import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger'
 import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
-import { GetBoardApplicationInterface } from 'src/modules/boards/interfaces/applications/get.board.application.interface';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import { GetTeamApplicationInterface } from 'src/modules/teams/interfaces/applications/get.team.application.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
@@ -49,30 +47,32 @@ import { GetUserApplication } from 'src/modules/users/interfaces/applications/ge
 import { UpdateUserApplication } from 'src/modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
-import { CreateResetTokenAuthApplicationInterface } from '../interfaces/applications/create-reset-token.auth.application.interface';
-import { RegisterAuthApplicationInterface } from '../interfaces/applications/register.auth.application.interface';
 import { TYPES } from '../interfaces/types';
 import { signIn } from '../shared/login.auth';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
+import { GetBoardApplication } from 'src/modules/boards/applications/get.board.application';
+import { RegisterAuthApplication } from '../applications/register.auth.application';
+import { GetTokenAuthApplication } from '../applications/get-token.auth.application';
+import { GetTeamApplication } from 'src/modules/teams/applications/get.team.application';
+import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.auth.application';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export default class AuthController {
 	constructor(
 		@Inject(TYPES.applications.RegisterAuthApplication)
-		private registerAuthApp: RegisterAuthApplicationInterface,
+		private registerAuthApp: RegisterAuthApplication,
 		@Inject(TYPES.applications.GetTokenAuthApplication)
-		private getTokenAuthApp: GetTokenAuthApplicationInterface,
+		private getTokenAuthApp: GetTokenAuthApplication,
 		@Inject(User.TYPES.applications.GetUserApplication)
 		private getUserApp: GetUserApplication,
 		@Inject(Teams.TYPES.applications.GetTeamApplication)
-		private getTeamsApp: GetTeamApplicationInterface,
+		private getTeamsApp: GetTeamApplication,
 		@Inject(Boards.TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplicationInterface,
+		private getBoardApp: GetBoardApplication,
 		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
-		private createResetTokenAuthApp: CreateResetTokenAuthApplicationInterface,
+		private createResetTokenAuthApp: CreateResetTokenAuthApplication,
 		@Inject(TYPES.applications.UpdateUserApplication)
 		private updateUserApp: UpdateUserApplication
 	) {}

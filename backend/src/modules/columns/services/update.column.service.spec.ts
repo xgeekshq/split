@@ -23,17 +23,17 @@ import * as Columns from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
-import UpdateColumnServiceImpl from './update.column.service';
 import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/teams/providers';
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { JwtService } from '@nestjs/jwt';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import DeleteCardService from 'src/modules/cards/services/delete.card.service';
+import UpdateColumnService from './update.column.service';
 
 const fakeBoards = BoardFactory.createMany(2, 3, 2);
 
 describe('UpdateColumnService', () => {
-	let columnService: UpdateColumnServiceImpl;
+	let columnService: UpdateColumnService;
 	let deleteCardServiceImpl: DeleteCardService;
 	let repositoryColumn: ColumnRepository;
 	let socketService: SocketGateway;
@@ -43,7 +43,7 @@ describe('UpdateColumnService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			providers: [
-				UpdateColumnServiceImpl,
+				UpdateColumnService,
 				DeleteCardService,
 				SocketGateway,
 				GetBoardService,
@@ -97,7 +97,7 @@ describe('UpdateColumnService', () => {
 			]
 		}).compile();
 
-		columnService = module.get<UpdateColumnServiceImpl>(Columns.TYPES.services.UpdateColumnService);
+		columnService = module.get<UpdateColumnService>(Columns.TYPES.services.UpdateColumnService);
 		deleteCardServiceImpl = module.get<DeleteCardService>(Cards.TYPES.services.DeleteCardService);
 		repositoryColumn = module.get<ColumnRepository>(Columns.TYPES.repositories.ColumnRepository);
 		socketService = module.get<SocketGateway>(SocketGateway);

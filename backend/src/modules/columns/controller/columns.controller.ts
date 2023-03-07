@@ -26,8 +26,8 @@ import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import ColumnDto from '../dto/column.dto';
 import { UpdateColumnDto } from '../dto/update-column.dto';
-import { UpdateColumnApplication } from '../interfaces/applications/update.comment.application.interface';
 import { ColumnDeleteCardsDto } from '../dto/colum.deleteCards.dto';
+import { UpdateColumnApplication } from '../applications/update.columns.application';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 

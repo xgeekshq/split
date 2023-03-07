@@ -3,7 +3,7 @@ import { COLUMN_NOT_FOUND, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Columns from '../interfaces/types';
-import { UpdateColumnService } from '../interfaces/services/update.column.service.interface';
+import { UpdateColumnServiceInterface } from '../interfaces/services/update.column.service.interface';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.dto';
 import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
@@ -12,7 +12,7 @@ import { ColumnRepositoryInterface } from '../repositories/column.repository.int
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
-export default class UpdateColumnServiceImpl implements UpdateColumnService {
+export default class UpdateColumnService implements UpdateColumnServiceInterface {
 	constructor(
 		@Inject(Columns.TYPES.repositories.ColumnRepository)
 		private readonly columnRepository: ColumnRepositoryInterface,
