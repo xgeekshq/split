@@ -59,19 +59,19 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		} catch (e) {
 			this.logger.error(e);
 			await this.boardUserRepository.abortTransaction();
-			await this.boardUserRepository.abortTransaction();
+			await this.boardRepository.abortTransaction();
 
 			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
 				await this.boardUserRepository.endSession();
-				await this.boardUserRepository.endSession();
+				await this.boardRepository.endSession();
 				await this.addVoteToCard(boardId, cardId, userId, cardItemId, count);
 			} else {
 				throw new BadRequestException(INSERT_VOTE_FAILED);
 			}
 		} finally {
 			await this.boardUserRepository.endSession();
-			await this.boardUserRepository.endSession();
+			await this.boardRepository.endSession();
 		}
 	}
 
@@ -115,14 +115,14 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
 				await this.boardUserRepository.endSession();
-				await this.boardUserRepository.endSession();
+				await this.boardRepository.endSession();
 				await this.addVoteToCardGroup(boardId, cardId, userId, count);
 			} else {
 				throw new BadRequestException(INSERT_VOTE_FAILED);
 			}
 		} finally {
 			await this.boardUserRepository.endSession();
-			await this.boardUserRepository.endSession();
+			await this.boardRepository.endSession();
 		}
 	}
 
