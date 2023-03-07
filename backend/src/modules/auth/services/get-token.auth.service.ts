@@ -9,10 +9,10 @@ import {
 } from 'src/libs/constants/jwt';
 import { UpdateUserService } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
-import { GetTokenAuthService } from '../interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
 @Injectable()
-export default class GetTokenAuthServiceImpl implements GetTokenAuthService {
+export default class GetTokenAuthService implements GetTokenAuthServiceInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateUserService)
 		private updateUserService: UpdateUserService,

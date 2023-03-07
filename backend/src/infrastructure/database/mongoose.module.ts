@@ -1,5 +1,7 @@
 import { MongooseModule } from '@nestjs/mongoose';
-import ResetPassword, { ResetPasswordSchema } from 'src/modules/auth/schemas/reset-password.schema';
+import ResetPassword, {
+	ResetPasswordSchema
+} from 'src/modules/auth/entities/reset-password.schema';
 import Board, { BoardSchema } from 'src/modules/boards/entities/board.schema';
 import BoardUser, { BoardUserSchema } from 'src/modules/boards/entities/board.user.schema';
 import Schedules, { SchedulesSchema } from 'src/modules/schedules/schemas/schedules.schema';

@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import jwt_decode from 'jwt-decode';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import * as AuthType from 'src/modules/auth/interfaces/types';
 import * as StorageType from 'src/modules/storage/interfaces/types';
 import { signIn } from 'src/modules/auth/shared/login.auth';
 import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as UserType from 'src/modules/users/interfaces/types';
-import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
+import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfigService } from '@nestjs/config';
@@ -35,7 +35,7 @@ type AzureDecodedUser = {
 };
 
 @Injectable()
-export default class AuthAzureServiceImpl implements AuthAzureService {
+export default class AuthAzureService implements AuthAzureServiceInterface {
 	private graphClient: Client;
 	private authCredentials: { accessToken: string; expiresOn: Date };
 
@@ -47,7 +47,7 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 		@Inject(AuthType.TYPES.services.UpdateUserService)
 		private readonly updateUserService: UpdateUserService,
 		@Inject(AuthType.TYPES.services.GetTokenAuthService)
-		private readonly getTokenService: GetTokenAuthService,
+		private readonly getTokenService: GetTokenAuthServiceInterface,
 		private readonly configService: ConfigService,
 		@Inject(StorageType.TYPES.services.StorageService)
 		private readonly storageService: StorageServiceInterface
