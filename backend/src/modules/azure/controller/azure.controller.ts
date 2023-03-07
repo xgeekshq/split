@@ -26,7 +26,7 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
-import { GetUserApplication } from 'src/modules/users/interfaces/applications/get.user.application.interface';
+import { GetUserApplication } from 'src/modules/users/applications/get.user.application';
 import * as User from 'src/modules/users/interfaces/types';
 import { AuthAzureApplication } from '../applications/auth.azure.application';
 import { AzureToken } from '../interfaces/token.azure.dto';

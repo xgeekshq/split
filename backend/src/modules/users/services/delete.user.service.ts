@@ -9,7 +9,7 @@ import { DeleteTeamUserServiceInterface } from 'src/modules/teams/interfaces/ser
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 
 @Injectable()
-export default class DeleteUserServiceImpl implements DeleteUserServiceInterface {
+export default class DeleteUserService implements DeleteUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository) private readonly userRepository: UserRepositoryInterface,
 		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)

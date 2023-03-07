@@ -7,7 +7,7 @@ import {
 	JWT_REFRESH_TOKEN_EXPIRATION_TIME,
 	JWT_REFRESH_TOKEN_SECRET
 } from 'src/libs/constants/jwt';
-import { UpdateUserService } from 'src/modules/users/interfaces/services/update.user.service.interface';
+import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
@@ -15,7 +15,7 @@ import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.a
 export default class GetTokenAuthService implements GetTokenAuthServiceInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateUserService)
-		private updateUserService: UpdateUserService,
+		private updateUserService: UpdateUserServiceInterface,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService
 	) {}

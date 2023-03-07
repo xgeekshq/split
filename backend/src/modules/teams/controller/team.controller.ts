@@ -49,11 +49,11 @@ import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
-import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
-import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { TYPES } from '../interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { DeleteTeamUserApplication } from '../applications/delete.team.user.application';
+import { CreateTeamApplication } from '../applications/create.team.application';
+import { GetTeamApplication } from '../applications/get.team.application';
 
 const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -64,9 +64,9 @@ const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissio
 export default class TeamsController {
 	constructor(
 		@Inject(TYPES.applications.CreateTeamApplication)
-		private createTeamApp: CreateTeamApplicationInterface,
+		private createTeamApp: CreateTeamApplication,
 		@Inject(TYPES.applications.GetTeamApplication)
-		private getTeamApp: GetTeamApplicationInterface,
+		private getTeamApp: GetTeamApplication,
 		@Inject(TYPES.applications.UpdateTeamApplication)
 		private updateTeamApp: UpdateTeamApplication,
 		@Inject(TYPES.applications.DeleteTeamApplication)

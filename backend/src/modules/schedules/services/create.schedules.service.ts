@@ -18,7 +18,7 @@ import {
 } from '../interfaces/services/create.schedules.service.interface';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import { TYPES } from '../interfaces/types';
-import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
+import Schedules, { SchedulesDocument } from '../entities/schedules.schema';
 import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { Configs } from 'src/modules/boards/dto/configs.dto';

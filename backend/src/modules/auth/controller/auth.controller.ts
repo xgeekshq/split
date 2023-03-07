@@ -43,7 +43,6 @@ import * as Teams from 'src/modules/teams/interfaces/types';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { GetUserApplication } from 'src/modules/users/interfaces/applications/get.user.application.interface';
 import { UpdateUserApplication } from 'src/modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
@@ -56,6 +55,7 @@ import { RegisterAuthApplication } from '../applications/register.auth.applicati
 import { GetTokenAuthApplication } from '../applications/get-token.auth.application';
 import { GetTeamApplication } from 'src/modules/teams/applications/get.team.application';
 import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.auth.application';
+import { GetUserApplication } from 'src/modules/users/applications/get.user.application';
 
 @ApiTags('Authentication')
 @Controller('auth')

@@ -31,7 +31,6 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
 import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
@@ -41,6 +40,7 @@ import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
+import { GetUserApplication } from '../applications/get.user.application';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
