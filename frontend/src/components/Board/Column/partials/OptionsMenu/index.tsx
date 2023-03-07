@@ -11,6 +11,7 @@ import Text from '@/components/Primitives/Text';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { useState } from 'react';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 import ColorSquare from '../ColorSquare';
 import { SwitchDefaultText } from '../SwitchDefaultText';
 
@@ -23,11 +24,7 @@ type OptionsMenuProps = {
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
-  handleDialogChange: (
-    openName: boolean,
-    openDeleteColumn: boolean,
-    openDeleteCards: boolean,
-  ) => void;
+  handleDialogChange: (openName: boolean, openDeleteColumn: boolean) => void;
   isDefaultText?: boolean;
   socketId: string;
 };
@@ -59,6 +56,7 @@ const OptionsMenu = ({
   // Update Board Hook
   const {
     updateColumn: { mutate: mutateColumn },
+    deleteCardsFromColumn: { mutate: mutateBoard },
   } = useColumn();
 
   const handleDefaultTextCheck = () => {
@@ -98,6 +96,15 @@ const OptionsMenu = ({
 
   const handleOpenPopover = (value: boolean) => setOpenPopover(value);
 
+  const handleEmptyColumn = () => {
+    setOpenPopover(false);
+    mutateBoard({
+      id: columnId,
+      boardId,
+      socketId,
+    });
+  };
+
   return (
     <>
       <Popover open={openPopover} onOpenChange={handleOpenPopover}>
@@ -110,10 +117,18 @@ const OptionsMenu = ({
               <Icon name="boards" />
               <Text size="sm">Edit column name </Text>
             </PopoverItem>
-            <PopoverItem onClick={() => handleDialogChange(false, false, true)}>
-              <Icon name="recurring" />
-              <Text size="sm">Empty column cards</Text>
-            </PopoverItem>
+            <ConfirmationDialog
+              title="Empty column of all cards"
+              description="Do you really want to remove all cards from this column?"
+              confirmationLabel="Empty Column"
+              variant="danger"
+              confirmationHandler={handleEmptyColumn}
+            >
+              <PopoverItem>
+                <Icon name="recurring" />
+                <Text size="sm">Empty column cards</Text>
+              </PopoverItem>
+            </ConfirmationDialog>
             <PopoverItem>
               <Icon name="file-alt" />
               <Text onClick={() => handleOpen('CardText')} size="sm">
@@ -126,7 +141,7 @@ const OptionsMenu = ({
                 disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
-            <PopoverItem onClick={() => handleDialogChange(false, true, false)}>
+            <PopoverItem onClick={() => handleDialogChange(false, true)}>
               <Icon name="trash-alt" />
               <Text size="sm">Delete column</Text>
             </PopoverItem>

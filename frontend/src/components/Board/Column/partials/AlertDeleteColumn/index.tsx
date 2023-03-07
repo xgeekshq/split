@@ -18,11 +18,7 @@ type AlertDeleteColumnProps = {
   columnTitle: string;
   isOpen: boolean;
   postAnonymously: boolean;
-  handleDialogChange: (
-    openName: boolean,
-    openDeleteColumn: boolean,
-    openDeleteCards: boolean,
-  ) => void;
+  handleDialogChange: (openName: boolean, openDeleteColumn: boolean) => void;
 };
 const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
   columnId,
@@ -91,13 +87,13 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
     <AlertDialog open={isOpen}>
       <AlertDialogContent
         title="Delete column"
-        handleClose={() => handleDialogChange(false, false, false)}
+        handleClose={() => handleDialogChange(false, false)}
       >
         <Text>Do you really want to delete the column &quot;{columnTitle}&quot;?</Text>
         <Flex gap="16" justify="end" css={{ mt: '$24' }}>
           <AlertDialogCancel
             variant="primaryOutline"
-            onClick={() => handleDialogChange(false, false, false)}
+            onClick={() => handleDialogChange(false, false)}
           >
             Cancel
           </AlertDialogCancel>
