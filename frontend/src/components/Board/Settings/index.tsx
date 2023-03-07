@@ -71,6 +71,7 @@ const BoardSettings = ({
       addCards,
       postAnonymously,
     },
+    mainBoard,
   } = useRecoilValue(boardInfoState);
 
   const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
@@ -243,6 +244,7 @@ const BoardSettings = ({
       deletedColumns,
       socketId,
       responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+      mainBoardId: mainBoard?._id,
     });
 
     setDeletedColumns([]);

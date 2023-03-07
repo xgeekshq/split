@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import BaseModel from 'src/libs/models/base.model';
-import Board from '../../boards/entities/board.schema';
 import TeamUser from './team.user.schema';
 
 export type TeamDocument = Team & Document;
@@ -16,8 +15,6 @@ export default class Team extends BaseModel {
 	@Prop({ nullable: false, required: true, unique: true })
 	name!: string;
 
-	boards?: Board[];
-
 	users?: TeamUser[];
 }
 
@@ -27,13 +24,6 @@ TeamSchema.plugin(leanVirtualsPlugin);
 
 TeamSchema.virtual('users', {
 	ref: 'TeamUser',
-	localField: '_id',
-	foreignField: 'team',
-	justOne: false
-});
-
-TeamSchema.virtual('boards', {
-	ref: 'Board',
 	localField: '_id',
 	foreignField: 'team',
 	justOne: false

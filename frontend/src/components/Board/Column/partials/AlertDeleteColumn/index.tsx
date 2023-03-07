@@ -45,6 +45,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
       columns,
       addCards,
     },
+    mainBoard,
   } = useRecoilValue(boardInfoState);
 
   // State used to change values
@@ -82,6 +83,7 @@ const AlertDeleteColumn: React.FC<AlertDeleteColumnProps> = ({
       responsible: users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       deletedColumns,
       socketId,
+      mainBoardId: mainBoard?._id,
     });
   };
 

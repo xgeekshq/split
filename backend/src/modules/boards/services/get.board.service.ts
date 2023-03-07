@@ -163,6 +163,10 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.boardUserRepository.getBoardUsers(board, user);
 	}
 
+	getAllMainBoards() {
+		return this.boardRepository.getAllMainBoards();
+	}
+
 	/* --------------- HELPERS --------------- */
 
 	private async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
