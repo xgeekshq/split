@@ -1,3 +1,4 @@
+import { votesBoardRepository, votesBoardUserRepository } from './../../votes/votes.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -76,6 +77,8 @@ describe('BoardsController', () => {
 				getTokenAuthService,
 				updateUserService,
 				getBoardService,
+				votesBoardRepository,
+				votesBoardUserRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
