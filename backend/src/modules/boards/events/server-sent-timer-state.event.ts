@@ -6,7 +6,6 @@ export default class ServerSentTimerStateEvent {
 	boardId: string;
 	clientId: string;
 	status: TimerStatusDto;
-	previousStatus: TimerStatusDto;
 	duration: TimeDto;
 	timeLeft: TimeDto;
 
@@ -14,7 +13,6 @@ export default class ServerSentTimerStateEvent {
 		this.boardId = payload.boardId;
 		this.clientId = payload.clientId;
 		this.status = payload.status;
-		this.previousStatus = payload.status;
 		this.duration = payload.duration;
 		this.timeLeft = payload.timeLeft;
 	}
