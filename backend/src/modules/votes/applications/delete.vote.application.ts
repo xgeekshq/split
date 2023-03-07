@@ -4,7 +4,7 @@ import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.s
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class DeleteVoteApplicationImpl implements DeleteVoteApplicationInterface {
+export class DeleteVoteApplication implements DeleteVoteApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.DeleteVoteService)
 		private deleteVoteService: DeleteVoteServiceInterface
