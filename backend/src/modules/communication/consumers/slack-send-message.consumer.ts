@@ -5,7 +5,7 @@ import { TYPES } from 'src/modules/communication/interfaces/types';
 import { Job } from 'bull';
 import { Inject, Logger } from '@nestjs/common';
 import { SlackCommunicationEventListeners } from './slack-communication-event-listeners';
-import { SendMessageApplicationInterface } from '../interfaces/SendMessageApplication.interface';
+import { SendMessageApplicationInterface } from '../interfaces/send-message.application.interface';
 
 @Processor(SlackSendMessageProducer.QUEUE_NAME)
 export class SlackSendMessageConsumer extends SlackCommunicationEventListeners<
