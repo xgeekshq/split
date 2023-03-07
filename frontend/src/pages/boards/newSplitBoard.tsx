@@ -27,12 +27,7 @@ import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
-  Container,
   PageHeader,
-  ContentWrapper,
-  ContentContainer,
-  SubContainer,
-  InnerContent,
   StyledForm,
   ButtonsContainer,
 } from '@/styles/pages/boards/newSplitBoard.styles';
@@ -46,6 +41,7 @@ import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import { BoardPhases } from '@/utils/enums/board.phases';
+import Flex from '@/components/Primitives/Flex';
 
 const defaultBoard = {
   users: [],
@@ -211,7 +207,10 @@ const NewSplitBoard: NextPage = () => {
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Container style={isLoading ? { opacity: 0.5 } : undefined}>
+        <Flex
+          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
+          direction="column"
+        >
           <PageHeader>
             <Text color="primary800" heading={3} fontWeight="bold">
               Add new SPLIT board
@@ -221,8 +220,11 @@ const NewSplitBoard: NextPage = () => {
               <Icon css={{ color: '$primaryBase' }} name="close" />
             </Button>
           </PageHeader>
-          <ContentWrapper>
-            <ContentContainer>
+          <Flex
+            css={{ height: '100%', position: 'relative', overflowY: 'auto' }}
+            direction="column"
+          >
+            <Flex css={{ flex: '1' }}>
               <StyledForm
                 id="hook-form"
                 onSubmit={
@@ -233,7 +235,7 @@ const NewSplitBoard: NextPage = () => {
                     : undefined
                 }
               >
-                <SubContainer>
+                <Flex direction="column" gap={24} css={{ width: '100%' }}>
                   {haveError && (
                     <AlertBox
                       text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
@@ -248,7 +250,7 @@ const NewSplitBoard: NextPage = () => {
                       </Link>
                     </AlertBox>
                   )}
-                  <InnerContent direction="column">
+                  <Flex direction="column">
                     <FormProvider {...methods}>
                       <BoardName
                         title="Main Board Name"
@@ -256,12 +258,12 @@ const NewSplitBoard: NextPage = () => {
                       />
                       <SettingsTabs />
                     </FormProvider>
-                  </InnerContent>
-                </SubContainer>
+                  </Flex>
+                </Flex>
               </StyledForm>
               <TipBar isSplitBoard />
-            </ContentContainer>
-          </ContentWrapper>
+            </Flex>
+          </Flex>
           <ButtonsContainer gap="24" justify="end">
             <Button
               disabled={isBackButtonDisable}
@@ -275,7 +277,7 @@ const NewSplitBoard: NextPage = () => {
               Create board
             </Button>
           </ButtonsContainer>
-        </Container>
+        </Flex>
       </QueryError>
     </Suspense>
   );
