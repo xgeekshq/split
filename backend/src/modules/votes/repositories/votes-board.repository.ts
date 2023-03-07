@@ -15,7 +15,7 @@ export class VotesBoardRepository
 		super(model);
 	}
 
-	/* UPDATE BOARDS */
+	/* UPDATE BOARD */
 	findBoardByFieldAndUpdate(
 		value: FilterQuery<Board>,
 		query: UpdateQuery<Board>,
@@ -25,6 +25,4 @@ export class VotesBoardRepository
 	): Promise<Board> {
 		return this.findOneByFieldAndUpdate(value, query, options, populate, withSession);
 	}
-
-	/* DELETE VOTES */
 }
