@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import ResetPassword, {
 	ResetPasswordDocument
-} from 'src/modules/auth/schemas/reset-password.schema';
+} from 'src/modules/auth/entities/reset-password.schema';
 import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';

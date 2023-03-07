@@ -22,7 +22,7 @@ import { BoardUserRepositoryInterface } from '../repositories/board-user.reposit
 import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
-export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
+export default class DeleteBoardService implements DeleteBoardServiceInterface {
 	constructor(
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,

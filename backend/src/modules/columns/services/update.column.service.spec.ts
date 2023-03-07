@@ -25,10 +25,10 @@ import * as Cards from 'src/modules/cards/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
 import UpdateColumnServiceImpl from './update.column.service';
 import DeleteCardServiceImpl from 'src/modules/cards/services/delete.card.service';
-import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/teams/providers';
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { JwtService } from '@nestjs/jwt';
+import GetBoardService from 'src/modules/boards/services/get.board.service';
 
 const fakeBoards = BoardFactory.createMany(2, 3, 2);
 
@@ -37,7 +37,7 @@ describe('UpdateColumnService', () => {
 	let deleteCardServiceImpl: DeleteCardServiceImpl;
 	let repositoryColumn: ColumnRepository;
 	let socketService: SocketGateway;
-	let getBoardServiceImpl: GetBoardServiceImpl;
+	let getBoardServiceImpl: GetBoardService;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -46,7 +46,7 @@ describe('UpdateColumnService', () => {
 				UpdateColumnServiceImpl,
 				DeleteCardServiceImpl,
 				SocketGateway,
-				GetBoardServiceImpl,
+				GetBoardService,
 				getTeamService,
 				updateColumnService,
 				deleteCardService,
@@ -103,7 +103,7 @@ describe('UpdateColumnService', () => {
 		);
 		repositoryColumn = module.get<ColumnRepository>(Columns.TYPES.repositories.ColumnRepository);
 		socketService = module.get<SocketGateway>(SocketGateway);
-		getBoardServiceImpl = module.get<GetBoardServiceImpl>(Boards.TYPES.services.GetBoardService);
+		getBoardServiceImpl = module.get<GetBoardService>(Boards.TYPES.services.GetBoardService);
 
 		jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);
 	});

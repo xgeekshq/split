@@ -4,10 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { LeanDocument, Model } from 'mongoose';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
-import {
-	Configs,
-	CreateBoardService
-} from 'src/modules/boards/interfaces/services/create.board.service.interface';
+import { CreateBoardServiceInterface } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
@@ -24,6 +21,7 @@ import { TYPES } from '../interfaces/types';
 import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
 import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
 import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
+import { Configs } from 'src/modules/boards/dto/configs.dto';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -35,7 +33,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		@Inject(forwardRef(() => TYPES.services.DeleteSchedulesService))
 		private deleteSchedulesService: DeleteSchedulesServiceInterface,
 		@Inject(forwardRef(() => BoardTypes.TYPES.services.CreateBoardService))
-		private createBoardService: CreateBoardService,
+		private createBoardService: CreateBoardServiceInterface,
 		@Inject(forwardRef(() => BoardTypes.TYPES.services.GetBoardService))
 		private getBoardService: GetBoardServiceInterface,
 		private schedulerRegistry: SchedulerRegistry,

@@ -23,7 +23,7 @@ import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
-import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
+import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';
 import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
@@ -31,10 +31,11 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import { BoardDataPopulate } from '../utils/populate-board';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { Configs } from '../dto/configs.dto';
 
 @Injectable()
-export default class CreateBoardServiceImpl implements CreateBoardService {
-	private logger = new Logger(CreateBoardServiceImpl.name);
+export default class CreateBoardService implements CreateBoardServiceInterface {
+	private logger = new Logger(CreateBoardService.name);
 
 	constructor(
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))

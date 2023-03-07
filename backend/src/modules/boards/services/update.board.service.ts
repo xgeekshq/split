@@ -42,7 +42,7 @@ import { BoardPhases } from 'src/libs/enum/board.phases';
 import Team from 'src/modules/teams/entities/teams.schema';
 
 @Injectable()
-export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
+export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,

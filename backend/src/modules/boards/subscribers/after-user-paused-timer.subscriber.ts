@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_PAUSED } from 'src/libs/constants/timer';
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
-import PauseBoardTimerService from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
+import PauseBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
 
 @Injectable()
@@ -11,7 +11,7 @@ export default class AfterUserPausedTimerSubscriber {
 
 	constructor(
 		@Inject(TYPES.services.PauseBoardTimerService)
-		private readonly pauseBoardTimerService: PauseBoardTimerService
+		private readonly pauseBoardTimerService: PauseBoardTimerServiceInterface
 	) {}
 
 	@OnEvent(BOARD_TIMER_USER_PAUSED)

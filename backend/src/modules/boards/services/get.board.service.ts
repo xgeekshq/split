@@ -25,19 +25,19 @@ import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.i
 import User from 'src/modules/users/entities/user.schema';
 import BoardGuestUserDto from '../dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
-export default class GetBoardServiceImpl implements GetBoardServiceInterface {
+export default class GetBoardService implements GetBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthService,
+		private getTokenAuthService: GetTokenAuthServiceInterface,
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.repositories.BoardUserRepository)
@@ -47,7 +47,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		private socketService: SocketGateway
 	) {}
 
-	private readonly logger = new Logger(GetBoardServiceImpl.name);
+	private readonly logger = new Logger(GetBoardService.name);
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);

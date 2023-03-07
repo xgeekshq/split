@@ -3,13 +3,13 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BOARD_TIMER_SERVER_STOPPED } from 'src/libs/constants/timer';
 import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import ServerStoppedTimerEvent from 'src/modules/boards/events/server-stopped-timer.event';
-import StopBoardTimerService from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
+import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
 import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
 
 @Injectable()
-export default class StopBoardTimerServiceImpl implements StopBoardTimerService {
-	private logger: Logger = new Logger(StopBoardTimerServiceImpl.name);
+export default class StopBoardTimerService implements StopBoardTimerServiceInterface {
+	private logger: Logger = new Logger(StopBoardTimerService.name);
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
