@@ -156,7 +156,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		count: number,
 		withSession?: boolean
 	) {
-		const boardUser = await this.boardUserRepository.findBoardUserByFieldAndUpdate(
+		const updatedBoardUser = await this.boardUserRepository.findBoardUserByFieldAndUpdate(
 			{
 				user: userId,
 				board: boardId
@@ -169,6 +169,6 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			withSession
 		);
 
-		if (!boardUser) throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoardUser) throw new BadRequestException(UPDATE_FAILED);
 	}
 }
