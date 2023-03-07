@@ -18,7 +18,7 @@ const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   '@media (prefers-reduced-motion: no-preference)': {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
-  zIndex: '100',
+  zIndex: '256',
 });
 
 const StyledContent = styled(AlertDialogPrimitive.Content, {
