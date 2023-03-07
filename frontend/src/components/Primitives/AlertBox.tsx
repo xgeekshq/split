@@ -7,7 +7,7 @@ import Box from '@/components/Primitives/Box';
 import Icon from '@/components/Primitives/Icon';
 
 const AlertStyle = styled(Flex, Box, {
-  padding: '16px 40px',
+  padding: '$16 $40',
   border: '1px solid',
   borderRadius: '$12',
   variants: {
