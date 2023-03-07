@@ -10,7 +10,7 @@ import Flex from './Flex';
 import Tooltip from './Tooltip';
 
 export type ConfirmationDialogProps = {
-  description: string;
+  description: string | React.ReactNode;
   confirmationHandler: () => void;
   confirmationLabel: string;
   title?: string;
