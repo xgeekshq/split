@@ -38,10 +38,6 @@ export class TeamRepository
 					path: 'user',
 					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
-			},
-			{
-				path: 'boards',
-				select: '_id'
 			}
 		]);
 	}
@@ -55,10 +51,6 @@ export class TeamRepository
 					path: 'user',
 					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
-			},
-			{
-				path: 'boards',
-				select: '_id'
 			}
 		]);
 	}
