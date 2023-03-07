@@ -32,7 +32,6 @@ import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
-import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 import useCards from '@/hooks/useCards';
@@ -189,21 +188,16 @@ const Board: NextPage<Props> = ({ boardId }) => {
   // Show button in sub boards to merge into main
   const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
-  // Show button in main board to start voting if is Admin
-  const showButtonToVote = !!(
-    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
-      board?.dividedBoards?.length &&
-    board?.phase === BoardPhases.ADDCARDS &&
+  const canChangePhase =
+    board?.dividedBoards?.every((dividedBoard) => !isEmpty(dividedBoard.submitedAt)) &&
     !isSubBoard &&
-    hasAdminRole
-  );
-  const showButtonToSubmit = !!(
-    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
-      board?.dividedBoards?.length &&
-    board?.phase === BoardPhases.VOTINGPHASE &&
-    !isSubBoard &&
-    hasAdminRole
-  );
+    hasAdminRole;
+
+  // Show button in main board to start voting
+  const showButtonToVote = !!(canChangePhase && board?.phase === BoardPhases.ADDCARDS);
+
+  // Show button in main board to submit
+  const showButtonToSubmit = !!(canChangePhase && board?.phase === BoardPhases.VOTINGPHASE);
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -231,15 +225,15 @@ const Board: NextPage<Props> = ({ boardId }) => {
     setIsOpen(true);
   };
 
-  const handleMergeClick = () => {
+  const handleMergeBoard = () => {
     mergeBoard.mutate({ subBoardId: boardId, socketId });
   };
 
-  const handleSubmitClick = () => {
+  const handleChangePhase = (phase: string) => {
     if (hasAdminRole) {
       const updateBoardPhase: UpdateBoardPhaseType = {
         boardId,
-        phase: BoardPhases.SUBMITTED,
+        phase,
       };
       updateBoardPhaseMutation.mutate(updateBoardPhase);
     }
@@ -281,7 +275,7 @@ const Board: NextPage<Props> = ({ boardId }) => {
                   description="If you merge your sub-team's board into the main board it can not be edited anymore
                 afterwards. Are you sure you want to merge it?"
                   confirmationLabel="Merge into main board"
-                  confirmationHandler={handleMergeClick}
+                  confirmationHandler={handleMergeBoard}
                 >
                   <Button variant="primaryOutline" size="sm">
                     Merge into main board
@@ -298,14 +292,28 @@ const Board: NextPage<Props> = ({ boardId }) => {
                 />
               )}
               {showButtonToVote && (
-                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
+                <ConfirmationDialog
+                  title="Start voting phase"
+                  description="Are you sure you want to start the voting phase?"
+                  confirmationHandler={() => {
+                    handleChangePhase(BoardPhases.VOTINGPHASE);
+                  }}
+                  confirmationLabel="Start Voting"
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Start voting
+                    <Icon name="check" />
+                  </Button>
+                </ConfirmationDialog>
               )}
               {showButtonToSubmit && (
                 <ConfirmationDialog
                   title="Submit"
                   description="If you submit your board it will block the users from voting and it can not be edited
                 anymore afterwards. Are you sure you want to submit it?"
-                  confirmationHandler={handleSubmitClick}
+                  confirmationHandler={() => {
+                    handleChangePhase(BoardPhases.SUBMITTED);
+                  }}
                   confirmationLabel="Submit"
                 >
                   <Button variant="primaryOutline" size="sm">
