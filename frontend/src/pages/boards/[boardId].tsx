@@ -34,9 +34,9 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import AlertSubmitPhase from '@/components/Board/SplitBoard/AlertSubmitPhase';
 import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 import useCards from '@/hooks/useCards';
+import { UpdateBoardPhaseType } from '@/types/board/board';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -118,6 +118,7 @@ const Board: NextPage<Props> = ({ boardId }) => {
   // Hooks
   const {
     fetchBoard: { data },
+    updateBoardPhaseMutation,
   } = useBoard({
     autoFetchBoard: true,
   });
@@ -234,6 +235,16 @@ const Board: NextPage<Props> = ({ boardId }) => {
     mergeBoard.mutate({ subBoardId: boardId, socketId });
   };
 
+  const handleSubmitClick = () => {
+    if (hasAdminRole) {
+      const updateBoardPhase: UpdateBoardPhaseType = {
+        boardId,
+        phase: BoardPhases.SUBMITTED,
+      };
+      updateBoardPhaseMutation.mutate(updateBoardPhase);
+    }
+  };
+
   const shouldShowLeftSection =
     !showMessageIfMerged &&
     (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
@@ -289,7 +300,20 @@ const Board: NextPage<Props> = ({ boardId }) => {
               {showButtonToVote && (
                 <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
               )}
-              {showButtonToSubmit && <AlertSubmitPhase boardId={boardId} isAdmin={hasAdminRole} />}
+              {showButtonToSubmit && (
+                <ConfirmationDialog
+                  title="Submit"
+                  description="If you submit your board it will block the users from voting and it can not be edited
+                anymore afterwards. Are you sure you want to submit it?"
+                  confirmationHandler={handleSubmitClick}
+                  confirmationLabel="Submit"
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Submit Board
+                    <Icon name="check" />
+                  </Button>
+                </ConfirmationDialog>
+              )}
             </Flex>
           )}
 
