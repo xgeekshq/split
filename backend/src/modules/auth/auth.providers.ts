@@ -1,6 +1,6 @@
-import { CreateResetTokenAuthApplicationImpl } from './applications/create-reset-token.auth.application';
-import { GetTokenAuthApplicationImpl } from './applications/get-token.auth.application';
-import { RegisterAuthApplicationImpl } from './applications/register.auth.application';
+import { CreateResetTokenAuthApplication } from './applications/create-reset-token.auth.application';
+import { GetTokenAuthApplication } from './applications/get-token.auth.application';
+import { RegisterAuthApplication } from './applications/register.auth.application';
 import { TYPES } from './interfaces/types';
 import CreateResetTokenAuthService from './services/create-reset-token.auth.service';
 import GetTokenAuthService from './services/get-token.auth.service';
@@ -29,15 +29,15 @@ export const createResetTokenAuthService = {
 
 export const getTokenAuthApplication = {
 	provide: TYPES.applications.GetTokenAuthApplication,
-	useClass: GetTokenAuthApplicationImpl
+	useClass: GetTokenAuthApplication
 };
 
 export const registerAuthApplication = {
 	provide: TYPES.applications.RegisterAuthApplication,
-	useClass: RegisterAuthApplicationImpl
+	useClass: RegisterAuthApplication
 };
 
 export const createResetTokenAuthApplication = {
 	provide: TYPES.applications.CreateResetTokenAuthApplication,
-	useClass: CreateResetTokenAuthApplicationImpl
+	useClass: CreateResetTokenAuthApplication
 };

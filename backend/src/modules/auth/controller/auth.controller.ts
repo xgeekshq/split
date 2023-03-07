@@ -49,22 +49,22 @@ import { GetUserApplication } from 'src/modules/users/interfaces/applications/ge
 import { UpdateUserApplication } from 'src/modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
-import { CreateResetTokenAuthApplication } from '../interfaces/applications/create-reset-token.auth.application.interface';
-import { GetTokenAuthApplication } from '../interfaces/applications/get-token.auth.application.interface';
-import { RegisterAuthApplication } from '../interfaces/applications/register.auth.application.interface';
+import { CreateResetTokenAuthApplicationInterface } from '../interfaces/applications/create-reset-token.auth.application.interface';
+import { RegisterAuthApplicationInterface } from '../interfaces/applications/register.auth.application.interface';
 import { TYPES } from '../interfaces/types';
 import { signIn } from '../shared/login.auth';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
+import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export default class AuthController {
 	constructor(
 		@Inject(TYPES.applications.RegisterAuthApplication)
-		private registerAuthApp: RegisterAuthApplication,
+		private registerAuthApp: RegisterAuthApplicationInterface,
 		@Inject(TYPES.applications.GetTokenAuthApplication)
-		private getTokenAuthApp: GetTokenAuthApplication,
+		private getTokenAuthApp: GetTokenAuthApplicationInterface,
 		@Inject(User.TYPES.applications.GetUserApplication)
 		private getUserApp: GetUserApplication,
 		@Inject(Teams.TYPES.applications.GetTeamApplication)
@@ -72,7 +72,7 @@ export default class AuthController {
 		@Inject(Boards.TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
-		private createResetTokenAuthApp: CreateResetTokenAuthApplication,
+		private createResetTokenAuthApp: CreateResetTokenAuthApplicationInterface,
 		@Inject(TYPES.applications.UpdateUserApplication)
 		private updateUserApp: UpdateUserApplication
 	) {}
