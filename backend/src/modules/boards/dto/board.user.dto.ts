@@ -35,9 +35,8 @@ export default class BoardUserDto {
 	board?: string;
 
 	@ApiPropertyOptional({ default: 0 })
-	@IsOptional()
 	@IsNumber()
-	votesCount?: number;
+	votesCount: number;
 
 	@ApiPropertyOptional()
 	@IsOptional()

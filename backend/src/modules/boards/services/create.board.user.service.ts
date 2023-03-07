@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
@@ -9,8 +9,6 @@ import BoardUserDto from '../dto/board.user.dto';
 
 @Injectable()
 export default class CreateBoardUserService implements CreateBoardUserServiceInterface {
-	private logger = new Logger(CreateBoardUserService.name);
-
 	constructor(
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>

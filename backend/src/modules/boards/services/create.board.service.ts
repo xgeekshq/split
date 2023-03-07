@@ -1,6 +1,5 @@
 import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
-import { InjectModel } from '@nestjs/mongoose';
-import { LeanDocument, Model } from 'mongoose';
+import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -12,7 +11,6 @@ import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/ge
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
@@ -26,27 +24,19 @@ import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
 import { Configs, CreateBoardService } from '../interfaces/services/create.board.service.interface';
-import Board, { BoardDocument } from '../entities/board.schema';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
+import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BoardDataPopulate } from '../utils/populate-board';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-
-export interface CreateBoardDto {
-	maxUsers: number;
-	board: BoardDto;
-	team: TeamDto | null;
-	users: BoardUserDto[];
-}
 
 @Injectable()
 export default class CreateBoardServiceImpl implements CreateBoardService {
 	private logger = new Logger(CreateBoardServiceImpl.name);
 
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
@@ -58,89 +48,14 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface
+		private createBoardUserService: CreateBoardUserServiceInterface,
+		@Inject(TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface,
+		@Inject(TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	private async createDividedBoards(boards: BoardDto[], userId: string) {
-		const newBoardsIds = await Promise.allSettled(
-			boards.map(async (board) => {
-				board.addCards = true;
-				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, false);
-
-				if (!isEmpty(users)) {
-					await this.createBoardUserService.saveBoardUsers(users, _id);
-				}
-
-				return _id;
-			})
-		);
-
-		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
-	}
-
-	async createBoard(
-		boardData: BoardDto,
-		userId: string,
-		isSubBoard = false,
-		haveSubBoards = true
-	): Promise<BoardDocument> {
-		const { dividedBoards = [], team } = boardData;
-
-		if (haveSubBoards) {
-			/**
-			 * Add in each divided board the team id (from main board)
-			 */
-			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
-				...dividedBoard,
-				team,
-				slackEnable: boardData.slackEnable,
-				hideCards: true,
-				postAnonymously: true
-			}));
-
-			return this.boardModel.create({
-				...boardData,
-				createdBy: userId,
-				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
-				addCards: false,
-				isSubBoard
-			});
-		}
-
-		return this.boardModel.create({
-			...boardData,
-			createdBy: userId,
-			isSubBoard
-		});
-	}
-
-	async saveBoardUsersFromTeam(newUsers: BoardUserDto[], team: string, responsibles: string[]) {
-		const usersIds: string[] = [];
-		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
-
-		teamUsers.forEach((teamUser) => {
-			const user = teamUser.user as User;
-
-			if (!usersIds.includes(user._id.toString())) {
-				newUsers.push({
-					user: user._id.toString(),
-					role: responsibles.includes(user._id.toString())
-						? BoardRoles.RESPONSIBLE
-						: this.handleBoardUserRole(teamUser),
-					votesCount: 0
-				});
-			}
-		});
-	}
-
-	handleBoardUserRole(teamUser: TeamUser): string {
-		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
-			? BoardRoles.RESPONSIBLE
-			: teamUser.role;
-	}
-
-	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<BoardDocument> {
+	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
 		const { team, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
@@ -181,7 +96,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable && team && teamData.name === 'xgeeks') {
-			const populatedBoard = await this.getBoardService.getBoardFromRepo(newBoard._id);
+			const populatedBoard = await this.getBoardService.getBoardPopulated(
+				newBoard._id,
+				BoardDataPopulate
+			);
 
 			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);
@@ -196,24 +114,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 
 		return newBoard;
 	}
-
-	createFirstCronJob(addCronJobDto: AddCronJobDto) {
-		this.createSchedulesService.addCronJob({
-			day: getDay(),
-			month: getNextMonth() - 1,
-			addCronJobDto
-		});
-	}
-
-	verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
-		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
-
-		dateToCompare = addDays(dateToCompare, 15);
-
-		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
-
-		return isAfter(maxDateToBeNewJoiner, new Date());
-	};
 
 	async splitBoardByTeam(
 		ownerId: string,
@@ -284,7 +184,117 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return board._id.toString();
 	}
 
-	sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
+	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
+		return Promise.all(
+			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
+		);
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async createDividedBoards(boards: BoardDto[], userId: string) {
+		const newBoardsIds = await Promise.allSettled(
+			boards.map(async (board) => {
+				board.addCards = true;
+				const { users } = board;
+				const { _id } = await this.createBoard(board, userId, true, false);
+
+				if (!isEmpty(users)) {
+					await this.createBoardUserService.saveBoardUsers(users, _id);
+				}
+
+				return _id;
+			})
+		);
+
+		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
+	}
+
+	private async createBoard(
+		boardData: BoardDto,
+		userId: string,
+		isSubBoard = false,
+		haveSubBoards = true
+	): Promise<Board> {
+		const { dividedBoards = [], team } = boardData;
+
+		if (haveSubBoards) {
+			/**
+			 * Add in each divided board the team id (from main board)
+			 */
+			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
+				...dividedBoard,
+				team,
+				slackEnable: boardData.slackEnable,
+				hideCards: true,
+				postAnonymously: true
+			}));
+
+			return this.boardRepository.create<BoardDto>({
+				...boardData,
+				createdBy: userId,
+				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
+				addCards: false,
+				isSubBoard
+			});
+		}
+
+		return this.boardRepository.create<BoardDto>({
+			...boardData,
+			dividedBoards: [],
+			createdBy: userId,
+			isSubBoard
+		});
+	}
+
+	private async saveBoardUsersFromTeam(
+		newUsers: BoardUserDto[],
+		team: string,
+		responsibles: string[]
+	) {
+		const usersIds: string[] = [];
+		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+
+		teamUsers.forEach((teamUser) => {
+			const user = teamUser.user as User;
+
+			if (!usersIds.includes(user._id.toString())) {
+				newUsers.push({
+					user: user._id.toString(),
+					role: responsibles.includes(user._id.toString())
+						? BoardRoles.RESPONSIBLE
+						: this.handleBoardUserRole(teamUser),
+					votesCount: 0
+				});
+			}
+		});
+	}
+
+	private handleBoardUserRole(teamUser: TeamUser): string {
+		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
+			? BoardRoles.RESPONSIBLE
+			: teamUser.role;
+	}
+
+	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
+		this.createSchedulesService.addCronJob({
+			day: getDay(),
+			month: getNextMonth() - 1,
+			addCronJobDto
+		});
+	}
+
+	private verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
+		let dateToCompare = new Date(providerAccountCreatedAt || joinedAt);
+
+		dateToCompare = addDays(dateToCompare, 15);
+
+		const maxDateToBeNewJoiner = addMonths(dateToCompare, 3);
+
+		return isAfter(maxDateToBeNewJoiner, new Date());
+	};
+
+	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
 		users
 			.map((user) => {
 				return {
@@ -294,7 +304,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
 
-	getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
+	private getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
 		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
 
 		// returns the user who has the oldest account date
@@ -313,7 +323,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return findSelectedAvailableUserArray;
 	};
 
-	getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
+	private getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
 		const randomGroupOfUsers = [];
 
 		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
@@ -353,9 +363,10 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return randomGroupOfUsers;
 	};
 
-	getRandomUser = (list: TeamUser[]) => list.splice(Math.floor(Math.random() * list.length), 1)[0];
+	private getRandomUser = (list: TeamUser[]) =>
+		list.splice(Math.floor(Math.random() * list.length), 1)[0];
 
-	handleSplitBoards = (
+	private handleSplitBoards = (
 		maxTeams: number,
 		teamMembers: LeanDocument<TeamUserDocument>[],
 		responsibles: string[]
@@ -407,7 +418,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		return subBoards;
 	};
 
-	generateSubBoards(
+	private generateSubBoards(
 		maxTeams: number,
 		splitUsers: BoardUserDto[][],
 		subBoards: BoardDto[],

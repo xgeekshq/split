@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
@@ -8,6 +9,13 @@ import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import mockedUser from 'src/libs/test-utils/mocks/user.mock';
 import ValidateUserAuthServiceImpl from 'src/modules/auth/services/validate-user.auth.service';
 import {
+	boardRepository,
+	boardUserRepository,
+	createBoardUserService,
+	getBoardService
+} from 'src/modules/boards/boards.providers';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import {
 	getTeamService,
 	teamRepository,
 	teamUserRepository,
@@ -15,7 +23,12 @@ import {
 } from 'src/modules/teams/providers';
 import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
-import { getUserService, userRepository } from 'src/modules/users/users.providers';
+import {
+	getUserService,
+	updateUserService,
+	userRepository
+} from 'src/modules/users/users.providers';
+import { getTokenAuthService } from '../auth.providers';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
@@ -38,14 +51,22 @@ describe('The AuthenticationService', () => {
 		(bcrypt.compare as jest.Mock) = bcryptCompare;
 
 		const module = await Test.createTestingModule({
+			imports: [EventEmitterModule.forRoot()],
 			providers: [
 				ValidateUserAuthServiceImpl,
+				SocketGateway,
 				getUserService,
 				getTeamService,
 				userRepository,
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
+				getBoardService,
+				createBoardUserService,
+				getTokenAuthService,
+				boardUserRepository,
+				boardRepository,
+				updateUserService,
 				{
 					provide: ConfigService,
 					useValue: configService
@@ -53,6 +74,14 @@ describe('The AuthenticationService', () => {
 				{
 					provide: JwtService,
 					useValue: jwtService
+				},
+				{
+					provide: getModelToken('Board'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('BoardUser'),
+					useValue: {}
 				},
 				{
 					provide: getModelToken('User'),
@@ -64,6 +93,10 @@ describe('The AuthenticationService', () => {
 				},
 				{
 					provide: getModelToken('TeamUser'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
 					useValue: {}
 				}
 			]

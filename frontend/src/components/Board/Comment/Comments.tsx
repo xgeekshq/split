@@ -6,6 +6,7 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import AddCardOrComment from '../AddCardOrComment';
 import Comment from './Comment';
 
@@ -23,6 +24,7 @@ interface CommentsListProps {
   hasAdminRole: boolean;
   isMainboard: boolean;
   postAnonymously: boolean;
+  phase?: string;
 }
 
 const Comments = React.memo(
@@ -40,6 +42,7 @@ const Comments = React.memo(
     hasAdminRole,
     isMainboard,
     postAnonymously,
+    phase,
   }: CommentsListProps) => {
     const [isCreateCommentOpened, setCreateComment] = useState(false);
 
@@ -77,6 +80,7 @@ const Comments = React.memo(
                   return null;
                 })?._id
               }
+              phase={phase}
             />
           ))}
         </Flex>
@@ -98,14 +102,17 @@ const Comments = React.memo(
             />
           </Flex>
         )}
-        {!isCreateCommentOpened && !isSubmited && (!isMainboard || hasAdminRole) && (
-          <Flex
-            css={{ '@hover': { '&:hover': { cursor: 'pointer' } } }}
-            onClick={handleSetCreateComment}
-          >
-            <Icon css={{ color: '$primary400', width: '$16', height: '$16' }} name="plus" />
-          </Flex>
-        )}
+        {phase !== BoardPhases.SUBMITTED &&
+          !isCreateCommentOpened &&
+          !isSubmited &&
+          (!isMainboard || hasAdminRole) && (
+            <Flex
+              css={{ '@hover': { '&:hover': { cursor: 'pointer' } } }}
+              onClick={handleSetCreateComment}
+            >
+              <Icon css={{ color: '$primary400', width: '$16', height: '$16' }} name="plus" />
+            </Flex>
+          )}
       </Flex>
     );
   },

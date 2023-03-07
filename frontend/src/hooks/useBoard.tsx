@@ -6,6 +6,7 @@ import {
   createBoardRequest,
   deleteBoardRequest,
   getBoardRequest,
+  updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
 import { newBoardState } from '@/store/board/atoms/board.atom';
@@ -13,7 +14,7 @@ import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { BoardUser } from '@/types/board/board.user';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
-import BoardType, { UpdateBoardPhase } from '@/types/board/board';
+import BoardType, { PhaseChangeEventType } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
@@ -142,23 +143,42 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
-  const updateBoardPhase = (data: UpdateBoardPhase) => {
+  const updateBoardPhaseMutation = useMutation(updateBoardPhaseRequest, {
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+    },
+    onError: (_data, variables) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      setToastState({
+        open: true,
+        content: 'Error updating the phase',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  const updateBoardPhase = (board: PhaseChangeEventType) => {
     setReady(false);
     queryClient.setQueryData<{ board: BoardType } | undefined>(
-      getBoardQuery(data.boardId),
+      getBoardQuery(board.boardId),
       (old: { board: BoardType } | undefined) => {
         if (old) {
           setToastState({
             open: true,
-            content: `${data.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''} ${
-              old.board.title
-            } ${data.phase === BoardPhases.SUBMITED ? ' was submited' : ''}`,
+            content: `${
+              board.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''
+            } ${old.board.title} ${board.phase === BoardPhases.SUBMITTED ? ' was submited' : ''}`,
             type: ToastStateEnum.SUCCESS,
           });
           return {
             board: {
               ...old.board,
-              phase: data.phase,
+              phase: board.phase,
+              hideCards: board.hideCards,
+              hideVotes: board.hideVotes,
+              addCards: board.addCards,
+              columns: board.columns,
+              submitedAt: board.submitedAt,
             },
           };
         }
@@ -175,6 +195,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     fetchBoard,
     setQueryDataAddBoardUser,
     updateBoardPhase,
+    updateBoardPhaseMutation,
   };
 };
 

@@ -1,4 +1,11 @@
-import { createBoardUserService } from './../../boards/boards.providers';
+import {
+	boardRepository,
+	boardUserRepository,
+	createBoardService,
+	createBoardUserService,
+	getBoardApplication,
+	getBoardService
+} from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -18,12 +25,6 @@ import {
 	registerAuthService
 } from 'src/modules/auth/auth.providers';
 import AuthController from 'src/modules/auth/controller/auth.controller';
-import {
-	boardRepository,
-	createBoardService,
-	getBoardApplication,
-	getBoardService
-} from 'src/modules/boards/boards.providers';
 import EmailModule from 'src/modules/mailer/mailer.module';
 import {
 	createTeamService,
@@ -91,6 +92,8 @@ describe('AuthController', () => {
 				SocketGateway,
 				SchedulerRegistry,
 				ConfigService,
+				boardUserRepository,
+				createBoardService,
 				{
 					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
 					useValue: {

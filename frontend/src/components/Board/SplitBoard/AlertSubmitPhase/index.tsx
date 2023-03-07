@@ -11,22 +11,21 @@ import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';
 import { UpdateBoardPhaseType } from '@/types/board/board';
-import EmitEvent from '@/types/events/emit-event.type';
 import { BoardPhases } from '@/utils/enums/board.phases';
 
 type Props = {
   boardId: string;
   isAdmin: boolean;
-  emitEvent: EmitEvent;
 };
 
-const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
+const AlertSubmitPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
   const { updateBoardPhaseMutation } = useBoard({ autoFetchBoard: false });
-  const handleVoteClick = () => {
+
+  const handleSubmitClick = () => {
     if (isAdmin) {
       const updateBoardPhase: UpdateBoardPhaseType = {
         boardId,
-        phase: BoardPhases.VOTINGPHASE,
+        phase: BoardPhases.SUBMITTED,
       };
       updateBoardPhaseMutation.mutate(updateBoardPhase);
     }
@@ -36,20 +35,24 @@ const AlertVotingPhase: React.FC<Props> = ({ boardId, isAdmin }) => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="primaryOutline" size="sm">
-          Start voting
-          <Icon name="thumbs-up" />
+          Submit Board
+          <Icon name="check" />
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent title="Start voting phase">
-        <Text>Are you sure you want to start voting phase?</Text>
+      <AlertDialogContent title="Submit">
+        <Text>
+          If you submit your board it will block the users from voting and it can not be edited
+          anymore afterwards. <br />
+          Are you sure you want to submit it ?
+        </Text>
         <Flex gap="16" justify="end" css={{ mt: '$24' }}>
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleVoteClick}>Start Voting</AlertDialogAction>
+          <AlertDialogAction onClick={handleSubmitClick}>submit</AlertDialogAction>
         </Flex>
       </AlertDialogContent>
     </AlertDialog>
   );
 };
 
-export default AlertVotingPhase;
+export default AlertSubmitPhase;
