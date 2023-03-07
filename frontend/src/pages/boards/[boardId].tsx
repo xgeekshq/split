@@ -10,7 +10,6 @@ import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
-import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icon';
@@ -36,6 +35,8 @@ import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import AlertSubmitPhase from '@/components/Board/SplitBoard/AlertSubmitPhase';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import useCards from '@/hooks/useCards';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -120,10 +121,11 @@ const Board: NextPage<Props> = ({ boardId }) => {
   } = useBoard({
     autoFetchBoard: true,
   });
-
   const board = data?.board;
   const isSubBoard = board?.isSubBoard;
+
   const route = useRouter();
+  const { mergeBoard } = useCards();
 
   const isPersonalBoard = !data?.board.team; // personal boards don't have teams
 
@@ -228,6 +230,10 @@ const Board: NextPage<Props> = ({ boardId }) => {
     setIsOpen(true);
   };
 
+  const handleMergeClick = () => {
+    mergeBoard.mutate({ subBoardId: boardId, socketId });
+  };
+
   const shouldShowLeftSection =
     !showMessageIfMerged &&
     (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
@@ -258,7 +264,20 @@ const Board: NextPage<Props> = ({ boardId }) => {
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
           {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
-              {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
+              {showButtonToMerge && (
+                <ConfirmationDialog
+                  title="Merge board into main board"
+                  description="If you merge your sub-team's board into the main board it can not be edited anymore
+                afterwards. Are you sure you want to merge it?"
+                  confirmationLabel="Merge into main board"
+                  confirmationHandler={handleMergeClick}
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Merge into main board
+                    <Icon name="merge" />
+                  </Button>
+                </ConfirmationDialog>
+              )}
 
               {showMessageHaveSubBoardsMerged && (
                 <AlertBox
