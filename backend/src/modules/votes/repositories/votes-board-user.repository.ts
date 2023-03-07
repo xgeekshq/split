@@ -15,7 +15,7 @@ export class VotesBoardUserRepository
 		super(model);
 	}
 
-	/* UPDATE BOARD */
+	/* UPDATE BOARD USER */
 	findBoardUserByFieldAndUpdate(
 		value: FilterQuery<BoardUser>,
 		query: UpdateQuery<BoardUser>,
