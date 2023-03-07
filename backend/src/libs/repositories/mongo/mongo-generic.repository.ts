@@ -93,10 +93,14 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
 		options?: QueryOptions<T>,
-		populate?: PopulateType
+		populate?: PopulateType,
+		withSession = false
 	): Promise<T> {
 		return this._repository
-			.findOneAndUpdate(value, query, options)
+			.findOneAndUpdate(value, query, {
+				...options,
+				session: withSession ? this._session : undefined
+			})
 			.populate(populate)
 			.lean()
 			.exec() as unknown as Promise<T>;

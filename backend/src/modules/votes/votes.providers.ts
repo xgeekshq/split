@@ -1,14 +1,14 @@
-import { VotesBoardUserRepository } from './repositories/board-user.repository';
-import { VotesBoardRepository } from './repositories/board.repository';
+import { VotesBoardUserRepository } from './repositories/votes-board-user.repository';
+import { VotesBoardRepository } from './repositories/votes-board.repository';
 import { CreateVoteApplicationImpl } from './applications/create.vote.application';
 import { DeleteVoteApplicationImpl } from './applications/delete.vote.application';
 import { TYPES } from './interfaces/types';
-import CreateVoteServiceImpl from './services/create.vote.service';
+import CreateVoteService from './services/create.vote.service';
 import DeleteVoteServiceImpl from './services/delete.vote.service';
 
 export const createVoteService = {
 	provide: TYPES.services.CreateVoteService,
-	useClass: CreateVoteServiceImpl
+	useClass: CreateVoteService
 };
 
 export const deleteVoteService = {
