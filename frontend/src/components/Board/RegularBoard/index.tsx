@@ -1,53 +1,40 @@
 import { useMemo, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-
+import { useRecoilValue } from 'recoil';
 import { Container } from '@/styles/pages/boards/board.styles';
-
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import Icon from '@/components/Primitives/Icon';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import {
-  boardInfoState,
-  deletedColumnsState,
-  editColumnsState,
-} from '@/store/board/atoms/board.atom';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useSession } from 'next-auth/react';
 import RegularBoardHeader from './ReagularHeader';
 
 type RegularBoardProps = {
   socketId?: string;
   listenEvent: ListenEvent;
   emitEvent: EmitEvent;
+  userId: string;
+  userSAdmin?: boolean;
 };
 
-const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) => {
+const RegularBoard = ({
+  socketId,
+  emitEvent,
+  listenEvent,
+  userId,
+  userSAdmin,
+}: RegularBoardProps) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
 
   // Recoil States
   const { board } = useRecoilValue(boardInfoState);
-  const setEditColumns = useSetRecoilState(editColumnsState);
-  const setDeletedColumns = useSetRecoilState(deletedColumnsState);
-
-  useMemo(() => {
-    if (!isOpen) {
-      setEditColumns(board.columns);
-      setDeletedColumns([]);
-    }
-  }, [board.columns, isOpen, setDeletedColumns, setEditColumns]);
-
-  // Session Details
-  const { data: session } = useSession({ required: true });
-
-  const userId = session?.user.id;
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
@@ -75,7 +62,9 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
   );
 
   // Show board settings button if current user is allowed to edit
-  const hasAdminRole = isStakeholderOrAdmin || session?.user.isSAdmin || isOwner || isResponsible;
+  const hasAdminRole = isStakeholderOrAdmin || userSAdmin || isOwner || isResponsible;
+
+  const shouldRenderBoardSettings = hasAdminRole && !board?.submitedAt;
 
   const userIsInBoard = useMemo(
     () => board.users.find((user) => user.user._id === userId),
@@ -86,23 +75,29 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
     setIsOpen(true);
   };
 
-  if (!userIsInBoard && !hasAdminRole) return <LoadingPage />;
+  if ((!userIsInBoard && !hasAdminRole) || !board || !userId || !socketId) return <LoadingPage />;
   return board && userId && socketId ? (
     <>
       <RegularBoardHeader />
       <Container direction="column">
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
-          <Flex css={{ flex: 1 }} />
-          <Flex css={{ flex: 1 }}>
-            <Timer
-              boardId={board._id}
-              isAdmin={hasAdminRole}
-              emitEvent={emitEvent}
-              listenEvent={listenEvent}
-            />
-          </Flex>
-
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
+          {!board?.submitedAt && (
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent: shouldRenderBoardSettings ? 'normal' : 'center',
+              }}
+            >
+              <Timer
+                boardId={board._id}
+                isAdmin={hasAdminRole}
+                emitEvent={emitEvent}
+                listenEvent={listenEvent}
+              />
+            </Flex>
+          )}
+          {shouldRenderBoardSettings && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
@@ -114,7 +109,7 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
                   isOpen={isOpen}
                   isOwner={isOwner}
                   isResponsible={isResponsible}
-                  isSAdmin={session?.user.isSAdmin}
+                  isSAdmin={userSAdmin}
                   isStakeholderOrAdmin={isStakeholderOrAdmin}
                   setIsOpen={setIsOpen}
                   socketId={socketId}
@@ -124,7 +119,6 @@ const RegularBoard = ({ socketId, emitEvent, listenEvent }: RegularBoardProps) =
             </>
           )}
         </Flex>
-
         <DragDropArea
           board={board}
           socketId={socketId}

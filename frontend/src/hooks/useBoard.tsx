@@ -6,12 +6,17 @@ import {
   createBoardRequest,
   deleteBoardRequest,
   getBoardRequest,
+  updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import UseBoardType from '@/types/board/useBoard';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import BoardType from '@/types/board/board';
+import { BoardUser } from '@/types/board/board.user';
+import { handleNewBoardUser } from '@/helper/board/transformBoard';
+import BoardType, { PhaseChangeEventType } from '@/types/board/board';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -22,7 +27,31 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   const { boardId, queryClient, setToastState } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
-  // #region BOARD
+  const setReady = useSetRecoilState(operationsQueueAtom);
+
+  const getBoardQuery = (id: string | undefined) => ['board', { id }];
+
+  const setQueryDataAddBoardUser = (data: BoardUser) => {
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(data.board),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          const boardData = handleNewBoardUser(old.board, data);
+
+          return {
+            board: {
+              ...old.board,
+              users: boardData.users,
+            },
+          };
+        }
+
+        return old;
+      },
+    );
+    setReady(true);
+  };
 
   const fetchBoard = useQuery(['board', { id: boardId }], () => getBoardRequest(boardId), {
     enabled: autoFetchBoard,
@@ -114,11 +143,59 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
+  const updateBoardPhaseMutation = useMutation(updateBoardPhaseRequest, {
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['board', { id: boardId }]);
+    },
+    onError: (_data, variables) => {
+      queryClient.invalidateQueries(getBoardQuery(variables.boardId));
+      setToastState({
+        open: true,
+        content: 'Error updating the phase',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  const updateBoardPhase = (board: PhaseChangeEventType) => {
+    setReady(false);
+    queryClient.setQueryData<{ board: BoardType } | undefined>(
+      getBoardQuery(board.boardId),
+      (old: { board: BoardType } | undefined) => {
+        if (old) {
+          setToastState({
+            open: true,
+            content: `${
+              board.phase === BoardPhases.VOTINGPHASE ? 'Voting phase started on ' : ''
+            } ${old.board.title} ${board.phase === BoardPhases.SUBMITTED ? ' was submited' : ''}`,
+            type: ToastStateEnum.SUCCESS,
+          });
+          return {
+            board: {
+              ...old.board,
+              phase: board.phase,
+              hideCards: board.hideCards,
+              hideVotes: board.hideVotes,
+              addCards: board.addCards,
+              columns: board.columns,
+              submitedAt: board.submitedAt,
+            },
+          };
+        }
+        return old;
+      },
+    );
+    setReady(true);
+  };
+
   return {
-    fetchBoard,
     createBoard,
     deleteBoard,
     updateBoard,
+    fetchBoard,
+    setQueryDataAddBoardUser,
+    updateBoardPhase,
+    updateBoardPhaseMutation,
   };
 };
 

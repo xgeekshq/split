@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import BoardType from '@/types/board/board';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';

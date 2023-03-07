@@ -2,7 +2,91 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.12...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.15...HEAD)
+
+## [v0.1.15](https://github.com/xgeekshq/split/compare/v0.1.14...v0.1.15) - 2023-02-21
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: board number when the responsible is changed @nunocaseiro (#1131)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.14...v0.1.15
+
+## [v0.1.14](https://github.com/xgeekshq/split/compare/v0.1.13...v0.1.14) - 2023-02-20
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: timer position @nunocaseiro (#1130)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.13...v0.1.14
+
+## [v0.1.13](https://github.com/xgeekshq/split/compare/v0.1.12...v0.1.13) - 2023-02-20
+
+### What Changed 👀
+
+- chore: remove maze code @nunocaseiro (#1103)
+- fix: added more space between columns @patricia-mdias (#1088)
+- refactor: column module @CatiaAntunes96 (#1063)
+- fix: hide comment @nunocaseiro (#1069)
+- chore: add maze script @nunocaseiro (#1067)
+- fix: dynamic tabs @StereoPT (#1058)
+- feat: board timer @geomarb (#1020)
+
+### 🚀 Features
+
+- feat: regular board public private @patricia-mdias (#1093)
+- fix: primitive style overrides @JoaoSaIvador (#1095)
+- feat: add template for to improve cards @CatiaAntunes96 (#1087)
+- feat: drag and drop column @CatiaAntunes96 (#1083)
+- feat: input primitive refactor story @StereoPT (#1076)
+- feat: regular board no team edit responsible endpoint @patricia-mdias (#1075)
+- feat: regular board no team edit responsible @patricia-mdias (#1074)
+- fix: optimistic update onSettled return added users with id @patricia-mdias (#1070)
+- feat: show board participants endpoint @patricia-mdias (#1056)
+- feat: basic recoil dev tools @StereoPT (#1061)
+
+### 🐛 Bug Fixes
+
+- fix: hide or show recoil dev tools based on a env var @nunocaseiro (#1128)
+- fix: regular board change tab @nunocaseiro (#1122)
+- fix: dialog form scroll and submit @JoaoSaIvador (#1118)
+- fix: add comment on own cards if they are hidden @nunocaseiro (#1116)
+- fix: fix board page scroll and add margin bottom @JoaoSaIvador (#1115)
+- fix: new line of the default text @nunocaseiro (#1105)
+- fix: textarea validation state @JoaoSaIvador (#1097)
+- fix: form field reseting @StereoPT (#1094)
+- fix: placeholder replaces card @CatiaAntunes96 (#1091)
+- fix: add slack channel id to a team @mourabraz (#1078)
+- fix: participants list ordered by responsibles>member @patricia-mdias (#1085)
+- fix: regular board team header no gap between elements @patricia-mdias (#1082)
+- fix: renamed keys of atoms @patricia-mdias (#1080)
+- feat: input primitive refactor story @StereoPT (#1076)
+- feat: regular board no team edit responsible @patricia-mdias (#1074)
+- fix: hide timer after sub board is merged @geomarb (#1066)
+
+### 📄 Documentation
+
+- feat: storybook split color palette @JoaoSaIvador (#1125)
+- feat: icons with search @StereoPT (#1121)
+- feat: dialog primitive story @JoaoSaIvador (#1107)
+- feat: alert box primitive story @JoaoSaIvador (#1113)
+- feat: tooltip primitive story @JoaoSaIvador (#1109)
+- feat: breadcrumbs primitive & story @StereoPT (#1110)
+- feat: loadings primitive & story @StereoPT (#1104)
+- fix: primitive style overrides @JoaoSaIvador (#1095)
+- feat: input primitive refactor story @StereoPT (#1076)
+- feat: checkbox primitive refactor and story @JoaoSaIvador (#1057)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump amannn/action-semantic-pull-request from 5.0.2 to 5.1.0 @dependabot (#1072)
+- chore(deps): bump @sideway/formula from 3.0.0 to 3.0.1 in /backend @dependabot (#1054)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.12...v0.1.13
 
 ## [v0.1.12](https://github.com/xgeekshq/split/compare/v0.1.11...v0.1.12) - 2023-02-08
 

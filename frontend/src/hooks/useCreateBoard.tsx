@@ -1,9 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-
-import { defaultColumns } from '@/helper/board/defaultColumns';
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import { createBoardDataState } from '../store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '../types/board/board';
 import { BoardUserToAdd } from '../types/board/board.user';
@@ -26,8 +24,8 @@ const useCreateBoard = (team?: Team) => {
 
   const generateSubBoard = useCallback(
     (index: number, users: BoardUserToAdd[] = []): BoardToAdd => ({
-      title: `Sub-team board ${index}`,
-      columns: defaultColumns,
+      title: `Sub-team ${index} board`,
+      columns: defaultSplitColumns,
       isPublic: false,
       dividedBoards: [],
       recurrent: false,

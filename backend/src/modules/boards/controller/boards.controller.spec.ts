@@ -1,8 +1,13 @@
+import { createBoardUserService } from './../boards.providers';
+import { ConfigService } from '@nestjs/config';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { getModelToken } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Test } from '@nestjs/testing';
 import {
+	boardRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
 	deleteBoardApplication,
@@ -13,7 +18,7 @@ import {
 	updateBoardService
 } from 'src/modules/boards/boards.providers';
 import BoardsController from 'src/modules/boards/controller/boards.controller';
-import { getCardService } from 'src/modules/cards/cards.providers';
+import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
@@ -28,7 +33,11 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
+import { JwtService } from '@nestjs/jwt';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -54,10 +63,18 @@ describe('BoardsController', () => {
 				createSchedulesService,
 				deleteSchedulesService,
 				teamRepository,
+				boardUserRepository,
 				teamUserRepository,
 				updateTeamService,
-				deleteVoteService,
 				getCardService,
+				deleteCardService,
+				deleteVoteService,
+				boardRepository,
+				userRepository,
+				updateTeamService,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
@@ -79,6 +96,10 @@ describe('BoardsController', () => {
 					useValue: {}
 				},
 				{
+					provide: ConfigService,
+					useValue: configService
+				},
+				{
 					provide: getModelToken('Schedules'),
 					useValue: {
 						find: jest.fn().mockResolvedValue([])
@@ -95,6 +116,20 @@ describe('BoardsController', () => {
 					useValue: {
 						execute: jest.fn()
 					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				}
 			]
 		}).compile();

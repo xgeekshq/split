@@ -1,5 +1,5 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -7,7 +7,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
@@ -24,7 +24,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeam from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,
@@ -42,8 +42,10 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { defaultColumns } from '@/helper/board/defaultColumns';
+
 import Link from 'next/link';
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { BoardPhases } from '@/utils/enums/board.phases';
 
 const defaultBoard = {
   users: [],
@@ -54,7 +56,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Main Board -',
-    columns: defaultColumns,
+    columns: defaultSplitColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],
@@ -110,8 +112,8 @@ const NewSplitBoard: NextPage = () => {
    * React Hook Form
    */
   const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
@@ -119,16 +121,6 @@ const NewSplitBoard: NextPage = () => {
       slackEnable: boardState.board.slackEnable,
     },
     resolver: joiResolver(SchemaCreateBoard),
-  });
-
-  const mainBoardName = useWatch({
-    control: methods.control,
-    name: 'text',
-  });
-
-  const slackEnable = useWatch({
-    control: methods.control,
-    name: 'slackEnable',
   });
 
   if (routerTeam && !selectedTeam) {
@@ -156,7 +148,7 @@ const NewSplitBoard: NextPage = () => {
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, team: string, maxVotes?: number) => {
+  const saveBoard = (title: string, team: string, slackEnable: boolean, maxVotes?: number) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -188,12 +180,10 @@ const NewSplitBoard: NextPage = () => {
       maxUsers: boardState.count.maxUsersCount,
       team,
       responsibles,
+      slackEnable,
+      phase: BoardPhases.ADDCARDS,
     });
   };
-
-  useEffect(() => {
-    setBoardState((prev) => ({ ...prev, board: { ...prev.board, slackEnable } }));
-  }, [setBoardState, slackEnable]);
 
   useEffect(() => {
     if (status === 'success') {
@@ -237,8 +227,8 @@ const NewSplitBoard: NextPage = () => {
                 id="hook-form"
                 onSubmit={
                   !haveError
-                    ? methods.handleSubmit(({ text, team, maxVotes }) => {
-                        saveBoard(text, team, maxVotes);
+                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
+                        saveBoard(text, team, slackEnable, maxVotes);
                       })
                     : undefined
                 }
@@ -260,7 +250,10 @@ const NewSplitBoard: NextPage = () => {
                   )}
                   <InnerContent direction="column">
                     <FormProvider {...methods}>
-                      <BoardName mainBoardName={mainBoardName} />
+                      <BoardName
+                        title="Main Board Name"
+                        description="The main board is the board into which all sub-boards will be merged"
+                      />
                       <SettingsTabs />
                     </FormProvider>
                   </InnerContent>

@@ -4,9 +4,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-
 import { Container } from '@/styles/pages/boards/board.styles';
-
 import { getBoardRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
@@ -15,8 +13,8 @@ import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard
 import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/icons/Icon';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import Icon from '@/components/Primitives/Icon';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import AlertBox from '@/components/Primitives/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
@@ -29,14 +27,20 @@ import {
   editColumnsState,
   newBoardState,
 } from '@/store/board/atoms/board.atom';
-import { GetBoardResponse } from '@/types/board/board';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { BoardUser } from '@/types/board/board.user';
+import { GuestUser } from '@/types/user/user';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
+import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import AlertSubmitPhase from '@/components/Board/SplitBoard/AlertSubmitPhase';
+import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);
+  const { req, res } = context;
   const queryClient = new QueryClient();
 
   const session = await getSession(context);
@@ -46,35 +50,30 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {},
     };
 
+  // if board is public and no session
+  if (!session) {
+    // check if there are guest user cookies
+    const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
+    // if there isn´t cookies, the guest user is not registered
+    if (!cookiesGuestUser) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/login-guest-user/${boardId}`,
+        },
+      };
+    }
+  }
+
   try {
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
-
-    const data = queryClient.getQueryData<GetBoardResponse>(['board', { id: boardId }]);
-    const boardUser = data?.board?.users.find((user) => user.user?._id === session?.user.id);
-
-    const userFound = data?.board.users.find((teamUser) => teamUser.user?._id === session?.user.id);
-
-    const teamUserFound = data?.board.team?.users.find(
-      (teamUser) => teamUser.user?._id === session?.user.id,
-    );
-
-    if (
-      !boardUser &&
-      !(
-        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.STAKEHOLDER) ||
-        [teamUserFound?.role, userFound?.role].includes(TeamUserRoles.ADMIN)
-      ) &&
-      !session?.user.isSAdmin
-    ) {
-      throw Error();
-    }
   } catch (e) {
     return {
       redirect: {
         permanent: false,
-        destination: '/dashboard',
+        destination: DASHBOARD_ROUTE,
       },
     };
   }
@@ -83,7 +82,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       key: boardId,
       dehydratedState: dehydrate(queryClient),
-      mainBoardId: context.query.mainBoardId ?? null,
       boardId,
     },
   };
@@ -91,10 +89,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 type Props = {
   boardId: string;
-  mainBoardId?: string;
 };
 
-const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
+const Board: NextPage<Props> = ({ boardId }) => {
   // States
   // State or open and close Board Settings Dialog
   const [isOpen, setIsOpen] = useState(false);
@@ -106,9 +103,16 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   const setEditColumns = useSetRecoilState(editColumnsState);
   const setDeletedColumns = useSetRecoilState(deletedColumnsState);
 
+  // Main Board Id
+  const mainBoardId = recoilBoard?.mainBoard?._id;
+
   // Session Details
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const { data: session } = useSession({ required: false });
+
+  const guestUserCookies = getGuestUserCookies();
+
+  const userId: string | undefined =
+    !session && guestUserCookies ? guestUserCookies.user : session?.user?.id;
 
   // Hooks
   const {
@@ -135,27 +139,15 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   useEffect(() => {
     if (data) {
       setRecoilBoard(data);
-      setEditColumns(data.board.columns);
-      setDeletedColumns([]);
 
-      const boardUsers: BoardUser[] = [...data.board.users];
-
-      // this insures that the team creator stays always in first
-      const userAdminIndex = boardUsers.findIndex(
-        (member) => member?.user?._id === session?.user.id,
-      );
-
-      boardUsers.unshift(boardUsers.splice(userAdminIndex, 1)[0]);
-      setBoardParticipants(boardUsers);
+      if (!data.board.team) {
+        setEditColumns(data.board.columns);
+        setDeletedColumns([]);
+        sortParticipantsList([...data.board.users], setBoardParticipants);
+      }
     }
-  }, [
-    data,
-    session?.user.id,
-    setDeletedColumns,
-    setEditColumns,
-    setBoardParticipants,
-    setRecoilBoard,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, userId]);
 
   // Board Settings permissions
   const isStakeholderOrAdmin = useMemo(
@@ -194,6 +186,22 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
   // Show button in sub boards to merge into main
   const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
+  // Show button in main board to start voting if is Admin
+  const showButtonToVote = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
+    board?.phase === BoardPhases.ADDCARDS &&
+    !isSubBoard &&
+    hasAdminRole
+  );
+  const showButtonToSubmit = !!(
+    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
+      board?.dividedBoards?.length &&
+    board?.phase === BoardPhases.VOTINGPHASE &&
+    !isSubBoard &&
+    hasAdminRole
+  );
+
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
     !isSubBoard &&
@@ -220,17 +228,35 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
     setIsOpen(true);
   };
 
-  if (!recoilBoard) return <LoadingPage />;
+  const shouldShowLeftSection =
+    !showMessageIfMerged &&
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
+
+  const shouldShowRightSection =
+    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+
+  if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
+    return <LoadingPage />;
+  }
 
   if (isRegularOrPersonalBoard)
-    return <RegularBoard socketId={socketId} emitEvent={emitEvent} listenEvent={listenEvent} />;
+    return (
+      <RegularBoard
+        socketId={socketId}
+        emitEvent={emitEvent}
+        listenEvent={listenEvent}
+        userId={userId}
+        userSAdmin={session?.user.isSAdmin}
+      />
+    );
 
-  return board && userId && socketId ? (
+  return (
     <>
       <BoardHeader />
       <Container direction="column">
-        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="between">
-          {!showMessageIfMerged && (
+        <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
+          {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
               {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
 
@@ -241,19 +267,35 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
                   type="info"
                 />
               )}
+              {showButtonToVote && (
+                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
+              )}
+              {showButtonToSubmit && <AlertSubmitPhase boardId={boardId} isAdmin={hasAdminRole} />}
             </Flex>
           )}
 
-          <Flex css={{ flex: 1 }}>
-            <Timer
-              boardId={boardId}
-              isAdmin={hasAdminRole}
-              emitEvent={emitEvent}
-              listenEvent={listenEvent}
-            />
-          </Flex>
+          {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
 
-          {hasAdminRole && !board?.submitedAt && (
+          {shouldShowTimer && (
+            <Flex
+              css={{
+                flex: 1,
+                justifyContent:
+                  ((!shouldShowLeftSection || !shouldShowRightSection) && shouldShowLeftSection) ||
+                  (!shouldShowLeftSection && !shouldShowRightSection)
+                    ? 'center'
+                    : 'normal',
+              }}
+            >
+              <Timer
+                boardId={boardId}
+                isAdmin={hasAdminRole}
+                emitEvent={emitEvent}
+                listenEvent={listenEvent}
+              />
+            </Flex>
+          )}
+          {shouldShowRightSection && (
             <>
               <Button onClick={handleOpen} variant="primaryOutline">
                 <Icon name="settings" />
@@ -274,9 +316,11 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
             </>
           )}
 
-          {showMessageIfMerged ? (
+          {!shouldShowRightSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
+
+          {showMessageIfMerged && (
             <AlertGoToMainBoard mainBoardId={mainBoardId} submitedAt={board.submitedAt as Date} />
-          ) : null}
+          )}
         </Flex>
 
         <DragDropArea
@@ -287,8 +331,6 @@ const Board: NextPage<Props> = ({ boardId, mainBoardId }) => {
         />
       </Container>
     </>
-  ) : (
-    <LoadingPage />
   );
 };
 

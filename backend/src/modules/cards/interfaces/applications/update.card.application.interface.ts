@@ -1,5 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 
 export interface UpdateCardApplication {
 	updateCardPosition(

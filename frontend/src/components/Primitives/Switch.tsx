@@ -3,7 +3,7 @@ import * as SwitchPrimitive from '@radix-ui/react-switch';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from './Flex';
-import Icon from '../icons/Icon';
+import Icon from './Icon';
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {
   justifyContent: 'center',
@@ -35,7 +35,7 @@ const SwitchThumb = ({ checked, icon }: SwitchThumbProps) => (
       <Icon
         name={icon}
         css={{
-          color: '$successBase !important',
+          color: '$successBase',
         }}
       />
     )}

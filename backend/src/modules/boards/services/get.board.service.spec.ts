@@ -1,10 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable max-classes-per-file */
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { ConfigService } from '@nestjs/config';
+import { boardUserRepository, createBoardUserService } from './../boards.providers';
+import { JwtService } from '@nestjs/jwt';
+import { getTokenAuthService } from './../../auth/auth.providers';
 import { Logger } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Document, LeanDocument } from 'mongoose';
-import Board from 'src/modules/boards/schemas/board.schema';
+import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import Board from 'src/modules/boards/entities/board.schema';
 import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import {
 	getTeamService,
@@ -12,8 +17,13 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { getBoardService } from '../boards.providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
+import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const fakeBoards = BoardFactory.createMany(2);
 
 describe('GetBoardServiceImpl', () => {
 	let service: GetBoardServiceImpl;
@@ -21,11 +31,20 @@ describe('GetBoardServiceImpl', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
+				createBoardUserService,
+				updateUserService,
+				ConfigService,
+				getTokenAuthService,
 				getTeamService,
 				getBoardService,
 				teamUserRepository,
 				teamRepository,
+				boardRepository,
 				updateTeamService,
+				userRepository,
+				boardUserRepository,
+				SocketGateway,
+				EventEmitter2,
 				{
 					provide: getModelToken('Team'),
 					useValue: {}
@@ -35,12 +54,24 @@ describe('GetBoardServiceImpl', () => {
 					useValue: {}
 				},
 				{
-					provide: getModelToken('Board'),
+					provide: getModelToken(Board.name),
 					useValue: {}
 				},
 				{
 					provide: getModelToken('BoardUser'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('User'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
 				},
 				GetBoardServiceImpl
 			]

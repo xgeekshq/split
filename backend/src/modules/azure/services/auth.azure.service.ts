@@ -1,23 +1,29 @@
 import { Inject, Injectable } from '@nestjs/common';
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import * as AuthType from 'src/modules/auth/interfaces/types';
+import * as StorageType from 'src/modules/storage/interfaces/types';
 import { signIn } from 'src/modules/auth/shared/login.auth';
 import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
 import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as UserType from 'src/modules/users/interfaces/types';
 import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
-import { CronAzureService } from '../interfaces/services/cron.azure.service.interface';
-import { TYPES } from '../interfaces/types';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
+import { ConfidentialClientApplication } from '@azure/msal-node';
+import { Client } from '@microsoft/microsoft-graph-client';
+import { ConfigService } from '@nestjs/config';
+import { AZURE_AUTHORITY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } from 'src/libs/constants/azure';
+import { createHash } from 'node:crypto';
+import User from 'src/modules/users/entities/user.schema';
+import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
+import { UpdateUserService } from 'src/modules/users/interfaces/services/update.user.service.interface';
 
 type AzureUserFound = {
-	mail?: string;
-	displayName?: string;
-	userPrincipalName?: string;
+	id: string;
+	mail: string;
+	displayName: string;
+	userPrincipalName: string;
+	createdDateTime: Date;
 };
 
 type AzureDecodedUser = {
@@ -30,18 +36,48 @@ type AzureDecodedUser = {
 
 @Injectable()
 export default class AuthAzureServiceImpl implements AuthAzureService {
+	private graphClient: Client;
+	private authCredentials: { accessToken: string; expiresOn: Date };
+
 	constructor(
 		@Inject(UserType.TYPES.services.CreateUserService)
 		private readonly createUserService: CreateUserService,
 		@Inject(UserType.TYPES.services.GetUserService)
 		private readonly getUserService: GetUserService,
+		@Inject(AuthType.TYPES.services.UpdateUserService)
+		private readonly updateUserService: UpdateUserService,
 		@Inject(AuthType.TYPES.services.GetTokenAuthService)
 		private readonly getTokenService: GetTokenAuthService,
-		@Inject(TYPES.services.CronAzureService)
-		private readonly cronAzureService: CronAzureService,
-		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
-		private slackCommunicationService: CommunicationServiceInterface
-	) {}
+		private readonly configService: ConfigService,
+		@Inject(StorageType.TYPES.services.StorageService)
+		private readonly storageService: StorageServiceInterface
+	) {
+		const confidentialClient = new ConfidentialClientApplication({
+			auth: {
+				clientId: configService.get(AZURE_CLIENT_ID),
+				clientSecret: configService.get(AZURE_CLIENT_SECRET),
+				authority: configService.get(AZURE_AUTHORITY)
+			}
+		});
+
+		this.graphClient = Client.init({
+			fetchOptions: {
+				headers: { ConsistencyLevel: 'eventual' }
+			},
+			authProvider: async (done) => {
+				if (this.authCredentials?.expiresOn >= new Date()) {
+					return done(null, this.authCredentials.accessToken);
+				}
+
+				const { accessToken, expiresOn } = await confidentialClient.acquireTokenByClientCredential({
+					scopes: ['https://graph.microsoft.com/.default']
+				});
+
+				this.authCredentials = { accessToken, expiresOn };
+				done(null, accessToken);
+			}
+		});
+	}
 
 	async loginOrRegisterAzureToken(azureToken: string) {
 		const { unique_name, email, name, given_name, family_name } = <AzureDecodedUser>(
@@ -54,56 +90,84 @@ export default class AuthAzureServiceImpl implements AuthAzureService {
 
 		const emailOrUniqueName = email ?? unique_name;
 
-		const userExists = await this.checkUserExistsInActiveDirectory(emailOrUniqueName);
 		const userFromAzure = await this.getUserFromAzure(emailOrUniqueName);
 
-		if (!userExists || isEmpty(userFromAzure)) return null;
+		if (!userFromAzure) return null;
 
 		const user = await this.getUserService.getByEmail(emailOrUniqueName);
 
-		if (user) return signIn(user, this.getTokenService, 'azure');
+		let userToAuthenticate: User;
 
-		const createdUser = await this.createUserService.create({
-			email: emailOrUniqueName,
-			firstName,
-			lastName,
-			providerAccountCreatedAt: userFromAzure.value[0].createdDateTime
-		});
+		if (user) {
+			userToAuthenticate = user;
+		} else {
+			const createdUser = await this.createUserService.create({
+				email: emailOrUniqueName,
+				firstName,
+				lastName,
+				providerAccountCreatedAt: userFromAzure.createdDateTime
+			});
 
-		//this.slackCommunicationService.executeAddUserMainChannel({ email: emailOrUniqueName });
+			if (!createdUser) return null;
 
-		if (!createdUser) return null;
+			userToAuthenticate = createdUser;
+		}
 
-		return signIn(createdUser, this.getTokenService, 'azure');
+		const avatarUrl = await this.getUserPhoto(userToAuthenticate);
+
+		if (avatarUrl) {
+			await this.updateUserService.updateUserAvatar(userToAuthenticate._id, avatarUrl);
+
+			userToAuthenticate.avatar = avatarUrl;
+		}
+
+		return signIn(userToAuthenticate, this.getTokenService, 'azure');
 	}
 
-	getGraphQueryUrl(email: string) {
-		return `https://graph.microsoft.com/v1.0/users?$search="mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"&$orderbydisplayName&$select=displayName,mail,userPrincipalName,createdDateTime`;
-	}
+	async getUserFromAzure(email: string): Promise<AzureUserFound | undefined> {
+		const { value } = await this.graphClient
+			.api('/users')
+			.select(['id', 'displayName', 'mail', 'userPrincipalName', 'createdDateTime'])
+			.search(`"mail:${email}" OR "displayName:${email}" OR "userPrincipalName:${email}"`)
+			.orderby('displayName')
+			.get();
 
-	async getUserFromAzure(email: string) {
-		const queryUrl = this.getGraphQueryUrl(email);
-
-		const { data } = await axios.get(queryUrl, {
-			headers: {
-				Authorization: `Bearer ${await this.cronAzureService.getAzureAccessToken()}`,
-				ConsistencyLevel: 'eventual'
-			}
-		});
-
-		return data;
+		return value[0];
 	}
 
 	async checkUserExistsInActiveDirectory(email: string) {
 		const data = await this.getUserFromAzure(email);
 
-		const user = data.value.find(
-			(userFound: AzureUserFound) =>
-				userFound.mail?.toLowerCase() === email.toLowerCase() ||
-				userFound.displayName?.toLowerCase() === email.toLowerCase() ||
-				userFound.userPrincipalName?.toLowerCase() === email.toLowerCase()
-		);
+		return !isEmpty(data);
+	}
 
-		return !isEmpty(user);
+	private async getUserPhoto(user: User) {
+		const { email, avatar } = user;
+		const azureUser = await this.getUserFromAzure(email);
+
+		if (!azureUser) return '';
+
+		try {
+			const blob = await this.graphClient.api(`/users/${azureUser.id}/photo/$value`).get();
+
+			const buffer = Buffer.from(await blob.arrayBuffer());
+			const hash = createHash('md5').update(buffer).digest('hex');
+
+			if (avatar) {
+				const avatarHash = avatar.split('/').pop().split('.').shift();
+
+				if (avatarHash === hash) return;
+
+				await this.storageService.deleteFile(avatar);
+			}
+
+			return this.storageService.uploadFile(hash, {
+				buffer,
+				mimetype: blob.type,
+				originalname: `${hash}.${blob.type.split('/').pop()}`
+			});
+		} catch (ex) {
+			return '';
+		}
 	}
 }

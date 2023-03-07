@@ -3,8 +3,8 @@ import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
-import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
-import Icon from '@/components/icons/Icon';
+import Breadcrumb from '@/components/Primitives/Breadcrumb';
+import Icon from '@/components/Primitives/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
@@ -17,12 +17,12 @@ import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import { useRouter } from 'next/router';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import {
   BoardCounter,
   MergeIconContainer,
@@ -38,7 +38,6 @@ import {
 
 const BoardHeader = () => {
   const { data: session } = useSession({ required: true });
-  const router = useRouter();
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   // Atoms
@@ -78,16 +77,12 @@ const BoardHeader = () => {
     },
   ];
 
-  const { mainBoardTitle, mainBoardId } = router.query;
-
-  const mainTitle = mainBoardTitle as string;
-  const mainId = mainBoardId as string;
-
-  if (isSubBoard) {
+  if (isSubBoard && boardData.mainBoard) {
+    const { _id: mainBoardId, title: mainBoardTitle } = boardData.mainBoard;
     breadcrumbItems.push(
       {
-        title: mainTitle ?? title,
-        link: `/boards/${mainId}`,
+        title: mainBoardTitle ?? title,
+        link: `/boards/${mainBoardId}`,
       },
       {
         title,
@@ -180,26 +175,25 @@ const BoardHeader = () => {
                 </Text>
               </StyledBoardTitle>
               <AvatarGroup
-                isBoardsPage
                 listUsers={users}
                 responsible={false}
                 teamAdmins={false}
                 userId={session!.user.id}
-                isSubBoardPage
+                hasDrawer
               />
             </Flex>
+
             <Separator orientation="vertical" size="lg" />
             <Flex align="center" gap="10">
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
               <AvatarGroup
-                isBoardsPage
                 responsible
                 listUsers={users}
                 teamAdmins={false}
                 userId={session!.user.id}
-                isSubBoardPage
+                hasDrawer
               />
             </Flex>
             <ListBoardMembers
@@ -228,11 +222,11 @@ const BoardHeader = () => {
                   </Text>
                 </StyledBoardTitle>
                 <AvatarGroup
-                  isBoardsPage
                   listUsers={teamUsers}
                   responsible={false}
                   teamAdmins={false}
                   userId={session!.user.id}
+                  isClickable
                 />
               </Flex>
               {!isEmpty(
@@ -245,11 +239,11 @@ const BoardHeader = () => {
                       Team admins
                     </Text>
                     <AvatarGroup
-                      isBoardsPage
                       teamAdmins
                       listUsers={teamUsers}
                       responsible={false}
                       userId={session!.user.id}
+                      isClickable
                     />
                   </Flex>
                 </>
@@ -266,12 +260,12 @@ const BoardHeader = () => {
                       Stakeholders
                     </Text>
                     <AvatarGroup
-                      isBoardsPage
                       stakeholders
                       listUsers={teamUsers}
                       responsible={false}
                       teamAdmins={false}
                       userId={session!.user.id}
+                      isClickable
                     />
                   </Flex>
                 </>
@@ -286,9 +280,18 @@ const BoardHeader = () => {
           <PopoverTrigger asChild>
             <BoardCounter>
               <Icon name="info" />
-              {
-                dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt).length
-              } of {dividedBoards.length} sub-team boards merged
+              {boardData.board.phase === BoardPhases.ADDCARDS ||
+              boardData.board.phase === undefined ? (
+                <div>
+                  {
+                    dividedBoards.filter((dividedBoard: BoardType) => dividedBoard.submitedAt)
+                      .length
+                  }{' '}
+                  of {dividedBoards.length} sub-team boards merged
+                </div>
+              ) : null}
+              {boardData.board.phase === BoardPhases.VOTINGPHASE ? 'Voting Phase' : null}
+              {boardData.board.phase === BoardPhases.SUBMITTED ? 'Submited' : null}
             </BoardCounter>
           </PopoverTrigger>
           <PopoverPortal>

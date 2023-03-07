@@ -4,7 +4,13 @@ import CardType from '@/types/card/card';
 import { ColumnInnerList } from '@/types/column';
 import CardBoard from '../Card/CardBoard';
 
-const CardsList = React.memo<ColumnInnerList>(
+type CardListProps = {
+  isRegularBoard?: boolean;
+  cardTextDefault?: string;
+  phase?: string;
+} & ColumnInnerList;
+
+const CardsList = React.memo<CardListProps>(
   ({
     cards,
     color,
@@ -20,6 +26,9 @@ const CardsList = React.memo<ColumnInnerList>(
     isDefaultText,
     hasAdminRole,
     postAnonymously,
+    isRegularBoard,
+    cardTextDefault,
+    phase,
   }) => (
     <>
       {cards.map((card: CardType, idx) => (
@@ -40,6 +49,9 @@ const CardsList = React.memo<ColumnInnerList>(
           isDefaultText={isDefaultText || true}
           hasAdminRole={hasAdminRole}
           postAnonymously={postAnonymously}
+          isRegularBoard={isRegularBoard}
+          cardTextDefault={cardTextDefault}
+          phase={phase}
         />
       ))}
     </>

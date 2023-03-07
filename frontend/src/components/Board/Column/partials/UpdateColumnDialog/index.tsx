@@ -51,18 +51,17 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   } = useColumn();
 
   const methods = useForm<{ title: string; text: string }>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      title: columnTitle || '',
+      title: columnTitle,
+      text: cardText || 'Write your comment here...',
+    },
+    values: {
+      title: columnTitle,
       text: cardText || 'Write your comment here...',
     },
     resolver: joiResolver(SchemaChangeColumnName),
-  });
-
-  const columnName = useWatch({
-    control: methods.control,
-    name: 'title',
   });
 
   const columnTextCard = useWatch({
@@ -111,14 +110,11 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
           >
             {type === 'ColumnName' ? (
               <Input
-                forceState
                 id="title"
-                maxChars="15"
+                maxChars="30"
                 placeholder="Column name"
-                state="default"
                 type="text"
                 showCount
-                currentValue={columnName}
                 css={{ mb: '0' }}
               />
             ) : (

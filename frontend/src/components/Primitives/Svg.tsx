@@ -3,6 +3,12 @@ import { styled } from '@/styles/stitches/stitches.config';
 const Svg = styled('svg', {
   variants: {
     size: {
+      100: {
+        size: '$100',
+      },
+      48: {
+        size: '$48',
+      },
       32: {
         size: '$32',
       },

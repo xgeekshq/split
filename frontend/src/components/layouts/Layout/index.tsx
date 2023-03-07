@@ -1,58 +1,36 @@
-import React, { ReactNode, useMemo } from 'react';
-import { useRouter } from 'next/router';
+import React, { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 
-import LoadingPage from '@/components/loadings/LoadingPage';
-import { Sidebar } from '@/components/Sidebar';
+import LoadingPage from '@/components/Primitives/Loading/Page';
+import Sidebar from '@/components/Sidebar';
 import { REFRESH_TOKEN_ERROR } from '@/utils/constants';
-import { BOARDS_ROUTE, DASHBOARD_ROUTE, TEAMS_ROUTE, USERS_ROUTE } from '@/utils/routes';
-import DashboardLayout from '../DashboardLayout';
-import { Container } from './styles';
+import { Container, ContentSection } from './styles';
 
-const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: session } = useSession({ required: true });
+type LayoutProps = {
+  children: ReactNode;
+};
 
-  const router = useRouter();
-
-  const isDashboard = router.pathname === DASHBOARD_ROUTE;
-  const isBoards = router.pathname === BOARDS_ROUTE;
-  const isTeams = router.pathname === TEAMS_ROUTE;
-  const isUsers = router.pathname === USERS_ROUTE;
+const Layout = ({ children }: LayoutProps) => {
+  const { data: session } = useSession({ required: false });
 
   if (session?.error === REFRESH_TOKEN_ERROR) {
     signOut({ callbackUrl: '/' });
   }
 
-  const renderMain = useMemo(() => {
-    if (!session) return null;
-    return (
-      <DashboardLayout
-        firstName={session.user.firstName}
-        isBoards={isBoards}
-        isDashboard={isDashboard}
-        isTeams={isTeams}
-        isUsers={isUsers}
-      >
-        {children}
-      </DashboardLayout>
-    );
-  }, [children, isBoards, isDashboard, session, isTeams, isUsers]);
-
   if (!session) return <LoadingPage />;
 
   return (
-    <>
-      <Container>
-        <Sidebar
-          email={session.user.email}
-          firstName={session.user.firstName}
-          lastName={session.user.lastName}
-          strategy={session.strategy}
-        />
-        {renderMain}
-      </Container>
-      {!session && <LoadingPage />}
-    </>
+    <Container>
+      <Sidebar
+        email={session.user.email}
+        firstName={session.user.firstName}
+        lastName={session.user.lastName}
+        strategy={session.strategy}
+      />
+      <ContentSection gap="36" justify="between">
+        {children}
+      </ContentSection>
+    </Container>
   );
 };
 

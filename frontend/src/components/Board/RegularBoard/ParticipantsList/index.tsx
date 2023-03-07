@@ -1,19 +1,33 @@
 import React from 'react';
-import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import Flex from '@/components/Primitives/Flex';
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
-import ParticipantCard from './ParticipantCard.tsx';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { useSession } from 'next-auth/react';
+import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import ParticipantsLayout from './ParticipantsLayout';
+import ParticipantCard from './ParticipantCard.tsx';
 
-const ParticipantsList = () => {
-  const { data: session } = useSession({ required: true });
+type ParticipantsListProps = {
+  createdBy?: string;
+};
 
+const ParticipantsList = ({ createdBy }: ParticipantsListProps) => {
   const boardParticipants = useRecoilValue(boardParticipantsState);
+  const { data: session } = useSession();
+
+  // User Id
+  const userId = getGuestUserCookies() ? getGuestUserCookies().user : session?.user.id;
+
+  const isResponsible = !!boardParticipants.find(
+    (boardUser) => boardUser.user._id === userId && boardUser.role === BoardUserRoles.RESPONSIBLE,
+  );
+
+  const isSAdmin = !!session?.user.isSAdmin;
 
   return (
-    <ParticipantsLayout>
+    <ParticipantsLayout hasPermissionsToEdit={isResponsible || isSAdmin}>
       <Flex direction="column">
         <ScrollableContent
           direction="column"
@@ -24,8 +38,11 @@ const ParticipantsList = () => {
           {boardParticipants?.map((member) => (
             <ParticipantCard
               key={member.user._id}
-              isBoardCreator={member.user._id === session?.user.id}
               member={member}
+              isMemberCurrentUser={member.user._id === userId}
+              isCurrentUserResponsible={isResponsible}
+              isCurrentUserSAdmin={isSAdmin}
+              isCreatedByCurrentUser={createdBy === member.user._id}
             />
           ))}
         </ScrollableContent>

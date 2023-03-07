@@ -1,4 +1,4 @@
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
@@ -6,29 +6,21 @@ import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import CreateTeam from '@/components/Teams/CreateTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { Suspense, useEffect } from 'react';
+import useUser from '@/hooks/useUser';
+import Flex from '@/components/Primitives/Flex';
+import Dots from '@/components/Primitives/Loading/Dots';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });
-  const setToastState = useSetRecoilState(toastState);
 
-  const { data } = useQuery(['users'], () => getAllUsers(), {
-    enabled: true,
-    refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the users',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
+  const {
+    fetchUsers: { data: usersData, isFetching },
+  } = useUser();
 
   const setUsersListState = useSetRecoilState(usersListState);
   const setMembersListState = useSetRecoilState(membersListState);
@@ -36,10 +28,11 @@ const NewTeam: NextPage = () => {
   useEffect(() => {
     const listMembers: TeamUser[] | undefined = [];
 
-    if (!data) {
+    if (!usersData) {
       return;
     }
-    data.forEach((user) => {
+
+    usersData.forEach((user) => {
       if (user._id === session?.user.id) {
         listMembers.push({
           user,
@@ -49,7 +42,7 @@ const NewTeam: NextPage = () => {
       }
     });
 
-    const usersWithChecked = data
+    const usersWithChecked = usersData
       .map((user) => ({
         ...user,
         isChecked: user._id === session?.user.id,
@@ -58,14 +51,20 @@ const NewTeam: NextPage = () => {
 
     setUsersListState(usersWithChecked);
     setMembersListState(listMembers);
-  }, [data, session?.user.id, setMembersListState, setUsersListState]);
+  }, [usersData, session?.user.id, setMembersListState, setUsersListState]);
 
-  if (!session || !data) return null;
+  if (!session || !usersData) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <CreateTeam />
+        {isFetching ? (
+          <Flex justify="center" css={{ mt: '$16' }}>
+            <Dots />
+          </Flex>
+        ) : (
+          <CreateTeam />
+        )}
       </QueryError>
     </Suspense>
   );
@@ -76,7 +75,16 @@ export default NewTeam;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    try {
+      await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    } catch (e) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/teams',
+        },
+      };
+    }
 
     return {
       props: {

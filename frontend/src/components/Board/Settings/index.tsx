@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
@@ -13,11 +13,7 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';
 import SchemaUpdateBoard from '@/schema/schemaUpdateBoardForm';
-import {
-  boardInfoState,
-  deletedColumnsState,
-  editColumnsState,
-} from '@/store/board/atoms/board.atom';
+import { boardInfoState, deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { UpdateBoardType } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -28,7 +24,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
-import { ConfigurationSwitchSettings } from './partials/ConfigurationSettings/ConfigurationSwitch';
+import ConfigurationSwitch from '../../Primitives/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
@@ -37,7 +33,7 @@ import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
 
-const StyledForm = styled('form', { height: 'calc(100% - 89px)' });
+const StyledForm = styled('form', { height: '100%', display: 'flex', flexDirection: 'column' });
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -77,7 +73,6 @@ const BoardSettings = ({
     },
   } = useRecoilValue(boardInfoState);
 
-  const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
   const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
 
   // State used to change values
@@ -89,12 +84,15 @@ const BoardSettings = ({
     maxVotes: boardMaxVotes,
     users,
     isPublic,
-    columns: isRegularBoard ? editColumns : columns,
+    columns,
     addCards,
     postAnonymously,
   };
 
   const [data, setData] = useState<UpdateBoardType>(initialData);
+
+  const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
 
   // References
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -110,13 +108,13 @@ const BoardSettings = ({
     addCards: boolean;
     postAnonymously: boolean;
   }>({
-    maxVotes: false,
-    responsible: false,
-    hideCards: false,
-    hideVotes: false,
-    isPublic: false,
-    addCards: false,
-    postAnonymously: false,
+    maxVotes: !!initialData?.maxVotes,
+    responsible: !!initialData.responsible,
+    hideCards: initialData.hideCards,
+    hideVotes: initialData.hideVotes,
+    isPublic: initialData.isPublic,
+    addCards: initialData.addCards,
+    postAnonymously: initialData.postAnonymously,
   });
 
   // User Board Hook
@@ -124,80 +122,26 @@ const BoardSettings = ({
     updateBoard: { mutate },
   } = useBoard({ autoFetchBoard: false });
 
-  const responsible = data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
-  const hasPermissions = isStakeholderOrAdmin || isOwner || isSAdmin || isResponsible;
-
   // Use Form Hook
   const methods = useForm<{
     title: string;
     maxVotes?: number | null;
-    column1title?: string;
-    column2title?: string;
-    column3title?: string;
-    column4title?: string;
+    formColumns: (ColumnType | CreateColumn)[];
   }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     resolver: joiResolver(SchemaUpdateBoard),
     defaultValues: {
-      title: data.title,
-      maxVotes: data.maxVotes,
-      column1title: editColumns[0]?.title,
-      column2title: editColumns[1]?.title,
-      column3title: editColumns[2]?.title,
-      column4title: editColumns[3]?.title,
+      title: boardTitle,
+      maxVotes: boardMaxVotes,
+      formColumns: data.columns,
     },
   });
 
-  /**
-   * Use Effect to run when board change
-   * to set title and validate if
-   * the value of max votes is not undefined,
-   * if yes set the input with this value
-   */
-  useEffect(() => {
-    setData((prev) => ({
-      ...prev,
-      title: boardTitle,
-      maxVotes: boardMaxVotes,
-      columns: isRegularBoard ? editColumns : columns,
-      hideCards,
-      hideVotes,
-      isPublic,
-      addCards,
-      postAnonymously,
-    }));
-    methods.setValue('title', boardTitle);
-    methods.setValue('maxVotes', boardMaxVotes ?? null);
-    if (isRegularBoard) {
-      methods.setValue('column1title', editColumns[0]?.title);
-      methods.setValue('column2title', editColumns[1]?.title);
-      methods.setValue('column3title', editColumns[2]?.title);
-      methods.setValue('column4title', editColumns[3]?.title);
-    }
-
-    setSwitchesState((prev) => ({
-      ...prev,
-      hideVotes,
-      hideCards,
-      maxVotes: !isEmpty(boardMaxVotes),
-      isPublic,
-      addCards,
-      postAnonymously,
-    }));
-  }, [
-    boardMaxVotes,
-    boardTitle,
-    columns,
-    hideCards,
-    hideVotes,
-    isPublic,
-    methods,
-    editColumns,
-    addCards,
-    isRegularBoard,
-    postAnonymously,
-  ]);
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: 'formColumns',
+  });
 
   const handleHideCardsChange = () => {
     setData((prev) => ({
@@ -280,32 +224,28 @@ const BoardSettings = ({
   const updateBoard = (
     title: string,
     maxVotes?: number | null,
-    updatedColumns?: (ColumnType | CreateColumn)[],
+    formColumns?: (ColumnType | CreateColumn)[],
   ) => {
-    mutate(
-      {
-        ...data,
-        title,
-        maxVotes,
-        columns: isRegularBoard ? updatedColumns : data.columns,
-        deletedColumns,
-        socketId,
-        responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
-      },
-      {
-        onSuccess: () => {
-          setSwitchesState({
-            hideCards: false,
-            maxVotes: false,
-            hideVotes: false,
-            responsible: false,
-            isPublic: false,
-            addCards: false,
-            postAnonymously: false,
-          });
-        },
-      },
+    const updatedColumns = [...formColumns!].flatMap((column) =>
+      column
+        ? {
+            ...column,
+            title: column.title as string,
+          }
+        : [],
     );
+
+    mutate({
+      ...data,
+      title,
+      maxVotes,
+      columns: updatedColumns,
+      deletedColumns,
+      socketId,
+      responsible: data.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+    });
+
+    setDeletedColumns([]);
     setIsOpen(false);
   };
 
@@ -342,247 +282,200 @@ const BoardSettings = ({
     }));
   };
 
-  /**
-   * Use Effect to submit the board settings form when press enter key
-   * (Note: Radix Dialog close when pressing enter)
-   */
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
+  const handleAddColumn = (e: any) => {
+    e.preventDefault();
 
-        if (submitBtnRef.current) {
-          submitBtnRef.current.click();
-        }
-      }
-    };
-
-    window?.addEventListener('keydown', keyDownHandler);
-
-    return () => {
-      window?.removeEventListener('keydown', keyDownHandler);
-      setEditColumns([]);
-      setDeletedColumns([]);
-    };
-  }, []);
-
-  const handleAddColumn = () => {
-    const arrayWithNewColumn = [...editColumns];
-    arrayWithNewColumn.push({
+    append({
       title: '',
       color: colors[Math.floor(Math.random() * colors.length)],
       cards: [],
     });
-    setEditColumns(arrayWithNewColumn);
   };
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header>
-        <Text heading="4">Board Settings</Text>
-      </Dialog.Header>
       <FormProvider {...methods}>
         <StyledForm
-          onSubmit={methods.handleSubmit(
-            ({ title, maxVotes, column1title, column2title, column3title, column4title }) => {
-              if (isRegularBoard) {
-                const updatedColumnTitles = [
-                  column1title,
-                  column2title,
-                  column3title,
-                  column4title,
-                ];
-                const updatedColumns = [...editColumns];
-                updatedColumns.forEach((column, index) => {
-                  updatedColumns[index] = {
-                    ...column,
-                    title: updatedColumnTitles[index] as string,
-                  };
-                });
-                updateBoard(title, maxVotes, updatedColumns);
-              } else {
-                updateBoard(title, maxVotes);
-              }
-            },
-          )}
+          onSubmit={methods.handleSubmit(({ title, maxVotes, formColumns }) => {
+            updateBoard(title, maxVotes, formColumns);
+          })}
         >
-          <Flex direction="column" css={{ justifyContent: 'space-between', height: '100%' }}>
-            <ScrollableContent direction="column" justify="start" ref={scrollRef}>
-              <Flex direction="column">
-                <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
-                  <Text heading="4">Board Name</Text>
-                  <Input
-                    forceState
-                    id="title"
-                    maxChars="30"
-                    placeholder="Board Name"
-                    state="default"
-                    type="text"
+          <Dialog.Header title="Board Settings" />
+          <ScrollableContent direction="column" justify="start" ref={scrollRef}>
+            <Flex direction="column">
+              <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+                <Text heading="4">Board Name</Text>
+                <Input id="title" maxChars="45" placeholder="Board Name" type="text" showCount />
+              </Flex>
+
+              <Text css={{ display: 'block', px: '$32' }} heading="4">
+                Board Settings
+              </Text>
+              <Accordion type="multiple">
+                <ConfigurationSettings>
+                  <ConfigurationSwitch
+                    handleCheckedChange={handleHideCardsChange}
+                    isChecked={switchesState.hideCards}
+                    text="Participants can not see the cards from other participants of this retrospective."
+                    title="Hide cards from others"
                   />
-                </Flex>
+                  <ConfigurationSwitch
+                    handleCheckedChange={handleAddCardsChange}
+                    isChecked={switchesState.addCards}
+                    text="Allow users to add cards."
+                    title="Add cards"
+                  />
+                  <ConfigurationSwitch
+                    handleCheckedChange={handlePostAnonymouslyChange}
+                    isChecked={switchesState.postAnonymously}
+                    text=" The option to post anonymously is checked by default."
+                    title="Post anonymously"
+                  />
 
-                <Text css={{ display: 'block', px: '$32' }} heading="4">
-                  Board Settings
-                </Text>
-                <Accordion type="multiple">
-                  <ConfigurationSettings>
-                    <ConfigurationSwitchSettings
-                      handleCheckedChange={handleHideCardsChange}
-                      isChecked={switchesState.hideCards}
-                      text="Participants can not see the cards from other participants of this retrospective."
-                      title="Hide cards from others"
-                    />
-                    <ConfigurationSwitchSettings
-                      handleCheckedChange={handleAddCardsChange}
-                      isChecked={switchesState.addCards}
-                      text="Allow users to add cards."
-                      title="Add cards"
-                    />
-                    <ConfigurationSwitchSettings
-                      handleCheckedChange={handlePostAnonymouslyChange}
-                      isChecked={switchesState.postAnonymously}
-                      text=" The option to post anonymously is checked by default."
-                      title="Post anonymously"
-                    />
-
-                    {!isSubBoard && (
-                      <>
-                        <ConfigurationSwitchSettings
-                          handleCheckedChange={handleHideVotesChange}
-                          isChecked={switchesState.hideVotes}
-                          text="Participants can not see the votes from other participants of this retrospective."
-                          title="Hide votes from others"
-                        />
-                        <ConfigurationSwitchSettings
-                          handleCheckedChange={handleMaxVotesChange}
-                          isChecked={switchesState.maxVotes}
-                          text="Make votes more significant by limiting them."
-                          title="Limit votes"
-                        >
-                          <Input
-                            css={{ mt: '$8' }}
-                            disabled={!switchesState.maxVotes}
-                            id="maxVotes"
-                            name="maxVotes"
-                            placeholder="Max votes"
-                            type="number"
-                          />
-                        </ConfigurationSwitchSettings>
-                      </>
-                    )}
-
-                    {isRegularBoard && hasPermissions && (
-                      <ConfigurationSwitchSettings
-                        handleCheckedChange={handleIsPublicChange}
-                        isChecked={switchesState.isPublic}
-                        text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
-                        title="Make board public"
+                  {!isSubBoard && (
+                    <>
+                      <ConfigurationSwitch
+                        handleCheckedChange={handleHideVotesChange}
+                        isChecked={switchesState.hideVotes}
+                        text="Participants can not see the votes from other participants of this retrospective."
+                        title="Hide votes from others"
                       />
-                    )}
-                  </ConfigurationSettings>
-
-                  {isSubBoard && hasPermissions && (
-                    <TeamResponsibleSettings>
-                      <ConfigurationSwitchSettings
-                        isChecked={switchesState.responsible}
-                        text="Change responsible participant for this board."
-                        title="Team Responsible"
-                        handleCheckedChange={handleResponsibleChange}
+                      <ConfigurationSwitch
+                        handleCheckedChange={handleMaxVotesChange}
+                        isChecked={switchesState.maxVotes}
+                        text="Make votes more significant by limiting them."
+                        title="Limit votes"
                       >
+                        <Input
+                          css={{ mt: '$8' }}
+                          disabled={!switchesState.maxVotes}
+                          id="maxVotes"
+                          name="maxVotes"
+                          placeholder="Max votes"
+                          type="number"
+                        />
+                      </ConfigurationSwitch>
+                    </>
+                  )}
+
+                  {isRegularBoard && hasPermissions && (
+                    <ConfigurationSwitch
+                      handleCheckedChange={handleIsPublicChange}
+                      isChecked={switchesState.isPublic}
+                      text="If you make this board public anyone with the link to board can access it. Where to find the link? Just copy the URL of the board itself and share it."
+                      title="Make board public"
+                    />
+                  )}
+                </ConfigurationSettings>
+
+                {isSubBoard && hasPermissions && (
+                  <TeamResponsibleSettings>
+                    <ConfigurationSwitch
+                      isChecked={switchesState.responsible}
+                      text="Change responsible participant for this board."
+                      title="Team Responsible"
+                      handleCheckedChange={handleResponsibleChange}
+                    >
+                      <Flex
+                        align="center"
+                        css={{
+                          mt: '$10',
+                          opacity: !switchesState.responsible ? '40%' : 'unset',
+                          pointerEvents: !switchesState.responsible ? 'none' : 'unset',
+                          transition: 'all 0.25s ease-in-out',
+                        }}
+                      >
+                        <Text color="primary300" css={{ mr: '$8' }}>
+                          Responsible Lottery
+                        </Text>
+                        <Separator orientation="vertical" size="md" />
+
                         <Flex
                           align="center"
+                          justify="center"
                           css={{
-                            mt: '$10',
-                            opacity: !switchesState.responsible ? '40%' : 'unset',
-                            pointerEvents: !switchesState.responsible ? 'none' : 'unset',
-                            transition: 'all 0.25s ease-in-out',
+                            height: '$24',
+                            width: '$24',
+                            borderRadius: '$round',
+                            border: '1px solid $colors$primary400',
+                            ml: '$12',
+                            cursor: switchesState.responsible ? 'pointer' : 'default',
+
+                            transition: 'all 0.2s ease-in-out',
+
+                            '&:hover': switchesState.responsible
+                              ? {
+                                  backgroundColor: '$primary400',
+                                  color: 'white',
+                                }
+                              : 'none',
                           }}
+                          onClick={handleRandomResponsible}
                         >
-                          <Text color="primary300" css={{ mr: '$8' }}>
-                            Responsible Lottery
-                          </Text>
-                          <Separator orientation="vertical" size="md" />
-
-                          <Flex
-                            align="center"
-                            justify="center"
+                          <Icon
+                            name="wand"
                             css={{
-                              height: '$24',
-                              width: '$24',
-                              borderRadius: '$round',
-                              border: '1px solid $colors$primary400',
-                              ml: '$12',
-                              cursor: switchesState.responsible ? 'pointer' : 'default',
-
-                              transition: 'all 0.2s ease-in-out',
-
-                              '&:hover': switchesState.responsible
-                                ? {
-                                    backgroundColor: '$primary400',
-                                    color: 'white',
-                                  }
-                                : 'none',
+                              width: '$12',
+                              height: '$12',
                             }}
-                            onClick={handleRandomResponsible}
-                          >
-                            <Icon
-                              name="wand"
-                              css={{
-                                width: '$12',
-                                height: '$12',
-                              }}
-                            />
-                          </Flex>
-
-                          <Text color="primary800" css={{ mx: '$8' }} size="sm">
-                            {!responsible
-                              ? 'Responsible not found!'
-                              : `${responsible?.firstName} ${responsible?.lastName}`}
-                          </Text>
-
-                          <Avatar
-                            css={{ position: 'relative' }}
-                            size={32}
-                            colors={{
-                              bg: '$highlight2Lighter',
-                              fontColor: '$highlight2Dark',
-                            }}
-                            fallbackText={getInitials(
-                              responsible?.firstName ?? '-',
-                              responsible?.lastName ?? '-',
-                            )}
                           />
                         </Flex>
-                      </ConfigurationSwitchSettings>
-                    </TeamResponsibleSettings>
-                  )}
-                  {isRegularBoard && (
-                    <ColumnSettings>
-                      <Flex css={{ height: '$310' }} direction="column">
-                        {editColumns.map((column, index) => (
-                          <ColumnBoxAndDelete
-                            title={column.title}
-                            index={index}
-                            key={`column${index + 1}`}
-                            disableDeleteColumn={editColumns.length === 1}
-                          />
-                        ))}
-                        <Flex direction="row" justify="start">
-                          {editColumns.length < 4 && (
-                            <Button variant="link" size="sm" onClick={handleAddColumn}>
-                              <Icon name="plus" />
-                              Add new column
-                            </Button>
+
+                        <Text color="primary800" css={{ mx: '$8' }} size="sm">
+                          {!responsible
+                            ? 'Responsible not found!'
+                            : `${responsible?.firstName} ${responsible?.lastName}`}
+                        </Text>
+
+                        <Avatar
+                          css={{ position: 'relative' }}
+                          size={32}
+                          colors={{
+                            bg: '$highlight2Lighter',
+                            fontColor: '$highlight2Dark',
+                          }}
+                          fallbackText={getInitials(
+                            responsible?.firstName ?? '-',
+                            responsible?.lastName ?? '-',
                           )}
-                        </Flex>
+                        />
                       </Flex>
-                    </ColumnSettings>
-                  )}
-                </Accordion>
-              </Flex>
-            </ScrollableContent>
-            <Dialog.Footer setIsOpen={setIsOpen} affirmativeLabel="Save" buttonRef={submitBtnRef} />
-          </Flex>
+                    </ConfigurationSwitch>
+                  </TeamResponsibleSettings>
+                )}
+                {isRegularBoard && (
+                  <ColumnSettings>
+                    <Flex css={{ height: '$400' }} direction="column">
+                      {fields.map((column, index) => (
+                        <ColumnBoxAndDelete
+                          key={column.id}
+                          title={column.title}
+                          index={index}
+                          disableDeleteColumn={fields.length <= 1}
+                          remove={remove}
+                        />
+                      ))}
+                      <Flex direction="row" justify="start">
+                        {fields.length < 4 && (
+                          <Button variant="link" size="sm" onClick={handleAddColumn}>
+                            <Icon name="plus" />
+                            Add new column
+                          </Button>
+                        )}
+                      </Flex>
+                    </Flex>
+                  </ColumnSettings>
+                )}
+              </Accordion>
+            </Flex>
+          </ScrollableContent>
+          <Dialog.Footer
+            handleClose={() => {
+              setIsOpen(false);
+            }}
+            affirmativeLabel="Save"
+            buttonRef={submitBtnRef}
+          />
         </StyledForm>
       </FormProvider>
     </Dialog>

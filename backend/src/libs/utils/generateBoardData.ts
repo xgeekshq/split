@@ -1,10 +1,10 @@
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import { CreateBoardDto } from 'src/modules/boards/services/create.board.service';
+import { CreateBoardDto } from 'src/modules/boards/dto/createBoard.dto';
 
 export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = []): BoardDto => {
 	return {
-		title: `Sub-team board ${index}`,
+		title: `Sub-team ${index} board`,
 		columns: [
 			{
 				title: 'Went well',
@@ -17,7 +17,7 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 				title: 'To improve',
 				color: '$highlight4Light',
 				cards: [],
-				cardText: 'Write your comment here...',
+				cardText: `Description: \n\nHow to improve:`,
 				isDefaultText: true
 			},
 			{
@@ -37,7 +37,8 @@ export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = [
 		maxVotes: undefined,
 		hideCards: false,
 		hideVotes: false,
-		responsibles: []
+		responsibles: [],
+		phase: 'addcards'
 	};
 };
 
@@ -60,7 +61,7 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 					title: 'To improve',
 					color: '$highlight4Light',
 					cards: [],
-					cardText: 'Write your comment here...',
+					cardText: `Description: \n\nHow to improve:`,
 					isDefaultText: true
 				},
 				{
@@ -80,7 +81,8 @@ export const generateBoardDtoData = (title: string): CreateBoardDto => {
 			boardNumber: 0,
 			hideCards: false,
 			hideVotes: false,
-			responsibles: []
+			responsibles: [],
+			phase: 'addcards'
 		}
 	};
 };

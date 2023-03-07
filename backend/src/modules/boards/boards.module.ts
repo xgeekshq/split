@@ -1,22 +1,28 @@
+import AuthModule from 'src/modules/auth/auth.module';
+import { userRepository } from 'src/modules/users/users.providers';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
-	mongooseBoardUserModule
+	mongooseBoardUserModule,
+	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
-import { VotesModule } from '../votes/votes.module';
+import { CardsModule } from '../cards/cards.module';
 import {
 	afterUserPausedTimerSubscriber,
 	afterUserRequestedTimerStateSubscriber,
 	afterUserStartedTimerSubscriber,
 	afterUserStoppedTimerSubscriber,
 	afterUserUpdatedDurationSubscriber,
+	boardRepository,
 	boardTimerRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
+	createBoardUserService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
@@ -31,18 +37,23 @@ import {
 	updateBoardTimerDurationService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
+import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 
 @Module({
 	imports: [
 		UsersModule,
 		forwardRef(() => TeamsModule),
-		VotesModule,
 		SchedulesModule,
 		CommunicationModule,
+		CardsModule,
+		forwardRef(() => AuthModule),
+		JwtRegister,
 		mongooseBoardModule,
-		mongooseBoardUserModule
+		mongooseBoardUserModule,
+		mongooseUserModule
 	],
 	providers: [
+		createBoardUserService,
 		createBoardService,
 		updateBoardService,
 		deleteBoardService,
@@ -62,7 +73,10 @@ import BoardsController from './controller/boards.controller';
 		afterUserStartedTimerSubscriber,
 		afterUserStoppedTimerSubscriber,
 		afterUserUpdatedDurationSubscriber,
-		afterUserRequestedTimerStateSubscriber
+		afterUserRequestedTimerStateSubscriber,
+		boardRepository,
+		boardUserRepository,
+		userRepository
 	],
 	controllers: [BoardsController],
 	exports: [

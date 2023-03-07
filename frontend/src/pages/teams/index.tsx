@@ -7,13 +7,16 @@ import { getDashboardHeaderInfo } from '@/api/authService';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { useRecoilState } from 'recoil';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import TeamsList from '@/components/Teams/TeamsList';
+import Dots from '@/components/Primitives/Loading/Dots';
+import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {
   const { data: session } = useSession({ required: true });
@@ -30,12 +33,35 @@ const Teams = () => {
   if (!session || !data) return null;
 
   return (
-    <Flex direction="column">
-      <Suspense fallback={<LoadingPage />}>
-        <QueryError>
-          <TeamsList isFetching={isFetching} teams={teamsList} userId={session.user.id} />
-        </QueryError>
-      </Suspense>
+    <Flex css={{ width: '100%' }} direction="column" gap="40">
+      <MainPageHeader
+        title="Teams"
+        button={{
+          link: ROUTES.NewTeam,
+          label: 'Create new team',
+        }}
+      />
+      <Flex
+        direction="column"
+        css={{
+          height: '100%',
+          position: 'relative',
+          overflowY: 'auto',
+          pr: '$8',
+        }}
+      >
+        <Suspense fallback={<LoadingPage />}>
+          <QueryError>
+            {isFetching ? (
+              <Flex justify="center" css={{ mt: '$16' }}>
+                <Dots />
+              </Flex>
+            ) : (
+              <TeamsList teams={teamsList} />
+            )}
+          </QueryError>
+        </Suspense>
+      </Flex>
     </Flex>
   );
 };

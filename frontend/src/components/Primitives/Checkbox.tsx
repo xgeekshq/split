@@ -1,19 +1,19 @@
-import React, { Dispatch, useEffect, useState } from 'react';
+import React from 'react';
 
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
-import { styled } from '@stitches/react';
+import { styled } from '@/styles/stitches/stitches.config';
 
-import { useFormContext } from 'react-hook-form';
 import Flex from './Flex';
 import Text from './Text';
-import Icon from '../icons/Icon';
+import Icon from './Icon';
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: 'unset',
   backgroundColor: 'white',
+  cursor: 'pointer',
   boxSizing: 'border-box',
   borderRadius: '$2',
-  border: '1px solid $primaryBase',
+  border: '1px solid',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -43,6 +43,24 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
         },
       },
     },
+    size: {
+      sm: {
+        width: '$12',
+        height: '$12',
+        '& svg': {
+          width: '$10',
+          height: '$10',
+        },
+      },
+      md: {
+        width: '$16',
+        height: '$16',
+        '& svg': {
+          width: '$14',
+          height: '$14',
+        },
+      },
+    },
   },
   '&[data-state="indeterminate"]': {
     borderColor: '$primaryBase',
@@ -52,123 +70,57 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
     variant: 'default',
   },
 });
+
 const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
   color: '$white',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 });
 
-export const CheckboxIndicator = StyledIndicator;
-const getIndeterminateSize = (boxSize: '12' | '16') => {
-  if (boxSize === '12') return '8';
-  return '10';
-};
 const Checkbox: React.FC<{
-  label: string;
   id: string;
+  label: string;
   variant?: 'default' | 'error';
-  checked?: boolean | 'indeterminate';
+  size: 'sm' | 'md';
+  checked?: boolean;
+  handleChange?: (value: boolean) => void;
   disabled?: boolean;
-  size: '12' | '16';
-  setCheckedTerms?: Dispatch<React.SetStateAction<boolean>> | null;
-  handleChange?: ((value: string) => void) | (() => void);
-  handleSelectAll?: () => void;
-  hasSelectAll?: boolean;
-}> = ({
-  id,
-  label,
-  variant,
-  size,
-  checked,
-  disabled,
-  handleChange,
-  setCheckedTerms,
-  handleSelectAll,
-  hasSelectAll,
-}) => {
+}> = ({ id, label, variant, size, checked, disabled, handleChange }) => {
   Checkbox.defaultProps = {
-    variant: 'default',
     checked: false,
     disabled: false,
     handleChange: undefined,
-    setCheckedTerms: null,
-    handleSelectAll: undefined,
-    hasSelectAll: false,
   };
-  const formContext = useFormContext();
-
-  const [currentCheckValue, setCurrentCheckValue] = useState<boolean | undefined | 'indeterminate'>(
-    checked,
-  );
-
-  useEffect(() => {
-    setCurrentCheckValue(checked);
-  }, [checked]);
-
-  useEffect(() => {
-    if (id === 'slackEnable' && formContext) {
-      setCurrentCheckValue(formContext.getValues(id));
-    }
-  }, [formContext, id]);
-
-  const handleCheckedChange = (isChecked: boolean | 'indeterminate') => {
-    if (handleChange) handleChange(id);
-    if (handleSelectAll) handleSelectAll();
-    setCurrentCheckValue(isChecked);
-    if (setCheckedTerms != null) setCheckedTerms(!!isChecked);
-    if (id === 'slackEnable' && formContext) {
-      formContext.setValue(id, !!isChecked);
-    }
-  };
-  const checkValue = hasSelectAll ? checked : currentCheckValue;
 
   return (
     <Flex
+      align="center"
       css={{
-        alignItems: 'center',
         height: '$36',
         width: '100%',
         boxSizing: 'border-box',
       }}
+      gap={8}
     >
-      <Flex>
-        <StyledCheckbox
-          checked={checkValue}
-          disabled={disabled}
-          id={id}
-          name={id}
-          variant={variant ?? 'default'}
-          css={{
-            width: `$${size} !important`,
-            height: `$${size} !important`,
-            cursor: 'pointer',
-          }}
-          onCheckedChange={handleCheckedChange}
-        >
-          <CheckboxIndicator
-            css={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              '& svg': {
-                width:
-                  currentCheckValue === 'indeterminate'
-                    ? `$${getIndeterminateSize(size)} !important`
-                    : `$${size} !important`,
-                height: `$${size} !important`,
-              },
-            }}
-          >
-            {checkValue === true && <Icon name="check" />}
-            {checkValue === 'indeterminate' && <Icon name="indeterminate" />}
-          </CheckboxIndicator>
-        </StyledCheckbox>
-      </Flex>
+      <StyledCheckbox
+        id={id}
+        checked={checked}
+        onCheckedChange={handleChange}
+        disabled={disabled}
+        name={id}
+        variant={variant}
+        size={size}
+      >
+        <StyledIndicator>
+          <Icon name="check" />
+        </StyledIndicator>
+      </StyledCheckbox>
       <Text
         as="label"
+        color={disabled ? 'primary200' : 'primary800'}
         css={{
-          paddingLeft: '$8',
-          width: '100%',
           cursor: 'pointer',
-          color: disabled ? '$primary200' : '$primaryBase',
           wordBreak: 'break-word',
         }}
         htmlFor={id}

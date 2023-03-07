@@ -10,7 +10,7 @@ import {
 } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
-import { BoardDocument } from 'src/modules/boards/schemas/board.schema';
+import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
@@ -22,6 +22,8 @@ import {
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import { TYPES } from '../interfaces/types';
 import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
+import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
+import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -38,7 +40,9 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		private getBoardService: GetBoardServiceInterface,
 		private schedulerRegistry: SchedulerRegistry,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
-		private archiveChannelService: ArchiveChannelServiceInterface
+		private archiveChannelService: ArchiveChannelServiceInterface,
+		@Inject(BoardTypes.TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface
 	) {
 		this.createInitialJobs();
 	}
@@ -110,7 +114,8 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			const deletedSchedule = await this.deleteSchedulesService.findAndDeleteScheduleByBoardId(
 				oldBoardId
 			);
-			const oldBoard = await this.getBoardService.getBoardFromRepo(oldBoardId);
+
+			const oldBoard = await this.boardRepository.getBoardPopulated(oldBoardId, BoardDataPopulate);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);

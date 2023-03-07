@@ -3,7 +3,7 @@ import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
 
-import { resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
   EmailUser,
   NewPassword,
@@ -13,15 +13,53 @@ import {
 } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { deleteUserRequest, updateUserIsAdminRequest, getUser } from '../api/userService';
+import { setCookie } from 'cookies-next';
+import { GUEST_USER_COOKIE } from '@/utils/constants';
+import {
+  deleteUserRequest,
+  getAllUsers,
+  getUser,
+  updateUserIsAdminRequest,
+} from '@/api/userService';
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
+  autoFetchUsers?: boolean;
   autoFetchGetUser?: boolean;
 }
 
-const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType => {
-  const { setToastState, queryClient, userId } = useUserUtils();
+const useUser = ({
+  autoFetchUsers = false,
+  autoFetchGetUser = false,
+}: AutoFetchProps = {}): UseUserType => {
+  const { setToastState, queryClient, userId, router } = useUserUtils();
+
+  const registerGuestUser = useMutation(registerGuest, {
+    onSuccess: (data, variables) => {
+      setCookie(GUEST_USER_COOKIE, data);
+      router.push({ pathname: `/boards/[boardId]`, query: { boardId: variables.board } });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Error login guest user',
+      });
+    },
+  });
+
+  const loginGuestUser = useMutation(loginGuest, {
+    onSuccess: (data) => {
+      setCookie(GUEST_USER_COOKIE, data);
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        type: ToastStateEnum.ERROR,
+        content: 'Error login guest user',
+      });
+    },
+  });
 
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
@@ -45,6 +83,18 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
       redirect: true,
     });
   };
+
+  const fetchUsers = useQuery(['users'], () => getAllUsers(), {
+    enabled: autoFetchUsers,
+    refetchOnWindowFocus: false,
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error getting the users',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 
   const getUserById = useQuery(['userById', userId], () => getUser(userId), {
     enabled: autoFetchGetUser,
@@ -103,7 +153,17 @@ const useUser = ({ autoFetchGetUser = false }: AutoFetchProps = {}): UseUserType
     },
   });
 
-  return { loginAzure, resetToken, resetPassword, updateUserIsAdmin, deleteUser, getUserById };
+  return {
+    loginAzure,
+    resetToken,
+    resetPassword,
+    updateUserIsAdmin,
+    deleteUser,
+    fetchUsers,
+    getUserById,
+    registerGuestUser,
+    loginGuestUser,
+  };
 };
 
 export default useUser;

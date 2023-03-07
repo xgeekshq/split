@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -9,21 +9,16 @@ import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/icons/Icon';
-import {
-  Container,
-  PageHeader,
-  ContentWrapper,
-  ContentContainer,
-  SubContainer,
-  InnerContent,
-  StyledForm,
-  ButtonsContainer,
-} from '@/styles/pages/boards/newSplitBoard.styles';
+import Icon from '@/components/Primitives/Icon';
+import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
-import TipBar from './TipBar';
-import TeamName from './TeamName';
-import TeamMembersList from './ListCardsMembers';
+import TeamMembersList from '@/components/Teams/Team';
+import Flex from '@/components/Primitives/Flex';
+import TipBar from './partials/TipBar';
+import TeamName from './partials/TeamName';
+import { ListMembers } from '../Team/ListMembers';
+import CreateTeamHeader from './partials/CreateTeamHeader';
+import CreateTeamFooter from './partials/CreateTeamFooter';
 
 const CreateTeam = () => {
   const router = useRouter();
@@ -33,24 +28,18 @@ const CreateTeam = () => {
     createTeam: { mutate, status },
   } = useTeam();
 
-  const [isBackButtonDisable, setBackButtonState] = useState(false);
-  const [isSubmitButtonDisable, setSubmitButtonState] = useState(false);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   const listMembers = useRecoilValue(membersListState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
 
   const methods = useForm<{ text: string }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
     },
     resolver: joiResolver(SchemaCreateTeam),
-  });
-
-  const teamName = useWatch({
-    control: methods.control,
-    name: 'text',
   });
 
   const resetListUsersState = useCallback(() => {
@@ -72,10 +61,17 @@ const CreateTeam = () => {
   };
 
   const handleBack = useCallback(() => {
-    setBackButtonState(true);
+    setDisableButtons(true);
     resetListUsersState();
     router.back();
   }, [resetListUsersState, router]);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     if (status === 'success') {
@@ -83,56 +79,49 @@ const CreateTeam = () => {
     }
 
     if (status === 'error') {
-      setSubmitButtonState(false);
+      setDisableButtons(false);
     }
   }, [status, router]);
 
   return (
-    <Container>
-      <PageHeader>
-        <Text color="primary800" heading={3} fontWeight="bold">
-          Create New Team
-        </Text>
-        <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
-          <Icon css={{ color: '$primaryBase' }} name="close" />
-        </Button>
-      </PageHeader>
-      <ContentWrapper>
-        <ContentContainer>
-          <SubContainer>
-            <StyledForm
-              id="hook-form"
-              direction="column"
-              onSubmit={methods.handleSubmit(({ text }) => {
-                saveTeam(text);
-                setSubmitButtonState(true);
-              })}
-            >
-              <InnerContent direction="column">
-                <FormProvider {...methods}>
-                  <TeamName teamName={teamName} />
-                  <TeamMembersList />
-                </FormProvider>
-              </InnerContent>
-            </StyledForm>
-          </SubContainer>
+    <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
+      <CreateTeamHeader
+        title="Create New Team"
+        disableBack={disableButtons}
+        handleBack={handleBack}
+      />
+      <Flex css={{ height: '100%', position: 'relative', overflowY: 'auto' }} direction="column">
+        <Flex css={{ flex: '1' }}>
+          <StyledForm
+            id="hook-form"
+            direction="column"
+            onSubmit={methods.handleSubmit(({ text }) => {
+              saveTeam(text);
+              setDisableButtons(true);
+            })}
+          >
+            <FormProvider {...methods}>
+              <TeamName />
+              <Flex css={{ my: '$20' }} direction="column">
+                <Flex>
+                  <Text css={{ flex: 1 }} heading="3">
+                    Team Members
+                  </Text>
+                  <Button variant="link" size="sm" onClick={handleOpen}>
+                    <Icon name="plus" />
+                    Add/remove members
+                  </Button>
+                </Flex>
+              </Flex>
+              <TeamMembersList teamUsers={listMembers} hasPermissions />
+              <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
+            </FormProvider>
+          </StyledForm>
           <TipBar />
-        </ContentContainer>
-      </ContentWrapper>
-      <ButtonsContainer gap="24" justify="end">
-        <Button
-          disabled={isBackButtonDisable}
-          type="button"
-          variant="lightOutline"
-          onClick={handleBack}
-        >
-          Cancel
-        </Button>
-        <Button form="hook-form" disabled={isSubmitButtonDisable} type="submit">
-          Create team
-        </Button>
-      </ButtonsContainer>
-    </Container>
+        </Flex>
+      </Flex>
+      <CreateTeamFooter disableButton={disableButtons} handleBack={handleBack} />
+    </Flex>
   );
 };
 

@@ -1,3 +1,4 @@
+import Flex from '@/components/Primitives/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 const Container = styled('main', {
@@ -18,4 +19,9 @@ const ContainerTeamPage = styled('main', {
   overflow: 'hidden',
 });
 
-export { Container, ContainerTeamPage };
+const ContentSection = styled('section', Flex, {
+  width: '100%',
+  height: '100%',
+});
+
+export { Container, ContainerTeamPage, ContentSection };

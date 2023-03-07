@@ -1,12 +1,15 @@
-import Breadcrumb from '@/components/breadcrumb/Breadcrumb';
+import Breadcrumb from '@/components/Primitives/Breadcrumb';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
-import { TitleSection } from './styles';
+import { TeamChecked } from '@/types/team/team';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { ListTeams } from '../TeamsDialog';
+import { TitleSection } from './styles';
 
 type UserHeaderProps = {
   firstName: string;
@@ -16,6 +19,11 @@ type UserHeaderProps = {
   joinedAt: string;
 };
 
+type Team = {
+  _id: string;
+  name: string;
+};
+
 const UserHeader = ({
   firstName,
   lastName,
@@ -23,6 +31,9 @@ const UserHeader = ({
   providerAccountCreatedAt,
   joinedAt,
 }: UserHeaderProps) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { userId } = router.query;
   const [isOpen, setIsOpen] = useState(false);
 
   // Set breadcrumbs
@@ -36,6 +47,11 @@ const UserHeader = ({
       isActive: true,
     },
   ];
+
+  // after fetching data, add the field "isChecked", to be used in the Add button
+  const teamsUserIsNotMember: TeamChecked[] = (
+    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', userId]) || []
+  ).map((team) => ({ ...team, _id: team._id, isChecked: false }));
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -85,6 +101,7 @@ const UserHeader = ({
           setIsOpen={setIsOpen}
           providerAccountCreatedAt={providerAccountCreatedAt}
           joinedAt={joinedAt}
+          teamsList={teamsUserIsNotMember}
         />
       </Flex>
     </Flex>

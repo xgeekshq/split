@@ -28,6 +28,7 @@ interface CardItemProps {
   isDefaultText: boolean;
   hasAdminRole: boolean;
   postAnonymously: boolean;
+  cardTextDefault?: string;
 }
 
 const Container = styled(Flex, {
@@ -55,6 +56,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     isDefaultText,
     hasAdminRole,
     postAnonymously,
+    cardTextDefault,
   }) => {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -81,7 +83,9 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                 {item.text}
               </Text>
               {!isSubmited &&
-                ((userId === item?.createdBy?._id && !isMainboard) || hasAdminRole) && (
+                ((userId === item?.createdBy?._id && !isMainboard) ||
+                  hasAdminRole ||
+                  !isMainboard) && (
                   <PopoverCardSettings
                     isItem
                     boardId={boardId}
@@ -130,6 +134,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             anonymous={item.anonymous}
             isDefaultText={isDefaultText}
             postAnonymously={postAnonymously}
+            cardTextDefault={cardTextDefault}
           />
         )}
         {deleting && (

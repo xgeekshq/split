@@ -35,70 +35,72 @@ const slackUsersIds = [
 	'U156F7AOI',
 	'W058A3SDQ'
 ];
+
+const conversationsMock = {
+	create(options?: ConversationsCreateArguments) {
+		return Promise.resolve({
+			ok: true,
+			channel: {
+				id: `C${faker.random.alphaNumeric(8).toUpperCase()}`,
+				name: options?.name
+			}
+		});
+	},
+	invite(options?: ConversationsInviteArguments) {
+		return new Promise((resolve, reject) => {
+			if (options?.users?.split(',').every((i) => slackUsersIds.includes(i))) {
+				resolve({
+					ok: true,
+					channel: {
+						id: options?.channelId
+					}
+				});
+			}
+
+			const dataError = {
+				ok: false,
+				errors: options?.users
+					.split(',')
+					.filter((i) => !(slackUsersIds.findIndex((j) => i === j) > -1))
+					.map((i) => ({
+						user: i,
+						ok: false,
+						error: 'any_error'
+					}))
+			};
+
+			// eslint-disable-next-line prefer-promise-reject-errors
+			reject({
+				data: dataError
+			});
+		});
+	},
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	members(options?: ConversationsMembersArguments) {
+		if (options?.cursor === 'next_cursor') {
+			return Promise.resolve({
+				ok: true,
+				members: slackUsersIds.slice(1),
+				response_metadata: {
+					next_cursor: null
+				}
+			});
+		}
+
+		return Promise.resolve({
+			ok: true,
+			members: slackUsersIds.slice(0, 1),
+			response_metadata: {
+				next_cursor: 'next_cursor' // 'e3VzZXJfaWQ6IFcxMjM0NTY3fQ==',
+			}
+		});
+	}
+};
 jest.mock('@slack/web-api', () => ({
 	// eslint-disable-next-line object-shorthand
 	WebClient: function WebClient() {
 		return {
-			conversations: {
-				create(options?: ConversationsCreateArguments) {
-					return Promise.resolve({
-						ok: true,
-						channel: {
-							id: `C${faker.random.alphaNumeric(8).toUpperCase()}`,
-							name: options?.name
-						}
-					});
-				},
-				invite(options?: ConversationsInviteArguments) {
-					return new Promise((resolve, reject) => {
-						if (options?.users?.split(',').every((i) => slackUsersIds.includes(i))) {
-							resolve({
-								ok: true,
-								channel: {
-									id: options?.channelId
-								}
-							});
-						}
-
-						const dataError = {
-							ok: false,
-							errors: options?.users
-								.split(',')
-								.filter((i) => !(slackUsersIds.findIndex((j) => i === j) > -1))
-								.map((i) => ({
-									user: i,
-									ok: false,
-									error: 'any_error'
-								}))
-						};
-
-						// eslint-disable-next-line prefer-promise-reject-errors
-						reject({
-							data: dataError
-						});
-					});
-				},
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				members(options?: ConversationsMembersArguments) {
-					if (options?.cursor === 'next_cursor') {
-						return Promise.resolve({
-							ok: true,
-							members: slackUsersIds.slice(1),
-							response_metadata: {
-								next_cursor: null
-							}
-						});
-					}
-
-					return Promise.resolve({
-						ok: true,
-						members: slackUsersIds.slice(0, 1),
-						response_metadata: {
-							next_cursor: 'next_cursor' // 'e3VzZXJfaWQ6IFcxMjM0NTY3fQ==',
-						}
-					});
-				}
-			},
+			conversations: conversationsMock,
 			users: {
 				profile: {
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -168,7 +170,7 @@ describe('SlackCommunicationApplication', () => {
 		expect(application).toBeDefined();
 	});
 
-	it('shoult create channels, invite users, post messages into slack platform and returns all teams created', async () => {
+	it('should create channels, invite users, post messages into slack platform and returns all teams created', async () => {
 		let givenBoard: any = {
 			_id: 'main-board',
 			title: 'Main Board',
@@ -436,5 +438,230 @@ describe('SlackCommunicationApplication', () => {
 				})
 			);
 		});
+	});
+
+	it('should returns all teams (one for each sub-board plus the team for responsibles)', async () => {
+		let givenBoard: any = {
+			_id: 'main-board',
+			title: 'Main Board',
+			dividedBoards: [
+				{
+					_id: 'sub-team-board-1',
+					title: 'Sub-team board 1',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[0],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[1],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[2],
+							board: 'sub-team-board-1'
+						}
+					]
+				},
+				{
+					_id: 'sub-team-board-2',
+					title: 'Sub-team board 2',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[3],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[4],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[5],
+							board: 'sub-team-board-2'
+						}
+					]
+				},
+				{
+					_id: 'sud-team-board-3',
+					title: 'Sub-team board 3',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'responsible',
+							user: slackUsersIds[6],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[7],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[8],
+							board: 'sud-team-board-3'
+						}
+					]
+				}
+			],
+			team: {
+				users: [
+					...slackUsersIds.map((i) => ({
+						role: 'member',
+						user: {
+							_id: i,
+							firstName: `first_name_${i}`,
+							lastName: `last_name_${i}`,
+							email: `${i}@email.com`
+						}
+					})),
+					{
+						role: 'stakeholder',
+						user: {
+							_id: 'any_id',
+							firstName: 'any_first_name',
+							lastName: 'any_last_name',
+							email: 'any_email@gmail.com'
+						}
+					}
+				]
+			},
+			isSubBoard: false
+		};
+		givenBoard = translateBoard(givenBoard);
+		givenBoard = fillDividedBoardsUsersWithTeamUsers(givenBoard);
+
+		const result = await application.execute(givenBoard);
+
+		const expectedTotalTeamsToBe = 4;
+
+		expect(result.length).toBe(expectedTotalTeamsToBe);
+	});
+
+	it('should returns all teams (one for each sub-board plus the team for responsibles) even if create slack channels fails for some', async () => {
+		jest
+			.spyOn(conversationsMock, 'create')
+			.mockImplementationOnce(() => Promise.reject(new Error('some error message')));
+
+		const spyLoggerWarn = jest.spyOn(Logger.prototype, 'warn');
+
+		let givenBoard: any = {
+			_id: 'main-board',
+			title: 'Main Board',
+			dividedBoards: [
+				{
+					_id: 'sub-team-board-1',
+					title: 'Sub-team board 1',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[0],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[1],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[2],
+							board: 'sub-team-board-1'
+						}
+					]
+				},
+				{
+					_id: 'sub-team-board-2',
+					title: 'Sub-team board 2',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[3],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[4],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[5],
+							board: 'sub-team-board-2'
+						}
+					]
+				},
+				{
+					_id: 'sud-team-board-3',
+					title: 'Sub-team board 3',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'responsible',
+							user: slackUsersIds[6],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[7],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[8],
+							board: 'sud-team-board-3'
+						}
+					]
+				}
+			],
+			team: {
+				users: [
+					...slackUsersIds.map((i) => ({
+						role: 'member',
+						user: {
+							_id: i,
+							firstName: `first_name_${i}`,
+							lastName: `last_name_${i}`,
+							email: `${i}@email.com`
+						}
+					})),
+					{
+						role: 'stakeholder',
+						user: {
+							_id: 'any_id',
+							firstName: 'any_first_name',
+							lastName: 'any_last_name',
+							email: 'any_email@gmail.com'
+						}
+					}
+				]
+			},
+			isSubBoard: false
+		};
+		givenBoard = translateBoard(givenBoard);
+		givenBoard = fillDividedBoardsUsersWithTeamUsers(givenBoard);
+
+		const result = await application.execute(givenBoard);
+
+		const expectedTotalTeamsToBe = 4;
+
+		expect(result.length).toBe(expectedTotalTeamsToBe);
+		expect(spyLoggerWarn).toBeCalledTimes(1);
 	});
 });

@@ -14,7 +14,9 @@ import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
 import CardType from '@/types/card/card';
 import CommentType from '@/types/comment/comment';
+import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import ColumnType, { ColumnDeleteCards } from '@/types/column';
+import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
 
 // #region BOARD
 
@@ -25,11 +27,30 @@ export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
 ): Promise<BoardType> => fetchData(`/boards/${board._id}`, { method: 'PUT', data: board });
 
+export const updateBoardPhaseRequest = (updateBoardPhaseDto: UpdateBoardPhaseDto): Promise<void> =>
+  fetchData(`/boards/${updateBoardPhaseDto.boardId}/phase`, {
+    method: 'PUT',
+    data: updateBoardPhaseDto,
+  });
+
 export const getBoardRequest = (
   id: string,
   context?: GetServerSidePropsContext,
 ): Promise<GetBoardResponse> =>
-  fetchData<GetBoardResponse>(`/boards/${id}`, { context, serverSide: !!context });
+  fetchData<GetBoardResponse>(`/boards/${id}`, {
+    context,
+    serverSide: !!context,
+  });
+
+export const getPublicStatusRequest = (
+  boardId: string,
+  context?: GetServerSidePropsContext,
+): Promise<boolean> =>
+  fetchData<boolean>(`/publicBoards/${boardId}/publicStatus`, {
+    context,
+    serverSide: !!context,
+    isPublicRequest: true,
+  });
 
 export const getDashboardBoardsRequest = (
   pageParam: number,
@@ -69,11 +90,21 @@ export const deleteBoardRequest = async ({
 
 // #endregion
 
+// #region PARTICIPANTS
+export const addAndRemoveBoardParticipantsRequest = (
+  boardUsers: UpdateBoardUser,
+): Promise<CreatedBoardUser[] | BoardUser> =>
+  fetchData(`/boards/${boardUsers.boardId}/participants`, {
+    method: 'PUT',
+    data: boardUsers,
+  });
+// #endRegion
+
 // #region COLUMN
 export const updateColumnRequest = (
   columnData: ColumnType & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column/${columnData._id}`, {
+  fetchData(`/columns/${columnData.boardId}/column/${columnData._id}`, {
     method: 'PUT',
     data: columnData,
   });
@@ -81,7 +112,7 @@ export const updateColumnRequest = (
 export const deleteCardsFromColumnRequest = (
   columnData: ColumnDeleteCards & { boardId: string },
 ): Promise<BoardType> =>
-  fetchData(`/boards/${columnData.boardId}/column/${columnData.id}/cards`, {
+  fetchData(`/columns/${columnData.boardId}/column/${columnData.id}/cards`, {
     method: 'PUT',
     data: columnData,
   });

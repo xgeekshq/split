@@ -1,20 +1,14 @@
-import { User } from '@/types/user/user';
+import { User, GuestUser } from '@/types/user/user';
 import ColumnType, { CreateColumn } from '../column';
 import { Team } from '../team/team';
 import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
 
 export interface GetBoardResponse {
+  guestUser: GuestUser;
   board: BoardType;
-  mainBoardData: {
+  mainBoard: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 
@@ -44,20 +38,14 @@ export default interface BoardType {
   responsibles?: string[];
   addCards: boolean;
   postAnonymously: boolean;
+  phase?: string;
 }
 
 export interface BoardInfoType {
   board: BoardType;
-  mainBoardData?: {
+  mainBoard?: {
     _id: string;
-    id: string;
     title: string;
-    team: Team;
-    addCards: boolean;
-    dividedBoards: {
-      _id: string;
-      title: string;
-    };
   };
 }
 
@@ -90,4 +78,22 @@ export type UpdateBoardType = {
   addCards: boolean;
   responsible?: BoardUser;
   postAnonymously: boolean;
+  team?: string;
+  phase?: string;
+  createdBy?: string;
+};
+
+export type UpdateBoardPhaseType = {
+  boardId: string;
+  phase: string;
+};
+
+export type PhaseChangeEventType = {
+  boardId: string;
+  phase: string;
+  hideCards: boolean;
+  hideVotes: boolean;
+  addCards: boolean;
+  columns: ColumnType[];
+  submitedAt: Date;
 };

@@ -3,7 +3,7 @@ import React from 'react';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatar/Avatar';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Flex';
@@ -224,7 +224,7 @@ const FakeMainBoardCard = () => (
     </Flex>
     <Tooltip color="primary800" content="First select a team">
       <Flex css={{ width: 'fit-content' }}>
-        <Checkbox id="slack" label="Create Slack group for each sub-team" size="16" disabled />
+        <Checkbox id="slack" label="Create Slack group for each sub-team" size="md" disabled />
       </Flex>
     </Tooltip>
   </Flex>

@@ -1,36 +1,34 @@
-import { ButtonsContainer } from '@/components/Board/Settings/styles';
 import Button from '../Button';
+import Flex from '../Flex';
 
 type FooterProps = {
   affirmativeLabel?: string;
   handleAffirmative?: () => void;
-  setIsOpen: (isOpen: boolean) => void;
+  handleClose: () => void;
   buttonRef?: React.RefObject<HTMLButtonElement>;
   showSeparator?: boolean;
 };
 
-const Footer: React.FC<FooterProps> = (props) => {
+const Footer = (props: FooterProps) => {
   const {
-    children,
     handleAffirmative,
-    setIsOpen,
+    handleClose,
     affirmativeLabel,
     buttonRef,
     showSeparator = true,
   } = props;
 
   return (
-    <ButtonsContainer
+    <Flex
       gap={24}
       align="center"
       justify="end"
       css={{
-        backgroundColor: '$white',
         borderTop: showSeparator ? '1px solid $colors$primary100' : 'none',
+        padding: showSeparator ? '$32' : 'auto',
       }}
     >
-      {children}
-      <Button variant="primaryOutline" onClick={() => setIsOpen(false)} type="button">
+      <Button variant="primaryOutline" onClick={handleClose} type="button">
         Cancel
       </Button>
       {(handleAffirmative || affirmativeLabel) && (
@@ -38,7 +36,7 @@ const Footer: React.FC<FooterProps> = (props) => {
           {affirmativeLabel}
         </Button>
       )}
-    </ButtonsContainer>
+    </Flex>
   );
 };
 

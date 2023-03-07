@@ -1,12 +1,12 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   Container,
@@ -25,7 +25,7 @@ import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRow
 import Flex from '@/components/Primitives/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
 import BoardName from '@/components/CreateBoard/BoardName';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import TipBar from '@/components/CreateBoard/TipBar';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
@@ -42,7 +42,7 @@ import useBoard from '@/hooks/useBoard';
 import isEmpty from '@/utils/isEmpty';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
-import { defaultColumns } from '@/helper/board/defaultColumns';
+import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 
 const defaultBoard = {
   users: [],
@@ -53,7 +53,7 @@ const defaultBoard = {
   },
   board: {
     title: 'Default Board',
-    columns: defaultColumns,
+    columns: defaultRegularColumns,
     isPublic: false,
     maxVotes: undefined,
     dividedBoards: [],
@@ -136,19 +136,14 @@ const NewRegularBoard: NextPage = () => {
   };
 
   const methods = useForm<{ text?: string; maxVotes?: number; slackEnable?: boolean }>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       text: '',
       maxVotes: boardState.board.maxVotes,
       slackEnable: false,
     },
     resolver: joiResolver(SchemaCreateRegularBoard),
-  });
-
-  const mainBoardName = useWatch({
-    control: methods.control,
-    name: 'text',
   });
 
   const resetListUsersState = useCallback(() => {
@@ -198,6 +193,7 @@ const NewRegularBoard: NextPage = () => {
 
     mutate({
       ...boardState.board,
+      columns: defaultRegularColumns,
       users: isEmpty(boardState.users) ? users : boardState.users,
       title: title || defaultBoard.board.title,
       dividedBoards: [],
@@ -206,6 +202,7 @@ const NewRegularBoard: NextPage = () => {
       maxUsers: boardState.count.maxUsersCount,
       recurrent: false,
       responsibles,
+      phase: undefined,
     });
   };
 
@@ -217,6 +214,7 @@ const NewRegularBoard: NextPage = () => {
 
     mutate({
       ...boardState.board,
+      columns: defaultRegularColumns,
       users: isEmpty(boardState.users) ? users : boardState.users,
       title: defaultBoard.board.title,
       dividedBoards: [],
@@ -274,7 +272,11 @@ const NewRegularBoard: NextPage = () => {
                     >
                       <InnerContent direction="column">
                         <FormProvider {...methods}>
-                          <BoardName mainBoardName={mainBoardName} />
+                          <BoardName
+                            title="Board Name"
+                            description="Make it short and descriptive. It well help you to distinguish retrospectives from each
+        other."
+                          />
                           <SettingsTabs />
                         </FormProvider>
                       </InnerContent>

@@ -3,7 +3,7 @@ import BoardDto from '../dto/board.dto';
 import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { CreateBoardService } from '../interfaces/services/create.board.service.interface';
 import { TYPES } from '../interfaces/types';
-import { BoardDocument } from '../schemas/board.schema';
+import Board from '../entities/board.schema';
 
 @Injectable()
 export class CreateBoardApplication implements CreateBoardApplicationInterface {
@@ -12,7 +12,7 @@ export class CreateBoardApplication implements CreateBoardApplicationInterface {
 		private createBoardService: CreateBoardService
 	) {}
 
-	create(board: BoardDto, userId: string): Promise<BoardDocument> {
+	create(board: BoardDto, userId: string): Promise<Board> {
 		return this.createBoardService.create(board, userId);
 	}
 }

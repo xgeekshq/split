@@ -1,9 +1,8 @@
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-// import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import Tooltip from '@/components/Primitives/Tooltip';
-import Icon from '@/components/icons/Icon';
-import { deletedColumnsState, editColumnsState } from '@/store/board/atoms/board.atom';
+import Icon from '@/components/Primitives/Icon';
+import { deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
 import {
   AlertDialog,
@@ -13,25 +12,24 @@ import {
   AlertDialogTrigger,
 } from '@/components/Primitives/AlertDialog';
 import Button from '@/components/Primitives/Button';
-import ColumnType from '@/types/column';
+import { useFormContext } from 'react-hook-form';
 
 interface Props {
+  remove: (index?: number | number[]) => void;
   columnTitle: string;
   columnIndex: number;
   disableDeleteColumn?: boolean;
 }
 
-const DeleteColumnButton = ({ columnTitle, columnIndex, disableDeleteColumn }: Props) => {
-  const [editColumns, setEditColumns] = useRecoilState(editColumnsState);
+const DeleteColumnButton = ({ remove, columnTitle, columnIndex, disableDeleteColumn }: Props) => {
+  const { getValues } = useFormContext();
   const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
 
   const handleDeleteColumn = () => {
-    const arrayWithoutColumn = [...editColumns];
+    const columnToBeRemoved = [...getValues('formColumns')].at(columnIndex);
+    remove(columnIndex);
 
-    const column = arrayWithoutColumn.splice(columnIndex, 1)[0] as ColumnType;
-
-    setEditColumns(arrayWithoutColumn);
-    if (column._id) setDeletedColumns([...deletedColumns, column._id]);
+    if (columnToBeRemoved._id) setDeletedColumns([...deletedColumns, columnToBeRemoved._id]);
   };
 
   return (

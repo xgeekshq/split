@@ -31,7 +31,8 @@ export const configuration = (): Configuration => {
 			clientId: process.env.AZURE_CLIENT_ID as string,
 			clientSecret: process.env.AZURE_CLIENT_SECRET as string,
 			tenantId: process.env.AZURE_TENANT_ID as string,
-			enabled: process.env.AZURE_ENABLE === 'true'
+			enabled: process.env.AZURE_ENABLE === 'true',
+			authority: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}`
 		},
 		smtp: {
 			host: process.env.SMTP_HOST as string,
@@ -51,6 +52,9 @@ export const configuration = (): Configuration => {
 			password: process.env.REDIS_PASSWORD as string,
 			host: process.env.REDIS_HOST as string,
 			port: parseInt(process.env.REDIS_PORT as string, 10)
+		},
+		storage: {
+			connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING as string
 		}
 	};
 

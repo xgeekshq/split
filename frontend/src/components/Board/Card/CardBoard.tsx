@@ -3,7 +3,7 @@ import { Draggable } from '@hello-pangea/dnd';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { cardBlur } from '@/helper/board/blurFilter';
@@ -12,6 +12,7 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { useRecoilValue } from 'recoil';
+import { BoardPhases } from '@/utils/enums/board.phases';
 import AddCardOrComment from '../AddCardOrComment';
 import Comments from '../Comment/Comments';
 import CardFooter from './CardFooter';
@@ -35,6 +36,7 @@ interface CardBoardProps {
   socketId: string;
   isMainboard: boolean;
   boardUser?: BoardUser;
+  cardTextDefault?: string;
   maxVotes?: number;
   isSubmited: boolean;
   hideCards: boolean;
@@ -42,6 +44,8 @@ interface CardBoardProps {
   cardText?: string;
   hasAdminRole: boolean;
   postAnonymously: boolean;
+  isRegularBoard?: boolean;
+  phase?: string;
 }
 
 const CardBoard = React.memo<CardBoardProps>(
@@ -61,6 +65,9 @@ const CardBoard = React.memo<CardBoardProps>(
     isDefaultText,
     hasAdminRole,
     postAnonymously,
+    isRegularBoard,
+    cardTextDefault,
+    phase,
   }) => {
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
@@ -108,7 +115,12 @@ const CardBoard = React.memo<CardBoardProps>(
         key={card._id}
         draggableId={card._id}
         index={index}
-        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || (isMainboard && hideCards)}
+        isDragDisabled={
+          isSubmited ||
+          (isMainboard && !hasAdminRole) ||
+          (isMainboard && hideCards) ||
+          phase === BoardPhases.SUBMITTED
+        }
       >
         {(provided) => (
           <Flex
@@ -144,6 +156,7 @@ const CardBoard = React.memo<CardBoardProps>(
                   cardId={card._id}
                   cardItemId={card.items[0]._id}
                   cardText={card.text}
+                  cardTextDefault={cardTextDefault}
                   colId={colId}
                   socketId={socketId}
                   anonymous={card.anonymous}
@@ -181,6 +194,7 @@ const CardBoard = React.memo<CardBoardProps>(
                         {card.text}
                       </Text>
                       {!isSubmited &&
+                        phase !== BoardPhases.SUBMITTED &&
                         ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
                           <PopoverCardSettings
                             boardId={boardId}
@@ -217,6 +231,7 @@ const CardBoard = React.memo<CardBoardProps>(
                       isDefaultText={isDefaultText}
                       hasAdminRole={hasAdminRole}
                       postAnonymously={postAnonymously}
+                      cardTextDefault={cardTextDefault}
                     />
                   )}
                   <CardFooter
@@ -233,6 +248,8 @@ const CardBoard = React.memo<CardBoardProps>(
                     setOpenComments={handleOpenComments}
                     socketId={socketId}
                     userId={userId}
+                    isRegularBoard={isRegularBoard}
+                    phase={phase}
                   />
                 </Flex>
               )}
@@ -263,6 +280,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 hasAdminRole={hasAdminRole}
                 postAnonymously={postAnonymously}
                 isMainboard={isMainboard}
+                phase={phase}
               />
             )}
           </Flex>

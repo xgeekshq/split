@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Button';
@@ -14,7 +14,8 @@ import UpdateCardDto from '@/types/card/updateCard.dto';
 import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
-import Icon from '../icons/Icon';
+import { CARD_TEXT_DEFAULT } from '@/utils/constants';
+import Icon from '../Primitives/Icon';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 
@@ -27,6 +28,7 @@ type AddCardProps = {
   cardId?: string;
   cardItemId?: string;
   cardText?: string;
+  cardTextDefault?: string;
   commentId?: string;
   cancelUpdate?: () => void;
   defaultOpen?: boolean;
@@ -35,6 +37,8 @@ type AddCardProps = {
   isDefaultText: boolean;
   postAnonymously: boolean;
   isOwner?: boolean;
+  columnName?: string;
+  isRegularBoard?: boolean;
 };
 
 const AddCard = React.memo<AddCardProps>(
@@ -46,6 +50,7 @@ const AddCard = React.memo<AddCardProps>(
     cardId,
     cardItemId,
     cardText,
+    cardTextDefault,
     isDefaultText,
     cancelUpdate,
     isCard,
@@ -55,6 +60,8 @@ const AddCard = React.memo<AddCardProps>(
     anonymous,
     postAnonymously,
     isOwner,
+    columnName,
+    isRegularBoard,
     ...props
   }) => {
     const { addCardInColumn, updateCard } = useCards();
@@ -64,18 +71,66 @@ const AddCard = React.memo<AddCardProps>(
     const [isCommentAnonymous, setIsCommentAnonymous] = useState(
       anonymous ?? postAnonymously ?? false,
     );
+    const placeholder = cardTextDefault || '';
+
+    const textAreaText = useMemo(() => {
+      if (isDefaultText && !cardText && columnName === 'To improve' && !isRegularBoard) {
+        return cardTextDefault;
+      }
+      if (isDefaultText && !cardText) {
+        return '';
+      }
+      if (!isDefaultText && !cardText) {
+        return cardTextDefault;
+      }
+
+      return cardText;
+    }, [cardText, cardTextDefault, columnName, isDefaultText, isRegularBoard]);
+
+    const placeholderToDisplay = useMemo(() => {
+      if (isDefaultText && !cardText) {
+        return CARD_TEXT_DEFAULT;
+      }
+      if (!isDefaultText && !cardText) {
+        return placeholder;
+      }
+
+      return cardText ?? '';
+    }, [cardText, isDefaultText, placeholder]);
 
     const methods = useForm<{ text: string }>({
-      mode: 'onSubmit',
+      mode: 'onChange',
       reValidateMode: 'onChange',
       defaultValues: {
-        text: cardText === 'Write your comment here...' ? '' : cardText,
+        text: textAreaText,
+      },
+      values: {
+        text: textAreaText || '',
       },
       resolver: joiResolver(SchemaAddCommentForm),
     });
 
     const watchCardTextInput = methods.watch();
-    const disabledButton = watchCardTextInput.text?.trim().length === 0;
+
+    // allows the use of the template
+    const placeholderColor =
+      watchCardTextInput.text !== CARD_TEXT_DEFAULT && watchCardTextInput.text === placeholder
+        ? '$primary300'
+        : '$primaryBase';
+
+    const disabledButton =
+      watchCardTextInput.text?.trim().length === 0 ||
+      watchCardTextInput.text.trim() === placeholder;
+
+    const handleClear = () => {
+      if ((isUpdate || !isCard) && cancelUpdate) {
+        cancelUpdate();
+        return;
+      }
+
+      methods.reset({ text: textAreaText });
+      setIsOpen(false);
+    };
 
     const handleAddCard = (text: string) => {
       if (text.trim().length === 0) return;
@@ -101,7 +156,7 @@ const AddCard = React.memo<AddCardProps>(
       };
 
       addCardInColumn.mutate(changes);
-      methods.reset({ text: '' });
+      handleClear();
     };
 
     const handleUpdateCard = (text: string) => {
@@ -162,16 +217,6 @@ const AddCard = React.memo<AddCardProps>(
       cancelUpdate();
     };
 
-    const handleClear = () => {
-      if ((isUpdate || !isCard) && cancelUpdate) {
-        cancelUpdate();
-        return;
-      }
-
-      methods.reset({ text: '' });
-      setIsOpen(false);
-    };
-
     if (!isOpen)
       return (
         <Button
@@ -185,8 +230,6 @@ const AddCard = React.memo<AddCardProps>(
           Add new card
         </Button>
       );
-
-    const placeholder = cardText || '';
 
     return (
       <StyledForm
@@ -214,30 +257,28 @@ const AddCard = React.memo<AddCardProps>(
         })}
       >
         <FormProvider {...methods}>
-          <TextArea
-            // variant={!isEmpty(cardText) ? default : undefined} }
-            id="text"
-            placeholder={!isDefaultText ? placeholder : 'Write your comment here...'}
-          />
+          <TextArea id="text" placeholder={placeholderToDisplay} textColor={placeholderColor} />
           <Flex css={{ width: '100%' }} justify="end">
             {!isCard && (isOwner || !commentId) && (
+              // This is when you are editing a card / comment
               <Checkbox
-                id={colId + cardId}
+                id={[colId, cardId, commentId].join('_')}
                 label="Post anonymously"
-                size="16"
-                checked={isCommentAnonymous || postAnonymously}
-                setCheckedTerms={() => {
+                size="md"
+                checked={isCommentAnonymous}
+                handleChange={() => {
                   setIsCommentAnonymous(!isCommentAnonymous);
                 }}
               />
             )}
             {!isEditing && (
+              // This is when you are Creating a new Card
               <Checkbox
                 id={colId}
                 label="Post anonymously"
-                size="16"
-                checked={isAnonymous || postAnonymously}
-                setCheckedTerms={() => {
+                size="md"
+                checked={isAnonymous}
+                handleChange={() => {
                   setIsAnonymous(!isAnonymous);
                 }}
               />

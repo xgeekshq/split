@@ -6,8 +6,8 @@ import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import Icon from '@/components/icons/Icon';
-import { DotsLoading } from '@/components/loadings/DotsLoading';
+import Icon from '@/components/Primitives/Icon';
+import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
@@ -17,6 +17,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { LoginUser } from '@/types/user/user';
 import {
   AUTH_SSO,
+  GUEST_USER_COOKIE,
   NEXT_PUBLIC_ENABLE_AZURE,
   NEXT_PUBLIC_ENABLE_GIT,
   NEXT_PUBLIC_ENABLE_GOOGLE,
@@ -25,6 +26,7 @@ import {
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Button';
+import { getCookie, deleteCookie } from 'cookies-next';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 
@@ -35,11 +37,10 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
   const setToastState = useSetRecoilState(toastState);
-  const [loginErrorCode, setLoginErrorCode] = useState(-1);
   const { loginAzure } = useUser();
   const methods = useForm<LoginUser>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -47,20 +48,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     resolver: joiResolver(SchemaLoginForm),
   });
 
-  const clearErrors = () => {
-    setToastState((prev) => ({ ...prev, open: false }));
-    setLoading({ credentials: false, sso: false });
-    setLoginErrorCode(-1);
-  };
-
-  const handleInputChange = (e: any) => {
-    const { id } = e.target;
-    const { value } = e.target;
-    methods.setValue(id, value);
-  };
-
   const handleLoginAzure = () => {
     if (loading.sso) return;
+    // deletes guest user cookies after login
+    if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
     setLoading((prevState) => ({ ...prevState, sso: true }));
     loginAzure();
   };
@@ -73,15 +64,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
       redirect: false,
     });
     if (!result?.error) {
+      // deletes guest user cookies after login
+      if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
       setToastState((prev) => ({ ...prev, open: false }));
       router.push(DASHBOARD_ROUTE);
       return;
     }
 
-    setLoginErrorCode(result.status);
     if (result.error) {
-      methods.setError('email', { type: 'custom', message: '' });
-      methods.setError('password', { type: 'custom', message: '' });
+      methods.reset();
       setToastState({
         open: true,
         type: ToastStateEnum.ERROR,
@@ -114,30 +105,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
         <Text size="md" color="primary500" css={{ mt: '$8' }}>
           Enter your email and password to log in.
         </Text>
+        <Input css={{ mt: '$32' }} id="email" placeholder="Email address" type="text" />
         <Input
-          clearErrorCode={clearErrors}
-          css={{ mt: '$32' }}
-          forceState={loginErrorCode > 0}
-          id="email"
-          placeholder="Email address"
-          state={loginErrorCode > 0 ? 'error' : undefined}
-          type="text"
-          onChange={handleInputChange}
-        />
-        <Input
-          clearErrorCode={clearErrors}
-          forceState={loginErrorCode > 0}
           icon="eye"
           iconPosition="right"
           id="password"
           placeholder="Password"
-          state={loginErrorCode > 0 ? 'error' : undefined}
           type="password"
-          onChange={handleInputChange}
         />
 
         <Button disabled={loading.credentials} size="lg" type="submit">
-          {loading.credentials && <DotsLoading color="primary800" size={10} />}
+          {loading.credentials && <Dots color="primary800" size={10} />}
           {!loading.credentials && 'Log in'}
         </Button>
         <Button

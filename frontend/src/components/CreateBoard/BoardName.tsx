@@ -5,9 +5,12 @@ import Input from '@/components/Primitives/Input';
 import Text from '@/components/Primitives/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 
-type Props = { mainBoardName?: string };
+type BoardNameProps = {
+  title: string;
+  description: string;
+};
 
-const BoardName = ({ mainBoardName }: Props) => {
+const BoardName = ({ title, description }: BoardNameProps) => {
   /**
    * Recoil Atoms
    */
@@ -15,18 +18,16 @@ const BoardName = ({ mainBoardName }: Props) => {
 
   return (
     <>
-      <Text heading="3">Main Board Name</Text>
+      <Text heading="3">{title}</Text>
       <Text color="primary500" css={{ mt: '$8', mb: '$16' }}>
-        The main board is the board into which all sub-team boards will be merged.
+        {description}
       </Text>
       <Input
-        forceState
-        currentValue={mainBoardName}
         disabled={haveError}
         id="text"
-        maxChars="30"
-        placeholder="Main board name"
-        state="default"
+        maxChars="45"
+        showCount
+        placeholder={title}
         type="text"
       />
     </>

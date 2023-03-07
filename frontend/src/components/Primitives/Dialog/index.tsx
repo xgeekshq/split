@@ -1,12 +1,9 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
-import {
-  StyledDialogContainer,
-  StyledDialogContent,
-  StyledDialogOverlay,
-} from '@/components/Board/Settings/styles';
+import { StyledDialogContent, StyledDialogOverlay } from './styles';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
+import Flex from '../Flex';
 
 type Props = {
   isOpen: boolean;
@@ -15,14 +12,20 @@ type Props = {
 };
 
 const Dialog = ({ isOpen, setIsOpen, children }: Props) => (
-  <StyledDialogContainer>
-    <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
-      <Portal>
-        <StyledDialogOverlay />
-        <StyledDialogContent>{children}</StyledDialogContent>
-      </Portal>
-    </RadixDialog>
-  </StyledDialogContainer>
+  <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
+    <Portal>
+      <StyledDialogOverlay />
+      <StyledDialogContent
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <Flex direction="column" css={{ height: '100%' }}>
+          {children}
+        </Flex>
+      </StyledDialogContent>
+    </Portal>
+  </RadixDialog>
 );
 
 Dialog.Footer = DialogFooter;

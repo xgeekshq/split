@@ -1,0 +1,52 @@
+import { User } from '@/types/user/user';
+import { Session } from 'next-auth/core/types';
+import { NextRouter } from 'next/router';
+import { SessionUserFactory } from '../factories/user';
+
+export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
+  return {
+    basePath: '',
+    pathname: '/',
+    route: '/',
+    query: {},
+    asPath: '/',
+    back: jest.fn(),
+    beforePopState: jest.fn(),
+    prefetch: jest.fn().mockResolvedValue(true),
+    push: jest.fn(),
+    reload: jest.fn(),
+    replace: jest.fn(),
+    events: {
+      on: jest.fn(),
+      off: jest.fn(),
+      emit: jest.fn(),
+    },
+    isFallback: false,
+    isLocaleDomain: false,
+    isReady: true,
+    defaultLocale: 'en',
+    domainLocales: [],
+    isPreview: false,
+    locale: 'en',
+    locales: ['en'],
+    ...router,
+  };
+}
+
+export function createMockSession(session?: Partial<Session>, user?: User): Session {
+  return {
+    user: SessionUserFactory.create({ ...user, id: user?._id, isSAdmin: false }),
+    expires: new Date().toISOString(),
+    strategy: 'local',
+    error: '',
+    ...session,
+  };
+}
+
+export function createMockResizeObserver() {
+  return {
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+  };
+}

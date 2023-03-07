@@ -1,43 +1,53 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { BOARDS_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	Logger,
+	NotFoundException,
+	forwardRef
+} from '@nestjs/common';
+import { BOARDS_NOT_FOUND, BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Team from 'src/modules/teams/interfaces/types';
+import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Users from 'src/modules/users/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
-import Board, { BoardDocument } from '../schemas/board.schema';
-import BoardUser, { BoardUserDocument } from '../schemas/board.user.schema';
 import { cleanBoard } from '../utils/clean-board';
-import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
+import { TYPES } from '../interfaces/types';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import Board from '../entities/board.schema';
+import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
+import User from 'src/modules/users/entities/user.schema';
+import BoardGuestUserDto from '../dto/board.guest.user.dto';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(forwardRef(() => Team.TYPES.services.GetTeamService))
-		private getTeamService: GetTeamServiceInterface
+		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
+		private getTeamService: GetTeamServiceInterface,
+		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface,
+		@Inject(Auth.TYPES.services.GetTokenAuthService)
+		private getTokenAuthService: GetTokenAuthService,
+		@Inject(Users.TYPES.repository)
+		private readonly userRepository: UserRepositoryInterface,
+		@Inject(TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface,
+		private socketService: SocketGateway
 	) {}
 
 	private readonly logger = new Logger(GetBoardServiceImpl.name);
-
-	getAllBoardsIdsOfUser(userId: string) {
-		return this.boardUserModel.find({ user: userId }).select('board').lean().exec();
-	}
-
-	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
-		const [boardIds, teamIds] = await Promise.all([
-			this.getAllBoardsIdsOfUser(userId),
-			this.getTeamService.getTeamsOfUser(userId)
-		]);
-
-		return {
-			boardIds: boardIds.map((boardUser) => boardUser.board),
-			teamIds: teamIds.map((team) => team._id)
-		};
-	}
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
@@ -61,7 +71,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 			$and: [{ isSubBoard: false }, { $or: [{ _id: { $in: boardIds } }, { team: { $ne: null } }] }]
 		};
 
-		return this.getBoards(true, query, page, size);
+		return this.getBoards(false, query, page, size);
 	}
 
 	async getUsersBoards(userId: string, page: number, size?: number) {
@@ -95,57 +105,72 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return this.getBoards(false, query, page, size);
 	}
 
-	async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
-		const count = await this.boardModel.find(query).countDocuments().exec();
+	async getBoard(boardId: string, user: UserDto) {
+		let board = await this.boardRepository.getBoardData(boardId);
+
+		if (!board) throw new NotFoundException(NOT_FOUND);
+
+		const guestUser = await this.checkIfPublicBoardAndCreatePublicBoardUsers(board, user);
+
+		board = cleanBoard(board, user._id);
+
+		if (board.isSubBoard) {
+			const mainBoard = await this.boardRepository.getMainBoard(boardId);
+
+			return { board, mainBoard };
+		}
+
+		if (guestUser) return { guestUser, board };
+
+		return { board };
+	}
+
+	async countBoards(userId: string) {
+		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
+
+		return this.boardRepository.countBoards(boardIds, teamIds);
+	}
+
+	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
+		const [boardIds, teamIds] = await Promise.all([
+			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
+			this.getTeamService.getTeamsOfUser(userId)
+		]);
+
+		return {
+			boardIds: boardIds.map((boardUser) => boardUser.board),
+			teamIds: teamIds.map((team) => team._id)
+		};
+	}
+
+	getAllBoardsByTeamId(teamId: string) {
+		return this.boardRepository.getAllBoardsByTeamId(teamId);
+	}
+
+	getBoardPopulated(boardId: string, populate?: PopulateType) {
+		return this.boardRepository.getBoardPopulated(boardId, populate);
+	}
+
+	getBoardById(boardId: string) {
+		return this.boardRepository.getBoard(boardId);
+	}
+
+	getBoardData(boardId: string) {
+		return this.boardRepository.getBoardData(boardId);
+	}
+
+	getBoardUsers(board: string, user: string) {
+		return this.boardUserRepository.getBoardUsers(board, user);
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
+		const count = await this.boardRepository.getCountPage(query);
+
 		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
 		try {
-			const boards = await this.boardModel
-				.find(query)
-				.sort({ updatedAt: 'desc' })
-				.skip(allBoards ? 0 : page * size)
-				.limit(allBoards ? count : size)
-				.select(
-					'-__v -createdAt -slackEnable -slackChannelId -submitedByUser -submitedAt -columns.id -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments'
-				)
-				.populate({ path: 'createdBy', select: 'firstName lastName' })
-				.populate({
-					path: 'team',
-					select: 'name users _id',
-					populate: {
-						path: 'users',
-						select: 'user role',
-						populate: {
-							path: 'user',
-							select: '_id firstName lastName joinedAt'
-						}
-					}
-				})
-				.populate({
-					path: 'dividedBoards',
-					select:
-						'-__v -createdAt -slackEnable -slackChannelId -submitedAt -id -columns.id -submitedByUser -columns._id -columns.cards.text -columns.cards.createdBy -columns.cards.items.text -columns.cards.items.createdBy -columns.cards.createdAt -columns.cards.items.createdAt -columns.cards._id -columns.cards.id -columns.cards.items._id -columns.cards.items.id -columns.cards.createdByTeam -columns.cards.items.createdByTeam -columns.cards.items.votes -columns.cards.items.comments -columns.cards.votes -columns.cards.comments',
-					populate: [
-						{
-							path: 'users',
-							select: 'role user',
-							populate: {
-								path: 'user',
-								model: 'User',
-								select: 'firstName email lastName'
-							}
-						}
-					]
-				})
-				.populate({
-					path: 'users',
-					select: 'user role -board',
-					populate: {
-						path: 'user',
-						select: '_id firstName email lastName'
-					}
-				})
-				.lean({ virtuals: true })
-				.exec();
+			const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
 
 			return { boards: boards ?? [], hasNextPage, page };
 		} catch (e) {
@@ -155,75 +180,73 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		return { boards: [], hasNextPage, page };
 	}
 
-	async getBoardFromRepo(boardId: string) {
-		const board = await this.boardModel
-			.findById(boardId)
-			.populate(BoardDataPopulate)
-			.lean({ virtuals: true })
-			.exec();
+	private async createBoardUserAndSendAccessToken(
+		board: string,
+		user: string
+	): Promise<LoginGuestUserResponse> {
+		const { accessToken } = await this.getTokenAuthService.getTokens(user);
+		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
 
-		return board as Board;
+		await this.createBoardUserService.createBoardUser(board, user);
+
+		return { accessToken, user };
 	}
 
-	async getMainBoardData(boardId: string) {
-		const mainBoard = await this.boardModel
-			.findOne({ dividedBoards: { $in: boardId } })
-			.select('dividedBoards team title')
-			.populate({
-				path: 'dividedBoards',
-				select: '_id title'
-			})
-			.populate({
-				path: 'team',
-				select: 'name users _id',
-				populate: {
-					path: 'users',
-					select: 'user role',
-					populate: {
-						path: 'user',
-						select: 'firstName email lastName joinedAt'
-					}
-				}
-			})
-			.lean({ virtuals: true })
-			.exec();
+	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
+		const userFound = await this.boardUserRepository.getBoardUser(
+			board,
+			user,
+			{},
+			{
+				path: 'user',
+				select: '_id firstName lastName '
+			}
+		);
 
-		return mainBoard;
+		if (!userFound) {
+			throw new BadRequestException(BOARD_USER_NOT_FOUND);
+		}
+
+		const { _id, firstName, lastName, isAnonymous } = userFound.user as User;
+
+		return {
+			role: userFound.role,
+			board: String(userFound.board),
+			votesCount: userFound.votesCount,
+			user: {
+				_id: String(_id),
+				firstName,
+				lastName,
+				isAnonymous
+			}
+		};
 	}
 
-	async getBoard(boardId: string, userId: string) {
-		let board = await this.getBoardData(boardId);
+	private async sendGuestBoardUser(board: string, user: string) {
+		const boardUser = await this.getGuestBoardUser(board, user);
 
-		if (!board) return null;
-
-		board = cleanBoard(board, userId);
-
-		return { board };
+		this.socketService.sendUpdateBoardUsers(boardUser);
 	}
 
-	async countBoards(userId: string) {
-		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
+	private async checkIfPublicBoardAndCreatePublicBoardUsers(
+		{ _id: boardId, isPublic }: Board,
+		user: UserDto
+	) {
+		const boardUserFound = await this.getBoardUsers(boardId, user._id);
 
-		return this.boardModel.countDocuments({
-			$and: [
-				{ isSubBoard: false },
-				{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
-			]
-		});
+		return !boardUserFound.length && isPublic && !user.isSAdmin
+			? await this.createPublicBoardUsers(boardId, user)
+			: undefined;
 	}
 
-	async getBoardData(boardId: string) {
-		const board = await this.boardModel
-			.findById(boardId)
-			.select('-slackEnable -slackChannelId -recurrent -__v')
-			.populate(GetBoardDataPopulate)
-			.lean({ virtuals: true })
-			.exec();
+	private async createPublicBoardUsers(boardId: string, user: UserDto) {
+		if (user.isAnonymous) {
+			const guestUser = await this.createBoardUserAndSendAccessToken(boardId, user._id);
+			await this.sendGuestBoardUser(boardId, user._id);
 
-		return board as Board;
-	}
-
-	getAllBoardsByTeamId(teamId: string) {
-		return this.boardModel.find({ team: teamId }).select('board').lean().exec();
+			return guestUser;
+		}
+		await this.createBoardUserService.createBoardUser(boardId, user._id);
+		await this.sendGuestBoardUser(boardId, user._id);
 	}
 }

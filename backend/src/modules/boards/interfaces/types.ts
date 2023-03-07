@@ -1,6 +1,7 @@
 export const TYPES = {
 	services: {
 		CreateBoardService: 'CreateBoardService',
+		CreateBoardUserService: 'CreateBoardUserService',
 		DeleteBoardService: 'DeleteBoardService',
 		UpdateBoardService: 'UpdateBoardService',
 		GetBoardService: 'GetBoardService',
@@ -18,7 +19,9 @@ export const TYPES = {
 		GetBoardApplication: 'GetBoardApplication'
 	},
 	repositories: {
-		BoardTimerRepository: 'BoardTimerRepository'
+		BoardTimerRepository: 'BoardTimerRepository',
+		BoardRepository: 'BoardRepository',
+		BoardUserRepository: 'BoardUserRepository'
 	},
 	subscribers: {
 		AfterUserPausedTimerSubscriber: 'AfterUserPausedTimerSubscriber',

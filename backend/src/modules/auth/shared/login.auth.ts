@@ -8,7 +8,7 @@ export const signIn = async (
 	getTokenService: GetTokenAuthService | GetTokenAuthApplication,
 	strategy: string
 ) => {
-	const { email, firstName, lastName, _id, isSAdmin, providerAccountCreatedAt } = user;
+	const { email, firstName, lastName, _id, isSAdmin, providerAccountCreatedAt, avatar } = user;
 	const jwt = await getTokenService.getTokens(_id);
 
 	if (!jwt) return null;
@@ -22,6 +22,7 @@ export const signIn = async (
 		id: _id,
 		isSAdmin,
 		providerAccountCreatedAt,
-		_id
+		_id,
+		avatar
 	};
 };

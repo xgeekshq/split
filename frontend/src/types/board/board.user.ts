@@ -7,6 +7,15 @@ export interface BoardUser {
   role: BoardUserRoles;
   _id?: string;
   votesCount: number;
+  board?: string;
+}
+
+export interface CreatedBoardUser {
+  id: any;
+  user: string;
+  role: BoardUserRoles;
+  _id: string;
+  votesCount: number;
 }
 
 export interface BoardUserNoPopulated {
@@ -20,6 +29,7 @@ export interface BoardUserToAdd {
   user: User;
   role: BoardUserRoles;
   votesCount: number;
+  board?: string;
   isNewJoiner?: boolean;
   _id?: string;
 }
@@ -27,4 +37,11 @@ export interface BoardUserToAdd {
 export interface BoardUserDto {
   user: string;
   role: BoardUserRoles;
+}
+
+export interface UpdateBoardUser {
+  addBoardUsers: BoardUserToAdd[];
+  removeBoardUsers: string[];
+  boardUserToUpdateRole?: BoardUser;
+  boardId: string;
 }

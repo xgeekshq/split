@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 

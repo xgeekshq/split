@@ -36,17 +36,11 @@ export default class GetUserServiceImpl implements GetUserService {
 	}
 
 	countUsers() {
-		return this.userRepository.countDocuments();
+		return this.userRepository.getSignedUpUsersCount();
 	}
 
 	getAllUsers() {
-		return this.userRepository.findAll(
-			{
-				password: 0,
-				currentHashedRefreshToken: 0
-			},
-			{ firstName: 'asc', lastName: 'asc' }
-		);
+		return this.userRepository.getAllSignedUpUsers();
 	}
 
 	getAllUsersWithPagination(page?: number, size?: number, searchUser?: string) {
@@ -56,7 +50,7 @@ export default class GetUserServiceImpl implements GetUserService {
 	async getAllUsersWithTeams(page = 0, size = 15, searchUser?: string) {
 		const users = await this.getAllUsersWithPagination(page, size, searchUser);
 
-		const count = await this.userRepository.countDocuments();
+		const count = await this.countUsers();
 		const hasNextPage = page + 1 < Math.ceil(count / size);
 
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {

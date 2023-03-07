@@ -28,10 +28,15 @@ export default class BoardUserDto {
 	@IsNotEmpty()
 	user!: string;
 
-	@ApiPropertyOptional({ default: 0 })
+	@ApiProperty()
+	@IsMongoId()
+	@IsString()
 	@IsOptional()
+	board?: string;
+
+	@ApiPropertyOptional({ default: 0 })
 	@IsNumber()
-	votesCount?: number;
+	votesCount: number;
 
 	@ApiPropertyOptional()
 	@IsOptional()

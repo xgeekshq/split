@@ -3,15 +3,19 @@ export type ElevationType = 0 | 1 | 2 | 3 | 4;
 export type BoxVariantType = 'bordered' | 'dropdown';
 
 // Primitive/Button
-export type ButtonVariantType =
-  | 'primary'
-  | 'primaryOutline'
-  | 'light'
-  | 'lightOutline'
-  | 'danger'
-  | 'dangerOutline'
-  | 'link';
-export type ButtonSizeType = 'sm' | 'md' | 'lg';
+export const ButtonVariant = [
+  'primary',
+  'primaryOutline',
+  'light',
+  'lightOutline',
+  'danger',
+  'dangerOutline',
+  'link',
+] as const;
+export type ButtonVariantType = typeof ButtonVariant[number];
+
+export const ButtonSize = ['sm', 'md', 'lg'] as const;
+export type ButtonSizeType = typeof ButtonSize[number];
 
 // Primitive/Flex
 export type DirectionType = 'row' | 'column' | 'rowReverse' | 'columnReverse';
@@ -29,6 +33,7 @@ export type TextSizeType = 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ColorType =
   | 'white'
   | 'dangerBase'
+  | 'primary100'
   | 'primary200'
   | 'primary300'
   | 'primary400'
@@ -49,7 +54,19 @@ export type SeparatorOrientationType = 'horizontal' | 'vertical';
 export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';
 
 // Primitive/Svg
-export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32;
+export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 48 | 100;
 
 // Primitive/Switch
 export type SwitchSizeType = 'xs' | 'sm' | 'md';
+
+// Primitive/Checkbox
+export type CheckboxSizeType = 'sm' | 'md';
+export type CheckboxVariantType = 'default' | 'error';
+
+// Primitive/Loading/Spinner
+export type SpinnerSizeType = 50 | 80 | 100 | 150 | 200;
+export type SpinnerColorType = 'light' | 'dark';
+
+// Primitive/Loading/Dots
+export type DotsSizeType = 8 | 4 | 10 | 15 | 50 | 80 | 100;
+export type DotsColorType = 'primary800' | 'primary200' | 'white';

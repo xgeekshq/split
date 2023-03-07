@@ -1,24 +1,63 @@
+import { getBoardRequest } from '@/api/boardService';
 import { getAllUsers } from '@/api/userService';
 import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
 import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Flex';
-import { ContentSection } from '@/components/layouts/DashboardLayout/styles';
-import LoadingPage from '@/components/loadings/LoadingPage';
-import { boardParticipantsState } from '@/store/board/atoms/board.atom';
+import { ContentSection } from '@/components/layouts/Layout/styles';
+import LoadingPage from '@/components/Primitives/Loading/Page';
+import useBoard from '@/hooks/useBoard';
+import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
 import React, { Suspense, useCallback, useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+
+// Sorts participants list to show responsibles first and then regular board members
+export const sortParticipantsList = (
+  boardUsers: BoardUser[],
+  setBoardParticipants: SetterOrUpdater<BoardUser[]>,
+) => {
+  boardUsers.sort((a, b) => {
+    const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+    const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+
+    return aFullName < bFullName ? -1 : 1;
+  });
+  const orderedResponsiblesList = boardUsers.filter(
+    (boardUser) => boardUser.role === BoardUserRoles.RESPONSIBLE,
+  );
+  const orderedParticipantsList = boardUsers.filter(
+    (boardUser) => boardUser.role === BoardUserRoles.MEMBER,
+  );
+  setBoardParticipants([...orderedResponsiblesList, ...orderedParticipantsList]);
+};
 
 const BoardParticipants = () => {
-  const { data: session } = useSession({ required: true });
   const setToastState = useSetRecoilState(toastState);
+  const [boardParticipants, setBoardParticipants] = useRecoilState(boardParticipantsState);
+  const [recoilBoard, setRecoilBoard] = useRecoilState(boardInfoState);
+
+  // Hooks
+  const {
+    fetchBoard: { data: boardData },
+  } = useBoard({
+    autoFetchBoard: true,
+  });
+
+  useEffect(() => {
+    if (boardData) {
+      setRecoilBoard(boardData);
+      sortParticipantsList([...boardData.board.users], setBoardParticipants);
+    }
+  }, [boardData, setBoardParticipants, setRecoilBoard]);
 
   const usersData = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -32,7 +71,6 @@ const BoardParticipants = () => {
     },
   }).data;
 
-  const boardParticipants = useRecoilValue(boardParticipantsState);
   const setUsersListState = useSetRecoilState(usersListState);
 
   const handleMembersList = useCallback(() => {
@@ -54,8 +92,7 @@ const BoardParticipants = () => {
     handleMembersList();
   }, [handleMembersList]);
 
-  if (!session) return null;
-  return (
+  return recoilBoard ? (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
         <ContentSection gap="36" justify="between">
@@ -63,11 +100,13 @@ const BoardParticipants = () => {
             <Flex justify="between">
               <RegularBoardHeader isParticipantsPage />
             </Flex>
-            <ParticipantsList />
+            <ParticipantsList createdBy={boardData?.board.createdBy._id} />
           </Flex>
         </ContentSection>
       </QueryError>
     </Suspense>
+  ) : (
+    <LoadingPage />
   );
 };
 
@@ -81,12 +120,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   try {
+    await queryClient.fetchQuery(['board', { id: boardId }], () =>
+      getBoardRequest(boardId, context),
+    );
     await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
   } catch (e) {
     return {
       redirect: {
         permanent: false,
-        destination: `/boards/${boardId}`,
+        destination: DASHBOARD_ROUTE,
       },
     };
   }

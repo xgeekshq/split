@@ -19,7 +19,8 @@ import {
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import { hideText } from 'src/libs/utils/hideText';
-import Board from 'src/modules/boards/schemas/board.schema';
+import BoardGuestUserDto from 'src/modules/boards/dto/board.guest.user.dto';
+import Board from 'src/modules/boards/entities/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
 import DeleteCardDto from 'src/modules/cards/dto/delete.card.dto';
 import { MergeCardDto } from 'src/modules/cards/dto/group/merge.card.dto';
@@ -143,6 +144,10 @@ export default class SocketGateway
 			.except(excludedClient)
 			.to(deleteCommentDto.boardId)
 			.emit(`${deleteCommentDto.boardId}deleteComment`, deleteCommentDto);
+	}
+
+	sendUpdateBoardUsers(boardUser: BoardGuestUserDto) {
+		this.server.to(boardUser.board).emit(`${boardUser.board}updateBoardUsers`, boardUser);
 	}
 
 	@SubscribeMessage(BOARD_TIMER_USER_REQUESTED_TIMER_STATE)

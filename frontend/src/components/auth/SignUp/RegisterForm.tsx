@@ -10,7 +10,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import { registerNewUser } from '@/api/authService';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Input';
@@ -39,8 +39,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 }) => {
   const setToastState = useSetRecoilState(toastState);
   const methods = useForm<RegisterUser>({
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       firstName: '',
@@ -112,7 +112,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           Put in your credentials or ask your admin to add your email to the company’s azure
           database.
         </Text>
-        <Input disabled id="email" placeholder="Email address" state="default" type="text" />
+        <Input disabled id="email" placeholder="Email address" type="text" />
         <Input id="firstName" placeholder="First Name" type="text" />
         <Input id="lastName" placeholder="Last Name" type="text" />
         <Input

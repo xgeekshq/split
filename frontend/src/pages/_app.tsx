@@ -43,6 +43,7 @@ function Root({
 
   const router = useRouter();
   globalStyles();
+
   return (
     <>
       <Head>

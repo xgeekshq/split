@@ -3,6 +3,7 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { BoardsAndPage } from '../interfaces/boards-page.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
+import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
 export class GetBoardApplication implements GetBoardApplicationInterface {
@@ -37,8 +38,8 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		return this.getBoardService.getPersonalUserBoards(userId, page, size);
 	}
 
-	getBoard(boardId: string, userId: string) {
-		return this.getBoardService.getBoard(boardId, userId);
+	getBoard(boardId: string, user: UserDto) {
+		return this.getBoardService.getBoard(boardId, user);
 	}
 
 	countBoards(userId: string) {

@@ -1,4 +1,11 @@
-import { ClientSession, FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
+import {
+	ClientSession,
+	FilterQuery,
+	Model,
+	ProjectionType,
+	QueryOptions,
+	UpdateQuery
+} from 'mongoose';
 import {
 	BaseInterfaceRepository,
 	PopulateType,
@@ -18,6 +25,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.countDocuments().lean().exec();
 	}
 
+	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number> {
+		return this._repository.countDocuments(filter, options).lean().exec();
+	}
+
 	findAll(
 		selectedValues?: SelectedValues<T>,
 		sort?: SortType,
@@ -31,6 +42,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.findById(id)
 			.select(selectedValues)
 			.populate(populate)
+			.lean({ virtuals: true })
 			.exec() as Promise<T>;
 	}
 
@@ -38,24 +50,38 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.findOne(value).exec();
 	}
 
-	findAllWithQuery(
-		query: any,
+	findOneByFieldWithQuery(
+		value: FilterQuery<T>,
 		selectedValues?: SelectedValues<T>,
 		populate?: PopulateType
-	): Promise<T[]> {
+	): Promise<T> {
 		return this._repository
-			.find(query)
+			.findOne(value)
 			.select(selectedValues)
 			.populate(populate)
-			.lean({ virtuals: true })
+			.exec() as Promise<T>;
+	}
+
+	findAllWithQuery(
+		query: FilterQuery<T>,
+		projection?: ProjectionType<T>,
+		selectedValues?: SelectedValues<T>,
+		populate?: PopulateType,
+		virtuals = true
+	): Promise<T[]> {
+		return this._repository
+			.find(query, projection)
+			.select(selectedValues)
+			.populate(populate)
+			.lean({ virtuals: virtuals })
 			.exec() as unknown as Promise<T[]>;
 	}
 
-	create(item: T): Promise<T> {
+	create<Q>(item: Q): Promise<T> {
 		return this._repository.create(item);
 	}
 
-	insertMany(listOfItems: T[]): Promise<T[]> {
+	insertMany<Q>(listOfItems: Q[]): Promise<T[]> {
 		return this._repository.insertMany(listOfItems);
 	}
 
@@ -64,11 +90,16 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	}
 
 	findOneByFieldAndUpdate(
-		value: ModelProps<T>,
+		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
-		options?: QueryOptions<T>
+		options?: QueryOptions<T>,
+		populate?: PopulateType
 	): Promise<T> {
-		return this._repository.findOneAndUpdate(value, query, options).exec();
+		return this._repository
+			.findOneAndUpdate(value, query, options)
+			.populate(populate)
+			.lean()
+			.exec() as unknown as Promise<T>;
 	}
 
 	findOneAndRemove(id: string, withSession = false): Promise<T> {

@@ -5,13 +5,15 @@ import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/loadings/LoadingPage';
+import LoadingPage from '@/components/Primitives/Loading/Page';
 import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
+import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import { ROUTES } from '@/utils/routes';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });
@@ -28,12 +30,21 @@ const Boards = () => {
   if (!session || !data) return null;
 
   return (
-    <Flex direction="column">
-      <Suspense fallback={<LoadingPage />}>
-        <QueryError>
-          <MyBoards isSuperAdmin={session?.user.isSAdmin} userId={session?.user.id} />
-        </QueryError>
-      </Suspense>
+    <Flex css={{ width: '100%' }} direction="column" gap="40">
+      <MainPageHeader
+        title="Boards"
+        button={{
+          link: ROUTES.NewBoard,
+          label: 'Add new board',
+        }}
+      />
+      <Flex direction="column">
+        <Suspense fallback={<LoadingPage />}>
+          <QueryError>
+            <MyBoards isSuperAdmin={session?.user.isSAdmin} userId={session?.user.id} />
+          </QueryError>
+        </Suspense>
+      </Flex>
     </Flex>
   );
 };

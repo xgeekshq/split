@@ -1,3 +1,5 @@
+import { boardUserRepository, createBoardUserService } from './../../boards/boards.providers';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -16,7 +18,12 @@ import {
 	registerAuthService
 } from 'src/modules/auth/auth.providers';
 import AuthController from 'src/modules/auth/controller/auth.controller';
-import { getBoardApplication, getBoardService } from 'src/modules/boards/boards.providers';
+import {
+	boardRepository,
+	createBoardService,
+	getBoardApplication,
+	getBoardService
+} from 'src/modules/boards/boards.providers';
 import EmailModule from 'src/modules/mailer/mailer.module';
 import {
 	createTeamService,
@@ -34,6 +41,13 @@ import {
 	updateUserService,
 	userRepository
 } from 'src/modules/users/users.providers';
+import {
+	createSchedulesService,
+	deleteSchedulesService
+} from 'src/modules/schedules/schedules.providers';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 describe('AuthController', () => {
 	let app: INestApplication;
@@ -45,7 +59,7 @@ describe('AuthController', () => {
 		};
 
 		const module: TestingModule = await Test.createTestingModule({
-			imports: [EmailModule],
+			imports: [EmailModule, EventEmitterModule.forRoot()],
 			controllers: [AuthController],
 			providers: [
 				registerAuthApplication,
@@ -68,7 +82,34 @@ describe('AuthController', () => {
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
+				boardRepository,
+				createBoardService,
+				createSchedulesService,
+				deleteSchedulesService,
+				createBoardUserService,
+				updateUserService,
+				SocketGateway,
+				SchedulerRegistry,
 				ConfigService,
+				boardUserRepository,
+				{
+					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
+				{
+					provide: getModelToken('Schedules'),
+					useValue: {
+						find: jest.fn().mockResolvedValue([])
+					}
+				},
+				{
+					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
+					useValue: {
+						execute: jest.fn()
+					}
+				},
 				{
 					provide: ConfigService,
 					useValue: configService

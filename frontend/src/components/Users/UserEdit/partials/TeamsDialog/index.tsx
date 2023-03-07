@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState, useMemo } from 'react';
+import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'react';
 
 import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -8,11 +8,10 @@ import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
-import { TeamChecked, Team } from '@/types/team/team';
+import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialog';
-import { useQueryClient } from '@tanstack/react-query';
-import SearchInput from '@/components/Teams/CreateTeam/ListMembersDialog/SearchInput';
+import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
 import { ScrollableContent } from './styles';
 
 type Props = {
@@ -20,30 +19,24 @@ type Props = {
   isOpen: boolean;
   providerAccountCreatedAt?: string;
   joinedAt: string;
+  teamsList: TeamChecked[];
 };
 
-const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Props) => {
-  let teamsUserIsNotMember: TeamChecked[];
-
+const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, teamsList }: Props) => {
   const [searchTeam, setSearchTeam] = useState<string>('');
-
-  const queryClient = useQueryClient();
-
-  const router = useRouter();
-  const { userId } = router.query;
-
-  const {
-    fetchTeamsUserIsNotMember: { refetch },
-  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
 
   const {
     updateAddTeamsToUser: { mutate },
   } = useTeam();
 
-  // after fetching data, add the field "isChecked", to be used in the Add button
-  teamsUserIsNotMember = (
-    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', userId]) || []
-  ).map((team) => ({ ...team, _id: team.id, isChecked: false }));
+  const router = useRouter();
+  const { userId } = router.query;
+
+  const [teamsUserIsNotMember, setTeamsUserIsNotMember] = useState<TeamChecked[]>(teamsList);
+
+  const {
+    fetchTeamsUserIsNotMember: { refetch },
+  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTeam(event.target.value);
@@ -54,9 +47,11 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
   };
 
   const handleChecked = (id: string) => {
-    teamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
+    const updateTeamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
       team._id === id ? { ...team, isChecked: !team.isChecked } : team,
     );
+
+    setTeamsUserIsNotMember(updateTeamsUserIsNotMember);
   };
 
   const handleAddTeams = () => {
@@ -86,11 +81,13 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
       : teamsUserIsNotMember;
   }, [searchTeam, teamsUserIsNotMember]);
 
+  useEffect(() => {
+    setTeamsUserIsNotMember(teamsList);
+  }, [teamsList]);
+
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header>
-        <Text heading="4">Add new team</Text>
-      </Dialog.Header>
+      <Dialog.Header title="Add new team" />
       <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
         <SearchInput
           currentValue={searchTeam}
@@ -111,11 +108,13 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
             <Flex key={team._id} align="center" justify="between">
               <Flex css={{ width: '50%' }}>
                 <Checkbox
-                  checked={false}
-                  handleChange={handleChecked}
+                  checked={team.isChecked}
+                  handleChange={() => {
+                    handleChecked(team._id);
+                  }}
                   id={team._id}
                   label={team.name}
-                  size="16"
+                  size="md"
                 />
               </Flex>
             </Flex>
@@ -123,7 +122,9 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt }: Pr
         </Flex>
       </ScrollableContent>
       <Dialog.Footer
-        setIsOpen={setIsOpen}
+        handleClose={() => {
+          setIsOpen(false);
+        }}
         handleAffirmative={handleAddTeams}
         affirmativeLabel="Add"
       />

@@ -7,7 +7,12 @@ export const ERROR_LOADING_DATA = 'Error loading data';
 
 export const JWT_EXPIRATION_TIME = Number(publicRuntimeConfig.NEXT_PUBLIC_EXPIRATION_TIME);
 
-export const { NEXT_PUBLIC_BACKEND_URL, NEXT_PUBLIC_NEXTAUTH_URL, SECRET } = publicRuntimeConfig;
+export const {
+  NEXT_PUBLIC_BACKEND_URL,
+  NEXT_PUBLIC_NEXTAUTH_URL,
+  SECRET,
+  NEXT_PUBLIC_RECOIL_DEV_TOOLS,
+} = publicRuntimeConfig;
 
 export const CLIENT_ID = serverRuntimeConfig.AZURE_CLIENT_ID;
 export const CLIENT_SECRET = serverRuntimeConfig.AZURE_CLIENT_SECRET;
@@ -28,7 +33,7 @@ export const REFRESH_TOKEN_ERROR = 'REFRESH_TOKEN_ERROR';
 
 export const MIN_MEMBERS = 4;
 
-export const RECOIL_DEV_TOOLS = true;
+export const RECOIL_DEV_TOOLS = NEXT_PUBLIC_RECOIL_DEV_TOOLS === 'true';
 
 // -------------------------------
 
@@ -55,3 +60,11 @@ export const BOARD_TIMER_SERVER_TIME_LEFT_UPDATED = 'board-timer.server.time-lef
 export const BOARD_TIMER_USER_REQUESTED_TIMER_STATE = 'board-timer.user.requested.timer-state';
 
 export const BOARD_TIMER_SERVER_SENT_TIMER_STATE = 'board-timer.server.sent.timer-state';
+
+export const BOARD_PHASE_SERVER_SENT = 'board-phase.server.updated';
+
+export const CARD_TEXT_DEFAULT = 'Write your comment here...';
+
+export const CARD_TEXT_TO_IMPROVE_SPLIT_COLUMN = `Description: \n\nHow to improve:`;
+
+export const GUEST_USER_COOKIE = 'guest-user-session';

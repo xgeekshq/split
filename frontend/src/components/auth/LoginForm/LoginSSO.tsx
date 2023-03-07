@@ -3,7 +3,7 @@ import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 
 const StyledFlex = styled(Flex, { width: '100%' });
 

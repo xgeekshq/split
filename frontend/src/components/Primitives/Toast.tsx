@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import { keyframes, styled } from '@/styles/stitches/stitches.config';
-import Icon from '@/components/icons/Icon';
+import Icon from '@/components/Primitives/Icon';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
@@ -70,7 +70,7 @@ const Toast: React.FC = () => {
   const { open, type, content } = currentToastState;
 
   const router = useRouter();
-  const VIEWPORT_PADDING = router && router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
+  const VIEWPORT_PADDING = router.asPath === ROUTES.START_PAGE_ROUTE ? 162 : 56;
 
   const slideIn = keyframes({
     from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ColumnDeleteCardsDto } from 'src/libs/dto/colum.deleteCards.dto';
-import { UpdateColumnDto } from '../dto/column/update-column.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TYPES } from '../interfaces/types';
+import UpdateBoardUserDto from '../dto/update-board-user.dto';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 @Injectable()
 export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
@@ -21,10 +21,17 @@ export class UpdateBoardApplication implements UpdateBoardApplicationInterface {
 		return this.updateBoardService.mergeBoards(subBoardId, userId);
 	}
 
-	updateColumn(boardId: string, column: UpdateColumnDto) {
-		return this.updateBoardService.updateColumn(boardId, column);
+	updateBoardParticipants(boardData: UpdateBoardUserDto) {
+		const { addBoardUsers, removeBoardUsers, boardUserToUpdateRole } = boardData;
+
+		if (boardUserToUpdateRole) {
+			return this.updateBoardService.updateBoardParticipantsRole(boardUserToUpdateRole);
+		}
+
+		return this.updateBoardService.updateBoardParticipants(addBoardUsers, removeBoardUsers);
 	}
-	deleteCardsFromColumn(boardId: string, column: ColumnDeleteCardsDto) {
-		return this.updateBoardService.deleteCardsFromColumn(boardId, column);
+
+	updatePhase(payload: BoardPhaseDto) {
+		this.updateBoardService.updatePhase(payload);
 	}
 }

@@ -6,6 +6,8 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    'storybook-addon-next',
+    '@tomfreudenberg/next-auth-mock/storybook'
   ],
   framework: '@storybook/react',
   core: {
@@ -13,6 +15,7 @@ module.exports = {
   },
   webpackFinal: async (config, { configType }) => {
     config.resolve.modules = [path.resolve(__dirname, '..'), 'node_modules'];
+    config.resolve.alias['@tomfreudenberg/next-auth-mock/storybook/preview-mock-auth-states'] = path.resolve(__dirname, 'previewMockAuthStates.js');
 
     config.resolve.alias = {
       ...config.resolve.alias,

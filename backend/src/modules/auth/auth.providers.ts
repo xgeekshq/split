@@ -1,4 +1,3 @@
-import AzureAuthServiceImpl from '../azure/services/cron.azure.service';
 import { CreateResetTokenAuthApplicationImpl } from './applications/create-reset-token.auth.application';
 import { GetTokenAuthApplicationImpl } from './applications/get-token.auth.application';
 import { RegisterAuthApplicationImpl } from './applications/register.auth.application';
@@ -26,11 +25,6 @@ export const validateUserAuthService = {
 export const createResetTokenAuthService = {
 	provide: TYPES.services.CreateResetTokenAuthService,
 	useClass: CreateResetTokenAuthServiceImpl
-};
-
-export const azureAuthService = {
-	provide: TYPES.services.AzureAuthService,
-	useClass: AzureAuthServiceImpl
 };
 
 export const getTokenAuthApplication = {

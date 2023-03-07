@@ -4,6 +4,7 @@ import {
 	ArrayMinSize,
 	ArrayNotEmpty,
 	IsBoolean,
+	IsEnum,
 	IsMongoId,
 	IsNotEmpty,
 	IsNumber,
@@ -14,7 +15,8 @@ import {
 } from 'class-validator';
 import { CheckUniqueUsers } from 'src/libs/validators/check-unique-users';
 import BoardUserDto from './board.user.dto';
-import ColumnDto from './column/column.dto';
+import ColumnDto from '../../columns/dto/column.dto';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 
 export default class BoardDto {
 	@ApiPropertyOptional()
@@ -27,6 +29,11 @@ export default class BoardDto {
 	@IsNotEmpty()
 	@Transform(({ value }: TransformFnParams) => value.trim())
 	title!: string;
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsString()
+	createdBy?: string;
 
 	@ApiProperty({ type: ColumnDto, isArray: true })
 	@ArrayNotEmpty()
@@ -42,7 +49,6 @@ export default class BoardDto {
 	isPublic!: boolean;
 
 	@ApiPropertyOptional({ type: String })
-	@IsNotEmpty()
 	@IsNumber()
 	@IsOptional()
 	maxVotes?: number | null;
@@ -73,7 +79,7 @@ export default class BoardDto {
 	@ValidateNested({ each: true })
 	@Type(() => BoardDto)
 	@IsOptional()
-	dividedBoards!: BoardDto[];
+	dividedBoards!: BoardDto[] | string[];
 
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()
@@ -122,4 +128,10 @@ export default class BoardDto {
 
 	@ApiProperty({ type: String, isArray: true })
 	responsibles!: string[];
+
+	@ApiProperty({ type: String, enum: BoardPhases, enumName: 'Phase' })
+	@IsString()
+	@IsOptional()
+	@IsEnum(BoardPhases, { each: true })
+	phase?: string;
 }
