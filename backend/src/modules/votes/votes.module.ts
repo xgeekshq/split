@@ -10,7 +10,9 @@ import {
 	createVoteApplication,
 	createVoteService,
 	deleteVoteApplication,
-	deleteVoteService
+	deleteVoteService,
+	votesBoardRepository,
+	votesBoardUserRepository
 } from './votes.providers';
 
 @Module({
@@ -21,7 +23,14 @@ import {
 		SocketModule
 	],
 	controllers: [VotesController],
-	providers: [createVoteApplication, createVoteService, deleteVoteApplication, deleteVoteService],
+	providers: [
+		createVoteApplication,
+		createVoteService,
+		deleteVoteApplication,
+		deleteVoteService,
+		votesBoardRepository,
+		votesBoardUserRepository
+	],
 	exports: [deleteVoteService]
 })
 export class VotesModule {}

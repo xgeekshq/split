@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { VotesBoardUserRepositoryInterface } from './../repositories/board-user.repository.interface';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ClientSession, Model } from 'mongoose';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
@@ -6,11 +7,17 @@ import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exc
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
+import { TYPES } from '../interfaces/types';
+import { VotesBoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export default class CreateVoteServiceImpl implements CreateVoteServiceInterface {
 	constructor(
 		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
+		// @Inject(TYPES.repositories.VotesBoardRepository)
+		// private readonly boardRepository: VotesBoardRepositoryInterface,
+		// @Inject(TYPES.repositories.VotesBoardUserRepository)
+		// private readonly boardUserRepository: VotesBoardUserRepositoryInterface,
 		@InjectModel(BoardUser.name)
 		private boardUserModel: Model<BoardUserDocument>
 	) {}
@@ -34,10 +41,19 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		}
 		const maxVotes = Number(board.maxVotes);
 
+		console.log(
+			'before',
+			await this.boardUserModel
+				.findOne({ board: boardId, user: userId })
+				.session(boardUserSession)
+				.exec()
+		);
+
 		const boardUserFound = await this.boardUserModel
 			.findOne({ board: boardId, user: userId })
 			.session(boardUserSession)
 			.exec();
+		console.log('after', boardUserFound);
 
 		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
 
@@ -50,6 +66,18 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 		count: number,
 		session?: ClientSession
 	) {
+		// console.log(
+		// 	'after2',
+		// 	await this.boardUserRepository.findOneByFieldAndUpdate(
+		// 		{
+		// 			user: userId,
+		// 			board: boardId
+		// 		},
+		// 		{
+		// 			$inc: { votesCount: count }
+		// 		}
+		// 	)
+		// );
 		const boardUser = await this.boardUserModel
 			.updateOne(
 				{
@@ -65,6 +93,8 @@ export default class CreateVoteServiceImpl implements CreateVoteServiceInterface
 			)
 			.lean()
 			.exec();
+
+		console.log('before2', boardUser);
 
 		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);
 	}
