@@ -103,12 +103,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				await Promise.all(promises);
 			}
 
-			/**
-			 * TODO:
-			 * When the mainBoardId starts to be returned by the board, remove this query from the board repository
-			 */
 			const mainBoardId = boardData.mainBoardId;
-			//await this.boardRepository.getMainBoardOfSubBoard(boardId);
 
 			const promises = boardData.users
 				.filter((boardUser) =>
