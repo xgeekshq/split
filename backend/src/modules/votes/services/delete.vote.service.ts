@@ -8,16 +8,16 @@ import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/g
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
-import { VotesBoardUserRepositoryInterface } from '../repositories/votes-board-user.repository.interface';
-import { VotesBoardRepositoryInterface } from '../repositories/votes-board.repository.interface';
+import { VoteBoardUserRepositoryInterface } from '../repositories/vote-board-user.repository.interface';
+import { VoteBoardRepositoryInterface } from '../repositories/vote-board.repository.interface';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	constructor(
-		@Inject(TYPES.repositories.VotesBoardRepository)
-		private readonly boardRepository: VotesBoardRepositoryInterface,
-		@Inject(TYPES.repositories.VotesBoardUserRepository)
-		private readonly boardUserRepository: VotesBoardUserRepositoryInterface,
+		@Inject(TYPES.repositories.VoteBoardRepository)
+		private readonly boardRepository: VoteBoardRepositoryInterface,
+		@Inject(TYPES.repositories.VoteBoardUserRepository)
+		private readonly boardUserRepository: VoteBoardUserRepositoryInterface,
 		@Inject(Cards.TYPES.services.GetCardService)
 		private getCardService: GetCardServiceInterface
 	) {}

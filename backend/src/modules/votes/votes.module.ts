@@ -11,8 +11,8 @@ import {
 	createVoteService,
 	deleteVoteApplication,
 	deleteVoteService,
-	votesBoardRepository,
-	votesBoardUserRepository
+	voteBoardRepository,
+	voteBoardUserRepository
 } from './votes.providers';
 
 @Module({
@@ -28,8 +28,8 @@ import {
 		createVoteService,
 		deleteVoteApplication,
 		deleteVoteService,
-		votesBoardRepository,
-		votesBoardUserRepository
+		voteBoardRepository,
+		voteBoardUserRepository
 	],
 	exports: [deleteVoteService]
 })

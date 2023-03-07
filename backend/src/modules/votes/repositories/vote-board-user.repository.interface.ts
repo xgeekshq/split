@@ -5,7 +5,7 @@ import {
 } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 
-export interface VotesBoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
+export interface VoteBoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	findBoardUserByFieldAndUpdate(
 		value: FilterQuery<BoardUser>,
 		query: UpdateQuery<BoardUser>,

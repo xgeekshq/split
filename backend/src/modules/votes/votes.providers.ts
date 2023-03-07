@@ -1,5 +1,5 @@
-import { VotesBoardUserRepository } from './repositories/votes-board-user.repository';
-import { VotesBoardRepository } from './repositories/votes-board.repository';
+import { VoteBoardUserRepository } from './repositories/vote-board-user.repository';
+import { VoteBoardRepository } from './repositories/vote-board.repository';
 import { CreateVoteApplication } from './applications/create.vote.application';
 import { DeleteVoteApplication } from './applications/delete.vote.application';
 import { TYPES } from './interfaces/types';
@@ -26,12 +26,12 @@ export const deleteVoteApplication = {
 	useClass: DeleteVoteApplication
 };
 
-export const votesBoardRepository = {
-	provide: TYPES.repositories.VotesBoardRepository,
-	useClass: VotesBoardRepository
+export const voteBoardRepository = {
+	provide: TYPES.repositories.VoteBoardRepository,
+	useClass: VoteBoardRepository
 };
 
-export const votesBoardUserRepository = {
-	provide: TYPES.repositories.VotesBoardUserRepository,
-	useClass: VotesBoardUserRepository
+export const voteBoardUserRepository = {
+	provide: TYPES.repositories.VoteBoardUserRepository,
+	useClass: VoteBoardUserRepository
 };

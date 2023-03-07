@@ -1,4 +1,4 @@
-import { votesBoardRepository, votesBoardUserRepository } from './../../votes/votes.providers';
+import { voteBoardRepository, voteBoardUserRepository } from './../../votes/votes.providers';
 import { boardUserRepository, createBoardUserService } from './../../boards/boards.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
@@ -76,8 +76,8 @@ describe('ColumnsController', () => {
 				updateUserService,
 				boardUserRepository,
 				createBoardUserService,
-				votesBoardRepository,
-				votesBoardUserRepository,
+				voteBoardRepository,
+				voteBoardUserRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}
