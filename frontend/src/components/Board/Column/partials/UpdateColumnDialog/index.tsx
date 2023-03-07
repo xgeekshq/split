@@ -24,7 +24,7 @@ type UpdateColumnNameProps = {
   columnColor: string;
   cards: CardType[];
   isOpen: boolean;
-  setIsOpen: (openName: boolean, openDeleteColumn: boolean) => void;
+  setIsOpen: (openName: boolean) => void;
   cardText?: string;
   isDefaultText?: boolean;
   type: string;
@@ -73,7 +73,7 @@ const UpdateColumnDialog: React.FC<UpdateColumnNameProps> = ({
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClose = () => {
-    setIsOpen(false, false);
+    setIsOpen(false);
   };
 
   const handleConfirm = (title: string, text: string) => {

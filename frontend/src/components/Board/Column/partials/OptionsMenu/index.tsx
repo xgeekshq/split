@@ -12,8 +12,13 @@ import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { useState } from 'react';
 import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
-import ColorSquare from '../ColorSquare';
+import useBoard from '@/hooks/useBoard';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { useRecoilValue } from 'recoil';
+import { boardInfoState } from '@/store/board/atoms/board.atom';
+import { UpdateBoardType } from '@/types/board/board';
 import { SwitchDefaultText } from '../SwitchDefaultText';
+import ColorSquare from '../ColorSquare';
 
 type OptionsMenuProps = {
   disabled?: boolean;
@@ -24,9 +29,9 @@ type OptionsMenuProps = {
   boardId: string;
   cardText?: string;
   setOpenDialogName: (open: boolean, type: string) => void;
-  handleDialogChange: (openName: boolean, openDeleteColumn: boolean) => void;
   isDefaultText?: boolean;
   socketId: string;
+  postAnonymously: boolean;
 };
 
 export const colors = [
@@ -48,16 +53,50 @@ const OptionsMenu = ({
   boardId,
   isDefaultText,
   socketId,
+  postAnonymously,
   setOpenDialogName,
-  handleDialogChange,
 }: OptionsMenuProps) => {
   const [openPopover, setOpenPopover] = useState(false);
 
-  // Update Board Hook
   const {
     updateColumn: { mutate: mutateColumn },
-    deleteCardsFromColumn: { mutate: mutateBoard },
+    deleteCardsFromColumn: { mutate: mutateBoardCards },
   } = useColumn();
+
+  const {
+    updateBoard: { mutate: mutateBoard },
+  } = useBoard({ autoFetchBoard: false });
+
+  const {
+    board: {
+      maxVotes: boardMaxVotes,
+      title: boardTitle,
+      _id,
+      hideCards,
+      hideVotes,
+      users,
+      isPublic,
+      columns,
+      addCards,
+    },
+    mainBoard,
+  } = useRecoilValue(boardInfoState);
+
+  // State used to change values
+  const initialData: UpdateBoardType = {
+    _id,
+    hideCards,
+    hideVotes,
+    title: boardTitle,
+    maxVotes: boardMaxVotes,
+    users,
+    isPublic,
+    columns,
+    addCards,
+    postAnonymously,
+  };
+
+  const boardData = initialData;
 
   const handleDefaultTextCheck = () => {
     const column = {
@@ -98,10 +137,29 @@ const OptionsMenu = ({
 
   const handleEmptyColumn = () => {
     setOpenPopover(false);
-    mutateBoard({
+    mutateBoardCards({
       id: columnId,
       boardId,
       socketId,
+    });
+  };
+
+  const handleDeleteColumn = () => {
+    setOpenPopover(false);
+
+    const columnsToUpdate = boardData.columns?.filter((column) => {
+      if ('_id' in column) return columnId !== column._id;
+      return false;
+    });
+    const deletedColumns = [columnId];
+
+    mutateBoard({
+      ...boardData,
+      columns: columnsToUpdate,
+      responsible: users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
+      deletedColumns,
+      socketId,
+      mainBoardId: mainBoard?._id,
     });
   };
 
@@ -141,10 +199,18 @@ const OptionsMenu = ({
                 disabled={cardText === 'Write your comment here...'}
               />
             </PopoverItem>
-            <PopoverItem onClick={() => handleDialogChange(false, true)}>
-              <Icon name="trash-alt" />
-              <Text size="sm">Delete column</Text>
-            </PopoverItem>
+            <ConfirmationDialog
+              title="Delete column"
+              description="Do you really want to delete this column?"
+              confirmationLabel="Delete Column"
+              variant="danger"
+              confirmationHandler={handleDeleteColumn}
+            >
+              <PopoverItem>
+                <Icon name="trash-alt" />
+                <Text size="sm">Delete column</Text>
+              </PopoverItem>
+            </ConfirmationDialog>
             <Separator css={{ mt: '$5' }} />
             <Flex gap={8} css={{ pb: '$8', pt: '$20', pl: '$18' }}>
               <Text size="xs" color="primary800" fontWeight="medium">
