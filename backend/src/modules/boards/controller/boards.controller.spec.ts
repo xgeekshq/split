@@ -18,7 +18,11 @@ import {
 	updateBoardService
 } from 'src/modules/boards/boards.providers';
 import BoardsController from 'src/modules/boards/controller/boards.controller';
-import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
+import {
+	cardRepository,
+	deleteCardService,
+	getCardService
+} from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
@@ -76,6 +80,7 @@ describe('BoardsController', () => {
 				getTokenAuthService,
 				updateUserService,
 				getBoardService,
+				cardRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

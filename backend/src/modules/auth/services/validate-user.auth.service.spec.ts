@@ -21,8 +21,8 @@ import {
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
+import GetUserService from 'src/modules/users/services/get.user.service';
 import {
 	getUserService,
 	updateUserService,

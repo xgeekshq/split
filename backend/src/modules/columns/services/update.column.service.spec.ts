@@ -15,7 +15,11 @@ import {
 	getBoardService
 } from 'src/modules/boards/boards.providers';
 import Board from 'src/modules/boards/entities/board.schema';
-import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
+import {
+	cardRepository,
+	deleteCardService,
+	getCardService
+} from 'src/modules/cards/cards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 import { columnRepository, updateColumnService } from '../columns.providers';
@@ -62,6 +66,7 @@ describe('UpdateColumnService', () => {
 				createBoardUserService,
 				getTokenAuthService,
 				updateUserService,
+				cardRepository,
 				{
 					provide: getModelToken(Board.name),
 					useValue: {}
