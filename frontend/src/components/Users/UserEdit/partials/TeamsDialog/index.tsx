@@ -10,8 +10,8 @@ import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog';
-import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
+import Dialog from '@/components/Primitives/Dialogs/Dialog';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput';
 import { ScrollableContent } from './styles';
 
 type Props = {
@@ -93,9 +93,6 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
           currentValue={searchTeam}
           handleChange={handleSearchChange}
           handleClear={handleClearSearch}
-          icon="search"
-          iconPosition="both"
-          id="search"
           placeholder="Search team"
         />
       </Flex>

@@ -3,7 +3,7 @@ import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import ListMembersDialog from '@/components/Teams/Team/ListMembers/ListMembersDialog';
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
@@ -89,13 +89,13 @@ const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
         </Flex>
         {children}
       </Flex>
-      <ListMembersDialog
+      <UserListDialog
         usersList={usersList}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        saveUsers={saveParticipants}
+        confirmationHandler={saveParticipants}
         title="Board Participants"
-        btnTitle="Add/remove participants"
+        confirmationLabel="Add/remove participants"
       />
     </ContentSection>
   );

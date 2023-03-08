@@ -1,7 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 import Text from '@/components/Primitives/Text';
 import { LoginGuestUser } from '@/types/user/user';
 import { START_PAGE_ROUTE } from '@/utils/routes';

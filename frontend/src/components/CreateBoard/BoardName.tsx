@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 import Text from '@/components/Primitives/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 

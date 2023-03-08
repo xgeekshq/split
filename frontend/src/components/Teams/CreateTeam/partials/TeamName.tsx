@@ -1,4 +1,4 @@
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 import Text from '@/components/Primitives/Text';
 
 const TeamName = () => (

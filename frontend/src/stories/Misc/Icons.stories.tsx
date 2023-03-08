@@ -6,7 +6,7 @@ import dedent from 'ts-dedent';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 import { FormProvider, useForm } from 'react-hook-form';
 import Card from '../components/Card';
 

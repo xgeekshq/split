@@ -4,7 +4,7 @@ import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog';
+import Dialog from '@/components/Primitives/Dialogs/Dialog';
 import { FilterBoardMembers } from './FilterBoardMembers';
 import { ScrollableContent } from './styles';
 

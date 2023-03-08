@@ -12,7 +12,7 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   backgroundColor: 'white',
   cursor: 'pointer',
   boxSizing: 'border-box',
-  borderRadius: '$2',
+  borderRadius: '3px',
   border: '1px solid',
   display: 'flex',
   alignItems: 'center',
@@ -82,7 +82,7 @@ const StyledIndicator = styled(CheckboxPrimitive.Indicator, {
 
 export type CheckboxProps = {
   id: string;
-  label: string;
+  label?: string;
   variant?: 'default' | 'error';
   size: 'sm' | 'md';
   checked?: boolean;
@@ -113,18 +113,20 @@ const Checkbox = ({
         <Icon name="check" />
       </StyledIndicator>
     </StyledCheckbox>
-    <Text
-      as="label"
-      color={disabled ? 'primary200' : 'primary800'}
-      css={{
-        cursor: 'pointer',
-        wordBreak: 'break-word',
-      }}
-      htmlFor={id}
-      size="sm"
-    >
-      {label}
-    </Text>
+    {label && (
+      <Text
+        as="label"
+        color={disabled ? 'primary200' : 'primary800'}
+        css={{
+          cursor: 'pointer',
+          wordBreak: 'break-word',
+        }}
+        htmlFor={id}
+        size="sm"
+      >
+        {label}
+      </Text>
+    )}
   </Flex>
 );
 export default Checkbox;

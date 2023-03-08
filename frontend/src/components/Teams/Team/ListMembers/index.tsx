@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { UserList } from '@/types/team/userList';
-import ListMembersDialog from './ListMembersDialog';
+import UserListDialog from '../../../Primitives/Dialogs/UserListDialog';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -108,13 +108,13 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   };
 
   return (
-    <ListMembersDialog
+    <UserListDialog
       usersList={usersList}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      saveUsers={saveMembers}
+      confirmationHandler={saveMembers}
       title="Team Members"
-      btnTitle="Add/remove members"
+      confirmationLabel="Add/remove members"
     />
   );
 };

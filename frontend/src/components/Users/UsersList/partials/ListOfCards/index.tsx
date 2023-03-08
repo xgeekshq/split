@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Flex from '@/components/Primitives/Flex';
 import { UserWithTeams } from '@/types/user/user';
 import Text from '@/components/Primitives/Text';
-import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput';
 import { useSetRecoilState } from 'recoil';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAllUsersWithTeams } from '@/api/userService';
@@ -90,9 +90,6 @@ const ListOfCards = React.memo(() => {
         </Text>
         <Flex css={{ width: '460px' }}>
           <SearchInput
-            icon="search"
-            iconPosition="both"
-            id="search"
             placeholder="Search user"
             currentValue={search}
             handleChange={handleSearchUser}

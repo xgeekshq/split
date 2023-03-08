@@ -8,7 +8,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 import Text from '@/components/Primitives/Text';
 import useUser from '@/hooks/useUser';
 import SchemaEmail from '@/schema/schemaEmail';

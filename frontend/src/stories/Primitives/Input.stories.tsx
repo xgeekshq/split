@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import Input from '@/components/Primitives/Input';
+import Input from '@/components/Primitives/Inputs/Input';
 
 export default {
   title: 'Primitives/Input',

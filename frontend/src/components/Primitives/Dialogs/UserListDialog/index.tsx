@@ -1,28 +1,43 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Dialog from '@/components/Primitives/Dialog';
+import Dialog from '@/components/Primitives/Dialogs/Dialog';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import { UserList } from '@/types/team/userList';
-import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
+import Separator from '@/components/Primitives/Separator';
+import SearchInput from '../../Inputs/SearchInput';
 
-type ListMembersDialogProps = {
+type UserListDialogProps = {
   usersList: UserList[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
-  isTeamPage?: boolean;
-  saveUsers: (checkedUserList: UserList[]) => void;
   title: string;
-  btnTitle: string;
+  confirmationLabel: string;
+  confirmationHandler: (usersList: UserList[]) => void;
 };
 
-const ListMembersDialog = React.memo<ListMembersDialogProps>(
-  ({ usersList, isOpen, setIsOpen, saveUsers, title, btnTitle }) => {
+const UserListDialog = React.memo<UserListDialogProps>(
+  ({ usersList, setIsOpen, isOpen, title, confirmationLabel, confirmationHandler }) => {
     const { data: session } = useSession({ required: false });
+
     const [searchMember, setSearchMember] = useState<string>('');
-    const [usersChecked, setUsersChecked] = useState(usersList);
+
+    const [localUsersList, setLocalUsersList] = useState(usersList);
     const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
+
+    const filteredList = useMemo(() => {
+      const searchString = searchMember.toLowerCase().trim();
+
+      return localUsersList.filter((user) => {
+        const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
+        const email = user.email.toLowerCase();
+
+        return (
+          email.includes(searchString) || fullName.includes(searchString) || searchMember === ''
+        );
+      });
+    }, [searchMember, localUsersList]);
 
     const sortUserList = () => {
       const listToBeSorted = [...usersList];
@@ -45,90 +60,87 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
       return listToBeSorted;
     };
 
-    // Method to close dialog
     const handleClose = () => {
       setSearchMember('');
-      setUsersChecked(sortUserList());
+      setLocalUsersList(sortUserList);
       setIsOpen(false);
     };
 
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchMember(event.target.value);
-    };
-
-    const handleClearSearch = () => {
-      setSearchMember('');
-    };
-
     const handleChecked = (id: string) => {
-      const updateCheckedUsers = usersChecked.map((user) =>
+      const updateCheckedUsers = localUsersList.map((user) =>
         user._id === id ? { ...user, isChecked: !user.isChecked } : user,
       );
 
-      setUsersChecked(updateCheckedUsers);
+      setLocalUsersList(updateCheckedUsers);
     };
 
     const handleSelectAll = () => {
-      const updateCheckedUsers = usersChecked.map((user) =>
+      const updateCheckedUsers = localUsersList.map((user) =>
         user._id !== session?.user.id ? { ...user, isChecked: !isCheckAll } : user,
       );
 
       setIsCheckAll(!isCheckAll);
-      setUsersChecked(updateCheckedUsers);
+      setLocalUsersList(updateCheckedUsers);
     };
 
     const handleUpdateUsers = () => {
       setSearchMember('');
-      saveUsers(usersChecked);
+      confirmationHandler(localUsersList);
     };
 
-    const filteredList = useMemo(() => {
-      const searchString = searchMember.toLowerCase().trim();
-
-      return usersChecked.filter((user) => {
-        const fullName = `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
-        const email = user.email.toLowerCase();
-        return (
-          email.includes(searchString) || fullName.includes(searchString) || searchMember === ''
-        );
-      });
-    }, [searchMember, usersChecked]);
-
-    // Sets User List from State
     useEffect(() => {
-      if (usersList.length <= 0) return;
-
-      setUsersChecked(sortUserList());
+      if (usersList.length > 0) {
+        setLocalUsersList(sortUserList());
+      }
     }, [usersList]);
 
-    // Update selectAll button when list is all checked
     useEffect(() => {
-      setIsCheckAll(!usersChecked.map((user) => user.isChecked).includes(false));
-    }, [setIsCheckAll, usersChecked]);
+      setIsCheckAll(!localUsersList.map((user) => user.isChecked).includes(false));
+    }, [localUsersList]);
 
     return (
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Dialog.Header title={btnTitle} />
+        <Dialog.Header title={confirmationLabel} />
         <Flex css={{ p: '$32' }} direction="column">
           <SearchInput
             currentValue={searchMember}
-            handleChange={handleSearchChange}
-            handleClear={handleClearSearch}
-            icon="search"
-            iconPosition="both"
-            id="search"
+            handleChange={(e) => {
+              setSearchMember(e.target.value);
+            }}
+            handleClear={() => {
+              setSearchMember('');
+            }}
             placeholder="Search member"
           />
         </Flex>
-        <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
+        <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
           {title}
         </Text>
+        <Flex direction="column" gap={8}>
+          <Flex align="center" css={{ px: '$32' }}>
+            <Flex css={{ flex: 1 }}>
+              <Flex align="center" gap={8}>
+                <Checkbox
+                  id="selectAll"
+                  checked={isCheckAll}
+                  handleChange={handleSelectAll}
+                  size="md"
+                />
+                <Text heading={5}>Name</Text>
+              </Flex>
+            </Flex>
+            <Flex css={{ flex: 1 }}>
+              <Text heading={5}>Email</Text>
+            </Flex>
+          </Flex>
+          <Separator orientation="horizontal" />
+        </Flex>
         <Flex
           direction="column"
           justify="start"
           css={{ height: '100%', overflowY: 'auto', py: '$16' }}
         >
-          <Flex css={{ px: '$32' }} direction="column" gap={16}>
+          <Flex css={{ px: '$32' }} direction="column" gap={20}>
             {filteredList?.map((user) => (
               <Flex key={user._id} align="center">
                 <Flex css={{ flex: 1 }}>
@@ -153,19 +165,10 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
           </Flex>
         </Flex>
         <Flex
-          justify="between"
+          justify="end"
           align="center"
           css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
         >
-          {searchMember.length <= 0 && (
-            <Checkbox
-              id="selectAll"
-              checked={isCheckAll}
-              handleChange={handleSelectAll}
-              label="Select all"
-              size="md"
-            />
-          )}
           <Dialog.Footer
             handleAffirmative={handleUpdateUsers}
             handleClose={handleClose}
@@ -178,4 +181,4 @@ const ListMembersDialog = React.memo<ListMembersDialogProps>(
   },
 );
 
-export default ListMembersDialog;
+export default UserListDialog;
