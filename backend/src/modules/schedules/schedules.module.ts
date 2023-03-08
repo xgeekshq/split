@@ -6,7 +6,11 @@ import {
 import BoardsModule from 'src/modules/boards/boards.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
 import { boardRepository } from '../boards/boards.providers';
-import { createSchedulesService, deleteSchedulesService } from './schedules.providers';
+import {
+	createSchedulesService,
+	deleteSchedulesService,
+	scheduleRepository
+} from './schedules.providers';
 
 @Module({
 	imports: [
@@ -15,7 +19,7 @@ import { createSchedulesService, deleteSchedulesService } from './schedules.prov
 		forwardRef(() => BoardsModule),
 		CommunicationModule
 	],
-	providers: [createSchedulesService, deleteSchedulesService, boardRepository],
+	providers: [createSchedulesService, deleteSchedulesService, boardRepository, scheduleRepository],
 	exports: [createSchedulesService, deleteSchedulesService]
 })
 export class SchedulesModule {}

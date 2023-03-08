@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb';
 import {
 	ClientSession,
 	FilterQuery,
@@ -138,6 +139,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 	}
 
+	findOneByeFieldAndDelete(value: FilterQuery<T>, options?: QueryOptions): Promise<T> {
+		return this._repository.findOneAndDelete(value, options).exec();
+	}
+
 	updateOneByField<Q>(
 		filter: FilterQuery<T>,
 		update: UpdateQuery<T>,
@@ -159,6 +164,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 
 		return deletedCount;
+	}
+
+	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {
+		return this._repository.deleteOne(value, options).exec();
 	}
 
 	async startTransaction() {
