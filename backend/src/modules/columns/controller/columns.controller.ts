@@ -27,7 +27,7 @@ import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import ColumnDto from '../dto/column.dto';
 import { UpdateColumnDto } from '../dto/update-column.dto';
 import { ColumnDeleteCardsDto } from '../dto/colum.deleteCards.dto';
-import { UpdateColumnApplication } from '../applications/update.columns.application';
+import { UpdateColumnApplicationInterface } from '../interfaces/applications/update.comment.application.interface';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -38,7 +38,7 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 export default class ColumnsController {
 	constructor(
 		@Inject(TYPES.applications.UpdateColumnApplication)
-		private updateColumnApp: UpdateColumnApplication
+		private updateColumnApp: UpdateColumnApplicationInterface
 	) {}
 
 	@ApiOperation({ summary: 'Update a specific column from a board' })

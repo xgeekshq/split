@@ -8,8 +8,8 @@ import SendBoardTimerTimeLeftServiceInterface from 'src/modules/boards/interface
 import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
 import { ONE_HOUR } from '../../../libs/constants/timer';
+import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class StartBoardTimerService implements StartBoardTimerServiceInterface {
@@ -17,7 +17,7 @@ export default class StartBoardTimerService implements StartBoardTimerServiceInt
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepository,
+		private boardTimerRepository: BoardTimerRepositoryInterface,
 
 		@Inject(TYPES.services.StopBoardTimerService)
 		private stopBoardTimerService: StopBoardTimerServiceInterface,

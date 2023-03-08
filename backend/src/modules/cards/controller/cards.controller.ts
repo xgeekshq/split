@@ -47,11 +47,11 @@ import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
 import Card from '../entities/card.schema';
 import { hideText } from 'src/libs/utils/hideText';
-import { CreateCardApplication } from '../applications/create.card.application';
-import { UpdateCardApplication } from '../applications/update.card.application';
-import { DeleteCardApplication } from '../applications/delete.card.application';
-import { MergeCardApplication } from '../applications/merge.card.application';
-import { UnmergeCardApplication } from '../applications/unmerge.card.application';
+import { CreateCardApplicationInterface } from '../interfaces/applications/create.card.application.interface';
+import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
+import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
+import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
+import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -60,15 +60,15 @@ import { UnmergeCardApplication } from '../applications/unmerge.card.application
 export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardApplication)
-		private createCardApp: CreateCardApplication,
+		private createCardApp: CreateCardApplicationInterface,
 		@Inject(TYPES.applications.UpdateCardApplication)
-		private updateCardApp: UpdateCardApplication,
+		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)
-		private deleteCardApp: DeleteCardApplication,
+		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.MergeCardApplication)
-		private mergeCardApp: MergeCardApplication,
+		private mergeCardApp: MergeCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardApplication)
-		private unmergeCardApp: UnmergeCardApplication,
+		private unmergeCardApp: UnmergeCardApplicationInterface,
 		private socketService: SocketGateway
 	) {}
 

@@ -19,8 +19,6 @@ import {
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import { TYPES } from '../interfaces/types';
 import Schedules, { SchedulesDocument } from '../entities/schedules.schema';
-import { BoardRepositoryInterface } from 'src/modules/boards/repositories/board.repository.interface';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
 
 @Injectable()
@@ -38,9 +36,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		private getBoardService: GetBoardServiceInterface,
 		private schedulerRegistry: SchedulerRegistry,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
-		private archiveChannelService: ArchiveChannelServiceInterface,
-		@Inject(BoardTypes.TYPES.repositories.BoardRepository)
-		private readonly boardRepository: BoardRepositoryInterface
+		private archiveChannelService: ArchiveChannelServiceInterface
 	) {
 		this.createInitialJobs();
 	}
@@ -113,7 +109,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				oldBoardId
 			);
 
-			const oldBoard = await this.boardRepository.getBoardPopulated(oldBoardId, BoardDataPopulate);
+			const oldBoard = await this.getBoardService.getBoardPopulated(oldBoardId);
 
 			if (!oldBoard) {
 				await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);

@@ -43,38 +43,38 @@ import * as Teams from 'src/modules/teams/interfaces/types';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { UpdateUserApplication } from 'src/modules/users/interfaces/applications/update.user.service.interface';
+import { UpdateUserApplicationInterface } from 'src/modules/users/interfaces/applications/update.user.service.interface';
 import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
 import { TYPES } from '../interfaces/types';
 import { signIn } from '../shared/login.auth';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { GetBoardApplication } from 'src/modules/boards/applications/get.board.application';
-import { RegisterAuthApplication } from '../applications/register.auth.application';
-import { GetTokenAuthApplication } from '../applications/get-token.auth.application';
-import { GetTeamApplication } from 'src/modules/teams/applications/get.team.application';
-import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.auth.application';
-import { GetUserApplication } from 'src/modules/users/applications/get.user.application';
+import { GetUserApplicationInterface } from 'src/modules/users/interfaces/applications/get.user.application.interface';
+import { GetTeamApplicationInterface } from 'src/modules/teams/interfaces/applications/get.team.application.interface';
+import { GetBoardApplicationInterface } from 'src/modules/boards/interfaces/applications/get.board.application.interface';
+import { CreateResetTokenAuthApplicationInterface } from '../interfaces/applications/create-reset-token.auth.application.interface';
+import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
+import { RegisterAuthApplicationInterface } from '../interfaces/applications/register.auth.application.interface';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export default class AuthController {
 	constructor(
 		@Inject(TYPES.applications.RegisterAuthApplication)
-		private registerAuthApp: RegisterAuthApplication,
+		private registerAuthApp: RegisterAuthApplicationInterface,
 		@Inject(TYPES.applications.GetTokenAuthApplication)
-		private getTokenAuthApp: GetTokenAuthApplication,
+		private getTokenAuthApp: GetTokenAuthApplicationInterface,
 		@Inject(User.TYPES.applications.GetUserApplication)
-		private getUserApp: GetUserApplication,
+		private getUserApp: GetUserApplicationInterface,
 		@Inject(Teams.TYPES.applications.GetTeamApplication)
-		private getTeamsApp: GetTeamApplication,
+		private getTeamsApp: GetTeamApplicationInterface,
 		@Inject(Boards.TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplication,
+		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
-		private createResetTokenAuthApp: CreateResetTokenAuthApplication,
+		private createResetTokenAuthApp: CreateResetTokenAuthApplicationInterface,
 		@Inject(TYPES.applications.UpdateUserApplication)
-		private updateUserApp: UpdateUserApplication
+		private updateUserApp: UpdateUserApplicationInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })

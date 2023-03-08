@@ -21,7 +21,6 @@ import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import BoardGuestUserDto from '../dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
@@ -143,12 +142,8 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		};
 	}
 
-	getAllBoardsByTeamId(teamId: string) {
-		return this.boardRepository.getAllBoardsByTeamId(teamId);
-	}
-
-	getBoardPopulated(boardId: string, populate?: PopulateType) {
-		return this.boardRepository.getBoardPopulated(boardId, populate);
+	getBoardPopulated(boardId: string) {
+		return this.boardRepository.getBoardPopulated(boardId);
 	}
 
 	getBoardById(boardId: string) {
@@ -197,15 +192,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.boardUserRepository.getBoardUser(
-			board,
-			user,
-			{},
-			{
-				path: 'user',
-				select: '_id firstName lastName '
-			}
-		);
+		const userFound = await this.boardUserRepository.getBoardUser(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);

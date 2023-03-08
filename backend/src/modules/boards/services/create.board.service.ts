@@ -9,7 +9,6 @@ import {
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
@@ -28,7 +27,6 @@ import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardDataPopulate } from '../utils/populate-board';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
@@ -42,8 +40,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
 		private updateTeamService: UpdateTeamServiceInterface,
-		@Inject(TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
@@ -97,10 +93,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 		if (slackEnable && team && teamData.name === 'xgeeks') {
-			const populatedBoard = await this.getBoardService.getBoardPopulated(
-				newBoard._id,
-				BoardDataPopulate
-			);
+			const populatedBoard = await this.boardRepository.getBoardPopulated(newBoard._id);
 
 			if (populatedBoard) {
 				this.logger.verbose(`Call Slack Communication Service for board id "${newBoard._id}".`);

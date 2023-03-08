@@ -31,33 +31,7 @@ export default class CreateCardService implements CreateCardServiceInterface {
 			card.items[0].createdBy = userId;
 		}
 
-		const populateBoard = [
-			{
-				path: 'columns.cards.createdBy',
-				select: '_id firstName lastName'
-			},
-			{
-				path: 'columns.cards.comments.createdBy',
-				select: '_id  firstName lastName'
-			},
-			{
-				path: 'columns.cards.items.createdBy',
-				select: '_id firstName lastName'
-			},
-			{
-				path: 'columns.cards.items.comments.createdBy',
-				select: '_id firstName lastName'
-			}
-		];
-
-		const board = await this.cardRepository.pushCard(
-			boardId,
-			colIdToAdd,
-			0,
-			card,
-			null,
-			populateBoard
-		);
+		const board = await this.cardRepository.pushCardWithPopulate(boardId, colIdToAdd, 0, card);
 
 		if (!board.columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
 

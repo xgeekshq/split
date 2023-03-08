@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
+import { UpdateUserApplicationInterface } from '../interfaces/applications/update.user.service.interface';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class UpdateUserApplicationImpl implements UpdateUserApplication {
+export class UpdateUserApplication implements UpdateUserApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateUserService)
 		private updateUserService: UpdateUserServiceInterface

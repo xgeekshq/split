@@ -43,17 +43,17 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
-import { DeleteTeamApplication } from '../applications/delete.team.application';
-import { UpdateTeamApplication } from '../applications/update.team.application';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
 import TeamUserDto from '../dto/team.user.dto';
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { TYPES } from '../interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
-import { DeleteTeamUserApplication } from '../applications/delete.team.user.application';
-import { CreateTeamApplication } from '../applications/create.team.application';
-import { GetTeamApplication } from '../applications/get.team.application';
+import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
+import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
+import { UpdateTeamApplicationInterface } from '../interfaces/applications/update.team.application.interface';
+import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
+import { DeleteTeamUserApplicationInterface } from '../interfaces/applications/delete.team.user.application.interface';
 
 const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -64,15 +64,15 @@ const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissio
 export default class TeamsController {
 	constructor(
 		@Inject(TYPES.applications.CreateTeamApplication)
-		private createTeamApp: CreateTeamApplication,
+		private createTeamApp: CreateTeamApplicationInterface,
 		@Inject(TYPES.applications.GetTeamApplication)
-		private getTeamApp: GetTeamApplication,
+		private getTeamApp: GetTeamApplicationInterface,
 		@Inject(TYPES.applications.UpdateTeamApplication)
-		private updateTeamApp: UpdateTeamApplication,
+		private updateTeamApp: UpdateTeamApplicationInterface,
 		@Inject(TYPES.applications.DeleteTeamApplication)
-		private deleteTeamApp: DeleteTeamApplication,
+		private deleteTeamApp: DeleteTeamApplicationInterface,
 		@Inject(TYPES.applications.DeleteTeamUserApplication)
-		private deleteTeamUserApp: DeleteTeamUserApplication
+		private deleteTeamUserApp: DeleteTeamUserApplicationInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })

@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
@@ -13,18 +10,128 @@ import { GetCardServiceInterface } from '../interfaces/services/get.card.service
 import { TYPES } from '../interfaces/types';
 import CardItem from '../entities/card.item.schema';
 import Card from '../entities/card.schema';
+import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
 @Injectable()
 export default class DeleteCardService implements DeleteCardServiceInterface {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
 		private getCardService: GetCardServiceInterface,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteServiceInterface
+		private deleteVoteService: DeleteVoteServiceInterface,
+		@Inject(TYPES.repository.CardRepository)
+		private readonly cardRepository: CardRepositoryInterface
 	) {}
 
-	async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
+	async delete(boardId: string, cardId: string) {
+		await this.cardRepository.startTransaction();
+		try {
+			await this.deletedVotesFromCard(boardId, cardId);
+			const boardWithCardsDeleted = await this.cardRepository.updateCardsFromBoard(boardId, cardId);
+
+			if (!boardWithCardsDeleted) throw Error(UPDATE_FAILED);
+			await this.cardRepository.commitTransaction();
+
+			return boardWithCardsDeleted;
+		} catch (e) {
+			await this.cardRepository.abortTransaction();
+		} finally {
+			await this.cardRepository.endSession();
+		}
+
+		return null;
+	}
+
+	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string) {
+		this.cardRepository.startTransaction();
+		try {
+			await this.deletedVotesFromCardItem(boardId, cardItemId);
+			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
+
+			if (
+				card &&
+				cardItems?.length === 1 &&
+				(card.votes.length >= 0 || card.comments.length >= 0)
+			) {
+				const newVotes = [...card.votes, ...cardItems[0].votes];
+				const newComments = [...card.comments, ...cardItems[0].comments];
+				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems);
+			}
+			const boardUpdated = await this.cardRepository.deleteCardFromCardItems(
+				boardId,
+				cardId,
+				cardItemId
+			);
+
+			if (!boardUpdated) throw Error(UPDATE_FAILED);
+			await this.cardRepository.commitTransaction();
+
+			return boardUpdated;
+		} catch (e) {
+			await this.cardRepository.abortTransaction();
+		} finally {
+			await this.cardRepository.endSession();
+		}
+
+		return null;
+	}
+
+	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
+		cardsArray.forEach((cards) => {
+			cards.items.forEach(async (card) => {
+				const votesByUserOnCardItems = this.getVotesByUser(card.votes);
+
+				votesByUserOnCardItems.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			});
+
+			if (cards.votes.length > 0) {
+				const votesByUserOnCard = this.getVotesByUser(cards.votes);
+				votesByUserOnCard.forEach(async (votesCount, userId) => {
+					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
+				});
+			}
+		});
+	}
+
+	/* HELPERS */
+
+	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
+		const votesByUser = new Map<string, number>();
+
+		votes.forEach((userId) => {
+			if (!votesByUser.has(userId.toString())) {
+				votesByUser.set(userId.toString(), 1);
+			} else {
+				const count = votesByUser.get(userId.toString());
+				votesByUser.set(userId.toString(), count + 1);
+			}
+		});
+
+		return votesByUser;
+	}
+
+	private async refactorLastItem(
+		boardId: string,
+		cardId: string,
+		newVotes: (User | ObjectId | string)[],
+		newComments: Comment[],
+		cardItems: CardItem[]
+	) {
+		const boardWithLastCardRefactored = await this.cardRepository.refactorLastCardItem(
+			boardId,
+			cardId,
+			newVotes,
+			newComments,
+			cardItems
+		);
+
+		if (!boardWithLastCardRefactored) throw Error(UPDATE_FAILED);
+	}
+
+	private async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
 
 		if (!getCardItem) {
@@ -43,7 +150,7 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 		}
 	}
 
-	async deletedVotesFromCard(boardId: string, cardId: string) {
+	private async deletedVotesFromCard(boardId: string, cardId: string) {
 		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
 
 		if (!getCard) {
@@ -74,159 +181,5 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 				throw Error(UPDATE_FAILED);
 			}
 		}
-	}
-
-	async delete(boardId: string, cardId: string) {
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
-		try {
-			await this.deletedVotesFromCard(boardId, cardId);
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$pull: {
-							'columns.$[].cards': { _id: cardId }
-						}
-					},
-					{ new: true }
-				)
-				.populate(BoardDataPopulate)
-				.lean()
-				.exec();
-
-			if (!board) throw Error(UPDATE_FAILED);
-			await session.commitTransaction();
-
-			return board;
-		} catch (e) {
-			await session.abortTransaction();
-		} finally {
-			await session.endSession();
-		}
-
-		return null;
-	}
-
-	async refactorLastItem(
-		boardId: string,
-		cardId: string,
-		newVotes: (User | ObjectId | string)[],
-		newComments: Comment[],
-		cardItems: CardItem[]
-	) {
-		const [{ text, createdBy }] = cardItems;
-
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$set: {
-						'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
-						'columns.$.cards.$[card].votes': [],
-						'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
-						'columns.$.cards.$[card].comments': [],
-						'columns.$.cards.$[card].text': text,
-						'columns.$.cards.$[card].createdBy': createdBy
-					}
-				},
-				{
-					arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
-					new: true
-				}
-			)
-			.lean()
-			.exec();
-
-		if (!board) throw Error(UPDATE_FAILED);
-	}
-
-	async deleteFromCardGroup(boardId: string, cardId: string, cardItemId: string) {
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
-		try {
-			await this.deletedVotesFromCardItem(boardId, cardItemId);
-			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
-
-			if (
-				card &&
-				cardItems?.length === 1 &&
-				(card.votes.length >= 0 || card.comments.length >= 0)
-			) {
-				const newVotes = [...card.votes, ...cardItems[0].votes];
-				const newComments = [...card.comments, ...cardItems[0].comments];
-				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems);
-			}
-			const board = await this.boardModel
-				.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardId
-					},
-					{
-						$pull: {
-							'columns.$.cards.$[card].items': {
-								_id: cardItemId
-							}
-						}
-					},
-					{ arrayFilters: [{ 'card._id': cardId }], new: true }
-				)
-				.populate(BoardDataPopulate)
-				.lean()
-				.exec();
-
-			if (!board) throw Error(UPDATE_FAILED);
-			await session.commitTransaction();
-
-			return board;
-		} catch (e) {
-			await session.abortTransaction();
-		} finally {
-			await session.endSession();
-		}
-
-		return null;
-	}
-
-	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
-		const votesByUser = new Map<string, number>();
-
-		votes.forEach((userId) => {
-			if (!votesByUser.has(userId.toString())) {
-				votesByUser.set(userId.toString(), 1);
-			} else {
-				const count = votesByUser.get(userId.toString());
-				votesByUser.set(userId.toString(), count + 1);
-			}
-		});
-
-		return votesByUser;
-	}
-
-	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
-		cardsArray.forEach((cards) => {
-			cards.items.forEach(async (card) => {
-				const votesByUserOnCardItems = this.getVotesByUser(card.votes);
-
-				votesByUserOnCardItems.forEach(async (votesCount, userId) => {
-					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
-				});
-			});
-
-			if (cards.votes.length > 0) {
-				const votesByUserOnCard = this.getVotesByUser(cards.votes);
-				votesByUserOnCard.forEach(async (votesCount, userId) => {
-					await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount);
-				});
-			}
-		});
 	}
 }

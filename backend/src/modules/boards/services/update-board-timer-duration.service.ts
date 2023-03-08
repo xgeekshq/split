@@ -5,7 +5,7 @@ import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import ServerUpdatedTimerDurationEvent from 'src/modules/boards/events/server-updated-timer-duration.event';
 import UpdateBoardTimerDurationServiceInterface from 'src/modules/boards/interfaces/services/update-board-timer-duration.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
+import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class UpdateBoardTimerDurationService
@@ -15,7 +15,7 @@ export default class UpdateBoardTimerDurationService
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepository,
+		private boardTimerRepository: BoardTimerRepositoryInterface,
 
 		private eventEmitter: EventEmitter2
 	) {}

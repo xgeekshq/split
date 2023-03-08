@@ -5,7 +5,7 @@ import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import ServerPausedTimerEvent from 'src/modules/boards/events/server-paused-timer.event';
 import PauseBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
+import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class PauseBoardTimerService implements PauseBoardTimerServiceInterface {
@@ -13,7 +13,7 @@ export default class PauseBoardTimerService implements PauseBoardTimerServiceInt
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepository,
+		private boardTimerRepository: BoardTimerRepositoryInterface,
 
 		private eventEmitter: EventEmitter2
 	) {}

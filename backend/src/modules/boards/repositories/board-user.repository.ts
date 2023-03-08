@@ -1,4 +1,3 @@
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
@@ -8,7 +7,6 @@ import BoardUserDto from '../dto/board.user.dto';
 import Board from '../entities/board.schema';
 import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
 import { BoardUserRepositoryInterface } from './board-user.repository.interface';
-import { SelectedValues } from 'src/libs/repositories/types';
 
 @Injectable()
 export class BoardUserRepository
@@ -38,13 +36,11 @@ export class BoardUserRepository
 		return this.findAllWithQuery({ board, user });
 	}
 
-	getBoardUser(
-		board: string,
-		user: string,
-		select?: SelectedValues<BoardUser>,
-		populate?: PopulateType
-	) {
-		return this.findOneByFieldWithQuery({ board, user }, select, populate);
+	getBoardUser(board: string, user: string) {
+		return this.findOneByFieldWithQuery({ board, user }, null, {
+			path: 'user',
+			select: '_id firstName lastName '
+		});
 	}
 
 	/* CREATE BOARD USERS */

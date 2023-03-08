@@ -1,10 +1,9 @@
 import { UpdateResult } from 'mongodb';
-import {
-	BaseInterfaceRepository,
-	PopulateType
-} from 'src/libs/repositories/interfaces/base.repository.interface';
+import { ObjectId } from 'mongoose';
+import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
 import Board from 'src/modules/boards/entities/board.schema';
 import Comment from 'src/modules/comments/schemas/comment.schema';
+import User from 'src/modules/users/entities/user.schema';
 import CardDto from '../dto/card.dto';
 import CardItem from '../entities/card.item.schema';
 import Card from '../entities/card.schema';
@@ -38,6 +37,8 @@ export interface CardRepositoryInterface extends BaseInterfaceRepository<Board> 
 		withSession?: boolean
 	): Promise<Board>;
 
+	updateCardsFromBoard(boardId: string, cardId: string): Promise<Board>;
+
 	pullCard(boardId: string, cardId: string, session?: boolean): Promise<UpdateResult>;
 
 	pushCard(
@@ -45,8 +46,14 @@ export interface CardRepositoryInterface extends BaseInterfaceRepository<Board> 
 		columnId: string,
 		position: number,
 		card: Card | CardDto,
-		withSession?: boolean,
-		populate?: PopulateType
+		withSession?: boolean
+	): Promise<Board>;
+
+	pushCardWithPopulate(
+		boardId: string,
+		columnId: string,
+		position: number,
+		card: Card | CardDto
 	): Promise<Board>;
 
 	/*CardItem */
@@ -61,4 +68,14 @@ export interface CardRepositoryInterface extends BaseInterfaceRepository<Board> 
 	): Promise<Board>;
 
 	pullItem(boardId: string, itemId: string, session?: boolean): Promise<UpdateResult>;
+
+	refactorLastCardItem(
+		boardId: string,
+		cardId: string,
+		newVotes: (User | ObjectId | string)[],
+		newComments: Comment[],
+		cardItems: CardItem[]
+	): Promise<Board>;
+
+	deleteCardFromCardItems(boardId: string, cardId: string, cardItemId: string): Promise<Board>;
 }

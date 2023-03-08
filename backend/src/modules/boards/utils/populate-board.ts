@@ -85,3 +85,22 @@ export const GetBoardDataPopulate: PopulateOptions[] = [
 		select: 'title _id submitedAt'
 	}
 ];
+
+export const GetCardFromBoardPopulate: PopulateOptions[] = [
+	{
+		path: 'columns.cards.createdBy',
+		select: '_id firstName lastName'
+	},
+	{
+		path: 'columns.cards.comments.createdBy',
+		select: '_id  firstName lastName'
+	},
+	{
+		path: 'columns.cards.items.createdBy',
+		select: '_id firstName lastName'
+	},
+	{
+		path: 'columns.cards.items.comments.createdBy',
+		select: '_id firstName lastName'
+	}
+];

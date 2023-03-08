@@ -54,10 +54,10 @@ import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import { BoardPhases } from 'src/libs/enum/board.phases';
-import { CreateBoardApplication } from '../applications/create.board.application';
-import { GetBoardApplication } from '../applications/get.board.application';
-import { UpdateBoardApplication } from '../applications/update.board.application';
-import { DeleteBoardApplication } from '../applications/delete.board.application';
+import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
+import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
+import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
+import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -68,13 +68,13 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 export default class BoardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateBoardApplication)
-		private createBoardApp: CreateBoardApplication,
+		private createBoardApp: CreateBoardApplicationInterface,
 		@Inject(TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplication,
+		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.UpdateBoardApplication)
-		private updateBoardApp: UpdateBoardApplication,
+		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardApplication)
-		private deleteBoardApp: DeleteBoardApplication,
+		private deleteBoardApp: DeleteBoardApplicationInterface,
 		private socketService: SocketGateway
 	) {}
 

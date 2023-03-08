@@ -3,12 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, ObjectId } from 'mongoose';
 import { Model, PopulateOptions } from 'mongoose';
 import { BoardPhases } from 'src/libs/enum/board.phases';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { QueryType } from '../interfaces/findQuery';
-import { GetBoardDataPopulate } from '../utils/populate-board';
+import { BoardDataPopulate, GetBoardDataPopulate } from '../utils/populate-board';
 import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
@@ -35,8 +34,8 @@ export class BoardRepository
 		);
 	}
 
-	getBoardPopulated(boardId: string, populate?: PopulateType) {
-		return this.findOneById(boardId, {}, populate);
+	getBoardPopulated(boardId: string) {
+		return this.findOneById(boardId, {}, BoardDataPopulate);
 	}
 
 	getMainBoard(boardId: string) {

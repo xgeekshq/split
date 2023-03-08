@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
+import {
+	BoardDataPopulate,
+	GetCardFromBoardPopulate
+} from 'src/modules/boards/utils/populate-board';
 import CardItem from '../entities/card.item.schema';
 import Card from '../entities/card.schema';
 import { CardRepositoryInterface } from './card.repository.interface';
 import { UpdateResult } from 'mongodb';
 import CardDto from '../dto/card.dto';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import Comment from 'src/modules/comments/schemas/comment.schema';
+import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export class CardRepository
@@ -147,6 +150,22 @@ export class CardRepository
 		);
 	}
 
+	updateCardsFromBoard(boardId: string, cardId: string): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId,
+				'columns.cards._id': cardId
+			},
+			{
+				$pull: {
+					'columns.$[].cards': { _id: cardId }
+				}
+			},
+			{ new: true },
+			BoardDataPopulate
+		);
+	}
+
 	pullCard(boardId: string, cardId: string, session?: boolean): Promise<UpdateResult> {
 		return this.updateOneByField<UpdateResult>(
 			{
@@ -168,8 +187,7 @@ export class CardRepository
 		columnId: string,
 		position: number,
 		card: Card | CardDto,
-		withSession?: boolean,
-		populate?: PopulateType
+		withSession?: boolean
 	): Promise<Board> {
 		return this.findOneByFieldAndUpdate(
 			{
@@ -185,8 +203,32 @@ export class CardRepository
 				}
 			},
 			{ new: true },
-			populate,
+			null,
 			withSession
+		);
+	}
+
+	pushCardWithPopulate(
+		boardId: string,
+		columnId: string,
+		position: number,
+		card: Card | CardDto
+	): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId,
+				'columns._id': columnId
+			},
+			{
+				$push: {
+					'columns.$.cards': {
+						$each: [card],
+						$position: position
+					}
+				}
+			},
+			{ new: true },
+			GetCardFromBoardPopulate
 		);
 	}
 
@@ -280,6 +322,55 @@ export class CardRepository
 			},
 			{ new: true },
 			session
+		);
+	}
+
+	refactorLastCardItem(
+		boardId: string,
+		cardId: string,
+		newVotes: (User | ObjectId | string)[],
+		newComments: Comment[],
+		cardItems: CardItem[]
+	): Promise<Board> {
+		const [{ text, createdBy }] = cardItems;
+
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId,
+				'columns.cards._id': cardId
+			},
+			{
+				$set: {
+					'columns.$.cards.$[card].items.$[cardItem].votes': newVotes,
+					'columns.$.cards.$[card].votes': [],
+					'columns.$.cards.$[card].items.$[cardItem].comments': newComments,
+					'columns.$.cards.$[card].comments': [],
+					'columns.$.cards.$[card].text': text,
+					'columns.$.cards.$[card].createdBy': createdBy
+				}
+			},
+			{
+				arrayFilters: [{ 'card._id': cardId }, { 'cardItem._id': cardItems[0]._id }],
+				new: true
+			}
+		);
+	}
+
+	deleteCardFromCardItems(boardId: string, cardId: string, cardItemId: string): Promise<Board> {
+		return this.findOneByFieldAndUpdate(
+			{
+				_id: boardId,
+				'columns.cards._id': cardId
+			},
+			{
+				$pull: {
+					'columns.$.cards.$[card].items': {
+						_id: cardItemId
+					}
+				}
+			},
+			{ arrayFilters: [{ 'card._id': cardId }], new: true },
+			BoardDataPopulate
 		);
 	}
 }

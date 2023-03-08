@@ -1,6 +1,6 @@
 import { DeleteTeamApplication } from './applications/delete.user.application';
 import { GetUserApplication } from './applications/get.user.application';
-import { UpdateUserApplicationImpl } from './applications/update.user.application';
+import { UpdateUserApplication } from './applications/update.user.application';
 import { TYPES } from './interfaces/types';
 import { UserRepository } from './repository/user.repository';
 import CreateUserService from './services/create.user.service';
@@ -25,7 +25,7 @@ export const updateUserService = {
 
 export const updateUserApplication = {
 	provide: TYPES.applications.UpdateUserApplication,
-	useClass: UpdateUserApplicationImpl
+	useClass: UpdateUserApplication
 };
 
 export const getUserApplication = {
