@@ -258,7 +258,7 @@ const AddCard = React.memo<AddCardProps>(
       >
         <FormProvider {...methods}>
           <TextArea id="text" placeholder={placeholderToDisplay} textColor={placeholderColor} />
-          <Flex css={{ width: '100%' }} justify="end">
+          <Flex css={{ width: '100%' }} justify="between">
             {!isCard && (isOwner || !commentId) && (
               // This is when you are editing a card / comment
               <Checkbox
