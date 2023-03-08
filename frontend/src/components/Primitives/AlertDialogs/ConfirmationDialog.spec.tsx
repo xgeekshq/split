@@ -3,7 +3,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ConfirmationDialog, { ConfirmationDialogProps } from './ConfirmationDialog';
-import Button from './Button';
+import Button from '../Button';
 
 const render = (props: Partial<ConfirmationDialogProps> = {}) =>
   renderWithProviders(

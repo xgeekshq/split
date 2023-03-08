@@ -6,8 +6,8 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from './AlertDialog';
-import Flex from './Flex';
-import Tooltip from './Tooltip';
+import Flex from '../Flex';
+import Tooltip from '../Tooltip';
 
 export type ConfirmationDialogProps = {
   description: string | React.ReactNode;

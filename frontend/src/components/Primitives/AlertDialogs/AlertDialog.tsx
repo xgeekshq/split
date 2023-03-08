@@ -4,11 +4,11 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { CSS, styled } from '@/styles/stitches/stitches.config';
 import { overlayShow } from '@/animations/DialogShow';
 
-import Button from './Button';
-import Flex from './Flex';
-import Text from './Text';
-import Icon from './Icon';
-import Separator from './Separator';
+import Button from '../Button';
+import Flex from '../Flex';
+import Text from '../Text';
+import Icon from '../Icon';
+import Separator from '../Separator';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   backdropFilter: 'blur(3px)',
@@ -43,9 +43,14 @@ export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
 
-type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void; title?: string };
+export type AlertDialogProps = {
+  children?: ReactNode;
+  css?: CSS;
+  handleClose?: () => void;
+  title?: string;
+};
 
-const Content = ({ children, css, handleClose, title, ...props }: ContentProps) => (
+const Content = ({ children, css, handleClose, title, ...props }: AlertDialogProps) => (
   <AlertDialogPrimitive.Portal>
     <StyledOverlay />
     <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
