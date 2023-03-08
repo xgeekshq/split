@@ -5,7 +5,10 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import BoardType from '@/types/board/board';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import DeleteBoard from '../DeleteBoard';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import useBoard from '@/hooks/useBoard';
+import Button from '@/components/Primitives/Button';
+import Icon from '@/components/Primitives/Icon';
 import CountCards from './CountCards';
 
 type CardEndProps = {
@@ -36,12 +39,20 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
     };
     const { _id: id, title, columns, users, team, createdBy } = board;
 
+    const { deleteBoard } = useBoard({ autoFetchBoard: false });
+
     const boardTypeCaption = useMemo(() => {
       if (isSubBoard && !isDashboard) return 'Responsible';
       if (isSubBoard && isDashboard) return 'Team';
       if (team) return 'Team';
       return 'Personal';
     }, [isDashboard, isSubBoard, team]);
+
+    const deleteBoardDescription = (
+      <Text>
+        Do you really want to delete the board <Text fontWeight="bold">{title}</Text>?
+      </Text>
+    );
 
     const boardOwnerName = useMemo(() => {
       if (team && !isSubBoard) {
@@ -56,6 +67,14 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 
       return createdBy?.firstName;
     }, [team, isSubBoard, isDashboard, createdBy?.firstName, index, users]);
+
+    const handleDelete = () => {
+      if (team?.id) {
+        deleteBoard.mutate({ id, socketId, teamId: team?.id });
+      } else {
+        deleteBoard.mutate({ id });
+      }
+    };
 
     if (isDashboard) {
       return (
@@ -91,8 +110,23 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           {(havePermissions || userSAdmin) && !isSubBoard && (
             <Flex align="center" css={{ ml: '$24' }} gap="24">
               <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
-
-              <DeleteBoard boardId={id} boardName={title} socketId={socketId} teamId={team?.id} />
+              <ConfirmationDialog
+                title="Delete board"
+                description={deleteBoardDescription}
+                confirmationHandler={handleDelete}
+                confirmationLabel="Delete"
+                tooltip="Delete board"
+                variant="danger"
+              >
+                <Button isIcon size="sm">
+                  <Icon
+                    name="trash-alt"
+                    css={{
+                      color: '$primary400',
+                    }}
+                  />
+                </Button>
+              </ConfirmationDialog>
             </Flex>
           )}
         </Flex>

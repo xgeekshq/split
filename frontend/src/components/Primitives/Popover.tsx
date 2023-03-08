@@ -15,7 +15,7 @@ const StyledContent = styled(PopoverPrimitive.Content, {
   borderRadius: 12,
   py: '$8',
   width: 251,
-  zIndex: 999,
+  zIndex: 128,
   backgroundColor: 'white',
   '&:focus': {
     border: 'none',

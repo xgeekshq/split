@@ -18,7 +18,7 @@ const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   '@media (prefers-reduced-motion: no-preference)': {
     animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
-  zIndex: '100',
+  zIndex: '256',
 });
 
 const StyledContent = styled(AlertDialogPrimitive.Content, {
@@ -37,18 +37,15 @@ const StyledContent = styled(AlertDialogPrimitive.Content, {
   '&:focus': { outline: 'none' },
 });
 
-export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
+export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {
+  cursor: 'pointer',
+});
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
 
-export type AlertDialogProps = {
-  children?: ReactNode;
-  css?: CSS;
-  handleClose?: () => void;
-  title?: string;
-};
+type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void; title?: string };
 
-const Content = ({ children, css, handleClose, title, ...props }: AlertDialogProps) => (
+const Content = ({ children, css, handleClose, title, ...props }: ContentProps) => (
   <AlertDialogPrimitive.Portal>
     <StyledOverlay />
     <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>

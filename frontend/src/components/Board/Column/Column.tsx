@@ -17,8 +17,6 @@ import SortMenu from './partials/SortMenu';
 import { CardsContainer, Container, OuterContainer, Title, TitleContainer } from './styles';
 import OptionsMenu from './partials/OptionsMenu';
 import UpdateColumnDialog from './partials/UpdateColumnDialog';
-import AlertDeleteColumn from './partials/AlertDeleteColumn';
-import AlertDeleteAllCards from './partials/AlertDeleteAllCards';
 
 type ColumMemoProps = {
   isRegularBoard?: boolean;
@@ -61,27 +59,19 @@ const Column = React.memo<ColumMemoProps>(
     const setFilteredColumns = useSetRecoilState(filteredColumnsState);
     const [openDialog, setOpenDialog] = useState({
       columnName: false,
-      deleteColumn: false,
-      deleteCards: false,
     });
     const [dialogType, setDialogType] = useState('ColumnName');
     const [showTooltip, setShowTooltip] = useState(false);
     const { width, ref } = useResizeDetector({ handleWidth: true });
 
     const handleDialogNameChange = (open: boolean, type: string) => {
-      setOpenDialog({ columnName: open, deleteColumn: false, deleteCards: false });
+      setOpenDialog({ columnName: open });
       setDialogType(type);
     };
 
-    const handleDialogChange = (
-      openName: boolean,
-      openDeleteColumn: boolean,
-      openDeleteCards: boolean,
-    ) => {
+    const handleDialogChange = (openName: boolean) => {
       setOpenDialog({
         columnName: openName,
-        deleteColumn: openDeleteColumn,
-        deleteCards: openDeleteCards,
       });
     };
 
@@ -198,10 +188,10 @@ const Column = React.memo<ColumMemoProps>(
                             columnId={columnId}
                             boardId={boardId}
                             setOpenDialogName={handleDialogNameChange}
-                            handleDialogChange={handleDialogChange}
                             isDefaultText={isDefaultText}
                             color={color}
                             socketId={socketId}
+                            postAnonymously={postAnonymously}
                           />
                         )}
                       </Flex>
@@ -278,21 +268,6 @@ const Column = React.memo<ColumMemoProps>(
           isDefaultText={isDefaultText}
           type={dialogType}
           socketId={socketId}
-        />
-        <AlertDeleteColumn
-          socketId={socketId}
-          columnId={columnId}
-          columnTitle={title}
-          isOpen={openDialog.deleteColumn}
-          handleDialogChange={handleDialogChange}
-          postAnonymously={postAnonymously}
-        />
-        <AlertDeleteAllCards
-          socketId={socketId}
-          boardId={boardId}
-          columnId={columnId}
-          isOpen={openDialog.deleteCards}
-          handleDialogChange={handleDialogChange}
         />
       </>
     );
