@@ -1,13 +1,16 @@
+import { CommentRepositoryInterface } from './../interfaces/repositories/comment-board.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
+import { UpdateCommentApplicationInterface } from '../interfaces/applications/update.comment.application.interface';
 import { UpdateCommentService } from '../interfaces/services/update.comment.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class UpdateCommentApplicationImpl implements UpdateCommentApplication {
+export class UpdateCommentApplication implements UpdateCommentApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateCommentService)
-		private updateCommentService: UpdateCommentService
+		private updateCommentService: UpdateCommentService,
+		@Inject(TYPES.repositories.CommentRepository)
+		private commentRepository: CommentRepositoryInterface
 	) {}
 
 	updateItemComment(

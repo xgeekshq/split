@@ -6,7 +6,7 @@ import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { DeleteCommentService } from '../interfaces/services/delete.comment.service.interface';
 
 @Injectable()
-export default class DeleteCommentServiceImpl implements DeleteCommentService {
+export default class DeleteCommentService implements DeleteCommentService {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
 	deleteItemComment(boardId: string, commentId: string, userId: string) {

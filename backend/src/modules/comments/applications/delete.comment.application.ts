@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DeleteCommentApplication } from '../interfaces/applications/delete.comment.application.interface';
+import { DeleteCommentApplicationInterface } from '../interfaces/applications/delete.comment.application.interface';
 import { DeleteCommentService } from '../interfaces/services/delete.comment.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class DeleteCommentApplicationImpl implements DeleteCommentApplication {
+export class DeleteCommentApplicationInterfaceImpl implements DeleteCommentApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.DeleteCommentService)
 		private deleteCommentService: DeleteCommentService

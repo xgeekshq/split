@@ -1,6 +1,6 @@
-import Comment from '../../schemas/comment.schema';
+import Comment from 'src/modules/comments/schemas/comment.schema';
 
-export interface CreateCommentApplication {
+export interface CreateCommentApplicationInterface {
 	createItemComment(
 		boardId: string,
 		cardId: string,

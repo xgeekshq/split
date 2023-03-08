@@ -7,7 +7,7 @@ import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { CreateCommentServiceInterface } from '../interfaces/services/create.comment.service.interface';
 
 @Injectable()
-export default class CreateCommentServiceImpl implements CreateCommentServiceInterface {
+export default class CreateCommentService implements CreateCommentServiceInterface {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
 	async createItemComment(

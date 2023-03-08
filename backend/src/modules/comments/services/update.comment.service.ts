@@ -6,7 +6,7 @@ import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { UpdateCommentService } from '../interfaces/services/update.comment.service.interface';
 
 @Injectable()
-export default class UpdateCommentServiceImpl implements UpdateCommentService {
+export default class UpdateCommentService implements UpdateCommentService {
 	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
 
 	updateItemComment(

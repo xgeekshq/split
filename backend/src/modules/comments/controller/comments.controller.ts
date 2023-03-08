@@ -42,9 +42,9 @@ import { UserDocument } from 'src/modules/users/entities/user.schema';
 import CreateCommentDto from '../dto/create.comment.dto';
 import DeleteCommentDto from '../dto/delete.comment.dto';
 import UpdateCardCommentDto from '../dto/update.comment.dto';
-import { CreateCommentApplication } from '../interfaces/applications/create.comment.application.interface';
-import { DeleteCommentApplication } from '../interfaces/applications/delete.comment.application.interface';
-import { UpdateCommentApplication } from '../interfaces/applications/update.comment.application.interface';
+import { CreateCommentApplicationInterface } from '../interfaces/applications/create.comment.application.interface';
+import { DeleteCommentApplicationInterface } from '../interfaces/applications/delete.comment.application.interface';
+import { UpdateCommentApplicationInterface } from '../interfaces/applications/update.comment.application.interface';
 import { TYPES } from '../interfaces/types';
 
 @ApiBearerAuth('access-token')
@@ -54,11 +54,11 @@ import { TYPES } from '../interfaces/types';
 export default class CommentsController {
 	constructor(
 		@Inject(TYPES.services.CreateCommentService)
-		private createCommentApp: CreateCommentApplication,
+		private createCommentApp: CreateCommentApplicationInterface,
 		@Inject(TYPES.services.UpdateCommentService)
-		private updateCommentApp: UpdateCommentApplication,
+		private updateCommentApp: UpdateCommentApplicationInterface,
 		@Inject(TYPES.services.DeleteCommentService)
-		private deleteCommentApp: DeleteCommentApplication,
+		private deleteCommentApp: DeleteCommentApplicationInterface,
 		private socketService: SocketGateway
 	) {}
 

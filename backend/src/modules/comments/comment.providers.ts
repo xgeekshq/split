@@ -1,37 +1,43 @@
-import { CreateCommentApplicationImpl } from './applications/create.comment.application';
-import { DeleteCommentApplicationImpl } from './applications/delete.comment.application';
-import { UpdateCommentApplicationImpl } from './applications/update.comment.application';
+import { CreateCommentApplicationInterfaceImpl } from './applications/create.comment.application';
+import { DeleteCommentApplicationInterfaceImpl } from './applications/delete.comment.application';
+import { UpdateCommentApplication } from './applications/update.comment.application';
 import { TYPES } from './interfaces/types';
-import CreateCommentServiceImpl from './services/create.comment.service';
-import DeleteCommentServiceImpl from './services/delete.comment.service';
-import UpdateCommentServiceImpl from './services/update.comment.service';
+import { CommentRepository } from './repositories/comment-board.repository';
+import CreateCommentService from './services/create.comment.service';
+import DeleteCommentService from './services/delete.comment.service';
+import UpdateCommentService from './services/update.comment.service';
 
 export const createCommentService = {
 	provide: TYPES.services.CreateCommentService,
-	useClass: CreateCommentServiceImpl
+	useClass: CreateCommentService
 };
 
 export const updateCommentService = {
 	provide: TYPES.services.UpdateCommentService,
-	useClass: UpdateCommentServiceImpl
+	useClass: UpdateCommentService
 };
 
 export const deleteCommentService = {
 	provide: TYPES.services.DeleteCommentService,
-	useClass: DeleteCommentServiceImpl
+	useClass: DeleteCommentService
 };
 
 export const createCommentApplication = {
 	provide: TYPES.applications.CreateCommentApplication,
-	useClass: CreateCommentApplicationImpl
+	useClass: CreateCommentApplicationInterfaceImpl
 };
 
 export const updateCommentApplication = {
 	provide: TYPES.applications.UpdateCommentApplication,
-	useClass: UpdateCommentApplicationImpl
+	useClass: UpdateCommentApplication
 };
 
 export const deleteCommentApplication = {
 	provide: TYPES.applications.DeleteCommentApplication,
-	useClass: DeleteCommentApplicationImpl
+	useClass: DeleteCommentApplicationInterfaceImpl
+};
+
+export const commentRepository = {
+	provide: TYPES.repositories.CommentRepository,
+	useClass: CommentRepository
 };
