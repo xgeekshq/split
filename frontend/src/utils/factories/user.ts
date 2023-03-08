@@ -1,3 +1,4 @@
+import { UserList } from '@/types/team/userList';
 import { User } from '@/types/user/user';
 import { faker } from '@faker-js/faker';
 import { buildTestFactory } from '@/utils/testing';
@@ -105,5 +106,25 @@ export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
     user,
     role,
     isNewJoiner,
+  };
+});
+
+export const UserListFactory = buildTestFactory<UserList>(() => {
+  const _id = faker.database.mongodbObjectId();
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+  const email = faker.internet.email(firstName, lastName);
+  const isSAdmin = faker.datatype.boolean();
+  const joinedAt = faker.datatype.datetime().toString();
+  const isChecked = faker.datatype.boolean();
+
+  return {
+    _id,
+    firstName,
+    lastName,
+    email,
+    isSAdmin,
+    joinedAt,
+    isChecked,
   };
 });

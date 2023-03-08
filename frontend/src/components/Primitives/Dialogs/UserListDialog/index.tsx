@@ -7,6 +7,7 @@ import Checkbox from '@/components/Primitives/Checkbox';
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator';
 import SearchInput from '../../Inputs/SearchInput';
+import CheckboxUserItem from './partials/CheckboxUserItem';
 
 type UserListDialogProps = {
   usersList: UserList[];
@@ -142,25 +143,12 @@ const UserListDialog = React.memo<UserListDialogProps>(
         >
           <Flex css={{ px: '$32' }} direction="column" gap={20}>
             {filteredList?.map((user) => (
-              <Flex key={user._id} align="center">
-                <Flex css={{ flex: 1 }}>
-                  <Checkbox
-                    id={user._id}
-                    checked={user.isChecked}
-                    handleChange={() => {
-                      handleChecked(user._id);
-                    }}
-                    disabled={user._id === session?.user.id && !session?.user.isSAdmin}
-                    label={`${user.firstName} ${user.lastName}`}
-                    size="md"
-                  />
-                </Flex>
-                <Flex css={{ flex: 1 }}>
-                  <Text color="primary300" size="sm">
-                    {user.email}
-                  </Text>
-                </Flex>
-              </Flex>
+              <CheckboxUserItem
+                key={user._id}
+                user={user}
+                disabled={user._id === session?.user.id && !session?.user.isSAdmin}
+                handleChecked={handleChecked}
+              />
             ))}
           </Flex>
         </Flex>

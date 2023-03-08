@@ -14,7 +14,7 @@ describe('Components/Primitives/Checkbox', () => {
 
     // Assert
     expect(getByTestId('checkBox')).toBeInTheDocument();
-    expect(getByText(checkboxProps.label)).toBeInTheDocument();
+    expect(getByText(checkboxProps.label!)).toBeInTheDocument();
   });
 
   it('should render checked state', () => {
