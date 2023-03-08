@@ -6,7 +6,7 @@ import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generi
 import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 
 @Injectable()
-export class VoteBoardRepository
+export class CommentRepository
 	extends MongoGenericRepository<Board>
 	implements CommentBoardRepositoryInterface
 {
