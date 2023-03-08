@@ -84,7 +84,8 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		createBoardService,
 		getBoardService,
 		updateBoardService,
-		deleteBoardService
+		deleteBoardService,
+		boardUserRepository
 	]
 })
 export default class BoardsModule {}

@@ -4,8 +4,7 @@ export const TYPES = {
 		DeleteVoteService: 'DeleteVoteService'
 	},
 	repositories: {
-		VoteBoardRepository: 'VoteBoardRepository',
-		VoteBoardUserRepository: 'VoteBoardUserRepository'
+		VoteRepository: 'VoteRepository'
 	},
 	applications: {
 		CreateVoteApplication: 'CreateVoteApplication',

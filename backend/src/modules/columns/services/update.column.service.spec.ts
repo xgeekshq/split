@@ -1,4 +1,4 @@
-import { voteBoardRepository, voteBoardUserRepository } from './../../votes/votes.providers';
+import { voteRepository } from 'src/modules/votes/votes.providers';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
@@ -63,8 +63,7 @@ describe('UpdateColumnService', () => {
 				createBoardUserService,
 				getTokenAuthService,
 				updateUserService,
-				voteBoardRepository,
-				voteBoardUserRepository,
+				voteRepository,
 				{
 					provide: getModelToken(Board.name),
 					useValue: {}

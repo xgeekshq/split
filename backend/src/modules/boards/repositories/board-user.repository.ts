@@ -1,7 +1,7 @@
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { FilterQuery, Model, ObjectId, QueryOptions, UpdateQuery } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import BoardUserDto from '../dto/board.user.dto';
@@ -63,6 +63,37 @@ export class BoardUserRepository
 				role: role
 			}
 		);
+	}
+
+	updateVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		withSession?: boolean,
+		decrement?: false
+	): Promise<BoardUser> {
+		return this.findOneByFieldAndUpdate(
+			{
+				user: userId,
+				board: boardId
+			},
+			{
+				$inc: { votesCount: decrement ? (!count ? -1 : count) : count }
+			},
+			null,
+			null,
+			withSession
+		);
+	}
+
+	findBoardUserByFieldAndUpdate(
+		value: FilterQuery<BoardUser>,
+		query: UpdateQuery<BoardUser>,
+		options?: QueryOptions<BoardUser>,
+		populate?: PopulateType,
+		withSession?: boolean
+	): Promise<BoardUser> {
+		return this.findOneByFieldAndUpdate(value, query, options, populate, withSession);
 	}
 
 	/* DELETE BOARD USERS */

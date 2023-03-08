@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+import { FilterQuery, ObjectId, QueryOptions, UpdateQuery } from 'mongoose';
 import {
 	BaseInterfaceRepository,
 	PopulateType
@@ -21,6 +21,20 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 	): Promise<BoardUser>;
 	createBoardUsers(boardUsers: BoardUserDto[]): Promise<BoardUser[]>;
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
+	updateVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		withSession?: boolean,
+		decrement?: boolean
+	): Promise<BoardUser>;
+	findBoardUserByFieldAndUpdate(
+		value: FilterQuery<BoardUser>,
+		query: UpdateQuery<BoardUser>,
+		options?: QueryOptions<BoardUser>,
+		populate?: PopulateType,
+		withSession?: boolean
+	): Promise<BoardUser>;
 	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[] | string[],
 		withSession: boolean,
