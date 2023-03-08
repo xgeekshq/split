@@ -11,7 +11,7 @@ export type CheckboxUserItemProps = {
 };
 
 const CheckboxUserItem = ({ user, disabled, handleChecked }: CheckboxUserItemProps) => (
-  <Flex key={user._id} align="center">
+  <Flex key={user._id} align="center" data-testid="checkboxUserItem">
     <Flex css={{ flex: 1 }}>
       <Checkbox
         id={user._id}

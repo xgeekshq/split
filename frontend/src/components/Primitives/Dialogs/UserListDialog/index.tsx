@@ -9,7 +9,7 @@ import Separator from '@/components/Primitives/Separator';
 import SearchInput from '../../Inputs/SearchInput';
 import CheckboxUserItem from './partials/CheckboxUserItem';
 
-type UserListDialogProps = {
+export type UserListDialogProps = {
   usersList: UserList[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;

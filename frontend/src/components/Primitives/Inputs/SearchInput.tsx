@@ -19,7 +19,11 @@ const SearchInput: React.FC<InputProps> = ({
   handleChange,
   handleClear,
 }) => (
-  <Flex css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }} direction="column">
+  <Flex
+    css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
+    direction="column"
+    data-testid="searchInput"
+  >
     <StyledInputWrapper gap="8" disabled={disabled}>
       <IconWrapper>
         <Icon

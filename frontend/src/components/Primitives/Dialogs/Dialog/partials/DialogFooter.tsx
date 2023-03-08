@@ -32,7 +32,7 @@ const Footer = (props: FooterProps) => {
         Cancel
       </Button>
       {(handleAffirmative || affirmativeLabel) && (
-        <Button onClick={handleAffirmative} ref={buttonRef}>
+        <Button onClick={handleAffirmative} ref={buttonRef} data-testid="dialogFooterSubmit">
           {affirmativeLabel}
         </Button>
       )}
