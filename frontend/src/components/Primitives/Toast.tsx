@@ -9,6 +9,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
 import { useEffect } from 'react';
 import Text from './Text';
+import Button from './Button';
 
 const hide = keyframes({
   '0%': { opacity: 1 },
@@ -50,22 +51,13 @@ const StyledDescription = styled(ToastPrimitive.Description, {
   alignItems: 'center',
 });
 
-const StyledClose = styled(ToastPrimitive.Close, {
-  all: 'none',
-  border: 'none',
-  padding: 0,
-  background: 'none',
-  ml: '$20',
-  fontSize: '$12',
-  color: '$primary400',
-  textAlign: 'center',
-});
+const StyledClose = styled(ToastPrimitive.Close, Button, {});
 
 // Exports
 export const ToastProvider = ToastPrimitive.Provider;
 export const ToastViewport = StyledViewport;
 
-const Toast: React.FC = () => {
+const Toast = () => {
   const [currentToastState, setToastState] = useRecoilState(toastState);
   const { open, type, content } = currentToastState;
 
@@ -117,29 +109,14 @@ const Toast: React.FC = () => {
       onOpenChange={(e) => setToastState({ open: e, type, content })}
     >
       <StyledDescription>
-        {type === ToastStateEnum.ERROR && (
-          <Icon css={{ width: '31px', height: '$32' }} name="blob-error" />
-        )}
-        {type === ToastStateEnum.SUCCESS && (
-          <Icon css={{ width: '31px', height: '$32' }} name="blob-success" />
-        )}
-        {type === ToastStateEnum.WARNING && (
-          <Icon css={{ width: '31px', height: '$32' }} name="blob-warning" />
-        )}
-        {type === ToastStateEnum.INFO && (
-          <Icon css={{ width: '31px', height: '$32' }} name="blob-info" />
-        )}
+        {type === ToastStateEnum.ERROR && <Icon size={32} name="blob-error" />}
+        {type === ToastStateEnum.SUCCESS && <Icon size={32} name="blob-success" />}
+        {type === ToastStateEnum.WARNING && <Icon size={32} name="blob-warning" />}
+        {type === ToastStateEnum.INFO && <Icon size={32} name="blob-info" />}
         <Text size="sm">{content}</Text>
       </StyledDescription>
-      <StyledClose
-        aria-label="Close"
-        css={{
-          '&:hover': {
-            cursor: 'pointer',
-          },
-        }}
-      >
-        <Icon css={{ width: '$16', height: '$16', color: '$primary800' }} name="close" />
+      <StyledClose aria-label="Close" size="sm" isIcon>
+        <Icon size={16} css={{ color: '$primary800' }} name="close" />
       </StyledClose>
     </StyledToast>
   );

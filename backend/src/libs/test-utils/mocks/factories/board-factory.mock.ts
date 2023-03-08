@@ -1,16 +1,17 @@
 import faker from '@faker-js/faker';
 import { ColumnFactory } from './column-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
+import { buildTestFactory } from './generic-factory.mock';
 
 const userId = faker.datatype.uuid();
 
-const mockBoardData = (countColumns = 2, countCards = 1, params?: Partial<Board>) => {
+const mockBoardData = () => {
 	return {
 		_id: faker.datatype.uuid(),
 		title: faker.lorem.words(),
-		columns: ColumnFactory.createMany(countColumns, countCards),
+		columns: ColumnFactory.createMany(3),
 		isPublic: faker.datatype.boolean(),
-		maxVotes: String(faker.datatype.number({ min: 0, max: 6 })),
+		maxVotes: faker.datatype.number({ min: 0, max: 6 }),
 		maxUsers: 0,
 		maxTeams: '1',
 		hideCards: faker.datatype.boolean(),
@@ -28,13 +29,10 @@ const mockBoardData = (countColumns = 2, countCards = 1, params?: Partial<Board>
 		createdBy: userId,
 		addcards: faker.datatype.boolean(),
 		postAnonymously: faker.datatype.boolean(),
-		...params
+		createdAt: faker.datatype.datetime().toISOString()
 	};
 };
 
-export const BoardFactory = {
-	create: (countColumns = 1, countCards = 1, params?: Partial<Board>) =>
-		mockBoardData(countColumns, countCards, params),
-	createMany: (count = 1, countColumns = 2, countCards = 1, params?: Partial<Board>) =>
-		Array.from({ length: count }).map(() => BoardFactory.create(countColumns, countCards, params))
-};
+export const BoardFactory = buildTestFactory<Board>(() => {
+	return mockBoardData();
+});

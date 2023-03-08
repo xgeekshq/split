@@ -37,47 +37,38 @@ const StyledContent = styled(AlertDialogPrimitive.Content, {
   '&:focus': { outline: 'none' },
 });
 
-const StyledTitleContainer = styled(Flex, { px: '$32', py: '$24' });
-const StyledDescription = styled('div', {
-  px: '$32',
-  py: '$24',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '$8',
-});
-
 export const AlertDialogTrigger = styled(AlertDialogPrimitive.Trigger, {});
 export const AlertDialogAction = styled(AlertDialogPrimitive.Action, Button, {});
 export const AlertDialogCancel = styled(AlertDialogPrimitive.Cancel, Button, {});
 
-type ContentProps = { children?: ReactNode; css?: CSS; handleClose?: () => void; title?: string };
-
-const Content: React.FC<ContentProps> = ({ children, css, handleClose, title, ...props }) => {
-  Content.defaultProps = {
-    css: undefined,
-    children: undefined,
-    handleClose: undefined,
-  };
-  return (
-    <AlertDialogPrimitive.Portal>
-      <StyledOverlay />
-      <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
-        {title && (
-          <>
-            <StyledTitleContainer align="center" justify="between">
-              <Text heading="4">{title}</Text>
-              <AlertDialogCancel isIcon onClick={handleClose}>
-                <Icon name="close" css={{ color: '$primary400' }} />
-              </AlertDialogCancel>
-            </StyledTitleContainer>
-            <Separator />
-          </>
-        )}
-        <StyledDescription>{children}</StyledDescription>
-      </StyledContent>
-    </AlertDialogPrimitive.Portal>
-  );
+export type AlertDialogProps = {
+  children?: ReactNode;
+  css?: CSS;
+  handleClose?: () => void;
+  title?: string;
 };
+
+const Content = ({ children, css, handleClose, title, ...props }: AlertDialogProps) => (
+  <AlertDialogPrimitive.Portal>
+    <StyledOverlay />
+    <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
+      {title && (
+        <>
+          <Flex align="center" justify="between" css={{ px: '$32', py: '$24' }}>
+            <Text heading="4">{title}</Text>
+            <AlertDialogCancel isIcon onClick={handleClose}>
+              <Icon name="close" css={{ color: '$primary400' }} />
+            </AlertDialogCancel>
+          </Flex>
+          <Separator />
+        </>
+      )}
+      <Flex direction="column" gap="8" css={{ px: '$32', py: '$24' }}>
+        {children}
+      </Flex>
+    </StyledContent>
+  </AlertDialogPrimitive.Portal>
+);
 
 export const AlertDialog = AlertDialogPrimitive.Root;
 export const AlertDialogContent = Content;
