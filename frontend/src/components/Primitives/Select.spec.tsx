@@ -24,7 +24,7 @@ const render = (disabled: boolean) =>
           </Text>
           <SelectValue />
         </Flex>
-        <SelectIcon className="SelectIcon" asChild>
+        <SelectIcon className="SelectIcon">
           <Icon name="arrow-down" />
         </SelectIcon>
       </SelectTrigger>
@@ -36,10 +36,8 @@ describe('Components/Primitives/Select', () => {
   it('should render correctly', () => {
     // Arrange
     const disableSelect: boolean = false;
-
     // Act
     const { getByTestId } = render(disableSelect);
-
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
   });
@@ -47,10 +45,8 @@ describe('Components/Primitives/Select', () => {
   it('should render placeholder correctly', () => {
     // Arrange
     const disableSelect: boolean = false;
-
     // Act
     const { getByTestId, getByText } = render(disableSelect);
-
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
     expect(getByText('Choose a fruit')).toBeInTheDocument();
