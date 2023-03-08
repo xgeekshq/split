@@ -11,7 +11,7 @@ import Text from '@/components/Primitives/Text';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { useState } from 'react';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRecoilValue } from 'recoil';

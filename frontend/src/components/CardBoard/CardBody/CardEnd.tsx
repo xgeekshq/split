@@ -5,7 +5,7 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import BoardType from '@/types/board/board';
 import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/Primitives/Icon';

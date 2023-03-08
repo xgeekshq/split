@@ -12,7 +12,7 @@ import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 import Button from '@/components/Primitives/Button';
 import useTeam from '@/hooks/useTeam';
 import TeamTitle from './partials/TeamTitle';

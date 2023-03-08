@@ -33,7 +33,7 @@ import { GuestUser } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 import useCards from '@/hooks/useCards';
 import { UpdateBoardPhaseType } from '@/types/board/board';
 import { sortParticipantsList } from './[boardId]/participants';

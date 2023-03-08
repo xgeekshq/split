@@ -3,7 +3,7 @@ import React from 'react';
 import Flex from '@/components/Primitives/Flex';
 import Separator from '@/components/Primitives/Separator';
 import { User } from '@/types/user/user';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';

@@ -10,7 +10,7 @@ import {
 import Text from '@/components/Primitives/Text';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
 
 interface PopoverSettingsContentProps {
   isItem: boolean;
