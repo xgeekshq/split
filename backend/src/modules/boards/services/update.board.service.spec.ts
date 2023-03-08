@@ -34,6 +34,7 @@ describe('UpdateBoardServiceImpl', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
+				UpdateBoardServiceImpl,
 				{
 					provide: getModelToken(Board.name),
 					useValue: {}
@@ -73,9 +74,7 @@ describe('UpdateBoardServiceImpl', () => {
 				{
 					provide: ConfigService,
 					useValue: createMock<ConfigService>()
-				},
-
-				UpdateBoardServiceImpl
+				}
 			]
 		}).compile();
 		service = module.get<UpdateBoardServiceImpl>(UpdateBoardServiceImpl);
@@ -106,30 +105,44 @@ describe('UpdateBoardServiceImpl', () => {
 		});
 
 		it('should throw badRequestException when boardRepository fails', async () => {
+			// Set up the board repository mock to reject with an error
 			boardRepositoryMock.updatePhase.mockRejectedValueOnce(new Error('Some error'));
+
+			// Verify that the service method being tested throws a BadRequestException
 			expect(async () => await service.updatePhase(boardPhaseDto)).rejects.toThrowError(
 				BadRequestException
 			);
 		});
 
 		it('shoult call websocket with eventEmitter', async () => {
+			// Call the service method being tested
 			await service.updatePhase(boardPhaseDto);
+
+			// Verify that the eventEmitterMock.emit method was called exactly once
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
 		it('should call slackSendMessageService.execute with slackMessageDto', async () => {
+			// Create a fake board object with the specified properties
 			const board = {
 				...fakeBoards,
 				team: { name: 'xgeeks' },
 				phase: BoardPhases.VOTINGPHASE,
 				slackEnable: true
 			};
+
+			// Set up the configuration service mock to return true
 			configServiceMock.getOrThrow.mockReturnValue(true);
+
+			// Set up the board repository mock to resolve with the fake board object
 			await boardRepositoryMock.updatePhase.mockResolvedValue(
 				board as unknown as ReturnType<typeof boardRepositoryMock.updatePhase>
 			);
+
+			// Call the service method being tested
 			await service.updatePhase(boardPhaseDto);
 
+			// Verify that the slackSendMessageService.execute method was called exactly once
 			expect(slackSendMessageServiceMock.execute).toHaveBeenCalledTimes(1);
 		});
 	});
