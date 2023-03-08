@@ -80,9 +80,21 @@ export type UpdateBoardType = {
   postAnonymously: boolean;
   team?: string;
   phase?: string;
+  createdBy?: string;
+  mainBoardId?: string;
 };
 
-export type UpdateBoardPhase = {
+export type UpdateBoardPhaseType = {
   boardId: string;
   phase: string;
+};
+
+export type PhaseChangeEventType = {
+  boardId: string;
+  phase: string;
+  hideCards: boolean;
+  hideVotes: boolean;
+  addCards: boolean;
+  columns: ColumnType[];
+  submitedAt: Date;
 };

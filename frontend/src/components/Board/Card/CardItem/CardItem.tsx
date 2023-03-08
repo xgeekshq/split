@@ -6,8 +6,8 @@ import AddCardOrComment from '@/components/Board/AddCardOrComment';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
 import { CardItemType } from '@/types/card/cardItem';
+import useCards from '@/hooks/useCards';
 import CardFooter from '../CardFooter';
-import DeleteCard from '../DeleteCard';
 import PopoverCardSettings from '../PopoverSettings';
 
 interface CardItemProps {
@@ -37,7 +37,7 @@ const Container = styled(Flex, {
   wordBreak: 'breakWord',
 });
 
-const CardItem: React.FC<CardItemProps> = React.memo(
+const CardItem = React.memo(
   ({
     item,
     color,
@@ -57,15 +57,25 @@ const CardItem: React.FC<CardItemProps> = React.memo(
     hasAdminRole,
     postAnonymously,
     cardTextDefault,
-  }) => {
+  }: CardItemProps) => {
+    const { deleteCard } = useCards();
+
     const [editing, setEditing] = useState(false);
-    const [deleting, setDeleting] = useState(false);
-    const handleDeleting = () => {
-      setDeleting(!deleting);
-    };
 
     const handleEditing = () => {
       setEditing(!editing);
+    };
+
+    const handleDelete = () => {
+      deleteCard.mutate({
+        boardId,
+        cardId: cardGroupId,
+        socketId,
+        columnId,
+        userId,
+        isCardGroup: false,
+        cardItemId: item._id,
+      });
     };
 
     return (
@@ -92,7 +102,7 @@ const CardItem: React.FC<CardItemProps> = React.memo(
                     cardGroupId={cardGroupId}
                     columnId={columnId}
                     firstOne={firstOne}
-                    handleDeleteCard={handleDeleting}
+                    handleDelete={handleDelete}
                     handleEditing={handleEditing}
                     hideCards={hideCards}
                     item={item}
@@ -135,18 +145,6 @@ const CardItem: React.FC<CardItemProps> = React.memo(
             isDefaultText={isDefaultText}
             postAnonymously={postAnonymously}
             cardTextDefault={cardTextDefault}
-          />
-        )}
-        {deleting && (
-          <DeleteCard
-            boardId={boardId}
-            cardId={cardGroupId}
-            cardItemId={item._id}
-            cardTitle={item.text}
-            handleClose={handleDeleting}
-            socketId={socketId}
-            userId={userId}
-            columnId={columnId}
           />
         )}
       </Container>

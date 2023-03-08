@@ -12,11 +12,12 @@ import { BoardUser } from '@/types/board/board.user';
 import CardType from '@/types/card/card';
 import { onDragCardStart } from '@/store/card/atoms/card.atom';
 import { useRecoilValue } from 'recoil';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import useCards from '@/hooks/useCards';
 import AddCardOrComment from '../AddCardOrComment';
 import Comments from '../Comment/Comments';
 import CardFooter from './CardFooter';
 import CardItemList from './CardItem/CardItemList';
-import DeleteCard from './DeleteCard';
 import PopoverCardSettings from './PopoverSettings';
 
 const Container = styled(Flex, {
@@ -68,6 +69,8 @@ const CardBoard = React.memo<CardBoardProps>(
     cardTextDefault,
     phase,
   }) => {
+    const { deleteCard } = useCards();
+
     const isCardGroup = card.items.length > 1;
     const comments = useMemo(
       () =>
@@ -80,7 +83,6 @@ const CardBoard = React.memo<CardBoardProps>(
     const draggedCard = useRecoilValue(onDragCardStart);
     const [isCommentsOpened, setOpenComments] = useState(false);
     const [editing, setEditing] = useState(false);
-    const [deleting, setDeleting] = useState(false);
 
     const createdBy = useMemo(() => {
       if (Object.hasOwnProperty.call(card, 'items')) {
@@ -99,8 +101,16 @@ const CardBoard = React.memo<CardBoardProps>(
       setEditing(!editing);
     };
 
-    const handleDeleting = () => {
-      setDeleting(!deleting);
+    const handleDelete = () => {
+      deleteCard.mutate({
+        boardId,
+        cardId: card._id,
+        socketId,
+        columnId: colId,
+        userId,
+        isCardGroup: true,
+        cardItemId: card._id,
+      });
     };
 
     useEffect(() => {
@@ -114,7 +124,12 @@ const CardBoard = React.memo<CardBoardProps>(
         key={card._id}
         draggableId={card._id}
         index={index}
-        isDragDisabled={isSubmited || (isMainboard && !hasAdminRole) || (isMainboard && hideCards)}
+        isDragDisabled={
+          isSubmited ||
+          (isMainboard && !hasAdminRole) ||
+          (isMainboard && hideCards) ||
+          phase === BoardPhases.SUBMITTED
+        }
       >
         {(provided) => (
           <Flex
@@ -188,13 +203,14 @@ const CardBoard = React.memo<CardBoardProps>(
                         {card.text}
                       </Text>
                       {!isSubmited &&
+                        phase !== BoardPhases.SUBMITTED &&
                         ((userId === card?.createdBy?._id && !isMainboard) || hasAdminRole) && (
                           <PopoverCardSettings
                             boardId={boardId}
                             cardGroupId={card._id}
                             columnId={colId}
                             firstOne={false}
-                            handleDeleteCard={handleDeleting}
+                            handleDelete={handleDelete}
                             handleEditing={handleEditing}
                             hideCards={hideCards}
                             isItem={false}
@@ -246,17 +262,6 @@ const CardBoard = React.memo<CardBoardProps>(
                   />
                 </Flex>
               )}
-              {deleting && (
-                <DeleteCard
-                  boardId={boardId}
-                  cardId={card._id}
-                  cardTitle={card.text}
-                  handleClose={handleDeleting}
-                  socketId={socketId}
-                  columnId={colId}
-                  userId={userId}
-                />
-              )}
             </Container>
             {isCommentsOpened && (
               <Comments
@@ -273,6 +278,7 @@ const CardBoard = React.memo<CardBoardProps>(
                 hasAdminRole={hasAdminRole}
                 postAnonymously={postAnonymously}
                 isMainboard={isMainboard}
+                phase={phase}
               />
             )}
           </Flex>

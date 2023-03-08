@@ -22,17 +22,17 @@ export default class Board extends BaseModel {
 	@Prop({ nullable: false })
 	isPublic!: boolean;
 
-	@Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
-	submitedByUser!: ObjectId;
+	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: true, default: null })
+	submitedByUser?: ObjectId | string;
 
 	@Prop({ type: Date, nullable: true, default: null })
-	submitedAt!: Date;
+	submitedAt?: Date;
 
 	@Prop({ nullable: false, type: [ColumnSchema] })
 	columns!: Column[];
 
-	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Board' }] })
-	dividedBoards!: Board[] | ObjectId[];
+	@Prop({ type: [{ type: SchemaTypes.ObjectId, ref: 'Board' }], nullable: true })
+	dividedBoards?: Board[] | ObjectId[] | string[];
 
 	@Prop({
 		type: SchemaTypes.ObjectId,
@@ -40,19 +40,19 @@ export default class Board extends BaseModel {
 		nullable: true,
 		default: null
 	})
-	team!: Team | ObjectId;
+	team?: Team | ObjectId | string;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
-	createdBy!: User | ObjectId;
+	createdBy!: User | ObjectId | string;
 
-	@Prop({ type: Boolean, default: false })
-	recurrent!: boolean;
+	@Prop({ type: Boolean, nullable: true, default: false })
+	recurrent?: boolean;
 
 	@Prop({ type: Boolean, default: false })
 	isSubBoard!: boolean;
 
-	@Prop({ type: Number, default: 0 })
-	boardNumber!: number;
+	@Prop({ type: Number, nullable: true, default: 0 })
+	boardNumber?: number;
 
 	@Prop({ type: Number, nullable: true, default: null })
 	maxVotes?: number;
@@ -63,24 +63,27 @@ export default class Board extends BaseModel {
 	@Prop({ type: Boolean, nullable: false, default: false })
 	hideVotes?: boolean;
 
-	@Prop({ type: Boolean, nullable: false, default: false })
-	slackEnable!: boolean;
+	@Prop({ type: Boolean, nullable: true, default: false })
+	slackEnable?: boolean;
 
 	@Prop({ type: String, nullable: true, default: null })
 	slackChannelId?: string;
 
 	@Prop({ type: Boolean, nullable: true, default: true })
-	addCards: boolean;
+	addCards?: boolean;
 
 	@Prop({ type: Boolean, nullable: true, default: false })
-	postAnonymously: boolean;
+	postAnonymously?: boolean;
 
 	@Prop({
 		type: String,
 		nullable: true,
-		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITED]
+		enum: [BoardPhases.ADDCARDS, BoardPhases.VOTINGPHASE, BoardPhases.SUBMITTED]
 	})
 	phase?: string;
+
+	@Prop({ type: String })
+	createdAt: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);

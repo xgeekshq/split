@@ -10,7 +10,6 @@ import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
-import AlertMergeIntoMain from '@/components/Board/SplitBoard/AlertMergeIntoMain';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icon';
@@ -33,8 +32,10 @@ import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
-import AlertVotingPhase from '@/components/Board/SplitBoard/AlertVotePhase';
 import { BoardPhases } from '@/utils/enums/board.phases';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import useCards from '@/hooks/useCards';
+import { UpdateBoardPhaseType } from '@/types/board/board';
 import { sortParticipantsList } from './[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -116,13 +117,15 @@ const Board: NextPage<Props> = ({ boardId }) => {
   // Hooks
   const {
     fetchBoard: { data },
+    updateBoardPhaseMutation,
   } = useBoard({
     autoFetchBoard: true,
   });
-
   const board = data?.board;
   const isSubBoard = board?.isSubBoard;
+
   const route = useRouter();
+  const { mergeBoard } = useCards();
 
   const isPersonalBoard = !data?.board.team; // personal boards don't have teams
 
@@ -185,14 +188,16 @@ const Board: NextPage<Props> = ({ boardId }) => {
   // Show button in sub boards to merge into main
   const showButtonToMerge = !!(isSubBoard && !board?.submitedByUser && hasAdminRole);
 
-  // Show button in main board to start voting if is Admin
-  const showButtonToVote = !!(
-    board?.dividedBoards?.filter((dividedBoard) => !isEmpty(dividedBoard.submitedAt)).length ===
-      board?.dividedBoards?.length &&
-    board?.phase === BoardPhases.ADDCARDS &&
+  const canChangePhase =
+    board?.dividedBoards?.every((dividedBoard) => !isEmpty(dividedBoard.submitedAt)) &&
     !isSubBoard &&
-    hasAdminRole
-  );
+    hasAdminRole;
+
+  // Show button in main board to start voting
+  const showButtonToVote = !!(canChangePhase && board?.phase === BoardPhases.ADDCARDS);
+
+  // Show button in main board to submit
+  const showButtonToSubmit = !!(canChangePhase && board?.phase === BoardPhases.VOTINGPHASE);
 
   // Show Alert message if any sub-board wasn't merged
   const showMessageHaveSubBoardsMerged =
@@ -220,11 +225,27 @@ const Board: NextPage<Props> = ({ boardId }) => {
     setIsOpen(true);
   };
 
+  const handleMergeBoard = () => {
+    mergeBoard.mutate({ subBoardId: boardId, socketId });
+  };
+
+  const handleChangePhase = (phase: string) => {
+    if (hasAdminRole) {
+      const updateBoardPhase: UpdateBoardPhaseType = {
+        boardId,
+        phase,
+      };
+      updateBoardPhaseMutation.mutate(updateBoardPhase);
+    }
+  };
+
   const shouldShowLeftSection =
     !showMessageIfMerged &&
-    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote);
+    (showButtonToMerge || showMessageHaveSubBoardsMerged || showButtonToVote || showButtonToSubmit);
 
-  const shouldShowRightSection = hasAdminRole && !board?.submitedAt;
+  const shouldShowRightSection =
+    hasAdminRole && !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
+  const shouldShowTimer = !board?.submitedAt && board?.phase !== BoardPhases.SUBMITTED;
 
   if (isEmpty(recoilBoard) || !userId || !socketId || !board) {
     return <LoadingPage />;
@@ -248,7 +269,20 @@ const Board: NextPage<Props> = ({ boardId }) => {
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
           {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
-              {showButtonToMerge && <AlertMergeIntoMain boardId={boardId} socketId={socketId} />}
+              {showButtonToMerge && (
+                <ConfirmationDialog
+                  title="Merge board into main board"
+                  description="If you merge your sub-team's board into the main board it can not be edited anymore
+                afterwards. Are you sure you want to merge it?"
+                  confirmationLabel="Merge into main board"
+                  confirmationHandler={handleMergeBoard}
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Merge into main board
+                    <Icon name="merge" />
+                  </Button>
+                </ConfirmationDialog>
+              )}
 
               {showMessageHaveSubBoardsMerged && (
                 <AlertBox
@@ -258,14 +292,42 @@ const Board: NextPage<Props> = ({ boardId }) => {
                 />
               )}
               {showButtonToVote && (
-                <AlertVotingPhase boardId={boardId} isAdmin={hasAdminRole} emitEvent={emitEvent} />
+                <ConfirmationDialog
+                  title="Start voting phase"
+                  description="Are you sure you want to start the voting phase?"
+                  confirmationHandler={() => {
+                    handleChangePhase(BoardPhases.VOTINGPHASE);
+                  }}
+                  confirmationLabel="Start Voting"
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Start voting
+                    <Icon name="check" />
+                  </Button>
+                </ConfirmationDialog>
+              )}
+              {showButtonToSubmit && (
+                <ConfirmationDialog
+                  title="Submit"
+                  description="If you submit your board it will block the users from voting and it can not be edited
+                anymore afterwards. Are you sure you want to submit it?"
+                  confirmationHandler={() => {
+                    handleChangePhase(BoardPhases.SUBMITTED);
+                  }}
+                  confirmationLabel="Submit"
+                >
+                  <Button variant="primaryOutline" size="sm">
+                    Submit Board
+                    <Icon name="check" />
+                  </Button>
+                </ConfirmationDialog>
               )}
             </Flex>
           )}
 
           {!shouldShowLeftSection && !showMessageIfMerged && <Flex css={{ flex: 1 }} />}
 
-          {!board?.submitedAt && (
+          {shouldShowTimer && (
             <Flex
               css={{
                 flex: 1,

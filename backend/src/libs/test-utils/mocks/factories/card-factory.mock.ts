@@ -1,5 +1,6 @@
 import faker from '@faker-js/faker';
 import Card from 'src/modules/cards/schemas/card.schema';
+import { buildTestFactory } from './generic-factory.mock';
 
 const userId = faker.datatype.uuid();
 const cardId = faker.datatype.uuid();
@@ -8,7 +9,7 @@ const commentText = faker.lorem.paragraph(1);
 const teamId = faker.datatype.uuid();
 const createdAtDate = faker.datatype.datetime();
 
-const mockCardData = (params: Partial<Card>): Card => {
+const mockCardData = (): Card => {
 	return {
 		_id: cardId,
 		text: cardText,
@@ -41,13 +42,10 @@ const mockCardData = (params: Partial<Card>): Card => {
 				createdByTeam: teamId,
 				createdAt: createdAtDate
 			}
-		],
-		...params
+		]
 	};
 };
 
-export const CardFactory = {
-	create: (params: Partial<Card> = {}): Card => mockCardData(params),
-	createMany: (amount: number, params: Partial<Card> = {}): Card[] =>
-		Array.from({ length: amount }).map(() => CardFactory.create(params))
-};
+export const CardFactory = buildTestFactory<Card>(() => {
+	return mockCardData();
+});

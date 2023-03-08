@@ -1,32 +1,56 @@
+import Button from '@/components/Primitives/Button';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 import Flex from '@/components/Primitives/Flex';
+import Icon from '@/components/Primitives/Icon';
 import Input from '@/components/Primitives/Input';
-import { DeleteColumnButton } from './DeleteButton';
+import { deletedColumnsState } from '@/store/board/atoms/board.atom';
+import { useFormContext } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   remove: (index?: number | number[]) => void;
-  title: string;
   index: number;
   disableDeleteColumn?: boolean;
 }
 
-const ColumnBoxAndDelete = ({ remove, title, index, disableDeleteColumn }: Props) => (
-  <Flex gap="20">
-    <Input
-      id={`formColumns.${index}.title`}
-      maxChars="15"
-      placeholder={`Column ${index + 1}`}
-      showCount
-      type="text"
-    />
-    <Flex direction="column">
-      <DeleteColumnButton
-        columnTitle={title}
-        columnIndex={index}
-        disableDeleteColumn={disableDeleteColumn}
-        remove={remove}
+const ColumnBoxAndDelete = ({ remove, index, disableDeleteColumn }: Props) => {
+  const { getValues } = useFormContext();
+  const [deletedColumns, setDeletedColumns] = useRecoilState(deletedColumnsState);
+
+  const handleDeleteColumn = () => {
+    const columnToBeRemoved = [...getValues('formColumns')].at(index);
+    remove(index);
+
+    if (columnToBeRemoved._id) setDeletedColumns([...deletedColumns, columnToBeRemoved._id]);
+  };
+
+  return (
+    <Flex gap="20">
+      <Input
+        id={`formColumns.${index}.title`}
+        maxChars="15"
+        placeholder={`Column ${index + 1}`}
+        showCount
+        type="text"
       />
+      <Flex direction="column">
+        <ConfirmationDialog
+          title="Delete column"
+          description="Do you really want to delete this column?"
+          confirmationLabel="Delete Column"
+          variant="danger"
+          confirmationHandler={handleDeleteColumn}
+          tooltip={
+            disableDeleteColumn ? 'Your board must have at least one column.' : 'Delete column'
+          }
+        >
+          <Button isIcon disabled={disableDeleteColumn}>
+            <Icon name="trash-alt" size={20} css={{ mt: '$16' }} />
+          </Button>
+        </ConfirmationDialog>
+      </Flex>
     </Flex>
-  </Flex>
-);
+  );
+};
 
 export { ColumnBoxAndDelete };

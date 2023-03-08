@@ -1,4 +1,11 @@
-import { FilterQuery, PopulateOptions, QueryOptions, SortOrder, UpdateQuery } from 'mongoose';
+import {
+	FilterQuery,
+	PopulateOptions,
+	ProjectionType,
+	QueryOptions,
+	SortOrder,
+	UpdateQuery
+} from 'mongoose';
 import { ModelProps, SelectedValues } from '../types';
 
 export type PopulateType = PopulateOptions | (PopulateOptions | string)[];
@@ -12,13 +19,20 @@ export interface BaseInterfaceRepository<T> {
 
 	findAllWithQuery(
 		query: any,
+		projection?: ProjectionType<T>,
 		selectedValues?: SelectedValues<T>,
 		populate?: PopulateType
 	): Promise<T[]>;
 
 	findOneByField(fields: ModelProps<T>): Promise<T>;
 
-	create(item: T): Promise<T>;
+	findOneByFieldWithQuery(
+		value: FilterQuery<T>,
+		selectedValues?: SelectedValues<T>,
+		populate?: PopulateType
+	): Promise<T>;
+
+	create<Q>(item: Q): Promise<T>;
 
 	insertMany(listOfItems: T[]): Promise<T[]>;
 
@@ -27,6 +41,8 @@ export interface BaseInterfaceRepository<T> {
 	deleteMany(field: FilterQuery<T>, withSession: boolean): Promise<number>;
 
 	countDocuments(): Promise<number>;
+
+	countDocumentsWithQuery(filter: FilterQuery<T>, options?: QueryOptions<T>): Promise<number>;
 
 	findOneByFieldAndUpdate(
 		value: FilterQuery<T>,
