@@ -30,7 +30,7 @@ import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 import { JwtService } from '@nestjs/jwt';
 
-const fakeBoards = BoardFactory.createMany(2, 3, 2);
+const fakeBoards = BoardFactory.createMany(2);
 
 describe('UpdateColumnService', () => {
 	let columnService: UpdateColumnServiceImpl;
@@ -176,7 +176,7 @@ describe('UpdateColumnService', () => {
 
 	describe('delete cards from column', () => {
 		it('should return a updated board without cards on the column', async () => {
-			const fakeBoards = BoardFactory.createMany(2, 3, 2);
+			const fakeBoards = BoardFactory.createMany(2);
 			const boardId = fakeBoards[1]._id;
 			const boardResult = fakeBoards[1];
 			const columnsResult = fakeBoards[1].columns.map((col) => {
@@ -241,7 +241,7 @@ describe('UpdateColumnService', () => {
 		});
 
 		it("when given column_id doesn't exist, throw Bad Request Exception", async () => {
-			const fakeBoards = BoardFactory.createMany(2, 0, 0);
+			const fakeBoards = BoardFactory.createMany(2);
 			const boardId = fakeBoards[1]._id;
 			const columnToDeleteCards = {
 				id: faker.datatype.uuid(),
