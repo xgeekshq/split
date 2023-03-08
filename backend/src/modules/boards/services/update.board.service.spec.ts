@@ -87,6 +87,10 @@ describe('UpdateBoardServiceImpl', () => {
 		);
 	});
 
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('should be defined', () => {
 		expect(service).toBeDefined();
 	});
@@ -96,8 +100,8 @@ describe('UpdateBoardServiceImpl', () => {
 			expect(service.updatePhase).toBeDefined();
 		});
 
-		it('should call boardRepository ', () => {
-			service.updatePhase(boardPhaseDto);
+		it('should call boardRepository ', async () => {
+			await service.updatePhase(boardPhaseDto);
 			expect(boardRepositoryMock.updatePhase).toBeCalledTimes(1);
 		});
 
@@ -109,7 +113,7 @@ describe('UpdateBoardServiceImpl', () => {
 		});
 
 		it('shoult call websocket with eventEmitter', async () => {
-			service.updatePhase(boardPhaseDto);
+			await service.updatePhase(boardPhaseDto);
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
@@ -117,7 +121,8 @@ describe('UpdateBoardServiceImpl', () => {
 			const board = {
 				...fakeBoards,
 				team: { name: 'xgeeks' },
-				phase: BoardPhases.VOTINGPHASE
+				phase: BoardPhases.VOTINGPHASE,
+				slackEnable: true
 			};
 			configServiceMock.getOrThrow.mockReturnValue(true);
 			await boardRepositoryMock.updatePhase.mockResolvedValue(
