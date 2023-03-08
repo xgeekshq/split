@@ -283,7 +283,7 @@ const AddCard = React.memo<AddCardProps>(
                 }}
               />
             )}
-            <Flex gap="8">
+            <Flex gap="8" css={{ flex: '1' }} justify="end">
               <Button
                 css={{ width: '$52', height: '$36' }}
                 size="sm"
