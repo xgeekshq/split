@@ -4,9 +4,3 @@ jest.mock('next/config', () => () => ({
   publicRuntimeConfig: {},
   serverRuntimeConfig: {},
 }));
-
-jest.mock('next/router', () => ({
-  useRouter: () => ({
-    query: '',
-  }),
-}));

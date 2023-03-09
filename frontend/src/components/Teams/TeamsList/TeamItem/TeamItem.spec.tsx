@@ -1,25 +1,21 @@
 // TODO: Test if Members & Team Admins <<Avatar Group>> is in the Document
 
-import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { libraryMocks } from '@/utils/testing/mocks';
 import TeamItem, { TeamItemProps } from './index';
 
 const DEFAULT_PROPS = {
   team: TeamFactory.create(),
 };
 
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: TeamItemProps = DEFAULT_PROPS, options?: any) =>
   renderWithProviders(<TeamItem {...props} />, {
-    routerOptions: router,
+    routerOptions: mockRouter,
     sessionOptions: {
       user: options?.user,
     },
@@ -29,6 +25,7 @@ describe('Components/Teams/TeamsList/TeamItem', () => {
   let testProps: TeamItemProps;
   beforeEach(() => {
     testProps = { ...DEFAULT_PROPS };
+    jest.clearAllMocks();
   });
 
   it('should render correctly', () => {

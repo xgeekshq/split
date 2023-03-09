@@ -27,6 +27,8 @@ export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
 
 export const SelectIcon = styled(SelectPrimitive.SelectIcon, {
   color: '$primary800',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const StyledContent = styled(SelectPrimitive.Content, {
@@ -97,7 +99,7 @@ type ContentProps = { options: Option[] };
 export const SelectContent = ({ options }: ContentProps) => (
   <StyledContent position="popper" collisionPadding={{ bottom: 100, top: 100 }}>
     <ScrollArea.Root type="auto">
-      <SelectPrimitive.Viewport asChild>
+      <SelectPrimitive.Viewport>
         <ScrollArea.Viewport>
           {options.map((option) => (
             <SelectItem value={option.value} key={option.value}>

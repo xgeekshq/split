@@ -1,4 +1,5 @@
-import { render as rtlRender } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Sidebar, { SidebarProps } from './index';
 
 const DEFAULT_PROPS = {
@@ -7,7 +8,11 @@ const DEFAULT_PROPS = {
   email: 'first.last@mail.com',
   strategy: 'local',
 };
-const render = (props: SidebarProps = DEFAULT_PROPS) => rtlRender(<Sidebar {...props} />);
+
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
+
+const render = (props: SidebarProps = DEFAULT_PROPS) =>
+  renderWithProviders(<Sidebar {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Sidebar', () => {
   it('should render correctly', () => {
