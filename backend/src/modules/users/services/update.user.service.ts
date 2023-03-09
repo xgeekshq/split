@@ -89,4 +89,8 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 
 		return user;
 	}
+
+	async updateUserUpdatedAtField(user: string) {
+		return await this.userRepository.updateUserUpdatedAt(user);
+	}
 }
