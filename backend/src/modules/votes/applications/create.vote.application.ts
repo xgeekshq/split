@@ -4,7 +4,7 @@ import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.s
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class CreateVoteApplicationImpl implements CreateVoteApplicationInterface {
+export class CreateVoteApplication implements CreateVoteApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.CreateVoteService)
 		private createVoteService: CreateVoteServiceInterface

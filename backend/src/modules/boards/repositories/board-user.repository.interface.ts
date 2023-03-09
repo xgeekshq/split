@@ -12,6 +12,13 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 	getBoardUser(board: string, user: string): Promise<BoardUser>;
 	createBoardUsers(boardUsers: BoardUserDto[]): Promise<BoardUser[]>;
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
+	updateVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		withSession?: boolean,
+		decrement?: boolean
+	): Promise<BoardUser>;
 	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[] | string[],
 		withSession: boolean,
