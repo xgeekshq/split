@@ -150,7 +150,7 @@ export class CardRepository
 		);
 	}
 
-	updateCardsFromBoard(boardId: string, cardId: string): Promise<Board> {
+	updateCardsFromBoard(boardId: string, cardId: string, session?: boolean): Promise<Board> {
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: boardId,
@@ -162,7 +162,8 @@ export class CardRepository
 				}
 			},
 			{ new: true },
-			BoardDataPopulate
+			BoardDataPopulate,
+			session
 		);
 	}
 
@@ -356,7 +357,12 @@ export class CardRepository
 		);
 	}
 
-	deleteCardFromCardItems(boardId: string, cardId: string, cardItemId: string): Promise<Board> {
+	deleteCardFromCardItems(
+		boardId: string,
+		cardId: string,
+		cardItemId: string,
+		session?: boolean
+	): Promise<Board> {
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: boardId,
@@ -370,7 +376,8 @@ export class CardRepository
 				}
 			},
 			{ arrayFilters: [{ 'card._id': cardId }], new: true },
-			BoardDataPopulate
+			BoardDataPopulate,
+			session
 		);
 	}
 }

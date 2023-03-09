@@ -27,7 +27,11 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 		await this.cardRepository.startTransaction();
 		try {
 			await this.deletedVotesFromCard(boardId, cardId);
-			const boardWithCardsDeleted = await this.cardRepository.updateCardsFromBoard(boardId, cardId);
+			const boardWithCardsDeleted = await this.cardRepository.updateCardsFromBoard(
+				boardId,
+				cardId,
+				true
+			);
 
 			if (!boardWithCardsDeleted) throw Error(UPDATE_FAILED);
 			await this.cardRepository.commitTransaction();
@@ -61,7 +65,8 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			const boardUpdated = await this.cardRepository.deleteCardFromCardItems(
 				boardId,
 				cardId,
-				cardItemId
+				cardItemId,
+				true
 			);
 
 			if (!boardUpdated) throw Error(UPDATE_FAILED);
