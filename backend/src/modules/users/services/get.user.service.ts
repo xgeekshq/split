@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Team from 'src/modules/teams/interfaces/types';
-import { GetUserService } from '../interfaces/services/get.user.service.interface';
+import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortAlphabetically } from '../utils/sortings';
 
 @Injectable()
-export default class GetUserServiceImpl implements GetUserService {
+export default class GetUserService implements GetUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,

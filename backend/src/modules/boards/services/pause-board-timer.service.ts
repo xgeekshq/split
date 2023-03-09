@@ -3,17 +3,17 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BOARD_TIMER_SERVER_PAUSED } from 'src/libs/constants/timer';
 import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import ServerPausedTimerEvent from 'src/modules/boards/events/server-paused-timer.event';
-import PauseBoardTimerService from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
+import PauseBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
+import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
-export default class PauseBoardTimerServiceImpl implements PauseBoardTimerService {
-	private logger: Logger = new Logger(PauseBoardTimerServiceImpl.name);
+export default class PauseBoardTimerService implements PauseBoardTimerServiceInterface {
+	private logger: Logger = new Logger(PauseBoardTimerService.name);
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepository,
+		private boardTimerRepository: BoardTimerRepositoryInterface,
 
 		private eventEmitter: EventEmitter2
 	) {}

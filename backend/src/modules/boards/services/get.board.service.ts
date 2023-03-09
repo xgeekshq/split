@@ -21,23 +21,22 @@ import { TYPES } from '../interfaces/types';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import BoardGuestUserDto from '../dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import UserDto from 'src/modules/users/dto/user.dto';
 
 @Injectable()
-export default class GetBoardServiceImpl implements GetBoardServiceInterface {
+export default class GetBoardService implements GetBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthService,
+		private getTokenAuthService: GetTokenAuthServiceInterface,
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.repositories.BoardUserRepository)
@@ -47,7 +46,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		private socketService: SocketGateway
 	) {}
 
-	private readonly logger = new Logger(GetBoardServiceImpl.name);
+	private readonly logger = new Logger(GetBoardService.name);
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
@@ -143,12 +142,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		};
 	}
 
-	getAllBoardsByTeamId(teamId: string) {
-		return this.boardRepository.getAllBoardsByTeamId(teamId);
-	}
-
-	getBoardPopulated(boardId: string, populate?: PopulateType) {
-		return this.boardRepository.getBoardPopulated(boardId, populate);
+	getBoardPopulated(boardId: string) {
+		return this.boardRepository.getBoardPopulated(boardId);
 	}
 
 	getBoardById(boardId: string) {
@@ -197,15 +192,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.boardUserRepository.getBoardUser(
-			board,
-			user,
-			{},
-			{
-				path: 'user',
-				select: '_id firstName lastName '
-			}
-		);
+		const userFound = await this.boardUserRepository.getBoardUser(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);

@@ -94,7 +94,7 @@ type Option = {
 
 type ContentProps = { options: Option[] };
 
-export const SelectContent: React.FC<ContentProps> = ({ options }) => (
+export const SelectContent = ({ options }: ContentProps) => (
   <StyledContent position="popper" collisionPadding={{ bottom: 100, top: 100 }}>
     <ScrollArea.Root type="auto">
       <SelectPrimitive.Viewport asChild>
@@ -113,7 +113,7 @@ export const SelectContent: React.FC<ContentProps> = ({ options }) => (
   </StyledContent>
 );
 
-type SelectProps = {
+export type SelectProps = {
   children: ReactNode;
   disabled: boolean;
   hasError?: boolean;
@@ -121,13 +121,7 @@ type SelectProps = {
   [x: string]: any;
 };
 
-export const Select: React.FC<SelectProps> = ({
-  children,
-  disabled,
-  hasError = false,
-  css,
-  ...props
-}) => {
+export const Select = ({ children, disabled, hasError = false, css, ...props }: SelectProps) => {
   const StyledBox = styled(Flex, Box, {});
 
   return (
@@ -140,6 +134,7 @@ export const Select: React.FC<SelectProps> = ({
       }}
       direction="column"
       elevation="1"
+      data-testid="select"
     >
       <SelectPrimitive.Root disabled={disabled} {...props}>
         {children}

@@ -1,8 +1,3 @@
-export interface MergeCardApplication {
-	mergeCards(
-		boardId: string,
-		draggedCardId: string,
-		cardId: string,
-		userId: string
-	): Promise<boolean>;
+export interface MergeCardApplicationInterface {
+	mergeCards(boardId: string, draggedCardId: string, cardId: string): Promise<boolean>;
 }

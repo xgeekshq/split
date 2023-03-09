@@ -1,5 +1,6 @@
 import {
 	FilterQuery,
+	PipelineStage,
 	PopulateOptions,
 	ProjectionType,
 	QueryOptions,
@@ -32,6 +33,8 @@ export interface BaseInterfaceRepository<T> {
 		populate?: PopulateType
 	): Promise<T>;
 
+	aggregateByQuery<Q>(pipeline: PipelineStage[]): Promise<Q[]>;
+
 	create<Q>(item: Q): Promise<T>;
 
 	insertMany(listOfItems: T[]): Promise<T[]>;
@@ -48,10 +51,18 @@ export interface BaseInterfaceRepository<T> {
 		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
 		options?: QueryOptions<T>,
-		populate?: PopulateType
+		populate?: PopulateType,
+		withSession?: boolean
 	): Promise<T>;
 
 	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T>;
+
+	updateOneByField<Q>(
+		filter: FilterQuery<T>,
+		update: UpdateQuery<T>,
+		options?: QueryOptions<T>,
+		withSession?: boolean
+	): Promise<Q>;
 
 	startTransaction(): Promise<void>;
 

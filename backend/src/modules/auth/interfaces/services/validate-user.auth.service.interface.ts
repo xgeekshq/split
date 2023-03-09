@@ -1,6 +1,6 @@
 import User from 'src/modules/users/entities/user.schema';
 
-export interface ValidateUserAuthService {
+export interface ValidateUserAuthServiceInterface {
 	validateUserWithCredentials(email: string, plainTextPassword: string): Promise<User | null>;
 
 	validateUserById(userId: string): Promise<User | null>;

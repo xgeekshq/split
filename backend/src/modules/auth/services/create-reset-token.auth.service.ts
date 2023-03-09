@@ -3,11 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ClientSession, Model } from 'mongoose';
-import { CreateResetTokenAuthService } from '../interfaces/services/create-reset-token.auth.service.interface';
-import ResetPassword, { ResetPasswordDocument } from '../schemas/reset-password.schema';
+import { CreateResetTokenAuthServiceInterface } from '../interfaces/services/create-reset-token.auth.service.interface';
+import ResetPassword, { ResetPasswordDocument } from '../entities/reset-password.schema';
 
 @Injectable()
-export default class CreateResetTokenAuthServiceImpl implements CreateResetTokenAuthService {
+export default class CreateResetTokenAuthService implements CreateResetTokenAuthServiceInterface {
 	constructor(
 		@InjectModel(ResetPassword.name)
 		private resetModel: Model<ResetPasswordDocument>,

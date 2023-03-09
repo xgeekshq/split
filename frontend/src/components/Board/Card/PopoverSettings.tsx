@@ -10,27 +10,24 @@ import {
 import Text from '@/components/Primitives/Text';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
 
 interface PopoverSettingsContentProps {
   isItem: boolean;
   isOwner: boolean;
   unmergeCard: () => void;
   setEditCard: () => void;
-  setDeleteCard?: () => void;
+  setDeleteCard: () => void;
 }
 
-const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
+const PopoverSettingsContent = ({
   isItem,
   isOwner,
   unmergeCard,
   setEditCard,
   setDeleteCard,
-}) => {
+}: PopoverSettingsContentProps) => {
   const [unmergeClickLock, setUnmergeClickLock] = useState(true);
-
-  PopoverSettingsContent.defaultProps = {
-    setDeleteCard: undefined,
-  };
 
   return (
     <PopoverContent>
@@ -60,12 +57,20 @@ const PopoverSettingsContent: React.FC<PopoverSettingsContentProps> = ({
         </PopoverItem>
       )}
       {isOwner && (
-        <PopoverItem onClick={setDeleteCard}>
-          <Icon name="trash-alt" />
-          <Text size="sm" fontWeight="medium">
-            Delete card
-          </Text>
-        </PopoverItem>
+        <ConfirmationDialog
+          title="Delete card"
+          description="Do you really want to delete this card?"
+          confirmationLabel="Delete"
+          variant="danger"
+          confirmationHandler={setDeleteCard}
+        >
+          <PopoverItem>
+            <Icon name="trash-alt" />
+            <Text size="sm" fontWeight="medium">
+              Delete card
+            </Text>
+          </PopoverItem>
+        </ConfirmationDialog>
       )}
     </PopoverContent>
   );
@@ -84,11 +89,11 @@ interface PopoverSettingsProps {
   userId: string;
   item: CardItemType;
   hasAdminRole: boolean;
+  handleDelete: () => void;
   handleEditing: () => void;
-  handleDeleteCard?: () => void;
 }
 
-const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
+const PopoverCardSettings = React.memo(
   ({
     firstOne,
     itemId,
@@ -98,13 +103,13 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
     socketId,
     newPosition,
     isItem,
+    handleDelete,
     handleEditing,
-    handleDeleteCard,
     item,
     userId,
     hideCards,
     hasAdminRole,
-  }) => {
+  }: PopoverSettingsProps) => {
     const [openPopover, setOpenPopover] = useState(false);
 
     const { removeFromMergeCard } = useCards();
@@ -123,9 +128,9 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
 
     const handleOpenPopover = (value: boolean) => setOpenPopover(value);
 
-    const handleDelete = () => {
+    const handleDeleteCard = () => {
       setOpenPopover(false);
-      if (handleDeleteCard) handleDeleteCard();
+      handleDelete();
     };
 
     return (
@@ -144,7 +149,7 @@ const PopoverCardSettings: React.FC<PopoverSettingsProps> = React.memo(
         <PopoverSettingsContent
           isItem={isItem}
           isOwner={item.createdBy?._id === userId || hasAdminRole}
-          setDeleteCard={handleDelete}
+          setDeleteCard={handleDeleteCard}
           setEditCard={handleEditing}
           unmergeCard={unmergeCard}
         />

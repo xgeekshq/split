@@ -3,6 +3,7 @@ import { mongooseBoardModule } from '../../infrastructure/database/mongoose.modu
 import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
+	cardRepository,
 	createCardApplication,
 	createCardService,
 	deleteCardApplication,
@@ -32,7 +33,8 @@ import CardsController from './controller/cards.controller';
 		updateCardApplication,
 		deleteCardApplication,
 		mergeCardApplication,
-		unmergeCardApplication
+		unmergeCardApplication,
+		cardRepository
 	],
 	exports: [getCardService, deleteCardService]
 })

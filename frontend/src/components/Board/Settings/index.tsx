@@ -451,7 +451,6 @@ const BoardSettings = ({
                       {fields.map((column, index) => (
                         <ColumnBoxAndDelete
                           key={column.id}
-                          title={column.title}
                           index={index}
                           disableDeleteColumn={fields.length <= 1}
                           remove={remove}

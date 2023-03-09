@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import TimerHelper from 'src/modules/boards/helpers/timer.helper';
+import { BoardTimerRepositoryInterface } from './board-timer.repository.interface';
 
-type BoardTimer = {
+export type BoardTimer = {
 	boardId: string;
 	clientId: string;
 	timerHelper: TimerHelper;
 };
 
 @Injectable()
-export default class BoardTimerRepository {
+export default class BoardTimerRepository implements BoardTimerRepositoryInterface {
 	boardTimers: BoardTimer[] = [];
 
 	getOrCreateBoardTimer(boardId: string, clientId: string): BoardTimer {

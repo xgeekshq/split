@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LeanDocument } from 'mongoose';
 import { UserDocument } from '../entities/user.schema';
-import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
-import { GetUserService } from '../interfaces/services/get.user.service.interface';
+import { GetUserApplicationInterface } from '../interfaces/applications/get.user.application.interface';
+import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class GetUserApplicationImpl implements GetUserApplication {
+export class GetUserApplication implements GetUserApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.GetUserService)
-		private getUserService: GetUserService
+		private getUserService: GetUserServiceInterface
 	) {}
 	getById(id: string): Promise<LeanDocument<UserDocument>> {
 		return this.getUserService.getById(id);

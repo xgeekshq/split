@@ -2,7 +2,7 @@ import { LeanDocument } from 'mongoose';
 import { UserDocument } from '../../entities/user.schema';
 import { UserWithTeams } from '../type-user-with-teams';
 
-export interface GetUserApplication {
+export interface GetUserApplicationInterface {
 	getByEmail(email: string): Promise<LeanDocument<UserDocument> | null>;
 
 	countUsers(): Promise<number>;
