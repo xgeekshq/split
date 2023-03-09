@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb';
 import {
 	FilterQuery,
 	PipelineStage,
@@ -57,12 +58,16 @@ export interface BaseInterfaceRepository<T> {
 
 	findOneAndRemoveByField(fields: ModelProps<T>, withSession: boolean): Promise<T>;
 
+	findOneByeFieldAndDelete(value: FilterQuery<T>, options?: QueryOptions): Promise<T>;
+
 	updateOneByField<Q>(
 		filter: FilterQuery<T>,
 		update: UpdateQuery<T>,
 		options?: QueryOptions<T>,
 		withSession?: boolean
 	): Promise<Q>;
+
+	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult>;
 
 	startTransaction(): Promise<void>;
 

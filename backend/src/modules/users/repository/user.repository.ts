@@ -94,4 +94,8 @@ export class UserRepository
 			.count()
 			.exec();
 	}
+
+	updateUserUpdatedAt(user: string) {
+		return this.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
+	}
 }

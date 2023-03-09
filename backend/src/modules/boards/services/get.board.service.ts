@@ -1,5 +1,4 @@
 import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
-import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -27,6 +26,7 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import UserDto from 'src/modules/users/dto/user.dto';
+import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 
 @Injectable()
 export default class GetBoardService implements GetBoardServiceInterface {
@@ -37,8 +37,8 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private getTokenAuthService: GetTokenAuthServiceInterface,
-		@Inject(Users.TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface,
+		@Inject(Users.TYPES.services.UpdateUserService)
+		private updateUserService: UpdateUserServiceInterface,
 		@Inject(TYPES.repositories.BoardUserRepository)
 		private readonly boardUserRepository: BoardUserRepositoryInterface,
 		@Inject(TYPES.repositories.BoardRepository)
@@ -184,7 +184,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		user: string
 	): Promise<LoginGuestUserResponse> {
 		const { accessToken } = await this.getTokenAuthService.getTokens(user);
-		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
+		await this.updateUserService.updateUserUpdatedAtField(user);
 
 		await this.createBoardUserService.createBoardUser(board, user);
 

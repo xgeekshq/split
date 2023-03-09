@@ -1,13 +1,11 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { LeanDocument, Model } from 'mongoose';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { CreateBoardServiceInterface } from 'src/modules/boards/interfaces/services/create.board.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import * as BoardTypes from 'src/modules/boards/interfaces/types';
-import { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import Board from 'src/modules/boards/entities/board.schema';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
@@ -18,16 +16,15 @@ import {
 } from '../interfaces/services/create.schedules.service.interface';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
 import { TYPES } from '../interfaces/types';
-import Schedules, { SchedulesDocument } from '../entities/schedules.schema';
+import Schedules from '../entities/schedules.schema';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
+import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	private logger = new Logger(CreateSchedulesService.name);
 
 	constructor(
-		@InjectModel(Schedules.name)
-		private schedulesModel: Model<SchedulesDocument>,
 		@Inject(forwardRef(() => TYPES.services.DeleteSchedulesService))
 		private deleteSchedulesService: DeleteSchedulesServiceInterface,
 		@Inject(forwardRef(() => BoardTypes.TYPES.services.CreateBoardService))
@@ -36,13 +33,16 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		private getBoardService: GetBoardServiceInterface,
 		private schedulerRegistry: SchedulerRegistry,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
-		private archiveChannelService: ArchiveChannelServiceInterface
+		private archiveChannelService: ArchiveChannelServiceInterface,
+		@Inject(TYPES.repository.ScheduleRepository)
+		private readonly scheduleRepository: ScheduleRepositoryInterface
 	) {
 		this.createInitialJobs();
 	}
 
 	private async createInitialJobs() {
-		const schedules = await this.schedulesModel.find();
+		const schedules = await this.scheduleRepository.getSchedules();
+
 		schedules.forEach(async (schedule) => {
 			const date = new Date(schedule.willRunAt);
 			const day = date.getUTCDate();
@@ -60,7 +60,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 		});
 	}
 
-	private mapScheduleDocumentToDto(schedule: SchedulesDocument): AddCronJobDto {
+	private mapScheduleDocumentToDto(schedule: Schedules): AddCronJobDto {
 		return {
 			boardId: String(schedule.board),
 			teamId: String(schedule.team),
@@ -85,7 +85,7 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 				this.handleComplete(String(ownerId), teamId, String(boardId))
 			);
 
-			const cronJobDoc = await this.schedulesModel.create({
+			const cronJobDoc = await this.scheduleRepository.create({
 				board: String(boardId),
 				team: String(teamId),
 				owner: String(ownerId),
@@ -141,8 +141,8 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 	}
 
 	async createSchedule(
-		oldBoard: LeanDocument<BoardDocument>,
-		deletedSchedule: SchedulesDocument,
+		oldBoard: Board,
+		deletedSchedule: Schedules,
 		ownerId: string,
 		teamId: string,
 		oldBoardId: string
