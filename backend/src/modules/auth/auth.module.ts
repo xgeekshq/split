@@ -18,6 +18,7 @@ import {
 	getTokenAuthService,
 	registerAuthApplication,
 	registerAuthService,
+	resetPasswordRepository,
 	validateUserAuthService
 } from './auth.providers';
 import AuthController from './controller/auth.controller';
@@ -49,7 +50,8 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		userRepository,
 		LocalStrategy,
 		JwtStrategy,
-		JwtRefreshTokenStrategy
+		JwtRefreshTokenStrategy,
+		resetPasswordRepository
 	],
 	controllers: [AuthController],
 	exports: [getTokenAuthService]

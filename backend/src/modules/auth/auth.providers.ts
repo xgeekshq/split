@@ -2,6 +2,7 @@ import { CreateResetTokenAuthApplication } from './applications/create-reset-tok
 import { GetTokenAuthApplication } from './applications/get-token.auth.application';
 import { RegisterAuthApplication } from './applications/register.auth.application';
 import { TYPES } from './interfaces/types';
+import { ResetPasswordRepository } from './repository/reset-password.repository';
 import CreateResetTokenAuthService from './services/create-reset-token.auth.service';
 import GetTokenAuthService from './services/get-token.auth.service';
 import RegisterAuthService from './services/register.auth.service';
@@ -40,4 +41,9 @@ export const registerAuthApplication = {
 export const createResetTokenAuthApplication = {
 	provide: TYPES.applications.CreateResetTokenAuthApplication,
 	useClass: CreateResetTokenAuthApplication
+};
+
+export const resetPasswordRepository = {
+	provide: TYPES.repository.ResetPasswordRepository,
+	useClass: ResetPasswordRepository
 };
