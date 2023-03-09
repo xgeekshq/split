@@ -1,5 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getInitials } from '@/utils/getInitials';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
@@ -7,9 +7,9 @@ import Header, { SidebarHeaderProps } from './Header';
 
 const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
 
-const router = createMockRouter({});
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props: SidebarHeaderProps = DEFAULT_PROPS) =>
-  renderWithProviders(<Header {...props} />, { routerOptions: router });
+  renderWithProviders(<Header {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Sidebar/Header', () => {
   it('should render correctly', () => {
@@ -39,7 +39,11 @@ describe('Components/Sidebar/Header', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(DASHBOARD_ROUTE, DASHBOARD_ROUTE, expect.anything());
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        DASHBOARD_ROUTE,
+        DASHBOARD_ROUTE,
+        expect.anything(),
+      );
     });
   });
 });

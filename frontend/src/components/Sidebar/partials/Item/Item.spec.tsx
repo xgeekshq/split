@@ -1,17 +1,15 @@
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { fireEvent, waitFor } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { BOARDS_ROUTE } from '@/utils/routes';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Item, { SidebarItemProps } from './Item';
 
 const DEFAULT_PROPS = { iconName: 'user', label: 'Users' };
-const router = createMockRouter({});
+
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
+
 const render = (props: SidebarItemProps = DEFAULT_PROPS) =>
-  rtlRender(
-    <RouterContext.Provider value={router}>
-      <Item {...props} />
-    </RouterContext.Provider>,
-  );
+  renderWithProviders(<Item {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Sidebar/Item', () => {
   it('should render correctly', () => {
@@ -37,7 +35,7 @@ describe('Components/Sidebar/Item', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
+      expect(mockRouter.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
     });
   });
 

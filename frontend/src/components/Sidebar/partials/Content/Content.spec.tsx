@@ -1,8 +1,12 @@
-import { render as rtlRender } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Content, { SidebarContentProps } from './Content';
 
 const DEFAULT_PROPS = { strategy: 'local' };
-const render = (props: SidebarContentProps = DEFAULT_PROPS) => rtlRender(<Content {...props} />);
+
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
+const render = (props: SidebarContentProps = DEFAULT_PROPS) =>
+  renderWithProviders(<Content {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Sidebar/Content', () => {
   it('should render correctly', () => {

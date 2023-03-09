@@ -1,13 +1,12 @@
 import { fireEvent } from '@testing-library/react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import DeleteTeam, { DeleteTeamProps } from './DeleteTeam';
 
-const router = createMockRouter({});
-
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: DeleteTeamProps) =>
-  renderWithProviders(<DeleteTeam {...props} />, { routerOptions: router });
+  renderWithProviders(<DeleteTeam {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/TeamsList/TeamItem/DeleteTeam', () => {
   it('should handle onClick events', () => {
