@@ -44,9 +44,6 @@ export const libraryMocks = {
     const mockRouter = createMockRouter(router);
     const useRouterMockFn = jest.fn(() => mockRouter);
 
-    jest.mock('next/router', () => ({
-      useRouter: useRouterMockFn,
-    }));
     jest.spyOn(NextRouter, 'useRouter').mockImplementation(useRouterMockFn);
 
     return {

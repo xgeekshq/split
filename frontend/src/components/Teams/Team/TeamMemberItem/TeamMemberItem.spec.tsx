@@ -1,23 +1,19 @@
 import React from 'react';
-import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { getFormattedUsername } from '@/utils/getFormattedUsername';
+import { libraryMocks } from '@/utils/testing/mocks';
 import TeamMemberItem, { TeamMemberItemProps } from '.';
-
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
 
 const DEFAULT_PROPS = {
   member: TeamUserFactory.create(),
   isTeamPage: true,
 };
 
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
+
 const render = (props: TeamMemberItemProps) =>
-  renderWithProviders(<TeamMemberItem {...props} />, { routerOptions: router });
+  renderWithProviders(<TeamMemberItem {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/Team/TeamMemberItem', () => {
   it('should render correctly', () => {
