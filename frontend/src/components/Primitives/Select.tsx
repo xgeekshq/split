@@ -97,7 +97,7 @@ type Option = {
 type ContentProps = { options: Option[] };
 
 export const SelectContent = ({ options }: ContentProps) => (
-  <StyledContent position="popper" collisionPadding={{ bottom: 100, top: 100 }}>
+  <StyledContent position="popper" collisionPadding={100}>
     <ScrollArea.Root type="auto">
       <SelectPrimitive.Viewport>
         <ScrollArea.Viewport>
