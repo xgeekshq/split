@@ -32,7 +32,6 @@ export default class SendBoardTimerStateService implements SendBoardTimerStateSe
 			boardTimerState = {
 				...boardTimerDto,
 				status: null,
-				previousStatus: null,
 				duration: null,
 				timeLeft: null
 			};

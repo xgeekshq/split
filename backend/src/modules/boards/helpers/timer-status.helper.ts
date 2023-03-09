@@ -6,16 +6,7 @@ export default class TimerStatusHelper {
 		return this._status;
 	}
 	private set status(newStatus: TimerStatusDto) {
-		this.previousStatus = this.status;
 		this._status = newStatus;
-	}
-
-	private _previousStatus: TimerStatusDto = TimerStatusDto.STOPPED;
-	get previousStatus(): TimerStatusDto {
-		return this._previousStatus;
-	}
-	private set previousStatus(status: TimerStatusDto) {
-		this._previousStatus = status;
 	}
 
 	run() {
