@@ -20,6 +20,8 @@ import { BoardPhases } from 'src/libs/enum/board.phases';
 import { BoardRepository } from '../repositories/board.repository';
 import { BadRequestException } from '@nestjs/common';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
 
 describe('UpdateBoardServiceImpl', () => {
 	let service: UpdateBoardServiceImpl;
@@ -122,28 +124,55 @@ describe('UpdateBoardServiceImpl', () => {
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
-		it('should call slackSendMessageService.execute with slackMessageDto', async () => {
+		it.only('should call slackSendMessageService.execute with slackMessageDto', async () => {
 			// Create a fake board object with the specified properties
 			const board = {
 				...fakeBoards,
 				team: { name: 'xgeeks' },
 				phase: BoardPhases.VOTINGPHASE,
-				slackEnable: true
+				slackEnable: true,
+				columns: [
+					{},
+					{},
+					{
+						_id: 'ee8279e5-cd81-4950-ae12-4e0833f3a029',
+						title: 'enim repudiandae aut',
+						color: '#aaaaaa',
+						cards: [{ text: 'someText' }, { text: 'someText' }],
+						cardText: 'totam ut repellendus',
+						isDefaultText: false
+					}
+				]
 			};
 
-			// Set up the configuration service mock to return true
-			configServiceMock.getOrThrow.mockReturnValue(true);
-
 			// Set up the board repository mock to resolve with the fake board object
-			await boardRepositoryMock.updatePhase.mockResolvedValue(
+			boardRepositoryMock.updatePhase.mockResolvedValue(
 				board as unknown as ReturnType<typeof boardRepositoryMock.updatePhase>
 			);
+
+			// Set up the configuration service mock
+			configServiceMock.getOrThrow.mockImplementation((string: string) => {
+				if (string === SLACK_MASTER_CHANNEL_ID) {
+					return '6405f9a04633b1668f71c068';
+				}
+
+				if (string === SLACK_ENABLE) {
+					return true;
+				}
+
+				if (string === FRONTEND_URL) {
+					return 'https://split.kigroup.de/';
+				}
+			});
 
 			// Call the service method being tested
 			await service.updatePhase(boardPhaseDto);
 
-			// Verify that the slackSendMessageService.execute method was called exactly once
-			expect(slackSendMessageServiceMock.execute).toHaveBeenCalledTimes(1);
+			// Verify that the slackSendMessageService.execute method with correct data 1 time
+			expect(slackSendMessageServiceMock.execute).toHaveBeenNthCalledWith(1, {
+				slackChannelId: expect.stringContaining('6405f9a04633b1668f71c068'),
+				message: expect.stringContaining('https://split.kigroup.de/')
+			});
 		});
 	});
 });
