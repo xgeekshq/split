@@ -61,6 +61,27 @@ export class BoardUserRepository
 		);
 	}
 
+	updateVoteUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		withSession?: boolean,
+		decrement?: false
+	): Promise<BoardUser> {
+		return this.findOneByFieldAndUpdate(
+			{
+				user: userId,
+				board: boardId
+			},
+			{
+				$inc: { votesCount: decrement ? (!count ? -1 : count) : count }
+			},
+			null,
+			null,
+			withSession
+		);
+	}
+
 	/* DELETE BOARD USERS */
 	deleteDividedBoardUsers(
 		dividedBoards: Board[] | ObjectId[] | string[],
