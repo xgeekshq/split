@@ -15,13 +15,13 @@ import { DeleteBoardApplication } from './applications/delete.board.application'
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
-import { BoardUserRepository } from './repositories/board-user.repository';
+import { BoardUserRepository } from '../boardusers/repositories/board-user.repository';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardServiceImpl from './services/create.board.service';
 import DeleteBoardServiceImpl from './services/delete.board.service';
 import GetBoardServiceImpl from './services/get.board.service';
 import UpdateBoardServiceImpl from './services/update.board.service';
-import CreateBoardUserService from './services/create.board.user.service';
+import CreateBoardUserService from '../boardusers/services/create.board.user.service';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,

@@ -1,4 +1,4 @@
-import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	BadRequestException,
@@ -18,7 +18,7 @@ import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';

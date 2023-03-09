@@ -3,9 +3,9 @@ import {
 	BaseInterfaceRepository,
 	PopulateType
 } from 'src/libs/repositories/interfaces/base.repository.interface';
-import BoardUserDto from '../dto/board.user.dto';
-import Board from '../entities/board.schema';
-import BoardUser from '../entities/board.user.schema';
+import BoardUserDto from '../../../boards/dto/board.user.dto';
+import Board from '../../../boards/entities/board.schema';
+import BoardUser from '../../../boards/entities/board.user.schema';
 import { SelectedValues } from 'src/libs/repositories/types';
 
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {

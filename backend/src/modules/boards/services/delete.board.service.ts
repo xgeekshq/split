@@ -18,7 +18,7 @@ import { GetBoardServiceInterface } from '../interfaces/services/get.board.servi
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()

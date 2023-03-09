@@ -1,4 +1,4 @@
-import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
@@ -29,7 +29,7 @@ import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/service
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
 @Injectable()

@@ -9,7 +9,7 @@ import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.s
 import { TYPES } from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
-import { BoardUserRepositoryInterface } from 'src/modules/boards/repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from 'src/modules/boardusers/interfaces/repositories/board-user.repository.interface';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {

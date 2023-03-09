@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import BoardUser, { BoardUserDocument } from '../entities/board.user.schema';
+import BoardUser, { BoardUserDocument } from '../../boards/entities/board.user.schema';
 import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
 import { Model } from 'mongoose';
-import BoardUserDto from '../dto/board.user.dto';
+import BoardUserDto from '../../boards/dto/board.user.dto';
 
 @Injectable()
 export default class CreateBoardUserService implements CreateBoardUserServiceInterface {

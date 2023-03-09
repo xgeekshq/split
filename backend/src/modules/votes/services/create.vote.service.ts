@@ -1,4 +1,4 @@
-import { BoardUserRepositoryInterface } from './../../boards/repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
