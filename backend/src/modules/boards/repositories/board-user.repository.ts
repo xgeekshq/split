@@ -1,7 +1,7 @@
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { FilterQuery, Model, ObjectId, QueryOptions, UpdateQuery } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import BoardUserDto from '../dto/board.user.dto';

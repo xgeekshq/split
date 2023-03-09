@@ -67,7 +67,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		votes = votes.concat(userVotes);
 
 		try {
-			this.removeVotesFromCardItem(boardId, cardItemId, votes, cardId, withSession);
+			await this.removeVotesFromCardItem(boardId, cardItemId, votes, cardId, withSession);
 			await this.decrementVoteUser(boardId, userId, count, withSession);
 
 			await this.boardUserRepository.commitTransaction();
@@ -118,7 +118,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			mappedVotes = mappedVotes.concat(userVotes);
 
 			try {
-				this.removeVotesFromCardGroup(boardId, mappedVotes, cardId, withSession);
+				await this.removeVotesFromCardGroup(boardId, mappedVotes, cardId, withSession);
 				await this.decrementVoteUser(boardId, userId, -votesToReduce, withSession);
 
 				await this.boardUserRepository.commitTransaction();
