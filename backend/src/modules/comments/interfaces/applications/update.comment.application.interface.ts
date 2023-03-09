@@ -7,7 +7,6 @@ export interface UpdateCommentApplicationInterface {
 		cardId: string,
 		cardItemId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
@@ -16,7 +15,6 @@ export interface UpdateCommentApplicationInterface {
 		boardId: string,
 		cardId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;

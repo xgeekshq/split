@@ -205,7 +205,6 @@ export default class CommentsController {
 			cardId,
 			itemId,
 			commentId,
-			request.user._id,
 			text,
 			anonymous
 		);
@@ -252,7 +251,6 @@ export default class CommentsController {
 			boardId,
 			cardId,
 			commentId,
-			request.user._id,
 			text,
 			anonymous
 		);

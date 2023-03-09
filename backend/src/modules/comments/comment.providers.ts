@@ -1,8 +1,8 @@
-import { CreateCommentApplicationInterfaceImpl } from './applications/create.comment.application';
-import { DeleteCommentApplicationInterfaceImpl } from './applications/delete.comment.application';
+import { DeleteCommentApplication } from './applications/delete.comment.application';
+import { CreateCommentApplication } from './applications/create.comment.application';
 import { UpdateCommentApplication } from './applications/update.comment.application';
 import { TYPES } from './interfaces/types';
-import { CommentRepository } from './repositories/comment-board.repository';
+import { CommentRepository } from './repositories/comment.repository';
 import CreateCommentService from './services/create.comment.service';
 import DeleteCommentService from './services/delete.comment.service';
 import UpdateCommentService from './services/update.comment.service';
@@ -24,7 +24,7 @@ export const deleteCommentService = {
 
 export const createCommentApplication = {
 	provide: TYPES.applications.CreateCommentApplication,
-	useClass: CreateCommentApplicationInterfaceImpl
+	useClass: CreateCommentApplication
 };
 
 export const updateCommentApplication = {
@@ -34,7 +34,7 @@ export const updateCommentApplication = {
 
 export const deleteCommentApplication = {
 	provide: TYPES.applications.DeleteCommentApplication,
-	useClass: DeleteCommentApplicationInterfaceImpl
+	useClass: DeleteCommentApplication
 };
 
 export const commentRepository = {

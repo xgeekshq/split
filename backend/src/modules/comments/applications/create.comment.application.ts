@@ -4,7 +4,7 @@ import { CreateCommentServiceInterface } from '../interfaces/services/create.com
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class CreateCommentApplicationInterfaceImpl implements CreateCommentApplicationInterface {
+export class CreateCommentApplication implements CreateCommentApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.CreateCommentService)
 		private createCommentService: CreateCommentServiceInterface

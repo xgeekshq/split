@@ -1,16 +1,13 @@
-import { CommentRepositoryInterface } from './../interfaces/repositories/comment-board.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { UpdateCommentApplicationInterface } from '../interfaces/applications/update.comment.application.interface';
-import { UpdateCommentService } from '../interfaces/services/update.comment.service.interface';
+import { UpdateCommentServiceInterface } from '../interfaces/services/update.comment.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export class UpdateCommentApplication implements UpdateCommentApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.UpdateCommentService)
-		private updateCommentService: UpdateCommentService,
-		@Inject(TYPES.repositories.CommentRepository)
-		private commentRepository: CommentRepositoryInterface
+		private updateCommentService: UpdateCommentServiceInterface
 	) {}
 
 	updateItemComment(
@@ -18,7 +15,6 @@ export class UpdateCommentApplication implements UpdateCommentApplicationInterfa
 		cardId: string,
 		cardItemId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	) {
@@ -27,7 +23,6 @@ export class UpdateCommentApplication implements UpdateCommentApplicationInterfa
 			cardId,
 			cardItemId,
 			commentId,
-			userId,
 			text,
 			anonymous
 		);
@@ -37,7 +32,6 @@ export class UpdateCommentApplication implements UpdateCommentApplicationInterfa
 		boardId: string,
 		cardId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	) {
@@ -45,7 +39,6 @@ export class UpdateCommentApplication implements UpdateCommentApplicationInterfa
 			boardId,
 			cardId,
 			commentId,
-			userId,
 			text,
 			anonymous
 		);
