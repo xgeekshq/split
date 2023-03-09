@@ -4,26 +4,26 @@ import { BOARD_TIMER_SERVER_STARTED, BOARD_TIMER_SYNC_INTERVAL } from 'src/libs/
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import BoardTimerStateDto from 'src/libs/dto/board-timer-state.dto';
 import ServerStartedTimerEvent from 'src/modules/boards/events/server-started-timer.event';
-import SendBoardTimerTimeLeftService from 'src/modules/boards/interfaces/services/send-board-time-left.service.interface';
-import StartBoardTimerService from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
-import StopBoardTimerService from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
+import SendBoardTimerTimeLeftServiceInterface from 'src/modules/boards/interfaces/services/send-board-time-left.service.interface';
+import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
+import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
 import { ONE_HOUR } from '../../../libs/constants/timer';
+import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
 
 @Injectable()
-export default class StartBoardTimerServiceImpl implements StartBoardTimerService {
-	private logger: Logger = new Logger(StartBoardTimerServiceImpl.name);
+export default class StartBoardTimerService implements StartBoardTimerServiceInterface {
+	private logger: Logger = new Logger(StartBoardTimerService.name);
 
 	constructor(
 		@Inject(TYPES.repositories.BoardTimerRepository)
-		private boardTimerRepository: BoardTimerRepository,
+		private boardTimerRepository: BoardTimerRepositoryInterface,
 
 		@Inject(TYPES.services.StopBoardTimerService)
-		private stopBoardTimerService: StopBoardTimerService,
+		private stopBoardTimerService: StopBoardTimerServiceInterface,
 
 		@Inject(TYPES.services.SendBardTimerTimeLeftService)
-		private updateBoardTimerService: SendBoardTimerTimeLeftService,
+		private updateBoardTimerService: SendBoardTimerTimeLeftServiceInterface,
 
 		private eventEmitter: EventEmitter2
 	) {}

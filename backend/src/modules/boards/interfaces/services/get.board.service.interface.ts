@@ -1,5 +1,4 @@
 import { LeanDocument } from 'mongoose';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
@@ -47,9 +46,7 @@ export interface GetBoardServiceInterface {
 
 	getAllBoardIdsAndTeamIdsOfUser(userId: string): Promise<{ boardIds: any[]; teamIds: any[] }>;
 
-	getAllBoardsByTeamId(teamId: string): Promise<LeanDocument<BoardDocument>[]>;
-
-	getBoardPopulated(boardId: string, populate?: PopulateType): Promise<Board>;
+	getBoardPopulated(boardId: string): Promise<Board>;
 
 	getBoardById(boardId: string): Promise<Board>;
 

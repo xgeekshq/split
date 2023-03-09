@@ -4,16 +4,16 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
-import GetTokenAuthServiceImpl from 'src/modules/auth/services/get-token.auth.service';
+import GetTokenAuthService from 'src/modules/auth/services/get-token.auth.service';
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
 
 describe('AuthService', () => {
-	let service: GetTokenAuthServiceImpl;
+	let service: GetTokenAuthService;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetTokenAuthServiceImpl,
+				GetTokenAuthService,
 				updateUserService,
 				userRepository,
 				{
@@ -35,7 +35,7 @@ describe('AuthService', () => {
 			]
 		}).compile();
 
-		service = module.get<GetTokenAuthServiceImpl>(GetTokenAuthServiceImpl);
+		service = module.get<GetTokenAuthService>(GetTokenAuthService);
 	});
 
 	describe('when creating a jwt', () => {

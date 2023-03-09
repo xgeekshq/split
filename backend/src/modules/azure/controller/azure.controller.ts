@@ -26,9 +26,9 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
-import { GetUserApplication } from 'src/modules/users/interfaces/applications/get.user.application.interface';
+import { GetUserApplicationInterface } from 'src/modules/users/interfaces/applications/get.user.application.interface';
 import * as User from 'src/modules/users/interfaces/types';
-import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
+import { AuthAzureApplicationInterface } from '../interfaces/applications/auth.azure.application.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
 
@@ -37,9 +37,9 @@ import { TYPES } from '../interfaces/types';
 export default class AzureController {
 	constructor(
 		@Inject(TYPES.applications.AuthAzureApplication)
-		private authAzureApp: AuthAzureApplication,
+		private authAzureApp: AuthAzureApplicationInterface,
 		@Inject(User.TYPES.applications.GetUserApplication)
-		private getUserApp: GetUserApplication
+		private getUserApp: GetUserApplicationInterface
 	) {}
 
 	@ApiOperation({

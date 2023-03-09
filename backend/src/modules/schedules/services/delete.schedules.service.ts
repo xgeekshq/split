@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
-import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
+import Schedules, { SchedulesDocument } from '../entities/schedules.schema';
 
 export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 	constructor(

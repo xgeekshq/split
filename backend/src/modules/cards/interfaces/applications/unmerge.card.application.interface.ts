@@ -1,4 +1,4 @@
-export interface UnmergeCardApplication {
+export interface UnmergeCardApplicationInterface {
 	unmergeAndUpdatePosition(
 		boardId: string,
 		cardGroupId: string,

@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AuthAzureApplication } from '../interfaces/applications/auth.azure.application.interface';
-import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
+import { AuthAzureApplicationInterface } from '../interfaces/applications/auth.azure.application.interface';
+import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export class AuthAzureApplicationImpl implements AuthAzureApplication {
+export class AuthAzureApplication implements AuthAzureApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.AuthAzureService)
-		private authAzureService: AuthAzureService
+		private authAzureService: AuthAzureServiceInterface
 	) {}
 
 	registerOrLogin(azureToken: string) {

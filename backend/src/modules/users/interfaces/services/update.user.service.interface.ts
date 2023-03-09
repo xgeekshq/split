@@ -3,7 +3,7 @@ import UpdateUserDto from '../../dto/update.user.dto';
 import User, { UserDocument } from '../../entities/user.schema';
 import UserDto from '../../dto/user.dto';
 
-export interface UpdateUserService {
+export interface UpdateUserServiceInterface {
 	setCurrentRefreshToken(refreshToken: string, userId: string): Promise<User | null>;
 
 	setPassword(

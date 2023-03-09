@@ -13,7 +13,11 @@ import {
 	updateBoardApplication,
 	updateBoardService
 } from 'src/modules/boards/boards.providers';
-import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
+import {
+	cardRepository,
+	deleteCardService,
+	getCardService
+} from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import {
 	createSchedulesService,
@@ -75,6 +79,7 @@ describe('ColumnsController', () => {
 				updateUserService,
 				boardUserRepository,
 				createBoardUserService,
+				cardRepository,
 				{
 					provide: getModelToken('User'),
 					useValue: {}

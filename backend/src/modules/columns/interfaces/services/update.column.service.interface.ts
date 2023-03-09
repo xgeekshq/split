@@ -3,7 +3,7 @@ import { ColumnDeleteCardsDto } from 'src/modules/columns/dto/colum.deleteCards.
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { UpdateColumnDto } from '../../dto/update-column.dto';
 
-export interface UpdateColumnService {
+export interface UpdateColumnServiceInterface {
 	updateColumn(
 		boardId: string,
 		column: UpdateColumnDto

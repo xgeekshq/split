@@ -4,16 +4,16 @@ import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import ResetPassword, {
 	ResetPasswordDocument
-} from 'src/modules/auth/schemas/reset-password.schema';
+} from 'src/modules/auth/entities/reset-password.schema';
 import UpdateUserDto from '../dto/update.user.dto';
-import { UpdateUserService } from '../interfaces/services/update.user.service.interface';
+import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import UserDto from '../dto/user.dto';
 
 @Injectable()
-export default class updateUserServiceImpl implements UpdateUserService {
+export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,

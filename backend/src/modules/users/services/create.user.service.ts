@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import CreateUserDto from '../dto/create.user.dto';
 import User from '../entities/user.schema';
-import { CreateUserService } from '../interfaces/services/create.user.service.interface';
+import { CreateUserServiceInterface } from '../interfaces/services/create.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import CreateGuestUserDto from '../dto/create.guest.user.dto';
 import faker from '@faker-js/faker';
 
 @Injectable()
-export default class CreateUserServiceImpl implements CreateUserService {
+export default class CreateUserService implements CreateUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface
