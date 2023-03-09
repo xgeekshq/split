@@ -56,11 +56,13 @@ describe('Components/Primitives/ConfirmationDialog', () => {
 
     fireEvent.click(getByRole('button'));
 
-    await waitFor(async () => {
+    await waitFor(() => {
       expect(getByRole('alertdialog')).toBeInTheDocument();
+    });
 
-      fireEvent.click(getByText('Confirm'));
+    fireEvent.click(getByText('Confirm'));
 
+    await waitFor(() => {
       expect(mockConfirmationHandler).toBeCalled();
     });
   });
