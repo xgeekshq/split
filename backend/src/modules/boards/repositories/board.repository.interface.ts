@@ -26,6 +26,7 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 	): Promise<Board[]>;
 	getResponsiblesSlackId(boardId: string): Promise<Board>;
 	getBoardByQuery(query: FilterQuery<any>): Promise<Board>;
+	getAllMainBoards(): Promise<Board[]>;
 	deleteManySubBoards(
 		dividedBoards: Board[] | ObjectId[] | string[],
 		withSession: boolean

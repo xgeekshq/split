@@ -2,10 +2,12 @@ import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
 import Team from '../entities/teams.schema';
 import { TYPES } from '../interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
 import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import UserDto from 'src/modules/users/dto/user.dto';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
@@ -13,7 +15,9 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		@Inject(TYPES.repositories.TeamRepository)
 		private readonly teamRepository: TeamRepositoryInterface,
 		@Inject(TYPES.repositories.TeamUserRepository)
-		private readonly teamUserRepository: TeamUserRepositoryInterface
+		private readonly teamUserRepository: TeamUserRepositoryInterface,
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
 	countTeams(userId: string) {
@@ -47,9 +51,17 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			teamsUser.map((teamUser) => teamUser._id)
 		);
 
-		return teams.map((team) => {
-			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
+		const allBoards = await this.getBoardService.getAllMainBoards();
+
+		const teamsResult = teams.map((team) => {
+			return {
+				...team,
+				boardsCount:
+					allBoards.filter((board) => String(board.team) === String(team._id)).length ?? 0
+			};
 		});
+
+		return teamsResult;
 	}
 
 	getUsersOnlyWithTeams(users: User[]) {
@@ -65,8 +77,14 @@ export default class GetTeamService implements GetTeamServiceInterface {
 
 		const teams = await this.teamRepository.getAllTeams();
 
+		const allBoards = await this.getBoardService.getAllMainBoards();
+
 		return teams.map((team) => {
-			return { ...team, boardsCount: team.boards?.length ?? 0, boards: undefined };
+			return {
+				...team,
+				boardsCount:
+					allBoards.filter((board) => String(board.team) === String(team._id)).length ?? 0
+			};
 		});
 	}
 

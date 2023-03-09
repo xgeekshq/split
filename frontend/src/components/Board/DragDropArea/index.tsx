@@ -124,6 +124,7 @@ const DragDropArea: React.FC<Props> = ({
       columns: columnsArray,
       responsible: boardState.board.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       socketId,
+      mainBoardId: boardState.mainBoard?._id,
     });
   };
 
