@@ -37,7 +37,7 @@ export interface CardRepositoryInterface extends BaseInterfaceRepository<Board> 
 		withSession?: boolean
 	): Promise<Board>;
 
-	updateCardsFromBoard(boardId: string, cardId: string): Promise<Board>;
+	updateCardsFromBoard(boardId: string, cardId: string, session?: boolean): Promise<Board>;
 
 	pullCard(boardId: string, cardId: string, session?: boolean): Promise<UpdateResult>;
 
@@ -77,5 +77,10 @@ export interface CardRepositoryInterface extends BaseInterfaceRepository<Board> 
 		cardItems: CardItem[]
 	): Promise<Board>;
 
-	deleteCardFromCardItems(boardId: string, cardId: string, cardItemId: string): Promise<Board>;
+	deleteCardFromCardItems(
+		boardId: string,
+		cardId: string,
+		cardItemId: string,
+		session?: boolean
+	): Promise<Board>;
 }
