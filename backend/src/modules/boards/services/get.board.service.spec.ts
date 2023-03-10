@@ -27,9 +27,10 @@ import { CreateBoardUserServiceInterface } from '../interfaces/services/create.b
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 
 describe('GetBoardService', () => {
-	let boardService: GetBoardService;
+	let boardService: GetBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
 	let boardUserRepositoryMock: DeepMocked<BoardUserRepositoryInterface>;
 	let getTeamServiceMock: DeepMocked<GetTeamServiceInterface>;
@@ -73,7 +74,7 @@ describe('GetBoardService', () => {
 			]
 		}).compile();
 
-		boardService = module.get<GetBoardService>(getBoardService.provide);
+		boardService = module.get<GetBoardServiceInterface>(getBoardService.provide);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		boardUserRepositoryMock = module.get(Boards.TYPES.repositories.BoardUserRepository);
 		getTeamServiceMock = module.get(Teams.TYPES.services.GetTeamService);
