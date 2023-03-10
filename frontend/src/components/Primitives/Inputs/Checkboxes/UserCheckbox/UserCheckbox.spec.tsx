@@ -1,7 +1,7 @@
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserListFactory } from '@/utils/factories/user';
-import CheckboxUserItem, { CheckboxUserItemProps } from './CheckboxUserItem';
+import UserCheckbox, { UserCheckboxProps } from './UserCheckbox';
 
 const DEFAULT_PROPS = {
   user: UserListFactory.create({ isChecked: true }),
@@ -11,8 +11,8 @@ const DEFAULT_PROPS = {
 
 const router = createMockRouter({});
 
-const render = (props: CheckboxUserItemProps = DEFAULT_PROPS) =>
-  renderWithProviders(<CheckboxUserItem {...props} />, { routerOptions: router });
+const render = (props: UserCheckboxProps = DEFAULT_PROPS) =>
+  renderWithProviders(<UserCheckbox {...props} />, { routerOptions: router });
 
 describe('Components/Primitives/Dialogs/UserListDialog/CheckboxUserItem', () => {
   it('should render correctly', () => {

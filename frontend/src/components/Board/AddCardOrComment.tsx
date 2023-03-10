@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 import useCards from '@/hooks/useCards';

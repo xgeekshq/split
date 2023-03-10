@@ -1,16 +1,16 @@
 import React from 'react';
 import { UserList } from '@/types/team/userList';
-import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';
 
-export type CheckboxUserItemProps = {
+export type UserCheckboxProps = {
   user: UserList;
   disabled: boolean;
   handleChecked: (id: string) => void;
 };
 
-const CheckboxUserItem = ({ user, disabled, handleChecked }: CheckboxUserItemProps) => (
+const UserCheckbox = ({ user, disabled, handleChecked }: UserCheckboxProps) => (
   <Flex key={user._id} align="center" data-testid="checkboxUserItem">
     <Flex css={{ flex: 1 }}>
       <Checkbox
@@ -32,4 +32,4 @@ const CheckboxUserItem = ({ user, disabled, handleChecked }: CheckboxUserItemPro
   </Flex>
 );
 
-export default CheckboxUserItem;
+export default UserCheckbox;
