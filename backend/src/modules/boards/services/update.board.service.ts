@@ -1,3 +1,4 @@
+import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
 import {
 	BadRequestException,
@@ -15,7 +16,8 @@ import * as CommunicationsType from 'src/modules/communication/interfaces/types'
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
-import * as Boards from '../interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
@@ -40,6 +42,9 @@ import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack'
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import Team from 'src/modules/teams/entities/teams.schema';
+import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
 
 @Injectable()
 export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
@@ -53,6 +58,14 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
 		private deleteCardService: DeleteCardService,
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		private readonly createBoardUserService: CreateBoardUserServiceInterface,
+		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		private readonly getBoardUserService: GetBoardUserServiceInterface,
+		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
+		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
+		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(Boards.TYPES.repositories.BoardUserRepository)
@@ -94,7 +107,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 					.map((boardUser) => {
 						const typedBoardUser = boardUser.user as unknown as User;
 
-						return this.boardUserRepository.updateBoardUserRole(
+						return this.updateBoardUserService.updateBoardUserRole(
 							boardId,
 							typedBoardUser._id,
 							boardUser.role
@@ -114,7 +127,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 				.map((boardUser) => {
 					const typedBoardUser = boardUser.user as unknown as User;
 
-					return this.boardUserRepository.updateBoardUserRole(
+					return this.updateBoardUserService.updateBoardUserRole(
 						mainBoardId,
 						typedBoardUser._id,
 						boardUser.role
@@ -249,7 +262,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
 		const user = boardUserToUpdateRole.user as unknown as User;
 
-		const updatedBoardUsers = await this.boardUserRepository.updateBoardUserRole(
+		const updatedBoardUsers = await this.updateBoardUserService.updateBoardUserRole(
 			boardUserToUpdateRole.board,
 			user._id,
 			boardUserToUpdateRole.role
@@ -297,7 +310,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @private
 	 */
 	private async getBoardResponsibleInfo(boardId: string): Promise<ResponsibleType | undefined> {
-		const boardUser = await this.boardUserRepository.getBoardResponsible(boardId);
+		const boardUser = await this.getBoardUserService.getBoardResponsible(boardId);
 
 		if (!boardUser) {
 			return undefined;
@@ -314,7 +327,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	 * @return number
 	 */
 	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		const votesCount = await this.boardUserRepository.getVotesCount(boardId);
+		const votesCount = await this.getBoardUserService.getVotesCount(boardId);
 
 		return votesCount.reduce(
 			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
@@ -479,7 +492,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	private async addBoardUsers(boardUsers: BoardUserDto[]) {
-		const createdBoardUsers = await this.boardUserRepository.createBoardUsers(boardUsers);
+		const createdBoardUsers = await this.createBoardUserService.saveBoardUsers(boardUsers);
 
 		if (createdBoardUsers.length < 1) throw new Error(INSERT_FAILED);
 
@@ -487,7 +500,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 	}
 
 	private async deleteBoardUsers(boardUsers: string[]) {
-		const deletedCount = await this.boardUserRepository.deleteBoardUsers(boardUsers);
+		const deletedCount = await this.deleteBoardUserService.deleteBoardUsers(boardUsers);
 
 		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
 	}

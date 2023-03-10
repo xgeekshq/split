@@ -13,13 +13,17 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	async saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		const boardUsersToInsert = newUsers.map((boardUser) => ({
-			...boardUser,
-			board: newBoardId
-		}));
+	async saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string) {
+		let boardUsersToInsert: BoardUserDto[] = newUsers;
 
-		return await this.boardUserRepository.insertMany(boardUsersToInsert);
+		if (newBoardId) {
+			boardUsersToInsert = newUsers.map((boardUser) => ({
+				...boardUser,
+				board: newBoardId
+			}));
+		}
+
+		return await this.boardUserRepository.createBoardUsers(boardUsersToInsert);
 	}
 
 	async createBoardUser(board: string, user: string) {

@@ -1,3 +1,4 @@
+import { GetBoardUserServiceInterface } from './../../boardusers/interfaces/services/get.board.user.service.interface';
 import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
@@ -13,12 +14,12 @@ import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/g
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
-import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
@@ -40,8 +41,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		private getTokenAuthService: GetTokenAuthService,
 		@Inject(Users.TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		private getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		private socketService: SocketGateway
@@ -133,7 +134,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
 		const [boardIds, teamIds] = await Promise.all([
-			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
+			this.getBoardUserService.getAllBoardsOfUser(userId),
 			this.getTeamService.getTeamsOfUser(userId)
 		]);
 
@@ -160,7 +161,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	}
 
 	getBoardUsers(board: string, user: string) {
-		return this.boardUserRepository.getBoardUsers(board, user);
+		return this.getBoardUserService.getBoardUsers(board, user);
 	}
 
 	getAllMainBoards() {
@@ -197,15 +198,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.boardUserRepository.getBoardUser(
-			board,
-			user,
-			{},
-			{
-				path: 'user',
-				select: '_id firstName lastName '
-			}
-		);
+		const userFound = await this.getBoardUserService.getBoardUser(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);
