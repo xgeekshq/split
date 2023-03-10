@@ -1,3 +1,4 @@
+import { DeleteBoardUserServiceInterface } from './../../boardusers/interfaces/services/delete.board.user.service.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -13,12 +14,12 @@ import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
@@ -26,8 +27,8 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	constructor(
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(Boards.TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
+		private deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
 		private deleteSheduleService: DeleteSchedulesServiceInterface,
 		@Inject(forwardRef(() => Boards.TYPES.services.GetBoardService))
@@ -83,7 +84,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		boardSession: boolean,
 		boardId: ObjectId | string
 	) {
-		const deletedCount = await this.boardUserRepository.deleteDividedBoardUsers(
+		const deletedCount = await this.deleteBoardUserService.deleteDividedBoardUsers(
 			dividedBoards,
 			boardSession,
 			boardId
@@ -106,7 +107,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 
 	private async deleteBoardBoardUsersAndSchedules(boardId: string, isMainBoard: boolean) {
 		await this.boardRepository.startTransaction();
-		await this.boardUserRepository.startTransaction();
+		await this.deleteBoardUserService.startTransaction();
 		try {
 			const { _id, dividedBoards, slackEnable } = await this.deleteBoard(boardId.toString(), true);
 			this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
@@ -141,21 +142,21 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 			}
 
 			await this.boardRepository.commitTransaction();
-			await this.boardUserRepository.commitTransaction();
+			await this.deleteBoardUserService.commitTransaction();
 
 			return true;
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
-			await this.boardUserRepository.abortTransaction();
+			await this.deleteBoardUserService.abortTransaction();
 		} finally {
 			await this.boardRepository.endSession();
-			await this.boardUserRepository.endSession();
+			await this.deleteBoardUserService.endSession();
 		}
 		throw new BadRequestException(DELETE_FAILED);
 	}
 
 	private async deleteSimpleBoardUsers(boardSession: boolean, boardId: string) {
-		const deletedCount = await this.boardUserRepository.deleteSimpleBoardUsers(
+		const deletedCount = await this.deleteBoardUserService.deleteSimpleBoardUsers(
 			boardId,
 			boardSession
 		);

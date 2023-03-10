@@ -35,7 +35,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		@Inject(Boards.TYPES.services.GetBoardService)
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private getTokenAuthService: GetTokenAuthService,

@@ -13,7 +13,7 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	async saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string) {
+	saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string) {
 		let boardUsersToInsert: BoardUserDto[] = newUsers;
 
 		if (newBoardId) {
@@ -23,7 +23,7 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 			}));
 		}
 
-		return await this.boardUserRepository.createBoardUsers(boardUsersToInsert);
+		return this.boardUserRepository.createBoardUsers(boardUsersToInsert);
 	}
 
 	async createBoardUser(board: string, user: string) {

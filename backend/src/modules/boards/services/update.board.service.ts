@@ -35,7 +35,6 @@ import { FRONTEND_URL } from 'src/libs/constants/frontend';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import PhaseChangeEvent from 'src/modules/socket/events/user-updated-phase.event';
-import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
@@ -68,8 +67,6 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private readonly deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(Boards.TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface,
 		private eventEmitter: EventEmitter2,
 		private configService: ConfigService
 	) {}

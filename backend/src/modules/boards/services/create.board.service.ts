@@ -47,7 +47,7 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
-		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		@Inject(Boards.TYPES.services.CreateBoardService)
 		private readonly boardRepository: BoardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private createBoardUserService: CreateBoardUserServiceInterface

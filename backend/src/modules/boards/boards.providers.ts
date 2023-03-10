@@ -15,22 +15,15 @@ import { DeleteBoardApplication } from './applications/delete.board.application'
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
-import { BoardUserRepository } from '../boardusers/repositories/board-user.repository';
 import { BoardRepository } from './repositories/board.repository';
 import CreateBoardServiceImpl from './services/create.board.service';
 import DeleteBoardServiceImpl from './services/delete.board.service';
 import GetBoardServiceImpl from './services/get.board.service';
 import UpdateBoardServiceImpl from './services/update.board.service';
-import CreateBoardUserService from '../boardusers/services/create.board.user.service';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
 	useClass: CreateBoardServiceImpl
-};
-
-export const createBoardUserService = {
-	provide: TYPES.services.CreateBoardUserService,
-	useClass: CreateBoardUserService
 };
 
 export const getBoardService = {
@@ -131,9 +124,4 @@ export const afterUserRequestedTimerStateSubscriber = {
 export const boardRepository = {
 	provide: TYPES.repositories.BoardRepository,
 	useClass: BoardRepository
-};
-
-export const boardUserRepository = {
-	provide: TYPES.repositories.BoardUserRepository,
-	useClass: BoardUserRepository
 };

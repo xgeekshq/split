@@ -1,6 +1,7 @@
+import { SessionInterface } from 'src/libs/transactions/session.interface';
 import BoardUser from 'src/modules/boards/entities/board.user.schema';
 
-export interface UpdateBoardUserServiceInterface {
+export interface UpdateBoardUserServiceInterface extends SessionInterface {
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
 	updateVoteUser(
 		boardId: string,

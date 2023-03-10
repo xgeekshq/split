@@ -11,23 +11,23 @@ export default class GetBoardUserService implements GetBoardUserServiceInterface
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	async getAllBoardsOfUser(userId: string): Promise<BoardUser[]> {
-		return await this.boardUserRepository.getAllBoardsIdsOfUser(userId);
+	getAllBoardsOfUser(userId: string): Promise<BoardUser[]> {
+		return this.boardUserRepository.getAllBoardsIdsOfUser(userId);
 	}
 
-	async getBoardResponsible(boardId: string): Promise<BoardUser> {
-		return await this.boardUserRepository.getBoardResponsible(boardId);
+	getBoardResponsible(boardId: string): Promise<BoardUser> {
+		return this.boardUserRepository.getBoardResponsible(boardId);
 	}
 
-	async getVotesCount(boardId: string): Promise<BoardUser[]> {
-		return await this.boardUserRepository.getVotesCount(boardId);
+	getVotesCount(boardId: string): Promise<BoardUser[]> {
+		return this.boardUserRepository.getVotesCount(boardId);
 	}
 
-	async getBoardUsers(board: string, user: string): Promise<BoardUser[]> {
-		return await this.boardUserRepository.getBoardUsers(board, user);
+	getBoardUsers(board: string, user: string): Promise<BoardUser[]> {
+		return this.boardUserRepository.getBoardUsers(board, user);
 	}
 
-	async getBoardUser(board: string, user: string): Promise<BoardUser> {
-		return await this.getBoardUser(board, user);
+	getBoardUser(board: string, user: string): Promise<BoardUser> {
+		return this.getBoardUser(board, user);
 	}
 }

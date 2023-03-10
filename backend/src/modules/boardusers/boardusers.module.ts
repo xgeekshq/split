@@ -25,4 +25,4 @@ import {
 		boardUserRepository
 	]
 })
-export default class BoardsModule {}
+export default class BoardUsersModule {}

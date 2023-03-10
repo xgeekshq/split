@@ -19,10 +19,8 @@ import {
 	afterUserUpdatedDurationSubscriber,
 	boardRepository,
 	boardTimerRepository,
-	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
-	createBoardUserService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
@@ -38,6 +36,7 @@ import {
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import { JwtRegister } from 'src/infrastructure/config/jwt.register';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
@@ -47,13 +46,13 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		CommunicationModule,
 		CardsModule,
 		forwardRef(() => AuthModule),
+		forwardRef(() => BoardUsersModule),
 		JwtRegister,
 		mongooseBoardModule,
 		mongooseBoardUserModule,
 		mongooseUserModule
 	],
 	providers: [
-		createBoardUserService,
 		createBoardService,
 		updateBoardService,
 		deleteBoardService,
@@ -75,7 +74,6 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository,
-		boardUserRepository,
 		userRepository
 	],
 	controllers: [BoardsController],
@@ -84,8 +82,7 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		createBoardService,
 		getBoardService,
 		updateBoardService,
-		deleteBoardService,
-		boardUserRepository
+		deleteBoardService
 	]
 })
 export default class BoardsModule {}

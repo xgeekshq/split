@@ -1,6 +1,6 @@
 export interface SessionInterface {
-	startTransaction(): void;
-	commitTransaction(): void;
-	abortTransaction(): void;
-	endSession(): void;
+	startTransaction(): Promise<void>;
+	commitTransaction(): Promise<void>;
+	abortTransaction(): Promise<void>;
+	endSession(): Promise<void>;
 }

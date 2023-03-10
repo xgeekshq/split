@@ -1,5 +1,4 @@
 import BoardsModule from 'src/modules/boards/boards.module';
-import { BoardUserRepository } from 'src/modules/boardusers/repositories/board-user.repository';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
@@ -15,12 +14,14 @@ import {
 	deleteVoteService,
 	voteRepository
 } from './votes.providers';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
 		mongooseBoardModule,
 		mongooseBoardUserModule,
 		forwardRef(() => BoardsModule),
+		forwardRef(() => BoardUsersModule),
 		forwardRef(() => CardsModule),
 		SocketModule
 	],

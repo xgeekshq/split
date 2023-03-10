@@ -11,23 +11,30 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	async updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser> {
-		return await this.boardUserRepository.updateBoardUserRole(boardId, userId, role);
+	startTransaction(): Promise<void> {
+		return this.startTransaction();
+	}
+	commitTransaction(): Promise<void> {
+		return this.commitTransaction();
+	}
+	abortTransaction(): Promise<void> {
+		return this.abortTransaction();
+	}
+	endSession(): Promise<void> {
+		return this.endSession();
 	}
 
-	async updateVoteUser(
+	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser> {
+		return this.boardUserRepository.updateBoardUserRole(boardId, userId, role);
+	}
+
+	updateVoteUser(
 		boardId: string,
 		userId: string,
 		count: number,
 		withSession?: boolean,
 		decrement?: boolean
 	): Promise<BoardUser> {
-		return await this.boardUserRepository.updateVoteUser(
-			boardId,
-			userId,
-			count,
-			withSession,
-			decrement
-		);
+		return this.boardUserRepository.updateVoteUser(boardId, userId, count, withSession, decrement);
 	}
 }

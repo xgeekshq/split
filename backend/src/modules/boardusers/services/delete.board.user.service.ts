@@ -11,20 +11,39 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 		@Inject(TYPES.repositories.BoardUserRepository)
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
+
 	deleteDividedBoardUsers(
 		dividedBoards: Board[] | Schema.Types.ObjectId[] | string[],
 		withSession: boolean,
 		boardId: string | Schema.Types.ObjectId
 	): Promise<number> {
-		throw new Error('Method not implemented.');
+		return this.boardUserRepository.deleteDividedBoardUsers(dividedBoards, withSession, boardId);
 	}
+
 	deleteSimpleBoardUsers(
 		boardId: string | Schema.Types.ObjectId,
 		withSession: boolean
 	): Promise<number> {
-		throw new Error('Method not implemented.');
+		return this.boardUserRepository.deleteSimpleBoardUsers(boardId, withSession);
 	}
+
 	deleteBoardUsers(boardUsers: string[]): Promise<number> {
-		throw new Error('Method not implemented.');
+		return this.boardUserRepository.deleteBoardUsers(boardUsers);
+	}
+
+	startTransaction(): Promise<void> {
+		return this.startTransaction();
+	}
+
+	commitTransaction(): Promise<void> {
+		return this.commitTransaction();
+	}
+
+	abortTransaction(): Promise<void> {
+		return this.abortTransaction();
+	}
+
+	endSession(): Promise<void> {
+		return this.endSession();
 	}
 }
