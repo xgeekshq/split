@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';

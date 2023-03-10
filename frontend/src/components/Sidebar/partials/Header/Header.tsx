@@ -1,5 +1,5 @@
 import BannerIcon from '@/components/Sidebar/partials/Banner';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import Separator from '@/components/Primitives/Separator';

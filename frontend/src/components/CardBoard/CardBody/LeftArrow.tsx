@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 
 type LeftArrowProps = {

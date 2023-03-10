@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Button from '@/components/Primitives/Button/Button';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import {

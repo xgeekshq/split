@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import dedent from 'ts-dedent';
 
-import TextArea from '@/components/Primitives/TextArea';
+import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 
 export default {
   title: 'Primitives/TextArea',

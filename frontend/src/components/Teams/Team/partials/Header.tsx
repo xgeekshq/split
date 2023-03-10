@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Button from '@/components/Primitives/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { ROUTES } from '@/utils/routes';

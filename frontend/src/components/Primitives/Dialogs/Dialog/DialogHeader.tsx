@@ -1,4 +1,4 @@
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { StyledDialogTitle } from './styles';
 import Button from '../../Button/Button';

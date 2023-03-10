@@ -6,7 +6,7 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { usersListState } from '@/store/team/atom/team.atom';
 import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Button/Button';
 import ListParticipants from '../ListParticipants';
 

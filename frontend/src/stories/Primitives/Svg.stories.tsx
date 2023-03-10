@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Svg from '@/components/Primitives/Svg';
+import Svg from '@/components/Primitives/Icons/Svg/Svg';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { SvgSizeType } from '../types/PrimitiveTypes';
 

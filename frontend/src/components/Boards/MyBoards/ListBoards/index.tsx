@@ -5,7 +5,7 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';

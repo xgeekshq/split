@@ -5,7 +5,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { Accordion } from '@radix-ui/react-accordion';
 import { deepClone } from 'fast-json-patch';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';

@@ -1,4 +1,4 @@
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';

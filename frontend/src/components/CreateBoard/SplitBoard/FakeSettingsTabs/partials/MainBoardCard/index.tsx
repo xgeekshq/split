@@ -3,7 +3,7 @@ import React from 'react';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';

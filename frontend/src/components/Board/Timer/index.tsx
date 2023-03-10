@@ -7,7 +7,7 @@ import {
   TimerContainer,
 } from '@/components/Board/Timer/styles';
 import Button from '@/components/Primitives/Button/Button';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import useTimer from '@/hooks/useTimer';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';

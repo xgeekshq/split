@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Button/Button';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Layout/Flex';

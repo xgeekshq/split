@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
 import ConfigurationSwitch from '@/components/Primitives/Switches/ConfigurationSwitch/ConfigurationSwitch';

@@ -15,7 +15,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import Text from '@/components/Primitives/Text';
-import TextArea from '@/components/Primitives/TextArea';
+import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 
 type UpdateColumnNameProps = {
   boardId: string;

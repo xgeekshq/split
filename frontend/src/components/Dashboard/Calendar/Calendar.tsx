@@ -4,7 +4,7 @@ import { CalendarTileProperties } from 'react-calendar';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import NoMeetingsImage from '@/components/images/NoMeetings';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';

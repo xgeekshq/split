@@ -3,7 +3,7 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Flex from './Layout/Flex';
 import Text from './Text';
-import Icon from './Icon';
+import Icon from './Icons/Icon/Icon';
 import { Select, SelectContent, SelectIcon, SelectTrigger, SelectValue } from './Select';
 
 const DUMMY_OPTIONS = [

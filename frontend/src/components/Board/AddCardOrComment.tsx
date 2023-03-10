@@ -4,7 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Button/Button';
 import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
-import TextArea from '@/components/Primitives/TextArea';
+import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';
 import { SchemaAddCommentForm } from '@/schema/schemaAddCommentForm';
@@ -15,7 +15,7 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { styled } from '@/styles/stitches/stitches.config';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
-import Icon from '../Primitives/Icon';
+import Icon from '../Primitives/Icons/Icon/Icon';
 
 const StyledForm = styled('form', Flex, { width: '100%' });
 

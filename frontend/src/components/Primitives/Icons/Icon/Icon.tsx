@@ -1,6 +1,6 @@
 import { CSSProps } from '@/styles/stitches/stitches.config';
 
-import Svg from '@/components/Primitives/Svg';
+import Svg from '@/components/Primitives/Icons/Svg/Svg';
 
 type Props = CSSProps & {
   name: string;

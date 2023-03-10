@@ -12,7 +12,7 @@ import { BoardSettings } from '@/components/Board/Settings';
 import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard';
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Button/Button';

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Button from '@/components/Primitives/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';

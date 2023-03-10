@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
   PopoverContent,

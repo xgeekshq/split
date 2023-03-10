@@ -8,7 +8,7 @@ import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
 import Button from '@/components/Primitives/Button/Button';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import CountCards from './CountCards';
 
 type CardEndProps = {

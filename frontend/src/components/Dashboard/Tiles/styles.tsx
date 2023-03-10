@@ -1,5 +1,5 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 const TileContainer = styled('section', {
   display: 'grid',
