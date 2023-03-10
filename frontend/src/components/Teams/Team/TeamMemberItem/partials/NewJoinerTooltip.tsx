@@ -1,6 +1,6 @@
 import React from 'react';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import Button from '@/components/Primitives/Button';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';

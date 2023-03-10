@@ -1,5 +1,5 @@
 import Icon from '@/components/Primitives/Icon';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import BoardType from '@/types/board/board';
 import isEmpty from '@/utils/isEmpty';
 

@@ -1,4 +1,4 @@
-import Tooltip from '../../../Primitives/Tooltip';
+import Tooltip from '../../../Primitives/Tooltip/Tooltip';
 import { Title } from './partials/Title';
 
 type CardTitleProps = {

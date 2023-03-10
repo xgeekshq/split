@@ -6,7 +6,7 @@ import Box from '@/components/Primitives/Box';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';

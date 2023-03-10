@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import Flex from '@/components/Primitives/Flex';
 import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 
 type ConfigurationSwitchProps = {
   title: string;

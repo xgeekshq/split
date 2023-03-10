@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 
 type CardTitleProps = {
   userIsParticipating: boolean;

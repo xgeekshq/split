@@ -1,5 +1,5 @@
 import Flex from '@/components/Primitives/Flex';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import Icon from '@/components/Primitives/Icon';
 
 const DisabledDeleteColumnButton = () => (

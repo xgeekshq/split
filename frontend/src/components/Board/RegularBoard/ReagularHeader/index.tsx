@@ -5,7 +5,7 @@ import Icon from '@/components/Primitives/Icon';
 import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import Link from 'next/link';
