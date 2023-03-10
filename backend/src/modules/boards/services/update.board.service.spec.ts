@@ -124,7 +124,7 @@ describe('UpdateBoardServiceImpl', () => {
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
-		it.only('should call slackSendMessageService.execute with slackMessageDto', async () => {
+		it('should call slackSendMessageService.execute with slackMessageDto 1 time', async () => {
 			// Create a fake board object with the specified properties
 			const board = {
 				...fakeBoards,
