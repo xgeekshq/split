@@ -17,6 +17,7 @@ import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
@@ -29,7 +30,6 @@ import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/service
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BoardDataPopulate } from '../utils/populate-board';
-import { BoardUserRepositoryInterface } from '../../boardusers/interfaces/repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 
 @Injectable()
@@ -48,11 +48,9 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface,
-		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
@@ -182,12 +180,6 @@ export default class CreateBoardServiceImpl implements CreateBoardService {
 		if (!board) return null;
 
 		return board._id.toString();
-	}
-
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
-		);
 	}
 
 	/* --------------- HELPERS --------------- */
