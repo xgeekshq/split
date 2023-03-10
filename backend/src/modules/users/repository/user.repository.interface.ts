@@ -11,4 +11,5 @@ export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {
 	getAllWithPagination(page: number, size: number, searchUser?: string): Promise<User[]>;
 	getAllSignedUpUsers(): Promise<User[]>;
 	getSignedUpUsersCount(): Promise<number>;
+	updateUserUpdatedAt(user: string): Promise<User>;
 }

@@ -119,10 +119,12 @@ const DragDropArea: React.FC<Props> = ({
 
     mutateBoard({
       ...boardState.board,
+      createdBy: boardState.board.createdBy._id,
       team: boardState.board.team ? boardState.board.team.id : undefined,
       columns: columnsArray,
       responsible: boardState.board.users?.find((user) => user.role === BoardUserRoles.RESPONSIBLE),
       socketId,
+      mainBoardId: boardState.mainBoard?._id,
     });
   };
 

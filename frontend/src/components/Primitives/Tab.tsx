@@ -43,15 +43,9 @@ type TabType = {
   onChangeActiveValue?: (newTab: string) => void;
 };
 
-type TabProps = TabType & React.ComponentProps<typeof Tabs.Root>;
+export type TabProps = TabType & React.ComponentProps<typeof Tabs.Root>;
 
-const Tab: React.FC<TabProps> = ({
-  tabList,
-  defaultValue,
-  activeValue,
-  onChangeActiveValue,
-  children,
-}) => {
+const Tab = ({ tabList, defaultValue, activeValue, onChangeActiveValue, children }: TabProps) => {
   const initialValue = defaultValue ?? tabList[0].value;
 
   return (
@@ -60,6 +54,7 @@ const Tab: React.FC<TabProps> = ({
       defaultValue={initialValue}
       value={activeValue}
       onValueChange={onChangeActiveValue}
+      data-testid="tabs"
     >
       <StyledTabsList>
         {tabList.map((tab) => (

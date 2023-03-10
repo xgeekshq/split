@@ -1,15 +1,14 @@
 import React from 'react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TEAMS_ROUTE } from '@/utils/routes';
 import TeamHeader, { TeamHeaderProps } from './Header';
 
-const router = createMockRouter({});
-
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: TeamHeaderProps) =>
-  renderWithProviders(<TeamHeader {...props} />, { routerOptions: router });
+  renderWithProviders(<TeamHeader {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/Team/TeamHeader', () => {
   let defaultProps: TeamHeaderProps;
@@ -48,7 +47,7 @@ describe('Components/Teams/Team/TeamHeader', () => {
     expect(breadcrumbs).toHaveLength(2);
     expect(currentTeamBreadcrumb).toHaveTextContent(teamHeaderProps.title);
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(TEAMS_ROUTE, TEAMS_ROUTE, expect.anything());
+      expect(mockRouter.push).toHaveBeenCalledWith(TEAMS_ROUTE, TEAMS_ROUTE, expect.anything());
     });
   });
 

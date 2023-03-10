@@ -12,9 +12,11 @@ import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
-import TeamBoards from './partials/TeamBoards';
+import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import Button from '@/components/Primitives/Button';
+import useTeam from '@/hooks/useTeam';
 import TeamTitle from './partials/TeamTitle';
-import DeleteTeam from './partials/DeleteTeam';
+import TeamBoards from './partials/TeamBoards';
 
 export type TeamItemProps = {
   team: Team;
@@ -24,6 +26,7 @@ export type TeamItemProps = {
 const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
   const { data: session } = useSession();
   const router = useRouter();
+  const { deleteTeam, deleteTeamUser } = useTeam();
 
   const { id: userId, isSAdmin } = { ...session?.user };
   const { id, users, name } = team;
@@ -42,6 +45,20 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
 
     return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser.role);
   }, [isSAdmin, team, userId]);
+
+  const deleteTeamDescription = (
+    <Text>
+      Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
+    </Text>
+  );
+
+  const handleDelete = () => {
+    if (isTeamPage) {
+      deleteTeam.mutate({ id });
+    } else {
+      deleteTeamUser.mutate({ teamUserId: userFound?._id });
+    }
+  };
 
   return (
     <Flex direction="column" data-testid="teamItem">
@@ -102,12 +119,22 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
         </Flex>
         <Flex css={{ flex: '0' }}>
           {havePermissions && (
-            <DeleteTeam
-              teamName={name}
-              teamId={id}
-              teamUserId={userFound?._id}
-              isTeamPage={isTeamPage}
-            />
+            <ConfirmationDialog
+              title="Delete team"
+              description={deleteTeamDescription}
+              confirmationHandler={handleDelete}
+              confirmationLabel="Delete"
+              tooltip="Delete team"
+            >
+              <Button isIcon size="sm">
+                <Icon
+                  name="trash-alt"
+                  css={{
+                    color: '$primary400',
+                  }}
+                />
+              </Button>
+            </ConfirmationDialog>
           )}
         </Flex>
       </InnerContainer>

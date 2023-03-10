@@ -1,13 +1,26 @@
+import { voteRepository } from 'src/modules/votes/votes.providers';
+import { ConfigService } from '@nestjs/config';
+import configService from 'src/libs/test-utils/mocks/configService.mock';
+import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
+import { getTokenAuthService } from 'src/modules/auth/auth.providers';
+import { createBoardUserService } from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { boardRepository } from 'src/modules/boards/boards.providers';
+import {
+	boardRepository,
+	boardUserRepository,
+	getBoardService
+} from 'src/modules/boards/boards.providers';
 import Board from 'src/modules/boards/entities/board.schema';
-import { BoardRepository } from 'src/modules/boards/repositories/board.repository';
-import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
+import {
+	cardRepository,
+	deleteCardService,
+	getCardService
+} from 'src/modules/cards/cards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { deleteVoteService } from 'src/modules/votes/votes.providers';
 import { columnRepository, updateColumnService } from '../columns.providers';
@@ -15,31 +28,47 @@ import * as Columns from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
-import UpdateColumnServiceImpl from './update.column.service';
-import DeleteCardServiceImpl from 'src/modules/cards/services/delete.card.service';
+import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/teams/providers';
+import { updateUserService, userRepository } from 'src/modules/users/users.providers';
+import { JwtService } from '@nestjs/jwt';
+import GetBoardService from 'src/modules/boards/services/get.board.service';
+import DeleteCardService from 'src/modules/cards/services/delete.card.service';
+import UpdateColumnService from './update.column.service';
 
-const fakeBoards = BoardFactory.createMany(2, 3, 2);
+const fakeBoards = BoardFactory.createMany(2);
 
 describe('UpdateColumnService', () => {
-	let columnService: UpdateColumnServiceImpl;
-	let deleteCardServiceImpl: DeleteCardServiceImpl;
+	let columnService: UpdateColumnService;
+	let deleteCardServiceImpl: DeleteCardService;
 	let repositoryColumn: ColumnRepository;
-	let repositoryBoard: BoardRepository;
 	let socketService: SocketGateway;
+	let getBoardServiceImpl: GetBoardService;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			providers: [
-				UpdateColumnServiceImpl,
-				DeleteCardServiceImpl,
+				UpdateColumnService,
+				DeleteCardService,
 				SocketGateway,
+				GetBoardService,
+				getTeamService,
 				updateColumnService,
 				deleteCardService,
+				getBoardService,
 				getCardService,
 				deleteVoteService,
 				columnRepository,
+				userRepository,
 				boardRepository,
+				boardUserRepository,
+				teamRepository,
+				teamUserRepository,
+				createBoardUserService,
+				getTokenAuthService,
+				updateUserService,
+				voteRepository,
+				cardRepository,
 				{
 					provide: getModelToken(Board.name),
 					useValue: {}
@@ -47,17 +76,39 @@ describe('UpdateColumnService', () => {
 				{
 					provide: getModelToken('BoardUser'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('User'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('Team'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('TeamUser'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
+				},
+				{
+					provide: JwtService,
+					useValue: jwtService
+				},
+				{
+					provide: ConfigService,
+					useValue: configService
 				}
 			]
 		}).compile();
 
-		columnService = module.get<UpdateColumnServiceImpl>(Columns.TYPES.services.UpdateColumnService);
-		deleteCardServiceImpl = module.get<DeleteCardServiceImpl>(
-			Cards.TYPES.services.DeleteCardService
-		);
+		columnService = module.get<UpdateColumnService>(Columns.TYPES.services.UpdateColumnService);
+		deleteCardServiceImpl = module.get<DeleteCardService>(Cards.TYPES.services.DeleteCardService);
 		repositoryColumn = module.get<ColumnRepository>(Columns.TYPES.repositories.ColumnRepository);
-		repositoryBoard = module.get<BoardRepository>(Boards.TYPES.repositories.BoardRepository);
 		socketService = module.get<SocketGateway>(SocketGateway);
+		getBoardServiceImpl = module.get<GetBoardService>(Boards.TYPES.services.GetBoardService);
 
 		jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);
 	});
@@ -130,30 +181,39 @@ describe('UpdateColumnService', () => {
 
 	describe('delete cards from column', () => {
 		it('should return a updated board without cards on the column', async () => {
-			const fakeBoards = BoardFactory.createMany(2, 3, 2);
+			const fakeBoards = BoardFactory.createMany(2);
 			const boardId = fakeBoards[1]._id;
 			const boardResult = fakeBoards[1];
-			const boardUpdateResult = { ...fakeBoards[1], cards: [] };
+			const columnsResult = fakeBoards[1].columns.map((col) => {
+				if (col._id === fakeBoards[1].columns[0]._id) {
+					return { ...col, cards: [] };
+				}
+
+				return col;
+			});
+
+			const boardUpdateResult = { ...fakeBoards[1], columns: columnsResult };
 			const columnToDeleteCards = {
 				id: fakeBoards.find((board) => board._id === boardId).columns[0]._id,
 				socketId: faker.datatype.uuid()
 			};
 
-			//tests if board is found
-			const spyBoardRepository = jest
-				.spyOn(repositoryBoard, 'getBoard')
-				.mockResolvedValue(boardResult as unknown as ReturnType<typeof repositoryBoard.getBoard>);
+			const spyGetBoardService = jest
+				.spyOn(getBoardServiceImpl, 'getBoardById')
+				.mockResolvedValue(
+					boardResult as unknown as ReturnType<typeof getBoardServiceImpl.getBoardById>
+				);
+			const board = await getBoardServiceImpl.getBoardById(boardId);
 
-			const board = await repositoryBoard.getBoard(boardId);
-
-			expect(spyBoardRepository).toHaveBeenCalledWith(boardId);
+			expect(spyGetBoardService).toHaveBeenCalledWith(boardId);
+			expect(spyGetBoardService).toBeCalledTimes(1);
 			expect(board).toEqual(boardResult);
 
 			//test if board is updated
 			const spyColumnRepository = jest
 				.spyOn(repositoryColumn, 'deleteCards')
 				.mockResolvedValue(
-					boardUpdateResult as unknown as ReturnType<typeof repositoryColumn.updateColumn>
+					boardUpdateResult as unknown as ReturnType<typeof getBoardServiceImpl.getBoardById>
 				);
 
 			jest.spyOn(deleteCardServiceImpl, 'deleteCardVotesFromColumn').mockResolvedValue(null);
@@ -173,29 +233,31 @@ describe('UpdateColumnService', () => {
 				socketId: faker.datatype.uuid()
 			};
 
-			const spyBoardRepository = jest.spyOn(repositoryBoard, 'getBoard').mockResolvedValue(null);
+			const spyGetBoardService = jest
+				.spyOn(getBoardServiceImpl, 'getBoardById')
+				.mockResolvedValue(null);
 
 			expect(async () => {
 				return await columnService.deleteCardsFromColumn(boardId, columnToDeleteCards);
 			}).rejects.toThrow(BadRequestException);
 
-			expect(spyBoardRepository).toHaveBeenCalledWith(boardId);
-			expect(spyBoardRepository).toHaveBeenCalledTimes(1);
+			expect(spyGetBoardService).toHaveBeenCalledWith(boardId);
+			expect(spyGetBoardService).toHaveBeenCalledTimes(1);
 		});
 
 		it("when given column_id doesn't exist, throw Bad Request Exception", async () => {
-			const fakeBoards = BoardFactory.createMany(2, 0, 0);
+			const fakeBoards = BoardFactory.createMany(2);
 			const boardId = fakeBoards[1]._id;
 			const columnToDeleteCards = {
 				id: faker.datatype.uuid(),
 				socketId: faker.datatype.uuid()
 			};
 
-			const spyBoardRepository = jest
-				.spyOn(repositoryBoard, 'getBoard')
+			const spyGetBoardService = jest
+				.spyOn(getBoardServiceImpl, 'getBoardById')
 				.mockResolvedValue(
 					fakeBoards.find((board) => boardId === board._id) as unknown as ReturnType<
-						typeof repositoryBoard.getBoard
+						typeof getBoardServiceImpl.getBoardById
 					>
 				);
 
@@ -203,8 +265,8 @@ describe('UpdateColumnService', () => {
 				return await columnService.deleteCardsFromColumn(boardId, columnToDeleteCards);
 			}).rejects.toThrow(NotFoundException);
 
-			expect(spyBoardRepository).toHaveBeenCalledWith(boardId);
-			expect(spyBoardRepository).toHaveBeenCalledTimes(1);
+			expect(spyGetBoardService).toHaveBeenCalledWith(boardId);
+			expect(spyGetBoardService).toHaveBeenCalledTimes(1);
 		});
 
 		it("when board returned after deleting column cards doesn't exist, throw Bad Request Exception", async () => {
@@ -214,11 +276,11 @@ describe('UpdateColumnService', () => {
 				socketId: faker.datatype.uuid()
 			};
 
-			const spyBoardRepository = jest
-				.spyOn(repositoryBoard, 'getBoard')
+			const spyGetBoardService = jest
+				.spyOn(getBoardServiceImpl, 'getBoardById')
 				.mockResolvedValue(
 					fakeBoards.find((board) => boardId === board._id) as unknown as ReturnType<
-						typeof repositoryBoard.getBoard
+						typeof getBoardServiceImpl.getBoardById
 					>
 				);
 
@@ -231,7 +293,7 @@ describe('UpdateColumnService', () => {
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(BadRequestException);
 
-				expect(spyBoardRepository).toHaveBeenCalledWith(boardId);
+				expect(spyGetBoardService).toHaveBeenCalledWith(boardId);
 				expect(spyColumnRepository).toHaveBeenCalledTimes(1);
 			}
 		});

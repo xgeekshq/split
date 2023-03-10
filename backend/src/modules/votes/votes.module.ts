@@ -1,3 +1,4 @@
+import BoardsModule from 'src/modules/boards/boards.module';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
@@ -10,18 +11,26 @@ import {
 	createVoteApplication,
 	createVoteService,
 	deleteVoteApplication,
-	deleteVoteService
+	deleteVoteService,
+	voteRepository
 } from './votes.providers';
 
 @Module({
 	imports: [
 		mongooseBoardModule,
 		mongooseBoardUserModule,
+		forwardRef(() => BoardsModule),
 		forwardRef(() => CardsModule),
 		SocketModule
 	],
 	controllers: [VotesController],
-	providers: [createVoteApplication, createVoteService, deleteVoteApplication, deleteVoteService],
+	providers: [
+		createVoteApplication,
+		createVoteService,
+		deleteVoteApplication,
+		deleteVoteService,
+		voteRepository
+	],
 	exports: [deleteVoteService]
 })
 export class VotesModule {}

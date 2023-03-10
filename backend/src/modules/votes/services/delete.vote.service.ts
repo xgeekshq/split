@@ -1,94 +1,39 @@
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { UpdateResult } from 'mongodb';
-import { ClientSession, Model } from 'mongoose';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
-import { TYPES } from 'src/modules/cards/interfaces/types';
+import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
+import { TYPES } from '../interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
+import { BoardUserRepositoryInterface } from 'src/modules/boards/repositories/board-user.repository.interface';
 
 @Injectable()
-export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface {
+export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	constructor(
-		@InjectModel(Board.name)
-		private boardModel: Model<BoardDocument>,
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>,
-		@Inject(TYPES.services.GetCardService)
+		@Inject(TYPES.repositories.VoteRepository)
+		private readonly voteRepository: VoteRepositoryInterface,
+		@Inject(Boards.TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(Cards.TYPES.services.GetCardService)
 		private getCardService: GetCardServiceInterface
 	) {}
 
 	private logger: Logger = new Logger('DeleteVoteService');
 
-	private async canUserVote(
-		boardId: string,
-		userId: string,
-		count: number,
-		cardId: string,
-		boardSession: ClientSession,
-		boardUserSession: ClientSession,
-		cardItemId?: string
-	): Promise<boolean> {
-		const board = await this.boardModel.findById(boardId).session(boardSession).lean().exec();
-
-		if (!board) {
-			throw new NotFoundException('Board not found!');
-		}
-
-		const boardUserFound = await this.boardUserModel
-			.findOne({ board: boardId, user: userId })
-			.session(boardUserSession)
-			.exec();
-
-		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-
-		if (!card) return false;
-
-		if (cardItemId) {
-			const item = card.items.find((item) => item._id === cardItemId);
-
-			if (!arrayIdToString(item.votes as string[]).includes(userId.toString())) {
-				return false;
-			}
-		} else {
-			let votes = card.votes as string[];
-			card.items.forEach((item) => {
-				votes = votes.concat(item.votes as string[]);
-			});
-
-			if (!arrayIdToString(votes).includes(userId.toString())) {
-				return false;
-			}
-		}
-
-		return boardUserFound?.votesCount
-			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - Math.abs(count) >= 0
-			: false;
-	}
-
-	async decrementVoteUser(
-		boardId: string,
-		userId: string,
-		count?: number,
-		session?: ClientSession
-	) {
-		const boardUser = await this.boardUserModel.updateOne(
-			{
-				user: userId,
-				board: boardId
-			},
-			{
-				$inc: { votesCount: !count ? -1 : count }
-			},
-			{ session }
+	async decrementVoteUser(boardId: string, userId: string, count?: number, withSession?: boolean) {
+		const updatedBoardUser = await this.boardUserRepository.updateVoteUser(
+			boardId,
+			userId,
+			count,
+			withSession,
+			true
 		);
 
-		if (boardUser.modifiedCount !== 1) throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoardUser) throw new BadRequestException(UPDATE_FAILED);
 	}
 
 	async deleteVoteFromCard(
@@ -99,19 +44,11 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		count: number
 	) {
 		let retryCount = 0;
-		const userSession = await this.boardUserModel.db.startSession();
-		userSession.startTransaction();
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
+		await this.boardUserRepository.startTransaction();
+		await this.voteRepository.startTransaction();
+		const withSession = true;
 
-		const canUserVote = await this.canUserVote(
-			boardId,
-			userId,
-			count,
-			cardId,
-			session,
-			userSession
-		);
+		const canUserVote = await this.canUserVote(boardId, userId, count, cardId);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
 		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
@@ -130,46 +67,37 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		votes = votes.concat(userVotes);
 
 		try {
-			const board = await this.setCardItemVotes(boardId, cardItemId, votes, cardId, session);
-			await this.decrementVoteUser(boardId, userId, count, userSession);
+			await this.removeVotesFromCardItem(boardId, cardItemId, votes, cardId, withSession);
+			await this.decrementVoteUser(boardId, userId, count, withSession);
 
-			if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
-
-			await userSession.commitTransaction();
-			await session.commitTransaction();
+			await this.boardUserRepository.commitTransaction();
+			await this.voteRepository.commitTransaction();
 		} catch (e) {
 			this.logger.error(e);
-			await userSession.abortTransaction();
-			await session.abortTransaction();
+			await this.boardUserRepository.abortTransaction();
+			await this.voteRepository.abortTransaction();
 
 			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 				retryCount++;
-				await userSession.endSession();
-				await session.endSession();
+				await this.boardUserRepository.endSession();
+				await this.voteRepository.endSession();
 				await this.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
 			} else {
 				throw new BadRequestException(DELETE_VOTE_FAILED);
 			}
 		} finally {
-			await session.endSession();
-			await userSession.endSession();
+			await this.boardUserRepository.endSession();
+			await this.voteRepository.endSession();
 		}
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
 		let retryCount = 0;
-		const userSession = await this.boardUserModel.db.startSession();
-		userSession.startTransaction();
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
-		const canUserVote = await this.canUserVote(
-			boardId,
-			userId,
-			count,
-			cardId,
-			session,
-			userSession
-		);
+		await this.boardUserRepository.startTransaction();
+		await this.voteRepository.startTransaction();
+		const withSession = true;
+
+		const canUserVote = await this.canUserVote(boardId, userId, count, cardId);
 
 		if (!canUserVote) throw new BadRequestException(DELETE_VOTE_FAILED);
 		let currentCount = Math.abs(count);
@@ -190,29 +118,27 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 			mappedVotes = mappedVotes.concat(userVotes);
 
 			try {
-				await this.decrementVoteUser(boardId, userId, -votesToReduce, userSession);
-				const board = await this.setCardVotes(boardId, mappedVotes, cardId, session);
+				await this.removeVotesFromCardGroup(boardId, mappedVotes, cardId, withSession);
+				await this.decrementVoteUser(boardId, userId, -votesToReduce, withSession);
 
-				if (board.modifiedCount !== 1) throw new BadRequestException(DELETE_VOTE_FAILED);
-
-				await userSession.commitTransaction();
-				await session.commitTransaction();
+				await this.boardUserRepository.commitTransaction();
+				await this.voteRepository.commitTransaction();
 			} catch (e) {
 				this.logger.error(e);
-				await userSession.abortTransaction();
-				await session.abortTransaction();
+				await this.boardUserRepository.abortTransaction();
+				await this.voteRepository.abortTransaction();
 
 				if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
 					retryCount++;
-					await userSession.endSession();
-					await session.endSession();
+					await this.boardUserRepository.endSession();
+					await this.voteRepository.endSession();
 					await this.deleteVoteFromCardGroup(boardId, cardId, userId, count);
 				} else {
 					throw new BadRequestException(DELETE_VOTE_FAILED);
 				}
 			} finally {
-				await session.endSession();
-				await userSession.endSession();
+				await this.boardUserRepository.endSession();
+				await this.voteRepository.endSession();
 			}
 
 			currentCount -= Math.abs(votesToReduce);
@@ -250,56 +176,83 @@ export default class DeleteVoteServiceImpl implements DeleteVoteServiceInterface
 		}
 	}
 
-	setCardVotes(
+	/* #################### HELPERS #################### */
+
+	private async canUserVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId?: string
+	): Promise<boolean> {
+		const board = await this.voteRepository.findOneById(boardId);
+
+		if (!board) {
+			throw new NotFoundException('Board not found!');
+		}
+
+		const boardUserFound = await this.boardUserRepository.findOneByFieldWithQuery({
+			board: boardId,
+			user: userId
+		});
+
+		const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
+		if (!card) return false;
+
+		if (cardItemId) {
+			const item = card.items.find((item) => item._id === cardItemId);
+
+			if (!arrayIdToString(item.votes as string[]).includes(userId.toString())) {
+				return false;
+			}
+		} else {
+			let votes = card.votes as string[];
+			card.items.forEach((item) => {
+				votes = votes.concat(item.votes as string[]);
+			});
+
+			if (!arrayIdToString(votes).includes(userId.toString())) {
+				return false;
+			}
+		}
+
+		return boardUserFound?.votesCount
+			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - Math.abs(count) >= 0
+			: false;
+	}
+
+	private async removeVotesFromCardGroup(
 		boardId: string,
 		mappedVotes: string[],
 		cardId: string,
-		session: ClientSession
-	): Promise<UpdateResult> {
-		return this.boardModel
-			.updateOne(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$set: {
-						'columns.$.cards.$[c].votes': mappedVotes
-					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }],
-					session
-				}
-			)
-			.lean()
-			.exec();
+		withSession?: boolean
+	) {
+		const updatedBoard = await this.voteRepository.removeVotesFromCard(
+			boardId,
+			mappedVotes,
+			cardId,
+			withSession
+		);
+
+		if (!updatedBoard) throw new BadRequestException(DELETE_VOTE_FAILED);
 	}
 
-	setCardItemVotes(
+	private async removeVotesFromCardItem(
 		boardId: string,
 		cardItemId: string,
 		votes: string[],
 		cardId: string,
-		session: ClientSession
-	): Promise<UpdateResult> {
-		return this.boardModel
-			.updateOne(
-				{
-					_id: boardId,
-					'columns.cards.items._id': cardItemId
-				},
-				{
-					$set: {
-						'columns.$.cards.$[c].items.$[i].votes': votes
-					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }, { 'i._id': cardItemId }],
-					session
-				}
-			)
-			.lean()
-			.exec();
+		withSession?: boolean
+	) {
+		const updatedBoard = await this.voteRepository.removeVotesFromCardItem(
+			boardId,
+			cardId,
+			cardItemId,
+			votes,
+			withSession
+		);
+
+		if (!updatedBoard) throw new BadRequestException(DELETE_VOTE_FAILED);
 	}
 }

@@ -27,6 +27,8 @@ export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
 
 export const SelectIcon = styled(SelectPrimitive.SelectIcon, {
   color: '$primary800',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const StyledContent = styled(SelectPrimitive.Content, {
@@ -94,10 +96,10 @@ type Option = {
 
 type ContentProps = { options: Option[] };
 
-export const SelectContent: React.FC<ContentProps> = ({ options }) => (
-  <StyledContent position="popper" collisionPadding={{ bottom: 100, top: 100 }}>
+export const SelectContent = ({ options }: ContentProps) => (
+  <StyledContent position="popper" collisionPadding={100}>
     <ScrollArea.Root type="auto">
-      <SelectPrimitive.Viewport asChild>
+      <SelectPrimitive.Viewport>
         <ScrollArea.Viewport>
           {options.map((option) => (
             <SelectItem value={option.value} key={option.value}>
@@ -113,7 +115,7 @@ export const SelectContent: React.FC<ContentProps> = ({ options }) => (
   </StyledContent>
 );
 
-type SelectProps = {
+export type SelectProps = {
   children: ReactNode;
   disabled: boolean;
   hasError?: boolean;
@@ -121,13 +123,7 @@ type SelectProps = {
   [x: string]: any;
 };
 
-export const Select: React.FC<SelectProps> = ({
-  children,
-  disabled,
-  hasError = false,
-  css,
-  ...props
-}) => {
+export const Select = ({ children, disabled, hasError = false, css, ...props }: SelectProps) => {
   const StyledBox = styled(Flex, Box, {});
 
   return (
@@ -140,6 +136,7 @@ export const Select: React.FC<SelectProps> = ({
       }}
       direction="column"
       elevation="1"
+      data-testid="select"
     >
       <SelectPrimitive.Root disabled={disabled} {...props}>
         {children}

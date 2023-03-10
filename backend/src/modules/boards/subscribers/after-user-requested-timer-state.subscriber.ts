@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { BOARD_TIMER_USER_REQUESTED_TIMER_STATE } from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
-import SendBoardTimerStateService from 'src/modules/boards/interfaces/services/send-board-timer-state.service.interface';
+import SendBoardTimerStateServiceInterface from 'src/modules/boards/interfaces/services/send-board-timer-state.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
 
 @Injectable()
@@ -11,7 +11,7 @@ export default class AfterUserRequestedTimerStateSubscriber {
 
 	constructor(
 		@Inject(TYPES.services.SendBoardTimerStateService)
-		private readonly getBoardTimerStateService: SendBoardTimerStateService
+		private readonly getBoardTimerStateService: SendBoardTimerStateServiceInterface
 	) {}
 
 	@OnEvent(BOARD_TIMER_USER_REQUESTED_TIMER_STATE)

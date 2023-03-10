@@ -1,24 +1,24 @@
 import { Inject } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import {
 	CARD_NOT_FOUND,
 	CARD_NOT_INSERTED,
 	CARD_NOT_REMOVED,
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import { UnmergeCardService } from '../interfaces/services/unmerge.card.service.interface';
+import { UnmergeCardServiceInterface } from '../interfaces/services/unmerge.card.service.interface';
+import { UpdateCardServiceInterface } from '../interfaces/services/update.card.service.interface';
 import { TYPES } from '../interfaces/types';
-import { pullItem } from '../shared/pull.card';
-import { pushCardIntoPosition } from '../shared/push.card';
+import { CardRepositoryInterface } from '../repository/card.repository.interface';
 
-export class UnmergeCardServiceImpl implements UnmergeCardService {
+export class UnmergeCardService implements UnmergeCardServiceInterface {
 	constructor(
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>,
 		@Inject(TYPES.services.GetCardService)
-		private readonly cardService: GetCardServiceInterface
+		private readonly cardService: GetCardServiceInterface,
+		@Inject(TYPES.services.UpdateCardService)
+		private updateCardService: UpdateCardServiceInterface,
+		@Inject(TYPES.repository.CardRepository)
+		private readonly cardRepository: CardRepositoryInterface
 	) {}
 
 	async unmergeAndUpdatePosition(
@@ -28,15 +28,14 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 		columnId: string,
 		position: number
 	) {
-		const session = await this.boardModel.db.startSession();
-		session.startTransaction();
+		await this.cardRepository.startTransaction();
 
 		try {
 			const cardItemToMove = await this.cardService.getCardItemFromGroup(boardId, draggedCardId);
 
 			if (!cardItemToMove) return null;
 
-			const pullResult = await pullItem(boardId, draggedCardId, this.boardModel, session);
+			const pullResult = await this.updateCardService.pullCardItem(boardId, draggedCardId, true);
 
 			if (pullResult.modifiedCount !== 1) throw Error(CARD_NOT_REMOVED);
 
@@ -47,37 +46,23 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 			const items = cardGroup.items.filter((item) => item._id.toString() !== draggedCardId);
 
 			if (items.length === 1) {
-				const [{ text, comments, votes: itemVotes, createdBy, createdByTeam, anonymous }] = items;
+				const [{ comments, votes: itemVotes }] = items;
 				const newComments = cardGroup.comments.concat(comments);
 
 				const newVotes = (cardGroup.votes as unknown as string[]).concat(
 					itemVotes as unknown as string[]
 				);
 
-				const updateResult = await this.boardModel.findOneAndUpdate(
-					{
-						_id: boardId,
-						'columns.cards._id': cardGroupId
-					},
-					{
-						$set: {
-							'columns.$.cards.$[c].text': text,
-							'columns.$.cards.$[c].comments': [],
-							'columns.$.cards.$[c].votes': [],
-							'columns.$.cards.$[c].items.0.comments': newComments,
-							'columns.$.cards.$[c].items.0.votes': newVotes,
-							'columns.$.cards.$[c].createdBy': createdBy,
-							'columns.$.cards.$[c].createdByTeam': createdByTeam,
-							'columns.$.cards.$[c].anonymous': anonymous
-						}
-					},
-					{
-						arrayFilters: [{ 'c._id': cardGroupId }],
-						session
-					}
+				const updateCard = await this.cardRepository.updateCardFromGroupOnUnmerge(
+					boardId,
+					cardGroupId,
+					items[0],
+					newComments,
+					newVotes,
+					true
 				);
 
-				if (!updateResult) throw Error(UPDATE_FAILED);
+				if (!updateCard) throw Error(UPDATE_FAILED);
 			}
 
 			const newCardItem = { ...cardItemToMove };
@@ -92,26 +77,25 @@ export class UnmergeCardServiceImpl implements UnmergeCardService {
 				items: [newCardItem]
 			};
 
-			const pushResult = await pushCardIntoPosition(
+			const pushResult = await this.cardRepository.pushCard(
 				boardId,
 				columnId,
 				position,
 				newCard,
-				this.boardModel,
-				session
+				true
 			);
 
 			if (!pushResult) throw Error(CARD_NOT_INSERTED);
-			await session.commitTransaction();
-			await session.endSession();
+			await this.cardRepository.commitTransaction();
+			await this.cardRepository.endSession();
 
 			const newCardSaved = await this.cardService.getCardFromBoard(boardId, itemId);
 
 			return newCardSaved.items[0]._id;
 		} catch (e) {
-			await session.abortTransaction();
+			await this.cardRepository.abortTransaction();
 		} finally {
-			await session.endSession();
+			await this.cardRepository.endSession();
 		}
 
 		throw Error(CARD_NOT_REMOVED);

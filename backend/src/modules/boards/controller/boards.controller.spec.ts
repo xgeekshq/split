@@ -47,7 +47,6 @@ describe('BoardsController', () => {
 			.overrideGuard(BoardUserGuard)
 			.useValue({ canActivate: () => true })
 			.compile();
-
 		controller = module.get<BoardsController>(BoardsController);
 		updateBoardAppMock = module.get(Boards.TYPES.applications.UpdateBoardApplication);
 	});

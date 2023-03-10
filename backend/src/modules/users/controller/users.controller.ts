@@ -31,8 +31,7 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { GetUserApplication } from '../interfaces/applications/get.user.application.interface';
-import { UpdateUserApplication } from '../interfaces/applications/update.user.service.interface';
+import { UpdateUserApplicationInterface } from '../interfaces/applications/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
@@ -41,6 +40,7 @@ import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
+import { GetUserApplicationInterface } from '../interfaces/applications/get.user.application.interface';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -49,9 +49,9 @@ import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 export default class UsersController {
 	constructor(
 		@Inject(TYPES.applications.GetUserApplication)
-		private getUserApp: GetUserApplication,
+		private getUserApp: GetUserApplicationInterface,
 		@Inject(TYPES.applications.UpdateUserApplication)
-		private updateUserApp: UpdateUserApplication,
+		private updateUserApp: UpdateUserApplicationInterface,
 		@Inject(TYPES.applications.DeleteUserApplication)
 		private deleteUserApp: DeleteUserApplicationInterface
 	) {}

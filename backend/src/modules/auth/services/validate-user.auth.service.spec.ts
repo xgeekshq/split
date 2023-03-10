@@ -1,4 +1,5 @@
 import { ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
@@ -6,23 +7,35 @@ import * as bcrypt from 'bcrypt';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import mockedUser from 'src/libs/test-utils/mocks/user.mock';
-import ValidateUserAuthServiceImpl from 'src/modules/auth/services/validate-user.auth.service';
+import ValidateUserAuthService from 'src/modules/auth/services/validate-user.auth.service';
+import {
+	boardRepository,
+	boardUserRepository,
+	createBoardUserService,
+	getBoardService
+} from 'src/modules/boards/boards.providers';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
 	getTeamService,
 	teamRepository,
 	teamUserRepository,
 	updateTeamService
 } from 'src/modules/teams/providers';
-import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { TYPES } from 'src/modules/users/interfaces/types';
-import { getUserService, userRepository } from 'src/modules/users/users.providers';
+import GetUserService from 'src/modules/users/services/get.user.service';
+import {
+	getUserService,
+	updateUserService,
+	userRepository
+} from 'src/modules/users/users.providers';
+import { getTokenAuthService } from '../auth.providers';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
 jest.mock('src/modules/schedules/services/delete.schedules.service.ts');
 
 describe('The AuthenticationService', () => {
-	let authenticationService: ValidateUserAuthServiceImpl;
+	let authenticationService: ValidateUserAuthService;
 	let gUserService: GetUserService;
 	let bcryptCompare: jest.Mock;
 	let findUser: jest.Mock;
@@ -38,14 +51,22 @@ describe('The AuthenticationService', () => {
 		(bcrypt.compare as jest.Mock) = bcryptCompare;
 
 		const module = await Test.createTestingModule({
+			imports: [EventEmitterModule.forRoot()],
 			providers: [
-				ValidateUserAuthServiceImpl,
+				ValidateUserAuthService,
+				SocketGateway,
 				getUserService,
 				getTeamService,
 				userRepository,
 				teamRepository,
 				teamUserRepository,
 				updateTeamService,
+				getBoardService,
+				createBoardUserService,
+				getTokenAuthService,
+				boardUserRepository,
+				boardRepository,
+				updateUserService,
 				{
 					provide: ConfigService,
 					useValue: configService
@@ -53,6 +74,14 @@ describe('The AuthenticationService', () => {
 				{
 					provide: JwtService,
 					useValue: jwtService
+				},
+				{
+					provide: getModelToken('Board'),
+					useValue: {}
+				},
+				{
+					provide: getModelToken('BoardUser'),
+					useValue: {}
 				},
 				{
 					provide: getModelToken('User'),
@@ -65,10 +94,14 @@ describe('The AuthenticationService', () => {
 				{
 					provide: getModelToken('TeamUser'),
 					useValue: {}
+				},
+				{
+					provide: getModelToken('ResetPassword'),
+					useValue: {}
 				}
 			]
 		}).compile();
-		authenticationService = await module.get(ValidateUserAuthServiceImpl);
+		authenticationService = await module.get(ValidateUserAuthService);
 		gUserService = await module.get(TYPES.services.GetUserService);
 	});
 	describe('when accessing the data of authenticating user', () => {

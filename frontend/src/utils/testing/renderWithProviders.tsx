@@ -18,6 +18,31 @@ export type RenderWithProvidersOptions = Omit<RenderOptions, 'queries'> & {
   };
 };
 
+export type WrapperProps = {
+  children: ReactNode;
+  router: NextRouter;
+  queryClient: QueryClient;
+  session: Session;
+};
+
+export function createWrapper({ children, router, session, queryClient }: WrapperProps) {
+  global.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+  }));
+
+  return (
+    <RouterContext.Provider value={router}>
+      <SessionProvider refetchInterval={300} session={session}>
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>{children}</RecoilRoot>
+        </QueryClientProvider>
+      </SessionProvider>
+    </RouterContext.Provider>
+  );
+}
+
 export function renderWithProviders(
   ui: ReactElement,
   options?: RenderWithProvidersOptions,
@@ -31,21 +56,7 @@ export function renderWithProviders(
         options?.sessionOptions?.user,
       );
 
-      global.ResizeObserver = jest.fn().mockImplementation(() => ({
-        observe: jest.fn(),
-        unobserve: jest.fn(),
-        disconnect: jest.fn(),
-      }));
-
-      return (
-        <RouterContext.Provider value={router}>
-          <SessionProvider refetchInterval={300} session={session}>
-            <QueryClientProvider client={queryClient}>
-              <RecoilRoot>{children}</RecoilRoot>
-            </QueryClientProvider>
-          </SessionProvider>
-        </RouterContext.Provider>
-      );
+      return createWrapper({ children, router, queryClient, session });
     },
     ...options,
   });

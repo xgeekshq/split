@@ -1,5 +1,4 @@
 import AuthModule from 'src/modules/auth/auth.module';
-import { userRepository } from 'src/modules/users/users.providers';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
@@ -19,6 +18,7 @@ import {
 	afterUserUpdatedDurationSubscriber,
 	boardRepository,
 	boardTimerRepository,
+	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
 	createBoardUserService,
@@ -74,7 +74,7 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository,
-		userRepository
+		boardUserRepository
 	],
 	controllers: [BoardsController],
 	exports: [
@@ -82,7 +82,8 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		createBoardService,
 		getBoardService,
 		updateBoardService,
-		deleteBoardService
+		deleteBoardService,
+		boardUserRepository
 	]
 })
 export default class BoardsModule {}

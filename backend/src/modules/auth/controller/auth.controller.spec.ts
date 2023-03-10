@@ -1,145 +1,57 @@
-import { createBoardUserService } from './../../boards/boards.providers';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import configService from 'src/libs/test-utils/mocks/configService.mock';
-import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import mockedUser from 'src/libs/test-utils/mocks/user.mock';
-import {
-	createResetTokenAuthApplication,
-	createResetTokenAuthService,
-	getTokenAuthApplication,
-	getTokenAuthService,
-	registerAuthApplication,
-	registerAuthService
-} from 'src/modules/auth/auth.providers';
 import AuthController from 'src/modules/auth/controller/auth.controller';
-import {
-	boardRepository,
-	createBoardService,
-	getBoardApplication,
-	getBoardService
-} from 'src/modules/boards/boards.providers';
 import EmailModule from 'src/modules/mailer/mailer.module';
-import {
-	createTeamService,
-	getTeamApplication,
-	getTeamService,
-	teamRepository,
-	teamUserRepository,
-	updateTeamService
-} from 'src/modules/teams/providers';
-import {
-	createUserService,
-	getUserApplication,
-	getUserService,
-	updateUserApplication,
-	updateUserService,
-	userRepository
-} from 'src/modules/users/users.providers';
-import {
-	createSchedulesService,
-	deleteSchedulesService
-} from 'src/modules/schedules/schedules.providers';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { SchedulerRegistry } from '@nestjs/schedule';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import * as Auth from 'src/modules/auth/interfaces/types';
+import * as Teams from 'src/modules/teams/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as User from 'src/modules/users/interfaces/types';
+import { createMock } from '@golevelup/ts-jest';
+import { RegisterAuthApplication } from '../applications/register.auth.application';
+import { GetTeamApplication } from 'src/modules/teams/applications/get.team.application';
+import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.auth.application';
+import { UpdateUserApplication } from 'src/modules/users/applications/update.user.application';
+import { GetBoardApplication } from 'src/modules/boards/applications/get.board.application';
+import { GetUserApplication } from 'src/modules/users/applications/get.user.application';
 
 describe('AuthController', () => {
 	let app: INestApplication;
 
 	beforeEach(async () => {
-		const usersRepository = {
-			create: jest.fn().mockResolvedValue(mockedUser),
-			save: jest.fn().mockReturnValue(Promise.resolve())
-		};
-
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EmailModule, EventEmitterModule.forRoot()],
 			controllers: [AuthController],
 			providers: [
-				registerAuthApplication,
-				getTokenAuthApplication,
-				getTokenAuthService,
-				createTeamService,
-				getTeamService,
-				getTeamApplication,
-				getBoardApplication,
-				getBoardService,
-				registerAuthService,
-				updateUserService,
-				updateUserApplication,
-				createResetTokenAuthApplication,
-				createResetTokenAuthService,
-				createUserService,
-				getUserApplication,
-				getUserService,
-				userRepository,
-				teamRepository,
-				teamUserRepository,
-				updateTeamService,
-				boardRepository,
-				createBoardService,
-				createSchedulesService,
-				deleteSchedulesService,
-				createBoardUserService,
-				updateUserService,
-				SocketGateway,
-				SchedulerRegistry,
-				ConfigService,
 				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
-					useValue: {
-						execute: jest.fn()
-					}
+					provide: Auth.TYPES.applications.RegisterAuthApplication,
+					useValue: createMock<RegisterAuthApplication>()
 				},
 				{
-					provide: getModelToken('Schedules'),
-					useValue: {
-						find: jest.fn().mockResolvedValue([])
-					}
+					provide: Auth.TYPES.applications.GetTokenAuthApplication,
+					useValue: createMock<GetTeamApplication>()
 				},
 				{
-					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
-					useValue: {
-						execute: jest.fn()
-					}
+					provide: Auth.TYPES.applications.CreateResetTokenAuthApplication,
+					useValue: createMock<CreateResetTokenAuthApplication>()
 				},
 				{
-					provide: ConfigService,
-					useValue: configService
+					provide: Auth.TYPES.applications.UpdateUserApplication,
+					useValue: createMock<UpdateUserApplication>()
 				},
 				{
-					provide: JwtService,
-					useValue: jwtService
+					provide: Teams.TYPES.applications.GetTeamApplication,
+					useValue: createMock<GetTeamApplication>()
 				},
 				{
-					provide: getModelToken('Board'),
-					useValue: {}
+					provide: Boards.TYPES.applications.GetBoardApplication,
+					useValue: createMock<GetBoardApplication>()
 				},
 				{
-					provide: getModelToken('BoardUser'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('User'),
-					useValue: usersRepository
-				},
-				{
-					provide: getModelToken('ResetPassword'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('Team'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('TeamUser'),
-					useValue: {}
+					provide: User.TYPES.applications.GetUserApplication,
+					useValue: createMock<GetUserApplication>()
 				}
 			]
 		}).compile();

@@ -1,21 +1,17 @@
 import React from 'react';
-import { createMockRouter } from '@/utils/testing/mocks';
-import { fireEvent } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import PopoverRoleSettings, { PopoverRoleSettingsProps } from './PopoverRoleSettings';
 
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: PopoverRoleSettingsProps) =>
-  renderWithProviders(<PopoverRoleSettings {...props} />, { routerOptions: router });
+  renderWithProviders(<PopoverRoleSettings {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/Team/TeamMemberItem/PopoverRoleSettings', () => {
-  it('should render correctly', () => {
+  it('should render correctly', async () => {
     // Arrange
     const team = TeamFactory.create();
     const popoverRoleSettingsProps = {
@@ -30,8 +26,10 @@ describe('Components/Teams/Team/TeamMemberItem/PopoverRoleSettings', () => {
     if (trigger) fireEvent.click(trigger);
 
     // Assert
-    expect(getByText('Team Member')).toBeInTheDocument();
-    expect(getByText('Team Admin')).toBeInTheDocument();
-    expect(getByText('Stakeholder')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText('Team Member')).toBeInTheDocument();
+      expect(getByText('Team Admin')).toBeInTheDocument();
+      expect(getByText('Stakeholder')).toBeInTheDocument();
+    });
   });
 });

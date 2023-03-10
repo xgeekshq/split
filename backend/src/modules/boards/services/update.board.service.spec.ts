@@ -1,20 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import UpdateBoardServiceImpl from './update.board.service';
-import { boardRepository } from '../boards.providers';
-import { getTeamService } from 'src/modules/teams/providers';
-import { getModelToken } from '@nestjs/mongoose';
-import Board from 'src/modules/boards/entities/board.schema';
 import { ConfigService } from '@nestjs/config';
-import BoardUser from '../entities/board.user.schema';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import DeleteCardServiceImpl from 'src/modules/cards/services/delete.card.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Teams from 'src/modules/teams/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { SlackCommunicationService } from 'src/modules/communication/services/slack-communication.service';
-import GetTeamService from 'src/modules/teams/services/get.team.service';
 import { SlackSendMessageService } from 'src/modules/communication/services/slack-send-messages.service';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { BoardRepository } from '../repositories/board.repository';
@@ -22,9 +15,11 @@ import { BadRequestException } from '@nestjs/common';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
+import DeleteCardService from 'src/modules/cards/services/delete.card.service';
+import UpdateBoardService from './update.board.service';
 
-describe('UpdateBoardServiceImpl', () => {
-	let service: UpdateBoardServiceImpl;
+describe('UpdateBoardService', () => {
+	let service: UpdateBoardService;
 	let eventEmitterMock: DeepMocked<EventEmitter2>;
 	let boardRepositoryMock: DeepMocked<BoardRepository>;
 	let configServiceMock: DeepMocked<ConfigService>;
@@ -36,14 +31,10 @@ describe('UpdateBoardServiceImpl', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				UpdateBoardServiceImpl,
+				UpdateBoardService,
 				{
-					provide: getModelToken(Board.name),
+					provide: Teams.TYPES.services.GetTeamService,
 					useValue: {}
-				},
-				{
-					provide: getTeamService.provide,
-					useValue: createMock<GetTeamService>()
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
@@ -54,20 +45,20 @@ describe('UpdateBoardServiceImpl', () => {
 					useValue: createMock<SlackSendMessageService>()
 				},
 				{
-					provide: getModelToken(BoardUser.name),
-					useValue: {}
-				},
-				{
 					provide: SocketGateway,
 					useValue: createMock<SocketGateway>()
 				},
 				{
 					provide: Cards.TYPES.services.DeleteCardService,
-					useValue: createMock<DeleteCardServiceImpl>()
+					useValue: createMock<DeleteCardService>()
 				},
 				{
-					provide: boardRepository.provide,
+					provide: Boards.TYPES.repositories.BoardRepository,
 					useValue: createMock<BoardRepository>()
+				},
+				{
+					provide: Boards.TYPES.repositories.BoardUserRepository,
+					useValue: {}
 				},
 				{
 					provide: EventEmitter2,
@@ -79,7 +70,7 @@ describe('UpdateBoardServiceImpl', () => {
 				}
 			]
 		}).compile();
-		service = module.get<UpdateBoardServiceImpl>(UpdateBoardServiceImpl);
+		service = module.get<UpdateBoardService>(UpdateBoardService);
 		eventEmitterMock = module.get(EventEmitter2);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		configServiceMock = module.get(ConfigService);

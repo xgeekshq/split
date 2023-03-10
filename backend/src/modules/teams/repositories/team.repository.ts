@@ -30,7 +30,7 @@ export class TeamRepository
 	}
 
 	getTeamsWithUsers(teamIds: string[]): Promise<Team[]> {
-		return this.findAllWithQuery({ _id: { $in: teamIds } }, { _id: 1, name: 1 }, [
+		return this.findAllWithQuery({ _id: { $in: teamIds } }, null, { _id: 1, name: 1 }, [
 			{
 				path: 'users',
 				select: 'user role isNewJoiner',
@@ -38,16 +38,12 @@ export class TeamRepository
 					path: 'user',
 					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
-			},
-			{
-				path: 'boards',
-				select: '_id'
 			}
 		]);
 	}
 
 	getAllTeams(): Promise<Team[]> {
-		return this.findAllWithQuery(null, null, [
+		return this.findAllWithQuery(null, null, null, [
 			{
 				path: 'users',
 				select: 'user role email isNewJoiner',
@@ -55,10 +51,6 @@ export class TeamRepository
 					path: 'user',
 					select: '_id firstName lastName email joinedAt providerAccountCreatedAt'
 				}
-			},
-			{
-				path: 'boards',
-				select: '_id'
 			}
 		]);
 	}
