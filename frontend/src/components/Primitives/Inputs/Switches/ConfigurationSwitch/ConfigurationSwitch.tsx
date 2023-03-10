@@ -5,7 +5,7 @@ import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
 import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
-type ConfigurationSwitchProps = {
+export type ConfigurationSwitchProps = {
   title: string;
   text?: string;
   isChecked: boolean;
