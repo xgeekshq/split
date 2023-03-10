@@ -14,8 +14,8 @@ import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import Flex from '@/components/Primitives/Layout/Flex';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import TipBar from './partials/TipBar';
-import TeamName from './partials/TeamName';
 import ListMembers from '../Team/ListMembers/ListMembers';
 import CreateTeamHeader from './partials/CreateTeamHeader';
 import CreateTeamFooter from './partials/CreateTeamFooter';
@@ -101,7 +101,10 @@ const CreateTeam = () => {
             })}
           >
             <FormProvider {...methods}>
-              <TeamName />
+              <Text css={{ mb: '$12' }} heading="3">
+                Team Name
+              </Text>
+              <Input showCount id="text" maxChars="40" placeholder="Team name" type="text" />
               <Flex css={{ my: '$20' }} direction="column">
                 <Flex>
                   <Text css={{ flex: 1 }} heading="3">

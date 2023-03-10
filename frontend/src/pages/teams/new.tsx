@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import CreateTeam from '@/components/Teams/CreateTeam';
+import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
