@@ -16,7 +16,7 @@ import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import faker from '@faker-js/faker';
-import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUSer-factory.mock';
+import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory';
 import { NotFoundException } from '@nestjs/common';
