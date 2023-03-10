@@ -10,7 +10,7 @@
     "pre-commit": "lint-staged",
     "cy:run": "cypress run",
     "cy:ci": "start-server-and-test dev http-get://localhost:3000 cy:run",
-    "jest": "jest",
+    "jest": "jest --coverage",
     "test:watch": "jest --watchAll",
     "test:ci": "jest --ci",
     "storybook": "start-storybook -p 6006",
