@@ -16,7 +16,7 @@ import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import Flex from '@/components/Primitives/Layout/Flex';
 import TipBar from './partials/TipBar';
 import TeamName from './partials/TeamName';
-import { ListMembers } from '../Team/ListMembers';
+import ListMembers from '../Team/ListMembers/ListMembers';
 import CreateTeamHeader from './partials/CreateTeamHeader';
 import CreateTeamFooter from './partials/CreateTeamFooter';
 

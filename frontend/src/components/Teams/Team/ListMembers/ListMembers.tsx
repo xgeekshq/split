@@ -119,4 +119,4 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   );
 };
 
-export { ListMembers };
+export default ListMembers;

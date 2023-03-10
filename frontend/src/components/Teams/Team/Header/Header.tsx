@@ -6,7 +6,7 @@ import Text from '@/components/Primitives/Text/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { ROUTES } from '@/utils/routes';
 import { useState } from 'react';
-import { ListMembers } from '../ListMembers';
+import ListMembers from '../ListMembers/ListMembers';
 
 export type TeamHeaderProps = {
   title: string;
