@@ -1,4 +1,4 @@
-import Breadcrumb from '@/components/Primitives/Breadcrumb';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Icon from '@/components/Primitives/Icon';

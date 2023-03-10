@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import Breadcrumb from '@/components/Primitives/Breadcrumb';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import dedent from 'ts-dedent';
 
 export default {
