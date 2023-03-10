@@ -25,7 +25,7 @@ import {
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';

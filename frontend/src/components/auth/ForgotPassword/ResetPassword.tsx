@@ -6,7 +6,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import LogoIcon from '@/components/icons/Logo';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text';

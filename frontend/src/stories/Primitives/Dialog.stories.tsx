@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
   title: 'Primitives/Dialog',

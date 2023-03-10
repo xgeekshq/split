@@ -3,7 +3,7 @@ import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Box from '@/components/Primitives/Layout/Box';
-import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
+import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';

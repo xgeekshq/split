@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
   title: 'Primitives/ConfirmationDialog',

@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 export default {

@@ -15,7 +15,7 @@ import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';

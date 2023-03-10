@@ -1,4 +1,4 @@
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';

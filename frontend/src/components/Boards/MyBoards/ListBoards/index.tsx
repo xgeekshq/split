@@ -10,7 +10,7 @@ import { teamsListState } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
 import Link from 'next/link';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 

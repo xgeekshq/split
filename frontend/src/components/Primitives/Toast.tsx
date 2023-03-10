@@ -9,7 +9,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
 import { useEffect } from 'react';
 import Text from './Text';
-import Button from './Button/Button';
+import Button from './Inputs/Button/Button';
 
 const hide = keyframes({
   '0%': { opacity: 1 },

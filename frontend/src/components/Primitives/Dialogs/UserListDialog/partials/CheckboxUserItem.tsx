@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserList } from '@/types/team/userList';
-import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
+import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 

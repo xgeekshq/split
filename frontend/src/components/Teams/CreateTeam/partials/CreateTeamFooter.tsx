@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 const Footer = styled(Flex, {
   borderTop: '1px solid $primary200',

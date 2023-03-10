@@ -11,7 +11,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text';

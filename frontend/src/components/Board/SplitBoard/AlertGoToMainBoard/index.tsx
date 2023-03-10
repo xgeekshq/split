@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 type Props = {
   submitedAt: string | Date;

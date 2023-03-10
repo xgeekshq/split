@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
+import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator';
 import SearchInput from '../../Inputs/SearchInput/SearchInput';

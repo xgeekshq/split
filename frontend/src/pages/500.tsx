@@ -5,7 +5,7 @@ import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pag
 import LogoIcon from '@/components/icons/Logo';
 import Text from '@/components/Primitives/Text';
 import SecondaryBanner from '@/components/icons/SecondaryBanner';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 const Custom500 = () => (
   <ImageBackground>

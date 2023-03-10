@@ -7,7 +7,7 @@ import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { CreateTeamUser } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';

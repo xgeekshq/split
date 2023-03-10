@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import ConfirmationDialog, {
   ConfirmationDialogProps,
 } from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Button from '../../Button/Button';
+import Button from '../../Inputs/Button/Button';
 
 const render = (props: Partial<ConfirmationDialogProps> = {}) =>
   renderWithProviders(

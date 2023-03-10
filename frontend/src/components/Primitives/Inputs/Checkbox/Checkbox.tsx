@@ -3,9 +3,9 @@ import React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Flex from '../Layout/Flex';
-import Text from '../Text';
-import Icon from '../Icons/Icon/Icon';
+import Flex from '../../Layout/Flex';
+import Text from '../../Text';
+import Icon from '../../Icons/Icon/Icon';
 
 const StyledCheckbox = styled(CheckboxPrimitive.Root, {
   all: 'unset',

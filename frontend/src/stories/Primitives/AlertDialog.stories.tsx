@@ -11,7 +11,7 @@ import {
   AlertDialogCancel,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Button from '@/components/Primitives/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
   title: 'Primitives/AlertDialog',

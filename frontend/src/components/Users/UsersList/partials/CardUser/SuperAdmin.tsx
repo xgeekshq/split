@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
-import ConfigurationSwitch from '@/components/Primitives/Switches/ConfigurationSwitch/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 
 type SuperAdminProps = {
   userSAdmin: boolean;
