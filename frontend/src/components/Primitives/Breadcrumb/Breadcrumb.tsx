@@ -5,7 +5,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { BreadcrumbItemType, BreadcrumbType } from '@/types/board/Breadcrumb';
 import { StyledList, StyledBreadcrumbItem } from './styles';
 
-type BreadcrumbProps = {
+export type BreadcrumbProps = {
   items: BreadcrumbType;
 };
 
@@ -20,7 +20,7 @@ const BreadcrumbItem = ({ item: { link, title, isActive } }: BreadcrumbItemProps
 };
 
 const Breadcrumb = ({ items }: BreadcrumbProps) => (
-  <StyledList>
+  <StyledList data-testid="breadcrumb">
     {items.map((item: BreadcrumbItemType, index) => (
       <Fragment key={item.title.toLowerCase().split(' ').join('-')}>
         {
