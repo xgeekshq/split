@@ -1,27 +1,29 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import BoardUser, { BoardUserDocument } from '../../boards/entities/board.user.schema';
 import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
-import { Model } from 'mongoose';
 import BoardUserDto from '../../boards/dto/board.user.dto';
+import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export default class CreateBoardUserService implements CreateBoardUserServiceInterface {
 	constructor(
-		@InjectModel(BoardUser.name)
-		private boardUserModel: Model<BoardUserDocument>
+		@Inject(TYPES.repositories.BoardUserRepository)
+		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserModel.create({ ...user, board: newBoardId }))
-		);
+	async saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
+		const boardUsersToInsert = newUsers.map((boardUser) => ({
+			...boardUser,
+			board: newBoardId
+		}));
+
+		return await this.boardUserRepository.insertMany(boardUsersToInsert);
 	}
 
 	async createBoardUser(board: string, user: string) {
-		const boardUserFound = await this.boardUserModel.findOne({ board, user });
+		const boardUserFound = await this.boardUserRepository.findOneByField({ board, user });
 
 		if (boardUserFound) throw new BadRequestException(BOARD_USER_EXISTS);
 
@@ -31,7 +33,8 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 			user,
 			votesCount: 0
 		};
-		const boardUserCreated = await this.boardUserModel.create(boardUser);
+
+		const boardUserCreated = await this.boardUserRepository.create(boardUser);
 
 		if (!boardUserCreated) throw new BadRequestException(INSERT_FAILED);
 
