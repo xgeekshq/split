@@ -85,12 +85,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
             {boardOwnerName}
           </Text>
-          <AvatarGroup
-            listUsers={!team || isSubBoard ? users : team.users}
-            responsible={false}
-            teamAdmins={false}
-            userId={userId}
-          />
+          <AvatarGroup listUsers={!team || isSubBoard ? users : team.users} userId={userId} />
         </Flex>
       );
     }
@@ -103,7 +98,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <AvatarGroup responsible listUsers={users} teamAdmins={false} userId={userId} />
+              <AvatarGroup responsible listUsers={users} userId={userId} />
             </Flex>
           )}
           <CountCards columns={columns} />

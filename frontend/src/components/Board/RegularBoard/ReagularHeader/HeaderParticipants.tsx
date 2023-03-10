@@ -31,13 +31,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
             <Text size="sm">Participants</Text>
           </StyledBoardTitle>
         )}
-        <AvatarGroup
-          responsible={false}
-          listUsers={users}
-          teamAdmins={false}
-          userId={session?.user.id}
-          isClickable
-        />
+        <AvatarGroup listUsers={users} userId={session?.user.id} isClickable />
       </Flex>
       <Flex align="center">
         <Separator orientation="vertical" size="lg" />
@@ -46,13 +40,7 @@ const HeaderParticipants = ({ isParticipantsPage }: Props) => {
         <Text color="primary300" size="sm">
           Responsibles
         </Text>
-        <AvatarGroup
-          responsible
-          listUsers={users}
-          teamAdmins={false}
-          userId={session?.user.id}
-          isClickable
-        />
+        <AvatarGroup responsible listUsers={users} userId={session?.user.id} isClickable />
       </Flex>
     </Flex>
   );

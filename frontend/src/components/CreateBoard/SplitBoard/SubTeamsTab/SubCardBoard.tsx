@@ -181,13 +181,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
         <Flex align="center" gap="8" justify="center">
           <Text size="sm">Sub team {index + 1}</Text>
-          <AvatarGroup
-            listUsers={board.users}
-            responsible={false}
-            teamAdmins={false}
-            userId="1"
-            hasDrawer
-          />
+          <AvatarGroup listUsers={board.users} userId="1" hasDrawer />
         </Flex>
       </Container>
     </Flex>

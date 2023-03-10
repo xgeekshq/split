@@ -34,35 +34,18 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
               <Text color="primary300" size="sm">
                 Members
               </Text>
-              <AvatarGroup
-                listUsers={team.users}
-                responsible={false}
-                teamAdmins={false}
-                userId={userId}
-              />
+              <AvatarGroup listUsers={team.users} userId={userId} />
             </Flex>
             <Separator css={{ backgroundColor: '$primary300' }} orientation="vertical" size="md" />
             <Text color="primary300" size="sm">
               Team admin
             </Text>
-            <AvatarGroup
-              teamAdmins
-              stakeholders
-              listUsers={team.users}
-              responsible={false}
-              userId={userId}
-            />
+            <AvatarGroup teamAdmins stakeholders listUsers={team.users} userId={userId} />
           </Flex>
         )}
         {!hasTeam && users && (
           <Flex css={{ ml: '$12' }}>
-            <AvatarGroup
-              myBoards
-              listUsers={users}
-              responsible={false}
-              teamAdmins={false}
-              userId={userId}
-            />
+            <AvatarGroup myBoards listUsers={users} userId={userId} />
           </Flex>
         )}
       </Flex>

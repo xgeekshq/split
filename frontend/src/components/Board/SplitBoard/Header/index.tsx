@@ -174,13 +174,7 @@ const BoardHeader = () => {
                   {`Sub-team ${boardNumber}`}
                 </Text>
               </StyledBoardTitle>
-              <AvatarGroup
-                listUsers={users}
-                responsible={false}
-                teamAdmins={false}
-                userId={session!.user.id}
-                hasDrawer
-              />
+              <AvatarGroup listUsers={users} userId={session!.user.id} hasDrawer />
             </Flex>
 
             <Separator orientation="vertical" size="lg" />
@@ -188,13 +182,7 @@ const BoardHeader = () => {
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <AvatarGroup
-                responsible
-                listUsers={users}
-                teamAdmins={false}
-                userId={session!.user.id}
-                hasDrawer
-              />
+              <AvatarGroup responsible listUsers={users} userId={session!.user.id} hasDrawer />
             </Flex>
             <ListBoardMembers
               boardMembers={boardMembers}
@@ -221,13 +209,7 @@ const BoardHeader = () => {
                     {team.name}
                   </Text>
                 </StyledBoardTitle>
-                <AvatarGroup
-                  listUsers={teamUsers}
-                  responsible={false}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                  isClickable
-                />
+                <AvatarGroup listUsers={teamUsers} userId={session!.user.id} isClickable />
               </Flex>
               {!isEmpty(
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
@@ -241,7 +223,6 @@ const BoardHeader = () => {
                     <AvatarGroup
                       teamAdmins
                       listUsers={teamUsers}
-                      responsible={false}
                       userId={session!.user.id}
                       isClickable
                     />
@@ -262,8 +243,6 @@ const BoardHeader = () => {
                     <AvatarGroup
                       stakeholders
                       listUsers={teamUsers}
-                      responsible={false}
-                      teamAdmins={false}
                       userId={session!.user.id}
                       isClickable
                     />

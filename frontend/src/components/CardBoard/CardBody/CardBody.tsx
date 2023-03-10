@@ -250,12 +250,7 @@ const CardBody = React.memo<CardBodyProps>(
                   )}
 
                   {!isDashboard && isSubBoard && (
-                    <AvatarGroup
-                      listUsers={isSubBoard ? users : team.users}
-                      responsible={false}
-                      teamAdmins={false}
-                      userId={userId}
-                    />
+                    <AvatarGroup listUsers={isSubBoard ? users : team.users} userId={userId} />
                   )}
                   {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
                     <CenterMainBoard

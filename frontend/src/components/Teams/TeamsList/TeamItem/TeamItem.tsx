@@ -81,13 +81,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
               Members
             </Text>
 
-            <AvatarGroup
-              listUsers={users}
-              responsible={false}
-              teamAdmins={false}
-              userId={userId}
-              css={{ minWidth: '$88' }}
-            />
+            <AvatarGroup listUsers={users} userId={userId} css={{ minWidth: '$88' }} />
           </Flex>
 
           <Separator orientation="vertical" size="lg" />
@@ -101,7 +95,6 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
               stakeholders
               teamAdmins
               listUsers={users}
-              responsible={false}
               userId={userId}
               css={{ minWidth: '$88' }}
             />

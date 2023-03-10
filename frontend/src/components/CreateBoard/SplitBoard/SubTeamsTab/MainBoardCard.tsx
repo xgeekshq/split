@@ -147,13 +147,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
           <Text size="sm" fontWeight="medium">
             {team.name}
           </Text>
-          <AvatarGroup
-            haveError={haveError}
-            listUsers={team.users}
-            responsible={false}
-            teamAdmins={false}
-            userId="1"
-          />
+          <AvatarGroup haveError={haveError} listUsers={team.users} userId="1" />
         </Flex>
       </MainContainer>
       <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />

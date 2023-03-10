@@ -16,10 +16,10 @@ export type ListUsersType = {
   _id?: string;
 };
 
-type AvatarGroupProps = {
+export type AvatarGroupProps = {
   listUsers: ListUsersType[];
-  responsible: boolean;
-  teamAdmins: boolean;
+  responsible?: boolean;
+  teamAdmins?: boolean;
   stakeholders?: boolean;
   userId: string | undefined;
   myBoards?: boolean;
@@ -33,11 +33,11 @@ const AVATAR_AMOUNT = 3;
 
 const AvatarGroup = ({
   listUsers,
-  teamAdmins,
-  stakeholders,
+  teamAdmins = false,
+  stakeholders = false,
   userId,
   haveError,
-  responsible,
+  responsible = false,
   myBoards,
   isClickable = false,
   hasDrawer = false,
