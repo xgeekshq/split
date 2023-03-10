@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { PopoverItemSquareStyled } from '../OptionsMenu/styles';
 
 type ColorSquareProps = {

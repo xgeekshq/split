@@ -1,5 +1,5 @@
 import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import { CardItemType } from '@/types/card/cardItem';
 import CardItem from './CardItem';

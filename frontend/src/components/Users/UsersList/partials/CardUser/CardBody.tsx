@@ -4,8 +4,8 @@ import { useSession } from 'next-auth/react';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/Primitives/Icon';
-import Box from '@/components/Primitives/Box';
-import Flex from '@/components/Primitives/Flex';
+import Box from '@/components/Primitives/Layout/Box';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import { UserWithTeams } from '@/types/user/user';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';

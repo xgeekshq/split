@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';

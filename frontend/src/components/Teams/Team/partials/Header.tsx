@@ -1,6 +1,6 @@
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';

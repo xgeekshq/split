@@ -2,7 +2,7 @@ import * as SwitchPrimitive from '@radix-ui/react-switch';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Flex from './Flex';
+import Flex from './Layout/Flex';
 import Icon from './Icon';
 
 const StyledThumb = styled(SwitchPrimitive.Thumb, Flex, {

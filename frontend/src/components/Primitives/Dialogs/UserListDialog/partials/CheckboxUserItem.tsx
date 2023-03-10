@@ -1,7 +1,7 @@
 import React from 'react';
 import { UserList } from '@/types/team/userList';
 import Checkbox from '@/components/Primitives/Checkbox';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 
 export type CheckboxUserItemProps = {

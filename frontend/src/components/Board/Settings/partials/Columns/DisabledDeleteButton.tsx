@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import Icon from '@/components/Primitives/Icon';
 

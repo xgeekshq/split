@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'r
 import { useSession } from 'next-auth/react';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Text from '@/components/Primitives/Text';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator';

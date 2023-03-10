@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import { User } from '@/types/user/user';
 import { getInitials } from '@/utils/getInitials';

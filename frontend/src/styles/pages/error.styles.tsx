@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 
 export const ContainerSection = styled('div', {
   position: 'absolute',

@@ -3,7 +3,7 @@ import { getAllUsers } from '@/api/userService';
 import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
 import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
 import QueryError from '@/components/Errors/QueryError';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { ContentSection } from '@/components/layouts/Layout/styles';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import useBoard from '@/hooks/useBoard';

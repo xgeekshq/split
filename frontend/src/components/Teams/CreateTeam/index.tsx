@@ -13,7 +13,7 @@ import Icon from '@/components/Primitives/Icon';
 import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';
 import TeamMembersList from '@/components/Teams/Team';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import TipBar from './partials/TipBar';
 import TeamName from './partials/TeamName';
 import { ListMembers } from '../Team/ListMembers';

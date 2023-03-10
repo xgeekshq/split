@@ -8,7 +8,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 
 import Icon from '@/components/Primitives/Icon';
 import Dots from '@/components/Primitives/Loading/Dots';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text';
 import useUser from '@/hooks/useUser';

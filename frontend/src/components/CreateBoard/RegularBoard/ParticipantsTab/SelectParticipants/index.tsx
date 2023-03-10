@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import UsersBox from '@/components/CreateBoard/SplitBoard/SubTeamsTab/UsersBox';
 import { useRecoilState } from 'recoil';

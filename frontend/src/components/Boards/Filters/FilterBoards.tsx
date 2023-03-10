@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
 import FilterSelect from './FilterSelect';

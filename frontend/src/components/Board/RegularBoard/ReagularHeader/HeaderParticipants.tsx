@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { boardInfoState } from '@/store/board/atoms/board.atom';

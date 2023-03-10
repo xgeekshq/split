@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Svg from '@/components/Primitives/Svg';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { SvgSizeType } from '../types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SvgSizeType[] = [12, 16, 18, 20, 24, 32, 48, 100];

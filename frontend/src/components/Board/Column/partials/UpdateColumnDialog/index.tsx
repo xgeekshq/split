@@ -5,7 +5,7 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import { SchemaChangeColumnName } from '@/schema/schemaChangeColumnName';
 import { useRef } from 'react';

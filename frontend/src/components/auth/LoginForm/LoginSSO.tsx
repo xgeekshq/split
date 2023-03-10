@@ -1,6 +1,6 @@
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 import { NEXT_PUBLIC_ENABLE_AZURE } from '@/utils/constants';
 import Icon from '@/components/Primitives/Icon';

@@ -16,7 +16,7 @@ import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import useBoard from '@/hooks/useBoard';
 import { useSocketIO } from '@/hooks/useSocketIO';
 import {

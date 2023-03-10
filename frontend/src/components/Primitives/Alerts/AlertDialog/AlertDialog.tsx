@@ -5,7 +5,7 @@ import { CSS, styled } from '@/styles/stitches/stitches.config';
 import { overlayShow } from '@/animations/DialogShow';
 
 import Button from '../../Button';
-import Flex from '../../Flex';
+import Flex from '../../Layout/Flex';
 import Text from '../../Text';
 import Icon from '../../Icon';
 import Separator from '../../Separator';

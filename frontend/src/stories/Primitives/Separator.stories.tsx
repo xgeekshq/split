@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Separator from '@/components/Primitives/Separator';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { SeparatorOrientationType, SeparatorSizeType } from '../types/PrimitiveTypes';
 
 const ORIENTATION_OPTIONS: SeparatorOrientationType[] = ['horizontal', 'vertical'];

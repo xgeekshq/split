@@ -7,7 +7,7 @@ import { deepClone } from 'fast-json-patch';
 
 import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';

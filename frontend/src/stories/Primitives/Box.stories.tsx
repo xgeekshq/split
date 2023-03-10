@@ -3,8 +3,8 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Box from '@/components/Primitives/Box';
-import Flex from '@/components/Primitives/Flex';
+import Box from '@/components/Primitives/Layout/Box';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import { ElevationType, BoxVariantType } from '../types/PrimitiveTypes';
 import { capitalize } from '../utils';

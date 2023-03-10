@@ -5,7 +5,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useUser from '@/hooks/useUser';

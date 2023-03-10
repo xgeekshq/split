@@ -8,7 +8,7 @@ import { getTeamRequest } from '@/api/teamService';
 import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import TeamMembersList from '@/components/Teams/Team';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';

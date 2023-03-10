@@ -3,7 +3,7 @@ import React, { Dispatch } from 'react';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import useUser from '@/hooks/useUser';
 import { SignUpEnum } from '@/utils/signUp.enum';

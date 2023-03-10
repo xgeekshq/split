@@ -6,7 +6,7 @@ import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Checkbox from '@/components/Primitives/Checkbox';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';

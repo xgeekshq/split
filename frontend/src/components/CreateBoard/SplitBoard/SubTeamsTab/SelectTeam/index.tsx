@@ -9,7 +9,7 @@ import { MIN_MEMBERS } from '@/utils/constants';
 import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';

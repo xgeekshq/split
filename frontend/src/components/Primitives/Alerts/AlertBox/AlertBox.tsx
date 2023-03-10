@@ -1,9 +1,9 @@
 import { CSSProps } from '@/styles/stitches/stitches.config';
 import { styled } from '@stitches/react';
 
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
-import Box from '@/components/Primitives/Box';
+import Box from '@/components/Primitives/Layout/Box';
 import Icon from '@/components/Primitives/Icon';
 
 const AlertStyle = styled(Flex, Box, {

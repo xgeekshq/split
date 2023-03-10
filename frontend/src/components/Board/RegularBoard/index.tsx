@@ -7,7 +7,7 @@ import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';

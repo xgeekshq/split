@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '@/components/Primitives/Flex';
-import Box from '@/components/Primitives/Box';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Box from '@/components/Primitives/Layout/Box';
 
 const InnerContainer = styled(Flex, Box, {
   px: '$32',

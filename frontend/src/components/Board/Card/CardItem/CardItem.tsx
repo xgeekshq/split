@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import AddCardOrComment from '@/components/Board/AddCardOrComment';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import { CardItemType } from '@/types/card/cardItem';
 import useCards from '@/hooks/useCards';

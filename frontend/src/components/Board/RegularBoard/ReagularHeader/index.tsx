@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Icon from '@/components/Primitives/Icon';
 import LogoIcon from '@/components/icons/Logo';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import { boardInfoState } from '@/store/board/atoms/board.atom';

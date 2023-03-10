@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'r
 
 import Text from '@/components/Primitives/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import { useRouter } from 'next/router';
 

@@ -6,7 +6,7 @@ import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover'
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Icon from '@/components/Primitives/Icon';
 import LogoIcon from '@/components/icons/Logo';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';

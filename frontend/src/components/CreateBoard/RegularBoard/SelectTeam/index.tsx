@@ -5,7 +5,7 @@ import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';

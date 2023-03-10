@@ -1,5 +1,5 @@
 import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Link from 'next/link';

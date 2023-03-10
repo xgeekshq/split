@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TeamUser } from '@/types/team/team.user';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 
 import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem';
 

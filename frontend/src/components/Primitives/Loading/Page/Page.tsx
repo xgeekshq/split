@@ -1,6 +1,6 @@
 import { styled, CSSProps } from '@/styles/stitches/stitches.config';
 
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
 
 const Overlay = styled('div', Flex, {

@@ -10,7 +10,7 @@ import {
   SelectIcon,
   SelectContent,
 } from '@/components/Primitives/Select';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
 
