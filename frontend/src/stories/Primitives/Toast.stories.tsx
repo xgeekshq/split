@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 import { useSetRecoilState } from 'recoil';
 import dedent from 'ts-dedent';
 
-import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
+import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast/Toast';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';

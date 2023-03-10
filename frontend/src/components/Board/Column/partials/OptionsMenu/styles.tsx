@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import { PopoverItem } from '@/components/Primitives/Popover';
+import { PopoverItem } from '@/components/Primitives/Popover/Popover';
 
 const PopoverItemSquareStyled = styled(PopoverItem, {
   alignItems: 'center',

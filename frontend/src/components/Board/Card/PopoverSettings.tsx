@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverItem,
   PopoverTrigger,
-} from '@/components/Primitives/Popover';
+} from '@/components/Primitives/Popover/Popover';
 import Text from '@/components/Primitives/Text';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';

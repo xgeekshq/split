@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   PopoverItem,
-} from '@/components/Primitives/Popover';
+} from '@/components/Primitives/Popover/Popover';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import useColumn from '@/hooks/useColumn';

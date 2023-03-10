@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
   PopoverItem,
   PopoverClose,
-} from '@/components/Primitives/Popover';
+} from '@/components/Primitives/Popover/Popover';
 import Text from '@/components/Primitives/Text';
 
 import { membersListState, userTeamsListState } from '@/store/team/atom/team.atom';
