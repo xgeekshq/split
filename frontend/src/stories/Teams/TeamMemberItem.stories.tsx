@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 
-import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem';
+import TeamMemberItem from '@/components/Teams/Team/TeamMemberItem/TeamMemberItem';
 import { TeamUserFactory } from '@/utils/factories/user';
 
 export default {

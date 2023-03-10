@@ -8,7 +8,7 @@ import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { UserWithTeams } from '@/types/user/user';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import Link from 'next/link';
 import { ROUTES } from '@/utils/routes';
 import SuperAdmin from './SuperAdmin';

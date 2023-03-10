@@ -9,7 +9,7 @@ import { useSetRecoilState } from 'recoil';
 import { filteredColumnsState } from '@/store/board/atoms/filterColumns';
 import { countColumnCards } from '@/helper/board/countCards';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { useResizeDetector } from 'react-resize-detector';
 import AddCardOrComment from '../AddCardOrComment';
 import CardsList from './CardsList';

@@ -7,7 +7,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';

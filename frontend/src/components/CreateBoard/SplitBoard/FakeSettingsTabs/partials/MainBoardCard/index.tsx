@@ -9,7 +9,7 @@ import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import FakeCardAvatars from '../CardAvatars';
 import { Container, MainContainer } from './styles';
 

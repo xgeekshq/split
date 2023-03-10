@@ -9,7 +9,7 @@ import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex';
-import TeamMembersList from '@/components/Teams/Team';
+import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
 import Layout from '@/components/layouts/Layout';

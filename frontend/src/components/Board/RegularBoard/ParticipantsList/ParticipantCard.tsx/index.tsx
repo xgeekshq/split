@@ -5,7 +5,7 @@ import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { useRouter } from 'next/router';
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';

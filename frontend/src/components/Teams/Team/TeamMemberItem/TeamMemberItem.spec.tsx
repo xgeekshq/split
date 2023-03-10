@@ -3,7 +3,7 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { getFormattedUsername } from '@/utils/getFormattedUsername';
 import { libraryMocks } from '@/utils/testing/mocks';
-import TeamMemberItem, { TeamMemberItemProps } from '.';
+import TeamMemberItem, { TeamMemberItemProps } from './TeamMemberItem';
 
 const DEFAULT_PROPS = {
   member: TeamUserFactory.create(),

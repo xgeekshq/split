@@ -13,7 +13,7 @@ import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/Configu
 import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
 import { InnerContainer } from '../../styles';
-import NewJoinerTooltip from './partials/NewJoinerTooltip';
+import NewJoinerTooltip from '../../../Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 
 export type TeamMemberItemProps = {
   member: TeamUser;

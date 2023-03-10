@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
 import { StyledMenuItem } from '../../styles';
 

@@ -9,7 +9,7 @@ import LogoIcon from '@/components/icons/Logo';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import { BoardUserNoPopulated } from '@/types/board/board.user';
