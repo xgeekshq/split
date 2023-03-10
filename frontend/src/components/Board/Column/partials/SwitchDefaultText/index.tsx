@@ -1,5 +1,5 @@
 import Flex from '@/components/Primitives/Layout/Flex';
-import Switch from '@/components/Primitives/Switch';
+import Switch from '@/components/Primitives/Switches/Switch/Switch';
 
 type SwitchDefaultTextProps = {
   isChecked: boolean;

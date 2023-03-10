@@ -5,7 +5,7 @@ import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.c
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/Primitives/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Checkbox from '@/components/Primitives/Checkbox';
+import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';

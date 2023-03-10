@@ -24,7 +24,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Button/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
-import ConfigurationSwitch from '../../Primitives/ConfigurationSwitch';
+import ConfigurationSwitch from '../../Primitives/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
 import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';

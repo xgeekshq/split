@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Checkbox from '@/components/Primitives/Checkbox';
+import Checkbox from '@/components/Primitives/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { CheckboxSizeType, CheckboxVariantType } from '../types/PrimitiveTypes';
 

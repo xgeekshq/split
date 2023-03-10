@@ -8,7 +8,7 @@ import Text from '@/components/Primitives/Text';
 import Icon from '@/components/Primitives/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
-import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/Switches/ConfigurationSwitch/ConfigurationSwitch';
 
 import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';

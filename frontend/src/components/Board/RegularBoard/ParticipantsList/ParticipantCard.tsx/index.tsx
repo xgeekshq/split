@@ -7,7 +7,7 @@ import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import { useRouter } from 'next/router';
-import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
 import Button from '@/components/Primitives/Button/Button';
