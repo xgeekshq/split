@@ -52,7 +52,7 @@ export interface GetBoardServiceInterface {
 
 	getBoardData(boardId: string): Promise<Board>;
 
-	getBoardUsers(board: string, user: string): Promise<BoardUser[]>;
+	getBoardUser(board: string, user: string): Promise<BoardUser>;
 
 	getAllMainBoards(): Promise<Board[]>;
 }

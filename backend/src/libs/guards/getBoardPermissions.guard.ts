@@ -29,13 +29,13 @@ export class GetBoardGuard implements CanActivate {
 
 		try {
 			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
-			const boardUserFound = await this.getBoardService.getBoardUsers(boardId, userId);
+			const boardUserFound = await this.getBoardService.getBoardUser(boardId, userId);
 
-			if (isPublic || boardUserFound.length || isSAdmin) {
+			if (isPublic || boardUserFound || isSAdmin) {
 				return true;
 			}
 
-			if (!boardUserFound.length) {
+			if (!boardUserFound) {
 				const { role: teamRole } = (team as Team).users.find(
 					(teamUser: TeamUser) => (teamUser.user as User)._id.toString() === userId.toString()
 				);

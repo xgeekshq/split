@@ -7,7 +7,7 @@ const userId = faker.datatype.uuid();
 
 const mockBoardData = () => {
 	return {
-		_id: faker.datatype.uuid(),
+		_id: faker.database.mongodbObjectId(),
 		title: faker.lorem.words(),
 		columns: ColumnFactory.createMany(3),
 		isPublic: faker.datatype.boolean(),
