@@ -20,7 +20,7 @@ const render = (props: Partial<ConfirmationDialogProps> = {}) =>
     </ConfirmationDialog>,
   );
 
-describe('Components/Primitives/ConfirmationDialog', () => {
+describe('Components/Primitives/Alerts/ConfirmationDialog', () => {
   it('should render trigger correctly', () => {
     // Act
     const { getByRole } = render();

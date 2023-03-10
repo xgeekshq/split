@@ -6,7 +6,7 @@ import Tab, { TabProps } from './Tab';
 
 const render = (props: TabProps) => renderWithProviders(<Tab {...props} />);
 
-describe('Components/Primitives/Switch', () => {
+describe('Components/Primitives/Tab', () => {
   it('should render correctly', () => {
     // Arrange
     const tabProps: TabProps = {

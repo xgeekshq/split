@@ -11,7 +11,7 @@ const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props = DEFAULT_PROPS) =>
   renderWithProviders(<MainPageHeader {...props} />, { routerOptions: mockRouter });
 
-describe('Components/Dashboard/Tiles/Tile', () => {
+describe('Components/Layouts/Layout/MainPageHeader', () => {
   it('should render correctly', () => {
     // Arrange
     const headerProps = { ...DEFAULT_PROPS };

@@ -30,7 +30,7 @@ const render = ({ children, ...props }: AlertDialogProps) =>
     </AlertDialog>,
   );
 
-describe('Components/Primitives/AlertDialog', () => {
+describe('Components/Primitives/Alerts/AlertDialog', () => {
   it('should render the trigger correctly', () => {
     // Act
     const { getByTestId } = render({});

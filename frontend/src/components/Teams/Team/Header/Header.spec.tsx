@@ -10,7 +10,7 @@ const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: TeamHeaderProps) =>
   renderWithProviders(<TeamHeader {...props} />, { routerOptions: mockRouter });
 
-describe('Components/Teams/Team/TeamHeader', () => {
+describe('Components/Teams/Team/Header', () => {
   let defaultProps: TeamHeaderProps;
   beforeEach(() => {
     const team = TeamFactory.create();

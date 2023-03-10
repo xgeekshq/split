@@ -5,7 +5,7 @@ import Button from '../../Inputs/Button/Button';
 const render = (props: AlertBoxProps, children?: React.ReactNode) =>
   renderWithProviders(<AlertBox {...props}>{children}</AlertBox>);
 
-describe('Components/Primitives/AlertBox', () => {
+describe('Components/Primitives/Alerts/AlertBox', () => {
   it('should render correctly', () => {
     // Arrange
     const alertBoxProps: AlertBoxProps = { type: 'info' };

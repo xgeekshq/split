@@ -4,7 +4,7 @@ import Checkbox, { CheckboxProps } from './Checkbox';
 
 const render = (props: CheckboxProps) => renderWithProviders(<Checkbox {...props} />);
 
-describe('Components/Primitives/Checkbox', () => {
+describe('Components/Primitives/Checkboxes/Checkbox', () => {
   it('should render correctly', () => {
     // Arrange
     const checkboxProps: CheckboxProps = { id: 'checkbox', label: 'Label', size: 'sm' };

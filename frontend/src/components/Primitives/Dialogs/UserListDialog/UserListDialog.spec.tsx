@@ -18,7 +18,7 @@ const router = createMockRouter({});
 const render = (props: UserListDialogProps = DEFAULT_PROPS) =>
   renderWithProviders(<UserListDialog {...props} />, { routerOptions: router });
 
-describe('Components/Primitives/Dialogs/UserListDialog/CheckboxUserItem', () => {
+describe('Components/Primitives/Dialogs/UserListDialog', () => {
   it('should render correctly', () => {
     // Arrange
     const testProps = { ...DEFAULT_PROPS };

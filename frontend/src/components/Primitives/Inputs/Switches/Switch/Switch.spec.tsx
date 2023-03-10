@@ -4,7 +4,7 @@ import Switch, { SwitchProps } from './Switch';
 
 const render = (props: SwitchProps) => renderWithProviders(<Switch {...props} />);
 
-describe('Components/Primitives/Switch', () => {
+describe('Components/Primitives/Switches/Switch', () => {
   it('should render correctly', () => {
     // Arrange
     const switchProps: SwitchProps = { checked: false };

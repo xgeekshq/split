@@ -10,7 +10,7 @@ const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: TeamRolePopoverProps) =>
   renderWithProviders(<TeamRolePopover {...props} />, { routerOptions: mockRouter });
 
-describe('Components/Teams/Team/TeamMemberItem/TeamRolePopover', () => {
+describe('Components/Primitives/Popovers/TeamRolePopover', () => {
   it('should render correctly', async () => {
     // Arrange
     const team = TeamFactory.create();
