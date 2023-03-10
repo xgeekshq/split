@@ -65,14 +65,9 @@ describe('BoardsController', () => {
 			expect(controller.updateBoardPhase).toBeDefined();
 		});
 
-		it('should call updateBoardApp', async () => {
+		it('should recieve boardPhaseDto in updateBoardApp and be called 1 time', async () => {
 			await controller.updateBoardPhase(boardPhaseDto);
-			expect(updateBoardAppMock.updatePhase).toHaveBeenCalledTimes(1);
-		});
-
-		it('should recieve boardPhaseDto in updateBoardApp', async () => {
-			await controller.updateBoardPhase(boardPhaseDto);
-			expect(updateBoardAppMock.updatePhase).toBeCalledWith(boardPhaseDto);
+			expect(updateBoardAppMock.updatePhase).toHaveBeenNthCalledWith(1, boardPhaseDto);
 		});
 	});
 });
