@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 import Link from 'next/link';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
 

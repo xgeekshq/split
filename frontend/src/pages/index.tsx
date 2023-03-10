@@ -8,7 +8,7 @@ import TroubleLogin from '@/components/auth/ForgotPassword/TroubleLogin';
 import LoginForm from '@/components/auth/LoginForm';
 import SignUpTabContent from '@/components/auth/SignUp/SignUpTabContent';
 import Banner from '@/components/icons/Banner';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { NEXT_PUBLIC_LOGIN_SSO_ONLY } from '@/utils/constants';

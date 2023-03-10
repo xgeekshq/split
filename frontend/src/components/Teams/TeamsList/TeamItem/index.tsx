@@ -3,8 +3,8 @@ import { useSession } from 'next-auth/react';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';

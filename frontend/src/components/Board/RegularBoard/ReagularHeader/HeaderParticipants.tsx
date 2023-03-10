@@ -2,8 +2,8 @@ import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';

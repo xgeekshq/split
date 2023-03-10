@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';

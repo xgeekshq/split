@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
@@ -19,7 +19,7 @@ import {
   SelectValue,
   SelectIcon,
   SelectContent,
-} from '@/components/Primitives/Select';
+} from '@/components/Primitives/Inputs/Select/Select';
 import { Team } from '@/types/team/team';
 import { HelperTextWrapper } from './styles';
 

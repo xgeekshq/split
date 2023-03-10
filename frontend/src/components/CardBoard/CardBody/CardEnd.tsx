@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import BoardType from '@/types/board/board';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';

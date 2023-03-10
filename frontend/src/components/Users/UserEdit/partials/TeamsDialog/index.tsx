@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'react';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';

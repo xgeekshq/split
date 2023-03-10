@@ -1,5 +1,5 @@
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 const TeamName = () => (
   <>

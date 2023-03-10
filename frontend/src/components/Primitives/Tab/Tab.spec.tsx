@@ -1,7 +1,7 @@
 // TODO: Test Tab Change
 
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Flex from './Layout/Flex';
+import Flex from '../Layout/Flex';
 import Tab, { TabProps } from './Tab';
 
 const render = (props: TabProps) => renderWithProviders(<Tab {...props} />);

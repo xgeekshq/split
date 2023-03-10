@@ -8,7 +8,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
 import { useEffect } from 'react';
-import Text from '../Text';
+import Text from '../Text/Text';
 import Button from '../Inputs/Button/Button';
 
 const hide = keyframes({

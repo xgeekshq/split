@@ -8,7 +8,7 @@ import {
   PopoverItem,
   PopoverClose,
 } from '@/components/Primitives/Popover/Popover';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 import { membersListState, userTeamsListState } from '@/store/team/atom/team.atom';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';

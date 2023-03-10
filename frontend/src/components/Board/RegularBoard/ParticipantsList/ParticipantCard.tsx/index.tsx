@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';

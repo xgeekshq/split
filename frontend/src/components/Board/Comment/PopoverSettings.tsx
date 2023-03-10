@@ -7,7 +7,7 @@ import {
   PopoverItem,
   PopoverTrigger,
 } from '@/components/Primitives/Popover/Popover';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 interface PopoverSettingsContentProps {
   setEditCard: () => void;

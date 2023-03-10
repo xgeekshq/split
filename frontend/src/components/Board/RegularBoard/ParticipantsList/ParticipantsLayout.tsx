@@ -2,7 +2,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';

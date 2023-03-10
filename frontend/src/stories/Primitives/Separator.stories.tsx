@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Separator from '@/components/Primitives/Separator';
+import Separator from '@/components/Primitives/Separator/Separator';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { SeparatorOrientationType, SeparatorSizeType } from '../types/PrimitiveTypes';
 

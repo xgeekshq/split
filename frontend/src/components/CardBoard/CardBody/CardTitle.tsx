@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 
 type CardTitleProps = {

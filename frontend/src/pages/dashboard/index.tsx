@@ -7,7 +7,7 @@ import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Tiles from '@/components/Dashboard/Tiles';
 import RecentRetros from '@/components/Dashboard/RecentRetros';
 import Flex from '@/components/Primitives/Layout/Flex';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 
 type BoardNameProps = {

@@ -4,8 +4,8 @@ import {
   RadioGroupItem,
   RadioGroup,
   Label,
-} from '@/components/Primitives/RadioGroup';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { useSetRecoilState } from 'recoil';
 import { FormStyled } from './styles';

@@ -3,7 +3,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { StyledDialogTitle } from './styles';
 import Button from '../../Inputs/Button/Button';
 import Flex from '../../Layout/Flex';
-import Text from '../../Text';
+import Text from '../../Text/Text';
 
 type HeaderProps = {
   title: string;

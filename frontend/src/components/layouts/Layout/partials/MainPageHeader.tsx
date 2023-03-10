@@ -1,5 +1,5 @@
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Link from 'next/link';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';

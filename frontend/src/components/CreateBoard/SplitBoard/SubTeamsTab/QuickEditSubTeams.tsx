@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';

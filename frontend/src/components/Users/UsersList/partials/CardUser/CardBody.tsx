@@ -6,7 +6,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { UserWithTeams } from '@/types/user/user';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
 import Link from 'next/link';

@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { ElevationType, BoxVariantType } from '../types/PrimitiveTypes';
 import { capitalize } from '../utils';
 

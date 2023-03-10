@@ -14,7 +14,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { styled } from '@/styles/stitches/stitches.config';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 
 type UpdateColumnNameProps = {

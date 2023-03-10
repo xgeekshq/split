@@ -1,8 +1,8 @@
 import BannerIcon from '@/components/Sidebar/partials/Banner';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
-import Separator from '@/components/Primitives/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
 import Link from 'next/link';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 

@@ -8,7 +8,7 @@ import { CreateTeamUser } from '@/types/team/team.user';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import { useSession } from 'next-auth/react';

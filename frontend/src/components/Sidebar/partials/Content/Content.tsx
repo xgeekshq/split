@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
+import Separator from '@/components/Primitives/Separator/Separator';
 import {
   ACCOUNT_ROUTE,
   BOARDS_ROUTE,

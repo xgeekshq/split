@@ -10,7 +10,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Dots from '@/components/Primitives/Loading/Dots';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import useUser from '@/hooks/useUser';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';

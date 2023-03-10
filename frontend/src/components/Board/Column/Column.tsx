@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Draggable, Droppable } from '@hello-pangea/dnd';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { getCardVotes } from '@/helper/board/votes';
 import { ColumnBoardType } from '@/types/column';
 import { useSetRecoilState } from 'recoil';

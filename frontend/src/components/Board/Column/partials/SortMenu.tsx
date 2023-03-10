@@ -6,7 +6,7 @@ import {
   PopoverItem,
   PopoverClose,
 } from '@/components/Primitives/Popover/Popover';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 type Props = {
   setFilter: (value: 'desc' | 'asc' | undefined) => void;

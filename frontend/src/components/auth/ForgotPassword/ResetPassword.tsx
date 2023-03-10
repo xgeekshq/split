@@ -9,7 +9,7 @@ import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import useUser from '@/hooks/useUser';
 import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
 import { toastState } from '@/store/toast/atom/toast.atom';

@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 
 const DEFAULT_MAX_VOTES = 6;

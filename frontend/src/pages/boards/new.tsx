@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';

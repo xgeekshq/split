@@ -9,9 +9,9 @@ import {
   SelectValue,
   SelectIcon,
   SelectContent,
-} from '@/components/Primitives/Select';
+} from '@/components/Primitives/Inputs/Select/Select';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 const DUMMY_OPTIONS = [

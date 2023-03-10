@@ -6,9 +6,9 @@ import { overlayShow } from '@/animations/DialogShow';
 
 import Button from '../../Inputs/Button/Button';
 import Flex from '../../Layout/Flex';
-import Text from '../../Text';
+import Text from '../../Text/Text';
 import Icon from '../../Icons/Icon/Icon';
-import Separator from '../../Separator';
+import Separator from '../../Separator/Separator';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   backdropFilter: 'blur(3px)',

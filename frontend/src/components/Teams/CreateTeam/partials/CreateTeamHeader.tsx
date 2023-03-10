@@ -3,7 +3,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 const Header = styled('header', Flex, {
   borderBottom: '1px solid $primary200',

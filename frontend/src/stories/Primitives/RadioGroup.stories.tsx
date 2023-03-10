@@ -8,9 +8,9 @@ import {
   RadioGroupItem,
   RadioGroupIndicator,
   Label,
-} from '@/components/Primitives/RadioGroup';
+} from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 import {
   RadioGroupDirectionType,

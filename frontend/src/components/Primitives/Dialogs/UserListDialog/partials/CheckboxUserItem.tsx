@@ -2,7 +2,7 @@ import React from 'react';
 import { UserList } from '@/types/team/userList';
 import Checkbox from '@/components/Primitives/Inputs/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 export type CheckboxUserItemProps = {
   user: UserList;

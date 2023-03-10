@@ -6,8 +6,8 @@ import {
   PopoverTrigger,
   PopoverItem,
 } from '@/components/Primitives/Popover/Popover';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { useState } from 'react';

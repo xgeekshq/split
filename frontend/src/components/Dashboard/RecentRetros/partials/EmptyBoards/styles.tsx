@@ -3,7 +3,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import EmptyBoardsImage from '@/components/images/EmptyBoards';
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 const StyledImage = styled(EmptyBoardsImage, Flex, Box, { '& svg': { zIndex: '-1' } });
 

@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { styled, CSS } from '@/styles/stitches/stitches.config';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
-import Box from './Layout/Box';
-import Flex from './Layout/Flex';
+import Box from '../../Layout/Box';
+import Flex from '../../Layout/Flex';
 
 export const SelectTrigger = styled(SelectPrimitive.SelectTrigger, {
   all: 'unset',

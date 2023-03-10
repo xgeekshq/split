@@ -4,7 +4,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { getCardVotes } from '@/helper/board/votes';
 import useVotes from '@/hooks/useVotes';
 import { BoardUser } from '@/types/board/board.user';

@@ -4,8 +4,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { toastState } from '@/store/toast/atom/toast.atom';
-import Text from '@/components/Primitives/Text';
-import Tab, { TabList } from '@/components/Primitives/Tab';
+import Text from '@/components/Primitives/Text/Text';
+import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import { usePrevious } from '@/utils/previousState';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';

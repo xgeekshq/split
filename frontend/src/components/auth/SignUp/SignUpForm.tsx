@@ -10,7 +10,7 @@ import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { EmailUser } from '@/types/user/user';

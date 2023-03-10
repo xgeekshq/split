@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
-import Separator from '@/components/Primitives/Separator';
+import Separator from '@/components/Primitives/Separator/Separator';
 import PopoverRoleSettings from './PopoverRoleSettings';
 
 export type RoleSelectorProps = {

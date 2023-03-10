@@ -1,6 +1,6 @@
 import Flex from '@/components/Primitives/Layout/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
