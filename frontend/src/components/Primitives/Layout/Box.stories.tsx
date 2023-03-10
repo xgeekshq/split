@@ -22,7 +22,7 @@ const DISABLE_ARG_TYPES = {
 };
 
 export default {
-  title: 'Primitives/Box',
+  title: 'Primitives/Layout/Box',
   component: Box,
   parameters: {
     docs: {

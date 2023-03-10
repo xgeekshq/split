@@ -10,7 +10,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Dashboard/Tiles/Tile/Tile.tsx\`
+        \`@/components/Dashboard/Tiles/Tile/Tile.tsx\` and \`@/components/Dashboard/Tiles/styles.tsx\`
         `,
       },
     },

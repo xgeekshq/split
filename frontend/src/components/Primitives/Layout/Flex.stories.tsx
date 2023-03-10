@@ -23,7 +23,7 @@ const WRAP_OPTIONS: WrapType[] = ['noWrap', 'wrap', 'wrapReverse'];
 const GAP_OPTIONS: GapType[] = [2, 4, 6, 8, 10, 12, 16, 20, 22, 24, 26, 32, 36, 40];
 
 export default {
-  title: 'Primitives/Flex',
+  title: 'Primitives/Layout/Flex',
   component: Flex,
   parameters: {
     docs: {

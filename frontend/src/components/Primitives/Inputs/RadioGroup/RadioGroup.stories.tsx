@@ -25,7 +25,7 @@ const SIZE_OPTIONS: RadioGroupSizeType[] = ['sm', 'md', 'lg'];
 const FONT_WEIGHT_OPTIONS: RadioGroupFontWeightType[] = ['regular', 'medium', 'bold'];
 
 export default {
-  title: 'Primitives/RadioGroup',
+  title: 'Primitives/Inputs/RadioGroup',
   component: RadioGroup,
   parameters: {
     docs: {

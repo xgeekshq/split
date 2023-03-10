@@ -8,7 +8,7 @@ import Flex from '@/components/Primitives/Layout/Flex';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
-  title: 'Primitives/Dialog',
+  title: 'Primitives/Dialogs/Dialog',
   component: Dialog,
   parameters: {
     docs: {

@@ -7,7 +7,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 
 export default {
-  title: 'Primitives/Input',
+  title: 'Primitives/Inputs/Input',
   component: Input,
   parameters: {
     docs: {

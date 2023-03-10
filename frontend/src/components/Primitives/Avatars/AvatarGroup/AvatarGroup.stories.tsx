@@ -7,7 +7,7 @@ import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup
 import { AvatarGroupUsersFactory } from '@/utils/factories/user';
 
 export default {
-  title: 'Primitives/Avatar/AvatarGroup',
+  title: 'Primitives/Avatars/AvatarGroup',
   component: AvatarGroup,
   parameters: {
     docs: {

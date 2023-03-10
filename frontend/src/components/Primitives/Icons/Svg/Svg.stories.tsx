@@ -10,7 +10,7 @@ import { SvgSizeType } from '../../../../stories/types/PrimitiveTypes';
 const SIZE_OPTIONS: SvgSizeType[] = [12, 16, 18, 20, 24, 32, 48, 100];
 
 export default {
-  title: 'Primitives/Svg',
+  title: 'Primitives/Icons/Svg',
   component: Svg,
   parameters: {
     docs: {

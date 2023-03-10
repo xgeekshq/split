@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
-import Tiles from '@/components/Dashboard/Tiles';
+import Tiles from '@/components/Dashboard/Tiles/Tiles';
 
 export default {
   title: 'Dashboard/Tiles/Tiles',
@@ -10,7 +10,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Dashboard/Tiles/index.tsx\`
+        \`@/components/Dashboard/Tiles/Tiles.tsx\` and \`@/components/Dashboard/Tiles/styles.tsx\`
         `,
       },
     },

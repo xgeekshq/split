@@ -11,7 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Card from '../../../../stories/components/Card';
 
 export default {
-  title: 'Misc/Icons',
+  title: 'Primitives/Icons',
   component: Sprite,
   parameters: {
     layout: 'start',

@@ -11,7 +11,7 @@ const SIZE_OPTIONS: CheckboxSizeType[] = ['sm', 'md'];
 const VARIANT_OPTIONS: CheckboxVariantType[] = ['default', 'error'];
 
 export default {
-  title: 'Primitives/Checkbox',
+  title: 'Primitives/Inputs/Checkbox',
   component: Checkbox,
   parameters: {
     docs: {

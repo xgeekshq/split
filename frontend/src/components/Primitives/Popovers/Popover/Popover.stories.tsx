@@ -19,7 +19,7 @@ const VARIANT_OPTIONS: PopoverVariantType[] = ['dark', 'light'];
 const SIZE_OPTIONS: PopoverSizeType[] = ['sm', 'md'];
 
 export default {
-  title: 'Primitives/Popover',
+  title: 'Primitives/Popovers/Popover',
   component: Popover,
   parameters: {
     docs: {

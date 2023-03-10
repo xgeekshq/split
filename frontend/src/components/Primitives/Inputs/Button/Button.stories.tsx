@@ -18,7 +18,7 @@ const VARIANT_OPTIONS: ButtonVariantType[] = [...ButtonVariant];
 const SIZE_OPTIONS: ButtonSizeType[] = [...ButtonSize];
 
 export default {
-  title: 'Primitives/Button',
+  title: 'Primitives/Inputs/Button',
   component: Button,
   parameters: {
     docs: {

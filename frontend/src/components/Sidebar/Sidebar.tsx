@@ -1,5 +1,5 @@
-import SidebarContent from './partials/Content/Content';
-import Header from './partials/Header/Header';
+import SidebarContent from './Content/Content';
+import Header from './Header/Header';
 import { StyledSidebar } from './styles';
 
 export type SidebarProps = {

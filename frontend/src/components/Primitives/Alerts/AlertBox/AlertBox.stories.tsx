@@ -7,7 +7,7 @@ import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
-  title: 'Primitives/AlertBox',
+  title: 'Primitives/Alerts/AlertBox',
   component: AlertBox,
   parameters: {
     layout: 'padded',

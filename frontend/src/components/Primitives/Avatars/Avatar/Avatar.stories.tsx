@@ -4,7 +4,7 @@ import dedent from 'ts-dedent';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 
 export default {
-  title: 'Primitives/Avatar/Avatar',
+  title: 'Primitives/Avatars/Avatar',
   component: Avatar,
   parameters: {
     docs: {

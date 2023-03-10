@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
-import Sidebar from '@/components/Sidebar';
-import SidebarHeader from '@/components/Sidebar/partials/Header/Header';
-import SidebarContent from '@/components/Sidebar/partials/Content/Content';
+import Sidebar from '@/components/Sidebar/Sidebar';
+import SidebarHeader from '@/components/Sidebar/Header/Header';
+import SidebarContent from '@/components/Sidebar/Content/Content';
 import Flex from '@/components/Primitives/Layout/Flex';
-import SidebarItem from '@/components/Sidebar/partials/Item/Item';
+import SidebarItem from '@/components/Sidebar/Item/Item';
 import { UserFactory } from '@/utils/factories/user';
 
 const user = UserFactory.create();

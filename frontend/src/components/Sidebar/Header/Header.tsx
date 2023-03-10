@@ -1,4 +1,4 @@
-import BannerIcon from '@/components/Sidebar/partials/Banner';
+import BannerIcon from '@/components/Sidebar/Banner/Banner';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';

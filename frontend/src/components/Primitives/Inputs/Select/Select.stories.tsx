@@ -38,7 +38,7 @@ const DUMMY_OPTIONS = [
 ];
 
 export default {
-  title: 'Primitives/Select',
+  title: 'Primitives/Inputs/Select',
   component: Select,
   parameters: {
     docs: {

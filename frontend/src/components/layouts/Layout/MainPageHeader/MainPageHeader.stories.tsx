@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
-import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 export default {
   title: 'Layouts/MainPageHeader',
@@ -10,7 +10,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/layouts/Layout/partials/MainPageHeader.tsx\`
+        \`@/components/layouts/Layout/MainPageHeader/MainPageHeader.tsx\`
         `,
       },
     },

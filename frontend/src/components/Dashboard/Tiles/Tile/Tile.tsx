@@ -1,7 +1,7 @@
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Link from 'next/link';
-import { StyledTile, TileArrow, TileBlob } from '../styles';
+import { StyledTile, TileArrow, TileBlob } from './styles';
 
 export type TileProps = {
   link: string;

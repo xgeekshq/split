@@ -12,7 +12,7 @@ import Flex from '@/components/Primitives/Layout/Flex';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
-import Layout from '@/components/layouts/Layout';
+import Layout from '@/components/layouts/Layout/Layout';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';

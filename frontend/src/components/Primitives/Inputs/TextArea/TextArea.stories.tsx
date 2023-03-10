@@ -7,7 +7,7 @@ import dedent from 'ts-dedent';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 
 export default {
-  title: 'Primitives/TextArea',
+  title: 'Primitives/Inputs/TextArea',
   component: TextArea,
   parameters: {
     docs: {

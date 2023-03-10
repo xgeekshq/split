@@ -8,7 +8,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default {
-  title: 'Primitives/ConfirmationDialog',
+  title: 'Primitives/Alerts/ConfirmationDialog',
   component: ConfirmationDialog,
   parameters: {
     docs: {

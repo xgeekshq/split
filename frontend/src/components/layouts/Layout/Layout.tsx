@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { REFRESH_TOKEN_ERROR } from '@/utils/constants';
 import { Container, ContentSection } from './styles';
 

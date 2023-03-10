@@ -9,7 +9,7 @@ import { SwitchSizeType } from '../../../../../stories/types/PrimitiveTypes';
 const SIZE_OPTIONS: SwitchSizeType[] = ['xs', 'sm', 'md'];
 
 export default {
-  title: 'Primitives/Switch',
+  title: 'Primitives/Inputs/Switch',
   component: Switch,
   parameters: {
     controls: {
