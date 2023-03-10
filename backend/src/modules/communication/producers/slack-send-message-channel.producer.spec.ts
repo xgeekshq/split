@@ -36,7 +36,7 @@ describe('SlackSendMessageProducer', () => {
 		expect(producer).toBeDefined();
 	});
 
-	it('should be called with data', async () => {
+	it('should call queue.add with SlackMessageType 1 time', async () => {
 		await producer.send(slackMessageMock);
 		expect(queueMock.add).toHaveBeenNthCalledWith(1, slackMessageMock);
 	});
