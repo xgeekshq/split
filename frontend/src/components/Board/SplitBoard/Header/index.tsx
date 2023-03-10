@@ -21,7 +21,7 @@ import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/part
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import {
   BoardCounter,

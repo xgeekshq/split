@@ -4,7 +4,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-} from '@/components/Primitives/AlertDialogs/AlertDialog';
+} from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
 import Input from '@/components/Primitives/Inputs/Input';
 import { SchemaChangeColumnName } from '@/schema/schemaChangeColumnName';

@@ -2,8 +2,10 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import ConfirmationDialog, { ConfirmationDialogProps } from './ConfirmationDialog';
-import Button from '../Button';
+import ConfirmationDialog, {
+  ConfirmationDialogProps,
+} from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import Button from '../../Button';
 
 const render = (props: Partial<ConfirmationDialogProps> = {}) =>
   renderWithProviders(

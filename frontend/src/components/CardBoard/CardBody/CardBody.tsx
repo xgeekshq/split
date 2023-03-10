@@ -11,7 +11,7 @@ import Tooltip from '@/components/Primitives/Tooltip';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import CardIcon from '../CardIcon';

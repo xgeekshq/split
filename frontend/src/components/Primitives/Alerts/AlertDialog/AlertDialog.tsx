@@ -4,11 +4,11 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog';
 import { CSS, styled } from '@/styles/stitches/stitches.config';
 import { overlayShow } from '@/animations/DialogShow';
 
-import Button from '../Button';
-import Flex from '../Flex';
-import Text from '../Text';
-import Icon from '../Icon';
-import Separator from '../Separator';
+import Button from '../../Button';
+import Flex from '../../Flex';
+import Text from '../../Text';
+import Icon from '../../Icon';
+import Separator from '../../Separator';
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, {
   backdropFilter: 'blur(3px)',

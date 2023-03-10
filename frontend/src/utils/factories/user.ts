@@ -6,7 +6,7 @@ import { buildTestFactory } from '@/utils/testing';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ListUsersType } from '@/components/Primitives/Avatar/AvatarGroup';
+import { ListUsersType } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { TeamUser } from '@/types/team/team.user';
 
 export const UserFactory = buildTestFactory<User>(() => {

@@ -12,7 +12,7 @@ import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/cre
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Flex';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { useFormContext, useWatch } from 'react-hook-form';
 import SubCardBoard from './SubCardBoard';
 

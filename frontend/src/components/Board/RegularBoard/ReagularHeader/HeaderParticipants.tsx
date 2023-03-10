@@ -6,7 +6,7 @@ import Separator from '@/components/Primitives/Separator';
 import Text from '@/components/Primitives/Text';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/partials/Title/styles';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface Props {
   isParticipantsPage?: boolean;

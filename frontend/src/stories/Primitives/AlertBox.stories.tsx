@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import AlertBox from '@/components/Primitives/AlertBox';
+import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Button';
 
 export default {

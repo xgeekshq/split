@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import Icon from '@/components/Primitives/Icon';
-import Avatar from '@/components/Primitives/Avatar/Avatar';
+import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';

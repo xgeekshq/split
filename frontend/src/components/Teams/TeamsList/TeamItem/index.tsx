@@ -8,11 +8,11 @@ import Text from '@/components/Primitives/Text';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
-import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Button from '@/components/Primitives/Button';
 import useTeam from '@/hooks/useTeam';
 import TeamTitle from './partials/TeamTitle';

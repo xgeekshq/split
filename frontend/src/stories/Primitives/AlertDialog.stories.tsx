@@ -9,7 +9,7 @@ import {
   AlertDialogContent,
   AlertDialogAction,
   AlertDialogCancel,
-} from '@/components/Primitives/AlertDialogs/AlertDialog';
+} from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
 import Button from '@/components/Primitives/Button';
 

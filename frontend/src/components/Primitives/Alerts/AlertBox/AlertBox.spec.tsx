@@ -1,6 +1,6 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import AlertBox, { AlertBoxProps } from './AlertBox';
-import Button from './Button';
+import AlertBox, { AlertBoxProps } from '@/components/Primitives/Alerts/AlertBox/AlertBox';
+import Button from '../../Button';
 
 const render = (props: AlertBoxProps, children?: React.ReactNode) =>
   renderWithProviders(<AlertBox {...props}>{children}</AlertBox>);

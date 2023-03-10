@@ -8,7 +8,7 @@ import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
 import Icon from '@/components/Primitives/Icon';
-import AlertBox from '@/components/Primitives/AlertBox';
+import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Text from '@/components/Primitives/Text';
 import useBoard from '@/hooks/useBoard';

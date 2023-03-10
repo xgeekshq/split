@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import ConfirmationDialog from '@/components/Primitives/AlertDialogs/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 

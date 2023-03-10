@@ -4,7 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface TeamHeaderProps {
   team?: Team;
