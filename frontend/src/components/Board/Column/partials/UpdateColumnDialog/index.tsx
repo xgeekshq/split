@@ -6,7 +6,7 @@ import {
   AlertDialogContent,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Inputs/Input';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import { SchemaChangeColumnName } from '@/schema/schemaChangeColumnName';
 import { useRef } from 'react';
 import { joiResolver } from '@hookform/resolvers/joi';

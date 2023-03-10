@@ -13,7 +13,7 @@ import { registerNewUser } from '@/api/authService';
 import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Inputs/Input';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text';
 import SchemaRegisterForm from '@/schema/schemaRegisterForm';
 import { toastState } from '@/store/toast/atom/toast.atom';

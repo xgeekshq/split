@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import Spinner from '@/components/Primitives/Loading/Spinner';
+import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
 import dedent from 'ts-dedent';
 import { SpinnerColorType, SpinnerSizeType } from '../../types/PrimitiveTypes';
 

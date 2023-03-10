@@ -9,7 +9,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Inputs/Input';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';

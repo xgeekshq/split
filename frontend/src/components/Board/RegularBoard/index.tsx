@@ -5,7 +5,7 @@ import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icon';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import { boardInfoState } from '@/store/board/atoms/board.atom';

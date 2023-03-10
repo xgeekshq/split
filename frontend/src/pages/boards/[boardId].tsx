@@ -13,7 +13,7 @@ import AlertGoToMainBoard from '@/components/Board/SplitBoard/AlertGoToMainBoard
 import BoardHeader from '@/components/Board/SplitBoard/Header';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icon';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';

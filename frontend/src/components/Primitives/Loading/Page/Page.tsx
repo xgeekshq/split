@@ -1,7 +1,7 @@
 import { styled, CSSProps } from '@/styles/stitches/stitches.config';
 
 import Flex from '@/components/Primitives/Flex';
-import Spinner from '@/components/Primitives/Loading/Spinner';
+import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
 
 const Overlay = styled('div', Flex, {
   position: 'absolute',

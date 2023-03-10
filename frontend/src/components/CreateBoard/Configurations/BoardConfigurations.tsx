@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
 import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Inputs/Input';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Switch from '@/components/Primitives/Switch';
 import Text from '@/components/Primitives/Text';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';

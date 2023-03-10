@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import BoardType from '@/types/board/board';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';

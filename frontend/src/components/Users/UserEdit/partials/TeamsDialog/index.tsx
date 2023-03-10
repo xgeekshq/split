@@ -11,7 +11,7 @@ import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import SearchInput from '@/components/Primitives/Inputs/SearchInput';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import { ScrollableContent } from './styles';
 
 type Props = {

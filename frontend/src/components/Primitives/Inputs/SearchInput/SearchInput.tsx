@@ -2,7 +2,7 @@ import React from 'react';
 
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Flex';
-import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from './styles';
+import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from '../Input/styles';
 
 interface InputProps {
   placeholder: string;

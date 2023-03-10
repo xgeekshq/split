@@ -9,7 +9,7 @@ import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
 import useUser from '@/hooks/useUser';
 import Flex from '@/components/Primitives/Flex';

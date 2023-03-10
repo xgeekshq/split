@@ -3,8 +3,8 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/Primitives/Icon';
 import isEmpty from '@/utils/isEmpty';
-import Flex from '../Flex';
-import Text from '../Text';
+import Flex from '../../Flex';
+import Text from '../../Text';
 import {
   HelperTextWrapper,
   IconWrapper,

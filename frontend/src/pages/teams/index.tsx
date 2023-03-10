@@ -7,7 +7,7 @@ import { getDashboardHeaderInfo } from '@/api/authService';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Flex';
 import useTeam from '@/hooks/useTeam';
 import requireAuthentication from '@/components/HOC/requireAuthentication';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory } from '@storybook/react';
 
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import dedent from 'ts-dedent';
 import { SpinnerSizeType } from '../../types/PrimitiveTypes';
 

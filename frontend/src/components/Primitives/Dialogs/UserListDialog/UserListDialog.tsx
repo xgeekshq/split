@@ -6,7 +6,7 @@ import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator';
-import SearchInput from '../../Inputs/SearchInput';
+import SearchInput from '../../Inputs/SearchInput/SearchInput';
 import CheckboxUserItem from './partials/CheckboxUserItem';
 
 export type UserListDialogProps = {
