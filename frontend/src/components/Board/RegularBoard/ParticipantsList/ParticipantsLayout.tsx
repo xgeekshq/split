@@ -3,7 +3,7 @@ import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Button';
 import Flex from '@/components/Primitives/Flex';
 import Text from '@/components/Primitives/Text';
-import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog';
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useParticipants from '@/hooks/useParticipants';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';

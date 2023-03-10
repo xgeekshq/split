@@ -2,7 +2,7 @@ import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserListFactory } from '@/utils/factories/user';
 import { fireEvent, waitFor } from '@testing-library/react';
-import UserListDialog, { UserListDialogProps } from '.';
+import UserListDialog, { UserListDialogProps } from './UserListDialog';
 
 const DEFAULT_PROPS = {
   usersList: UserListFactory.createMany(3),

@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { UserList } from '@/types/team/userList';
-import UserListDialog from '../../../Primitives/Dialogs/UserListDialog';
+import UserListDialog from '../../../Primitives/Dialogs/UserListDialog/UserListDialog';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;

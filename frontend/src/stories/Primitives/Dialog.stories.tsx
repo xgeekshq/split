@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Dialog from '@/components/Primitives/Dialogs/Dialog';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Flex from '@/components/Primitives/Flex';
 import Button from '@/components/Primitives/Button';
 

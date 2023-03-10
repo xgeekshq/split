@@ -1,8 +1,8 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
 import { StyledDialogContent, StyledDialogOverlay } from './styles';
-import DialogFooter from './partials/DialogFooter';
-import DialogHeader from './partials/DialogHeader';
+import DialogFooter from './DialogFooter';
+import DialogHeader from './DialogHeader';
 import Flex from '../../Flex';
 
 type Props = {

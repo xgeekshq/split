@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Dialog from '@/components/Primitives/Dialogs/Dialog';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Flex';
 import Checkbox from '@/components/Primitives/Checkbox';

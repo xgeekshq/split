@@ -19,7 +19,7 @@ import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialogs/Dialog';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Button';
