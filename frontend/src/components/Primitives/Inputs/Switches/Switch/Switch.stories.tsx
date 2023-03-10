@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
-import { SwitchSizeType } from '../types/PrimitiveTypes';
+import { SwitchSizeType } from '../../../../../stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SwitchSizeType[] = ['xs', 'sm', 'md'];
 
@@ -21,7 +21,7 @@ export default {
         A control that allows the user to toggle between checked and not checked.
 
         **File Path:**
-        \`@/components/Primitives/Switch.tsx\`
+        \`@/components/Primitives/Inputs/Switches/Switch/Switch.tsx\`
         `,
       },
     },

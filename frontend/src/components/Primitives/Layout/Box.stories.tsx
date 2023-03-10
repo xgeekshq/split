@@ -6,8 +6,8 @@ import dedent from 'ts-dedent';
 import Box from '@/components/Primitives/Layout/Box';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import { ElevationType, BoxVariantType } from '../types/PrimitiveTypes';
-import { capitalize } from '../utils';
+import { ElevationType, BoxVariantType } from '@/stories/types/PrimitiveTypes';
+import { capitalize } from '@/stories/utils';
 
 const ELEVATION_OPTIONS: ElevationType[] = [0, 1, 2, 3, 4];
 const VARIANT_OPTIONS: BoxVariantType[] = ['bordered', 'dropdown'];
@@ -29,7 +29,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Primitives/Box.tsx\`
+        \`@/components/Primitives/Layout/Box.tsx\`
         `,
       },
     },

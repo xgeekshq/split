@@ -18,7 +18,7 @@ export default {
         The border color and below text are controlled by the validation of the form the input is in. As well as whether the helper text or an error message appears.
 
         **File Path:**
-        \`@/components/Primitives/Input/index.tsx\` and \`@/components/Primitives/Input/styles.tsx\` 
+        \`@/components/Primitives/Inputs/Input/Input.tsx\` and \`@/components/Primitives/Input/styles.tsx\` 
         `,
       },
     },

@@ -4,7 +4,13 @@ import { ComponentStory } from '@storybook/react';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import dedent from 'ts-dedent';
-import { DirectionType, AlignType, JustifyType, WrapType, GapType } from '../types/PrimitiveTypes';
+import {
+  DirectionType,
+  AlignType,
+  JustifyType,
+  WrapType,
+  GapType,
+} from '../../../stories/types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: DirectionType[] = ['row', 'column', 'rowReverse', 'columnReverse'];
 
@@ -26,7 +32,7 @@ export default {
         Flex element, allows you to control how the elements are displayed in the page.
 
         **File Path:**
-        \`@/components/Primitives/Flex.tsx\`
+        \`@/components/Primitives/Layout/Flex.tsx\`
         `,
       },
     },

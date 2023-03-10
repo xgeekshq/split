@@ -20,10 +20,10 @@ export default {
         a handler in case of confirmation, the content of the confirm button, the ref of the confirm button and whether or not to show the top separator.
 
         **File Path:**
-        \`@/components/Primitives/Dialog/index.tsx\`,
-        \`@/components/Primitives/Dialog/DialogHeader.tsx\`,
-        \`@/components/Primitives/Dialog/DialogFooter.tsx\` and
-        \`@/components/Primitives/Dialog/styles.tsx\`
+        \`@/components/Primitives/Dialogs/Dialog/Dialog.tsx\`,
+        \`@/components/Primitives/Dialogs/Dialog/DialogHeader.tsx\`,
+        \`@/components/Primitives/Dialogs/Dialog/DialogFooter.tsx\` and
+        \`@/components/Primitives/Dialogs/Dialog/styles.tsx\`
         `,
       },
     },

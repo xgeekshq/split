@@ -13,7 +13,7 @@ export default {
         An image element with a fallback for representing the user.
 
         **File Path:**
-        \`@/components/Primitives/Avatar/Avatar.tsx\`
+        \`@/components/Primitives/Avatars/Avatar/Avatar.tsx\`
         `,
       },
     },

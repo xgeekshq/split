@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Separator from '@/components/Primitives/Separator/Separator';
 import Flex from '@/components/Primitives/Layout/Flex';
-import { SeparatorOrientationType, SeparatorSizeType } from '../types/PrimitiveTypes';
+import { SeparatorOrientationType, SeparatorSizeType } from '../../../stories/types/PrimitiveTypes';
 
 const ORIENTATION_OPTIONS: SeparatorOrientationType[] = ['horizontal', 'vertical'];
 
@@ -21,7 +21,7 @@ export default {
         Visually or semantically separates content.
 
         **File Path:**
-        \`@/components/Primitives/Separator.tsx\`
+        \`@/components/Primitives/Separator/Separator.tsx\`
         `,
       },
     },

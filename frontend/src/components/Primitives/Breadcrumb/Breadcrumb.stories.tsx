@@ -14,7 +14,7 @@ export default {
         Breadcrumbs allow users to navigate back to previous linked pages.
 
         **File Path:**
-        \`@/components/Primitives/Breadcrumb/index.tsx\` and \`@/components/Primitives/Breadcrumb/styles.tsx\`
+        \`@/components/Primitives/Breadcrumb/Breadcrumb.tsx\` and \`@/components/Primitives/Breadcrumb/styles.tsx\`
         `,
       },
     },

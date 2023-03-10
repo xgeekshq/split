@@ -18,7 +18,7 @@ export default {
         The border color of the TextArea component is controlled by the react hook form validator that is used.
 
         **File Path:**
-        \`@/components/Primitives/TextArea.tsx\`
+        \`@/components/Primitives/Inputs/TextArea/TextArea.tsx\`
         `,
       },
     },

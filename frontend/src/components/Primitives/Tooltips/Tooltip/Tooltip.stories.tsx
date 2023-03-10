@@ -15,7 +15,7 @@ export default {
         A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
 
         **File Path:**
-        \`@/components/Primitives/Tooltip/index.jsx\` and \`@/components/Primitives/Tooltip/styles.jsx\`
+        \`@/components/Primitives/Tooltips/Tooltip/Tooltip.jsx\` and \`@/components/Primitives/Tooltips/Tooltip/styles.jsx\`
         `,
       },
     },

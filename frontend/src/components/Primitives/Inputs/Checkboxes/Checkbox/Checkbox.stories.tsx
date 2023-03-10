@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
-import { CheckboxSizeType, CheckboxVariantType } from '../types/PrimitiveTypes';
+import { CheckboxSizeType, CheckboxVariantType } from '../../../../../stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: CheckboxSizeType[] = ['sm', 'md'];
 const VARIANT_OPTIONS: CheckboxVariantType[] = ['default', 'error'];
@@ -20,7 +20,7 @@ export default {
         A control that allows the user to toggle between checked and not checked.
 
         **File Path:**
-        \`@/components/Primitives/Checkbox.tsx\`
+        \`@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox.tsx\`
         `,
       },
     },

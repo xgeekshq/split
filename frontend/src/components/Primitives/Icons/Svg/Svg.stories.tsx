@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Svg from '@/components/Primitives/Icons/Svg/Svg';
 import Flex from '@/components/Primitives/Layout/Flex';
-import { SvgSizeType } from '../types/PrimitiveTypes';
+import { SvgSizeType } from '../../../../stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SvgSizeType[] = [12, 16, 18, 20, 24, 32, 48, 100];
 
@@ -17,7 +17,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Primitives/Svg.tsx\`
+        \`@/components/Primitives/Icons/Svg/Svg.tsx\`
         `,
       },
     },

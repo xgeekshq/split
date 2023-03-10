@@ -12,7 +12,7 @@ import {
   HeadingType,
   Overline,
   TextSizeType,
-} from '../types/PrimitiveTypes';
+} from '../../../stories/types/PrimitiveTypes';
 
 const FONT_WEIGHT_OPTIONS: FontWeightType[] = ['regular', 'medium', 'bold'];
 
@@ -70,7 +70,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Primitives/Text.tsx\`
+        \`@/components/Primitives/Text/Text.tsx\`
         `,
       },
     },

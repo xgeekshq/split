@@ -28,7 +28,7 @@ export default {
         A succinct message that is displayed temporarily.
 
         **File Path:**
-        \`@/components/Primitives/Toast.tsx\`
+        \`@/components/Primitives/Toast/Toast.tsx\`
         `,
       },
     },

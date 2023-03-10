@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import dedent from 'ts-dedent';
-import { SpinnerSizeType } from '../../types/PrimitiveTypes';
+import { SpinnerSizeType } from '../../../../stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: SpinnerSizeType[] = [50, 80, 100, 150, 200];
 
@@ -17,7 +17,7 @@ export default {
         Loading Page, used when a page is loading.
 
         **File Path:**
-        \`@/components/Primitives/Loading/Page.tsx\`
+        \`@/components/Primitives/Loading/Page/Page.tsx\`
         `,
       },
     },

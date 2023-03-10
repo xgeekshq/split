@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 
 import Spinner from '@/components/Primitives/Loading/Spinner/Spinner';
 import dedent from 'ts-dedent';
-import { SpinnerColorType, SpinnerSizeType } from '../../types/PrimitiveTypes';
+import { SpinnerColorType, SpinnerSizeType } from '../../../../stories/types/PrimitiveTypes';
 
 const COLOR_OPTIONS: SpinnerColorType[] = ['light', 'dark'];
 const SIZE_OPTIONS: SpinnerSizeType[] = [50, 80, 100, 150, 200];
@@ -18,7 +18,7 @@ export default {
         Spinner element, it spins forever.
 
         **File Path:**
-        \`@/components/Primitives/Loading/Spinner.tsx\`
+        \`@/components/Primitives/Loading/Spinner/Spinner.tsx\`
         `,
       },
     },

@@ -14,7 +14,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { useRecoilState } from 'recoil';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
-import Dots from '@/components/Primitives/Loading/Dots';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
 

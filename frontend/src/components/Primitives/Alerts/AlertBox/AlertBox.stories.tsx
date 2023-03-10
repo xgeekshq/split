@@ -17,7 +17,8 @@ export default {
         An alert box that is displayed on the screen to inform or warn the user of something.
 
         **File Path:**
-        \`@/components/Primitives/AlertBox/index.tsx\` and \`@/components/Primitives/AlertBox/styles.tsx\`
+        \`@/components/Primitives/Alerts/AlertBox/AlertBox.tsx\`
+        ${JSON.stringify(import.meta)}
         `,
       },
     },

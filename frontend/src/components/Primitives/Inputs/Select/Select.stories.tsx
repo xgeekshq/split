@@ -47,7 +47,7 @@ export default {
         Displays a list of options for the user to pick from.
 
         **File Path:**
-        \`@/components/Primitives/Select.tsx\`
+        \`@/components/Primitives/Inputs/Select/Select.tsx\`
         `,
       },
     },

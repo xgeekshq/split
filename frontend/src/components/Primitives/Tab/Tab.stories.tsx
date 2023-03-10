@@ -16,7 +16,7 @@ export default {
         A set of layered sections of content, also known as tab panels, that are displayed one at a time.
 
         **File Path:**
-        \`@/components/Primitives/Tab.tsx\`
+        \`@/components/Primitives/Tab/Tab.tsx\`
         `,
       },
     },

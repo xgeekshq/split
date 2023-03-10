@@ -16,7 +16,7 @@ import {
   RadioGroupDirectionType,
   RadioGroupSizeType,
   RadioGroupFontWeightType,
-} from '../types/PrimitiveTypes';
+} from '../../../../stories/types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: RadioGroupDirectionType[] = ['row', 'column'];
 
@@ -34,7 +34,7 @@ export default {
         A set of checkable buttons, known as radio buttons, where no more than one of the buttons can be checked at a time.
 
         **File Path:**
-        \`@/components/Primitives/RadioGroup.tsx\`
+        \`@/components/Primitives/Inputs/RadioGroup/RadioGroup.tsx\`
         `,
       },
     },
