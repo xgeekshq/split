@@ -5,7 +5,7 @@ import { TeamFactory } from '@/utils/factories/team';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { libraryMocks } from '@/utils/testing/mocks';
-import TeamItem, { TeamItemProps } from './index';
+import TeamItem, { TeamItemProps } from './TeamItem';
 
 const DEFAULT_PROPS = {
   team: TeamFactory.create(),

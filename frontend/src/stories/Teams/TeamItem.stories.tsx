@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react';
 
-import TeamItem from '@/components/Teams/TeamsList/TeamItem';
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { TeamFactory } from '@/utils/factories/team';
 import { useSession } from 'next-auth/react';
 import { createTeamUser } from '../utils/createTeamUser';

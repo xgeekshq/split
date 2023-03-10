@@ -2,7 +2,7 @@ import React from 'react';
 import Flex from '@/components/Primitives/Layout/Flex';
 
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
-import TeamItem from '@/components/Teams/TeamsList/TeamItem';
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { Team } from '@/types/team/team';
 import Dots from '@/components/Primitives/Loading/Dots';
 import { useRecoilValue } from 'recoil';

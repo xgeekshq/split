@@ -2,9 +2,9 @@ import React from 'react';
 
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex';
-import EmptyTeams from './partials/EmptyTeams';
+import EmptyTeams from './EmptyTeams/EmptyTeams';
 
-import TeamItem from './TeamItem';
+import TeamItem from './TeamItem/TeamItem';
 
 export type TeamsListProps = {
   teams: Team[];

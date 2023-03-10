@@ -15,8 +15,8 @@ import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSe
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import useTeam from '@/hooks/useTeam';
-import TeamTitle from './partials/TeamTitle';
-import TeamBoards from './partials/TeamBoards';
+import TeamTitle from './TeamTitle/TeamTitle';
+import TeamBoards from './TeamBoards/TeamBoards';
 
 export type TeamItemProps = {
   team: Team;
