@@ -7,7 +7,7 @@ import { usersListState } from '@/store/team/atom/team.atom';
 import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import ListParticipants from '../ListParticipants';
 
 const SelectParticipants = () => {

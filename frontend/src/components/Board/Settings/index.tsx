@@ -22,7 +22,7 @@ import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
 import ConfigurationSwitch from '../../Primitives/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';

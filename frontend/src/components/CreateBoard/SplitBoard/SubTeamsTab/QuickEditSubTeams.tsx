@@ -15,7 +15,7 @@ import Text from '@/components/Primitives/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 
 interface QuickEditSubTeamsProps {
   team: Team;

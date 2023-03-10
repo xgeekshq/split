@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 
 type CardBodyProps = {
   member: BoardUser;

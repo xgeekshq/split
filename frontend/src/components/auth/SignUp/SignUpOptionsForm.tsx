@@ -2,7 +2,7 @@ import React, { Dispatch } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import useUser from '@/hooks/useUser';

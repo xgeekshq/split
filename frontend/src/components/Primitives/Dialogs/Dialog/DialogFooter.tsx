@@ -1,4 +1,4 @@
-import Button from '../../Button';
+import Button from '../../Button/Button';
 import Flex from '../../Layout/Flex';
 
 type FooterProps = {

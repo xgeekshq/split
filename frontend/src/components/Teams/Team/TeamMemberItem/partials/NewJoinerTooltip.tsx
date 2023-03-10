@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from '@/components/Primitives/Text';
 import Tooltip from '@/components/Primitives/Tooltip/Tooltip';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Icon from '@/components/Primitives/Icon';
 import Flex from '@/components/Primitives/Layout/Flex';
 

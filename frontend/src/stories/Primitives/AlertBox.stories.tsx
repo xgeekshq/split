@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 
 export default {
   title: 'Primitives/AlertBox',

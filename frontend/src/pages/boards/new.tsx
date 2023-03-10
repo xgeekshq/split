@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
 import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';

@@ -1,4 +1,4 @@
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Text from '@/components/Primitives/Text';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { styled } from '@/styles/stitches/stitches.config';

@@ -2,7 +2,7 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Text from '@/components/Primitives/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';

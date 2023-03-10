@@ -4,7 +4,7 @@ import Flex from '@/components/Primitives/Layout/Flex';
 import Separator from '@/components/Primitives/Separator';
 import { User } from '@/types/user/user';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Icon from '@/components/Primitives/Icon';
 import Text from '@/components/Primitives/Text';
 import { useSession } from 'next-auth/react';

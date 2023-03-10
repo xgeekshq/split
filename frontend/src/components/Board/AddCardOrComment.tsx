@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Checkbox from '@/components/Primitives/Checkbox';
 import Flex from '@/components/Primitives/Layout/Flex';
 import TextArea from '@/components/Primitives/TextArea';

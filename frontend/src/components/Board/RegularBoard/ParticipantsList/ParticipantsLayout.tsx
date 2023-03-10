@@ -1,6 +1,6 @@
 import Icon from '@/components/Primitives/Icon';
 import { ContentSection } from '@/components/layouts/Layout/styles';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex';
 import Text from '@/components/Primitives/Text';
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';

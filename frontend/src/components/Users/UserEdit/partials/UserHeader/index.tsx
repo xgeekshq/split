@@ -4,7 +4,7 @@ import Text from '@/components/Primitives/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';
 import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import { TeamChecked } from '@/types/team/team';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';

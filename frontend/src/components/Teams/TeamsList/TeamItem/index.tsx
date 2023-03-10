@@ -13,7 +13,7 @@ import { InnerContainer } from '@/components/Teams/styles';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Button/Button';
 import useTeam from '@/hooks/useTeam';
 import TeamTitle from './partials/TeamTitle';
 import TeamBoards from './partials/TeamBoards';
