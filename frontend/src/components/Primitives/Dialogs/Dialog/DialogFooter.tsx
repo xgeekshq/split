@@ -1,7 +1,7 @@
 import Button from '../../Inputs/Button/Button';
 import Flex from '../../Layout/Flex';
 
-type FooterProps = {
+export type FooterProps = {
   affirmativeLabel?: string;
   handleAffirmative?: () => void;
   handleClose: () => void;
@@ -31,7 +31,7 @@ const Footer = (props: FooterProps) => {
       <Button variant="primaryOutline" onClick={handleClose} type="button">
         Cancel
       </Button>
-      {(handleAffirmative || affirmativeLabel) && (
+      {handleAffirmative && affirmativeLabel && (
         <Button onClick={handleAffirmative} ref={buttonRef} data-testid="dialogFooterSubmit">
           {affirmativeLabel}
         </Button>

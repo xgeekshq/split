@@ -5,7 +5,7 @@ import Button from '../../Inputs/Button/Button';
 import Flex from '../../Layout/Flex';
 import Text from '../../Text/Text';
 
-type HeaderProps = {
+export type HeaderProps = {
   title: string;
 };
 

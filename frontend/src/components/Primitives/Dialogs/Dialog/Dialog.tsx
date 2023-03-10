@@ -5,13 +5,13 @@ import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
 import Flex from '../../Layout/Flex';
 
-type Props = {
+export type DialogProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   children?: React.ReactNode;
 };
 
-const Dialog = ({ isOpen, setIsOpen, children }: Props) => (
+const Dialog = ({ isOpen, setIsOpen, children }: DialogProps) => (
   <RadixDialog open={isOpen} onOpenChange={setIsOpen}>
     <Portal>
       <StyledDialogOverlay />
