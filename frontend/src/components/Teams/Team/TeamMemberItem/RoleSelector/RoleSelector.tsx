@@ -5,7 +5,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import Flex from '@/components/Primitives/Layout/Flex';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 import Separator from '@/components/Primitives/Separator/Separator';
-import PopoverRoleSettings from './PopoverRoleSettings';
+import TeamRolePopover from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';
 
 export type RoleSelectorProps = {
   role: TeamUserRoles;
@@ -30,9 +30,7 @@ const RoleSelector = ({
     <Text color="primary800" size="sm" fontWeight="medium">
       {getFormattedTeamUserRole(role)}
     </Text>
-    {canChangeRole && (
-      <PopoverRoleSettings userId={userId} isTeamPage={isTeamPage} teamId={teamId} />
-    )}
+    {canChangeRole && <TeamRolePopover userId={userId} isTeamPage={isTeamPage} teamId={teamId} />}
   </Flex>
 );
 

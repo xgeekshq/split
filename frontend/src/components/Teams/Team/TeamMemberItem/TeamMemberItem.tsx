@@ -11,7 +11,7 @@ import { membersListState } from '@/store/team/atom/team.atom';
 import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 
 import useTeam from '@/hooks/useTeam';
-import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import { InnerContainer } from '../../styles';
 import NewJoinerTooltip from '../../../Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 

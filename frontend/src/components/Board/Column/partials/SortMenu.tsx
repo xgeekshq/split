@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
   PopoverItem,
   PopoverClose,
-} from '@/components/Primitives/Popover/Popover';
+} from '@/components/Primitives/Popovers/Popover/Popover';
 import Text from '@/components/Primitives/Text/Text';
 
 type Props = {

@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { InnerContainer } from '@/components/Teams/styles';
 
-import RoleSelector from '@/components/Teams/Team/TeamMemberItem/partials/RoleSelector';
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import useTeam from '@/hooks/useTeam';

@@ -3,26 +3,26 @@ import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import PopoverRoleSettings, { PopoverRoleSettingsProps } from './PopoverRoleSettings';
+import TeamRolePopover, { TeamRolePopoverProps } from './TeamRolePopover';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
-const render = (props: PopoverRoleSettingsProps) =>
-  renderWithProviders(<PopoverRoleSettings {...props} />, { routerOptions: mockRouter });
+const render = (props: TeamRolePopoverProps) =>
+  renderWithProviders(<TeamRolePopover {...props} />, { routerOptions: mockRouter });
 
-describe('Components/Teams/Team/TeamMemberItem/PopoverRoleSettings', () => {
+describe('Components/Teams/Team/TeamMemberItem/TeamRolePopover', () => {
   it('should render correctly', async () => {
     // Arrange
     const team = TeamFactory.create();
-    const popoverRoleSettingsProps = {
+    const teamRolePopoverProps = {
       userId: team.users[0]._id,
       teamId: team.id,
       isTeamPage: true,
     };
 
     // Act
-    const { getByTestId, getByText } = render(popoverRoleSettingsProps);
-    const trigger = getByTestId('popoverRoleSettingsTrigger');
+    const { getByTestId, getByText } = render(teamRolePopoverProps);
+    const trigger = getByTestId('teamRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
     // Assert
