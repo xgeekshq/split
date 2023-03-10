@@ -4,7 +4,7 @@ import { TYPES } from '../interfaces/types';
 import UserDto from '../dto/user.dto';
 
 @Injectable()
-export class DeleteTeamApplicationImpl implements DeleteUserApplicationInterface {
+export class DeleteTeamApplication implements DeleteUserApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.DeleteUserService)
 		private deleteUserServices: DeleteUserApplicationInterface

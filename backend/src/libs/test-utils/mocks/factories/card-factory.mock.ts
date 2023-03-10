@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker';
-import Card from 'src/modules/cards/schemas/card.schema';
+import Card from 'src/modules/cards/entities/card.schema';
 import { buildTestFactory } from './generic-factory.mock';
 
 const userId = faker.datatype.uuid();

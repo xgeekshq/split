@@ -1,14 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { CommentRepositoryInterface } from '../interfaces/repositories/comment.repository.interface';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import { BoardDataPopulate } from 'src/modules/boards/utils/populate-board';
 import { CreateCommentServiceInterface } from '../interfaces/services/create.comment.service.interface';
+import { TYPES } from '../interfaces/types';
 
 @Injectable()
-export default class CreateCommentServiceImpl implements CreateCommentServiceInterface {
-	constructor(@InjectModel(Board.name) private boardModel: Model<BoardDocument>) {}
+export default class CreateCommentService implements CreateCommentServiceInterface {
+	constructor(
+		@Inject(TYPES.repositories.CommentRepository)
+		private commentRepository: CommentRepositoryInterface
+	) {}
 
 	async createItemComment(
 		boardId: string,
@@ -19,45 +20,31 @@ export default class CreateCommentServiceImpl implements CreateCommentServiceInt
 		anonymous: boolean,
 		columnId: string
 	) {
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards.items._id': itemId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].items.$[i].comments': {
-							text,
-							createdBy: userId,
-							anonymous,
-							createdAt: new Date()
-						}
-					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }, { 'i._id': itemId }],
-					new: true
-				}
-			)
-			.populate(BoardDataPopulate)
-			.lean()
-			.exec();
+		const updatedBoard = await this.commentRepository.insertItemComment(
+			boardId,
+			cardId,
+			itemId,
+			userId,
+			text,
+			anonymous
+		);
 
-		if (!board) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+		if (!updatedBoard) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
 
-		const colIdx = board.columns.findIndex((col) => col._id.toString() === columnId);
-		const cardIdx = board.columns[colIdx].cards.findIndex((card) => card._id.toString() === cardId);
-		const cardItemIdx = board.columns[colIdx].cards[cardIdx].items.findIndex(
+		const colIdx = updatedBoard.columns.findIndex((col) => col._id.toString() === columnId);
+		const cardIdx = updatedBoard.columns[colIdx].cards.findIndex(
+			(card) => card._id.toString() === cardId
+		);
+		const cardItemIdx = updatedBoard.columns[colIdx].cards[cardIdx].items.findIndex(
 			(item) => item._id.toString() === itemId
 		);
 
 		return {
 			newComment:
-				board.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments[
-					board.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments.length - 1
+				updatedBoard.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments[
+					updatedBoard.columns[colIdx].cards[cardIdx].items[cardItemIdx].comments.length - 1
 				],
-			hideCards: board.hideCards
+			hideCards: updatedBoard.hideCards
 		};
 	}
 
@@ -69,42 +56,27 @@ export default class CreateCommentServiceImpl implements CreateCommentServiceInt
 		anonymous: boolean,
 		columnId: string
 	) {
-		const board = await this.boardModel
-			.findOneAndUpdate(
-				{
-					_id: boardId,
-					'columns.cards._id': cardId
-				},
-				{
-					$push: {
-						'columns.$.cards.$[c].comments': {
-							text,
-							createdBy: userId,
-							anonymous,
-							createdAt: new Date()
-						}
-					}
-				},
-				{
-					arrayFilters: [{ 'c._id': cardId }],
-					new: true
-				}
-			)
-			.populate(BoardDataPopulate)
-			.lean()
-			.exec();
+		const updatedBoard = await this.commentRepository.insertCardGroupComment(
+			boardId,
+			cardId,
+			userId,
+			text,
+			anonymous
+		);
 
-		if (!board) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+		if (!updatedBoard) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
 
-		const colIdx = board.columns.findIndex((col) => col._id.toString() === columnId);
-		const cardIdx = board.columns[colIdx].cards.findIndex((card) => card._id.toString() === cardId);
+		const colIdx = updatedBoard.columns.findIndex((col) => col._id.toString() === columnId);
+		const cardIdx = updatedBoard.columns[colIdx].cards.findIndex(
+			(card) => card._id.toString() === cardId
+		);
 
 		return {
 			newComment:
-				board.columns[colIdx].cards[cardIdx].comments[
-					board.columns[colIdx].cards[cardIdx].comments.length - 1
+				updatedBoard.columns[colIdx].cards[cardIdx].comments[
+					updatedBoard.columns[colIdx].cards[cardIdx].comments.length - 1
 				],
-			hideCards: board.hideCards
+			hideCards: updatedBoard.hideCards
 		};
 	}
 }

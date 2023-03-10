@@ -1,36 +1,36 @@
-import { DeleteTeamApplicationImpl } from './applications/delete.user.application';
-import { GetUserApplicationImpl } from './applications/get.user.application';
-import { UpdateUserApplicationImpl } from './applications/update.user.application';
+import { DeleteTeamApplication } from './applications/delete.user.application';
+import { GetUserApplication } from './applications/get.user.application';
+import { UpdateUserApplication } from './applications/update.user.application';
 import { TYPES } from './interfaces/types';
 import { UserRepository } from './repository/user.repository';
-import CreateUserServiceImpl from './services/create.user.service';
-import DeleteUserServiceImpl from './services/delete.user.service';
-import GetUserServiceImpl from './services/get.user.service';
-import UpdateUserServiceImpl from './services/update.user.service';
+import CreateUserService from './services/create.user.service';
+import DeleteUserService from './services/delete.user.service';
+import GetUserService from './services/get.user.service';
+import UpdateUserService from './services/update.user.service';
 
 export const createUserService = {
 	provide: TYPES.services.CreateUserService,
-	useClass: CreateUserServiceImpl
+	useClass: CreateUserService
 };
 
 export const getUserService = {
 	provide: TYPES.services.GetUserService,
-	useClass: GetUserServiceImpl
+	useClass: GetUserService
 };
 
 export const updateUserService = {
 	provide: TYPES.services.UpdateUserService,
-	useClass: UpdateUserServiceImpl
+	useClass: UpdateUserService
 };
 
 export const updateUserApplication = {
 	provide: TYPES.applications.UpdateUserApplication,
-	useClass: UpdateUserApplicationImpl
+	useClass: UpdateUserApplication
 };
 
 export const getUserApplication = {
 	provide: TYPES.applications.GetUserApplication,
-	useClass: GetUserApplicationImpl
+	useClass: GetUserApplication
 };
 
 export const userRepository = {
@@ -40,10 +40,10 @@ export const userRepository = {
 
 export const deleteUserService = {
 	provide: TYPES.services.DeleteUserService,
-	useClass: DeleteUserServiceImpl
+	useClass: DeleteUserService
 };
 
 export const deleteUserApplication = {
 	provide: TYPES.applications.DeleteUserApplication,
-	useClass: DeleteTeamApplicationImpl
+	useClass: DeleteTeamApplication
 };

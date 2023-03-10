@@ -3,6 +3,7 @@ import { mongooseBoardModule } from 'src/infrastructure/database/mongoose.module
 import SocketModule from 'src/modules/socket/socket.module';
 import { CardsModule } from '../cards/cards.module';
 import {
+	commentRepository,
 	createCommentApplication,
 	createCommentService,
 	deleteCommentApplication,
@@ -21,7 +22,8 @@ import CommentsController from './controller/comments.controller';
 		updateCommentService,
 		updateCommentApplication,
 		deleteCommentApplication,
-		deleteCommentService
+		deleteCommentService,
+		commentRepository
 	],
 	exports: []
 })

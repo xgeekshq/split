@@ -1,7 +1,7 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 
-export interface DeleteCommentApplication {
+export interface DeleteCommentApplicationInterface {
 	deleteItemComment(
 		boardId: string,
 		commentId: string,

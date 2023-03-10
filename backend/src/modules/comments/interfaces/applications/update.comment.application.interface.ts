@@ -1,13 +1,12 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 
-export interface UpdateCommentApplication {
+export interface UpdateCommentApplicationInterface {
 	updateItemComment(
 		boardId: string,
 		cardId: string,
 		cardItemId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;
@@ -16,7 +15,6 @@ export interface UpdateCommentApplication {
 		boardId: string,
 		cardId: string,
 		commentId: string,
-		userId: string,
 		text: string,
 		anonymous: boolean
 	): Promise<LeanDocument<BoardDocument> | null>;

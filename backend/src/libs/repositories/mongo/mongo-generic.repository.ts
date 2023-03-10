@@ -1,7 +1,9 @@
+import { DeleteResult } from 'mongodb';
 import {
 	ClientSession,
 	FilterQuery,
 	Model,
+	PipelineStage,
 	ProjectionType,
 	QueryOptions,
 	UpdateQuery
@@ -77,6 +79,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec() as unknown as Promise<T[]>;
 	}
 
+	aggregateByQuery<Q>(pipeline: PipelineStage[]): Promise<Q[]> {
+		return this._repository.aggregate(pipeline).exec();
+	}
+
 	create<Q>(item: Q): Promise<T> {
 		return this._repository.create(item);
 	}
@@ -93,12 +99,16 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		value: FilterQuery<T>,
 		query: UpdateQuery<T>,
 		options?: QueryOptions<T>,
-		populate?: PopulateType
+		populate?: PopulateType,
+		withSession?: boolean
 	): Promise<T> {
 		return this._repository
-			.findOneAndUpdate(value, query, options)
+			.findOneAndUpdate(value, query, {
+				...options,
+				session: withSession ? this._session : undefined
+			})
 			.populate(populate)
-			.lean()
+			.lean({ virtuals: populate ? true : false })
 			.exec() as unknown as Promise<T>;
 	}
 
@@ -129,12 +139,35 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 			.exec();
 	}
 
+	findOneByeFieldAndDelete(value: FilterQuery<T>, options?: QueryOptions): Promise<T> {
+		return this._repository.findOneAndDelete(value, options).exec();
+	}
+
+	updateOneByField<Q>(
+		filter: FilterQuery<T>,
+		update: UpdateQuery<T>,
+		options?: QueryOptions<T>,
+		withSession?: boolean
+	): Promise<Q> {
+		return this._repository
+			.updateOne(filter, update, {
+				...options,
+				session: withSession ? this._session : undefined
+			})
+			.lean()
+			.exec() as unknown as Promise<Q>;
+	}
+
 	async deleteMany(field: FilterQuery<T>, withSession = false): Promise<number> {
 		const { deletedCount } = await this._repository
 			.deleteMany(field, { session: withSession ? this._session : undefined })
 			.exec();
 
 		return deletedCount;
+	}
+
+	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {
+		return this._repository.deleteOne(value, options).exec();
 	}
 
 	async startTransaction() {

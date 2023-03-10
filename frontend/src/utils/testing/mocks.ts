@@ -1,9 +1,15 @@
 import { User } from '@/types/user/user';
 import { Session } from 'next-auth/core/types';
-import { NextRouter } from 'next/router';
+import * as NextRouter from 'next/router';
+import * as ReactQuery from '@tanstack/react-query';
 import { SessionUserFactory } from '../factories/user';
 
-export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
+export type MockReactQueryOptions = {
+  useQueryResult: ReactQuery.UseQueryResult;
+  useMutationResult: ReactQuery.UseMutationResult;
+};
+
+export function createMockRouter(router?: Partial<NextRouter.NextRouter>): NextRouter.NextRouter {
   return {
     basePath: '',
     pathname: '/',
@@ -32,6 +38,40 @@ export function createMockRouter(router?: Partial<NextRouter>): NextRouter {
     ...router,
   };
 }
+
+export const libraryMocks = {
+  mockNextRouter(router?: Partial<NextRouter.NextRouter>) {
+    const mockRouter = createMockRouter(router);
+    const useRouterMockFn = jest.fn(() => mockRouter);
+
+    jest.spyOn(NextRouter, 'useRouter').mockImplementation(useRouterMockFn);
+
+    return {
+      ...this,
+      mockRouter,
+      useRouterMockFn,
+    };
+  },
+  mockReactQuery(options?: MockReactQueryOptions) {
+    const { useQueryResult, useMutationResult } = options ?? {};
+    const useQueryMockFn = jest.fn<Partial<ReactQuery.UseQueryResult>, any>(() => ({
+      ...useQueryResult,
+    }));
+    const useMutationMockFn = jest.fn<Partial<ReactQuery.UseMutationResult>, any>(() => ({
+      ...useMutationResult,
+      mutate: jest.fn(),
+    }));
+
+    jest.spyOn(ReactQuery, 'useQuery').mockImplementation(useQueryMockFn as any);
+    jest.spyOn(ReactQuery, 'useMutation').mockImplementation(useMutationMockFn as any);
+
+    return {
+      ...this,
+      useQueryMockFn,
+      useMutationMockFn,
+    };
+  },
+};
 
 export function createMockSession(session?: Partial<Session>, user?: User): Session {
   return {

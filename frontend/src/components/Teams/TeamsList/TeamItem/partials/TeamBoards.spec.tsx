@@ -1,17 +1,13 @@
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { ROUTES } from '@/utils/routes';
 import { TeamFactory } from '@/utils/factories/team';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import TeamBoards, { TeamBoardsProps } from './TeamBoards';
 
-const router = createMockRouter({});
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: TeamBoardsProps) =>
-  rtlRender(
-    <RouterContext.Provider value={router}>
-      <TeamBoards {...props} />
-    </RouterContext.Provider>,
-  );
+  renderWithProviders(<TeamBoards {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
   it('should render No boards', () => {
@@ -42,7 +38,7 @@ describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(
+      expect(mockRouter.push).toHaveBeenCalledWith(
         ROUTES.NewTeamBoard(teamBoardsProps.team.id),
         ROUTES.NewTeamBoard(teamBoardsProps.team.id),
         expect.anything(),
@@ -67,7 +63,7 @@ describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(
+      expect(mockRouter.push).toHaveBeenCalledWith(
         ROUTES.TeamBoards(teamBoardsProps.team.id),
         ROUTES.TeamBoards(teamBoardsProps.team.id),
         expect.anything(),

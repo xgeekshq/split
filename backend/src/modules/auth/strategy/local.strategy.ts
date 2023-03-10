@@ -4,14 +4,14 @@ import { LeanDocument } from 'mongoose';
 import { Strategy } from 'passport-local';
 import { INVALID_CREDENTIALS } from 'src/libs/exceptions/messages';
 import { UserDocument } from 'src/modules/users/entities/user.schema';
-import { ValidateUserAuthService } from '../interfaces/services/validate-user.auth.service.interface';
+import { ValidateUserAuthServiceInterface } from '../interfaces/services/validate-user.auth.service.interface';
 import { TYPES } from '../interfaces/types';
 
 @Injectable()
 export default class LocalStrategy extends PassportStrategy(Strategy) {
 	constructor(
 		@Inject(TYPES.services.ValidateAuthService)
-		private readonly validateUserAuthService: ValidateUserAuthService
+		private readonly validateUserAuthService: ValidateUserAuthServiceInterface
 	) {
 		super({
 			usernameField: 'email'

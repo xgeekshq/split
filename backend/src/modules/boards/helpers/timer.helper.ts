@@ -12,7 +12,6 @@ type TimerExpiredCallback = () => void;
 type CleanTimerCallback = () => void;
 type TimerStateType = {
 	status: TimerStatusDto;
-	previousStatus: TimerStatusDto;
 	duration: TimeDto;
 	timeLeft: TimeDto;
 };
@@ -57,7 +56,6 @@ export default class TimerHelper {
 	get state(): TimerStateType {
 		return {
 			status: this.statusHelper.status,
-			previousStatus: this.statusHelper.previousStatus,
 			duration: this._duration,
 			timeLeft: this.timeLeft
 		};

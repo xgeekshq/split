@@ -5,6 +5,8 @@ import { io, Socket } from 'socket.io-client';
 import useCards from '@/hooks/useCards';
 import BoardType, { PhaseChangeEventType } from '@/types/board/board';
 
+import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import { BoardUser } from '@/types/board/board.user';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import AddCardDto from '@/types/card/addCard.dto';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
@@ -19,14 +21,12 @@ import EventCallback from '@/types/events/event-callback.type';
 import ListenEvent from '@/types/events/listen-event.type';
 import VoteDto from '@/types/vote/vote.dto';
 import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/constants';
-import { useQueryClient } from '@tanstack/react-query';
 import isEmpty from '@/utils/isEmpty';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
-import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
-import { BoardUser } from '@/types/board/board.user';
+import useBoard from './useBoard';
 import useComments from './useComments';
 import useVotes from './useVotes';
-import useBoard from './useBoard';
 
 enum BoardAction {
   UPDATECARDPOSITION,

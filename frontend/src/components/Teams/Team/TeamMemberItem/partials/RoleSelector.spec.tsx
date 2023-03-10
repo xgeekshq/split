@@ -1,18 +1,14 @@
 import React from 'react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { TeamFactory } from '@/utils/factories/team';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 import RoleSelector, { RoleSelectorProps } from './RoleSelector';
 
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: RoleSelectorProps) =>
-  renderWithProviders(<RoleSelector {...props} />, { routerOptions: router });
+  renderWithProviders(<RoleSelector {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/Team/TeamMemberItem/RoleSelector', () => {
   let defaultProps: RoleSelectorProps;

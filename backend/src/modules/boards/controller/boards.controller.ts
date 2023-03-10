@@ -49,15 +49,15 @@ import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import BoardDto from '../dto/board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
-import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
-import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
-import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
-import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import UpdateBoardUserDto from '../dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import { BoardPhases } from 'src/libs/enum/board.phases';
+import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
+import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
+import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
+import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 

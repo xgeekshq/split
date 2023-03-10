@@ -1,7 +1,7 @@
-import { RouterContext } from 'next/dist/shared/lib/router-context';
-import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { fireEvent, waitFor } from '@testing-library/react';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { BOARDS_ROUTE } from '@/utils/routes';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import Tile, { TileProps } from './Tile';
 
 const DEFAULT_PROPS: TileProps = {
@@ -10,13 +10,10 @@ const DEFAULT_PROPS: TileProps = {
   count: 99,
   color: 'purple',
 };
-const router = createMockRouter({});
+
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/' });
 const render = (props = DEFAULT_PROPS) =>
-  rtlRender(
-    <RouterContext.Provider value={router}>
-      <Tile {...props} />
-    </RouterContext.Provider>,
-  );
+  renderWithProviders(<Tile {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Dashboard/Tiles/Tile', () => {
   it('should render correctly', () => {
@@ -41,7 +38,7 @@ describe('Components/Dashboard/Tiles/Tile', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
+      expect(mockRouter.push).toHaveBeenCalledWith(BOARDS_ROUTE, BOARDS_ROUTE, expect.anything());
     });
   });
 });
