@@ -1,5 +1,5 @@
-import { SlackMessageType, SlackPostMessageResult } from '../dto/types';
+import { SlackMessageType } from '../dto/types';
 
 export interface SendMessageApplicationInterface {
-	execute(data: SlackMessageType): Promise<SlackPostMessageResult>;
+	execute(data: SlackMessageType): Promise<void>;
 }
