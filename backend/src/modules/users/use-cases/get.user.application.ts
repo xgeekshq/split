@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LeanDocument } from 'mongoose';
 import { UserDocument } from '../entities/user.schema';
-import { GetUserApplicationInterface } from '../interfaces/applications/get.user.application.interface';
+import { GetUserApplicationInterface } from '../interfaces/use-cases/get.user.application.interface';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
 

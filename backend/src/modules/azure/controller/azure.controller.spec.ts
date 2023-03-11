@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import AzureController from './azure.controller';
 import { AuthAzureApplication } from '../applications/auth.azure.application';
-import { GetUserApplication } from 'src/modules/users/applications/get.user.application';
+import { GetUserApplication } from 'src/modules/users/use-cases/get.user.application';
 
 describe('AzureController', () => {
 	let controller: AzureController;

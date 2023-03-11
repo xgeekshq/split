@@ -10,5 +10,11 @@ export const TYPES = {
 		UpdateUserApplication: 'UpdateUserApplication',
 		DeleteUserApplication: 'DeleteUserApplication'
 	},
+	useCases: {
+		GetAllUsersUseCase: 'GetAllUsersUseCase',
+		GetAllUsersWithTeamsUseCase: 'GetAllUsersWithTeamsUseCase',
+		GetUserUseCase: 'GetUserUseCase',
+		UpdateSAdminUseCase: 'UpdateSAdminUseCase'
+	},
 	repository: 'UserRepository'
 };

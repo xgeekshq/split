@@ -10,8 +10,12 @@ import {
 	createUserService,
 	deleteUserApplication,
 	deleteUserService,
+	getAllUsersUseCase,
+	getAllUsersWithTeamsUseCase,
 	getUserApplication,
 	getUserService,
+	getUserUseCase,
+	updateSAdminUseCase,
 	updateUserApplication,
 	updateUserService,
 	userRepository
@@ -20,6 +24,10 @@ import {
 @Module({
 	imports: [mongooseUserModule, TeamsModule, mongooseResetModule, mongooseTeamUserModule],
 	providers: [
+		getAllUsersUseCase,
+		getAllUsersWithTeamsUseCase,
+		getUserUseCase,
+		updateSAdminUseCase,
 		createUserService,
 		getUserService,
 		updateUserService,

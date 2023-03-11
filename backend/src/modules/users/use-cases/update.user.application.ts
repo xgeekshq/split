@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { UpdateUserApplicationInterface } from '../interfaces/applications/update.user.service.interface';
+import { UpdateUserApplicationInterface } from '../interfaces/use-cases/update.user.service.interface';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 

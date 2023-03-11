@@ -1,4 +1,4 @@
-import { DeleteUserApplicationInterface } from './../interfaces/applications/delete.user.application';
+import { DeleteUserApplicationInterface } from '../interfaces/use-cases/delete.user.application';
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import UserDto from '../dto/user.dto';
