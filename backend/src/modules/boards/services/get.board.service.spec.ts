@@ -1,8 +1,6 @@
-import {
-	boardUserRepository,
-	createBoardUserService,
-	getBoardService
-} from './../boards.providers';
+import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { getBoardUserService } from './../../boardusers/boardusers.providers';
+import { getBoardService } from './../boards.providers';
 import { getTokenAuthService } from './../../auth/auth.providers';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
@@ -12,6 +10,7 @@ import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import faker from '@faker-js/faker';
@@ -22,16 +21,16 @@ import { NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
-import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { createBoardUserService } from 'src/modules/boardusers/boardusers.providers';
 
 describe('GetBoardService', () => {
 	let boardService: GetBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
-	let boardUserRepositoryMock: DeepMocked<BoardUserRepositoryInterface>;
+	let getBoardUserServiceMock: DeepMocked<GetBoardUserServiceInterface>;
 	let getTeamServiceMock: DeepMocked<GetTeamServiceInterface>;
 	let getTokenAuthServiceMock: DeepMocked<GetTokenAuthServiceInterface>;
 
@@ -56,12 +55,12 @@ describe('GetBoardService', () => {
 					useValue: createMock<UpdateUserServiceInterface>()
 				},
 				{
-					provide: boardRepository.provide,
-					useValue: createMock<BoardRepositoryInterface>()
+					provide: getBoardUserService.provide,
+					useValue: createMock<GetBoardUserServiceInterface>()
 				},
 				{
-					provide: boardUserRepository.provide,
-					useValue: createMock<BoardUserRepositoryInterface>()
+					provide: boardRepository.provide,
+					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
 					provide: SocketGateway,
@@ -72,7 +71,7 @@ describe('GetBoardService', () => {
 
 		boardService = module.get<GetBoardServiceInterface>(getBoardService.provide);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
-		boardUserRepositoryMock = module.get(Boards.TYPES.repositories.BoardUserRepository);
+		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		getTeamServiceMock = module.get(Teams.TYPES.services.GetTeamService);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
 	});
@@ -94,8 +93,8 @@ describe('GetBoardService', () => {
 		it('should call boardUserRepository and getTeamService', async () => {
 			const userId = faker.datatype.uuid();
 			await boardService.getAllBoardIdsAndTeamIdsOfUser(userId);
-			expect(boardUserRepositoryMock.getAllBoardsIdsOfUser).toBeCalledTimes(1);
-			expect(boardUserRepositoryMock.getAllBoardsIdsOfUser).toBeCalledWith(userId);
+			expect(getBoardUserServiceMock.getAllBoardsOfUser).toBeCalledTimes(1);
+			expect(getBoardUserServiceMock.getAllBoardsOfUser).toBeCalledWith(userId);
 
 			expect(getTeamServiceMock.getTeamsOfUser).toBeCalledTimes(1);
 			expect(getTeamServiceMock.getTeamsOfUser).toBeCalledWith(userId);
@@ -111,7 +110,7 @@ describe('GetBoardService', () => {
 			const teamIds = teams.map((team) => team._id);
 			const boardAndTeamIdsResult = { boardIds, teamIds };
 
-			boardUserRepositoryMock.getAllBoardsIdsOfUser.mockResolvedValue(boardUsers);
+			getBoardUserServiceMock.getAllBoardsOfUser.mockResolvedValue(boardUsers);
 			getTeamServiceMock.getTeamsOfUser.mockResolvedValue(teams);
 
 			const result = await boardService.getAllBoardIdsAndTeamIdsOfUser(userId);
@@ -392,7 +391,7 @@ describe('GetBoardService', () => {
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(subBoard);
 
-			boardUserRepositoryMock.getBoardUser.mockResolvedValue(boardUser);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValue(boardUser);
 
 			boardRepositoryMock.getMainBoard.mockResolvedValue(mainBoard);
 
@@ -427,11 +426,11 @@ describe('GetBoardService', () => {
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
 
-			boardUserRepositoryMock.getBoardUser.mockResolvedValue(null);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
 
 			getTokenAuthServiceMock.getTokens.mockResolvedValue(tokens);
 
-			boardUserRepositoryMock.getBoardUserPopulated.mockResolvedValue(boardUser);
+			getBoardUserServiceMock.getBoardUserPopulated.mockResolvedValue(boardUser);
 
 			const boardResponse = {
 				guestUser: { accessToken: tokens.accessToken, user: userDtoMock._id },
@@ -456,7 +455,7 @@ describe('GetBoardService', () => {
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
 
-			boardUserRepositoryMock.getBoardUser.mockResolvedValue(boardUser);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValue(boardUser);
 
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 
@@ -474,7 +473,7 @@ describe('GetBoardService', () => {
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
 
-			boardUserRepositoryMock.getBoardUser.mockResolvedValue(null);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
 
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 

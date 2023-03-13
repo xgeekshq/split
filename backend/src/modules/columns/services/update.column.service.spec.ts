@@ -1,36 +1,17 @@
-import { voteRepository } from 'src/modules/votes/votes.providers';
-import { ConfigService } from '@nestjs/config';
-import configService from 'src/libs/test-utils/mocks/configService.mock';
-import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
-import { getTokenAuthService } from 'src/modules/auth/auth.providers';
-import { createBoardUserService } from './../../boards/boards.providers';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
+import { createMock } from '@golevelup/ts-jest';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import faker from '@faker-js/faker';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import {
-	boardRepository,
-	boardUserRepository,
-	getBoardService
-} from 'src/modules/boards/boards.providers';
-import Board from 'src/modules/boards/entities/board.schema';
-import {
-	cardRepository,
-	deleteCardService,
-	getCardService
-} from 'src/modules/cards/cards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { deleteVoteService } from 'src/modules/votes/votes.providers';
-import { columnRepository, updateColumnService } from '../columns.providers';
+import { updateColumnService } from '../columns.providers';
 import * as Columns from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { ColumnRepository } from '../repositories/column.repository';
-import { getTeamService, teamRepository, teamUserRepository } from 'src/modules/teams/providers';
-import { updateUserService, userRepository } from 'src/modules/users/users.providers';
-import { JwtService } from '@nestjs/jwt';
 import GetBoardService from 'src/modules/boards/services/get.board.service';
 import DeleteCardService from 'src/modules/cards/services/delete.card.service';
 import UpdateColumnService from './update.column.service';
@@ -48,58 +29,22 @@ describe('UpdateColumnService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			imports: [EventEmitterModule.forRoot()],
 			providers: [
-				UpdateColumnService,
-				DeleteCardService,
-				SocketGateway,
-				GetBoardService,
-				getTeamService,
 				updateColumnService,
-				deleteCardService,
-				getBoardService,
-				getCardService,
-				deleteVoteService,
-				columnRepository,
-				userRepository,
-				boardRepository,
-				boardUserRepository,
-				teamRepository,
-				teamUserRepository,
-				createBoardUserService,
-				getTokenAuthService,
-				updateUserService,
-				voteRepository,
-				cardRepository,
 				{
-					provide: getModelToken(Board.name),
-					useValue: {}
+					provide: Columns.TYPES.repositories.ColumnRepository,
+					useValue: createMock<ColumnRepository>()
 				},
 				{
-					provide: getModelToken('BoardUser'),
-					useValue: {}
+					provide: SocketGateway,
+					useValue: createMock<SocketGateway>()
 				},
 				{
-					provide: getModelToken('User'),
-					useValue: {}
+					provide: Cards.TYPES.services.DeleteCardService,
+					useValue: createMock<DeleteCardServiceInterface>()
 				},
 				{
-					provide: getModelToken('Team'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('TeamUser'),
-					useValue: {}
-				},
-				{
-					provide: getModelToken('ResetPassword'),
-					useValue: {}
-				},
-				{
-					provide: JwtService,
-					useValue: jwtService
-				},
-				{
-					provide: ConfigService,
-					useValue: configService
+					provide: Boards.TYPES.services.GetBoardService,
+					useValue: createMock<GetBoardServiceInterface>()
 				}
 			]
 		}).compile();

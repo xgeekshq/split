@@ -1,4 +1,4 @@
-import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
@@ -9,13 +9,13 @@ import {
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { TYPES } from 'src/modules/boards/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
@@ -27,7 +27,6 @@ import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
 
@@ -44,12 +43,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
-		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface,
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
@@ -176,12 +173,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		if (!board) return null;
 
 		return board._id.toString();
-	}
-
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
-		);
 	}
 
 	/* --------------- HELPERS --------------- */

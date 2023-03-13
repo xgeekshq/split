@@ -13,6 +13,7 @@ import {
 	updateColumnService
 } from './columns.providers';
 import ColumnsController from './controller/columns.controller';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
@@ -20,6 +21,7 @@ import ColumnsController from './controller/columns.controller';
 		mongooseBoardUserModule,
 		CardsModule,
 		BoardsModule,
+		BoardUsersModule,
 		TeamsModule,
 		forwardRef(() => SocketModule)
 	],

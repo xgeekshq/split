@@ -8,12 +8,12 @@ import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import mockedUser from 'src/libs/test-utils/mocks/user.mock';
 import ValidateUserAuthService from 'src/modules/auth/services/validate-user.auth.service';
+import { boardRepository, getBoardService } from 'src/modules/boards/boards.providers';
 import {
-	boardRepository,
 	boardUserRepository,
 	createBoardUserService,
-	getBoardService
-} from 'src/modules/boards/boards.providers';
+	getBoardUserService
+} from 'src/modules/boardusers/boardusers.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
 	getTeamService,
@@ -67,6 +67,7 @@ describe('The AuthenticationService', () => {
 				boardUserRepository,
 				boardRepository,
 				updateUserService,
+				getBoardUserService,
 				{
 					provide: ConfigService,
 					useValue: configService
