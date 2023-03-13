@@ -26,7 +26,7 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 		await this.userRepository.startTransaction();
 
 		try {
-			this.deleteUser(userId, true);
+			await this.deleteUser(userId, true);
 			const teamsOfUser = await this.getTeamUserService.getTeamsOfUser(userId);
 
 			if (teamsOfUser.length > 0) {

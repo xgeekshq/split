@@ -1,7 +1,8 @@
-import LoggedUserDto from 'src/modules/users/dto/logged.user.dto';
+import { Client } from '@microsoft/microsoft-graph-client';
+import { AzureUserFound } from '../../services/auth.azure.service';
 
 export interface AuthAzureServiceInterface {
-	loginOrRegisterAzureToken(azureToken: string): Promise<LoggedUserDto | null>;
+	getUserFromAzure(email: string): Promise<AzureUserFound | undefined>;
 
-	checkUserExistsInActiveDirectory(email: string): Promise<boolean>;
+	getGraphClient(): Client;
 }

@@ -15,10 +15,7 @@ export const TYPES = {
 		SignInUseCase: 'SignInUseCase',
 		RefreshTokenUseCase: 'RefreshTokenUseCase',
 		ResetPasswordUseCase: 'ResetPasswordUseCase',
-		CreateResetTokenUseCase: 'CreateResetTokenUseCase',
-		CreateResetTokenAuthApplication: 'CreateResetTokenAuthApplication',
-		UpdatePasswordAuthApplication: 'UpdatePasswordAuthApplication',
-		UpdateUserApplication: 'UpdateUserApplication'
+		CreateResetTokenUseCase: 'CreateResetTokenUseCase'
 	},
 	repository: {
 		ResetPasswordRepository: 'ResetPasswordRepository'

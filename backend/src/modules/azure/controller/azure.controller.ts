@@ -1,13 +1,4 @@
-import {
-	Body,
-	Controller,
-	Get,
-	HttpCode,
-	Inject,
-	NotFoundException,
-	Param,
-	Post
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Param, Post } from '@nestjs/common';
 import {
 	ApiBadRequestResponse,
 	ApiBody,
@@ -20,26 +11,24 @@ import {
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { EmailParam } from 'src/libs/dto/param/email.param';
-import { USER_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
 import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
-import * as User from 'src/modules/users/interfaces/types';
-import { AuthAzureApplicationInterface } from '../interfaces/applications/auth.azure.application.interface';
+import { RegisterOrLoginAzureUseCaseInterface } from '../interfaces/applications/register-or-login.azure.use-case.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
-import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
+import { CheckUserAzureUseCaseInterface } from '../interfaces/applications/check-user.azure.use-case.interface';
 
 @ApiTags('Azure')
 @Controller('auth/azure')
 export default class AzureController {
 	constructor(
-		@Inject(TYPES.applications.AuthAzureApplication)
-		private authAzureApp: AuthAzureApplicationInterface,
-		@Inject(User.TYPES.services.GetUserService)
-		private getUserService: GetUserServiceInterface
+		@Inject(TYPES.applications.RegisterOrLoginUseCase)
+		private registerOrLoginUseCase: RegisterOrLoginAzureUseCaseInterface,
+		@Inject(TYPES.applications.CheckUserUseCase)
+		private checkUserUseCase: CheckUserAzureUseCaseInterface
 	) {}
 
 	@ApiOperation({
@@ -75,7 +64,7 @@ export default class AzureController {
 	@HttpCode(200)
 	@Post('/')
 	loginOrRegistetruerAzureToken(@Body() azureToken: AzureToken) {
-		return this.authAzureApp.registerOrLogin(azureToken.token);
+		return this.registerOrLoginUseCase.execute(azureToken.token);
 	}
 
 	@ApiParam({
@@ -105,18 +94,6 @@ export default class AzureController {
 	})
 	@Get('users/:email')
 	async checkEmail(@Param() { email }: EmailParam) {
-		const existUserInAzure = await this.authAzureApp.checkUserExistsInActiveDirectory(email);
-
-		if (existUserInAzure) {
-			return 'az';
-		}
-
-		const existUserInDB = await this.getUserService.getByEmail(email);
-
-		if (existUserInDB) {
-			return 'local';
-		}
-
-		throw new NotFoundException(USER_NOT_FOUND);
+		return this.checkUserUseCase.execute(email);
 	}
 }

@@ -9,6 +9,7 @@ import ValidateUserEmailUseCase from './applications/validate-user-email.use-cas
 import { TYPES } from './interfaces/types';
 import { ResetPasswordRepository } from './repository/reset-password.repository';
 import GetTokenAuthService from './services/get-token.auth.service';
+import ValidateUserAuthService from './services/validate-user.auth.service';
 
 export const getTokenAuthService = {
 	provide: TYPES.services.GetTokenAuthService,
@@ -17,7 +18,7 @@ export const getTokenAuthService = {
 
 export const validateUserAuthService = {
 	provide: TYPES.services.ValidateAuthService,
-	useClass: ValidateUserEmailUseCase
+	useClass: ValidateUserAuthService
 };
 
 export const registerUserUseCase = {
