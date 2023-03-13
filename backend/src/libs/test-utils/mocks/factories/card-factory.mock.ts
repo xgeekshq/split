@@ -1,25 +1,26 @@
 import faker from '@faker-js/faker';
 import Card from 'src/modules/cards/entities/card.schema';
 import { buildTestFactory } from './generic-factory.mock';
+import { UserFactory } from './user-factory';
 
-const userId = faker.datatype.uuid();
 const cardId = faker.datatype.uuid();
-const cardText = faker.lorem.words();
-const commentText = faker.lorem.paragraph(1);
+const cardText = faker.lorem.words(5);
+const commentText = faker.lorem.words(4);
 const teamId = faker.datatype.uuid();
 const createdAtDate = faker.datatype.datetime();
+const user = UserFactory.create();
 
 const mockCardData = (): Card => {
 	return {
 		_id: cardId,
 		text: cardText,
-		createdBy: userId,
+		createdBy: user,
 		createdByTeam: teamId,
 		createdAt: createdAtDate,
 		comments: [
 			{
 				text: commentText,
-				createdBy: userId,
+				createdBy: user,
 				anonymous: false
 			}
 		],
@@ -29,11 +30,11 @@ const mockCardData = (): Card => {
 			{
 				_id: cardId,
 				text: cardText,
-				createdBy: userId,
+				createdBy: user,
 				comments: [
 					{
 						text: commentText,
-						createdBy: userId,
+						createdBy: user,
 						anonymous: false
 					}
 				],
