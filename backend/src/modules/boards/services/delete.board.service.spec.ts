@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { deleteBoardService } from '../boards.providers';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { NotFoundException } from '@nestjs/common';
+import { deleteBoardService } from '../boards.providers';
 
 describe('DeleteBoardService', () => {
 	let service: DeleteBoardServiceInterface;
@@ -21,7 +22,7 @@ describe('DeleteBoardService', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: Boards.TYPES.repositories.BoardUserRepository,
+					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
 					useValue: {}
 				},
 				{
