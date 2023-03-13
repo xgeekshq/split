@@ -57,15 +57,16 @@ const TeamRolePopover = React.memo(({ userId, teamId, isTeamPage }: TeamRolePopo
   };
 
   const updateUserRole = (value: TeamUserRoles) => {
+    let userFound: TeamUser | undefined;
+
     if (router.pathname.includes('users')) {
       const teamUsers = userTeamsList.flatMap((team) => team.users);
-      const teamFound = teamUsers.find((teamUser) => teamUser.team === teamId);
-
-      updateUser(value, teamFound);
+      userFound = teamUsers.find((teamUser) => teamUser.team === teamId);
     } else {
-      const userFound = membersList.find((member) => member.user._id === userId);
-      updateUser(value, userFound);
+      userFound = membersList.find((member) => member.user._id === userId);
     }
+
+    updateUser(value, userFound);
   };
 
   const handleSelectFunction = (role: TeamUserRoles) =>
