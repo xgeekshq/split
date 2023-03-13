@@ -1,4 +1,4 @@
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { ReactNode } from 'react';
 import { User } from '@/types/user/user';
 import { Dropdown, DropdownBtn, DropdownContent, DropdownItem } from './styles';

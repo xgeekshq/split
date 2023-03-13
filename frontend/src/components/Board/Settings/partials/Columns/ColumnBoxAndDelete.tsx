@@ -1,8 +1,8 @@
-import Button from '@/components/Primitives/Button';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
-import Flex from '@/components/Primitives/Flex';
-import Icon from '@/components/Primitives/Icon';
-import Input from '@/components/Primitives/Input';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import { deletedColumnsState } from '@/store/board/atoms/board.atom';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilState } from 'recoil';

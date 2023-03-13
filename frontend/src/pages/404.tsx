@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pages/error.styles';
 
 import LogoIcon from '@/components/icons/Logo';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import SecondaryBanner from '@/components/icons/SecondaryBanner';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default function Custom404() {
   return (

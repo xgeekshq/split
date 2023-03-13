@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { Dispatch, SetStateAction } from 'react';
 import SelectTeam from '@/components/CreateBoard/RegularBoard/SelectTeam';
 import SelectParticipants from './SelectParticipants';

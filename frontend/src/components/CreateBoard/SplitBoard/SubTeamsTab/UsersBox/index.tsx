@@ -1,5 +1,5 @@
 import { User } from '@/types/user/user';
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import BoxContainer from '../BoxContainer';
 import DropdownStakeholders from '../DropdownUsers';
 

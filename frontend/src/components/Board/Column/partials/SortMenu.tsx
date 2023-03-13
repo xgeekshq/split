@@ -1,12 +1,12 @@
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
   PopoverItem,
   PopoverClose,
-} from '@/components/Primitives/Popover';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Popovers/Popover/Popover';
+import Text from '@/components/Primitives/Text/Text';
 
 type Props = {
   setFilter: (value: 'desc' | 'asc' | undefined) => void;

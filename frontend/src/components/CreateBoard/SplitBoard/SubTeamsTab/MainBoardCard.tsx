@@ -1,18 +1,18 @@
 import React from 'react';
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { styled } from '@/styles/stitches/stitches.config';
-import Icon from '@/components/Primitives/Icon';
-import Box from '@/components/Primitives/Box';
-import Checkbox from '@/components/Primitives/Checkbox';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Box from '@/components/Primitives/Layout/Box';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import Flex from '@/components/Primitives/Flex';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import Flex from '@/components/Primitives/Layout/Flex';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { useFormContext, useWatch } from 'react-hook-form';
 import SubCardBoard from './SubCardBoard';
 
@@ -147,13 +147,7 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
           <Text size="sm" fontWeight="medium">
             {team.name}
           </Text>
-          <AvatarGroup
-            haveError={haveError}
-            listUsers={team.users}
-            responsible={false}
-            teamAdmins={false}
-            userId="1"
-          />
+          <AvatarGroup haveError={haveError} listUsers={team.users} userId="1" />
         </Flex>
       </MainContainer>
       <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />

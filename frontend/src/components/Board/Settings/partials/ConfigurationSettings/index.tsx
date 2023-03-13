@@ -1,5 +1,5 @@
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import {
   StyledAccordionItem,
   StyledAccordionHeader,

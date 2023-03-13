@@ -2,9 +2,9 @@ import { ReactElement, Suspense, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
 import QueryError from '@/components/Errors/QueryError';
-import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page';
-import Flex from '@/components/Primitives/Flex';
+import Layout from '@/components/layouts/Layout/Layout';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Flex from '@/components/Primitives/Layout/Flex';
 import UsersEdit from '@/components/Users/UserEdit';
 import { ContentSection } from '@/components/layouts/Layout/styles';
 import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
@@ -17,7 +17,7 @@ import { useSetRecoilState } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
-import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 const UserDetails = () => {
   const { data: session } = useSession({ required: true });

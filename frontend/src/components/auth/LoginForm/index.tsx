@@ -6,11 +6,11 @@ import { signIn } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import Icon from '@/components/Primitives/Icon';
-import Dots from '@/components/Primitives/Loading/Dots';
-import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Input';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import Text from '@/components/Primitives/Text/Text';
 import useUser from '@/hooks/useUser';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -25,7 +25,7 @@ import {
 } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';

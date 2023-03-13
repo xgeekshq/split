@@ -1,8 +1,8 @@
 import Select, { ControlProps, components } from 'react-select';
 
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import { useRecoilState } from 'recoil';
 import { filterByTeamSelectStyles } from './styles';

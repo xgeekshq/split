@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
 import { User } from '@/types/user/user';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/Primitives/Icon';
-import Text from '@/components/Primitives/Text';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Text from '@/components/Primitives/Text/Text';
 import { useSession } from 'next-auth/react';
 import useUser from '@/hooks/useUser';
 import EditUser from './EditUser';

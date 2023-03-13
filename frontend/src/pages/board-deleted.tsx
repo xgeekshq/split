@@ -4,8 +4,8 @@ import { BannerContainer, ContainerSection, ImageBackground } from '@/styles/pag
 
 import Banner from '@/components/icons/Banner';
 import LogoIcon from '@/components/icons/Logo';
-import Text from '@/components/Primitives/Text';
-import Button from '@/components/Primitives/Button';
+import Text from '@/components/Primitives/Text/Text';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 export default function Custom404() {
   return (

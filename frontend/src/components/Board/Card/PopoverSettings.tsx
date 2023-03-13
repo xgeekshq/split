@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
   PopoverContent,
   PopoverItem,
   PopoverTrigger,
-} from '@/components/Primitives/Popover';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Popovers/Popover/Popover';
+import Text from '@/components/Primitives/Text/Text';
 import useCards from '@/hooks/useCards';
 import { CardItemType } from '@/types/card/cardItem';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 
 interface PopoverSettingsContentProps {
   isItem: boolean;

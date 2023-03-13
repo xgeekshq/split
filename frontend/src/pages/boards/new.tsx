@@ -3,13 +3,13 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
-import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
-import Text from '@/components/Primitives/Text';
-import Flex from '@/components/Primitives/Flex';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Text from '@/components/Primitives/Text/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
 
 const NewBoard: NextPage = () => {

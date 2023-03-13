@@ -7,10 +7,10 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import BoardName from '@/components/CreateBoard/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
 import TipBar from '@/components/CreateBoard/TipBar';
-import Icon from '@/components/Primitives/Icon';
-import AlertBox from '@/components/Primitives/AlertBox';
-import Button from '@/components/Primitives/Button';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Text from '@/components/Primitives/Text/Text';
 import useBoard from '@/hooks/useBoard';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
@@ -24,7 +24,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeam from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   PageHeader,
@@ -41,7 +41,7 @@ import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 
 const defaultBoard = {
   users: [],

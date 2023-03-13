@@ -3,7 +3,7 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { ROUTES } from '@/utils/routes';
-import TeamsList, { TeamsListProps } from '.';
+import TeamsList, { TeamsListProps } from './TeamList';
 
 const DEFAULT_PROPS = {
   teams: TeamFactory.createMany(3),

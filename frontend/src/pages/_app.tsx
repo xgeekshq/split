@@ -11,7 +11,7 @@ import { RecoilRoot } from 'recoil';
 import globalStyles from '@/styles/globals';
 
 import Sprite from '@/components/icons/Sprite';
-import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast';
+import Toast, { ToastProvider, ToastViewport } from '@/components/Primitives/Toast/Toast';
 import { JWT_EXPIRATION_TIME, RECOIL_DEV_TOOLS } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 import { Session } from 'next-auth';

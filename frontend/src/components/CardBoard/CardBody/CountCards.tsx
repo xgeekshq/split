@@ -1,4 +1,4 @@
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { countBoardCards } from '@/helper/board/countCards';
 import ColumnType from '@/types/column';
 

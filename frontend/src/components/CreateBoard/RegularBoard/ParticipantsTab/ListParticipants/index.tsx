@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import ListMembersDialog from '@/components/Teams/Team/ListMembers/ListMembersDialog';
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useSession } from 'next-auth/react';
@@ -56,13 +56,13 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
   };
 
   return (
-    <ListMembersDialog
+    <UserListDialog
       usersList={usersList}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      saveUsers={saveParticipants}
+      confirmationHandler={saveParticipants}
       title="Board Participants"
-      btnTitle="Add/remove participants"
+      confirmationLabel="Add/remove participants"
     />
   );
 };

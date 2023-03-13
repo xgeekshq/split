@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import Icon from '@/components/Primitives/Icon';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Text from '@/components/Primitives/Text/Text';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
@@ -16,7 +16,7 @@ import {
   SelectValue,
   SelectIcon,
   SelectContent,
-} from '@/components/Primitives/Select';
+} from '@/components/Primitives/Inputs/Select/Select';
 import { HelperTextWrapper } from '../../SplitBoard/SubTeamsTab/SelectTeam/styles';
 
 const SelectTeam = () => {

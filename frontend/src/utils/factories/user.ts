@@ -1,3 +1,4 @@
+import { UserList } from '@/types/team/userList';
 import { User } from '@/types/user/user';
 import { faker } from '@faker-js/faker';
 import { buildTestFactory } from '@/utils/testing';
@@ -5,7 +6,7 @@ import { buildTestFactory } from '@/utils/testing';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ListUsersType } from '@/components/Primitives/Avatar/AvatarGroup';
+import { ListUsersType } from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { TeamUser } from '@/types/team/team.user';
 
 export const UserFactory = buildTestFactory<User>(() => {
@@ -105,5 +106,25 @@ export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
     user,
     role,
     isNewJoiner,
+  };
+});
+
+export const UserListFactory = buildTestFactory<UserList>(() => {
+  const _id = faker.database.mongodbObjectId();
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+  const email = faker.internet.email(firstName, lastName);
+  const isSAdmin = faker.datatype.boolean();
+  const joinedAt = faker.datatype.datetime().toString();
+  const isChecked = faker.datatype.boolean();
+
+  return {
+    _id,
+    firstName,
+    lastName,
+    email,
+    isSAdmin,
+    joinedAt,
+    isChecked,
   };
 });
