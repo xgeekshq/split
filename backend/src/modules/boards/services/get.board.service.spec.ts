@@ -10,7 +10,6 @@ import { getTeamService } from 'src/modules/teams/providers';
 import { updateUserService } from 'src/modules/users/users.providers';
 import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import GetBoardService from 'src/modules/boards/services/get.board.service';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
@@ -39,10 +38,7 @@ describe('GetBoardService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				{
-					provide: getBoardService.provide,
-					useClass: GetBoardService
-				},
+				getBoardService,
 				{
 					provide: getTeamService.provide,
 					useValue: createMock<GetTeamServiceInterface>()
@@ -300,7 +296,7 @@ describe('GetBoardService', () => {
 			await boardRepositoryMock.getCountPage.mockResolvedValue(1);
 			await boardRepositoryMock.getAllBoards.mockResolvedValue(filterBoardsResponse);
 
-			const result = await boardService.getUsersBoards(userId, 1);
+			const result = await boardService.getTeamBoards(userId, 1);
 
 			expect(result).toEqual(allBoards);
 		});
@@ -354,7 +350,7 @@ describe('GetBoardService', () => {
 			await boardRepositoryMock.getCountPage.mockResolvedValue(1);
 			await boardRepositoryMock.getAllBoards.mockResolvedValue(filterBoardsResponse);
 
-			const result = await boardService.getUsersBoards(userId, 1);
+			const result = await boardService.getPersonalUserBoards(userId, 1);
 
 			expect(result).toEqual(allBoards);
 		});
@@ -447,9 +443,10 @@ describe('GetBoardService', () => {
 			expect(boardResult).toEqual(boardResponse);
 		});
 
-		it('should return a board', async () => {
+		it('should return a board when boardUserIsFound', async () => {
 			const board = BoardFactory.create();
 			board.isSubBoard = false;
+			board.isPublic = false;
 
 			const userDtoMock = UserDtoFactory.create();
 			userDtoMock.isSAdmin = false;
@@ -460,6 +457,24 @@ describe('GetBoardService', () => {
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
 
 			boardUserRepositoryMock.getBoardUser.mockResolvedValue(boardUser);
+
+			const boardResult = await boardService.getBoard(board._id, userDtoMock);
+
+			expect(boardResult.board).toEqual(board);
+		});
+
+		it('should return a board when boardIsPublic, boardUser is not found and userDto is not anonymous', async () => {
+			const board = BoardFactory.create();
+			board.isSubBoard = false;
+			board.isPublic = true;
+
+			const userDtoMock = UserDtoFactory.create();
+			userDtoMock.isSAdmin = false;
+			userDtoMock.isAnonymous = false;
+
+			boardRepositoryMock.getBoardData.mockResolvedValue(board);
+
+			boardUserRepositoryMock.getBoardUser.mockResolvedValue(null);
 
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 
