@@ -297,7 +297,7 @@ const NewRegularBoard: NextPage = () => {
                       </FormProvider>
                     </Flex>
                   </StyledForm>
-                  <TipBar iconName="blob-idea" tips={regularBoardTips} />
+                  <TipBar tips={regularBoardTips} />
                 </Flex>
               </Flex>
               <ButtonsContainer gap="24" justify="end">

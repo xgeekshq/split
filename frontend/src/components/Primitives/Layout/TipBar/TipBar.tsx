@@ -23,11 +23,11 @@ type Tip = {
 };
 
 type TipBarProps = {
-  iconName: 'blob-idea' | 'blob-info';
+  iconName?: 'blob-idea' | 'blob-info';
   tips: Tip[];
 };
 
-const TipBar = ({ iconName, tips }: TipBarProps) => (
+const TipBar = ({ iconName = 'blob-idea', tips }: TipBarProps) => (
   <TipbarList direction="column" justify="start" gap="24">
     <Icon name={iconName} size={48} css={{ mb: '$16' }} />
 

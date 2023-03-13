@@ -142,7 +142,7 @@ const CreateTeam = () => {
               <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
             </FormProvider>
           </StyledForm>
-          <TipBar iconName="blob-idea" tips={createTeamTips} />
+          <TipBar tips={createTeamTips} />
         </Flex>
       </Flex>
       <CreateTeamFooter disableButton={disableButtons} handleBack={handleBack} />

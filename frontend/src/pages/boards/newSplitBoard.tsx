@@ -283,7 +283,7 @@ const NewSplitBoard: NextPage = () => {
                   </Flex>
                 </Flex>
               </StyledForm>
-              <TipBar iconName="blob-idea" tips={splitBoardTips} />
+              <TipBar tips={splitBoardTips} />
             </Flex>
           </Flex>
           <ButtonsContainer gap="24" justify="end">
