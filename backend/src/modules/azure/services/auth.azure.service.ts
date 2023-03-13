@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import isEmpty from 'src/libs/utils/isEmpty';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
@@ -68,11 +67,5 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 			.get();
 
 		return value[0];
-	}
-
-	async checkUserExistsInActiveDirectory(email: string) {
-		const data = await this.getUserFromAzure(email);
-
-		return !isEmpty(data);
 	}
 }

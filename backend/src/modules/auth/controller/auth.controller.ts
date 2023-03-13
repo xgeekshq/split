@@ -47,7 +47,7 @@ import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/va
 import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
 import { RefreshTokenUseCaseInterface } from '../interfaces/applications/refresh-token.use-case.interface';
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
-import { CreateResetTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
+import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -65,8 +65,8 @@ export default class AuthController {
 		private statisticsUseCase: StatisticsAuthUserUseCaseInterface,
 		@Inject(TYPES.applications.ResetPasswordUseCase)
 		private resetPasswordUseCase: ResetPasswordUseCaseInterface,
-		@Inject(TYPES.applications.CreateResetTokenUseCase)
-		private createResetTokenUseCase: CreateResetTokenUseCaseInterface,
+		@Inject(TYPES.applications.CreateResetPasswordTokenUseCase)
+		private createResetTokenUseCase: CreateResetPasswordTokenUseCaseInterface,
 		@Inject(TYPES.applications.SignInUseCase)
 		private signInUseCase: SignInUseCaseInterface
 	) {}

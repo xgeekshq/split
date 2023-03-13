@@ -1,11 +1,13 @@
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
+import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';
+import { UserNotFoundException } from '../../../libs/exceptions/userNotFoundException';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
@@ -29,12 +31,12 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		const password = await encrypt(newPassword);
 
 		if (newPassword !== newPasswordConf) {
-			throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
+			throw new PasswordsDontMatchException();
 		}
 
 		const user = await this.userRepository.updateUserPassword(userEmail, password);
 
-		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!user) throw new UserNotFoundException();
 
 		return user;
 	}
@@ -42,13 +44,13 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 	async checkEmailOfToken(token: string) {
 		const userFromDb = await this.resetPasswordRepository.findOneByField({ token });
 
-		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!userFromDb) throw new UserNotFoundException();
 
 		this.tokenValidator(userFromDb.updatedAt);
 
 		const user = await this.userRepository.findOneByField({ email: userFromDb.emailAddress });
 
-		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!user) throw new UserNotFoundException();
 
 		return user.email;
 	}
@@ -65,7 +67,7 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		const user = await this.userRepository.updateUserAvatar(userId, avatarUrl);
 
 		if (!user) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		return user;

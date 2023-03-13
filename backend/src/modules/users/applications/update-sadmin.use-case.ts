@@ -1,10 +1,10 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import UpdateUserDto from '../dto/update.user.dto';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import UserDto from '../dto/user.dto';
 import { UpdateSAdminUseCaseInterface } from '../interfaces/applications/update-sadmin.use-case.interface';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class UpdateSAdminUseCase implements UpdateSAdminUseCaseInterface {
@@ -15,13 +15,13 @@ export default class UpdateSAdminUseCase implements UpdateSAdminUseCaseInterface
 
 	async execute(user: UpdateUserDto, requestUser: UserDto) {
 		if (requestUser._id.toString() === user._id) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
 
 		if (!userUpdated) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		return userUpdated;

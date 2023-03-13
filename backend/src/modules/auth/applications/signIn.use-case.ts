@@ -1,10 +1,10 @@
-import { USER_NOT_FOUND } from 'src/libs/exceptions/messages';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import UserDto from 'src/modules/users/dto/user.dto';
 import { TYPES } from '../interfaces/types';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 import { signIn } from '../shared/login.auth';
 import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
+import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
 
 @Injectable()
 export default class SignInUseCase implements SignInUseCaseInterface {
@@ -17,7 +17,7 @@ export default class SignInUseCase implements SignInUseCaseInterface {
 		const loggedUser = await signIn(user, this.getTokenAuthService, 'local');
 
 		if (!loggedUser) {
-			throw new NotFoundException(USER_NOT_FOUND);
+			throw new UserNotFoundException();
 		}
 
 		return loggedUser;

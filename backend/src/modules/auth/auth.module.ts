@@ -12,7 +12,7 @@ import BoardsModule from '../boards/boards.module';
 import TeamsModule from '../teams/teams.module';
 import UsersModule from '../users/users.module';
 import {
-	createResetTokenUseCase,
+	createResetPasswordTokenUseCase,
 	getTokenAuthService,
 	refreshTokenUseCase,
 	registerGuestUserUseCase,
@@ -50,7 +50,7 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		statisticsAuthUserUseCase,
 		signInUseCase,
 		refreshTokenUseCase,
-		createResetTokenUseCase,
+		createResetPasswordTokenUseCase,
 		resetPasswordUseCase,
 		UsersModule,
 		userRepository,

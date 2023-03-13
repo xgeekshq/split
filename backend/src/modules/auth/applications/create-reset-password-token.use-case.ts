@@ -1,12 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CreateResetTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
+import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
+import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 import { TYPES } from '../interfaces/types';
 import { ResetPasswordRepositoryInterface } from '../repository/reset-password.repository.interface';
 
 @Injectable()
-export class CreateResetTokenUseCase implements CreateResetTokenUseCaseInterface {
+export class CreateResetPasswordTokenUseCase implements CreateResetPasswordTokenUseCaseInterface {
 	constructor(
 		private mailerService: MailerService,
 		private configService: ConfigService,
@@ -25,7 +26,7 @@ export class CreateResetTokenUseCase implements CreateResetTokenUseCaseInterface
 			const { token } = await this.tokenGenerator(emailAddress, true);
 
 			if (!token) {
-				throw new InternalServerErrorException();
+				throw new InsertFailedException();
 			}
 
 			const res = await this.emailBody(token, emailAddress);

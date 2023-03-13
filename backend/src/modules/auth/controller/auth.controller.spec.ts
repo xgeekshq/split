@@ -11,7 +11,7 @@ import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/va
 import { RefreshTokenUseCaseInterface } from '../interfaces/applications/refresh-token.use-case.interface';
 import { StatisticsAuthUserUseCaseInterface } from '../interfaces/applications/statistics.auth.use-case.interface';
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
-import { CreateResetTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
+import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
 import { TYPES } from '../interfaces/types';
 import { createMock } from '@golevelup/ts-jest';
@@ -51,8 +51,8 @@ describe('AuthController', () => {
 					useValue: createMock<ResetPasswordUseCaseInterface>()
 				},
 				{
-					provide: TYPES.applications.CreateResetTokenUseCase,
-					useValue: createMock<CreateResetTokenUseCaseInterface>()
+					provide: TYPES.applications.CreateResetPasswordTokenUseCase,
+					useValue: createMock<CreateResetPasswordTokenUseCaseInterface>()
 				},
 				{
 					provide: TYPES.applications.SignInUseCase,

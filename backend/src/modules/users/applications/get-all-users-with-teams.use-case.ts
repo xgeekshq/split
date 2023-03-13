@@ -6,12 +6,15 @@ import { TYPES } from '../interfaces/types';
 import * as Team from 'src/modules/teams/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortAlphabetically } from '../utils/sortings';
+import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 
 @Injectable()
 export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeamsUseCaseInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
+		@Inject(TYPES.services.GetUserService)
+		private readonly getUserService: GetUserServiceInterface,
 		@Inject(Team.TYPES.services.GetTeamService)
 		private getTeamService: GetTeamServiceInterface
 	) {}
@@ -19,7 +22,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 	async execute(page = 0, size = 15, searchUser?: string) {
 		const users = await this.getAllUsersWithPagination(page, size, searchUser);
 
-		const count = await this.countUsers();
+		const count = await this.getUserService.countUsers();
 		const hasNextPage = page + 1 < Math.ceil(count / size);
 
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {
@@ -49,9 +52,5 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 
 	private getAllUsersWithPagination(page?: number, size?: number, searchUser?: string) {
 		return this.userRepository.getAllWithPagination(page, size, searchUser);
-	}
-
-	private countUsers() {
-		return this.userRepository.getSignedUpUsersCount();
 	}
 }

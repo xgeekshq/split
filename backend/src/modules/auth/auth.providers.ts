@@ -1,4 +1,4 @@
-import { CreateResetTokenUseCase } from './applications/create-reset-token.use-case';
+import { CreateResetPasswordTokenUseCase } from './applications/create-reset-password-token.use-case';
 import RefreshTokenUseCase from './applications/refresh-token.use-case';
 import RegisterGuestUserUseCase from './applications/register-guest-user.use-case';
 import RegisterUserUseCase from './applications/register-user.use-case';
@@ -56,9 +56,9 @@ export const validateUserEmailUseCase = {
 	useClass: ValidateUserEmailUseCase
 };
 
-export const createResetTokenUseCase = {
-	provide: TYPES.applications.CreateResetTokenUseCase,
-	useClass: CreateResetTokenUseCase
+export const createResetPasswordTokenUseCase = {
+	provide: TYPES.applications.CreateResetPasswordTokenUseCase,
+	useClass: CreateResetPasswordTokenUseCase
 };
 
 export const resetPasswordRepository = {

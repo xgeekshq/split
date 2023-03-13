@@ -1,8 +1,10 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { InvalidTokenException } from '../exceptions/invalidTokenException';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class ResetPasswordUseCase implements ResetPasswordUseCaseInterface {
@@ -15,13 +17,13 @@ export default class ResetPasswordUseCase implements ResetPasswordUseCaseInterfa
 		const email = await this.updateUserService.checkEmailOfToken(token);
 
 		if (!email) {
-			throw new UnauthorizedException('Invalid token!');
+			throw new InvalidTokenException();
 		}
 
 		const result = await this.updateUserService.setPassword(email, newPassword, newPasswordConf);
 
 		if (!result) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException(UPDATE_FAILED);
 		}
 
 		return {

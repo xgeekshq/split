@@ -1,12 +1,12 @@
 import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import * as TeamUser from 'src/modules/teams/interfaces/types';
 import UserDto from '../dto/user.dto';
-import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teams/interfaces/services/delete.team.user.service.interface';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
+import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 
 @Injectable()
 export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
@@ -20,7 +20,7 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 
 	async execute(user: UserDto, userId: string) {
 		if (user._id == userId) {
-			throw new BadRequestException(DELETE_FAILED);
+			throw new DeleteFailedException();
 		}
 
 		await this.userRepository.startTransaction();
@@ -40,12 +40,12 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 		} finally {
 			await this.userRepository.endSession();
 		}
-		throw new BadRequestException(DELETE_FAILED);
+		throw new DeleteFailedException();
 	}
 
 	private async deleteUser(userId: string, withSession: boolean) {
 		const result = await this.userRepository.deleteUser(userId, withSession);
 
-		if (!result) throw new NotFoundException(DELETE_FAILED);
+		if (!result) throw new DeleteFailedException();
 	}
 }

@@ -1,10 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { TYPES } from '../interfaces/types';
 import * as UserType from 'src/modules/users/interfaces/types';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { CheckUserAzureUseCaseInterface } from '../interfaces/applications/check-user.azure.use-case.interface';
-import { USER_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { UserNotFoundException } from 'src/libs/exceptions/userNotFoundException';
 
 @Injectable()
 export class CheckUserAzureUseCase implements CheckUserAzureUseCaseInterface {
@@ -28,6 +28,6 @@ export class CheckUserAzureUseCase implements CheckUserAzureUseCaseInterface {
 			return 'local';
 		}
 
-		throw new NotFoundException(USER_NOT_FOUND);
+		throw new UserNotFoundException();
 	}
 }

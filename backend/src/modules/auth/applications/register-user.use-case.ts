@@ -1,4 +1,3 @@
-import { EMAIL_EXISTS } from 'src/libs/exceptions/messages';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
@@ -6,6 +5,7 @@ import { CreateUserServiceInterface } from 'src/modules/users/interfaces/service
 import { TYPES } from 'src/modules/users/interfaces/types';
 import { RegisterUserUseCaseInterface } from '../interfaces/applications/register-user.use-case.interface';
 import { uniqueViolation } from 'src/infrastructure/database/errors/unique.user';
+import { EmailExistsException } from '../exceptions/emailExistsException';
 
 @Injectable()
 export default class RegisterUserUseCase implements RegisterUserUseCaseInterface {
@@ -26,7 +26,7 @@ export default class RegisterUserUseCase implements RegisterUserUseCaseInterface
 			return { _id, firstName, lastName, email };
 		} catch (error) {
 			if (error.code === uniqueViolation) {
-				throw new BadRequestException(EMAIL_EXISTS);
+				throw new EmailExistsException();
 			}
 
 			throw new BadRequestException(error.message);
