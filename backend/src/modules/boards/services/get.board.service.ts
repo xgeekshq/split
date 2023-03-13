@@ -187,7 +187,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.this.getBoardUserService.getBoardUserPopulated(board, user);
+		const userFound = await this.getBoardUserService.getBoardUserPopulated(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);
