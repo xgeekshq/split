@@ -30,7 +30,7 @@ export default {
         ],
       },
       {
-        title: 'Lorem Ipsum',
+        title: 'Lorem Ipsum 1',
         description: [
           'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad porro similique perspiciatis tempora.',
           'Libero animi quis dolores vitae maiores similique quam velit. Sapiente quas ipsam blanditiis ratione, corporis laborum in?',
