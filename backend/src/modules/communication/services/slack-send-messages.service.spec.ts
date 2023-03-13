@@ -3,9 +3,11 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { SlackSendMessageService } from './slack-send-messages.service';
 import { SlackSendMessageProducer } from '../producers/slack-send-message-channel.producer';
 import { SlackMessageType } from '../dto/types';
+import { SendMessageServiceInterface } from '../interfaces/send-message.service.interface';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 
 describe('SlackSendMessageService', () => {
-	let service: SlackSendMessageService;
+	let service: SendMessageServiceInterface;
 	let slackSendMessageProducerMock: DeepMocked<SlackSendMessageProducer>;
 	const slackMessageType: SlackMessageType = {
 		slackChannelId: '6405f9a04633b1668f71c068',
@@ -15,7 +17,10 @@ describe('SlackSendMessageService', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				SlackSendMessageService,
+				{
+					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
+					useClass: SlackSendMessageService
+				},
 				{
 					provide: SlackSendMessageProducer,
 					useValue: createMock<SlackSendMessageProducer>()
@@ -23,7 +28,9 @@ describe('SlackSendMessageService', () => {
 			]
 		}).compile();
 
-		service = module.get<SlackSendMessageService>(SlackSendMessageService);
+		service = module.get<SendMessageServiceInterface>(
+			CommunicationsType.TYPES.services.SlackSendMessageService
+		);
 		slackSendMessageProducerMock = module.get(SlackSendMessageProducer);
 	});
 

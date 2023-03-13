@@ -3,17 +3,17 @@ import BoardsController from 'src/modules/boards/controller/boards.controller';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CreateBoardApplication } from '../applications/create.board.application';
-import { GetBoardApplication } from '../applications/get.board.application';
-import { UpdateBoardApplication } from '../applications/update.board.application';
-import { DeleteBoardApplication } from '../applications/delete.board.application';
 import { GetBoardGuard } from 'src/libs/guards/getBoardPermissions.guard';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { BoardPhases } from 'src/libs/enum/board.phases';
+import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
+import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
+import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
+import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
-	let updateBoardAppMock: DeepMocked<UpdateBoardApplication>;
+	let updateBoardAppMock: DeepMocked<UpdateBoardApplicationInterface>;
 	const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 
 	beforeAll(async () => {
@@ -22,19 +22,19 @@ describe('BoardsController', () => {
 			providers: [
 				{
 					provide: Boards.TYPES.applications.CreateBoardApplication,
-					useValue: createMock<CreateBoardApplication>()
+					useValue: createMock<CreateBoardApplicationInterface>()
 				},
 				{
 					provide: Boards.TYPES.applications.GetBoardApplication,
-					useValue: createMock<GetBoardApplication>()
+					useValue: createMock<GetBoardApplicationInterface>()
 				},
 				{
 					provide: Boards.TYPES.applications.UpdateBoardApplication,
-					useValue: createMock<UpdateBoardApplication>()
+					useValue: createMock<UpdateBoardApplicationInterface>()
 				},
 				{
 					provide: Boards.TYPES.applications.DeleteBoardApplication,
-					useValue: createMock<DeleteBoardApplication>()
+					useValue: createMock<DeleteBoardApplicationInterface>()
 				},
 				{
 					provide: SocketGateway,
@@ -64,7 +64,7 @@ describe('BoardsController', () => {
 			expect(controller.updateBoardPhase).toBeDefined();
 		});
 
-		it('should recieve boardPhaseDto in updateBoardApp and be called 1 time', async () => {
+		it('should recieve boardPhaseDto in updateBoardApp and be called once', async () => {
 			await controller.updateBoardPhase(boardPhaseDto);
 			expect(updateBoardAppMock.updatePhase).toHaveBeenNthCalledWith(1, boardPhaseDto);
 		});

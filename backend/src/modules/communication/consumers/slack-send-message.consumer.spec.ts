@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SlackSendMessageApplication } from '../applications/slack-send-message-channel.application';
 import { SlackSendMessageConsumer } from './slack-send-message.consumer';
 import * as Communication from 'src/modules/communication/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { SlackMessageType } from 'src/modules/communication/dto/types';
 import { Job } from 'bull';
+import { SendMessageApplicationInterface } from '../interfaces/send-message.application.interface';
 
 const slackMessageMock = {
 	id: 1,
@@ -13,7 +13,7 @@ const slackMessageMock = {
 
 describe('SlackSendMessageConsumer', () => {
 	let consumer: SlackSendMessageConsumer;
-	let sendMessageApplicationMock: DeepMocked<SlackSendMessageApplication>;
+	let sendMessageApplicationMock: DeepMocked<SendMessageApplicationInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -21,7 +21,7 @@ describe('SlackSendMessageConsumer', () => {
 				SlackSendMessageConsumer,
 				{
 					provide: Communication.TYPES.application.SlackSendMessageApplication,
-					useValue: createMock<SlackSendMessageApplication>()
+					useValue: createMock<SendMessageApplicationInterface>()
 				}
 			]
 		}).compile();

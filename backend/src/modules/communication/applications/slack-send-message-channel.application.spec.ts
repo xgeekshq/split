@@ -8,6 +8,7 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'src/libs/constants/slack';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
+import { SendMessageApplicationInterface } from '../interfaces/send-message.application.interface';
 
 const getConfiguration = () => ({
 	slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
@@ -18,31 +19,31 @@ const getConfiguration = () => ({
 const slackMessageDtoMock = { slackChannelId: '6405f9a04633b1668f71c068', message: 'SlackMessage' };
 
 describe('SlackSendMessageApplication', () => {
-	let application: SlackSendMessageApplication;
+	let application: SendMessageApplicationInterface;
 	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 	const chatHandler = new ChatSlackHandler(communicationGateAdapterMocked);
+	let postMessage;
 
 	beforeAll(async () => {
 		application = new SlackSendMessageApplication(chatHandler);
+		postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementation(jest.fn());
 	});
 
 	afterEach(() => {
 		jest.clearAllMocks();
+		jest.resetAllMocks();
 	});
 
 	it('should be defined', () => {
 		expect(application).toBeDefined();
 	});
 
-	it('shoult call postMessage', () => {
-		const postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementation(jest.fn());
+	it('should be called once with SlackMessageDto', () => {
 		application.execute(slackMessageDtoMock);
-		expect(postMessage).toHaveBeenCalled();
-	});
-
-	it('should be called with SlackMessageDto', () => {
-		const postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementationOnce(jest.fn());
-		application.execute(slackMessageDtoMock);
-		expect(postMessage).toHaveBeenCalledWith('6405f9a04633b1668f71c068', 'SlackMessage');
+		expect(postMessage).toHaveBeenNthCalledWith(
+			1,
+			slackMessageDtoMock.slackChannelId,
+			slackMessageDtoMock.message
+		);
 	});
 });
