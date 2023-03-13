@@ -1,3 +1,7 @@
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
@@ -5,6 +9,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardPhases } from 'src/libs/enum/board.phases';
@@ -58,8 +63,20 @@ describe('UpdateBoardService', () => {
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: Boards.TYPES.repositories.BoardUserRepository,
-					useValue: {}
+					provide: BoardUsers.TYPES.services.CreateBoardUserService,
+					useValue: createMock<CreateBoardUserServiceInterface>()
+				},
+				{
+					provide: BoardUsers.TYPES.services.GetBoardUserService,
+					useValue: createMock<GetBoardUserServiceInterface>()
+				},
+				{
+					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
+					useValue: createMock<UpdateBoardUserServiceInterface>()
+				},
+				{
+					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
+					useValue: createMock<DeleteBoardUserServiceInterface>()
 				},
 				{
 					provide: EventEmitter2,
