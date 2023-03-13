@@ -20,15 +20,15 @@ const StyledTile = styled('div', {
 
 const TileArrow = styled(Icon, {
   position: 'absolute',
-  right: '20px',
+  right: '$20',
   top: '50%',
-  bottom: '-1px',
+  bottom: '$-1',
   color: '$black',
 });
 
 const TileBlob = styled(Icon, {
   position: 'absolute',
-  right: '-1px',
+  right: '$-1',
 });
 
 export { StyledTile, TileArrow, TileBlob };

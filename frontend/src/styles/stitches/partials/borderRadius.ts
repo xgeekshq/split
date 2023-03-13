@@ -1,5 +1,7 @@
 const borderRadius = {
+  1: '0.0625rem',
   2: '0.125rem',
+  3: '0.1875rem',
   4: '0.25rem',
   6: '0.375rem',
   8: '0.5rem',

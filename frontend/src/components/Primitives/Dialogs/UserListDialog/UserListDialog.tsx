@@ -90,9 +90,8 @@ const UserListDialog = React.memo<UserListDialogProps>(
     };
 
     useEffect(() => {
-      if (usersList.length > 0) {
-        setLocalUsersList(sortUserList());
-      }
+      if (usersList.length <= 0) return;
+      setLocalUsersList(sortUserList());
     }, [usersList]);
 
     useEffect(() => {

@@ -43,12 +43,10 @@ const SearchInput: React.FC<InputProps> = ({
         <PlaceholderText as="label">{placeholder}</PlaceholderText>
       </Flex>
       <IconWrapper
+        justify="center"
         css={{
           width: '$24',
           height: '$24',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
           borderRadius: '100%',
         }}
         onClick={handleClear}
@@ -60,7 +58,7 @@ const SearchInput: React.FC<InputProps> = ({
             color: '$white',
             backgroundColor: '$primary100',
             borderRadius: '100%',
-            padding: '2px',
+            padding: '$2',
           }}
         />
       </IconWrapper>
