@@ -12,7 +12,7 @@ import * as User from 'src/modules/users/interfaces/types';
 import { createMock } from '@golevelup/ts-jest';
 import { RegisterAuthApplication } from '../applications/register.auth.application';
 import { GetTeamApplication } from 'src/modules/teams/applications/get.team.application';
-import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.auth.application';
+import { CreateResetTokenAuthApplication } from '../applications/create-reset-token.use-case';
 import { UpdateUserApplication } from 'src/modules/users/use-cases/update.user.application';
 import { GetBoardApplication } from 'src/modules/boards/applications/get.board.application';
 import { GetUserApplication } from 'src/modules/users/use-cases/get.user.application';

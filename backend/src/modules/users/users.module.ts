@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseResetModule,
 	mongooseTeamUserModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import TeamsModule from 'src/modules/teams/teams.module';
+import AuthModule from '../auth/auth.module';
 import UsersController from './controller/users.controller';
 import {
 	createUserService,
@@ -19,7 +20,13 @@ import {
 } from './users.providers';
 
 @Module({
-	imports: [mongooseUserModule, TeamsModule, mongooseResetModule, mongooseTeamUserModule],
+	imports: [
+		mongooseUserModule,
+		TeamsModule,
+		mongooseResetModule,
+		mongooseTeamUserModule,
+		forwardRef(() => AuthModule)
+	],
 	providers: [
 		getAllUsersUseCase,
 		getAllUsersWithTeamsUseCase,

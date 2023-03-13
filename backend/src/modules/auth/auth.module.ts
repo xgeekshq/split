@@ -12,14 +12,13 @@ import BoardsModule from '../boards/boards.module';
 import TeamsModule from '../teams/teams.module';
 import UsersModule from '../users/users.module';
 import {
-	createResetTokenAuthApplication,
-	createResetTokenAuthService,
-	getTokenAuthApplication,
+	createResetTokenUseCase,
 	getTokenAuthService,
-	registerAuthService,
+	refreshTokenUseCase,
 	registerGuestUserUseCase,
 	registerUserUseCase,
 	resetPasswordRepository,
+	resetPasswordUseCase,
 	signInUseCase,
 	statisticsAuthUserUseCase,
 	validateUserAuthService,
@@ -44,16 +43,15 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 	],
 	providers: [
 		getTokenAuthService,
-		registerAuthService,
 		validateUserAuthService,
-		getTokenAuthApplication,
 		registerUserUseCase,
 		registerGuestUserUseCase,
 		validateUserEmailUseCase,
 		statisticsAuthUserUseCase,
 		signInUseCase,
-		createResetTokenAuthApplication,
-		createResetTokenAuthService,
+		refreshTokenUseCase,
+		createResetTokenUseCase,
+		resetPasswordUseCase,
 		UsersModule,
 		userRepository,
 		LocalStrategy,
@@ -62,6 +60,6 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		resetPasswordRepository
 	],
 	controllers: [AuthController],
-	exports: [getTokenAuthService]
+	exports: [getTokenAuthService, resetPasswordRepository]
 })
 export default class AuthModule {}

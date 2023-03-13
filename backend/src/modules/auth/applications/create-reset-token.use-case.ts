@@ -1,12 +1,12 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MailerService } from '@nestjs-modules/mailer';
-import { CreateResetTokenAuthServiceInterface } from '../interfaces/services/create-reset-token.auth.service.interface';
-import { TYPES } from 'src/modules/auth/interfaces/types';
+import { CreateResetTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
+import { TYPES } from '../interfaces/types';
 import { ResetPasswordRepositoryInterface } from '../repository/reset-password.repository.interface';
 
 @Injectable()
-export default class CreateResetTokenAuthService implements CreateResetTokenAuthServiceInterface {
+export class CreateResetTokenUseCase implements CreateResetTokenUseCaseInterface {
 	constructor(
 		private mailerService: MailerService,
 		private configService: ConfigService,
@@ -14,7 +14,7 @@ export default class CreateResetTokenAuthService implements CreateResetTokenAuth
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 
-	async create(emailAddress: string) {
+	async execute(emailAddress: string) {
 		await this.resetPasswordRepository.startTransaction();
 		try {
 			const passwordModel = await this.resetPasswordRepository.findPassword(emailAddress);

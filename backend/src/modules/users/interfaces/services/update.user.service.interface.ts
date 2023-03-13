@@ -10,7 +10,7 @@ export interface UpdateUserServiceInterface {
 		newPasswordConf: string
 	): Promise<User | null>;
 
-	checkEmail(token: string): Promise<string>;
+	checkEmailOfToken(token: string): Promise<string>;
 
 	updateUserAvatar(avatar: string, userId: string): Promise<LeanDocument<UserDocument>>;
 

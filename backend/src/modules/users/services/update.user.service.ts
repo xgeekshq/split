@@ -1,22 +1,19 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { encrypt } from 'src/libs/utils/bcrypt';
-import ResetPassword, {
-	ResetPasswordDocument
-} from 'src/modules/auth/entities/reset-password.schema';
+import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@InjectModel(ResetPassword.name)
-		private resetModel: Model<ResetPasswordDocument>
+		@Inject(ResetPassword.TYPES.repository.ResetPasswordRepository)
+		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
@@ -42,8 +39,8 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		return user;
 	}
 
-	async checkEmail(token: string) {
-		const userFromDb = await this.resetModel.findOne({ token });
+	async checkEmailOfToken(token: string) {
+		const userFromDb = await this.resetPasswordRepository.findOneByField({ token });
 
 		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
 

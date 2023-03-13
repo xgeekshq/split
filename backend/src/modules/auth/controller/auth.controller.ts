@@ -1,5 +1,4 @@
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Get,
@@ -10,7 +9,6 @@ import {
 	Patch,
 	Post,
 	Req,
-	UnauthorizedException,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -27,7 +25,6 @@ import {
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { EmailParam } from 'src/libs/dto/param/email.param';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'src/libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'src/libs/guards/localAuth.guard';
@@ -39,18 +36,18 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { UpdateUserApplicationInterface } from 'src/modules/users/interfaces/applications/update.user.service.interface';
 import { LoginDto } from '../dto/login.dto';
 import { TYPES } from '../interfaces/types';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { CreateResetTokenAuthApplicationInterface } from '../interfaces/applications/create-reset-token.auth.application.interface';
-import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
 import { RegisterUserUseCaseInterface } from '../interfaces/applications/register-user.use-case.interface';
 import { RegisterGuestUserUseCaseInterface } from '../interfaces/applications/register-guest-user.use-case.interface';
 import { StatisticsAuthUserUseCaseInterface } from '../interfaces/applications/statistics.auth.use-case.interface';
 import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/validate-email.use-case.interface';
 import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
+import { RefreshTokenUseCaseInterface } from '../interfaces/applications/refresh-token.use-case.interface';
+import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
+import { CreateResetTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -62,16 +59,16 @@ export default class AuthController {
 		private registerGuestUserUseCase: RegisterGuestUserUseCaseInterface,
 		@Inject(TYPES.applications.ValidateUserEmailUseCase)
 		private validateUserEmailUseCase: ValidateUserEmailUseCaseInterface,
-		@Inject(TYPES.applications.GetTokenAuthApplication)
-		private getTokenAuthApp: GetTokenAuthApplicationInterface,
+		@Inject(TYPES.applications.RefreshTokenUseCase)
+		private refreshTokenUseCase: RefreshTokenUseCaseInterface,
 		@Inject(TYPES.applications.StatisticsAuthUserUseCase)
 		private statisticsUseCase: StatisticsAuthUserUseCaseInterface,
-		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
-		private createResetTokenAuthApp: CreateResetTokenAuthApplicationInterface,
+		@Inject(TYPES.applications.ResetPasswordUseCase)
+		private resetPasswordUseCase: ResetPasswordUseCaseInterface,
+		@Inject(TYPES.applications.CreateResetTokenUseCase)
+		private createResetTokenUseCase: CreateResetTokenUseCaseInterface,
 		@Inject(TYPES.applications.SignInUseCase)
-		private signInUseCase: SignInUseCaseInterface,
-		@Inject(TYPES.services.UpdateUserService)
-		private updateUserService: UpdateUserApplicationInterface
+		private signInUseCase: SignInUseCaseInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })
@@ -151,7 +148,7 @@ export default class AuthController {
 	@UseGuards(JwtRefreshGuard)
 	@Get('refresh')
 	refresh(@Req() request: RequestWithUser) {
-		return this.getTokenAuthApp.getAccessToken(request.user._id);
+		return this.refreshTokenUseCase.execute(request.user._id);
 	}
 
 	@ApiParam({
@@ -193,7 +190,7 @@ export default class AuthController {
 	})
 	@Patch('password/reset')
 	forgot(@Body() { email }: EmailParam) {
-		return this.createResetTokenAuthApp.create(email);
+		return this.createResetTokenUseCase.execute(email);
 	}
 
 	@ApiOperation({
@@ -229,23 +226,8 @@ export default class AuthController {
 	})
 	@Patch('password')
 	@HttpCode(HttpStatus.OK)
-	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
-		const email = await this.updateUserService.checkEmail(token);
-
-		if (!email) {
-			throw new UnauthorizedException('Invalid token!');
-		}
-
-		const result = await this.updateUserService.setPassword(email, newPassword, newPasswordConf);
-
-		if (!result) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		return {
-			status: 'ok',
-			message: 'Password updated successfully!'
-		};
+	setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
+		return this.resetPasswordUseCase.execute(token, newPassword, newPasswordConf);
 	}
 
 	@ApiOperation({

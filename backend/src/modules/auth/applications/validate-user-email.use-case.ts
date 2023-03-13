@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/validate-email.use-case.interface';
-import { UserRepositoryInterface } from 'src/modules/users/repository/user.repository.interface';
+import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 
 @Injectable()
 export default class ValidateUserEmailUseCase implements ValidateUserEmailUseCaseInterface {
 	constructor(
-		@Inject(TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface
+		@Inject(TYPES.services.GetUserService)
+		private readonly getUserService: GetUserServiceInterface
 	) {}
 
 	async execute(email: string) {
-		const user = await this.userRepository.findOneByField({ email });
+		const user = await this.getUserService.getByEmail(email);
 
 		return !!user;
 	}
