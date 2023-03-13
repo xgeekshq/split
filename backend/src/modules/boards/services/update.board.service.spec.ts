@@ -18,6 +18,7 @@ import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/service
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { updateBoardService } from '../boards.providers';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
+import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 
 describe('UpdateBoardService', () => {
 	let service: UpdateBoardServiceInterface;
@@ -118,7 +119,9 @@ describe('UpdateBoardService', () => {
 		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
 			// Create a fake board object with the specified properties
 			const board = BoardFactory.create();
-			board.team = { name: 'xgeeks' };
+			const team = TeamFactory.create({ name: 'xgeeks' });
+
+			board.team = team;
 			board.phase = BoardPhases.SUBMITTED;
 			board.slackEnable = true;
 
