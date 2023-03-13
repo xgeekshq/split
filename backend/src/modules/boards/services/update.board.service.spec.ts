@@ -11,7 +11,6 @@ import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { BadRequestException } from '@nestjs/common';
@@ -25,10 +24,6 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import { updateBoardService } from '../boards.providers';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
-import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
 
 describe('UpdateBoardService', () => {
 	let service: UpdateBoardServiceInterface;
