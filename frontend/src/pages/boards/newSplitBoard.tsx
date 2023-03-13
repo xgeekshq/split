@@ -23,7 +23,7 @@ import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient } from '@tanstack/react-query';

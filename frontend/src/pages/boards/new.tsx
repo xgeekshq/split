@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { ContentContainer } from '@/styles/pages/boards/new.styles';
 import Text from '@/components/Primitives/Text/Text';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
@@ -38,7 +37,7 @@ const NewBoard: NextPage = () => {
         disableBack={isBackButtonDisable}
         handleBack={handleBack}
       />
-      <ContentContainer>
+      <Flex direction="column" align="center" justify="center" css={{ height: '100%' }}>
         <Text heading={3} color="primary800" fontWeight="bold">
           What kind of retro do you want to create?
         </Text>
@@ -59,7 +58,7 @@ const NewBoard: NextPage = () => {
             route="/boards/newSplitBoard"
           />
         </Flex>
-      </ContentContainer>
+      </Flex>
       {status === 'loading' && <LoadingPage />}
     </Flex>
   );

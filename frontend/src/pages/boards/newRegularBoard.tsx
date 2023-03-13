@@ -5,13 +5,12 @@ import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -299,7 +298,7 @@ const NewRegularBoard: NextPage = () => {
               />
             </>
           ) : (
-            <ContentSelectContainer>
+            <Flex align="center" justify="center">
               <Flex gap={16} direction="column">
                 <BoxRowContainer
                   iconName="blob-arrow-right"
@@ -316,7 +315,7 @@ const NewRegularBoard: NextPage = () => {
                   handleSelect={addNewRegularBoard}
                 />
               </Flex>
-            </ContentSelectContainer>
+            </Flex>
           )}
         </Flex>
       </QueryError>

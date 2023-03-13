@@ -10,7 +10,7 @@ import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/pages.styles';
 import { useSession } from 'next-auth/react';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
