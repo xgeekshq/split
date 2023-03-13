@@ -1,24 +1,24 @@
+import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { DeleteUserServiceInterface } from '../interfaces/services/delete.user.service.interface';
-import { DELETE_FAILED } from 'src/libs/exceptions/messages';
-import UserDto from '../dto/user.dto';
 import { TYPES } from '../interfaces/types';
-import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import * as TeamUser from 'src/modules/teams/interfaces/types';
+import UserDto from '../dto/user.dto';
+import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teams/interfaces/services/delete.team.user.service.interface';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import { UserRepositoryInterface } from '../repository/user.repository.interface';
 
 @Injectable()
-export default class DeleteUserService implements DeleteUserServiceInterface {
+export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 	constructor(
 		@Inject(TYPES.repository) private readonly userRepository: UserRepositoryInterface,
-		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
-		private teamUserService: DeleteTeamUserServiceInterface,
 		@Inject(TeamUser.TYPES.services.GetTeamService)
-		private getTeamUserService: GetTeamServiceInterface
+		private getTeamUserService: GetTeamServiceInterface,
+		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
+		private teamUserService: DeleteTeamUserServiceInterface
 	) {}
 
-	async delete(user: UserDto, userId: string): Promise<boolean> {
+	async execute(user: UserDto, userId: string) {
 		if (user._id == userId) {
 			throw new BadRequestException(DELETE_FAILED);
 		}

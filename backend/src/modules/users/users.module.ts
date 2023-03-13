@@ -8,15 +8,12 @@ import TeamsModule from 'src/modules/teams/teams.module';
 import UsersController from './controller/users.controller';
 import {
 	createUserService,
-	deleteUserApplication,
-	deleteUserService,
+	deleteUserUseCase,
 	getAllUsersUseCase,
 	getAllUsersWithTeamsUseCase,
-	getUserApplication,
 	getUserService,
 	getUserUseCase,
 	updateSAdminUseCase,
-	updateUserApplication,
 	updateUserService,
 	userRepository
 } from './users.providers';
@@ -30,22 +27,11 @@ import {
 		updateSAdminUseCase,
 		createUserService,
 		getUserService,
+		deleteUserUseCase,
 		updateUserService,
-		updateUserApplication,
-		getUserApplication,
-		userRepository,
-		deleteUserService,
-		deleteUserApplication
+		userRepository
 	],
 	controllers: [UsersController],
-	exports: [
-		createUserService,
-		getUserService,
-		updateUserService,
-		updateUserApplication,
-		getUserApplication,
-		deleteUserService,
-		deleteUserApplication
-	]
+	exports: [createUserService, getUserService, updateUserService]
 })
 export default class UsersModule {}

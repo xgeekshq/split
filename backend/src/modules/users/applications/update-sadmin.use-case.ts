@@ -4,7 +4,7 @@ import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import UserDto from '../dto/user.dto';
-import { UpdateSAdminUseCaseInterface } from '../interfaces/use-cases/update-sadmin.use-case.interface';
+import { UpdateSAdminUseCaseInterface } from '../interfaces/applications/update-sadmin.use-case.interface';
 
 @Injectable()
 export default class UpdateSAdminUseCase implements UpdateSAdminUseCaseInterface {

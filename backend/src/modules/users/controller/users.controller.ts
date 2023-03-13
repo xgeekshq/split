@@ -1,4 +1,3 @@
-import { DeleteUserApplicationInterface } from '../interfaces/use-cases/delete.user.application';
 import { UserParams } from './../../../libs/dto/param/user.param';
 import {
 	Body,
@@ -31,7 +30,6 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import UpdateUserDto from '../dto/update.user.dto';
 import UserDto from '../dto/user.dto';
-import { UpdateUserApplicationInterface } from '../interfaces/use-cases/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UsersWithTeamsResponse } from '../swagger/users-with-teams.swagger';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
@@ -40,10 +38,11 @@ import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger
 import { UpdateSuperAdminSwagger } from '../swagger/update.superadmin.swagger';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
-import { GetAllUsersUseCaseInterface } from '../interfaces/use-cases/get-all-users.use-case.interface';
-import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/use-cases/get-all-users-with-teams.use-case.interface';
-import { GetUserUseCaseInterface } from '../interfaces/use-cases/get-user.use-case.interface';
-import { UpdateSAdminUseCaseInterface } from '../interfaces/use-cases/update-sadmin.use-case.interface';
+import { GetAllUsersUseCaseInterface } from '../interfaces/applications/get-all-users.use-case.interface';
+import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
+import { GetUserUseCaseInterface } from '../interfaces/applications/get-user.use-case.interface';
+import { UpdateSAdminUseCaseInterface } from '../interfaces/applications/update-sadmin.use-case.interface';
+import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Users')
@@ -51,18 +50,16 @@ import { UpdateSAdminUseCaseInterface } from '../interfaces/use-cases/update-sad
 @Controller('users')
 export default class UsersController {
 	constructor(
-		@Inject(TYPES.useCases.GetUserUseCase)
+		@Inject(TYPES.applications.GetUserUseCase)
 		private getUserUseCase: GetUserUseCaseInterface,
-		@Inject(TYPES.useCases.GetAllUsersUseCase)
+		@Inject(TYPES.applications.GetAllUsersUseCase)
 		private getAllUsersUseCase: GetAllUsersUseCaseInterface,
-		@Inject(TYPES.useCases.GetAllUsersWithTeamsUseCase)
+		@Inject(TYPES.applications.GetAllUsersWithTeamsUseCase)
 		private getAllUsersWithTeamsUseCase: GetAllUsersWithTeamsUseCaseInterface,
-		@Inject(TYPES.useCases.UpdateSAdminUseCase)
+		@Inject(TYPES.applications.UpdateSAdminUseCase)
 		private updateSAdminUseCase: UpdateSAdminUseCaseInterface,
-		@Inject(TYPES.applications.UpdateUserApplication)
-		private updateUserApp: UpdateUserApplicationInterface,
-		@Inject(TYPES.applications.DeleteUserApplication)
-		private deleteUserApp: DeleteUserApplicationInterface
+		@Inject(TYPES.applications.DeleteUserUseCase)
+		private deleteUserApp: DeleteUserUseCaseInterface
 	) {}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing users' })

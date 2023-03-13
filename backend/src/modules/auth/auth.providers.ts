@@ -1,12 +1,15 @@
 import { CreateResetTokenAuthApplication } from './applications/create-reset-token.auth.application';
 import { GetTokenAuthApplication } from './applications/get-token.auth.application';
-import { RegisterAuthApplication } from './applications/register.auth.application';
+import RegisterGuestUserUseCase from './applications/register-guest-user.use-case';
+import RegisterUserUseCase from './applications/register-user.use-case';
+import SignInUseCase from './applications/signIn.use-case';
+import StatisticsAuthUserUseCase from './applications/statistics.auth.application';
+import ValidateUserEmailUseCase from './applications/validate-user-email.use-case';
 import { TYPES } from './interfaces/types';
 import { ResetPasswordRepository } from './repository/reset-password.repository';
 import CreateResetTokenAuthService from './services/create-reset-token.auth.service';
 import GetTokenAuthService from './services/get-token.auth.service';
 import RegisterAuthService from './services/register.auth.service';
-import ValidateUserAuthService from './services/validate-user.auth.service';
 
 export const getTokenAuthService = {
 	provide: TYPES.services.GetTokenAuthService,
@@ -20,7 +23,7 @@ export const registerAuthService = {
 
 export const validateUserAuthService = {
 	provide: TYPES.services.ValidateAuthService,
-	useClass: ValidateUserAuthService
+	useClass: ValidateUserEmailUseCase
 };
 
 export const createResetTokenAuthService = {
@@ -33,9 +36,29 @@ export const getTokenAuthApplication = {
 	useClass: GetTokenAuthApplication
 };
 
-export const registerAuthApplication = {
-	provide: TYPES.applications.RegisterAuthApplication,
-	useClass: RegisterAuthApplication
+export const registerUserUseCase = {
+	provide: TYPES.applications.RegisterUserUseCase,
+	useClass: RegisterUserUseCase
+};
+
+export const signInUseCase = {
+	provide: TYPES.applications.SignInUseCase,
+	useClass: SignInUseCase
+};
+
+export const registerGuestUserUseCase = {
+	provide: TYPES.applications.RegisterGuestUserUseCase,
+	useClass: RegisterGuestUserUseCase
+};
+
+export const statisticsAuthUserUseCase = {
+	provide: TYPES.applications.StatisticsAuthUserUseCase,
+	useClass: StatisticsAuthUserUseCase
+};
+
+export const validateUserEmailUseCase = {
+	provide: TYPES.applications.ValidateUserEmailUseCase,
+	useClass: ValidateUserEmailUseCase
 };
 
 export const createResetTokenAuthApplication = {

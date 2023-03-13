@@ -5,12 +5,10 @@ import { encrypt } from 'src/libs/utils/bcrypt';
 import ResetPassword, {
 	ResetPasswordDocument
 } from 'src/modules/auth/entities/reset-password.schema';
-import UpdateUserDto from '../dto/update.user.dto';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import UserDto from '../dto/user.dto';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
@@ -64,20 +62,6 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		if (!isTokenValid) {
 			throw new HttpException('EXPIRED_TOKEN', HttpStatus.BAD_REQUEST);
 		}
-	}
-
-	async updateSuperAdmin(user: UpdateUserDto, requestUser: UserDto) {
-		if (requestUser._id.toString() === user._id) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
-
-		if (!userUpdated) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		return userUpdated;
 	}
 
 	async updateUserAvatar(userId: string, avatarUrl: string) {

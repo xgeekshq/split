@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetAllUsersUseCaseInterface } from '../interfaces/use-cases/get-all-users.use-case.interface';
+import { GetAllUsersUseCaseInterface } from '../interfaces/applications/get-all-users.use-case.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 

@@ -16,10 +16,14 @@ import {
 	createResetTokenAuthService,
 	getTokenAuthApplication,
 	getTokenAuthService,
-	registerAuthApplication,
 	registerAuthService,
+	registerGuestUserUseCase,
+	registerUserUseCase,
 	resetPasswordRepository,
-	validateUserAuthService
+	signInUseCase,
+	statisticsAuthUserUseCase,
+	validateUserAuthService,
+	validateUserEmailUseCase
 } from './auth.providers';
 import AuthController from './controller/auth.controller';
 import JwtStrategy from './strategy/jwt.strategy';
@@ -43,7 +47,11 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		registerAuthService,
 		validateUserAuthService,
 		getTokenAuthApplication,
-		registerAuthApplication,
+		registerUserUseCase,
+		registerGuestUserUseCase,
+		validateUserEmailUseCase,
+		statisticsAuthUserUseCase,
+		signInUseCase,
 		createResetTokenAuthApplication,
 		createResetTokenAuthService,
 		UsersModule,

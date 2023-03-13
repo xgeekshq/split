@@ -26,11 +26,11 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { LoginResponse } from 'src/modules/auth/swagger/login.swagger';
-import { GetUserApplicationInterface } from 'src/modules/users/interfaces/use-cases/get.user.application.interface';
 import * as User from 'src/modules/users/interfaces/types';
 import { AuthAzureApplicationInterface } from '../interfaces/applications/auth.azure.application.interface';
 import { AzureToken } from '../interfaces/token.azure.dto';
 import { TYPES } from '../interfaces/types';
+import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 
 @ApiTags('Azure')
 @Controller('auth/azure')
@@ -38,8 +38,8 @@ export default class AzureController {
 	constructor(
 		@Inject(TYPES.applications.AuthAzureApplication)
 		private authAzureApp: AuthAzureApplicationInterface,
-		@Inject(User.TYPES.applications.GetUserApplication)
-		private getUserApp: GetUserApplicationInterface
+		@Inject(User.TYPES.services.GetUserService)
+		private getUserService: GetUserServiceInterface
 	) {}
 
 	@ApiOperation({
@@ -111,7 +111,7 @@ export default class AzureController {
 			return 'az';
 		}
 
-		const existUserInDB = await this.getUserApp.getByEmail(email);
+		const existUserInDB = await this.getUserService.getByEmail(email);
 
 		if (existUserInDB) {
 			return 'local';

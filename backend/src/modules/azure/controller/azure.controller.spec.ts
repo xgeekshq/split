@@ -4,7 +4,7 @@ import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
 import AzureController from './azure.controller';
 import { AuthAzureApplication } from '../applications/auth.azure.application';
-import { GetUserApplication } from 'src/modules/users/use-cases/get.user.application';
+import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 
 describe('AzureController', () => {
 	let controller: AzureController;
@@ -18,8 +18,8 @@ describe('AzureController', () => {
 					useValue: createMock<AuthAzureApplication>()
 				},
 				{
-					provide: User.TYPES.applications.GetUserApplication,
-					useValue: createMock<GetUserApplication>()
+					provide: User.TYPES.services.GetUserService,
+					useValue: createMock<GetUserServiceInterface>()
 				}
 			]
 		}).compile();

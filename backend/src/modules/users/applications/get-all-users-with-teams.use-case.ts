@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/use-cases/get-all-users-with-teams.use-case.interface';
+import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
 import * as Team from 'src/modules/teams/interfaces/types';
