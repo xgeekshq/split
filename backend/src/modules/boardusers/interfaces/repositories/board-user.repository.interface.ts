@@ -8,8 +8,8 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;
 	getBoardResponsible(boardId: string): Promise<BoardUser>;
 	getVotesCount(boardId: string): Promise<BoardUser[]>;
-	getBoardUsers(board: string, user: string): Promise<BoardUser[]>;
 	getBoardUser(board: string, user: string): Promise<BoardUser>;
+	getBoardUserPopulated(board: string, user: string): Promise<BoardUser>;
 	createBoardUsers(boardUsers: BoardUserDto[]): Promise<BoardUser[]>;
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;
 	updateVoteUser(

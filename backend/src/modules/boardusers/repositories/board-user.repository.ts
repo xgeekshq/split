@@ -32,11 +32,11 @@ export class BoardUserRepository
 		return this.findAllWithQuery({ board: boardId }, ['votesCount']);
 	}
 
-	getBoardUsers(board: string, user: string) {
-		return this.findAllWithQuery({ board, user });
+	getBoardUser(board: string, user: string) {
+		return this.findOneByField({ board, user });
 	}
 
-	getBoardUser(board: string, user: string) {
+	getBoardUserPopulated(board: string, user: string) {
 		return this.findOneByFieldWithQuery({ board, user }, null, {
 			path: 'user',
 			select: '_id firstName lastName '

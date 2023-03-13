@@ -23,11 +23,11 @@ export default class GetBoardUserService implements GetBoardUserServiceInterface
 		return this.boardUserRepository.getVotesCount(boardId);
 	}
 
-	getBoardUsers(board: string, user: string): Promise<BoardUser[]> {
-		return this.boardUserRepository.getBoardUsers(board, user);
-	}
-
 	getBoardUser(board: string, user: string): Promise<BoardUser> {
 		return this.boardUserRepository.getBoardUser(board, user);
+	}
+
+	getBoardUserPopulated(board: string, user: string): Promise<BoardUser> {
+		return this.boardUserRepository.getBoardUserPopulated(board, user);
 	}
 }
