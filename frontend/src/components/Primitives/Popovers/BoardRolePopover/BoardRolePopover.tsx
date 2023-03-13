@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
 } from '@/components/Primitives/Popovers/Popover/Popover';
 
-type BoardRolePopoverProps = {
+export type BoardRolePopoverProps = {
   isNewJoinerHandler: (checked: boolean) => void;
   isNewJoiner: boolean;
   canBeResponsibleHandler: (checked: boolean) => void;
@@ -27,7 +27,7 @@ const BoardRolePopover = ({
       Board role
     </Text>
     <Popover>
-      <PopoverTrigger variant="dark" size="sm" data-testid="teamRolePopoverTrigger">
+      <PopoverTrigger variant="dark" size="sm" data-testid="boardRolePopoverTrigger">
         <Icon name="arrow-down" />
       </PopoverTrigger>
       <PopoverContent collisionPadding={32} onOpenAutoFocus={(e) => e.preventDefault()}>
