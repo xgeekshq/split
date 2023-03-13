@@ -4,7 +4,6 @@ import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Container } from '@/styles/pages/boards/board.styles';
 import { getBoardRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
@@ -265,7 +264,7 @@ const Board: NextPage<Props> = ({ boardId }) => {
   return (
     <>
       <BoardHeader />
-      <Container direction="column">
+      <Flex direction="column" align="start" justify="center" css={{ px: '$36' }}>
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="center">
           {shouldShowLeftSection && (
             <Flex gap={40} css={{ flex: 1 }}>
@@ -380,7 +379,7 @@ const Board: NextPage<Props> = ({ boardId }) => {
           userId={userId}
           hasAdminRole={hasAdminRole}
         />
-      </Container>
+      </Flex>
     </>
   );
 };

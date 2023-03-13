@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
@@ -79,7 +78,7 @@ const RegularBoard = ({
   return board && userId && socketId ? (
     <>
       <RegularBoardHeader />
-      <Container direction="column">
+      <Flex direction="column" align="start" justify="center" css={{ px: '$36' }}>
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
           {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
           {!board?.submitedAt && (
@@ -126,7 +125,7 @@ const RegularBoard = ({
           isRegularBoard
           hasAdminRole={hasAdminRole}
         />
-      </Container>
+      </Flex>
     </>
   ) : (
     <LoadingPage />
