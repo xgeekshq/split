@@ -45,12 +45,20 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
-      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
-        user: teamUser._id,
-        role: TeamUserRoles.MEMBER,
-        isNewJoiner: verifyIfIsNewJoiner(teamUser.joinedAt, teamUser.providerAccountCreatedAt),
-        team,
-      }));
+      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => {
+        const isNewJoiner = verifyIfIsNewJoiner(
+          teamUser.joinedAt,
+          teamUser.providerAccountCreatedAt,
+        );
+
+        return {
+          user: teamUser._id,
+          role: TeamUserRoles.MEMBER,
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+          team,
+        };
+      });
 
       const removedUsers = listOfUsers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user?._id === user._id),
@@ -71,14 +79,18 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       return;
     }
 
-    const updatedListWithAdded = selectedUsers.map(
-      (user) =>
+    const updatedListWithAdded = selectedUsers.map((user) => {
+      const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
+
+      return (
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
-          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
-        },
-    );
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+        }
+      );
+    });
 
     // Sort by Name
     updatedListWithAdded.sort((a, b) => {
