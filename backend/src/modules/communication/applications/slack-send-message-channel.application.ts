@@ -1,6 +1,6 @@
 import { ChatHandlerInterface } from 'src/modules/communication/interfaces/chat.handler.interface';
 import { SlackMessageDto } from '../dto/slack.message.dto';
-import { SendMessageApplicationInterface } from '../interfaces/SendMessageApplication.interface';
+import { SendMessageApplicationInterface } from '../interfaces/send-message.application.interface';
 
 export class SlackSendMessageApplication implements SendMessageApplicationInterface {
 	constructor(private readonly chatHandler: ChatHandlerInterface) {}
