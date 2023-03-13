@@ -1,82 +1,62 @@
-import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { boardUserRepository, updateBoardService } from './../boards.providers';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
+import { getTeamService } from 'src/modules/teams/providers';
+import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { BoardPhases } from 'src/libs/enum/board.phases';
-import { BadRequestException } from '@nestjs/common';
-import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
-import { FRONTEND_URL } from 'src/libs/constants/frontend';
+import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
+import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
+import { deleteCardService } from 'src/modules/cards/cards.providers';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
-import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
-import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { updateBoardService } from '../boards.providers';
-import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
-import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ConfigService } from '@nestjs/config';
+import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
+import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
+import { NotFoundException } from '@nestjs/common';
 
-describe('UpdateBoardService', () => {
-	let service: UpdateBoardServiceInterface;
-	let eventEmitterMock: DeepMocked<EventEmitter2>;
+describe('GetUpdateBoardService', () => {
+	let boardService: UpdateBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
-	let configServiceMock: DeepMocked<ConfigService>;
-	let slackSendMessageServiceMock: DeepMocked<SendMessageServiceInterface>;
-
-	const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
+	let boardUserRepositoryMock: DeepMocked<BoardUserRepositoryInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				updateBoardService,
 				{
-					provide: Teams.TYPES.services.GetTeamService,
-					useValue: {}
-				},
-				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
-					useValue: createMock<CommunicationServiceInterface>()
+					provide: getTeamService.provide,
+					useValue: createMock<GetTeamServiceInterface>()
 				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
 					useValue: createMock<SendMessageServiceInterface>()
 				},
 				{
-					provide: SocketGateway,
-					useValue: createMock<SocketGateway>()
+					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
+					useValue: createMock<CommunicationServiceInterface>()
 				},
 				{
-					provide: Cards.TYPES.services.DeleteCardService,
+					provide: deleteCardService.provide,
 					useValue: createMock<DeleteCardServiceInterface>()
 				},
 				{
-					provide: Boards.TYPES.repositories.BoardRepository,
+					provide: boardRepository.provide,
 					useValue: createMock<BoardRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.CreateBoardUserService,
-					useValue: createMock<CreateBoardUserServiceInterface>()
+					provide: boardUserRepository.provide,
+					useValue: createMock<BoardUserRepositoryInterface>()
 				},
 				{
-					provide: BoardUsers.TYPES.services.GetBoardUserService,
-					useValue: createMock<GetBoardUserServiceInterface>()
-				},
-				{
-					provide: BoardUsers.TYPES.services.UpdateBoardUserService,
-					useValue: createMock<UpdateBoardUserServiceInterface>()
-				},
-				{
-					provide: BoardUsers.TYPES.services.DeleteBoardUserService,
-					useValue: createMock<DeleteBoardUserServiceInterface>()
+					provide: SocketGateway,
+					useValue: createMock<SocketGateway>()
 				},
 				{
 					provide: EventEmitter2,
@@ -88,81 +68,58 @@ describe('UpdateBoardService', () => {
 				}
 			]
 		}).compile();
-		service = module.get<UpdateBoardServiceInterface>(updateBoardService.provide);
-		eventEmitterMock = module.get(EventEmitter2);
+
+		boardService = module.get<UpdateBoardServiceInterface>(updateBoardService.provide);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
-		configServiceMock = module.get(ConfigService);
-		slackSendMessageServiceMock = module.get(
-			CommunicationsType.TYPES.services.SlackSendMessageService
-		);
+		boardUserRepositoryMock = module.get(Boards.TYPES.repositories.BoardUserRepository);
 	});
 
 	beforeEach(() => {
+		jest.restoreAllMocks();
 		jest.clearAllMocks();
 	});
 
 	it('should be defined', () => {
-		expect(service).toBeDefined();
+		expect(boardService).toBeDefined();
 	});
 
-	describe('updatePhase', () => {
+	describe('update', () => {
 		it('should be defined', () => {
-			expect(service.updatePhase).toBeDefined();
+			expect(boardService.update).toBeDefined();
 		});
 
-		it('should call boardRepository ', async () => {
-			await service.updatePhase(boardPhaseDto);
-			expect(boardRepositoryMock.updatePhase).toBeCalledTimes(1);
+		it('should call boardRepository', async () => {
+			const board = BoardFactory.create();
+			const boardDto = UpdateBoardDtoFactory.create();
+			const boardUser = BoardUserFactory.createMany(2, [{ votesCount: 2 }, { votesCount: 1 }]);
+
+			boardUserRepositoryMock.getVotesCount.mockResolvedValueOnce(boardUser);
+
+			await boardService.update(board._id, boardDto);
+
+			expect(boardRepositoryMock.getBoard).toBeCalledTimes(1);
 		});
 
-		it('should throw badRequestException when boardRepository fails', async () => {
-			// Set up the board repository mock to reject with an error
-			boardRepositoryMock.updatePhase.mockRejectedValueOnce(new Error('Some error'));
+		it('should throw error if board not found', async () => {
+			const boardDto = UpdateBoardDtoFactory.create();
 
-			// Verify that the service method being tested throws a BadRequestException
-			expect(async () => await service.updatePhase(boardPhaseDto)).rejects.toThrowError(
-				BadRequestException
+			boardRepositoryMock.getBoard.mockResolvedValue(null);
+			expect(async () => await boardService.update('-1', boardDto)).rejects.toThrow(
+				NotFoundException
 			);
 		});
 
-		it('should call websocket with eventEmitter', async () => {
-			// Call the service method being tested
-			await service.updatePhase(boardPhaseDto);
-
-			// Verify that the eventEmitterMock.emit method was called exactly once
-			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
-		});
-
-		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
-			// Create a fake board object with the specified properties
+		it('should call getBoardResponsibleInfo', async () => {
 			const board = BoardFactory.create();
-			board.team = TeamFactory.create({ name: 'xgeeks' });
+			const boardDto = UpdateBoardDtoFactory.create();
+			const boardUser = BoardUserFactory.createMany(2, [{ votesCount: 2 }, { votesCount: 1 }]);
 
-			board.phase = BoardPhases.SUBMITTED;
-			board.slackEnable = true;
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
+			boardUserRepositoryMock.getVotesCount.mockResolvedValueOnce(boardUser);
 
-			const table = {
-				[SLACK_MASTER_CHANNEL_ID]: '6405f9a04633b1668f71c068',
-				[SLACK_ENABLE]: true,
-				[FRONTEND_URL]: 'https://split.kigroup.de/'
-			};
+			await boardService.update(board._id, boardDto);
 
-			// Set up the board repository mock to resolve with the fake board object
-			boardRepositoryMock.updatePhase.mockResolvedValue(board);
-
-			// Set up the configuration service mock
-			configServiceMock.getOrThrow.mockImplementation((key: string) => {
-				return table[key];
-			});
-
-			// Call the service method being tested
-			await service.updatePhase(boardPhaseDto);
-
-			// Verify that the slackSendMessageService.execute method with correct data 1 time
-			expect(slackSendMessageServiceMock.execute).toHaveBeenNthCalledWith(1, {
-				slackChannelId: '6405f9a04633b1668f71c068',
-				message: expect.stringContaining('https://split.kigroup.de/')
-			});
+			expect(boardUserRepositoryMock.getBoardResponsible).toBeCalledTimes(1);
 		});
 	});
 });

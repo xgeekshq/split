@@ -16,7 +16,7 @@ import * as Auth from 'src/modules/auth/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory';
+import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
