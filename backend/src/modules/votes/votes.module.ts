@@ -14,12 +14,14 @@ import {
 	deleteVoteService,
 	voteRepository
 } from './votes.providers';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
 		mongooseBoardModule,
 		mongooseBoardUserModule,
 		forwardRef(() => BoardsModule),
+		forwardRef(() => BoardUsersModule),
 		forwardRef(() => CardsModule),
 		SocketModule
 	],
