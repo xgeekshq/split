@@ -2,15 +2,14 @@ import { useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/new.styles';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Button from '@/components/Primitives/Inputs/Button/Button';
+import { ContentContainer } from '@/styles/pages/boards/new.styles';
 import Text from '@/components/Primitives/Text/Text';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 
 const NewBoard: NextPage = () => {
   const router = useRouter();
@@ -33,16 +32,12 @@ const NewBoard: NextPage = () => {
   if (!session) return null;
 
   return (
-    <Container>
-      <PageHeader>
-        <Text color="primary800" heading={3} fontWeight="bold">
-          Add new board
-        </Text>
-        <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
-          <Icon css={{ color: '$primaryBase' }} name="close" />
-        </Button>
-      </PageHeader>
-
+    <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
+      <CreateHeader
+        title="Add new board"
+        disableBack={isBackButtonDisable}
+        handleBack={handleBack}
+      />
       <ContentContainer>
         <Text heading={3} color="primary800" fontWeight="bold">
           What kind of retro do you want to create?
@@ -66,7 +61,7 @@ const NewBoard: NextPage = () => {
         </Flex>
       </ContentContainer>
       {status === 'loading' && <LoadingPage />}
-    </Container>
+    </Flex>
   );
 };
 

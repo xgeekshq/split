@@ -1,18 +1,11 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import {
-  PageHeader,
-  ButtonsContainer,
-  StyledForm,
-} from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/boards/newSplitBoard.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
@@ -38,6 +31,8 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 
 const defaultBoard = {
   users: [],
@@ -264,15 +259,11 @@ const NewRegularBoard: NextPage = () => {
           css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
           direction="column"
         >
-          <PageHeader>
-            <Text color="primary800" heading={3} fontWeight="bold">
-              Add new Regular board
-            </Text>
-
-            <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
-              <Icon css={{ color: '$primaryBase' }} name="close" />
-            </Button>
-          </PageHeader>
+          <CreateHeader
+            title="Add new Regular board"
+            disableBack={isBackButtonDisable}
+            handleBack={handleBack}
+          />
           {createBoard ? (
             <>
               <Flex
@@ -300,19 +291,12 @@ const NewRegularBoard: NextPage = () => {
                   <TipBar tips={regularBoardTips} />
                 </Flex>
               </Flex>
-              <ButtonsContainer gap="24" justify="end">
-                <Button
-                  disabled={isBackButtonDisable}
-                  type="button"
-                  variant="lightOutline"
-                  onClick={handleCancelBtn}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" form="hook-form" disabled={isBackButtonDisable}>
-                  Create board
-                </Button>
-              </ButtonsContainer>
+              <CreateFooter
+                disableButton={isBackButtonDisable}
+                handleBack={handleCancelBtn}
+                formId="hook-form"
+                confirmationLabel="Create board"
+              />
             </>
           ) : (
             <ContentSelectContainer>

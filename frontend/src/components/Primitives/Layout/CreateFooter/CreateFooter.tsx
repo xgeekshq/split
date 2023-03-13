@@ -9,20 +9,29 @@ const Footer = styled(Flex, {
   backgroundColor: 'white',
 });
 
-type CreateTeamFooterProps = {
+type CreateFooterProps = {
   disableButton: boolean;
+  hasError?: boolean;
   handleBack: () => void;
+  formId: string;
+  confirmationLabel: string;
 };
 
-const CreateTeamFooter = ({ disableButton, handleBack }: CreateTeamFooterProps) => (
+const CreateFooter = ({
+  disableButton,
+  hasError = false,
+  handleBack,
+  formId,
+  confirmationLabel,
+}: CreateFooterProps) => (
   <Footer gap="24" justify="end">
     <Button disabled={disableButton} type="button" variant="lightOutline" onClick={handleBack}>
       Cancel
     </Button>
-    <Button form="hook-form" disabled={disableButton} type="submit">
-      Create team
+    <Button form={formId} disabled={disableButton || hasError} type="submit">
+      {confirmationLabel}
     </Button>
   </Footer>
 );
 
-export default CreateTeamFooter;
+export default CreateFooter;

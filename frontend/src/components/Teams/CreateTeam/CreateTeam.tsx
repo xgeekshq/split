@@ -16,9 +16,9 @@ import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 import ListMembers from '../Team/ListMembers/ListMembers';
-import CreateTeamHeader from './partials/CreateTeamHeader';
-import CreateTeamFooter from './partials/CreateTeamFooter';
 
 const CreateTeam = () => {
   const router = useRouter();
@@ -107,11 +107,7 @@ const CreateTeam = () => {
 
   return (
     <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
-      <CreateTeamHeader
-        title="Create New Team"
-        disableBack={disableButtons}
-        handleBack={handleBack}
-      />
+      <CreateHeader title="Create New Team" disableBack={disableButtons} handleBack={handleBack} />
       <Flex css={{ height: '100%', position: 'relative', overflowY: 'auto' }} direction="column">
         <Flex css={{ flex: '1' }}>
           <StyledForm
@@ -145,7 +141,12 @@ const CreateTeam = () => {
           <TipBar tips={createTeamTips} />
         </Flex>
       </Flex>
-      <CreateTeamFooter disableButton={disableButtons} handleBack={handleBack} />
+      <CreateFooter
+        disableButton={disableButtons}
+        handleBack={handleBack}
+        formId="hook-form"
+        confirmationLabel="Create team"
+      />
     </Flex>
   );
 };

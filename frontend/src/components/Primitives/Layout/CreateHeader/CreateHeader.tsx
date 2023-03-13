@@ -11,13 +11,13 @@ const Header = styled('header', Flex, {
   backgroundColor: '$white',
 });
 
-type CreateTeamHeaderProps = {
+type CreateHeaderProps = {
   title: string;
   disableBack: boolean;
   handleBack: () => void;
 };
 
-const CreateTeamHeader = ({ title, disableBack, handleBack }: CreateTeamHeaderProps) => (
+const CreateHeader = ({ title, disableBack, handleBack }: CreateHeaderProps) => (
   <Header align="center" justify="between">
     <Text color="primary800" heading={3} fontWeight="bold">
       {title}
@@ -28,4 +28,4 @@ const CreateTeamHeader = ({ title, disableBack, handleBack }: CreateTeamHeaderPr
   </Header>
 );
 
-export default CreateTeamHeader;
+export default CreateHeader;
