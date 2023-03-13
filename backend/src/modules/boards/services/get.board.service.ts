@@ -7,7 +7,7 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { BOARDS_NOT_FOUND, BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -47,6 +47,18 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	) {}
 
 	private readonly logger = new Logger(GetBoardService.name);
+
+	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
+		const [boardIds, teamIds] = await Promise.all([
+			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
+			this.getTeamService.getTeamsOfUser(userId)
+		]);
+
+		return {
+			boardIds: boardIds.map((boardUser) => String(boardUser.board)),
+			teamIds: teamIds.map((team) => team._id)
+		};
+	}
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
@@ -130,18 +142,6 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		return this.boardRepository.countBoards(boardIds, teamIds);
 	}
 
-	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
-		const [boardIds, teamIds] = await Promise.all([
-			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
-			this.getTeamService.getTeamsOfUser(userId)
-		]);
-
-		return {
-			boardIds: boardIds.map((boardUser) => boardUser.board),
-			teamIds: teamIds.map((team) => team._id)
-		};
-	}
-
 	getBoardPopulated(boardId: string) {
 		return this.boardRepository.getBoardPopulated(boardId);
 	}
@@ -154,8 +154,8 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		return this.boardRepository.getBoardData(boardId);
 	}
 
-	getBoardUsers(board: string, user: string) {
-		return this.boardUserRepository.getBoardUsers(board, user);
+	getBoardUser(board: string, user: string) {
+		return this.boardUserRepository.getBoardUser(board, user);
 	}
 
 	getAllMainBoards() {
@@ -168,15 +168,10 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		const count = await this.boardRepository.getCountPage(query);
 
 		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
-		try {
-			const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
 
-			return { boards: boards ?? [], hasNextPage, page };
-		} catch (e) {
-			this.logger.error(BOARDS_NOT_FOUND);
-		}
+		const boards = await this.boardRepository.getAllBoards(allBoards, query, page, size, count);
 
-		return { boards: [], hasNextPage, page };
+		return { boards: boards ?? [], hasNextPage, page };
 	}
 
 	private async createBoardUserAndSendAccessToken(
@@ -192,7 +187,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.boardUserRepository.getBoardUser(board, user);
+		const userFound = await this.boardUserRepository.getBoardUserPopulated(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);
@@ -223,9 +218,9 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		{ _id: boardId, isPublic }: Board,
 		user: UserDto
 	) {
-		const boardUserFound = await this.getBoardUsers(boardId, user._id);
+		const boardUserFound = await this.getBoardUser(boardId, user._id);
 
-		return !boardUserFound.length && isPublic && !user.isSAdmin
+		return !boardUserFound && isPublic && !user.isSAdmin
 			? await this.createPublicBoardUsers(boardId, user)
 			: undefined;
 	}
@@ -233,6 +228,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	private async createPublicBoardUsers(boardId: string, user: UserDto) {
 		if (user.isAnonymous) {
 			const guestUser = await this.createBoardUserAndSendAccessToken(boardId, user._id);
+
 			await this.sendGuestBoardUser(boardId, user._id);
 
 			return guestUser;
