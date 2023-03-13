@@ -6,7 +6,7 @@ import { Container, ContentContainer, PageHeader } from '@/styles/pages/boards/n
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
 import useBoard from '@/hooks/useBoard';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';

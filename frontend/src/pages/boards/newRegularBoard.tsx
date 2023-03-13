@@ -17,7 +17,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';

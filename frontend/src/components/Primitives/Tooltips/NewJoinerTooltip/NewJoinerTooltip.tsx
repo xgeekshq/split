@@ -3,7 +3,7 @@ import Text from '@/components/Primitives/Text/Text';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const NewJoinerTooltip = () => (
   <Flex align="center" gap={8} data-testid="newJoinerTooltip">

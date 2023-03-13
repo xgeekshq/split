@@ -3,7 +3,7 @@ import { ComponentStory } from '@storybook/react';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import SidebarHeader from '@/components/Sidebar/Header/Header';
 import SidebarContent from '@/components/Sidebar/Content/Content';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import SidebarItem from '@/components/Sidebar/Item/Item';
 import { UserFactory } from '@/utils/factories/user';
 

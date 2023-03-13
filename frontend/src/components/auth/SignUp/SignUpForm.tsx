@@ -8,7 +8,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import { checkUserExists, checkUserExistsAD } from '@/api/authService';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';

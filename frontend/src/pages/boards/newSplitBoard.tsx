@@ -41,7 +41,7 @@ import isEmpty from '@/utils/isEmpty';
 import Link from 'next/link';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const defaultBoard = {
   users: [],

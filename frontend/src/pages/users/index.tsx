@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import UsersList from '@/components/Users/UsersList';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { GetServerSideProps } from 'next';
