@@ -119,9 +119,8 @@ describe('UpdateBoardService', () => {
 		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
 			// Create a fake board object with the specified properties
 			const board = BoardFactory.create();
-			const team = TeamFactory.create({ name: 'xgeeks' });
+			board.team = TeamFactory.create({ name: 'xgeeks' });
 
-			board.team = team;
 			board.phase = BoardPhases.SUBMITTED;
 			board.slackEnable = true;
 
