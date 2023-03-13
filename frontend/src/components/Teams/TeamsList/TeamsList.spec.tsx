@@ -1,4 +1,4 @@
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import { fireEvent, waitFor } from '@testing-library/react';
@@ -9,14 +9,10 @@ const DEFAULT_PROPS = {
   teams: TeamFactory.createMany(3),
 };
 
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: TeamsListProps = DEFAULT_PROPS) =>
-  renderWithProviders(<TeamsList {...props} />, { routerOptions: router });
+  renderWithProviders(<TeamsList {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/TeamsList', () => {
   let testProps: TeamsListProps;
@@ -46,7 +42,11 @@ describe('Components/Teams/TeamsList', () => {
     // Assert
     expect(getByTestId('emptyTeams')).toBeInTheDocument();
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(ROUTES.NewTeam, ROUTES.NewTeam, expect.anything());
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        ROUTES.NewTeam,
+        ROUTES.NewTeam,
+        expect.anything(),
+      );
     });
   });
 });

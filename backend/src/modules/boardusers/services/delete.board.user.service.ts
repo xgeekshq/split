@@ -32,18 +32,18 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 	}
 
 	startTransaction(): Promise<void> {
-		return this.startTransaction();
+		return this.boardUserRepository.startTransaction();
 	}
 
 	commitTransaction(): Promise<void> {
-		return this.commitTransaction();
+		return this.boardUserRepository.commitTransaction();
 	}
 
 	abortTransaction(): Promise<void> {
-		return this.abortTransaction();
+		return this.boardUserRepository.abortTransaction();
 	}
 
 	endSession(): Promise<void> {
-		return this.endSession();
+		return this.boardUserRepository.endSession();
 	}
 }

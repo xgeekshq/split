@@ -1,13 +1,13 @@
-import { AuthAzureApplicationImpl } from './applications/auth.azure.application';
+import { AuthAzureApplication } from './applications/auth.azure.application';
 import { TYPES } from './interfaces/types';
-import AuthAzureServiceImpl from './services/auth.azure.service';
+import AuthAzureService from './services/auth.azure.service';
 
 export const authAzureService = {
 	provide: TYPES.services.AuthAzureService,
-	useClass: AuthAzureServiceImpl
+	useClass: AuthAzureService
 };
 
 export const authAzureApplication = {
 	provide: TYPES.applications.AuthAzureApplication,
-	useClass: AuthAzureApplicationImpl
+	useClass: AuthAzureApplication
 };

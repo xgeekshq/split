@@ -28,7 +28,7 @@ import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
-import { DeleteCardService } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
+import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { BOARD_PHASE_SERVER_UPDATED } from 'src/libs/constants/phase';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
@@ -46,7 +46,7 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfac
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
 
 @Injectable()
-export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterface {
+export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
@@ -56,7 +56,7 @@ export default class UpdateBoardServiceImpl implements UpdateBoardServiceInterfa
 		private slackSendMessageService: SendMessageServiceInterface,
 		private socketService: SocketGateway,
 		@Inject(Cards.TYPES.services.DeleteCardService)
-		private deleteCardService: DeleteCardService,
+		private deleteCardService: DeleteCardServiceInterface,
 		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private readonly createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)

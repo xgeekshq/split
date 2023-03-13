@@ -26,6 +26,7 @@
     "@azure/msal-node": "^1.15.0",
     "@azure/storage-blob": "^12.12.0",
     "@faker-js/faker": "^6.1.2",
+    "@golevelup/ts-jest": "^0.3.5",
     "@microsoft/microsoft-graph-client": "^3.0.5",
     "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/bull": "^0.6.0",

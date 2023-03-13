@@ -8,5 +8,8 @@ export const TYPES = {
 		CreateCommentApplication: 'CreateCommentApplication',
 		DeleteCommentApplication: 'DeleteCommentApplication',
 		UpdateCommentApplication: 'UpdateCommentApplication'
+	},
+	repositories: {
+		CommentRepository: 'CommentRepository'
 	}
 };

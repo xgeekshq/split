@@ -1,67 +1,73 @@
-import { CreateCardApplicationImpl } from './applications/create.card.application';
-import { DeleteCardApplicationImpl } from './applications/delete.card.application';
-import { MergeCardApplicationImpl } from './applications/merge.card.application';
-import { UnmergeCardApplicationImpl } from './applications/unmerge.card.application';
-import { UpdateCardApplicationImpl } from './applications/update.card.application';
+import { CreateCardApplication } from './applications/create.card.application';
+import { DeleteCardApplication } from './applications/delete.card.application';
+import { MergeCardApplication } from './applications/merge.card.application';
+import { UnmergeCardApplication } from './applications/unmerge.card.application';
+import { UpdateCardApplication } from './applications/update.card.application';
 import { TYPES } from './interfaces/types';
-import CreateCardServiceImpl from './services/create.card.service';
-import DeleteCardServiceImpl from './services/delete.card.service';
-import GetCardServiceImpl from './services/get.card.service';
-import { MergeCardServiceImpl } from './services/merge.card.service';
-import { UnmergeCardServiceImpl } from './services/unmerge.card.service';
-import UpdateCardServiceImpl from './services/update.card.service';
+import { CardRepository } from './repository/card.repository';
+import CreateCardService from './services/create.card.service';
+import DeleteCardService from './services/delete.card.service';
+import GetCardService from './services/get.card.service';
+import { MergeCardService } from './services/merge.card.service';
+import { UnmergeCardService } from './services/unmerge.card.service';
+import UpdateCardService from './services/update.card.service';
 
 export const createCardService = {
 	provide: TYPES.services.CreateCardService,
-	useClass: CreateCardServiceImpl
+	useClass: CreateCardService
 };
 
 export const getCardService = {
 	provide: TYPES.services.GetCardService,
-	useClass: GetCardServiceImpl
+	useClass: GetCardService
 };
 
 export const updateCardService = {
 	provide: TYPES.services.UpdateCardService,
-	useClass: UpdateCardServiceImpl
+	useClass: UpdateCardService
 };
 
 export const deleteCardService = {
 	provide: TYPES.services.DeleteCardService,
-	useClass: DeleteCardServiceImpl
+	useClass: DeleteCardService
 };
 
 export const mergeCardService = {
 	provide: TYPES.services.MergeCardService,
-	useClass: MergeCardServiceImpl
+	useClass: MergeCardService
 };
 
 export const unmergeCardService = {
 	provide: TYPES.services.UnmergeCardService,
-	useClass: UnmergeCardServiceImpl
+	useClass: UnmergeCardService
 };
 
 export const createCardApplication = {
 	provide: TYPES.applications.CreateCardApplication,
-	useClass: CreateCardApplicationImpl
+	useClass: CreateCardApplication
 };
 
 export const updateCardApplication = {
 	provide: TYPES.applications.UpdateCardApplication,
-	useClass: UpdateCardApplicationImpl
+	useClass: UpdateCardApplication
 };
 
 export const deleteCardApplication = {
 	provide: TYPES.applications.DeleteCardApplication,
-	useClass: DeleteCardApplicationImpl
+	useClass: DeleteCardApplication
 };
 
 export const mergeCardApplication = {
 	provide: TYPES.applications.MergeCardApplication,
-	useClass: MergeCardApplicationImpl
+	useClass: MergeCardApplication
 };
 
 export const unmergeCardApplication = {
 	provide: TYPES.applications.UnmergeCardApplication,
-	useClass: UnmergeCardApplicationImpl
+	useClass: UnmergeCardApplication
+};
+
+export const cardRepository = {
+	provide: TYPES.repository.CardRepository,
+	useClass: CardRepository
 };

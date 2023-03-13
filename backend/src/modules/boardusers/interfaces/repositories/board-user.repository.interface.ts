@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongoose';
 import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
-import BoardUserDto from '../../../boards/dto/board.user.dto';
-import Board from '../../../boards/entities/board.schema';
-import BoardUser from '../../../boards/entities/board.user.schema';
+import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import Board from 'src/modules/boards/entities/board.schema';
+import BoardUser from 'src/modules/boards/entities/board.user.schema';
 
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;

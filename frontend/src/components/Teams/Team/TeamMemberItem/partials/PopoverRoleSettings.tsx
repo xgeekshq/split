@@ -79,7 +79,11 @@ const PopoverRoleSettings: React.FC<PopoverRoleSettingsProps> = React.memo(
         <PopoverTrigger variant="dark" size="sm" data-testid="popoverRoleSettingsTrigger">
           <Icon name="arrow-down" />
         </PopoverTrigger>
-        <PopoverContent css={{ width: '$360', height: '$316' }}>
+        <PopoverContent
+          css={{ width: '$360', height: '$316' }}
+          collisionPadding={32}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <PopoverClose>
             <PopoverItem
               align="end"

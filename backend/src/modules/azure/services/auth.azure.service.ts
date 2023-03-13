@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import jwt_decode from 'jwt-decode';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import * as AuthType from 'src/modules/auth/interfaces/types';
 import * as StorageType from 'src/modules/storage/interfaces/types';
 import { signIn } from 'src/modules/auth/shared/login.auth';
-import { CreateUserService } from 'src/modules/users/interfaces/services/create.user.service.interface';
-import { GetUserService } from 'src/modules/users/interfaces/services/get.user.service.interface';
+import { CreateUserServiceInterface } from 'src/modules/users/interfaces/services/create.user.service.interface';
+import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as UserType from 'src/modules/users/interfaces/types';
-import { AuthAzureService } from '../interfaces/services/auth.azure.service.interface';
+import { AuthAzureServiceInterface } from '../interfaces/services/auth.azure.service.interface';
 import { ConfidentialClientApplication } from '@azure/msal-node';
 import { Client } from '@microsoft/microsoft-graph-client';
 import { ConfigService } from '@nestjs/config';
@@ -16,7 +16,7 @@ import { AZURE_AUTHORITY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } from 'src/libs/
 import { createHash } from 'node:crypto';
 import User from 'src/modules/users/entities/user.schema';
 import { StorageServiceInterface } from 'src/modules/storage/interfaces/services/storage.service';
-import { UpdateUserService } from 'src/modules/users/interfaces/services/update.user.service.interface';
+import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 
 type AzureUserFound = {
 	id: string;
@@ -35,19 +35,19 @@ type AzureDecodedUser = {
 };
 
 @Injectable()
-export default class AuthAzureServiceImpl implements AuthAzureService {
+export default class AuthAzureService implements AuthAzureServiceInterface {
 	private graphClient: Client;
 	private authCredentials: { accessToken: string; expiresOn: Date };
 
 	constructor(
 		@Inject(UserType.TYPES.services.CreateUserService)
-		private readonly createUserService: CreateUserService,
+		private readonly createUserService: CreateUserServiceInterface,
 		@Inject(UserType.TYPES.services.GetUserService)
-		private readonly getUserService: GetUserService,
+		private readonly getUserService: GetUserServiceInterface,
 		@Inject(AuthType.TYPES.services.UpdateUserService)
-		private readonly updateUserService: UpdateUserService,
+		private readonly updateUserService: UpdateUserServiceInterface,
 		@Inject(AuthType.TYPES.services.GetTokenAuthService)
-		private readonly getTokenService: GetTokenAuthService,
+		private readonly getTokenService: GetTokenAuthServiceInterface,
 		private readonly configService: ConfigService,
 		@Inject(StorageType.TYPES.services.StorageService)
 		private readonly storageService: StorageServiceInterface

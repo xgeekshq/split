@@ -19,7 +19,7 @@ const Tooltip = ({ children, content, color }: Props) => (
           align="center"
           color={color}
           side="top"
-          css={{ zIndex: 999 }}
+          css={{ zIndex: 128 }}
         >
           {content}
           <StyledArrow color={color} height={5} width={16} />

@@ -1,18 +1,13 @@
-import { createMockRouter } from '@/utils/testing/mocks';
-import { fireEvent, render as rtlRender, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { TeamFactory } from '@/utils/factories/team';
-import { RouterContext } from 'next/dist/shared/lib/router-context';
 import { ROUTES } from '@/utils/routes';
+import { libraryMocks } from '@/utils/testing/mocks';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import TeamTitle, { TeamTitleProps } from './TeamTitle';
 
-const router = createMockRouter({});
-
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: TeamTitleProps) =>
-  rtlRender(
-    <RouterContext.Provider value={router}>
-      <TeamTitle {...props} />
-    </RouterContext.Provider>,
-  );
+  renderWithProviders(<TeamTitle {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/TeamsList/TeamItem/TeamTitle', () => {
   let defaultProps: TeamTitleProps;
@@ -42,7 +37,7 @@ describe('Components/Teams/TeamsList/TeamItem/TeamTitle', () => {
 
     // Assert
     await waitFor(() => {
-      expect(router.push).toHaveBeenCalledWith(
+      expect(mockRouter.push).toHaveBeenCalledWith(
         ROUTES.TeamPage(teamTitleProps.teamId),
         ROUTES.TeamPage(teamTitleProps.teamId),
         expect.anything(),

@@ -1,10 +1,4 @@
 import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
-import PauseBoardTimerServiceImpl from 'src/modules/boards/services/pause-board-timer.service';
-import SendBoardTimerStateServiceImpl from 'src/modules/boards/services/send-board-timer-state.service';
-import SendBoardTimerTimeLeftServiceImpl from 'src/modules/boards/services/send-board-timer-time-left.service';
-import StartBoardTimerServiceImpl from 'src/modules/boards/services/start-board-timer.service';
-import StopBoardTimerServiceImpl from 'src/modules/boards/services/stop-board-timer.service';
-import UpdateBoardTimerDurationServiceImpl from 'src/modules/boards/services/update-board-timer-duration.service';
 import AfterUserPausedTimerSubscriber from 'src/modules/boards/subscribers/after-user-paused-timer.subscriber';
 import AfterUserRequestedTimerStateSubscriber from 'src/modules/boards/subscribers/after-user-requested-timer-state.subscriber';
 import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/after-user-started-timer.subscriber';
@@ -16,29 +10,35 @@ import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
 import { BoardRepository } from './repositories/board.repository';
-import CreateBoardServiceImpl from './services/create.board.service';
-import DeleteBoardServiceImpl from './services/delete.board.service';
-import GetBoardServiceImpl from './services/get.board.service';
-import UpdateBoardServiceImpl from './services/update.board.service';
+import CreateBoardService from './services/create.board.service';
+import DeleteBoardService from './services/delete.board.service';
+import GetBoardService from './services/get.board.service';
+import PauseBoardTimerService from 'src/modules/boards/services/pause-board-timer.service';
+import SendBoardTimerStateService from 'src/modules/boards/services/send-board-timer-state.service';
+import SendBoardTimerTimeLeftService from 'src/modules/boards/services/send-board-timer-time-left.service';
+import StartBoardTimerService from 'src/modules/boards/services/start-board-timer.service';
+import StopBoardTimerService from 'src/modules/boards/services/stop-board-timer.service';
+import UpdateBoardTimerDurationService from 'src/modules/boards/services/update-board-timer-duration.service';
+import UpdateBoardService from './services/update.board.service';
 
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
-	useClass: CreateBoardServiceImpl
+	useClass: CreateBoardService
 };
 
 export const getBoardService = {
 	provide: TYPES.services.GetBoardService,
-	useClass: GetBoardServiceImpl
+	useClass: GetBoardService
 };
 
 export const updateBoardService = {
 	provide: TYPES.services.UpdateBoardService,
-	useClass: UpdateBoardServiceImpl
+	useClass: UpdateBoardService
 };
 
 export const deleteBoardService = {
 	provide: TYPES.services.DeleteBoardService,
-	useClass: DeleteBoardServiceImpl
+	useClass: DeleteBoardService
 };
 
 export const createBoardApplication = {
@@ -68,32 +68,32 @@ export const boardTimerRepository = {
 
 export const sendBoardTimerStateService = {
 	provide: TYPES.services.SendBoardTimerStateService,
-	useClass: SendBoardTimerStateServiceImpl
+	useClass: SendBoardTimerStateService
 };
 
 export const startBoardTimerService = {
 	provide: TYPES.services.StartBoardTimerService,
-	useClass: StartBoardTimerServiceImpl
+	useClass: StartBoardTimerService
 };
 
 export const pauseBoardTimerService = {
 	provide: TYPES.services.PauseBoardTimerService,
-	useClass: PauseBoardTimerServiceImpl
+	useClass: PauseBoardTimerService
 };
 
 export const stopBoardTimerService = {
 	provide: TYPES.services.StopBoardTimerService,
-	useClass: StopBoardTimerServiceImpl
+	useClass: StopBoardTimerService
 };
 
 export const updateBoardTimerDurationService = {
 	provide: TYPES.services.UpdateBoardTimerDurationService,
-	useClass: UpdateBoardTimerDurationServiceImpl
+	useClass: UpdateBoardTimerDurationService
 };
 
 export const sendBoardTimerTimeLeftService = {
 	provide: TYPES.services.SendBardTimerTimeLeftService,
-	useClass: SendBoardTimerTimeLeftServiceImpl
+	useClass: SendBoardTimerTimeLeftService
 };
 
 export const afterUserUpdatedDurationSubscriber = {

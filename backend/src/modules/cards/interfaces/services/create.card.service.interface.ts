@@ -1,7 +1,7 @@
 import CardDto from '../../dto/card.dto';
-import Card from '../../schemas/card.schema';
+import Card from '../../entities/card.schema';
 
-export interface CreateCardService {
+export interface CreateCardServiceInterface {
 	create(
 		boardId: string,
 		userId: string,

@@ -1,11 +1,5 @@
 import { DeleteBoardUserServiceInterface } from './../../boardusers/interfaces/services/delete.board.user.service.interface';
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	NotFoundException,
-	forwardRef
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import isEmpty from 'src/libs/utils/isEmpty';
@@ -16,14 +10,12 @@ import Board from '../entities/board.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
-import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardDataPopulate } from '../utils/populate-board';
 
 @Injectable()
-export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterface {
+export default class DeleteBoardService implements DeleteBoardServiceInterface {
 	constructor(
 		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
@@ -31,14 +23,12 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 		private deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
 		private deleteSheduleService: DeleteSchedulesServiceInterface,
-		@Inject(forwardRef(() => Boards.TYPES.services.GetBoardService))
-		private getBoardService: GetBoardServiceInterface,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
 		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
 	async delete(boardId: string) {
-		const board = await this.getBoardService.getBoardById(boardId);
+		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
 			throw new NotFoundException('Board not found!');
@@ -52,7 +42,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 	}
 
 	async deleteBoardsByTeamId(teamId: string) {
-		const teamBoards = await this.getBoardService.getAllBoardsByTeamId(teamId);
+		const teamBoards = await this.boardRepository.getAllBoardsByTeamId(teamId);
 
 		const promises = teamBoards.map((board) =>
 			this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false)
@@ -125,7 +115,7 @@ export default class DeleteBoardServiceImpl implements DeleteBoardServiceInterfa
 				// archive all related channels
 				// for that we need to fetch the board with all dividedBoards
 
-				const board = await this.getBoardService.getBoardPopulated(boardId, BoardDataPopulate);
+				const board = await this.boardRepository.getBoardPopulated(boardId);
 
 				this.archiveChannelService.execute({
 					type: ArchiveChannelDataOptions.BOARD,

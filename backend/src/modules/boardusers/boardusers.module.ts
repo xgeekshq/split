@@ -6,9 +6,10 @@ import {
 	getBoardUserService,
 	updateBoardUserService
 } from './boardusers.providers';
+import { mongooseBoardUserModule } from 'src/infrastructure/database/mongoose.module';
 
 @Module({
-	imports: [],
+	imports: [mongooseBoardUserModule],
 	providers: [
 		createBoardUserService,
 		getBoardUserService,

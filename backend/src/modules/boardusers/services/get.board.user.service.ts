@@ -28,6 +28,6 @@ export default class GetBoardUserService implements GetBoardUserServiceInterface
 	}
 
 	getBoardUser(board: string, user: string): Promise<BoardUser> {
-		return this.getBoardUser(board, user);
+		return this.boardUserRepository.getBoardUser(board, user);
 	}
 }

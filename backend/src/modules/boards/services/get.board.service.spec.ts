@@ -1,7 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
 import { ConfigService } from '@nestjs/config';
-import { boardUserRepository, createBoardUserService } from './../boards.providers';
 import { JwtService } from '@nestjs/jwt';
 import { getTokenAuthService } from './../../auth/auth.providers';
 import { Logger } from '@nestjs/common';
@@ -10,7 +9,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Document, LeanDocument } from 'mongoose';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import Board from 'src/modules/boards/entities/board.schema';
-import GetBoardServiceImpl from 'src/modules/boards/services/get.board.service';
 import {
 	getTeamService,
 	teamRepository,
@@ -21,12 +19,18 @@ import { updateUserService, userRepository } from 'src/modules/users/users.provi
 import { boardRepository, getBoardService } from '../boards.providers';
 import { cleanBoard } from '../utils/clean-board';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
+import GetBoardService from 'src/modules/boards/services/get.board.service';
+import {
+	boardUserRepository,
+	createBoardUserService,
+	getBoardUserService
+} from 'src/modules/boardusers/boardusers.providers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fakeBoards = BoardFactory.createMany(2);
 
-describe('GetBoardServiceImpl', () => {
-	let service: GetBoardServiceImpl;
+describe('GetBoardService', () => {
+	let service: GetBoardService;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -37,6 +41,7 @@ describe('GetBoardServiceImpl', () => {
 				getTokenAuthService,
 				getTeamService,
 				getBoardService,
+				getBoardUserService,
 				teamUserRepository,
 				teamRepository,
 				boardRepository,
@@ -73,11 +78,11 @@ describe('GetBoardServiceImpl', () => {
 					provide: JwtService,
 					useValue: jwtService
 				},
-				GetBoardServiceImpl
+				GetBoardService
 			]
 		}).compile();
 
-		service = module.get<GetBoardServiceImpl>(GetBoardServiceImpl);
+		service = module.get<GetBoardService>(GetBoardService);
 		jest.spyOn(Logger.prototype, 'error').mockImplementation(jest.fn);
 	});
 

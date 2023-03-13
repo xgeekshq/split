@@ -106,7 +106,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
   },
 });
 
-type SwitchProps = {
+export type SwitchProps = {
   checked: boolean;
   size?: 'xs' | 'sm' | 'md';
   onCheckedChange?: (checked: boolean) => void;
@@ -119,7 +119,7 @@ type SwitchProps = {
 };
 
 const Switch = ({ checked, icon = 'check', ...props }: SwitchProps) => (
-  <StyledSwitch checked={checked} {...props}>
+  <StyledSwitch checked={checked} {...props} data-testid="switch">
     <SwitchThumb checked={checked} icon={icon} />
   </StyledSwitch>
 );

@@ -118,7 +118,7 @@ const Template: ComponentStory<typeof Select> = ({ disabled, hasError }) => {
           <Flex direction="column">
             <SelectValue placeholder="Choose a fruit" />
           </Flex>
-          <SelectIcon className="SelectIcon" asChild>
+          <SelectIcon className="SelectIcon">
             <Icon name="arrow-down" />
           </SelectIcon>
         </SelectTrigger>
@@ -152,7 +152,7 @@ export const WithLabel: ComponentStory<typeof Select> = ({ disabled, hasError })
             </Text>
             <SelectValue />
           </Flex>
-          <SelectIcon className="SelectIcon" asChild>
+          <SelectIcon className="SelectIcon">
             <Icon name="arrow-down" />
           </SelectIcon>
         </SelectTrigger>

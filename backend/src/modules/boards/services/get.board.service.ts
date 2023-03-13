@@ -1,6 +1,5 @@
 import { GetBoardUserServiceInterface } from './../../boardusers/interfaces/services/get.board.user.service.interface';
 import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
-import { UserRepositoryInterface } from './../../users/repository/user.repository.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -13,7 +12,6 @@ import { BOARDS_NOT_FOUND, BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exce
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
@@ -22,25 +20,25 @@ import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
-import { PopulateType } from 'src/libs/repositories/interfaces/base.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import BoardGuestUserDto from '../dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { GetTokenAuthService } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
+import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';
 import UserDto from 'src/modules/users/dto/user.dto';
+import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 
 @Injectable()
-export default class GetBoardServiceImpl implements GetBoardServiceInterface {
+export default class GetBoardService implements GetBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(Boards.TYPES.services.GetBoardService)
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
-		private getTokenAuthService: GetTokenAuthService,
-		@Inject(Users.TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface,
+		private getTokenAuthService: GetTokenAuthServiceInterface,
+		@Inject(Users.TYPES.services.UpdateUserService)
+		private updateUserService: UpdateUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
 		private getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
@@ -48,7 +46,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		private socketService: SocketGateway
 	) {}
 
-	private readonly logger = new Logger(GetBoardServiceImpl.name);
+	private readonly logger = new Logger(GetBoardService.name);
 
 	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
 		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
@@ -144,12 +142,8 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		};
 	}
 
-	getAllBoardsByTeamId(teamId: string) {
-		return this.boardRepository.getAllBoardsByTeamId(teamId);
-	}
-
-	getBoardPopulated(boardId: string, populate?: PopulateType) {
-		return this.boardRepository.getBoardPopulated(boardId, populate);
+	getBoardPopulated(boardId: string) {
+		return this.boardRepository.getBoardPopulated(boardId);
 	}
 
 	getBoardById(boardId: string) {
@@ -190,7 +184,7 @@ export default class GetBoardServiceImpl implements GetBoardServiceInterface {
 		user: string
 	): Promise<LoginGuestUserResponse> {
 		const { accessToken } = await this.getTokenAuthService.getTokens(user);
-		this.userRepository.findOneByFieldAndUpdate({ _id: user }, { $set: { updatedAt: new Date() } });
+		await this.updateUserService.updateUserUpdatedAtField(user);
 
 		await this.createBoardUserService.createBoardUser(board, user);
 

@@ -1,16 +1,13 @@
 import { FilterQuery, ObjectId } from 'mongoose';
 import { BoardPhases } from 'src/libs/enum/board.phases';
-import {
-	BaseInterfaceRepository,
-	PopulateType
-} from 'src/libs/repositories/interfaces/base.repository.interface';
+import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
 import Board from 'src/modules/boards/entities/board.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { QueryType } from '../interfaces/findQuery';
 
 export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board> {
 	getBoard(boardId: string): Promise<Board>;
-	getBoardPopulated(boardId: string, populate?: PopulateType): Promise<Board>;
+	getBoardPopulated(boardId: string): Promise<Board>;
 	getMainBoard(boardId: string): Promise<Board>;
 	getMainBoardOfSubBoard(boardId: string): Promise<Board>;
 	getBoardData(boardId: string): Promise<Board>;

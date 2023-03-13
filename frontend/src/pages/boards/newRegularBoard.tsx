@@ -9,12 +9,7 @@ import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
-  Container,
-  ContentWrapper,
-  ContentContainer,
-  InnerContent,
   PageHeader,
-  SubContainer,
   ButtonsContainer,
   StyledForm,
 } from '@/styles/pages/boards/newSplitBoard.styles';
@@ -248,7 +243,10 @@ const NewRegularBoard: NextPage = () => {
   return (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Container style={isLoading ? { opacity: 0.5 } : undefined}>
+        <Flex
+          css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
+          direction="column"
+        >
           <PageHeader>
             <Text color="primary800" heading={3} fontWeight="bold">
               Add new Regular board
@@ -260,31 +258,32 @@ const NewRegularBoard: NextPage = () => {
           </PageHeader>
           {createBoard ? (
             <>
-              <ContentWrapper>
-                <ContentContainer>
-                  <SubContainer>
-                    <StyledForm
-                      id="hook-form"
-                      direction="column"
-                      onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
-                        saveBoard(text, maxVotes, slackEnable);
-                      })}
-                    >
-                      <InnerContent direction="column">
-                        <FormProvider {...methods}>
-                          <BoardName
-                            title="Board Name"
-                            description="Make it short and descriptive. It well help you to distinguish retrospectives from each
+              <Flex
+                css={{ height: '100%', position: 'relative', overflowY: 'auto' }}
+                direction="column"
+              >
+                <Flex css={{ flex: '1' }}>
+                  <StyledForm
+                    id="hook-form"
+                    direction="column"
+                    onSubmit={methods.handleSubmit(({ text, maxVotes, slackEnable }) => {
+                      saveBoard(text, maxVotes, slackEnable);
+                    })}
+                  >
+                    <Flex direction="column">
+                      <FormProvider {...methods}>
+                        <BoardName
+                          title="Board Name"
+                          description="Make it short and descriptive. It well help you to distinguish retrospectives from each
         other."
-                          />
-                          <SettingsTabs />
-                        </FormProvider>
-                      </InnerContent>
-                    </StyledForm>
-                  </SubContainer>
+                        />
+                        <SettingsTabs />
+                      </FormProvider>
+                    </Flex>
+                  </StyledForm>
                   <TipBar isRegularBoard />
-                </ContentContainer>
-              </ContentWrapper>
+                </Flex>
+              </Flex>
               <ButtonsContainer gap="24" justify="end">
                 <Button
                   disabled={isBackButtonDisable}
@@ -319,7 +318,7 @@ const NewRegularBoard: NextPage = () => {
               </Flex>
             </ContentSelectContainer>
           )}
-        </Container>
+        </Flex>
       </QueryError>
     </Suspense>
   );

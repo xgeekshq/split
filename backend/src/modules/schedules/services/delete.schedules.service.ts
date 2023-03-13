@@ -1,22 +1,22 @@
-import { Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { Inject, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { Model } from 'mongoose';
 import { DeleteSchedulesServiceInterface } from '../interfaces/services/delete.schedules.service.interface';
-import Schedules, { SchedulesDocument } from '../schemas/schedules.schema';
+import Schedules from '../entities/schedules.schema';
+import { TYPES } from '../interfaces/types';
+import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
 
 export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 	constructor(
-		@InjectModel(Schedules.name)
-		private schedulesModel: Model<SchedulesDocument>,
-		private schedulerRegistry: SchedulerRegistry
+		private schedulerRegistry: SchedulerRegistry,
+		@Inject(TYPES.repository.ScheduleRepository)
+		private readonly scheduleRepository: ScheduleRepositoryInterface
 	) {}
 
 	private logger = new Logger(DeleteSchedulesService.name);
 
-	async findAndDeleteScheduleByBoardId(boardId: string): Promise<SchedulesDocument | null> {
+	async findAndDeleteScheduleByBoardId(boardId: string): Promise<Schedules | null> {
 		try {
-			const deletedSchedule = await this.schedulesModel.findOneAndDelete({ board: boardId });
+			const deletedSchedule = await this.scheduleRepository.deleteScheduleByBoardId(boardId);
 			this.schedulerRegistry.deleteCronJob(boardId);
 
 			return deletedSchedule;
@@ -28,6 +28,6 @@ export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 	}
 
 	async deleteScheduleByBoardId(boardId: string): Promise<void> {
-		await this.schedulesModel.deleteOne({ board: boardId });
+		await this.scheduleRepository.deleteOneSchedule(boardId);
 	}
 }

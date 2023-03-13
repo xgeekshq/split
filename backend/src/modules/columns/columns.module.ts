@@ -4,7 +4,6 @@ import {
 	mongooseBoardUserModule
 } from '../../infrastructure/database/mongoose.module';
 import BoardsModule from '../boards/boards.module';
-import { boardRepository } from '../boards/boards.providers';
 import { CardsModule } from '../cards/cards.module';
 import SocketModule from '../socket/socket.module';
 import TeamsModule from '../teams/teams.module';
@@ -14,6 +13,7 @@ import {
 	updateColumnService
 } from './columns.providers';
 import ColumnsController from './controller/columns.controller';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
@@ -21,10 +21,11 @@ import ColumnsController from './controller/columns.controller';
 		mongooseBoardUserModule,
 		CardsModule,
 		BoardsModule,
+		BoardUsersModule,
 		TeamsModule,
 		forwardRef(() => SocketModule)
 	],
 	controllers: [ColumnsController],
-	providers: [updateColumnService, updateColumnApplication, columnRepository, boardRepository]
+	providers: [updateColumnService, updateColumnApplication, columnRepository]
 })
 export class ColumnsModule {}

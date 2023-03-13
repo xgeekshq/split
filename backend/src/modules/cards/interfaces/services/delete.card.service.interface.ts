@@ -1,8 +1,8 @@
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
-import Card from '../../schemas/card.schema';
+import Card from '../../entities/card.schema';
 
-export interface DeleteCardService {
+export interface DeleteCardServiceInterface {
 	delete(boardId: string, cardId: string): Promise<LeanDocument<BoardDocument> | null>;
 
 	deleteFromCardGroup(

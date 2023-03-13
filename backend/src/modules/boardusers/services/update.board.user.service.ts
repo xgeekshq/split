@@ -11,19 +11,6 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	startTransaction(): Promise<void> {
-		return this.startTransaction();
-	}
-	commitTransaction(): Promise<void> {
-		return this.commitTransaction();
-	}
-	abortTransaction(): Promise<void> {
-		return this.abortTransaction();
-	}
-	endSession(): Promise<void> {
-		return this.endSession();
-	}
-
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser> {
 		return this.boardUserRepository.updateBoardUserRole(boardId, userId, role);
 	}
@@ -36,5 +23,18 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		decrement?: boolean
 	): Promise<BoardUser> {
 		return this.boardUserRepository.updateVoteUser(boardId, userId, count, withSession, decrement);
+	}
+
+	startTransaction(): Promise<void> {
+		return this.boardUserRepository.startTransaction();
+	}
+	commitTransaction(): Promise<void> {
+		return this.boardUserRepository.commitTransaction();
+	}
+	abortTransaction(): Promise<void> {
+		return this.boardUserRepository.abortTransaction();
+	}
+	endSession(): Promise<void> {
+		return this.boardUserRepository.endSession();
 	}
 }

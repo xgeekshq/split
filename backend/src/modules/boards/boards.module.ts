@@ -1,9 +1,7 @@
 import AuthModule from 'src/modules/auth/auth.module';
-import { userRepository } from 'src/modules/users/users.providers';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
-	mongooseBoardUserModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
@@ -46,10 +44,9 @@ import BoardUsersModule from '../boardusers/boardusers.module';
 		CommunicationModule,
 		CardsModule,
 		forwardRef(() => AuthModule),
-		forwardRef(() => BoardUsersModule),
+		BoardUsersModule,
 		JwtRegister,
 		mongooseBoardModule,
-		mongooseBoardUserModule,
 		mongooseUserModule
 	],
 	providers: [
@@ -73,8 +70,7 @@ import BoardUsersModule from '../boardusers/boardusers.module';
 		afterUserStoppedTimerSubscriber,
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
-		boardRepository,
-		userRepository
+		boardRepository
 	],
 	controllers: [BoardsController],
 	exports: [

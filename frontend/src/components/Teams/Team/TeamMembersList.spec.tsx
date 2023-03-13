@@ -1,17 +1,13 @@
 import React from 'react';
-import { createMockRouter } from '@/utils/testing/mocks';
+import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import TeamMembersList, { TeamMembersListProps } from '.';
 
-const router = createMockRouter({ pathname: '/teams' });
-
-jest.mock('next/router', () => ({
-  useRouter: () => router,
-}));
+const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
 const render = (props: TeamMembersListProps) =>
-  renderWithProviders(<TeamMembersList {...props} />, { routerOptions: router });
+  renderWithProviders(<TeamMembersList {...props} />, { routerOptions: mockRouter });
 
 describe('Components/Teams/Team/TeamMembersList', () => {
   it('should render correctly', () => {

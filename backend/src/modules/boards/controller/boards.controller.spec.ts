@@ -1,44 +1,15 @@
-import { voteRepository } from 'src/modules/votes/votes.providers';
-import { ConfigService } from '@nestjs/config';
-import configService from 'src/libs/test-utils/mocks/configService.mock';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { getModelToken } from '@nestjs/mongoose';
-import { SchedulerRegistry } from '@nestjs/schedule';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { Test } from '@nestjs/testing';
-import {
-	boardRepository,
-	boardUserRepository,
-	createBoardApplication,
-	createBoardService,
-	createBoardUserService,
-	deleteBoardApplication,
-	deleteBoardService,
-	getBoardApplication,
-	getBoardService,
-	updateBoardApplication,
-	updateBoardService
-} from 'src/modules/boards/boards.providers';
 import BoardsController from 'src/modules/boards/controller/boards.controller';
-import { deleteCardService, getCardService } from 'src/modules/cards/cards.providers';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import {
-	createSchedulesService,
-	deleteSchedulesService
-} from 'src/modules/schedules/schedules.providers';
+import { createMock } from '@golevelup/ts-jest';
+import { CreateBoardApplication } from '../applications/create.board.application';
+import { GetBoardApplication } from '../applications/get.board.application';
+import { UpdateBoardApplication } from '../applications/update.board.application';
+import { DeleteBoardApplication } from '../applications/delete.board.application';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import {
-	createTeamService,
-	getTeamApplication,
-	getTeamService,
-	teamRepository,
-	teamUserRepository,
-	updateTeamService
-} from 'src/modules/teams/providers';
-import { updateUserService, userRepository } from 'src/modules/users/users.providers';
-import { deleteVoteService } from 'src/modules/votes/votes.providers';
-import { JwtService } from '@nestjs/jwt';
-import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
-import { getTokenAuthService } from 'src/modules/auth/auth.providers';
+import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
+import { GetBoardGuard } from 'src/libs/guards/getBoardPermissions.guard';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -48,95 +19,33 @@ describe('BoardsController', () => {
 			imports: [EventEmitterModule.forRoot()],
 			controllers: [BoardsController],
 			providers: [
-				SchedulerRegistry,
-				SocketGateway,
-				createBoardApplication,
-				createBoardService,
-				getBoardApplication,
-				getBoardService,
-				getTeamService,
-				getTeamApplication,
-				updateBoardApplication,
-				updateBoardService,
-				deleteBoardApplication,
-				deleteBoardService,
-				createTeamService,
-				createSchedulesService,
-				deleteSchedulesService,
-				teamRepository,
-				boardUserRepository,
-				teamUserRepository,
-				updateTeamService,
-				getCardService,
-				deleteCardService,
-				deleteVoteService,
-				boardRepository,
-				userRepository,
-				updateTeamService,
-				createBoardUserService,
-				getTokenAuthService,
-				updateUserService,
-				getBoardService,
-				voteRepository,
 				{
-					provide: getModelToken('User'),
-					useValue: {}
+					provide: Boards.TYPES.applications.CreateBoardApplication,
+					useValue: createMock<CreateBoardApplication>()
 				},
 				{
-					provide: getModelToken('Board'),
-					useValue: {}
+					provide: Boards.TYPES.applications.GetBoardApplication,
+					useValue: createMock<GetBoardApplication>()
 				},
 				{
-					provide: getModelToken('BoardUser'),
-					useValue: {}
+					provide: Boards.TYPES.applications.UpdateBoardApplication,
+					useValue: createMock<UpdateBoardApplication>()
 				},
 				{
-					provide: getModelToken('Team'),
-					useValue: {}
+					provide: Boards.TYPES.applications.DeleteBoardApplication,
+					useValue: createMock<DeleteBoardApplication>()
 				},
 				{
-					provide: getModelToken('TeamUser'),
-					useValue: {}
-				},
-				{
-					provide: ConfigService,
-					useValue: configService
-				},
-				{
-					provide: getModelToken('Schedules'),
-					useValue: {
-						find: jest.fn().mockResolvedValue([])
-					}
-				},
-				{
-					provide: CommunicationsType.TYPES.services.SlackCommunicationService,
-					useValue: {
-						execute: jest.fn()
-					}
-				},
-				{
-					provide: CommunicationsType.TYPES.services.SlackArchiveChannelService,
-					useValue: {
-						execute: jest.fn()
-					}
-				},
-				{
-					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
-					useValue: {
-						execute: jest.fn()
-					}
-				},
-				{
-					provide: getModelToken('ResetPassword'),
-					useValue: {}
-				},
-				{
-					provide: JwtService,
-					useValue: jwtService
+					provide: SocketGateway,
+					useValue: createMock<SocketGateway>()
 				}
 			]
-		}).compile();
-
+		})
+			.overrideGuard(GetBoardGuard)
+			.useValue({ canActivate: () => true })
+			.overrideGuard(BoardUserGuard)
+			.useValue({ canActivate: () => true })
+			.compile();
 		controller = module.get<BoardsController>(BoardsController);
 	});
 

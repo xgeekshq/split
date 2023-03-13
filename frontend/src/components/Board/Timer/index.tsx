@@ -6,8 +6,8 @@ import {
   TimePanelText,
   TimerContainer,
 } from '@/components/Board/Timer/styles';
-import Icon from '@/components/Primitives/Icon';
 import Button from '@/components/Primitives/Button';
+import Icon from '@/components/Primitives/Icon';
 import useTimer from '@/hooks/useTimer';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';
@@ -24,25 +24,25 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
     minutes,
     seconds,
 
-    isPaused,
-    isRunning,
+    isTimerPaused,
+    isTimerRunning,
 
-    incrementOneMinute,
-    decrementOneMinute,
-    incrementFiveSeconds,
-    decrementFiveSeconds,
+    incrementDurationMinutes,
+    decrementDurationMinutes,
+    incrementDurationSeconds,
+    decrementDurationSeconds,
 
     startTimer,
     pauseTimer,
     stopTimer,
 
     timerVariant,
-    progressWidth,
+    progressBarWidth,
   } = useTimer({ boardId, isAdmin, emitEvent, listenEvent });
 
   const buildTimeButton = (action: string, onClick: any) => (
     <Button
-      disabled={!isAdmin || isRunning() || isPaused()}
+      disabled={!isAdmin || isTimerRunning() || isTimerPaused()}
       type="button"
       variant="transparentHover"
       onClick={onClick}
@@ -60,9 +60,10 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
       {buildDecrementTimeButton(decrementFn)}
     </TimePanel>
   );
-  const buildMinutesPanel = () => buildTimePanel(minutes, incrementOneMinute, decrementOneMinute);
+  const buildMinutesPanel = () =>
+    buildTimePanel(minutes, incrementDurationMinutes, decrementDurationMinutes);
   const buildSecondsPanel = () =>
-    buildTimePanel(seconds, incrementFiveSeconds, decrementFiveSeconds);
+    buildTimePanel(seconds, incrementDurationSeconds, decrementDurationSeconds);
 
   const buildControlButton = (action: string, onClick: any) => (
     <Button onClick={onClick} size="xs" variant="transparent" disabled={!isAdmin}>
@@ -74,13 +75,13 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
   const buildStopButton = () => buildControlButton('stop', stopTimer);
 
   return (
-    <TimerContainer variant={timerVariant} css={{ $$w: `${progressWidth}` }}>
+    <TimerContainer variant={timerVariant} css={{ $$w: `${progressBarWidth}` }}>
       <ClockPanel variant={timerVariant}>
         {buildMinutesPanel()}:{buildSecondsPanel()}
       </ClockPanel>
       <ControlPanel>
         {buildStopButton()}
-        {isRunning() ? buildPauseButton() : buildStartButton()}
+        {isTimerRunning() ? buildPauseButton() : buildStartButton()}
       </ControlPanel>
     </TimerContainer>
   );

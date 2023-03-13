@@ -1,5 +1,5 @@
-import CardItem from 'src/modules/cards/schemas/card.item.schema';
-import Card from '../../schemas/card.schema';
+import CardItem from 'src/modules/cards/entities/card.item.schema';
+import Card from '../../entities/card.schema';
 
 export interface GetCardServiceInterface {
 	getCardFromBoard(boardId: string, cardId: string): Promise<Card | null>;
