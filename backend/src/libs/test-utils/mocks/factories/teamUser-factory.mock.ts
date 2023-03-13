@@ -8,6 +8,7 @@ const mockTeamUserData = () => {
 		_id: faker.database.mongodbObjectId(),
 		role: faker.helpers.arrayElement([TeamRoles.MEMBER, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER]),
 		isNewJoiner: faker.datatype.boolean(),
+		canBeResponsible: faker.datatype.boolean(),
 		user: faker.database.mongodbObjectId(),
 		team: faker.database.mongodbObjectId()
 	};

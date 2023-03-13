@@ -33,7 +33,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
   const handleLottery = () => {
     const cloneUsers = [...deepClone(users)].flatMap((user) => {
-      if (!user.isNewJoiner)
+      if (!user.isNewJoiner && user.canBeResponsible)
         return {
           ...user,
           role: BoardUserRoles.MEMBER,

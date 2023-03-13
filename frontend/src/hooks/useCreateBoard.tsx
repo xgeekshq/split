@@ -52,14 +52,15 @@ const useCreateBoard = (team?: Team) => {
       if (splitUsers && (team?.users.length ?? 0) >= MIN_MEMBERS) {
         new Array(maxTeams).fill(0).forEach((_, i) => {
           const newBoard = generateSubBoard(i + 1);
-          const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+          const canBeResponsibles = splitUsers[i].filter(
+            (user) => !user.isNewJoiner && user.canBeResponsible,
+          );
 
-          teamUsersWotIsNewJoiner[Math.floor(Math.random() * teamUsersWotIsNewJoiner.length)].role =
+          canBeResponsibles[Math.floor(Math.random() * canBeResponsibles.length)].role =
             BoardUserRoles.RESPONSIBLE;
 
           const result = splitUsers[i].map(
-            (user) =>
-              teamUsersWotIsNewJoiner.find((member) => member.user._id === user.user._id) || user,
+            (user) => canBeResponsibles.find((member) => member.user._id === user.user._id) || user,
           ) as BoardUserToAdd[];
 
           newBoard.users = result;
@@ -84,6 +85,7 @@ const useCreateBoard = (team?: Team) => {
     // returns the user who has the oldest account date
     return availableUsersListSorted.slice(0, 1).map((user) => {
       user.isNewJoiner = false;
+      user.canBeResponsible = true;
       return user;
     });
   }, []);
@@ -92,7 +94,9 @@ const useCreateBoard = (team?: Team) => {
     (usersPerTeam: number, availableUsers: TeamUser[]) => {
       const randomGroupOfUsers = [];
 
-      let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+      let availableUsersToBeResponsible = availableUsers.filter(
+        (user) => !user.isNewJoiner && user.canBeResponsible,
+      );
 
       if (availableUsersToBeResponsible.length < 1) {
         availableUsersToBeResponsible = getAvailableUsersToBeResponsible(availableUsers);
@@ -106,6 +110,7 @@ const useCreateBoard = (team?: Team) => {
         role: BoardUserRoles.MEMBER,
         votesCount: 0,
         isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+        canBeResponsible: candidateToBeTeamResponsible.canBeResponsible,
         _id: candidateToBeTeamResponsible._id,
       });
 
@@ -124,6 +129,7 @@ const useCreateBoard = (team?: Team) => {
           role: BoardUserRoles.MEMBER,
           votesCount: 0,
           isNewJoiner: teamUser.isNewJoiner,
+          canBeResponsible: teamUser.canBeResponsible,
           _id: teamUser._id,
         });
         i++;
@@ -143,14 +149,16 @@ const useCreateBoard = (team?: Team) => {
 
       let availableUsers = [...teamMembers];
 
-      const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+      const canBeResponsibles = availableUsers.filter(
+        (user) => !user.isNewJoiner && user.canBeResponsible,
+      );
       const responsiblesAvailable: TeamUser[] = [];
-      while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
-        const idx = Math.floor(Math.random() * isNotNewJoiners.length);
-        const randomUser = isNotNewJoiners[idx];
+      while (canBeResponsibles.length > 0 && responsiblesAvailable.length !== maxTeams) {
+        const idx = Math.floor(Math.random() * canBeResponsibles.length);
+        const randomUser = canBeResponsibles[idx];
         if (randomUser && !responsiblesAvailable.includes(randomUser)) {
           responsiblesAvailable.push(randomUser);
-          isNotNewJoiners.splice(idx, 1);
+          canBeResponsibles.splice(idx, 1);
         }
       }
 
