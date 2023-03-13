@@ -2,7 +2,7 @@ import React from 'react';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
-import TeamMembersList, { TeamMembersListProps } from '.';
+import TeamMembersList, { TeamMembersListProps } from './TeamMembersList';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

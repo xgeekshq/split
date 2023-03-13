@@ -1,5 +1,5 @@
 import { styled } from '@/styles/stitches/stitches.config';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 
 const ImageBackground = styled(Flex, {
   background: 'url(/images/background.svg) no-repeat center center fixed',

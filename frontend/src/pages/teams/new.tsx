@@ -4,16 +4,16 @@ import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import CreateTeam from '@/components/Teams/CreateTeam';
+import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
 import useUser from '@/hooks/useUser';
-import Flex from '@/components/Primitives/Flex';
-import Dots from '@/components/Primitives/Loading/Dots';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
 
 const NewTeam: NextPage = () => {
   const { data: session } = useSession({ required: true });

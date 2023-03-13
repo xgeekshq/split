@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import BoardType from '@/types/board/board';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
-import Button from '@/components/Primitives/Button';
-import Icon from '@/components/Primitives/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import CountCards from './CountCards';
 
 type CardEndProps = {
@@ -85,12 +85,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           <Text color="primary800" css={{ mx: '$8' }} size="sm" fontWeight="medium">
             {boardOwnerName}
           </Text>
-          <AvatarGroup
-            listUsers={!team || isSubBoard ? users : team.users}
-            responsible={false}
-            teamAdmins={false}
-            userId={userId}
-          />
+          <AvatarGroup listUsers={!team || isSubBoard ? users : team.users} userId={userId} />
         </Flex>
       );
     }
@@ -103,7 +98,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <AvatarGroup responsible listUsers={users} teamAdmins={false} userId={userId} />
+              <AvatarGroup responsible listUsers={users} userId={userId} />
             </Flex>
           )}
           <CountCards columns={columns} />

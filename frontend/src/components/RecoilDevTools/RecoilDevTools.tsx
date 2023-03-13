@@ -1,6 +1,6 @@
 import { useRecoilCallback } from 'recoil';
-import Icon from '../Primitives/Icon';
-import Button from '../Primitives/Button';
+import Icon from '../Primitives/Icons/Icon/Icon';
+import Button from '../Primitives/Inputs/Button/Button';
 
 const RecoilDevTools = () => {
   const getAtomValues = async (snapshot: any) => {

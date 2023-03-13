@@ -1,10 +1,10 @@
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import { useState } from 'react';
 
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin } from '@/types/user/user';
-import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 
 type SuperAdminProps = {
   userSAdmin: boolean;

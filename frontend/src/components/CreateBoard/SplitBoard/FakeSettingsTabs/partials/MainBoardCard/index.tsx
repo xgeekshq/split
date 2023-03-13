@@ -3,13 +3,13 @@ import React from 'react';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Icon from '@/components/Primitives/Icon';
-import Avatar from '@/components/Primitives/Avatar/Avatar';
-import Checkbox from '@/components/Primitives/Checkbox';
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import FakeCardAvatars from '../CardAvatars';
 import { Container, MainContainer } from './styles';
 

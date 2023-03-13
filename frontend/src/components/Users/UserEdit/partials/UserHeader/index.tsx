@@ -1,10 +1,10 @@
-import Breadcrumb from '@/components/Primitives/Breadcrumb';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';
-import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import { TeamChecked } from '@/types/team/team';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';

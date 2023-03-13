@@ -5,11 +5,11 @@ import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Input';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import Text from '@/components/Primitives/Text/Text';
 import useUser from '@/hooks/useUser';
 import SchemaEmail from '@/schema/schemaEmail';
 import { toastState } from '@/store/toast/atom/toast.atom';

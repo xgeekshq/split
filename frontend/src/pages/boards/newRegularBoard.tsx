@@ -1,12 +1,12 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Text from '@/components/Primitives/Text/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import {
   PageHeader,
@@ -17,7 +17,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';

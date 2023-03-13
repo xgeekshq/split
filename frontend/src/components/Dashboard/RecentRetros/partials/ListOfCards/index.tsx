@@ -2,8 +2,8 @@ import React, { useMemo, useRef } from 'react';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
-import Dots from '@/components/Primitives/Loading/Dots';
-import Flex from '@/components/Primitives/Flex';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import Flex from '@/components/Primitives/Layout/Flex';
 import BoardType from '@/types/board/board';
 import { LastUpdatedText } from './styles';
 

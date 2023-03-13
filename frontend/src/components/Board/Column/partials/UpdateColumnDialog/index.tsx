@@ -4,9 +4,9 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-} from '@/components/Primitives/AlertDialog';
-import Flex from '@/components/Primitives/Flex';
-import Input from '@/components/Primitives/Input';
+} from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import { SchemaChangeColumnName } from '@/schema/schemaChangeColumnName';
 import { useRef } from 'react';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -14,8 +14,8 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { styled } from '@/styles/stitches/stitches.config';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
-import Text from '@/components/Primitives/Text';
-import TextArea from '@/components/Primitives/TextArea';
+import Text from '@/components/Primitives/Text/Text';
+import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 
 type UpdateColumnNameProps = {
   boardId: string;

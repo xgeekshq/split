@@ -1,6 +1,6 @@
-import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
 import { CardItemType } from '@/types/card/cardItem';
 import CardItem from './CardItem';
 

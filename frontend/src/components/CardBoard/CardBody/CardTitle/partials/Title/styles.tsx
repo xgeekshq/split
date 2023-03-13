@@ -1,6 +1,6 @@
 import { styled } from '@stitches/react';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 const StyledBoardTitle = styled(Text, {
   fontWeight: '$bold',

@@ -6,16 +6,16 @@ import { getSession, useSession } from 'next-auth/react';
 import { getDashboardHeaderInfo } from '@/api/authService';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
-import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page';
-import Flex from '@/components/Primitives/Flex';
+import Layout from '@/components/layouts/Layout/Layout';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Flex from '@/components/Primitives/Layout/Flex';
 import useTeam from '@/hooks/useTeam';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { useRecoilState } from 'recoil';
 import { teamsListState } from '@/store/team/atom/team.atom';
-import TeamsList from '@/components/Teams/TeamsList';
-import Dots from '@/components/Primitives/Loading/Dots';
-import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import TeamsList from '@/components/Teams/TeamsList/TeamList';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {

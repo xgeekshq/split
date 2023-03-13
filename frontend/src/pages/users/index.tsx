@@ -2,13 +2,13 @@ import { ReactElement, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 
 import QueryError from '@/components/Errors/QueryError';
-import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page';
-import Flex from '@/components/Primitives/Flex';
+import Layout from '@/components/layouts/Layout/Layout';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Flex from '@/components/Primitives/Layout/Flex';
 import UsersList from '@/components/Users/UsersList';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { GetServerSideProps } from 'next';
-import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},

@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { ScrollableContent } from '../styles';
 import TeamHeader from '../../TeamHeader';
 import EmptyTeamBoards from './EmptyTeamBoards';

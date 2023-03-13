@@ -2,20 +2,20 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTrigger,
-} from '@/components/Primitives/AlertDialog';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 interface QuickEditSubTeamsProps {
   team: Team;

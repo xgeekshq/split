@@ -6,18 +6,18 @@ import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.c
 import { styled } from '@/styles/stitches/stitches.config';
 
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Icon from '@/components/Primitives/Icon';
-import Avatar from '@/components/Primitives/Avatar/Avatar';
-import Box from '@/components/Primitives/Box';
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
+import Box from '@/components/Primitives/Layout/Box';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
 import { BoardUserToAdd } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface SubCardBoardProps {
   index: number;
@@ -181,13 +181,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
         <Flex align="center" gap="8" justify="center">
           <Text size="sm">Sub team {index + 1}</Text>
-          <AvatarGroup
-            listUsers={board.users}
-            responsible={false}
-            teamAdmins={false}
-            userId="1"
-            hasDrawer
-          />
+          <AvatarGroup listUsers={board.users} userId="1" hasDrawer />
         </Flex>
       </Container>
     </Flex>

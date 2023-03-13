@@ -1,17 +1,17 @@
 import React, { Dispatch, SetStateAction, useState, useMemo, useEffect } from 'react';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Flex';
-import Checkbox from '@/components/Primitives/Checkbox';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Dialog from '@/components/Primitives/Dialog';
-import SearchInput from '@/components/Teams/Team/ListMembers/ListMembersDialog/SearchInput';
+import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import { ScrollableContent } from './styles';
 
 type Props = {
@@ -93,9 +93,6 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
           currentValue={searchTeam}
           handleChange={handleSearchChange}
           handleClear={handleClearSearch}
-          icon="search"
-          iconPosition="both"
-          id="search"
           placeholder="Search team"
         />
       </Flex>

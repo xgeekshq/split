@@ -4,7 +4,7 @@ import { styled } from '@/styles/stitches/stitches.config';
 
 import ResetPassword from '@/components/auth/ForgotPassword/ResetPassword';
 import Banner from '@/components/icons/Banner';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 
 const CenteredContainer = styled(Flex, {
   position: 'absolute',

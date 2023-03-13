@@ -1,12 +1,12 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { joiResolver } from '@hookform/resolvers/joi';
-import Input from '@/components/Primitives/Input';
-import Text from '@/components/Primitives/Text';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import Text from '@/components/Primitives/Text/Text';
 import { LoginGuestUser } from '@/types/user/user';
 import { START_PAGE_ROUTE } from '@/utils/routes';
-import Button from '@/components/Primitives/Button';
-import Flex from '@/components/Primitives/Flex';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex';
 import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import useUser from '@/hooks/useUser';
 import { getUsername } from '@/utils/getUsername';

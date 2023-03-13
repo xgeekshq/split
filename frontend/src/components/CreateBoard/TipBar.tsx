@@ -1,8 +1,8 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 
 const LiWhite = styled('li', Text, { color: '$primary100', fontSize: '$14', lineHeight: '$20' });
 const UnorderedList = styled('ul', { paddingInlineStart: '$26' });

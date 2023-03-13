@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Text from '@/components/Primitives/Text';
+import Text from '@/components/Primitives/Text/Text';
 
 type CardTitleProps = {
   firstName: string;

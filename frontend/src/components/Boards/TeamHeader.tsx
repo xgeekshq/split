@@ -1,10 +1,10 @@
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import { BoardUser } from '@/types/board/board.user';
 import { Team } from '@/types/team/team';
 import { TeamUser } from '@/types/team/team.user';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 
 interface TeamHeaderProps {
   team?: Team;
@@ -34,35 +34,18 @@ const TeamHeader: React.FC<TeamHeaderProps> = ({ team, userId, users }) => {
               <Text color="primary300" size="sm">
                 Members
               </Text>
-              <AvatarGroup
-                listUsers={team.users}
-                responsible={false}
-                teamAdmins={false}
-                userId={userId}
-              />
+              <AvatarGroup listUsers={team.users} userId={userId} />
             </Flex>
             <Separator css={{ backgroundColor: '$primary300' }} orientation="vertical" size="md" />
             <Text color="primary300" size="sm">
               Team admin
             </Text>
-            <AvatarGroup
-              teamAdmins
-              stakeholders
-              listUsers={team.users}
-              responsible={false}
-              userId={userId}
-            />
+            <AvatarGroup teamAdmins stakeholders listUsers={team.users} userId={userId} />
           </Flex>
         )}
         {!hasTeam && users && (
           <Flex css={{ ml: '$12' }}>
-            <AvatarGroup
-              myBoards
-              listUsers={users}
-              responsible={false}
-              teamAdmins={false}
-              userId={userId}
-            />
+            <AvatarGroup myBoards listUsers={users} userId={userId} />
           </Flex>
         )}
       </Flex>

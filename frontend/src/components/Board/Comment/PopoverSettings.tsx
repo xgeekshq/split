@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Icon from '@/components/Primitives/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Popover,
   PopoverContent,
   PopoverItem,
   PopoverTrigger,
-} from '@/components/Primitives/Popover';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Popovers/Popover/Popover';
+import Text from '@/components/Primitives/Text/Text';
 
 interface PopoverSettingsContentProps {
   setEditCard: () => void;

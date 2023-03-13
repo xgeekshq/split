@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 
 import Banner from '@/components/icons/Banner';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { BannerContainer, ImageBackground } from '@/styles/pages/auth.styles';
 import GuestUserForm from '@/components/auth/GuestUserForm';
 

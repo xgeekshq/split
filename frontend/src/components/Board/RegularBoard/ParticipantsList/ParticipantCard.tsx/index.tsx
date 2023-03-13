@@ -1,16 +1,16 @@
 import React from 'react';
 
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
-import Icon from '@/components/Primitives/Icon';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { InnerContainer } from '@/components/Teams/styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { useRouter } from 'next/router';
-import ConfigurationSwitch from '@/components/Primitives/ConfigurationSwitch';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useParticipants from '@/hooks/useParticipants';
-import Button from '@/components/Primitives/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 
 type CardBodyProps = {
   member: BoardUser;

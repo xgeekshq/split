@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useTeam from '@/hooks/useTeam';

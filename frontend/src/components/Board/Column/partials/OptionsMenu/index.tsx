@@ -1,17 +1,17 @@
-import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
   PopoverItem,
-} from '@/components/Primitives/Popover';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
+} from '@/components/Primitives/Popovers/Popover/Popover';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
 import useColumn from '@/hooks/useColumn';
 import CardType from '@/types/card/card';
 import { useState } from 'react';
-import ConfirmationDialog from '@/components/Primitives/ConfirmationDialog';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRecoilValue } from 'recoil';

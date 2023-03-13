@@ -5,14 +5,14 @@ import { useSession } from 'next-auth/react';
 import { getDashboardHeaderInfo } from '@/api/authService';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import Layout from '@/components/layouts/Layout';
-import LoadingPage from '@/components/Primitives/Loading/Page';
-import Text from '@/components/Primitives/Text';
-import Tiles from '@/components/Dashboard/Tiles';
+import Layout from '@/components/layouts/Layout/Layout';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Text from '@/components/Primitives/Text/Text';
+import Tiles from '@/components/Dashboard/Tiles/Tiles';
 import RecentRetros from '@/components/Dashboard/RecentRetros';
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { ROUTES } from '@/utils/routes';
-import MainPageHeader from '@/components/layouts/Layout/partials/MainPageHeader';
+import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 
 export const getServerSideProps: GetServerSideProps = requireAuthentication(async () => ({
   props: {},

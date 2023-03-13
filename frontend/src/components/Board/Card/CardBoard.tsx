@@ -3,9 +3,9 @@ import { Draggable } from '@hello-pangea/dnd';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import { cardBlur } from '@/helper/board/blurFilter';
 import { getCommentsFromCardGroup } from '@/helper/board/comments';
 import { BoardUser } from '@/types/board/board.user';

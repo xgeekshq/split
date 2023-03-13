@@ -3,15 +3,15 @@ import { useRecoilValue } from 'recoil';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Icon from '@/components/Primitives/Icon';
-import Box from '@/components/Primitives/Box';
-import Flex from '@/components/Primitives/Flex';
-import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Box from '@/components/Primitives/Layout/Box';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import ClickEvent from '@/types/events/clickEvent';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { Team } from '@/types/team/team';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import CardIcon from '../CardIcon';
@@ -250,12 +250,7 @@ const CardBody = React.memo<CardBodyProps>(
                   )}
 
                   {!isDashboard && isSubBoard && (
-                    <AvatarGroup
-                      listUsers={isSubBoard ? users : team.users}
-                      responsible={false}
-                      teamAdmins={false}
-                      userId={userId}
-                    />
+                    <AvatarGroup listUsers={isSubBoard ? users : team.users} userId={userId} />
                   )}
                   {!isDashboard && !isSubBoard && countDividedBoards > 0 && (
                     <CenterMainBoard

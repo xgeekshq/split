@@ -3,13 +3,13 @@ import { useSession } from 'next-auth/react';
 import { useRecoilValue } from 'recoil';
 import { Popover, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover';
 
-import Breadcrumb from '@/components/Primitives/Breadcrumb';
-import Icon from '@/components/Primitives/Icon';
+import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import LogoIcon from '@/components/icons/Logo';
-import Flex from '@/components/Primitives/Flex';
-import Separator from '@/components/Primitives/Separator';
-import Text from '@/components/Primitives/Text';
-import Tooltip from '@/components/Primitives/Tooltip';
+import Flex from '@/components/Primitives/Layout/Flex';
+import Separator from '@/components/Primitives/Separator/Separator';
+import Text from '@/components/Primitives/Text/Text';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import BoardType from '@/types/board/board';
 import { BoardUserNoPopulated } from '@/types/board/board.user';
@@ -21,7 +21,7 @@ import { StyledBoardTitle } from '@/components/CardBoard/CardBody/CardTitle/part
 import { ListBoardMembers } from '@/components/Boards/MyBoards/ListBoardMembers';
 import { useMemo, useState } from 'react';
 import { User } from '@/types/user/user';
-import AvatarGroup from '@/components/Primitives/Avatar/AvatarGroup';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import {
   BoardCounter,
@@ -174,13 +174,7 @@ const BoardHeader = () => {
                   {`Sub-team ${boardNumber}`}
                 </Text>
               </StyledBoardTitle>
-              <AvatarGroup
-                listUsers={users}
-                responsible={false}
-                teamAdmins={false}
-                userId={session!.user.id}
-                hasDrawer
-              />
+              <AvatarGroup listUsers={users} userId={session!.user.id} hasDrawer />
             </Flex>
 
             <Separator orientation="vertical" size="lg" />
@@ -188,13 +182,7 @@ const BoardHeader = () => {
               <Text color="primary300" size="sm">
                 Responsible
               </Text>
-              <AvatarGroup
-                responsible
-                listUsers={users}
-                teamAdmins={false}
-                userId={session!.user.id}
-                hasDrawer
-              />
+              <AvatarGroup responsible listUsers={users} userId={session!.user.id} hasDrawer />
             </Flex>
             <ListBoardMembers
               boardMembers={boardMembers}
@@ -221,13 +209,7 @@ const BoardHeader = () => {
                     {team.name}
                   </Text>
                 </StyledBoardTitle>
-                <AvatarGroup
-                  listUsers={teamUsers}
-                  responsible={false}
-                  teamAdmins={false}
-                  userId={session!.user.id}
-                  isClickable
-                />
+                <AvatarGroup listUsers={teamUsers} userId={session!.user.id} isClickable />
               </Flex>
               {!isEmpty(
                 teamUsers.filter((user: TeamUser) => user.role === TeamUserRoles.ADMIN),
@@ -241,7 +223,6 @@ const BoardHeader = () => {
                     <AvatarGroup
                       teamAdmins
                       listUsers={teamUsers}
-                      responsible={false}
                       userId={session!.user.id}
                       isClickable
                     />
@@ -262,8 +243,6 @@ const BoardHeader = () => {
                     <AvatarGroup
                       stakeholders
                       listUsers={teamUsers}
-                      responsible={false}
-                      teamAdmins={false}
                       userId={session!.user.id}
                       isClickable
                     />

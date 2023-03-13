@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Flex';
+import Flex from '@/components/Primitives/Layout/Flex';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import UsersBox from '@/components/CreateBoard/SplitBoard/SubTeamsTab/UsersBox';
 import { useRecoilState } from 'recoil';
@@ -6,8 +6,8 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { usersListState } from '@/store/team/atom/team.atom';
 import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import Icon from '@/components/Primitives/Icon';
-import Button from '@/components/Primitives/Button';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import ListParticipants from '../ListParticipants';
 
 const SelectParticipants = () => {
