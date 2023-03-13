@@ -8,7 +8,11 @@ import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 export interface UpdateBoardApplicationInterface {
 	update(boardId: string, boardData: UpdateBoardDto): Promise<LeanDocument<BoardDocument> | null>;
 
-	mergeBoards(subBoardId: string, userId: string): Promise<LeanDocument<BoardDocument> | null>;
+	mergeBoards(
+		subBoardId: string,
+		userId: string,
+		socketId?: string
+	): Promise<LeanDocument<BoardDocument> | null>;
 
 	updateBoardParticipants(boardData: UpdateBoardUserDto): Promise<BoardUser[] | BoardUser | null>;
 

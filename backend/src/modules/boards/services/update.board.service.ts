@@ -95,42 +95,22 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 */
 		if (boardData.users && String(currentResponsible?.id) !== String(newResponsible?.id)) {
 			if (isSubBoard) {
-				const promises = boardData.users
-					.filter((boardUser) =>
-						[getIdFromObjectId(String(currentResponsible?.id)), String(newResponsible.id)].includes(
-							(boardUser.user as unknown as User)._id
-						)
-					)
-					.map((boardUser) => {
-						const typedBoardUser = boardUser.user as unknown as User;
-
-						return this.updateBoardUserService.updateBoardUserRole(
-							boardId,
-							typedBoardUser._id,
-							boardUser.role
-						);
-					});
-				await Promise.all(promises);
+				this.updateBoardUsersRole(
+					boardId,
+					boardData.users,
+					String(currentResponsible.id),
+					String(newResponsible.id)
+				);
 			}
 
 			const mainBoardId = boardData.mainBoardId;
 
-			const promises = boardData.users
-				.filter((boardUser) =>
-					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
-						(boardUser.user as unknown as User)._id
-					)
-				)
-				.map((boardUser) => {
-					const typedBoardUser = boardUser.user as unknown as User;
-
-					return this.updateBoardUserService.updateBoardUserRole(
-						mainBoardId,
-						typedBoardUser._id,
-						boardUser.role
-					);
-				});
-			await Promise.all(promises);
+			this.updateBoardUsersRole(
+				mainBoardId,
+				boardData.users,
+				String(currentResponsible.id),
+				String(newResponsible.id)
+			);
 		}
 
 		/**
@@ -164,7 +144,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		if (!isEmpty(boardData.maxVotes)) {
 			const highestVotes = await this.getHighestVotesOnBoard(boardId);
 
-			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
 			if (highestVotes > Number(boardData.maxVotes)) {
 				throw new BadRequestException(
 					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
@@ -201,39 +180,55 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		return updatedBoard;
 	}
 
-	async mergeBoards(subBoardId: string, userId: string) {
+	async mergeBoards(subBoardId: string, userId: string, socketId?: string) {
 		const [subBoard, board] = await Promise.all([
 			this.boardRepository.getBoard(subBoardId),
 			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
 		]);
 
-		if (!subBoard || !board || subBoard.submitedByUser) return null;
+		if (!subBoard || !board || subBoard.submitedByUser)
+			throw new BadRequestException(UPDATE_FAILED);
+
 		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
 
-		if (!team) return null;
+		if (!team) throw new BadRequestException(UPDATE_FAILED);
 
-		const newSubColumns = this.generateNewSubColumns(subBoard as Board);
+		const columnsWitMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
 
-		const newColumns = [...(board as Board).columns];
-		for (let i = 0; i < newColumns.length; i++) {
-			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
+		await this.boardRepository.startTransaction();
+		try {
+			await this.boardRepository.updateMergedSubBoard(subBoardId, userId, true);
+			const result = await this.boardRepository.updateMergedBoard(
+				board._id,
+				columnsWitMergedCards,
+				true
+			);
+
+			if (board.slackChannelId && board.slackEnable) {
+				this.slackCommunicationService.executeMergeBoardNotification({
+					responsiblesChannelId: board.slackChannelId,
+					teamNumber: subBoard.boardNumber,
+					isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
+					boardId: subBoardId,
+					mainBoardId: board._id
+				});
+			}
+
+			if (socketId) {
+				this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
+			}
+
+			await this.boardRepository.commitTransaction();
+			await this.boardRepository.endSession();
+
+			return result;
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+		} finally {
+			await this.boardRepository.endSession();
 		}
 
-		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
-
-		const result = await this.boardRepository.updateMergedBoard(board._id, newColumns);
-
-		if (board.slackChannelId && board.slackEnable) {
-			this.slackCommunicationService.executeMergeBoardNotification({
-				responsiblesChannelId: board.slackChannelId,
-				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
-				boardId: subBoardId,
-				mainBoardId: board._id
-			});
-		}
-
-		return result;
+		throw new BadRequestException(UPDATE_FAILED);
 	}
 
 	updateChannelId(teams: TeamDto[]) {
@@ -316,6 +311,39 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		const user = boardUser?.user as User;
 
 		return { id: user._id, email: user.email };
+	}
+
+	/**
+	 * Method to update all boardUsers role
+	 * @param boardId String
+	 * @param boardUsers BoardUserDto[]
+	 * @param currentResponsibleId String
+	 * @param newResponsibleId String
+	 * @return void
+	 * @private
+	 */
+	private async updateBoardUsersRole(
+		boardId: string,
+		boardUsers: BoardUserDto[],
+		currentResponsibleId: string,
+		newResponsibleId: string
+	) {
+		const promises = boardUsers
+			.filter((boardUser) =>
+				[getIdFromObjectId(currentResponsibleId), newResponsibleId].includes(
+					(boardUser.user as unknown as User)._id
+				)
+			)
+			.map((boardUser) => {
+				const typedBoardUser = boardUser.user as unknown as User;
+
+				return this.boardUserRepository.updateBoardUserRole(
+					boardId,
+					typedBoardUser._id,
+					boardUser.role
+				);
+			});
+		await Promise.all(promises);
 	}
 
 	/**
@@ -408,11 +436,18 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		return count === dividedBoards.length;
 	}
 
+	/**
+	 * Method to generate columns from sub-board
+	 * @param subBoard: Board
+	 * @return Column[]
+	 */
 	private generateNewSubColumns(subBoard: Board) {
 		return [...subBoard.columns].map((column) => {
 			const newColumn = {
 				title: column.title,
 				color: column.color,
+				cardText: column.cardText,
+				isDefaultText: column.isDefaultText,
 				cards: column.cards.map((card) => {
 					const newCard = {
 						text: card.text,
@@ -451,8 +486,34 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				})
 			};
 
-			return newColumn;
+			return newColumn as Column;
 		});
+	}
+
+	/**
+	 * Method to merge cards from sub-board into a main board
+	 * @param columns: Column[]
+	 * @param subColumns: Column[]
+	 * @return Column[]
+	 */
+	private mergeCardsFromSubBoardColumnsIntoMainBoard(columns: Column[], subColumns: Column[]) {
+		for (let i = 0; i < columns.length; i++) {
+			columns[i].cards = [...columns[i].cards, ...subColumns[i].cards];
+		}
+
+		return columns;
+	}
+
+	/**
+	 * Method to return columns with cards merged cards a from sub-board
+	 * @param subBoard: Board
+	 * @param board: Board
+	 * @return Column[]
+	 */
+	private getColumnsFromMainBoardWithMergedCards(subBoard: Board, board: Board) {
+		const newSubColumns = this.generateNewSubColumns(subBoard);
+
+		return this.mergeCardsFromSubBoardColumnsIntoMainBoard([...board.columns], newSubColumns);
 	}
 
 	private generateMessage(phase: string, boardId: string, date: string, columns): string {
