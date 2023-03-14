@@ -31,19 +31,21 @@ const BoardRolePopover = ({
         <Icon name="arrow-down" />
       </PopoverTrigger>
       <PopoverContent collisionPadding={32} onOpenAutoFocus={(e) => e.preventDefault()}>
-        <PopoverItem>
+        <PopoverItem css={{ cursor: 'default !important' }}>
           <ConfigurationSwitch
             handleCheckedChange={isNewJoinerHandler}
             isChecked={isNewJoiner}
             title="New Joiner"
+            fontSize="sm"
             disabled={canBeResponsible}
           />
         </PopoverItem>
-        <PopoverItem>
+        <PopoverItem css={{ cursor: 'default !important' }}>
           <ConfigurationSwitch
             handleCheckedChange={canBeResponsibleHandler}
             isChecked={canBeResponsible}
             title="Responsible allowed"
+            fontSize="sm"
             disabled={isNewJoiner}
           />
         </PopoverItem>
