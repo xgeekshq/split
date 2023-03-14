@@ -141,10 +141,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		});
 
 		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = Math.floor(teamLength / Number(maxUsersPerTeam));
+		const maxTeams = Math.ceil(teamLength / Number(maxUsersPerTeam));
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
