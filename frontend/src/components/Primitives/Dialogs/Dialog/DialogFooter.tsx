@@ -31,7 +31,7 @@ const Footer = (props: FooterProps) => {
       <Button variant="primaryOutline" onClick={handleClose} type="button">
         Cancel
       </Button>
-      {handleAffirmative && affirmativeLabel && (
+      {affirmativeLabel && (
         <Button onClick={handleAffirmative} ref={buttonRef} data-testid="dialogFooterSubmit">
           {affirmativeLabel}
         </Button>
