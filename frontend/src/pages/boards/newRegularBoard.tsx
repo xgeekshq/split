@@ -298,7 +298,7 @@ const NewRegularBoard: NextPage = () => {
               />
             </>
           ) : (
-            <Flex align="center" justify="center">
+            <Flex align="center" justify="center" css={{ height: '100%' }}>
               <Flex gap={16} direction="column">
                 <BoxRowContainer
                   iconName="blob-arrow-right"
