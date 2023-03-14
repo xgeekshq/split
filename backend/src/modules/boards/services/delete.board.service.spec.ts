@@ -88,7 +88,10 @@ describe('DeleteBoardService', () => {
 		});
 
 		it('should throw error when deleteBoardBoardUsersAndSchedules fails', async () => {
-			const board = BoardFactory.create({ dividedBoards: BoardFactory.createMany(2) });
+			const board = BoardFactory.create({
+				dividedBoards: BoardFactory.createMany(2),
+				slackEnable: true
+			});
 			boardRepositoryMock.getBoard.mockResolvedValue(board);
 			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
 			deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
@@ -96,6 +99,52 @@ describe('DeleteBoardService', () => {
 			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
 
 			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+		});
+	});
+
+	describe('deleteBoardsByTeamId', () => {
+		it('should return true if board deleted ', async () => {
+			const boards = BoardFactory.createMany(2);
+			const board = BoardFactory.create({
+				dividedBoards: BoardFactory.createMany(2),
+				slackEnable: true
+			});
+			boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
+			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
+			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
+
+			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
+			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
+			await deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
+
+			//Slack Enabled
+			await boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+			await achiveChannelServiceMock.execute.mockResolvedValue(null);
+
+			await expect(service.deleteBoardsByTeamId('teamId')).resolves.toBe(true);
+		});
+
+		it('should throw badRequestException when delete fails', async () => {
+			const boards = BoardFactory.createMany(2);
+			const board = BoardFactory.create({
+				dividedBoards: BoardFactory.createMany(2),
+				slackEnable: true
+			});
+			boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
+			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
+			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
+
+			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(0);
+			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(0);
+			await deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(0);
+
+			//Slack Enabled
+			await boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+			await achiveChannelServiceMock.execute.mockResolvedValue(null);
+
+			await expect(service.deleteBoardsByTeamId('teamId')).rejects.toThrowError(
+				BadRequestException
+			);
 		});
 	});
 });
