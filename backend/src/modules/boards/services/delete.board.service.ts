@@ -27,7 +27,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
 
-	async delete(boardId: string) {
+	async delete(boardId: string): Promise<boolean> {
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
@@ -35,7 +35,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		}
 
 		try {
-			return this.deleteBoardBoardUsersAndSchedules(boardId, true);
+			return await this.deleteBoardBoardUsersAndSchedules(boardId, true);
 		} catch (error) {
 			throw new BadRequestException(DELETE_FAILED);
 		}
