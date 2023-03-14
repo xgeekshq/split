@@ -29,7 +29,7 @@ describe('SlackResponsibleConsumer', () => {
 				SlackResponsibleConsumer,
 				{
 					provide: TYPES.application.SlackResponsibleApplication,
-					useValue: createMock<ResponsibleApplicationInterface>
+					useValue: createMock<ResponsibleApplicationInterface>()
 				}
 			]
 		}).compile();
