@@ -3,7 +3,7 @@ import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import CardBody from '@/components/CardBoard/CardBody/CardBody';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardType from '@/types/board/board';
 import { LastUpdatedText } from './styles';
 

@@ -1,28 +1,19 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text/Text';
 import useTeam from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import {
-  PageHeader,
-  ButtonsContainer,
-  StyledForm,
-} from '@/styles/pages/boards/newSplitBoard.styles';
+import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
-import Flex from '@/components/Primitives/Layout/Flex';
-import { ContentSelectContainer } from '@/styles/pages/boards/newRegularBoard.styles';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import TipBar from '@/components/CreateBoard/TipBar';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -38,6 +29,9 @@ import isEmpty from '@/utils/isEmpty';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { BoardUserDto } from '@/types/board/board.user';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
+import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 
 const defaultBoard = {
   users: [],
@@ -83,6 +77,23 @@ const NewRegularBoard: NextPage = () => {
   const {
     fetchUserBasedTeams: { data },
   } = useTeam();
+
+  const regularBoardTips = [
+    {
+      title: 'Quick create board',
+      description: [
+        'If you want to jump the settings you can just hit the button Create board.',
+        'You can still adjust all the settings later on inside the board itself.',
+      ],
+    },
+    {
+      title: 'Columns',
+      description: [
+        'We will set the columns by default to 3.',
+        'If you want to have more or less you can later, inside the actual board, still adjust the columns.',
+      ],
+    },
+  ];
 
   const { data: allUsers } = useQuery(['users'], () => getAllUsers(), {
     enabled: true,
@@ -247,15 +258,11 @@ const NewRegularBoard: NextPage = () => {
           css={{ height: '100vh', backgroundColor: '$primary50', opacity: isLoading ? 0.5 : 1 }}
           direction="column"
         >
-          <PageHeader>
-            <Text color="primary800" heading={3} fontWeight="bold">
-              Add new Regular board
-            </Text>
-
-            <Button isIcon size="lg" disabled={isBackButtonDisable} onClick={handleBack}>
-              <Icon css={{ color: '$primaryBase' }} name="close" />
-            </Button>
-          </PageHeader>
+          <CreateHeader
+            title="Add new Regular board"
+            disableBack={isBackButtonDisable}
+            handleBack={handleBack}
+          />
           {createBoard ? (
             <>
               <Flex
@@ -274,32 +281,24 @@ const NewRegularBoard: NextPage = () => {
                       <FormProvider {...methods}>
                         <BoardName
                           title="Board Name"
-                          description="Make it short and descriptive. It well help you to distinguish retrospectives from each
-        other."
+                          description="Make it short and descriptive. It well help you to distinguish retrospectives from each other."
                         />
                         <SettingsTabs />
                       </FormProvider>
                     </Flex>
                   </StyledForm>
-                  <TipBar isRegularBoard />
+                  <TipBar tips={regularBoardTips} />
                 </Flex>
               </Flex>
-              <ButtonsContainer gap="24" justify="end">
-                <Button
-                  disabled={isBackButtonDisable}
-                  type="button"
-                  variant="lightOutline"
-                  onClick={handleCancelBtn}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" form="hook-form" disabled={isBackButtonDisable}>
-                  Create board
-                </Button>
-              </ButtonsContainer>
+              <CreateFooter
+                disableButton={isBackButtonDisable}
+                handleBack={handleCancelBtn}
+                formId="hook-form"
+                confirmationLabel="Create board"
+              />
             </>
           ) : (
-            <ContentSelectContainer>
+            <Flex align="center" justify="center">
               <Flex gap={16} direction="column">
                 <BoxRowContainer
                   iconName="blob-arrow-right"
@@ -316,7 +315,7 @@ const NewRegularBoard: NextPage = () => {
                   handleSelect={addNewRegularBoard}
                 />
               </Flex>
-            </ContentSelectContainer>
+            </Flex>
           )}
         </Flex>
       </QueryError>

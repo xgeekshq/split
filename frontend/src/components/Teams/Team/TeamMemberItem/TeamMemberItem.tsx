@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { useSession } from 'next-auth/react';
 
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';

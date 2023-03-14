@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import Sprite from '@/components/icons/Sprite';
 import dedent from 'ts-dedent';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import { FormProvider, useForm } from 'react-hook-form';

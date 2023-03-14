@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useComments from '@/hooks/useComments';
 import CommentType from '@/types/comment/comment';

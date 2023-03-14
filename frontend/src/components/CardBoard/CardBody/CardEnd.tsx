@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import BoardType from '@/types/board/board';

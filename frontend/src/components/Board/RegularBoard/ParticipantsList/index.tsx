@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';

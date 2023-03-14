@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/dom';
 import Dialog, { DialogProps } from './Dialog';
 import { HeaderProps } from './DialogHeader';
 import { FooterProps } from './DialogFooter';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 
 const DEFAULT_PROPS = {
   isOpen: true,

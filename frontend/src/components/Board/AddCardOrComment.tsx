@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TextArea from '@/components/Primitives/Inputs/TextArea/TextArea';
 import useCards from '@/hooks/useCards';
 import useComments from '@/hooks/useComments';

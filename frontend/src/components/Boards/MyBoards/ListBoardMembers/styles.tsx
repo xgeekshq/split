@@ -1,5 +1,5 @@
 import { styled } from '../../../../styles/stitches/stitches.config';
-import Flex from '../../../Primitives/Layout/Flex';
+import Flex from '../../../Primitives/Layout/Flex/Flex';
 
 const ScrollableContent = styled(Flex, {
   py: '$24',

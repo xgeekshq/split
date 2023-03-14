@@ -1,5 +1,5 @@
-import Box from '@/components/Primitives/Layout/Box';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Box from '@/components/Primitives/Layout/Box/Box';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import React from 'react';
 
 const Card = ({ display, backgroundColor, children }: any) => (

@@ -10,7 +10,7 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';

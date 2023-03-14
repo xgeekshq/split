@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import {
   ButtonVariantType,

@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 const DropdownContent = styled('div', {
