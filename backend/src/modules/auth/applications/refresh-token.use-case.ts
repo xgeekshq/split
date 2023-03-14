@@ -10,7 +10,7 @@ export default class RefreshTokenUseCase implements RefreshTokenUseCaseInterface
 		private readonly getTokenService: GetTokenAuthServiceInterface
 	) {}
 
-	async execute(userId: string) {
+	execute(userId: string) {
 		return this.getTokenService.getAccessToken(userId);
 	}
 }

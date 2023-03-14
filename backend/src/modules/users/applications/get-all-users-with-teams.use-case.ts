@@ -20,9 +20,11 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 	) {}
 
 	async execute(page = 0, size = 15, searchUser?: string) {
-		const users = await this.getAllUsersWithPagination(page, size, searchUser);
+		const [users, count] = await Promise.all([
+			this.getAllUsersWithPagination(page, size, searchUser),
+			this.getUserService.countUsers()
+		]);
 
-		const count = await this.getUserService.countUsers();
 		const hasNextPage = page + 1 < Math.ceil(count / size);
 
 		const mappedUsers: UserWithTeams[] = users.map((userFound) => {

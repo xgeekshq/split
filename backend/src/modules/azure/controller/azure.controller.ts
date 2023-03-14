@@ -93,7 +93,7 @@ export default class AzureController {
 		type: InternalServerErrorResponse
 	})
 	@Get('users/:email')
-	async checkEmail(@Param() { email }: EmailParam) {
+	checkEmail(@Param() { email }: EmailParam) {
 		return this.checkUserUseCase.execute(email);
 	}
 }

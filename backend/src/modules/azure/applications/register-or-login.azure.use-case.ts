@@ -38,10 +38,6 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 			jwt_decode(azureToken)
 		);
 
-		const splitedName = name ? name.split(' ') : [];
-		const firstName = given_name ?? splitedName[0] ?? 'first';
-		const lastName = family_name ?? splitedName[splitedName.length - 1] ?? 'last';
-
 		const emailOrUniqueName = email ?? unique_name;
 
 		const userFromAzure = await this.authAzureService.getUserFromAzure(emailOrUniqueName);
@@ -55,6 +51,10 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		if (user) {
 			userToAuthenticate = user;
 		} else {
+			const splitedName = name ? name.split(' ') : [];
+			const firstName = given_name ?? splitedName[0] ?? 'first';
+			const lastName = family_name ?? splitedName.at(-1) ?? 'last';
+
 			const createdUser = await this.createUserService.create({
 				email: emailOrUniqueName,
 				firstName,
@@ -85,10 +85,7 @@ export class RegisterOrLoginAzureUseCase implements RegisterOrLoginAzureUseCaseI
 		if (!azureUser) return '';
 
 		try {
-			const blob = await this.authAzureService
-				.getGraphClient()
-				.api(`/users/${azureUser.id}/photo/$value`)
-				.get();
+			const blob = await this.authAzureService.fetchUserPhoto(azureUser.id);
 
 			const buffer = Buffer.from(await blob.arrayBuffer());
 			const hash = createHash('md5').update(buffer).digest('hex');

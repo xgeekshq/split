@@ -54,10 +54,6 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 		});
 	}
 
-	getGraphClient() {
-		return this.graphClient;
-	}
-
 	async getUserFromAzure(email: string): Promise<AzureUserFound | undefined> {
 		const { value } = await this.graphClient
 			.api('/users')
@@ -67,5 +63,9 @@ export default class AuthAzureService implements AuthAzureServiceInterface {
 			.get();
 
 		return value[0];
+	}
+
+	fetchUserPhoto(userId: string) {
+		return this.graphClient.api(`/users/${userId}/photo/$value`).get();
 	}
 }

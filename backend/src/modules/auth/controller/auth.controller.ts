@@ -270,7 +270,7 @@ export default class AuthController {
 	@ApiBearerAuth('access-token')
 	@UseGuards(JwtAuthenticationGuard)
 	@Get('/statistics')
-	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
+	getDashboardHeaderInfo(@Req() request: RequestWithUser) {
 		const { _id: userId } = request.user;
 
 		return this.statisticsUseCase.execute(userId);
@@ -287,7 +287,7 @@ export default class AuthController {
 		type: InternalServerErrorResponse
 	})
 	@Post('loginGuest')
-	async loginGuest(@Body() guestUserData: CreateGuestUserDto) {
-		return await this.registerGuestUserUseCase.execute(guestUserData);
+	loginGuest(@Body() guestUserData: CreateGuestUserDto) {
+		return this.registerGuestUserUseCase.execute(guestUserData);
 	}
 }
