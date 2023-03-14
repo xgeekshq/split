@@ -9,7 +9,7 @@ const Footer = styled(Flex, {
   backgroundColor: 'white',
 });
 
-type CreateFooterProps = {
+export type CreateFooterProps = {
   disableButton: boolean;
   hasError?: boolean;
   handleBack: () => void;
@@ -24,7 +24,7 @@ const CreateFooter = ({
   formId,
   confirmationLabel,
 }: CreateFooterProps) => (
-  <Footer gap="24" justify="end">
+  <Footer gap="24" justify="end" data-testid="createFooter">
     <Button disabled={disableButton} type="button" variant="lightOutline" onClick={handleBack}>
       Cancel
     </Button>
