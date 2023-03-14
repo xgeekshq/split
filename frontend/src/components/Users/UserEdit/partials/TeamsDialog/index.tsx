@@ -57,11 +57,15 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
   const handleAddTeams = () => {
     const teamUsers = teamsUserIsNotMember.flatMap((team) => {
       if (!team.isChecked) return [];
+
+      const isNewJoiner = verifyIfIsNewJoiner(joinedAt, providerAccountCreatedAt || undefined);
+
       return {
         user: userId as string,
         role: TeamUserRoles.MEMBER,
         team: team._id,
-        isNewJoiner: verifyIfIsNewJoiner(joinedAt, providerAccountCreatedAt || undefined),
+        isNewJoiner,
+        canBeResponsible: !isNewJoiner,
       };
     });
 
