@@ -11,14 +11,14 @@ const Header = styled('header', Flex, {
   backgroundColor: '$white',
 });
 
-type CreateHeaderProps = {
+export type CreateHeaderProps = {
   title: string;
   disableBack: boolean;
   handleBack: () => void;
 };
 
 const CreateHeader = ({ title, disableBack, handleBack }: CreateHeaderProps) => (
-  <Header align="center" justify="between">
+  <Header align="center" justify="between" data-testid="createHeader">
     <Text color="primary800" heading={3} fontWeight="bold">
       {title}
     </Text>
