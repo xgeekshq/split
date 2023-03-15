@@ -9,7 +9,7 @@ import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { useRouter } from 'next/router';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import { InnerContainer } from '@/components/Teams/styles';
+import { InnerContainer } from '@/styles/pages/pages.styles';
 
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';

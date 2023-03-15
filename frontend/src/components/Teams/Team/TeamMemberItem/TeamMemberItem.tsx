@@ -12,7 +12,7 @@ import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/Configu
 
 import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { InnerContainer } from '../../styles';
+import { InnerContainer } from '@/styles/pages/pages.styles';
 import NewJoinerTooltip from '../../../Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 
 export type TeamMemberItemProps = {
