@@ -144,7 +144,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER ?? []
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = Math.ceil(teamLength / Number(maxUsersPerTeam));
+		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
+		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
