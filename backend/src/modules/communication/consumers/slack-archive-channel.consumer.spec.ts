@@ -45,7 +45,10 @@ describe('SlackArchiveChannelConsumer', () => {
 	describe('communication', () => {
 		it('should call ArchiveChannelApplication.execute once with job.data', async () => {
 			await consumer.communication(archiveChannelDataMock as unknown as Job<ArchiveChannelData>);
-			expect(addUserIntoChannelAppMock.execute).toHaveBeenCalledTimes(1);
+			expect(addUserIntoChannelAppMock.execute).toHaveBeenNthCalledWith(
+				1,
+				archiveChannelDataMock.data
+			);
 		});
 	});
 });
