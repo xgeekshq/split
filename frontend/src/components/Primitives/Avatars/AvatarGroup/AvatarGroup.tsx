@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
 import Avatar, { AvatarButton } from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { User } from '@/types/user/user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';

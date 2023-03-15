@@ -9,9 +9,7 @@ import { DeleteBoardApplication } from './applications/delete.board.application'
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
-import { BoardUserRepository } from './repositories/board-user.repository';
 import { BoardRepository } from './repositories/board.repository';
-import CreateBoardUserService from './services/create.board.user.service';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
@@ -26,11 +24,6 @@ import UpdateBoardService from './services/update.board.service';
 export const createBoardService = {
 	provide: TYPES.services.CreateBoardService,
 	useClass: CreateBoardService
-};
-
-export const createBoardUserService = {
-	provide: TYPES.services.CreateBoardUserService,
-	useClass: CreateBoardUserService
 };
 
 export const getBoardService = {
@@ -131,9 +124,4 @@ export const afterUserRequestedTimerStateSubscriber = {
 export const boardRepository = {
 	provide: TYPES.repositories.BoardRepository,
 	useClass: BoardRepository
-};
-
-export const boardUserRepository = {
-	provide: TYPES.repositories.BoardUserRepository,
-	useClass: BoardUserRepository
 };

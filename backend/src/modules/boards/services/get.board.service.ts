@@ -1,4 +1,5 @@
-import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { GetBoardUserServiceInterface } from './../../boardusers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -11,13 +12,12 @@ import { BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { cleanBoard } from '../utils/clean-board';
 import { TYPES } from '../interfaces/types';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import User from 'src/modules/users/entities/user.schema';
@@ -33,14 +33,14 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(Boards.TYPES.services.CreateBoardUserService)
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
 		private createBoardUserService: CreateBoardUserServiceInterface,
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private getTokenAuthService: GetTokenAuthServiceInterface,
 		@Inject(Users.TYPES.services.UpdateUserService)
 		private updateUserService: UpdateUserServiceInterface,
-		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		private getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
 		private socketService: SocketGateway
@@ -50,12 +50,12 @@ export default class GetBoardService implements GetBoardServiceInterface {
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
 		const [boardIds, teamIds] = await Promise.all([
-			this.boardUserRepository.getAllBoardsIdsOfUser(userId),
+			this.getBoardUserService.getAllBoardsOfUser(userId),
 			this.getTeamService.getTeamsOfUser(userId)
 		]);
 
 		return {
-			boardIds: boardIds.map((boardUser) => String(boardUser.board)),
+			boardIds: boardIds.map((boardUser) => boardUser.board),
 			teamIds: teamIds.map((team) => team._id)
 		};
 	}
@@ -155,7 +155,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	}
 
 	getBoardUser(board: string, user: string) {
-		return this.boardUserRepository.getBoardUser(board, user);
+		return this.getBoardUserService.getBoardUser(board, user);
 	}
 
 	getAllMainBoards() {
@@ -187,7 +187,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {
-		const userFound = await this.boardUserRepository.getBoardUserPopulated(board, user);
+		const userFound = await this.getBoardUserService.getBoardUserPopulated(board, user);
 
 		if (!userFound) {
 			throw new BadRequestException(BOARD_USER_NOT_FOUND);
@@ -218,7 +218,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		{ _id: boardId, isPublic }: Board,
 		user: UserDto
 	) {
-		const boardUserFound = await this.getBoardUser(boardId, user._id);
+		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, user._id);
 
 		return !boardUserFound && isPublic && !user.isSAdmin
 			? await this.createPublicBoardUsers(boardId, user)

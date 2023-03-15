@@ -1,6 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 import Text from '../../Text/Text';
 
 const StyledInputWrapper = styled(Flex, {

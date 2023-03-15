@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import {
   RadioGroupIndicator,
   RadioGroupItem,

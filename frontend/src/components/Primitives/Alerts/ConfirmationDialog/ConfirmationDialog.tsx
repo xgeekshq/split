@@ -6,7 +6,7 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from '../AlertDialog/AlertDialog';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 import Tooltip from '../../Tooltips/Tooltip/Tooltip';
 
 export type ConfirmationDialogProps = {

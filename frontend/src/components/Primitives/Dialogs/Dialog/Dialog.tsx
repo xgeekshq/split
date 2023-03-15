@@ -3,7 +3,7 @@ import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
 import { StyledDialogContent, StyledDialogOverlay } from './styles';
 import DialogFooter from './DialogFooter';
 import DialogHeader from './DialogHeader';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 
 export type DialogProps = {
   isOpen: boolean;

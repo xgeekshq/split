@@ -8,7 +8,7 @@ import {
   slideRightAndFade,
   slideUpAndFade,
 } from '@/animations/Slide';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 
 const StyledContent = styled(PopoverPrimitive.Content, {
   mt: '5px',

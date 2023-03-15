@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Text from '@/components/Primitives/Text/Text';
 
@@ -11,14 +11,14 @@ const Header = styled('header', Flex, {
   backgroundColor: '$white',
 });
 
-type CreateTeamHeaderProps = {
+export type CreateHeaderProps = {
   title: string;
   disableBack: boolean;
   handleBack: () => void;
 };
 
-const CreateTeamHeader = ({ title, disableBack, handleBack }: CreateTeamHeaderProps) => (
-  <Header align="center" justify="between">
+const CreateHeader = ({ title, disableBack, handleBack }: CreateHeaderProps) => (
+  <Header align="center" justify="between" data-testid="createHeader">
     <Text color="primary800" heading={3} fontWeight="bold">
       {title}
     </Text>
@@ -28,4 +28,4 @@ const CreateTeamHeader = ({ title, disableBack, handleBack }: CreateTeamHeaderPr
   </Header>
 );
 
-export default CreateTeamHeader;
+export default CreateHeader;
