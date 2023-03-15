@@ -25,7 +25,13 @@ export class TeamUserRepository
 	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null> {
 		return this.findOneByFieldAndUpdate(
 			{ user: teamData.user, team: teamData.team },
-			{ $set: { role: teamData.role, isNewJoiner: teamData.isNewJoiner } }
+			{
+				$set: {
+					role: teamData.role,
+					isNewJoiner: teamData.isNewJoiner,
+					canBeResponsible: teamData.canBeResponsible
+				}
+			}
 		);
 	}
 
@@ -34,10 +40,15 @@ export class TeamUserRepository
 	}
 
 	getUsersOfTeam(teamId: string) {
-		return this.findAllWithQuery({ team: teamId }, null, 'user role isNewJoiner _id', {
-			path: 'user',
-			select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
-		});
+		return this.findAllWithQuery(
+			{ team: teamId },
+			null,
+			'user role isNewJoiner canBeResponsible _id',
+			{
+				path: 'user',
+				select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
+			}
+		);
 	}
 
 	getUsersOnlyWithTeams(users: User[]): Promise<UserWithTeams[]> {

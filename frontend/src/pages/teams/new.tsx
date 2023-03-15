@@ -38,6 +38,7 @@ const NewTeam: NextPage = () => {
           user,
           role: TeamUserRoles.ADMIN,
           isNewJoiner: false,
+          canBeResponsible: true,
         });
       }
     });
