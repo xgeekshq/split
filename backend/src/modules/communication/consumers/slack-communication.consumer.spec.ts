@@ -11,7 +11,7 @@ import { Logger } from '@nestjs/common';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 
-const mergeBoardTypeMock = {
+const BoardTypeMock = {
 	id: 1,
 	data: {
 		id: 'someId',
@@ -73,13 +73,13 @@ describe('SlackCommunicationConsumer', () => {
 
 	describe('communication', () => {
 		it('should call application.execute once with job.data', async () => {
-			await consumer.communication(mergeBoardTypeMock as unknown as Job<BoardType>);
-			expect(communicationAppMock.execute).toHaveBeenNthCalledWith(1, mergeBoardTypeMock.data);
+			await consumer.communication(BoardTypeMock as unknown as Job<BoardType>);
+			expect(communicationAppMock.execute).toHaveBeenNthCalledWith(1, BoardTypeMock.data);
 		});
 
 		it('should call Logger when type BOARD', async () => {
 			const spyLogger = jest.spyOn(Logger.prototype, 'verbose');
-			await consumer.communication(mergeBoardTypeMock as unknown as Job<BoardType>);
+			await consumer.communication(BoardTypeMock as unknown as Job<BoardType>);
 			expect(spyLogger).toBeCalledTimes(1);
 		});
 	});
@@ -88,14 +88,14 @@ describe('SlackCommunicationConsumer', () => {
 		it('should call Logger once', async () => {
 			const spyLogger = jest.spyOn(Logger.prototype, 'verbose');
 			await consumer.onCompleted(
-				mergeBoardTypeMock as unknown as Job<BoardType>,
+				BoardTypeMock as unknown as Job<BoardType>,
 				result as unknown as TeamDto[]
 			);
 			expect(spyLogger).toBeCalledTimes(1);
 		});
 		it('should call updateBoardService once', async () => {
 			await consumer.onCompleted(
-				mergeBoardTypeMock as unknown as Job<BoardType>,
+				BoardTypeMock as unknown as Job<BoardType>,
 				result as unknown as TeamDto[]
 			);
 			expect(updateBoardServiceMock.updateChannelId).toBeCalledTimes(1);
