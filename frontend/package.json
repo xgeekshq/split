@@ -60,7 +60,7 @@
     "react-select": "^5.7.0",
     "recoil": "^0.7.6",
     "socket.io-client": "^4.4.1",
-    "webpack": "^5.71.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
