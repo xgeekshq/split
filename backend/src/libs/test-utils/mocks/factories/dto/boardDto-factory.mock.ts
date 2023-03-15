@@ -2,13 +2,13 @@ import faker from '@faker-js/faker';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import { buildTestFactory } from '../generic-factory.mock';
-import { columnDtoFactory } from './columnDto-factory.mock';
+import { ColumnDtoFactory } from './columnDto-factory.mock';
 
 const mockBoardDto = () => {
 	return {
 		_id: faker.database.mongodbObjectId(),
 		title: faker.lorem.words(),
-		columns: columnDtoFactory.createMany(3),
+		columns: ColumnDtoFactory.createMany(3),
 		isPublic: faker.datatype.boolean(),
 		maxVotes: faker.datatype.number({ min: 0, max: 6 }),
 		maxUsers: 0,

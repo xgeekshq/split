@@ -72,6 +72,23 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	) {}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
+		/**
+		 * Only can change the maxVotes if:
+		 * - new maxVotes not empty
+		 * - current highest votes equals to zero
+		 * - or current highest votes lower than new maxVotes
+		 */
+
+		if (!isEmpty(boardData.maxVotes)) {
+			const highestVotes = await this.getHighestVotesOnBoard(boardId);
+
+			if (highestVotes > Number(boardData.maxVotes)) {
+				throw new BadRequestException(
+					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
+				);
+			}
+		}
+
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
@@ -94,23 +111,31 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 * - and the current responsible isn't the new responsible
 		 */
 		if (boardData.users && String(currentResponsible?.id) !== String(newResponsible?.id)) {
-			if (isSubBoard) {
-				this.updateBoardUsersRole(
-					boardId,
-					boardData.users,
-					String(currentResponsible.id),
-					String(newResponsible.id)
-				);
-			}
-
-			const mainBoardId = boardData.mainBoardId;
-
-			this.updateBoardUsersRole(
-				mainBoardId,
+			this.changeResponsibleOnBoard(
+				isSubBoard,
+				boardId,
+				boardData.mainBoardId,
 				boardData.users,
 				String(currentResponsible.id),
 				String(newResponsible.id)
 			);
+			// if (isSubBoard) {
+			// 	this.updateBoardUsersRole(
+			// 		boardId,
+			// 		boardData.users,
+			// 		String(currentResponsible.id),
+			// 		String(newResponsible.id)
+			// 	);
+			// }
+
+			// const mainBoardId = boardData.mainBoardId;
+
+			// this.updateBoardUsersRole(
+			// 	mainBoardId,
+			// 	boardData.users,
+			// 	String(currentResponsible.id),
+			// 	String(newResponsible.id)
+			// );
 		}
 
 		/**
@@ -132,23 +157,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 * */
 		if (!isSubBoard && isEmpty(board.dividedBoards)) {
 			board.columns = await this.updateRegularBoard(boardId, boardData, board);
-		}
-
-		/**
-		 * Only can change the maxVotes if:
-		 * - new maxVotes not empty
-		 * - current highest votes equals to zero
-		 * - or current highest votes lower than new maxVotes
-		 */
-
-		if (!isEmpty(boardData.maxVotes)) {
-			const highestVotes = await this.getHighestVotesOnBoard(boardId);
-
-			if (highestVotes > Number(boardData.maxVotes)) {
-				throw new BadRequestException(
-					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
-				);
-			}
 		}
 
 		const updatedBoard = await this.boardRepository.updateBoard(boardId, board, true);
@@ -296,6 +304,20 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	/* --------------- HELPERS --------------- */
 
 	/**
+	 * Method to get the highest value of votesCount on Board Users
+	 * @param boardId String
+	 * @return number
+	 */
+	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
+		const votesCount = await this.getBoardUserService.getVotesCount(boardId);
+
+		return votesCount.reduce(
+			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
+			0
+		);
+	}
+
+	/**
 	 * Method to get current responsible to a specific board
 	 * @param boardId String
 	 * @return Board User
@@ -347,17 +369,22 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	}
 
 	/**
-	 * Method to get the highest value of votesCount on Board Users
-	 * @param boardId String
-	 * @return number
+	 * Method to change board responsible
+	 * @return void
 	 */
-	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		const votesCount = await this.getBoardUserService.getVotesCount(boardId);
+	private changeResponsibleOnBoard(
+		isSubBoard: boolean,
+		boardId: string,
+		mainBoardId: string,
+		users: BoardUserDto[],
+		currentResponsibleId: string,
+		newResponsibleId: string
+	) {
+		if (isSubBoard) {
+			this.updateBoardUsersRole(boardId, users, currentResponsibleId, newResponsibleId);
+		}
 
-		return votesCount.reduce(
-			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
-			0
-		);
+		this.updateBoardUsersRole(mainBoardId, users, currentResponsibleId, newResponsibleId);
 	}
 
 	private async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: Board) {
