@@ -129,7 +129,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
         type: ToastStateEnum.SUCCESS,
       });
     },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       queryClient.invalidateQueries(['board', { id: boardId }]);
       const errorMessage = error.response?.data.message.includes('max votes')
         ? error.response?.data.message

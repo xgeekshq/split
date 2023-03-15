@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { DragDropContext, DropResult, BeforeCapture, Droppable } from '@hello-pangea/dnd';
+import { DragDropContext, DropResult, BeforeCapture, Droppable } from 'react-beautiful-dnd';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { countBoardCards } from '@/helper/board/countCards';
 import useCards from '@/hooks/useCards';

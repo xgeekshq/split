@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getRandomColor } from '@/utils/initialNames';
 
@@ -16,7 +16,7 @@ const useAvatarColor = (userId: string | undefined, isDefaultColor?: boolean): A
     [],
   );
 
-  useEffect(() => {
+  useMemo(() => {
     const localStorageKey = `user_color_${userId}`;
     const userStorage = localStorage.getItem(localStorageKey);
 

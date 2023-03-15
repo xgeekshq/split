@@ -21,7 +21,7 @@ const FakeCardAvatars = () => {
   }, [getRandomColor]);
 
   const renderAvatar = useCallback(
-    (value: string, idx) => (
+    (value: string, idx: number) => (
       <Avatar
         key={`${value}-${idx}-${Math.random()}`}
         colors={colors[idx]}

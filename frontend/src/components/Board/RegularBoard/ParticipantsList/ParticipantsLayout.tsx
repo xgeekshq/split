@@ -11,11 +11,11 @@ import { BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRouter } from 'next/router';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { ChildrenProp } from '@/types/common';
 
-interface Props {
-  children: ReactNode;
+interface Props extends ChildrenProp {
   hasPermissionsToEdit: boolean;
 }
 

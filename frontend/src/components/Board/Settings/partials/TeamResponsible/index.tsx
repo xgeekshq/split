@@ -1,5 +1,6 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { ChildrenProp } from '@/types/common';
 import {
   StyledAccordionItem,
   StyledAccordionHeader,
@@ -8,7 +9,7 @@ import {
   StyledAccordionContent,
 } from '../../styles';
 
-const TeamResponsibleSettings: React.FC = ({ children }) => (
+const TeamResponsibleSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="responsible">
     <StyledAccordionHeader>
       <StyledAccordionTrigger>

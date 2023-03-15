@@ -48,7 +48,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     formState: { errors },
   } = useFormContext();
 
-  const message = errors.team?.message;
+  const message = errors.team?.message as string;
   const teamValueOnForm = getValues().team;
   const isValueEmpty = isEmpty(teamValueOnForm);
 
