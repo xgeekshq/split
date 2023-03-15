@@ -337,7 +337,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			.map((boardUser) => {
 				const typedBoardUser = boardUser.user as unknown as User;
 
-				return this.boardUserRepository.updateBoardUserRole(
+				return this.updateBoardUserService.updateBoardUserRole(
 					boardId,
 					typedBoardUser._id,
 					boardUser.role

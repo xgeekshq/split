@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
 import ColumnDto from 'src/modules/columns/dto/column.dto';
 import { buildTestFactory } from '../generic-factory.mock';
-import { cardDtoFactory } from './cardDto-factory.mock';
+import { CardDtoFactory } from './cardDto-factory.mock';
 
 const mockColumnDto = () => {
 	return {
@@ -15,12 +15,12 @@ const mockColumnDto = () => {
 			'#9DCAFF',
 			'#FEB9A9'
 		]),
-		cards: [cardDtoFactory.create()],
+		cards: [CardDtoFactory.create()],
 		cardText: faker.lorem.words(),
 		isDefaultText: faker.datatype.boolean()
 	};
 };
 
-export const columnDtoFactory = buildTestFactory<ColumnDto>(() => {
+export const ColumnDtoFactory = buildTestFactory<ColumnDto>(() => {
 	return mockColumnDto();
 });

@@ -10,6 +10,6 @@ const mockCommentDto = () => {
 	};
 };
 
-export const commentDtoFactory = buildTestFactory<CommentDto>(() => {
+export const CommentDtoFactory = buildTestFactory<CommentDto>(() => {
 	return mockCommentDto();
 });
