@@ -7,14 +7,14 @@ import { SlackAddUserToChannelConsumer } from './slack-add-user-channel.consumer
 import { AddUserIntoChannelApplicationInterface } from '../interfaces/communication.application.interface copy';
 import { Logger } from '@nestjs/common';
 
-const changeResponsibleMock = {
+const newUserMock = {
 	id: 1,
 	data: {
 		email: 'someEmail@gmail.com'
 	}
 };
 
-describe('SlackResponsibleConsumer', () => {
+describe('SlackAddUserToChannelConsumer', () => {
 	let consumer: SlackAddUserToChannelConsumer;
 	let addUserIntoChannelAppMock: DeepMocked<AddUserIntoChannelApplicationInterface>;
 
@@ -43,11 +43,8 @@ describe('SlackResponsibleConsumer', () => {
 
 	describe('communication', () => {
 		it('should call sendMessageApplication.execute once with job.data', async () => {
-			await consumer.communication(changeResponsibleMock as unknown as Job<AddUserMainChannelType>);
-			expect(addUserIntoChannelAppMock.execute).toHaveBeenNthCalledWith(
-				1,
-				changeResponsibleMock.data.email
-			);
+			await consumer.communication(newUserMock as unknown as Job<AddUserMainChannelType>);
+			expect(addUserIntoChannelAppMock.execute).toHaveBeenNthCalledWith(1, newUserMock.data.email);
 		});
 	});
 
@@ -55,10 +52,7 @@ describe('SlackResponsibleConsumer', () => {
 		it('should call Logger with string containing a email ', async () => {
 			const spyLogger = jest.spyOn(Logger.prototype, 'verbose');
 			const result: boolean[] = [true];
-			await consumer.onCompleted(
-				changeResponsibleMock as unknown as Job<AddUserMainChannelType>,
-				result
-			);
+			await consumer.onCompleted(newUserMock as unknown as Job<AddUserMainChannelType>, result);
 			expect(spyLogger).toHaveBeenNthCalledWith(1, expect.stringContaining('someEmail@gmail.com'));
 		});
 	});
