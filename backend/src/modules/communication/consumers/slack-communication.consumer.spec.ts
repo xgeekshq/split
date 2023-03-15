@@ -8,6 +8,8 @@ import { SlackCommunicationConsumer } from './slack-communication.consumer';
 import { CommunicationApplicationInterface } from '../interfaces/communication.application.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
 import { Logger } from '@nestjs/common';
+import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
+import { TeamDto } from 'src/modules/communication/dto/team.dto';
 
 const mergeBoardTypeMock = {
 	id: 1,
@@ -17,16 +19,29 @@ const mergeBoardTypeMock = {
 		isSubBoard: true,
 		dividedBoards: 'BoardType[]',
 		team: null,
-		users: 'UserRoleType[]',
+		users: '',
 		slackChannelId: 'someSlackChannelId',
 		boardNumber: 1
 	}
 };
 
+const result = [
+	{
+		name: 'someName',
+		normalName: 'normalName',
+		boardId: 'someBoardId',
+		channelId: 'someChannelId',
+		type: 'team',
+		for: 'member',
+		participants: UserFactory.createMany(2),
+		teamNumber: 2
+	}
+];
+
 describe('SlackCommunicationConsumer', () => {
 	let consumer: SlackCommunicationConsumer;
 	let communicationAppMock: DeepMocked<CommunicationApplicationInterface>;
-	//let updateBoardServiceMock: DeepMocked<UpdateBoardServiceInterface>;
+	let updateBoardServiceMock: DeepMocked<UpdateBoardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -44,6 +59,7 @@ describe('SlackCommunicationConsumer', () => {
 		}).compile();
 		consumer = module.get<SlackCommunicationConsumer>(SlackCommunicationConsumer);
 		communicationAppMock = module.get(TYPES.application.SlackCommunicationApplication);
+		updateBoardServiceMock = module.get(BOARD_TYPES.services.UpdateBoardService);
 	});
 
 	beforeEach(() => {
@@ -68,10 +84,21 @@ describe('SlackCommunicationConsumer', () => {
 		});
 	});
 
-	//  describe('onCompleted',()=> {
-	//  	it('should call application.execute once with job.data', async () => {
-	//  		await consumer.onCompleted(mergeBoardTypeMock as unknown as Job<BoardType>);
-	//  		//expect(responsibleApplicationMock.execute).toHaveBeenNthCalledWith(1, mergeBoardTypeMock.data);
-	//  	});
-	//  });
+	describe('onCompleted', () => {
+		it('should call Logger once', async () => {
+			const spyLogger = jest.spyOn(Logger.prototype, 'verbose');
+			await consumer.onCompleted(
+				mergeBoardTypeMock as unknown as Job<BoardType>,
+				result as unknown as TeamDto[]
+			);
+			expect(spyLogger).toBeCalledTimes(1);
+		});
+		it('should call updateBoardService once', async () => {
+			await consumer.onCompleted(
+				mergeBoardTypeMock as unknown as Job<BoardType>,
+				result as unknown as TeamDto[]
+			);
+			expect(updateBoardServiceMock.updateChannelId).toBeCalledTimes(1);
+		});
+	});
 });
