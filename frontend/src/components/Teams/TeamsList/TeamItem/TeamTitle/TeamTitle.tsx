@@ -10,7 +10,7 @@ export type TeamTitleProps = {
 
 const TeamTitle = ({ teamId, title }: TeamTitleProps) => (
   <Link key={teamId} href={ROUTES.TeamPage(teamId)}>
-    <Text size="sm" fontWeight="bold" overflow="wrap">
+    <Text link size="sm" fontWeight="bold" overflow="wrap">
       {title}
     </Text>
   </Link>

@@ -32,12 +32,8 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   const { deleteTeam, deleteTeamUser } = useTeam();
 
   const userFound = useMemo(() => {
-    let teamUserId: string;
-    if (!isTeamPage && router.query.userId) {
-      teamUserId = router.query.userId as string;
-    } else {
-      teamUserId = userId as string;
-    }
+    const queryUserId = router.query.userId;
+    const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
 
     return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
   }, [router, userId, teamUsers]);
@@ -54,12 +50,29 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
     return [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound.role);
   }, [isSAdmin, userFound]);
 
-  const deleteTeamDescription = (
-    <Text>
-      Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
-    </Text>
-  );
+  const confirmationDialogDescription = () => {
+    if (isTeamPage) {
+      return (
+        <Text>
+          Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
+        </Text>
+      );
+    }
+    const userFoundName = (
+      <Text fontWeight="bold">
+        {userFound?.user.firstName} ${userFound?.user.lastName}
+      </Text>
+    );
 
+    return (
+      <Text>
+        Do you really want to remove {userFoundName} from <Text fontWeight="bold">{name}</Text>?
+      </Text>
+    );
+  };
+
+  // CHECK: This function can be abstracted
+  // to the Parent and passed as Prop.
   const handleDelete = () => {
     if (isTeamPage) {
       deleteTeam.mutate({ id });
@@ -121,15 +134,15 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
         <Flex css={{ flex: '0' }}>
           {havePermissions && (
             <ConfirmationDialog
-              title="Delete team"
-              description={deleteTeamDescription}
+              title={isTeamPage ? 'Delete team' : 'Remove User'}
+              description={confirmationDialogDescription()}
               confirmationHandler={handleDelete}
-              confirmationLabel="Delete"
-              tooltip="Delete team"
+              confirmationLabel={isTeamPage ? 'Delete' : 'Remove'}
+              tooltip={isTeamPage ? 'Delete team' : 'Remvove user'}
             >
               <Button isIcon size="sm">
                 <Icon
-                  name="trash-alt"
+                  name={isTeamPage ? 'trash-alt' : 'user-slash'}
                   css={{
                     color: '$primary400',
                   }}
