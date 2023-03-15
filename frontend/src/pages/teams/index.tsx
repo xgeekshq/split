@@ -1,7 +1,7 @@
 import { ReactElement, Suspense, useEffect } from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 
 import { getDashboardHeaderInfo } from '@/api/authService';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
@@ -19,7 +19,6 @@ import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageH
 import { ROUTES } from '@/utils/routes';
 
 const Teams = () => {
-  const { data: session } = useSession({ required: true });
   const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
   const {
@@ -29,8 +28,6 @@ const Teams = () => {
   useEffect(() => {
     if (data) setTeamsList(data);
   }, [data, setTeamsList]);
-
-  if (!session || !data) return null;
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -86,7 +83,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

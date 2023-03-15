@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSession } from 'next-auth/react';
+import useCurrentSession from '@/hooks/useCurrentSession';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -20,31 +20,39 @@ import TeamBoards from './TeamBoards/TeamBoards';
 
 export type TeamItemProps = {
   team: Team;
-  isTeamPage?: boolean;
 };
 
-const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
-  const { data: session } = useSession();
+const TeamItem = React.memo(({ team }: TeamItemProps) => {
+  const { id, users: teamUsers, name } = team;
+
+  const { userId, isSAdmin } = useCurrentSession();
   const router = useRouter();
+  const isTeamPage = router.pathname.includes('teams');
+
   const { deleteTeam, deleteTeamUser } = useTeam();
 
-  const { id: userId, isSAdmin } = { ...session?.user };
-  const { id, users, name } = team;
-  const userFound = users.find((member) => member.user?._id === userId);
+  const userFound = useMemo(() => {
+    let teamUserId: string;
+    if (!isTeamPage && router.query.userId) {
+      teamUserId = router.query.userId as string;
+    } else {
+      teamUserId = userId as string;
+    }
+
+    return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
+  }, [router, userId, teamUsers]);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
       return true;
     }
 
-    const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
-
-    if (!myUser) {
+    if (!userFound) {
       return false;
     }
 
-    return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser.role);
-  }, [isSAdmin, team, userId]);
+    return [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound.role);
+  }, [isSAdmin, userFound]);
 
   const deleteTeamDescription = (
     <Text>
@@ -73,7 +81,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
             }}
           />
 
-          <TeamTitle teamId={id} title={name} isTeamPage={isTeamPage} />
+          <TeamTitle teamId={id} title={name} />
         </Flex>
         <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
           <Flex align="center" gap="8">
@@ -81,7 +89,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
               Members
             </Text>
 
-            <AvatarGroup listUsers={users} userId={userId} css={{ minWidth: '$88' }} />
+            <AvatarGroup listUsers={teamUsers} userId={userId} css={{ minWidth: '$88' }} />
           </Flex>
 
           <Separator orientation="vertical" size="lg" />
@@ -94,7 +102,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
             <AvatarGroup
               stakeholders
               teamAdmins
-              listUsers={users}
+              listUsers={teamUsers}
               userId={userId}
               css={{ minWidth: '$88' }}
             />
@@ -103,7 +111,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
           <Separator orientation="vertical" size="lg" />
 
           <Flex align="center">
-            {router.pathname.includes('users') && userFound ? (
+            {!isTeamPage && userFound ? (
               <RoleSelector role={userFound.role} userId={userId!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
