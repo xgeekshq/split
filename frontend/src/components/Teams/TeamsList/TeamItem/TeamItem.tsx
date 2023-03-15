@@ -60,7 +60,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
     }
     const userFoundName = (
       <Text fontWeight="bold">
-        {userFound?.user.firstName} ${userFound?.user.lastName}
+        {userFound?.user.firstName} {userFound?.user.lastName}
       </Text>
     );
 
@@ -138,7 +138,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
               description={confirmationDialogDescription()}
               confirmationHandler={handleDelete}
               confirmationLabel={isTeamPage ? 'Delete' : 'Remove'}
-              tooltip={isTeamPage ? 'Delete team' : 'Remvove user'}
+              tooltip={isTeamPage ? 'Delete team' : 'Remove user'}
             >
               <Button isIcon size="sm">
                 <Icon

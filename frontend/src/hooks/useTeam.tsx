@@ -272,7 +272,7 @@ const useTeam = ({
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error deleting the team',
+        content: 'Error deleting the team.',
         type: ToastStateEnum.ERROR,
       });
     },
@@ -287,14 +287,14 @@ const useTeam = ({
 
       setToastState({
         open: true,
-        content: 'The team was successfully deleted.',
+        content: 'The user was successfully removed from the team.',
         type: ToastStateEnum.SUCCESS,
       });
     },
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error deleting the team user',
+        content: 'Error removing user from the team.',
         type: ToastStateEnum.ERROR,
       });
     },
