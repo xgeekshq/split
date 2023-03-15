@@ -28,8 +28,6 @@ const ConfirmationDialog = ({
   tooltip,
   children,
 }: ConfirmationDialogProps) => {
-  const outlineVariant = variant === 'primary' ? 'primaryOutline' : 'dangerOutline';
-
   const renderTrigger = () => {
     if (tooltip !== undefined) {
       return (
@@ -50,7 +48,7 @@ const ConfirmationDialog = ({
           {description}
         </Flex>
         <Flex justify="end" gap="16">
-          <AlertDialogCancel variant={outlineVariant}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
           <AlertDialogAction variant={variant} onClick={confirmationHandler}>
             {confirmationLabel}
           </AlertDialogAction>
