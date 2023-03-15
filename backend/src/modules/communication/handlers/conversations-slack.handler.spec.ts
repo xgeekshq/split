@@ -1,33 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/lines-between-class-members */
 import { UserDto } from 'src/modules/communication/dto/user.dto';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
 import { CommunicationGateAdapterInterface } from 'src/modules/communication/interfaces/communication-gate.adapter.interface';
 
 const MakeSlackCommunicationGateAdapterStub = () => {
 	class SlackCommunicationGateAdapterStub implements CommunicationGateAdapterInterface {
-		archive(channelId: string): Promise<{ ok: boolean; error?: string }> {
+		archive(_channelId: string): Promise<{ ok: boolean; error?: string }> {
 			return Promise.resolve({ ok: true });
 		}
-		getEmailByPlatformUserId(email: string): Promise<string> {
+		getEmailByPlatformUserId(_email: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}
 		addChannel(name: string): Promise<{ id: string; name: string }> {
 			return Promise.resolve({ id: 'any_id', name });
 		}
 		addUsersToChannel(
-			channelId: string,
-			usersIds: string[]
+			_channelId: string,
+			_usersIds: string[]
 		): Promise<{ ok: boolean; fails?: string[] | undefined }> {
 			return Promise.resolve({ ok: true });
 		}
-		getAllUsersByChannel(channelId: string): Promise<string[]> {
+		getAllUsersByChannel(_channelId: string): Promise<string[]> {
 			return Promise.resolve(['any_user_id']);
 		}
-		getEmailByUserId(userId: string): Promise<string> {
+		getEmailByUserId(_userId: string): Promise<string> {
 			throw new Error('Method not implemented.');
 		}
-		addMessageToChannel(channelId: string, message: string): Promise<{ ok: boolean }> {
+		addMessageToChannel(_channelId: string, _message: string): Promise<{ ok: boolean }> {
 			throw new Error('Method not implemented.');
 		}
 	}

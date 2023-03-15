@@ -1,12 +1,13 @@
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
-import { CreateResetTokenAuthServiceInterface } from '../interfaces/services/create-reset-token.auth.service.interface';
-import { TYPES } from 'src/modules/auth/interfaces/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
+import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
+import { TYPES } from '../interfaces/types';
 import { ResetPasswordRepositoryInterface } from '../repository/reset-password.repository.interface';
 
 @Injectable()
-export default class CreateResetTokenAuthService implements CreateResetTokenAuthServiceInterface {
+export class CreateResetPasswordTokenUseCase implements CreateResetPasswordTokenUseCaseInterface {
 	constructor(
 		private mailerService: MailerService,
 		private configService: ConfigService,
@@ -14,7 +15,7 @@ export default class CreateResetTokenAuthService implements CreateResetTokenAuth
 		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 
-	async create(emailAddress: string) {
+	async execute(emailAddress: string) {
 		await this.resetPasswordRepository.startTransaction();
 		try {
 			const passwordModel = await this.resetPasswordRepository.findPassword(emailAddress);
@@ -25,7 +26,7 @@ export default class CreateResetTokenAuthService implements CreateResetTokenAuth
 			const { token } = await this.tokenGenerator(emailAddress, true);
 
 			if (!token) {
-				throw new InternalServerErrorException();
+				throw new InsertFailedException();
 			}
 
 			const res = await this.emailBody(token, emailAddress);

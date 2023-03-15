@@ -28,7 +28,7 @@ import {
 	updateUserService,
 	userRepository
 } from 'src/modules/users/users.providers';
-import { getTokenAuthService } from '../auth.providers';
+import { getTokenAuthService, resetPasswordRepository } from '../auth.providers';
 
 jest.mock('bcrypt');
 jest.mock('src/modules/schedules/services/create.schedules.service.ts');
@@ -68,6 +68,7 @@ describe('The AuthenticationService', () => {
 				boardRepository,
 				updateUserService,
 				getBoardUserService,
+				resetPasswordRepository,
 				{
 					provide: ConfigService,
 					useValue: configService

@@ -1,9 +1,9 @@
 export const TYPES = {
 	services: {
-		AuthAzureService: 'AuthAzureService',
-		CronAzureService: 'CronAzureService'
+		AuthAzureService: 'AuthAzureService'
 	},
 	applications: {
-		AuthAzureApplication: 'AuthAzureApplication'
+		RegisterOrLoginUseCase: 'RegisterOrLoginUseCase',
+		CheckUserUseCase: 'CheckUserUseCase'
 	}
 };

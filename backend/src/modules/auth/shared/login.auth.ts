@@ -1,11 +1,10 @@
 import UserDto from 'src/modules/users/dto/user.dto';
 import User from 'src/modules/users/entities/user.schema';
-import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
 import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
 
 export const signIn = async (
 	user: User | UserDto,
-	getTokenService: GetTokenAuthServiceInterface | GetTokenAuthApplicationInterface,
+	getTokenService: GetTokenAuthServiceInterface,
 	strategy: string
 ) => {
 	const { email, firstName, lastName, _id, isSAdmin, providerAccountCreatedAt, avatar } = user;

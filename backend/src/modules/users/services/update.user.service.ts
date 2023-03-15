@@ -1,24 +1,21 @@
-import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { encrypt } from 'src/libs/utils/bcrypt';
-import ResetPassword, {
-	ResetPasswordDocument
-} from 'src/modules/auth/entities/reset-password.schema';
-import UpdateUserDto from '../dto/update.user.dto';
+import * as ResetPassword from '../../auth/interfaces/types';
 import { UpdateUserServiceInterface } from '../interfaces/services/update.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import UserDto from '../dto/user.dto';
+import { ResetPasswordRepositoryInterface } from 'src/modules/auth/repository/reset-password.repository.interface';
+import { PasswordsDontMatchException } from '../exceptions/passwordsDontMatchException';
+import { UserNotFoundException } from '../../../libs/exceptions/userNotFoundException';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class UpdateUserService implements UpdateUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@InjectModel(ResetPassword.name)
-		private resetModel: Model<ResetPasswordDocument>
+		@Inject(ResetPassword.TYPES.repository.ResetPasswordRepository)
+		private readonly resetPasswordRepository: ResetPasswordRepositoryInterface
 	) {}
 
 	async setCurrentRefreshToken(refreshToken: string, userId: string) {
@@ -34,26 +31,26 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		const password = await encrypt(newPassword);
 
 		if (newPassword !== newPasswordConf) {
-			throw new HttpException('PASSWORDS_DO_NOT_MATCH', HttpStatus.BAD_REQUEST);
+			throw new PasswordsDontMatchException();
 		}
 
 		const user = await this.userRepository.updateUserPassword(userEmail, password);
 
-		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!user) throw new UserNotFoundException();
 
 		return user;
 	}
 
-	async checkEmail(token: string) {
-		const userFromDb = await this.resetModel.findOne({ token });
+	async checkEmailOfToken(token: string) {
+		const userFromDb = await this.resetPasswordRepository.findOneByField({ token });
 
-		if (!userFromDb) throw new HttpException('USER_FROM_TOKEN_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!userFromDb) throw new UserNotFoundException();
 
 		this.tokenValidator(userFromDb.updatedAt);
 
 		const user = await this.userRepository.findOneByField({ email: userFromDb.emailAddress });
 
-		if (!user) throw new HttpException('USER_NOT_FOUND', HttpStatus.NOT_FOUND);
+		if (!user) throw new UserNotFoundException();
 
 		return user.email;
 	}
@@ -66,25 +63,11 @@ export default class UpdateUserService implements UpdateUserServiceInterface {
 		}
 	}
 
-	async updateSuperAdmin(user: UpdateUserDto, requestUser: UserDto) {
-		if (requestUser._id.toString() === user._id) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		const userUpdated = await this.userRepository.updateSuperAdmin(user._id, user.isSAdmin);
-
-		if (!userUpdated) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		return userUpdated;
-	}
-
 	async updateUserAvatar(userId: string, avatarUrl: string) {
 		const user = await this.userRepository.updateUserAvatar(userId, avatarUrl);
 
 		if (!user) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		return user;

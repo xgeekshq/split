@@ -1,7 +1,6 @@
-import LoggedUserDto from 'src/modules/users/dto/logged.user.dto';
+import { AzureUserFound } from '../../services/auth.azure.service';
 
 export interface AuthAzureServiceInterface {
-	loginOrRegisterAzureToken(azureToken: string): Promise<LoggedUserDto | null>;
-
-	checkUserExistsInActiveDirectory(email: string): Promise<boolean>;
+	getUserFromAzure(email: string): Promise<AzureUserFound | undefined>;
+	fetchUserPhoto(userId: string): Promise<any>;
 }
