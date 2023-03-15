@@ -19,7 +19,7 @@ const mergeBoardTypeMock = {
 
 describe('SlackMergeBoardConsumer', () => {
 	let consumer: SlackMergeBoardConsumer;
-	let responsibleApplicationMock: DeepMocked<MergeBoardApplicationInterface>;
+	let applicationMock: DeepMocked<MergeBoardApplicationInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -32,7 +32,7 @@ describe('SlackMergeBoardConsumer', () => {
 			]
 		}).compile();
 		consumer = module.get<SlackMergeBoardConsumer>(SlackMergeBoardConsumer);
-		responsibleApplicationMock = module.get(TYPES.application.SlackMergeBoardApplication);
+		applicationMock = module.get(TYPES.application.SlackMergeBoardApplication);
 	});
 
 	beforeEach(() => {
@@ -46,6 +46,6 @@ describe('SlackMergeBoardConsumer', () => {
 
 	it('should call application.execute once with job.data', async () => {
 		await consumer.communication(mergeBoardTypeMock as unknown as Job<MergeBoardType>);
-		expect(responsibleApplicationMock.execute).toHaveBeenNthCalledWith(1, mergeBoardTypeMock.data);
+		expect(applicationMock.execute).toHaveBeenNthCalledWith(1, mergeBoardTypeMock.data);
 	});
 });

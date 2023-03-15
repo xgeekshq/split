@@ -18,7 +18,7 @@ const archiveChannelDataMock = {
 
 describe('SlackArchiveChannelConsumer', () => {
 	let consumer: SlackArchiveChannelConsumer;
-	let addUserIntoChannelAppMock: DeepMocked<ArchiveChannelApplicationInterface>;
+	let archiveChannelAppMock: DeepMocked<ArchiveChannelApplicationInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -31,7 +31,7 @@ describe('SlackArchiveChannelConsumer', () => {
 			]
 		}).compile();
 		consumer = module.get<SlackArchiveChannelConsumer>(SlackArchiveChannelConsumer);
-		addUserIntoChannelAppMock = module.get(TYPES.application.SlackArchiveChannelApplication);
+		archiveChannelAppMock = module.get(TYPES.application.SlackArchiveChannelApplication);
 	});
 
 	beforeEach(() => {
@@ -47,10 +47,7 @@ describe('SlackArchiveChannelConsumer', () => {
 		it('should call ArchiveChannelApplication.execute once with job.data', async () => {
 			await consumer.communication(archiveChannelDataMock as unknown as Job<ArchiveChannelData>);
 
-			expect(addUserIntoChannelAppMock.execute).toHaveBeenNthCalledWith(
-				1,
-				archiveChannelDataMock.data
-			);
+			expect(archiveChannelAppMock.execute).toHaveBeenNthCalledWith(1, archiveChannelDataMock.data);
 		});
 
 		it('should call Logger when type CHANNEL_ID', async () => {
