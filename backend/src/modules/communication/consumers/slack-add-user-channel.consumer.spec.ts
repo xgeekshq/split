@@ -42,7 +42,7 @@ describe('SlackAddUserToChannelConsumer', () => {
 	});
 
 	describe('communication', () => {
-		it('should call sendMessageApplication.execute once with job.data', async () => {
+		it('should call AddUserIntoChannelApplication.execute once with job.data', async () => {
 			await consumer.communication(newUserMock as unknown as Job<AddUserMainChannelType>);
 			expect(addUserIntoChannelAppMock.execute).toHaveBeenNthCalledWith(1, newUserMock.data.email);
 		});

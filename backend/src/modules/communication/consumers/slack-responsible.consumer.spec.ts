@@ -45,7 +45,7 @@ describe('SlackResponsibleConsumer', () => {
 		expect(consumer).toBeDefined();
 	});
 
-	it('should call sendMessageApplication.execute once with job.data', async () => {
+	it('should call application.execute once with job.data', async () => {
 		await consumer.communication(changeResponsibleMock as unknown as Job<ChangeResponsibleType>);
 		expect(responsibleApplicationMock.execute).toHaveBeenNthCalledWith(
 			1,
