@@ -11,6 +11,7 @@ import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/service
 import { deleteCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as Cards from 'src/modules/cards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
@@ -32,13 +33,25 @@ import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfac
 import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+import { BoardRoles } from 'src/libs/enum/board.roles';
+import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
+import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
+import { FRONTEND_URL } from 'src/libs/constants/frontend';
+import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
+import User from 'src/modules/users/entities/user.schema';
+import ColumnDto from 'src/modules/columns/dto/column.dto';
 
 describe('GetUpdateBoardService', () => {
 	let boardService: UpdateBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
-	// let boardUserRepositoryMock: DeepMocked<BoardUserRepositoryInterface>;
-	// let boardUserUpdateServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
+	let eventEmitterMock: DeepMocked<EventEmitter2>;
+	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let getBoardUserServiceMock: DeepMocked<GetBoardUserServiceInterface>;
+	let configServiceMock: DeepMocked<ConfigService>;
+	let slackSendMessageServiceMock: DeepMocked<SendMessageServiceInterface>;
+	let deleteCardServiceMock: DeepMocked<DeleteCardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -101,9 +114,14 @@ describe('GetUpdateBoardService', () => {
 
 		boardService = module.get<UpdateBoardServiceInterface>(updateBoardService.provide);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
-		// boardUserRepositoryMock = module.get(BoardUsers.TYPES.repositories.BoardUserRepository);
-		// boardUserUpdateServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
+		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
+		deleteCardServiceMock = module.get(Cards.TYPES.services.DeleteCardService);
+		eventEmitterMock = module.get(EventEmitter2);
+		configServiceMock = module.get(ConfigService);
+		slackSendMessageServiceMock = module.get(
+			CommunicationsType.TYPES.services.SlackSendMessageService
+		);
 	});
 
 	beforeEach(() => {
@@ -133,10 +151,7 @@ describe('GetUpdateBoardService', () => {
 
 		it('should call boardRepository', async () => {
 			const board = BoardFactory.create();
-			const updateBoardDto = UpdateBoardDtoFactory.create();
-			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 2 }, { votesCount: 1 }]);
-
-			jest.spyOn(getBoardUserServiceMock, 'getVotesCount').mockResolvedValueOnce(boardUsers);
+			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 
 			await boardService.update(board._id, updateBoardDto);
 
@@ -144,10 +159,7 @@ describe('GetUpdateBoardService', () => {
 		});
 
 		it('should throw error if board not found', async () => {
-			const updateBoardDto = UpdateBoardDtoFactory.create();
-			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 2 }, { votesCount: 1 }]);
-
-			jest.spyOn(getBoardUserServiceMock, 'getVotesCount').mockResolvedValueOnce(boardUsers);
+			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 
 			boardRepositoryMock.getBoard.mockResolvedValue(null);
 			expect(async () => await boardService.update('-1', updateBoardDto)).rejects.toThrow(
@@ -157,10 +169,7 @@ describe('GetUpdateBoardService', () => {
 
 		it('should call getBoardResponsibleInfo', async () => {
 			const board = BoardFactory.create();
-			const updateBoardDto = UpdateBoardDtoFactory.create();
-			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 2 }, { votesCount: 1 }]);
-
-			jest.spyOn(getBoardUserServiceMock, 'getVotesCount').mockResolvedValueOnce(boardUsers);
+			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 
 			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
 
@@ -169,48 +178,171 @@ describe('GetUpdateBoardService', () => {
 			expect(getBoardUserServiceMock.getBoardResponsible).toBeCalledTimes(1);
 		});
 
-		// it('should return undefined if there is not a responsible when calling getBoardResponsibleInfo ', async () => {
-		// 	const board = BoardFactory.create({ isSubBoard: true });
-		// 	//const mainBoard = BoardFactory.create();
-		// 	const currentResponsible = BoardUserFactory.create({
-		// 		role: BoardRoles.RESPONSIBLE,
-		// 		board: board._id
-		// 	});
-		// 	const boardUsersDto = BoardUserDtoFactory.createMany(3, [
-		// 		{ board: board._id, role: BoardRoles.RESPONSIBLE },
-		// 		{
-		// 			board: board._id,
-		// 			role: BoardRoles.MEMBER,
-		// 			user: String(currentResponsible.user),
-		// 			_id: String(currentResponsible._id)
-		// 		},
-		// 		{ board: board._id, role: BoardRoles.MEMBER }
-		// 	]);
-		// 	const newResponsible = BoardUserFactory.create({
-		// 		board: board._id,
-		// 		role: BoardRoles.RESPONSIBLE,
-		// 		user: String(boardUsersDto[0].user),
-		// 		_id: String(boardUsersDto[0]._id)
-		// 	});
-		// 	// const updateBoardDto = UpdateBoardDtoFactory.create({
-		// 	// 	responsible: newResponsible,
-		// 	// 	mainBoardId: mainBoard._id,
-		// 	// 	users: boardUsersDto,
-		// 	// 	maxVotes: undefined
-		// 	// });
+		it('should call changeResponsibleOnBoard if current responsible is not equal to new responsible', async () => {
+			const board = BoardFactory.create({ isSubBoard: true });
+			const mainBoard = BoardFactory.create();
+			const currentResponsible = BoardUserFactory.create({
+				role: BoardRoles.RESPONSIBLE,
+				board: board._id
+			});
 
-		// 	boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
+			const boardUsersDto = BoardUserDtoFactory.createMany(3, [
+				{ board: board._id, role: BoardRoles.RESPONSIBLE },
+				{
+					board: board._id,
+					role: BoardRoles.MEMBER,
+					user: currentResponsible.user as User,
+					_id: String(currentResponsible._id)
+				},
+				{ board: board._id, role: BoardRoles.MEMBER }
+			]);
+			const newResponsible = BoardUserFactory.create({
+				board: board._id,
+				role: BoardRoles.RESPONSIBLE,
+				user: UserFactory.create({ _id: (boardUsersDto[0].user as User)._id }),
+				_id: String(boardUsersDto[0]._id)
+			});
+			const updateBoardDto = UpdateBoardDtoFactory.create({
+				responsible: newResponsible,
+				mainBoardId: mainBoard._id,
+				users: boardUsersDto,
+				maxVotes: null,
+				_id: board._id,
+				isSubBoard: true
+			});
 
-		// 	//gets current responsible from the board
-		// 	boardUserRepositoryMock.getBoardResponsible.mockResolvedValueOnce(currentResponsible);
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
 
-		// 	jest
-		// 		.spyOn(boardUserUpdateServiceMock, 'updateBoardUserRole')
-		// 		.mockResolvedValueOnce(newResponsible);
+			//gets current responsible from the board
+			jest
+				.spyOn(getBoardUserServiceMock, 'getBoardResponsible')
+				.mockResolvedValue(currentResponsible);
 
-		// 	// await boardService.update(board._id, boardDto);
+			await boardService.update(board._id, updateBoardDto);
+			//update changeResponsibleOnBoard
+			expect(updateBoardUserServiceMock.updateBoardUserRole).toBeCalled();
+		});
 
-		// 	// expect(boardUserRepositoryMock.getBoardResponsible).toBeCalledTimes(1);
-		// });
+		it('should throw error when update fails', async () => {
+			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
+			const board = BoardFactory.create();
+
+			boardRepositoryMock.getBoard.mockResolvedValue(board);
+			boardRepositoryMock.updateBoard.mockResolvedValueOnce(null);
+
+			expect(async () => await boardService.update('1', updateBoardDto)).rejects.toThrow(
+				BadRequestException
+			);
+		});
+
+		it('should return updated board', async () => {
+			const board = BoardFactory.create();
+			const updateBoardDto = UpdateBoardDtoFactory.create({
+				maxVotes: null,
+				title: 'Mock 2.0',
+				_id: board._id
+			});
+			const boardResult = { ...board, title: updateBoardDto.title };
+
+			boardRepositoryMock.getBoard.mockResolvedValue(board);
+			boardRepositoryMock.updateBoard.mockResolvedValue(boardResult);
+
+			const result = await boardService.update(board._id, updateBoardDto);
+
+			expect(result).toEqual(boardResult);
+		});
+
+		it('should updated board from a regular board', async () => {
+			const board = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
+
+			board.columns[1].title = 'Make things';
+			board.columns[1].color = '#FEB9A9';
+
+			const updateBoardDto = UpdateBoardDtoFactory.create({
+				maxVotes: null,
+				_id: board._id,
+				isSubBoard: false,
+				dividedBoards: [],
+				columns: board.columns as ColumnDto[],
+				deletedColumns: [board.columns[0]._id]
+			});
+
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
+
+			deleteCardServiceMock.deleteCardVotesFromColumn.mockResolvedValue(null);
+
+			const boardResult = { ...board, columns: board.columns.slice(1) };
+
+			boardRepositoryMock.updateBoard.mockResolvedValue(boardResult);
+
+			const result = await boardService.update(board._id, updateBoardDto);
+
+			expect(result).toEqual(boardResult);
+		});
+	});
+
+	describe('updatePhase', () => {
+		it('should be defined', () => {
+			expect(boardService.updatePhase).toBeDefined();
+		});
+
+		it('should call boardRepository ', async () => {
+			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
+			await boardService.updatePhase(boardPhaseDto);
+			expect(boardRepositoryMock.updatePhase).toBeCalledTimes(1);
+		});
+
+		it('should throw badRequestException when boardRepository fails', async () => {
+			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
+			// Set up the board repository mock to reject with an error
+			boardRepositoryMock.updatePhase.mockRejectedValueOnce(new Error('Some error'));
+
+			// Verify that the service method being tested throws a BadRequestException
+			expect(async () => await boardService.updatePhase(boardPhaseDto)).rejects.toThrowError(
+				BadRequestException
+			);
+		});
+
+		it('should call websocket with eventEmitter', async () => {
+			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
+			// Call the service method being tested
+			await boardService.updatePhase(boardPhaseDto);
+
+			// Verify that the eventEmitterMock.emit method was called exactly once
+			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
+		});
+
+		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
+			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
+			// Create a fake board object with the specified properties
+			const board = BoardFactory.create();
+			board.team = TeamFactory.create({ name: 'xgeeks' });
+
+			board.phase = BoardPhases.SUBMITTED;
+			board.slackEnable = true;
+
+			const table = {
+				[SLACK_MASTER_CHANNEL_ID]: '6405f9a04633b1668f71c068',
+				[SLACK_ENABLE]: true,
+				[FRONTEND_URL]: 'https://split.kigroup.de/'
+			};
+
+			// Set up the board repository mock to resolve with the fake board object
+			boardRepositoryMock.updatePhase.mockResolvedValue(board);
+
+			// Set up the configuration service mock
+			configServiceMock.getOrThrow.mockImplementation((key: string) => {
+				return table[key];
+			});
+
+			// Call the service method being tested
+			await boardService.updatePhase(boardPhaseDto);
+
+			// Verify that the slackSendMessageService.execute method with correct data 1 time
+			expect(slackSendMessageServiceMock.execute).toHaveBeenNthCalledWith(1, {
+				slackChannelId: '6405f9a04633b1668f71c068',
+				message: expect.stringContaining('https://split.kigroup.de/')
+			});
+		});
 	});
 });

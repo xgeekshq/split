@@ -78,7 +78,6 @@ export default class BoardDto {
 	@ApiProperty({ type: BoardDto, isArray: true })
 	@ValidateNested({ each: true })
 	@Type(() => BoardDto)
-	@IsOptional()
 	dividedBoards!: BoardDto[] | string[];
 
 	@ApiPropertyOptional({ type: String })
@@ -92,22 +91,24 @@ export default class BoardDto {
 	socketId?: string;
 
 	@ApiPropertyOptional({ type: BoardUserDto, isArray: true })
-	@IsOptional()
 	@Validate(CheckUniqueUsers)
 	users!: BoardUserDto[];
 
 	@ApiPropertyOptional({ default: true })
 	@IsNotEmpty()
+	@IsOptional()
 	@IsBoolean()
 	recurrent?: boolean;
 
 	@ApiPropertyOptional({ default: false })
 	@IsNotEmpty()
+	@IsOptional()
 	@IsBoolean()
 	isSubBoard?: boolean;
 
 	@ApiPropertyOptional({ default: 0 })
 	@IsNotEmpty()
+	@IsOptional()
 	@IsNumber()
 	boardNumber?: number;
 

@@ -119,23 +119,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				String(currentResponsible.id),
 				String(newResponsible.id)
 			);
-			// if (isSubBoard) {
-			// 	this.updateBoardUsersRole(
-			// 		boardId,
-			// 		boardData.users,
-			// 		String(currentResponsible.id),
-			// 		String(newResponsible.id)
-			// 	);
-			// }
-
-			// const mainBoardId = boardData.mainBoardId;
-
-			// this.updateBoardUsersRole(
-			// 	mainBoardId,
-			// 	boardData.users,
-			// 	String(currentResponsible.id),
-			// 	String(newResponsible.id)
-			// );
 		}
 
 		/**
@@ -260,7 +243,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	}
 
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
-		const user = boardUserToUpdateRole.user as unknown as User;
+		const user = boardUserToUpdateRole.user as User;
 
 		const updatedBoardUsers = await this.updateBoardUserService.updateBoardUserRole(
 			boardUserToUpdateRole.board,
@@ -353,11 +336,11 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		const promises = boardUsers
 			.filter((boardUser) =>
 				[getIdFromObjectId(currentResponsibleId), newResponsibleId].includes(
-					(boardUser.user as unknown as User)._id
+					(boardUser.user as User)._id
 				)
 			)
 			.map((boardUser) => {
-				const typedBoardUser = boardUser.user as unknown as User;
+				const typedBoardUser = boardUser.user as User;
 
 				return this.updateBoardUserService.updateBoardUserRole(
 					boardId,
@@ -405,7 +388,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 * Updates the columns
 		 *
 		 * */
-
 		const columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
 			if (col._id) {
 				const columnBoard = board.columns.find(
