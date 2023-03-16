@@ -7,7 +7,6 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -44,6 +43,8 @@ import Team from 'src/modules/teams/entities/teams.schema';
 import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+import { generateNewSubColumns } from '../utils/generate-subcolumns';
+import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
@@ -180,26 +181,37 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		if (!subBoard || !board || subBoard.submitedByUser)
 			throw new BadRequestException(UPDATE_FAILED);
 
-		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
-
-		if (!team) throw new BadRequestException(UPDATE_FAILED);
-
 		const columnsWitMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
 
 		await this.boardRepository.startTransaction();
 		try {
-			await this.boardRepository.updateMergedSubBoard(subBoardId, userId, true);
-			const result = await this.boardRepository.updateMergedBoard(
+			const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
+				subBoardId,
+				userId,
+				true
+			);
+
+			if (!updatedMergedSubBoard) {
+				throw new BadRequestException(UPDATE_FAILED);
+			}
+
+			const mergedBoard = await this.boardRepository.updateMergedBoard(
 				board._id,
 				columnsWitMergedCards,
 				true
 			);
 
+			if (!mergedBoard) {
+				throw new BadRequestException(UPDATE_FAILED);
+			}
+
 			if (board.slackChannelId && board.slackEnable) {
 				this.slackCommunicationService.executeMergeBoardNotification({
 					responsiblesChannelId: board.slackChannelId,
 					teamNumber: subBoard.boardNumber,
-					isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
+					isLastSubBoard: await this.checkIfIsLastBoardToMerge(
+						mergedBoard.dividedBoards as Board[]
+					),
 					boardId: subBoardId,
 					mainBoardId: board._id
 				});
@@ -212,7 +224,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			await this.boardRepository.commitTransaction();
 			await this.boardRepository.endSession();
 
-			return result;
+			return mergedBoard;
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
 		} finally {
@@ -446,83 +458,15 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	}
 
 	/**
-	 * Method to generate columns from sub-board
-	 * @param subBoard: Board
-	 * @return Column[]
-	 */
-	private generateNewSubColumns(subBoard: Board) {
-		return [...subBoard.columns].map((column) => {
-			const newColumn = {
-				title: column.title,
-				color: column.color,
-				cardText: column.cardText,
-				isDefaultText: column.isDefaultText,
-				cards: column.cards.map((card) => {
-					const newCard = {
-						text: card.text,
-						createdBy: card.createdBy,
-						votes: card.votes,
-						anonymous: card.anonymous,
-						createdByTeam: subBoard.title.replace('board', ''),
-						comments: card.comments.map((comment) => {
-							return {
-								text: comment.text,
-								createdBy: comment.createdBy,
-								anonymous: comment.anonymous
-							};
-						}),
-						items: card.items.map((cardItem) => {
-							return {
-								text: cardItem.text,
-								votes: cardItem.votes,
-								createdByTeam: subBoard.title.replace('board ', ''),
-								createdBy: cardItem.createdBy,
-								anonymous: cardItem.anonymous,
-								comments: cardItem.comments.map((comment) => {
-									return {
-										text: comment.text,
-										createdBy: comment.createdBy,
-										anonymous: comment.anonymous
-									};
-								}),
-								createdAt: card.createdAt
-							};
-						}),
-						createdAt: card.createdAt
-					};
-
-					return newCard;
-				})
-			};
-
-			return newColumn as Column;
-		});
-	}
-
-	/**
-	 * Method to merge cards from sub-board into a main board
-	 * @param columns: Column[]
-	 * @param subColumns: Column[]
-	 * @return Column[]
-	 */
-	private mergeCardsFromSubBoardColumnsIntoMainBoard(columns: Column[], subColumns: Column[]) {
-		for (let i = 0; i < columns.length; i++) {
-			columns[i].cards = [...columns[i].cards, ...subColumns[i].cards];
-		}
-
-		return columns;
-	}
-
-	/**
 	 * Method to return columns with cards merged cards a from sub-board
 	 * @param subBoard: Board
 	 * @param board: Board
 	 * @return Column[]
 	 */
 	private getColumnsFromMainBoardWithMergedCards(subBoard: Board, board: Board) {
-		const newSubColumns = this.generateNewSubColumns(subBoard);
+		const newSubColumns = generateNewSubColumns(subBoard);
 
-		return this.mergeCardsFromSubBoardColumnsIntoMainBoard([...board.columns], newSubColumns);
+		return mergeCardsFromSubBoardColumnsIntoMainBoard([...board.columns], newSubColumns);
 	}
 
 	private generateMessage(phase: string, boardId: string, date: string, columns): string {
