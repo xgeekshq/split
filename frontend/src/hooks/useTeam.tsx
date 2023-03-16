@@ -147,7 +147,7 @@ const useTeam = ({
         type: ToastStateEnum.SUCCESS,
       });
     },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       setToastState({
         open: true,
         content:

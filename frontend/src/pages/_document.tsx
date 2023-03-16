@@ -6,10 +6,10 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link crossOrigin="true" href="https://fonts.googleapis.com" rel="preconnect" />
-        <link crossOrigin="true" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link crossOrigin="anonymous" href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
         <link
-          crossOrigin="true"
+          crossOrigin="anonymous"
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
           rel="stylesheet"
         />

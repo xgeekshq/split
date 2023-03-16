@@ -1,5 +1,6 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
+import { ChildrenProp } from '@/types/common';
 import {
   StyledAccordionItem,
   StyledAccordionHeader,
@@ -8,7 +9,7 @@ import {
   StyledAccordionContent,
 } from '../../styles';
 
-const ConfigurationSettings: React.FC = ({ children }) => (
+const ConfigurationSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="configurations" variant="first">
     <StyledAccordionHeader variant="first">
       <StyledAccordionTrigger>

@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Draggable } from '@hello-pangea/dnd';
-
+import { Draggable } from 'react-beautiful-dnd';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
