@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -10,7 +9,8 @@ import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useTeam from '@/hooks/useTeam';
 import { UserList } from '@/types/team/userList';
-import UserListDialog from '../../../Primitives/Dialogs/UserListDialog/UserListDialog';
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import useCurrentSession from '@/hooks/useCurrentSession';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -25,7 +25,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
 
   const router = useRouter();
 
-  const { data: session } = useSession({ required: true });
+  const { userId } = useCurrentSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
@@ -89,9 +89,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     });
 
     // this insures that the team creator stays always in first
-    const userAdminIndex = updatedListWithAdded.findIndex(
-      (member) => member.user._id === session?.user.id,
-    );
+    const userAdminIndex = updatedListWithAdded.findIndex((member) => member.user._id === userId);
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 
