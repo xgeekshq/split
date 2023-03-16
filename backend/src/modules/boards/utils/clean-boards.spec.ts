@@ -1,6 +1,4 @@
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { hideText } from 'src/libs/utils/hideText';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
@@ -32,15 +30,7 @@ const hideVotes = (votes: string[], createdBy: string) => {
 describe('cleanBoard function', () => {
 	test('cleanBoard should return votes hidden if they not belong to the user', () => {
 		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
-		const user_2 = UserFactory.create();
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards to another user, since all cards are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
 		board.columns.forEach((column) => {
@@ -49,13 +39,11 @@ describe('cleanBoard function', () => {
 				card.comments = [];
 				card.createdByTeam = null;
 				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.votes = [];
 				card.items.forEach((cardItem) => {
 					cardItem.anonymous = false;
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
 					cardItem.comments = [];
 					cardItem.createdByTeam = null;
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 				});
 			});
 		});
@@ -70,25 +58,17 @@ describe('cleanBoard function', () => {
 				card.createdAt = new Date(card.createdAt);
 				card.items.forEach((cardItem) => {
 					cardItem.createdAt = new Date(cardItem.createdAt);
-					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdBy._id));
+					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return cards with hidden text', () => {
 		const board = BoardFactory.create({ hideCards: true, hideVotes: false });
-		const user_2 = UserFactory.create();
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards to another user, since all cards are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
 		board.columns.forEach((column) => {
@@ -96,13 +76,11 @@ describe('cleanBoard function', () => {
 				card.anonymous = false;
 				card.comments = [];
 				card.createdByTeam = null;
-				card.votes = [];
 				card.createdBy = formatCreatedBy(card.createdBy as User);
 				card.items.forEach((cardItem) => {
 					cardItem.anonymous = false;
 					cardItem.comments = [];
 					cardItem.createdByTeam = null;
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
 				});
 			});
@@ -118,54 +96,46 @@ describe('cleanBoard function', () => {
 			column.cards.forEach((card: Card) => {
 				const createdByAsUser = card.createdBy as User;
 
-				if (createdByAsUser._id !== createdBy._id) {
+				if (createdByAsUser._id !== createdByUser_1._id) {
 					card.text = hideText(card.text);
-					card.createdBy = replaceUser(createdByAsUser, createdBy._id);
+					card.createdBy = replaceUser(createdByAsUser, createdByUser_1._id);
 				}
 				card.createdAt = new Date(card.createdAt);
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
-					if (createdByAsUserItem._id !== createdBy._id) {
+					if (createdByAsUserItem._id !== createdByUser_1._id) {
 						cardItem.text = hideText(cardItem.text);
-						cardItem.createdBy = replaceUser(createdByAsUserItem, createdBy._id);
+						cardItem.createdBy = replaceUser(createdByAsUserItem, createdByUser_1._id);
 					}
 					cardItem.createdAt = new Date(cardItem.createdAt);
-					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdBy._id));
+					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return createdBy with hidden text if anonymous or createdByTeam are true', () => {
 		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const team = TeamFactory.create();
-		const user_2 = UserFactory.create();
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards to another user and team, since all cards are created by the same user. Also, change anonymous card field to true
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[1].createdByTeam = team._id;
-			board.columns[index].cards[1].items[0].createdByTeam = team._id;
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].anonymous = true;
-			board.columns[index].cards[0].items[0].anonymous = true;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
+		const createdByUser_2 = formatCreatedBy(board.columns[0].cards[1].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
 		board.columns.forEach((column) => {
 			column.cards.forEach((card) => {
 				card.createdBy = formatCreatedBy(card.createdBy as User);
 				card.comments = [];
-				card.votes = [];
+				card.anonymous = card.createdBy._id === createdByUser_2._id ? true : false;
+				card.createdByTeam = card.createdBy._id === createdByUser_1._id ? card.createdByTeam : null;
+
 				card.items.forEach((cardItem) => {
 					cardItem.createdBy = formatCreatedBy(card.createdBy as User);
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 					cardItem.comments = [];
+					cardItem.anonymous = cardItem.createdBy._id === createdByUser_2._id ? true : false;
+					cardItem.createdByTeam =
+						cardItem.createdBy._id === createdByUser_1._id ? cardItem.createdByTeam : null;
 				});
 			});
 		});
@@ -181,7 +151,7 @@ describe('cleanBoard function', () => {
 				const createdByAsUser = card.createdBy as User;
 
 				if (card.anonymous || card.createdByTeam) {
-					card.createdBy = replaceUser(createdByAsUser, createdBy._id);
+					card.createdBy = replaceUser(createdByAsUser, createdByUser_1._id);
 				}
 
 				card.createdAt = new Date(card.createdAt);
@@ -189,28 +159,20 @@ describe('cleanBoard function', () => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
 					if (cardItem.anonymous || cardItem.createdByTeam) {
-						cardItem.createdBy = replaceUser(createdByAsUserItem, createdBy._id);
+						cardItem.createdBy = replaceUser(createdByAsUserItem, createdByUser_1._id);
 					}
 					cardItem.createdAt = new Date(cardItem.createdAt);
-					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdBy._id));
+					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return votes user only ', () => {
 		const board = BoardFactory.create({ hideCards: false, hideVotes: true });
-		const user_2 = UserFactory.create();
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards to another user, since all cards are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
 		board.columns.forEach((column) => {
@@ -219,13 +181,11 @@ describe('cleanBoard function', () => {
 				card.comments = [];
 				card.createdByTeam = null;
 				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.votes = [];
 				card.items.forEach((cardItem) => {
 					cardItem.anonymous = false;
 					cardItem.comments = [];
 					cardItem.createdByTeam = null;
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 				});
 			});
 		});
@@ -242,28 +202,19 @@ describe('cleanBoard function', () => {
 				card.items.forEach((cardItem) => {
 					cardItem.createdAt = new Date(cardItem.createdAt);
 					cardItem.votes = hideVotes(
-						filterVotes(cardItem.votes as string[], String(createdBy._id)),
-						String(createdBy._id)
+						filterVotes(cardItem.votes as string[], String(createdByUser_1._id)),
+						String(createdByUser_1._id)
 					);
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return cards and votes hidden if hideCards and hidVotes are true', () => {
 		const board = BoardFactory.create({ hideCards: true, hideVotes: true });
-		const user_2 = UserFactory.create();
-
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards to another user, since all cards are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
 		board.columns.forEach((element) => {
@@ -271,13 +222,11 @@ describe('cleanBoard function', () => {
 				card.anonymous = false;
 				card.comments = [];
 				card.createdByTeam = null;
-				card.votes = [];
 				card.createdBy = formatCreatedBy(card.createdBy as User);
 				card.items.forEach((cardItem) => {
 					cardItem.anonymous = false;
 					cardItem.comments = [];
 					cardItem.createdByTeam = null;
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
 				});
 			});
@@ -294,72 +243,54 @@ describe('cleanBoard function', () => {
 			column.cards.forEach((card) => {
 				const createdByAsUser = card.createdBy as User;
 
-				if (createdByAsUser._id !== createdBy._id) {
+				if (createdByAsUser._id !== createdByUser_1._id) {
 					card.text = hideText(card.text);
-					card.createdBy = replaceUser(createdByAsUser, createdBy._id);
+					card.createdBy = replaceUser(createdByAsUser, createdByUser_1._id);
 				}
 				card.createdAt = new Date(card.createdAt);
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
-					if (createdByAsUserItem._id !== createdBy._id) {
+					if (createdByAsUserItem._id !== createdByUser_1._id) {
 						cardItem.text = hideText(cardItem.text);
-						cardItem.createdBy = replaceUser(createdByAsUserItem, createdBy._id);
+						cardItem.createdBy = replaceUser(createdByAsUserItem, createdByUser_1._id);
 					}
 					cardItem.createdAt = new Date(cardItem.createdAt);
 					cardItem.votes = hideVotes(
-						filterVotes(cardItem.votes as string[], String(createdBy._id)),
-						String(createdBy._id)
+						filterVotes(cardItem.votes as string[], String(createdByUser_1._id)),
+						String(createdByUser_1._id)
 					);
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return comments hidden if they are anonymous', () => {
 		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
-		const user_2 = UserFactory.create();
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards and comments to another user, since all cards and comments are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].comments[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].comments[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].comments[0].anonymous = true;
-			board.columns[index].cards[0].items[0].comments[0].anonymous = true;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
+		const createdByUser_2 = formatCreatedBy(board.columns[0].cards[1].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy and ensures that besides
 		//of the comments above, all others are not anonymous
 		board.columns.forEach((column) => {
 			column.cards.forEach((card) => {
 				card.createdByTeam = null;
-				card.votes = [];
 				card.anonymous = false;
 				card.createdBy = formatCreatedBy(card.createdBy as User);
 				card.comments.forEach((comment) => {
 					comment.createdBy = formatCreatedBy(comment.createdBy as User);
-
-					if (comment.createdBy._id !== createdBy._id) {
-						comment.anonymous = false;
-					}
+					comment.anonymous = comment.createdBy._id === createdByUser_2._id ? true : false;
 				});
 				card.items.forEach((cardItem) => {
 					cardItem.createdByTeam = null;
 					cardItem.anonymous = false;
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
 					cardItem.comments.forEach((commentItem) => {
 						commentItem.createdBy = formatCreatedBy(commentItem.createdBy as User);
-
-						if (commentItem.createdBy._id !== createdBy._id) {
-							commentItem.anonymous = false;
-						}
+						commentItem.anonymous =
+							commentItem.createdBy._id === createdByUser_2._id ? true : false;
 					});
 				});
 			});
@@ -376,9 +307,9 @@ describe('cleanBoard function', () => {
 			column.cards.forEach((card: Card) => {
 				const createdByAsUser = card.createdBy as User;
 				card.comments.forEach((comment) => {
-					if (comment.anonymous && createdByAsUser._id !== createdBy._id) {
+					if (comment.anonymous && createdByAsUser._id !== createdByUser_1._id) {
 						comment.text = board.hideCards ? hideText(comment.text) : comment.text;
-						comment.createdBy = replaceUser(comment.createdBy as User, createdBy._id);
+						comment.createdBy = replaceUser(comment.createdBy as User, createdByUser_1._id);
 					}
 				});
 
@@ -386,40 +317,32 @@ describe('cleanBoard function', () => {
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 					cardItem.comments.forEach((commentItem) => {
-						if (commentItem.anonymous && createdByAsUserItem._id !== createdBy._id) {
+						if (commentItem.anonymous && createdByAsUserItem._id !== createdByUser_1._id) {
 							commentItem.text = board.hideCards ? hideText(commentItem.text) : commentItem.text;
-							commentItem.createdBy = replaceUser(commentItem.createdBy as User, createdBy._id);
+							commentItem.createdBy = replaceUser(
+								commentItem.createdBy as User,
+								createdByUser_1._id
+							);
 						}
 					});
 
 					cardItem.createdAt = new Date(cardItem.createdAt);
-					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdBy._id));
+					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
 	test('cleanBoard should return comments with text hidden if hideCards is true', () => {
 		const board = BoardFactory.create({ hideCards: true, hideVotes: false });
-		const user_2 = UserFactory.create();
-		const createdBy = board.columns[0].cards[0].createdBy as User;
-		const createdByUser_2 = formatCreatedBy(user_2);
-
-		// Assigns cards and comments to another user, since all cards and comments are created by the same user
-		for (let index = 0; index < board.columns.length; index++) {
-			board.columns[index].cards[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].comments[0].createdBy = createdByUser_2;
-			board.columns[index].cards[0].items[0].comments[0].createdBy = createdByUser_2;
-		}
+		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy and comment.anonymous to false
 		board.columns.forEach((column) => {
 			column.cards.forEach((card) => {
 				card.createdByTeam = null;
-				card.votes = [];
 				card.anonymous = false;
 				card.createdBy = formatCreatedBy(card.createdBy as User);
 				card.comments.forEach((comment) => {
@@ -429,7 +352,6 @@ describe('cleanBoard function', () => {
 				card.items.forEach((cardItem) => {
 					cardItem.createdByTeam = null;
 					cardItem.anonymous = false;
-					cardItem.votes = [createdBy._id, createdBy._id, createdByUser_2._id];
 					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
 					cardItem.comments.forEach((commentItem) => {
 						commentItem.createdBy = formatCreatedBy(commentItem.createdBy as User);
@@ -449,17 +371,17 @@ describe('cleanBoard function', () => {
 			column.cards.forEach((card: Card) => {
 				const createdByAsUserDocument = card.createdBy as User;
 
-				if (createdByAsUserDocument._id !== createdBy._id) {
+				if (createdByAsUserDocument._id !== createdByUser_1._id) {
 					card.text = hideText(card.text);
-					card.createdBy = replaceUser(card.createdBy as User, createdBy._id);
+					card.createdBy = replaceUser(card.createdBy as User, createdByUser_1._id);
 				}
 
 				card.comments.forEach((comment) => {
-					if (board.hideCards && createdByAsUserDocument._id !== createdBy._id) {
+					if (board.hideCards && createdByAsUserDocument._id !== createdByUser_1._id) {
 						comment.text = hideText(comment.text);
 						comment.createdBy =
-							comment.createdBy && createdBy._id
-								? replaceUser(comment.createdBy as User, createdBy._id)
+							comment.createdBy && createdByUser_1._id
+								? replaceUser(comment.createdBy as User, createdByUser_1._id)
 								: null;
 					}
 				});
@@ -467,26 +389,26 @@ describe('cleanBoard function', () => {
 				card.items.forEach((cardItem) => {
 					const createdByAsUserDocumentItem = cardItem.createdBy as User;
 
-					if (createdByAsUserDocumentItem._id !== createdBy._id) {
+					if (createdByAsUserDocumentItem._id !== createdByUser_1._id) {
 						cardItem.text = hideText(cardItem.text);
-						cardItem.createdBy = replaceUser(cardItem.createdBy as User, createdBy._id);
+						cardItem.createdBy = replaceUser(cardItem.createdBy as User, createdByUser_1._id);
 					}
 
 					cardItem.comments.forEach((commentItem) => {
-						if (board.hideCards && createdByAsUserDocumentItem._id !== createdBy._id) {
+						if (board.hideCards && createdByAsUserDocumentItem._id !== createdByUser_1._id) {
 							commentItem.text = hideText(commentItem.text);
 							commentItem.createdBy =
-								commentItem.createdBy && createdBy._id
-									? replaceUser(commentItem.createdBy as User, createdBy._id)
+								commentItem.createdBy && createdByUser_1._id
+									? replaceUser(commentItem.createdBy as User, createdByUser_1._id)
 									: null;
 						}
 					});
 					cardItem.createdAt = new Date(cardItem.createdAt);
-					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdBy._id));
+					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
 				});
 			});
 		});
 
-		expect(cleanBoard(board, createdBy._id)).toEqual(boardResult);
+		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 });

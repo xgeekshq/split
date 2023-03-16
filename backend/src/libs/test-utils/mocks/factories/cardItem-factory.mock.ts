@@ -1,6 +1,5 @@
 import faker from '@faker-js/faker';
-import Card from 'src/modules/cards/entities/card.schema';
-import { CardItemFactory } from './cardItem-factory.mock';
+import CardItem from 'src/modules/cards/entities/card.item.schema';
 import { CommentFactory } from './comment-factory.mock';
 import { buildTestFactory } from './generic-factory.mock';
 import { UserFactory } from './user-factory';
@@ -11,7 +10,7 @@ const teamId = faker.datatype.uuid();
 const createdAtDate = faker.datatype.datetime();
 const user = UserFactory.create({ joinedAt: new Date(faker.datatype.datetime()) });
 
-const mockCardData = (): Card => {
+const mockCardItemData = () => {
 	return {
 		_id: cardId,
 		text: cardText,
@@ -20,16 +19,10 @@ const mockCardData = (): Card => {
 		createdAt: createdAtDate,
 		comments: CommentFactory.createMany(2, () => ({ createdBy: user })),
 		votes: [],
-		anonymous: faker.datatype.boolean(),
-		items: [
-			CardItemFactory.create({
-				createdBy: user,
-				comments: CommentFactory.createMany(2, [{ createdBy: user }, { createdBy: user }])
-			})
-		]
+		anonymous: faker.datatype.boolean()
 	};
 };
 
-export const CardFactory = buildTestFactory<Card>(() => {
-	return mockCardData();
+export const CardItemFactory = buildTestFactory<CardItem>(() => {
+	return mockCardItemData();
 });
