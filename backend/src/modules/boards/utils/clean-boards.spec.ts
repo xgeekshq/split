@@ -1,7 +1,13 @@
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
+import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
+import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
+import { ColumnFactory } from 'src/libs/test-utils/mocks/factories/column-factory.mock';
+import { CommentFactory } from 'src/libs/test-utils/mocks/factories/comment-factory.mock';
+import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { hideText } from 'src/libs/utils/hideText';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
+import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { cleanBoard, replaceUser } from './clean-board';
 
@@ -17,7 +23,7 @@ const filterVotes = (votes: string[], userId: string) => {
 	return votes.filter((vote) => String(vote) === String(userId));
 };
 
-const hideVotes = (votes: string[], createdBy: string) => {
+export const hideVotes = (votes: string[], createdBy: string) => {
 	return votes.map((vote) => {
 		if (String(vote) !== String(createdBy)) {
 			return hideText(String(vote));
@@ -27,26 +33,80 @@ const hideVotes = (votes: string[], createdBy: string) => {
 	});
 };
 
+const formatCreatedByOfCards = (cards: Card[]) => {
+	return cards.map((card) => {
+		card.createdBy = formatCreatedBy(card.createdBy as User);
+		card.comments = card.comments.length != 0 ? formatCreatedByOfComments(card.comments) : [];
+		card.items.forEach((cardItem) => {
+			cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
+			cardItem.comments =
+				cardItem.comments.length != 0 ? formatCreatedByOfComments(cardItem.comments) : [];
+		});
+
+		return card;
+	});
+};
+
+const formatCreatedByOfComments = (comments: Comment[]) => {
+	return comments.map((comment) => {
+		comment.createdBy = formatCreatedBy(comment.createdBy as User);
+
+		return comment;
+	});
+};
+
+const formatColumns = (columns: Column[]) => {
+	return columns.map((column) => {
+		column.cards = formatCreatedByOfCards(column.cards);
+
+		return column;
+	});
+};
+
 describe('cleanBoard function', () => {
 	test('cleanBoard should return votes hidden if they not belong to the user', () => {
-		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: false,
+			hideVotes: false,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						createdByTeam: null,
+						comments: [],
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
+
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.anonymous = false;
-				card.comments = [];
-				card.createdByTeam = null;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.items.forEach((cardItem) => {
-					cardItem.anonymous = false;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-					cardItem.comments = [];
-					cardItem.createdByTeam = null;
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -67,24 +127,47 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return cards with hidden text', () => {
-		const board = BoardFactory.create({ hideCards: true, hideVotes: false });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: true,
+			hideVotes: false,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						createdByTeam: null,
+						comments: [],
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.anonymous = false;
-				card.comments = [];
-				card.createdByTeam = null;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.items.forEach((cardItem) => {
-					cardItem.anonymous = false;
-					cardItem.comments = [];
-					cardItem.createdByTeam = null;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -118,27 +201,45 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return createdBy with hidden text if anonymous or createdByTeam are true', () => {
-		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: false,
+			hideVotes: false,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						comments: [],
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: []
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: true,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: true,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
-		const createdByUser_2 = formatCreatedBy(board.columns[0].cards[1].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.comments = [];
-				card.anonymous = card.createdBy._id === createdByUser_2._id ? true : false;
-				card.createdByTeam = card.createdBy._id === createdByUser_1._id ? card.createdByTeam : null;
-
-				card.items.forEach((cardItem) => {
-					cardItem.createdBy = formatCreatedBy(card.createdBy as User);
-					cardItem.comments = [];
-					cardItem.anonymous = cardItem.createdBy._id === createdByUser_2._id ? true : false;
-					cardItem.createdByTeam =
-						cardItem.createdBy._id === createdByUser_1._id ? cardItem.createdByTeam : null;
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -171,24 +272,47 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return votes user only ', () => {
-		const board = BoardFactory.create({ hideCards: false, hideVotes: true });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: false,
+			hideVotes: true,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.anonymous = false;
-				card.comments = [];
-				card.createdByTeam = null;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.items.forEach((cardItem) => {
-					cardItem.anonymous = false;
-					cardItem.comments = [];
-					cardItem.createdByTeam = null;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -213,24 +337,47 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return cards and votes hidden if hideCards and hidVotes are true', () => {
-		const board = BoardFactory.create({ hideCards: true, hideVotes: true });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: true,
+			hideVotes: true,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy
-		board.columns.forEach((element) => {
-			element.cards.forEach((card) => {
-				card.anonymous = false;
-				card.comments = [];
-				card.createdByTeam = null;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.items.forEach((cardItem) => {
-					cardItem.anonymous = false;
-					cardItem.comments = [];
-					cardItem.createdByTeam = null;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -268,33 +415,54 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return comments hidden if they are anonymous', () => {
-		const board = BoardFactory.create({ hideCards: false, hideVotes: false });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: false,
+			hideVotes: false,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						comments: CommentFactory.createMany(2, [
+							{ createdBy: cardUsers[0], anonymous: false },
+							{ createdBy: cardUsers[1], anonymous: true }
+						]),
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: CommentFactory.createMany(2, [
+									{ createdBy: cardUsers[0], anonymous: false },
+									{ createdBy: cardUsers[1], anonymous: true }
+								]),
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
-		const createdByUser_2 = formatCreatedBy(board.columns[0].cards[1].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy and ensures that besides
 		//of the comments above, all others are not anonymous
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.createdByTeam = null;
-				card.anonymous = false;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.comments.forEach((comment) => {
-					comment.createdBy = formatCreatedBy(comment.createdBy as User);
-					comment.anonymous = comment.createdBy._id === createdByUser_2._id ? true : false;
-				});
-				card.items.forEach((cardItem) => {
-					cardItem.createdByTeam = null;
-					cardItem.anonymous = false;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-					cardItem.comments.forEach((commentItem) => {
-						commentItem.createdBy = formatCreatedBy(commentItem.createdBy as User);
-						commentItem.anonymous =
-							commentItem.createdBy._id === createdByUser_2._id ? true : false;
-					});
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
@@ -336,30 +504,53 @@ describe('cleanBoard function', () => {
 	});
 
 	test('cleanBoard should return comments with text hidden if hideCards is true', () => {
-		const board = BoardFactory.create({ hideCards: true, hideVotes: false });
+		const cardUsers = UserFactory.createMany(2);
+		const board = BoardFactory.create({
+			hideCards: true,
+			hideVotes: false,
+			columns: ColumnFactory.createMany(3, () => ({
+				cards: CardFactory.createMany(2, [
+					{
+						createdBy: cardUsers[0],
+						anonymous: false,
+						comments: CommentFactory.createMany(2, [
+							{ createdBy: cardUsers[0], anonymous: false },
+							{ createdBy: cardUsers[1], anonymous: false }
+						]),
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: CommentFactory.createMany(2, [
+									{ createdBy: cardUsers[0], anonymous: false },
+									{ createdBy: cardUsers[1], anonymous: false }
+								]),
+								createdByTeam: null
+							})
+						]
+					},
+					{
+						createdBy: cardUsers[1],
+						anonymous: false,
+						comments: [],
+						createdByTeam: null,
+						items: [
+							CardItemFactory.create({
+								createdBy: cardUsers[0],
+								anonymous: false,
+								comments: [],
+								createdByTeam: null
+							})
+						]
+					}
+				])
+			}))
+		});
 		const createdByUser_1 = formatCreatedBy(board.columns[0].cards[0].createdBy as User);
 
 		// Format board fields accordingly with conditions to test and format createdBy to only have the fields from formatCreatedBy and comment.anonymous to false
-		board.columns.forEach((column) => {
-			column.cards.forEach((card) => {
-				card.createdByTeam = null;
-				card.anonymous = false;
-				card.createdBy = formatCreatedBy(card.createdBy as User);
-				card.comments.forEach((comment) => {
-					comment.createdBy = formatCreatedBy(comment.createdBy as User);
-					comment.anonymous = false;
-				});
-				card.items.forEach((cardItem) => {
-					cardItem.createdByTeam = null;
-					cardItem.anonymous = false;
-					cardItem.createdBy = formatCreatedBy(cardItem.createdBy as User);
-					cardItem.comments.forEach((commentItem) => {
-						commentItem.createdBy = formatCreatedBy(commentItem.createdBy as User);
-						commentItem.anonymous = false;
-					});
-				});
-			});
-		});
+		board.columns = formatColumns(board.columns);
 
 		const boardResult = JSON.parse(JSON.stringify(board));
 
