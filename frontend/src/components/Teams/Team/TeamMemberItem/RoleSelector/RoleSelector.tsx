@@ -19,7 +19,7 @@ const RoleSelector = ({
   role,
   userId,
   isTeamPage = false,
-  teamId = undefined,
+  teamId,
   canChangeRole = true,
 }: RoleSelectorProps) => (
   <Flex gap="8" align="center" data-testid="roleSelector">

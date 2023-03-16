@@ -1,20 +1,22 @@
 import React, { useMemo } from 'react';
-import useCurrentSession from '@/hooks/useCurrentSession';
+import { useRouter } from 'next/router';
 
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import { Team } from '@/types/team/team';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { useRouter } from 'next/router';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import { InnerContainer } from '@/styles/pages/pages.styles';
 
-import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Button from '@/components/Primitives/Inputs/Button/Button';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import useTeam from '@/hooks/useTeam';
+
+import { Team } from '@/types/team/team';
+
+import { InnerContainer } from '@/styles/pages/pages.styles';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import TeamTitle from './TeamTitle/TeamTitle';
 import TeamBoards from './TeamBoards/TeamBoards';
 
@@ -125,7 +127,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
 
           <Flex align="center">
             {!isTeamPage && userFound ? (
-              <RoleSelector role={userFound.role} userId={userId!} teamId={id} />
+              <RoleSelector role={userFound.role} userId={userFound._id!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}
