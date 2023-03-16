@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Team } from '@/types/team/team';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import EmptyTeams from './EmptyTeams/EmptyTeams';
 
 import TeamItem from './TeamItem/TeamItem';

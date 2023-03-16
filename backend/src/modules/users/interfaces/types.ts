@@ -6,9 +6,11 @@ export const TYPES = {
 		DeleteUserService: 'DeleteUserService'
 	},
 	applications: {
-		GetUserApplication: 'GetUserApplication',
-		UpdateUserApplication: 'UpdateUserApplication',
-		DeleteUserApplication: 'DeleteUserApplication'
+		GetAllUsersUseCase: 'GetAllUsersUseCase',
+		GetAllUsersWithTeamsUseCase: 'GetAllUsersWithTeamsUseCase',
+		GetUserUseCase: 'GetUserUseCase',
+		UpdateSAdminUseCase: 'UpdateSAdminUseCase',
+		DeleteUserUseCase: 'DeleteUserUseCase'
 	},
 	repository: 'UserRepository'
 };

@@ -12,7 +12,7 @@ import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
 import useUser from '@/hooks/useUser';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 
 const NewTeam: NextPage = () => {
@@ -38,6 +38,7 @@ const NewTeam: NextPage = () => {
           user,
           role: TeamUserRoles.ADMIN,
           isNewJoiner: false,
+          canBeResponsible: true,
         });
       }
     });

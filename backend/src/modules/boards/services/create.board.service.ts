@@ -1,4 +1,4 @@
-import { CreateBoardUserServiceInterface } from './../interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
@@ -9,13 +9,13 @@ import {
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { TYPES } from 'src/modules/boards/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
@@ -27,7 +27,6 @@ import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BoardUserRepositoryInterface } from '../repositories/board-user.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
 
@@ -44,12 +43,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
-		@Inject(Boards.TYPES.services.CreateBoardUserService)
-		private createBoardUserService: CreateBoardUserServiceInterface,
-		@Inject(TYPES.repositories.BoardRepository)
+		@Inject(Boards.TYPES.repositories.BoardRepository)
 		private readonly boardRepository: BoardRepositoryInterface,
-		@Inject(TYPES.repositories.BoardUserRepository)
-		private readonly boardUserRepository: BoardUserRepositoryInterface
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
@@ -129,20 +126,23 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					team: teamId,
 					user: `${user._id}`,
 					role: teamUser.role,
-					isNewJoiner: false
+					isNewJoiner: false,
+					canBeResponsible: true
 				});
 
 				teamUser.isNewJoiner = false;
+				teamUser.canBeResponsible = true;
 			}
 
 			return teamUser;
 		});
 
 		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = Math.floor(teamLength / Number(maxUsersPerTeam));
+		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
+		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -176,12 +176,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		if (!board) return null;
 
 		return board._id.toString();
-	}
-
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId: string) {
-		return Promise.all(
-			newUsers.map((user) => this.boardUserRepository.create({ ...user, board: newBoardId }))
-		);
 	}
 
 	/* --------------- HELPERS --------------- */
@@ -309,6 +303,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		);
 
 		findSelectedAvailableUser.isNewJoiner = false;
+		findSelectedAvailableUser.canBeResponsible = true;
 
 		const findSelectedAvailableUserArray: TeamUser[] = [];
 
@@ -320,7 +315,9 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	private getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
 		const randomGroupOfUsers = [];
 
-		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+		let availableUsersToBeResponsible = availableUsers.filter(
+			(user) => !user.isNewJoiner && user.canBeResponsible
+		);
 
 		if (availableUsersToBeResponsible.length < 1) {
 			availableUsersToBeResponsible = this.getAvailableUsersToBeResponsible(availableUsers);
@@ -333,7 +330,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			user: (candidateToBeTeamResponsible.user as User)._id,
 			role: BoardRoles.MEMBER,
 			votesCount: 0,
-			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner
+			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+			canBeResponsible: candidateToBeTeamResponsible.canBeResponsible
 		});
 
 		const availableUsersWotResponsible = availableUsers.filter(
@@ -349,7 +347,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				user: (teamUser.user as User)._id,
 				role: BoardRoles.MEMBER,
 				votesCount: 0,
-				isNewJoiner: teamUser.isNewJoiner
+				isNewJoiner: teamUser.isNewJoiner,
+				canBeResponsible: teamUser.canBeResponsible
 			});
 			i++;
 		}
@@ -370,15 +369,17 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 		let availableUsers = [...teamMembers];
 
-		const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+		const canBeResponsibles = availableUsers.filter(
+			(user) => !user.isNewJoiner && user.canBeResponsible
+		);
 		const responsiblesAvailable: TeamUser[] = [];
-		while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
-			const idx = Math.floor(Math.random() * isNotNewJoiners.length);
-			const randomUser = isNotNewJoiners[idx];
+		while (canBeResponsibles.length > 0 && responsiblesAvailable.length !== maxTeams) {
+			const idx = Math.floor(Math.random() * canBeResponsibles.length);
+			const randomUser = canBeResponsibles[idx];
 
 			if (randomUser && !responsiblesAvailable.includes(randomUser)) {
 				responsiblesAvailable.push(randomUser);
-				isNotNewJoiners.splice(idx, 1);
+				canBeResponsibles.splice(idx, 1);
 			}
 		}
 
@@ -420,14 +421,16 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
-			const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+			const canBeResponsibles = splitUsers[i].filter(
+				(user) => !user.isNewJoiner && user.canBeResponsible
+			);
 
-			const randomIndex = Math.floor(Math.random() * teamUsersWotIsNewJoiner.length);
-			teamUsersWotIsNewJoiner[randomIndex].role = BoardRoles.RESPONSIBLE;
-			responsibles.push(teamUsersWotIsNewJoiner[randomIndex].user.toString());
+			const randomIndex = Math.floor(Math.random() * canBeResponsibles.length);
+			canBeResponsibles[randomIndex].role = BoardRoles.RESPONSIBLE;
+			responsibles.push(canBeResponsibles[randomIndex].user.toString());
 
 			const result = splitUsers[i].map(
-				(user) => teamUsersWotIsNewJoiner.find((member) => member.user === user.user) || user
+				(user) => canBeResponsibles.find((member) => member.user === user.user) || user
 			);
 
 			newBoard.users = result;

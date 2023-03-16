@@ -1,4 +1,4 @@
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
 
 type SwitchDefaultTextProps = {

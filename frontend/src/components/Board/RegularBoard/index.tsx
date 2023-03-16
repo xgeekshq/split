@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Container } from '@/styles/pages/boards/board.styles';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
 import EmitEvent from '@/types/events/emit-event.type';
 import ListenEvent from '@/types/events/listen-event.type';
@@ -79,7 +78,7 @@ const RegularBoard = ({
   return board && userId && socketId ? (
     <>
       <RegularBoardHeader />
-      <Container direction="column">
+      <Flex direction="column" align="start" justify="center" css={{ px: '$36' }}>
         <Flex gap={40} align="center" css={{ py: '$32', width: '100%' }} justify="end">
           {shouldRenderBoardSettings && <Flex css={{ flex: 1 }} />}
           {!board?.submitedAt && (
@@ -126,7 +125,7 @@ const RegularBoard = ({
           isRegularBoard
           hasAdminRole={hasAdminRole}
         />
-      </Container>
+      </Flex>
     </>
   ) : (
     <LoadingPage />

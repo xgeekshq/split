@@ -8,11 +8,14 @@ export const TYPES = {
 		UpdateUserService: 'UpdateUserService'
 	},
 	applications: {
-		GetTokenAuthApplication: 'GetTokenAuthApplication',
-		RegisterAuthApplication: 'RegisterAuthApplication',
-		CreateResetTokenAuthApplication: 'CreateResetTokenAuthApplication',
-		UpdatePasswordAuthApplication: 'UpdatePasswordAuthApplication',
-		UpdateUserApplication: 'UpdateUserApplication'
+		RegisterUserUseCase: 'RegisterUserUseCase',
+		RegisterGuestUserUseCase: 'RegisterGuestUserUseCase',
+		StatisticsAuthUserUseCase: 'StatisticsAuthUserUseCase',
+		ValidateUserEmailUseCase: 'ValidateUserEmailUseCase',
+		SignInUseCase: 'SignInUseCase',
+		RefreshTokenUseCase: 'RefreshTokenUseCase',
+		ResetPasswordUseCase: 'ResetPasswordUseCase',
+		CreateResetPasswordTokenUseCase: 'CreateResetPasswordTokenUseCase'
 	},
 	repository: {
 		ResetPasswordRepository: 'ResetPasswordRepository'

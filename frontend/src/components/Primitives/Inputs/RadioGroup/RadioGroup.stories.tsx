@@ -9,7 +9,7 @@ import {
   RadioGroupIndicator,
   Label,
 } from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 
 import {

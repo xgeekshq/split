@@ -37,4 +37,8 @@ export default class BoardGuestUserDto {
 	@IsOptional()
 	@IsBoolean()
 	isNewJoiner?: boolean;
+
+	@IsOptional()
+	@IsBoolean()
+	canBeResponsible?: boolean;
 }

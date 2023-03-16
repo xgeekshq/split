@@ -1,7 +1,7 @@
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useParticipants from '@/hooks/useParticipants';
@@ -11,11 +11,11 @@ import { BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useRouter } from 'next/router';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { ChildrenProp } from '@/types/common';
 
-interface Props {
-  children: ReactNode;
+interface Props extends ChildrenProp {
   hasPermissionsToEdit: boolean;
 }
 

@@ -9,7 +9,7 @@ import { MIN_MEMBERS } from '@/utils/constants';
 import { useSession } from 'next-auth/react';
 import { useFormContext } from 'react-hook-form';
 import isEmpty from '@/utils/isEmpty';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
@@ -48,7 +48,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     formState: { errors },
   } = useFormContext();
 
-  const message = errors.team?.message;
+  const message = errors.team?.message as string;
   const teamValueOnForm = getValues().team;
   const isValueEmpty = isEmpty(teamValueOnForm);
 

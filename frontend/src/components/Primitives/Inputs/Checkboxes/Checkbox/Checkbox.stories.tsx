@@ -4,7 +4,7 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { CheckboxSizeType, CheckboxVariantType } from '../../../../../stories/types/PrimitiveTypes';
 
 const SIZE_OPTIONS: CheckboxSizeType[] = ['sm', 'md'];

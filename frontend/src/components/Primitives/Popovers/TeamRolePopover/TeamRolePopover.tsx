@@ -50,6 +50,7 @@ const TeamRolePopover = React.memo(({ userId, teamId, isTeamPage }: TeamRolePopo
         user: userId,
         role: value,
         isNewJoiner: teamUser.isNewJoiner,
+        canBeResponsible: teamUser.canBeResponsible,
       };
 
       mutate(updateTeamUserRole);

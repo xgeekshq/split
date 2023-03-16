@@ -3,7 +3,7 @@ import React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Flex from '../../../Layout/Flex';
+import Flex from '../../../Layout/Flex/Flex';
 import Text from '../../../Text/Text';
 import Icon from '../../../Icons/Icon/Icon';
 

@@ -1,5 +1,6 @@
+import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -9,10 +10,9 @@ import {
 	forwardRef
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import * as Teams from 'src/modules/teams/interfaces/types';
-import Board, { BoardDocument } from 'src/modules/boards/entities/board.schema';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 
 @Injectable()
@@ -21,8 +21,10 @@ export class BoardUserGuard implements CanActivate {
 		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
 		private readonly reflector: Reflector,
-		@InjectModel(BoardUser.name) private BoardUserModel: Model<BoardUserDocument>,
-		@InjectModel(Board.name) private boardModel: Model<BoardDocument>
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface,
+		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		private getBoardUserService: GetBoardUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {
@@ -33,7 +35,7 @@ export class BoardUserGuard implements CanActivate {
 		const boardId: string = request.params.boardId;
 
 		try {
-			const board = await this.boardModel.findById(boardId).exec();
+			const board = await this.getBoardService.getBoardById(boardId);
 
 			let teamUser: TeamUser;
 
@@ -41,10 +43,7 @@ export class BoardUserGuard implements CanActivate {
 			if (board.team)
 				teamUser = await this.getTeamService.getTeamUser(user._id, String(board.team));
 
-			const boardUserFound = await this.BoardUserModel.findOne({
-				user: user._id,
-				board: boardId
-			}).exec();
+			const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, user._id);
 
 			const hasPermissions =
 				user.isSAdmin ||

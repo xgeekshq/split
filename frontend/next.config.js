@@ -2,7 +2,7 @@
 /** @type {import('next').NextConfig} */
 
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   output: 'standalone',
   swcMinify: true,
   publicRuntimeConfig: {

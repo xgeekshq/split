@@ -2,7 +2,6 @@ import AuthModule from 'src/modules/auth/auth.module';
 import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseBoardModule,
-	mongooseBoardUserModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
@@ -18,10 +17,8 @@ import {
 	afterUserUpdatedDurationSubscriber,
 	boardRepository,
 	boardTimerRepository,
-	boardUserRepository,
 	createBoardApplication,
 	createBoardService,
-	createBoardUserService,
 	deleteBoardApplication,
 	deleteBoardService,
 	getBoardApplication,
@@ -37,6 +34,7 @@ import {
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import { JwtRegister } from 'src/infrastructure/config/jwt.register';
+import BoardUsersModule from '../boardusers/boardusers.module';
 
 @Module({
 	imports: [
@@ -46,13 +44,12 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		CommunicationModule,
 		CardsModule,
 		forwardRef(() => AuthModule),
+		BoardUsersModule,
 		JwtRegister,
 		mongooseBoardModule,
-		mongooseBoardUserModule,
 		mongooseUserModule
 	],
 	providers: [
-		createBoardUserService,
 		createBoardService,
 		updateBoardService,
 		deleteBoardService,
@@ -73,8 +70,7 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		afterUserStoppedTimerSubscriber,
 		afterUserUpdatedDurationSubscriber,
 		afterUserRequestedTimerStateSubscriber,
-		boardRepository,
-		boardUserRepository
+		boardRepository
 	],
 	controllers: [BoardsController],
 	exports: [
@@ -82,8 +78,7 @@ import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 		createBoardService,
 		getBoardService,
 		updateBoardService,
-		deleteBoardService,
-		boardUserRepository
+		deleteBoardService
 	]
 })
 export default class BoardsModule {}

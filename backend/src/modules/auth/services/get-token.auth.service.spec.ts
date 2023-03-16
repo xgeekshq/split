@@ -4,18 +4,21 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
 import jwtService from 'src/libs/test-utils/mocks/jwtService.mock';
-import GetTokenAuthService from 'src/modules/auth/services/get-token.auth.service';
 import { updateUserService, userRepository } from 'src/modules/users/users.providers';
+import { getTokenAuthService, resetPasswordRepository } from '../auth.providers';
+import { GetTokenAuthServiceInterface } from '../interfaces/services/get-token.auth.service.interface';
+import { TYPES } from '../interfaces/types';
 
 describe('AuthService', () => {
-	let service: GetTokenAuthService;
+	let service: GetTokenAuthServiceInterface;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetTokenAuthService,
+				getTokenAuthService,
 				updateUserService,
 				userRepository,
+				resetPasswordRepository,
 				{
 					provide: ConfigService,
 					useValue: configService
@@ -35,7 +38,7 @@ describe('AuthService', () => {
 			]
 		}).compile();
 
-		service = module.get<GetTokenAuthService>(GetTokenAuthService);
+		service = module.get<GetTokenAuthServiceInterface>(TYPES.services.GetTokenAuthService);
 	});
 
 	describe('when creating a jwt', () => {

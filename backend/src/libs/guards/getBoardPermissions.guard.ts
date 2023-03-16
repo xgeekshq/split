@@ -6,18 +6,22 @@ import {
 	Injectable
 } from '@nestjs/common';
 import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { Reflector } from '@nestjs/core';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
 
 @Injectable()
 export class GetBoardGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private getBoardService: GetBoardServiceInterface,
+		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
+		private getBoardUserService: GetBoardUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {
@@ -29,7 +33,7 @@ export class GetBoardGuard implements CanActivate {
 
 		try {
 			const { isPublic, team } = await this.getBoardService.getBoardData(boardId);
-			const boardUserFound = await this.getBoardService.getBoardUser(boardId, userId);
+			const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
 
 			if (isPublic || boardUserFound || isSAdmin) {
 				return true;

@@ -41,7 +41,7 @@ jobs:
       
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
   build_backend:
     name: Build Backend
@@ -136,7 +136,7 @@ jobs:
       
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build
         run: npm run build
@@ -169,7 +169,7 @@ jobs:
       
       - name: Install
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Test
         run: npm run jest -- --coverage

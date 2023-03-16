@@ -21,7 +21,7 @@ import { SlackArchiveChannelConsumer } from 'src/modules/communication/consumers
 import { SlackCommunicationConsumer } from 'src/modules/communication/consumers/slack-communication.consumer';
 import { SlackArchiveChannelProducer } from 'src/modules/communication/producers/slack-archive-channel.producer';
 import { SlackCommunicationProducer } from 'src/modules/communication/producers/slack-communication.producer';
-import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consummer';
+import { SlackAddUserToChannelConsumer } from './consumers/slack-add-user-channel.consumer';
 import { SlackMergeBoardConsumer } from './consumers/slack-merge-board.consumer';
 import { SlackResponsibleConsumer } from './consumers/slack-responsible.consumer';
 import { SlackSendMessageConsumer } from './consumers/slack-send-message.consumer';
