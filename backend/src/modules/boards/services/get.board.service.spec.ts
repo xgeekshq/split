@@ -17,7 +17,7 @@ import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
@@ -473,6 +473,19 @@ describe('GetBoardService', () => {
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 
 			expect(boardResult.board).toEqual(board);
+		});
+
+		it('should throw error when boardIsPublic and creating a board user fails', async () => {
+			const board = BoardFactory.create({ isSubBoard: false, isPublic: true });
+			const userDtoMock = UserDtoFactory.create({ isSAdmin: false, isAnonymous: false });
+
+			boardRepositoryMock.getBoardData.mockResolvedValue(board);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce(null);
+			getBoardUserServiceMock.getBoardUserPopulated.mockResolvedValueOnce(null);
+
+			expect(async () => await boardService.getBoard(board._id, userDtoMock)).rejects.toThrow(
+				BadRequestException
+			);
 		});
 	});
 
