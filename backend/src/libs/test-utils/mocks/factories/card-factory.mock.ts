@@ -24,7 +24,7 @@ const mockCardData = (): Card => {
 		items: [
 			CardItemFactory.create({
 				createdBy: user,
-				comments: CommentFactory.createMany(2, [{ createdBy: user }, { createdBy: user }])
+				comments: CommentFactory.createMany(2, () => ({ createdBy: user }))
 			})
 		]
 	};
