@@ -19,25 +19,83 @@ const getConfiguration = () => ({
 	frontendUrl: configService.getOrThrow(FRONTEND_URL)
 });
 
+const changeResponsibleMock = {
+	newResponsibleEmail: 'someEmail',
+	previousResponsibleEmail: 'someEmail',
+	subTeamChannelId: 'someId',
+	email: 'someEmail',
+	teamNumber: 1,
+	responsiblesChannelId: 'someId',
+	mainChannelId: 'someChannelId'
+};
+
 describe('SlackResponsibleApplication', () => {
 	let application: ResponsibleApplicationInterface;
 	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 	const chatHandler = new ChatSlackHandler(communicationGateAdapterMocked);
 	const userHandler = new UsersSlackHandler(communicationGateAdapterMocked);
 	const conversationsHandler = new ConversationsSlackHandler(communicationGateAdapterMocked);
-	//let postMessage;
+	let postMessage;
+	let userHandlerMock;
+	let conversationsHandlerMock;
 
 	beforeAll(async () => {
 		application = new SlackResponsibleApplication(chatHandler, userHandler, conversationsHandler);
-		//postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementation(jest.fn());
+
+		postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementation(jest.fn());
+		userHandlerMock = jest
+			.spyOn(userHandler, 'getSlackUserIdByEmail')
+			.mockImplementation(jest.fn());
+
+		conversationsHandlerMock = jest
+			.spyOn(conversationsHandler, 'inviteUserToChannel')
+			.mockImplementation(jest.fn());
 	});
 
-	afterEach(() => {
+	beforeEach(() => {
 		jest.clearAllMocks();
 		jest.resetAllMocks();
+		userHandlerMock.mockResolvedValue('newResponsibleId');
 	});
 
 	it('should be defined', () => {
 		expect(application).toBeDefined();
+	});
+
+	it('should call userHandler.getSlackUserIdByEmail once with newResponsibleEmail ', async () => {
+		await application.execute(changeResponsibleMock);
+		expect(userHandlerMock).toHaveBeenNthCalledWith(1, changeResponsibleMock.newResponsibleEmail);
+	});
+
+	it('should call postMessage if mainChannelId', async () => {
+		await application.execute(changeResponsibleMock);
+		expect(postMessage).toHaveBeenCalledWith(
+			changeResponsibleMock.mainChannelId,
+			expect.stringContaining('newResponsibleId')
+		);
+	});
+
+	it('should call conversationHandler.inviteUserToChannel', async () => {
+		await application.execute(changeResponsibleMock);
+		expect(conversationsHandlerMock).toHaveBeenCalledWith(
+			changeResponsibleMock.responsiblesChannelId,
+			'newResponsibleId'
+		);
+	});
+
+	it('should call postMessage if has responsibleChannelId', async () => {
+		await application.execute(changeResponsibleMock);
+		expect(postMessage).toHaveBeenCalledWith(
+			changeResponsibleMock.responsiblesChannelId,
+			expect.stringContaining('newResponsibleId')
+		);
+	});
+
+	it('should call postMessage with subTeamChannelId and message', async () => {
+		await application.execute(changeResponsibleMock);
+		expect(postMessage).toHaveBeenCalledWith(
+			changeResponsibleMock.subTeamChannelId,
+			expect.stringContaining('newResponsibleId')
+		);
 	});
 });
