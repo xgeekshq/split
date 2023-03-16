@@ -8,6 +8,7 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'src/libs/constants/slack';
 import { FRONTEND_URL } from 'src/libs/constants/frontend';
+import { MergeBoardApplicationInterface } from '../interfaces/merge-board.application.interface';
 
 const getConfiguration = () => ({
 	slackApiBotToken: configService.getOrThrow(SLACK_API_BOT_TOKEN),
@@ -25,7 +26,7 @@ const mergeBoardMock = {
 };
 
 describe('SlackSendMessageApplication', () => {
-	let application: SlackMergeBoardApplication;
+	let application: MergeBoardApplicationInterface;
 	const communicationGateAdapterMocked = new SlackCommunicationGateAdapter(getConfiguration());
 	const chatHandler = new ChatSlackHandler(communicationGateAdapterMocked);
 	let postMessage;
