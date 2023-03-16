@@ -192,7 +192,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			);
 
 			if (!updatedMergedSubBoard) {
-				throw new BadRequestException(UPDATE_FAILED);
+				throw new Error(UPDATE_FAILED);
 			}
 
 			const mergedBoard = await this.boardRepository.updateMergedBoard(
@@ -202,7 +202,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			);
 
 			if (!mergedBoard) {
-				throw new BadRequestException(UPDATE_FAILED);
+				throw new Error(UPDATE_FAILED);
 			}
 
 			if (board.slackChannelId && board.slackEnable) {
@@ -257,17 +257,17 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
 		const user = boardUserToUpdateRole.user as User;
 
-		const updatedBoardUsers = await this.updateBoardUserService.updateBoardUserRole(
+		const updatedBoardUser = await this.updateBoardUserService.updateBoardUserRole(
 			boardUserToUpdateRole.board,
 			user._id,
 			boardUserToUpdateRole.role
 		);
 
-		if (!updatedBoardUsers) {
+		if (!updatedBoardUser) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
 
-		return updatedBoardUsers;
+		return updatedBoardUser;
 	}
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
@@ -406,10 +406,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 					(colBoard) => colBoard._id.toString() === col._id.toString()
 				);
 
-				if (columnBoard) {
-					return [{ ...columnBoard, title: col.title }];
-				}
-
 				if (boardData.deletedColumns) {
 					const columnToDelete = boardData.deletedColumns.some(
 						(colId) => colId === col._id.toString()
@@ -418,6 +414,10 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 					if (columnToDelete) {
 						return [];
 					}
+				}
+
+				if (columnBoard) {
+					return [{ ...columnBoard, title: col.title }];
 				}
 			}
 
