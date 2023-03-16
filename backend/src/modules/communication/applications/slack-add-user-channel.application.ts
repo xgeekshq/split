@@ -13,8 +13,8 @@ export class SlackAddUserIntoChannelApplication implements AddUserIntoChannelApp
 		private readonly usersHandler: UsersHandlerInterface
 	) {}
 
-	public execute(email: string): Promise<boolean> {
-		return this.inviteMemberToMainChannel(email);
+	public async execute(email: string): Promise<boolean> {
+		return await this.inviteMemberToMainChannel(email);
 	}
 
 	private async inviteMemberToMainChannel(email: string): Promise<boolean> {
