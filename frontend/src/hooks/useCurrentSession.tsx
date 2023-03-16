@@ -1,7 +1,11 @@
 import { useSession } from 'next-auth/react';
 
-const useCurrentSession = () => {
-  const { data: session, status } = useSession();
+type UserCurrentSessionProps = {
+  required: boolean;
+};
+
+const useCurrentSession = ({ required = false }: Partial<UserCurrentSessionProps> = {}) => {
+  const { data: session, status } = useSession({ required });
 
   if (!session?.user) {
     return {
@@ -13,6 +17,7 @@ const useCurrentSession = () => {
   const { id: userId, isSAdmin } = session.user;
 
   return {
+    session,
     userId,
     isSAdmin,
     status,

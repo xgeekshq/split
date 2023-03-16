@@ -5,6 +5,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { Team } from '@/types/team/team';
 import { AxiosError } from 'axios';
 import { INVALID_NAME } from '@/errors/teams/errors';
+import { ROUTES } from '@/utils/routes';
 import {
   addAndRemoveTeamUserRequest,
   createTeamRequest,
@@ -46,6 +47,7 @@ const useTeam = ({
     usersList,
     userId,
     session,
+    router,
   } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
@@ -146,6 +148,8 @@ const useTeam = ({
         content: 'The team was successfully created.',
         type: ToastStateEnum.SUCCESS,
       });
+
+      router.push(ROUTES.Teams);
     },
     onError: (error: AxiosError) => {
       setToastState({

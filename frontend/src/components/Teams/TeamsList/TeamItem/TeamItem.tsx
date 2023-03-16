@@ -27,6 +27,8 @@ export type TeamItemProps = {
 const TeamItem = React.memo(({ team }: TeamItemProps) => {
   const { id, users: teamUsers, name } = team;
 
+  // CHECK: the session data could be passed as props,
+  // since it's the same for all items
   const { userId, isSAdmin } = useCurrentSession();
   const router = useRouter();
   const isTeamPage = router.pathname.includes('teams');

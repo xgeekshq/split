@@ -11,49 +11,29 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import { useSession } from 'next-auth/react';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { CREATE_TEAM_TIPS } from '@/utils/tips';
 import ListMembers from '../Team/ListMembers/ListMembers';
 
 const CreateTeam = () => {
+  const { userId } = useCurrentSession();
   const router = useRouter();
-  const { data: session } = useSession();
 
   const {
     createTeam: { mutate, status },
   } = useTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const listMembers = useRecoilValue(membersListState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
-
-  const createTeamTips = [
-    {
-      title: 'Team Admin',
-      description: [
-        'You will be the team admin of this team.',
-        'You can also choose other team admins later on out of your team members.',
-      ],
-    },
-    {
-      title: 'Stakeholders',
-      description: [
-        'If you select the role stakeholder, this person will not be included in sub-team retros later on when you create a SPLIT retrospective.',
-      ],
-    },
-    {
-      title: 'New Joiner',
-      description: [
-        'The new joiner will not be selected as a responsible for the SPLIT sub-teams.',
-      ],
-    },
-  ];
 
   const methods = useForm<{ text: string }>({
     mode: 'onChange',
@@ -67,10 +47,10 @@ const CreateTeam = () => {
   const resetListUsersState = useCallback(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user._id === userId,
     }));
     setUsersList(updateCheckedUser);
-  }, [session?.user.id, setUsersList, usersList]);
+  }, [userId, setUsersList, usersList]);
 
   const saveTeam = (title: string) => {
     const membersListToSubmit: CreateTeamUser[] = listMembers.map((member) => ({
@@ -88,22 +68,16 @@ const CreateTeam = () => {
     router.back();
   }, [resetListUsersState, router]);
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setIsOpen(true);
   };
 
   useEffect(() => {
-    if (status === 'success') {
-      router.push('/teams');
-    }
-
     if (status === 'error') {
       setDisableButtons(false);
     }
-  }, [status, router]);
+  }, [status]);
 
   return (
     <Flex css={{ height: '100vh', backgroundColor: '$primary50' }} direction="column">
@@ -138,7 +112,7 @@ const CreateTeam = () => {
               <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
             </FormProvider>
           </StyledForm>
-          <TipBar tips={createTeamTips} />
+          <TipBar tips={CREATE_TEAM_TIPS} />
         </Flex>
       </Flex>
       <CreateFooter
