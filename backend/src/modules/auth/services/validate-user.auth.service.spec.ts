@@ -1,3 +1,4 @@
+import { getTeamUserService, teamUserRepository } from './../../teamusers/teamusers.providers';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
@@ -15,12 +16,7 @@ import {
 	getBoardUserService
 } from 'src/modules/boardusers/boardusers.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import {
-	getTeamService,
-	teamRepository,
-	teamUserRepository,
-	updateTeamService
-} from 'src/modules/teams/providers';
+import { getTeamService, teamRepository } from 'src/modules/teams/providers';
 import { TYPES } from 'src/modules/users/interfaces/types';
 import GetUserService from 'src/modules/users/services/get.user.service';
 import {
@@ -59,8 +55,6 @@ describe('The AuthenticationService', () => {
 				getTeamService,
 				userRepository,
 				teamRepository,
-				teamUserRepository,
-				updateTeamService,
 				getBoardService,
 				createBoardUserService,
 				getTokenAuthService,
@@ -68,6 +62,8 @@ describe('The AuthenticationService', () => {
 				boardRepository,
 				updateUserService,
 				getBoardUserService,
+				getTeamUserService,
+				teamUserRepository,
 				{
 					provide: ConfigService,
 					useValue: configService

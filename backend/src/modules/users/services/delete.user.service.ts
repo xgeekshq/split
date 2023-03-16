@@ -4,17 +4,17 @@ import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import UserDto from '../dto/user.dto';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
-import * as TeamUser from 'src/modules/teams/interfaces/types';
-import { DeleteTeamUserServiceInterface } from 'src/modules/teams/interfaces/services/delete.team.user.service.interface';
+import * as TeamUser from 'src/modules/teamusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import { DeleteTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/delete.team.user.service.interface';
 
 @Injectable()
 export default class DeleteUserService implements DeleteUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository) private readonly userRepository: UserRepositoryInterface,
 		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
-		private teamUserService: DeleteTeamUserServiceInterface,
-		@Inject(TeamUser.TYPES.services.GetTeamService)
+		private deleteTeamUserService: DeleteTeamUserServiceInterface,
+		@Inject(TeamUser.TYPES.services.GetTeamUserService)
 		private getTeamUserService: GetTeamServiceInterface
 	) {}
 
@@ -24,21 +24,29 @@ export default class DeleteUserService implements DeleteUserServiceInterface {
 		}
 
 		await this.userRepository.startTransaction();
+		await this.deleteTeamUserService.startTransaction();
 
 		try {
 			this.deleteUser(userId, true);
 			const teamsOfUser = await this.getTeamUserService.getTeamsOfUser(userId);
 
 			if (teamsOfUser.length > 0) {
-				await this.teamUserService.delete(userId);
+				// here
+				await this.deleteTeamUserService.deleteTeamUsersOfUser(userId, false);
 			}
 			await this.userRepository.commitTransaction();
+			await this.deleteTeamUserService.commitTransaction();
+
+			await this.userRepository.endSession();
+			await this.deleteTeamUserService.endSession();
 
 			return true;
 		} catch (e) {
 			await this.userRepository.abortTransaction();
+			await this.deleteTeamUserService.abortTransaction();
 		} finally {
 			await this.userRepository.endSession();
+			await this.deleteTeamUserService.endSession();
 		}
 		throw new BadRequestException(DELETE_FAILED);
 	}

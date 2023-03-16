@@ -21,7 +21,7 @@ import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import User from 'src/modules/users/entities/user.schema';
-import BoardGuestUserDto from '../dto/board.guest.user.dto';
+import BoardGuestUserDto from '../../boardusers/dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';

@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import BoardUserDto from 'src/modules/boardusers/dto/board.user.dto';
 import Board from 'src/modules/boards/entities/board.schema';
-import BoardUser, { BoardUserDocument } from 'src/modules/boards/entities/board.user.schema';
+import BoardUser, { BoardUserDocument } from 'src/modules/boardusers/entities/board.user.schema';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
 
 @Injectable()

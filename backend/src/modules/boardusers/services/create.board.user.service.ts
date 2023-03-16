@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { BOARD_USER_EXISTS, INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateBoardUserServiceInterface } from '../interfaces/services/create.board.user.service.interface';
-import BoardUserDto from '../../boards/dto/board.user.dto';
+import BoardUserDto from '../dto/board.user.dto';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
 import { TYPES } from '../interfaces/types';
 

@@ -1,32 +1,23 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { CreateTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/create.team.user.service.interface';
+import { HttpException, HttpStatus, Inject, Injectable, BadRequestException } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
-import TeamUserDto from '../dto/team.user.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import TeamUser from '../entities/team.user.schema';
-import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
-import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
+import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TYPES } from '../interfaces/types';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
+import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
 
 @Injectable()
 export default class CreateTeamService implements CreateTeamServiceInterface {
 	constructor(
 		@Inject(TYPES.repositories.TeamRepository)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(TYPES.repositories.TeamUserRepository)
-		private readonly teamUserRepository: TeamUserRepositoryInterface
+		@Inject(TeamUsers.TYPES.services.CreateTeamUserService)
+		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
-
-	createTeamUsers(teamUsers: TeamUserDto[], teamId: string) {
-		return Promise.all(
-			teamUsers.map((user) => this.teamUserRepository.create({ ...user, team: teamId }))
-		);
-	}
-
-	createTeamUser(teamUser: TeamUserDto) {
-		return this.teamUserRepository.create({ ...teamUser });
-	}
 
 	createTeam(name: string) {
 		return this.teamRepository.create({ name });
@@ -41,16 +32,34 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 			throw new HttpException(TEAM_ALREADY_EXISTS, HttpStatus.CONFLICT);
 		}
 
-		const newTeam = await this.teamRepository.create({
-			name
-		});
+		this.teamRepository.startTransaction();
+		this.createTeamUserService.startTransaction();
 
-		let teamUsers: TeamUser[] = [];
+		try {
+			const newTeam = await this.teamRepository.create({
+				name
+			});
 
-		if (!isEmpty(users)) {
-			teamUsers = await this.createTeamUsers(users, newTeam._id);
+			let teamUsers: TeamUser[] = [];
+
+			if (!isEmpty(users)) {
+				teamUsers = await this.createTeamUserService.createTeamUsers(users, newTeam._id);
+			}
+
+			await this.teamRepository.commitTransaction();
+			await this.createTeamUserService.commitTransaction();
+
+			await this.teamRepository.endSession();
+			await this.createTeamUserService.endSession();
+
+			return { ...newTeam, users: teamUsers };
+		} catch (error) {
+			await this.teamRepository.abortTransaction();
+			await this.createTeamUserService.abortTransaction();
+		} finally {
+			await this.teamRepository.endSession();
+			await this.createTeamUserService.endSession();
 		}
-
-		return { ...newTeam, users: teamUsers };
+		throw new BadRequestException(INSERT_FAILED);
 	}
 }

@@ -19,7 +19,7 @@ import {
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import { hideText } from 'src/libs/utils/hideText';
-import BoardGuestUserDto from 'src/modules/boards/dto/board.guest.user.dto';
+import BoardGuestUserDto from 'src/modules/boardusers/dto/board.guest.user.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import { CreateCardDto } from 'src/modules/cards/dto/create.card.dto';
 import DeleteCardDto from 'src/modules/cards/dto/delete.card.dto';

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsOptional } from 'class-validator';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import BoardUserDto from 'src/modules/boardusers/dto/board.user.dto';
 
 export default class UpdateBoardUserDto {
 	@ApiProperty({ description: 'List of users to add on board' })

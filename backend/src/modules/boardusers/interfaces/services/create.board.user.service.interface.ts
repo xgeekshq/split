@@ -1,5 +1,5 @@
-import BoardUser from 'src/modules/boards/entities/board.user.schema';
-import BoardUserDto from '../../../boards/dto/board.user.dto';
+import BoardUser from 'src/modules/boardusers/entities/board.user.schema';
+import BoardUserDto from '../../dto/board.user.dto';
 
 export interface CreateBoardUserServiceInterface {
 	saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string): Promise<BoardUser[]>;

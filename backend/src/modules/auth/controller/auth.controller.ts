@@ -1,3 +1,4 @@
+import { GetTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/get.team.user.application.interface';
 import {
 	BadRequestException,
 	Body,
@@ -68,7 +69,7 @@ export default class AuthController {
 		@Inject(User.TYPES.applications.GetUserApplication)
 		private getUserApp: GetUserApplicationInterface,
 		@Inject(Teams.TYPES.applications.GetTeamApplication)
-		private getTeamsApp: GetTeamApplicationInterface,
+		private getTeamUserApp: GetTeamUserApplicationInterface,
 		@Inject(Boards.TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
@@ -313,7 +314,7 @@ export default class AuthController {
 		const { _id: userId } = request.user;
 		const [usersCount, teamsCount, boardsCount] = await Promise.all([
 			this.getUserApp.countUsers(),
-			this.getTeamsApp.countTeams(userId),
+			this.getTeamUserApp.countTeamsOfUser(userId),
 			this.getBoardApp.countBoards(userId)
 		]);
 

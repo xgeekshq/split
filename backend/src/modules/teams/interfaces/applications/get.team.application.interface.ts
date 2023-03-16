@@ -4,8 +4,6 @@ import UserDto from 'src/modules/users/dto/user.dto';
 import { TeamDocument } from '../../entities/teams.schema';
 
 export interface GetTeamApplicationInterface {
-	countTeams(userId: string): Promise<number>;
-
 	getAllTeams(user: UserDto): Promise<LeanDocument<TeamDocument>[]>;
 
 	getTeam(

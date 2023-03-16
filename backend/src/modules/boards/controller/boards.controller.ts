@@ -51,7 +51,7 @@ import BoardDto from '../dto/board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { TYPES } from '../interfaces/types';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
-import UpdateBoardUserDto from '../dto/update-board-user.dto';
+import UpdateBoardUserDto from '../../boardusers/dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';

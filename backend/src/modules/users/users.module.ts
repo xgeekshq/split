@@ -16,9 +16,16 @@ import {
 	updateUserService,
 	userRepository
 } from './users.providers';
+import TeamUsersModule from '../teamusers/teamusers.module';
 
 @Module({
-	imports: [mongooseUserModule, TeamsModule, mongooseResetModule, mongooseTeamUserModule],
+	imports: [
+		mongooseUserModule,
+		TeamsModule,
+		TeamUsersModule,
+		mongooseResetModule,
+		mongooseTeamUserModule
+	],
 	providers: [
 		createUserService,
 		getUserService,

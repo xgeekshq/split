@@ -1,5 +1,5 @@
 import { CreateTeamDto } from '../../dto/crate-team.dto';
-import TeamUserDto from '../../dto/team.user.dto';
+import TeamUserDto from '../../../teamusers/dto/team.user.dto';
 import TeamUser from '../../entities/team.user.schema';
 import Team from '../../entities/teams.schema';
 

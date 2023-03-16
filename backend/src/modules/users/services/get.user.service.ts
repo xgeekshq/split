@@ -1,7 +1,8 @@
+import { GetTeamUserServiceInterface } from './../../teamusers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Team from 'src/modules/teams/interfaces/types';
+import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
@@ -13,8 +14,8 @@ export default class GetUserService implements GetUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
 		private readonly userRepository: UserRepositoryInterface,
-		@Inject(Team.TYPES.services.GetTeamService)
-		private getTeamService: GetTeamServiceInterface
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	getByEmail(email: string) {
@@ -59,7 +60,7 @@ export default class GetUserService implements GetUserServiceInterface {
 				teamsNames: []
 			};
 		});
-		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams(users);
+		const usersOnlyWithTeams = await this.getTeamUserService.getUsersOnlyWithTeams(users);
 
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 

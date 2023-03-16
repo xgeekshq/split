@@ -14,7 +14,7 @@ import {
 	ValidateNested
 } from 'class-validator';
 import { CheckUniqueUsers } from 'src/libs/validators/check-unique-users';
-import BoardUserDto from './board.user.dto';
+import BoardUserDto from '../../boardusers/dto/board.user.dto';
 import ColumnDto from '../../columns/dto/column.dto';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 

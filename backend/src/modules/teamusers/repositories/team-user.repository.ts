@@ -5,9 +5,9 @@ import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
-import TeamUserDto from '../dto/team.user.dto';
 import TeamUser, { TeamUserDocument } from '../entities/team.user.schema';
-import { TeamUserRepositoryInterface } from './team-user.repository.interface';
+import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
+import TeamUserDto from '../dto/team.user.dto';
 
 @Injectable()
 export class TeamUserRepository
@@ -18,26 +18,16 @@ export class TeamUserRepository
 		super(model);
 	}
 
-	countTeamsOfUser(userId: string) {
-		return this._repository.find({ user: userId }).distinct('team').count().exec();
-	}
+	// CREATE
 
-	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null> {
-		return this.findOneByFieldAndUpdate(
-			{ user: teamData.user, team: teamData.team },
-			{ $set: { role: teamData.role, isNewJoiner: teamData.isNewJoiner } }
-		);
+	// GET
+
+	countTeamsOfUser(userId: string): Promise<number> {
+		return this._repository.find({ user: userId }).distinct('team').count().exec();
 	}
 
 	getAllTeamsOfUser(userId: string): Promise<TeamUser[]> {
 		return this._repository.find({ user: userId }).distinct('team').exec();
-	}
-
-	getUsersOfTeam(teamId: string) {
-		return this.findAllWithQuery({ team: teamId }, null, 'user role isNewJoiner _id', {
-			path: 'user',
-			select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
-		});
 	}
 
 	getUsersOnlyWithTeams(users: User[]): Promise<UserWithTeams[]> {
@@ -98,11 +88,51 @@ export class TeamUserRepository
 			.exec();
 	}
 
-	deleteManyTeamUser(userId: string, withSession: boolean): Promise<number> {
-		return this.deleteMany({ user: userId }, withSession);
+	getUsersOfTeam(teamId: string): Promise<TeamUser[]> {
+		return this.findAllWithQuery({ team: teamId }, null, 'user role isNewJoiner _id', {
+			path: 'user',
+			select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
+		});
 	}
 
-	deleteTeamOfUserOnly(teamUserId: string, withSession: boolean): Promise<TeamUser> {
+	getTeamUser(userId: string, teamId: string): Promise<TeamUser> {
+		return this.findOneByField({ user: userId, team: teamId });
+	}
+
+	// UPDATE
+
+	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null> {
+		return this.findOneByFieldAndUpdate(
+			{ user: teamData.user, team: teamData.team },
+			{ $set: { role: teamData.role, isNewJoiner: teamData.isNewJoiner } }
+		);
+	}
+
+	// DELETE
+
+	deleteTeamUser(teamUserId: string, withSession: boolean): Promise<TeamUser> {
 		return this.findByIdAndDelete(teamUserId, withSession);
+	}
+
+	deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<number> {
+		return this.deleteMany(
+			{
+				_id: { $in: teamUsers }
+			},
+			withSession
+		);
+	}
+
+	deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number> {
+		return this.deleteMany(
+			{
+				team: teamId
+			},
+			withSession
+		);
+	}
+
+	deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<number> {
+		return this.deleteMany({ user: userId }, withSession);
 	}
 }

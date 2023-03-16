@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import Team, { TeamDocument } from '../entities/teams.schema';
-import { TeamRepositoryInterface } from './team.repository.interface';
+import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 
 @Injectable()
 export class TeamRepository

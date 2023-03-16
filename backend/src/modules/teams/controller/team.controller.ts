@@ -1,5 +1,5 @@
+import { CreateTeamUserApplicationInterface } from './../../teamusers/interfaces/applications/create.team.user.application.interface';
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -34,7 +34,6 @@ import { TeamParams } from 'src/libs/dto/param/team.params';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { UserTeamsParams } from 'src/libs/dto/param/user.teams.param';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -45,15 +44,16 @@ import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagge
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
-import TeamUserDto from '../dto/team.user.dto';
-import UpdateTeamUserDto from '../dto/update.team.user.dto';
+import TeamUserDto from '../../teamusers/dto/team.user.dto';
+import UpdateTeamUserDto from '../../teamusers/dto/update.team.user.dto';
 import { TYPES } from '../interfaces/types';
+import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
-import { UpdateTeamApplicationInterface } from '../interfaces/applications/update.team.application.interface';
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
-import { DeleteTeamUserApplicationInterface } from '../interfaces/applications/delete.team.user.application.interface';
+import { DeleteTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/delete.team.user.application.interface';
+import { UpdateTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/update.team.user.application.interface';
 
 const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -67,11 +67,13 @@ export default class TeamsController {
 		private createTeamApp: CreateTeamApplicationInterface,
 		@Inject(TYPES.applications.GetTeamApplication)
 		private getTeamApp: GetTeamApplicationInterface,
-		@Inject(TYPES.applications.UpdateTeamApplication)
-		private updateTeamApp: UpdateTeamApplicationInterface,
 		@Inject(TYPES.applications.DeleteTeamApplication)
 		private deleteTeamApp: DeleteTeamApplicationInterface,
-		@Inject(TYPES.applications.DeleteTeamUserApplication)
+		@Inject(TYPES.applications.CreateTeamApplication)
+		private createTeamUserApp: CreateTeamUserApplicationInterface,
+		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserApplication)
+		private updateTeamUserApp: UpdateTeamUserApplicationInterface,
+		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserApplication)
 		private deleteTeamUserApp: DeleteTeamUserApplicationInterface
 	) {}
 
@@ -90,12 +92,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Post()
-	async create(@Body() teamData: CreateTeamDto) {
-		const team = await this.createTeamApp.create(teamData);
-
-		if (!team) throw new BadRequestException(INSERT_FAILED);
-
-		return team;
+	create(@Body() teamData: CreateTeamDto) {
+		return this.createTeamApp.create(teamData);
 	}
 
 	@ApiOperation({ summary: 'Add a user to an existing team' })
@@ -113,14 +111,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Put()
-	async createTeamUser(@Body() teamData: TeamUserDto) {
-		const team = await this.createTeamApp.createTeamUser(teamData);
-
-		if (!team) {
-			throw new BadRequestException(INSERT_FAILED);
-		}
-
-		return team;
+	createTeamUser(@Body() teamData: TeamUserDto) {
+		return this.createTeamUserApp.createTeamUser(teamData);
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
@@ -158,11 +150,7 @@ export default class TeamsController {
 	})
 	@Get('user')
 	getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
-		if (userId) {
-			return this.getTeamApp.getTeamsOfUser(userId);
-		}
-
-		return this.getTeamApp.getTeamsOfUser(request.user._id);
+		return this.getTeamApp.getTeamsOfUser(userId ?? request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Get a specific team' })
@@ -247,12 +235,8 @@ export default class TeamsController {
 	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
-	async updateTeamUser(@Body() teamData: TeamUserDto) {
-		const teamUser = await this.updateTeamApp.updateTeamUser(teamData);
-
-		if (!teamUser) throw new BadRequestException(UPDATE_FAILED);
-
-		return teamUser;
+	updateTeamUser(@Body() teamUserData: TeamUserDto) {
+		return this.updateTeamUserApp.updateTeamUser(teamUserData);
 	}
 
 	@ApiOperation({ summary: 'Add and remove team members' })
@@ -286,7 +270,7 @@ export default class TeamsController {
 	@UseGuards(TeamUserGuard)
 	@Put('/:teamId/addAndRemove')
 	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
-		return this.updateTeamApp.addAndRemoveTeamUsers(users.addUsers, users.removeUsers);
+		return this.updateTeamUserApp.AddAndRemoveTeamUsers(users.addUsers, users.removeUsers);
 	}
 
 	@ApiOperation({ summary: 'Add team members' })
@@ -318,7 +302,7 @@ export default class TeamsController {
 	@UseGuards(SuperAdminGuard)
 	@Put('add/user')
 	addTeamUsers(@Body() teamUsers: TeamUserDto[]) {
-		return this.updateTeamApp.addTeamUsers(teamUsers);
+		return this.createTeamUserApp.createTeamUsers(teamUsers);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific team' })
@@ -368,7 +352,7 @@ export default class TeamsController {
 	})
 	@UseGuards(SuperAdminGuard)
 	@Delete('/user/:teamUserId')
-	deleteTeamUsers(@Param() { teamUserId }: UserTeamsParams) {
-		return this.deleteTeamUserApp.deleteTeamUser(teamUserId, true);
+	deleteTeamUser(@Param() { teamUserId }: UserTeamsParams) {
+		return this.deleteTeamUserApp.deleteTeamUser(teamUserId);
 	}
 }

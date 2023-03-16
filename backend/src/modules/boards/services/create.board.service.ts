@@ -1,3 +1,5 @@
+import { UpdateTeamUserServiceInterface } from './../../teamusers/interfaces/services/update.team.user.service.interface';
+import { GetTeamUserServiceInterface } from './../../teamusers/interfaces/services/get.team.user.service.interface';
 import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
@@ -18,13 +20,13 @@ import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
+import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
 import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
-import BoardUserDto from '../dto/board.user.dto';
+import BoardUserDto from '../../boardusers/dto/board.user.dto';
 import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';
 import Board from '../entities/board.schema';
-import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
@@ -37,8 +39,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
-		private updateTeamService: UpdateTeamServiceInterface,
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface,
+		@Inject(TeamUsers.TYPES.services.UpdateTeamUserService)
+		private updateTeamUserService: UpdateTeamUserServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
@@ -113,7 +117,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	): Promise<string | null> {
 		const { maxUsersPerTeam } = configs;
 
-		let teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
+		let teamUsers = await this.getTeamUserService.getUsersOfTeam(teamId);
 
 		teamUsers = teamUsers.map((teamUser: TeamUser) => {
 			const user = teamUser.user as User;
@@ -122,7 +126,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				teamUser.isNewJoiner &&
 				!this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
 			) {
-				this.updateTeamService.updateTeamUser({
+				this.updateTeamUserService.updateTeamUser({
 					team: teamId,
 					user: `${user._id}`,
 					role: teamUser.role,
@@ -238,7 +242,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		responsibles: string[]
 	) {
 		const usersIds: string[] = [];
-		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+		const teamUsers = await this.getTeamUserService.getUsersOfTeam(team);
 
 		teamUsers.forEach((teamUser) => {
 			const user = teamUser.user as User;

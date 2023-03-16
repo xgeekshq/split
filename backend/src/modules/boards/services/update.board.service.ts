@@ -1,5 +1,5 @@
 import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import BoardUserDto from 'src/modules/boardusers/dto/board.user.dto';
 import {
 	BadRequestException,
 	Inject,
@@ -23,7 +23,7 @@ import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board from '../entities/board.schema';
-import BoardUser from '../entities/board.user.schema';
+import BoardUser from '../../boardusers/entities/board.user.schema';
 import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';

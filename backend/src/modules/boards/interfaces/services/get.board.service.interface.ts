@@ -3,7 +3,7 @@ import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-gu
 import Board, { BoardDocument } from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 import UserDto from 'src/modules/users/dto/user.dto';
-import BoardUser from '../../entities/board.user.schema';
+import BoardUser from '../../../boardusers/entities/board.user.schema';
 
 export interface GetBoardServiceInterface {
 	getUserBoardsOfLast3Months(
