@@ -41,8 +41,5 @@ export class SlackAddUserToChannelConsumer extends SlackCommunicationEventListen
 				!result[0] ? 'not' : ''
 			} added to the main channel`
 		);
-		this.saveLog(
-			`User with email: ${job.data.email} was ${!result[0] ? 'not' : ''} added to the main channel`
-		);
 	}
 }
