@@ -1,8 +1,9 @@
-import { ComponentStory } from '@storybook/react';
+import { useSession } from 'next-auth/react';
 
 import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { TeamFactory } from '@/utils/factories/team';
-import { useSession } from 'next-auth/react';
+import { ComponentStory } from '@storybook/react';
+
 import { createTeamUser } from '../../../../stories/utils/createTeamUser';
 
 export default {
@@ -18,7 +19,6 @@ export default {
   },
   args: {
     team: TeamFactory.create(),
-    isTeamPage: false,
   },
   argTypes: {
     team: {
@@ -28,16 +28,10 @@ export default {
         type: { summary: 'Team' },
       },
     },
-    isTeamPage: {
-      description: 'If the component is being used in a Team Page',
-      table: {
-        type: { summary: 'boolean' },
-      },
-    },
   },
 };
 
-const Template: ComponentStory<typeof TeamItem> = ({ team, isTeamPage }) => {
+const Template: ComponentStory<typeof TeamItem> = ({ team }) => {
   const { data: session } = useSession();
   const user: any = session?.user!;
 
@@ -45,7 +39,7 @@ const Template: ComponentStory<typeof TeamItem> = ({ team, isTeamPage }) => {
     createTeamUser(user, team);
   }
 
-  return <TeamItem team={team} isTeamPage={isTeamPage} />;
+  return <TeamItem team={team} />;
 };
 
 export const Default = Template.bind({});

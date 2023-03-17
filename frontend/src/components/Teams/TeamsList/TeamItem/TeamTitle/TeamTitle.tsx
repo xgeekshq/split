@@ -6,25 +6,14 @@ import { ROUTES } from '@/utils/routes';
 export type TeamTitleProps = {
   title: string;
   teamId: string;
-  isTeamPage?: boolean;
 };
 
-const TeamTitle = ({ teamId, title, isTeamPage }: TeamTitleProps) => {
-  const renderTitle = () => (
-    <Text link={isTeamPage} size="sm" fontWeight="bold" overflow="wrap">
+const TeamTitle = ({ teamId, title }: TeamTitleProps) => (
+  <Link key={teamId} href={ROUTES.TeamPage(teamId)}>
+    <Text link size="sm" fontWeight="bold" overflow="wrap">
       {title}
     </Text>
-  );
-
-  if (isTeamPage) {
-    return (
-      <Link key={teamId} href={ROUTES.TeamPage(teamId)}>
-        {renderTitle()}
-      </Link>
-    );
-  }
-
-  return renderTitle();
-};
+  </Link>
+);
 
 export default TeamTitle;
