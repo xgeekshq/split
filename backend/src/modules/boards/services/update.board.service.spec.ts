@@ -10,7 +10,7 @@ import { deleteCardService } from 'src/modules/cards/cards.providers';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
 import { EventEmitter2 } from '@nestjs/event-emitter';
