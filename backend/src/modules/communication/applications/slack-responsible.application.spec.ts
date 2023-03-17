@@ -45,7 +45,7 @@ describe('SlackResponsibleApplication', () => {
 		postMessage = jest.spyOn(chatHandler, 'postMessage').mockImplementation(jest.fn());
 		userHandlerMock = jest
 			.spyOn(userHandler, 'getSlackUserIdByEmail')
-			.mockImplementation(jest.fn());
+			.mockResolvedValue('newResponsibleId');
 
 		conversationsHandlerMock = jest
 			.spyOn(conversationsHandler, 'inviteUserToChannel')
@@ -54,8 +54,6 @@ describe('SlackResponsibleApplication', () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		jest.resetAllMocks();
-		userHandlerMock.mockResolvedValue('newResponsibleId');
 	});
 
 	it('should be defined', () => {
