@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 import { AxiosError } from 'axios';
@@ -18,6 +18,7 @@ import { GUEST_USER_COOKIE } from '@/utils/constants';
 import {
   deleteUserRequest,
   getAllUsers,
+  getAllUsersWithTeams,
   getUser,
   updateUserIsAdminRequest,
 } from '@/api/userService';
@@ -26,11 +27,13 @@ import useUserUtils from './useUserUtils';
 interface AutoFetchProps {
   autoFetchUsers?: boolean;
   autoFetchGetUser?: boolean;
+  autoFetchUsersWithTeams?: boolean;
 }
 
 const useUser = ({
   autoFetchUsers = false,
   autoFetchGetUser = false,
+  autoFetchUsersWithTeams = false,
 }: AutoFetchProps = {}): UseUserType => {
   const { setToastState, queryClient, userId, router } = useUserUtils();
 
@@ -108,6 +111,27 @@ const useUser = ({
     },
   });
 
+  const fetchUsersWithTeams = useInfiniteQuery(
+    ['usersWithTeams'],
+    ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, ''),
+    {
+      enabled: autoFetchUsersWithTeams,
+      refetchOnWindowFocus: false,
+      getNextPageParam: (lastPage) => {
+        const { hasNextPage, page } = lastPage;
+        if (hasNextPage) return page + 1;
+        return undefined;
+      },
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the users',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['usersWithTeams']);
@@ -163,6 +187,7 @@ const useUser = ({
     getUserById,
     registerGuestUser,
     loginGuestUser,
+    fetchUsersWithTeams,
   };
 };
 

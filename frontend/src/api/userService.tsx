@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 
 import fetchData from '@/utils/fetchData';
-import { User, UserWithTeams, UpdateUserIsAdmin, DeleteUser } from '../types/user/user';
+import { User, UpdateUserIsAdmin, DeleteUser, InfiniteUsersWithTeams } from '../types/user/user';
 
 export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]> =>
   fetchData(`/users`, { context, serverSide: !!context });
@@ -10,12 +10,7 @@ export const getAllUsersWithTeams = (
   pageParam: number,
   searchUser?: string,
   context?: GetServerSidePropsContext,
-): Promise<{
-  userWithTeams: UserWithTeams[];
-  hasNextPage: boolean;
-  page: number;
-  userAmount: number;
-}> =>
+): Promise<InfiniteUsersWithTeams> =>
   fetchData(`/users/teams?page=${pageParam ?? 0}&searchUser=${searchUser ?? ''}`, {
     context,
     serverSide: !!context,
