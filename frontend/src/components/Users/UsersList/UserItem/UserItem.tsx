@@ -35,7 +35,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
   return (
     <Flex direction="column">
       <InnerContainer align="center" elevation="1" gap="40">
-        <Flex align="center" gap="8" css={{ flex: '1' }}>
+        <Flex align="center" gap="8" css={{ flex: '2' }}>
           <Icon
             name="blob-personal"
             size={32}
@@ -48,7 +48,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
           <UserTitle user={user} hasPermissions={isSAdmin!} />
         </Flex>
 
-        <Flex align="center" css={{ flex: '1' }}>
+        <Flex align="center" justify="start" css={{ flex: '2' }}>
           <Text color="primary300" size="sm">
             {user.email}
           </Text>
@@ -71,7 +71,7 @@ const UserItem = React.memo<UserItemProps>(({ userWithTeams }) => {
         </Flex>
 
         {isSAdmin && (
-          <Flex align="center" justify="end" css={{ flex: '1' }}>
+          <Flex align="center" justify="end" css={{ flex: '2' }}>
             <UserItemActions user={user} />
           </Flex>
         )}
