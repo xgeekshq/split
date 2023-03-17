@@ -1,19 +1,19 @@
-import { UpdateTeamUserApplication } from './applications/update.team.user.application';
-import { GetTeamUserApplication } from './applications/get.team.user.application';
-import { CreateTeamUserApplication } from './applications/create.team.user.application.interface';
-import { DeleteTeamUserApplication } from './applications/delete.team.user.application';
+import { AddAndRemoveTeamUsersUseCase } from './applications/add-and-remove-team-users.use-case';
+import { UpdateTeamUserUseCase } from './applications/update-team-user.use-case';
+import { CreateTeamUsersUseCase } from './applications/create-team-users.use-case';
+import { CreateTeamUserUseCase } from './applications/create-team-user.use-case';
 import { TeamUserRepository } from './repositories/team-user.repository';
 import { TYPES } from './interfaces/types';
 import CreateTeamUserService from './services/create.team.user.service';
 import DeleteTeamUserService from './services/delete.team.user.service';
 import GetTeamUserService from './services/get.team.user.service';
 import UpdateTeamUserService from './services/update.team.user.service';
+import { DeleteTeamUserUseCase } from './applications/delete-team-user.use-case';
 
 export const teamUserRepository = {
 	provide: TYPES.repositories.TeamUserRepository,
 	useClass: TeamUserRepository
 };
-
 
 export const createTeamUserService = {
 	provide: TYPES.services.CreateTeamUserService,
@@ -35,24 +35,27 @@ export const deleteTeamUserService = {
 	useClass: DeleteTeamUserService
 };
 
-
-export const createTeamUserApplication = {
-	provide: TYPES.applications.CreateTeamUserApplication,
-	useClass: CreateTeamUserApplication
+export const createTeamUserUseCase = {
+	provide: TYPES.applications.CreateTeamUserUseCase,
+	useClass: CreateTeamUserUseCase
 };
 
-export const getTeamUserApplication = {
-	provide: TYPES.applications.GetTeamUserApplication,
-	useClass: GetTeamUserApplication
+export const createTeamUsersUseCase = {
+	provide: TYPES.applications.CreateTeamUsersUseCase,
+	useClass: CreateTeamUsersUseCase
 };
 
-export const updateTeamUserApplication = {
-	provide: TYPES.applications.UpdateTeamUserApplication,
-	useClass: UpdateTeamUserApplication
+export const updateTeamUserUseCase = {
+	provide: TYPES.applications.UpdateTeamUserUseCase,
+	useClass: UpdateTeamUserUseCase
 };
 
-export const deleteTeamUserApplication = {
-	provide: TYPES.applications.DeleteTeamUserApplication,
-	useClass: DeleteTeamUserApplication
+export const addAndRemoveTeamUsersUseCase = {
+	provide: TYPES.applications.AddAndRemoveTeamUsersUseCase,
+	useClass: AddAndRemoveTeamUsersUseCase
 };
 
+export const deleteTeamUserUseCase = {
+	provide: TYPES.applications.DeleteTeamUserUseCase,
+	useClass: DeleteTeamUserUseCase
+};

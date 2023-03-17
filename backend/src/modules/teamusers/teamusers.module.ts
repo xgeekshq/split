@@ -1,13 +1,14 @@
 import {
-	teamUserRepository,
+	addAndRemoveTeamUsersUseCase,
 	createTeamUserService,
-	getTeamUserService,
-	updateTeamUserService,
+	createTeamUserUseCase,
+	createTeamUsersUseCase,
 	deleteTeamUserService,
-	createTeamUserApplication,
-	getTeamUserApplication,
-	updateTeamUserApplication,
-	deleteTeamUserApplication
+	deleteTeamUserUseCase,
+	getTeamUserService,
+	teamUserRepository,
+	updateTeamUserService,
+	updateTeamUserUseCase
 } from './teamusers.providers';
 import { Module } from '@nestjs/common';
 import { mongooseTeamUserModule } from 'src/infrastructure/database/mongoose.module';
@@ -20,10 +21,11 @@ import { mongooseTeamUserModule } from 'src/infrastructure/database/mongoose.mod
 		getTeamUserService,
 		updateTeamUserService,
 		deleteTeamUserService,
-		createTeamUserApplication,
-		getTeamUserApplication,
-		updateTeamUserApplication,
-		deleteTeamUserApplication
+		createTeamUserUseCase,
+		createTeamUsersUseCase,
+		updateTeamUserUseCase,
+		addAndRemoveTeamUsersUseCase,
+		deleteTeamUserUseCase
 	],
 	controllers: [],
 	exports: [
@@ -31,10 +33,11 @@ import { mongooseTeamUserModule } from 'src/infrastructure/database/mongoose.mod
 		getTeamUserService,
 		updateTeamUserService,
 		deleteTeamUserService,
-		createTeamUserApplication,
-		getTeamUserApplication,
-		updateTeamUserApplication,
-		deleteTeamUserApplication
+		createTeamUserUseCase,
+		createTeamUsersUseCase,
+		updateTeamUserUseCase,
+		addAndRemoveTeamUsersUseCase,
+		deleteTeamUserUseCase
 	]
 })
 export default class TeamUsersModule {}

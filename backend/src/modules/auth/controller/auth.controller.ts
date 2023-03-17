@@ -1,4 +1,3 @@
-import { GetTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/get.team.user.application.interface';
 import {
 	Body,
 	Controller,

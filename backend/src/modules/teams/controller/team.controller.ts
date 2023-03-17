@@ -1,4 +1,4 @@
-import { CreateTeamUserApplicationInterface } from './../../teamusers/interfaces/applications/create.team.user.application.interface';
+import { CreateTeamUserUseCaseInterface } from '../../teamusers/interfaces/applications/create-team-user.use-case.interface';
 import {
 	Body,
 	Controller,
@@ -52,8 +52,10 @@ import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
-import { DeleteTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/delete.team.user.application.interface';
-import { UpdateTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/update.team.user.application.interface';
+import { CreateTeamUsersUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/create-team-users.use-case.interface';
+import { UpdateTeamUserUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/update-team-user.use-case.interface';
+import { AddAndRemoveTeamUsersUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/add-and-remove-team-users.use-case.interface';
+import { DeleteTeamUserUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/delete-team-user.use-case.interface';
 
 const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -69,12 +71,16 @@ export default class TeamsController {
 		private getTeamApp: GetTeamApplicationInterface,
 		@Inject(TYPES.applications.DeleteTeamApplication)
 		private deleteTeamApp: DeleteTeamApplicationInterface,
-		@Inject(TYPES.applications.CreateTeamApplication)
-		private createTeamUserApp: CreateTeamUserApplicationInterface,
-		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserApplication)
-		private updateTeamUserApp: UpdateTeamUserApplicationInterface,
-		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserApplication)
-		private deleteTeamUserApp: DeleteTeamUserApplicationInterface
+		@Inject(TeamUsers.TYPES.applications.CreateTeamUserUseCase)
+		private createTeamUserUseCase: CreateTeamUserUseCaseInterface,
+		@Inject(TeamUsers.TYPES.applications.CreateTeamUsersUseCase)
+		private createTeamUsersUseCase: CreateTeamUsersUseCaseInterface,
+		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserUseCase)
+		private updateTeamUserUseCase: UpdateTeamUserUseCaseInterface,
+		@Inject(TeamUsers.TYPES.applications.AddAndRemoveTeamUsersUseCase)
+		private addAndRemoveTeamUsersUseCase: AddAndRemoveTeamUsersUseCaseInterface,
+		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserUseCase)
+		private deleteTeamUserUseCase: DeleteTeamUserUseCaseInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -111,8 +117,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Put()
-	createTeamUser(@Body() teamData: TeamUserDto) {
-		return this.createTeamUserApp.createTeamUser(teamData);
+	createTeamUser(@Body() teamUserData: TeamUserDto) {
+		return this.createTeamUserUseCase.execute(teamUserData);
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
@@ -236,7 +242,7 @@ export default class TeamsController {
 	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
 	updateTeamUser(@Body() teamUserData: TeamUserDto) {
-		return this.updateTeamUserApp.updateTeamUser(teamUserData);
+		return this.updateTeamUserUseCase.execute(teamUserData);
 	}
 
 	@ApiOperation({ summary: 'Add and remove team members' })
@@ -270,7 +276,7 @@ export default class TeamsController {
 	@UseGuards(TeamUserGuard)
 	@Put('/:teamId/addAndRemove')
 	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
-		return this.updateTeamUserApp.AddAndRemoveTeamUsers(users.addUsers, users.removeUsers);
+		return this.addAndRemoveTeamUsersUseCase.execute(users.addUsers, users.removeUsers);
 	}
 
 	@ApiOperation({ summary: 'Add team members' })
@@ -302,7 +308,7 @@ export default class TeamsController {
 	@UseGuards(SuperAdminGuard)
 	@Put('add/user')
 	addTeamUsers(@Body() teamUsers: TeamUserDto[]) {
-		return this.createTeamUserApp.createTeamUsers(teamUsers);
+		return this.createTeamUsersUseCase.execute(teamUsers);
 	}
 
 	@ApiOperation({ summary: 'Delete a specific team' })
@@ -353,6 +359,6 @@ export default class TeamsController {
 	@UseGuards(SuperAdminGuard)
 	@Delete('/user/:teamUserId')
 	deleteTeamUser(@Param() { teamUserId }: UserTeamsParams) {
-		return this.deleteTeamUserApp.deleteTeamUser(teamUserId);
+		return this.deleteTeamUserUseCase.execute(teamUserId);
 	}
 }
