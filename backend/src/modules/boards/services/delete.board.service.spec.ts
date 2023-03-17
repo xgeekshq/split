@@ -13,6 +13,12 @@ import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfac
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 
+const boards = BoardFactory.createMany(2);
+const board = BoardFactory.create({
+	dividedBoards: BoardFactory.createMany(2),
+	slackEnable: true
+});
+
 describe('DeleteBoardService', () => {
 	let service: DeleteBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
@@ -52,8 +58,24 @@ describe('DeleteBoardService', () => {
 	});
 
 	beforeEach(() => {
-		jest.restoreAllMocks();
 		jest.clearAllMocks();
+		jest.restoreAllMocks();
+
+		//Mock returns
+		boardRepositoryMock.getBoard.mockResolvedValue(board);
+		boardRepositoryMock.deleteBoard.mockResolvedValue(board);
+
+		deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
+		boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
+		deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
+		deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
+
+		boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
+		deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
+
+		//Slack Enabled
+		boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+		achiveChannelServiceMock.execute.mockResolvedValue(null);
 	});
 
 	it('should be defined', () => {
@@ -62,22 +84,6 @@ describe('DeleteBoardService', () => {
 
 	describe('delete', () => {
 		it('should return true if deleteBoardBoardUsersAndSchedules succeded', async () => {
-			const board = BoardFactory.create({
-				dividedBoards: BoardFactory.createMany(2),
-				slackEnable: true
-			});
-			boardRepositoryMock.getBoard.mockResolvedValue(board);
-			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
-
-			deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
-			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
-			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
-			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
-
-			//Slack Enabled
-			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			achiveChannelServiceMock.execute.mockResolvedValue(null);
-
 			await expect(service.delete('boardId')).resolves.toBe(true);
 		});
 
@@ -87,60 +93,31 @@ describe('DeleteBoardService', () => {
 			await expect(service.delete('boardId')).rejects.toThrow(NotFoundException);
 		});
 
-		it('should throw error when deleteBoardBoardUsersAndSchedules fails', async () => {
-			const board = BoardFactory.create({
-				dividedBoards: BoardFactory.createMany(2),
-				slackEnable: true
-			});
-			boardRepositoryMock.getBoard.mockResolvedValue(board);
-			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
-			deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
+		it('should throw error if boardRepository.deleteManySubBoards fails', async () => {
 			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(1);
-			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
 
+			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+		});
+
+		it('should throw error when deleteBoardUserService.deleteDividedBoardUsers fails', async () => {
+			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(0);
+
+			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+		});
+
+		it('should throw error boardRepository.deleteBoard return null', async () => {
+			boardRepositoryMock.deleteBoard.mockResolvedValue(null);
 			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
 		});
 	});
 
 	describe('deleteBoardsByTeamId', () => {
 		it('should return true if board deleted ', async () => {
-			const boards = BoardFactory.createMany(2);
-			const board = BoardFactory.create({
-				dividedBoards: BoardFactory.createMany(2),
-				slackEnable: true
-			});
-			boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
-			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
-			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
-
-			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
-			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
-			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
-
-			//Slack Enabled
-			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			achiveChannelServiceMock.execute.mockResolvedValue(null);
-
 			await expect(service.deleteBoardsByTeamId('teamId')).resolves.toBe(true);
 		});
 
-		it('should throw badRequestException when delete fails', async () => {
-			const boards = BoardFactory.createMany(2);
-			const board = BoardFactory.create({
-				dividedBoards: BoardFactory.createMany(2),
-				slackEnable: true
-			});
-			boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
-			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
-			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
-
-			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(0);
-			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(0);
+		it('should throw badRequestException when deleteBoardUserService.deleteSimpleBoardUsers fails', async () => {
 			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(0);
-
-			//Slack Enabled
-			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			achiveChannelServiceMock.execute.mockResolvedValue(null);
 
 			await expect(service.deleteBoardsByTeamId('teamId')).rejects.toThrowError(
 				BadRequestException
