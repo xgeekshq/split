@@ -67,7 +67,7 @@ const IconWrapper = styled(Flex, {
   alignItems: 'center',
   cursor: 'default',
   p: '$2',
-  '&[data-type="password"]': {
+  '&[data-type="password"], &[data-type="clear"]': {
     '&:hover': {
       cursor: 'pointer',
     },
