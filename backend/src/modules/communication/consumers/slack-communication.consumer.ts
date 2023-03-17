@@ -43,6 +43,5 @@ export class SlackCommunicationConsumer extends SlackCommunicationEventListeners
 	override async onCompleted(job: Job<BoardType>, result: TeamDto[]) {
 		this.logger.verbose(`Completed Job id: "${job.id}"`);
 		this.updateBoardService.updateChannelId(result);
-		this.saveLog(result);
 	}
 }

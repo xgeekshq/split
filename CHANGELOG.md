@@ -2,7 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.15...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.16...HEAD)
+
+## [v0.1.16](https://github.com/xgeekshq/split/compare/v0.1.15...v0.1.16) - 2023-03-15
+
+### What Changed 👀
+
+- refactor: users, auth and azure use cases @nunocaseiro (#1233)
+- feat: tipbar, header & footer @StereoPT (#1236)
+- fix: import error @patricia-mdias (#1231)
+- refactor: board user module @patricia-mdias (#1229)
+- test: update phase backend @GoncaloCanteiro (#1222)
+- test: create team page refactor and tests @JoaoSaIvador (#1226)
+- test: add tests to get board service @CatiaAntunes96 (#1224)
+- feat: library mocks @StereoPT (#1218)
+- refactor: comment repository @patricia-mdias (#1214)
+- feat: add reset-password repository @CatiaAntunes96 (#1213)
+- refactor: schedule repository @CatiaAntunes96 (#1209)
+- refactor: vote repository @patricia-mdias (#1201)
+- refactor: card repository @CatiaAntunes96 (#1204)
+- feat: generic factory @nunocaseiro (#1200)
+- feat: primitive testing @StereoPT (#1192)
+- refactor: remove server side props logic to a single request on backend @patricia-mdias (#1169)
+- feat: team list refactor and tests @JoaoSaIvador (#1168)
+- refactor: subboard link @patricia-mdias (#1154)
+- refactor: team participants page @patricia-mdias (#1151)
+- feat: add card or comment as guest user @patricia-mdias (#1147)
+- docs: add GoncaloCanteiro as a contributor for code @allcontributors (#1144)
+
+### 🚀 Features
+
+- feat: update pull request template @StereoPT (#1219)
+- feat: add minimum time for the timer @geomarb (#1210)
+- feat: confirmation dialog refactor @JoaoSaIvador (#1203)
+- refactor: create board and board user repository  @CatiaAntunes96 (#1178)
+- feat: add submit phase @GoncaloCanteiro (#1175)
+- feat: get board guard @patricia-mdias (#1177)
+- feat: send xgeeks board phase to slack @GoncaloCanteiro (#1156)
+- refactor: enhance swagger on updateBoardPhase @GoncaloCanteiro (#1160)
+- refactor: change sub board name @nunocaseiro (#1149)
+- feat: regular board public private frontend @CatiaAntunes96 (#1134)
+- feat: add the voting phase @GoncaloCanteiro (#1137)
+- feat(auth-azure): upload and set user photo on login @rpvsilva (#1132)
+
+### 🐛 Bug Fixes
+
+- fix: cancel button color @StereoPT (#1247)
+- fix: board settings save button and create regular board cards @JoaoSaIvador (#1244)
+- fix: remove condition to display save button @CatiaAntunes96 (#1242)
+- fix: popover outline and margin @JoaoSaIvador (#1220)
+- fix: checkbox position @StereoPT (#1208)
+- fix: create board page design @JoaoSaIvador (#1198)
+- fix: remove populate path fro boards on team repo @CatiaAntunes96 (#1196)
+- fix: delete query to db to get mainboardid @CatiaAntunes96 (#1194)
+- fix: fix board creator permissions on a regular board @CatiaAntunes96 (#1189)
+- fix: merge board last message @nunocaseiro (#1171)
+- fix: merged subboard banner @patricia-mdias (#1174)
+- fix: regular retro column name @CatiaAntunes96 (#1166)
+- fix: update board column name max char @JoaoSaIvador (#1162)
+- fix: get non anonymous users @JoaoSaIvador (#1159)
+- fix(azure): if statement to get token @rpvsilva (#1158)
+- fix: endpoint returns paginated boards to sAdmin @patricia-mdias (#1153)
+
+### 📄 Documentation
+
+- feat: update pull request template @StereoPT (#1219)
+- feat: team details page refactor and tests @JoaoSaIvador (#1184)
+- feat: team item refactor, story & tests @StereoPT (#1164)
+- feat: main page header refactor story and tests @JoaoSaIvador (#1142)
+- feat: dashboard tiles story and tests @JoaoSaIvador (#1140)
+- feat: sidebar story, refactor and tests @JoaoSaIvador (#1136)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump webpack from 5.75.0 to 5.76.0 in /frontend @dependabot (#1245)
+- chore(deps): bump next-auth from 4.18.6 to 4.20.1 in /frontend @dependabot (#1234)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.15...v0.1.16
 
 ## [v0.1.15](https://github.com/xgeekshq/split/compare/v0.1.14...v0.1.15) - 2023-02-21
 

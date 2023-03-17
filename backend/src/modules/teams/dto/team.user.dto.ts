@@ -25,4 +25,9 @@ export default class TeamUserDto {
 	@IsOptional()
 	@IsBoolean()
 	isNewJoiner?: boolean;
+
+	@ApiPropertyOptional()
+	@IsOptional()
+	@IsBoolean()
+	canBeResponsible?: boolean;
 }

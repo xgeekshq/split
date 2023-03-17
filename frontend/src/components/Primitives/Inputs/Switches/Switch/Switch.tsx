@@ -35,7 +35,7 @@ const SwitchThumb = ({ checked, icon }: SwitchThumbProps) => (
       <Icon
         name={icon}
         css={{
-          color: '$successBase',
+          color: '$successBase !important',
         }}
       />
     )}
@@ -52,7 +52,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
   WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
   boxSizing: 'border-box',
   '&[data-state="checked"]': {
-    backgroundColor: '$successBase',
+    backgroundColor: '$successBase !important',
   },
   '&[data-disabled]': {
     cursor: 'not-allowed',

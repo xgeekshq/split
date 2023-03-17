@@ -1,19 +1,18 @@
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { useSession } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
-import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
-
 import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { InnerContainer } from '../../styles';
+import { InnerContainer } from '@/styles/pages/pages.styles';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import NewJoinerTooltip from '../../../Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
+import BoardRolePopover from '../../../Primitives/Popovers/BoardRolePopover/BoardRolePopover';
 
 export type TeamMemberItemProps = {
   member: TeamUser;
@@ -23,8 +22,8 @@ export type TeamMemberItemProps = {
 
 const TeamMemberItem = React.memo<TeamMemberItemProps>(
   ({ isTeamPage = false, member, hasPermissions = false }) => {
-    const { data: session } = useSession();
-    const canChangeRole = hasPermissions && session?.user.id !== member.user._id;
+    const { userId } = useCurrentSession();
+    const canChangeRole = hasPermissions && userId !== member.user._id;
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
@@ -32,29 +31,47 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
       updateTeamUser: { mutate },
     } = useTeam();
 
-    const handleIsNewJoiner = (checked: boolean) => {
-      const listUsersMembers = membersList.map((user) =>
-        user.user._id === member.user._id ? { ...user, isNewJoiner: checked } : user,
-      );
-
-      setMembersList(listUsersMembers);
-    };
-
-    const updateIsNewJoinerStatus = (checked: boolean) => {
-      if (member.team) {
+    const isNewJoinerHandler = (checked: boolean) => {
+      if (isTeamPage && member.team) {
         const updateTeamUser: TeamUserUpdate = {
           team: member.team,
           user: member.user._id,
           role: member.role,
           isNewJoiner: checked,
+          canBeResponsible: !checked,
         };
 
         mutate(updateTeamUser);
+      } else {
+        const listUsersMembers = membersList.map((user) =>
+          user.user._id === member.user._id
+            ? { ...user, isNewJoiner: checked, canBeResponsible: !checked }
+            : user,
+        );
+
+        setMembersList(listUsersMembers);
       }
     };
 
-    const handleSelectFunction = (checked: boolean) =>
-      isTeamPage ? updateIsNewJoinerStatus(checked) : handleIsNewJoiner(checked);
+    const canBeResponsibleHandler = (checked: boolean) => {
+      if (isTeamPage && member.team) {
+        const updateTeamUser: TeamUserUpdate = {
+          team: member.team,
+          user: member.user._id,
+          role: member.role,
+          isNewJoiner: member.isNewJoiner,
+          canBeResponsible: checked,
+        };
+
+        mutate(updateTeamUser);
+      } else {
+        const listUsersMembers = membersList.map((user) =>
+          user.user._id === member.user._id ? { ...user, canBeResponsible: checked } : user,
+        );
+
+        setMembersList(listUsersMembers);
+      }
+    };
 
     return (
       <Flex direction="column" data-testid="teamMemberItem">
@@ -66,12 +83,13 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
               fontWeight="bold"
             >{`${member.user.firstName} ${member.user.lastName}`}</Text>
           </Flex>
-          <Flex align="center" gap="8">
+          <Flex align="center">
             {(hasPermissions || !isTeamPage) && (
-              <ConfigurationSwitch
-                handleCheckedChange={handleSelectFunction}
-                isChecked={member.isNewJoiner}
-                title="New Joiner"
+              <BoardRolePopover
+                isNewJoinerHandler={isNewJoinerHandler}
+                isNewJoiner={member.isNewJoiner}
+                canBeResponsibleHandler={canBeResponsibleHandler}
+                canBeResponsible={member.canBeResponsible}
               />
             )}
             {isTeamPage && !hasPermissions && member.isNewJoiner && <NewJoinerTooltip />}

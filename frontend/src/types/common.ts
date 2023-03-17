@@ -7,3 +7,7 @@ export interface DataT {
 export interface ErrorT {
   message: string;
 }
+
+export interface ChildrenProp {
+  children: React.ReactNode;
+}

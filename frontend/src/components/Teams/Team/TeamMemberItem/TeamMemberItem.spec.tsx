@@ -43,7 +43,7 @@ describe('Components/Teams/Team/TeamMemberItem', () => {
     const { getByTestId } = render(teamMemberItemProps);
 
     // Assert
-    expect(getByTestId('configurationSwitch')).toBeInTheDocument();
+    expect(getByTestId('boardRolePopover')).toBeInTheDocument();
   });
 
   it('should not allow to change new joiner status', () => {

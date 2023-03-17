@@ -126,20 +126,23 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					team: teamId,
 					user: `${user._id}`,
 					role: teamUser.role,
-					isNewJoiner: false
+					isNewJoiner: false,
+					canBeResponsible: true
 				});
 
 				teamUser.isNewJoiner = false;
+				teamUser.canBeResponsible = true;
 			}
 
 			return teamUser;
 		});
 
 		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => !(teamUser.role === TeamRoles.STAKEHOLDER) ?? []
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
 		);
 		const teamLength = teamUsersWotStakeholders.length;
-		const maxTeams = Math.floor(teamLength / Number(maxUsersPerTeam));
+		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
+		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -300,6 +303,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		);
 
 		findSelectedAvailableUser.isNewJoiner = false;
+		findSelectedAvailableUser.canBeResponsible = true;
 
 		const findSelectedAvailableUserArray: TeamUser[] = [];
 
@@ -311,7 +315,9 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	private getRandomGroup = (usersPerTeam: number, availableUsers: TeamUser[]) => {
 		const randomGroupOfUsers = [];
 
-		let availableUsersToBeResponsible = availableUsers.filter((user) => !user.isNewJoiner);
+		let availableUsersToBeResponsible = availableUsers.filter(
+			(user) => !user.isNewJoiner && user.canBeResponsible
+		);
 
 		if (availableUsersToBeResponsible.length < 1) {
 			availableUsersToBeResponsible = this.getAvailableUsersToBeResponsible(availableUsers);
@@ -324,7 +330,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			user: (candidateToBeTeamResponsible.user as User)._id,
 			role: BoardRoles.MEMBER,
 			votesCount: 0,
-			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner
+			isNewJoiner: candidateToBeTeamResponsible.isNewJoiner,
+			canBeResponsible: candidateToBeTeamResponsible.canBeResponsible
 		});
 
 		const availableUsersWotResponsible = availableUsers.filter(
@@ -340,7 +347,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				user: (teamUser.user as User)._id,
 				role: BoardRoles.MEMBER,
 				votesCount: 0,
-				isNewJoiner: teamUser.isNewJoiner
+				isNewJoiner: teamUser.isNewJoiner,
+				canBeResponsible: teamUser.canBeResponsible
 			});
 			i++;
 		}
@@ -361,15 +369,17 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 		let availableUsers = [...teamMembers];
 
-		const isNotNewJoiners = availableUsers.filter((user) => !user.isNewJoiner);
+		const canBeResponsibles = availableUsers.filter(
+			(user) => !user.isNewJoiner && user.canBeResponsible
+		);
 		const responsiblesAvailable: TeamUser[] = [];
-		while (isNotNewJoiners.length > 0 && responsiblesAvailable.length !== maxTeams) {
-			const idx = Math.floor(Math.random() * isNotNewJoiners.length);
-			const randomUser = isNotNewJoiners[idx];
+		while (canBeResponsibles.length > 0 && responsiblesAvailable.length !== maxTeams) {
+			const idx = Math.floor(Math.random() * canBeResponsibles.length);
+			const randomUser = canBeResponsibles[idx];
 
 			if (randomUser && !responsiblesAvailable.includes(randomUser)) {
 				responsiblesAvailable.push(randomUser);
-				isNotNewJoiners.splice(idx, 1);
+				canBeResponsibles.splice(idx, 1);
 			}
 		}
 
@@ -411,14 +421,16 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	) {
 		new Array(maxTeams).fill(0).forEach((_, i) => {
 			const newBoard = generateSubBoardDtoData(i + 1);
-			const teamUsersWotIsNewJoiner = splitUsers[i].filter((user) => !user.isNewJoiner);
+			const canBeResponsibles = splitUsers[i].filter(
+				(user) => !user.isNewJoiner && user.canBeResponsible
+			);
 
-			const randomIndex = Math.floor(Math.random() * teamUsersWotIsNewJoiner.length);
-			teamUsersWotIsNewJoiner[randomIndex].role = BoardRoles.RESPONSIBLE;
-			responsibles.push(teamUsersWotIsNewJoiner[randomIndex].user.toString());
+			const randomIndex = Math.floor(Math.random() * canBeResponsibles.length);
+			canBeResponsibles[randomIndex].role = BoardRoles.RESPONSIBLE;
+			responsibles.push(canBeResponsibles[randomIndex].user.toString());
 
 			const result = splitUsers[i].map(
-				(user) => teamUsersWotIsNewJoiner.find((member) => member.user === user.user) || user
+				(user) => canBeResponsibles.find((member) => member.user === user.user) || user
 			);
 
 			newBoard.users = result;

@@ -41,4 +41,9 @@ export default class BoardUserDto {
 	@IsOptional()
 	@IsBoolean()
 	isNewJoiner?: boolean;
+
+	@ApiPropertyOptional()
+	@IsOptional()
+	@IsBoolean()
+	canBeResponsible?: boolean;
 }

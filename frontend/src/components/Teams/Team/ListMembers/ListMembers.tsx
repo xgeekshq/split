@@ -1,16 +1,17 @@
+import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeam from '@/hooks/useTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
+import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
-import { useRouter } from 'next/router';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import useTeam from '@/hooks/useTeam';
-import { UserList } from '@/types/team/userList';
-import UserListDialog from '../../../Primitives/Dialogs/UserListDialog/UserListDialog';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -23,9 +24,11 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     addAndRemoveTeamUser: { mutate },
   } = useTeam({ autoFetchTeam: false });
 
-  const router = useRouter();
+  const {
+    query: { teamId },
+  } = useRouter();
 
-  const { data: session } = useSession({ required: true });
+  const { userId } = useCurrentSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);
@@ -36,7 +39,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     const listOfUsers = [...membersList];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
-    const { teamId } = router.query;
 
     if (isTeamPage && teamId) {
       const team = teamId as string;
@@ -45,12 +47,20 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
-      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => ({
-        user: teamUser._id,
-        role: TeamUserRoles.MEMBER,
-        isNewJoiner: verifyIfIsNewJoiner(teamUser.joinedAt, teamUser.providerAccountCreatedAt),
-        team,
-      }));
+      const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => {
+        const isNewJoiner = verifyIfIsNewJoiner(
+          teamUser.joinedAt,
+          teamUser.providerAccountCreatedAt,
+        );
+
+        return {
+          user: teamUser._id,
+          role: TeamUserRoles.MEMBER,
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+          team,
+        };
+      });
 
       const removedUsers = listOfUsers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user?._id === user._id),
@@ -71,14 +81,18 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       return;
     }
 
-    const updatedListWithAdded = selectedUsers.map(
-      (user) =>
+    const updatedListWithAdded = selectedUsers.map((user) => {
+      const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
+
+      return (
         listOfUsers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
-          isNewJoiner: verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt),
-        },
-    );
+          isNewJoiner,
+          canBeResponsible: !isNewJoiner,
+        }
+      );
+    });
 
     // Sort by Name
     updatedListWithAdded.sort((a, b) => {
@@ -89,9 +103,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     });
 
     // this insures that the team creator stays always in first
-    const userAdminIndex = updatedListWithAdded.findIndex(
-      (member) => member.user._id === session?.user.id,
-    );
+    const userAdminIndex = updatedListWithAdded.findIndex((member) => member.user._id === userId);
 
     updatedListWithAdded.unshift(updatedListWithAdded.splice(userAdminIndex, 1)[0]);
 

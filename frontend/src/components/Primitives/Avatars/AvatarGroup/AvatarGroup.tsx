@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import Avatar, { AvatarButton } from '@/components/Primitives/Avatars/Avatar/Avatar';
+import Avatar, { AvatarButton, AvatarColor } from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { User } from '@/types/user/user';
@@ -112,7 +112,7 @@ const AvatarGroup = ({
   const usersCount = data.length;
 
   const getAvatarValue = useCallback(
-    (user: User | undefined, index) => {
+    (user: User | undefined, index: number) => {
       if (usersCount - 1 > index && index > 1) {
         return `+${usersCount - (AVATAR_AMOUNT - 1)}`;
       }
@@ -122,7 +122,13 @@ const AvatarGroup = ({
   );
 
   const renderAvatarWithButton = useCallback(
-    (keyValue, idx, avatarColor, fallbackText, id) => (
+    (
+      keyValue: string,
+      idx: number,
+      avatarColor: AvatarColor | undefined,
+      fallbackText: string,
+      id: string,
+    ) => (
       <AvatarButton
         key={`${keyValue}-${idx}-${Math.random()}`}
         aria-hidden="true"
@@ -146,7 +152,7 @@ const AvatarGroup = ({
   );
 
   const renderAvatar = useCallback(
-    (value: User | string, avatarColor, idx) => {
+    (value: User | string, avatarColor: AvatarColor | undefined, idx: number) => {
       // Only used for the User Amount:
       if (typeof value === 'string') {
         return renderAvatarWithButton(value, idx, avatarColor, value, value);

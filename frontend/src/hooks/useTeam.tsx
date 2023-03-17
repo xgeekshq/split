@@ -1,21 +1,23 @@
+import { AxiosError } from 'axios';
+
+import { INVALID_NAME } from '@/errors/teams/errors';
+import { Team } from '@/types/team/team';
+import { TeamUser } from '@/types/team/team.user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { ROUTES } from '@/utils/routes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { TeamUser } from '@/types/team/team.user';
-import { Team } from '@/types/team/team';
-import { AxiosError } from 'axios';
-import { INVALID_NAME } from '@/errors/teams/errors';
 import {
   addAndRemoveTeamUserRequest,
   createTeamRequest,
   deleteTeamRequest,
+  deleteTeamUserRequest,
   getAllTeams,
   getTeamRequest,
   getTeamsOfUser,
-  updateTeamUserRequest,
-  deleteTeamUserRequest,
   getTeamsUserIsNotMemberRequest,
   updateAddTeamsToUserRequest,
+  updateTeamUserRequest,
 } from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
@@ -46,6 +48,7 @@ const useTeam = ({
     usersList,
     userId,
     session,
+    router: { push },
   } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
@@ -146,8 +149,10 @@ const useTeam = ({
         content: 'The team was successfully created.',
         type: ToastStateEnum.SUCCESS,
       });
+
+      push(ROUTES.Teams);
     },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       setToastState({
         open: true,
         content:
@@ -272,7 +277,7 @@ const useTeam = ({
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error deleting the team',
+        content: 'Error deleting the team.',
         type: ToastStateEnum.ERROR,
       });
     },
@@ -287,14 +292,14 @@ const useTeam = ({
 
       setToastState({
         open: true,
-        content: 'The team was successfully deleted.',
+        content: 'The user was successfully removed from the team.',
         type: ToastStateEnum.SUCCESS,
       });
     },
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error deleting the team user',
+        content: 'Error removing user from the team.',
         type: ToastStateEnum.ERROR,
       });
     },

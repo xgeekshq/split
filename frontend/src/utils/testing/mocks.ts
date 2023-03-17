@@ -27,6 +27,7 @@ export function createMockRouter(router?: Partial<NextRouter.NextRouter>): NextR
       off: jest.fn(),
       emit: jest.fn(),
     },
+    forward: jest.fn(),
     isFallback: false,
     isLocaleDomain: false,
     isReady: true,

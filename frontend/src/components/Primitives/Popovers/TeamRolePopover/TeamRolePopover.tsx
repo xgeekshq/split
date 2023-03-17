@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import {
   Popover,
@@ -25,8 +25,7 @@ export type TeamRolePopoverProps = {
 };
 
 const TeamRolePopover = React.memo(({ userId, teamId, isTeamPage }: TeamRolePopoverProps) => {
-  const membersList = useRecoilValue(membersListState);
-  const setMembersList = useSetRecoilState(membersListState);
+  const [membersList, setMembersList] = useRecoilState(membersListState);
   const userTeamsList = useRecoilValue(userTeamsListState);
 
   const router = useRouter();
@@ -50,6 +49,7 @@ const TeamRolePopover = React.memo(({ userId, teamId, isTeamPage }: TeamRolePopo
         user: userId,
         role: value,
         isNewJoiner: teamUser.isNewJoiner,
+        canBeResponsible: teamUser.canBeResponsible,
       };
 
       mutate(updateTeamUserRole);

@@ -11,7 +11,7 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const { data: session } = useSession({ required: false });
+  const { data: session } = useSession({ required: true });
 
   if (session?.error === REFRESH_TOKEN_ERROR) {
     signOut({ callbackUrl: '/' });

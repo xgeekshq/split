@@ -8,6 +8,7 @@ import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 export type ConfigurationSwitchProps = {
   title: string;
   text?: string;
+  fontSize?: 'sm' | 'md';
   isChecked: boolean;
   handleCheckedChange: (checked: boolean) => void;
   children?: ReactNode;
@@ -18,6 +19,7 @@ export type ConfigurationSwitchProps = {
 const ConfigurationSwitch = ({
   title,
   text,
+  fontSize = 'md',
   isChecked,
   handleCheckedChange,
   children,
@@ -45,11 +47,11 @@ const ConfigurationSwitch = ({
       />
     )}
     <Flex direction="column">
-      <Text size="md" fontWeight="medium">
+      <Text size={fontSize} fontWeight="medium">
         {title}
       </Text>
       {text && (
-        <Text color="primary500" size="sm">
+        <Text color="primary500" size={fontSize === 'md' ? 'sm' : 'xs'}>
           {text}
         </Text>
       )}

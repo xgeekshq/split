@@ -1,14 +1,15 @@
 import faker from '@faker-js/faker';
 import Card from 'src/modules/cards/entities/card.schema';
+import { CardItemFactory } from './cardItem-factory.mock';
+import { CommentFactory } from './comment-factory.mock';
 import { buildTestFactory } from './generic-factory.mock';
 import { UserFactory } from './user-factory';
 
 const cardId = faker.datatype.uuid();
 const cardText = faker.lorem.words(5);
-const commentText = faker.lorem.words(4);
 const teamId = faker.datatype.uuid();
 const createdAtDate = faker.datatype.datetime();
-const user = UserFactory.create();
+const user = UserFactory.create({ joinedAt: new Date(faker.datatype.datetime()) });
 
 const mockCardData = (): Card => {
 	return {
@@ -17,32 +18,14 @@ const mockCardData = (): Card => {
 		createdBy: user,
 		createdByTeam: teamId,
 		createdAt: createdAtDate,
-		comments: [
-			{
-				text: commentText,
-				createdBy: user,
-				anonymous: false
-			}
-		],
+		comments: CommentFactory.createMany(2, () => ({ createdBy: user })),
 		votes: [],
-		anonymous: false,
+		anonymous: faker.datatype.boolean(),
 		items: [
-			{
-				_id: cardId,
-				text: cardText,
+			CardItemFactory.create({
 				createdBy: user,
-				comments: [
-					{
-						text: commentText,
-						createdBy: user,
-						anonymous: false
-					}
-				],
-				votes: [],
-				anonymous: false,
-				createdByTeam: teamId,
-				createdAt: createdAtDate
-			}
+				comments: CommentFactory.createMany(2, () => ({ createdBy: user }))
+			})
 		]
 	};
 };

@@ -5,6 +5,7 @@ export interface TeamUser {
   user: User;
   role: TeamUserRoles;
   isNewJoiner: boolean;
+  canBeResponsible: boolean;
   _id?: string;
   team?: string;
   userCreated?: Date | string;
@@ -14,6 +15,7 @@ export interface CreatedTeamUser {
   user: string;
   role: TeamUserRoles;
   isNewJoiner: boolean;
+  canBeResponsible: boolean;
   _id: string;
   team?: string;
 }
@@ -22,12 +24,14 @@ export interface CreateTeamUser {
   user: string; // user._id
   role: TeamUserRoles;
   isNewJoiner: boolean;
+  canBeResponsible: boolean;
   team?: string;
 }
 
 export interface TeamUserUpdate {
   role: TeamUserRoles;
   isNewJoiner: boolean;
+  canBeResponsible: boolean;
   user: string | undefined;
   team: string;
 }

@@ -39,7 +39,7 @@ describe('SlackSendMessageConsumer', () => {
 		expect(consumer).toBeDefined();
 	});
 
-	it('should call sendMessageApplication.execute with job.data 1 time', async () => {
+	it('should call application.execute once with job.data', async () => {
 		await consumer.communication(slackMessageMock as unknown as Job<SlackMessageType>);
 		expect(sendMessageApplicationMock.execute).toHaveBeenNthCalledWith(1, slackMessageMock.data);
 	});

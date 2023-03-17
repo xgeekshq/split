@@ -1,6 +1,5 @@
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { useSession } from 'next-auth/react';
 import { useSetRecoilState } from 'recoil';
 import { getAllUsers } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -14,9 +13,10 @@ import { Suspense, useEffect } from 'react';
 import useUser from '@/hooks/useUser';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import useCurrentSession from '@/hooks/useCurrentSession';
 
 const NewTeam: NextPage = () => {
-  const { data: session } = useSession({ required: true });
+  const { session, userId } = useCurrentSession({ required: true });
 
   const {
     fetchUsers: { data: usersData, isFetching },
@@ -33,11 +33,12 @@ const NewTeam: NextPage = () => {
     }
 
     usersData.forEach((user) => {
-      if (user._id === session?.user.id) {
+      if (user._id === userId) {
         listMembers.push({
           user,
           role: TeamUserRoles.ADMIN,
           isNewJoiner: false,
+          canBeResponsible: true,
         });
       }
     });
@@ -45,13 +46,13 @@ const NewTeam: NextPage = () => {
     const usersWithChecked = usersData
       .map((user) => ({
         ...user,
-        isChecked: user._id === session?.user.id,
+        isChecked: user._id === userId,
       }))
       .sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
 
     setUsersListState(usersWithChecked);
     setMembersListState(listMembers);
-  }, [usersData, session?.user.id, setMembersListState, setUsersListState]);
+  }, [usersData, userId, setMembersListState, setUsersListState]);
 
   if (!session || !usersData) return null;
 
@@ -75,20 +76,12 @@ export default NewTeam;
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
-    try {
-      await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
-    } catch (e) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/teams',
-        },
-      };
-    }
+
+    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },
