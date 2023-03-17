@@ -1,30 +1,30 @@
-import React, { ReactElement, Suspense, useEffect } from 'react';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import React, { ReactElement, Suspense, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getTeamRequest } from '@/api/teamService';
 import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import useTeam from '@/hooks/useTeam';
 import Layout from '@/components/layouts/Layout/Layout';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useUser from '@/hooks/useUser';
+import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeam from '@/hooks/useTeam';
+import useUser from '@/hooks/useUser';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { UserList } from '@/types/team/userList';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ROUTES } from '@/utils/routes';
-import { useRouter } from 'next/router';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 const Team = () => {
   // Session Details
   const { userId, isSAdmin } = useCurrentSession();
-  const router = useRouter();
+  const { replace } = useRouter();
 
   // Recoil States
   const [teamUsers, setTeamUsers] = useRecoilState(membersListState);
@@ -61,7 +61,7 @@ const Team = () => {
   }, [usersData, setUsers, teamData]);
 
   if (!teamData || !usersData) {
-    router.replace(ROUTES.Teams);
+    replace(ROUTES.Teams);
     return null;
   }
 

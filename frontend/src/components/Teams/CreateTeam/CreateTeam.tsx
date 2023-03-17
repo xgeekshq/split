@@ -1,29 +1,31 @@
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { joiResolver } from '@hookform/resolvers/joi';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import { CreateTeamUser } from '@/types/team/team.user';
+
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import Text from '@/components/Primitives/Text/Text';
+import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import Text from '@/components/Primitives/Text/Text';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import Input from '@/components/Primitives/Inputs/Input/Input';
-import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
-import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
-import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
-import useCurrentSession from '@/hooks/useCurrentSession';
+import { CreateTeamUser } from '@/types/team/team.user';
 import { CREATE_TEAM_TIPS } from '@/utils/tips';
+import { joiResolver } from '@hookform/resolvers/joi';
+
 import ListMembers from '../Team/ListMembers/ListMembers';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
-  const router = useRouter();
+  const { back } = useRouter();
 
   const {
     createTeam: { mutate, status },
@@ -65,8 +67,8 @@ const CreateTeam = () => {
   const handleBack = useCallback(() => {
     setDisableButtons(true);
     resetListUsersState();
-    router.back();
-  }, [resetListUsersState, router]);
+    back();
+  }, [resetListUsersState, back]);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();

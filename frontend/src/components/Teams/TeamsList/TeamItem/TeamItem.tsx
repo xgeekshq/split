@@ -1,24 +1,22 @@
-import React, { useMemo } from 'react';
 import { useRouter } from 'next/router';
+import React, { useMemo } from 'react';
 
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import Button from '@/components/Primitives/Inputs/Button/Button';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useTeam from '@/hooks/useTeam';
-
-import { Team } from '@/types/team/team';
-
 import { InnerContainer } from '@/styles/pages/pages.styles';
+import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import TeamTitle from './TeamTitle/TeamTitle';
+
 import TeamBoards from './TeamBoards/TeamBoards';
+import TeamTitle from './TeamTitle/TeamTitle';
 
 export type TeamItemProps = {
   team: Team;
@@ -30,17 +28,20 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   // CHECK: the session data could be passed as props,
   // since it's the same for all items
   const { userId, isSAdmin } = useCurrentSession();
-  const router = useRouter();
-  const isTeamPage = router.pathname.includes('teams');
+  const {
+    pathname,
+    query: { userId: userPathId },
+  } = useRouter();
+  const isTeamPage = pathname.includes('teams');
 
   const { deleteTeam, deleteTeamUser } = useTeam();
 
   const userFound = useMemo(() => {
-    const queryUserId = router.query.userId;
+    const queryUserId = userPathId;
     const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
 
     return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
-  }, [router, userId, teamUsers]);
+  }, [userPathId, userId, teamUsers]);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {

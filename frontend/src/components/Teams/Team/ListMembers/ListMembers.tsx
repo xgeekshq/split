@@ -1,16 +1,17 @@
+import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
-import { useRouter } from 'next/router';
-import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import useTeam from '@/hooks/useTeam';
-import { UserList } from '@/types/team/userList';
+
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeam from '@/hooks/useTeam';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
+import { UserList } from '@/types/team/userList';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -23,7 +24,9 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     addAndRemoveTeamUser: { mutate },
   } = useTeam({ autoFetchTeam: false });
 
-  const router = useRouter();
+  const {
+    query: { teamId },
+  } = useRouter();
 
   const { userId } = useCurrentSession();
 
@@ -36,7 +39,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     const listOfUsers = [...membersList];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
-    const { teamId } = router.query;
 
     if (isTeamPage && teamId) {
       const team = teamId as string;

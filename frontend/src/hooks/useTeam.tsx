@@ -1,22 +1,23 @@
+import { AxiosError } from 'axios';
+
+import { INVALID_NAME } from '@/errors/teams/errors';
+import { Team } from '@/types/team/team';
+import { TeamUser } from '@/types/team/team.user';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { ROUTES } from '@/utils/routes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { TeamUser } from '@/types/team/team.user';
-import { Team } from '@/types/team/team';
-import { AxiosError } from 'axios';
-import { INVALID_NAME } from '@/errors/teams/errors';
-import { ROUTES } from '@/utils/routes';
 import {
   addAndRemoveTeamUserRequest,
   createTeamRequest,
   deleteTeamRequest,
+  deleteTeamUserRequest,
   getAllTeams,
   getTeamRequest,
   getTeamsOfUser,
-  updateTeamUserRequest,
-  deleteTeamUserRequest,
   getTeamsUserIsNotMemberRequest,
   updateAddTeamsToUserRequest,
+  updateTeamUserRequest,
 } from '../api/teamService';
 import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
@@ -47,7 +48,7 @@ const useTeam = ({
     usersList,
     userId,
     session,
-    router,
+    router: { push },
   } = useTeamUtils();
 
   const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
@@ -149,9 +150,9 @@ const useTeam = ({
         type: ToastStateEnum.SUCCESS,
       });
 
-      router.push(ROUTES.Teams);
+      push(ROUTES.Teams);
     },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       setToastState({
         open: true,
         content:
