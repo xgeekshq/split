@@ -37,9 +37,6 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 			await this.userRepository.commitTransaction();
 			await this.deleteTeamUserService.commitTransaction();
 
-			await this.userRepository.endSession();
-			await this.deleteTeamUserService.endSession();
-
 			return true;
 		} catch (e) {
 			await this.userRepository.abortTransaction();

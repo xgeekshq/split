@@ -1,6 +1,6 @@
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/create.team.user.service.interface';
-import { HttpException, HttpStatus, Inject, Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
@@ -48,9 +48,6 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 
 			await this.teamRepository.commitTransaction();
 			await this.createTeamUserService.commitTransaction();
-
-			await this.teamRepository.endSession();
-			await this.createTeamUserService.endSession();
 
 			return { ...newTeam, users: teamUsers };
 		} catch (error) {
