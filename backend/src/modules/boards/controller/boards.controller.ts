@@ -361,7 +361,7 @@ export default class BoardsController {
 		type: UnauthorizedResponse
 	})
 	@Put(':boardId/phase')
-	async updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
+	updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
 		this.updateBoardApp.updatePhase(boardPhaseDto);
 	}
 }
