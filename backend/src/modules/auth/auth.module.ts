@@ -28,11 +28,13 @@ import AuthController from './controller/auth.controller';
 import JwtStrategy from './strategy/jwt.strategy';
 import LocalStrategy from './strategy/local.strategy';
 import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
+import TeamUsersModule from 'src/modules/teamusers/teamusers.module';
 
 @Module({
 	imports: [
 		UsersModule,
 		TeamsModule,
+		TeamUsersModule,
 		JwtRegister,
 		BoardsModule,
 		PassportModule,

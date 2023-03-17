@@ -1,9 +1,9 @@
+import { GetTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
-import * as Team from 'src/modules/teams/interfaces/types';
+import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
@@ -15,8 +15,8 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 		private readonly userRepository: UserRepositoryInterface,
 		@Inject(TYPES.services.GetUserService)
 		private readonly getUserService: GetUserServiceInterface,
-		@Inject(Team.TYPES.services.GetTeamService)
-		private getTeamService: GetTeamServiceInterface
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async execute(page = 0, size = 15, searchUser?: string) {
@@ -33,7 +33,7 @@ export default class GetAllUsersWithTeamsUseCase implements GetAllUsersWithTeams
 				teamsNames: []
 			};
 		});
-		const usersOnlyWithTeams = await this.getTeamService.getUsersOnlyWithTeams(users);
+		const usersOnlyWithTeams = await this.getTeamUserService.getUsersOnlyWithTeams(users);
 
 		const ids = new Set(usersOnlyWithTeams.map((userWithTeams) => String(userWithTeams.user._id)));
 
