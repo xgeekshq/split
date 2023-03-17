@@ -5,12 +5,12 @@ import { buildTestFactory } from './generic-factory.mock';
 
 const cardText = faker.lorem.words();
 
-const mockColumnData = (cardsCount = 1): Column => {
+const mockColumnData = (): Column => {
 	return {
 		_id: faker.datatype.uuid(),
 		title: faker.lorem.words(),
 		color: '#aaaaaa',
-		cards: CardFactory.createMany(cardsCount),
+		cards: CardFactory.createMany(2),
 		cardText: cardText,
 		isDefaultText: faker.datatype.boolean()
 	};
