@@ -72,6 +72,7 @@ describe('cleanBoard function', () => {
 			columns: ColumnFactory.createMany(3, () => ({
 				cards: CardFactory.createMany(2, [
 					{
+						votes: [cardUsers[0]._id],
 						createdBy: cardUsers[0],
 						anonymous: false,
 						createdByTeam: null,
@@ -81,7 +82,8 @@ describe('cleanBoard function', () => {
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					},
@@ -90,12 +92,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -116,6 +120,7 @@ describe('cleanBoard function', () => {
 		boardResult.columns.forEach((column) => {
 			column.cards.forEach((card) => {
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(card.votes as string[], String(createdByUser_1._id));
 				card.items.forEach((cardItem) => {
 					cardItem.createdAt = new Date(cardItem.createdAt);
 					cardItem.votes = hideVotes(cardItem.votes as string[], String(createdByUser_1._id));
@@ -138,12 +143,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						createdByTeam: null,
 						comments: [],
+						votes: [cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[1]._id]
 							})
 						]
 					},
@@ -152,12 +159,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[0]._id],
 						items: [
 							CardItemFactory.create({
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -184,6 +193,7 @@ describe('cleanBoard function', () => {
 					card.createdBy = replaceUser(createdByAsUser, createdByUser_1._id);
 				}
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(card.votes as string[], String(createdByUser_1._id));
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
@@ -211,11 +221,13 @@ describe('cleanBoard function', () => {
 						createdBy: cardUsers[0],
 						anonymous: false,
 						comments: [],
+						votes: [cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
 								createdBy: cardUsers[0],
 								anonymous: false,
-								comments: []
+								comments: [],
+								votes: [cardUsers[1]._id]
 							})
 						]
 					},
@@ -224,12 +236,14 @@ describe('cleanBoard function', () => {
 						anonymous: true,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
-								createdBy: cardUsers[0],
+								createdBy: cardUsers[1],
 								anonymous: true,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[0]._id]
 							})
 						]
 					}
@@ -256,6 +270,7 @@ describe('cleanBoard function', () => {
 				}
 
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(card.votes as string[], String(createdByUser_1._id));
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
@@ -279,6 +294,7 @@ describe('cleanBoard function', () => {
 			columns: ColumnFactory.createMany(3, () => ({
 				cards: CardFactory.createMany(2, [
 					{
+						votes: [cardUsers[1]._id],
 						createdBy: cardUsers[0],
 						anonymous: false,
 						comments: [],
@@ -288,7 +304,8 @@ describe('cleanBoard function', () => {
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[1]._id, cardUsers[1]._id]
 							})
 						]
 					},
@@ -297,12 +314,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
-								createdBy: cardUsers[0],
+								createdBy: cardUsers[1],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -323,6 +342,10 @@ describe('cleanBoard function', () => {
 		boardResult.columns.forEach((column) => {
 			column.cards.forEach((card) => {
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(
+					filterVotes(card.votes as string[], String(createdByUser_1._id)),
+					String(createdByUser_1._id)
+				);
 				card.items.forEach((cardItem) => {
 					cardItem.createdAt = new Date(cardItem.createdAt);
 					cardItem.votes = hideVotes(
@@ -336,7 +359,7 @@ describe('cleanBoard function', () => {
 		expect(cleanBoard(board, createdByUser_1._id)).toEqual(boardResult);
 	});
 
-	test('cleanBoard should return cards and votes hidden if hideCards and hidVotes are true', () => {
+	test('cleanBoard should return cards and votes hidden if hideCards and hideVotes are true', () => {
 		const cardUsers = UserFactory.createMany(2);
 		const board = BoardFactory.create({
 			hideCards: true,
@@ -348,12 +371,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[0]._id, cardUsers[1]._id],
 						items: [
 							CardItemFactory.create({
 								createdBy: cardUsers[0],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					},
@@ -362,12 +387,14 @@ describe('cleanBoard function', () => {
 						anonymous: false,
 						comments: [],
 						createdByTeam: null,
+						votes: [cardUsers[0]._id],
 						items: [
 							CardItemFactory.create({
-								createdBy: cardUsers[0],
+								createdBy: cardUsers[1],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -395,6 +422,10 @@ describe('cleanBoard function', () => {
 					card.createdBy = replaceUser(createdByAsUser, createdByUser_1._id);
 				}
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(
+					filterVotes(card.votes as string[], String(createdByUser_1._id)),
+					String(createdByUser_1._id)
+				);
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 
@@ -422,6 +453,7 @@ describe('cleanBoard function', () => {
 			columns: ColumnFactory.createMany(3, () => ({
 				cards: CardFactory.createMany(2, [
 					{
+						votes: [cardUsers[0]._id, cardUsers[1]._id],
 						createdBy: cardUsers[0],
 						anonymous: false,
 						comments: CommentFactory.createMany(2, [
@@ -437,6 +469,7 @@ describe('cleanBoard function', () => {
 									{ createdBy: cardUsers[0], anonymous: false },
 									{ createdBy: cardUsers[1], anonymous: true }
 								]),
+								votes: [cardUsers[0]._id, cardUsers[1]._id],
 								createdByTeam: null
 							})
 						]
@@ -444,14 +477,16 @@ describe('cleanBoard function', () => {
 					{
 						createdBy: cardUsers[1],
 						anonymous: false,
+						votes: [cardUsers[0]._id, cardUsers[1]._id],
 						comments: [],
 						createdByTeam: null,
 						items: [
 							CardItemFactory.create({
-								createdBy: cardUsers[0],
+								createdBy: cardUsers[1],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -482,6 +517,7 @@ describe('cleanBoard function', () => {
 				});
 
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(card.votes as string[], String(createdByUser_1._id));
 				card.items.forEach((cardItem) => {
 					const createdByAsUserItem = cardItem.createdBy as User;
 					cardItem.comments.forEach((commentItem) => {
@@ -517,6 +553,7 @@ describe('cleanBoard function', () => {
 							{ createdBy: cardUsers[0], anonymous: false },
 							{ createdBy: cardUsers[1], anonymous: false }
 						]),
+						votes: [cardUsers[0]._id, cardUsers[1]._id],
 						createdByTeam: null,
 						items: [
 							CardItemFactory.create({
@@ -526,7 +563,8 @@ describe('cleanBoard function', () => {
 									{ createdBy: cardUsers[0], anonymous: false },
 									{ createdBy: cardUsers[1], anonymous: false }
 								]),
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					},
@@ -534,13 +572,15 @@ describe('cleanBoard function', () => {
 						createdBy: cardUsers[1],
 						anonymous: false,
 						comments: [],
+						votes: [cardUsers[0]._id, cardUsers[1]._id],
 						createdByTeam: null,
 						items: [
 							CardItemFactory.create({
-								createdBy: cardUsers[0],
+								createdBy: cardUsers[1],
 								anonymous: false,
 								comments: [],
-								createdByTeam: null
+								createdByTeam: null,
+								votes: [cardUsers[0]._id, cardUsers[1]._id]
 							})
 						]
 					}
@@ -577,6 +617,7 @@ describe('cleanBoard function', () => {
 					}
 				});
 				card.createdAt = new Date(card.createdAt);
+				card.votes = hideVotes(card.votes as string[], String(createdByUser_1._id));
 				card.items.forEach((cardItem) => {
 					const createdByAsUserDocumentItem = cardItem.createdBy as User;
 
