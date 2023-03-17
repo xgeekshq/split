@@ -1,26 +1,30 @@
-import React, { ReactElement, Suspense, useEffect } from 'react';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps } from 'next';
-import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import React, { ReactElement, Suspense, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getTeamRequest } from '@/api/teamService';
 import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
-import useTeam from '@/hooks/useTeam';
 import Layout from '@/components/layouts/Layout/Layout';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeam from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
+import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { UserList } from '@/types/team/userList';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ROUTES } from '@/utils/routes';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 const Team = () => {
   // Session Details
-  const { data: session } = useSession({ required: true });
+  const { userId, isSAdmin } = useCurrentSession();
+  const { replace } = useRouter();
 
   // Recoil States
   const [teamUsers, setTeamUsers] = useRecoilState(membersListState);
@@ -35,6 +39,10 @@ const Team = () => {
     fetchUsers: { data: usersData, isFetching: fetchingUsers },
   } = useUser();
 
+  const userFound = teamData?.users.find((member) => member.user?._id === userId);
+  const hasPermissions =
+    isSAdmin || [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound?.role!);
+
   useEffect(() => {
     if (teamData) setTeamUsers(teamData.users);
   }, [teamData, setTeamUsers]);
@@ -42,7 +50,7 @@ const Team = () => {
   useEffect(() => {
     if (!usersData || !teamData) return;
 
-    const checkedUsersData = usersData.map((user) => {
+    const checkedUsersData: UserList[] = usersData.map((user) => {
       const userIsTeamMember = teamData.users.some(
         (teamMember) => teamMember.user?._id === user._id,
       );
@@ -52,13 +60,10 @@ const Team = () => {
     setUsers(checkedUsersData);
   }, [usersData, setUsers, teamData]);
 
-  const { id: userId, isSAdmin } = { ...session?.user };
-
-  const user = teamData?.users.find((member) => member.user?._id === userId);
-  const hasPermissions =
-    isSAdmin || [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(user?.role!);
-
-  if (!session || !teamData || !usersData) return null;
+  if (!teamData || !usersData) {
+    replace(ROUTES.Teams);
+    return null;
+  }
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -88,23 +93,12 @@ Team.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const teamId = String(context.query.teamId);
 
-  if (teamId.includes('.map'))
-    return {
-      props: {},
-    };
-
   const queryClient = new QueryClient();
-  try {
-    await queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context));
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
-  } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: '/teams',
-      },
-    };
-  }
+  await Promise.all([
+    queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context)),
+    queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+  ]);
+
   return {
     props: {
       key: teamId,

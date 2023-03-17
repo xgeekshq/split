@@ -1,11 +1,11 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import Text from '@/components/Primitives/Text/Text';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 import { UserList } from '@/types/team/userList';
 import Separator from '@/components/Primitives/Separator/Separator';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import SearchInput from '../../Inputs/SearchInput/SearchInput';
 import CheckboxUserItem from '../../Inputs/Checkboxes/UserCheckbox/UserCheckbox';
 
@@ -20,7 +20,7 @@ export type UserListDialogProps = {
 
 const UserListDialog = React.memo<UserListDialogProps>(
   ({ usersList, setIsOpen, isOpen, title, confirmationLabel, confirmationHandler }) => {
-    const { data: session } = useSession({ required: false });
+    const { userId, isSAdmin } = useCurrentSession();
 
     const [searchMember, setSearchMember] = useState<string>('');
 
@@ -55,7 +55,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
       listToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked));
 
       // Ensure Team Admin is in First place
-      const userAdminIndex = listToBeSorted.findIndex((user) => user._id === session?.user.id);
+      const userAdminIndex = listToBeSorted.findIndex((user) => user._id === userId);
       listToBeSorted.unshift(listToBeSorted.splice(userAdminIndex, 1)[0]);
 
       return listToBeSorted;
@@ -77,7 +77,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
 
     const handleSelectAll = () => {
       const updateCheckedUsers = localUsersList.map((user) =>
-        user._id !== session?.user.id ? { ...user, isChecked: !isCheckAll } : user,
+        user._id !== userId ? { ...user, isChecked: !isCheckAll } : user,
       );
 
       setIsCheckAll(!isCheckAll);
@@ -145,7 +145,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
               <CheckboxUserItem
                 key={user._id}
                 user={user}
-                disabled={user._id === session?.user.id && !session?.user.isSAdmin}
+                disabled={user._id === userId && !isSAdmin}
                 handleChecked={handleChecked}
               />
             ))}
