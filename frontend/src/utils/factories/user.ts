@@ -106,6 +106,7 @@ export const TeamUserFactory = buildTestFactory<TeamUser>(() => {
     user,
     role,
     isNewJoiner,
+    canBeResponsible: !isNewJoiner,
   };
 });
 

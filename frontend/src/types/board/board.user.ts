@@ -31,6 +31,7 @@ export interface BoardUserToAdd {
   votesCount: number;
   board?: string;
   isNewJoiner?: boolean;
+  canBeResponsible?: boolean;
   _id?: string;
 }
 

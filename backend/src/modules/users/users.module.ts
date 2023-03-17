@@ -1,18 +1,20 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import {
 	mongooseResetModule,
 	mongooseTeamUserModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import TeamsModule from 'src/modules/teams/teams.module';
+import AuthModule from '../auth/auth.module';
 import UsersController from './controller/users.controller';
 import {
 	createUserService,
-	deleteUserApplication,
-	deleteUserService,
-	getUserApplication,
+	deleteUserUseCase,
+	getAllUsersUseCase,
+	getAllUsersWithTeamsUseCase,
 	getUserService,
-	updateUserApplication,
+	getUserUseCase,
+	updateSAdminUseCase,
 	updateUserService,
 	userRepository
 } from './users.providers';
@@ -24,27 +26,21 @@ import TeamUsersModule from '../teamusers/teamusers.module';
 		TeamsModule,
 		TeamUsersModule,
 		mongooseResetModule,
-		mongooseTeamUserModule
+		mongooseTeamUserModule,
+		forwardRef(() => AuthModule)
 	],
 	providers: [
+		getAllUsersUseCase,
+		getAllUsersWithTeamsUseCase,
+		getUserUseCase,
+		updateSAdminUseCase,
 		createUserService,
 		getUserService,
+		deleteUserUseCase,
 		updateUserService,
-		updateUserApplication,
-		getUserApplication,
-		userRepository,
-		deleteUserService,
-		deleteUserApplication
+		userRepository
 	],
 	controllers: [UsersController],
-	exports: [
-		createUserService,
-		getUserService,
-		updateUserService,
-		updateUserApplication,
-		getUserApplication,
-		deleteUserService,
-		deleteUserApplication
-	]
+	exports: [createUserService, getUserService, updateUserService]
 })
 export default class UsersModule {}

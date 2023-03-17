@@ -1,5 +1,5 @@
 import React from 'react';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 import { ScrollableContent } from '@/components/Boards/MyBoards/styles';
 import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';

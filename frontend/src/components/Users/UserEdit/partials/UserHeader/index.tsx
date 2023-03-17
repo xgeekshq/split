@@ -1,5 +1,5 @@
 import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';

@@ -8,7 +8,7 @@ import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useTeam from '@/hooks/useTeam';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { useRecoilState } from 'recoil';

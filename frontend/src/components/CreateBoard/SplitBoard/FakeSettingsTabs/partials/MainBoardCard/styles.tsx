@@ -1,7 +1,7 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
-import Box from '@/components/Primitives/Layout/Box';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Box from '@/components/Primitives/Layout/Box/Box';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const MainContainer = styled(Flex, Box, {
   backgroundColor: 'white',

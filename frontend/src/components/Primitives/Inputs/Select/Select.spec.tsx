@@ -1,7 +1,7 @@
 // TODO: Test Select Options
 
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 import Text from '../../Text/Text';
 import Icon from '../../Icons/Icon/Icon';
 import { Select, SelectContent, SelectIcon, SelectTrigger, SelectValue } from './Select';

@@ -12,14 +12,17 @@ import BoardsModule from '../boards/boards.module';
 import TeamsModule from '../teams/teams.module';
 import UsersModule from '../users/users.module';
 import {
-	createResetTokenAuthApplication,
-	createResetTokenAuthService,
-	getTokenAuthApplication,
+	createResetPasswordTokenUseCase,
 	getTokenAuthService,
-	registerAuthApplication,
-	registerAuthService,
+	refreshTokenUseCase,
+	registerGuestUserUseCase,
+	registerUserUseCase,
 	resetPasswordRepository,
-	validateUserAuthService
+	resetPasswordUseCase,
+	signInUseCase,
+	statisticsAuthUserUseCase,
+	validateUserAuthService,
+	validateUserEmailUseCase
 } from './auth.providers';
 import AuthController from './controller/auth.controller';
 import JwtStrategy from './strategy/jwt.strategy';
@@ -40,12 +43,15 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 	],
 	providers: [
 		getTokenAuthService,
-		registerAuthService,
 		validateUserAuthService,
-		getTokenAuthApplication,
-		registerAuthApplication,
-		createResetTokenAuthApplication,
-		createResetTokenAuthService,
+		registerUserUseCase,
+		registerGuestUserUseCase,
+		validateUserEmailUseCase,
+		statisticsAuthUserUseCase,
+		signInUseCase,
+		refreshTokenUseCase,
+		createResetPasswordTokenUseCase,
+		resetPasswordUseCase,
 		UsersModule,
 		userRepository,
 		LocalStrategy,
@@ -54,6 +60,6 @@ import JwtRefreshTokenStrategy from './strategy/refresh.strategy';
 		resetPasswordRepository
 	],
 	controllers: [AuthController],
-	exports: [getTokenAuthService]
+	exports: [getTokenAuthService, resetPasswordRepository]
 })
 export default class AuthModule {}

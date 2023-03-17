@@ -30,6 +30,18 @@ export class TeamUserRepository
 		return this._repository.find({ user: userId }).distinct('team').exec();
 	}
 
+	getUsersOfTeam(teamId: string) {
+		return this.findAllWithQuery(
+			{ team: teamId },
+			null,
+			'user role isNewJoiner canBeResponsible _id',
+			{
+				path: 'user',
+				select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
+			}
+		);
+	}
+
 	getUsersOnlyWithTeams(users: User[]): Promise<UserWithTeams[]> {
 		const ids = users.map((user) => new ObjectId(user._id));
 
@@ -88,13 +100,6 @@ export class TeamUserRepository
 			.exec();
 	}
 
-	getUsersOfTeam(teamId: string): Promise<TeamUser[]> {
-		return this.findAllWithQuery({ team: teamId }, null, 'user role isNewJoiner _id', {
-			path: 'user',
-			select: '_id firstName lastName email isSAdmin joinedAt providerAccountCreatedAt'
-		});
-	}
-
 	getTeamUser(userId: string, teamId: string): Promise<TeamUser> {
 		return this.findOneByField({ user: userId, team: teamId });
 	}
@@ -104,7 +109,13 @@ export class TeamUserRepository
 	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null> {
 		return this.findOneByFieldAndUpdate(
 			{ user: teamData.user, team: teamData.team },
-			{ $set: { role: teamData.role, isNewJoiner: teamData.isNewJoiner } }
+			{
+				$set: {
+					role: teamData.role,
+					isNewJoiner: teamData.isNewJoiner,
+					canBeResponsible: teamData.canBeResponsible
+				}
+			}
 		);
 	}
 

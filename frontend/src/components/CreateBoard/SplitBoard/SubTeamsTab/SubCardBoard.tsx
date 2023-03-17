@@ -8,8 +8,8 @@ import { styled } from '@/styles/stitches/stitches.config';
 import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
-import Box from '@/components/Primitives/Layout/Box';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Box from '@/components/Primitives/Layout/Box/Box';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
@@ -33,7 +33,7 @@ const SubCardBoard: React.FC<SubCardBoardProps> = ({ board, index, setBoard }) =
 
   const handleLottery = () => {
     const cloneUsers = [...deepClone(users)].flatMap((user) => {
-      if (!user.isNewJoiner)
+      if (!user.isNewJoiner && user.canBeResponsible)
         return {
           ...user,
           role: BoardUserRoles.MEMBER,

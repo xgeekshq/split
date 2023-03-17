@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardType from '@/types/board/board';
 
 type SubBoardsProps = {

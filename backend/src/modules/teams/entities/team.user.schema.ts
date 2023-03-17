@@ -23,6 +23,12 @@ export default class TeamUser extends BaseModel {
 	})
 	isNewJoiner?: boolean;
 
+	@Prop({
+		type: Boolean,
+		nullable: false
+	})
+	canBeResponsible?: boolean;
+
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	user!: User | ObjectId | string;
 

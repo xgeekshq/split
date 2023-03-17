@@ -62,9 +62,11 @@ export const AvatarButton = styled('button', {
   },
 });
 
+export type AvatarColor = { bg: string; fontColor: string; border?: boolean };
+
 type AvatarType = {
   fallbackText: string;
-  colors?: { bg: string; fontColor: string; border?: boolean };
+  colors?: AvatarColor;
   src?: string;
   size?: number;
   isClickable?: boolean;

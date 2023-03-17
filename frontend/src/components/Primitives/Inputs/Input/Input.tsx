@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import isEmpty from '@/utils/isEmpty';
-import Flex from '../../Layout/Flex';
+import Flex from '../../Layout/Flex/Flex';
 import Text from '../../Text/Text';
 import {
   HelperTextWrapper,

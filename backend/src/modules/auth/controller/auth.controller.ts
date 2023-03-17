@@ -1,18 +1,15 @@
 import { GetTeamUserApplicationInterface } from 'src/modules/teamusers/interfaces/applications/get.team.user.application.interface';
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Get,
 	HttpCode,
 	HttpStatus,
 	Inject,
-	NotFoundException,
 	Param,
 	Patch,
 	Post,
 	Req,
-	UnauthorizedException,
 	UseGuards
 } from '@nestjs/common';
 import {
@@ -28,9 +25,7 @@ import {
 	ApiTags,
 	ApiUnauthorizedResponse
 } from '@nestjs/swagger';
-import { uniqueViolation } from 'src/infrastructure/database/errors/unique.user';
 import { EmailParam } from 'src/libs/dto/param/email.param';
-import { EMAIL_EXISTS, UPDATE_FAILED, USER_NOT_FOUND } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import JwtRefreshGuard from 'src/libs/guards/jwtRefreshAuth.guard';
 import LocalAuthGuard from 'src/libs/guards/localAuth.guard';
@@ -39,43 +34,42 @@ import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger'
 import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
 import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import CreateUserDto from 'src/modules/users/dto/create.user.dto';
 import { ResetPasswordDto } from 'src/modules/users/dto/reset-password.dto';
 import UserDto from 'src/modules/users/dto/user.dto';
-import { UpdateUserApplicationInterface } from 'src/modules/users/interfaces/applications/update.user.service.interface';
-import * as User from 'src/modules/users/interfaces/types';
 import { LoginDto } from '../dto/login.dto';
 import { TYPES } from '../interfaces/types';
-import { signIn } from '../shared/login.auth';
 import { LoginResponse } from '../swagger/login.swagger';
 import CreateGuestUserDto from 'src/modules/users/dto/create.guest.user.dto';
-import { GetUserApplicationInterface } from 'src/modules/users/interfaces/applications/get.user.application.interface';
-import { GetTeamApplicationInterface } from 'src/modules/teams/interfaces/applications/get.team.application.interface';
-import { GetBoardApplicationInterface } from 'src/modules/boards/interfaces/applications/get.board.application.interface';
-import { CreateResetTokenAuthApplicationInterface } from '../interfaces/applications/create-reset-token.auth.application.interface';
-import { GetTokenAuthApplicationInterface } from '../interfaces/applications/get-token.auth.application.interface';
-import { RegisterAuthApplicationInterface } from '../interfaces/applications/register.auth.application.interface';
+import { RegisterUserUseCaseInterface } from '../interfaces/applications/register-user.use-case.interface';
+import { RegisterGuestUserUseCaseInterface } from '../interfaces/applications/register-guest-user.use-case.interface';
+import { StatisticsAuthUserUseCaseInterface } from '../interfaces/applications/statistics.auth.use-case.interface';
+import { ValidateUserEmailUseCaseInterface } from '../interfaces/applications/validate-email.use-case.interface';
+import { SignInUseCaseInterface } from '../interfaces/applications/signIn.use-case.interface';
+import { RefreshTokenUseCaseInterface } from '../interfaces/applications/refresh-token.use-case.interface';
+import { ResetPasswordUseCaseInterface } from '../interfaces/applications/reset-password.use-case.interface';
+import { CreateResetPasswordTokenUseCaseInterface } from '../interfaces/applications/create-reset-token.use-case.interface';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export default class AuthController {
 	constructor(
-		@Inject(TYPES.applications.RegisterAuthApplication)
-		private registerAuthApp: RegisterAuthApplicationInterface,
-		@Inject(TYPES.applications.GetTokenAuthApplication)
-		private getTokenAuthApp: GetTokenAuthApplicationInterface,
-		@Inject(User.TYPES.applications.GetUserApplication)
-		private getUserApp: GetUserApplicationInterface,
-		@Inject(Teams.TYPES.applications.GetTeamApplication)
-		private getTeamUserApp: GetTeamUserApplicationInterface,
-		@Inject(Boards.TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplicationInterface,
-		@Inject(TYPES.applications.CreateResetTokenAuthApplication)
-		private createResetTokenAuthApp: CreateResetTokenAuthApplicationInterface,
-		@Inject(TYPES.applications.UpdateUserApplication)
-		private updateUserApp: UpdateUserApplicationInterface
+		@Inject(TYPES.applications.RegisterUserUseCase)
+		private registerUserUseCase: RegisterUserUseCaseInterface,
+		@Inject(TYPES.applications.RegisterGuestUserUseCase)
+		private registerGuestUserUseCase: RegisterGuestUserUseCaseInterface,
+		@Inject(TYPES.applications.ValidateUserEmailUseCase)
+		private validateUserEmailUseCase: ValidateUserEmailUseCaseInterface,
+		@Inject(TYPES.applications.RefreshTokenUseCase)
+		private refreshTokenUseCase: RefreshTokenUseCaseInterface,
+		@Inject(TYPES.applications.StatisticsAuthUserUseCase)
+		private statisticsUseCase: StatisticsAuthUserUseCaseInterface,
+		@Inject(TYPES.applications.ResetPasswordUseCase)
+		private resetPasswordUseCase: ResetPasswordUseCaseInterface,
+		@Inject(TYPES.applications.CreateResetPasswordTokenUseCase)
+		private createResetTokenUseCase: CreateResetPasswordTokenUseCaseInterface,
+		@Inject(TYPES.applications.SignInUseCase)
+		private signInUseCase: SignInUseCaseInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create new user' })
@@ -89,20 +83,8 @@ export default class AuthController {
 		type: InternalServerErrorResponse
 	})
 	@Post('register')
-	async register(@Body() registrationData: CreateUserDto) {
-		try {
-			const { _id, firstName, lastName, email } = await this.registerAuthApp.register(
-				registrationData
-			);
-
-			return { _id, firstName, lastName, email };
-		} catch (error) {
-			if (error.code === uniqueViolation) {
-				throw new BadRequestException(EMAIL_EXISTS);
-			}
-
-			throw new BadRequestException(error.message);
-		}
+	register(@Body() registrationData: CreateUserDto) {
+		return this.registerUserUseCase.execute(registrationData);
 	}
 
 	@ApiOperation({
@@ -131,14 +113,8 @@ export default class AuthController {
 	@HttpCode(200)
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
-	async login(@Req() request: RequestWithUser) {
-		const loggedUser = await signIn(request.user, this.getTokenAuthApp, 'local');
-
-		if (!loggedUser) {
-			throw new NotFoundException(USER_NOT_FOUND);
-		}
-
-		return loggedUser;
+	login(@Req() request: RequestWithUser) {
+		return this.signInUseCase.execute(request.user);
 	}
 
 	@ApiOperation({ summary: 'Generate a new refresh token' })
@@ -173,7 +149,7 @@ export default class AuthController {
 	@UseGuards(JwtRefreshGuard)
 	@Get('refresh')
 	refresh(@Req() request: RequestWithUser) {
-		return this.getTokenAuthApp.getAccessToken(request.user._id);
+		return this.refreshTokenUseCase.execute(request.user._id);
 	}
 
 	@ApiParam({
@@ -199,8 +175,8 @@ export default class AuthController {
 		type: InternalServerErrorResponse
 	})
 	@Get('users/:email')
-	checkEmail(@Param() { email }: EmailParam): Promise<boolean> {
-		return this.getUserApp.getByEmail(email).then((user) => !!user);
+	checkEmail(@Param() { email }: EmailParam) {
+		return this.validateUserEmailUseCase.execute(email);
 	}
 
 	@ApiOperation({ summary: 'Request a reset password link' })
@@ -215,7 +191,7 @@ export default class AuthController {
 	})
 	@Patch('password/reset')
 	forgot(@Body() { email }: EmailParam) {
-		return this.createResetTokenAuthApp.create(email);
+		return this.createResetTokenUseCase.execute(email);
 	}
 
 	@ApiOperation({
@@ -251,23 +227,8 @@ export default class AuthController {
 	})
 	@Patch('password')
 	@HttpCode(HttpStatus.OK)
-	async setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
-		const email = await this.updateUserApp.checkEmail(token);
-
-		if (!email) {
-			throw new UnauthorizedException('Invalid token!');
-		}
-
-		const result = await this.updateUserApp.setPassword(email, newPassword, newPasswordConf);
-
-		if (!result) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		return {
-			status: 'ok',
-			message: 'Password updated successfully!'
-		};
+	setNewPassword(@Body() { token, newPassword, newPasswordConf }: ResetPasswordDto) {
+		return this.resetPasswordUseCase.execute(token, newPassword, newPasswordConf);
 	}
 
 	@ApiOperation({
@@ -310,15 +271,10 @@ export default class AuthController {
 	@ApiBearerAuth('access-token')
 	@UseGuards(JwtAuthenticationGuard)
 	@Get('/statistics')
-	async getDashboardHeaderInfo(@Req() request: RequestWithUser) {
+	getDashboardHeaderInfo(@Req() request: RequestWithUser) {
 		const { _id: userId } = request.user;
-		const [usersCount, teamsCount, boardsCount] = await Promise.all([
-			this.getUserApp.countUsers(),
-			this.getTeamUserApp.countTeamsOfUser(userId),
-			this.getBoardApp.countBoards(userId)
-		]);
 
-		return { usersCount, teamsCount, boardsCount };
+		return this.statisticsUseCase.execute(userId);
 	}
 
 	@ApiOperation({ summary: 'Create new guest user' })
@@ -332,7 +288,7 @@ export default class AuthController {
 		type: InternalServerErrorResponse
 	})
 	@Post('loginGuest')
-	async loginGuest(@Body() guestUserData: CreateGuestUserDto) {
-		return await this.registerAuthApp.createGuestUser(guestUserData);
+	loginGuest(@Body() guestUserData: CreateGuestUserDto) {
+		return this.registerGuestUserUseCase.execute(guestUserData);
 	}
 }

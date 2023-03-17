@@ -2,7 +2,7 @@ import React from 'react';
 
 import Text from '@/components/Primitives/Text/Text';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { getFormattedTeamUserRole } from '@/utils/getFormattedTeamUserRole';
 import Separator from '@/components/Primitives/Separator/Separator';
 import TeamRolePopover from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';

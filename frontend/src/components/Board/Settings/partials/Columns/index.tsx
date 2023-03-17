@@ -1,5 +1,6 @@
 import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { ChildrenProp } from '@/types/common';
 import {
   StyledAccordionItem,
   StyledAccordionHeader,
@@ -8,7 +9,7 @@ import {
   StyledAccordionContent,
 } from '../../styles';
 
-const ColumnSettings: React.FC = ({ children }) => (
+const ColumnSettings = ({ children }: ChildrenProp) => (
   <StyledAccordionItem value="columns">
     <StyledAccordionHeader>
       <StyledAccordionTrigger>
