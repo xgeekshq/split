@@ -70,13 +70,13 @@ describe('DeleteBoardService', () => {
 			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
 
 			deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
-			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
-			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
-			await deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
+			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
+			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
+			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
 
 			//Slack Enabled
-			await boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			await achiveChannelServiceMock.execute.mockResolvedValue(null);
+			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+			achiveChannelServiceMock.execute.mockResolvedValue(null);
 
 			await expect(service.delete('boardId')).resolves.toBe(true);
 		});
@@ -84,7 +84,7 @@ describe('DeleteBoardService', () => {
 		it('should throw notFoundException when board not found ', async () => {
 			boardRepositoryMock.getBoard.mockResolvedValue(null);
 
-			expect(async () => await service.delete('boardId')).rejects.toThrow(NotFoundException);
+			await expect(service.delete('boardId')).rejects.toThrow(NotFoundException);
 		});
 
 		it('should throw error when deleteBoardBoardUsersAndSchedules fails', async () => {
@@ -95,8 +95,8 @@ describe('DeleteBoardService', () => {
 			boardRepositoryMock.getBoard.mockResolvedValue(board);
 			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
 			deleteSchedulesServiceMock.deleteScheduleByBoardId.mockResolvedValue(null);
-			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(1);
-			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
+			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(1);
+			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
 
 			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
 		});
@@ -113,13 +113,13 @@ describe('DeleteBoardService', () => {
 			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
 			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
 
-			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
-			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
-			await deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
+			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(2);
+			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(2);
+			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(2);
 
 			//Slack Enabled
-			await boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			await achiveChannelServiceMock.execute.mockResolvedValue(null);
+			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+			achiveChannelServiceMock.execute.mockResolvedValue(null);
 
 			await expect(service.deleteBoardsByTeamId('teamId')).resolves.toBe(true);
 		});
@@ -134,13 +134,13 @@ describe('DeleteBoardService', () => {
 			boardRepositoryMock.deleteBoard.mockResolvedValue(board);
 			deleteSchedulesServiceMock.findAndDeleteScheduleByBoardId.mockResolvedValue(null);
 
-			await boardRepositoryMock.deleteManySubBoards.mockResolvedValue(0);
-			await deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(0);
-			await deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(0);
+			boardRepositoryMock.deleteManySubBoards.mockResolvedValue(0);
+			deleteBoardUserServiceMock.deleteDividedBoardUsers.mockResolvedValue(0);
+			deleteBoardUserServiceMock.deleteSimpleBoardUsers.mockResolvedValue(0);
 
 			//Slack Enabled
-			await boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-			await achiveChannelServiceMock.execute.mockResolvedValue(null);
+			boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
+			achiveChannelServiceMock.execute.mockResolvedValue(null);
 
 			await expect(service.deleteBoardsByTeamId('teamId')).rejects.toThrowError(
 				BadRequestException
