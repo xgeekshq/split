@@ -149,10 +149,6 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('update', () => {
-		it('should be defined', () => {
-			expect(boardService.update).toBeDefined();
-		});
-
 		it('should throw error if max votes is less than the highest votes on board', async () => {
 			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: 2 });
 			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 3 }, { votesCount: 1 }]);
@@ -229,7 +225,7 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
-		it('should call socketService if socketId exists', async () => {
+		it('should call socketService.sendUpdatedBoard if socketId exists', async () => {
 			const board = BoardFactory.create();
 			const updateBoardDto = UpdateBoardDtoFactory.create({
 				maxVotes: null,
@@ -247,7 +243,7 @@ describe('GetUpdateBoardService', () => {
 			expect(socketServiceMock.sendUpdatedBoard).toBeCalledTimes(1);
 		});
 
-		it('should call handleResponsiblesSlackMessage if board has a newResponsible and slack enable', async () => {
+		it('should call slackCommunicationService.executeResponsibleChange if board has a newResponsible and slack enable', async () => {
 			const board = BoardFactory.create({
 				isSubBoard: true,
 				slackEnable: true,
@@ -286,7 +282,6 @@ describe('GetUpdateBoardService', () => {
 			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
 			boardRepositoryMock.updateBoard.mockResolvedValueOnce(board);
 
-			//gets current responsible from the board
 			jest
 				.spyOn(getBoardUserServiceMock, 'getBoardResponsible')
 				.mockResolvedValue(currentResponsible);
@@ -296,12 +291,13 @@ describe('GetUpdateBoardService', () => {
 			expect(slackCommunicationServiceMock.executeResponsibleChange).toBeCalledTimes(1);
 		});
 
-		it('should update board', async () => {
-			const board = BoardFactory.create();
+		it('should update a split board', async () => {
+			const board = BoardFactory.create({ addCards: false });
 			const updateBoardDto = UpdateBoardDtoFactory.create({
 				maxVotes: null,
 				title: 'Mock 2.0',
-				_id: board._id
+				_id: board._id,
+				addCards: true
 			});
 			const boardResult = { ...board, title: updateBoardDto.title };
 
@@ -313,7 +309,7 @@ describe('GetUpdateBoardService', () => {
 			expect(result).toEqual(boardResult);
 		});
 
-		it('should update board from a regular board', async () => {
+		it('should update regular board', async () => {
 			const board = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 
 			board.columns[1].title = 'Make things';
@@ -354,7 +350,7 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
-		it('should throw error if updateMergedSubBoard fails', async () => {
+		it('should throw error if boardRepository.updateMergedSubBoard fails', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({ isSubBoard: false });
 			const subBoard = BoardFactory.create({ isSubBoard: true });
@@ -368,7 +364,7 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
-		it('should throw error if updateMergedBoard fails', async () => {
+		it('should throw error if boardRepository.updateMergedBoard fails', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({ isSubBoard: false });
 			const subBoard = BoardFactory.create({ isSubBoard: true });
@@ -382,7 +378,7 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
-		it('should call executeMergeBoardNotification if board has slackChannelId and slackEnable', async () => {
+		it('should call slackCommunicationService.executeMergeBoardNotification if board has slackChannelId and slackEnable', async () => {
 			const userId = faker.datatype.uuid();
 			const subBoard = BoardFactory.create({ isSubBoard: true });
 			const board = BoardFactory.create({
@@ -402,7 +398,7 @@ describe('GetUpdateBoardService', () => {
 			expect(slackCommunicationServiceMock.executeMergeBoardNotification).toBeCalledTimes(1);
 		});
 
-		it('should call socketService if there is a socketId', async () => {
+		it('should call socketService.sendUpdatedAllBoard if there is a socketId', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({
 				isSubBoard: false,
@@ -451,7 +447,7 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('updateChannelId', () => {
-		it('should call board repository', async () => {
+		it('should call boardRepository.updatedChannelId', async () => {
 			const teamsDto = TeamCommunicationDtoFactory.createMany(2);
 			const board = BoardFactory.create();
 
