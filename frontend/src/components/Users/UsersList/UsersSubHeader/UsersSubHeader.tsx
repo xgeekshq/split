@@ -2,24 +2,22 @@ import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput'
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 
-type UserSearchProps = {
+type UsersSubHeaderProps = {
   userAmount: number | undefined;
   search: string;
   handleSearchUser: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleClearSearch: () => void;
 };
 
-const UserSearch = ({
+const UsersSubHeader = ({
   userAmount,
   search,
   handleSearchUser,
   handleClearSearch,
-}: UserSearchProps) => (
-  <Flex css={{ mt: '$16' }} align="end">
-    <Text fontWeight="bold" css={{ flex: 1 }}>
-      {userAmount} registered users
-    </Text>
-    <Flex css={{ width: '460px' }}>
+}: UsersSubHeaderProps) => (
+  <Flex css={{ mt: '$16' }} justify="between" align="end">
+    <Text fontWeight="bold">{userAmount} registered users</Text>
+    <Flex css={{ width: '$455' }}>
       <SearchInput
         placeholder="Search user"
         currentValue={search}
@@ -30,4 +28,4 @@ const UserSearch = ({
   </Flex>
 );
 
-export default UserSearch;
+export default UsersSubHeader;

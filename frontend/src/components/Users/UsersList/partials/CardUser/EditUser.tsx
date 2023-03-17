@@ -1,14 +1,15 @@
+import Link from 'next/link';
+
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
-import Link from 'next/link';
 
 type EditUserProps = { user: User };
 
-const EditUser: React.FC<EditUserProps> = ({ user }) => (
+const EditUser = ({ user }: EditUserProps) => (
   <Flex pointer>
-    <Link href={ROUTES.UserEdit(user._id)}>
+    <Link href={ROUTES.UserPage(user._id)}>
       <Flex>
         <Icon
           name="edit"

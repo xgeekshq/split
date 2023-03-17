@@ -5,8 +5,8 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import useUser from '@/hooks/useUser';
 import { UserWithTeams } from '@/types/user/user';
 
-import CardBody from './partials/CardUser/CardBody';
-import UserSearch from './partials/UserSearch';
+import UserItem from './UserItem/UserItem';
+import UsersSubHeader from './UsersSubHeader/UsersSubHeader';
 
 const UsersList = () => {
   const [search, setSearch] = useState<string>('');
@@ -49,7 +49,7 @@ const UsersList = () => {
 
   return (
     <>
-      <UserSearch
+      <UsersSubHeader
         userAmount={userAmount}
         search={search}
         handleSearchUser={handleSearchUser}
@@ -68,7 +68,7 @@ const UsersList = () => {
       >
         <Flex direction="column" gap="8">
           {users.map((user: UserWithTeams) => (
-            <CardBody key={user.user._id} userWithTeams={user} />
+            <UserItem key={user.user._id} userWithTeams={user} />
           ))}
         </Flex>
         {isFetching && (
