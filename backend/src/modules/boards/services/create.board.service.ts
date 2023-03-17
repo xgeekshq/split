@@ -27,8 +27,9 @@ import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
+import { CREATE_FAILED } from 'src/libs/exceptions/messages';
 
 @Injectable()
 export default class CreateBoardService implements CreateBoardServiceInterface {
@@ -56,6 +57,11 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const newUsers = [];
 
 		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+
+		if (!newBoard) {
+			throw new BadRequestException(CREATE_FAILED);
+		}
+
 		let teamData;
 
 		if (team) {
@@ -138,7 +144,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		});
 
 		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER 
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
 		);
 		const teamLength = teamUsersWotStakeholders.length;
 		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
