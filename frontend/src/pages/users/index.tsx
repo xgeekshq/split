@@ -8,7 +8,7 @@ import Layout from '@/components/layouts/Layout/Layout';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import UsersList from '@/components/Users/UsersList';
+import UsersList from '@/components/Users/UsersList/UsersList';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 const Users = () => (
