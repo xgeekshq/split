@@ -38,7 +38,7 @@ export interface BaseInterfaceRepository<T> {
 
 	create<Q>(item: Q): Promise<T>;
 
-	insertMany(listOfItems: T[]): Promise<T[]>;
+	insertMany<Q>(listOfItems: Q[], withSession?: boolean): Promise<T[]>;
 
 	update(id: string, item: T): Promise<T>;
 

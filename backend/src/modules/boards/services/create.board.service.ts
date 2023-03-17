@@ -62,39 +62,55 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 		const boardUsersToCreate: BoardUserDto[] = [];
 
-		const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+		await this.boardRepository.startTransaction();
+		await this.createBoardUserService.startTransaction();
 
-		if (!newBoard) {
-			throw new BadRequestException(CREATE_FAILED);
+		try {
+			const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+
+			if (!newBoard) {
+				throw new Error(CREATE_FAILED);
+			}
+
+			let teamName: string;
+
+			if (teamId) {
+				teamName = await this.getTeamNameAndTeamUsers(
+					teamId,
+					boardUsersToCreate,
+					boardData.responsibles
+				);
+			}
+
+			if (!haveDividedBoards && !teamId) {
+				this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
+			}
+
+			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, newBoard._id, true);
+
+			if (newBoard && recurrent && teamId && maxUsers && teamName === 'xgeeks' && !fromSchedule) {
+				this.addCronJobToBoard(String(newBoard._id), userId, teamId, maxUsers);
+			}
+
+			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
+
+			if (slackEnable && teamId && teamName === 'xgeeks') {
+				await this.callSlackCommunication(newBoard._id);
+			}
+
+			await this.boardRepository.commitTransaction();
+			await this.createBoardUserService.commitTransaction();
+
+			return newBoard;
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+			await this.createBoardUserService.abortTransaction();
+		} finally {
+			await this.boardRepository.endSession();
+			await this.createBoardUserService.endSession();
 		}
 
-		let teamName: string;
-
-		if (teamId) {
-			teamName = await this.getTeamNameAndTeamUsers(
-				teamId,
-				boardUsersToCreate,
-				boardData.responsibles
-			);
-		}
-
-		if (!haveDividedBoards && !teamId) {
-			this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
-		}
-
-		await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, newBoard._id);
-
-		if (newBoard && recurrent && teamId && maxUsers && teamName === 'xgeeks' && !fromSchedule) {
-			this.addCronJobToBoard(String(newBoard._id), userId, teamId, maxUsers);
-		}
-
-		this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
-
-		if (slackEnable && teamId && teamName === 'xgeeks') {
-			await this.callSlackCommunication(newBoard._id);
-		}
-
-		return newBoard;
+		throw new BadRequestException(CREATE_FAILED);
 	}
 
 	async splitBoardByTeam(
@@ -109,7 +125,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 		if (!teamUsers) throw new NotFoundException(NOT_FOUND);
 
-		teamUsers = this.updateTeamUserNewJoinerOrResponisbleStatus(teamUsers, teamId);
+		teamUsers = this.updateTeamUserNewJoinerOrResponsibleStatus(teamUsers, teamId);
 
 		const teamUsersWotStakeholders = teamUsers.filter(
 			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
@@ -308,7 +324,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		return isAfter(maxDateToBeNewJoiner, new Date());
 	};
 
-	private updateTeamUserNewJoinerOrResponisbleStatus(teamUsers: TeamUser[], teamId: string) {
+	private updateTeamUserNewJoinerOrResponsibleStatus(teamUsers: TeamUser[], teamId: string) {
 		return teamUsers.map((teamUser: TeamUser) => {
 			const user = teamUser.user as User;
 
@@ -316,7 +332,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				teamUser.isNewJoiner &&
 				!this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
 			) {
-				this.updateTeamService.updateTeamUser({
+				const updatedUser = this.updateTeamService.updateTeamUser({
 					team: teamId,
 					user: `${user._id}`,
 					role: teamUser.role,
@@ -324,6 +340,13 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					canBeResponsible: true
 				});
 
+				if (!updatedUser) {
+					this.logger.verbose(
+						`Update isNewJoiner and can be responsible fields failed for ${user._id}`
+					);
+
+					return;
+				}
 				teamUser.isNewJoiner = false;
 				teamUser.canBeResponsible = true;
 			}

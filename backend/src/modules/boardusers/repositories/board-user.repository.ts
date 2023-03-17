@@ -44,8 +44,8 @@ export class BoardUserRepository
 	}
 
 	/* CREATE BOARD USERS */
-	createBoardUsers(boardUsers: BoardUserDto[]) {
-		return this.insertMany<BoardUserDto>(boardUsers);
+	createBoardUsers(boardUsers: BoardUserDto[], withSession?: boolean) {
+		return this.insertMany<BoardUserDto>(boardUsers, withSession);
 	}
 
 	/* UPDATE BOARD USERS */
