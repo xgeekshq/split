@@ -1,11 +1,9 @@
 import { updateBoardService } from './../boards.providers';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getTeamService } from 'src/modules/teams/providers';
 import { boardRepository } from '../boards.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { deleteCardService } from 'src/modules/cards/cards.providers';
@@ -66,10 +64,6 @@ describe('GetUpdateBoardService', () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				updateBoardService,
-				{
-					provide: getTeamService.provide,
-					useValue: createMock<GetTeamServiceInterface>()
-				},
 				{
 					provide: CommunicationsType.TYPES.services.SlackSendMessageService,
 					useValue: createMock<SendMessageServiceInterface>()
@@ -463,7 +457,7 @@ describe('GetUpdateBoardService', () => {
 			const addUsers = BoardUserDtoFactory.createMany(3);
 			const removedUsers = [];
 
-			createBoardUserServiceMock.saveBoardUsers.mockResolvedValueOnce([]);
+			createBoardUserServiceMock.saveBoardUsers.mockRejectedValueOnce('Error inserting users');
 			expect(
 				async () => await boardService.updateBoardParticipants(addUsers, removedUsers)
 			).rejects.toThrowError(BadRequestException);

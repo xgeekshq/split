@@ -1,19 +1,11 @@
 import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	NotFoundException,
-	forwardRef
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
@@ -23,7 +15,7 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board from '../entities/board.schema';
 import BoardUser from '../entities/board.user.schema';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -49,8 +41,6 @@ import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	constructor(
-		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
-		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
@@ -244,7 +234,8 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		try {
 			let createdBoardUsers: BoardUser[] = [];
 
-			if (addUsers.length > 0) createdBoardUsers = await this.addBoardUsers(addUsers);
+			if (addUsers.length > 0)
+				createdBoardUsers = await this.createBoardUserService.saveBoardUsers(addUsers);
 
 			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
 
@@ -500,14 +491,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				'\nThank you for your collaboration! :ok_hand: Keep rocking :rocket:'
 			);
 		}
-	}
-
-	private async addBoardUsers(boardUsers: BoardUserDto[]) {
-		const createdBoardUsers = await this.createBoardUserService.saveBoardUsers(boardUsers);
-
-		if (createdBoardUsers.length < 1) throw new Error(INSERT_FAILED);
-
-		return createdBoardUsers;
 	}
 
 	private async deleteBoardUsers(boardUsers: string[]) {
