@@ -37,7 +37,7 @@ describe('SlackArchiveChannelService', () => {
 		expect(service).toBeDefined();
 	});
 
-	it('should call producer.send with SlackMessageType 1 time', async () => {
+	it('should call SlackArchiveChannelProducer once with ArchiveChannelData', async () => {
 		await service.execute(slackMessageType);
 		expect(slackArchiveChannelProducer.add).toHaveBeenNthCalledWith(1, slackMessageType);
 	});
