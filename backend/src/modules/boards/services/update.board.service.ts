@@ -1,6 +1,6 @@
 import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -15,7 +15,6 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board from '../entities/board.schema';
 import BoardUser from '../entities/board.user.schema';
-import { DELETE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -37,9 +36,12 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfac
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
+	private logger = new Logger(UpdateBoardService.name);
+
 	constructor(
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
@@ -74,7 +76,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			const highestVotes = await this.getHighestVotesOnBoard(boardId);
 
 			if (highestVotes > Number(boardData.maxVotes)) {
-				throw new BadRequestException(
+				throw new UpdateFailedException(
 					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
 				);
 			}
@@ -135,7 +137,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 
 		const updatedBoard = await this.boardRepository.updateBoard(boardId, board, true);
 
-		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoard) throw new UpdateFailedException();
 
 		if (boardData.socketId) {
 			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
@@ -168,10 +170,11 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
 		]);
 
-		if (!subBoard || !board || subBoard.submitedByUser)
-			throw new BadRequestException(UPDATE_FAILED);
+		if (!subBoard || !board || subBoard.submitedByUser) {
+			throw new NotFoundException('Board or subBoard not found');
+		}
 
-		const columnsWitMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
+		const columnsWithMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
 
 		await this.boardRepository.startTransaction();
 		try {
@@ -182,17 +185,19 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			);
 
 			if (!updatedMergedSubBoard) {
-				throw new Error(UPDATE_FAILED);
+				this.logger.error('Update of the subBoard to be merged failed');
+				throw new UpdateFailedException();
 			}
 
 			const mergedBoard = await this.boardRepository.updateMergedBoard(
 				board._id,
-				columnsWitMergedCards,
+				columnsWithMergedCards,
 				true
 			);
 
 			if (!mergedBoard) {
-				throw new Error(UPDATE_FAILED);
+				this.logger.error('Update of the merged board failed');
+				throw new UpdateFailedException();
 			}
 
 			if (board.slackChannelId && board.slackEnable) {
@@ -221,7 +226,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			await this.boardRepository.endSession();
 		}
 
-		throw new BadRequestException(UPDATE_FAILED);
+		throw new UpdateFailedException();
 	}
 
 	updateChannelId(teams: TeamDto[]) {
@@ -241,7 +246,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 
 			return createdBoardUsers;
 		} catch (error) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 	}
 
@@ -255,7 +260,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		);
 
 		if (!updatedBoardUser) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 
 		return updatedBoardUser;
@@ -283,7 +288,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				this.slackSendMessageService.execute(slackMessageDto);
 			}
 		} catch (err) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 	}
 
@@ -496,6 +501,6 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	private async deleteBoardUsers(boardUsers: string[]) {
 		const deletedCount = await this.deleteBoardUserService.deleteBoardUsers(boardUsers);
 
-		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
+		if (deletedCount <= 0) throw new UpdateFailedException();
 	}
 }

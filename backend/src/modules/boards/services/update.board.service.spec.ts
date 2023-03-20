@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { BoardUserRepositoryInterface } from 'src/modules/boardusers/interfaces/repositories/board-user.repository.interface';
 import {
 	boardUserRepository,
@@ -44,6 +44,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 describe('GetUpdateBoardService', () => {
 	let boardService: UpdateBoardServiceInterface;
@@ -143,18 +144,18 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('update', () => {
-		it('should throw error if max votes is less than the highest votes on board', async () => {
+		it('should throw an error if max votes is less than the highest votes on board', async () => {
 			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: 2 });
 			const boardUsers = BoardUserFactory.createMany(2, [{ votesCount: 3 }, { votesCount: 1 }]);
 
 			jest.spyOn(getBoardUserServiceMock, 'getVotesCount').mockResolvedValueOnce(boardUsers);
 
 			expect(async () => await boardService.update('1', updateBoardDto)).rejects.toThrow(
-				BadRequestException
+				UpdateFailedException
 			);
 		});
 
-		it('should throw error if board not found', async () => {
+		it('should throw an error if board not found', async () => {
 			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 
 			boardRepositoryMock.getBoard.mockResolvedValue(null);
@@ -163,7 +164,7 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
-		it('should call changeResponsibleOnBoard if current responsible is not equal to new responsible', async () => {
+		it('should call the changeResponsibleOnBoard method if the current responsible is not equal to the new responsible', async () => {
 			const board = BoardFactory.create({ isSubBoard: true });
 			const mainBoard = BoardFactory.create();
 			const currentResponsible = BoardUserFactory.create({
@@ -197,17 +198,15 @@ describe('GetUpdateBoardService', () => {
 
 			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
 
-			//gets current responsible from the board
-			jest
-				.spyOn(getBoardUserServiceMock, 'getBoardResponsible')
-				.mockResolvedValue(currentResponsible);
+			//gets the current responsible from the board
+			getBoardUserServiceMock.getBoardResponsible.mockResolvedValueOnce(currentResponsible);
 
 			await boardService.update(board._id, updateBoardDto);
-			//update changeResponsibleOnBoard
+			//update the changeResponsibleOnBoard
 			expect(updateBoardUserServiceMock.updateBoardUserRole).toBeCalled();
 		});
 
-		it('should throw error when update fails', async () => {
+		it('should throw an error when update fails', async () => {
 			const updateBoardDto = UpdateBoardDtoFactory.create({ maxVotes: null });
 			const board = BoardFactory.create();
 
@@ -215,11 +214,11 @@ describe('GetUpdateBoardService', () => {
 			boardRepositoryMock.updateBoard.mockResolvedValueOnce(null);
 
 			expect(async () => await boardService.update('1', updateBoardDto)).rejects.toThrow(
-				BadRequestException
+				UpdateFailedException
 			);
 		});
 
-		it('should call socketService.sendUpdatedBoard if socketId exists', async () => {
+		it('should call the socketService.sendUpdatedBoard if the socketId exists', async () => {
 			const board = BoardFactory.create();
 			const updateBoardDto = UpdateBoardDtoFactory.create({
 				maxVotes: null,
@@ -237,7 +236,7 @@ describe('GetUpdateBoardService', () => {
 			expect(socketServiceMock.sendUpdatedBoard).toBeCalledTimes(1);
 		});
 
-		it('should call slackCommunicationService.executeResponsibleChange if board has a newResponsible and slack enable', async () => {
+		it('should call the slackCommunicationService.executeResponsibleChange if the board has a newResponsible and slack enable', async () => {
 			const board = BoardFactory.create({
 				isSubBoard: true,
 				slackEnable: true,
@@ -303,7 +302,7 @@ describe('GetUpdateBoardService', () => {
 			expect(result).toEqual(boardResult);
 		});
 
-		it('should update regular board', async () => {
+		it('should update a regular board', async () => {
 			const board = BoardFactory.create({ isSubBoard: false, dividedBoards: [] });
 
 			board.columns[1].title = 'Make things';
@@ -319,6 +318,7 @@ describe('GetUpdateBoardService', () => {
 			});
 
 			boardRepositoryMock.getBoard.mockResolvedValueOnce(board);
+			getBoardUserServiceMock.getBoardResponsible.mockResolvedValueOnce(null);
 			deleteCardServiceMock.deleteCardVotesFromColumn.mockResolvedValue(null);
 
 			const boardResult = { ...board, columns: board.columns.slice(1) };
@@ -332,7 +332,7 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('mergeBoards', () => {
-		it('should throw error when subBoard, board or subBoard.submittedByUser are undefined', async () => {
+		it('should throw an error when the subBoard, board or subBoard.submittedByUser are undefined', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({ isSubBoard: false });
 
@@ -340,11 +340,11 @@ describe('GetUpdateBoardService', () => {
 			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
 
 			expect(async () => await boardService.mergeBoards('-1', userId)).rejects.toThrowError(
-				BadRequestException
+				NotFoundException
 			);
 		});
 
-		it('should throw error if boardRepository.updateMergedSubBoard fails', async () => {
+		it('should throw an error if the boardRepository.updateMergedSubBoard fails', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({ isSubBoard: false });
 			const subBoard = BoardFactory.create({ isSubBoard: true });
@@ -354,45 +354,73 @@ describe('GetUpdateBoardService', () => {
 			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(null);
 
 			expect(async () => await boardService.mergeBoards(subBoard._id, userId)).rejects.toThrowError(
-				BadRequestException
+				UpdateFailedException
 			);
 		});
 
-		it('should throw error if boardRepository.updateMergedBoard fails', async () => {
+		it('should throw an error if the boardRepository.updateMergedBoard fails', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({ isSubBoard: false });
 			const subBoard = BoardFactory.create({ isSubBoard: true });
 
 			boardRepositoryMock.getBoard.mockResolvedValueOnce(subBoard);
 			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
-			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(null);
+			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(null);
 
 			expect(async () => await boardService.mergeBoards(subBoard._id, userId)).rejects.toThrowError(
-				BadRequestException
+				UpdateFailedException
 			);
 		});
 
-		it('should call slackCommunicationService.executeMergeBoardNotification if board has slackChannelId and slackEnable', async () => {
+		it('should call the slackCommunicationService.executeMergeBoardNotification if the board has slackChannelId and slackEnable', async () => {
 			const userId = faker.datatype.uuid();
-			const subBoard = BoardFactory.create({ isSubBoard: true });
+			const subBoards = BoardFactory.createMany(2, [
+				{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
+				{ isSubBoard: true, boardNumber: 2 }
+			]);
 			const board = BoardFactory.create({
 				isSubBoard: false,
 				slackEnable: true,
 				slackChannelId: faker.datatype.uuid(),
-				dividedBoards: [subBoard]
+				dividedBoards: subBoards
 			});
 
-			boardRepositoryMock.getBoard.mockResolvedValueOnce(subBoard);
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(subBoards[1]);
 			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
-			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(subBoard);
-			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(board);
 
-			await boardService.mergeBoards(subBoard._id, userId);
+			//mocks update of subBoard that is being merged
+			const subBoardUpdated = { ...subBoards[1], submitedByUser: userId, submitedAt: new Date() };
+			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(subBoardUpdated);
+
+			//merges columns of the sub-boards to the main board
+			const newSubColumnsSubBoard_1 = generateNewSubColumns(subBoards[0]);
+			const newSubColumnsSubBoard_2 = generateNewSubColumns(subBoardUpdated);
+
+			const mergeSubBoard_1 = {
+				...board,
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_1
+				)
+			};
+
+			const boardResult = {
+				...mergeSubBoard_1,
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_2
+				),
+				dividedBoards: [subBoards[0], subBoardUpdated]
+			};
+
+			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(boardResult);
+
+			await boardService.mergeBoards(subBoards[1]._id, userId);
 
 			expect(slackCommunicationServiceMock.executeMergeBoardNotification).toBeCalledTimes(1);
 		});
 
-		it('should call socketService.sendUpdatedAllBoard if there is a socketId', async () => {
+		it('should call the socketService.sendUpdatedAllBoard if there is a socketId', async () => {
 			const userId = faker.datatype.uuid();
 			const board = BoardFactory.create({
 				isSubBoard: false,
@@ -412,36 +440,57 @@ describe('GetUpdateBoardService', () => {
 			expect(socketServiceMock.sendUpdatedAllBoard).toBeCalledTimes(1);
 		});
 
-		it('should return merged board', async () => {
+		it('should return the merged board', async () => {
 			const userId = faker.datatype.uuid();
+			const subBoards = BoardFactory.createMany(2, [
+				{ isSubBoard: true, boardNumber: 1 },
+				{ isSubBoard: true, boardNumber: 2 }
+			]);
 			const board = BoardFactory.create({
-				isSubBoard: false
+				isSubBoard: false,
+				slackEnable: true,
+				slackChannelId: faker.datatype.uuid(),
+				dividedBoards: subBoards
 			});
-			const subBoard = BoardFactory.create({ isSubBoard: true });
-			const newSubColumns = generateNewSubColumns(subBoard);
 
-			boardRepositoryMock.getBoard.mockResolvedValue(subBoard);
-			boardRepositoryMock.getBoardByQuery.mockResolvedValue(board);
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(subBoards[0]);
+			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
 
 			//mocks update of subBoard that is being merged
-			const subBoardUpdated = { ...subBoard, submitedByUser: userId, submitedAt: new Date() };
+			const subBoardUpdated = { ...subBoards[0], submitedByUser: userId, submitedAt: new Date() };
 			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(subBoardUpdated);
 
-			//mocks update to the mainBoard to merge cards from subBoard
-			const boardResult = {
+			//merges columns of the sub-boards to the main board
+			const newSubColumnsSubBoard_1 = generateNewSubColumns(subBoards[1]);
+			const newSubColumnsSubBoard_2 = generateNewSubColumns(subBoardUpdated);
+
+			const mergeSubBoard_1 = {
 				...board,
-				columns: mergeCardsFromSubBoardColumnsIntoMainBoard([...board.columns], newSubColumns)
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_1
+				)
 			};
+
+			const boardResult = {
+				...mergeSubBoard_1,
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_2
+				),
+				dividedBoards: [subBoardUpdated, subBoards[1]]
+			};
+
 			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(boardResult);
 
-			const result = await boardService.mergeBoards(subBoard._id, userId);
+			const result = await boardService.mergeBoards(subBoards[0]._id, userId);
 
 			expect(result).toEqual(boardResult);
 		});
 	});
 
 	describe('updateChannelId', () => {
-		it('should call boardRepository.updatedChannelId', async () => {
+		it('should call the boardRepository.updatedChannelId', async () => {
 			const teamsDto = TeamCommunicationDtoFactory.createMany(2);
 			const board = BoardFactory.create();
 
@@ -453,17 +502,17 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('updateBoardParticipants', () => {
-		it('should throw error when insert board users fails', async () => {
+		it('should throw an error when the inserting of board users fails', async () => {
 			const addUsers = BoardUserDtoFactory.createMany(3);
 			const removedUsers = [];
 
 			createBoardUserServiceMock.saveBoardUsers.mockRejectedValueOnce('Error inserting users');
 			expect(
 				async () => await boardService.updateBoardParticipants(addUsers, removedUsers)
-			).rejects.toThrowError(BadRequestException);
+			).rejects.toThrowError(UpdateFailedException);
 		});
 
-		it('should throw error when delete board users fails', async () => {
+		it('should throw an error when the deleting of board users fails', async () => {
 			const addUsers = BoardUserDtoFactory.createMany(3);
 			const boardUserToRemove = BoardUserFactory.create();
 			const removedUsers = [boardUserToRemove._id];
@@ -471,10 +520,10 @@ describe('GetUpdateBoardService', () => {
 			deleteBoardUserServiceMock.deleteBoardUsers.mockResolvedValueOnce(0);
 			expect(
 				async () => await boardService.updateBoardParticipants(addUsers, removedUsers)
-			).rejects.toThrowError(BadRequestException);
+			).rejects.toThrowError(UpdateFailedException);
 		});
 
-		it('should return boardUsers created', async () => {
+		it('should return the created boardUsers', async () => {
 			const addUsers = BoardUserDtoFactory.createMany(2);
 			const boardUserToRemove = BoardUserFactory.create();
 			const removedUsers = [boardUserToRemove._id];
@@ -505,17 +554,17 @@ describe('GetUpdateBoardService', () => {
 	});
 
 	describe('updateBoardParticipantsRole', () => {
-		it('should throw error if updateBoardUserRole fails', async () => {
+		it('should throw an error if the updateBoardUserRole fails', async () => {
 			const boardUserDto = BoardUserDtoFactory.create();
 
 			updateBoardUserServiceMock.updateBoardUserRole.mockResolvedValueOnce(null);
 
 			expect(
 				async () => await boardService.updateBoardParticipantsRole(boardUserDto)
-			).rejects.toThrowError(BadRequestException);
+			).rejects.toThrowError(UpdateFailedException);
 		});
 
-		it('should return boardUser role updated', async () => {
+		it('should return the boardUser with the updated role', async () => {
 			const boardUserDto = BoardUserDtoFactory.create({ role: BoardRoles.MEMBER });
 			const boardUserUpdated = BoardUserFactory.create({
 				_id: boardUserDto._id,
@@ -537,24 +586,24 @@ describe('GetUpdateBoardService', () => {
 			expect(boardService.updatePhase).toBeDefined();
 		});
 
-		it('should call boardRepository ', async () => {
+		it('should call the boardRepository ', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 			await boardService.updatePhase(boardPhaseDto);
 			expect(boardRepositoryMock.updatePhase).toBeCalledTimes(1);
 		});
 
-		it('should throw badRequestException when boardRepository fails', async () => {
+		it('should throw the badRequestException when the boardRepository fails', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 			// Set up the board repository mock to reject with an error
 			boardRepositoryMock.updatePhase.mockRejectedValueOnce(new Error('Some error'));
 
-			// Verify that the service method being tested throws a BadRequestException
+			// Verify that the service method that is being tested throws a BadRequestException
 			expect(async () => await boardService.updatePhase(boardPhaseDto)).rejects.toThrowError(
-				BadRequestException
+				UpdateFailedException
 			);
 		});
 
-		it('should call websocket with eventEmitter', async () => {
+		it('should call the websocket with eventEmitter', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 			// Call the service method being tested
 			await boardService.updatePhase(boardPhaseDto);
@@ -563,7 +612,7 @@ describe('GetUpdateBoardService', () => {
 			expect(eventEmitterMock.emit).toHaveBeenCalledTimes(1);
 		});
 
-		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
+		it('should call the slackSendMessageService.execute once with slackMessageDto', async () => {
 			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
 			// Create a fake board object with the specified properties
 			const board = BoardFactory.create();
@@ -594,32 +643,9 @@ describe('GetUpdateBoardService', () => {
 				slackChannelId: '6405f9a04633b1668f71c068',
 				message: expect.stringContaining('https://split.kigroup.de/')
 			});
-		});
-
-		it('should call slackSendMessageService.execute once with slackMessageDto', async () => {
-			const boardPhaseDto = { boardId: '6405f9a04633b1668f71c068', phase: BoardPhases.ADDCARDS };
-			// Create a fake board object with the specified properties
-			const board = BoardFactory.create();
-			board.team = TeamFactory.create({ name: 'xgeeks' });
 
 			board.phase = BoardPhases.VOTINGPHASE;
-			board.slackEnable = true;
 
-			const table = {
-				[SLACK_MASTER_CHANNEL_ID]: '6405f9a04633b1668f71c068',
-				[SLACK_ENABLE]: true,
-				[FRONTEND_URL]: 'https://split.kigroup.de/'
-			};
-
-			// Set up the board repository mock to resolve with the fake board object
-			boardRepositoryMock.updatePhase.mockResolvedValue(board);
-
-			// Set up the configuration service mock
-			configServiceMock.getOrThrow.mockImplementation((key: string) => {
-				return table[key];
-			});
-
-			// Call the service method being tested
 			await boardService.updatePhase(boardPhaseDto);
 
 			// Verify that the slackSendMessageService.execute method with correct data 1 time
