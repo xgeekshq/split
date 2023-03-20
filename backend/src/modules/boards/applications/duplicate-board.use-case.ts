@@ -94,9 +94,7 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 				team: board.team._id,
 				responsibles,
 				slackEnable: false,
-				dividedBoards: [],
-				hideVotes: board.hideVotes || false,
-				hideCards: board.hideCards || false
+				dividedBoards: []
 			},
 			userId
 		);

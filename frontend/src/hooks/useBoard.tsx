@@ -80,7 +80,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const duplicateBoard = useMutation(duplicateBoardRequest, {
-    onSuccess: (data) => setNewBoard(data._id),
+    onSuccess: () => queryClient.invalidateQueries(['boards']),
     onError: () => {
       setToastState({
         open: true,
