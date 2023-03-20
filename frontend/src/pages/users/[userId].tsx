@@ -1,70 +1,65 @@
 import { ReactElement, Suspense, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import UsersEdit from '@/components/Users/UserEdit';
-import { ContentSection } from '@/components/layouts/Layout/styles';
-import UserHeader from '@/components/Users/UserEdit/partials/UserHeader';
+import UserHeader from '@/components/Users/User/Header/Header';
 
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
+import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getTeamsOfUser } from '@/api/teamService';
 import { useSetRecoilState } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
-import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
+import { useRouter } from 'next/router';
+import Dots from '@/components/Primitives/Loading/Dots/Dots';
+import { ROUTES } from '@/utils/routes';
+import { getUser } from '@/api/userService';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
+import TeamsList from '@/components/Teams/TeamsList/TeamList';
 
 const UserDetails = () => {
-  const { data: session } = useSession({ required: true });
+  const { replace } = useRouter();
 
   // Recoil States
   const setTeamsListState = useSetRecoilState(userTeamsListState);
 
+  // Hooks
   const {
-    fetchTeamsOfSpecificUser: { data, isFetching },
-  } = useTeam({
-    autoFetchTeamsOfSpecificUser: true,
-  });
+    getUserById: { data: userData, isFetching: fetchingUser },
+  } = useUser();
 
   const {
-    getUserById: { data: user },
-  } = useUser({ autoFetchGetUser: true });
+    fetchTeamsOfSpecificUser: { data: userTeams, isFetching: fetchingTeams },
+  } = useTeam();
 
   useEffect(() => {
-    if (!data) {
-      return;
-    }
+    if (userTeams) setTeamsListState(userTeams);
+  }, [userTeams, setTeamsListState]);
 
-    setTeamsListState(data);
-  }, [data, setTeamsListState]);
-
-  if (!session || !data || !user) return null;
+  if (!userData || !userTeams) {
+    replace(ROUTES.Users);
+    return null;
+  }
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <MainPageHeader title="Users" />
-      <Flex direction="column">
+      <UserHeader user={userData} />
+      <Flex
+        css={{ height: '100%', position: 'relative', overflowY: 'auto', pr: '$8' }}
+        direction="column"
+      >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            <ContentSection gap="36" justify="between">
-              <Flex css={{ width: '100%' }} direction="column">
-                <Flex justify="between">
-                  <UserHeader
-                    firstName={user.firstName}
-                    lastName={user.lastName}
-                    isSAdmin={user.isSAdmin}
-                    providerAccountCreatedAt={user.providerAccountCreatedAt}
-                    joinedAt={user.joinedAt}
-                  />
-                </Flex>
-                {data && <UsersEdit isLoading={isFetching} />}
+            {fetchingUser || fetchingTeams ? (
+              <Flex justify="center" css={{ mt: '$16' }}>
+                <Dots />
               </Flex>
-            </ContentSection>
+            ) : (
+              <TeamsList teams={userTeams} />
+            )}
           </QueryError>
         </Suspense>
       </Flex>
@@ -74,19 +69,21 @@ const UserDetails = () => {
 
 UserDetails.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-  async (context: GetServerSidePropsContext) => {
-    const userId = context.query.userId?.toString();
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
+  const userId = String(context.query.userId);
 
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context));
+  const queryClient = new QueryClient();
+  await Promise.all([
+    queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
+    queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context)),
+  ]);
 
-    return {
-      props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-      },
-    };
-  },
-);
+  return {
+    props: {
+      key: userId,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+});
 
 export default UserDetails;
