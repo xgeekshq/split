@@ -22,5 +22,4 @@ Mention people who discussed this issue previously
 -->
 
 
-This pull request closes:
-- #
+This pull request closes #
