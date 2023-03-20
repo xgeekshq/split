@@ -23,9 +23,8 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
             <Flex css={{ alignItems: 'center' }}>
               <Icon
                 name="plus"
+                size={16}
                 css={{
-                  width: '$16',
-                  height: '$32',
                   marginRight: '$5',
                 }}
               />

@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { get_nth_suffix } from 'src/libs/utils/ordinal-date';
-import { TeamDto } from 'src/modules/communication/dto/team.dto';
+import { ForTeamDtoEnum, TeamDto } from 'src/modules/communication/dto/team.dto';
 import { BoardRoles, BoardType, ConfigurationType } from 'src/modules/communication/dto/types';
 import { UserDto } from 'src/modules/communication/dto/user.dto';
 import { BoardNotValidError } from 'src/modules/communication/errors/board-not-valid.error';
@@ -195,7 +195,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				name: board.title,
 				normalName: normalizeName(board.team.name),
 				boardId: board.id,
-				type: board.isSubBoard ? 'sub-team' : 'team',
+				type: board.isSubBoard ? ForTeamDtoEnum.SUBTEAM : ForTeamDtoEnum.TEAM,
 				for: BoardRoles.RESPONSIBLE,
 				teamNumber: 0,
 				participants: board.isSubBoard
@@ -219,7 +219,7 @@ export class SlackCommunicationApplication implements CommunicationApplicationIn
 				name: subBoard.title,
 				normalName: normalizeName(board.team.name + '-' + subBoard.title.replace(' board', '')),
 				boardId: subBoard.id,
-				type: 'sub-team',
+				type: ForTeamDtoEnum.SUBTEAM,
 				for: BoardRoles.MEMBER,
 				participants,
 				teamNumber: subBoard.boardNumber

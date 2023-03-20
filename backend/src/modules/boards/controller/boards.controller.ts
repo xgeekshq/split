@@ -2,7 +2,6 @@ import { GetBoardGuard } from './../../../libs/guards/getBoardPermissions.guard'
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -35,7 +34,6 @@ import {
 import { BaseParam } from 'src/libs/dto/param/base.param';
 import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -311,22 +309,12 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Put(':boardId/merge')
-	async mergeBoard(
+	mergeBoard(
 		@Param() { boardId }: BaseParam,
 		@Query() { socketId }: BaseParamWSocket,
 		@Req() request: RequestWithUser
 	) {
-		const result = await this.updateBoardApp.mergeBoards(boardId, request.user._id);
-
-		if (!result) {
-			throw new BadRequestException(UPDATE_FAILED);
-		}
-
-		if (socketId) {
-			this.socketService.sendUpdatedAllBoard(boardId, socketId);
-		}
-
-		return result;
+		return this.updateBoardApp.mergeBoards(boardId, request.user._id, socketId);
 	}
 
 	@ApiOperation({ summary: 'Update board phase' })
@@ -354,7 +342,7 @@ export default class BoardsController {
 		type: UnauthorizedResponse
 	})
 	@Put(':boardId/phase')
-	async updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
+	updateBoardPhase(@Body() boardPhaseDto: BoardPhaseDto) {
 		this.updateBoardApp.updatePhase(boardPhaseDto);
 	}
 }
