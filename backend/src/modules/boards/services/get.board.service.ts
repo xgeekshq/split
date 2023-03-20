@@ -4,7 +4,6 @@ import {
 	BadRequestException,
 	Inject,
 	Injectable,
-	Logger,
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
@@ -45,8 +44,6 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		private readonly boardRepository: BoardRepositoryInterface,
 		private socketService: SocketGateway
 	) {}
-
-	private readonly logger = new Logger(GetBoardService.name);
 
 	async getAllBoardIdsAndTeamIdsOfUser(userId: string) {
 		const [boardIds, teamIds] = await Promise.all([
