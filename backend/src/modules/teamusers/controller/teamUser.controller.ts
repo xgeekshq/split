@@ -1,4 +1,4 @@
-import { TeamUserUseCaseInterface } from './../../teamUsers/interfaces/applications/team-user.use-case.interface';
+import { TeamUserUseCaseInterface } from '../interfaces/applications/team-user.use-case.interface';
 import {
 	Body,
 	Controller,
@@ -31,8 +31,8 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
-import TeamUserDto from '../../teamUsers/dto/team.user.dto';
-import UpdateTeamUserDto from '../../teamUsers/dto/update.team.user.dto';
+import TeamUserDto from '../dto/team.user.dto';
+import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
@@ -43,7 +43,7 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 @ApiTags('Teams')
 @UseGuards(JwtAuthenticationGuard)
 @Controller('teams')
-export default class TeamsController {
+export default class TeamUsersController {
 	constructor(
 		@Inject(TeamUsers.TYPES.applications.CreateTeamUserUseCase)
 		private createTeamUserUseCase: TeamUserUseCaseInterface<TeamUserDto, TeamUser>,

@@ -12,6 +12,7 @@ import {
 } from './teamusers.providers';
 import { Module } from '@nestjs/common';
 import { mongooseTeamUserModule } from 'src/infrastructure/database/mongoose.module';
+import TeamUsersController from './controller/teamUser.controller';
 
 @Module({
 	imports: [mongooseTeamUserModule],
@@ -27,7 +28,7 @@ import { mongooseTeamUserModule } from 'src/infrastructure/database/mongoose.mod
 		addAndRemoveTeamUsersUseCase,
 		deleteTeamUserUseCase
 	],
-	controllers: [],
+	controllers: [TeamUsersController],
 	exports: [
 		createTeamUserService,
 		getTeamUserService,

@@ -1,4 +1,4 @@
-import { TeamUserUseCaseInterface } from './../../teamUsers/interfaces/applications/team-user.use-case.interface';
+import { TeamUserUseCaseInterface } from '../interfaces/applications/team-user.use-case.interface';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
