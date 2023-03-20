@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react';
 
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import BoardType from '@/types/board/board';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useBoard from '@/hooks/useBoard';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import BoardType from '@/types/board/board';
+import isEmpty from '@/utils/isEmpty';
+
 import CountCards from './CountCards';
 
 type CardEndProps = {
@@ -39,7 +41,10 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
     };
     const { _id: id, title, columns, users, team, createdBy } = board;
 
-    const { deleteBoard } = useBoard({ autoFetchBoard: false });
+    const {
+      deleteBoard,
+      duplicateBoard: { mutate: duplicate },
+    } = useBoard({ autoFetchBoard: false });
 
     const boardTypeCaption = useMemo(() => {
       if (isSubBoard && !isDashboard) return 'Responsible';
@@ -76,6 +81,10 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
       }
     };
 
+    const handleDuplicateBoard = () => {
+      duplicate(board._id);
+    };
+
     if (isDashboard) {
       return (
         <Flex align="center" css={{ justifySelf: 'end' }}>
@@ -105,6 +114,16 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
           {(havePermissions || userSAdmin) && !isSubBoard && (
             <Flex align="center" css={{ ml: '$24' }} gap="24">
               <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
+              {isEmpty(board.dividedBoards) && (
+                <Button isIcon size="sm" onClick={handleDuplicateBoard}>
+                  <Icon
+                    name="clone"
+                    css={{
+                      color: '$primary400',
+                    }}
+                  />
+                </Button>
+              )}
               <ConfirmationDialog
                 title="Delete board"
                 description={deleteBoardDescription}

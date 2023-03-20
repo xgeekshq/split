@@ -1,16 +1,17 @@
-import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import BoardType, {
-  PhaseChangeEventType,
   CreateBoardDto,
   GetBoardResponse,
+  PhaseChangeEventType,
   UpdateBoardType,
 } from '@/types/board/board';
-import { BoardUser } from './board.user';
+import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
+import { BoardUser } from './board.user';
 import UpdateBoardPhaseDto from './updateBoardPhase.dto';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
+  duplicateBoard: UseMutationResult<BoardType, unknown, string, unknown>;
   updateBoard: UseMutationResult<
     BoardType,
     unknown,

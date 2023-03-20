@@ -1,22 +1,24 @@
-import { InfiniteData, useMutation, useQuery } from '@tanstack/react-query';
-import { useSetRecoilState } from 'recoil';
 import { AxiosError } from 'axios';
+import { useSetRecoilState } from 'recoil';
 
 import {
   createBoardRequest,
   deleteBoardRequest,
+  duplicateBoardRequest,
   getBoardRequest,
   updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
-import { newBoardState } from '@/store/board/atoms/board.atom';
-import UseBoardType from '@/types/board/useBoard';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { BoardUser } from '@/types/board/board.user';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
-import BoardType, { PhaseChangeEventType } from '@/types/board/board';
-import { BoardPhases } from '@/utils/enums/board.phases';
+import { newBoardState } from '@/store/board/atoms/board.atom';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
+import BoardType, { PhaseChangeEventType } from '@/types/board/board';
+import { BoardUser } from '@/types/board/board.user';
+import UseBoardType from '@/types/board/useBoard';
+import { BoardPhases } from '@/utils/enums/board.phases';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { InfiniteData, useMutation, useQuery } from '@tanstack/react-query';
+
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
@@ -72,6 +74,17 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
       setToastState({
         open: true,
         content: 'Error creating the board',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+
+  const duplicateBoard = useMutation(duplicateBoardRequest, {
+    onSuccess: (data) => setNewBoard(data._id),
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error duplicating the board',
         type: ToastStateEnum.ERROR,
       });
     },
@@ -190,6 +203,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   return {
     createBoard,
+    duplicateBoard,
     deleteBoard,
     updateBoard,
     fetchBoard,
