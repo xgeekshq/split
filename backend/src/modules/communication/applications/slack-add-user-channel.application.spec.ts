@@ -36,12 +36,10 @@ describe('SlackAddUserIntoChannelApplication', () => {
 		);
 		userHandlerMock = jest
 			.spyOn(userHandler, 'getSlackUserIdByEmail')
-			.mockImplementation(jest.fn())
 			.mockResolvedValue('someUserId');
 
 		jest
 			.spyOn(conversationsHandler, 'inviteUserToChannel')
-			.mockImplementation(jest.fn())
 			.mockResolvedValue({ ok: true, channelId: 'someChannelId' });
 	});
 
