@@ -14,6 +14,7 @@ import {
 	SLACK_MASTER_CHANNEL_ID
 } from 'src/libs/constants/slack';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
+import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import {
 	fillDividedBoardsUsersWithTeamUsers,
 	translateBoard
@@ -23,6 +24,7 @@ import { SlackCommunicationApplication } from 'src/modules/communication/applica
 import { ChatSlackHandler } from 'src/modules/communication/handlers/chat-slack.handler';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
 import { UsersSlackHandler } from 'src/modules/communication/handlers/users-slack.handler';
+import { BoardNotValidError } from '../errors/board-not-valid.error';
 
 const slackUsersIds = [
 	'U023BECGF',
@@ -544,6 +546,236 @@ describe('SlackCommunicationApplication', () => {
 
 		const result = await application.execute(givenBoard);
 
+		const expectedTotalTeamsToBe = 4;
+
+		expect(result.length).toBe(expectedTotalTeamsToBe);
+	});
+	it('should throw  BoardNotValidError when board is not valid', async () => {
+		let givenBoard: any = {
+			_id: 'main-board',
+			title: 'Main Board',
+			dividedBoards: [
+				{
+					_id: 'sub-team-board-1',
+					title: 'Sub-team board 1',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: null,
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'responsible',
+							user: null,
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'member',
+							user: null,
+							board: 'sub-team-board-1'
+						}
+					]
+				},
+				{
+					_id: 'sub-team-board-2',
+					title: 'Sub-team board 2',
+					dividedBoards: null,
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[3],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[4],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[5],
+							board: 'sub-team-board-2'
+						}
+					]
+				},
+				{
+					_id: 'sud-team-board-3',
+					title: 'Sub-team board 3',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'responsible',
+							user: slackUsersIds[6],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[7],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[8],
+							board: 'sud-team-board-3'
+						}
+					]
+				}
+			],
+			team: {
+				users: [
+					...slackUsersIds.map((i) => ({
+						role: 'member',
+						user: {
+							_id: i,
+							firstName: `first_name_${i}`,
+							lastName: `last_name_${i}`,
+							email: `${i}@email.com`
+						}
+					})),
+					{
+						role: 'stakeholder',
+						user: {
+							_id: 'any_id',
+							firstName: 'any_first_name',
+							lastName: 'any_last_name',
+							email: 'any_email@gmail.com'
+						}
+					}
+				]
+			},
+			isSubBoard: false
+		};
+		givenBoard = translateBoard(givenBoard);
+		givenBoard = fillDividedBoardsUsersWithTeamUsers(givenBoard);
+
+		await expect(application.execute(givenBoard)).rejects.toThrowError(BoardNotValidError);
+	});
+
+	it('should returns all teams (one for each sub-board plus the team for responsibles) even if create slack channels fails for some ', async () => {
+		let givenBoard: any = {
+			_id: 'main-board',
+			title: 'Main Board',
+			dividedBoards: [
+				{
+					_id: 'sub-team-board-1',
+					title: 'Sub-team board 1',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[0],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[1],
+							board: 'sub-team-board-1'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[2],
+							board: 'sub-team-board-1'
+						}
+					]
+				},
+				{
+					_id: 'sub-team-board-2',
+					title: 'Sub-team board 2',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'member',
+							user: slackUsersIds[3],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[4],
+							board: 'sub-team-board-2'
+						},
+						{
+							role: 'responsible',
+							user: slackUsersIds[5],
+							board: 'sub-team-board-2'
+						}
+					]
+				},
+				{
+					_id: 'sud-team-board-3',
+					title: 'Sub-team board 3',
+					dividedBoards: [],
+					isSubBoard: true,
+					users: [
+						{
+							role: 'responsible',
+							user: slackUsersIds[6],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[7],
+							board: 'sud-team-board-3'
+						},
+						{
+							role: 'member',
+							user: slackUsersIds[8],
+							board: 'sud-team-board-3'
+						}
+					]
+				}
+			],
+			team: {
+				users: [
+					...slackUsersIds.map((i) => ({
+						role: 'member',
+						user: {
+							_id: i,
+							firstName: `first_name_${i}`,
+							lastName: `last_name_${i}`,
+							email: `${i}@email.com`
+						}
+					})),
+					{
+						role: 'stakeholder',
+						user: {
+							_id: 'any_id',
+							firstName: 'any_first_name',
+							lastName: 'any_last_name',
+							email: 'any_email@gmail.com'
+						}
+					}
+				]
+			},
+			users: [
+				{
+					role: 'member',
+					user: UserFactory.create(),
+					board: 'sub-team-board-1'
+				},
+				{
+					role: 'responsible',
+					user: UserFactory.create(),
+					board: 'sub-team-board-1'
+				},
+				{
+					role: 'member',
+					user: UserFactory.create(),
+					board: 'sub-team-board-1'
+				}
+			],
+			isSubBoard: true
+		};
+
+		givenBoard = translateBoard(givenBoard);
+		givenBoard = fillDividedBoardsUsersWithTeamUsers(givenBoard);
+
+		const result = await application.execute(givenBoard);
 		const expectedTotalTeamsToBe = 4;
 
 		expect(result.length).toBe(expectedTotalTeamsToBe);
