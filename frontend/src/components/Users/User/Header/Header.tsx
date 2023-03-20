@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
-import { ListTeams } from '../TeamsDialog';
+import { ListTeams } from '../TeamsDialog/TeamsDialog';
 
 type UserHeaderProps = {
   user: User;
@@ -65,6 +65,8 @@ const UserHeader = ({ user }: UserHeaderProps) => {
             <ListTeams
               isOpen={isOpen}
               setIsOpen={setIsOpen}
+              confirmationLabel="Add new team"
+              title="Teams"
               providerAccountCreatedAt={user.providerAccountCreatedAt}
               joinedAt={user.joinedAt}
               teamsList={teamsUserIsNotMember}
