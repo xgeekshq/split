@@ -1,20 +1,18 @@
 import { GetTeamUserServiceInterface } from '../../modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import {
 	CanActivate,
 	ExecutionContext,
 	ForbiddenException,
 	Inject,
-	Injectable,
-	forwardRef
+	Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 
 @Injectable()
 export class BoardUserGuard implements CanActivate {

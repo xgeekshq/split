@@ -3,8 +3,8 @@ import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import BaseModel from 'src/libs/models/base.model';
-import Team from 'src/modules/teams/entities/teams.schema';
 import User from 'src/modules/users/entities/user.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 
 export type TeamUserDocument = TeamUser & Document;
 
@@ -22,6 +22,12 @@ export default class TeamUser extends BaseModel {
 		nullable: false
 	})
 	isNewJoiner?: boolean;
+
+	@Prop({
+		type: Boolean,
+		nullable: false
+	})
+	canBeResponsible?: boolean;
 
 	@Prop({ type: SchemaTypes.ObjectId, ref: 'User', nullable: false })
 	user!: User | ObjectId | string;

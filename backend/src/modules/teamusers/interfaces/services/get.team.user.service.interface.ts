@@ -1,4 +1,4 @@
-import TeamUser from '../../entities/team.user.schema';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { UserWithTeams } from '../../../users/interfaces/type-user-with-teams';
 import User from 'src/modules/users/entities/user.schema';
 

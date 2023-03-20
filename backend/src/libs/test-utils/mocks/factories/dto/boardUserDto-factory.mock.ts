@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
 import { BoardRoles } from 'src/libs/enum/board.roles';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { buildTestFactory } from '../generic-factory.mock';
 import { UserFactory } from '../user-factory';
 

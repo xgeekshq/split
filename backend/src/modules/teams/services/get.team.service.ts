@@ -1,6 +1,6 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
-import Team from '../entities/teams.schema';
+import Team from '../entities/team.schema';
 import { TYPES } from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';

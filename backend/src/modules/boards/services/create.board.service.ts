@@ -21,7 +21,7 @@ import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
-import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
+import TeamUser, { TeamUserDocument } from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../../boardUsers/dto/board.user.dto';

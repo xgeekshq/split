@@ -1,6 +1,6 @@
 import { LeanDocument } from 'mongoose';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
-import Team from '../../entities/teams.schema';
+import Team from '../../entities/team.schema';
 import UserDto from 'src/modules/users/dto/user.dto';
 
 export interface GetTeamServiceInterface {

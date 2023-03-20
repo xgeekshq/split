@@ -2,7 +2,7 @@ import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.r
 import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
 import TeamUserDto from '../../dto/team.user.dto';
-import TeamUser from '../../entities/team.user.schema';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 
 export interface TeamUserRepositoryInterface extends BaseInterfaceRepository<TeamUser> {
 	// GET
