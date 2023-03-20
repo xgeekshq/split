@@ -1,3 +1,4 @@
+// CHECK: Should add ellipsis to User Name
 import Link from 'next/link';
 
 import Text from '@/components/Primitives/Text/Text';
@@ -8,13 +9,6 @@ type UserTitleProps = {
   user: User;
   hasPermissions: boolean;
 };
-
-// const StyledBoardTitle = styled(Text, {
-//   textOverflow: 'ellipsis',
-//   whiteSpace: 'nowrap',
-//   overflow: 'hidden',
-//   maxWidth: '$260',
-// });
 
 const UserTitle = ({ user, hasPermissions }: UserTitleProps) => {
   const getTitle = () => (
