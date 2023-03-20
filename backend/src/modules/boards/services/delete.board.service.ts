@@ -138,11 +138,11 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
 			await this.deleteBoardUserService.abortTransaction();
+			throw new BadRequestException(DELETE_FAILED);
 		} finally {
 			await this.boardRepository.endSession();
 			await this.deleteBoardUserService.endSession();
 		}
-		throw new BadRequestException(DELETE_FAILED);
 	}
 
 	private async deleteSimpleBoardUsers(boardSession: boolean, boardId: string) {

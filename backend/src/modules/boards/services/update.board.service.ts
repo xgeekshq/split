@@ -1,20 +1,12 @@
+import Team from 'src/modules/teams/entities/team.schema';
 import { UpdateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	NotFoundException,
-	forwardRef
-} from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
@@ -24,7 +16,6 @@ import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board from '../entities/board.schema';
 import BoardUser from '../../boardUsers/entities/board.user.schema';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -40,16 +31,18 @@ import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
-import Team from 'src/modules/teams/entities/teams.schema';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
+import { generateNewSubColumns } from '../utils/generate-subcolumns';
+import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
+	private logger = new Logger(UpdateBoardService.name);
+
 	constructor(
-		@Inject(forwardRef(() => Teams.TYPES.services.GetTeamService))
-		private getTeamService: GetTeamServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
 		private slackCommunicationService: CommunicationServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackSendMessageService)
@@ -72,6 +65,23 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	) {}
 
 	async update(boardId: string, boardData: UpdateBoardDto) {
+		/**
+		 * Only can change the maxVotes if:
+		 * - new maxVotes not empty
+		 * - current highest votes equals to zero
+		 * - or current highest votes lower than new maxVotes
+		 */
+
+		if (!isEmpty(boardData.maxVotes)) {
+			const highestVotes = await this.getHighestVotesOnBoard(boardId);
+
+			if (highestVotes > Number(boardData.maxVotes)) {
+				throw new UpdateFailedException(
+					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
+				);
+			}
+		}
+
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
@@ -94,43 +104,14 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 * - and the current responsible isn't the new responsible
 		 */
 		if (boardData.users && String(currentResponsible?.id) !== String(newResponsible?.id)) {
-			if (isSubBoard) {
-				const promises = boardData.users
-					.filter((boardUser) =>
-						[getIdFromObjectId(String(currentResponsible?.id)), String(newResponsible.id)].includes(
-							(boardUser.user as unknown as User)._id
-						)
-					)
-					.map((boardUser) => {
-						const typedBoardUser = boardUser.user as unknown as User;
-
-						return this.updateBoardUserService.updateBoardUserRole(
-							boardId,
-							typedBoardUser._id,
-							boardUser.role
-						);
-					});
-				await Promise.all(promises);
-			}
-
-			const mainBoardId = boardData.mainBoardId;
-
-			const promises = boardData.users
-				.filter((boardUser) =>
-					[getIdFromObjectId(String(currentResponsible?.id)), newResponsible.id].includes(
-						(boardUser.user as unknown as User)._id
-					)
-				)
-				.map((boardUser) => {
-					const typedBoardUser = boardUser.user as unknown as User;
-
-					return this.updateBoardUserService.updateBoardUserRole(
-						mainBoardId,
-						typedBoardUser._id,
-						boardUser.role
-					);
-				});
-			await Promise.all(promises);
+			this.changeResponsibleOnBoard(
+				isSubBoard,
+				boardId,
+				boardData.mainBoardId,
+				boardData.users,
+				String(currentResponsible.id),
+				String(newResponsible.id)
+			);
 		}
 
 		/**
@@ -154,27 +135,9 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 			board.columns = await this.updateRegularBoard(boardId, boardData, board);
 		}
 
-		/**
-		 * Only can change the maxVotes if:
-		 * - new maxVotes not empty
-		 * - current highest votes equals to zero
-		 * - or current highest votes lower than new maxVotes
-		 */
-
-		if (!isEmpty(boardData.maxVotes)) {
-			const highestVotes = await this.getHighestVotesOnBoard(boardId);
-
-			// TODO: maxVotes as 'undefined' not undefined (so typeof returns string, but needs to be number or undefined)
-			if (highestVotes > Number(boardData.maxVotes)) {
-				throw new BadRequestException(
-					`You can't set a lower value to max votes. Please insert a value higher or equals than ${highestVotes}!`
-				);
-			}
-		}
-
 		const updatedBoard = await this.boardRepository.updateBoard(boardId, board, true);
 
-		if (!updatedBoard) throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoard) throw new UpdateFailedException();
 
 		if (boardData.socketId) {
 			this.socketService.sendUpdatedBoard(boardId, boardData.socketId);
@@ -201,39 +164,69 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		return updatedBoard;
 	}
 
-	async mergeBoards(subBoardId: string, userId: string) {
+	async mergeBoards(subBoardId: string, userId: string, socketId?: string) {
 		const [subBoard, board] = await Promise.all([
 			this.boardRepository.getBoard(subBoardId),
 			this.boardRepository.getBoardByQuery({ dividedBoards: { $in: [subBoardId] } })
 		]);
 
-		if (!subBoard || !board || subBoard.submitedByUser) return null;
-		const team = await this.getTeamService.getTeam((board.team as ObjectId).toString());
-
-		if (!team) return null;
-
-		const newSubColumns = this.generateNewSubColumns(subBoard as Board);
-
-		const newColumns = [...(board as Board).columns];
-		for (let i = 0; i < newColumns.length; i++) {
-			newColumns[i].cards = [...newColumns[i].cards, ...newSubColumns[i].cards];
+		if (!subBoard || !board || subBoard.submitedByUser) {
+			throw new NotFoundException('Board or subBoard not found');
 		}
 
-		await this.boardRepository.updateMergedSubBoard(subBoardId, userId);
+		const columnsWithMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
 
-		const result = await this.boardRepository.updateMergedBoard(board._id, newColumns);
+		await this.boardRepository.startTransaction();
+		try {
+			const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
+				subBoardId,
+				userId,
+				true
+			);
 
-		if (board.slackChannelId && board.slackEnable) {
-			this.slackCommunicationService.executeMergeBoardNotification({
-				responsiblesChannelId: board.slackChannelId,
-				teamNumber: subBoard.boardNumber,
-				isLastSubBoard: await this.checkIfIsLastBoardToMerge(result.dividedBoards as Board[]),
-				boardId: subBoardId,
-				mainBoardId: board._id
-			});
+			if (!updatedMergedSubBoard) {
+				this.logger.error('Update of the subBoard to be merged failed');
+				throw new UpdateFailedException();
+			}
+
+			const mergedBoard = await this.boardRepository.updateMergedBoard(
+				board._id,
+				columnsWithMergedCards,
+				true
+			);
+
+			if (!mergedBoard) {
+				this.logger.error('Update of the merged board failed');
+				throw new UpdateFailedException();
+			}
+
+			if (board.slackChannelId && board.slackEnable) {
+				this.slackCommunicationService.executeMergeBoardNotification({
+					responsiblesChannelId: board.slackChannelId,
+					teamNumber: subBoard.boardNumber,
+					isLastSubBoard: await this.checkIfIsLastBoardToMerge(
+						mergedBoard.dividedBoards as Board[]
+					),
+					boardId: subBoardId,
+					mainBoardId: board._id
+				});
+			}
+
+			if (socketId) {
+				this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
+			}
+
+			await this.boardRepository.commitTransaction();
+			await this.boardRepository.endSession();
+
+			return mergedBoard;
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+		} finally {
+			await this.boardRepository.endSession();
 		}
 
-		return result;
+		throw new UpdateFailedException();
 	}
 
 	updateChannelId(teams: TeamDto[]) {
@@ -246,30 +239,31 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		try {
 			let createdBoardUsers: BoardUser[] = [];
 
-			if (addUsers.length > 0) createdBoardUsers = await this.addBoardUsers(addUsers);
+			if (addUsers.length > 0)
+				createdBoardUsers = await this.createBoardUserService.saveBoardUsers(addUsers);
 
 			if (removeUsers.length > 0) await this.deleteBoardUsers(removeUsers);
 
 			return createdBoardUsers;
 		} catch (error) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 	}
 
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
-		const user = boardUserToUpdateRole.user as unknown as User;
+		const user = boardUserToUpdateRole.user as User;
 
-		const updatedBoardUsers = await this.updateBoardUserService.updateBoardUserRole(
+		const updatedBoardUser = await this.updateBoardUserService.updateBoardUserRole(
 			boardUserToUpdateRole.board,
 			user._id,
 			boardUserToUpdateRole.role
 		);
 
-		if (!updatedBoardUsers) {
-			throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoardUser) {
+			throw new UpdateFailedException();
 		}
 
-		return updatedBoardUsers;
+		return updatedBoardUser;
 	}
 
 	async updatePhase(boardPhaseDto: BoardPhaseDto) {
@@ -294,11 +288,25 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 				this.slackSendMessageService.execute(slackMessageDto);
 			}
 		} catch (err) {
-			throw new BadRequestException(UPDATE_FAILED);
+			throw new UpdateFailedException();
 		}
 	}
 
 	/* --------------- HELPERS --------------- */
+
+	/**
+	 * Method to get the highest value of votesCount on Board Users
+	 * @param boardId String
+	 * @return number
+	 */
+	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
+		const votesCount = await this.getBoardUserService.getVotesCount(boardId);
+
+		return votesCount.reduce(
+			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
+			0
+		);
+	}
 
 	/**
 	 * Method to get current responsible to a specific board
@@ -319,17 +327,55 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	}
 
 	/**
-	 * Method to get the highest value of votesCount on Board Users
+	 * Method to update all boardUsers role
 	 * @param boardId String
-	 * @return number
+	 * @param boardUsers BoardUserDto[]
+	 * @param currentResponsibleId String
+	 * @param newResponsibleId String
+	 * @return void
+	 * @private
 	 */
-	private async getHighestVotesOnBoard(boardId: string): Promise<number> {
-		const votesCount = await this.getBoardUserService.getVotesCount(boardId);
+	private async updateBoardUsersRole(
+		boardId: string,
+		boardUsers: BoardUserDto[],
+		currentResponsibleId: string,
+		newResponsibleId: string
+	) {
+		const promises = boardUsers
+			.filter((boardUser) =>
+				[getIdFromObjectId(currentResponsibleId), newResponsibleId].includes(
+					(boardUser.user as User)._id
+				)
+			)
+			.map((boardUser) => {
+				const typedBoardUser = boardUser.user as User;
 
-		return votesCount.reduce(
-			(prev, current) => (current.votesCount > prev ? current.votesCount : prev),
-			0
-		);
+				return this.updateBoardUserService.updateBoardUserRole(
+					boardId,
+					typedBoardUser._id,
+					boardUser.role
+				);
+			});
+		await Promise.all(promises);
+	}
+
+	/**
+	 * Method to change board responsible
+	 * @return void
+	 */
+	private changeResponsibleOnBoard(
+		isSubBoard: boolean,
+		boardId: string,
+		mainBoardId: string,
+		users: BoardUserDto[],
+		currentResponsibleId: string,
+		newResponsibleId: string
+	) {
+		if (isSubBoard) {
+			this.updateBoardUsersRole(boardId, users, currentResponsibleId, newResponsibleId);
+		}
+
+		this.updateBoardUsersRole(mainBoardId, users, currentResponsibleId, newResponsibleId);
 	}
 
 	private async updateRegularBoard(boardId: string, boardData: UpdateBoardDto, board: Board) {
@@ -350,16 +396,11 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		 * Updates the columns
 		 *
 		 * */
-
 		const columns = boardData.columns.flatMap((col: Column | ColumnDto) => {
 			if (col._id) {
 				const columnBoard = board.columns.find(
 					(colBoard) => colBoard._id.toString() === col._id.toString()
 				);
-
-				if (columnBoard) {
-					return [{ ...columnBoard, title: col.title }];
-				}
 
 				if (boardData.deletedColumns) {
 					const columnToDelete = boardData.deletedColumns.some(
@@ -369,6 +410,10 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 					if (columnToDelete) {
 						return [];
 					}
+				}
+
+				if (columnBoard) {
+					return [{ ...columnBoard, title: col.title }];
 				}
 			}
 
@@ -408,51 +453,16 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		return count === dividedBoards.length;
 	}
 
-	private generateNewSubColumns(subBoard: Board) {
-		return [...subBoard.columns].map((column) => {
-			const newColumn = {
-				title: column.title,
-				color: column.color,
-				cards: column.cards.map((card) => {
-					const newCard = {
-						text: card.text,
-						createdBy: card.createdBy,
-						votes: card.votes,
-						anonymous: card.anonymous,
-						createdByTeam: subBoard.title.replace('board', ''),
-						comments: card.comments.map((comment) => {
-							return {
-								text: comment.text,
-								createdBy: comment.createdBy,
-								anonymous: comment.anonymous
-							};
-						}),
-						items: card.items.map((cardItem) => {
-							return {
-								text: cardItem.text,
-								votes: cardItem.votes,
-								createdByTeam: subBoard.title.replace('board ', ''),
-								createdBy: cardItem.createdBy,
-								anonymous: cardItem.anonymous,
-								comments: cardItem.comments.map((comment) => {
-									return {
-										text: comment.text,
-										createdBy: comment.createdBy,
-										anonymous: comment.anonymous
-									};
-								}),
-								createdAt: card.createdAt
-							};
-						}),
-						createdAt: card.createdAt
-					};
+	/**
+	 * Method to return columns with cards merged cards a from sub-board
+	 * @param subBoard: Board
+	 * @param board: Board
+	 * @return Column[]
+	 */
+	private getColumnsFromMainBoardWithMergedCards(subBoard: Board, board: Board) {
+		const newSubColumns = generateNewSubColumns(subBoard);
 
-					return newCard;
-				})
-			};
-
-			return newColumn;
-		});
+		return mergeCardsFromSubBoardColumnsIntoMainBoard([...board.columns], newSubColumns);
 	}
 
 	private generateMessage(phase: string, boardId: string, date: string, columns): string {
@@ -488,17 +498,9 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		}
 	}
 
-	private async addBoardUsers(boardUsers: BoardUserDto[]) {
-		const createdBoardUsers = await this.createBoardUserService.saveBoardUsers(boardUsers);
-
-		if (createdBoardUsers.length < 1) throw new Error(INSERT_FAILED);
-
-		return createdBoardUsers;
-	}
-
 	private async deleteBoardUsers(boardUsers: string[]) {
 		const deletedCount = await this.deleteBoardUserService.deleteBoardUsers(boardUsers);
 
-		if (deletedCount <= 0) throw new Error(DELETE_FAILED);
+		if (deletedCount <= 0) throw new UpdateFailedException();
 	}
 }

@@ -16,7 +16,7 @@ const TeamsList = ({ teams }: TeamsListProps) => {
   return (
     <Flex direction="column" gap="8">
       {teams.map((team: Team) => (
-        <TeamItem key={team.id} team={team} isTeamPage />
+        <TeamItem key={team.id} team={team} />
       ))}
     </Flex>
   );

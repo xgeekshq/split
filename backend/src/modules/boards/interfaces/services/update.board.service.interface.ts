@@ -7,9 +7,13 @@ import BoardUser from '../../../boardUsers/entities/board.user.schema';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 export interface UpdateBoardServiceInterface {
-	update(boardId: string, boardData: UpdateBoardDto): Promise<LeanDocument<BoardDocument> | null>;
+	update(boardId: string, boardData: UpdateBoardDto): Promise<Board>;
 
-	mergeBoards(subBoardId: string, userId: string): Promise<LeanDocument<BoardDocument> | null>;
+	mergeBoards(
+		subBoardId: string,
+		userId: string,
+		socketId?: string
+	): Promise<LeanDocument<BoardDocument> | null>;
 	updateChannelId(teams: TeamDto[]);
 
 	updateBoardParticipants(

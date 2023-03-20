@@ -1,57 +1,83 @@
+import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
-import { useSession } from 'next-auth/react';
 
+import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
+import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
+import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeam from '@/hooks/useTeam';
+import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { useRouter } from 'next/router';
-import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
-import { InnerContainer } from '@/components/Teams/styles';
 
-import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
-import Button from '@/components/Primitives/Inputs/Button/Button';
-import useTeam from '@/hooks/useTeam';
-import TeamTitle from './TeamTitle/TeamTitle';
 import TeamBoards from './TeamBoards/TeamBoards';
+import TeamTitle from './TeamTitle/TeamTitle';
 
 export type TeamItemProps = {
   team: Team;
-  isTeamPage?: boolean;
 };
 
-const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
-  const { data: session } = useSession();
-  const router = useRouter();
+const TeamItem = React.memo(({ team }: TeamItemProps) => {
+  const { id, users: teamUsers, name } = team;
+
+  // CHECK: the session data could be passed as props,
+  // since it's the same for all items
+  const { userId, isSAdmin } = useCurrentSession();
+  const {
+    pathname,
+    query: { userId: userPathId },
+  } = useRouter();
+  const isTeamPage = pathname.includes('teams');
+
   const { deleteTeam, deleteTeamUser } = useTeam();
 
-  const { id: userId, isSAdmin } = { ...session?.user };
-  const { id, users, name } = team;
-  const userFound = users.find((member) => member.user?._id === userId);
+  const userFound = useMemo(() => {
+    const queryUserId = userPathId;
+    const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
+
+    return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
+  }, [userPathId, userId, teamUsers]);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
       return true;
     }
 
-    const myUser = team.users.find((user) => String(user.user?._id) === String(userId));
-
-    if (!myUser) {
+    if (!userFound) {
       return false;
     }
 
-    return team && [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(myUser.role);
-  }, [isSAdmin, team, userId]);
+    return [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound.role);
+  }, [isSAdmin, userFound]);
 
-  const deleteTeamDescription = (
-    <Text>
-      Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
-    </Text>
-  );
+  const confirmationDialogDescription = () => {
+    if (isTeamPage) {
+      return (
+        <Text>
+          Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
+        </Text>
+      );
+    }
+    const userFoundName = (
+      <Text fontWeight="bold">
+        {userFound?.user.firstName} {userFound?.user.lastName}
+      </Text>
+    );
 
+    return (
+      <Text>
+        Do you really want to remove {userFoundName} from <Text fontWeight="bold">{name}</Text>?
+      </Text>
+    );
+  };
+
+  // CHECK: This function can be abstracted
+  // to the Parent and passed as Prop.
   const handleDelete = () => {
     if (isTeamPage) {
       deleteTeam.mutate({ id });
@@ -73,7 +99,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
             }}
           />
 
-          <TeamTitle teamId={id} title={name} isTeamPage={isTeamPage} />
+          <TeamTitle teamId={id} title={name} />
         </Flex>
         <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
           <Flex align="center" gap="8">
@@ -81,7 +107,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
               Members
             </Text>
 
-            <AvatarGroup listUsers={users} userId={userId} css={{ minWidth: '$88' }} />
+            <AvatarGroup listUsers={teamUsers} userId={userId} css={{ minWidth: '$88' }} />
           </Flex>
 
           <Separator orientation="vertical" size="lg" />
@@ -94,7 +120,7 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
             <AvatarGroup
               stakeholders
               teamAdmins
-              listUsers={users}
+              listUsers={teamUsers}
               userId={userId}
               css={{ minWidth: '$88' }}
             />
@@ -103,8 +129,8 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
           <Separator orientation="vertical" size="lg" />
 
           <Flex align="center">
-            {router.pathname.includes('users') && userFound ? (
-              <RoleSelector role={userFound.role} userId={userId!} teamId={id} />
+            {!isTeamPage && userFound ? (
+              <RoleSelector role={userFound.role} userId={userFound._id!} teamId={id} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}
@@ -113,15 +139,15 @@ const TeamItem = React.memo<TeamItemProps>(({ team, isTeamPage }) => {
         <Flex css={{ flex: '0' }}>
           {havePermissions && (
             <ConfirmationDialog
-              title="Delete team"
-              description={deleteTeamDescription}
+              title={isTeamPage ? 'Delete team' : 'Remove User'}
+              description={confirmationDialogDescription()}
               confirmationHandler={handleDelete}
-              confirmationLabel="Delete"
-              tooltip="Delete team"
+              confirmationLabel={isTeamPage ? 'Delete' : 'Remove'}
+              tooltip={isTeamPage ? 'Delete team' : 'Remove user'}
             >
               <Button isIcon size="sm">
                 <Icon
-                  name="trash-alt"
+                  name={isTeamPage ? 'trash-alt' : 'user-slash'}
                   css={{
                     color: '$primary400',
                   }}

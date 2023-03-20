@@ -16,8 +16,6 @@ import * as Auth from 'src/modules/auth/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory';
-import { NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
@@ -26,6 +24,23 @@ import { BoardRepositoryInterface } from '../repositories/board.repository.inter
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { createBoardUserService } from 'src/modules/boardUsers/boardusers.providers';
+import { hideVotes } from '../utils/clean-boards.spec';
+import Column from 'src/modules/columns/entities/column.schema';
+import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+
+const hideVotesFromColumns = (columns: Column[], userId: string) => {
+	return columns.map((column) => {
+		column.cards.forEach((card) => {
+			card.votes = hideVotes(card.votes as string[], userId);
+			card.items.forEach(
+				(cardItem) => (cardItem.votes = hideVotes(cardItem.votes as string[], userId))
+			);
+		});
+
+		return column;
+	});
+};
 
 describe('GetBoardService', () => {
 	let boardService: GetBoardServiceInterface;
@@ -184,17 +199,17 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return all boards for the superAdmin', async () => {
-			const boards = BoardFactory.createMany(4);
 			const teams = TeamFactory.createMany(2);
-			const userId = faker.datatype.uuid();
-
 			const teamIds = teams.map((team) => team._id);
+			const boards = BoardFactory.createMany(4, [
+				{ isSubBoard: true },
+				{ team: teamIds[0] },
+				{ isSubBoard: false },
+				{ isSubBoard: false }
+			]);
+			const userId = faker.datatype.uuid();
 			const boardIds = boards.map((board) => board._id);
 			const getBoardAndTeamIdsResult = { boardIds, teamIds };
-
-			boards[2].isSubBoard = false;
-			boards[3].isSubBoard = false;
-			boards[0].team = teamIds[0];
 			const filterBoardsResponse = boards.filter(
 				(board) =>
 					!board.isSubBoard &&
@@ -237,17 +252,17 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return all boards of a user', async () => {
-			const boards = BoardFactory.createMany(4);
 			const teams = TeamFactory.createMany(2);
-			const userId = faker.datatype.uuid();
-
 			const teamIds = teams.map((team) => team._id);
+			const boards = BoardFactory.createMany(4, [
+				{ isSubBoard: false },
+				{ team: teamIds[1] },
+				{ isSubBoard: false },
+				{ isSubBoard: true }
+			]);
+			const userId = faker.datatype.uuid();
 			const boardIds = boards.map((board) => board._id);
 			const getBoardAndTeamIdsResult = { boardIds, teamIds };
-
-			boards[0].isSubBoard = false;
-			boards[2].isSubBoard = false;
-			boards[1].team = teamIds[1];
 			const filterBoardsResponse = boards.filter(
 				(board) =>
 					!board.isSubBoard &&
@@ -279,13 +294,14 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return all boards from a team', async () => {
-			const boards = BoardFactory.createMany(4);
 			const team = TeamFactory.create();
+			const boards = BoardFactory.createMany(4, [
+				{ isSubBoard: false },
+				{ team: team._id },
+				{ isSubBoard: false },
+				{ isSubBoard: true }
+			]);
 			const userId = faker.datatype.uuid();
-
-			boards[0].isSubBoard = false;
-			boards[2].isSubBoard = false;
-			boards[1].team = team._id;
 			const filterBoardsResponse = boards.filter(
 				(board) => !board.isSubBoard || String(board.team) === team._id
 			);
@@ -318,20 +334,17 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return all personal boards of a user', async () => {
-			const boards = BoardFactory.createMany(4);
 			const teams = TeamFactory.createMany(1);
-			const userId = faker.datatype.uuid();
-
 			const teamIds = teams.map((team) => team._id);
+			const boards = BoardFactory.createMany(4, [
+				{ isSubBoard: false, team: null },
+				{ team: null },
+				{ isSubBoard: false, team: teamIds[0] },
+				{ isSubBoard: true, team: teamIds[0] }
+			]);
+			const userId = faker.datatype.uuid();
 			const boardIds = boards.map((board) => board._id);
 			const getBoardAndTeamIdsResult = { boardIds, teamIds };
-
-			boards[0].isSubBoard = false;
-			boards[2].isSubBoard = false;
-			boards[0].team = null;
-			boards[1].team = null;
-			boards[2].team = teamIds[0];
-			boards[3].team = teamIds[0];
 			const filterBoardsResponse = boards.filter(
 				(board) => !board.isSubBoard && !board.team && boardIds.includes(board._id)
 			);
@@ -379,23 +392,20 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return board and main board if is a subBoard', async () => {
-			const mainBoard = BoardFactory.create();
-			mainBoard.isSubBoard = false;
-			const subBoard = BoardFactory.create();
-			subBoard.isSubBoard = true;
-			const boardUser = BoardUserFactory.create();
-			boardUser.board = subBoard._id;
-
+			const mainBoard = BoardFactory.create({ isSubBoard: false });
+			const subBoard = BoardFactory.create({ isSubBoard: true });
+			const boardUser = BoardUserFactory.create({ board: subBoard._id });
 			const userDtoMock = UserDtoFactory.create();
 			userDtoMock._id = String(boardUser.user);
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(subBoard);
-
 			getBoardUserServiceMock.getBoardUser.mockResolvedValue(boardUser);
-
 			boardRepositoryMock.getMainBoard.mockResolvedValue(mainBoard);
 
 			const boardResult = await boardService.getBoard(subBoard._id, userDtoMock);
+
+			//format columns to hideVotes that is called on clean board function
+			subBoard.columns = hideVotesFromColumns(subBoard.columns, userDtoMock._id);
 
 			const response = { board: subBoard, mainBoard };
 
@@ -403,16 +413,9 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return board and guestUser if is a guestUser', async () => {
-			const board = BoardFactory.create();
-			board.isSubBoard = false;
-			board.isPublic = true;
-
-			const userDtoMock = UserDtoFactory.create();
-			userDtoMock.isSAdmin = false;
-			userDtoMock.isAnonymous = true;
-
+			const board = BoardFactory.create({ isSubBoard: false, isPublic: true });
+			const userDtoMock = UserDtoFactory.create({ isSAdmin: false, isAnonymous: true });
 			const boardUser = BoardUserFactory.create();
-
 			const tokens: Tokens = {
 				accessToken: {
 					expiresIn: String(faker.datatype.number()),
@@ -425,12 +428,11 @@ describe('GetBoardService', () => {
 			};
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
-
 			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
-
 			getTokenAuthServiceMock.getTokens.mockResolvedValue(tokens);
-
 			getBoardUserServiceMock.getBoardUserPopulated.mockResolvedValue(boardUser);
+
+			board.columns = hideVotesFromColumns(board.columns, userDtoMock._id);
 
 			const boardResponse = {
 				guestUser: { accessToken: tokens.accessToken, user: userDtoMock._id },
@@ -443,19 +445,15 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return a board when boardUserIsFound', async () => {
-			const board = BoardFactory.create();
-			board.isSubBoard = false;
-			board.isPublic = false;
-
-			const userDtoMock = UserDtoFactory.create();
-			userDtoMock.isSAdmin = false;
-			userDtoMock.isAnonymous = true;
-
+			const board = BoardFactory.create({ isSubBoard: false, isPublic: false });
+			const userDtoMock = UserDtoFactory.create({ isSAdmin: false, isAnonymous: true });
 			const boardUser = BoardUserFactory.create();
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
-
 			getBoardUserServiceMock.getBoardUser.mockResolvedValue(boardUser);
+
+			//format columns to hideVotes that is called on clean board function
+			board.columns = hideVotesFromColumns(board.columns, userDtoMock._id);
 
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 
@@ -463,21 +461,31 @@ describe('GetBoardService', () => {
 		});
 
 		it('should return a board when boardIsPublic, boardUser is not found and userDto is not anonymous', async () => {
-			const board = BoardFactory.create();
-			board.isSubBoard = false;
-			board.isPublic = true;
-
-			const userDtoMock = UserDtoFactory.create();
-			userDtoMock.isSAdmin = false;
-			userDtoMock.isAnonymous = false;
+			const board = BoardFactory.create({ isSubBoard: false, isPublic: true });
+			const userDtoMock = UserDtoFactory.create({ isSAdmin: false, isAnonymous: false });
 
 			boardRepositoryMock.getBoardData.mockResolvedValue(board);
-
 			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
+
+			//format columns to hideVotes that is called on clean board function
+			board.columns = hideVotesFromColumns(board.columns, userDtoMock._id);
 
 			const boardResult = await boardService.getBoard(board._id, userDtoMock);
 
 			expect(boardResult.board).toEqual(board);
+		});
+
+		it('should throw error when boardIsPublic and creating a board user fails', async () => {
+			const board = BoardFactory.create({ isSubBoard: false, isPublic: true });
+			const userDtoMock = UserDtoFactory.create({ isSAdmin: false, isAnonymous: false });
+
+			boardRepositoryMock.getBoardData.mockResolvedValue(board);
+			getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce(null);
+			getBoardUserServiceMock.getBoardUserPopulated.mockResolvedValueOnce(null);
+
+			expect(async () => await boardService.getBoard(board._id, userDtoMock)).rejects.toThrow(
+				BadRequestException
+			);
 		});
 	});
 

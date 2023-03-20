@@ -3,7 +3,7 @@ import React from 'react';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { InnerContainer } from '@/components/Teams/styles';
+import { InnerContainer } from '@/styles/pages/pages.styles';
 import { BoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { useRouter } from 'next/router';

@@ -1,7 +1,6 @@
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { useSession } from 'next-auth/react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
@@ -10,7 +9,8 @@ import { membersListState } from '@/store/team/atom/team.atom';
 
 import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import { InnerContainer } from '../../styles';
+import { InnerContainer } from '@/styles/pages/pages.styles';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import NewJoinerTooltip from '../../../Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 import BoardRolePopover from '../../../Primitives/Popovers/BoardRolePopover/BoardRolePopover';
 
@@ -22,8 +22,8 @@ export type TeamMemberItemProps = {
 
 const TeamMemberItem = React.memo<TeamMemberItemProps>(
   ({ isTeamPage = false, member, hasPermissions = false }) => {
-    const { data: session } = useSession();
-    const canChangeRole = hasPermissions && session?.user.id !== member.user._id;
+    const { userId } = useCurrentSession();
+    const canChangeRole = hasPermissions && userId !== member.user._id;
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
