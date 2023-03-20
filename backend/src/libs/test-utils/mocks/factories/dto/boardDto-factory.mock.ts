@@ -1,13 +1,14 @@
 import faker from '@faker-js/faker';
-import { ColumnFactory } from './column-factory.mock';
-import Board from 'src/modules/boards/entities/board.schema';
-import { buildTestFactory } from './generic-factory.mock';
+import { BoardPhases } from 'src/libs/enum/board.phases';
+import BoardDto from 'src/modules/boards/dto/board.dto';
+import { buildTestFactory } from '../generic-factory.mock';
+import { ColumnDtoFactory } from './columnDto-factory.mock';
 
-const mockBoardData = () => {
+const mockBoardDto = () => {
 	return {
 		_id: faker.database.mongodbObjectId(),
 		title: faker.lorem.words(),
-		columns: ColumnFactory.createMany(3),
+		columns: ColumnDtoFactory.createMany(3),
 		isPublic: faker.datatype.boolean(),
 		maxVotes: faker.datatype.number({ min: 0, max: 6 }),
 		maxUsers: 0,
@@ -27,10 +28,15 @@ const mockBoardData = () => {
 		createdBy: faker.datatype.uuid(),
 		addcards: faker.datatype.boolean(),
 		postAnonymously: faker.datatype.boolean(),
-		createdAt: faker.datatype.datetime().toISOString()
+		createdAt: faker.datatype.datetime().toISOString(),
+		phase: faker.helpers.arrayElement([
+			BoardPhases.ADDCARDS,
+			BoardPhases.SUBMITTED,
+			BoardPhases.VOTINGPHASE
+		])
 	};
 };
 
-export const BoardFactory = buildTestFactory<Board>(() => {
-	return mockBoardData();
+export const BoardDtoFactory = buildTestFactory<BoardDto>(() => {
+	return mockBoardDto();
 });

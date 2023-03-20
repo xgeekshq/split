@@ -1,6 +1,11 @@
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import { UserDto } from 'src/modules/communication/dto/user.dto';
 
+export enum ForTeamDtoEnum {
+	TEAM = 'team',
+	SUBTEAM = 'sub-team'
+}
+
 export class TeamDto {
 	name!: string;
 
@@ -10,7 +15,7 @@ export class TeamDto {
 
 	channelId?: string;
 
-	type!: 'team' | 'sub-team';
+	type!: ForTeamDtoEnum;
 
 	for!: BoardRoles;
 

@@ -9,6 +9,7 @@ import {
 	IsString
 } from 'class-validator';
 import { BoardRoles } from 'src/libs/enum/board.roles';
+import User from 'src/modules/users/entities/user.schema';
 
 export default class BoardUserDto {
 	@ApiPropertyOptional()
@@ -23,10 +24,8 @@ export default class BoardUserDto {
 	role!: string;
 
 	@ApiProperty()
-	@IsMongoId()
-	@IsString()
 	@IsNotEmpty()
-	user!: string;
+	user!: string | User;
 
 	@ApiProperty()
 	@IsMongoId()
