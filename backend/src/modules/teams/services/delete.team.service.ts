@@ -4,9 +4,9 @@ import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.s
 import { TYPES } from '../interfaces/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import * as Boards from '../../boards/interfaces/types';
-import * as TeamUsers from '../../teamusers/interfaces/types';
+import * as TeamUsers from '../../teamUsers/interfaces/types';
 import { DeleteBoardServiceInterface } from 'src/modules/boards/interfaces/services/delete.board.service.interface';
-import { DeleteTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/delete.team.user.service.interface';
+import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 
 @Injectable()
 export default class DeleteTeamService implements DeleteTeamServiceInterface {

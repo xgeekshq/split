@@ -1,8 +1,8 @@
-import { GetTeamUserServiceInterface } from './../../teamusers/interfaces/services/get.team.user.service.interface';
+import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';

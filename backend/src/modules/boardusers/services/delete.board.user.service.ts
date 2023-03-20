@@ -1,4 +1,4 @@
-import { DeleteBoardUserServiceInterface } from './../interfaces/services/delete.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from '../interfaces/services/delete.board.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
 import { TYPES } from '../interfaces/types';

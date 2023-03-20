@@ -1,8 +1,8 @@
-import { BoardUserRepositoryInterface } from 'src/modules/boardusers/interfaces/repositories/board-user.repository.interface';
-import { GetBoardUserServiceInterface } from './../interfaces/services/get.board.user.service.interface';
+import { BoardUserRepositoryInterface } from 'src/modules/boardUsers/interfaces/repositories/board-user.repository.interface';
+import { GetBoardUserServiceInterface } from '../interfaces/services/get.board.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
-import BoardUser from 'src/modules/boardusers/entities/board.user.schema';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 
 @Injectable()
 export default class GetBoardUserService implements GetBoardUserServiceInterface {

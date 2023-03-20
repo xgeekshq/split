@@ -1,4 +1,4 @@
-import { DeleteBoardUserServiceInterface } from './../../boardusers/interfaces/services/delete.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from '../../boardUsers/interfaces/services/delete.board.user.service.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
@@ -8,7 +8,7 @@ import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
 import Board from '../entities/board.schema';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as CommunicationTypes from 'src/modules/communication/interfaces/types';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
 import { ArchiveChannelDataOptions } from 'src/modules/communication/dto/types';

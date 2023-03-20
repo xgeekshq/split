@@ -1,9 +1,9 @@
-import { GetTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/get.team.user.service.interface';
+import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { GetAllUsersWithTeamsUseCaseInterface } from '../interfaces/applications/get-all-users-with-teams.use-case.interface';
 import { UserWithTeams } from '../interfaces/type-user-with-teams';
 import { TYPES } from '../interfaces/types';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { sortAlphabetically } from '../utils/sortings';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';

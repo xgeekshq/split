@@ -1,4 +1,4 @@
-import { SessionInterface } from './../../../../libs/transactions/session.interface';
+import { SessionInterface } from '../../../../libs/transactions/session.interface';
 import { ObjectId } from 'mongoose';
 import Board from 'src/modules/boards/entities/board.schema';
 

@@ -1,8 +1,8 @@
-import { CreateTeamUserServiceInterface } from './../interfaces/services/create.team.user.service.interface';
+import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
 import { UpdateTeamUserServiceInterface } from '../interfaces/services/update.team.user.service.interface';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
-import TeamUserDto from '../../teamusers/dto/team.user.dto';
+import TeamUserDto from '../dto/team.user.dto';
 import TeamUser from '../entities/team.user.schema';
 import { TYPES } from '../interfaces/types';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';

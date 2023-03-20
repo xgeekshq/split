@@ -1,4 +1,4 @@
-import { GetTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/get.team.user.service.interface';
+import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 import {
 	CanActivate,
 	ExecutionContext,
@@ -7,7 +7,7 @@ import {
 	Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 
 @Injectable()
 export class TeamUserGuard implements CanActivate {

@@ -1,5 +1,5 @@
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import { CreateTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/create.team.user.service.interface';
+import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { CreateTeamDto } from '../dto/crate-team.dto';
@@ -8,7 +8,7 @@ import TeamUser from '../entities/team.user.schema';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TYPES } from '../interfaces/types';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 
 @Injectable()
 export default class CreateTeamService implements CreateTeamServiceInterface {
@@ -32,8 +32,8 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 			throw new HttpException(TEAM_ALREADY_EXISTS, HttpStatus.CONFLICT);
 		}
 
-		this.teamRepository.startTransaction();
-		this.createTeamUserService.startTransaction();
+		await this.teamRepository.startTransaction();
+		await this.createTeamUserService.startTransaction();
 
 		try {
 			const newTeam = await this.teamRepository.create({

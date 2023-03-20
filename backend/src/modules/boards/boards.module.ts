@@ -34,8 +34,8 @@ import {
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import { JwtRegister } from 'src/infrastructure/config/jwt.register';
-import BoardUsersModule from '../boardusers/boardusers.module';
-import TeamUsersModule from 'src/modules/teamusers/teamusers.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
+import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 
 @Module({
 	imports: [

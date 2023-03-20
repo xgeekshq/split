@@ -1,4 +1,4 @@
-import { getTeamUserService, teamUserRepository } from './../../teamusers/teamusers.providers';
+import { getTeamUserService, teamUserRepository } from '../../teamUsers/teamusers.providers';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,7 @@ import {
 	boardUserRepository,
 	createBoardUserService,
 	getBoardUserService
-} from 'src/modules/boardusers/boardusers.providers';
+} from 'src/modules/boardUsers/boardusers.providers';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { getTeamService, teamRepository } from 'src/modules/teams/providers';
 import { TYPES } from 'src/modules/users/interfaces/types';

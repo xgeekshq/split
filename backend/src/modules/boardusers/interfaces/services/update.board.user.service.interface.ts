@@ -1,5 +1,5 @@
 import { SessionInterface } from 'src/libs/transactions/session.interface';
-import BoardUser from 'src/modules/boardusers/entities/board.user.schema';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 
 export interface UpdateBoardUserServiceInterface extends SessionInterface {
 	updateBoardUserRole(boardId: string, userId: string, role: string): Promise<BoardUser>;

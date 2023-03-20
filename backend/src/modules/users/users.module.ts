@@ -18,7 +18,7 @@ import {
 	updateUserService,
 	userRepository
 } from './users.providers';
-import TeamUsersModule from '../teamusers/teamusers.module';
+import TeamUsersModule from '../teamUsers/teamusers.module';
 
 @Module({
 	imports: [

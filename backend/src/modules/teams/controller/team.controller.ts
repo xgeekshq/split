@@ -1,4 +1,4 @@
-import { CreateTeamUserUseCaseInterface } from '../../teamusers/interfaces/applications/create-team-user.use-case.interface';
+import { TeamUserUseCaseInterface } from './../../teamUsers/interfaces/applications/team-user.use-case.interface';
 import {
 	Body,
 	Controller,
@@ -44,20 +44,17 @@ import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagge
 import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
-import TeamUserDto from '../../teamusers/dto/team.user.dto';
-import UpdateTeamUserDto from '../../teamusers/dto/update.team.user.dto';
+import TeamUserDto from '../../teamUsers/dto/team.user.dto';
+import UpdateTeamUserDto from '../../teamUsers/dto/update.team.user.dto';
 import { TYPES } from '../interfaces/types';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
-import { CreateTeamUsersUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/create-team-users.use-case.interface';
-import { UpdateTeamUserUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/update-team-user.use-case.interface';
-import { AddAndRemoveTeamUsersUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/add-and-remove-team-users.use-case.interface';
-import { DeleteTeamUserUseCaseInterface } from 'src/modules/teamusers/interfaces/applications/delete-team-user.use-case.interface';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 
-const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
+const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions', permissions);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Teams')
@@ -72,15 +69,15 @@ export default class TeamsController {
 		@Inject(TYPES.applications.DeleteTeamApplication)
 		private deleteTeamApp: DeleteTeamApplicationInterface,
 		@Inject(TeamUsers.TYPES.applications.CreateTeamUserUseCase)
-		private createTeamUserUseCase: CreateTeamUserUseCaseInterface,
+		private createTeamUserUseCase: TeamUserUseCaseInterface<TeamUserDto, TeamUser>,
 		@Inject(TeamUsers.TYPES.applications.CreateTeamUsersUseCase)
-		private createTeamUsersUseCase: CreateTeamUsersUseCaseInterface,
+		private createTeamUsersUseCase: TeamUserUseCaseInterface<TeamUserDto[], TeamUser[]>,
 		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserUseCase)
-		private updateTeamUserUseCase: UpdateTeamUserUseCaseInterface,
+		private updateTeamUserUseCase: TeamUserUseCaseInterface<TeamUserDto, TeamUser>,
 		@Inject(TeamUsers.TYPES.applications.AddAndRemoveTeamUsersUseCase)
-		private addAndRemoveTeamUsersUseCase: AddAndRemoveTeamUsersUseCaseInterface,
+		private addAndRemoveTeamUsersUseCase: TeamUserUseCaseInterface<UpdateTeamUserDto, TeamUser[]>,
 		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserUseCase)
-		private deleteTeamUserUseCase: DeleteTeamUserUseCaseInterface
+		private deleteTeamUserUseCase: TeamUserUseCaseInterface<string, TeamUser>
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -155,7 +152,7 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Get('user')
-	getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
+	async getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
 		return this.getTeamApp.getTeamsOfUser(userId ?? request.user._id);
 	}
 
@@ -238,7 +235,7 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@TeamUserPermission([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Put(':teamId')
 	updateTeamUser(@Body() teamUserData: TeamUserDto) {
@@ -272,11 +269,11 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@TeamUserPermission([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Put('/:teamId/addAndRemove')
 	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
-		return this.addAndRemoveTeamUsersUseCase.execute(users.addUsers, users.removeUsers);
+		return this.addAndRemoveTeamUsersUseCase.execute(users);
 	}
 
 	@ApiOperation({ summary: 'Add team members' })
@@ -330,7 +327,7 @@ export default class TeamsController {
 		description: 'Forbidden',
 		type: ForbiddenResponse
 	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@TeamUserPermission([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
 	deleteTeam(@Param() { teamId }: TeamParams) {

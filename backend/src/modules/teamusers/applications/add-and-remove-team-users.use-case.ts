@@ -1,15 +1,17 @@
-import TeamUserDto from 'src/modules/teamusers/dto/team.user.dto';
+import { TeamUserUseCaseInterface } from './../../teamUsers/interfaces/applications/team-user.use-case.interface';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
-import { AddAndRemoveTeamUsersUseCaseInterface } from '../interfaces/applications/add-and-remove-team-users.use-case.interface';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
+import UpdateTeamUserDto from '../dto/update.team.user.dto';
 
 @Injectable()
-export class AddAndRemoveTeamUsersUseCase implements AddAndRemoveTeamUsersUseCaseInterface {
+export class AddAndRemoveTeamUsersUseCase
+	implements TeamUserUseCaseInterface<UpdateTeamUserDto, TeamUser[]>
+{
 	constructor(
 		@Inject(TYPES.repositories.TeamUserRepository)
 		private readonly teamUserRepository: TeamUserRepositoryInterface,
@@ -18,7 +20,7 @@ export class AddAndRemoveTeamUsersUseCase implements AddAndRemoveTeamUsersUseCas
 		@Inject(TYPES.services.DeleteTeamUserService)
 		private deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
-	async execute(addUsers: TeamUserDto[], removeUsers: string[]): Promise<TeamUser[]> {
+	async execute({ addUsers, removeUsers }: UpdateTeamUserDto): Promise<TeamUser[]> {
 		try {
 			let createdTeamUsers: TeamUser[] = [];
 

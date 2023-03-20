@@ -2,7 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
-import BoardUser from '../../boardusers/entities/board.user.schema';
+import BoardUser from '../../boardUsers/entities/board.user.schema';
 import BoardDto from './board.dto';
 
 export class UpdateBoardDto extends PartialType(BoardDto) {

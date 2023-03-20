@@ -1,4 +1,4 @@
-import BoardUser from 'src/modules/boardusers/entities/board.user.schema';
+import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import BoardUserDto from '../../dto/board.user.dto';
 
 export interface CreateBoardUserServiceInterface {

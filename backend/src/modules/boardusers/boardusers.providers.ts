@@ -1,5 +1,5 @@
-import { BoardUserRepository } from '../boardusers/repositories/board-user.repository';
-import CreateBoardUserService from '../boardusers/services/create.board.user.service';
+import { BoardUserRepository } from './repositories/board-user.repository';
+import CreateBoardUserService from './services/create.board.user.service';
 import { TYPES } from './interfaces/types';
 import DeleteBoardUserService from './services/delete.board.user.service';
 import GetBoardUserService from './services/get.board.user.service';

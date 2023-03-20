@@ -1,8 +1,8 @@
 import { LeanDocument } from 'mongoose';
 import { UpdateBoardDto } from '../../dto/update-board.dto';
 import { BoardDocument } from '../../entities/board.schema';
-import BoardUser from '../../../boardusers/entities/board.user.schema';
-import UpdateBoardUserDto from 'src/modules/boardusers/dto/update-board-user.dto';
+import BoardUser from '../../../boardUsers/entities/board.user.schema';
+import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 export interface UpdateBoardApplicationInterface {

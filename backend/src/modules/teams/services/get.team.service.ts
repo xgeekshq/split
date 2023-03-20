@@ -3,12 +3,12 @@ import { GetTeamServiceInterface } from '../interfaces/services/get.team.service
 import Team from '../entities/teams.schema';
 import { TYPES } from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as TeamUsers from 'src/modules/teamusers/interfaces/types';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import UserDto from 'src/modules/users/dto/user.dto';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import { GetTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/get.team.user.service.interface';
+import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {

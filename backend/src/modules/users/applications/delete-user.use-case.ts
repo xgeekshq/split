@@ -1,8 +1,8 @@
 import { DeleteUserUseCaseInterface } from '../interfaces/applications/delete-user.use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
-import { DeleteTeamUserServiceInterface } from 'src/modules/teamusers/interfaces/services/delete.team.user.service.interface';
-import * as TeamUser from 'src/modules/teamusers/interfaces/types';
+import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
+import * as TeamUser from 'src/modules/teamUsers/interfaces/types';
 import UserDto from '../dto/user.dto';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';

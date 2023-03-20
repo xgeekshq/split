@@ -15,8 +15,8 @@ export default class CreateTeamUserService implements CreateTeamUserServiceInter
 
 	async createTeamUsers(teamUsers: TeamUserDto[], teamId?: string): Promise<TeamUser[]> {
 		const teamUsersToSave = teamId
-			? teamUsers
-			: teamUsers.map((teamUser) => ({ ...teamUser, team: teamId }));
+			? teamUsers.map((teamUser) => ({ ...teamUser, team: teamId }))
+			: teamUsers;
 
 		const teamUsersSaved = await this.teamUserRepository.insertMany(teamUsersToSave);
 

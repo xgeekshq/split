@@ -1,4 +1,4 @@
-import TeamUserDto from 'src/modules/teamusers/dto/team.user.dto';
+import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
 

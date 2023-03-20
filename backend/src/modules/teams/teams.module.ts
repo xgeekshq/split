@@ -11,7 +11,7 @@ import {
 	getTeamService,
 	teamRepository
 } from './providers';
-import TeamUsersModule from 'src/modules/teamusers/teamusers.module';
+import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 
 @Module({
 	imports: [mongooseTeamModule, forwardRef(() => BoardsModule), TeamUsersModule],
