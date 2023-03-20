@@ -19,7 +19,8 @@ export const getAllUsersWithTeams = (
 export const updateUserIsAdminRequest = (user: UpdateUserIsAdmin): Promise<User> =>
   fetchData(`/users/sadmin/`, { method: 'PUT', data: user });
 
-export const getUser = (userId?: string): Promise<User> => fetchData(`/users/${userId}`);
+export const getUser = (userId?: string, context?: GetServerSidePropsContext): Promise<User> =>
+  fetchData(`/users/${userId}`, { context, serverSide: !!context });
 
 export const deleteUserRequest = (user: DeleteUser): Promise<Boolean> =>
   fetchData(`/users/${user.id}`, { method: 'DELETE' });

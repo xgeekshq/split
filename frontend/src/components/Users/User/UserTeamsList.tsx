@@ -1,11 +1,20 @@
 import React from 'react';
 
-import ListOfCards from './partials/ListOfCards';
+import { Team } from '@/types/team/team';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-type UserEditProps = {
-  isLoading: boolean;
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
+
+export type UserTeamsListProps = {
+  userTeams: Team[];
 };
 
-const UsersEdit = ({ isLoading }: UserEditProps) => <ListOfCards isLoading={isLoading} />;
+const UserTeamsList = ({ userTeams }: UserTeamsListProps) => (
+  <Flex direction="column" gap="8">
+    {userTeams.map((team) => (
+      <TeamItem key={team.id} team={team} />
+    ))}
+  </Flex>
+);
 
-export default UsersEdit;
+export default UserTeamsList;

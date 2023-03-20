@@ -4,11 +4,9 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import UsersEdit from '@/components/Users/User/UserTeamsList';
 import UserHeader from '@/components/Users/User/Header/Header';
 
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
+import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getTeamsOfUser } from '@/api/teamService';
 import { useSetRecoilState } from 'recoil';
@@ -18,9 +16,9 @@ import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import { ROUTES } from '@/utils/routes';
-
-// TODO:
-// - Remove the AutoFetch
+import { getUser } from '@/api/userService';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
+import TeamsList from '@/components/Teams/TeamsList/TeamList';
 
 const UserDetails = () => {
   const { replace } = useRouter();
@@ -30,41 +28,37 @@ const UserDetails = () => {
 
   // Hooks
   const {
-    fetchTeamsOfSpecificUser: { data, isFetching: fetchingTeams },
-  } = useTeam({ autoFetchTeamsOfSpecificUser: true });
+    getUserById: { data: userData, isFetching: fetchingUser },
+  } = useUser();
 
   const {
-    getUserById: { data: user },
-  } = useUser({ autoFetchGetUser: true });
+    fetchTeamsOfSpecificUser: { data: userTeams, isFetching: fetchingTeams },
+  } = useTeam();
 
   useEffect(() => {
-    if (!data) {
-      return;
-    }
+    if (userTeams) setTeamsListState(userTeams);
+  }, [userTeams, setTeamsListState]);
 
-    setTeamsListState(data);
-  }, [data, setTeamsListState]);
-
-  if (!data || !user) {
+  if (!userData || !userTeams) {
     replace(ROUTES.Users);
     return null;
   }
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
-      <UserHeader user={user} />
+      <UserHeader user={userData} />
       <Flex
         css={{ height: '100%', position: 'relative', overflowY: 'auto', pr: '$8' }}
         direction="column"
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {fetchingTeams ? (
+            {fetchingUser || fetchingTeams ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
             ) : (
-              <UsersEdit isLoading={fetchingTeams} />
+              <TeamsList teams={userTeams} />
             )}
           </QueryError>
         </Suspense>
@@ -75,19 +69,21 @@ const UserDetails = () => {
 
 UserDetails.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
 
-export const getServerSideProps: GetServerSideProps = requireAuthentication(
-  async (context: GetServerSidePropsContext) => {
-    const userId = String(context.query.userId);
+export const getServerSideProps: GetServerSideProps = requireAuthentication(async (context) => {
+  const userId = String(context.query.userId);
 
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context));
+  const queryClient = new QueryClient();
+  await Promise.all([
+    queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
+    queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context)),
+  ]);
 
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    };
-  },
-);
+  return {
+    props: {
+      key: userId,
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
+});
 
 export default UserDetails;
