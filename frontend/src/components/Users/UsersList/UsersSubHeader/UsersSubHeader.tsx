@@ -2,7 +2,7 @@ import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput'
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 
-type UsersSubHeaderProps = {
+export type UsersSubHeaderProps = {
   userAmount: number | undefined;
   search: string;
   handleSearchUser: (event: React.ChangeEvent<HTMLInputElement>) => void;

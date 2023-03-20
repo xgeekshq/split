@@ -12,7 +12,7 @@ import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
 import { ListTeams } from '../TeamsDialog/TeamsDialog';
 
-type UserHeaderProps = {
+export type UserHeaderProps = {
   user: User;
 };
 
