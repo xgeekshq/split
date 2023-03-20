@@ -1,5 +1,4 @@
 import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
-import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -18,7 +17,7 @@ import * as Boards from 'src/modules/boards/interfaces/types';
 import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
-import TeamUser, { TeamUserDocument } from 'src/modules/teams/entities/team.user.schema';
+import TeamUser from 'src/modules/teams/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../dto/board.user.dto';
@@ -27,16 +26,10 @@ import Board from '../entities/board.schema';
 import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import {
-	BadRequestException,
-	Inject,
-	Injectable,
-	Logger,
-	NotFoundException,
-	forwardRef
-} from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
-import { CREATE_FAILED, NOT_FOUND } from 'src/libs/exceptions/messages';
+import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 
 @Injectable()
 export default class CreateBoardService implements CreateBoardServiceInterface {
@@ -59,20 +52,22 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
 		const { team: teamId, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
-		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 		const boardUsersToCreate: BoardUserDto[] = [];
+		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			const newBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+			const createdBoard = await this.createBoard(
+				boardData,
+				userId,
+				false,
+				haveDividedBoards,
+				true
+			);
 
-			if (!newBoard) {
-				throw new Error(CREATE_FAILED);
-			}
-
-			let teamName: string;
+			let teamName;
 
 			if (teamId) {
 				teamName = await this.getTeamNameAndTeamUsers(
@@ -86,22 +81,29 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
 			}
 
-			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, newBoard._id, true);
+			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, createdBoard._id, true);
 
-			if (newBoard && recurrent && teamId && maxUsers && teamName === 'xgeeks' && !fromSchedule) {
-				this.addCronJobToBoard(String(newBoard._id), userId, teamId, maxUsers);
+			if (
+				createdBoard &&
+				recurrent &&
+				teamId &&
+				maxUsers &&
+				teamName === 'xgeeks' &&
+				!fromSchedule
+			) {
+				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
 			}
 
 			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
 			if (slackEnable && teamId && teamName === 'xgeeks') {
-				await this.callSlackCommunication(newBoard._id);
+				await this.callSlackCommunication(createdBoard._id);
 			}
 
 			await this.boardRepository.commitTransaction();
 			await this.createBoardUserService.commitTransaction();
 
-			return newBoard;
+			return createdBoard;
 		} catch (e) {
 			await this.boardRepository.abortTransaction();
 			await this.createBoardUserService.abortTransaction();
@@ -110,7 +112,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			await this.createBoardUserService.endSession();
 		}
 
-		throw new BadRequestException(CREATE_FAILED);
+		throw new CreateFailedException();
 	}
 
 	async splitBoardByTeam(
@@ -123,7 +125,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 		let teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
 
-		if (!teamUsers) throw new NotFoundException(NOT_FOUND);
+		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
 		teamUsers = this.updateTeamUserNewJoinerOrResponsibleStatus(teamUsers, teamId);
 
@@ -167,7 +169,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		return board._id.toString();
 	}
 
-	/* --------------- HELPERS --------------- */
+	// /* --------------- HELPERS --------------- */
 
 	private async getTeamNameAndTeamUsers(
 		teamId: string,
@@ -176,7 +178,9 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	) {
 		const team = await this.getTeamService.getTeam(teamId);
 
-		if (!team) throw new NotFoundException(NOT_FOUND);
+		if (!team) {
+			throw new NotFoundException(TEAM_NOT_FOUND);
+		}
 
 		await this.saveBoardUsersFromTeam(newUsers, teamId, responsibles);
 
@@ -220,59 +224,22 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		}
 	}
 
-	private async createDividedBoards(boards: BoardDto[], userId: string) {
-		const newBoardsIds = await Promise.allSettled(
+	private async createDividedBoards(boards: BoardDto[], userId: string, withSession?: boolean) {
+		const newBoardsIds = await Promise.all(
 			boards.map(async (board) => {
 				board.addCards = true;
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, false);
+				const { _id } = await this.createBoard(board, userId, true, false, withSession);
 
 				if (!isEmpty(users)) {
-					await this.createBoardUserService.saveBoardUsers(users, _id);
+					await this.createBoardUserService.saveBoardUsers(users, _id, withSession);
 				}
 
 				return _id;
 			})
 		);
 
-		return newBoardsIds.flatMap((result) => (result.status === 'fulfilled' ? [result.value] : []));
-	}
-
-	private async createBoard(
-		boardData: BoardDto,
-		userId: string,
-		isSubBoard = false,
-		haveSubBoards = true
-	): Promise<Board> {
-		const { dividedBoards = [], team } = boardData;
-
-		if (haveSubBoards) {
-			/**
-			 * Add in each divided board the team id (from main board)
-			 */
-			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
-				...dividedBoard,
-				team,
-				slackEnable: boardData.slackEnable,
-				hideCards: true,
-				postAnonymously: true
-			}));
-
-			return this.boardRepository.create<BoardDto>({
-				...boardData,
-				createdBy: userId,
-				dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId),
-				addCards: false,
-				isSubBoard
-			});
-		}
-
-		return this.boardRepository.create<BoardDto>({
-			...boardData,
-			dividedBoards: [],
-			createdBy: userId,
-			isSubBoard
-		});
+		return newBoardsIds;
 	}
 
 	private async saveBoardUsersFromTeam(
@@ -283,7 +250,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const usersIds: string[] = [];
 		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
 
-		if (!teamUsers) throw new NotFoundException(NOT_FOUND);
+		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
 		teamUsers.forEach((teamUser) => {
 			const user = teamUser.user as User;
@@ -304,14 +271,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
 			? BoardRoles.RESPONSIBLE
 			: teamUser.role;
-	}
-
-	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
-		this.createSchedulesService.addCronJob({
-			day: getDay(),
-			month: getNextMonth() - 1,
-			addCronJobDto
-		});
 	}
 
 	private verifyIfIsNewJoiner = (joinedAt: Date, providerAccountCreatedAt?: Date) => {
@@ -434,7 +393,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 	private handleSplitBoards = (
 		maxTeams: number,
-		teamMembers: LeanDocument<TeamUserDocument>[],
+		teamMembers: TeamUser[],
 		responsibles: string[]
 	) => {
 		const subBoards: BoardDto[] = [];
@@ -508,6 +467,80 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			newBoard.users = result;
 			subBoards.push(newBoard);
+		});
+	}
+
+	private async createBoard(
+		boardData: BoardDto,
+		userId: string,
+		isSubBoard = false,
+		haveSubBoards = true,
+		withSession?: boolean
+	): Promise<Board> {
+		const { dividedBoards = [], team } = boardData;
+
+		if (haveSubBoards) {
+			/**
+			 * Add in each divided board the team id (from main board)
+			 */
+			const dividedBoardsWithTeam = dividedBoards.map((dividedBoard) => ({
+				...dividedBoard,
+				team,
+				slackEnable: boardData.slackEnable,
+				hideCards: true,
+				postAnonymously: true
+			}));
+
+			const createSplitBoard = await this.boardRepository.insertMany<BoardDto>(
+				[
+					{
+						...boardData,
+						createdBy: userId,
+						dividedBoards: await this.createDividedBoards(
+							dividedBoardsWithTeam,
+							userId,
+							withSession
+						),
+						addCards: false,
+						isSubBoard
+					}
+				],
+				withSession
+			);
+
+			if (!createSplitBoard) {
+				this.logger.error('Create board user failed');
+				throw new CreateFailedException();
+			}
+
+			return createSplitBoard[0];
+		}
+
+		const createRegularBoard = await this.boardRepository.insertMany<BoardDto>(
+			[
+				{
+					...boardData,
+					dividedBoards: [],
+					createdBy: userId,
+					isSubBoard
+				}
+			],
+			withSession
+		);
+
+		if (!createRegularBoard) {
+			this.logger.error('Create board user failed');
+			throw new CreateFailedException();
+		}
+
+		return createRegularBoard[0];
+	}
+
+	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
+		this.createSchedulesService.addCronJob({
+			day: getDay(),
+			month: getNextMonth() - 1,
+			addCronJobDto
 		});
 	}
 }

@@ -1,6 +1,6 @@
 import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -37,6 +37,7 @@ import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfac
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
@@ -85,7 +86,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
-			throw new NotFoundException('Board not found!');
+			throw new BoardNotFoundException();
 		}
 
 		// Destructuring board/boardData variables
@@ -171,7 +172,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		]);
 
 		if (!subBoard || !board || subBoard.submitedByUser) {
-			throw new NotFoundException('Board or subBoard not found');
+			throw new BoardNotFoundException();
 		}
 
 		const columnsWithMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
