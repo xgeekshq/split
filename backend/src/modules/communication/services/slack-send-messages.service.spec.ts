@@ -42,7 +42,7 @@ describe('SlackSendMessageService', () => {
 		expect(service).toBeDefined();
 	});
 
-	it('should call producer.send with SlackMessageType 1 time', async () => {
+	it('should call sendMessageProducer.send with SlackMessageType once', async () => {
 		await service.execute(slackMessageType);
 		expect(slackSendMessageProducerMock.send).toHaveBeenNthCalledWith(1, slackMessageType);
 	});

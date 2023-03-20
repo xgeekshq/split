@@ -6,7 +6,7 @@ import { SlackDisabledCommunicationService } from './slack-disabled-communicatio
 
 const spyLoggerWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation(jest.fn);
 
-describe('SlackCommunicationService', () => {
+describe('SlackDisabledCommunicationService', () => {
 	let service: CommunicationServiceInterface;
 
 	beforeAll(async () => {

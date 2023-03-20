@@ -65,7 +65,7 @@ describe('SlackCommunicationService', () => {
 		expect(slackArchiveChannelProducerMock.add).toHaveBeenNthCalledWith(1, boardMock);
 	});
 
-	it('should call slackResponsibleProducer.add once with a boardType', async () => {
+	it('should call slackResponsibleProducer.add once with a changeResponsibleType', async () => {
 		const changeResponsible = {
 			newResponsibleEmail: 'someEmail@gmail.com',
 			previousResponsibleEmail: 'someEmail@gmail.com',
