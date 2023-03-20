@@ -173,7 +173,10 @@ export class BoardRepository
 				$set: { columns: newColumns }
 			},
 			{ new: true },
-			null,
+			{
+				path: 'dividedBoards',
+				select: 'submitedByUser'
+			},
 			withSession
 		);
 	}
