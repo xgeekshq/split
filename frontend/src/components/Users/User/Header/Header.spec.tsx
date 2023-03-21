@@ -27,7 +27,6 @@ describe('Components/Users/User/Header', () => {
 
   it('should render breadcrumbs correctly', async () => {
     // Arrange
-    // Arrange
     const user = UserFactory.create();
 
     // Act

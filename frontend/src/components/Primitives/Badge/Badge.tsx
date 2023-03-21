@@ -51,7 +51,7 @@ const Badge = styled('div', {
     },
     pill: {
       true: {
-        borderRadius: '50rem',
+        borderRadius: '$800',
       },
     },
   },
