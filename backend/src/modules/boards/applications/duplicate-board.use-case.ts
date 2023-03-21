@@ -1,14 +1,17 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { CreateBoardServiceInterface } from 'src/modules/boards/interfaces/services/create.board.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
-import { BoardRoles } from 'src/modules/communication/dto/types';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as Users from 'src/modules/users/interfaces/types';
 import { Inject, Injectable } from '@nestjs/common';
+import BoardDto from '../dto/board.dto';
+import BoardUserDto from '../dto/board.user.dto';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
+import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
 export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId: string }, Board> {
@@ -17,8 +20,10 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 		private getBoardService: GetBoardServiceInterface,
 		@Inject(Users.TYPES.services.GetUserService)
 		private getUserService: GetUserServiceInterface,
-		@Inject(TYPES.services.CreateBoardService)
-		private createBoardService: CreateBoardServiceInterface
+		@Inject(TYPES.repositories.BoardRepository)
+		private readonly boardRepository: BoardRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.CreateBoardUserService)
+		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
 	async execute({ boardId, userId }) {
@@ -32,19 +37,14 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 			strategy
 		});
 
-		const users: any[] = [];
-		const responsibles: string[] = [];
-
+		const users: BoardUserDto[] = [];
 		board.users.forEach((user) => {
-			users.push({
-				user: user._id,
-				role: user.role,
-				votesCount: user.votesCount
-			});
+			delete user._id;
 
-			if (user.role === BoardRoles.RESPONSIBLE) {
-				responsibles.push(user._id!);
-			}
+			users.push({
+				...user,
+				user: user.user._id
+			});
 		});
 
 		const columns = board.columns.map((column: Column) => {
@@ -83,20 +83,21 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 			};
 		});
 
-		return await this.createBoardService.create(
-			{
-				...board,
-				_id: undefined,
-				id: undefined,
-				columns,
-				users,
-				title: board.title + ' copy',
-				team: board.team._id,
-				responsibles,
-				slackEnable: false,
-				dividedBoards: []
-			},
-			userId
-		);
+		const newBoard = await this.boardRepository.create<BoardDto>({
+			...board,
+			_id: undefined,
+			id: undefined,
+			users,
+			columns,
+			title: board.title + ' copy',
+			team: board.team._id,
+			slackEnable: false,
+			isSubBoard: false,
+			dividedBoards: []
+		});
+
+		await this.createBoardUserService.saveBoardUsers(users, newBoard._id);
+
+		return newBoard;
 	}
 }
