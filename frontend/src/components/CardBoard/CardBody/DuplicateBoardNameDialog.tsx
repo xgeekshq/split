@@ -12,6 +12,7 @@ import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import SchemaDuplicateBoard from '@/schema/schemaDuplicateBoardForm';
 import { joiResolver } from '@hookform/resolvers/joi';
 
@@ -70,7 +71,8 @@ const DuplicateBoardNameDialog = ({
               handleClose();
             })}
           >
-            <Flex>
+            <Flex direction="column" gap={8}>
+              <Text>Choose a name for the new duplicated board:</Text>
               <Input id="title" maxChars="45" placeholder="Board title" type="text" />
             </Flex>
             <Flex css={{ mt: '$32' }} gap="24" justify="end">
