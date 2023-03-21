@@ -151,18 +151,11 @@ const UserListDialog = React.memo<UserListDialogProps>(
             ))}
           </Flex>
         </Flex>
-        <Flex
-          justify="end"
-          align="center"
-          css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
-        >
-          <Dialog.Footer
-            handleAffirmative={handleUpdateUsers}
-            handleClose={handleClose}
-            affirmativeLabel="Update"
-            showSeparator={false}
-          />
-        </Flex>
+        <Dialog.Footer
+          handleAffirmative={handleUpdateUsers}
+          handleClose={handleClose}
+          affirmativeLabel="Update"
+        />
       </Dialog>
     );
   },

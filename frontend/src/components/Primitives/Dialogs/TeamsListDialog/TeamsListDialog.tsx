@@ -1,24 +1,51 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import { TeamChecked } from '@/types/team/team';
 import SearchInput from '../../Inputs/SearchInput/SearchInput';
 import Flex from '../../Layout/Flex/Flex';
 import Dialog from '../Dialog/Dialog';
 import Text from '../../Text/Text';
 import Separator from '../../Separator/Separator';
+import Checkbox from '../../Inputs/Checkboxes/Checkbox/Checkbox';
 
 type TeamListDialogProps = {
+  teamList: TeamChecked[];
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  handleAddTeams: () => void;
-  handleClose: () => void;
+  handleAddTeams: (updatedTeams: TeamChecked[]) => void;
 };
 
-const TeamListDialog = ({
-  isOpen,
-  setIsOpen,
-  handleAddTeams,
-  handleClose,
-}: TeamListDialogProps) => {
+const TeamsListDialog = ({ teamList, isOpen, setIsOpen, handleAddTeams }: TeamListDialogProps) => {
+  const [teams, setTeams] = useState<TeamChecked[]>([]);
   const [search, setSearch] = useState<string>('');
+
+  // Filter Teams
+  const filteredTeams = useMemo(() => {
+    const input = search.toLowerCase().trim();
+
+    if (!input) {
+      return teams;
+    }
+
+    return teams.filter((team) => team.name.toLowerCase().trim().includes(input));
+  }, [search, teams]);
+
+  // Checks Teams
+  const handleChecked = (id: string) => {
+    const updateCheckedTeams = teams.map((team) =>
+      team._id === id ? { ...team, isChecked: !team.isChecked } : team,
+    );
+
+    setTeams(updateCheckedTeams);
+  };
+
+  const saveUpdatedTeams = () => {
+    const checkedTeams = teams.filter((t) => t.isChecked);
+    handleAddTeams(checkedTeams);
+  };
+
+  useEffect(() => {
+    if (teamList) setTeams(teamList);
+  }, [teamList]);
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -52,16 +79,28 @@ const TeamListDialog = ({
         css={{ height: '100%', overflowY: 'auto', py: '$16' }}
       >
         <Flex css={{ px: '$32' }} direction="column" gap={20}>
-          List
+          {filteredTeams?.map((team) => (
+            <Flex key={team._id} align="center">
+              <Flex css={{ flex: 1 }}>
+                <Checkbox
+                  checked={team.isChecked}
+                  size="md"
+                  id={team._id}
+                  label={team.name}
+                  handleChange={() => handleChecked(team._id)}
+                />
+              </Flex>
+            </Flex>
+          ))}
         </Flex>
       </Flex>
       <Dialog.Footer
-        handleAffirmative={handleAddTeams}
-        handleClose={handleClose}
+        handleAffirmative={saveUpdatedTeams}
+        handleClose={() => setIsOpen(false)}
         affirmativeLabel="Add"
       />
     </Dialog>
   );
 };
 
-export default TeamListDialog;
+export default TeamsListDialog;

@@ -8,9 +8,9 @@ import UserHeader from '@/components/Users/User/Header/Header';
 
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getTeamsOfUser } from '@/api/teamService';
-import { useSetRecoilState } from 'recoil';
-import { userTeamsListState } from '@/store/team/atom/team.atom';
+import { getTeamsOfUser, getTeamsUserIsNotMemberRequest } from '@/api/teamService';
+import { useRecoilState } from 'recoil';
+import { teamsListState } from '@/store/team/atom/team.atom';
 import useTeam from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
@@ -24,7 +24,7 @@ const UserDetails = () => {
   const { replace } = useRouter();
 
   // Recoil States
-  const setTeamsListState = useSetRecoilState(userTeamsListState);
+  const [userTeamsList, setUserTeamsList] = useRecoilState(teamsListState);
 
   // Hooks
   const {
@@ -36,8 +36,8 @@ const UserDetails = () => {
   } = useTeam();
 
   useEffect(() => {
-    if (userTeams) setTeamsListState(userTeams);
-  }, [userTeams, setTeamsListState]);
+    if (userTeams) setUserTeamsList(userTeams);
+  }, [userTeams, setUserTeamsList]);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -58,7 +58,7 @@ const UserDetails = () => {
                 <Dots />
               </Flex>
             ) : (
-              <TeamsList teams={userTeams} />
+              <TeamsList teams={userTeamsList} />
             )}
           </QueryError>
         </Suspense>
@@ -76,6 +76,9 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
   await Promise.all([
     queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
     queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context)),
+    queryClient.prefetchQuery(['teamsUserIsNotMember', userId], () =>
+      getTeamsUserIsNotMemberRequest(userId, context),
+    ),
   ]);
 
   return {
