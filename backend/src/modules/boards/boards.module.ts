@@ -9,7 +9,7 @@ import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
 import { Module, forwardRef } from '@nestjs/common';
-import BoardUsersModule from '../boardusers/boardusers.module';
+import BoardUsersModule from 'src/modules/boardusers/boardusers.module';
 import { CardsModule } from '../cards/cards.module';
 import {
 	afterUserPausedTimerSubscriber,

@@ -1,5 +1,5 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
@@ -7,7 +7,7 @@ import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/g
 import * as Users from 'src/modules/users/interfaces/types';
 import { Inject, Injectable } from '@nestjs/common';
 import BoardDto from '../dto/board.dto';
-import BoardUserDto from '../dto/board.user.dto';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';

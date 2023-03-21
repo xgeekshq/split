@@ -52,8 +52,8 @@ import {
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
 import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import BoardDto from '../dto/board.dto';
-import UpdateBoardUserDto from '../dto/update-board-user.dto';
-import { UpdateBoardDto } from '../dto/update-board.dto';
+import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
