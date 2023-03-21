@@ -1,6 +1,11 @@
 import { GetServerSidePropsContext } from 'next';
 
-import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from '@/types/board/board';
+import BoardType, {
+  CreateBoardDto,
+  DuplicateBoardType,
+  GetBoardResponse,
+  UpdateBoardType,
+} from '@/types/board/board';
 import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
 import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
@@ -23,8 +28,11 @@ import fetchData from '@/utils/fetchData';
 export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType> =>
   fetchData(`/boards`, { method: 'POST', data: newBoard });
 
-export const duplicateBoardRequest = (boardId: string): Promise<BoardType> =>
-  fetchData(`/boards/duplicate/${boardId}`, { method: 'POST' });
+export const duplicateBoardRequest = ({
+  boardId,
+  boardTitle,
+}: DuplicateBoardType): Promise<BoardType> =>
+  fetchData(`/boards/duplicate/${boardId}`, { method: 'POST', data: { boardTitle } });
 
 export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },

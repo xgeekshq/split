@@ -12,6 +12,7 @@ import BoardType from '@/types/board/board';
 import isEmpty from '@/utils/isEmpty';
 
 import CountCards from './CountCards';
+import DuplicateBoardNameDialog from './DuplicateBoardNameDialog';
 
 type CardEndProps = {
   board: BoardType;
@@ -81,8 +82,8 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
       }
     };
 
-    const handleDuplicateBoard = () => {
-      duplicate(board._id);
+    const handleDuplicateBoard = (boardTitle: string) => {
+      duplicate({ boardId: board._id, boardTitle });
     };
 
     if (isDashboard) {
@@ -115,14 +116,10 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
             <Flex align="center" css={{ ml: '$24' }} gap="24">
               <Separator orientation="vertical" size="lg" css={{ ml: '$8' }} />
               {isEmpty(board.dividedBoards) && (
-                <Button isIcon size="sm" onClick={handleDuplicateBoard}>
-                  <Icon
-                    name="clone"
-                    css={{
-                      color: '$primary400',
-                    }}
-                  />
-                </Button>
+                <DuplicateBoardNameDialog
+                  handleDuplicateBoard={handleDuplicateBoard}
+                  boardTitle={title}
+                />
               )}
               <ConfirmationDialog
                 title="Delete board"

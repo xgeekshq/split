@@ -1,5 +1,6 @@
 import BoardType, {
   CreateBoardDto,
+  DuplicateBoardType,
   GetBoardResponse,
   PhaseChangeEventType,
   UpdateBoardType,
@@ -11,7 +12,7 @@ import UpdateBoardPhaseDto from './updateBoardPhase.dto';
 
 export default interface UseBoardType {
   createBoard: UseMutationResult<BoardType, unknown, CreateBoardDto, unknown>;
-  duplicateBoard: UseMutationResult<BoardType, unknown, string, unknown>;
+  duplicateBoard: UseMutationResult<BoardType, unknown, DuplicateBoardType, unknown>;
   updateBoard: UseMutationResult<
     BoardType,
     unknown,

@@ -14,7 +14,9 @@ import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 
 @Injectable()
-export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId: string }, Board> {
+export class DuplicateBoardUseCase
+	implements UseCase<{ boardId: string; userId: string; boardTitle: string }, Board>
+{
 	constructor(
 		@Inject(TYPES.services.GetBoardService)
 		private getBoardService: GetBoardServiceInterface,
@@ -26,7 +28,7 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
-	async execute({ boardId, userId }) {
+	async execute({ boardId, userId, boardTitle }) {
 		const { _id, firstName, lastName, email, strategy } = await this.getUserService.getById(userId);
 
 		const { board }: { board: any } = await this.getBoardService.getBoard(boardId, {
@@ -89,7 +91,7 @@ export class DuplicateBoardUseCase implements UseCase<{ boardId: string; userId:
 			id: undefined,
 			users,
 			columns,
-			title: board.title + ' copy',
+			title: boardTitle,
 			team: board.team._id,
 			slackEnable: false,
 			isSubBoard: false,

@@ -72,7 +72,10 @@ export default class BoardsController {
 		@Inject(TYPES.applications.CreateBoardApplication)
 		private createBoardApp: CreateBoardApplicationInterface,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
-		private duplicateBoardUseCase: UseCase<{ boardId: string; userId: string }, Board>,
+		private duplicateBoardUseCase: UseCase<
+			{ boardId: string; userId: string; boardTitle: string },
+			Board
+		>,
 		@Inject(TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.UpdateBoardApplication)
@@ -130,8 +133,16 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Post('/duplicate/:boardId')
-	async duplicateBoard(@Req() request: RequestWithUser, @Param() { boardId }: BaseParam) {
-		const board = await this.duplicateBoardUseCase.execute({ boardId, userId: request.user._id });
+	async duplicateBoard(
+		@Req() request: RequestWithUser,
+		@Param() { boardId }: BaseParam,
+		@Body() { boardTitle }: { boardTitle: string }
+	) {
+		const board = await this.duplicateBoardUseCase.execute({
+			boardId,
+			userId: request.user._id,
+			boardTitle
+		});
 
 		if (!board) throw new BadRequestException(INSERT_FAILED);
 

@@ -1,4 +1,5 @@
-import { User, GuestUser } from '@/types/user/user';
+import { GuestUser, User } from '@/types/user/user';
+
 import ColumnType, { CreateColumn } from '../column';
 import { Team } from '../team/team';
 import { BoardUser, BoardUserDto, BoardUserToAdd } from './board.user';
@@ -65,6 +66,10 @@ export interface CreateBoardDto extends Omit<BoardToAdd, 'dividedBoards' | 'user
   users: BoardUserDto[];
   maxUsers?: number;
 }
+export type DuplicateBoardType = {
+  boardId: string;
+  boardTitle: string;
+};
 
 export type UpdateBoardType = {
   _id: string;
