@@ -372,6 +372,55 @@ describe('GetUpdateBoardService', () => {
 			);
 		});
 
+		it('should throw an error if the boardRepository.startTransaction fails', async () => {
+			const userId = faker.datatype.uuid();
+			const subBoards = BoardFactory.createMany(2, [
+				{ isSubBoard: true, boardNumber: 1, submitedByUser: userId, submitedAt: new Date() },
+				{ isSubBoard: true, boardNumber: 2 }
+			]);
+			const board = BoardFactory.create({
+				isSubBoard: false,
+				slackEnable: true,
+				slackChannelId: faker.datatype.uuid(),
+				dividedBoards: subBoards
+			});
+
+			boardRepositoryMock.getBoard.mockResolvedValueOnce(subBoards[1]);
+			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
+
+			//mocks update of subBoard that is being merged
+			const subBoardUpdated = { ...subBoards[1], submitedByUser: userId, submitedAt: new Date() };
+			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(subBoardUpdated);
+
+			//merges columns of the sub-boards to the main board
+			const newSubColumnsSubBoard_1 = generateNewSubColumns(subBoards[0]);
+			const newSubColumnsSubBoard_2 = generateNewSubColumns(subBoardUpdated);
+
+			const mergeSubBoard_1 = {
+				...board,
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_1
+				)
+			};
+
+			const boardResult = {
+				...mergeSubBoard_1,
+				columns: mergeCardsFromSubBoardColumnsIntoMainBoard(
+					[...board.columns],
+					newSubColumnsSubBoard_2
+				),
+				dividedBoards: [subBoards[0], subBoardUpdated]
+			};
+
+			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(boardResult);
+			boardRepositoryMock.commitTransaction.mockRejectedValue('some error');
+
+			expect(
+				async () => await boardService.mergeBoards(subBoards[1]._id, userId)
+			).rejects.toThrowError(UpdateFailedException);
+		});
+
 		it('should call the slackCommunicationService.executeMergeBoardNotification if the board has slackChannelId and slackEnable', async () => {
 			const userId = faker.datatype.uuid();
 			const subBoards = BoardFactory.createMany(2, [
@@ -414,6 +463,7 @@ describe('GetUpdateBoardService', () => {
 			};
 
 			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(boardResult);
+			boardRepositoryMock.commitTransaction.mockResolvedValueOnce(null);
 
 			await boardService.mergeBoards(subBoards[1]._id, userId);
 
@@ -434,6 +484,7 @@ describe('GetUpdateBoardService', () => {
 			boardRepositoryMock.getBoardByQuery.mockResolvedValueOnce(board);
 			boardRepositoryMock.updateMergedSubBoard.mockResolvedValueOnce(subBoard);
 			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(board);
+			boardRepositoryMock.commitTransaction.mockResolvedValueOnce(null);
 
 			await boardService.mergeBoards(subBoard._id, userId, socketId);
 
@@ -482,6 +533,7 @@ describe('GetUpdateBoardService', () => {
 			};
 
 			boardRepositoryMock.updateMergedBoard.mockResolvedValueOnce(boardResult);
+			boardRepositoryMock.commitTransaction.mockResolvedValueOnce(null);
 
 			const result = await boardService.mergeBoards(subBoards[0]._id, userId);
 

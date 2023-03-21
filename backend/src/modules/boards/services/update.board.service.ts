@@ -176,58 +176,62 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		}
 
 		const columnsWithMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
+		let mergedBoard;
 
 		await this.boardRepository.startTransaction();
+
 		try {
-			const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
-				subBoardId,
-				userId,
-				true
-			);
+			try {
+				const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
+					subBoardId,
+					userId,
+					true
+				);
 
-			if (!updatedMergedSubBoard) {
-				this.logger.error('Update of the subBoard to be merged failed');
+				if (!updatedMergedSubBoard) {
+					this.logger.error('Update of the subBoard to be merged failed');
+					throw new UpdateFailedException();
+				}
+
+				mergedBoard = await this.boardRepository.updateMergedBoard(
+					board._id,
+					columnsWithMergedCards,
+					true
+				);
+
+				if (!mergedBoard) {
+					this.logger.error('Update of the merged board failed');
+					throw new UpdateFailedException();
+				}
+
+				if (board.slackChannelId && board.slackEnable) {
+					this.slackCommunicationService.executeMergeBoardNotification({
+						responsiblesChannelId: board.slackChannelId,
+						teamNumber: subBoard.boardNumber,
+						isLastSubBoard: await this.checkIfIsLastBoardToMerge(
+							mergedBoard.dividedBoards as Board[]
+						),
+						boardId: subBoardId,
+						mainBoardId: board._id
+					});
+				}
+
+				if (socketId) {
+					this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
+				}
+			} catch (e) {
+				await this.boardRepository.abortTransaction();
 				throw new UpdateFailedException();
-			}
-
-			const mergedBoard = await this.boardRepository.updateMergedBoard(
-				board._id,
-				columnsWithMergedCards,
-				true
-			);
-
-			if (!mergedBoard) {
-				this.logger.error('Update of the merged board failed');
-				throw new UpdateFailedException();
-			}
-
-			if (board.slackChannelId && board.slackEnable) {
-				this.slackCommunicationService.executeMergeBoardNotification({
-					responsiblesChannelId: board.slackChannelId,
-					teamNumber: subBoard.boardNumber,
-					isLastSubBoard: await this.checkIfIsLastBoardToMerge(
-						mergedBoard.dividedBoards as Board[]
-					),
-					boardId: subBoardId,
-					mainBoardId: board._id
-				});
-			}
-
-			if (socketId) {
-				this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
 			}
 
 			await this.boardRepository.commitTransaction();
-			await this.boardRepository.endSession();
 
 			return mergedBoard;
 		} catch (e) {
-			await this.boardRepository.abortTransaction();
+			throw new UpdateFailedException();
 		} finally {
 			await this.boardRepository.endSession();
 		}
-
-		throw new UpdateFailedException();
 	}
 
 	updateChannelId(teams: TeamDto[]) {

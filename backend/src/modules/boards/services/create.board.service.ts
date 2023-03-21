@@ -59,43 +59,55 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const boardUsersToCreate: BoardUserDto[] = [];
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 
+		let createdBoard;
+
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			const createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+			try {
+				createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 
-			let teamName;
+				let teamName;
 
-			if (teamId) {
-				teamName = await this.getTeamNameAndTeamUsers(
-					teamId,
+				if (teamId) {
+					teamName = await this.getTeamNameAndTeamUsers(
+						teamId,
+						boardUsersToCreate,
+						boardData.responsibles
+					);
+				}
+
+				if (!haveDividedBoards && !teamId) {
+					this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
+				}
+
+				await this.createBoardUserService.saveBoardUsers(
 					boardUsersToCreate,
-					boardData.responsibles
+					createdBoard._id,
+					true
 				);
-			}
 
-			if (!haveDividedBoards && !teamId) {
-				this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
-			}
+				if (
+					createdBoard &&
+					recurrent &&
+					teamId &&
+					maxUsers &&
+					teamName === 'xgeeks' &&
+					!fromSchedule
+				) {
+					this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
+				}
 
-			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, createdBoard._id, true);
+				this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-			if (
-				createdBoard &&
-				recurrent &&
-				teamId &&
-				maxUsers &&
-				teamName === 'xgeeks' &&
-				!fromSchedule
-			) {
-				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
-			}
-
-			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
-
-			if (slackEnable && teamId && teamName === 'xgeeks') {
-				await this.callSlackCommunication(createdBoard._id);
+				if (slackEnable && teamId && teamName === 'xgeeks') {
+					await this.callSlackCommunication(createdBoard._id);
+				}
+			} catch (e) {
+				await this.boardRepository.abortTransaction();
+				await this.createBoardUserService.abortTransaction();
+				throw new CreateFailedException();
 			}
 
 			await this.boardRepository.commitTransaction();
@@ -103,13 +115,11 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			return createdBoard;
 		} catch (e) {
-			await this.boardRepository.abortTransaction();
-			await this.createBoardUserService.abortTransaction();
+			throw new CreateFailedException();
 		} finally {
 			await this.boardRepository.endSession();
 			await this.createBoardUserService.endSession();
 		}
-		throw new CreateFailedException();
 	}
 
 	async splitBoardByTeam(
@@ -484,16 +494,14 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				isSubBoard: true
 			}));
 
-			const createSplitBoard = await this.boardRepository.insertMany<BoardDto>(
-				[
-					{
-						...boardData,
-						createdBy: userId,
-						dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam),
-						addCards: false,
-						isSubBoard
-					}
-				],
+			const createSplitBoard = await this.boardRepository.create<BoardDto>(
+				{
+					...boardData,
+					createdBy: userId,
+					dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam),
+					addCards: false,
+					isSubBoard
+				},
 				true
 			);
 
@@ -502,18 +510,16 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				throw new CreateFailedException();
 			}
 
-			return createSplitBoard[0];
+			return createSplitBoard;
 		}
 
-		const createRegularBoard = await this.boardRepository.insertMany<BoardDto>(
-			[
-				{
-					...boardData,
-					dividedBoards: [],
-					createdBy: userId,
-					isSubBoard
-				}
-			],
+		const createRegularBoard = await this.boardRepository.create<BoardDto>(
+			{
+				...boardData,
+				dividedBoards: [],
+				createdBy: userId,
+				isSubBoard
+			},
 			true
 		);
 
@@ -522,7 +528,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			throw new CreateFailedException();
 		}
 
-		return createRegularBoard[0];
+		return createRegularBoard;
 	}
 
 	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
