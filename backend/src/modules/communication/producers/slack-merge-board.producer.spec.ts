@@ -40,12 +40,12 @@ describe('SlackMergeBoardProducer', () => {
 		expect(producer).toBeDefined();
 	});
 
-	it('should add boardType to queue', async () => {
+	it('should add mergeBoardType to queue', async () => {
 		await producer.add(mockedMergeBoardType);
 		expect(queueMock.add).toHaveBeenNthCalledWith(1, mockedMergeBoardType);
 	});
 
-	it('should call logger and containt board id', async () => {
+	it('should call logger and containt team Number id', async () => {
 		queueMock.add.mockResolvedValue(job as unknown as Job<BoardType>);
 
 		await producer.add(mockedMergeBoardType);
