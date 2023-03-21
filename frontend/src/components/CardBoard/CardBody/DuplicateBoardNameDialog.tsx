@@ -15,6 +15,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaDuplicateBoard from '@/schema/schemaDuplicateBoardForm';
 import { joiResolver } from '@hookform/resolvers/joi';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
 type DuplicateBoardNameDialogProps = {
   handleDuplicateBoard: (title: string) => void;
@@ -43,22 +44,24 @@ const DuplicateBoardNameDialog = ({
 
   return (
     <AlertDialog open={isOpen}>
-      <AlertDialogTrigger asChild>
-        <Button
-          isIcon
-          size="sm"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          <Icon
-            name="clone"
-            css={{
-              color: '$primary400',
+      <Tooltip content="Duplicate board">
+        <AlertDialogTrigger asChild>
+          <Button
+            isIcon
+            size="sm"
+            onClick={() => {
+              setIsOpen(true);
             }}
-          />
-        </Button>
-      </AlertDialogTrigger>
+          >
+            <Icon
+              name="clone"
+              css={{
+                color: '$primary400',
+              }}
+            />
+          </Button>
+        </AlertDialogTrigger>
+      </Tooltip>
       <AlertDialogContent
         css={{ top: '200px', flexDirection: 'column' }}
         title="Duplicate Board"
