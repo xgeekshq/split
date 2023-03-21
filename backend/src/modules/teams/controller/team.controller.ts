@@ -1,5 +1,4 @@
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -7,7 +6,6 @@ import {
 	Inject,
 	Param,
 	Post,
-	Put,
 	Query,
 	Req,
 	SetMetadata,
@@ -18,11 +16,9 @@ import {
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
-	ApiBody,
 	ApiCreatedResponse,
 	ApiForbiddenResponse,
 	ApiInternalServerErrorResponse,
-	ApiNotFoundResponse,
 	ApiOkResponse,
 	ApiOperation,
 	ApiParam,
@@ -34,7 +30,6 @@ import { TeamParams } from 'src/libs/dto/param/team.params';
 import { TeamQueryParams } from 'src/libs/dto/param/team.query.params';
 import { UserTeamsParams } from 'src/libs/dto/param/user.teams.param';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -42,20 +37,15 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
-import { NotFoundResponse } from '../../../libs/swagger/errors/not-found.swagger';
 import { CreateTeamDto } from '../dto/crate-team.dto';
 import TeamDto from '../dto/team.dto';
-import TeamUserDto from '../dto/team.user.dto';
-import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { TYPES } from '../interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
 import { CreateTeamApplicationInterface } from '../interfaces/applications/create.team.application.interface';
 import { GetTeamApplicationInterface } from '../interfaces/applications/get.team.application.interface';
-import { UpdateTeamApplicationInterface } from '../interfaces/applications/update.team.application.interface';
 import { DeleteTeamApplicationInterface } from '../interfaces/applications/delete.team.application.interface';
-import { DeleteTeamUserApplicationInterface } from '../interfaces/applications/delete.team.user.application.interface';
 
-const TeamUser = (permissions: string[]) => SetMetadata('permissions', permissions);
+const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions', permissions);
 
 @ApiBearerAuth('access-token')
 @ApiTags('Teams')
@@ -67,12 +57,8 @@ export default class TeamsController {
 		private createTeamApp: CreateTeamApplicationInterface,
 		@Inject(TYPES.applications.GetTeamApplication)
 		private getTeamApp: GetTeamApplicationInterface,
-		@Inject(TYPES.applications.UpdateTeamApplication)
-		private updateTeamApp: UpdateTeamApplicationInterface,
 		@Inject(TYPES.applications.DeleteTeamApplication)
-		private deleteTeamApp: DeleteTeamApplicationInterface,
-		@Inject(TYPES.applications.DeleteTeamUserApplication)
-		private deleteTeamUserApp: DeleteTeamUserApplicationInterface
+		private deleteTeamApp: DeleteTeamApplicationInterface
 	) {}
 
 	@ApiOperation({ summary: 'Create a new team' })
@@ -90,37 +76,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Post()
-	async create(@Body() teamData: CreateTeamDto) {
-		const team = await this.createTeamApp.create(teamData);
-
-		if (!team) throw new BadRequestException(INSERT_FAILED);
-
-		return team;
-	}
-
-	@ApiOperation({ summary: 'Add a user to an existing team' })
-	@ApiOkResponse({ description: 'User successfully added to the team!', type: TeamUserDto })
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@Put()
-	async createTeamUser(@Body() teamData: TeamUserDto) {
-		const team = await this.createTeamApp.createTeamUser(teamData);
-
-		if (!team) {
-			throw new BadRequestException(INSERT_FAILED);
-		}
-
-		return team;
+	create(@Body() teamData: CreateTeamDto) {
+		return this.createTeamApp.create(teamData);
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of existing teams' })
@@ -157,12 +114,8 @@ export default class TeamsController {
 		type: InternalServerErrorResponse
 	})
 	@Get('user')
-	getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
-		if (userId) {
-			return this.getTeamApp.getTeamsOfUser(userId);
-		}
-
-		return this.getTeamApp.getTeamsOfUser(request.user._id);
+	async getTeamsOfUser(@Req() request: RequestWithUser, @Query() { userId }: UserTeamsParams) {
+		return this.getTeamApp.getTeamsOfUser(userId ?? request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Get a specific team' })
@@ -217,110 +170,6 @@ export default class TeamsController {
 		return this.getTeamApp.getTeamsUserIsNotMember(userId);
 	}
 
-	@ApiOperation({ summary: 'Update a specific team member' })
-	@ApiParam({ type: String, name: 'teamId', required: true })
-	@ApiBody({ type: TeamUserDto })
-	@ApiOkResponse({
-		type: TeamUserDto,
-		description: 'Team member updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(TeamUserGuard)
-	@Put(':teamId')
-	async updateTeamUser(@Body() teamData: TeamUserDto) {
-		const teamUser = await this.updateTeamApp.updateTeamUser(teamData);
-
-		if (!teamUser) throw new BadRequestException(UPDATE_FAILED);
-
-		return teamUser;
-	}
-
-	@ApiOperation({ summary: 'Add and remove team members' })
-	@ApiParam({ type: String, name: 'teamId', required: true })
-	@ApiBody({ type: UpdateTeamUserDto })
-	@ApiOkResponse({
-		type: TeamUserDto,
-		description: 'Team member updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(TeamUserGuard)
-	@Put('/:teamId/addAndRemove')
-	addAndRemoveTeamUsers(@Body() users: UpdateTeamUserDto) {
-		return this.updateTeamApp.addAndRemoveTeamUsers(users.addUsers, users.removeUsers);
-	}
-
-	@ApiOperation({ summary: 'Add team members' })
-	@ApiBody({ type: TeamUserDto })
-	@ApiOkResponse({
-		type: TeamUserDto,
-		description: 'Team member updated successfully!'
-	})
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiNotFoundResponse({
-		type: NotFoundResponse,
-		description: 'Not found!'
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@UseGuards(SuperAdminGuard)
-	@Put('add/user')
-	addTeamUsers(@Body() teamUsers: TeamUserDto[]) {
-		return this.updateTeamApp.addTeamUsers(teamUsers);
-	}
-
 	@ApiOperation({ summary: 'Delete a specific team' })
 	@ApiParam({ type: String, name: 'teamId', required: true })
 	@ApiOkResponse({ type: Boolean, description: 'Team successfully deleted!' })
@@ -340,35 +189,10 @@ export default class TeamsController {
 		description: 'Forbidden',
 		type: ForbiddenResponse
 	})
-	@TeamUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
+	@TeamUserPermission([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(TeamUserGuard)
 	@Delete(':teamId')
 	deleteTeam(@Param() { teamId }: TeamParams) {
 		return this.deleteTeamApp.delete(teamId);
-	}
-
-	@ApiOperation({ summary: 'Delete a specific team of a user' })
-	@ApiParam({ type: String, name: 'userId', required: true })
-	@ApiOkResponse({ type: Boolean, description: 'Team of user successfully deleted!' })
-	@ApiBadRequestResponse({
-		description: 'Bad Request',
-		type: BadRequestResponse
-	})
-	@ApiUnauthorizedResponse({
-		description: 'Unauthorized',
-		type: UnauthorizedResponse
-	})
-	@ApiInternalServerErrorResponse({
-		description: 'Internal Server Error',
-		type: InternalServerErrorResponse
-	})
-	@ApiForbiddenResponse({
-		description: 'Forbidden',
-		type: ForbiddenResponse
-	})
-	@UseGuards(SuperAdminGuard)
-	@Delete('/user/:teamUserId')
-	deleteTeamUsers(@Param() { teamUserId }: UserTeamsParams) {
-		return this.deleteTeamUserApp.deleteTeamUser(teamUserId, true);
 	}
 }

@@ -1,5 +1,5 @@
-import { GetBoardUserServiceInterface } from './../../boardusers/interfaces/services/get.board.user.service.interface';
-import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
+import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/create.board.user.service.interface';
 import {
 	BadRequestException,
 	Inject,
@@ -11,7 +11,7 @@ import { BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Auth from 'src/modules/auth/interfaces/types';
 import { QueryType } from '../interfaces/findQuery';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
@@ -20,7 +20,7 @@ import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import Board from '../entities/board.schema';
 import User from 'src/modules/users/entities/user.schema';
-import BoardGuestUserDto from '../dto/board.guest.user.dto';
+import BoardGuestUserDto from '../../boardUsers/dto/board.guest.user.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { LoginGuestUserResponse } from 'src/libs/dto/response/login-guest-user.response';

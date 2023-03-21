@@ -1,5 +1,8 @@
+import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { compare } from 'src/libs/utils/bcrypt';
+import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { GetUserServiceInterface } from '../interfaces/services/get.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
@@ -8,7 +11,9 @@ import { UserRepositoryInterface } from '../repository/user.repository.interface
 export default class GetUserService implements GetUserServiceInterface {
 	constructor(
 		@Inject(TYPES.repository)
-		private readonly userRepository: UserRepositoryInterface
+		private readonly userRepository: UserRepositoryInterface,
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	getByEmail(email: string) {

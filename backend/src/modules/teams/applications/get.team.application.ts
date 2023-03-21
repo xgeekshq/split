@@ -12,10 +12,6 @@ export class GetTeamApplication implements GetTeamApplicationInterface {
 		private getTeamService: GetTeamServiceInterface
 	) {}
 
-	countTeams(userId: string) {
-		return this.getTeamService.countTeams(userId);
-	}
-
 	getAllTeams(user: UserDto) {
 		return this.getTeamService.getAllTeams(user);
 	}

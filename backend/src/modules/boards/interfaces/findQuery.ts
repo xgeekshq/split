@@ -1,5 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import Team from 'src/modules/teams/entities/teams.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 
 export type QueryType = {
 	$and: (

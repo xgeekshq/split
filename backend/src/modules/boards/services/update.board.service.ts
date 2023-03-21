@@ -1,5 +1,6 @@
-import { UpdateBoardUserServiceInterface } from './../../boardusers/interfaces/services/update.board.user.service.interface';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
+import Team from 'src/modules/teams/entities/team.schema';
+import { UpdateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/update.board.user.service.interface';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
@@ -8,13 +9,13 @@ import { CommunicationServiceInterface } from 'src/modules/communication/interfa
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import * as Cards from 'src/modules/cards/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { ResponsibleType } from '../interfaces/responsible.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import Board from '../entities/board.schema';
-import BoardUser from '../entities/board.user.schema';
+import BoardUser from '../../boardUsers/entities/board.user.schema';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import Column from '../../columns/entities/column.schema';
 import ColumnDto from '../../columns/dto/column.dto';
@@ -30,10 +31,9 @@ import { SlackMessageDto } from 'src/modules/communication/dto/slack.message.dto
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
 import { ConfigService } from '@nestjs/config';
 import { BoardPhases } from 'src/libs/enum/board.phases';
-import Team from 'src/modules/teams/entities/teams.schema';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
-import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
