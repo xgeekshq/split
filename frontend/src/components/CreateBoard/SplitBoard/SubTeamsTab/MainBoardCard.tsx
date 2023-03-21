@@ -109,8 +109,8 @@ const MainBoardCard = React.memo(({ team }: MainBoardCardInterface) => {
                 <Icon
                   name="minus"
                   css={{
-                    width: '$10',
-                    height: '$1',
+                    width: '$12',
+                    height: '$12',
                   }}
                 />
               </Flex>

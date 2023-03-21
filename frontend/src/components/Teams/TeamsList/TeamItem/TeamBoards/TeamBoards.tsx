@@ -26,6 +26,7 @@ const TeamBoards = ({ havePermissions, team }: TeamBoardsProps) => {
                 size={16}
                 css={{
                   marginRight: '$5',
+                  color: '$primaryBase',
                 }}
               />
               <Text css={{ ml: '$8' }} size="sm" fontWeight="medium" link>
