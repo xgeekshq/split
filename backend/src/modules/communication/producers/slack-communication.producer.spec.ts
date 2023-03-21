@@ -6,7 +6,7 @@ import { SlackCommunicationProducer } from './slack-communication.producer';
 import { BoardTypeFactory } from 'src/libs/test-utils/mocks/factories/communication/boardType-factory.mock';
 import { Logger } from '@nestjs/common';
 
-describe('SlackArchiveChannelProducer', () => {
+describe('SlackCommunicationProducer', () => {
 	let producer: SlackCommunicationProducer;
 	let queueMock: DeepMocked<Queue>;
 
