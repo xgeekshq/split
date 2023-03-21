@@ -71,6 +71,7 @@ const sizes = {
   521: '32.56rem',
   592: '37rem',
   683: '42.688rem',
+  800: '50rem',
 };
 
 export { sizes };

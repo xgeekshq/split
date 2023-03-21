@@ -22,7 +22,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   const [checkedState, setCheckedState] = useState(user.isSAdmin);
 
   const {
-    updateUserIsAdmin: { mutateAsync },
+    updateUserIsAdmin: { mutateAsync: updateUserMutation },
   } = useUser();
 
   const handleSuperAdminChange = async (checked: boolean) => {
@@ -32,7 +32,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
     };
 
     try {
-      await mutateAsync(updateTeamUser);
+      await updateUserMutation(updateTeamUser);
       setCheckedState(checked);
     } catch (error) {
       setCheckedState(!checked);
@@ -40,7 +40,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   };
 
   const {
-    deleteUser: { mutate },
+    deleteUser: { mutate: deleteUserMutation },
   } = useUser();
 
   const deleteUserDescription = (
@@ -54,7 +54,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   );
 
   const handleDeleteUser = () => {
-    mutate({ id: user._id });
+    deleteUserMutation({ id: user._id });
   };
 
   return (
