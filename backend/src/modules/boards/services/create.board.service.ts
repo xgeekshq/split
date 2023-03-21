@@ -111,7 +111,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			await this.boardRepository.endSession();
 			await this.createBoardUserService.endSession();
 		}
-
 		throw new CreateFailedException();
 	}
 

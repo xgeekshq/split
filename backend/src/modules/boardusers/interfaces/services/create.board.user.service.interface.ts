@@ -9,8 +9,4 @@ export interface CreateBoardUserServiceInterface extends SessionInterface {
 		withSession?: boolean
 	): Promise<BoardUser[]>;
 	createBoardUser(board: string, user: string): Promise<BoardUser>;
-	startTransaction(): Promise<void>;
-	commitTransaction(): Promise<void>;
-	abortTransaction(): Promise<void>;
-	endSession(): Promise<void>;
 }
