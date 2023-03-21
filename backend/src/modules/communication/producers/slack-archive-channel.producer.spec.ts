@@ -51,8 +51,8 @@ describe('SlackArchiveChannelProducer', () => {
 	});
 
 	it('should call logger.verbose when ArchiveChannelDataOptions.BOARD', async () => {
-		(archiveChannelDataMock.type = ArchiveChannelDataOptions.BOARD),
-			await producer.add(archiveChannelDataMock);
+		archiveChannelDataMock.type = ArchiveChannelDataOptions.BOARD;
+		await producer.add(archiveChannelDataMock);
 		expect(spyLoggerVerbose).toHaveBeenNthCalledWith(
 			1,
 			expect.stringContaining(archiveChannelDataMock.data.id)
