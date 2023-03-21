@@ -39,21 +39,22 @@ const FakeMainBoardCard = () => (
                 width: '$24',
                 height: '$24',
                 borderRadius: '$round',
-                border: `1px solid $colors$primary200`,
-                color: '$colors$primary200',
+                border: `1px solid $primary200`,
+                color: '$primary200',
                 transition: 'all 0.2s ease-in-out',
 
                 '&:hover': {
                   cursor: 'default',
                   backgroundColor: 'white',
+                  color: 'blue',
                 },
               }}
             >
               <Icon
                 name="minus"
                 css={{
-                  width: '$10',
-                  height: '$1',
+                  width: '$12',
+                  height: '$12',
                 }}
               />
             </Flex>
