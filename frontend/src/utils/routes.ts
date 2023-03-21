@@ -24,7 +24,7 @@ export const ROUTES = {
   TeamPage: (teamId: string): string => `${TEAMS_ROUTE}/${teamId}`,
   NewTeam: `${TEAMS_ROUTE}/new`,
   Users: USERS_ROUTE,
-  UserEdit: (userId: string) => `${USERS_ROUTE}/${userId}`,
+  UserPage: (userId: string) => `${USERS_ROUTE}/${userId}`,
   UserGuest: (boardId: string) => `${LOGIN_GUEST_USER}/${boardId}`,
 };
 

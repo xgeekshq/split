@@ -1,5 +1,5 @@
 import { UserList } from '@/types/team/userList';
-import { User } from '@/types/user/user';
+import { User, UserWithTeams } from '@/types/user/user';
 import { faker } from '@faker-js/faker';
 import { buildTestFactory } from '@/utils/testing';
 
@@ -127,5 +127,26 @@ export const UserListFactory = buildTestFactory<UserList>(() => {
     isSAdmin,
     joinedAt,
     isChecked,
+  };
+});
+
+export const UserWithTeamsFactory = buildTestFactory<UserWithTeams>(() => {
+  const user = UserFactory.create();
+  const teamsNames = faker.helpers.arrayElements([
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+    faker.company.name(),
+  ]);
+
+  return {
+    user,
+    teamsNames,
   };
 });

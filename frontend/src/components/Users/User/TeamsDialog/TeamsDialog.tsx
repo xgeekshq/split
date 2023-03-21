@@ -12,17 +12,27 @@ import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
-import { ScrollableContent } from './styles';
+import Separator from '@/components/Primitives/Separator/Separator';
 
 type Props = {
+  teamsList: TeamChecked[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  title: string;
+  confirmationLabel: string;
   providerAccountCreatedAt?: string;
   joinedAt: string;
-  teamsList: TeamChecked[];
 };
 
-const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, teamsList }: Props) => {
+const ListTeams = ({
+  isOpen,
+  setIsOpen,
+  title,
+  confirmationLabel,
+  providerAccountCreatedAt,
+  joinedAt,
+  teamsList,
+}: Props) => {
   const [searchTeam, setSearchTeam] = useState<string>('');
 
   const {
@@ -38,12 +48,9 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
     fetchTeamsUserIsNotMember: { refetch },
   } = useTeam({ autoFetchTeamsUserIsNotMember: true });
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTeam(event.target.value);
-  };
-
-  const handleClearSearch = () => {
+  const handleClose = () => {
     setSearchTeam('');
+    setIsOpen(false);
   };
 
   const handleChecked = (id: string) => {
@@ -91,23 +98,42 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
 
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-      <Dialog.Header title="Add new team" />
-      <Flex css={{ padding: '$24 $32 $40' }} direction="column" gap={16}>
+      <Dialog.Header title={confirmationLabel} />
+      <Flex css={{ p: '$32' }} direction="column">
         <SearchInput
           currentValue={searchTeam}
-          handleChange={handleSearchChange}
-          handleClear={handleClearSearch}
+          handleChange={(e) => {
+            setSearchTeam(e.target.value);
+          }}
+          handleClear={() => {
+            setSearchTeam('');
+          }}
           placeholder="Search team"
         />
       </Flex>
-      <Text css={{ display: 'block', px: '$32', py: '$10' }} heading="4">
-        Teams
+      <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
+        {title}
       </Text>
-      <ScrollableContent direction="column" justify="start">
-        <Flex css={{ flex: '1 1', px: '$32' }} direction="column" gap={16}>
+      <Flex direction="column" gap={8}>
+        <Flex align="center" css={{ px: '$32' }}>
+          <Flex css={{ flex: 1 }}>
+            <Flex align="center" gap={8}>
+              <Checkbox id="selectAll" size="md" disabled />
+              <Text heading={5}>Name</Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Separator orientation="horizontal" />
+      </Flex>
+      <Flex
+        direction="column"
+        justify="start"
+        css={{ height: '100%', overflowY: 'auto', py: '$16' }}
+      >
+        <Flex css={{ px: '$32' }} direction="column" gap={20}>
           {filteredTeams?.map((team) => (
-            <Flex key={team._id} align="center" justify="between">
-              <Flex css={{ width: '50%' }}>
+            <Flex key={team._id} align="center">
+              <Flex css={{ flex: 1 }}>
                 <Checkbox
                   checked={team.isChecked}
                   handleChange={() => {
@@ -121,14 +147,19 @@ const ListTeams = ({ isOpen, setIsOpen, providerAccountCreatedAt, joinedAt, team
             </Flex>
           ))}
         </Flex>
-      </ScrollableContent>
-      <Dialog.Footer
-        handleClose={() => {
-          setIsOpen(false);
-        }}
-        handleAffirmative={handleAddTeams}
-        affirmativeLabel="Add"
-      />
+      </Flex>
+      <Flex
+        justify="end"
+        align="center"
+        css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
+      >
+        <Dialog.Footer
+          handleAffirmative={handleAddTeams}
+          handleClose={handleClose}
+          affirmativeLabel="Add"
+          showSeparator={false}
+        />
+      </Flex>
     </Dialog>
   );
 };

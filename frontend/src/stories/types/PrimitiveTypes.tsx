@@ -73,3 +73,7 @@ export type SpinnerColorType = 'light' | 'dark';
 // Primitive/Loading/Dots
 export type DotsSizeType = 8 | 4 | 10 | 15 | 50 | 80 | 100;
 export type DotsColorType = 'primary800' | 'primary200' | 'white';
+
+// Primitive/Badge
+export type BadgeSizeType = 'xs' | 'sm' | 'md' | 'lg';
+export type BadgeVariants = 'success' | 'danger' | 'info' | 'warning';
