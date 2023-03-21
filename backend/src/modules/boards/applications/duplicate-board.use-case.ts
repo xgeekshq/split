@@ -5,13 +5,14 @@ import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as Users from 'src/modules/users/interfaces/types';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
+import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
 
 @Injectable()
 export class DuplicateBoardUseCase
@@ -38,6 +39,10 @@ export class DuplicateBoardUseCase
 			email,
 			strategy
 		});
+
+		if (!board) {
+			throw new BadRequestException(BOARD_NOT_FOUND);
+		}
 
 		const users: BoardUserDto[] = [];
 		board.users.forEach((user) => {
