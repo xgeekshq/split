@@ -9,6 +9,8 @@ import { SlackAddUserToChannelProducer } from '../producers/slack-add-user-chann
 import { BoardTypeFactory } from 'src/libs/test-utils/mocks/factories/communication/boardType-factory.mock';
 import { ConfigService } from '@nestjs/config';
 import configService from 'src/libs/test-utils/mocks/configService.mock';
+import mockedChangeResponsible from 'src/libs/test-utils/mocks/factories/communication/changeResponsible.mock';
+import mockedMergeBoardType from 'src/libs/test-utils/mocks/factories/communication/mergeBoardType.mock';
 
 describe('SlackCommunicationService', () => {
 	let service: CommunicationServiceInterface;
@@ -66,30 +68,13 @@ describe('SlackCommunicationService', () => {
 	});
 
 	it('should call slackResponsibleProducer.add once with a changeResponsibleType', async () => {
-		const changeResponsible = {
-			newResponsibleEmail: 'someEmail@gmail.com',
-			previousResponsibleEmail: 'someEmail@gmail.com',
-			subTeamChannelId: 'someId',
-			email: 'someEmail',
-			teamNumber: 1,
-			responsiblesChannelId: 'someChannelId',
-			mainChannelId: 'mainChannelId'
-		};
-
-		await service.executeResponsibleChange(changeResponsible);
-		expect(slackResponsibleProducerMock.add).toHaveBeenNthCalledWith(1, changeResponsible);
+		await service.executeResponsibleChange(mockedChangeResponsible);
+		expect(slackResponsibleProducerMock.add).toHaveBeenNthCalledWith(1, mockedChangeResponsible);
 	});
 
 	it('should call slackMergeBoardProducer.add once with MergeBoardType data', async () => {
-		const mergeBoardTypeMock = {
-			teamNumber: 1,
-			responsiblesChannelId: 'someId',
-			isLastSubBoard: true,
-			boardId: 'someId',
-			mainBoardId: 'someId'
-		};
-		await service.executeMergeBoardNotification(mergeBoardTypeMock);
-		expect(slackMergeBoardProducerMock.add).toHaveBeenNthCalledWith(1, mergeBoardTypeMock);
+		await service.executeMergeBoardNotification(mockedMergeBoardType);
+		expect(slackMergeBoardProducerMock.add).toHaveBeenNthCalledWith(1, mockedMergeBoardType);
 	});
 
 	it('should call slackAddUserToChannelProducer.add once with AddUserMainChannelType', async () => {

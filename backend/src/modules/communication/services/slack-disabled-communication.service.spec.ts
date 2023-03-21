@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BoardTypeFactory } from 'src/libs/test-utils/mocks/factories/communication/boardType-factory.mock';
+import mockedChangeResponsible from 'src/libs/test-utils/mocks/factories/communication/changeResponsible.mock';
+import mockedMergeBoardType from 'src/libs/test-utils/mocks/factories/communication/mergeBoardType.mock';
 import { CommunicationServiceInterface } from '../interfaces/slack-communication.service.interface';
 import { SlackDisabledCommunicationService } from './slack-disabled-communication.service';
 
@@ -26,38 +28,20 @@ describe('SlackDisabledCommunicationService', () => {
 	});
 
 	it('should call logger warning if executeResponsibleChange is called', async () => {
-		const changeResponsible = {
-			newResponsibleEmail: 'someEmail@gmail.com',
-			previousResponsibleEmail: 'someEmail@gmail.com',
-			subTeamChannelId: 'someId',
-			email: 'someEmail',
-			teamNumber: 1,
-			responsiblesChannelId: 'someChannelId',
-			mainChannelId: 'mainChannelId'
-		};
-
-		await service.executeResponsibleChange(changeResponsible);
+		await service.executeResponsibleChange(mockedChangeResponsible);
 
 		expect(spyLoggerWarn).toHaveBeenNthCalledWith(
 			1,
-			expect.stringContaining(JSON.stringify(changeResponsible))
+			expect.stringContaining(JSON.stringify(mockedChangeResponsible))
 		);
 	});
 
 	it('should call logger warning if executeMergeBoardNotification is called', async () => {
-		const mergeBoardTypeMock = {
-			teamNumber: 1,
-			responsiblesChannelId: 'someId',
-			isLastSubBoard: true,
-			boardId: 'someId',
-			mainBoardId: 'someId'
-		};
-
-		await service.executeMergeBoardNotification(mergeBoardTypeMock);
+		await service.executeMergeBoardNotification(mockedMergeBoardType);
 
 		expect(spyLoggerWarn).toHaveBeenNthCalledWith(
 			1,
-			expect.stringContaining(JSON.stringify(mergeBoardTypeMock))
+			expect.stringContaining(JSON.stringify(mockedMergeBoardType))
 		);
 	});
 
