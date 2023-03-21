@@ -1,5 +1,4 @@
-import { TeamUserUseCaseInterface } from '../interfaces/applications/team-user.use-case.interface';
-import {
+import { UseCase } from 'src/libs/interfaces/use-case.interface';import {
 	Body,
 	Controller,
 	Delete,
@@ -46,15 +45,15 @@ const TeamUserPermission = (permissions: string[]) => SetMetadata('permissions',
 export default class TeamUsersController {
 	constructor(
 		@Inject(TeamUsers.TYPES.applications.CreateTeamUserUseCase)
-		private createTeamUserUseCase: TeamUserUseCaseInterface<TeamUserDto, TeamUser>,
+		private createTeamUserUseCase: UseCase<TeamUserDto, TeamUser>,
 		@Inject(TeamUsers.TYPES.applications.CreateTeamUsersUseCase)
-		private createTeamUsersUseCase: TeamUserUseCaseInterface<TeamUserDto[], TeamUser[]>,
+		private createTeamUsersUseCase: UseCase<TeamUserDto[], TeamUser[]>,
 		@Inject(TeamUsers.TYPES.applications.UpdateTeamUserUseCase)
-		private updateTeamUserUseCase: TeamUserUseCaseInterface<TeamUserDto, TeamUser>,
+		private updateTeamUserUseCase: UseCase<TeamUserDto, TeamUser>,
 		@Inject(TeamUsers.TYPES.applications.AddAndRemoveTeamUsersUseCase)
-		private addAndRemoveTeamUsersUseCase: TeamUserUseCaseInterface<UpdateTeamUserDto, TeamUser[]>,
+		private addAndRemoveTeamUsersUseCase: UseCase<UpdateTeamUserDto, TeamUser[]>,
 		@Inject(TeamUsers.TYPES.applications.DeleteTeamUserUseCase)
-		private deleteTeamUserUseCase: TeamUserUseCaseInterface<string, TeamUser>
+		private deleteTeamUserUseCase: UseCase<string, TeamUser>
 	) {}
 
 	@ApiOperation({ summary: 'Add a user to an existing team' })

@@ -1,5 +1,3 @@
-import { TeamUserUseCaseInterface } from '../interfaces/applications/team-user.use-case.interface';
-import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
@@ -7,14 +5,13 @@ import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { CreateTeamUserServiceInterface } from '../interfaces/services/create.team.user.service.interface';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
 import UpdateTeamUserDto from '../dto/update.team.user.dto';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @Injectable()
 export class AddAndRemoveTeamUsersUseCase
-	implements TeamUserUseCaseInterface<UpdateTeamUserDto, TeamUser[]>
+	implements UseCase<UpdateTeamUserDto, TeamUser[]>
 {
 	constructor(
-		@Inject(TYPES.repositories.TeamUserRepository)
-		private readonly teamUserRepository: TeamUserRepositoryInterface,
 		@Inject(TYPES.services.CreateTeamUserService)
 		private createTeamUserService: CreateTeamUserServiceInterface,
 		@Inject(TYPES.services.DeleteTeamUserService)
