@@ -7,7 +7,6 @@ import {
 } from 'src/libs/utils/communication-helpers';
 import { getDay, getNextMonth } from 'src/libs/utils/dates';
 import { generateBoardDtoData, generateSubBoardDtoData } from 'src/libs/utils/generateBoardData';
-import isEmpty from 'src/libs/utils/isEmpty';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import * as CommunicationsType from 'src/modules/communication/interfaces/types';
 import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
@@ -52,6 +51,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
 		const { team: teamId, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
+
 		const boardUsersToCreate: BoardUserDto[] = [];
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 
@@ -59,13 +59,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			const createdBoard = await this.createBoard(
-				boardData,
-				userId,
-				false,
-				haveDividedBoards,
-				true
-			);
+			const createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 
 			let teamName;
 
@@ -132,6 +126,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
 		);
 		const teamLength = teamUsersWotStakeholders.length;
+
 		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
 		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
 
@@ -223,22 +218,16 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		}
 	}
 
-	private async createDividedBoards(boards: BoardDto[], userId: string, withSession?: boolean) {
-		const newBoardsIds = await Promise.all(
-			boards.map(async (board) => {
-				board.addCards = true;
-				const { users } = board;
-				const boardId = await this.createBoard(board, userId, true, false, withSession);
+	private async createDividedBoards(subBoards: BoardDto[]) {
+		const newSubBoards = await this.boardRepository.insertMany(subBoards, true);
 
-				if (!isEmpty(users)) {
-					await this.createBoardUserService.saveBoardUsers(users, boardId._id, withSession);
-				}
+		const subBoardUsers = subBoards.flatMap((board, idx) => {
+			return board.users.map((boardUser) => ({ ...boardUser, board: newSubBoards[idx]._id }));
+		});
 
-				return boardId._id;
-			})
-		);
+		await this.createBoardUserService.saveBoardUsers(subBoardUsers, null, true);
 
-		return newBoardsIds;
+		return newSubBoards.map((board) => board._id);
 	}
 
 	private async saveBoardUsersFromTeam(
@@ -473,8 +462,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		boardData: BoardDto,
 		userId: string,
 		isSubBoard = false,
-		haveSubBoards = true,
-		withSession?: boolean
+		haveSubBoards = true
 	): Promise<Board> {
 		const { dividedBoards = [], team } = boardData;
 
@@ -487,18 +475,24 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				team,
 				slackEnable: boardData.slackEnable,
 				hideCards: true,
-				postAnonymously: true
+				postAnonymously: true,
+				addCards: true,
+				dividedBoards: [],
+				createdBy: userId,
+				isSubBoard: true
 			}));
 
-			const createSplitBoard = await this.boardRepository.create<BoardDto>(
-				{
-					...boardData,
-					createdBy: userId,
-					dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId, withSession),
-					addCards: false,
-					isSubBoard
-				},
-				withSession
+			const createSplitBoard = await this.boardRepository.insertMany<BoardDto>(
+				[
+					{
+						...boardData,
+						createdBy: userId,
+						dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam),
+						addCards: false,
+						isSubBoard
+					}
+				],
+				true
 			);
 
 			if (!createSplitBoard) {
@@ -506,17 +500,19 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				throw new CreateFailedException();
 			}
 
-			return createSplitBoard;
+			return createSplitBoard[0];
 		}
 
-		const createRegularBoard = await this.boardRepository.create<BoardDto>(
-			{
-				...boardData,
-				dividedBoards: [],
-				createdBy: userId,
-				isSubBoard
-			},
-			withSession
+		const createRegularBoard = await this.boardRepository.insertMany<BoardDto>(
+			[
+				{
+					...boardData,
+					dividedBoards: [],
+					createdBy: userId,
+					isSubBoard
+				}
+			],
+			true
 		);
 
 		if (!createRegularBoard) {
@@ -524,7 +520,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			throw new CreateFailedException();
 		}
 
-		return createRegularBoard;
+		return createRegularBoard[0];
 	}
 
 	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
