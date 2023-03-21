@@ -19,7 +19,7 @@ import { TYPES } from '../interfaces/types';
 import Schedules from '../entities/schedules.schema';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
 import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
-import Team from 'src/modules/teams/entities/teams.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {

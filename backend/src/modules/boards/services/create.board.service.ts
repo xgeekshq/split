@@ -1,4 +1,6 @@
-import { CreateBoardUserServiceInterface } from '../../boardusers/interfaces/services/create.board.user.service.interface';
+import { UpdateTeamUserServiceInterface } from '../../teamUsers/interfaces/services/update.team.user.service.interface';
+import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
+import { CreateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/create.board.user.service.interface';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -13,16 +15,16 @@ import { AddCronJobDto } from 'src/modules/schedules/dto/add.cronjob.dto';
 import { CreateSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/create.schedules.service.interface';
 import * as SchedulesType from 'src/modules/schedules/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
-import BoardUserDto from '../dto/board.user.dto';
+import BoardUserDto from '../../boardUsers/dto/board.user.dto';
 import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';
 import Board from '../entities/board.schema';
-import { UpdateTeamServiceInterface } from 'src/modules/teams/interfaces/services/update.team.service.interface';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
@@ -37,8 +39,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	constructor(
 		@Inject(forwardRef(() => TeamType.services.GetTeamService))
 		private getTeamService: GetTeamServiceInterface,
-		@Inject(forwardRef(() => TeamType.services.UpdateTeamService))
-		private updateTeamService: UpdateTeamServiceInterface,
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface,
+		@Inject(TeamUsers.TYPES.services.UpdateTeamUserService)
+		private updateTeamUserService: UpdateTeamUserServiceInterface,
 		@Inject(SchedulesType.TYPES.services.CreateSchedulesService)
 		private createSchedulesService: CreateSchedulesServiceInterface,
 		@Inject(CommunicationsType.TYPES.services.SlackCommunicationService)
@@ -116,7 +120,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	): Promise<string | null> {
 		const { maxUsersPerTeam } = configs;
 
-		let teamUsers = await this.getTeamService.getUsersOfTeam(teamId);
+		let teamUsers = await this.getTeamUserService.getUsersOfTeam(teamId);
 
 		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
@@ -128,7 +132,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const teamLength = teamUsersWotStakeholders.length;
 
 		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
-		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
+		const maxTeams = Math.ceil(rawMaxTeams);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -236,7 +240,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		responsibles: string[]
 	) {
 		const usersIds: string[] = [];
-		const teamUsers = await this.getTeamService.getUsersOfTeam(team);
+		const teamUsers = await this.getTeamUserService.getUsersOfTeam(team);
 
 		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
@@ -279,7 +283,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				teamUser.isNewJoiner &&
 				!this.verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt)
 			) {
-				const updatedUser = this.updateTeamService.updateTeamUser({
+				const updatedUser = this.updateTeamUserService.updateTeamUser({
 					team: teamId,
 					user: `${user._id}`,
 					role: teamUser.role,
@@ -421,11 +425,9 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 
-			availableUsers = availableUsers.filter((user) => {
-				return !splitUsers[i].some((member) => {
-					return member.user === (user.user as User)._id;
-				});
-			});
+			availableUsers = availableUsers.filter(
+				(user) => !splitUsers[i].some((member) => member.user === (user.user as User)._id)
+			);
 		});
 
 		this.generateSubBoards(maxTeams, splitUsers, subBoards, responsibles);

@@ -14,7 +14,7 @@ import {
 	deleteVoteService,
 	voteRepository
 } from './votes.providers';
-import BoardUsersModule from '../boardusers/boardusers.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
 
 @Module({
 	imports: [

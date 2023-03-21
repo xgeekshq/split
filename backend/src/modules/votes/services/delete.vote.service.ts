@@ -7,10 +7,10 @@ import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/g
 import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {

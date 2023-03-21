@@ -1,36 +1,35 @@
-import { updateBoardService } from './../boards.providers';
 import { Test, TestingModule } from '@nestjs/testing';
-import { boardRepository } from '../boards.providers';
+import { ConfigService } from '@nestjs/config';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import * as CommunicationsType from 'src/modules/communication/interfaces/types';
+import * as Cards from 'src/modules/cards/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import { updateBoardService } from './../boards.providers';
+import { boardRepository } from '../boards.providers';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { DeleteCardServiceInterface } from 'src/modules/cards/interfaces/services/delete.card.service.interface';
 import { deleteCardService } from 'src/modules/cards/cards.providers';
-import * as CommunicationsType from 'src/modules/communication/interfaces/types';
-import * as Boards from 'src/modules/boards/interfaces/types';
-import * as Cards from 'src/modules/cards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
 import { CommunicationServiceInterface } from 'src/modules/communication/interfaces/slack-communication.service.interface';
 import { SendMessageServiceInterface } from 'src/modules/communication/interfaces/send-message.service.interface';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ConfigService } from '@nestjs/config';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { NotFoundException } from '@nestjs/common';
-import { BoardUserRepositoryInterface } from 'src/modules/boardusers/interfaces/repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from 'src/modules/boardUsers/interfaces/repositories/board-user.repository.interface';
 import {
 	boardUserRepository,
 	createBoardUserService,
 	deleteBoardUserService,
 	getBoardUserService,
 	updateBoardUserService
-} from 'src/modules/boardusers/boardusers.providers';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
-import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+} from 'src/modules/boardUsers/boardusers.providers';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
@@ -45,6 +44,7 @@ import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamDto-factory';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { DeepMocked, createMock } from '@golevelup/ts-jest';
 
 describe('GetUpdateBoardService', () => {
 	let boardService: UpdateBoardServiceInterface;
