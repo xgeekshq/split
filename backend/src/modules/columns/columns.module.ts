@@ -13,7 +13,8 @@ import {
 	updateColumnService
 } from './columns.providers';
 import ColumnsController from './controller/columns.controller';
-import BoardUsersModule from '../boardusers/boardusers.module';
+import BoardUsersModule from '../boardUsers/boardusers.module';
+import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 
 @Module({
 	imports: [
@@ -23,6 +24,7 @@ import BoardUsersModule from '../boardusers/boardusers.module';
 		BoardsModule,
 		BoardUsersModule,
 		TeamsModule,
+		TeamUsersModule,
 		forwardRef(() => SocketModule)
 	],
 	controllers: [ColumnsController],

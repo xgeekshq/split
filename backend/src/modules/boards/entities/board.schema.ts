@@ -3,7 +3,7 @@ import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import BaseModel from 'src/libs/models/base.model';
-import Team from 'src/modules/teams/entities/teams.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 import User from 'src/modules/users/entities/user.schema';
 import Column, { ColumnSchema } from '../../columns/entities/column.schema';
 

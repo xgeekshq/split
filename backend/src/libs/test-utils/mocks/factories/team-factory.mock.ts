@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
 import { buildTestFactory } from './generic-factory.mock';
-import Team from 'src/modules/teams/entities/teams.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 
 const dateCreatedAt = faker.date.past(1);
 
