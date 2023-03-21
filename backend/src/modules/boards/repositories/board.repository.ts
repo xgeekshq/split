@@ -147,7 +147,7 @@ export class BoardRepository
 		);
 	}
 
-	updateMergedSubBoard(subBoardId: string, userId: string) {
+	updateMergedSubBoard(subBoardId: string, userId: string, withSession: boolean) {
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: subBoardId
@@ -157,11 +157,14 @@ export class BoardRepository
 					submitedByUser: userId,
 					submitedAt: new Date()
 				}
-			}
+			},
+			null,
+			null,
+			withSession
 		);
 	}
 
-	updateMergedBoard(boardId: string, newColumns: Column[]) {
+	updateMergedBoard(boardId: string, newColumns: Column[], withSession: boolean) {
 		return this.findOneByFieldAndUpdate(
 			{
 				_id: boardId
@@ -169,7 +172,12 @@ export class BoardRepository
 			{
 				$set: { columns: newColumns }
 			},
-			{ new: true }
+			{ new: true },
+			{
+				path: 'dividedBoards',
+				select: 'submitedByUser'
+			},
+			withSession
 		);
 	}
 

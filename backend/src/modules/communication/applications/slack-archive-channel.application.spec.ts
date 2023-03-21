@@ -14,6 +14,7 @@ import {
 	PartialBoardType
 } from 'src/modules/communication/dto/types';
 import { ConversationsSlackHandler } from 'src/modules/communication/handlers/conversations-slack.handler';
+import { ArchiveChannelInvalidArgError } from '../errors/archive-channel-invalid-arg.error';
 
 const slackChannel = {
 	U023BECGF: { archived: false, shouldThrowsError: false },
@@ -81,6 +82,17 @@ describe('SlackArchiveChannelApplication', () => {
 		const result = await application.execute(archiveChannelData);
 
 		expect(result).toMatchObject([{ channelId: archiveChannelData.data, result: true }]);
+	});
+
+	it('should throw ArchiveChannelInvalidArgError if !isValid', async () => {
+		const archiveChannelData: ArchiveChannelData = {
+			type: ArchiveChannelDataOptions.BOARD,
+			data: 'U023BECGF'
+		};
+
+		await expect(application.execute(archiveChannelData)).rejects.toThrowError(
+			ArchiveChannelInvalidArgError
+		);
 	});
 
 	it('should returns "ok" if the channel is already archived', async () => {

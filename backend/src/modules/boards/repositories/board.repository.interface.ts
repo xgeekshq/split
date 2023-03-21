@@ -30,8 +30,8 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 	): Promise<number>;
 	deleteBoard(boardId: string, withSession: boolean): Promise<Board>;
 	updateBoard(boardId: string, board: Board, isNew: boolean): Promise<Board>;
-	updateMergedSubBoard(subBoardId: string, userId: string): Promise<Board>;
-	updateMergedBoard(boardId: string, newColumns: Column[]): Promise<Board>;
+	updateMergedSubBoard(subBoardId: string, userId: string, withSession: boolean): Promise<Board>;
+	updateMergedBoard(boardId: string, newColumns: Column[], withSession: boolean): Promise<Board>;
 	updatedChannelId(boardId: string, channelId: string): Promise<Board>;
 	updatePhase(boardId: string, phase: BoardPhases): Promise<Board>;
 }

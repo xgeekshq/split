@@ -16,8 +16,6 @@ import * as Auth from 'src/modules/auth/interfaces/types';
 import faker from '@faker-js/faker';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
@@ -28,6 +26,8 @@ import { hideVotes } from '../utils/clean-boards.spec';
 import Column from 'src/modules/columns/entities/column.schema';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
 import { createBoardUserService } from 'src/modules/boardusers/boardusers.providers';
+import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 const hideVotesFromColumns = (columns: Column[], userId: string) => {
 	return columns.map((column) => {
