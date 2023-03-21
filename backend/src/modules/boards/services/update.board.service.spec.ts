@@ -18,18 +18,18 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { NotFoundException } from '@nestjs/common';
-import { BoardUserRepositoryInterface } from 'src/modules/boardusers/interfaces/repositories/board-user.repository.interface';
+import { BoardUserRepositoryInterface } from 'src/modules/boardUsers/interfaces/repositories/board-user.repository.interface';
 import {
 	boardUserRepository,
 	createBoardUserService,
 	deleteBoardUserService,
 	getBoardUserService,
 	updateBoardUserService
-} from 'src/modules/boardusers/boardusers.providers';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
-import { DeleteBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/delete.board.user.service.interface';
+} from 'src/modules/boardUsers/boardusers.providers';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
+import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { SLACK_ENABLE, SLACK_MASTER_CHANNEL_ID } from 'src/libs/constants/slack';
