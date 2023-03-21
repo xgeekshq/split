@@ -1,7 +1,6 @@
 import { UpdateTeamUserServiceInterface } from '../../teamUsers/interfaces/services/update.team.user.service.interface';
 import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import { CreateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/create.board.user.service.interface';
-import { LeanDocument } from 'mongoose';
 import { BoardRoles } from 'src/libs/enum/board.roles';
 import { TeamRoles } from 'src/libs/enum/team.roles';
 import {
@@ -21,7 +20,7 @@ import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { TYPES as TeamType } from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
-import TeamUser, { TeamUserDocument } from 'src/modules/teamUsers/entities/team.user.schema';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import BoardDto from '../dto/board.dto';
 import BoardUserDto from '../../boardUsers/dto/board.user.dto';
@@ -146,7 +145,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		);
 		const teamLength = teamUsersWotStakeholders.length;
 		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
-		const maxTeams = Math.ceil(rawMaxTeams) === 2 ? 2 : Math.floor(rawMaxTeams);
+		const maxTeams = Math.ceil(rawMaxTeams);
 
 		if (maxTeams < 2 || maxUsersPerTeam < 2) {
 			return null;
@@ -365,7 +364,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 	private handleSplitBoards = (
 		maxTeams: number,
-		teamMembers: LeanDocument<TeamUserDocument>[],
+		teamMembers: TeamUser[],
 		responsibles: string[]
 	) => {
 		const subBoards: BoardDto[] = [];
@@ -405,11 +404,9 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			splitUsers[i] = this.getRandomGroup(numberOfUsersByGroup, availableUsers);
 
-			availableUsers = availableUsers.filter((user) => {
-				return !splitUsers[i].some((member) => {
-					return member.user === (user.user as User)._id;
-				});
-			});
+			availableUsers = availableUsers.filter(
+				(user) => !splitUsers[i].some((member) => member.user === (user.user as User)._id)
+			);
 		});
 
 		this.generateSubBoards(maxTeams, splitUsers, subBoards, responsibles);
