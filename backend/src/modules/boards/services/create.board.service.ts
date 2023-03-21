@@ -228,13 +228,13 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			boards.map(async (board) => {
 				board.addCards = true;
 				const { users } = board;
-				const { _id } = await this.createBoard(board, userId, true, false, withSession);
+				const boardId = await this.createBoard(board, userId, true, false, withSession);
 
 				if (!isEmpty(users)) {
-					await this.createBoardUserService.saveBoardUsers(users, _id, withSession);
+					await this.createBoardUserService.saveBoardUsers(users, boardId._id, withSession);
 				}
 
-				return _id;
+				return boardId._id;
 			})
 		);
 
@@ -490,49 +490,41 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				postAnonymously: true
 			}));
 
-			const createSplitBoard = await this.boardRepository.insertMany<BoardDto>(
-				[
-					{
-						...boardData,
-						createdBy: userId,
-						dividedBoards: await this.createDividedBoards(
-							dividedBoardsWithTeam,
-							userId,
-							withSession
-						),
-						addCards: false,
-						isSubBoard
-					}
-				],
+			const createSplitBoard = await this.boardRepository.create<BoardDto>(
+				{
+					...boardData,
+					createdBy: userId,
+					dividedBoards: await this.createDividedBoards(dividedBoardsWithTeam, userId, withSession),
+					addCards: false,
+					isSubBoard
+				},
 				withSession
 			);
 
 			if (!createSplitBoard) {
-				this.logger.error('Create board user failed');
+				this.logger.verbose('Create board failed');
 				throw new CreateFailedException();
 			}
 
-			return createSplitBoard[0];
+			return createSplitBoard;
 		}
 
-		const createRegularBoard = await this.boardRepository.insertMany<BoardDto>(
-			[
-				{
-					...boardData,
-					dividedBoards: [],
-					createdBy: userId,
-					isSubBoard
-				}
-			],
+		const createRegularBoard = await this.boardRepository.create<BoardDto>(
+			{
+				...boardData,
+				dividedBoards: [],
+				createdBy: userId,
+				isSubBoard
+			},
 			withSession
 		);
 
 		if (!createRegularBoard) {
-			this.logger.error('Create board user failed');
+			this.logger.verbose('Create board failed');
 			throw new CreateFailedException();
 		}
 
-		return createRegularBoard[0];
+		return createRegularBoard;
 	}
 
 	private createFirstCronJob(addCronJobDto: AddCronJobDto) {
