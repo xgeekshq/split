@@ -25,7 +25,7 @@ const Footer = (props: FooterProps) => {
       justify="end"
       css={{
         borderTop: showSeparator ? '1px solid $colors$primary100' : 'none',
-        padding: showSeparator ? '$32' : 'auto',
+        padding: '$24 $32',
       }}
     >
       <Button variant="primaryOutline" onClick={handleClose} type="button">
