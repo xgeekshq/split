@@ -1,5 +1,5 @@
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
