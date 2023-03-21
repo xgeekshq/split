@@ -89,6 +89,8 @@ export class DuplicateBoardUseCase
 			...board,
 			_id: undefined,
 			id: undefined,
+			createdAt: undefined,
+			updatedAt: undefined,
 			users,
 			columns,
 			title: boardTitle,
