@@ -12,7 +12,9 @@ import {
   updateUserIsAdminRequest,
 } from '@/api/userService';
 import {
+  DeleteUser,
   EmailUser,
+  InfiniteUsersWithTeams,
   NewPassword,
   ResetPasswordResponse,
   ResetTokenResponse,
@@ -21,7 +23,7 @@ import {
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import useUserUtils from './useUserUtils';
 
@@ -165,9 +167,22 @@ const useUser = ({
   });
 
   const deleteUser = useMutation(deleteUserRequest, {
+    onMutate: (variables: DeleteUser) => {
+      queryClient.setQueryData<InfiniteData<InfiniteUsersWithTeams>>(
+        ['usersWithTeams'],
+        (oldData: InfiniteData<InfiniteUsersWithTeams> | undefined) => {
+          if (!oldData) return { pages: [], pageParams: [] };
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              userWithTeams: page.userWithTeams.filter((value) => value.user._id !== variables.id),
+            })),
+          };
+        },
+      );
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['usersWithTeams']);
-
       setToastState({
         open: true,
         content: 'The team user was successfully updated.',
@@ -175,6 +190,7 @@ const useUser = ({
       });
     },
     onError: () => {
+      queryClient.invalidateQueries(['usersWithTeams']);
       setToastState({
         open: true,
         content: 'Error while deleting the user',

@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 import { INVALID_NAME } from '@/errors/teams/errors';
 import { Team } from '@/types/team/team';
-import { TeamUser } from '@/types/team/team.user';
+import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -165,12 +165,29 @@ const useTeam = ({
   });
 
   const updateTeamUser = useMutation(updateTeamUserRequest, {
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries(['team', teamId]),
-        queryClient.invalidateQueries(['teams', userId]),
-      ]);
+    onMutate: async (variables: TeamUserUpdate) => {
+      const { role, canBeResponsible, isNewJoiner } = variables;
+      queryClient.setQueryData(['team', teamId], (old: Team | undefined) => {
+        if (old) {
+          return {
+            ...old,
+            users: old.users.map((teamUser) => {
+              if (teamUser.user._id === variables.user) {
+                return {
+                  ...teamUser,
+                  role,
+                  canBeResponsible,
+                  isNewJoiner,
+                };
+              }
 
+              return teamUser;
+            }),
+          };
+        }
+
+        return old;
+      });
       setToastState({
         open: true,
         content: 'The team user was successfully updated.',
@@ -178,6 +195,7 @@ const useTeam = ({
       });
     },
     onError: () => {
+      queryClient.invalidateQueries(['team', teamId]);
       setToastState({
         open: true,
         content: 'Error while updating the team user',
@@ -245,9 +263,6 @@ const useTeam = ({
       );
 
       return { previousTeam };
-    },
-    onSettled: (data, _error, variables) => {
-      queryClient.invalidateQueries(['team', variables.team]);
     },
     onError: (error, variables, context) => {
       queryClient.setQueryData(['team', variables.team], context?.previousTeam);

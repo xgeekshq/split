@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { DeleteTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/delete.team.user.service.interface';
 import * as TeamUser from 'src/modules/teamUsers/interfaces/types';
+import { GetTeamUserServiceInterface } from '../../teamUsers/interfaces/services/get.team.user.service.interface';
 import UserDto from '../dto/user.dto';
-import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import { UserRepositoryInterface } from '../repository/user.repository.interface';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 
@@ -15,7 +15,7 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 		@Inject(TeamUser.TYPES.services.DeleteTeamUserService)
 		private deleteTeamUserService: DeleteTeamUserServiceInterface,
 		@Inject(TeamUser.TYPES.services.GetTeamUserService)
-		private getTeamUserService: GetTeamServiceInterface
+		private getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async execute(user: UserDto, userId: string) {
@@ -28,10 +28,9 @@ export class DeleteUserUseCase implements DeleteUserUseCaseInterface {
 
 		try {
 			await this.deleteUser(userId, true);
-			const teamsOfUser = await this.getTeamUserService.getTeamsOfUser(userId);
+			const teamsOfUser = await this.getTeamUserService.countTeamsOfUser(userId);
 
-			if (teamsOfUser.length > 0) {
-				// here
+			if (teamsOfUser > 0) {
 				await this.deleteTeamUserService.deleteTeamUsersOfUser(userId, false);
 			}
 			await this.userRepository.commitTransaction();
