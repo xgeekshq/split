@@ -1,6 +1,5 @@
-import { LeanDocument } from 'mongoose';
 import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
-import Board, { BoardDocument } from '../../entities/board.schema';
+import Board from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 import UserDto from 'src/modules/users/dto/user.dto';
 import BoardUser from '../../../boardUsers/entities/board.user.schema';
@@ -28,16 +27,16 @@ export interface GetBoardServiceInterface {
 		boardId: string,
 		user: UserDto
 	): Promise<
-		| { board: LeanDocument<BoardDocument> }
+		| { board: Board }
 		| null
 		| {
-				board: LeanDocument<BoardDocument>;
-				mainBoard: LeanDocument<BoardDocument>;
+				board: Board;
+				mainBoard: Board;
 		  }
 		| null
 		| {
 				guestUser: LoginGuestUserResponse;
-				board: LeanDocument<BoardDocument>;
+				board: Board;
 		  }
 		| null
 	>;

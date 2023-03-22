@@ -17,7 +17,7 @@ import SchemaDuplicateBoard from '@/schema/schemaDuplicateBoardForm';
 import { joiResolver } from '@hookform/resolvers/joi';
 import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
-type DuplicateBoardNameDialogProps = {
+export type DuplicateBoardNameDialogProps = {
   handleDuplicateBoard: (title: string) => void;
   boardTitle: string;
 };
@@ -52,6 +52,7 @@ const DuplicateBoardNameDialog = ({
             onClick={() => {
               setIsOpen(true);
             }}
+            data-testid="duplicateBoardTrigger"
           >
             <Icon
               name="clone"
@@ -85,6 +86,7 @@ const DuplicateBoardNameDialog = ({
               <AlertDialogAction
                 type="submit"
                 disabled={!methods.formState.isDirty || !methods.formState.isValid}
+                data-testid="duplicateBoardSubmit"
               >
                 Duplicate
               </AlertDialogAction>

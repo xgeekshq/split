@@ -14,7 +14,7 @@ import isEmpty from '@/utils/isEmpty';
 import CountCards from './CountCards';
 import DuplicateBoardNameDialog from './DuplicateBoardNameDialog';
 
-type CardEndProps = {
+export type CardEndProps = {
   board: BoardType;
   isDashboard: boolean;
   isSubBoard: boolean | undefined;
