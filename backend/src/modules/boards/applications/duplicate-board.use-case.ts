@@ -36,8 +36,8 @@ export class DuplicateBoardUseCase
 		if (!currentUser) {
 			throw new NotFoundException(USER_NOT_FOUND);
 		}
-
 		const { _id, firstName, lastName, email, strategy } = currentUser;
+
 		const { board } = await this.getBoardService.getBoard(boardId, {
 			_id,
 			firstName,
@@ -45,12 +45,12 @@ export class DuplicateBoardUseCase
 			email,
 			strategy
 		});
-		const boardTeam = board.team as Team;
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
+		const boardTeam = board.team as Team;
 		const users: BoardUserDto[] = board.users.map((user) => {
 			const userData = user.user as User;
 			delete user._id;
