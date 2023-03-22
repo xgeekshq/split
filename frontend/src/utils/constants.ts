@@ -1,3 +1,4 @@
+import { inSeconds } from '@/types/utils';
 import getConfig from 'next/config';
 
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
@@ -62,6 +63,33 @@ export const BOARD_TIMER_USER_REQUESTED_TIMER_STATE = 'board-timer.user.requeste
 export const BOARD_TIMER_SERVER_SENT_TIMER_STATE = 'board-timer.server.sent.timer-state';
 
 export const BOARD_PHASE_SERVER_SENT = 'board-phase.server.updated';
+
+export const BOARD_TIMER_PROGRESS_BAR_DEFAULT_WIDTH = 186;
+
+export const BOARD_TIMER_START_MINUTES = 5;
+
+export const BOARD_TIMER_START_SECONDS = 0;
+
+export const BOARD_TIMER_JUMP_SECONDS = 5;
+
+export const BOARD_TIMER_JUMP_MINUTES = 1;
+
+export const BOARD_TIMER_MIN_SECONDS = 30;
+
+export const BOARD_TIMER_MIN_MINUTES = 0;
+
+export const BOARD_TIMER_MAX_SECONDS = 60 - BOARD_TIMER_JUMP_SECONDS;
+
+export const BOARD_TIMER_MAX_MINUTES = 59;
+
+export const BOARD_TIMER_TOTAL_TIME =
+  inSeconds(BOARD_TIMER_START_MINUTES) + BOARD_TIMER_START_SECONDS;
+
+export const BOARD_TIMER_START_TIME = {
+  minutes: BOARD_TIMER_START_MINUTES,
+  seconds: BOARD_TIMER_START_SECONDS,
+  total: BOARD_TIMER_TOTAL_TIME,
+};
 
 export const CARD_TEXT_DEFAULT = 'Write your comment here...';
 
