@@ -27,7 +27,7 @@ export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> =>
 export const getTeamRequest = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
   fetchData(`/teams/${id}`, { context, serverSide: !!context });
 
-export const updateTeamUserRequest = (team: TeamUserUpdate): Promise<TeamUserUpdate> =>
+export const updateTeamUserRequest = (team: TeamUserUpdate): Promise<TeamUser> =>
   fetchData(`/teams/${team.team}`, { method: 'PUT', data: team });
 
 export const addAndRemoveTeamUserRequest = (

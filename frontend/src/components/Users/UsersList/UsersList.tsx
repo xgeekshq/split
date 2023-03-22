@@ -14,7 +14,7 @@ const UsersList = () => {
 
   const {
     fetchUsersWithTeams: { data, isFetching, hasNextPage, fetchNextPage, refetch },
-  } = useUser({ options: { search } });
+  } = useUser({ options: { search }, autoFetchUsersWithTeams: true });
   const userAmount = data?.pages[0].userAmount;
 
   const users = useMemo(() => {

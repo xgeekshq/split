@@ -1,28 +1,25 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
-import Team from '../entities/teams.schema';
+import Team from '../entities/team.schema';
 import { TYPES } from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import { TeamRepositoryInterface } from '../repositories/team.repository.interface';
-import { TeamUserRepositoryInterface } from '../repositories/team-user.repository.interface';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
+import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import UserDto from 'src/modules/users/dto/user.dto';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 
 @Injectable()
 export default class GetTeamService implements GetTeamServiceInterface {
 	constructor(
 		@Inject(TYPES.repositories.TeamRepository)
 		private readonly teamRepository: TeamRepositoryInterface,
-		@Inject(TYPES.repositories.TeamUserRepository)
-		private readonly teamUserRepository: TeamUserRepositoryInterface,
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface,
 		@Inject(Boards.TYPES.services.GetBoardService)
 		private getBoardService: GetBoardServiceInterface
 	) {}
-
-	countTeams(userId: string) {
-		return this.teamUserRepository.countTeamsOfUser(userId);
-	}
 
 	countAllTeams() {
 		return this.teamRepository.countDocuments();
@@ -45,7 +42,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 	}
 
 	async getTeamsOfUser(userId: string) {
-		const teamsUser = await this.teamUserRepository.getAllTeamsOfUser(userId);
+		const teamsUser = await this.getTeamUserService.getAllTeamsOfUser(userId);
 
 		const teams: Team[] = await this.teamRepository.getTeamsWithUsers(
 			teamsUser.map((teamUser) => teamUser._id)
@@ -64,14 +61,6 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		return teamsResult;
 	}
 
-	getUsersOnlyWithTeams(users: User[]) {
-		return this.teamUserRepository.getUsersOnlyWithTeams(users);
-	}
-
-	getTeamUser(userId: string, teamId: string) {
-		return this.teamUserRepository.findOneByField({ user: userId, team: teamId });
-	}
-
 	async getAllTeams(user: UserDto) {
 		if (!user.isSAdmin) throw new ForbiddenException();
 
@@ -88,13 +77,9 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		});
 	}
 
-	getUsersOfTeam(teamId: string) {
-		return this.teamUserRepository.getUsersOfTeam(teamId);
-	}
-
 	async getTeamsUserIsNotMember(userId: string) {
 		const allTeams = await this.teamRepository.getAllTeams();
-		const teamUsers = await this.teamUserRepository.getAllTeamsOfUser(userId);
+		const teamUsers = await this.getTeamUserService.getAllTeamsOfUser(userId);
 
 		if (teamUsers.length === 0) return allTeams;
 

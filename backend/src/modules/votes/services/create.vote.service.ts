@@ -1,12 +1,12 @@
-import { GetBoardUserServiceInterface } from './../../boardusers/interfaces/services/get.board.user.service.interface';
+import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/services/get.board.user.service.interface';
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from 'src/modules/votes/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
-import { UpdateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/update.board.user.service.interface';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 
 @Injectable()
 export default class CreateVoteService implements CreateVoteServiceInterface {

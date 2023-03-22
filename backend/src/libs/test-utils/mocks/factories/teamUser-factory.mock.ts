@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
 import { buildTestFactory } from './generic-factory.mock';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 
 const mockTeamUserData = () => {
 	const isNewJoiner = faker.datatype.boolean();

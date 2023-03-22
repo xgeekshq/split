@@ -6,13 +6,13 @@ import {
 	Injectable
 } from '@nestjs/common';
 import * as Boards from 'src/modules/boards/interfaces/types';
-import * as BoardUsers from 'src/modules/boardusers/interfaces/types';
-import TeamUser from 'src/modules/teams/entities/team.user.schema';
-import Team from 'src/modules/teams/entities/teams.schema';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import Team from 'src/modules/teams/entities/team.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { Reflector } from '@nestjs/core';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
-import { GetBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/get.board.user.service.interface';
+import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 
 @Injectable()
 export class GetBoardGuard implements CanActivate {

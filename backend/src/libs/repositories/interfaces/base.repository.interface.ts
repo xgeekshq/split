@@ -36,9 +36,9 @@ export interface BaseInterfaceRepository<T> {
 
 	aggregateByQuery<Q>(pipeline: PipelineStage[]): Promise<Q[]>;
 
-	create<Q>(item: Q): Promise<T>;
+	create<Q>(item: Q, withSession?: boolean): Promise<T>;
 
-	insertMany(listOfItems: T[]): Promise<T[]>;
+	insertMany<Q>(listOfItems: Q[], withSession?: boolean): Promise<T[]>;
 
 	update(id: string, item: T): Promise<T>;
 

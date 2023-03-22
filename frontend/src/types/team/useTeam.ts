@@ -15,7 +15,7 @@ export default interface UseTeamType {
   fetchUserBasedTeams: UseQueryResult<Team[] | null, unknown>;
   fetchTeamsOfUser: UseQueryResult<Team[] | null, unknown>;
   fetchTeam: UseQueryResult<Team | null | undefined, unknown>;
-  updateTeamUser: UseMutationResult<TeamUserUpdate, unknown, TeamUserUpdate, unknown>;
+  updateTeamUser: UseMutationResult<TeamUser, unknown, TeamUserUpdate, unknown>;
   addAndRemoveTeamUser: UseMutationResult<
     CreatedTeamUser[],
     unknown,

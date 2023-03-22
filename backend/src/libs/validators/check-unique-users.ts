@@ -1,6 +1,6 @@
 import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-import BoardUserDto from 'src/modules/boards/dto/board.user.dto';
-import TeamUserDto from 'src/modules/teams/dto/team.user.dto';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
+import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 
 @ValidatorConstraint({ name: 'checkUniqueUsers', async: false })
 export class CheckUniqueUsers implements ValidatorConstraintInterface {

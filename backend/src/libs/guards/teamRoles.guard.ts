@@ -1,14 +1,20 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
+import {
+	CanActivate,
+	ExecutionContext,
+	ForbiddenException,
+	Inject,
+	Injectable
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import TeamUser, { TeamUserDocument } from '../../modules/teams/entities/team.user.schema';
+import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 
 @Injectable()
 export class TeamUserGuard implements CanActivate {
 	constructor(
 		private readonly reflector: Reflector,
-		@InjectModel(TeamUser.name) private teamUserModel: Model<TeamUserDocument>
+		@Inject(TeamUsers.TYPES.services.GetTeamUserService)
+		private getTeamUserService: GetTeamUserServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {
@@ -18,7 +24,7 @@ export class TeamUserGuard implements CanActivate {
 		const user = request.user;
 		const teamId: string = request.params.teamId;
 		try {
-			const userFound = await this.teamUserModel.findOne({ user: user._id, team: teamId }).exec();
+			const userFound = await this.getTeamUserService.getTeamUser(user._id, teamId);
 			const hasPermissions = permissions.includes(userFound?.role) || user.isSAdmin;
 
 			return hasPermissions;

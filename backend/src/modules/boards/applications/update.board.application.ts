@@ -3,7 +3,7 @@ import { UpdateBoardDto } from '../dto/update-board.dto';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { UpdateBoardServiceInterface } from '../interfaces/services/update.board.service.interface';
 import { TYPES } from '../interfaces/types';
-import UpdateBoardUserDto from '../dto/update-board-user.dto';
+import UpdateBoardUserDto from '../../boardUsers/dto/update-board-user.dto';
 import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
 
 @Injectable()

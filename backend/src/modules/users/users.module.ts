@@ -18,11 +18,13 @@ import {
 	updateUserService,
 	userRepository
 } from './users.providers';
+import TeamUsersModule from '../teamUsers/teamusers.module';
 
 @Module({
 	imports: [
 		mongooseUserModule,
 		TeamsModule,
+		TeamUsersModule,
 		mongooseResetModule,
 		mongooseTeamUserModule,
 		forwardRef(() => AuthModule)
