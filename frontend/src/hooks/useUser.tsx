@@ -1,36 +1,46 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { setCookie } from 'cookies-next';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
-import { AxiosError } from 'axios';
 
 import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
+  deleteUserRequest,
+  getAllUsers,
+  getAllUsersWithTeams,
+  getUser,
+  updateUserIsAdminRequest,
+} from '@/api/userService';
+import {
+  DeleteUser,
   EmailUser,
+  InfiniteUsersWithTeams,
   NewPassword,
   ResetPasswordResponse,
   ResetTokenResponse,
   UseUserType,
 } from '@/types/user/user';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { setCookie } from 'cookies-next';
 import { GUEST_USER_COOKIE } from '@/utils/constants';
-import {
-  deleteUserRequest,
-  getAllUsers,
-  getUser,
-  updateUserIsAdminRequest,
-} from '@/api/userService';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
   autoFetchUsers?: boolean;
   autoFetchGetUser?: boolean;
+  autoFetchUsersWithTeams?: boolean;
+  options?: {
+    search?: string;
+  };
 }
 
 const useUser = ({
   autoFetchUsers = false,
   autoFetchGetUser = false,
+  autoFetchUsersWithTeams = false,
+  options = {},
 }: AutoFetchProps = {}): UseUserType => {
   const { setToastState, queryClient, userId, router } = useUserUtils();
 
@@ -108,6 +118,28 @@ const useUser = ({
     },
   });
 
+  const fetchUsersWithTeams = useInfiniteQuery(
+    ['usersWithTeams'],
+    ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, options.search ?? ''),
+    {
+      enabled: autoFetchUsersWithTeams,
+      refetchOnWindowFocus: false,
+      keepPreviousData: true,
+      getNextPageParam: (lastPage) => {
+        const { hasNextPage, page } = lastPage;
+        if (hasNextPage) return page + 1;
+        return undefined;
+      },
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the users',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
       queryClient.invalidateQueries(['usersWithTeams']);
@@ -135,9 +167,22 @@ const useUser = ({
   });
 
   const deleteUser = useMutation(deleteUserRequest, {
+    onMutate: (variables: DeleteUser) => {
+      queryClient.setQueryData<InfiniteData<InfiniteUsersWithTeams>>(
+        ['usersWithTeams'],
+        (oldData: InfiniteData<InfiniteUsersWithTeams> | undefined) => {
+          if (!oldData) return { pages: [], pageParams: [] };
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              userWithTeams: page.userWithTeams.filter((value) => value.user._id !== variables.id),
+            })),
+          };
+        },
+      );
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['usersWithTeams']);
-
       setToastState({
         open: true,
         content: 'The team user was successfully updated.',
@@ -145,6 +190,7 @@ const useUser = ({
       });
     },
     onError: () => {
+      queryClient.invalidateQueries(['usersWithTeams']);
       setToastState({
         open: true,
         content: 'Error while deleting the user',
@@ -163,6 +209,7 @@ const useUser = ({
     getUserById,
     registerGuestUser,
     loginGuestUser,
+    fetchUsersWithTeams,
   };
 };
 

@@ -19,6 +19,7 @@ import { TYPES } from '../interfaces/types';
 import Schedules from '../entities/schedules.schema';
 import { Configs } from 'src/modules/boards/dto/configs.dto';
 import { ScheduleRepositoryInterface } from '../repository/schedule.repository.interface';
+import Team from 'src/modules/teams/entities/team.schema';
 
 @Injectable()
 export class CreateSchedulesService implements CreateSchedulesServiceInterface {
@@ -162,7 +163,14 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 			date: new Date(new Date().getFullYear(), month, day)
 		};
 
-		const boardId = await this.createBoardService.splitBoardByTeam(ownerId, teamId, configs);
+		const team = oldBoard.team as Team;
+
+		const boardId = await this.createBoardService.splitBoardByTeam(
+			ownerId,
+			teamId,
+			configs,
+			team.name
+		);
 
 		if (!boardId) {
 			await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);

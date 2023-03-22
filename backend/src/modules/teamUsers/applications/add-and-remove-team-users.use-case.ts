@@ -8,9 +8,7 @@ import UpdateTeamUserDto from '../dto/update.team.user.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @Injectable()
-export class AddAndRemoveTeamUsersUseCase
-	implements UseCase<UpdateTeamUserDto, TeamUser[]>
-{
+export class AddAndRemoveTeamUsersUseCase implements UseCase<UpdateTeamUserDto, TeamUser[]> {
 	constructor(
 		@Inject(TYPES.services.CreateTeamUserService)
 		private createTeamUserService: CreateTeamUserServiceInterface,

@@ -4,7 +4,7 @@ import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { BOARD_NOT_FOUND, INSERT_FAILED } from 'src/libs/exceptions/messages';
+import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
@@ -24,7 +24,6 @@ import {
 	Delete,
 	Get,
 	Inject,
-	NotFoundException,
 	Param,
 	Post,
 	Put,
@@ -107,12 +106,8 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Post()
-	async createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
-		const board = await this.createBoardApp.create(boardData, request.user._id);
-
-		if (!board) throw new BadRequestException(INSERT_FAILED);
-
-		return board;
+	createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
+		return this.createBoardApp.create(boardData, request.user._id);
 	}
 
 	@ApiOperation({ summary: 'Duplicate a board' })
@@ -185,10 +180,7 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Get()
-	async getAllBoards(
-		@Req() request: RequestWithUser,
-		@Query() { page, size, team }: PaginationParams
-	) {
+	getAllBoards(@Req() request: RequestWithUser, @Query() { page, size, team }: PaginationParams) {
 		const { _id: userId, isSAdmin } = request.user;
 
 		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
@@ -209,10 +201,7 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Get('/personal')
-	async getPersonalBoards(
-		@Req() request: RequestWithUser,
-		@Query() { page, size }: PaginationParams
-	) {
+	getPersonalBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		const { _id: userId } = request.user;
 
 		return this.getBoardApp.getPersonalBoards(userId, page, size);
@@ -240,14 +229,8 @@ export default class BoardsController {
 	@BoardUser([TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
 	@UseGuards(GetBoardGuard)
 	@Get(':boardId')
-	async getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		const board = await this.getBoardApp.getBoard(boardId, request.user);
-
-		if (!board) {
-			throw new NotFoundException(BOARD_NOT_FOUND);
-		}
-
-		return board;
+	getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
+		return this.getBoardApp.getBoard(boardId, request.user);
 	}
 
 	@ApiOperation({ summary: 'Update a specific board' })

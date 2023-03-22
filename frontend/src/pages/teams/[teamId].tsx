@@ -102,7 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       key: teamId,
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };

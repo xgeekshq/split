@@ -13,7 +13,7 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 		private readonly boardUserRepository: BoardUserRepositoryInterface
 	) {}
 
-	saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string) {
+	saveBoardUsers(newUsers: BoardUserDto[], newBoardId?: string, withSession?: boolean) {
 		let boardUsersToInsert: BoardUserDto[] = newUsers;
 
 		if (newBoardId) {
@@ -23,7 +23,7 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 			}));
 		}
 
-		return this.boardUserRepository.createBoardUsers(boardUsersToInsert);
+		return this.boardUserRepository.createBoardUsers(boardUsersToInsert, withSession);
 	}
 
 	async createBoardUser(board: string, user: string) {
@@ -43,5 +43,21 @@ export default class CreateBoardUserService implements CreateBoardUserServiceInt
 		if (!boardUserCreated) throw new BadRequestException(INSERT_FAILED);
 
 		return boardUserCreated;
+	}
+
+	startTransaction(): Promise<void> {
+		return this.boardUserRepository.startTransaction();
+	}
+
+	commitTransaction(): Promise<void> {
+		return this.boardUserRepository.commitTransaction();
+	}
+
+	abortTransaction(): Promise<void> {
+		return this.boardUserRepository.abortTransaction();
+	}
+
+	endSession(): Promise<void> {
+		return this.boardUserRepository.endSession();
 	}
 }

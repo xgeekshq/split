@@ -137,6 +137,7 @@ const CardBoard = React.memo<CardBoardProps>(
             {...provided.draggableProps}
             direction="column"
             css={{
+              userSelect: hideCards && card.createdBy?._id !== userId ? 'none' : 'auto',
               backgroundColor: color,
               borderRadius: '$8',
               mb: '$12',

@@ -4,7 +4,8 @@ import { Job, Queue } from 'bull';
 import {
 	ArchiveChannelData,
 	ArchiveChannelDataOptions,
-	BoardType
+	BoardType,
+	PartialBoardType
 } from 'src/modules/communication/dto/types';
 
 @Injectable()
@@ -36,7 +37,9 @@ export class SlackArchiveChannelProducer {
 
 		if (data.type === ArchiveChannelDataOptions.CHANNEL_ID) {
 			this.logger.verbose(
-				`Add channel with id: "${data.data}" to be archived to queue with Job id: "${job.id}"`
+				`Add channel with id: "${
+					(data.data as PartialBoardType).id
+				}" to be archived to queue with Job id: "${job.id}"`
 			);
 		}
 

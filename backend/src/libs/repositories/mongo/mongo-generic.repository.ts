@@ -83,12 +83,18 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.aggregate(pipeline).exec();
 	}
 
-	create<Q>(item: Q): Promise<T> {
-		return this._repository.create(item);
+	async create<Q>(item: Q, withSession?: boolean): Promise<T> {
+		return (
+			await this._repository.create([item], {
+				session: withSession ? this._session : undefined
+			})
+		)[0];
 	}
 
-	insertMany<Q>(listOfItems: Q[]): Promise<T[]> {
-		return this._repository.insertMany(listOfItems);
+	insertMany<Q>(listOfItems: Q[], withSession?: boolean): Promise<T[]> {
+		return this._repository.insertMany(listOfItems, {
+			session: withSession ? this._session : undefined
+		});
 	}
 
 	update(id: string, item: T): Promise<T> {

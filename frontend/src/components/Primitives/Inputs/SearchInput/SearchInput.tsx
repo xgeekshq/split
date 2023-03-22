@@ -2,6 +2,7 @@ import React from 'react';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+
 import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from '../Input/styles';
 
 interface InputProps {
@@ -12,13 +13,13 @@ interface InputProps {
   handleClear?: () => void;
 }
 
-const SearchInput: React.FC<InputProps> = ({
+const SearchInput = ({
   placeholder,
   disabled = false,
   currentValue,
   handleChange,
   handleClear,
-}) => (
+}: InputProps) => (
   <Flex
     css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
     direction="column"
@@ -44,6 +45,7 @@ const SearchInput: React.FC<InputProps> = ({
       </Flex>
       <IconWrapper
         justify="center"
+        data-type="clear"
         css={{
           width: '$24',
           height: '$24',

@@ -1,7 +1,7 @@
 import Team from 'src/modules/teams/entities/team.schema';
 import { UpdateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -37,6 +37,7 @@ import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { generateNewSubColumns } from '../utils/generate-subcolumns';
 import { mergeCardsFromSubBoardColumnsIntoMainBoard } from '../utils/merge-cards-from-subboard';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { BoardNotFoundException } from 'src/libs/exceptions/boardNotFoundException';
 
 @Injectable()
 export default class UpdateBoardService implements UpdateBoardServiceInterface {
@@ -85,7 +86,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		const board = await this.boardRepository.getBoard(boardId);
 
 		if (!board) {
-			throw new NotFoundException('Board not found!');
+			throw new BoardNotFoundException();
 		}
 
 		// Destructuring board/boardData variables
@@ -171,62 +172,66 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		]);
 
 		if (!subBoard || !board || subBoard.submitedByUser) {
-			throw new NotFoundException('Board or subBoard not found');
+			throw new BoardNotFoundException();
 		}
 
 		const columnsWithMergedCards = this.getColumnsFromMainBoardWithMergedCards(subBoard, board);
+		let mergedBoard;
 
 		await this.boardRepository.startTransaction();
+
 		try {
-			const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
-				subBoardId,
-				userId,
-				true
-			);
+			try {
+				const updatedMergedSubBoard = await this.boardRepository.updateMergedSubBoard(
+					subBoardId,
+					userId,
+					true
+				);
 
-			if (!updatedMergedSubBoard) {
-				this.logger.error('Update of the subBoard to be merged failed');
+				if (!updatedMergedSubBoard) {
+					this.logger.error('Update of the subBoard to be merged failed');
+					throw new UpdateFailedException();
+				}
+
+				mergedBoard = await this.boardRepository.updateMergedBoard(
+					board._id,
+					columnsWithMergedCards,
+					true
+				);
+
+				if (!mergedBoard) {
+					this.logger.error('Update of the merged board failed');
+					throw new UpdateFailedException();
+				}
+
+				if (board.slackChannelId && board.slackEnable) {
+					this.slackCommunicationService.executeMergeBoardNotification({
+						responsiblesChannelId: board.slackChannelId,
+						teamNumber: subBoard.boardNumber,
+						isLastSubBoard: await this.checkIfIsLastBoardToMerge(
+							mergedBoard.dividedBoards as Board[]
+						),
+						boardId: subBoardId,
+						mainBoardId: board._id
+					});
+				}
+
+				if (socketId) {
+					this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
+				}
+			} catch (e) {
+				await this.boardRepository.abortTransaction();
 				throw new UpdateFailedException();
-			}
-
-			const mergedBoard = await this.boardRepository.updateMergedBoard(
-				board._id,
-				columnsWithMergedCards,
-				true
-			);
-
-			if (!mergedBoard) {
-				this.logger.error('Update of the merged board failed');
-				throw new UpdateFailedException();
-			}
-
-			if (board.slackChannelId && board.slackEnable) {
-				this.slackCommunicationService.executeMergeBoardNotification({
-					responsiblesChannelId: board.slackChannelId,
-					teamNumber: subBoard.boardNumber,
-					isLastSubBoard: await this.checkIfIsLastBoardToMerge(
-						mergedBoard.dividedBoards as Board[]
-					),
-					boardId: subBoardId,
-					mainBoardId: board._id
-				});
-			}
-
-			if (socketId) {
-				this.socketService.sendUpdatedAllBoard(subBoardId, socketId);
 			}
 
 			await this.boardRepository.commitTransaction();
-			await this.boardRepository.endSession();
 
 			return mergedBoard;
 		} catch (e) {
-			await this.boardRepository.abortTransaction();
+			throw new UpdateFailedException();
 		} finally {
 			await this.boardRepository.endSession();
 		}
-
-		throw new UpdateFailedException();
 	}
 
 	updateChannelId(teams: TeamDto[]) {
@@ -486,7 +491,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 
 			//Extracts the action points to a string
 			cards.map((card) => {
-				actionPoints += ` \u2022 ${card.text} \n`;
+				actionPoints += ` \u2022 ${card.text.replace(/\n{2,}/g, '\n\t')} \n`;
 			});
 
 			return (
