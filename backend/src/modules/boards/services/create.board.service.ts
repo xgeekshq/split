@@ -57,7 +57,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const { team: teamId, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
 
 		const boardUsersToCreate: BoardUserDto[] = [];
-		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
+		const haveDividedBoards = dividedBoards.length > 0;
 
 		let createdBoard;
 		let teamName;
@@ -234,8 +234,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	private async createDividedBoards(subBoards: BoardDto[]) {
 		const newSubBoards = await this.boardRepository.insertMany(subBoards, true);
 
-		const subBoardUsers = subBoards.flatMap((board, idx) => {
-			return board.users.map((boardUser) => ({ ...boardUser, board: newSubBoards[idx]._id }));
+		const subBoardUsers = subBoards.flatMap((board) => {
+			const subBoard = newSubBoards.find((subBoard) => subBoard.title === board.title);
+
+			return board.users.map((boardUser) => ({ ...boardUser, board: subBoard._id }));
 		});
 
 		await this.createBoardUserService.saveBoardUsers(subBoardUsers, null, true);
