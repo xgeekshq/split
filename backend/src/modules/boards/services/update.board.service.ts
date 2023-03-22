@@ -486,7 +486,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 
 			//Extracts the action points to a string
 			cards.map((card) => {
-				actionPoints += ` \u2022 ${card.text} \n`;
+				actionPoints += ` \u2022 ${card.text.replace(/\n{2,}/g, '\n\t')} \n`;
 			});
 
 			return (
