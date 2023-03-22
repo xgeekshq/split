@@ -14,10 +14,12 @@ export type UserListDialogProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   confirmationHandler: (usersList: UserList[]) => void;
+  title: string;
+  confirmationLabel: string;
 };
 
 const UserListDialog = React.memo<UserListDialogProps>(
-  ({ usersList, setIsOpen, isOpen, confirmationHandler }) => {
+  ({ usersList, setIsOpen, isOpen, confirmationHandler, title, confirmationLabel }) => {
     const { userId, isSAdmin } = useCurrentSession();
 
     const [searchMember, setSearchMember] = useState<string>('');
@@ -98,7 +100,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
 
     return (
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Dialog.Header title="Add/remove members" />
+        <Dialog.Header title={confirmationLabel} />
         <Flex css={{ p: '$32' }} direction="column">
           <SearchInput
             currentValue={searchMember}
@@ -112,7 +114,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
           />
         </Flex>
         <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
-          Team Members
+          {title}
         </Text>
         <Flex direction="column" gap={8}>
           <Flex align="center" css={{ px: '$32' }}>
