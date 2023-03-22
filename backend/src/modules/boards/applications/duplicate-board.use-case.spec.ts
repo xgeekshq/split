@@ -6,7 +6,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { duplicateBoardUseCase } from '../boards.providers';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
-import { CreateBoardUserServiceInterface } from 'src/modules/boardusers/interfaces/services/create.board.user.service.interface';
+import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { NotFoundException } from '@nestjs/common';
