@@ -125,8 +125,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       confirmationHandler={saveMembers}
-      title="Team Members"
-      confirmationLabel="Add/remove members"
     />
   );
 };
