@@ -4,6 +4,7 @@ import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-u
 import { TYPES } from '../interfaces/types';
 import { Schema } from 'mongoose';
 import Board from 'src/modules/boards/entities/board.schema';
+import { DeleteResult } from 'mongodb';
 
 @Injectable()
 export default class DeleteBoardUserService implements DeleteBoardUserServiceInterface {
@@ -26,6 +27,10 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 	): Promise<number> {
 		return this.boardUserRepository.deleteSimpleBoardUsers(boardId, withSession);
 	}
+
+	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>{
+		return this.boardUserRepository.deleteBoardUsersByBoardList(teamBoardsIds, withSession);
+	};
 
 	deleteBoardUsers(boardUsers: string[]): Promise<number> {
 		return this.boardUserRepository.deleteBoardUsers(boardUsers);

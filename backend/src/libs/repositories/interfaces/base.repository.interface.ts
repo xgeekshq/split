@@ -67,6 +67,8 @@ export interface BaseInterfaceRepository<T> {
 		withSession?: boolean
 	): Promise<Q>;
 
+	deleteManyWithAcknowledged(field: FilterQuery<T>, withSession: boolean): Promise<DeleteResult>;
+
 	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult>;
 
 	startTransaction(): Promise<void>;

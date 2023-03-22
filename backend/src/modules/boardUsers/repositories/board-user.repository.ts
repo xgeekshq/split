@@ -22,6 +22,10 @@ export class BoardUserRepository
 		return this.findAllWithQuery({ user: userId }, null, 'board');
 	}
 
+	getAllBoardUsersOfBoard(boardId: string) {
+		return this.findAllWithQuery({ board: boardId });
+	}
+
 	getBoardResponsible(boardId: string) {
 		return this.findOneByFieldWithQuery({ board: boardId, role: BoardRoles.RESPONSIBLE }, null, {
 			path: 'user'
@@ -104,5 +108,14 @@ export class BoardUserRepository
 		return this.deleteMany({
 			_id: { $in: boardUsers }
 		});
+	}
+
+	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean) {
+		return this.deleteManyWithAcknowledged(
+			{
+				board: { $in: teamBoardsIds }
+			},
+			withSession
+		);
 	}
 }

@@ -24,23 +24,26 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		await this.deleteTeamUserService.startTransaction();
 
 		try {
-			await this.deleteTeam(teamId, true);
-			await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
+			try {
+				await this.deleteTeam(teamId, true);
+				await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
 
-			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
-
+				await this.deleteBoardService.deleteBoardsByTeamId(teamId);
+			} catch (e) {
+				await this.teamRepository.abortTransaction();
+				await this.deleteTeamUserService.abortTransaction();
+				throw new BadRequestException(DELETE_FAILED);
+			}
 			await this.teamRepository.commitTransaction();
 			await this.deleteTeamUserService.commitTransaction();
 
 			return true;
-		} catch (e) {
-			await this.teamRepository.abortTransaction();
-			await this.deleteTeamUserService.abortTransaction();
+		} catch (error) {
+			throw new BadRequestException(DELETE_FAILED);
 		} finally {
 			await this.teamRepository.endSession();
 			await this.deleteTeamUserService.endSession();
 		}
-		throw new BadRequestException(DELETE_FAILED);
 	}
 
 	private async deleteTeam(teamId: string, withSession: boolean) {
