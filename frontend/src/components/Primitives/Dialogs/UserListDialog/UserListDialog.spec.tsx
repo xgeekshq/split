@@ -8,8 +8,6 @@ const DEFAULT_PROPS = {
   usersList: UserListFactory.createMany(3),
   setIsOpen: jest.fn(),
   isOpen: true,
-  title: 'Team Members',
-  confirmationLabel: 'Save',
   confirmationHandler: jest.fn(),
 };
 
@@ -24,11 +22,10 @@ describe('Components/Primitives/Dialogs/UserListDialog', () => {
     const testProps = { ...DEFAULT_PROPS };
 
     // Act
-    const { getByText, getAllByTestId, getByTestId } = render(testProps);
+    const { getAllByTestId, getByTestId } = render(testProps);
 
     // Assert
     expect(getAllByTestId('checkboxUserItem')).toHaveLength(testProps.usersList.length);
-    expect(getByText(testProps.confirmationLabel)).toBeInTheDocument();
     expect(getByTestId('searchInput')).toBeInTheDocument();
   });
 

@@ -13,13 +13,13 @@ export type UserListDialogProps = {
   usersList: UserList[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  confirmationHandler: (usersList: UserList[]) => void;
   title: string;
   confirmationLabel: string;
-  confirmationHandler: (usersList: UserList[]) => void;
 };
 
 const UserListDialog = React.memo<UserListDialogProps>(
-  ({ usersList, setIsOpen, isOpen, title, confirmationLabel, confirmationHandler }) => {
+  ({ usersList, setIsOpen, isOpen, confirmationHandler, title, confirmationLabel }) => {
     const { userId, isSAdmin } = useCurrentSession();
 
     const [searchMember, setSearchMember] = useState<string>('');
@@ -151,18 +151,11 @@ const UserListDialog = React.memo<UserListDialogProps>(
             ))}
           </Flex>
         </Flex>
-        <Flex
-          justify="end"
-          align="center"
-          css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
-        >
-          <Dialog.Footer
-            handleAffirmative={handleUpdateUsers}
-            handleClose={handleClose}
-            affirmativeLabel="Update"
-            showSeparator={false}
-          />
-        </Flex>
+        <Dialog.Footer
+          handleAffirmative={handleUpdateUsers}
+          handleClose={handleClose}
+          affirmativeLabel="Update"
+        />
       </Dialog>
     );
   },

@@ -33,7 +33,7 @@ const Team = () => {
   // Hooks
   const {
     fetchTeam: { data: teamData, isFetching: fetchingTeams },
-  } = useTeam({ autoFetchTeam: true });
+  } = useTeam();
 
   const {
     fetchUsers: { data: usersData, isFetching: fetchingUsers },

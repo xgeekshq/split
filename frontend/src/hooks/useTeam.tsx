@@ -299,7 +299,10 @@ const useTeam = ({
   });
 
   const deleteTeamUser = useMutation(deleteTeamUserRequest, {
-    onSuccess: async () => {
+    onSuccess: async ({ team: currentTeamId }) => {
+      const teams = teamsList.filter((team) => team.id !== currentTeamId);
+      setTeamsList(teams);
+
       await Promise.all([
         queryClient.invalidateQueries(['teams', userId]),
         queryClient.invalidateQueries(['teamsUserIsNotMember', userId]),

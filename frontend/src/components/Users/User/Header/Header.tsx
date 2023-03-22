@@ -5,20 +5,13 @@ import { BreadcrumbType } from '@/types/board/Breadcrumb';
 import { useState } from 'react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import { TeamChecked } from '@/types/team/team';
-import { useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
-import { ListTeams } from '../TeamsDialog/TeamsDialog';
+import ListTeams from '../ListTeams/ListTeams';
 
 export type UserHeaderProps = {
   user: User;
-};
-
-type Team = {
-  _id: string;
-  name: string;
 };
 
 const UserHeader = ({ user }: UserHeaderProps) => {
@@ -33,12 +26,6 @@ const UserHeader = ({ user }: UserHeaderProps) => {
     { title: 'Users', link: ROUTES.Users },
     { title: `${user.firstName} ${user.lastName}`, isActive: true },
   ];
-
-  // after fetching data, add the field "isChecked", to be used in the Add button
-  const queryClient = useQueryClient();
-  const teamsUserIsNotMember: TeamChecked[] = (
-    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', user._id]) || []
-  ).map((team) => ({ ...team, _id: team._id, isChecked: false }));
 
   return (
     <Flex align="center" justify="between" data-testid="userHeader">
@@ -62,15 +49,7 @@ const UserHeader = ({ user }: UserHeaderProps) => {
               <Icon name="plus" />
               Add user to new team
             </Button>
-            <ListTeams
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              confirmationLabel="Add new team"
-              title="Teams"
-              providerAccountCreatedAt={user.providerAccountCreatedAt}
-              joinedAt={user.joinedAt}
-              teamsList={teamsUserIsNotMember}
-            />
+            <ListTeams isOpen={isOpen} setIsOpen={setIsOpen} user={user} />
           </>
         </Flex>
       </Flex>

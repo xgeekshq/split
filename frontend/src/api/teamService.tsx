@@ -43,8 +43,10 @@ export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promi
     method: 'DELETE',
   });
 
-export const getTeamsUserIsNotMemberRequest = (userId?: string): Promise<Team[]> =>
-  fetchData(`/teams/not/${userId}`);
+export const getTeamsUserIsNotMemberRequest = (
+  userId?: string,
+  context?: GetServerSidePropsContext,
+): Promise<Team[]> => fetchData(`/teams/not/${userId}`, { context, serverSide: !!context });
 
 export const updateAddTeamsToUserRequest = (teamUser: TeamUserUpdate[]): Promise<TeamUserUpdate> =>
   fetchData(`/teams/add/user`, { method: 'PUT', data: teamUser });
