@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import isEmpty from 'src/libs/utils/isEmpty';
 import CardDto from '../dto/card.dto';
@@ -37,8 +37,12 @@ export default class CreateCardService implements CreateCardServiceInterface {
 
 		const colIndex = board.columns.findIndex((col) => col._id.toString() === colIdToAdd);
 
+		const newCard = board.columns[colIndex].cards[0];
+
+		if (!newCard) throw new BadRequestException(INSERT_FAILED);
+
 		return {
-			newCard: board.columns[colIndex].cards[0],
+			newCard: newCard,
 			hideCards: board.hideCards,
 			hideVotes: board.hideVotes
 		};

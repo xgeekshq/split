@@ -28,7 +28,7 @@ import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
 import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
-import { DELETE_FAILED, INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -104,8 +104,6 @@ export default class CardsController {
 			card,
 			colIdToAdd
 		);
-
-		if (!newCard) throw new BadRequestException(INSERT_FAILED);
 
 		const cardWithHiddenInfo = replaceCard(
 			newCard,
