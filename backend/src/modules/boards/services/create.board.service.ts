@@ -60,6 +60,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const haveDividedBoards = dividedBoards.length > 0 ? true : false;
 
 		let createdBoard;
+		let teamName;
 
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
@@ -67,8 +68,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		try {
 			try {
 				createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
-
-				let teamName;
 
 				if (teamId) {
 					teamName = await this.getTeamNameAndTeamUsers(
@@ -87,23 +86,6 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					createdBoard._id,
 					true
 				);
-
-				if (
-					createdBoard &&
-					recurrent &&
-					teamId &&
-					maxUsers &&
-					teamName === 'xgeeks' &&
-					!fromSchedule
-				) {
-					this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
-				}
-
-				this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
-
-				if (slackEnable && teamId && teamName === 'xgeeks') {
-					await this.callSlackCommunication(createdBoard._id);
-				}
 			} catch (e) {
 				await this.boardRepository.abortTransaction();
 				await this.createBoardUserService.abortTransaction();
@@ -112,6 +94,23 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 			await this.boardRepository.commitTransaction();
 			await this.createBoardUserService.commitTransaction();
+
+			if (
+				createdBoard &&
+				recurrent &&
+				teamId &&
+				maxUsers &&
+				teamName === 'xgeeks' &&
+				!fromSchedule
+			) {
+				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
+			}
+
+			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
+
+			if (slackEnable && teamId && teamName === 'xgeeks') {
+				await this.callSlackCommunication(createdBoard._id);
+			}
 
 			return createdBoard;
 		} catch (e) {
