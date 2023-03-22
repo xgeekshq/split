@@ -5,14 +5,13 @@ import Card from 'src/modules/cards/entities/card.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import * as Users from 'src/modules/users/interfaces/types';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import BoardDto from '../dto/board.dto';
-import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from '../entities/board.schema';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BOARD_NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BOARD_NOT_FOUND, USER_NOT_FOUND } from 'src/libs/exceptions/messages';
 
 @Injectable()
 export class DuplicateBoardUseCase
@@ -30,7 +29,13 @@ export class DuplicateBoardUseCase
 	) {}
 
 	async execute({ boardId, userId, boardTitle }) {
-		const { _id, firstName, lastName, email, strategy } = await this.getUserService.getById(userId);
+		const currentUser = await this.getUserService.getById(userId);
+
+		if (!currentUser) {
+			throw new NotFoundException(USER_NOT_FOUND);
+		}
+
+		const { _id, firstName, lastName, email, strategy } = currentUser;
 
 		const { board }: { board: any } = await this.getBoardService.getBoard(boardId, {
 			_id,
@@ -41,17 +46,16 @@ export class DuplicateBoardUseCase
 		});
 
 		if (!board) {
-			throw new BadRequestException(BOARD_NOT_FOUND);
+			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
-		const users: BoardUserDto[] = [];
-		board.users.forEach((user) => {
+		const users = board.users.map((user) => {
 			delete user._id;
 
-			users.push({
+			return {
 				...user,
 				user: user.user._id
-			});
+			};
 		});
 
 		const columns = board.columns.map((column: Column) => {
