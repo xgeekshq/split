@@ -97,7 +97,7 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
           </Flex>
           <Flex css={{ flex: '2' }} justify="end">
             <RoleSelector
-              isTeamPage
+              isTeamPage={isTeamPage}
               role={member.role}
               userId={member.user._id}
               canChangeRole={canChangeRole}
