@@ -78,8 +78,8 @@ describe('GetCardService', () => {
 		});
 
 		it('should return null if doesnt find cardItem', async () => {
-			cardRepositoryMock.getCardFromBoard.mockResolvedValue(null);
-			await expect(service.getCardFromBoard(boardIdMock, cardIdMock)).resolves.toEqual(null);
+			cardRepositoryMock.getCardItemFromGroup.mockResolvedValue(null);
+			await expect(service.getCardItemFromGroup(boardIdMock, cardIdMock)).resolves.toEqual(null);
 		});
 	});
 });
