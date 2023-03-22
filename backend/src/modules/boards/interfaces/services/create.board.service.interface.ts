@@ -5,5 +5,10 @@ import Board from '../../entities/board.schema';
 export interface CreateBoardServiceInterface {
 	create(boardData: BoardDto, userId: string): Promise<Board>;
 
-	splitBoardByTeam(ownerId: string, teamId: string, configs: Configs): Promise<string | null>;
+	splitBoardByTeam(
+		ownerId: string,
+		teamId: string,
+		configs: Configs,
+		teamName: string
+	): Promise<string | null>;
 }
