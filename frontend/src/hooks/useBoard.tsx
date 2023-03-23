@@ -106,20 +106,8 @@ const useBoard = ({
   });
 
   const duplicateBoard = useMutation(duplicateBoardRequest, {
-    onSuccess: async (data) => {
-      await queryClient.cancelQueries({ queryKey: ['boards'] });
-
-      queryClient.setQueryData(['boards'], (oldData: InfiniteData<InfiniteBoards> | undefined) => {
-        if (!oldData) return { pages: [], pageParams: [] };
-
-        oldData.pages[0].boards.unshift(data);
-
-        return {
-          ...oldData,
-        };
-      });
-
-      // queryClient.invalidateQueries(['boards']);
+    onSuccess: async () => {
+      queryClient.invalidateQueries(['boards']);
 
       setToastState({
         open: true,
