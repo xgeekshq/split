@@ -169,7 +169,7 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 	async deleteManyWithAcknowledged(field: FilterQuery<T>, withSession = false): Promise<DeleteResult> {
 		return this._repository
 		.deleteMany(field, { session: withSession ? this._session : undefined })
-		.exec();;
+		.exec();
 	}
 
 	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {

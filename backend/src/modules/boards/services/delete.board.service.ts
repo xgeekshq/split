@@ -1,3 +1,4 @@
+import { isEmpty } from 'class-validator';
 import { DeleteBoardUserServiceInterface } from '../../boardUsers/interfaces/services/delete.board.user.service.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
@@ -35,21 +36,21 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 
 		const boardIdsToDelete: string[] = [boardId];
 
-		if (board.dividedBoards.length) {
+		if (!isEmpty(board.dividedBoards)) {
 			const dividedBoards = (board.dividedBoards as ObjectId[]).map((subBoardId) =>
 				subBoardId.toString()
 			);
 			boardIdsToDelete.push(...dividedBoards);
 		}
 
-		return await this.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
+		return this.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
 	}
 
 	async deleteBoardsByTeamId(teamId: string) {
 		const teamBoards = await this.boardRepository.getAllBoardsByTeamId(teamId);
 		const teamBoardsIds = teamBoards.map((board) => board._id);
 
-		return await this.deleteBoardBoardUsersAndSchedules(teamBoardsIds);
+		return this.deleteBoardBoardUsersAndSchedules(teamBoardsIds);
 	}
 
 	/* --------------- HELPERS --------------- */

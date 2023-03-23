@@ -13,8 +13,9 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
+import Board from '../entities/board.schema';
 
-const boards = BoardFactory.createMany(2);
+const boards = BoardFactory.createMany(2, [{ slackEnable: true }, { slackEnable: true }]);
 const board = BoardFactory.create({
 	dividedBoards: BoardFactory.createMany(2),
 	slackEnable: true
@@ -73,6 +74,8 @@ describe('DeleteBoardService', () => {
 		//Mock returns
 		boardRepositoryMock.getBoard.mockResolvedValue(board);
 
+		boardRepositoryMock.getBoardsByBoardIdsList.mockResolvedValue(boards);
+
 		deleteBoardUserServiceMock.deleteBoardUsersByBoardList.mockResolvedValue(
 			deleteSuccessfulResult
 		);
@@ -80,7 +83,7 @@ describe('DeleteBoardService', () => {
 		boardRepositoryMock.deleteBoardsByBoardList.mockResolvedValue(deleteSuccessfulResult);
 
 		boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
-		deleteSchedulesServiceMock.deleteSchedulesByBoardList.mockResolvedValue(deleteSuccessfulResult);
+		boardRepositoryMock.getAllBoardsByTeamId.mockResolvedValue(boards);
 
 		//Slack Enabled
 		boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
@@ -93,6 +96,8 @@ describe('DeleteBoardService', () => {
 
 	describe('delete', () => {
 		it('should return true if deleteBoardBoardUsersAndSchedules succeded', async () => {
+			boardRepositoryMock.getBoardsByBoardIdsList.mockResolvedValue(boards);
+
 			await expect(service.delete('boardId')).resolves.toBe(true);
 		});
 
@@ -133,10 +138,6 @@ describe('DeleteBoardService', () => {
 		});
 
 		it('should throw error when deleteSchedulesServiceMock.deleteSchedulesByBoardList fails', async () => {
-			const deleteFailedResult = {
-				acknowledged: false,
-				deletedCount: 0
-			};
 			deleteSchedulesServiceMock.deleteSchedulesByBoardList.mockResolvedValue(deleteFailedResult);
 
 			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
