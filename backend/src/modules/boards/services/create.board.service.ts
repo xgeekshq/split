@@ -27,7 +27,14 @@ import { CreateBoardServiceInterface } from '../interfaces/services/create.board
 import Board from '../entities/board.schema';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	Logger,
+	NotFoundException,
+	forwardRef
+} from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
@@ -127,6 +134,10 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 
 		const boardData = this.generateBoardData(teamUsers, configs, teamName, teamId);
 
+		if (!boardData) {
+			throw new BadRequestException();
+		}
+
 		const board = await this.create(boardData, ownerId, true);
 
 		return board._id.toString();
@@ -215,6 +226,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(populatedBoard));
 			this.slackCommunicationService.execute(board);
 		} else {
+			//this isn't tested on the create.board.service.spec.ts
 			this.logger.error(
 				`Call Slack Communication Service for board id "${boardId}" fails. Board not found.`
 			);
@@ -333,6 +345,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					canBeResponsible: true
 				});
 
+				//this isn't tested on the create.board.service.spec.ts
 				if (!updatedUser) {
 					this.logger.verbose(
 						`Update isNewJoiner and can be responsible fields failed for ${user._id}`
@@ -348,8 +361,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		});
 	}
 
-	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
-		users
+	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) => {
+		return users
 			.map((user) => {
 				return {
 					...user,
@@ -357,6 +370,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				};
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+	};
 
 	private getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
 		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
@@ -438,6 +452,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const canBeResponsibles = availableUsers.filter(
 			(user) => !user.isNewJoiner && user.canBeResponsible
 		);
+
 		const responsiblesAvailable: TeamUser[] = [];
 		while (canBeResponsibles.length > 0 && responsiblesAvailable.length !== maxTeams) {
 			const idx = Math.floor(Math.random() * canBeResponsibles.length);
