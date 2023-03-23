@@ -103,3 +103,9 @@ export type PhaseChangeEventType = {
   columns: ColumnType[];
   submitedAt: Date;
 };
+
+export interface InfiniteBoards {
+  boards: BoardType[];
+  hasNextPage: boolean;
+  page: number;
+}

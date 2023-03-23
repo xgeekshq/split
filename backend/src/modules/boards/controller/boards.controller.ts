@@ -4,7 +4,6 @@ import { PaginationParams } from 'src/libs/dto/param/pagination.params';
 import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamRoles } from 'src/libs/enum/team.roles';
-import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
@@ -18,7 +17,6 @@ import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
 import { BoardRoles } from 'src/modules/communication/dto/types';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -133,15 +131,11 @@ export default class BoardsController {
 		@Param() { boardId }: BaseParam,
 		@Body() { boardTitle }: { boardTitle: string }
 	) {
-		const board = await this.duplicateBoardUseCase.execute({
+		return this.duplicateBoardUseCase.execute({
 			boardId,
 			userId: request.user._id,
 			boardTitle
 		});
-
-		if (!board) throw new BadRequestException(INSERT_FAILED);
-
-		return board;
 	}
 
 	@ApiOperation({ summary: 'Get Boards to show on dashboard' })

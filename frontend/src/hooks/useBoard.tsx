@@ -6,26 +6,31 @@ import {
   deleteBoardRequest,
   duplicateBoardRequest,
   getBoardRequest,
+  getBoardsRequest,
   updateBoardPhaseRequest,
   updateBoardRequest,
 } from '@/api/boardService';
 import { handleNewBoardUser } from '@/helper/board/transformBoard';
 import { newBoardState } from '@/store/board/atoms/board.atom';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
-import BoardType, { PhaseChangeEventType } from '@/types/board/board';
+import BoardType, { InfiniteBoards, PhaseChangeEventType } from '@/types/board/board';
 import { BoardUser } from '@/types/board/board.user';
 import UseBoardType from '@/types/board/useBoard';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { InfiniteData, useMutation, useQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 import useBoardUtils from './useBoardUtils';
 
 interface AutoFetchProps {
-  autoFetchBoard: boolean;
+  autoFetchBoard?: boolean;
+  autoFetchBoards?: boolean;
 }
 
-const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
+const useBoard = ({
+  autoFetchBoard = false,
+  autoFetchBoards = false,
+}: AutoFetchProps = {}): UseBoardType => {
   const { boardId, queryClient, setToastState } = useBoardUtils();
 
   const setNewBoard = useSetRecoilState(newBoardState);
@@ -68,6 +73,27 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     },
   });
 
+  const fetchBoards = useInfiniteQuery(
+    ['boards'],
+    ({ pageParam = 0 }) => getBoardsRequest(pageParam),
+    {
+      enabled: autoFetchBoards,
+      refetchOnWindowFocus: false,
+      getNextPageParam: (lastPage) => {
+        const { hasNextPage, page } = lastPage;
+        if (hasNextPage) return page + 1;
+        return undefined;
+      },
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the boards',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+
   const createBoard = useMutation(createBoardRequest, {
     onSuccess: (data) => setNewBoard(data._id),
     onError: () => {
@@ -80,8 +106,20 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
   });
 
   const duplicateBoard = useMutation(duplicateBoardRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['boards']);
+    onSuccess: async (data) => {
+      await queryClient.cancelQueries({ queryKey: ['boards'] });
+
+      queryClient.setQueryData(['boards'], (oldData: InfiniteData<InfiniteBoards> | undefined) => {
+        if (!oldData) return { pages: [], pageParams: [] };
+
+        oldData.pages[0].boards.unshift(data);
+
+        return {
+          ...oldData,
+        };
+      });
+
+      // queryClient.invalidateQueries(['boards']);
 
       setToastState({
         open: true,
@@ -100,30 +138,17 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
 
   const deleteBoard = useMutation(deleteBoardRequest, {
     onSuccess: (data, variables) => {
-      queryClient.setQueryData(
-        ['boards'],
-        (
-          oldData:
-            | InfiniteData<{
-                boards: BoardType[];
-                hasNextPage: boolean;
-                page: number;
-              }>
-            | undefined,
-        ) => {
-          if (!oldData) return { pages: [], pageParams: [] };
+      queryClient.setQueryData(['boards'], (oldData: InfiniteData<InfiniteBoards> | undefined) => {
+        if (!oldData) return { pages: [], pageParams: [] };
 
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              boards: page.boards.filter((board) => board._id !== variables.id),
-            })),
-          };
-        },
-      );
-
-      queryClient.invalidateQueries(['boards']);
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            boards: page.boards.filter((board) => board._id !== variables.id),
+          })),
+        };
+      });
 
       setToastState({
         open: true,
@@ -215,6 +240,7 @@ const useBoard = ({ autoFetchBoard = false }: AutoFetchProps): UseBoardType => {
     deleteBoard,
     updateBoard,
     fetchBoard,
+    fetchBoards,
     setQueryDataAddBoardUser,
     updateBoardPhase,
     updateBoardPhaseMutation,

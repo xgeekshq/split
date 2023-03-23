@@ -44,8 +44,8 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
 
     const {
       deleteBoard,
-      duplicateBoard: { mutate: duplicate },
-    } = useBoard({ autoFetchBoard: false });
+      duplicateBoard: { mutate: duplicateMutation },
+    } = useBoard();
 
     const boardTypeCaption = useMemo(() => {
       if (isSubBoard && !isDashboard) return 'Responsible';
@@ -83,7 +83,7 @@ const CardEnd: React.FC<CardEndProps> = React.memo(
     };
 
     const handleDuplicateBoard = (boardTitle: string) => {
-      duplicate({ boardId: board._id, boardTitle });
+      duplicateMutation({ boardId: board._id, boardTitle });
     };
 
     if (isDashboard) {

@@ -14,9 +14,10 @@ import faker from '@faker-js/faker';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
+import { DuplicateBoardDto } from './duplicate-board.use-case';
 
 describe('DuplicateBoardUseCase', () => {
-	let duplicateBoardMock: UseCase<{ boardId: string; userId: string; boardTitle: string }, Board>;
+	let duplicateBoardMock: UseCase<DuplicateBoardDto, Board>;
 	let getUserServiceMock: DeepMocked<GetUserServiceInterface>;
 	let getBoardServiceMock: DeepMocked<GetBoardServiceInterface>;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
@@ -45,9 +46,9 @@ describe('DuplicateBoardUseCase', () => {
 			]
 		}).compile();
 
-		duplicateBoardMock = module.get<
-			UseCase<{ boardId: string; userId: string; boardTitle: string }, Board>
-		>(Boards.TYPES.applications.DuplicateBoardUseCase);
+		duplicateBoardMock = module.get<UseCase<DuplicateBoardDto, Board>>(
+			Boards.TYPES.applications.DuplicateBoardUseCase
+		);
 
 		getUserServiceMock = module.get(Users.TYPES.services.GetUserService);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);

@@ -12,6 +12,7 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
+import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -28,8 +29,7 @@ describe('BoardsController', () => {
 				},
 				{
 					provide: Boards.TYPES.applications.DuplicateBoardUseCase,
-					useValue:
-						createMock<UseCase<{ boardId: string; userId: string; boardTitle: string }, Board>>()
+					useValue: createMock<UseCase<DuplicateBoardDto, Board>>()
 				},
 				{
 					provide: Boards.TYPES.applications.GetBoardApplication,
