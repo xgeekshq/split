@@ -1,16 +1,16 @@
-import { useMemo, useState } from 'react';
-import { useRecoilValue } from 'recoil';
 import DragDropArea from '@/components/Board/DragDropArea';
 import { BoardSettings } from '@/components/Board/Settings';
 import Timer from '@/components/Board/Timer';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { boardInfoState } from '@/store/board/atoms/board.atom';
-import EmitEvent from '@/types/events/emit-event.type';
-import ListenEvent from '@/types/events/listen-event.type';
+import { EmitEvent } from '@/types/events/emit-event.type';
+import { ListenEvent } from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import RegularBoardHeader from './ReagularHeader';
 
 type RegularBoardProps = {

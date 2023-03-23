@@ -15,3 +15,6 @@ export type FixedLengthArray<T, N extends number> = N extends N
 type FixedLengthArrayRecursive<T, N extends number, R extends unknown[]> = R['length'] extends N
   ? R
   : FixedLengthArrayRecursive<T, N, [T, ...R]>;
+
+export const timeToString = (time: number) => (time <= 9 ? '0' : '') + time;
+export const inSeconds = (minutes: number) => minutes * 60;
