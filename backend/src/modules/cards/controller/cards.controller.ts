@@ -44,14 +44,13 @@ import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import Board from 'src/modules/boards/entities/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
-import { replaceCard } from 'src/modules/boards/utils/clean-board';
-import Card from '../entities/card.schema';
-import { hideText } from 'src/libs/utils/hideText';
-import { CreateCardApplicationInterface } from '../interfaces/applications/create.card.application.interface';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
 import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
 import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
+import CreateCardUseCaseDto from '../dto/useCase/params/create-card.use-case.dto';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -59,8 +58,8 @@ import { UnmergeCardApplicationInterface } from '../interfaces/applications/unme
 @Controller('boards')
 export default class CardsController {
 	constructor(
-		@Inject(TYPES.applications.CreateCardApplication)
-		private createCardApp: CreateCardApplicationInterface,
+		@Inject(TYPES.applications.CreateCreateCardUseCase)
+		private createCardUseCase: UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto>,
 		@Inject(TYPES.applications.UpdateCardApplication)
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)
@@ -96,26 +95,18 @@ export default class CardsController {
 		@Param() { boardId }: BaseParam,
 		@Body() createCardDto: CreateCardDto
 	) {
-		const { card, colIdToAdd, socketId } = createCardDto;
+		const { socketId } = createCardDto;
 
-		const { newCard, hideCards, hideVotes } = await this.createCardApp.create(
+		const { newCardToReturn, newCardToSocket } = await this.createCardUseCase.execute({
 			boardId,
-			request.user._id,
-			card,
-			colIdToAdd
-		);
+			userId: request.user._id,
+			createCardDto
+		});
 
-		const cardWithHiddenInfo = replaceCard(
-			newCard,
-			hideText(request.user._id.toString()),
-			hideCards,
-			hideVotes
-		);
-
-		createCardDto.newCard = cardWithHiddenInfo as Card;
+		createCardDto.newCard = newCardToSocket;
 		this.socketService.sendAddCard(socketId, createCardDto);
 
-		return newCard;
+		return newCardToReturn;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card' })
