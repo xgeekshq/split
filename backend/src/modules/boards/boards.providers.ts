@@ -1,4 +1,10 @@
 import BoardTimerRepository from 'src/modules/boards/repositories/board-timer.repository';
+import PauseBoardTimerService from 'src/modules/boards/services/pause-board-timer.service';
+import SendBoardTimerStateService from 'src/modules/boards/services/send-board-timer-state.service';
+import SendBoardTimerTimeLeftService from 'src/modules/boards/services/send-board-timer-time-left.service';
+import StartBoardTimerService from 'src/modules/boards/services/start-board-timer.service';
+import StopBoardTimerService from 'src/modules/boards/services/stop-board-timer.service';
+import UpdateBoardTimerDurationService from 'src/modules/boards/services/update-board-timer-duration.service';
 import AfterUserPausedTimerSubscriber from 'src/modules/boards/subscribers/after-user-paused-timer.subscriber';
 import AfterUserRequestedTimerStateSubscriber from 'src/modules/boards/subscribers/after-user-requested-timer-state.subscriber';
 import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/after-user-started-timer.subscriber';
@@ -6,6 +12,7 @@ import AfterUserStoppedTimerSubscriber from 'src/modules/boards/subscribers/afte
 import AfterUserUpdatedDurationSubscriber from 'src/modules/boards/subscribers/after-user-updated-duration.subscriber';
 import { CreateBoardApplication } from './applications/create.board.application';
 import { DeleteBoardApplication } from './applications/delete.board.application';
+import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
@@ -13,12 +20,6 @@ import { BoardRepository } from './repositories/board.repository';
 import CreateBoardService from './services/create.board.service';
 import DeleteBoardService from './services/delete.board.service';
 import GetBoardService from './services/get.board.service';
-import PauseBoardTimerService from 'src/modules/boards/services/pause-board-timer.service';
-import SendBoardTimerStateService from 'src/modules/boards/services/send-board-timer-state.service';
-import SendBoardTimerTimeLeftService from 'src/modules/boards/services/send-board-timer-time-left.service';
-import StartBoardTimerService from 'src/modules/boards/services/start-board-timer.service';
-import StopBoardTimerService from 'src/modules/boards/services/stop-board-timer.service';
-import UpdateBoardTimerDurationService from 'src/modules/boards/services/update-board-timer-duration.service';
 import UpdateBoardService from './services/update.board.service';
 
 export const createBoardService = {
@@ -44,6 +45,11 @@ export const deleteBoardService = {
 export const createBoardApplication = {
 	provide: TYPES.applications.CreateBoardApplication,
 	useClass: CreateBoardApplication
+};
+
+export const duplicateBoardUseCase = {
+	provide: TYPES.applications.DuplicateBoardUseCase,
+	useClass: DuplicateBoardUseCase
 };
 
 export const getBoardApplication = {

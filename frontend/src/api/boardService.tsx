@@ -1,27 +1,38 @@
 import { GetServerSidePropsContext } from 'next';
 
-import BoardType, { CreateBoardDto, GetBoardResponse, UpdateBoardType } from '@/types/board/board';
+import BoardType, {
+  CreateBoardDto,
+  DuplicateBoardType,
+  GetBoardResponse,
+  UpdateBoardType,
+} from '@/types/board/board';
+import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
 import MergeCardsDto from '@/types/board/mergeCard.dto';
+import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
 import AddCardDto from '@/types/card/addCard.dto';
+import CardType from '@/types/card/card';
 import DeleteCardDto from '@/types/card/deleteCard.dto';
 import RemoveFromCardGroupDto from '@/types/card/removeFromCardGroup.dto';
 import UpdateCardDto from '@/types/card/updateCard.dto';
 import UpdateCardPositionDto from '@/types/card/updateCardPosition.dto';
+import ColumnType, { ColumnDeleteCards } from '@/types/column';
 import AddCommentDto from '@/types/comment/addComment.dto';
+import CommentType from '@/types/comment/comment';
 import DeleteCommentDto from '@/types/comment/deleteComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import VoteDto from '@/types/vote/vote.dto';
 import fetchData from '@/utils/fetchData';
-import CardType from '@/types/card/card';
-import CommentType from '@/types/comment/comment';
-import { BoardUser, CreatedBoardUser, UpdateBoardUser } from '@/types/board/board.user';
-import ColumnType, { ColumnDeleteCards } from '@/types/column';
-import UpdateBoardPhaseDto from '@/types/board/updateBoardPhase.dto';
 
 // #region BOARD
 
 export const createBoardRequest = (newBoard: CreateBoardDto): Promise<BoardType> =>
   fetchData(`/boards`, { method: 'POST', data: newBoard });
+
+export const duplicateBoardRequest = ({
+  boardId,
+  boardTitle,
+}: DuplicateBoardType): Promise<BoardType> =>
+  fetchData(`/boards/duplicate/${boardId}`, { method: 'POST', data: { boardTitle } });
 
 export const updateBoardRequest = (
   board: UpdateBoardType & { socketId: string; deletedColumns?: string[] },
