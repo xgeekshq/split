@@ -57,6 +57,7 @@ import { DeleteBoardApplicationInterface } from '../interfaces/applications/dele
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
+import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -69,10 +70,7 @@ export default class BoardsController {
 		@Inject(TYPES.applications.CreateBoardApplication)
 		private createBoardApp: CreateBoardApplicationInterface,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
-		private duplicateBoardUseCase: UseCase<
-			{ boardId: string; userId: string; boardTitle: string },
-			Board
-		>,
+		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
 		@Inject(TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.UpdateBoardApplication)
@@ -126,7 +124,7 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@Post('/duplicate/:boardId')
-	async duplicateBoard(
+	duplicateBoard(
 		@Req() request: RequestWithUser,
 		@Param() { boardId }: BaseParam,
 		@Body() { boardTitle }: { boardTitle: string }
