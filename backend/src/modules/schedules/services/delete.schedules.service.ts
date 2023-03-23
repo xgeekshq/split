@@ -30,4 +30,24 @@ export class DeleteSchedulesService implements DeleteSchedulesServiceInterface {
 	async deleteScheduleByBoardId(boardId: string): Promise<void> {
 		await this.scheduleRepository.deleteOneSchedule(boardId);
 	}
+
+	deleteSchedulesByBoardList(teamBoardsIds: string[], withSession?: boolean) {
+		return this.scheduleRepository.deleteSchedulesByBoardList(teamBoardsIds, withSession);
+	}
+
+	startTransaction() {
+		return this.scheduleRepository.startTransaction();
+	}
+
+	commitTransaction() {
+		return this.scheduleRepository.commitTransaction();
+	}
+
+	abortTransaction() {
+		return this.scheduleRepository.abortTransaction();
+	}
+
+	endSession() {
+		return this.scheduleRepository.endSession();
+	}
 }

@@ -172,6 +172,12 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return deletedCount;
 	}
 
+	async deleteManyWithAcknowledged(field: FilterQuery<T>, withSession = false): Promise<DeleteResult> {
+		return this._repository
+		.deleteMany(field, { session: withSession ? this._session : undefined })
+		.exec();
+	}
+
 	deleteOneWithQuery(value: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {
 		return this._repository.deleteOne(value, options).exec();
 	}

@@ -6,4 +6,5 @@ export interface ScheduleRepositoryInterface extends BaseInterfaceRepository<Sch
 	getSchedules(): Promise<Schedules[]>;
 	deleteScheduleByBoardId(boardId: string): Promise<Schedules>;
 	deleteOneSchedule(boardId: string): Promise<DeleteResult>;
+	deleteSchedulesByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>;
 }
