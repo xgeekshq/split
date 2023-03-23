@@ -32,6 +32,16 @@ import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 
+type ResultFromCreatedBoard = {
+	createdBoard: Board;
+	teamName?: string;
+};
+
+type CreateBoardAndUsers = {
+	boardData: BoardDto;
+	userId: string;
+};
+
 @Injectable()
 export default class CreateBoardService implements CreateBoardServiceInterface {
 	private logger = new Logger(CreateBoardService.name);
@@ -54,65 +64,47 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
-		const { team: teamId, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
+		const { team: teamId, recurrent, maxUsers, slackEnable } = boardData;
 
-		const boardUsersToCreate: BoardUserDto[] = [];
-		const haveDividedBoards = dividedBoards.length > 0;
+		const createBoardArgs: CreateBoardAndUsers = {
+			boardData,
+			userId
+		};
 
-		let createdBoard;
-		let teamName;
+		let resultFromCreateBoard: ResultFromCreatedBoard;
 
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			try {
-				createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
-
-				if (teamId) {
-					teamName = await this.getTeamNameAndTeamUsers(
-						teamId,
-						boardUsersToCreate,
-						boardData.responsibles
-					);
-				}
-
-				if (!haveDividedBoards && !teamId) {
-					this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
-				}
-
-				await this.createBoardUserService.saveBoardUsers(
-					boardUsersToCreate,
-					createdBoard._id,
-					true
-				);
-			} catch (e) {
-				await this.boardRepository.abortTransaction();
-				await this.createBoardUserService.abortTransaction();
-				throw new CreateFailedException();
-			}
+			resultFromCreateBoard = await this.createBoardAndSaveBoardUsers(createBoardArgs);
 
 			await this.boardRepository.commitTransaction();
 			await this.createBoardUserService.commitTransaction();
 
 			if (
-				createdBoard &&
+				resultFromCreateBoard.createdBoard &&
 				recurrent &&
 				teamId &&
 				maxUsers &&
-				teamName === 'xgeeks' &&
+				resultFromCreateBoard.teamName === 'xgeeks' &&
 				!fromSchedule
 			) {
-				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
+				this.addCronJobToBoard(
+					String(resultFromCreateBoard.createdBoard._id),
+					userId,
+					teamId,
+					maxUsers
+				);
 			}
 
 			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-			if (slackEnable && teamId && teamName === 'xgeeks') {
-				await this.callSlackCommunication(createdBoard._id);
+			if (slackEnable && teamId && resultFromCreateBoard.teamName === 'xgeeks') {
+				await this.callSlackCommunication(resultFromCreateBoard.createdBoard._id);
 			}
 
-			return createdBoard;
+			return resultFromCreateBoard.createdBoard;
 		} catch (e) {
 			throw new CreateFailedException();
 		} finally {
@@ -177,6 +169,40 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	}
 
 	// /* --------------- HELPERS --------------- */
+
+	private async createBoardAndSaveBoardUsers({ boardData, userId }: CreateBoardAndUsers) {
+		const { team: teamId, users, dividedBoards } = boardData;
+		const boardUsersToCreate: BoardUserDto[] = [];
+		const haveDividedBoards = dividedBoards.length > 0;
+
+		try {
+			let teamName;
+			const createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+
+			if (teamId) {
+				teamName = await this.getTeamNameAndTeamUsers(
+					teamId,
+					boardUsersToCreate,
+					boardData.responsibles
+				);
+			}
+
+			if (!haveDividedBoards && !teamId) {
+				this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
+			}
+
+			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, createdBoard._id, true);
+
+			return {
+				createdBoard,
+				teamName
+			};
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+			await this.createBoardUserService.abortTransaction();
+			throw new CreateFailedException();
+		}
+	}
 
 	private async getTeamNameAndTeamUsers(
 		teamId: string,
