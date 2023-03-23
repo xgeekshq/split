@@ -5,8 +5,6 @@ import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
 	creacteCardUseCase,
-	createCardApplication,
-	createCardService,
 	deleteCardApplication,
 	deleteCardService,
 	getCardService,
@@ -23,14 +21,12 @@ import CardsController from './controller/cards.controller';
 	imports: [mongooseBoardModule, forwardRef(() => SocketModule), forwardRef(() => VotesModule)],
 	controllers: [CardsController],
 	providers: [
-		createCardService,
 		updateCardService,
 		getCardService,
 		deleteCardService,
 		updateCardService,
 		mergeCardService,
 		unmergeCardService,
-		createCardApplication,
 		updateCardApplication,
 		deleteCardApplication,
 		mergeCardApplication,
