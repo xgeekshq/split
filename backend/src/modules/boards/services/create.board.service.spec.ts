@@ -31,6 +31,8 @@ import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import User from 'src/modules/users/entities/user.schema';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { createBoardService } from '../boards.providers';
+import { Configs } from '../dto/configs.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('CreateBoardService', () => {
 	let boardService: CreateBoardServiceInterface;
@@ -38,6 +40,7 @@ describe('CreateBoardService', () => {
 	let createBoardUserServiceMock: DeepMocked<CreateBoardUserServiceInterface>;
 	let getTeamServiceMock: DeepMocked<GetTeamServiceInterface>;
 	let getTeamUserServiceMock: DeepMocked<GetTeamUserServiceInterface>;
+	//let updateTeamUserServiceMock: DeepMocked<UpdateTeamUserServiceInterface>;
 	let createSchedulesServiceMock: DeepMocked<CreateSchedulesServiceInterface>;
 	let slackCommunicationServiceMock: DeepMocked<CommunicationServiceInterface>;
 
@@ -81,6 +84,7 @@ describe('CreateBoardService', () => {
 		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
 		getTeamServiceMock = module.get(Teams.TYPES.services.GetTeamService);
 		getTeamUserServiceMock = module.get(TeamUsers.TYPES.services.GetTeamUserService);
+		//ßupdateTeamUserServiceMock = module.get(TeamUsers.TYPES.services.UpdateTeamUserService);
 		createSchedulesServiceMock = module.get(Schedules.TYPES.services.CreateSchedulesService);
 		slackCommunicationServiceMock = module.get(
 			CommunicationsType.TYPES.services.SlackCommunicationService
@@ -96,6 +100,7 @@ describe('CreateBoardService', () => {
 	let teamUsers: TeamUser[];
 	let boardCreated: Board;
 	let boardUsers: BoardUser[];
+	let configs: Configs;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -139,7 +144,7 @@ describe('CreateBoardService', () => {
 			{ _id: subBoardUsers[3].user as string }
 		]);
 		teamUsers = TeamUserFactory.createMany(4, [
-			{ team: team._id, user: users[0] },
+			{ team: team._id, user: users[0], isNewJoiner: false, canBeResponsible: true },
 			{ team: team._id, user: users[1] },
 			{ team: team._id, user: users[2] },
 			{ team: team._id, user: users[3] }
@@ -156,6 +161,16 @@ describe('CreateBoardService', () => {
 			{ board: boardCreated._id, user: subBoardUsers[2].user },
 			{ board: boardCreated._id, user: subBoardUsers[3].user }
 		]);
+		configs = {
+			recurrent: faker.datatype.boolean(),
+			maxVotes: faker.datatype.number(),
+			hideCards: faker.datatype.boolean(),
+			hideVotes: faker.datatype.boolean(),
+			maxUsersPerTeam: faker.datatype.number(),
+			slackEnable: faker.datatype.boolean(),
+			date: faker.datatype.datetime(),
+			postAnonymously: faker.datatype.boolean()
+		};
 
 		getTeamServiceMock.getTeam.mockResolvedValue(team);
 		boardRepositoryMock.create.mockResolvedValue(boardCreated);
@@ -347,5 +362,18 @@ describe('CreateBoardService', () => {
 				async () => await boardService.create(boardDataWithDividedBoard, userId)
 			).rejects.toThrow(CreateFailedException);
 		});
+	});
+
+	describe('splitBoardByTeam', () => {
+		it('should throw error when the team users are not found', async () => {
+			getTeamUserServiceMock.getUsersOfTeam.mockResolvedValue(null);
+			expect(
+				async () => await boardService.splitBoardByTeam(userId, team._id, configs, team.name)
+			).rejects.toThrow(NotFoundException);
+		});
+
+		// it('should call the updateTeamUserService.updateTeamUser ', async () => {
+		// 	updateTeamUserServiceMock.updateTeamUser.mockResolvedValue(teamUsers[0]);
+		// });
 	});
 });

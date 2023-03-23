@@ -119,51 +119,15 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		configs: Configs,
 		teamName: string
 	): Promise<string | null> {
-		const { maxUsersPerTeam } = configs;
-
 		let teamUsers = await this.getTeamUserService.getUsersOfTeam(teamId);
 
 		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
 		teamUsers = this.updateTeamUserNewJoinerOrResponsibleStatus(teamUsers, teamId);
 
-		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
-		);
-		const teamLength = teamUsersWotStakeholders.length;
-
-		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
-		const maxTeams = Math.ceil(rawMaxTeams);
-
-		if (maxTeams < 2 || maxUsersPerTeam < 2) {
-			return null;
-		}
-
-		const responsibles = [];
-		const today = new Date();
-
-		const boardData: BoardDto = {
-			...generateBoardDtoData(
-				`${teamName}-mainboard-${new Intl.DateTimeFormat('en-US', {
-					month: 'long'
-				}).format(today)}-${configs.date?.getFullYear()}`
-			).board,
-			users: [],
-			team: teamId,
-			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
-			recurrent: configs.recurrent,
-			maxVotes: configs.maxVotes ?? null,
-			hideCards: true,
-			postAnonymously: configs.postAnonymously,
-			hideVotes: configs.hideVotes ?? false,
-			maxUsers: Math.ceil(configs.maxUsersPerTeam),
-			slackEnable: configs.slackEnable,
-			responsibles
-		};
+		const boardData = this.generateBoardData(teamUsers, configs, teamName, teamId);
 
 		const board = await this.create(boardData, ownerId, true);
-
-		if (!board) return null;
 
 		return board._id.toString();
 	}
@@ -294,6 +258,47 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				});
 			}
 		});
+	}
+
+	private generateBoardData(
+		teamUsers: TeamUser[],
+		configs: Configs,
+		teamName: string,
+		teamId: string
+	): BoardDto {
+		const teamUsersWotStakeholders = teamUsers.filter(
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
+		);
+		const teamLength = teamUsersWotStakeholders.length;
+
+		const rawMaxTeams = teamLength / Number(configs.maxUsersPerTeam);
+		const maxTeams = Math.ceil(rawMaxTeams);
+
+		if (maxTeams < 2 || configs.maxUsersPerTeam < 2) {
+			return null;
+		}
+
+		const responsibles = [];
+		const today = new Date();
+
+		return {
+			...generateBoardDtoData(
+				`${teamName}-mainboard-${new Intl.DateTimeFormat('en-US', {
+					month: 'long'
+				}).format(today)}-${configs.date?.getFullYear()}`
+			).board,
+			users: [],
+			team: teamId,
+			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
+			recurrent: configs.recurrent,
+			maxVotes: configs.maxVotes ?? null,
+			hideCards: true,
+			postAnonymously: configs.postAnonymously,
+			hideVotes: configs.hideVotes ?? false,
+			maxUsers: Math.ceil(configs.maxUsersPerTeam),
+			slackEnable: configs.slackEnable,
+			responsibles
+		};
 	}
 
 	private handleBoardUserRole(teamUser: TeamUser): string {
