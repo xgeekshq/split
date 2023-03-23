@@ -114,7 +114,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 			users,
 			columns,
 			title: boardTitle,
-			team: boardTeam._id,
+			team: boardTeam?._id,
 			slackEnable: false,
 			isSubBoard: false,
 			dividedBoards: []

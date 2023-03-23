@@ -17,7 +17,6 @@ const UsersNames = ({ haveError, participants, title }: UsersBoxProps) => (
     <Text
       css={{
         textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
         overflow: 'hidden',
         textAlign: 'start',
         height: '$64',
