@@ -58,7 +58,7 @@ import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use
 @Controller('boards')
 export default class CardsController {
 	constructor(
-		@Inject(TYPES.applications.CreateCreateCardUseCase)
+		@Inject(TYPES.applications.CreateCardUseCase)
 		private createCardUseCase: UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto>,
 		@Inject(TYPES.applications.UpdateCardApplication)
 		private updateCardApp: UpdateCardApplicationInterface,

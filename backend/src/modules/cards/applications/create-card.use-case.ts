@@ -12,9 +12,7 @@ import Card from '../entities/card.schema';
 import { hideText } from 'src/libs/utils/hideText';
 
 @Injectable()
-export class CreateCreateCardUseCase
-	implements UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto>
-{
+export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto> {
 	constructor(
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface
@@ -24,6 +22,7 @@ export class CreateCreateCardUseCase
 		const { createCardDto, userId, boardId } = createCardUseCaseDto;
 		const { card, colIdToAdd } = createCardDto;
 
+		// transform data to be stored
 		card.createdBy = userId;
 
 		if (isEmpty(card.items)) {
@@ -50,6 +49,7 @@ export class CreateCreateCardUseCase
 
 		if (!newCard) throw new BadRequestException(INSERT_FAILED);
 
+		//transform data to send via websocket
 		const cardWithHiddenInfo = replaceCard(
 			newCard,
 			hideText(userId),

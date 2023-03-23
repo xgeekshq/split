@@ -1,3 +1,4 @@
+import { CreateCardUseCase } from './applications/create-card.use-case';
 import { CreateCardApplication } from './applications/create.card.application';
 import { DeleteCardApplication } from './applications/delete.card.application';
 import { MergeCardApplication } from './applications/merge.card.application';
@@ -70,4 +71,9 @@ export const unmergeCardApplication = {
 export const cardRepository = {
 	provide: TYPES.repository.CardRepository,
 	useClass: CardRepository
+};
+
+export const creacteCardUseCase = {
+	provide: TYPES.applications.CreateCardUseCase,
+	useClass: CreateCardUseCase
 };
