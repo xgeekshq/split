@@ -45,8 +45,8 @@ const ListTeams = ({
   const [teamsUserIsNotMember, setTeamsUserIsNotMember] = useState<TeamChecked[]>(teamsList);
 
   const {
-    fetchTeamsUserIsNotMember: { refetch },
-  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
+    fetchTeamsWithoutUser: { refetch },
+  } = useTeam({ enableFetchTeamsWithoutUser: true });
 
   const handleClose = () => {
     setSearchTeam('');

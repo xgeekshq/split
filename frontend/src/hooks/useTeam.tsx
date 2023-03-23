@@ -8,14 +8,14 @@ import { ROUTES } from '@/utils/routes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import {
+  getAllTeams,
+  getUserTeams,
+  getTeam,
+  getTeamsWithoutUser,
   addAndRemoveTeamUserRequest,
   createTeamRequest,
   deleteTeamRequest,
   deleteTeamUserRequest,
-  getAllTeams,
-  getTeamRequest,
-  getTeamsOfUser,
-  getTeamsUserIsNotMemberRequest,
   updateAddTeamsToUserRequest,
   updateTeamUserRequest,
 } from '../api/teamService';
@@ -23,119 +23,86 @@ import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
 
 interface AutoFetchProps {
-  autoFetchTeam?: boolean;
-  autoFetchAllTeams?: boolean;
-  autoFetchTeamsOfUser?: boolean;
-  autoFetchUserBasedTeams?: boolean;
-  autoFetchTeamsOfSpecificUser?: boolean;
-  autoFetchTeamsUserIsNotMember?: boolean;
+  enableFetchTeams?: boolean;
+  enableFetchTeam?: boolean;
+  enableFetchUserTeams?: boolean;
+  enableFetchTeamsWithoutUser?: boolean;
 }
 
+export const TEAMS_KEY: string = 'teams';
+const TEAM_STALE_TIME: number = 1000 * 60;
+
+export const fetchTeamsFn = (isSAdmin: boolean) => {
+  if (isSAdmin) {
+    return getAllTeams();
+  }
+  return getUserTeams();
+};
+
 const useTeam = ({
-  autoFetchTeam = false,
-  autoFetchAllTeams = false,
-  autoFetchTeamsOfUser = false,
-  autoFetchUserBasedTeams = false,
-  autoFetchTeamsOfSpecificUser = false,
-  autoFetchTeamsUserIsNotMember = false,
+  enableFetchTeams = false,
+  enableFetchTeam = false,
+  enableFetchUserTeams = false,
+  enableFetchTeamsWithoutUser = false,
 }: AutoFetchProps = {}): UseTeamType => {
   const {
     teamId,
     setToastState,
     queryClient,
-    teamsList,
-    setTeamsList,
     usersList,
     userId,
-    session,
     router: { push },
+    isSAdmin,
   } = useTeamUtils();
 
-  const fetchAllTeams = useQuery(['allTeams'], () => getAllTeams(), {
-    enabled: autoFetchAllTeams,
+  const displayToast = (text: string) => {
+    setToastState({
+      open: true,
+      content: text,
+      type: ToastStateEnum.ERROR,
+    });
+  };
+
+  const fetchTeams = useQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin), {
+    enabled: enableFetchTeams,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: TEAM_STALE_TIME,
     onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the teams',
-        type: ToastStateEnum.ERROR,
-      });
+      displayToast('Error getting the teams');
     },
   });
 
-  const fetchUserBasedTeams = useQuery(
-    ['userBasedTeams'],
-    () => {
-      if (session?.user.isSAdmin) {
-        return getAllTeams();
-      }
-      return getTeamsOfUser();
-    },
-    {
-      enabled: autoFetchUserBasedTeams,
-      refetchOnWindowFocus: false,
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the teams',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
-
-  const fetchTeam = useQuery(['team', teamId], () => getTeamRequest(teamId), {
-    enabled: autoFetchTeam,
+  const fetchTeam = useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
+    enabled: enableFetchTeam,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: TEAM_STALE_TIME,
     onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the team',
-        type: ToastStateEnum.ERROR,
-      });
+      displayToast('Error getting the team');
     },
   });
 
-  const fetchTeamsOfUser = useQuery(['teams'], () => getTeamsOfUser(), {
-    enabled: autoFetchTeamsOfUser,
+  const fetchUserTeams = useQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId), {
+    enabled: enableFetchUserTeams,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: TEAM_STALE_TIME,
     onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the teams',
-        type: ToastStateEnum.ERROR,
-      });
+      displayToast('Error getting the teams');
     },
   });
 
-  const fetchTeamsOfSpecificUser = useQuery(
-    ['teams', userId],
-    () => getTeamsOfUser(userId, undefined),
+  const fetchTeamsWithoutUser = useQuery(
+    [TEAMS_KEY, 'not', 'user', userId],
+    () => getTeamsWithoutUser(userId),
     {
-      enabled: autoFetchTeamsOfSpecificUser,
+      enabled: enableFetchTeamsWithoutUser,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      staleTime: TEAM_STALE_TIME,
       onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the teams',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
-
-  const fetchTeamsUserIsNotMember = useQuery(
-    ['teamsUserIsNotMember', userId],
-    () => getTeamsUserIsNotMemberRequest(userId),
-    {
-      enabled: autoFetchTeamsUserIsNotMember,
-      refetchOnWindowFocus: false,
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the teams',
-          type: ToastStateEnum.ERROR,
-        });
+        displayToast('Error getting the teams');
       },
     },
   );
@@ -276,12 +243,11 @@ const useTeam = ({
 
   const deleteTeam = useMutation(deleteTeamRequest, {
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries(['teams']);
-
-      // updates the teamsList recoil
-      const teams = teamsList.filter((team) => team.id !== variables.id);
-
-      setTeamsList(teams);
+      // Remove Deleted Team from Cache
+      queryClient.setQueryData(['userBasedTeams'], (oldTeams?: Team[]) => {
+        if (oldTeams) return oldTeams.filter((team: Team) => team.id !== variables.id);
+        return oldTeams;
+      });
 
       setToastState({
         open: true,
@@ -321,17 +287,16 @@ const useTeam = ({
   });
 
   return {
-    fetchAllTeams,
-    fetchUserBasedTeams,
-    fetchTeamsOfUser,
-    createTeam,
+    fetchTeams,
     fetchTeam,
+    fetchUserTeams,
+    fetchTeamsWithoutUser,
+
+    createTeam,
     updateTeamUser,
     addAndRemoveTeamUser,
     deleteTeam,
     deleteTeamUser,
-    fetchTeamsOfSpecificUser,
-    fetchTeamsUserIsNotMember,
     updateAddTeamsToUser,
   };
 };

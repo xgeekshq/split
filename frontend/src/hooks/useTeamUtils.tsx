@@ -24,6 +24,7 @@ type TeamUtilsType = {
   usersList: UserList[];
   userId: string | undefined;
   session: Session | null;
+  isSAdmin: boolean;
 };
 
 const useTeamUtils = (): TeamUtilsType => {
@@ -45,6 +46,8 @@ const useTeamUtils = (): TeamUtilsType => {
 
   const [teamsList, setTeamsList] = useRecoilState(teamsListState);
 
+  const isSAdmin = session?.user.isSAdmin ?? false;
+
   return {
     loggedUserId,
     teamId: String(teamId),
@@ -58,6 +61,7 @@ const useTeamUtils = (): TeamUtilsType => {
     usersList,
     userId: Array.isArray(userId) ? userId[0] : userId,
     session,
+    isSAdmin,
   };
 };
 

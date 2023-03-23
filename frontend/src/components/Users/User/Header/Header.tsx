@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
+import { TEAMS_KEY } from '@/hooks/useTeam';
 import { ListTeams } from '../TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
@@ -37,7 +38,7 @@ const UserHeader = ({ user }: UserHeaderProps) => {
   // after fetching data, add the field "isChecked", to be used in the Add button
   const queryClient = useQueryClient();
   const teamsUserIsNotMember: TeamChecked[] = (
-    queryClient.getQueryData<Team[]>(['teamsUserIsNotMember', user._id]) || []
+    queryClient.getQueryData<Team[]>([TEAMS_KEY, 'not', 'user', user._id]) || []
   ).map((team) => ({ ...team, _id: team._id, isChecked: false }));
 
   return (

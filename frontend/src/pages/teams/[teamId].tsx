@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { ReactElement, Suspense, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { getTeamRequest } from '@/api/teamService';
+import { getTeam } from '@/api/teamService';
 import { getAllUsers } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
@@ -13,7 +13,7 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
+import useTeam, { TEAMS_KEY } from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { UserList } from '@/types/team/userList';
@@ -33,7 +33,7 @@ const Team = () => {
   // Hooks
   const {
     fetchTeam: { data: teamData, isFetching: fetchingTeams },
-  } = useTeam({ autoFetchTeam: true });
+  } = useTeam({ enableFetchTeam: true });
 
   const {
     fetchUsers: { data: usersData, isFetching: fetchingUsers },
@@ -95,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const queryClient = new QueryClient();
   await Promise.all([
-    queryClient.prefetchQuery(['team', teamId], () => getTeamRequest(teamId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, teamId], () => getTeam(teamId, context)),
     queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
   ]);
 

@@ -8,10 +8,10 @@ import UserHeader from '@/components/Users/User/Header/Header';
 
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getTeamsOfUser } from '@/api/teamService';
+import { getUserTeams } from '@/api/teamService';
 import { useSetRecoilState } from 'recoil';
 import { userTeamsListState } from '@/store/team/atom/team.atom';
-import useTeam from '@/hooks/useTeam';
+import useTeam, { TEAMS_KEY } from '@/hooks/useTeam';
 import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -32,8 +32,8 @@ const UserDetails = () => {
   } = useUser();
 
   const {
-    fetchTeamsOfSpecificUser: { data: userTeams, isFetching: fetchingTeams },
-  } = useTeam();
+    fetchUserTeams: { data: userTeams, isFetching: fetchingTeams },
+  } = useTeam({ enableFetchUserTeams: true });
 
   useEffect(() => {
     if (userTeams) setTeamsListState(userTeams);
@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
-    queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId, context)),
   ]);
 
   return {

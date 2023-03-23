@@ -7,11 +7,10 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useTeam from '@/hooks/useTeam';
+import useTeam, { fetchTeamsFn, TEAMS_KEY } from '@/hooks/useTeam';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
 
@@ -20,8 +19,8 @@ const Boards = () => {
   const setTeamsList = useSetRecoilState(teamsListState);
 
   const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
+    fetchTeams: { data },
+  } = useTeam({ enableFetchTeams: true });
 
   useEffect(() => {
     if (data) setTeamsList(data);
@@ -58,18 +57,14 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
+    await queryClient.prefetchQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin));
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

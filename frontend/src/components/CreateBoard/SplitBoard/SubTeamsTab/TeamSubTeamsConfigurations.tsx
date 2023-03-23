@@ -25,8 +25,8 @@ const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
     const selectedTeam = useRecoilValue(createBoardTeam);
 
     const {
-      fetchTeamsOfUser: { data: teams },
-    } = useTeam();
+      fetchTeams: { data: teams },
+    } = useTeam({ enableFetchTeams: true });
 
     const haveError = useRecoilValue(createBoardError);
 

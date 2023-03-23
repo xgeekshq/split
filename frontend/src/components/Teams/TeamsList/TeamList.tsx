@@ -11,7 +11,7 @@ export type TeamsListProps = {
 };
 
 const TeamsList = ({ teams }: TeamsListProps) => {
-  if (teams?.length === 0) return <EmptyTeams />;
+  if (teams.length === 0) return <EmptyTeams />;
 
   return (
     <Flex direction="column" gap="8">

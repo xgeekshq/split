@@ -1,13 +1,12 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import useTeam from '@/hooks/useTeam';
+import useTeam, { fetchTeamsFn, TEAMS_KEY } from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -75,8 +74,8 @@ const NewRegularBoard: NextPage = () => {
 
   // Team  Hook
   const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
+    fetchTeams: { data },
+  } = useTeam({ enableFetchTeams: true });
 
   const regularBoardTips = [
     {
@@ -328,20 +327,17 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
-
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    Promise.all([
+      queryClient.prefetchQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin)),
+      queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+    ]);
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

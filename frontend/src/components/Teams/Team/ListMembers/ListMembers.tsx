@@ -22,7 +22,7 @@ type Props = {
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const {
     addAndRemoveTeamUser: { mutate },
-  } = useTeam({ autoFetchTeam: false });
+  } = useTeam({ enableFetchTeam: false });
 
   const {
     query: { teamId },

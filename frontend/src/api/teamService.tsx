@@ -13,19 +13,20 @@ import {
 export const getAllTeams = (context?: GetServerSidePropsContext): Promise<Team[]> =>
   fetchData(`/teams`, { context, serverSide: !!context });
 
-export const getTeamsOfUser = (
+export const getUserTeams = (
   userId?: string,
   context?: GetServerSidePropsContext,
 ): Promise<Team[]> =>
-  userId
-    ? fetchData(`/teams/user?userId=${userId ?? ''}`, { context, serverSide: !!context })
-    : fetchData(`/teams/user`, { context, serverSide: !!context });
+  fetchData(`/teams/user${userId ? `?userId=${userId}` : ''}`, { context, serverSide: !!context });
+
+export const getTeam = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
+  fetchData(`/teams/${id}`, { context, serverSide: !!context });
+
+export const getTeamsWithoutUser = (userId?: string): Promise<Team[]> =>
+  fetchData(`/teams/not/${userId}`);
 
 export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> =>
   fetchData(`/teams`, { method: 'POST', data: newTeam });
-
-export const getTeamRequest = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
-  fetchData(`/teams/${id}`, { context, serverSide: !!context });
 
 export const updateTeamUserRequest = (team: TeamUserUpdate): Promise<TeamUser> =>
   fetchData(`/teams/${team.team}`, { method: 'PUT', data: team });
@@ -42,9 +43,6 @@ export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promi
   fetchData(`/teams/user/${teamOfUserToDelete.teamUserId}`, {
     method: 'DELETE',
   });
-
-export const getTeamsUserIsNotMemberRequest = (userId?: string): Promise<Team[]> =>
-  fetchData(`/teams/not/${userId}`);
 
 export const updateAddTeamsToUserRequest = (teamUser: TeamUserUpdate[]): Promise<TeamUserUpdate> =>
   fetchData(`/teams/add/user`, { method: 'PUT', data: teamUser });

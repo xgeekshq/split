@@ -10,11 +10,12 @@ import {
 } from './team.user';
 
 export default interface UseTeamType {
+  fetchTeams: UseQueryResult<Team[], unknown>;
+  fetchTeam: UseQueryResult<Team, unknown>;
+  fetchUserTeams: UseQueryResult<Team[], unknown>;
+  fetchTeamsWithoutUser: UseQueryResult<Team[], unknown>;
+
   createTeam: UseMutationResult<Team, unknown, CreateTeamDto, unknown>;
-  fetchAllTeams: UseQueryResult<Team[] | null, unknown>;
-  fetchUserBasedTeams: UseQueryResult<Team[] | null, unknown>;
-  fetchTeamsOfUser: UseQueryResult<Team[] | null, unknown>;
-  fetchTeam: UseQueryResult<Team | null | undefined, unknown>;
   updateTeamUser: UseMutationResult<TeamUser, unknown, TeamUserUpdate, unknown>;
   addAndRemoveTeamUser: UseMutationResult<
     CreatedTeamUser[],
@@ -25,10 +26,6 @@ export default interface UseTeamType {
   deleteTeam: UseMutationResult<Team, unknown, { id: string }, unknown>;
 
   deleteTeamUser: UseMutationResult<TeamUser, unknown, DeleteTeamUser, unknown>;
-
-  fetchTeamsOfSpecificUser: UseQueryResult<Team[], unknown>;
-
-  fetchTeamsUserIsNotMember: UseQueryResult<Team[], unknown>;
 
   updateAddTeamsToUser: UseMutationResult<TeamUserUpdate, unknown, TeamUserUpdate[], unknown>;
 }

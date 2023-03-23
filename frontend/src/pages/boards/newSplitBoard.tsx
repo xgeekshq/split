@@ -18,14 +18,13 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeam from '@/hooks/useTeam';
+import useTeam, { fetchTeamsFn, TEAMS_KEY } from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -90,8 +89,8 @@ const NewSplitBoard: NextPage = () => {
 
   // Team  Hook
   const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
+    fetchTeams: { data },
+  } = useTeam({ enableFetchTeams: true });
 
   useEffect(() => {
     if (data) {
@@ -295,18 +294,14 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
+    await queryClient.prefetchQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin));
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },
