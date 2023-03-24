@@ -9,7 +9,6 @@ import { StyledForm } from '@/styles/pages/pages.styles';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
-import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardName from '@/components/CreateBoard/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -32,6 +31,7 @@ import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
 
 const defaultBoard = {
   users: [],
@@ -300,19 +300,19 @@ const NewRegularBoard: NextPage = () => {
           ) : (
             <Flex align="center" justify="center" css={{ height: '100%' }}>
               <Flex gap={16} direction="column">
-                <BoxRowContainer
+                <CreateBoardBox
                   iconName="blob-arrow-right"
                   title="Quick create"
                   description="Jump the settings and just create a board. All configurations can still be done within the board itself."
-                  handleSelect={saveEmptyBoard}
-                  active
+                  type="row"
+                  onClick={saveEmptyBoard}
                 />
-                <BoxRowContainer
+                <CreateBoardBox
                   iconName="blob-settings"
                   title="Configure board"
                   description="Select team or participants, configure your board and schedule a date and time."
-                  active
-                  handleSelect={addNewRegularBoard}
+                  type="row"
+                  onClick={addNewRegularBoard}
                 />
               </Flex>
             </Flex>
