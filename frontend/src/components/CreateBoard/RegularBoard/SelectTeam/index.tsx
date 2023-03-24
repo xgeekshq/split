@@ -17,7 +17,7 @@ import {
   SelectIcon,
   SelectContent,
 } from '@/components/Primitives/Inputs/Select/Select';
-import { HelperTextWrapper } from '../../SplitBoard/SubTeamsTab/SelectTeam/styles';
+import { HelperTextWrapper } from './styles';
 
 const SelectTeam = () => {
   const router = useRouter();

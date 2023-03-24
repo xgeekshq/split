@@ -8,7 +8,7 @@ import Text from '@/components/Primitives/Text/Text';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import ParticipantsTab from '../ParticipantsTab';
-import BoardConfigurations from '../../Configurations/BoardConfigurations';
+import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
 
 const SettingsTabs = () => {
   const [optionSelected, setOptionSelected] = useState('team');

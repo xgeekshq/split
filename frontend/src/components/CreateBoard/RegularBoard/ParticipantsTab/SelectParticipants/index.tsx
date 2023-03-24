@@ -1,6 +1,6 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { MouseEvent, useEffect, useMemo, useState } from 'react';
-import UsersBox from '@/components/CreateBoard/SplitBoard/SubTeamsTab/UsersBox';
+import BoardUsersDropdown from '@/components/CreateBoard/BoardUsersDropdown/BoardUsersDropdown';
 import { useRecoilState } from 'recoil';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
@@ -59,7 +59,7 @@ const SelectParticipants = () => {
 
   return (
     <Flex direction="column" css={{ width: '100%' }}>
-      <UsersBox haveError={false} participants={usersListNames} title="Participants" />
+      <BoardUsersDropdown haveError={false} users={usersListNames} title="Participants" />
       <Flex justify="end" css={{ mt: '$10' }}>
         <Button variant="link" size="sm" onClick={handleOpen}>
           <Icon name="plus" />

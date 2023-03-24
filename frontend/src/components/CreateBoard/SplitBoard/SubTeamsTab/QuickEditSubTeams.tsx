@@ -1,8 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,12 +7,14 @@ import {
   AlertDialogContent,
   AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
+import { styled } from '@/styles/stitches/stitches.config';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
-import Button from '@/components/Primitives/Inputs/Button/Button';
 
 interface QuickEditSubTeamsProps {
   team: Team;

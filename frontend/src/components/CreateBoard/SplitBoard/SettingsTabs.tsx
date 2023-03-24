@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import Text from '@/components/Primitives/Text/Text';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
-import { usePrevious } from '@/utils/previousState';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import TeamSubTeamsConfigurations from './SubTeamsTab/TeamSubTeamsConfigurations';
-import BoardConfigurations from '../Configurations/BoardConfigurations';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import { usePrevious } from '@/utils/previousState';
+
+import BoardConfigurations from '../BoardConfigurations/BoardConfigurations';
+import SubTeamsConfigurations from './SubTeamsTab/SubTeamsTab';
 
 const Settings = () => {
-  /**
-   * Recoil Atoms
-   */
+  // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
   const selectedTeam = useRecoilValue(createBoardTeam);
@@ -24,7 +24,7 @@ const Settings = () => {
     {
       value: 'teams',
       label: 'Team/Sub-teams configurations',
-      content: <TeamSubTeamsConfigurations previousTeam={prevTeam} />,
+      content: <SubTeamsConfigurations previousTeam={prevTeam} />,
     },
     {
       value: 'config',
@@ -33,7 +33,6 @@ const Settings = () => {
     },
   ];
   const initialTabValue = tabList[0].value;
-
   const [activeTab, setActiveTab] = useState(initialTabValue);
 
   const {
@@ -61,8 +60,8 @@ const Settings = () => {
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 
   return (
-    <>
-      <Text heading={3} css={{ mb: '$16', mt: '$32' }}>
+    <Flex direction="column" gap={16}>
+      <Text heading={3} css={{ mt: '$16' }}>
         Settings
       </Text>
       <Tab
@@ -71,7 +70,7 @@ const Settings = () => {
         activeValue={activeTab}
         onChangeActiveValue={handleTabChange}
       />
-    </>
+    </Flex>
   );
 };
 

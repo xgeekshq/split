@@ -1,27 +1,27 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import Text from '@/components/Primitives/Text/Text';
-import { teamsOfUser } from '@/store/team/atom/team.atom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import { MIN_MEMBERS } from '@/utils/constants';
 import { useSession } from 'next-auth/react';
-import { useFormContext } from 'react-hook-form';
-import isEmpty from '@/utils/isEmpty';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import useCreateBoard from '@/hooks/useCreateBoard';
 import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
   Select,
+  SelectContent,
+  SelectIcon,
   SelectTrigger,
   SelectValue,
-  SelectIcon,
-  SelectContent,
 } from '@/components/Primitives/Inputs/Select/Select';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import useCreateBoard from '@/hooks/useCreateBoard';
+import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
+import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
-import { HelperTextWrapper } from './styles';
+import { MIN_MEMBERS } from '@/utils/constants';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import isEmpty from '@/utils/isEmpty';
 
 type SelectTeamProps = {
   previousTeam?: string;
@@ -29,13 +29,10 @@ type SelectTeamProps = {
 
 const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const { data: session } = useSession({ required: true });
-
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
-  /**
-   * Recoil Atoms and Hooks
-   */
+  // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setHaveError = useSetRecoilState(createBoardError);
   const teams = useRecoilValue(teamsOfUser);
@@ -48,11 +45,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     formState: { errors },
   } = useFormContext();
 
-  const message = errors.team?.message as string;
-  const teamValueOnForm = getValues().team;
-  const isValueEmpty = isEmpty(teamValueOnForm);
-
-  const isAdminOrStakeholder = (team: Team) =>
+  const hasPermissions = (team: Team) =>
     !!team.users?.find(
       (teamUser) =>
         teamUser.user._id === session?.user.id &&
@@ -60,30 +53,35 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     ) || session?.user.isSAdmin;
 
   const teamMembersCount = teamMembers?.length ?? 0;
-  const numberOfTeams = teams?.filter((team) => isAdminOrStakeholder(team)).length ?? 0;
+  const numberOfTeams = teams?.filter((team) => hasPermissions(team)).length ?? 0;
+  const message =
+    numberOfTeams === 0
+      ? ' In order to create a team board, you must be team-admin or stakeholder of at least one team.'
+      : (errors.team?.message as string);
+  const isHelperEmpty = isEmpty(message);
+  const teamValueOnForm = getValues().team;
+  const isValueEmpty = isEmpty(teamValueOnForm);
 
   const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';
     if (isValueEmpty) return 'default';
     if (!message && !isValueEmpty) return 'valid';
+
     return undefined;
   }, [message, isValueEmpty]);
-
-  const isHelperEmpty = isEmpty(message);
 
   const handleTeamChange = (value: string) => {
     clearErrors();
     const foundTeam = teams.find((team) => team.id === value);
 
     setValue('team', foundTeam?.id);
-
     setSelectedTeam(foundTeam);
   };
 
   const teamsNames = useMemo(
     () =>
       teams
-        .filter((team) => isAdminOrStakeholder(team))
+        .filter((team) => hasPermissions(team))
         .map((team) => ({
           label: `${team.name} (${team.users.length} members)`,
           value: team.id,
@@ -101,18 +99,20 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       MIN_MEMBERS
     );
 
-    return !haveMinMembers || !isAdminOrStakeholder(selectedTeam);
+    return !haveMinMembers || !hasPermissions(selectedTeam);
   }, [selectedTeam, session?.user.id, session?.user.isSAdmin]);
 
   const createBoard = useCallback(() => {
     if (!selectedTeam) {
       return;
     }
+
     const maxUsersCount = Math.ceil(teamMembersCount / 2);
     const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
     const users = selectedTeam.users.flatMap((teamUser) => {
       if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
+
       return [
         {
           user: teamUser.user._id,
@@ -158,7 +158,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, [routerTeam, createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
 
   return (
-    <Flex direction="column" css={{ width: '100%' }}>
+    <Flex direction="column" css={{ flex: 1 }}>
       <Select
         disabled={numberOfTeams === 0}
         hasError={currentSelectTeamState === 'error'}
@@ -175,39 +175,20 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
             </Text>
             <SelectValue />
           </Flex>
-          <SelectIcon className="SelectIcon" asChild>
+          <SelectIcon className="SelectIcon">
             <Icon name="arrow-down" />
           </SelectIcon>
         </SelectTrigger>
         <SelectContent options={teamsNames} />
       </Select>
-      {numberOfTeams === 0 && (
-        <Flex justify="start">
-          <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            <Icon css={{ width: '$24', height: '$24' }} name="info" />
-
-            <Text hint color="dangerBase">
-              In order to create a team board, you must be team-admin or stakeholder of at least one
-              team.
-            </Text>
-          </HelperTextWrapper>
+      {!isHelperEmpty && (
+        <Flex justify="start" gap="4" css={{ mt: '$8', color: '$dangerBase' }}>
+          {currentSelectTeamState === 'error' && <Icon size={16} name="info" />}
+          <Text hint color={currentSelectTeamState === 'error' ? 'dangerBase' : 'primary300'}>
+            {message}
+          </Text>
         </Flex>
       )}
-
-      <Flex justify={!isHelperEmpty ? 'between' : 'end'}>
-        {!isHelperEmpty && (
-          <HelperTextWrapper css={{ mt: '$8' }} gap="4">
-            {currentSelectTeamState === 'error' && (
-              <Icon css={{ width: '$24', height: '$24' }} name="info" />
-            )}
-            {!isHelperEmpty && (
-              <Text hint color={currentSelectTeamState === 'error' ? 'dangerBase' : 'primary300'}>
-                {message}
-              </Text>
-            )}
-          </HelperTextWrapper>
-        )}
-      </Flex>
     </Flex>
   );
 };

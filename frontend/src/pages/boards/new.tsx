@@ -1,15 +1,16 @@
-import { useCallback, useState } from 'react';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useBoard from '@/hooks/useBoard';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
-import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCallback, useState } from 'react';
+
 import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Text from '@/components/Primitives/Text/Text';
+import useBoard from '@/hooks/useBoard';
+import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 
 const NewBoard: NextPage = () => {
@@ -24,9 +25,7 @@ const NewBoard: NextPage = () => {
     createBoard: { status },
   } = useBoard({ autoFetchBoard: false });
 
-  /**
-   * Handle back to boards list page
-   */
+  // Handle back to boards list page
   const handleBack = useCallback(() => {
     setBackButtonState(true);
     back();

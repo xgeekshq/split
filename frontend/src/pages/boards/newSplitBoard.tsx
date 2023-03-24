@@ -1,42 +1,43 @@
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
-import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { joiResolver } from '@hookform/resolvers/joi';
+
+import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
+import QueryError from '@/components/Errors/QueryError';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import useBoard from '@/hooks/useBoard';
+import useTeam from '@/hooks/useTeam';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
   createBoardDataState,
   createBoardError,
   createBoardTeam,
 } from '@/store/createBoard/atoms/create-board.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { CreateBoardDto } from '@/types/board/board';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeam from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
-import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import isEmpty from '@/utils/isEmpty';
-import Link from 'next/link';
-import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { CreateBoardDto } from '@/types/board/board';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
-import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
-import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import isEmpty from '@/utils/isEmpty';
+import { DASHBOARD_ROUTE, ROUTES } from '@/utils/routes';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 const defaultBoard = {
   users: [],
@@ -72,18 +73,14 @@ const NewSplitBoard: NextPage = () => {
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  /**
-   * Recoil Atoms and Hooks
-   */
+  // Recoil Atoms and Hooks
   const setToastState = useSetRecoilState(toastState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
   const [teams, setTeams] = useRecoilState(teamsOfUser);
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
 
-  /**
-   * User Board Hook
-   */
+  // User Board Hook
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -121,9 +118,7 @@ const NewSplitBoard: NextPage = () => {
     },
   ];
 
-  /**
-   * React Hook Form
-   */
+  // React Hook Form
   const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -141,9 +136,7 @@ const NewSplitBoard: NextPage = () => {
     setSelectedTeam(foundTeam);
   }
 
-  /**
-   * Handle back to boards list page
-   */
+  // Handle back to boards list page
   const handleBack = useCallback(() => {
     setIsLoading(true);
 
@@ -238,42 +231,40 @@ const NewSplitBoard: NextPage = () => {
             direction="column"
           >
             <Flex css={{ flex: '1' }}>
-              <StyledForm
-                id="hook-form"
-                onSubmit={
-                  !haveError
-                    ? methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
-                        saveBoard(text, team, slackEnable, maxVotes);
-                      })
-                    : undefined
-                }
-              >
-                <Flex direction="column" gap={24} css={{ width: '100%' }}>
-                  {haveError && (
-                    <AlertBox
-                      text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
-                      title="No team yet!"
-                      type="error"
-                      css={{ flexWrap: 'wrap', gap: '$16' }}
-                    >
-                      <Link href="/teams/new">
-                        <Button size="sm" css={{ px: '$40' }}>
-                          Create team
-                        </Button>
-                      </Link>
-                    </AlertBox>
-                  )}
-                  <Flex direction="column">
-                    <FormProvider {...methods}>
+              <FormProvider {...methods}>
+                <StyledForm
+                  id="hook-form"
+                  {...(!haveError && {
+                    onSubmit: methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
+                      saveBoard(text, team, slackEnable, maxVotes);
+                    }),
+                  })}
+                >
+                  <Flex direction="column" gap={24} css={{ width: '100%' }}>
+                    {haveError && (
+                      <AlertBox
+                        text="In order to create a SPLIT retrospective, you need to have a team with an amount of people big enough to be split into smaller sub-teams. Also you need to be team-admin to create SPLIT retrospectives."
+                        title="No team yet!"
+                        type="error"
+                        css={{ flexWrap: 'wrap', gap: '$16' }}
+                      >
+                        <Link href={ROUTES.NewTeam}>
+                          <Button size="sm" css={{ px: '$40' }}>
+                            Create team
+                          </Button>
+                        </Link>
+                      </AlertBox>
+                    )}
+                    <Flex direction="column">
                       <BoardName
                         title="Main Board Name"
                         description="The main board is the board into which all sub-boards will be merged"
                       />
                       <SettingsTabs />
-                    </FormProvider>
+                    </Flex>
                   </Flex>
-                </Flex>
-              </StyledForm>
+                </StyledForm>
+              </FormProvider>
               <TipBar tips={splitBoardTips} />
             </Flex>
           </Flex>

@@ -1,11 +1,10 @@
 import { useCallback, useMemo } from 'react';
 
-import { bubbleColors } from '@/styles/stitches/partials/colors/bubble.colors';
-
 import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { bubbleColors } from '@/styles/stitches/partials/colors/bubble.colors';
 
-const FakeCardAvatars = () => {
+const FakeAvatarGroup = () => {
   const getRandomColor = useCallback(() => {
     const keys = Object.keys(bubbleColors);
     const value = Math.floor(Math.random() * keys.length);
@@ -40,4 +39,4 @@ const FakeCardAvatars = () => {
   );
 };
 
-export default FakeCardAvatars;
+export default FakeAvatarGroup;

@@ -1,9 +1,8 @@
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { styled } from '@/styles/stitches/stitches.config';
 
-const MainContainer = styled(Flex, Box, {
+const StyledMainBoardItem = styled(Flex, Box, {
   backgroundColor: 'white',
   height: '$76',
   width: '100%',
@@ -12,6 +11,4 @@ const MainContainer = styled(Flex, Box, {
   py: '$22',
 });
 
-const Container = styled(Flex, Box, {});
-
-export { Container, MainContainer };
+export { StyledMainBoardItem };

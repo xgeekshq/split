@@ -1,51 +1,45 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
+const UserNamesContainer = styled(Flex, {
+  height: '$64',
+  flex: 1,
+  py: '$12',
+  px: '$16',
+  border: '1px solid $primary200',
+  borderRadius: '$4',
+});
+
 const DropdownContent = styled('div', {
+  width: '100%',
   display: 'none',
   position: 'absolute',
-  backgroundColor: 'white',
-  minWidth: '100%',
+  backgroundColor: '$white',
   zIndex: 1,
   borderRadius: '$12',
+  mt: '$2',
   px: '$20',
-  py: '$16',
+  py: '$12',
   boxShadow: '0px 4px 16px -4px rgba(18, 25, 34, 0.2)',
-  marginTop: '$2',
 });
 
 const Dropdown = styled(Flex, {
+  flex: 1,
   position: 'relative',
+  cursor: 'pointer',
   '&:hover': {
     display: 'block',
     [`& ${DropdownContent}`]: {
       display: 'block',
-      width: ' 100%',
-      minWidth: 0,
     },
-  },
-  width: ' 100%',
-  minWidth: 0,
-});
-
-const DropdownBtn = styled('button', {
-  color: 'white',
-  border: 'none',
-  cursor: 'pointer',
-  width: ' 100%',
-  padding: 0,
-  minWidth: 0,
-  '&:hover': {
-    display: 'block',
   },
 });
 
 const DropdownItem = styled(Flex, {
-  height: '$36',
   py: '$8',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
 });
 
-export { Dropdown, DropdownBtn, DropdownContent, DropdownItem };
+export { UserNamesContainer, Dropdown, DropdownContent, DropdownItem };
