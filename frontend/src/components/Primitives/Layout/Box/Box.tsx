@@ -1,8 +1,6 @@
 import { styled } from '@/styles/stitches/stitches.config';
 
 const Box = styled('div', {
-  background: '$background',
-  borderRadius: '$8',
   variants: {
     elevation: {
       0: {
