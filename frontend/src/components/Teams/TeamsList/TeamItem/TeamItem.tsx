@@ -10,7 +10,7 @@ import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
+import { useDeleteTeam, useDeleteTeamUser } from '@/hooks/useTeam';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -34,7 +34,9 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   } = useRouter();
   const isTeamPage = pathname.includes('teams');
 
-  const { deleteTeam, deleteTeamUser } = useTeam();
+  // const { deleteTeam, deleteTeamUser } = useTeam();
+  const { mutate: deleteTeam } = useDeleteTeam();
+  const { mutate: deleteTeamUser } = useDeleteTeamUser();
 
   const userFound = useMemo(() => {
     const queryUserId = userPathId;
@@ -80,9 +82,9 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   // to the Parent and passed as Prop.
   const handleDelete = () => {
     if (isTeamPage) {
-      deleteTeam.mutate({ id });
+      deleteTeam({ id });
     } else {
-      deleteTeamUser.mutate({ teamUserId: userFound?._id });
+      deleteTeamUser({ teamUserId: userFound?._id });
     }
   };
 

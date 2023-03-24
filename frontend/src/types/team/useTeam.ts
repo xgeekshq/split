@@ -10,7 +10,6 @@ import {
 } from './team.user';
 
 export default interface UseTeamType {
-  fetchTeams: UseQueryResult<Team[], unknown>;
   fetchTeam: UseQueryResult<Team, unknown>;
   fetchUserTeams: UseQueryResult<Team[], unknown>;
   fetchTeamsWithoutUser: UseQueryResult<Team[], unknown>;

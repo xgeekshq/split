@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import useTeam, { fetchTeamsFn, TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY, useTeams } from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
@@ -31,6 +31,7 @@ import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import { getAllTeams, getUserTeams } from '@/api/teamService';
 
 const defaultBoard = {
   users: [],
@@ -73,9 +74,7 @@ const NewRegularBoard: NextPage = () => {
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   // Team  Hook
-  const {
-    fetchTeams: { data },
-  } = useTeam({ enableFetchTeams: true });
+  const { data } = useTeams(session?.user.isSAdmin ?? false);
 
   const regularBoardTips = [
     {
@@ -327,11 +326,17 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
     const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
     Promise.all([
-      queryClient.prefetchQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin)),
+      queryClient.prefetchQuery([TEAMS_KEY], () => {
+        if (isSAdmin) {
+          return getAllTeams(context);
+        }
+        return getUserTeams(userId, context);
+      }),
       queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
     ]);
 

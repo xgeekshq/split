@@ -5,7 +5,7 @@ import { Team } from '@/types/team/team';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
   getAllTeams,
@@ -23,7 +23,6 @@ import UseTeamType from '../types/team/useTeam';
 import useTeamUtils from './useTeamUtils';
 
 interface AutoFetchProps {
-  enableFetchTeams?: boolean;
   enableFetchTeam?: boolean;
   enableFetchUserTeams?: boolean;
   enableFetchTeamsWithoutUser?: boolean;
@@ -32,15 +31,7 @@ interface AutoFetchProps {
 export const TEAMS_KEY: string = 'teams';
 const TEAM_STALE_TIME: number = 1000 * 60;
 
-export const fetchTeamsFn = (isSAdmin: boolean) => {
-  if (isSAdmin) {
-    return getAllTeams();
-  }
-  return getUserTeams();
-};
-
 const useTeam = ({
-  enableFetchTeams = false,
   enableFetchTeam = false,
   enableFetchUserTeams = false,
   enableFetchTeamsWithoutUser = false,
@@ -52,26 +43,15 @@ const useTeam = ({
     usersList,
     userId,
     router: { push },
-    isSAdmin,
   } = useTeamUtils();
 
-  const displayToast = (text: string) => {
+  const displayToast = (content: string, type: ToastStateEnum) => {
     setToastState({
       open: true,
-      content: text,
-      type: ToastStateEnum.ERROR,
+      content,
+      type,
     });
   };
-
-  const fetchTeams = useQuery([TEAMS_KEY], () => fetchTeamsFn(isSAdmin), {
-    enabled: enableFetchTeams,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    staleTime: TEAM_STALE_TIME,
-    onError: () => {
-      displayToast('Error getting the teams');
-    },
-  });
 
   const fetchTeam = useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
     enabled: enableFetchTeam,
@@ -79,7 +59,7 @@ const useTeam = ({
     refetchOnMount: false,
     staleTime: TEAM_STALE_TIME,
     onError: () => {
-      displayToast('Error getting the team');
+      displayToast('Error getting the team', ToastStateEnum.ERROR);
     },
   });
 
@@ -89,7 +69,7 @@ const useTeam = ({
     refetchOnMount: false,
     staleTime: TEAM_STALE_TIME,
     onError: () => {
-      displayToast('Error getting the teams');
+      displayToast('Error getting the teams', ToastStateEnum.ERROR);
     },
   });
 
@@ -102,32 +82,22 @@ const useTeam = ({
       refetchOnMount: false,
       staleTime: TEAM_STALE_TIME,
       onError: () => {
-        displayToast('Error getting the teams');
+        displayToast('Error getting the teams', ToastStateEnum.ERROR);
       },
     },
   );
 
   const createTeam = useMutation(createTeamRequest, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['teams']);
-
-      setToastState({
-        open: true,
-        content: 'The team was successfully created.',
-        type: ToastStateEnum.SUCCESS,
-      });
-
+      displayToast('The team was successfully created.', ToastStateEnum.SUCCESS);
+      // CHECK: Should this Hook be responsible for changing the Page?
       push(ROUTES.Teams);
     },
     onError: (error: AxiosError<{ message: string }>) => {
-      setToastState({
-        open: true,
-        content:
-          error.response?.data.message === 'INVALID_NAME'
-            ? INVALID_NAME
-            : 'Error creating the team',
-        type: ToastStateEnum.ERROR,
-      });
+      displayToast(
+        error.response?.data.message === 'INVALID_NAME' ? INVALID_NAME : 'Error creating the team',
+        ToastStateEnum.ERROR,
+      );
     },
   });
 
@@ -287,7 +257,6 @@ const useTeam = ({
   });
 
   return {
-    fetchTeams,
     fetchTeam,
     fetchUserTeams,
     fetchTeamsWithoutUser,
@@ -299,6 +268,81 @@ const useTeam = ({
     deleteTeamUser,
     updateAddTeamsToUser,
   };
+};
+
+export const useTeams = (isSAdmin: boolean) => {
+  const { setToastState } = useTeamUtils();
+
+  return useQuery(
+    [TEAMS_KEY],
+    () => {
+      if (isSAdmin) {
+        return getAllTeams();
+      }
+      return getUserTeams();
+    },
+    {
+      enabled: true,
+      refetchOnWindowFocus: false,
+      onError: () => {
+        setToastState({
+          open: true,
+          content: 'Error getting the teams',
+          type: ToastStateEnum.ERROR,
+        });
+      },
+    },
+  );
+};
+
+export const useDeleteTeam = () => {
+  const queryClient = useQueryClient();
+  const { setToastState } = useTeamUtils();
+
+  return useMutation(deleteTeamRequest, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([TEAMS_KEY]);
+
+      setToastState({
+        open: true,
+        content: 'The team was successfully deleted.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error deleting the team.',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
+};
+
+export const useDeleteTeamUser = () => {
+  const { queryClient, setToastState } = useTeamUtils();
+
+  return useMutation(deleteTeamUserRequest, {
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries([TEAMS_KEY, variables.teamUserId]),
+        queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', variables.teamUserId]),
+      ]);
+
+      setToastState({
+        open: true,
+        content: 'The user was successfully removed from the team.',
+        type: ToastStateEnum.SUCCESS,
+      });
+    },
+    onError: () => {
+      setToastState({
+        open: true,
+        content: 'Error removing user from the team.',
+        type: ToastStateEnum.ERROR,
+      });
+    },
+  });
 };
 
 export default useTeam;

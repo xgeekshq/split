@@ -4,9 +4,10 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import useTeam from '@/hooks/useTeam';
+import { useTeams } from '@/hooks/useTeam';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import MainBoardCard from './MainBoardCard';
 import QuickEditSubTeams from './QuickEditSubTeams';
 import SelectTeam from './SelectTeam';
@@ -20,13 +21,12 @@ type TeamSubTeamsConfigurationsProps = {
 
 const TeamSubTeamsConfigurations = React.memo<TeamSubTeamsConfigurationsProps>(
   ({ previousTeam }) => {
+    const { isSAdmin } = useCurrentSession();
     const [stakeholders, setStakeholders] = useState<User[]>([]);
 
     const selectedTeam = useRecoilValue(createBoardTeam);
 
-    const {
-      fetchTeams: { data: teams },
-    } = useTeam({ enableFetchTeams: true });
+    const { data: teams } = useTeams(isSAdmin);
 
     const haveError = useRecoilValue(createBoardError);
 
