@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.17...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.18...HEAD)
+
+## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: redirect guest user on public board @CatiaAntunes96 (#1304)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
 
 ## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
 

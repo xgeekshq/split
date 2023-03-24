@@ -29,6 +29,8 @@ import Column from 'src/modules/columns/entities/column.schema';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
+const board = BoardFactory.create();
+
 const hideVotesFromColumns = (columns: Column[], userId: string) => {
 	return columns.map((column) => {
 		column.cards.forEach((card) => {
@@ -556,6 +558,27 @@ describe('GetBoardService', () => {
 			const result = await boardService.countBoards(userId);
 
 			expect(result).toEqual(countResult);
+		});
+	});
+
+	describe('isBoardPublic', () => {
+		it('should return the isPublic status of a board', async () => {
+			board.isPublic = true;
+
+			boardRepositoryMock.isBoardPublic.mockResolvedValue(board);
+
+			const result = await boardService.isBoardPublic(board._id);
+
+			expect(boardRepositoryMock.isBoardPublic).toBeCalledTimes(1);
+			expect(result).toEqual(true);
+		});
+
+		it('should throw an error if board is not found', async () => {
+			boardRepositoryMock.isBoardPublic.mockResolvedValue(null);
+
+			expect(async () => await boardService.isBoardPublic(board._id)).rejects.toThrow(
+				NotFoundException
+			);
 		});
 	});
 });

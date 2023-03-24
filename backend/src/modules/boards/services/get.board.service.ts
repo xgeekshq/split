@@ -7,7 +7,7 @@ import {
 	NotFoundException,
 	forwardRef
 } from '@nestjs/common';
-import { BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
+import { BOARD_NOT_FOUND, BOARD_USER_NOT_FOUND, NOT_FOUND } from 'src/libs/exceptions/messages';
 import { GetTeamServiceInterface } from 'src/modules/teams/interfaces/services/get.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
@@ -157,6 +157,16 @@ export default class GetBoardService implements GetBoardServiceInterface {
 
 	getAllMainBoards() {
 		return this.boardRepository.getAllMainBoards();
+	}
+
+	async isBoardPublic(boardId: string) {
+		const board = await this.boardRepository.isBoardPublic(boardId);
+
+		if (!board) {
+			throw new NotFoundException(BOARD_NOT_FOUND);
+		}
+
+		return board.isPublic;
 	}
 
 	/* --------------- HELPERS --------------- */

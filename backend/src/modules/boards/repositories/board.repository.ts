@@ -24,6 +24,10 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 
+	isBoardPublic(boardId: string): Promise<Board> {
+		return this.findOneById(boardId, 'isPublic');
+	}
+
 	getBoardsByBoardIdsList(boardIds: string[]): Promise<Board[]> {
 		return this.findAllWithQuery({
 			_id: { $in: boardIds }
