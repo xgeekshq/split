@@ -9,10 +9,12 @@ import {
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from 'src/modules/votes/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
 export default class CreateVoteService implements CreateVoteServiceInterface {
@@ -22,7 +24,9 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
 		private getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface
+		private updateBoardUserService: UpdateBoardUserServiceInterface,
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface
 	) {}
 	private logger: Logger = new Logger('CreateVoteService');
 
@@ -93,7 +97,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 	}
 
 	private async getBoardMaxVotes(boardId: string) {
-		const board = await this.voteRepository.findOneById(boardId, 'maxVotes');
+		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
