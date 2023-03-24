@@ -10,6 +10,7 @@ import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
 import Card from '../entities/card.schema';
 import { hideText } from 'src/libs/utils/hideText';
+import CardDto from '../dto/card.dto';
 
 @Injectable()
 export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto> {
@@ -22,7 +23,33 @@ export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCa
 		const { createCardDto, userId, boardId } = createCardUseCaseDto;
 		const { card, colIdToAdd } = createCardDto;
 
-		// transform data to be stored
+		const transformedCard = this.transformCardToStore(card, userId);
+
+		const board = await this.cardRepository.pushCardWithPopulate(
+			boardId,
+			colIdToAdd,
+			0,
+			transformedCard
+		);
+
+		if (!board.columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+
+		const newCard = this.getNewCardPopulated(board, colIdToAdd);
+
+		const newCardToSocket = this.transformCardForSocket(
+			newCard,
+			userId,
+			board.hideCards,
+			board.hideVotes
+		);
+
+		return {
+			newCardToReturn: newCard,
+			newCardToSocket: newCardToSocket
+		};
+	}
+
+	private transformCardToStore(card: CardDto, userId: string) {
 		card.createdBy = userId;
 
 		if (isEmpty(card.items)) {
@@ -39,28 +66,27 @@ export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCa
 			card.items[0].createdBy = userId;
 		}
 
-		const board = await this.cardRepository.pushCardWithPopulate(boardId, colIdToAdd, 0, card);
+		return card;
+	}
 
-		if (!board.columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
+	private transformCardForSocket(newCard, userId: string, hideCards, hideVotes): Card {
+		const cardWithHiddenInfo = replaceCard(
+			newCard,
+			hideText(userId.toString()),
+			hideCards,
+			hideVotes
+		);
 
+		return cardWithHiddenInfo as Card;
+	}
+
+	private getNewCardPopulated(board, colIdToAdd) {
 		const colIndex = board.columns.findIndex((col) => col._id.toString() === colIdToAdd);
 
 		const newCard = board.columns[colIndex].cards[0];
 
 		if (!newCard) throw new BadRequestException(INSERT_FAILED);
 
-		//transform data to send via websocket
-		const cardWithHiddenInfo = replaceCard(
-			newCard,
-			hideText(userId),
-			board.hideCards,
-			board.hideVotes
-		);
-		const newCardToSocket = cardWithHiddenInfo as Card;
-
-		return {
-			newCardToReturn: newCard,
-			newCardToSocket: newCardToSocket
-		};
+		return newCard;
 	}
 }
