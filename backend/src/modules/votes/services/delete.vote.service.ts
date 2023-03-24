@@ -52,10 +52,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardItemId: string,
 		count: number
 	) {
+		await this.canUserVote(boardId, userId, count, cardId);
+
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
-
-		await this.canUserVote(boardId, userId, count, cardId);
 
 		const cardItem = await this.getCardItemFromBoard(boardId, cardId, cardItemId);
 
@@ -87,10 +87,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	}
 
 	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		await this.canUserVote(boardId, userId, count, cardId);
+
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
-
-		await this.canUserVote(boardId, userId, count, cardId);
 
 		const currentCount = Math.abs(count);
 

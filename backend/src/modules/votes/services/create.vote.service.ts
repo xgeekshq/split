@@ -33,10 +33,10 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		cardItemId: string,
 		count: number
 	) {
+		await this.canUserVote(boardId, userId, count);
+
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
-
-		await this.canUserVote(boardId, userId, count);
 
 		try {
 			await this.addVoteToCardAndUserOperations(boardId, userId, count, cardId, cardItemId);
@@ -51,10 +51,10 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 	}
 
 	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		await this.canUserVote(boardId, userId, count);
+
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
-
-		await this.canUserVote(boardId, userId, count);
 
 		try {
 			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId);
