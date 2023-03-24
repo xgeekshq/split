@@ -74,6 +74,8 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		const canUserVoteResult = await this.verifyIfUserCanVote(boardId, userId, count);
 
 		if (!canUserVoteResult) throw new InsertFailedException(INSERT_VOTE_FAILED);
+
+		return;
 	}
 
 	private async verifyIfUserCanVote(
