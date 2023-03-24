@@ -7,7 +7,7 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY, useTeams } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/useTeam';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -16,6 +16,7 @@ import { ROUTES } from '@/utils/routes';
 import ScrollableContent from '@/components/Primitives/Layout/ScrollableContent/ScrollableContent';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeams from '@/hooks/teams/useTeams';
 
 const Teams = () => {
   const { isSAdmin } = useCurrentSession();

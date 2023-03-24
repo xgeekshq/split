@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import { TEAMS_KEY, useTeams } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/useTeam';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
@@ -32,6 +32,7 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useTeams from '@/hooks/teams/useTeams';
 
 const defaultBoard = {
   users: [],

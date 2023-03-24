@@ -22,7 +22,6 @@ export default interface UseTeamType {
     TeamUserAddAndRemove,
     unknown
   >;
-  deleteTeam: UseMutationResult<Team, unknown, { id: string }, unknown>;
 
   deleteTeamUser: UseMutationResult<TeamUser, unknown, DeleteTeamUser, unknown>;
 

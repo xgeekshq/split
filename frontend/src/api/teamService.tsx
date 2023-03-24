@@ -46,7 +46,7 @@ export const updateAddTeamsToUserRequest = (teamUser: TeamUserUpdate[]): Promise
 // #endregion
 
 // #region DELETE
-export const deleteTeamRequest = ({ id }: { id: string }): Promise<Team> =>
+export const deleteTeam = (id: string): Promise<Team> =>
   fetchData(`/teams/${id}`, { method: 'DELETE' });
 
 export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promise<TeamUser> =>

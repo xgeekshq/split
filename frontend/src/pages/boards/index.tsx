@@ -7,13 +7,14 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY, useTeams } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/useTeam';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useTeams from '@/hooks/teams/useTeams';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });

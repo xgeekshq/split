@@ -5,16 +5,14 @@ import { Team } from '@/types/team/team';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { ROUTES } from '@/utils/routes';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import {
-  getAllTeams,
   getUserTeams,
   getTeam,
   getTeamsWithoutUser,
   addAndRemoveTeamUserRequest,
   createTeamRequest,
-  deleteTeamRequest,
   deleteTeamUserRequest,
   updateAddTeamsToUserRequest,
   updateTeamUserRequest,
@@ -211,29 +209,6 @@ const useTeam = ({
     },
   });
 
-  const deleteTeam = useMutation(deleteTeamRequest, {
-    onSuccess: (_data, variables) => {
-      // Remove Deleted Team from Cache
-      queryClient.setQueryData(['userBasedTeams'], (oldTeams?: Team[]) => {
-        if (oldTeams) return oldTeams.filter((team: Team) => team.id !== variables.id);
-        return oldTeams;
-      });
-
-      setToastState({
-        open: true,
-        content: 'The team was successfully deleted.',
-        type: ToastStateEnum.SUCCESS,
-      });
-    },
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error deleting the team.',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
-
   const deleteTeamUser = useMutation(deleteTeamUserRequest, {
     onSuccess: async () => {
       await Promise.all([
@@ -264,59 +239,9 @@ const useTeam = ({
     createTeam,
     updateTeamUser,
     addAndRemoveTeamUser,
-    deleteTeam,
     deleteTeamUser,
     updateAddTeamsToUser,
   };
-};
-
-export const useTeams = (isSAdmin: boolean) => {
-  const { setToastState } = useTeamUtils();
-
-  return useQuery(
-    [TEAMS_KEY],
-    () => {
-      if (isSAdmin) {
-        return getAllTeams();
-      }
-      return getUserTeams();
-    },
-    {
-      enabled: true,
-      refetchOnWindowFocus: false,
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the teams',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
-};
-
-export const useDeleteTeam = () => {
-  const queryClient = useQueryClient();
-  const { setToastState } = useTeamUtils();
-
-  return useMutation(deleteTeamRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([TEAMS_KEY]);
-
-      setToastState({
-        open: true,
-        content: 'The team was successfully deleted.',
-        type: ToastStateEnum.SUCCESS,
-      });
-    },
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error deleting the team.',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
 };
 
 export const useDeleteTeamUser = () => {

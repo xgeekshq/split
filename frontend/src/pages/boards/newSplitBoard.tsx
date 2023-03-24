@@ -18,7 +18,7 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { TEAMS_KEY, useTeams } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/useTeam';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
@@ -38,6 +38,7 @@ import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHead
 import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useTeams from '@/hooks/teams/useTeams';
 
 const defaultBoard = {
   users: [],

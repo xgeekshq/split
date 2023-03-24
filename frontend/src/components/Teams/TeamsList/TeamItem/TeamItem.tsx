@@ -10,11 +10,12 @@ import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { useDeleteTeam, useDeleteTeamUser } from '@/hooks/useTeam';
+import { useDeleteTeamUser } from '@/hooks/useTeam';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
+import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import TeamBoards from './TeamBoards/TeamBoards';
 import TeamTitle from './TeamTitle/TeamTitle';
 
@@ -34,7 +35,6 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   } = useRouter();
   const isTeamPage = pathname.includes('teams');
 
-  // const { deleteTeam, deleteTeamUser } = useTeam();
   const { mutate: deleteTeam } = useDeleteTeam();
   const { mutate: deleteTeamUser } = useDeleteTeamUser();
 
@@ -43,7 +43,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
     const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
 
     return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
-  }, [userPathId, userId, teamUsers]);
+  }, [isTeamPage, userPathId, userId, teamUsers]);
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
@@ -82,7 +82,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   // to the Parent and passed as Prop.
   const handleDelete = () => {
     if (isTeamPage) {
-      deleteTeam({ id });
+      deleteTeam(id);
     } else {
       deleteTeamUser({ teamUserId: userFound?._id });
     }
