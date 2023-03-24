@@ -20,6 +20,8 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
+  const { userId } = useCurrentSession();
+
   const {
     addAndRemoveTeamUser: { mutate },
   } = useTeam({ autoFetchTeam: false });
@@ -27,8 +29,6 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   const {
     query: { teamId },
   } = useRouter();
-
-  const { userId } = useCurrentSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const [membersList, setMembersListState] = useRecoilState(membersListState);

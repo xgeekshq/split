@@ -3,9 +3,11 @@ import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.r
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
+import { DeleteResult } from 'mongodb';
 
 export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<BoardUser> {
 	getAllBoardsIdsOfUser(userId: string): Promise<BoardUser[]>;
+	getAllBoardUsersOfBoard(boardId: string): Promise<BoardUser[]>;
 	getBoardResponsible(boardId: string): Promise<BoardUser>;
 	getVotesCount(boardId: string): Promise<BoardUser[]>;
 	getBoardUser(board: string, user: string): Promise<BoardUser>;
@@ -26,4 +28,8 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 	): Promise<number>;
 	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
 	deleteBoardUsers(boardUsers: string[]): Promise<number>;
+	deleteBoardUsersByBoardList(
+		teamBoardsIds: string[],
+		withSession?: boolean
+	): Promise<DeleteResult>;
 }

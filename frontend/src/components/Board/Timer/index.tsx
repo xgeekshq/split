@@ -6,11 +6,11 @@ import {
   TimePanelText,
   TimerContainer,
 } from '@/components/Board/Timer/styles';
-import Button from '@/components/Primitives/Inputs/Button/Button';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
 import useTimer from '@/hooks/useTimer';
-import EmitEvent from '@/types/events/emit-event.type';
-import ListenEvent from '@/types/events/listen-event.type';
+import { EmitEvent } from '@/types/events/emit-event.type';
+import { ListenEvent } from '@/types/events/listen-event.type';
 
 type TimerProps = {
   boardId: string;

@@ -24,6 +24,16 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 
+	isBoardPublic(boardId: string): Promise<Board> {
+		return this.findOneById(boardId, 'isPublic');
+	}
+
+	getBoardsByBoardIdsList(boardIds: string[]): Promise<Board[]> {
+		return this.findAllWithQuery({
+			_id: { $in: boardIds }
+		});
+	}
+
 	getAllMainBoards(): Promise<Board[]> {
 		return this.findAllWithQuery(
 			{
@@ -222,5 +232,9 @@ export class BoardRepository
 
 	deleteBoard(boardId: string, withSession: boolean) {
 		return this.findOneAndRemove(boardId, withSession);
+	}
+
+	deleteBoardsByBoardList(teamBoardsIds: string[], withSession?: boolean) {
+		return this.deleteManyWithAcknowledged({ _id: { $in: teamBoardsIds } }, withSession);
 	}
 }

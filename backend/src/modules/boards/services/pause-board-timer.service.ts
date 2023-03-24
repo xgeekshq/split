@@ -5,7 +5,7 @@ import BoardTimerTimeLeftDto from 'src/libs/dto/board-timer-time-left.dto';
 import ServerPausedTimerEvent from 'src/modules/boards/events/server-paused-timer.event';
 import PauseBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/pause-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
+import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class PauseBoardTimerService implements PauseBoardTimerServiceInterface {
@@ -23,13 +23,23 @@ export default class PauseBoardTimerService implements PauseBoardTimerServiceInt
 
 		const boardTimer = this.boardTimerRepository.findBoardTimerByBoardId(boardTimeLeftDto.boardId);
 
-		if (boardTimer?.timerHelper?.isRunning) {
-			boardTimer.timerHelper.pause();
+		if (!boardTimer?.timerHelper) {
+			this.logger.warn(`Timer not found for board: "${boardTimeLeftDto.boardId}"`);
 
-			this.eventEmitter.emit(
-				BOARD_TIMER_SERVER_PAUSED,
-				new ServerPausedTimerEvent({ ...boardTimeLeftDto, ...boardTimer.timerHelper.state })
-			);
+			return;
 		}
+
+		if (!boardTimer?.timerHelper?.isRunning) {
+			this.logger.warn(`Timer not running for board: "${boardTimeLeftDto.boardId}"`);
+
+			return;
+		}
+
+		boardTimer.timerHelper.pause();
+
+		this.eventEmitter.emit(
+			BOARD_TIMER_SERVER_PAUSED,
+			new ServerPausedTimerEvent({ ...boardTimeLeftDto, ...boardTimer.timerHelper.state })
+		);
 	}
 }

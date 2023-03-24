@@ -28,7 +28,7 @@ import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
 import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
-import { DELETE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -42,7 +42,6 @@ import UnmergeCardsDto from '../dto/unmerge.dto';
 import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
-import Board from 'src/modules/boards/entities/board.schema';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
@@ -135,10 +134,8 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		const board = await this.deleteCardApp.delete(boardId, cardId);
-
-		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
+		await this.deleteCardApp.delete(boardId, cardId);
+		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 
 		return HttpStatus.OK;
 	}
@@ -170,10 +167,8 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId, itemId } = params;
-		const board = await this.deleteCardApp.deleteFromCardGroup(boardId, cardId, itemId);
-
-		if (!board) throw new BadRequestException(DELETE_FAILED);
-		this.socketService.sendBoard(board as Board, deleteCardDto.socketId);
+		await this.deleteCardApp.deleteFromCardGroup(boardId, cardId, itemId);
+		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 
 		return HttpStatus.OK;
 	}

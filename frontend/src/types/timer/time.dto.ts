@@ -1,4 +1,4 @@
-export default interface TimeDto {
+export interface TimeDto {
   minutes: number;
   seconds: number;
 }

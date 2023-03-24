@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb';
 import { SessionInterface } from '../../../../libs/transactions/session.interface';
 import { ObjectId } from 'mongoose';
 import Board from 'src/modules/boards/entities/board.schema';
@@ -10,4 +11,5 @@ export interface DeleteBoardUserServiceInterface extends SessionInterface {
 	): Promise<number>;
 	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
 	deleteBoardUsers(boardUsers: string[]): Promise<number>;
+	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>;
 }
