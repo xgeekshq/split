@@ -7,12 +7,13 @@ import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbo
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import Separator from '@/components/Primitives/Separator/Separator';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 
 type Props = {
   teamsList: TeamChecked[];
@@ -35,18 +36,13 @@ const ListTeams = ({
 }: Props) => {
   const [searchTeam, setSearchTeam] = useState<string>('');
 
-  const {
-    updateAddTeamsToUser: { mutate },
-  } = useTeam();
-
   const router = useRouter();
   const { userId } = router.query;
 
   const [teamsUserIsNotMember, setTeamsUserIsNotMember] = useState<TeamChecked[]>(teamsList);
 
-  const {
-    fetchTeamsWithoutUser: { refetch },
-  } = useTeam({ enableFetchTeamsWithoutUser: true });
+  const { mutate } = useUpdateUserTeams(userId! as string);
+  const { refetch } = useTeamsWithoutUser(userId! as string);
 
   const handleClose = () => {
     setSearchTeam('');

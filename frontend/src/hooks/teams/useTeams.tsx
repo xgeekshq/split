@@ -4,7 +4,7 @@ import { getAllTeams, getUserTeams } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeamUtils from '../useTeamUtils';
 
-import { TEAMS_KEY } from '../useTeam';
+import { TEAMS_KEY } from '.';
 
 const useTeams = (isSAdmin: boolean) => {
   const { setToastState } = useTeamUtils();

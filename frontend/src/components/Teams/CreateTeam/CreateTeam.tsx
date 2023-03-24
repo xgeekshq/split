@@ -13,7 +13,6 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import Text from '@/components/Primitives/Text/Text';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
@@ -21,15 +20,14 @@ import { CreateTeamUser } from '@/types/team/team.user';
 import { CREATE_TEAM_TIPS } from '@/utils/tips';
 import { joiResolver } from '@hookform/resolvers/joi';
 
+import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import ListMembers from '../Team/ListMembers/ListMembers';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
   const { back } = useRouter();
 
-  const {
-    createTeam: { mutate, status },
-  } = useTeam();
+  const { mutate, status } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);

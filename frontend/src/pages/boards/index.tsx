@@ -7,7 +7,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';

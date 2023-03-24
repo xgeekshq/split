@@ -4,7 +4,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
 import { membersListState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
@@ -12,6 +11,7 @@ import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -20,9 +20,7 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
-  const {
-    addAndRemoveTeamUser: { mutate },
-  } = useTeam({ enableFetchTeam: false });
+  const { mutate } = useUpdateTeamUsers();
 
   const {
     query: { teamId },

@@ -6,12 +6,12 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { membersListState } from '@/store/team/atom/team.atom';
 
-import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import NewJoinerTooltip from '@/components/Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
+import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import MemberTitle from './MemberTitle/MemberTitle';
 
 export type TeamMemberItemProps = {
@@ -27,9 +27,7 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
 
     const [membersList, setMembersList] = useRecoilState(membersListState);
 
-    const {
-      updateTeamUser: { mutate },
-    } = useTeam();
+    const { mutate } = useUpdateTeamUser(member.team!);
 
     const isNewJoinerHandler = (checked: boolean) => {
       if (isTeamPage && member.team) {

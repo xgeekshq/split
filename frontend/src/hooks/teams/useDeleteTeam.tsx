@@ -4,15 +4,15 @@ import { deleteTeam } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeamUtils from '../useTeamUtils';
 
-import { TEAMS_KEY } from '../useTeam';
+import { TEAMS_KEY } from '.';
 
 const useDeleteTeam = () => {
   const queryClient = useQueryClient();
   const { setToastState } = useTeamUtils();
 
   return useMutation(deleteTeam, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([TEAMS_KEY]);
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([TEAMS_KEY]);
 
       setToastState({
         open: true,

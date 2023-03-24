@@ -10,12 +10,12 @@ import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { useDeleteTeamUser } from '@/hooks/useTeam';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
+import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
 import TeamBoards from './TeamBoards/TeamBoards';
 import TeamTitle from './TeamTitle/TeamTitle';
 
@@ -31,18 +31,18 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
   const { userId, isSAdmin } = useCurrentSession();
   const {
     pathname,
-    query: { userId: userPathId },
+    query: { userId: userPathId, teamId },
   } = useRouter();
   const isTeamPage = pathname.includes('teams');
 
   const { mutate: deleteTeam } = useDeleteTeam();
-  const { mutate: deleteTeamUser } = useDeleteTeamUser();
+  const { mutate: deleteTeamUser } = useDeleteTeamUser(teamId! as string);
 
   const userFound = useMemo(() => {
     const queryUserId = userPathId;
     const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
 
-    return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId));
+    return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId))!;
   }, [isTeamPage, userPathId, userId, teamUsers]);
 
   const havePermissions = useMemo(() => {
@@ -78,13 +78,11 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
     );
   };
 
-  // CHECK: This function can be abstracted
-  // to the Parent and passed as Prop.
   const handleDelete = () => {
     if (isTeamPage) {
       deleteTeam(id);
     } else {
-      deleteTeamUser({ teamUserId: userFound?._id });
+      deleteTeamUser(userFound._id!);
     }
   };
 

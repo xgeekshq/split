@@ -7,7 +7,7 @@ import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -34,12 +34,12 @@ const Teams = () => {
       <ScrollableContent>
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {isLoading ? (
+            {isLoading || !teamsList ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
             ) : (
-              <TeamsList teams={teamsList!} />
+              <TeamsList teams={teamsList} />
             )}
           </QueryError>
         </Suspense>

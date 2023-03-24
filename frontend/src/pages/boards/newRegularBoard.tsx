@@ -1,7 +1,7 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
-import { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';

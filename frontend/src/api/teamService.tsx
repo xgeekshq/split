@@ -4,7 +4,6 @@ import { CreateTeamDto, Team } from '@/types/team/team';
 import fetchData from '@/utils/fetchData';
 import {
   CreatedTeamUser,
-  DeleteTeamUser,
   TeamUser,
   TeamUserAddAndRemove,
   TeamUserUpdate,
@@ -46,11 +45,11 @@ export const updateAddTeamsToUserRequest = (teamUser: TeamUserUpdate[]): Promise
 // #endregion
 
 // #region DELETE
-export const deleteTeam = (id: string): Promise<Team> =>
-  fetchData(`/teams/${id}`, { method: 'DELETE' });
+export const deleteTeam = (teamId: string): Promise<Team> =>
+  fetchData(`/teams/${teamId}`, { method: 'DELETE' });
 
-export const deleteTeamUserRequest = (teamOfUserToDelete: DeleteTeamUser): Promise<TeamUser> =>
-  fetchData(`/teams/user/${teamOfUserToDelete.teamUserId}`, {
+export const deleteTeamUser = (userId: string): Promise<TeamUser> =>
+  fetchData(`/teams/user/${userId}`, {
     method: 'DELETE',
   });
 // #endregion

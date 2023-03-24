@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
@@ -9,9 +9,7 @@ import UserHeader from '@/components/Users/User/Header/Header';
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getUserTeams } from '@/api/teamService';
-import { useSetRecoilState } from 'recoil';
-import { userTeamsListState } from '@/store/team/atom/team.atom';
-import useTeam, { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -19,25 +17,20 @@ import { ROUTES } from '@/utils/routes';
 import { getUser } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
+import useUserTeams from '@/hooks/teams/useUserTeams';
 
 const UserDetails = () => {
-  const { replace } = useRouter();
-
-  // Recoil States
-  const setTeamsListState = useSetRecoilState(userTeamsListState);
+  const {
+    replace,
+    query: { userId },
+  } = useRouter();
 
   // Hooks
   const {
     getUserById: { data: userData, isFetching: fetchingUser },
   } = useUser();
 
-  const {
-    fetchUserTeams: { data: userTeams, isFetching: fetchingTeams },
-  } = useTeam({ enableFetchUserTeams: true });
-
-  useEffect(() => {
-    if (userTeams) setTeamsListState(userTeams);
-  }, [userTeams, setTeamsListState]);
+  const { data: userTeams, isFetching: fetchingTeams } = useUserTeams(userId! as string);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);

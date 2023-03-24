@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
-import { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import { ListTeams } from '../TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
