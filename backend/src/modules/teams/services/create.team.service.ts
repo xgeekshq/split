@@ -53,12 +53,7 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 				name: teamName
 			});
 
-			// console.log(newTeam);
-
-			if (!newTeam) {
-				// console.log('hereeee1');
-				throw new BadRequestException(INSERT_FAILED);
-			}
+			if (!newTeam) throw new BadRequestException(INSERT_FAILED);
 
 			let teamUsers: TeamUser[] = [];
 

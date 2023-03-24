@@ -11,7 +11,7 @@ import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { CreateTeamDto } from '../dto/create-team.dto';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
-import { HttpException, HttpStatus, BadRequestException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
 
 const createTeamDto: CreateTeamDto = {
