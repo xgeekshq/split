@@ -1,12 +1,18 @@
 import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/services/get.board.user.service.interface';
-import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import {
+	BOARD_NOT_FOUND,
+	BOARD_USER_NOT_FOUND,
+	INSERT_VOTE_FAILED
+} from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from 'src/modules/votes/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export default class CreateVoteService implements CreateVoteServiceInterface {
@@ -27,15 +33,94 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		cardItemId: string,
 		count: number
 	) {
-		let retryCount = 0;
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
+
+		await this.canUserVote(boardId, userId, count);
+
+		try {
+			await this.addVoteToCardAndUserOperations(boardId, userId, count, cardId, cardItemId);
+			await this.updateBoardUserService.commitTransaction();
+			await this.voteRepository.commitTransaction();
+		} catch (e) {
+			throw new InsertFailedException(INSERT_VOTE_FAILED);
+		} finally {
+			await this.updateBoardUserService.endSession();
+			await this.voteRepository.endSession();
+		}
+	}
+
+	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+		await this.updateBoardUserService.startTransaction();
+		await this.voteRepository.startTransaction();
+
+		await this.canUserVote(boardId, userId, count);
+
+		try {
+			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId);
+			await this.updateBoardUserService.commitTransaction();
+			await this.voteRepository.commitTransaction();
+		} catch (e) {
+			throw new InsertFailedException(INSERT_VOTE_FAILED);
+		} finally {
+			await this.updateBoardUserService.endSession();
+			await this.voteRepository.endSession();
+		}
+	}
+
+	/* #################### HELPERS #################### */
+
+	private async canUserVote(boardId: string, userId: string, count: number) {
+		const canUserVoteResult = await this.verifyIfUserCanVote(boardId, userId, count);
+
+		if (!canUserVoteResult) throw new InsertFailedException(INSERT_VOTE_FAILED);
+	}
+
+	private async verifyIfUserCanVote(
+		boardId: string,
+		userId: string,
+		count: number
+	): Promise<boolean> {
+		const maxVotesOfBoard = await this.getBoardMaxVotes(boardId);
+
+		if (maxVotesOfBoard === null || maxVotesOfBoard === undefined) {
+			return true;
+		}
+
+		return await this.canBoardUserVote(boardId, userId, count, Number(maxVotesOfBoard));
+	}
+
+	private async getBoardMaxVotes(boardId: string) {
+		const board = await this.voteRepository.findOneById(boardId, 'maxVotes');
+
+		if (!board) {
+			throw new NotFoundException(BOARD_NOT_FOUND);
+		}
+
+		return board.maxVotes;
+	}
+
+	private async canBoardUserVote(boardId: string, userId: string, count: number, maxVotes: number) {
+		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
+
+		if (!boardUserFound) {
+			throw new NotFoundException(BOARD_USER_NOT_FOUND);
+		}
+
+		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
+
+		return userCanVote ? boardUserFound.votesCount + count <= maxVotes : false;
+	}
+
+	private async addVoteToCardAndUserOperations(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId: string
+	) {
+		let retryCount = 0;
 		const withSession = true;
-
-		const canUserVote = await this.canUserVote(boardId, userId, count);
-
-		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
-
 		try {
 			await this.incrementVoteUser(boardId, userId, count, withSession);
 
@@ -49,10 +134,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 				withSession
 			);
 
-			if (!updatedBoard) throw new BadRequestException(INSERT_VOTE_FAILED);
-
-			await this.updateBoardUserService.commitTransaction();
-			await this.voteRepository.commitTransaction();
+			if (!updatedBoard) throw new InsertFailedException(INSERT_VOTE_FAILED);
 		} catch (e) {
 			this.logger.error(e);
 			await this.updateBoardUserService.abortTransaction();
@@ -64,24 +146,19 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 				await this.voteRepository.endSession();
 				await this.addVoteToCard(boardId, cardId, userId, cardItemId, count);
 			} else {
-				throw new BadRequestException(INSERT_VOTE_FAILED);
+				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}
-		} finally {
-			await this.updateBoardUserService.endSession();
-			await this.voteRepository.endSession();
 		}
 	}
 
-	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+	private async addVoteToCardGroupAndUserOperations(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string
+	) {
 		let retryCount = 0;
-		await this.updateBoardUserService.startTransaction();
-		await this.voteRepository.startTransaction();
 		const withSession = true;
-
-		const canUserVote = await this.canUserVote(boardId, userId, count);
-
-		if (!canUserVote) throw new BadRequestException(INSERT_VOTE_FAILED);
-
 		try {
 			await this.incrementVoteUser(boardId, userId, count, withSession);
 			const updatedBoard = await this.voteRepository.insertCardGroupVote(
@@ -92,9 +169,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 				withSession
 			);
 
-			if (!updatedBoard) throw new BadRequestException(INSERT_VOTE_FAILED);
-			await this.updateBoardUserService.commitTransaction();
-			await this.voteRepository.commitTransaction();
+			if (!updatedBoard) throw new InsertFailedException(INSERT_VOTE_FAILED);
 		} catch (e) {
 			this.logger.error(e);
 			await this.updateBoardUserService.abortTransaction();
@@ -106,33 +181,9 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 				await this.voteRepository.endSession();
 				await this.addVoteToCardGroup(boardId, cardId, userId, count);
 			} else {
-				throw new BadRequestException(INSERT_VOTE_FAILED);
+				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}
-		} finally {
-			await this.updateBoardUserService.endSession();
-			await this.voteRepository.endSession();
 		}
-	}
-
-	/* #################### HELPERS #################### */
-
-	private async canUserVote(boardId: string, userId: string, count: number): Promise<boolean> {
-		const board = await this.voteRepository.findOneById(boardId);
-
-		if (!board) {
-			throw new NotFoundException(BOARD_NOT_FOUND);
-		}
-
-		if (board.maxVotes === null || board.maxVotes === undefined) {
-			return true;
-		}
-		const maxVotes = Number(board.maxVotes);
-
-		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
-
-		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
-
-		return userCanVote ? boardUserFound.votesCount + count <= maxVotes : false;
 	}
 
 	private async incrementVoteUser(
@@ -148,6 +199,6 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			withSession
 		);
 
-		if (!updatedBoardUser) throw new BadRequestException(UPDATE_FAILED);
+		if (!updatedBoardUser) throw new UpdateFailedException();
 	}
 }
