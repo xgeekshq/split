@@ -34,7 +34,7 @@ export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCa
 
 		if (!board.columns) throw new HttpException(INSERT_FAILED, HttpStatus.BAD_REQUEST);
 
-		const newCard = this.getNewCardPopulated(board, colIdToAdd);
+		const newCard = this.extractCardFromBoard(board, colIdToAdd);
 
 		const newCardToSocket = this.transformCardForSocket(
 			newCard,
@@ -80,13 +80,16 @@ export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCa
 		return cardWithHiddenInfo as Card;
 	}
 
-	private getNewCardPopulated(board, colIdToAdd) {
-		const colIndex = board.columns.findIndex((col) => col._id.toString() === colIdToAdd);
+	//Extract the card from the populated board
+	private extractCardFromBoard(board, colIdToAdd) {
+		try {
+			const colIndex = board.columns.findIndex((col) => col._id.toString() === colIdToAdd);
 
-		const newCard = board.columns[colIndex].cards[0];
+			const newCard = board.columns[colIndex].cards[0];
 
-		if (!newCard) throw new BadRequestException(INSERT_FAILED);
-
-		return newCard;
+			return newCard;
+		} catch {
+			throw new BadRequestException(INSERT_FAILED);
+		}
 	}
 }
