@@ -2,7 +2,7 @@ import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { CreateTeamDto } from '../dto/crate-team.dto';
+import { CreateTeamDto } from '../dto/create-team.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TYPES } from '../interfaces/types';
@@ -18,10 +18,6 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		@Inject(TeamUsers.TYPES.services.CreateTeamUserService)
 		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
-
-	createTeam(name: string) {
-		return this.teamRepository.create({ name });
-	}
 
 	async create(teamData: CreateTeamDto) {
 		const { users, name } = teamData;

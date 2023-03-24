@@ -1,4 +1,4 @@
-import * as Azure from 'src/modules/azure/interfaces/types';
+import * as Azure from 'src/modules/boards/azure/interfaces/types';
 import * as User from 'src/modules/users/interfaces/types';
 import { Test } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';

@@ -9,7 +9,7 @@ import {
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
 import AuthModule from 'src/modules/auth/auth.module';
-import AzureModule from 'src/modules/azure/azure.module';
+import AzureModule from 'src/modules/boards/azure/azure.module';
 import BoardsModule from 'src/modules/boards/boards.module';
 import { CardsModule } from 'src/modules/cards/cards.module';
 import { CommentsModule } from 'src/modules/comments/comments.module';

@@ -37,7 +37,7 @@ import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-se
 import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
 import { TeamUserGuard } from '../../../libs/guards/teamRoles.guard';
 import { ForbiddenResponse } from '../../../libs/swagger/errors/forbidden.swagger';
-import { CreateTeamDto } from '../dto/crate-team.dto';
+import { CreateTeamDto } from '../dto/create-team.dto';
 import TeamDto from '../dto/team.dto';
 import { TYPES } from '../interfaces/types';
 import { SuperAdminGuard } from 'src/libs/guards/superAdmin.guard';
