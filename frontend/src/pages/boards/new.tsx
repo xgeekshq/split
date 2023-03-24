@@ -13,10 +13,10 @@ import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardB
 import { ROUTES } from '@/utils/routes';
 
 const NewBoard: NextPage = () => {
-  const router = useRouter();
   const {
+    back,
     query: { team },
-  } = router;
+  } = useRouter();
   const { data: session } = useSession({ required: true });
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
@@ -29,8 +29,8 @@ const NewBoard: NextPage = () => {
    */
   const handleBack = useCallback(() => {
     setBackButtonState(true);
-    router.back();
-  }, [router]);
+    back();
+  }, [back]);
 
   if (!session) return null;
 

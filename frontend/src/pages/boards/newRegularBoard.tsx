@@ -10,7 +10,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import BoardName from '@/components/CreateBoard/BoardName';
+import BoardName from '@/components/CreateBoard/BoardName/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';

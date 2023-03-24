@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
-import BoardName from '@/components/CreateBoard/BoardName';
+import BoardName from '@/components/CreateBoard/BoardName/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Inputs/Button/Button';

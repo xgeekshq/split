@@ -1,13 +1,15 @@
 import { useFormContext } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
-import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 
 const DEFAULT_MAX_VOTES = 6;
+
+type BoardConfigurationOptions = 'hideCards' | 'hideVotes' | 'postAnonymously' | 'isPublic';
 
 type BoardConfigurationsProps = {
   isRegularBoard?: Boolean;
@@ -15,37 +17,15 @@ type BoardConfigurationsProps = {
 
 const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
-
   const { board } = createBoardData;
-
   const { register, unregister, clearErrors, setValue } = useFormContext();
 
-  const handleHideCardsChange = (checked: boolean) => {
+  const handleCheckedChange = (checked: boolean, key: BoardConfigurationOptions) => {
     setCreateBoardData((prev) => ({
       ...prev,
       board: {
         ...prev.board,
-        hideCards: checked,
-      },
-    }));
-  };
-
-  const handleHideVotesChange = (checked: boolean) => {
-    setCreateBoardData((prev) => ({
-      ...prev,
-      board: {
-        ...prev.board,
-        hideVotes: checked,
-      },
-    }));
-  };
-
-  const handlePostAnonymouslyChange = (checked: boolean) => {
-    setCreateBoardData((prev) => ({
-      ...prev,
-      board: {
-        ...prev.board,
-        postAnonymously: checked,
+        [key]: checked,
       },
     }));
   };
@@ -69,85 +49,51 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
     register('maxVotes');
   };
 
-  const handleMakeBoardPublicChange = (checked: boolean) => {
-    setCreateBoardData((prev) => ({
-      ...prev,
-      board: {
-        ...prev.board,
-        isPublic: checked,
-      },
-    }));
-  };
-
   return (
     <Flex direction="column" gap="24">
       <Text color="primary500">
         You can change the board configurations still later inside your retro board.
       </Text>
-      <Flex gap="16">
-        <Switch checked={board.hideCards} onCheckedChange={handleHideCardsChange} />
-        <Flex direction="column">
-          <Text size="md" fontWeight="medium">
-            Hide cards from others
-          </Text>
-          <Text color="primary500" size="sm">
-            Participants can not see the cards from other participants of this retrospective.
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex gap="16">
-        <Switch checked={board.hideVotes} onCheckedChange={handleHideVotesChange} />
-        <Flex direction="column">
-          <Text size="md" fontWeight="medium">
-            Hide votes from others
-          </Text>
-          <Text color="primary500" size="sm">
-            Participants can not see the votes from other participants of this retrospective.
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex gap="16">
-        <Switch checked={board.postAnonymously} onCheckedChange={handlePostAnonymouslyChange} />
-        <Flex direction="column">
-          <Text size="md" fontWeight="medium">
-            Post anonymously
-          </Text>
-          <Text color="primary500" size="sm">
-            The option to post anonymously is checked by default.
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex gap="16">
-        <Switch checked={!!board.maxVotes} onCheckedChange={handleLimitVotesChange} />
-        <Flex direction="column">
-          <Text size="md" fontWeight="medium">
-            Limit votes
-          </Text>
-          <Text color="primary500" size="sm">
-            Make votes more significant by limiting them.
-          </Text>
-          <Input
-            css={{ mt: '$8', mb: 0 }}
-            disabled={!board.maxVotes}
-            id="maxVotes"
-            placeholder="Max votes"
-            type="number"
-          />
-        </Flex>
-      </Flex>
+      <ConfigurationSwitch
+        title="Hide cards from others"
+        text="Participants can not see the cards from other participants of this retrospective."
+        isChecked={board.hideCards}
+        handleCheckedChange={(checked) => handleCheckedChange(checked, 'hideCards')}
+      />
+      <ConfigurationSwitch
+        title="Hide votes from others"
+        text="Participants can not see the votes from other participants of this retrospective."
+        isChecked={board.hideVotes}
+        handleCheckedChange={(checked) => handleCheckedChange(checked, 'hideVotes')}
+      />
+      <ConfigurationSwitch
+        title="Post anonymously"
+        text="The option to post anonymously is checked by default."
+        isChecked={board.postAnonymously}
+        handleCheckedChange={(checked) => handleCheckedChange(checked, 'postAnonymously')}
+      />
+      <ConfigurationSwitch
+        title="Limit votes"
+        text=" Make votes more significant by limiting them."
+        isChecked={!!board.maxVotes}
+        handleCheckedChange={handleLimitVotesChange}
+      >
+        <Input
+          css={{ mt: '$8', mb: 0 }}
+          disabled={!board.maxVotes}
+          id="maxVotes"
+          placeholder="Max votes"
+          type="number"
+        />
+      </ConfigurationSwitch>
       {isRegularBoard && (
-        <Flex gap="16">
-          <Switch checked={board.isPublic} onCheckedChange={handleMakeBoardPublicChange} />
-          <Flex direction="column">
-            <Text size="md" fontWeight="medium">
-              Make board public
-            </Text>
-            <Text color="primary500" size="sm">
-              If you make this board public anyone with the link to the board can access it. Where
-              to find the link? Just copy the URL of the board itself and share it.
-            </Text>
-          </Flex>
-        </Flex>
+        <ConfigurationSwitch
+          title="Make board public"
+          text=" If you make this board public anyone with the link to the board can access it. Where
+          to find the link? Just copy the URL of the board itself and share it."
+          isChecked={board.isPublic}
+          handleCheckedChange={(checked) => handleCheckedChange(checked, 'isPublic')}
+        />
       )}
     </Flex>
   );
