@@ -53,7 +53,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		count: number,
 		retryCount?: number
 	) {
-		await this.canUserVote(boardId, userId, count, cardId);
+		await this.canUserDeleteVote(boardId, userId, count, cardId, cardItemId);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
@@ -95,7 +95,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		count: number,
 		retryCount?: number
 	) {
-		await this.canUserVote(boardId, userId, count, cardId);
+		await this.canUserDeleteVote(boardId, userId, count, cardId);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
@@ -127,7 +127,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 	/* #################### HELPERS #################### */
 
-	private async verifyIfUserCanVote(
+	private async verifyIfUserCanDeleteVote(
 		boardId: string,
 		userId: string,
 		count: number,
@@ -151,19 +151,14 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 		if (cardItemId) {
 			const item = card.items.find((item) => item._id === cardItemId);
-
-			if (!arrayIdToString(item.votes as string[]).includes(userId.toString())) {
-				return false;
-			}
+			this.ifVotesIncludeUserId(item.votes as string[], String(userId));
 		} else {
 			let votes = card.votes as string[];
 			card.items.forEach((item) => {
 				votes = votes.concat(item.votes as string[]);
 			});
 
-			if (!arrayIdToString(votes).includes(userId.toString())) {
-				return false;
-			}
+			this.ifVotesIncludeUserId(votes, String(userId));
 		}
 
 		return boardUserFound?.votesCount
@@ -171,10 +166,28 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			: false;
 	}
 
-	private async canUserVote(boardId: string, userId: string, count: number, cardId: string) {
-		const canUserVote = await this.verifyIfUserCanVote(boardId, userId, count, cardId);
+	private ifVotesIncludeUserId(votes: string[], userId: string) {
+		if (!arrayIdToString(votes).includes(userId)) {
+			return false;
+		}
+	}
 
-		if (!canUserVote) throw new DeleteFailedException(DELETE_VOTE_FAILED);
+	private async canUserDeleteVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId?: string
+	) {
+		const canUserDeleteVote = await this.verifyIfUserCanDeleteVote(
+			boardId,
+			userId,
+			count,
+			cardId,
+			cardItemId
+		);
+
+		if (!canUserDeleteVote) throw new DeleteFailedException(DELETE_VOTE_FAILED);
 	}
 
 	private async getCardFromBoard(boardId: string, cardId: string) {
