@@ -50,7 +50,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		cardItemId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	) {
 		await this.canUserVote(boardId, userId, count, cardId);
 
@@ -73,7 +74,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				votes,
 				cardId,
 				count,
-				userId
+				userId,
+				retryCount
 			);
 
 			await this.updateBoardUserService.commitTransaction();
@@ -86,7 +88,13 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		}
 	}
 
-	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+	async deleteVoteFromCardGroup(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		count: number,
+		retryCount?: number
+	) {
 		await this.canUserVote(boardId, userId, count, cardId);
 
 		await this.updateBoardUserService.startTransaction();
@@ -107,7 +115,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				cardId,
 				userId,
 				count,
-				currentCount
+				currentCount,
+				retryCount
 			);
 		}
 
@@ -193,9 +202,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		votes: string[],
 		cardId: string,
 		count: number,
-		userId: string
+		userId: string,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 
 		try {
@@ -206,11 +216,18 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
+				await this.deleteVoteFromCard(
+					boardId,
+					cardId,
+					userId,
+					cardItemId,
+					count,
+					retryCountOperation
+				);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
@@ -291,9 +308,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		votesToReduce: number,
 		userId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 		try {
 			await this.removeVotesFromCardGroup(boardId, mappedVotes, cardId, withSession);
@@ -303,11 +321,11 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count);
+				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCount);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
@@ -321,7 +339,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		count: number,
-		currentCount: number
+		currentCount: number,
+		retryCount?: number
 	) {
 		let mappedVotes = votes.filter((vote) => vote.toString() !== userId.toString());
 		const votesToReduce = userVotes.length / currentCount >= 1 ? currentCount : userVotes.length;
@@ -336,7 +355,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				cardId,
 				votesToReduce,
 				userId,
-				count
+				count,
+				retryCount
 			);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
