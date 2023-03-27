@@ -1,10 +1,6 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import {
-	BOARD_NOT_FOUND,
-	BOARD_USER_NOT_FOUND,
-	DELETE_VOTE_FAILED
-} from 'src/libs/exceptions/messages';
+import { DELETE_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
@@ -12,11 +8,13 @@ import * as Cards from 'src/modules/cards/interfaces/types';
 import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 import { TYPES } from '../interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import * as Boards from 'src/modules/boards/interfaces/types';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/get.board.user.service.interface';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
@@ -28,7 +26,9 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
 		private updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Cards.TYPES.services.GetCardService)
-		private getCardService: GetCardServiceInterface
+		private getCardService: GetCardServiceInterface,
+		@Inject(Boards.TYPES.services.GetBoardService)
+		private getBoardService: GetBoardServiceInterface
 	) {}
 
 	private logger: Logger = new Logger('DeleteVoteService');
@@ -125,16 +125,16 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		cardItemId?: string
 	): Promise<boolean> {
-		const board = await this.voteRepository.findOneById(boardId);
+		const board = await this.getBoardService.getBoardById(boardId);
 
 		if (!board) {
-			throw new NotFoundException(BOARD_NOT_FOUND);
+			return false;
 		}
 
 		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
 
 		if (!boardUserFound) {
-			throw new NotFoundException(BOARD_USER_NOT_FOUND);
+			return false;
 		}
 
 		const card = await this.getCardService.getCardFromBoard(boardId, cardId);

@@ -93,7 +93,7 @@ describe('CreateVoteService', () => {
 
 			expect(
 				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(NotFoundException);
+			).rejects.toThrow(InsertFailedException);
 		});
 
 		it("should throw an error when the boardUser can't vote", async () => {

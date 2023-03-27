@@ -1,11 +1,7 @@
 import { GetBoardUserServiceInterface } from '../../boardUsers/interfaces/services/get.board.user.service.interface';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import {
-	BOARD_NOT_FOUND,
-	BOARD_USER_NOT_FOUND,
-	INSERT_VOTE_FAILED
-} from 'src/libs/exceptions/messages';
+import { BOARD_NOT_FOUND, INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
 import { TYPES } from 'src/modules/votes/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
@@ -124,7 +120,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
 
 		if (!boardUserFound) {
-			throw new NotFoundException(BOARD_USER_NOT_FOUND);
+			return false;
 		}
 
 		const userCanVote = boardUserFound?.votesCount !== undefined && boardUserFound?.votesCount >= 0;
