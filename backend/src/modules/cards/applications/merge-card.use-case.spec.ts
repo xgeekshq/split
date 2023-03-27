@@ -105,7 +105,7 @@ describe('MergeCardUseCase', () => {
 		await expect(useCase.execute(mergeCardDtoMock)).rejects.toThrow(BadRequestException);
 	});
 
-	it('should throw badRequest with default message when a funcition throws some error', async () => {
+	it('should throw badRequest with default message when a non expected error occurs', async () => {
 		cardRepositoryMock.updateCardOnMerge.mockRejectedValueOnce(Error);
 		await expect(useCase.execute(mergeCardDtoMock)).rejects.toThrow(BadRequestException);
 	});
