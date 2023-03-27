@@ -15,6 +15,7 @@ import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
+import Card from 'src/modules/cards/entities/card.schema';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
@@ -149,16 +150,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 		if (!card) return false;
 
-		if (cardItemId) {
-			const item = card.items.find((item) => item._id === cardItemId);
-			this.ifVotesIncludeUserId(item.votes as string[], String(userId));
-		} else {
-			let votes = card.votes as string[];
-			card.items.forEach((item) => {
-				votes = votes.concat(item.votes as string[]);
-			});
+		const ifVotesIncludesUser = this.ifVotesIncludesUserId(card, String(userId), cardItemId);
 
-			this.ifVotesIncludeUserId(votes, String(userId));
+		if (!ifVotesIncludesUser) {
+			return false;
 		}
 
 		return boardUserFound?.votesCount
@@ -166,10 +161,27 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			: false;
 	}
 
-	private ifVotesIncludeUserId(votes: string[], userId: string) {
+	private ifVotesIncludesUserId(card: Card, userId: string, cardItemId?: string) {
+		if (cardItemId) {
+			const item = card.items.find((item) => String(item._id) === String(cardItemId));
+
+			return this.votesArrayVerification(item.votes as string[], userId);
+		} else {
+			let votes = card.votes as string[];
+			card.items.forEach((item) => {
+				votes = votes.concat(item.votes as string[]);
+			});
+
+			return this.votesArrayVerification(votes, userId);
+		}
+	}
+
+	private votesArrayVerification(votes: string[], userId: string) {
 		if (!arrayIdToString(votes).includes(userId)) {
 			return false;
 		}
+
+		return true;
 	}
 
 	private async canUserDeleteVote(
