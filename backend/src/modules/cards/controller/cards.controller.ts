@@ -330,7 +330,7 @@ export default class CardsController {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
 
-		const board = this.mergeCardUseCase.execute({ boardId, draggedCardId, targetCardId });
+		const board = await this.mergeCardUseCase.execute({ boardId, draggedCardId, targetCardId });
 
 		if (board) this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
