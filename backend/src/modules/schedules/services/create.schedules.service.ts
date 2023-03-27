@@ -165,26 +165,25 @@ export class CreateSchedulesService implements CreateSchedulesServiceInterface {
 
 		const team = oldBoard.team as Team;
 
-		const boardId = await this.createBoardService.splitBoardByTeam(
-			ownerId,
-			teamId,
-			configs,
-			team.name
-		);
+		try {
+			const boardId = await this.createBoardService.splitBoardByTeam(
+				ownerId,
+				teamId,
+				configs,
+				team.name
+			);
 
-		if (!boardId) {
+			const addCronJobDto: AddCronJobDto = {
+				ownerId,
+				teamId,
+				boardId: boardId ?? oldBoardId,
+				maxUsersPerTeam: deletedSchedule.maxUsers
+			};
+
+			this.addCronJob({ day, month, addCronJobDto });
+		} catch (e) {
+			this.logger.error(e);
 			await this.deleteSchedulesService.deleteScheduleByBoardId(oldBoardId);
-
-			return;
 		}
-
-		const addCronJobDto: AddCronJobDto = {
-			ownerId,
-			teamId,
-			boardId: boardId ?? oldBoardId,
-			maxUsersPerTeam: deletedSchedule.maxUsers
-		};
-
-		this.addCronJob({ day, month, addCronJobDto });
 	}
 }
