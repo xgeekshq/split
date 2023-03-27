@@ -14,7 +14,7 @@ import FakeAvatarGroup from './FakeAvatarGroup/FakeAvatarGroup';
 import { StyledMainBoardItem } from '../CreateBoardItem/styles';
 import { StyledSubBoardItem } from '../CreateBoardItem/CreateSubBoardItem/styles';
 
-const FakeBoardSection = () => (
+const FakeBoardItem = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
     <StyledMainBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
       <Flex align="center" gap="8" css={{ flex: 2 }}>
@@ -163,4 +163,4 @@ const FakeBoardSection = () => (
   </Flex>
 );
 
-export default FakeBoardSection;
+export default FakeBoardItem;

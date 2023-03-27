@@ -107,6 +107,9 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       return;
     }
 
+    const maxUsersCount = Math.ceil(teamMembersCount / 2);
+    const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
+
     const users = selectedTeam.users.flatMap((teamUser) => {
       if (teamUser.role !== TeamUserRoles.STAKEHOLDER) return [];
 
@@ -124,6 +127,11 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         ...prev,
         users,
         board: { ...prev.board, dividedBoards: handleSplitBoards(2) },
+        count: {
+          ...prev.count,
+          teamsCount,
+          maxUsersCount,
+        },
       }));
     }
   }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);

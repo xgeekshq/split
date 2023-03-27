@@ -10,7 +10,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import BoardUsersDropdown from '../../BoardUsersDropdown/BoardUsersDropdown';
 import BoardSection from './CreateBoardItem/CreateBoardItem';
-import FakeBoardSection from './FakeBoardSection/FakeBoardSection';
+import FakeBoardItem from './FakeBoardSection/FakeBoardItem';
 import QuickEditSubTeams from './QuickEditSubTeams';
 import SelectTeam from './SelectTeam/SelectTeam';
 
@@ -65,7 +65,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
         </>
       ) : (
         <Flex css={{ mt: '$36' }}>
-          <FakeBoardSection />
+          <FakeBoardItem />
         </Flex>
       )}
     </Flex>

@@ -11,6 +11,9 @@ import ParticipantsTab from '../ParticipantsTab';
 import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
 
 const SettingsTabs = () => {
+  // Recoil Atoms
+  const haveError = useRecoilValue(createBoardError);
+  const setToastState = useSetRecoilState(toastState);
   const [optionSelected, setOptionSelected] = useState('team');
 
   const tabList: TabList[] = [
@@ -28,14 +31,7 @@ const SettingsTabs = () => {
     },
   ];
   const initialTabValue = tabList[0].value;
-
   const [activeTab, setActiveTab] = useState(initialTabValue);
-
-  /**
-   * Recoil Atoms
-   */
-  const haveError = useRecoilValue(createBoardError);
-  const setToastState = useSetRecoilState(toastState);
 
   const {
     formState: { errors },

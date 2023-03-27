@@ -22,7 +22,12 @@ type QuickEditSubTeamsProps = {
 
 const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   const { register, getValues, setValue } = useFormContext();
-  const { setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard(team);
+  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } =
+    useCreateBoard(team);
+  const {
+    count: { teamsCount, maxUsersCount },
+  } = createBoardData;
+
   const teamLength = teamMembers?.length ?? 0;
   const minUsers = teamLength % 2 === 0 ? 2 : 3;
   const maxTeams = Math.floor(teamLength / 2);
@@ -79,6 +84,11 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   const handleSaveConfigs = () => {
     setCreateBoardData((prev) => ({
       ...prev,
+      count: {
+        ...prev.count,
+        teamsCount: Math.floor(getValues('maxTeams')),
+        maxUsersCount: Math.floor(getValues('maxUsers')),
+      },
       board: {
         ...prev.board,
         dividedBoards: handleSplitBoards(Math.floor(getValues('maxTeams'))),
@@ -87,8 +97,13 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
   };
 
   useEffect(() => {
-    setValue('maxTeams', minTeams);
-    setValue('maxUsers', maxUsers);
+    setValue('maxTeams', teamsCount);
+    setValue('maxUsers', maxUsersCount);
+  }, [teamsCount, maxUsersCount]);
+
+  useEffect(() => {
+    register('maxTeams', { onChange: handleChangeCountTeams });
+    register('maxUsers', { onChange: handleMaxMembers });
   }, []);
 
   return (
@@ -99,30 +114,18 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           Quick edit sub-teams configurations
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent
-        css={{ top: '200px', flexDirection: 'column' }}
-        title="Quick edit sub-teams configurations"
-      >
-        <Flex>
-          <Flex css={{ position: 'relative', top: '3px' }}>
-            <Icon css={{ width: '$16', height: '$16', color: '$primary500' }} name="info" />
-          </Flex>
-          <Text color="primary500" css={{ pl: '$8' }} size="md">
+      <AlertDialogContent title="Quick edit sub-teams configurations" css={{ gap: 24 }}>
+        <Flex gap={8}>
+          <Icon css={{ color: '$primary500' }} size={24} name="info" />
+          <Text color="primary500" size="md">
             Note, if you change any of the two values below, the other value will adjust
             accordingly.
           </Text>
         </Flex>
-        <Flex css={{ mt: '$24', width: '100%' }} gap="24">
-          <Flex css={{ width: '100%' }} direction="column" gap="8">
+        <Flex gap="24">
+          <Flex direction="column" gap="8">
             <Text label>Sub-teams count</Text>
-            <Input
-              css={{ mb: 0 }}
-              id="maxTeams"
-              max={maxTeams}
-              min={minTeams}
-              type="number"
-              {...register('maxTeams', { onChange: handleChangeCountTeams })}
-            />
+            <Input css={{ mb: 0 }} id="maxTeams" max={maxTeams} min={minTeams} type="number" />
             <Flex>
               <Text hint color={errors.teamError ? 'dangerBase' : 'primary800'}>
                 Min {minTeams}, Max {maxTeams}{' '}
@@ -132,16 +135,9 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               </Text>
             </Flex>
           </Flex>
-          <Flex css={{ width: '100%' }} direction="column" gap="8">
+          <Flex direction="column" gap="8">
             <Text label>Max sub-team members count</Text>
-            <Input
-              css={{ mb: 0 }}
-              id="maxUsers"
-              max={maxUsers}
-              min={minUsers}
-              type="number"
-              {...register('maxUsers', { onChange: handleMaxMembers })}
-            />
+            <Input css={{ mb: 0 }} id="maxUsers" max={maxUsers} min={minUsers} type="number" />
             <Flex>
               <Text hint color={errors.maxUserError ? 'dangerBase' : 'primary800'}>
                 Min {minUsers}, Max {maxUsers}{' '}
@@ -152,7 +148,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex css={{ mt: '$32' }} gap="24" justify="end">
+        <Flex gap="24" justify="end">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
             Save configurations

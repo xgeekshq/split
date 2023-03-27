@@ -53,7 +53,7 @@ export type AlertDialogProps = {
 const Content = ({ children, css, handleClose, title, ...props }: AlertDialogProps) => (
   <AlertDialogPrimitive.Portal>
     <StyledOverlay />
-    <StyledContent css={css} onCloseAutoFocus={handleClose} {...props}>
+    <StyledContent onCloseAutoFocus={handleClose} {...props}>
       {title && (
         <>
           <Flex align="center" justify="between" css={{ px: '$32', py: '$24' }}>
@@ -65,7 +65,7 @@ const Content = ({ children, css, handleClose, title, ...props }: AlertDialogPro
           <Separator />
         </>
       )}
-      <Flex direction="column" gap="8" css={{ px: '$32', py: '$24' }}>
+      <Flex direction="column" gap="8" css={{ ...css, px: '$32', py: '$24' }}>
         {children}
       </Flex>
     </StyledContent>
