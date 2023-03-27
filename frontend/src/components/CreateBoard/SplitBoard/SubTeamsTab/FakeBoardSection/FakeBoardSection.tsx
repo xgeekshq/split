@@ -11,8 +11,8 @@ import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
 
 import FakeAvatarGroup from './FakeAvatarGroup/FakeAvatarGroup';
-import { StyledMainBoardItem } from '../CreateMainBoardItem/styles';
-import { StyledBoardItem } from '../CreateBoardItem/styles';
+import { StyledMainBoardItem } from '../CreateBoardItem/styles';
+import { StyledSubBoardItem } from '../CreateBoardItem/CreateSubBoardItem/styles';
 
 const FakeBoardSection = () => (
   <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
@@ -72,11 +72,11 @@ const FakeBoardSection = () => (
     <Flex css={{ mb: '$50' }} direction="column" gap="8">
       <Flex>
         <LeftArrow index={0} isDashboard={false} />
-        <StyledBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
-          <Flex css={{ flex: 1 }}>
+        <StyledSubBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
+          <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 1</Text>
           </Flex>
-          <Flex align="center" css={{ flex: 2 }}>
+          <Flex align="center" css={{ flex: 3 }}>
             <Flex align="center" gap={8}>
               <Text>Responsible Lottery</Text>
               <Separator orientation="vertical" size="md" />
@@ -106,19 +106,19 @@ const FakeBoardSection = () => (
               />
             </Flex>
           </Flex>
-          <Flex align="center" justify="end" gap="8" css={{ flex: 3 }}>
+          <Flex align="center" justify="end" gap="8" css={{ flex: 2 }}>
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
-        </StyledBoardItem>
+        </StyledSubBoardItem>
       </Flex>
       <Flex>
         <LeftArrow index={1} isDashboard={false} />
-        <StyledBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
-          <Flex css={{ flex: 1 }}>
+        <StyledSubBoardItem align="center" elevation="1" justify="between" css={{ opacity: '0.5' }}>
+          <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 2</Text>
           </Flex>
-          <Flex align="center" css={{ flex: 2 }}>
+          <Flex align="center" css={{ flex: 3 }}>
             <Flex align="center" gap={8}>
               <Text>Responsible Lottery</Text>
               <Separator orientation="vertical" size="md" />
@@ -148,11 +148,11 @@ const FakeBoardSection = () => (
               />
             </Flex>
           </Flex>
-          <Flex align="center" justify="end" gap="8" css={{ flex: 3 }}>
+          <Flex align="center" justify="end" gap="8" css={{ flex: 2 }}>
             <Text size="sm">-----</Text>
             <FakeAvatarGroup />
           </Flex>
-        </StyledBoardItem>
+        </StyledSubBoardItem>
       </Flex>
     </Flex>
     <Tooltip color="primary800" content="First select a team">

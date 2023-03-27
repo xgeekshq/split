@@ -1,123 +1,140 @@
-import { deepClone } from 'fast-json-patch';
 import React from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 
-import LeftArrow from '@/components/CardBoard/CardBody/LeftArrow';
-import Avatar from '@/components/Primitives/Avatars/Avatar/Avatar';
 import AvatarGroup from '@/components/Primitives/Avatars/AvatarGroup/AvatarGroup';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
+import Box from '@/components/Primitives/Layout/Box/Box';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import { CreateBoardData } from '@/store/createBoard/atoms/create-board.atom';
-import { highlight2Colors } from '@/styles/stitches/partials/colors/highlight2.colors';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
+import useCreateBoard from '@/hooks/useCreateBoard';
+import { CreateBoardData, createBoardError } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardToAdd } from '@/types/board/board';
-import { BoardUserToAdd } from '@/types/board/board.user';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { getInitials } from '@/utils/getInitials';
-import { StyledBoardItem, WandButtonWrapper } from './styles';
+import { Team } from '@/types/team/team';
 
-interface CreateBoardItemProps {
-  index: number;
-  board: BoardToAdd;
+import CreateSubBoardItem from './CreateSubBoardItem/CreateSubBoardItem';
+import { StyledMainBoardItem } from './styles';
+
+interface SubBoardListProp {
+  dividedBoards: BoardToAdd[];
   setBoard: SetterOrUpdater<CreateBoardData>;
 }
 
-const CreateBoardItem: React.FC<CreateBoardItemProps> = ({ board, index, setBoard }) => {
-  const { users } = board;
-  const responsible = users.find((user) => user.role === BoardUserRoles.RESPONSIBLE)?.user;
+interface CreateBoardItemInterface {
+  team: Team;
+}
 
-  const handleLottery = () => {
-    const cloneUsers = [...deepClone(users)].flatMap((user) => {
-      if (!user.isNewJoiner && user.canBeResponsible)
-        return {
-          ...user,
-          role: BoardUserRoles.MEMBER,
-        };
-      return [];
-    });
+const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => (
+  <Flex css={{ mb: '$50' }} direction="column" gap="8">
+    {dividedBoards.map((subBoard, index) => (
+      <CreateSubBoardItem key={subBoard.title} board={subBoard} index={index} setBoard={setBoard} />
+    ))}
+  </Flex>
+));
 
-    if (cloneUsers.length <= 1) return;
+const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
+  const haveError = useRecoilValue(createBoardError);
+  const { setValue, watch, control } = useFormContext();
+  const boardName = watch('text');
 
-    let userFound: BoardUserToAdd | undefined;
-    do {
-      userFound = cloneUsers[Math.floor(Math.random() * cloneUsers.length)];
-    } while (userFound?.user.email === responsible?.email);
+  const slackEnable = useWatch({
+    control,
+    name: 'slackEnable',
+  });
 
-    if (!userFound) return;
-    userFound.role = BoardUserRoles.RESPONSIBLE;
-
-    const listUsers = users.map(
-      (user) => cloneUsers.find((member) => member._id === user._id) || user,
-    );
-
-    setBoard((prevBoard) => ({
-      ...prevBoard,
-      board: {
-        ...prevBoard.board,
-        dividedBoards: prevBoard.board.dividedBoards.map((boardFound, i) => {
-          if (i === index) {
-            return { ...boardFound, users: listUsers };
-          }
-          return boardFound;
-        }),
-      },
-    }));
-  };
+  const {
+    handleAddTeam,
+    handleRemoveTeam,
+    createBoardData: { board },
+    setCreateBoardData,
+    canAdd,
+    canReduce,
+  } = useCreateBoard(team);
 
   return (
-    <Flex>
-      <LeftArrow index={index} isDashboard={false} />
-      <StyledBoardItem align="center" elevation="1" justify="between">
-        <Flex css={{ flex: 1 }}>
-          <Text heading="5">{board.title}</Text>
+    <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
+      <StyledMainBoardItem align="center" elevation="1" justify="between" gap={24}>
+        <Flex align="center" gap="8" css={{ flex: 2 }}>
+          <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
+            <div>
+              <Icon size={32} name="blob-split" />
+            </div>
+          </Tooltip>
+          <Text heading="6">{boardName.length > 0 ? boardName : board.title}</Text>
         </Flex>
-        <Flex align="center" css={{ flex: 3 }}>
+        <Flex css={{ flex: 2 }} gap={12}>
           <Flex align="center" gap={8}>
-            <Text>Responsible Lottery</Text>
+            <Text color="primary300" size="sm">
+              Sub-teams/-boards
+            </Text>
             <Separator orientation="vertical" size="md" />
-            <WandButtonWrapper
+            <Text>{board.dividedBoards.length}</Text>
+          </Flex>
+          <Flex gap="4">
+            <Flex
               align="center"
               justify="center"
-              disabled={users.length <= 1}
-              {...(users.length > 1 && { onClick: handleLottery })}
-            >
-              <Icon name="wand" size={12} />
-            </WandButtonWrapper>
-            <Flex>
-              <Text
-                color="primary300"
-                css={{
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                }}
-                size="sm"
-              >
-                {responsible?.firstName} {responsible?.lastName}
-              </Text>
-            </Flex>
-            <Avatar
-              css={{ position: 'relative' }}
-              fallbackText={getInitials(
-                responsible?.firstName ?? '-',
-                responsible?.lastName ?? '-',
-              )}
-              size={32}
-              colors={{
-                bg: highlight2Colors.highlight2Lighter,
-                fontColor: highlight2Colors.highlight2Dark,
+              css={{
+                width: '$24',
+                height: '$24',
+                borderRadius: '$round',
+                border: `1px solid ${!canReduce ? '$colors$primary200' : '$colors$primary400'}`,
+                color: !canReduce ? '$colors$primary200' : '$colors$primary400',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  cursor: canReduce ? 'pointer' : 'default',
+                  backgroundColor: canReduce ? '$primary100' : 'white',
+                },
               }}
-            />
+              onClick={handleRemoveTeam}
+            >
+              <Icon name="minus" size={12} />
+            </Flex>
+            <Flex
+              align="center"
+              justify="center"
+              css={{
+                width: '$24',
+                height: '$24',
+                borderRadius: '$round',
+                border: `1px solid ${!canAdd ? '$primary200' : '$primary400'}`,
+                color: !canAdd ? '$primary200' : '$primary400',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  cursor: canAdd ? 'pointer' : 'default',
+                  backgroundColor: canAdd ? '$primary100' : 'white',
+                },
+              }}
+              onClick={handleAddTeam}
+            >
+              <Icon name="plus" size={12} />
+            </Flex>
           </Flex>
         </Flex>
-        <Flex align="center" justify="end" gap="8" css={{ flex: 2 }}>
-          <Text size="sm">Sub team {index + 1}</Text>
-          <AvatarGroup listUsers={board.users} userId="1" hasDrawer />
+        <Flex align="center" justify="end" gap="8" css={{ flex: 3 }}>
+          <Text size="sm" fontWeight="medium">
+            {team.name}
+          </Text>
+          <AvatarGroup haveError={haveError} listUsers={team.users} userId="1" />
         </Flex>
-      </StyledBoardItem>
+      </StyledMainBoardItem>
+      <SubBoardList dividedBoards={board.dividedBoards} setBoard={setCreateBoardData} />
+      <Box>
+        <Checkbox
+          id="slackEnable"
+          label="Create Slack group for each sub-team"
+          size="md"
+          checked={slackEnable}
+          handleChange={(checked) => {
+            setValue('slackEnable', checked);
+          }}
+        />
+      </Box>
     </Flex>
   );
-};
+});
 
 export default CreateBoardItem;
