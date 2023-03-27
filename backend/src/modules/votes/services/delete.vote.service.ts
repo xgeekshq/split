@@ -50,9 +50,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		cardItemId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	) {
-		await this.canUserVote(boardId, userId, count, cardId);
+		await this.canUserDeleteVote(boardId, userId, count, cardId, cardItemId);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
@@ -73,7 +74,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				votes,
 				cardId,
 				count,
-				userId
+				userId,
+				retryCount
 			);
 
 			await this.updateBoardUserService.commitTransaction();
@@ -86,8 +88,14 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		}
 	}
 
-	async deleteVoteFromCardGroup(boardId: string, cardId: string, userId: string, count: number) {
-		await this.canUserVote(boardId, userId, count, cardId);
+	async deleteVoteFromCardGroup(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		count: number,
+		retryCount?: number
+	) {
+		await this.canUserDeleteVote(boardId, userId, count, cardId);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
@@ -107,7 +115,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				cardId,
 				userId,
 				count,
-				currentCount
+				currentCount,
+				retryCount
 			);
 		}
 
@@ -118,7 +127,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 	/* #################### HELPERS #################### */
 
-	private async verifyIfUserCanVote(
+	private async verifyIfUserCanDeleteVote(
 		boardId: string,
 		userId: string,
 		count: number,
@@ -130,7 +139,6 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		if (!board) {
 			return false;
 		}
-
 		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
 
 		if (!boardUserFound) {
@@ -143,19 +151,14 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 		if (cardItemId) {
 			const item = card.items.find((item) => item._id === cardItemId);
-
-			if (!arrayIdToString(item.votes as string[]).includes(userId.toString())) {
-				return false;
-			}
+			this.ifVotesIncludeUserId(item.votes as string[], String(userId));
 		} else {
 			let votes = card.votes as string[];
 			card.items.forEach((item) => {
 				votes = votes.concat(item.votes as string[]);
 			});
 
-			if (!arrayIdToString(votes).includes(userId.toString())) {
-				return false;
-			}
+			this.ifVotesIncludeUserId(votes, String(userId));
 		}
 
 		return boardUserFound?.votesCount
@@ -163,10 +166,28 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			: false;
 	}
 
-	private async canUserVote(boardId: string, userId: string, count: number, cardId: string) {
-		const canUserVote = await this.verifyIfUserCanVote(boardId, userId, count, cardId);
+	private ifVotesIncludeUserId(votes: string[], userId: string) {
+		if (!arrayIdToString(votes).includes(userId)) {
+			return false;
+		}
+	}
 
-		if (!canUserVote) throw new DeleteFailedException(DELETE_VOTE_FAILED);
+	private async canUserDeleteVote(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		cardItemId?: string
+	) {
+		const canUserDeleteVote = await this.verifyIfUserCanDeleteVote(
+			boardId,
+			userId,
+			count,
+			cardId,
+			cardItemId
+		);
+
+		if (!canUserDeleteVote) throw new DeleteFailedException(DELETE_VOTE_FAILED);
 	}
 
 	private async getCardFromBoard(boardId: string, cardId: string) {
@@ -193,9 +214,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		votes: string[],
 		cardId: string,
 		count: number,
-		userId: string
+		userId: string,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 
 		try {
@@ -206,11 +228,18 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
+				await this.deleteVoteFromCard(
+					boardId,
+					cardId,
+					userId,
+					cardItemId,
+					count,
+					retryCountOperation
+				);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
@@ -291,9 +320,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		votesToReduce: number,
 		userId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 		try {
 			await this.removeVotesFromCardGroup(boardId, mappedVotes, cardId, withSession);
@@ -303,11 +333,11 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count);
+				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCount);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
@@ -321,7 +351,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		count: number,
-		currentCount: number
+		currentCount: number,
+		retryCount?: number
 	) {
 		let mappedVotes = votes.filter((vote) => vote.toString() !== userId.toString());
 		const votesToReduce = userVotes.length / currentCount >= 1 ? currentCount : userVotes.length;
@@ -336,7 +367,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				cardId,
 				votesToReduce,
 				userId,
-				count
+				count,
+				retryCount
 			);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
