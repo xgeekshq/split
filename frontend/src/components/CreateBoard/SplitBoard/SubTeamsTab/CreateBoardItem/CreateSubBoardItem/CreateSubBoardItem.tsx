@@ -72,7 +72,7 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
         <Flex css={{ flex: 2 }}>
           <Text heading="5">{board.title}</Text>
         </Flex>
-        <Flex align="center" css={{ flex: 3 }}>
+        <Flex align="center" css={{ flex: 4 }}>
           <Flex align="center" gap={8}>
             <Text>Responsible Lottery</Text>
             <Separator orientation="vertical" size="md" />

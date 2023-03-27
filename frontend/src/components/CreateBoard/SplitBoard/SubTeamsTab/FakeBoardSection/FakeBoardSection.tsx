@@ -25,7 +25,7 @@ const FakeBoardSection = () => (
         </Tooltip>
         <Text heading="6">Main Board -</Text>
       </Flex>
-      <Flex css={{ flex: 2 }} gap={12}>
+      <Flex align="center" css={{ flex: 2 }} gap={12}>
         <Flex align="center" gap={8}>
           <Text color="primary300" size="sm">
             Sub-teams/-boards
@@ -76,7 +76,7 @@ const FakeBoardSection = () => (
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 1</Text>
           </Flex>
-          <Flex align="center" css={{ flex: 3 }}>
+          <Flex align="center" css={{ flex: 4 }}>
             <Flex align="center" gap={8}>
               <Text>Responsible Lottery</Text>
               <Separator orientation="vertical" size="md" />
@@ -118,7 +118,7 @@ const FakeBoardSection = () => (
           <Flex css={{ flex: 2 }}>
             <Text heading="5">Sub-team board 2</Text>
           </Flex>
-          <Flex align="center" css={{ flex: 3 }}>
+          <Flex align="center" css={{ flex: 4 }}>
             <Flex align="center" gap={8}>
               <Text>Responsible Lottery</Text>
               <Separator orientation="vertical" size="md" />

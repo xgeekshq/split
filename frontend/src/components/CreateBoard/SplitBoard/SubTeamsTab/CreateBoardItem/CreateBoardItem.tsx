@@ -65,7 +65,7 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
           </Tooltip>
           <Text heading="6">{boardName.length > 0 ? boardName : board.title}</Text>
         </Flex>
-        <Flex css={{ flex: 2 }} gap={12}>
+        <Flex align="center" css={{ flex: 2 }} gap={12}>
           <Flex align="center" gap={8}>
             <Text color="primary300" size="sm">
               Sub-teams/-boards

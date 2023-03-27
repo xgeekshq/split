@@ -12,101 +12,32 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
-import { styled } from '@/styles/stitches/stitches.config';
 import { Team } from '@/types/team/team';
-import isEmpty from '@/utils/isEmpty';
+import Input from '@/components/Primitives/Inputs/Input/Input';
+import { useFormContext } from 'react-hook-form';
 
-interface QuickEditSubTeamsProps {
+type QuickEditSubTeamsProps = {
   team: Team;
-}
-
-const StyledInput = styled('input', {
-  display: 'flex',
-  fontSize: '$16',
-  px: '$16',
-  boxShadow: '0',
-  border: '1px solid $primary200',
-  outline: 'none',
-  width: '100%',
-  borderRadius: '$4',
-  lineHeight: '$20',
-  height: '$56',
-  'input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button': {
-    '-webkit-appearance': 'none',
-    margin: 0,
-  },
-  'input[type=number]': {
-    '-moz-appearance': 'textfield',
-  },
-  '&:focus': {
-    borderColor: '$primary400',
-    boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
-  },
-  '&:-webkit-autofill': {
-    '-webkit-box-shadow': '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
-  },
-  variants: {
-    variant: {
-      default: {
-        '&:focus': {
-          borderColor: '$primary400',
-          boxShadow: '0px 0px 0px 2px $colors$primaryLightest',
-        },
-        '&:-webkit-autofill': {
-          '-webkit-box-shadow':
-            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$primaryLightest',
-        },
-      },
-      error: {
-        '&:focus': {
-          borderColor: '$danger700',
-          boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
-        },
-        borderColor: '$danger700',
-        boxShadow: '0px 0px 0px 2px $colors$dangerLightest',
-        '&:-webkit-autofill': {
-          '-webkit-box-shadow':
-            '0 0 0px 1000px white inset, 0px 0px 0px 2px $colors$dangerLightest',
-        },
-      },
-    },
-  },
-});
+};
 
 const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
-  const { createBoardData, setCreateBoardData, handleSplitBoards, teamMembers } =
-    useCreateBoard(team);
-
-  const {
-    count: { teamsCount, maxUsersCount },
-  } = createBoardData;
+  const { register, getValues, setValue } = useFormContext();
+  const { setCreateBoardData, handleSplitBoards, teamMembers } = useCreateBoard(team);
   const teamLength = teamMembers?.length ?? 0;
   const minUsers = teamLength % 2 === 0 ? 2 : 3;
   const maxTeams = Math.floor(teamLength / 2);
   const minTeams = 2;
   const maxUsers = Math.ceil(teamLength / 2);
 
-  const [values, setValues] = useState<{
-    teamsCount: number | string;
+  const [errors, setErrors] = useState<{
     teamError: boolean;
-    maxUsersCount: number | string;
     maxUserError: boolean;
   }>({
-    teamsCount,
     teamError: false,
-    maxUsersCount,
     maxUserError: false,
   });
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
-  useEffect(() => {
-    setValues({
-      teamsCount,
-      teamError: false,
-      maxUsersCount,
-      maxUserError: false,
-    });
-  }, [maxUsersCount, teamsCount]);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
   const hasError = (value: number | string, min: number, max: number) =>
     +value < min || +value > max;
@@ -117,11 +48,11 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
     const error = hasError(value, minTeams, maxTeams);
     setIsSubmitDisabled(error);
 
-    setValues((prev) => ({
+    if (!error) setValue('maxUsers', Math.ceil(teamLength / +value));
+
+    setErrors((prev) => ({
       ...prev,
-      teamsCount: value,
       teamError: error,
-      maxUsersCount: !error ? Math.ceil(teamLength / +value) : prev.maxUsersCount,
       maxUserError: !error
         ? hasError(Math.ceil(teamLength / +value), minUsers, maxUsers)
         : prev.maxUserError,
@@ -134,32 +65,31 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
     const error = hasError(value, minUsers, maxUsers);
     setIsSubmitDisabled(error);
 
-    setValues((prev) => ({
+    if (!error) setValue('maxTeams', Math.ceil(teamLength / +value));
+
+    setErrors((prev) => ({
       ...prev,
-      maxUsersCount: value,
       teamError: !error
         ? hasError(Math.ceil(teamLength / +value), minTeams, maxTeams)
         : prev.teamError,
-      teamsCount: !error ? Math.ceil(teamLength / +value) : prev.teamsCount,
       maxUserError: error,
     }));
   };
 
   const handleSaveConfigs = () => {
-    if (isEmpty(values.teamsCount) || isEmpty(values.maxUsersCount)) return;
     setCreateBoardData((prev) => ({
       ...prev,
-      count: {
-        ...prev.count,
-        teamsCount: Math.floor(+values.teamsCount),
-        maxUsersCount: Math.floor(+values.maxUsersCount),
-      },
       board: {
         ...prev.board,
-        dividedBoards: handleSplitBoards(Math.floor(+values.teamsCount)),
+        dividedBoards: handleSplitBoards(Math.floor(getValues('maxTeams'))),
       },
     }));
   };
+
+  useEffect(() => {
+    setValue('maxTeams', minTeams);
+    setValue('maxUsers', maxUsers);
+  }, []);
 
   return (
     <AlertDialog>
@@ -169,7 +99,6 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           Quick edit sub-teams configurations
         </Button>
       </AlertDialogTrigger>
-
       <AlertDialogContent
         css={{ top: '200px', flexDirection: 'column' }}
         title="Quick edit sub-teams configurations"
@@ -186,19 +115,16 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
         <Flex css={{ mt: '$24', width: '100%' }} gap="24">
           <Flex css={{ width: '100%' }} direction="column" gap="8">
             <Text label>Sub-teams count</Text>
-            <StyledInput
+            <Input
               css={{ mb: 0 }}
-              id="teamsCount"
-              variant={values.teamError ? 'error' : 'default'}
+              id="maxTeams"
               max={maxTeams}
               min={minTeams}
-              placeholder=" "
               type="number"
-              value={values.teamsCount}
-              onChange={handleChangeCountTeams}
+              {...register('maxTeams', { onChange: handleChangeCountTeams })}
             />
             <Flex>
-              <Text hint color={values.teamError ? 'dangerBase' : 'primary800'}>
+              <Text hint color={errors.teamError ? 'dangerBase' : 'primary800'}>
                 Min {minTeams}, Max {maxTeams}{' '}
                 <Text hint color="primary300">
                   sub-teams
@@ -208,19 +134,16 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           </Flex>
           <Flex css={{ width: '100%' }} direction="column" gap="8">
             <Text label>Max sub-team members count</Text>
-            <StyledInput
+            <Input
               css={{ mb: 0 }}
               id="maxUsers"
-              variant={values.maxUserError ? 'error' : 'default'}
               max={maxUsers}
               min={minUsers}
-              placeholder=" "
               type="number"
-              value={values.maxUsersCount}
-              onChange={handleMaxMembers}
+              {...register('maxUsers', { onChange: handleMaxMembers })}
             />
             <Flex>
-              <Text hint color={values.maxUserError ? 'dangerBase' : 'primary800'}>
+              <Text hint color={errors.maxUserError ? 'dangerBase' : 'primary800'}>
                 Min {minUsers}, Max {maxUsers}{' '}
                 <Text hint color="primary300">
                   members per team

@@ -119,7 +119,14 @@ const NewSplitBoard: NextPage = () => {
   ];
 
   // React Hook Form
-  const methods = useForm<{ text: string; team: string; maxVotes?: number; slackEnable: boolean }>({
+  const methods = useForm<{
+    text: string;
+    team: string;
+    maxVotes?: number;
+    slackEnable: boolean;
+    maxTeams: number;
+    maxUsers: number;
+  }>({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -127,6 +134,8 @@ const NewSplitBoard: NextPage = () => {
       maxVotes: boardState.board.maxVotes,
       team: undefined,
       slackEnable: boardState.board.slackEnable,
+      maxTeams: undefined,
+      maxUsers: undefined,
     },
     resolver: joiResolver(SchemaCreateBoard),
   });
@@ -154,7 +163,13 @@ const NewSplitBoard: NextPage = () => {
    * @param title Board Title
    * @param maxVotes Maxium number of votes allowed
    */
-  const saveBoard = (title: string, team: string, slackEnable: boolean, maxVotes?: number) => {
+  const saveBoard = (
+    title: string,
+    team: string,
+    slackEnable: boolean,
+    maxUsers: number,
+    maxVotes?: number,
+  ) => {
     const responsibles: string[] = [];
     const newDividedBoards: CreateBoardDto[] = boardState.board.dividedBoards.map((subBoard) => {
       const newSubBoard: CreateBoardDto = { ...subBoard, users: [], dividedBoards: [] };
@@ -183,7 +198,7 @@ const NewSplitBoard: NextPage = () => {
       title,
       dividedBoards: newDividedBoards,
       maxVotes,
-      maxUsers: boardState.count.maxUsersCount,
+      maxUsers,
       team,
       responsibles,
       slackEnable,
@@ -235,9 +250,11 @@ const NewSplitBoard: NextPage = () => {
                 <StyledForm
                   id="hook-form"
                   {...(!haveError && {
-                    onSubmit: methods.handleSubmit(({ text, team, maxVotes, slackEnable }) => {
-                      saveBoard(text, team, slackEnable, maxVotes);
-                    }),
+                    onSubmit: methods.handleSubmit(
+                      ({ text, team, maxVotes, slackEnable, maxUsers }) => {
+                        saveBoard(text, team, slackEnable, +maxUsers, maxVotes);
+                      },
+                    ),
                   })}
                 >
                   <Flex direction="column" gap={24} css={{ width: '100%' }}>

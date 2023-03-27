@@ -22,7 +22,6 @@ import { HelperTextWrapper } from './styles';
 const SelectTeam = () => {
   const router = useRouter();
   const routerTeam = router.query.team as string;
-
   const { data: session } = useSession();
 
   /**
@@ -54,8 +53,6 @@ const SelectTeam = () => {
     if (!selectedTeam) {
       return;
     }
-    const maxUsersCount = Math.ceil(teamMembersCount / 2);
-    const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
 
     const users = selectedTeam.users.flatMap((teamUser) => {
       if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === session?.user.id)
@@ -79,11 +76,6 @@ const SelectTeam = () => {
       ...prev,
       users,
       board: { ...prev.board, team: selectedTeam.id },
-      count: {
-        ...prev.count,
-        teamsCount,
-        maxUsersCount,
-      },
     }));
   }, [selectedTeam, session?.user.id, setCreateBoardData, teamMembersCount]);
 
