@@ -35,7 +35,8 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		cardItemId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	) {
 		await this.canUserVote(boardId, userId, count);
 
@@ -43,7 +44,14 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		await this.voteRepository.startTransaction();
 
 		try {
-			await this.addVoteToCardAndUserOperations(boardId, userId, count, cardId, cardItemId);
+			await this.addVoteToCardAndUserOperations(
+				boardId,
+				userId,
+				count,
+				cardId,
+				cardItemId,
+				retryCount
+			);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
 		} catch (e) {
@@ -54,14 +62,20 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		}
 	}
 
-	async addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
+	async addVoteToCardGroup(
+		boardId: string,
+		cardId: string,
+		userId: string,
+		count: number,
+		retryCount?: number
+	) {
 		await this.canUserVote(boardId, userId, count);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
 
 		try {
-			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId);
+			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId, retryCount);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
 		} catch (e) {
@@ -123,9 +137,10 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		userId: string,
 		count: number,
 		cardId: string,
-		cardItemId: string
+		cardItemId: string,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 		try {
 			await this.incrementVoteUser(boardId, userId, count, withSession);
@@ -146,11 +161,11 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.addVoteToCard(boardId, cardId, userId, cardItemId, count);
+				await this.addVoteToCard(boardId, cardId, userId, cardItemId, count, retryCountOperation);
 			} else {
 				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}
@@ -161,9 +176,10 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 		boardId: string,
 		userId: string,
 		count: number,
-		cardId: string
+		cardId: string,
+		retryCount?: number
 	) {
-		let retryCount = 0;
+		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 		try {
 			await this.incrementVoteUser(boardId, userId, count, withSession);
@@ -181,11 +197,11 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			await this.updateBoardUserService.abortTransaction();
 			await this.voteRepository.abortTransaction();
 
-			if (e.code === WRITE_LOCK_ERROR && retryCount < 5) {
-				retryCount++;
+			if (e.code === WRITE_LOCK_ERROR && retryCountOperation < 5) {
+				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.addVoteToCardGroup(boardId, cardId, userId, count);
+				await this.addVoteToCardGroup(boardId, cardId, userId, count, retryCountOperation);
 			} else {
 				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}
