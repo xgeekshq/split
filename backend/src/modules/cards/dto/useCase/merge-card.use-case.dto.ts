@@ -15,5 +15,5 @@ export default class MergeCardUseCaseDto {
 	@ApiProperty()
 	@IsNotEmpty()
 	@IsString()
-	cardId: string;
+	targetCardId: string;
 }

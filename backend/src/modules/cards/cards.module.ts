@@ -10,6 +10,7 @@ import {
 	getCardService,
 	mergeCardApplication,
 	mergeCardService,
+	mergeCardUseCase,
 	unmergeCardApplication,
 	unmergeCardService,
 	updateCardApplication,
@@ -32,7 +33,8 @@ import CardsController from './controller/cards.controller';
 		mergeCardApplication,
 		unmergeCardApplication,
 		cardRepository,
-		creacteCardUseCase
+		creacteCardUseCase,
+		mergeCardUseCase
 	],
 	exports: [getCardService, deleteCardService]
 })
