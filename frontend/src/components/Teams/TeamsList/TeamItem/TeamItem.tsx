@@ -15,6 +15,8 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
+import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
+import { TeamUserUpdate } from '@/types/team/team.user';
 import TeamBoards from './TeamBoards/TeamBoards';
 import TeamTitle from './TeamTitle/TeamTitle';
 
@@ -32,6 +34,7 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
   const queryUserId = (!isTeamPage && query.userId ? query.userId : userId) as string;
 
   const { mutate: deleteTeam } = useDeleteTeam();
+  const { mutate: updateUser } = useUpdateTeamUser(teamId, queryUserId);
   const { mutate: deleteTeamUser } = useDeleteTeamUser(queryUserId);
 
   const userFound = useMemo(
@@ -50,6 +53,18 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
 
     return [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(userFound.role);
   }, [isSAdmin, userFound]);
+
+  const handleRoleChange = (role: TeamUserRoles) => {
+    const updateTeamUser: TeamUserUpdate = {
+      team: userFound.team!,
+      user: userFound.user._id,
+      role,
+      isNewJoiner: userFound.isNewJoiner,
+      canBeResponsible: userFound.canBeResponsible,
+    };
+
+    updateUser(updateTeamUser);
+  };
 
   const confirmationDialogDescription = () => {
     if (isTeamPage) {
@@ -124,7 +139,7 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
 
           <Flex align="center">
             {!isTeamPage && userFound ? (
-              <RoleSelector role={userFound.role} userId={userFound._id!} teamId={teamId} />
+              <RoleSelector role={userFound.role} handleRoleChange={handleRoleChange} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}

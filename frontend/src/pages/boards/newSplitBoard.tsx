@@ -18,7 +18,7 @@ import {
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateBoardDto } from '@/types/board/board';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { TEAMS_KEY } from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
