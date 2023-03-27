@@ -39,11 +39,6 @@ import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
 
-type ResultFromCreatedBoard = {
-	createdBoard: Board;
-	teamName?: string;
-};
-
 type CreateBoardAndUsers = {
 	boardData: BoardDto;
 	userId: string;
@@ -78,40 +73,33 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			userId
 		};
 
-		let resultFromCreateBoard: ResultFromCreatedBoard;
-
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			resultFromCreateBoard = await this.createBoardAndSaveBoardUsers(createBoardArgs);
+			const { createdBoard, teamName } = await this.createBoardAndSaveBoardUsers(createBoardArgs);
 
 			await this.boardRepository.commitTransaction();
 			await this.createBoardUserService.commitTransaction();
 
 			if (
-				resultFromCreateBoard.createdBoard &&
+				createdBoard &&
 				recurrent &&
 				teamId &&
 				maxUsers &&
-				resultFromCreateBoard.teamName === 'xgeeks' &&
+				teamName === 'xgeeks' &&
 				!fromSchedule
 			) {
-				this.addCronJobToBoard(
-					String(resultFromCreateBoard.createdBoard._id),
-					userId,
-					teamId,
-					maxUsers
-				);
+				this.addCronJobToBoard(String(createdBoard._id), userId, teamId, maxUsers);
 			}
 
 			this.logger.verbose(`Communication Slack Enable is set to "${boardData.slackEnable}".`);
 
-			if (slackEnable && teamId && resultFromCreateBoard.teamName === 'xgeeks') {
-				await this.callSlackCommunication(resultFromCreateBoard.createdBoard._id);
+			if (slackEnable && teamId && teamName === 'xgeeks') {
+				await this.callSlackCommunication(createdBoard._id);
 			}
 
-			return resultFromCreateBoard.createdBoard;
+			return createdBoard;
 		} catch (e) {
 			throw new CreateFailedException();
 		} finally {
@@ -151,7 +139,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const haveDividedBoards = dividedBoards.length > 0;
 
 		try {
-			let teamName;
+			let teamName: string | undefined;
 			const createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
 
 			if (teamId) {
