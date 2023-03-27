@@ -47,9 +47,9 @@ import { UpdateCardApplicationInterface } from '../interfaces/applications/updat
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
 import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
 import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
-import CreateCardUseCaseDto from '../dto/useCase/params/create-card.use-case.dto';
+import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use-case.dto';
+import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -58,7 +58,7 @@ import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use
 export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardUseCase)
-		private createCardUseCase: UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto>,
+		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
 		@Inject(TYPES.applications.UpdateCardApplication)
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)

@@ -1,19 +1,19 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import CreateCardUseCaseDto from '../dto/useCase/params/create-card.use-case.dto';
+import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import isEmpty from 'src/libs/utils/isEmpty';
 import CardItem from '../entities/card.item.schema';
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
-import CreateCardResUseCaseDto from '../dto/useCase/response/create-card-res.use-case.dto';
+import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import { replaceCard } from 'src/modules/boards/utils/clean-board';
 import Card from '../entities/card.schema';
 import { hideText } from 'src/libs/utils/hideText';
 import CardDto from '../dto/card.dto';
 
 @Injectable()
-export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CreateCardResUseCaseDto> {
+export class CreateCardUseCase implements UseCase<CreateCardUseCaseDto, CardCreationPresenter> {
 	constructor(
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface

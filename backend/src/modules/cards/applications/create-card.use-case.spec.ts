@@ -5,7 +5,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import faker from '@faker-js/faker';
 import { CardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/cardDto-factory.mock';
-import CreateCardUseCaseDto from '../dto/useCase/params/create-card.use-case.dto';
+import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { CardItemDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/cardItemDto-factory.mock';
