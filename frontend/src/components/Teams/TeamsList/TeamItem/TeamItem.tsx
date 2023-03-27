@@ -9,7 +9,6 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
-import useCurrentSession from '@/hooks/useCurrentSession';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import { Team } from '@/types/team/team';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -21,29 +20,24 @@ import TeamTitle from './TeamTitle/TeamTitle';
 
 export type TeamItemProps = {
   team: Team;
+  userId: string;
+  isSAdmin: boolean;
 };
 
-const TeamItem = React.memo(({ team }: TeamItemProps) => {
-  const { id, users: teamUsers, name } = team;
+const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
+  const { id: teamId, users: teamUsers, name: teamName } = team;
 
-  // CHECK: the session data could be passed as props,
-  // since it's the same for all items
-  const { userId, isSAdmin } = useCurrentSession();
-  const {
-    pathname,
-    query: { userId: userPathId, teamId },
-  } = useRouter();
+  const { pathname, query } = useRouter();
   const isTeamPage = pathname.includes('teams');
+  const queryUserId = (!isTeamPage && query.userId ? query.userId : userId) as string;
 
   const { mutate: deleteTeam } = useDeleteTeam();
-  const { mutate: deleteTeamUser } = useDeleteTeamUser(teamId! as string);
+  const { mutate: deleteTeamUser } = useDeleteTeamUser(queryUserId);
 
-  const userFound = useMemo(() => {
-    const queryUserId = userPathId;
-    const teamUserId = !isTeamPage && queryUserId ? queryUserId : userId;
-
-    return teamUsers.find((teamUser) => String(teamUser.user?._id) === String(teamUserId))!;
-  }, [isTeamPage, userPathId, userId, teamUsers]);
+  const userFound = useMemo(
+    () => teamUsers.find((teamUser) => String(teamUser.user?._id) === String(queryUserId))!,
+    [teamUsers, queryUserId],
+  );
 
   const havePermissions = useMemo(() => {
     if (isSAdmin) {
@@ -61,7 +55,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
     if (isTeamPage) {
       return (
         <Text>
-          Do you really want to delete the team <Text fontWeight="bold">{name}</Text>?
+          Do you really want to delete the team <Text fontWeight="bold">{teamName}</Text>?
         </Text>
       );
     }
@@ -73,14 +67,14 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
 
     return (
       <Text>
-        Do you really want to remove {userFoundName} from <Text fontWeight="bold">{name}</Text>?
+        Do you really want to remove {userFoundName} from <Text fontWeight="bold">{teamName}</Text>?
       </Text>
     );
   };
 
   const handleDelete = () => {
     if (isTeamPage) {
-      deleteTeam(id);
+      deleteTeam(teamId);
     } else {
       deleteTeamUser(userFound._id!);
     }
@@ -99,7 +93,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
             }}
           />
 
-          <TeamTitle teamId={id} title={name} />
+          <TeamTitle teamId={teamId} title={teamName} />
         </Flex>
         <Flex align="center" justify="start" gap="40" css={{ flex: '3' }}>
           <Flex align="center" gap="8">
@@ -130,7 +124,7 @@ const TeamItem = React.memo(({ team }: TeamItemProps) => {
 
           <Flex align="center">
             {!isTeamPage && userFound ? (
-              <RoleSelector role={userFound.role} userId={userFound._id!} teamId={id} />
+              <RoleSelector role={userFound.role} userId={userFound._id!} teamId={teamId} />
             ) : (
               <TeamBoards team={team} havePermissions={havePermissions} />
             )}

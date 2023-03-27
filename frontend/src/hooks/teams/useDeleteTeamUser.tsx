@@ -1,22 +1,21 @@
-import { useMutation /* , useQueryClient */ } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteTeamUser } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useTeamUtils from '../useTeamUtils';
 
-// import { TEAMS_KEY } from './';
+import { TEAMS_KEY } from '.';
 
-// CHECK: When is this Function Called?
-const useDeleteTeamUser = (/* teamId: string */) => {
-  // const queryClient = useQueryClient();
+const useDeleteTeamUser = (userId: string) => {
+  const queryClient = useQueryClient();
   const { setToastState } = useTeamUtils();
 
   return useMutation(deleteTeamUser, {
-    onSuccess: async (/* _data, userId */) => {
-      // await Promise.all([
-      //   //queryClient.invalidateQueries([TEAMS_KEY, teamId]),
-      //   //queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', userId]),
-      // ]);
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]),
+        queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', userId]),
+      ]);
 
       setToastState({
         open: true,

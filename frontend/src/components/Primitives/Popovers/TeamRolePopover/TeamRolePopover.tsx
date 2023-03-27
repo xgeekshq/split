@@ -24,6 +24,10 @@ export type TeamRolePopoverProps = {
   isTeamPage?: boolean;
 };
 
+// TODO:
+// Extract 'handleSelectFunction' to Parent
+// Create changes the Recoil Value
+// Other Pages Mutate the React Query
 const TeamRolePopover = React.memo(({ userId, teamId, isTeamPage }: TeamRolePopoverProps) => {
   const [membersList, setMembersList] = useRecoilState(membersListState);
   const userTeamsList = useRecoilValue(userTeamsListState);

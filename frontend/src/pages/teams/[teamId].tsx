@@ -34,7 +34,7 @@ const Team = () => {
   const setUsers = useSetRecoilState(usersListState);
 
   // Hooks
-  const { data: teamData, isLoading: loadingTeam } = useTeam(teamId! as string);
+  const { data: teamData, isLoading: loadingTeam } = useTeam(teamId as string);
 
   const {
     fetchUsers: { data: usersData, isLoading: loadingUsers },
@@ -55,7 +55,7 @@ const Team = () => {
     });
 
     setUsers(checkedUsersData);
-  }, [usersData, setUsers]);
+  }, [usersData, teamData, setUsers]);
 
   if (!teamData || !usersData) {
     replace(ROUTES.Teams);

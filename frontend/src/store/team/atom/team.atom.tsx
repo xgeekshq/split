@@ -28,3 +28,9 @@ export const userTeamsListState = atom<Team[]>({
   key: 'userTeamsList',
   default: [],
 });
+
+//* Guido's Store:
+export const createTeamState = atom<TeamUser[]>({
+  key: 'createTeamState',
+  default: [],
+});

@@ -14,7 +14,7 @@ import Text from '@/components/Primitives/Text/Text';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateTeam from '@/schema/schemaCreateTeamForm';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateTeamUser } from '@/types/team/team.user';
 import { CREATE_TEAM_TIPS } from '@/utils/tips';
@@ -32,7 +32,7 @@ const CreateTeam = () => {
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const listMembers = useRecoilValue(membersListState);
+  const createTeamMembers = useRecoilValue(createTeamState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
 
   const methods = useForm<{ text: string }>({
@@ -53,7 +53,7 @@ const CreateTeam = () => {
   }, [userId, setUsersList, usersList]);
 
   const saveTeam = (title: string) => {
-    const membersListToSubmit: CreateTeamUser[] = listMembers.map((member) => ({
+    const membersListToSubmit: CreateTeamUser[] = createTeamMembers.map((member) => ({
       ...member,
       user: member.user._id,
     }));
@@ -108,7 +108,7 @@ const CreateTeam = () => {
                   </Button>
                 </Flex>
               </Flex>
-              <TeamMembersList teamUsers={listMembers} hasPermissions />
+              <TeamMembersList teamUsers={createTeamMembers} hasPermissions />
               <ListMembers isOpen={isOpen} setIsOpen={setIsOpen} />
             </FormProvider>
           </StyledForm>

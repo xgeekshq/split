@@ -10,7 +10,7 @@ const useTeam = (teamId: string) => {
   const { setToastState } = useTeamUtils();
 
   return useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
-    enabled: true,
+    enabled: !!teamId,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({

@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
@@ -20,21 +20,19 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
-  const { mutate } = useUpdateTeamUsers();
-
   const {
     query: { teamId },
   } = useRouter();
 
   const { userId } = useCurrentSession();
+  const { mutate } = useUpdateTeamUsers(teamId as string);
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const [membersList, setMembersListState] = useRecoilState(membersListState);
+  const [createTeamMembers, setCreateTeamMembers] = useRecoilState(createTeamState);
 
   const setToastState = useSetRecoilState(toastState);
 
   const saveMembers = (checkedUserList: UserList[]) => {
-    const listOfUsers = [...membersList];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
 
@@ -42,7 +40,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       const team = teamId as string;
 
       const addedUsers = selectedUsers.filter(
-        (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
+        (user) => !createTeamMembers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => {
@@ -60,7 +58,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
         };
       });
 
-      const removedUsers = listOfUsers.filter((teamUser) =>
+      const removedUsers = createTeamMembers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user?._id === user._id),
       );
       const removedUsersIds = removedUsers.map((user) => user._id);
@@ -79,11 +77,12 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       return;
     }
 
+    // We are Creating a NEW Team
     const updatedListWithAdded = selectedUsers.map((user) => {
       const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
 
       return (
-        listOfUsers.find((member) => member.user._id === user._id) || {
+        createTeamMembers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
           isNewJoiner,
@@ -111,7 +110,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       type: ToastStateEnum.SUCCESS,
     });
 
-    setMembersListState(updatedListWithAdded);
+    setCreateTeamMembers(updatedListWithAdded);
     setUsersList(checkedUserList);
 
     setIsOpen(false);
