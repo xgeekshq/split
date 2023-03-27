@@ -72,6 +72,7 @@ describe('CreateVoteService', () => {
 		getBoardUserServiceMock.getBoardUser.mockResolvedValue(boardUser);
 		updateBoardUserServiceMock.updateVoteUser.mockResolvedValue({ ...boardUser, votesCount: 1 });
 		voteRepositoryMock.insertCardItemVote.mockResolvedValue(board);
+		voteRepositoryMock.insertCardGroupVote.mockResolvedValue(board);
 	});
 
 	it('should be defined', () => {
@@ -144,6 +145,40 @@ describe('CreateVoteService', () => {
 
 			expect(
 				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
+			).rejects.toThrow(InsertFailedException);
+		});
+	});
+
+	describe('addVoteToCardGroup', () => {
+		it('should throw an error when the voteRepository.insertCardGroupVote fails', async () => {
+			voteRepositoryMock.insertCardGroupVote.mockResolvedValue(null);
+
+			expect(
+				async () => await voteService.addVoteToCardGroup(board._id, card._id, userId, 1)
+			).rejects.toThrow(InsertFailedException);
+		});
+
+		it('should throw an error when the voteRepository.insertCardGroupVote fails, but should call the addVoteToCard again if retry count is < 5 and e.code is WRITE_LOCK_ERROR', async () => {
+			try {
+				voteRepositoryMock.insertCardGroupVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
+				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
+		});
+
+		it('should call the updateBoardUserService.updateVoteUser and the voteRepository.insertCardGroupVote when addVoteToCard addVoteToCardGroup succeeds', async () => {
+			await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
+
+			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
+			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
+		});
+
+		it('should throw an error when a commit transaction fails', async () => {
+			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
+
+			expect(
+				async () => await voteService.addVoteToCardGroup(board._id, card._id, userId, 1)
 			).rejects.toThrow(InsertFailedException);
 		});
 	});
