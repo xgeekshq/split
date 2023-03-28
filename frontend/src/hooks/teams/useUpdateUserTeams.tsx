@@ -10,7 +10,7 @@ const useUpdateUserTeams = (userId: string) => {
 
   return useMutation(updateAddTeamsToUserRequest, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([TEAMS_KEY, userId]);
+      await queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
 
       setToastState({
         open: true,

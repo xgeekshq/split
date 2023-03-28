@@ -26,7 +26,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   } = useRouter();
 
   const { userId } = useCurrentSession();
-  const { data: team } = useTeam(teamId as string, false);
+  const { data: team } = useTeam(teamId as string);
   const { mutate } = useUpdateTeamUsers(teamId as string);
 
   const [usersList, setUsersList] = useRecoilState(usersListState);

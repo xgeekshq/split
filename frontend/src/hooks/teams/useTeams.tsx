@@ -19,6 +19,7 @@ const useTeams = (isSAdmin: boolean) => {
     },
     {
       enabled: true,
+      refetchOnMount: false,
       refetchOnWindowFocus: false,
       onError: () => {
         setToastState({

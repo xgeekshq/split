@@ -11,6 +11,7 @@ const useUserTeams = (userId: string) => {
 
   return useQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId), {
     enabled: true,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
