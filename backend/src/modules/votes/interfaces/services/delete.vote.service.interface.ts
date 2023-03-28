@@ -4,14 +4,16 @@ export interface DeleteVoteServiceInterface {
 		cardId: string,
 		userId: string,
 		cardItemId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	): Promise<void>;
 
 	deleteVoteFromCardGroup(
 		boardId: string,
 		cardId: string,
 		userId: string,
-		count: number
+		count: number,
+		retryCount?: number
 	): Promise<void>;
 
 	decrementVoteUser(boardId: string, userId: string, count?: number | undefined): Promise<void>;
