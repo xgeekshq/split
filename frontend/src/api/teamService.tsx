@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { CreateTeamDto, Team } from '@/types/team/team';
+import { CreateTeamDto, Team, TeamChecked } from '@/types/team/team';
 import fetchData from '@/utils/fetchData';
 import {
   CreatedTeamUser,
@@ -22,7 +22,7 @@ export const getUserTeams = (
 export const getTeam = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
   fetchData(`/teams/${id}`, { context, serverSide: !!context });
 
-export const getTeamsWithoutUser = (userId?: string): Promise<Team[]> =>
+export const getTeamsWithoutUser = (userId?: string): Promise<TeamChecked[]> =>
   fetchData(`/teams/not/${userId}`);
 // #endregion
 
@@ -32,7 +32,7 @@ export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> =>
 // #endregion
 
 // #region PUT
-export const updateTeamUser = (team: TeamUserUpdate): Promise<TeamUser> =>
+export const updateTeamUser = (team: TeamUserUpdate): Promise<TeamUserUpdate> =>
   fetchData(`/teams/${team.team}`, { method: 'PUT', data: team });
 
 export const updateTeamUsers = (users: TeamUserAddAndRemove): Promise<CreatedTeamUser[]> =>

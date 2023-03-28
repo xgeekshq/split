@@ -6,6 +6,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
+import { Team, TeamChecked } from '@/types/team/team';
 import { TEAMS_KEY } from '.';
 
 const useDeleteTeamUser = (userId: string) => {
@@ -13,11 +14,29 @@ const useDeleteTeamUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(deleteTeamUser, {
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]),
-        queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', userId]),
-      ]);
+    onSuccess: async (res) => {
+      const teamId = res.team;
+
+      queryClient.setQueryData([TEAMS_KEY, 'user', userId], (oldTeams: Team[] | undefined) => {
+        if (!oldTeams) return oldTeams;
+
+        const removedTeam = oldTeams.find((team) => team.id === teamId);
+        queryClient.setQueryData(
+          [TEAMS_KEY, 'not', 'user', userId],
+          (oldNotTeams: TeamChecked[] | undefined) => {
+            if (!oldNotTeams || !removedTeam) return oldNotTeams;
+
+            const team = {
+              _id: removedTeam.id,
+              name: removedTeam.name,
+            };
+
+            return [...oldNotTeams, team];
+          },
+        );
+
+        return oldTeams.filter((team) => team.id !== teamId);
+      });
 
       setToastState({
         open: true,
@@ -26,6 +45,9 @@ const useDeleteTeamUser = (userId: string) => {
       });
     },
     onError: () => {
+      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', userId]);
+
       setToastState({
         open: true,
         content: 'Error removing user from the team.',

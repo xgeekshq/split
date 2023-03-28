@@ -15,8 +15,8 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(updateTeamUser, {
-    onMutate: async (variables: TeamUserUpdate) => {
-      const { role, canBeResponsible, isNewJoiner } = variables;
+    onSuccess: async (res: TeamUserUpdate) => {
+      const { role, canBeResponsible, isNewJoiner, user } = res;
 
       const updateUserInTeam = (teamUser: TeamUser, id: string) => {
         if (teamUser.user._id !== id) return teamUser;
@@ -52,7 +52,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
           if (!oldTeam) return oldTeam;
 
           const updatedOldTeam = oldTeam.users.map((teamUser) =>
-            updateUserInTeam(teamUser, variables.user as string),
+            updateUserInTeam(teamUser, user as string),
           );
 
           return {

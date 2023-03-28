@@ -26,6 +26,7 @@ const useUpdateUserTeams = (userId: string) => {
       });
     },
     onError: () => {
+      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
       setToastState({
         open: true,
         content: 'Error while adding team(s) to the user',

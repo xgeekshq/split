@@ -14,8 +14,6 @@ const useDeleteTeam = () => {
 
   return useMutation(deleteTeam, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([TEAMS_KEY]);
-
       setToastState({
         open: true,
         content: 'The team was successfully deleted.',
@@ -28,6 +26,9 @@ const useDeleteTeam = () => {
         content: 'Error deleting the team.',
         type: ToastStateEnum.ERROR,
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries([TEAMS_KEY]);
     },
   });
 };
