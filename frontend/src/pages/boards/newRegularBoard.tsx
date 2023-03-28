@@ -13,7 +13,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import BoardName from '@/components/CreateBoard/BoardName/BoardName';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
-import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
+import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs/SettingsTabs';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';

@@ -10,10 +10,10 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { usePrevious } from '@/utils/previousState';
 
-import BoardConfigurations from '../BoardConfigurations/BoardConfigurations';
-import SubTeamsConfigurations from './SubTeamsTab/SubTeamsTab';
+import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
+import SubTeamsConfigurations from '../SubTeamsTab/SubTeamsTab';
 
-const Settings = () => {
+const SettingsTabs = () => {
   // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
@@ -74,4 +74,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default SettingsTabs;

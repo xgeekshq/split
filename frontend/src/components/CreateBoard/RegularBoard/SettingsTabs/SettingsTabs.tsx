@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import Text from '@/components/Primitives/Text/Text';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
+import Text from '@/components/Primitives/Text/Text';
 import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
-import ParticipantsTab from '../ParticipantsTab';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+
 import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
+import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
 
 const SettingsTabs = () => {
   // Recoil Atoms
@@ -58,8 +60,8 @@ const SettingsTabs = () => {
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
 
   return (
-    <>
-      <Text heading={3} css={{ mb: '$16', mt: '$32' }}>
+    <Flex direction="column" gap={16}>
+      <Text heading={3} css={{ mb: '$16' }}>
         Settings
       </Text>
       <Tab
@@ -68,7 +70,7 @@ const SettingsTabs = () => {
         activeValue={activeTab}
         onChangeActiveValue={handleTabChange}
       />
-    </>
+    </Flex>
   );
 };
 

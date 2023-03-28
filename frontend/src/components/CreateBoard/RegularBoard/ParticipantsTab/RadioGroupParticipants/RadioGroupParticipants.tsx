@@ -1,19 +1,25 @@
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import { useSetRecoilState } from 'recoil';
+
 import {
+  Label,
+  RadioGroup,
   RadioGroupIndicator,
   RadioGroupItem,
-  RadioGroup,
-  Label,
 } from '@/components/Primitives/Inputs/RadioGroup/RadioGroup';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { useSetRecoilState } from 'recoil';
-import { FormStyled } from './styles';
+import { styled } from '@/styles/stitches/stitches.config';
 
 type RadioGroupParticipantsProps = {
   optionSelected: string;
   handleSelection: (value: string) => void;
 };
+
+const FormStyled = styled('form', {
+  width: '100%',
+  '@media (min-width: 1600px)': { width: '70%' },
+});
 
 const RadioGroupParticipants = ({
   optionSelected,

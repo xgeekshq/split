@@ -8,7 +8,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName/BoardName';
-import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs';
+import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs/SettingsTabs';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import AlertBox from '@/components/Primitives/Alerts/AlertBox/AlertBox';

@@ -1,8 +1,10 @@
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { Dispatch, SetStateAction } from 'react';
-import SelectTeam from '@/components/CreateBoard/RegularBoard/SelectTeam';
-import SelectParticipants from './SelectParticipants';
-import RadioGroupParticipants from './RadioGroupParticipants';
+
+import SelectTeam from '@/components/CreateBoard/RegularBoard/ParticipantsTab/SelectTeam/SelectTeam';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+
+import RadioGroupParticipants from './RadioGroupParticipants/RadioGroupParticipants';
+import SelectParticipants from './SelectParticipants/SelectParticipants';
 
 type Props = { optionSelected: string; setOptionSelected: Dispatch<SetStateAction<string>> };
 

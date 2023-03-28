@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import ListParticipants from '../ListParticipants';
+import ListParticipants from '../ListParticipants/ListParticipants';
 
 const SelectParticipants = () => {
   const [isOpen, setIsOpen] = useState(false);
