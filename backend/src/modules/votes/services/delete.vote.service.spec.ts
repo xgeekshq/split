@@ -22,12 +22,15 @@ import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.s
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
+import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
-const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 0 });
-const card: Card = CardFactory.create();
+const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 1 });
+const card: Card = CardFactory.create({ votes: [boardUser._id, userId] });
 const cardItem: CardItem = card.items[0];
+cardItem.votes = [boardUser._id, userId];
 
 describe('DeleteVoteService', () => {
 	let voteService: DeleteVoteServiceInterface;
@@ -98,34 +101,107 @@ describe('DeleteVoteService', () => {
 	});
 
 	describe('deleteVoteFromCard', () => {
-		it('should throw an error when the board is not found on the canUserVote function', async () => {
-			getBoardServiceMock.getBoardById.mockResolvedValue(null);
+		it('should throw an error when the canUserDeleteVote function returns false', async () => {
+			//if board is not found
+			try {
+				getBoardServiceMock.getBoardById.mockResolvedValueOnce(null);
 
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+
+			// if boardUser is not found
+			try {
+				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce(null);
+
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+
+			//if card is not found
+			try {
+				getCardServiceMock.getCardFromBoard.mockResolvedValueOnce(null);
+
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+
+			//if the cardItem votes does't include the vote of the userId
+			try {
+				const cardItemResult: CardItem = { ...cardItem, votes: [boardUser._id] };
+				const cardResult: Card = { ...card, items: [cardItemResult] };
+
+				getCardServiceMock.getCardFromBoard.mockResolvedValueOnce(cardResult);
+
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+
+			//if the votes count of the boardUser is less than zero
+			try {
+				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce({ ...boardUser, votesCount: 1 });
+
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 2);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+		});
+
+		it('should throw an error if the getCardItem is not found', async () => {
+			getCardServiceMock.getCardFromBoard.mockResolvedValue({
+				...card,
+				items: [CardItemFactory.create()]
+			});
 			expect(
 				async () =>
 					await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1)
 			).rejects.toThrow(DeleteFailedException);
 		});
 
-		it('should throw an error when the boardUser is not found on the canUserVote function', async () => {
-			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
+		it('should throw an error when the removeVotesFromCardItemAndUserOperations fails', async () => {
+			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
+			try {
+				voteRepositoryMock.removeVotesFromCardItem.mockRejectedValueOnce({
+					code: WRITE_LOCK_ERROR
+				});
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
 
-			expect(
-				async () =>
-					await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(DeleteFailedException);
+			//if voteRepositoryMock.removeVotesFromCardItem fails
+			try {
+				voteRepositoryMock.removeVotesFromCardItem.mockResolvedValueOnce(null);
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
+
+			//if updateBoardUserServiceMock.updateBoardUserRole
+			try {
+				updateBoardUserServiceMock.updateBoardUserRole.mockResolvedValueOnce(null);
+				await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(DeleteFailedException);
+			}
 		});
 
-		it('should throw an error when the card is not found on the canUserVote function', async () => {
-			getCardServiceMock.getCardFromBoard.mockResolvedValue(null);
-
-			expect(
-				async () =>
-					await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(DeleteFailedException);
+		it('should call all functions if the deleteVoteFromCard function is successful', async () => {
+			await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1);
+			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
+			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
+			expect(getCardServiceMock.getCardFromBoard).toBeCalledTimes(2);
+			expect(voteRepositoryMock.removeVotesFromCardItem).toBeCalled();
+			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
 		});
 
-		it.only("should throw an error when the cardItem does't include the vote of the userId", async () => {
+		it('should throw an error when a commit transaction fails', async () => {
+			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
+
 			expect(
 				async () =>
 					await voteService.deleteVoteFromCard(board._id, card._id, userId, cardItem._id, 1)

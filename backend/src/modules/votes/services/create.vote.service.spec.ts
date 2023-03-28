@@ -80,49 +80,52 @@ describe('CreateVoteService', () => {
 	});
 
 	describe('addVoteToCard', () => {
-		it('should throw an error when the board is not found on the canUserVote function', async () => {
-			getBoardServiceMock.getBoardById.mockResolvedValue(null);
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(NotFoundException);
-		});
-
-		it('should throw an error when the boardUser is not found on the canUserVote function', async () => {
-			getBoardUserServiceMock.getBoardUser.mockResolvedValue(null);
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(InsertFailedException);
-		});
-
-		it("should throw an error when the boardUser can't vote", async () => {
-			getBoardUserServiceMock.getBoardUser.mockResolvedValue({ ...boardUser, votesCount: 3 });
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 3)
-			).rejects.toThrow(InsertFailedException);
-		});
-
-		it('should throw an error when the updateBoardUserService.updateVoteUser fails', async () => {
-			updateBoardUserServiceMock.updateVoteUser.mockResolvedValue(null);
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(InsertFailedException);
-		});
-
-		it('should throw an error when the voteRepository.insertCardItemVote fails', async () => {
-			voteRepositoryMock.insertCardItemVote.mockResolvedValue(null);
-
-			expect(
-				async () => await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1)
-			).rejects.toThrow(InsertFailedException);
-		});
-
-		it('should throw an error when the voteRepository.insertCardItemVote fails, but should call the addVoteToCard again if retry count is < 5 and e.code is WRITE_LOCK_ERROR', async () => {
+		it('should throw an error when the canUserVote function returns false', async () => {
+			//if the board is not found
 			try {
-				voteRepositoryMock.insertCardItemVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
+				getBoardServiceMock.getBoardById.mockResolvedValueOnce(null);
+				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(NotFoundException);
+			}
+
+			//if the boardUser is not found
+			try {
+				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce(null);
+				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
+
+			//if count of total votes of the user is greater than the max votes of the board
+			try {
+				getBoardUserServiceMock.getBoardUser.mockResolvedValueOnce({ ...boardUser, votesCount: 3 });
+				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
+		});
+
+		it('should throw an error when the addVoteToCardAndUserOperations fails', async () => {
+			//if updateBoardUserServiceMock.updateVoteUser fails
+			try {
+				updateBoardUserServiceMock.updateVoteUser.mockResolvedValueOnce(null);
+				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
+
+			//if voteRepositoryMock.insertCardItemVote fails
+			try {
+				voteRepositoryMock.insertCardItemVote.mockResolvedValueOnce(null);
+				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
+
+			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
+			try {
+				voteRepositoryMock.insertCardItemVote.mockRejectedValueOnce({ code: WRITE_LOCK_ERROR });
 				await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
@@ -132,6 +135,8 @@ describe('CreateVoteService', () => {
 		it('should call the updateBoardUserService.updateVoteUser and the voteRepository.insertCardItemVote when addVoteToCard function succeeds', async () => {
 			await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
 
+			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
+			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
 			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
 			expect(voteRepositoryMock.insertCardItemVote).toBeCalled();
 		});
@@ -151,14 +156,16 @@ describe('CreateVoteService', () => {
 
 	describe('addVoteToCardGroup', () => {
 		it('should throw an error when the voteRepository.insertCardGroupVote fails', async () => {
-			voteRepositoryMock.insertCardGroupVote.mockResolvedValue(null);
+			//if the error code isn't of type  WRITE_ERROR_LOCK or retryCount is greater than 5
+			try {
+				voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
+				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
+				expect(voteService.addVoteToCardGroup).toBeCalled();
+			} catch (ex) {
+				expect(ex).toBeInstanceOf(InsertFailedException);
+			}
 
-			expect(
-				async () => await voteService.addVoteToCardGroup(board._id, card._id, userId, 1)
-			).rejects.toThrow(InsertFailedException);
-		});
-
-		it('should throw an error when the voteRepository.insertCardGroupVote fails, but should call the addVoteToCard again if retry count is < 5 and e.code is WRITE_LOCK_ERROR', async () => {
+			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
 			try {
 				voteRepositoryMock.insertCardGroupVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
 				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
@@ -170,6 +177,8 @@ describe('CreateVoteService', () => {
 		it('should call the updateBoardUserService.updateVoteUser and the voteRepository.insertCardGroupVote when addVoteToCard addVoteToCardGroup succeeds', async () => {
 			await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
 
+			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
+			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
 			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
 			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
 		});
