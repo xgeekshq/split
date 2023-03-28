@@ -2,12 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getTeam } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeamUtils from '../useTeamUtils';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
 
 const useTeam = (teamId: string) => {
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
   return useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
     enabled: !!teamId,

@@ -2,15 +2,18 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getTeamsWithoutUser } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeamUtils from '../useTeamUtils';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
 
 const useTeamsWithoutUser = (userId: string) => {
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
   return useQuery([TEAMS_KEY, 'not', 'user', userId], () => getTeamsWithoutUser(userId), {
     enabled: true,
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({

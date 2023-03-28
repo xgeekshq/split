@@ -4,15 +4,13 @@ import { createTeamRequest } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { AxiosError } from 'axios';
 
-import { ROUTES } from '@/utils/routes';
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
+
 import { INVALID_NAME } from '@/errors/teams/errors';
-import useTeamUtils from '../useTeamUtils';
 
 const useCreateTeam = () => {
-  const {
-    setToastState,
-    router: { push },
-  } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
   return useMutation(createTeamRequest, {
     onSuccess: () => {
@@ -21,9 +19,6 @@ const useCreateTeam = () => {
         content: 'The team was successfully created.',
         type: ToastStateEnum.SUCCESS,
       });
-
-      // CHECK: Should this Hook be responsible for changing the Page?
-      push(ROUTES.Teams);
     },
     onError: (error: AxiosError<{ message: string }>) => {
       setToastState({

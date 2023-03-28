@@ -21,13 +21,14 @@ import { CREATE_TEAM_TIPS } from '@/utils/tips';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
+import { ROUTES } from '@/utils/routes';
 import ListMembers from '../Team/ListMembers/ListMembers';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();
-  const { back } = useRouter();
+  const { back, push } = useRouter();
 
-  const { mutate, status } = useCreateTeam();
+  const { mutateAsync: createTeam, status } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -52,14 +53,15 @@ const CreateTeam = () => {
     setUsersList(updateCheckedUser);
   }, [userId, setUsersList, usersList]);
 
-  const saveTeam = (title: string) => {
+  const saveTeam = async (title: string) => {
     const membersListToSubmit: CreateTeamUser[] = createTeamMembers.map((member) => ({
       ...member,
       user: member.user._id,
     }));
 
-    mutate({ name: title, users: membersListToSubmit });
+    await createTeam({ name: title, users: membersListToSubmit });
     resetListUsersState();
+    push(ROUTES.Teams);
   };
 
   const handleBack = useCallback(() => {

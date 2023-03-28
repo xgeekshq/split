@@ -1,14 +1,21 @@
-import { updateAddTeamsToUserRequest } from '@/api/teamService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TEAMS_KEY } from '.';
-import useTeamUtils from '../useTeamUtils';
 
+import { updateAddTeamsToUser } from '@/api/teamService';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
+
+import { TEAMS_KEY } from '.';
+
+// CHECK: This Mutation should return the Team the user was added to.
+// Instead atm it returns the TeamUser that was added.
+// That would allow us to bypass the sequential requests.
 const useUpdateUserTeams = (userId: string) => {
   const queryClient = useQueryClient();
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(updateAddTeamsToUserRequest, {
+  return useMutation(updateAddTeamsToUser, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
 

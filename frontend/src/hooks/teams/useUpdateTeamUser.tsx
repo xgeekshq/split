@@ -1,18 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { updateTeamUserRequest } from '@/api/teamService';
+import { updateTeamUser } from '@/api/teamService';
 import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { Team } from '@/types/team/team';
-import useTeamUtils from '../useTeamUtils';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
 
 const useUpdateTeamUser = (teamId: string, userId?: string) => {
   const queryClient = useQueryClient();
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(updateTeamUserRequest, {
+  return useMutation(updateTeamUser, {
     onMutate: async (variables: TeamUserUpdate) => {
       const { role, canBeResponsible, isNewJoiner } = variables;
 

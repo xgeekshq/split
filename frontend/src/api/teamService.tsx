@@ -32,15 +32,13 @@ export const createTeamRequest = (newTeam: CreateTeamDto): Promise<Team> =>
 // #endregion
 
 // #region PUT
-export const updateTeamUserRequest = (team: TeamUserUpdate): Promise<TeamUser> =>
+export const updateTeamUser = (team: TeamUserUpdate): Promise<TeamUser> =>
   fetchData(`/teams/${team.team}`, { method: 'PUT', data: team });
 
-export const addAndRemoveTeamUserRequest = (
-  users: TeamUserAddAndRemove,
-): Promise<CreatedTeamUser[]> =>
+export const updateTeamUsers = (users: TeamUserAddAndRemove): Promise<CreatedTeamUser[]> =>
   fetchData(`/teams/${users.team}/addAndRemove`, { method: 'PUT', data: users });
 
-export const updateAddTeamsToUserRequest = (teamUser: TeamUserUpdate[]): Promise<TeamUserUpdate> =>
+export const updateAddTeamsToUser = (teamUser: TeamUserUpdate[]): Promise<TeamUserUpdate> =>
   fetchData(`/teams/add/user`, { method: 'PUT', data: teamUser });
 // #endregion
 

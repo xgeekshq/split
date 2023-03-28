@@ -1,16 +1,21 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { addAndRemoveTeamUserRequest } from '@/api/teamService';
+import { updateTeamUsers } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeamUtils from '../useTeamUtils';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
 
+// CHECK: This Mutation should return the TeamUsers that were added to the Team
+// As well as the ids of the TeamUsers removed.
+// That would allow us to bypass the sequential requests.
 const useUpdateTeamUsers = (teamId: string) => {
   const queryClient = useQueryClient();
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
-  return useMutation(addAndRemoveTeamUserRequest, {
+  return useMutation(updateTeamUsers, {
     onSuccess: async () => {
       await queryClient.invalidateQueries([TEAMS_KEY, teamId]);
 

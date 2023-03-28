@@ -2,13 +2,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deleteTeam } from '@/api/teamService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useTeamUtils from '../useTeamUtils';
+
+import { useSetRecoilState } from 'recoil';
+import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
 
 const useDeleteTeam = () => {
   const queryClient = useQueryClient();
-  const { setToastState } = useTeamUtils();
+  const setToastState = useSetRecoilState(toastState);
 
   return useMutation(deleteTeam, {
     onSuccess: async () => {
