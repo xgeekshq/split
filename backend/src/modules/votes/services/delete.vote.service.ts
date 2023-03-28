@@ -122,7 +122,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		}
 
 		if (!isEmpty(currentCount)) {
-			await this.deleteVotesWhileCurrentCountIsNotEmpty(currentCount, boardId, cardId, userId);
+			await this.deleteVotesWhileCurrentCountIsNotEmpty(currentCount, boardId, card, userId);
 		}
 	}
 
@@ -140,9 +140,12 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		if (!board) {
 			return false;
 		}
-		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, userId);
+		const { _id: boardUserId, votesCount } = await this.getBoardUserService.getBoardUser(
+			boardId,
+			userId
+		);
 
-		if (!boardUserFound) {
+		if (!boardUserId) {
 			return false;
 		}
 
@@ -156,9 +159,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			return false;
 		}
 
-		return boardUserFound?.votesCount
-			? boardUserFound.votesCount > 0 && boardUserFound.votesCount - Math.abs(count) >= 0
-			: false;
+		return votesCount ? votesCount > 0 && votesCount - Math.abs(count) >= 0 : false;
 	}
 
 	private ifVotesIncludesUserId(card: Card, userId: string, cardItemId?: string) {
@@ -295,12 +296,10 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 	private async deleteVotesWhileCurrentCountIsNotEmpty(
 		currentCount: number,
 		boardId: string,
-		cardId: string,
+		card: Card,
 		userId: string
 	) {
 		while (currentCount > 0) {
-			const card = await this.getCardFromBoard(boardId, cardId);
-
 			const item = card.items.find(({ votes: itemVotes }) =>
 				arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
 			);
@@ -316,7 +315,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 			await this.deleteVoteFromCard(
 				boardId,
-				cardId,
+				card._id,
 				userId,
 				item._id.toString(),
 				-itemVotesToReduce
