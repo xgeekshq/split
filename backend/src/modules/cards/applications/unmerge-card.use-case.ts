@@ -30,13 +30,17 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 
 			if (!cardItemToMove) throw Error(CARD_NOT_FOUND);
 
-			const itemId = await this.unmergeCard(cardItemToMove, unMergeCardDto);
+			const cardId = await this.unmergeCard(cardItemToMove, unMergeCardDto);
 
 			await this.cardRepository.commitTransaction();
 
-			const newCardSaved = await this.cardService.getCardFromBoard(boardId, itemId);
+			const newCardSaved = await this.cardService.getCardFromBoard(boardId, cardId);
 
-			return newCardSaved.items[0]._id;
+			const itemId = newCardSaved.items[0]._id;
+
+			if (!itemId) throw Error(UPDATE_FAILED);
+
+			return itemId;
 		} catch (e) {
 			throw new UpdateFailedException(e.message ? e.message : UPDATE_FAILED);
 		} finally {
@@ -58,9 +62,9 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 
 			this.updateLastCardOnGroup(cardGroup, unMergeCardDto);
 
-			const itemId = this.createNewCard(cardItemToMove, unMergeCardDto);
+			const cardId = this.createNewCard(cardItemToMove, unMergeCardDto);
 
-			return itemId;
+			return cardId;
 		} catch (e) {
 			await this.cardRepository.abortTransaction();
 			throw Error(e.message ? e.message : UPDATE_FAILED);
@@ -98,11 +102,11 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 		const { boardId, columnId, position } = unMergeCardDto;
 
 		const newCardItem = { ...cardItemToMove };
-		const itemId = newCardItem._id;
+		const cardId = newCardItem._id;
 		delete newCardItem._id;
 
 		const newCard = {
-			_id: itemId,
+			_id: cardId,
 			...cardItemToMove,
 			comments: [],
 			votes: [],
@@ -119,6 +123,6 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 
 		if (!pushResult) throw Error(CARD_NOT_INSERTED);
 
-		return itemId;
+		return cardId;
 	}
 }

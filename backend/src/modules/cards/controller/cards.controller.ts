@@ -374,8 +374,6 @@ export default class CardsController {
 			position
 		});
 
-		if (!itemId) throw new BadRequestException(UPDATE_FAILED);
-
 		unmergeCardsDto.newCardItemId = itemId;
 		this.socketService.sendUnmergeCards(socketId, unmergeCardsDto);
 
