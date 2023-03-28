@@ -46,10 +46,10 @@ import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
 import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
-import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
+import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -65,8 +65,8 @@ export default class CardsController {
 		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.MergeCardApplication)
 		private mergeCardApp: MergeCardApplicationInterface,
-		@Inject(TYPES.applications.UnmergeCardApplication)
-		private unmergeCardApp: UnmergeCardApplicationInterface,
+		@Inject(TYPES.applications.UnmergeCardUseCase)
+		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		private socketService: SocketGateway
 	) {}
 
@@ -364,15 +364,15 @@ export default class CardsController {
 		@Body() unmergeCardsDto: UnmergeCardsDto
 	) {
 		const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
-		const { columnId, socketId, newPosition } = unmergeCardsDto;
+		const { columnId, socketId, newPosition: position } = unmergeCardsDto;
 
-		const itemId = await this.unmergeCardApp.unmergeAndUpdatePosition(
+		const itemId = await this.unmergeCardUseCase.execute({
 			boardId,
 			cardGroupId,
 			draggedCardId,
 			columnId,
-			newPosition
-		);
+			position
+		});
 
 		if (!itemId) throw new BadRequestException(UPDATE_FAILED);
 
