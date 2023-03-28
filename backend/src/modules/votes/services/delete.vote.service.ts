@@ -300,13 +300,15 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		userId: string
 	) {
 		while (currentCount > 0) {
-			const item = card.items.find(({ votes: itemVotes }) =>
-				arrayIdToString(itemVotes as unknown as string[]).includes(userId.toString())
-			);
+			const item = card.items.find((cardItem) => {
+				if (this.votesArrayVerification(cardItem.votes as string[], String(userId))) {
+					return cardItem;
+				}
+			});
 
 			if (!item) return null;
 
-			const votesOfUser = (item.votes as unknown as string[]).filter(
+			const votesOfUser = (item.votes as string[]).filter(
 				(vote) => vote.toString() === userId.toString()
 			);
 
