@@ -103,7 +103,7 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 			return true;
 		}
 
-		return await this.canBoardUserVote(boardId, userId, count, Number(maxVotesOfBoard));
+		return this.canBoardUserVote(boardId, userId, count, Number(maxVotesOfBoard));
 	}
 
 	private async getBoardMaxVotes(boardId: string) {
