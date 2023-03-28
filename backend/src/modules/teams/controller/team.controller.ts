@@ -94,9 +94,10 @@ export default class TeamsController {
 		description: 'Internal Server Error',
 		type: InternalServerErrorResponse
 	})
+	@UseGuards(SuperAdminGuard)
 	@Get()
-	getAllTeams(@Req() request: RequestWithUser) {
-		return this.getTeamApp.getAllTeams(request.user);
+	getAllTeams() {
+		return this.getTeamApp.getAllTeams();
 	}
 
 	@ApiOperation({ summary: 'Retrieve a list of teams that belongs to an user' })

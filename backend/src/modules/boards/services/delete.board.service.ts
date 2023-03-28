@@ -75,6 +75,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 					boardIdsToDelete,
 					withSession
 				);
+
 				if (
 					!(
 						boardUsersDeleted.acknowledged &&
