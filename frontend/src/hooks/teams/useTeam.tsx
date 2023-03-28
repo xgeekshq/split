@@ -6,11 +6,11 @@ import useTeamUtils from '../useTeamUtils';
 
 import { TEAMS_KEY } from '.';
 
-const useTeam = (teamId: string) => {
+const useTeam = (teamId: string, enable?: boolean) => {
   const { setToastState } = useTeamUtils();
 
   return useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
-    enabled: !!teamId,
+    enabled: !!teamId && enable,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({

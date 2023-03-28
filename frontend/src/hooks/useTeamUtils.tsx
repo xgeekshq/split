@@ -7,8 +7,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { Team } from '@/types/team/team';
 import { UserList } from '@/types/team/userList';
 import { Session } from 'next-auth/core/types';
-import { membersListState, teamsListState, usersListState } from '../store/team/atom/team.atom';
-import { TeamUser } from '../types/team/team.user';
+import { teamsListState, usersListState } from '../store/team/atom/team.atom';
 import { ToastStateEnum } from '../utils/enums/toast-types';
 
 type TeamUtilsType = {
@@ -17,8 +16,6 @@ type TeamUtilsType = {
   queryClient: QueryClient;
   setToastState: SetterOrUpdater<{ open: boolean; type: ToastStateEnum; content: string }>;
   router: NextRouter;
-  membersList: TeamUser[];
-  setMembersList: SetterOrUpdater<TeamUser[]>;
   teamsList: Team[];
   setTeamsList: SetterOrUpdater<Team[]>;
   usersList: UserList[];
@@ -38,7 +35,6 @@ const useTeamUtils = (): TeamUtilsType => {
   const { userId } = router.query;
 
   const setToastState = useSetRecoilState(toastState);
-  const [membersList, setMembersList] = useRecoilState(membersListState);
 
   const usersList = useRecoilValue(usersListState);
 
@@ -54,8 +50,6 @@ const useTeamUtils = (): TeamUtilsType => {
     queryClient,
     setToastState,
     router,
-    membersList,
-    setMembersList,
     teamsList,
     setTeamsList,
     usersList,

@@ -12,6 +12,7 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
 import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
+import useTeam from '@/hooks/teams/useTeam';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -25,6 +26,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
   } = useRouter();
 
   const { userId } = useCurrentSession();
+  const { data: team } = useTeam(teamId as string, false);
   const { mutate } = useUpdateTeamUsers(teamId as string);
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
@@ -36,11 +38,11 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
 
-    if (isTeamPage && teamId) {
-      const team = teamId as string;
+    if (isTeamPage && teamId && team) {
+      const teamUsers = team.users;
 
       const addedUsers = selectedUsers.filter(
-        (user) => !createTeamMembers.some((teamUser) => teamUser.user?._id === user._id),
+        (user) => !teamUsers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => {
@@ -54,26 +56,26 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
           role: TeamUserRoles.MEMBER,
           isNewJoiner,
           canBeResponsible: !isNewJoiner,
-          team,
+          team: teamId as string,
         };
       });
 
-      const removedUsers = createTeamMembers.filter((teamUser) =>
+      const removedUsers = teamUsers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user?._id === user._id),
       );
       const removedUsersIds = removedUsers.map((user) => user._id);
+
       if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {
         const usersToUpdate: TeamUserAddAndRemove = {
           addUsers: addedUsersToSend,
           removeUsers: removedUsersIds,
-          team,
+          team: teamId as string,
         };
 
         mutate(usersToUpdate);
       }
 
       setIsOpen(false);
-
       return;
     }
 

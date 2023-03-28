@@ -30,7 +30,7 @@ const UserDetails = () => {
     getUserById: { data: userData, isFetching: fetchingUser },
   } = useUser();
 
-  const { data: userTeams, isFetching: fetchingTeams } = useUserTeams(userId! as string);
+  const { data: userTeams, isLoading: loadingTeams } = useUserTeams(userId! as string);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -46,7 +46,7 @@ const UserDetails = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {fetchingUser || fetchingTeams ? (
+            {fetchingUser || loadingTeams ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
