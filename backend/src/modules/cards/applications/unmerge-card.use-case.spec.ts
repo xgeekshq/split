@@ -64,6 +64,7 @@ describe('UnmergeCardUseCase', () => {
 	it('should be defined', () => {
 		expect(useCase).toBeDefined();
 	});
+
 	it('should call repository startTransaction', async () => {
 		await useCase.execute(unmergeCardDto);
 		expect(cardRepositoryMock.startTransaction).toHaveBeenCalledTimes(1);
@@ -106,5 +107,34 @@ describe('UnmergeCardUseCase', () => {
 
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
 		updateResultMock.modifiedCount = 1;
+	});
+
+	it('should call cardService.getCardFromBoard with boardId and cardGroupId', async () => {
+		await useCase.execute(unmergeCardDto);
+		expect(cardServiceMock.getCardFromBoard).toHaveBeenNthCalledWith(
+			1,
+			unmergeCardDto.boardId,
+			unmergeCardDto.cardGroupId
+		);
+	});
+
+	it('should throw badRequest if cardGroup not found', async () => {
+		cardServiceMock.getCardFromBoard.mockResolvedValueOnce(null);
+		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+	});
+
+	it('should throw badRequest if getCardFromBoard the new card', async () => {
+		const newCardSavedMock = CardFactory.create();
+		newCardSavedMock.items[0]._id = null;
+		cardServiceMock.getCardFromBoard
+			.mockResolvedValueOnce(cardMock)
+			.mockResolvedValueOnce(newCardSavedMock);
+
+		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+	});
+
+	it('should throw badRequest if getCardFromBoard the new card', async () => {
+		cardServiceMock.getCardFromBoard.mockRejectedValueOnce(Error);
+		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
 	});
 });
