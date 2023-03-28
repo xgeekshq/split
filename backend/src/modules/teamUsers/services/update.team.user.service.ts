@@ -19,12 +19,8 @@ export default class UpdateTeamUserService implements UpdateTeamUserServiceInter
 		private deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
 
-	async updateTeamUser(teamUserData: TeamUserDto): Promise<TeamUser> {
-		const teamUserSaved = await this.teamUserRepository.updateTeamUser(teamUserData);
-
-		if (!teamUserSaved) throw new BadRequestException(UPDATE_FAILED);
-
-		return teamUserSaved;
+	updateTeamUser(teamUserData: TeamUserDto): Promise<TeamUser> {
+		return this.teamUserRepository.updateTeamUser(teamUserData);
 	}
 
 	async addAndRemoveTeamUsers(addUsers: TeamUserDto[], removeUsers: string[]): Promise<TeamUser[]> {

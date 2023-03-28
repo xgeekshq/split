@@ -59,3 +59,4 @@ export const mergeCardUseCase = {
 	provide: TYPES.applications.MergeCardUseCase,
 	useClass: MergeCardUseCase
 };
+

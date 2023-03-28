@@ -18,9 +18,7 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { NotFoundException } from '@nestjs/common';
-import { BoardUserRepositoryInterface } from 'src/modules/boardUsers/interfaces/repositories/board-user.repository.interface';
 import {
-	boardUserRepository,
 	createBoardUserService,
 	deleteBoardUserService,
 	getBoardUserService,
@@ -46,7 +44,7 @@ import { TeamCommunicationDtoFactory } from 'src/libs/test-utils/mocks/factories
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 
-describe('GetUpdateBoardService', () => {
+describe('UpdateBoardService', () => {
 	let boardService: UpdateBoardServiceInterface;
 	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
@@ -96,10 +94,6 @@ describe('GetUpdateBoardService', () => {
 				{
 					provide: boardRepository.provide,
 					useValue: createMock<BoardRepositoryInterface>()
-				},
-				{
-					provide: boardUserRepository.provide,
-					useValue: createMock<BoardUserRepositoryInterface>()
 				},
 				{
 					provide: SocketGateway,
