@@ -12,7 +12,8 @@ export const TYPES = {
 		DeleteCardApplication: 'DeleteCardApplication',
 		UpdateCardApplication: 'UpdateCardApplication',
 		MergeCardApplication: 'MergeCardApplication',
-		UnmergeCardApplication: 'UnmergeCardApplication'
+		UnmergeCardApplication: 'UnmergeCardApplication',
+		CreateCardUseCase: 'CreateCardUseCase'
 	},
 	repository: {
 		CardRepository: 'CardRepository'

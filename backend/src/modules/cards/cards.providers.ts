@@ -1,21 +1,15 @@
-import { CreateCardApplication } from './applications/create.card.application';
+import { CreateCardUseCase } from './applications/create-card.use-case';
 import { DeleteCardApplication } from './applications/delete.card.application';
 import { MergeCardApplication } from './applications/merge.card.application';
 import { UnmergeCardApplication } from './applications/unmerge.card.application';
 import { UpdateCardApplication } from './applications/update.card.application';
 import { TYPES } from './interfaces/types';
 import { CardRepository } from './repository/card.repository';
-import CreateCardService from './services/create.card.service';
 import DeleteCardService from './services/delete.card.service';
 import GetCardService from './services/get.card.service';
 import { MergeCardService } from './services/merge.card.service';
 import { UnmergeCardService } from './services/unmerge.card.service';
 import UpdateCardService from './services/update.card.service';
-
-export const createCardService = {
-	provide: TYPES.services.CreateCardService,
-	useClass: CreateCardService
-};
 
 export const getCardService = {
 	provide: TYPES.services.GetCardService,
@@ -42,11 +36,6 @@ export const unmergeCardService = {
 	useClass: UnmergeCardService
 };
 
-export const createCardApplication = {
-	provide: TYPES.applications.CreateCardApplication,
-	useClass: CreateCardApplication
-};
-
 export const updateCardApplication = {
 	provide: TYPES.applications.UpdateCardApplication,
 	useClass: UpdateCardApplication
@@ -70,4 +59,9 @@ export const unmergeCardApplication = {
 export const cardRepository = {
 	provide: TYPES.repository.CardRepository,
 	useClass: CardRepository
+};
+
+export const creacteCardUseCase = {
+	provide: TYPES.applications.CreateCardUseCase,
+	useClass: CreateCardUseCase
 };
