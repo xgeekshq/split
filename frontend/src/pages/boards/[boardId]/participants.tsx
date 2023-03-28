@@ -1,10 +1,13 @@
+import { GetServerSideProps } from 'next';
+import React, { Suspense, useCallback, useEffect } from 'react';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
+
 import { getBoardRequest } from '@/api/boardService';
 import { getAllUsers } from '@/api/userService';
 import ParticipantsList from '@/components/Board/RegularBoard/ParticipantsList';
-import RegularBoardHeader from '@/components/Board/RegularBoard/ReagularHeader';
+import RegularBoardHeader from '@/components/Board/RegularBoard/RegularHeader';
 import QueryError from '@/components/Errors/QueryError';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { ContentSection } from '@/components/layouts/Layout/styles';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import useBoard from '@/hooks/useBoard';
 import { boardInfoState, boardParticipantsState } from '@/store/board/atoms/board.atom';
@@ -14,11 +17,8 @@ import { BoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
-import { GetServerSideProps } from 'next';
-import React, { Suspense, useCallback, useEffect } from 'react';
-import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 
 // Sorts participants list to show responsibles first and then regular board members
 export const sortParticipantsList = (
@@ -95,14 +95,10 @@ const BoardParticipants = () => {
   return recoilBoard ? (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <ContentSection gap="36" justify="between">
-          <Flex css={{ width: '100%' }} direction="column">
-            <Flex justify="between">
-              <RegularBoardHeader isParticipantsPage />
-            </Flex>
-            <ParticipantsList createdBy={boardData?.board.createdBy._id} />
-          </Flex>
-        </ContentSection>
+        <Flex direction="column" gap={20} css={{ width: '100%', height: '100vh' }}>
+          <RegularBoardHeader isParticipantsPage />
+          <ParticipantsList createdBy={boardData?.board.createdBy._id} />
+        </Flex>
       </QueryError>
     </Suspense>
   ) : (

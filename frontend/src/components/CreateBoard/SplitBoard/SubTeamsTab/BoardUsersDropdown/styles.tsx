@@ -1,7 +1,8 @@
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
+import * as HoverCard from '@radix-ui/react-hover-card';
 
-const UserNamesContainer = styled(Flex, {
+const UserNamesContainer = styled(HoverCard.Trigger, Flex, {
   height: '$64',
   flex: 1,
   py: '$12',
@@ -10,29 +11,15 @@ const UserNamesContainer = styled(Flex, {
   borderRadius: '$4',
 });
 
-const DropdownContent = styled('div', {
-  width: '100%',
-  display: 'none',
-  position: 'absolute',
+const DropdownContent = styled(HoverCard.Content, {
+  width: 'var(--radix-hover-card-trigger-width)',
+  maxHeight: 'var(--radix-hover-card-content-available-height)',
+  overflow: 'auto',
   backgroundColor: '$white',
-  zIndex: 1,
   borderRadius: '$12',
-  mt: '$2',
   px: '$20',
   py: '$12',
   boxShadow: '0px 4px 16px -4px rgba(18, 25, 34, 0.2)',
-});
-
-const Dropdown = styled(Flex, {
-  flex: 1,
-  position: 'relative',
-  cursor: 'pointer',
-  '&:hover': {
-    display: 'block',
-    [`& ${DropdownContent}`]: {
-      display: 'block',
-    },
-  },
 });
 
 const DropdownItem = styled(Flex, {
@@ -41,5 +28,7 @@ const DropdownItem = styled(Flex, {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
 });
+
+const Dropdown = styled(HoverCard.Root, {});
 
 export { UserNamesContainer, Dropdown, DropdownContent, DropdownItem };

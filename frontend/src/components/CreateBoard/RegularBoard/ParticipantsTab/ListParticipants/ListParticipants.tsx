@@ -1,13 +1,14 @@
+import { useSession } from 'next-auth/react';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { usersListState } from '@/store/team/atom/team.atom';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useSession } from 'next-auth/react';
+import { usersListState } from '@/store/team/atom/team.atom';
+import { toastState } from '@/store/toast/atom/toast.atom';
 import { UserList } from '@/types/team/userList';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 type ListParticipantsProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +20,6 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const setCreateBoardData = useSetRecoilState(createBoardDataState);
-
   const setToastState = useSetRecoilState(toastState);
 
   const saveParticipants = (checkedUserList: UserList[]) => {

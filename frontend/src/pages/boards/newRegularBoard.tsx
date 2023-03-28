@@ -130,9 +130,7 @@ const NewRegularBoard: NextPage = () => {
     }
   }, [data, setTeams, allUsers, setUsersList, session]);
 
-  /**
-   * Board  Hook
-   */
+  // Board Hook
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -160,9 +158,7 @@ const NewRegularBoard: NextPage = () => {
     setUsersList(updateCheckedUser);
   }, [session?.user.id, setUsersList, usersList]);
 
-  /**
-   * Handle back to boards list page
-   */
+  // Handle back to boards list page
   const handleBack = useCallback(() => {
     setIsLoading(true);
 
@@ -179,10 +175,6 @@ const NewRegularBoard: NextPage = () => {
     router.push(DASHBOARD_ROUTE);
   };
 
-  /**
-   * Save board
-
-   */
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
     const responsibles: string[] = [];

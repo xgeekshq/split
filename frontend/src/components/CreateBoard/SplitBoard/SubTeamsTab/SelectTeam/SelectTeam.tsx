@@ -34,8 +34,8 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
   // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
-  const setHaveError = useSetRecoilState(createBoardError);
   const teams = useRecoilValue(teamsOfUser);
+  const setHaveError = useSetRecoilState(createBoardError);
   const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
 
   const {
@@ -59,8 +59,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
       ? ' In order to create a team board, you must be team-admin or stakeholder of at least one team.'
       : (errors.team?.message as string);
   const isHelperEmpty = isEmpty(message);
-  const teamValueOnForm = getValues().team;
-  const isValueEmpty = isEmpty(teamValueOnForm);
+  const isValueEmpty = isEmpty(getValues('team'));
 
   const currentSelectTeamState = useMemo(() => {
     if (message) return 'error';

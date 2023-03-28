@@ -57,47 +57,45 @@ const RegularBoardHeader = ({ isParticipantsPage }: Props) => {
       ];
 
   return (
-    <StyledHeader>
-      <Flex align="center" gap="20" justify="between">
-        <Flex direction="column">
-          <Flex align="center" gap={!isSubBoard ? 26 : undefined}>
-            <Breadcrumb items={breadcrumbItems} />
-          </Flex>
-          <TitleSection>
-            <StyledLogo>
-              <LogoIcon />
-            </StyledLogo>
-            <Text heading="2">{title}</Text>
-
-            {recurrent && (
-              <Tooltip content="Occurs every month">
-                <RecurrentIconContainer>
-                  <Icon name="recurring" />
-                </RecurrentIconContainer>
-              </Tooltip>
-            )}
-
-            {isSubBoard && !submitedAt && (
-              <Tooltip content="Unmerged">
-                <MergeIconContainer isMerged={!!submitedAt}>
-                  <Icon name="merge" />
-                </MergeIconContainer>
-              </Tooltip>
-            )}
-          </TitleSection>
+    <StyledHeader align="center" gap="20" justify="between">
+      <Flex direction="column">
+        <Flex align="center" gap={!isSubBoard ? 26 : undefined}>
+          <Breadcrumb items={breadcrumbItems} />
         </Flex>
-        <Flex align="center" gap="24">
-          <Flex>
-            {isParticipantsPage ? (
-              <HeaderParticipants isParticipantsPage />
-            ) : (
-              <Link href={`/boards/${_id}/participants`}>
-                <Flex>
-                  <HeaderParticipants />
-                </Flex>
-              </Link>
-            )}
-          </Flex>
+        <TitleSection>
+          <StyledLogo>
+            <LogoIcon />
+          </StyledLogo>
+          <Text heading="2">{title}</Text>
+
+          {recurrent && (
+            <Tooltip content="Occurs every month">
+              <RecurrentIconContainer>
+                <Icon name="recurring" />
+              </RecurrentIconContainer>
+            </Tooltip>
+          )}
+
+          {isSubBoard && !submitedAt && (
+            <Tooltip content="Unmerged">
+              <MergeIconContainer isMerged={!!submitedAt}>
+                <Icon name="merge" />
+              </MergeIconContainer>
+            </Tooltip>
+          )}
+        </TitleSection>
+      </Flex>
+      <Flex align="center" gap="24">
+        <Flex>
+          {isParticipantsPage ? (
+            <HeaderParticipants isParticipantsPage />
+          ) : (
+            <Link href={`/boards/${_id}/participants`}>
+              <Flex>
+                <HeaderParticipants />
+              </Flex>
+            </Link>
+          )}
         </Flex>
       </Flex>
     </StyledHeader>

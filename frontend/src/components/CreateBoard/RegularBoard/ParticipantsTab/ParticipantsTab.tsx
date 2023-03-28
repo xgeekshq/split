@@ -4,7 +4,7 @@ import SelectTeam from '@/components/CreateBoard/RegularBoard/ParticipantsTab/Se
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 import RadioGroupParticipants from './RadioGroupParticipants/RadioGroupParticipants';
-import SelectParticipants from './SelectParticipants/SelectParticipants';
+import BoardParticipantsList from './BoardParticipantsList/BoardParticipantsList';
 
 type Props = { optionSelected: string; setOptionSelected: Dispatch<SetStateAction<string>> };
 
@@ -14,12 +14,12 @@ const ParticipantsTab = ({ optionSelected, setOptionSelected }: Props) => {
   };
 
   return (
-    <Flex direction="column" css={{ width: '100%', mb: '$20', height: '$300' }} gap="24">
+    <Flex direction="column" gap="24">
       <RadioGroupParticipants
         optionSelected={optionSelected}
         handleSelection={handleChangeOption}
       />
-      {optionSelected === 'team' ? <SelectTeam /> : <SelectParticipants />}
+      {optionSelected === 'team' ? <SelectTeam /> : <BoardParticipantsList />}
     </Flex>
   );
 };

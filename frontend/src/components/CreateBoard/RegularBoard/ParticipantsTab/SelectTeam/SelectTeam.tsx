@@ -20,16 +20,15 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 const SelectTeam = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const routerTeam = router.query.team as string;
-  const { data: session } = useSession();
 
   // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const teams = useRecoilValue(teamsOfUser);
-  const { setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
+  const { setCreateBoardData } = useCreateBoard(selectedTeam);
 
-  const teamMembersCount = teamMembers?.length ?? 0;
   const numberOfTeams = teams?.length ?? 0;
 
   const handleTeamChange = (value: string) => {
@@ -75,7 +74,7 @@ const SelectTeam = () => {
       users,
       board: { ...prev.board, team: selectedTeam.id },
     }));
-  }, [selectedTeam, session?.user.id, setCreateBoardData, teamMembersCount]);
+  }, [selectedTeam, session?.user.id, setCreateBoardData]);
 
   useEffect(() => {
     if (routerTeam) {

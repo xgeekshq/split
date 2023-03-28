@@ -1,39 +1,37 @@
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { ContentSection } from '@/components/layouts/Layout/styles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useParticipants from '@/hooks/useParticipants';
-import { boardParticipantsState } from '@/store/board/atoms/board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
-import { BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
+import { BoardUser, BoardUserToAdd, UpdateBoardUser } from '@/types/board/board.user';
 import { UserList } from '@/types/team/userList';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { ChildrenProp } from '@/types/common';
 
-interface Props extends ChildrenProp {
-  hasPermissionsToEdit: boolean;
-}
+type BoardParticipantsSubHeaderProps = {
+  hasPermissions: boolean;
+  boardParticipants: BoardUser[];
+};
 
-const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
+const BoardParticipantsSubHeader = ({
+  hasPermissions,
+  boardParticipants,
+}: BoardParticipantsSubHeaderProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { query } = useRouter();
+  const boardId = query.boardId as string;
+
+  const usersList = useRecoilValue(usersListState);
+
   const {
     addAndRemoveBoardParticipants: { mutate },
   } = useParticipants();
-
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const usersList = useRecoilValue(usersListState);
-  const boardParticipants = useRecoilValue(boardParticipantsState);
-  const boardId = router.query.boardId as string;
-
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
 
   const saveParticipants = (checkedUserList: UserList[]) => {
     const listOfUsers = [...boardParticipants];
@@ -72,23 +70,14 @@ const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
   };
 
   return (
-    <ContentSection gap="36" justify="between">
-      <Flex
-        css={{ width: '100%', marginLeft: '152px', marginRight: '152px', mt: '50px' }}
-        direction="column"
-        gap="20"
-      >
-        <Flex justify="between">
-          <Text heading="1">Participants</Text>
-          {hasPermissionsToEdit && (
-            <Button size="md" onClick={handleOpen}>
-              <Icon css={{ color: 'white' }} name="plus" />
-              Add/remove participants
-            </Button>
-          )}
-        </Flex>
-        {children}
-      </Flex>
+    <Flex justify="between" css={{ mt: '50px', px: '$150' }}>
+      <Text heading="1">Participants</Text>
+      {hasPermissions && (
+        <Button size="sm" onClick={() => setIsOpen(true)}>
+          <Icon css={{ color: 'white' }} name="plus" />
+          Add/remove participants
+        </Button>
+      )}
       <UserListDialog
         usersList={usersList}
         isOpen={isOpen}
@@ -97,8 +86,8 @@ const ParticipantsLayout = ({ children, hasPermissionsToEdit }: Props) => {
         title="Board Participants"
         confirmationLabel="Add/remove participants"
       />
-    </ContentSection>
+    </Flex>
   );
 };
 
-export default ParticipantsLayout;
+export default BoardParticipantsSubHeader;

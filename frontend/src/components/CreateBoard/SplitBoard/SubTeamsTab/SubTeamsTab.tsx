@@ -8,7 +8,7 @@ import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
-import BoardUsersDropdown from '../../BoardUsersDropdown/BoardUsersDropdown';
+import BoardUsersDropdown from './BoardUsersDropdown/BoardUsersDropdown';
 import BoardSection from './CreateBoardItem/CreateBoardItem';
 import FakeBoardItem from './FakeBoardSection/FakeBoardItem';
 import QuickEditSubTeams from './QuickEditSubTeams';

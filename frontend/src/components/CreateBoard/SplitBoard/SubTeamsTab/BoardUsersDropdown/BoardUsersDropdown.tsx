@@ -1,5 +1,6 @@
 import { User } from '@/types/user/user';
 import Text from '@/components/Primitives/Text/Text';
+import * as HoverCard from '@radix-ui/react-hover-card';
 import { UserNamesContainer, Dropdown, DropdownContent, DropdownItem } from './styles';
 
 type UsersBoxProps = {
@@ -9,7 +10,7 @@ type UsersBoxProps = {
 };
 
 const BoardUsersDropdown = ({ haveError, users, title }: UsersBoxProps) => (
-  <Dropdown>
+  <Dropdown openDelay={0} closeDelay={0}>
     <UserNamesContainer
       direction="column"
       gap="2"
@@ -33,18 +34,20 @@ const BoardUsersDropdown = ({ haveError, users, title }: UsersBoxProps) => (
           users.map((value) => `${value.firstName} ${value.lastName}`).join(', ')}
       </Text>
     </UserNamesContainer>
-    {users.length > 0 && (
-      <DropdownContent>
-        {users.map((user) => (
-          <DropdownItem key={user._id} justify="between" align="center">
-            <Text size="sm" fontWeight="medium">
-              {`${user.firstName} ${user.lastName} `}
-            </Text>
-            <Text size="xs" color="primary300">{`(${user.email})`}</Text>
-          </DropdownItem>
-        ))}
-      </DropdownContent>
-    )}
+    <HoverCard.Portal>
+      {users.length > 0 && (
+        <DropdownContent align="start" collisionPadding={100} avoidCollisions hideWhenDetached>
+          {users.map((user) => (
+            <DropdownItem key={user._id} justify="between" align="center">
+              <Text size="sm" fontWeight="medium">
+                {`${user.firstName} ${user.lastName} `}
+              </Text>
+              <Text size="xs" color="primary300">{`(${user.email})`}</Text>
+            </DropdownItem>
+          ))}
+        </DropdownContent>
+      )}
+    </HoverCard.Portal>
   </Dropdown>
 );
 

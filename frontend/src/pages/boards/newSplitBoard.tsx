@@ -85,7 +85,7 @@ const NewSplitBoard: NextPage = () => {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
 
-  // Team  Hook
+  // Team Hook
   const {
     fetchUserBasedTeams: { data },
   } = useTeam();
@@ -158,11 +158,7 @@ const NewSplitBoard: NextPage = () => {
 
     router.push(DASHBOARD_ROUTE);
   };
-  /**
-   * Save board
-   * @param title Board Title
-   * @param maxVotes Maxium number of votes allowed
-   */
+
   const saveBoard = (
     title: string,
     team: string,
