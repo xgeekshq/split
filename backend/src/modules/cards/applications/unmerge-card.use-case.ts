@@ -10,6 +10,7 @@ import {
 	UPDATE_FAILED
 } from 'src/libs/exceptions/messages';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string> {
@@ -27,7 +28,7 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 		try {
 			const cardItemToMove = await this.cardService.getCardItemFromGroup(boardId, draggedCardId);
 
-			if (!cardItemToMove) return null;
+			if (!cardItemToMove) throw Error(CARD_NOT_FOUND);
 
 			const itemId = await this.unmergeCard(cardItemToMove, unMergeCardDto);
 
@@ -37,7 +38,7 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 
 			return newCardSaved.items[0]._id;
 		} catch (e) {
-			throw Error(CARD_NOT_REMOVED);
+			throw new UpdateFailedException(e.message ? e.message : UPDATE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
 		}
@@ -60,8 +61,9 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 			const itemId = this.createNewCard(cardItemToMove, unMergeCardDto);
 
 			return itemId;
-		} catch {
+		} catch (e) {
 			await this.cardRepository.abortTransaction();
+			throw Error(e.message ? e.message : UPDATE_FAILED);
 		}
 	}
 
