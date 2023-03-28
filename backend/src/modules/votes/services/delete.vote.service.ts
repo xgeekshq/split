@@ -78,6 +78,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			await this.voteRepository.commitTransaction();
 		} catch (e) {
 			this.logger.error(e);
+
 			throw new DeleteFailedException(DELETE_VOTE_FAILED);
 		} finally {
 			await this.updateBoardUserService.endSession();
@@ -102,13 +103,14 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		const card = await this.getCardFromBoard(boardId, cardId);
 
 		const mappedVotes = card.votes as string[];
+
 		const userVotes = mappedVotes.filter((vote) => vote.toString() === userId.toString());
 
 		try {
 			const withSession = true;
 
 			if (!isEmpty(userVotes)) {
-				currentCount = await this.deleteUserVotes(
+				currentCount = await this.deleteCardGroupAndUserVotes(
 					mappedVotes,
 					userVotes,
 					boardId,
@@ -122,7 +124,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			}
 
 			if (!isEmpty(currentCount)) {
-				await this.deleteVotesWhileCurrentCountIsNotEmpty(
+				await this.deleteCardItemAndUserVotes(
 					currentCount,
 					boardId,
 					card,
@@ -174,12 +176,9 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		if (!board) {
 			return false;
 		}
-		const { _id: boardUserId, votesCount } = await this.getBoardUserService.getBoardUser(
-			boardId,
-			userId
-		);
+		const boardUser = await this.getBoardUserService.getBoardUser(boardId, userId);
 
-		if (!boardUserId) {
+		if (!boardUser) {
 			return false;
 		}
 
@@ -193,7 +192,9 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			return false;
 		}
 
-		return votesCount ? votesCount > 0 && votesCount - Math.abs(count) >= 0 : false;
+		return boardUser.votesCount
+			? boardUser.votesCount > 0 && boardUser.votesCount - Math.abs(count) >= 0
+			: false;
 	}
 
 	private ifVotesIncludesUserId(card: Card, userId: string, cardItemId?: string) {
@@ -284,7 +285,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		if (!updatedBoard) throw new DeleteFailedException(DELETE_VOTE_FAILED);
 	}
 
-	private async deleteVotesWhileCurrentCountIsNotEmpty(
+	private async deleteCardItemAndUserVotes(
 		currentCount: number,
 		boardId: string,
 		card: Card,
@@ -324,7 +325,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		}
 	}
 
-	private async deleteUserVotes(
+	private async deleteCardGroupAndUserVotes(
 		votes: string[],
 		userVotes: string[],
 		boardId: string,
@@ -361,7 +362,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCount);
+				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCountOperation);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
@@ -396,7 +397,8 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCount);
+
+				await this.deleteVoteFromCardGroup(boardId, cardId, userId, count, retryCountOperation);
 			} else {
 				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}

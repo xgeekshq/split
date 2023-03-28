@@ -132,7 +132,7 @@ describe('CreateVoteService', () => {
 			}
 		});
 
-		it('should call the updateBoardUserService.updateVoteUser and the voteRepository.insertCardItemVote when addVoteToCard function succeeds', async () => {
+		it('should call all the functions when addVoteToCard function succeeds', async () => {
 			await voteService.addVoteToCard(board._id, card._id, userId, cardItem._id, 1);
 
 			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
@@ -174,7 +174,7 @@ describe('CreateVoteService', () => {
 			}
 		});
 
-		it('should call the updateBoardUserService.updateVoteUser and the voteRepository.insertCardGroupVote when addVoteToCard addVoteToCardGroup succeeds', async () => {
+		it('should call all the functions when addVoteToCardGroup succeeds', async () => {
 			await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
 
 			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
