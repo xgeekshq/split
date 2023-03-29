@@ -91,6 +91,7 @@ describe('UnmergeCardUseCase', () => {
 	it('should throw badRequest if getCardItemFromGroup fails', async () => {
 		cardServiceMock.getCardItemFromGroup.mockResolvedValueOnce(null);
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 	});
 	it('should call pullItem ', async () => {
 		await useCase.execute(unmergeCardDto);
@@ -106,6 +107,8 @@ describe('UnmergeCardUseCase', () => {
 		cardRepositoryMock.pullItem.mockResolvedValueOnce(updateResultMock);
 
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.abortTransaction).toHaveBeenCalledTimes(1);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 		updateResultMock.modifiedCount = 1;
 	});
 
@@ -121,6 +124,8 @@ describe('UnmergeCardUseCase', () => {
 	it('should throw badRequest if cardGroup not found', async () => {
 		cardServiceMock.getCardFromBoard.mockResolvedValueOnce(null);
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.abortTransaction).toHaveBeenCalledTimes(1);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 	});
 
 	it('should throw badRequest if getCardFromBoard the new card', async () => {
@@ -131,10 +136,26 @@ describe('UnmergeCardUseCase', () => {
 			.mockResolvedValueOnce(newCardSavedMock);
 
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 	});
 
-	it('should throw badRequest if getCardFromBoard the new card', async () => {
-		cardServiceMock.getCardFromBoard.mockRejectedValueOnce(Error);
+	it('should throw badRequest when cardRep.updateCardFromGroupOnUnmerge fails', async () => {
+		cardRepositoryMock.updateCardFromGroupOnUnmerge.mockResolvedValueOnce(null);
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.abortTransaction).toHaveBeenCalledTimes(1);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
+	});
+
+	it('should throw badRequest when pushCard fails', async () => {
+		cardRepositoryMock.pushCard.mockResolvedValueOnce(null);
+		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.abortTransaction).toHaveBeenCalledTimes(1);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
+	});
+
+	it('should throw badRequest when unexpected error occurs', async () => {
+		cardServiceMock.getCardItemFromGroup.mockRejectedValueOnce(Error);
+		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
+		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 	});
 });

@@ -60,14 +60,14 @@ export class UnmergeCardUseCase implements UseCase<UnmergeCardUseCaseDto, string
 
 			if (!cardGroup) throw Error(CARD_NOT_FOUND);
 
-			this.updateLastCardOnGroup(cardGroup, unMergeCardDto);
+			await this.updateLastCardOnGroup(cardGroup, unMergeCardDto);
 
-			const cardId = this.createNewCard(cardItemToMove, unMergeCardDto);
+			const cardId = await this.createNewCard(cardItemToMove, unMergeCardDto);
 
 			return cardId;
 		} catch (e) {
 			await this.cardRepository.abortTransaction();
-			throw Error(e.message ? e.message : UPDATE_FAILED);
+			throw Error(e.message);
 		}
 	}
 
