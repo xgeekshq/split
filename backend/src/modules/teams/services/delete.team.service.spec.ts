@@ -8,7 +8,7 @@ import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { TeamRepositoryInterface } from './../../../../dist/modules/teams/repositories/team.repository.interface.d';
-import { deleteTeamService, getTeamService } from 'src/modules/teams/providers';
+import { deleteTeamService } from 'src/modules/teams/providers';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
@@ -32,18 +32,6 @@ const team1 = {
 	...teams[0],
 	users: teamUsersWithUsers
 };
-const team2 = {
-	...teams[1],
-	users: teamUsersWithUsers
-};
-const teamsWithUsers = [team1, team2];
-const boards = BoardFactory.createMany(5, [
-	{ team: team1._id },
-	{ team: team1._id },
-	{ team: team1._id },
-	{ team: team2._id },
-	{ team: team2._id }
-]);
 
 describe('DeleteTeamService', () => {
 	let teamService: DeleteTeamServiceInterface;

@@ -1,4 +1,3 @@
-import { DeleteResult } from 'mongodb';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';

@@ -42,7 +42,6 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		try {
 			await this.deleteTeam(teamId, true);
 			const a = await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
-			console.log(a);
 
 			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
 		} catch (e) {
