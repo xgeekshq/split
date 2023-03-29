@@ -8,7 +8,7 @@ import UserHeader from '@/components/Users/User/Header/Header';
 
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getUserTeams } from '@/api/teamService';
+import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
 import { TEAMS_KEY } from '@/hooks/teams';
 import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
@@ -69,6 +69,9 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
   await Promise.all([
     queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
     queryClient.prefetchQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, 'not', 'user', userId], () =>
+      getTeamsWithoutUser(userId, context),
+    ),
   ]);
 
   return {

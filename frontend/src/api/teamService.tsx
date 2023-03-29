@@ -22,8 +22,10 @@ export const getUserTeams = (
 export const getTeam = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
   fetchData(`/teams/${id}`, { context, serverSide: !!context });
 
-export const getTeamsWithoutUser = (userId?: string): Promise<TeamChecked[]> =>
-  fetchData(`/teams/not/${userId}`);
+export const getTeamsWithoutUser = (
+  userId: string,
+  context?: GetServerSidePropsContext,
+): Promise<TeamChecked[]> => fetchData(`/teams/not/${userId}`, { context, serverSide: !!context });
 // #endregion
 
 // #region POST
