@@ -16,7 +16,6 @@ export const configuration = (): Configuration => {
 				NODE_ENV === 'local'
 					? `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?authSource=admin&replicaSet=${process.env.DB_REPLICA_SET}&readPreference=primary&directConnection=true`
 					: `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@${process.env.DB_USER}@`
-			// uri: 'mongodb://split-db:STbMkTrb1ts95BUy91RNFlXAbg6XFvfeP97QuKbQDKRq3hVN3QeNQMsCfuuQULkXWuXzslirxMymACDbPpGBfg==@split-db.mongo.cosmos.azure.com:10255/split-dev?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@split-db@'
 		},
 		jwt: {
 			accessToken: {

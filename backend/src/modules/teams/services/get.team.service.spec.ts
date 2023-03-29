@@ -11,12 +11,12 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import Team from 'src/modules/teams/entities/team.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { TeamRepositoryInterface } from './../../../../dist/modules/teams/repositories/team.repository.interface.d';
 import { getTeamService } from 'src/modules/teams/providers';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Teams from 'src/modules/teams/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
+import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 
 const teams: Team[] = TeamFactory.createMany(4);
 const teamUsers: TeamUser[] = TeamUserFactory.createMany(5);

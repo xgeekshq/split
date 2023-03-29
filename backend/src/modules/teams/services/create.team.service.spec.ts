@@ -4,7 +4,6 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
-import { TeamRepositoryInterface } from './../../../../dist/modules/teams/repositories/team.repository.interface.d';
 import { createTeamService } from 'src/modules/teams/providers';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import * as Teams from 'src/modules/teams/interfaces/types';
@@ -13,6 +12,7 @@ import { CreateTeamDto } from '../dto/create-team.dto';
 import { TeamUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/teamUserDto-factory.mock';
 import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
 import { TEAM_ALREADY_EXISTS } from 'src/libs/constants/team';
+import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 
 const createTeamDto: CreateTeamDto = {
 	name: faker.name.findName(),
