@@ -2,7 +2,64 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.16...HEAD)
+## [Unreleased](https://github.com/xgeekshq/split/compare/v0.1.18...HEAD)
+
+## [v0.1.18](https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18) - 2023-03-24
+
+### What Changed 👀
+
+### 🐛 Bug Fixes
+
+- fix: redirect guest user on public board @CatiaAntunes96 (#1304)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.17...v0.1.18
+
+## [v0.1.17](https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17) - 2023-03-23
+
+### What Changed 👀
+
+- feat: duplicate regular board @JoaoSaIvador (#1281)
+- test: get card service @GoncaloCanteiro (#1289)
+- refactor: create board service @CatiaAntunes96 (#1276)
+- test: create card service @GoncaloCanteiro (#1282)
+- test: communication producers @GoncaloCanteiro (#1278)
+- refactor: team user module @patricia-mdias (#1260)
+- test: communication services @GoncaloCanteiro (#1274)
+- test: add unity tests to util functions @CatiaAntunes96 (#1271)
+- test: update board service @CatiaAntunes96 (#1259)
+- test: communication applications tests @GoncaloCanteiro (#1258)
+- chore: add missing variables @nunocaseiro (#1268)
+- test: delete board service test @GoncaloCanteiro (#1252)
+- test: clean board @CatiaAntunes96 (#1240)
+- test: communication consumers tests @GoncaloCanteiro (#1249)
+- chore: update next and react @nunocaseiro (#1251)
+- feat: option to force a user not to be selected as responsible @JoaoSaIvador (#1237)
+
+### 🚀 Features
+
+- refactor: user components @StereoPT (#1272)
+- refactor: team pages state logic @JoaoSaIvador (#1256)
+- feat: add test_request issue @GoncaloCanteiro (#1254)
+
+### 🐛 Bug Fixes
+
+- fix: duplicate board without team @nunocaseiro (#1299)
+- fix: delete cards @nunocaseiro (#1298)
+- fix: delete team fails @patricia-mdias (#1296)
+- fix: stop timer method is called unnecessarily @geomarb (#1291)
+- refactor: user team side drawers @StereoPT (#1293)
+- fix: submitted action points format @GoncaloCanteiro (#1292)
+- fix: recent bugs @nunocaseiro (#1287)
+- fix: fix minus size and plus color @CatiaAntunes96 (#1284)
+- refactor: user components @StereoPT (#1272)
+- fix: split teams @nunocaseiro (#1279)
+
+### 🧩 Dependency Updates
+
+- chore(deps): bump webpack and @nestjs/cli in /backend @dependabot (#1270)
+- chore(deps): bump amannn/action-semantic-pull-request from 5.1.0 to 5.2.0 @dependabot (#1265)
+
+**Full Changelog**: https://github.com/xgeekshq/split/compare/v0.1.16...v0.1.17
 
 ## [v0.1.16](https://github.com/xgeekshq/split/compare/v0.1.15...v0.1.16) - 2023-03-15
 

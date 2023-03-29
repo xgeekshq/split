@@ -1,6 +1,21 @@
-import { GetBoardGuard } from './../../../libs/guards/getBoardPermissions.guard';
+import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
+import { BaseParam } from 'src/libs/dto/param/base.param';
+import { PaginationParams } from 'src/libs/dto/param/pagination.params';
+import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
+import { BoardPhases } from 'src/libs/enum/board.phases';
 import { TeamRoles } from 'src/libs/enum/team.roles';
+import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
+import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
+import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
+import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
+import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
+import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
+import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
+import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
 import { BoardRoles } from 'src/modules/communication/dto/types';
+import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import {
 	Body,
 	Controller,
@@ -31,30 +46,18 @@ import {
 	ApiUnauthorizedResponse,
 	OmitType
 } from '@nestjs/swagger';
-import { BaseParam } from 'src/libs/dto/param/base.param';
-import { PaginationParams } from 'src/libs/dto/param/pagination.params';
-import { BaseParamWSocket } from 'src/libs/dto/param/socket.param';
-import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
-import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
-import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
-import { ForbiddenResponse } from 'src/libs/swagger/errors/forbidden.swagger';
-import { InternalServerErrorResponse } from 'src/libs/swagger/errors/internal-server-error.swagger';
-import { NotFoundResponse } from 'src/libs/swagger/errors/not-found.swagger';
-import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagger';
-import { BoardResponse } from 'src/modules/boards/swagger/board.swagger';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { TeamParamOptional } from '../../../libs/dto/param/team.param.optional';
+import { GetBoardGuard } from '../../../libs/guards/getBoardPermissions.guard';
 import BoardDto from '../dto/board.dto';
-import { UpdateBoardDto } from '../dto/update-board.dto';
-import { TYPES } from '../interfaces/types';
-import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
-import UpdateBoardUserDto from '../../boardUsers/dto/update-board-user.dto';
-import { BoardPhaseDto } from 'src/libs/dto/board-phase.dto';
-import { BoardPhases } from 'src/libs/enum/board.phases';
+import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
+import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
+import Board from '../entities/board.schema';
+import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
+import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
-import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
+import { TYPES } from '../interfaces/types';
+import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -66,6 +69,8 @@ export default class BoardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateBoardApplication)
 		private createBoardApp: CreateBoardApplicationInterface,
+		@Inject(TYPES.applications.DuplicateBoardUseCase)
+		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
 		@Inject(TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.UpdateBoardApplication)
@@ -99,6 +104,36 @@ export default class BoardsController {
 	@Post()
 	createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
 		return this.createBoardApp.create(boardData, request.user._id);
+	}
+
+	@ApiOperation({ summary: 'Duplicate a board' })
+	@ApiCreatedResponse({
+		type: BoardDto,
+		description: 'Board duplicated successfully.'
+	})
+	@ApiBadRequestResponse({
+		description: 'Bad Request',
+		type: BadRequestResponse
+	})
+	@ApiUnauthorizedResponse({
+		description: 'Unauthorized',
+		type: UnauthorizedResponse
+	})
+	@ApiInternalServerErrorResponse({
+		description: 'Internal Server Error',
+		type: InternalServerErrorResponse
+	})
+	@Post('/duplicate/:boardId')
+	duplicateBoard(
+		@Req() request: RequestWithUser,
+		@Param() { boardId }: BaseParam,
+		@Body() { boardTitle }: { boardTitle: string }
+	) {
+		return this.duplicateBoardUseCase.execute({
+			boardId,
+			userId: request.user._id,
+			boardTitle
+		});
 	}
 
 	@ApiOperation({ summary: 'Get Boards to show on dashboard' })

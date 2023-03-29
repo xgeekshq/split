@@ -8,6 +8,7 @@ import { DeleteResult } from 'mongodb';
 
 export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board> {
 	getBoard(boardId: string): Promise<Board>;
+	isBoardPublic(boardId: string): Promise<Board>;
 	getBoardsByBoardIdsList(boardIds: string[]): Promise<Board[]>;
 	getBoardPopulated(boardId: string): Promise<Board>;
 	getMainBoard(boardId: string): Promise<Board>;
