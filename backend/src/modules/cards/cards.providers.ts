@@ -1,4 +1,7 @@
 import { CreateCardUseCase } from './applications/create-card.use-case';
+import { DeleteCardVotesFromColumnUseCase } from './applications/delete-card-votes-from-column.use-case';
+import { DeleteCardUseCase } from './applications/delete-card.use-case';
+import { DeleteFromCardGroupUseCase } from './applications/delete-from-card-group.use-case';
 import { DeleteCardApplication } from './applications/delete.card.application';
 import { MergeCardUseCase } from './applications/merge-card.use-case';
 import { UnmergeCardApplication } from './applications/unmerge.card.application';
@@ -58,4 +61,19 @@ export const creacteCardUseCase = {
 export const mergeCardUseCase = {
 	provide: TYPES.applications.MergeCardUseCase,
 	useClass: MergeCardUseCase
+};
+
+export const deleteCardUseCase = {
+	provide: TYPES.applications.DeleteCardUseCase,
+	useClass: DeleteCardUseCase
+};
+
+export const deleteCardVotesFromColumnUseCase = {
+	provide: TYPES.applications.DeleteCardVotesFromColumnUseCase,
+	useClass: DeleteCardVotesFromColumnUseCase
+};
+
+export const deleteFromCardGroupUseCase = {
+	provide: TYPES.applications.DeleteFromCardGroupUseCase,
+	useClass: DeleteFromCardGroupUseCase
 };

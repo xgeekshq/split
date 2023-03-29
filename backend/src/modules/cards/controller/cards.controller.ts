@@ -50,7 +50,7 @@ import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
-
+import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -68,6 +68,8 @@ export default class CardsController {
 		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		@Inject(TYPES.applications.UnmergeCardApplication)
 		private unmergeCardApp: UnmergeCardApplicationInterface,
+		@Inject(TYPES.applications.DeleteCardUseCase)
+		private deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
 		private socketService: SocketGateway
 	) {}
 
@@ -135,7 +137,8 @@ export default class CardsController {
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		await this.deleteCardApp.delete(boardId, cardId);
+		//await this.deleteCardApp.delete(boardId, cardId);
+		await this.deleteCardUseCase.execute({ boardId, cardId });
 		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
 
 		return HttpStatus.OK;

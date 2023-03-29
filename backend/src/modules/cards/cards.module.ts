@@ -7,6 +7,9 @@ import {
 	creacteCardUseCase,
 	deleteCardApplication,
 	deleteCardService,
+	deleteCardUseCase,
+	deleteCardVotesFromColumnUseCase,
+	deleteFromCardGroupUseCase,
 	getCardService,
 	mergeCardUseCase,
 	unmergeCardApplication,
@@ -30,7 +33,10 @@ import CardsController from './controller/cards.controller';
 		unmergeCardApplication,
 		cardRepository,
 		creacteCardUseCase,
-		mergeCardUseCase
+		mergeCardUseCase,
+		deleteCardUseCase,
+		deleteCardVotesFromColumnUseCase,
+		deleteFromCardGroupUseCase
 	],
 	exports: [getCardService, deleteCardService]
 })
