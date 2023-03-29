@@ -1,4 +1,4 @@
-# Contributing to xgeeks - Divide & Conquer
+# Contributing to xgeeks - SPLIT
 
 🎉🚀🙌🏻 First off, thanks for taking the time to contribute! 🙌🏻🚀🎉
 
