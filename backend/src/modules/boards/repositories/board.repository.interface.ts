@@ -4,9 +4,12 @@ import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.r
 import Board from 'src/modules/boards/entities/board.schema';
 import Column from 'src/modules/columns/entities/column.schema';
 import { QueryType } from '../interfaces/findQuery';
+import { DeleteResult } from 'mongodb';
 
 export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board> {
 	getBoard(boardId: string): Promise<Board>;
+	isBoardPublic(boardId: string): Promise<Board>;
+	getBoardsByBoardIdsList(boardIds: string[]): Promise<Board[]>;
 	getBoardPopulated(boardId: string): Promise<Board>;
 	getMainBoard(boardId: string): Promise<Board>;
 	getMainBoardOfSubBoard(boardId: string): Promise<Board>;
@@ -29,6 +32,7 @@ export interface BoardRepositoryInterface extends BaseInterfaceRepository<Board>
 		withSession: boolean
 	): Promise<number>;
 	deleteBoard(boardId: string, withSession: boolean): Promise<Board>;
+	deleteBoardsByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>;
 	updateBoard(boardId: string, board: Board, isNew: boolean): Promise<Board>;
 	updateMergedSubBoard(subBoardId: string, userId: string, withSession: boolean): Promise<Board>;
 	updateMergedBoard(boardId: string, newColumns: Column[], withSession: boolean): Promise<Board>;

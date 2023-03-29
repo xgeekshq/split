@@ -1,6 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { BOARD_TIMER_SERVER_STARTED, BOARD_TIMER_SYNC_INTERVAL } from 'src/libs/constants/timer';
+import {
+	BOARD_TIMER_SERVER_STARTED,
+	BOARD_TIMER_SYNC_INTERVAL,
+	ONE_HOUR
+} from 'src/libs/constants/timer';
 import BoardTimerDurationDto from 'src/libs/dto/board-timer-duration.dto';
 import BoardTimerStateDto from 'src/libs/dto/board-timer-state.dto';
 import ServerStartedTimerEvent from 'src/modules/boards/events/server-started-timer.event';
@@ -8,8 +12,7 @@ import SendBoardTimerTimeLeftServiceInterface from 'src/modules/boards/interface
 import StartBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/start-board-timer.service.interface';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import { ONE_HOUR } from '../../../libs/constants/timer';
-import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
+import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class StartBoardTimerService implements StartBoardTimerServiceInterface {

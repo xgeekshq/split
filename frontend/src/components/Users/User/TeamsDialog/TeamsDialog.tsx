@@ -14,7 +14,7 @@ import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput'
 import Separator from '@/components/Primitives/Separator/Separator';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 
-type Props = {
+type TeamsDialogProps = {
   teamsList: TeamChecked[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -24,7 +24,7 @@ type Props = {
   joinedAt: string;
 };
 
-const ListTeams = ({
+const TeamsDialog = ({
   isOpen,
   setIsOpen,
   title,
@@ -32,7 +32,7 @@ const ListTeams = ({
   providerAccountCreatedAt,
   joinedAt,
   teamsList,
-}: Props) => {
+}: TeamsDialogProps) => {
   const [searchTeam, setSearchTeam] = useState<string>('');
 
   const router = useRouter();
@@ -48,7 +48,7 @@ const ListTeams = ({
   };
 
   const handleChecked = (id: string) => {
-    const updateTeamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
+    const updateTeamsUserIsNotMember: TeamChecked[] = teamsUserIsNotMember.map((team) =>
       team._id === id ? { ...team, isChecked: !team.isChecked } : team,
     );
 
@@ -157,4 +157,4 @@ const ListTeams = ({
   );
 };
 
-export { ListTeams };
+export default TeamsDialog;

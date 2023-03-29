@@ -1,13 +1,15 @@
-import AuthModule from 'src/modules/auth/auth.module';
-import { Module, forwardRef } from '@nestjs/common';
+import { JwtRegister } from 'src/infrastructure/config/jwt.register';
 import {
 	mongooseBoardModule,
 	mongooseUserModule
 } from 'src/infrastructure/database/mongoose.module';
+import AuthModule from 'src/modules/auth/auth.module';
 import { CommunicationModule } from 'src/modules/communication/communication.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import TeamsModule from 'src/modules/teams/teams.module';
 import UsersModule from 'src/modules/users/users.module';
+import { Module, forwardRef } from '@nestjs/common';
+import BoardUsersModule from '../boardUsers/boardusers.module';
 import { CardsModule } from '../cards/cards.module';
 import {
 	afterUserPausedTimerSubscriber,
@@ -21,6 +23,7 @@ import {
 	createBoardService,
 	deleteBoardApplication,
 	deleteBoardService,
+	duplicateBoardUseCase,
 	getBoardApplication,
 	getBoardService,
 	pauseBoardTimerService,
@@ -33,9 +36,8 @@ import {
 	updateBoardTimerDurationService
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
-import { JwtRegister } from 'src/infrastructure/config/jwt.register';
-import BoardUsersModule from '../boardUsers/boardusers.module';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
+import PublicBoardsController from './controller/publicBoards.controller';
 
 @Module({
 	imports: [
@@ -57,6 +59,7 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		deleteBoardService,
 		getBoardService,
 		createBoardApplication,
+		duplicateBoardUseCase,
 		updateBoardApplication,
 		deleteBoardApplication,
 		getBoardApplication,
@@ -74,7 +77,7 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository
 	],
-	controllers: [BoardsController],
+	controllers: [BoardsController, PublicBoardsController],
 	exports: [
 		getBoardApplication,
 		createBoardService,

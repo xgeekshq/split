@@ -10,7 +10,7 @@ import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
 import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
-import { ListTeams } from '../TeamsDialog/TeamsDialog';
+import TeamsDialog from '../TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
   user: User;
@@ -59,7 +59,7 @@ const UserHeader = ({ user }: UserHeaderProps) => {
               <Icon name="plus" />
               Add user to new team
             </Button>
-            <ListTeams
+            <TeamsDialog
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               confirmationLabel="Add new team"

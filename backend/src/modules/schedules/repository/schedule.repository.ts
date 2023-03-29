@@ -25,4 +25,16 @@ export class ScheduleRepository
 	deleteOneSchedule(boardId: string): Promise<DeleteResult> {
 		return this.deleteOneWithQuery({ board: boardId });
 	}
+
+	deleteSchedulesByBoardList(
+		teamBoardsIds: string[],
+		withSession?: boolean
+	): Promise<DeleteResult> {
+		return this.deleteManyWithAcknowledged(
+			{
+				board: { $in: teamBoardsIds }
+			},
+			withSession
+		);
+	}
 }

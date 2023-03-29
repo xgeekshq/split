@@ -1,8 +1,8 @@
+import { isEmpty } from 'class-validator';
 import { DeleteBoardUserServiceInterface } from '../../boardUsers/interfaces/services/delete.board.user.service.interface';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
-import isEmpty from 'src/libs/utils/isEmpty';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
 import { DeleteBoardServiceInterface } from '../interfaces/services/delete.board.service.interface';
@@ -34,123 +34,93 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 			throw new NotFoundException('Board not found!');
 		}
 
-		try {
-			return this.deleteBoardBoardUsersAndSchedules(boardId, true);
-		} catch (error) {
-			throw new BadRequestException(DELETE_FAILED);
+		const boardIdsToDelete: string[] = [boardId];
+
+		if (!isEmpty(board.dividedBoards)) {
+			const dividedBoards = (board.dividedBoards as ObjectId[]).map((subBoardId) =>
+				subBoardId.toString()
+			);
+			boardIdsToDelete.push(...dividedBoards);
 		}
+
+		return this.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
 	}
 
 	async deleteBoardsByTeamId(teamId: string) {
 		const teamBoards = await this.boardRepository.getAllBoardsByTeamId(teamId);
+		const teamBoardsIds = teamBoards.map((board) => board._id);
 
-		const promises = teamBoards.map((board) =>
-			this.deleteBoardBoardUsersAndSchedules(board._id.toString(), false)
-		);
-
-		await Promise.all(promises).catch(() => {
-			throw new BadRequestException(DELETE_FAILED);
-		});
-
-		return true;
+		return this.deleteBoardBoardUsersAndSchedules(teamBoardsIds);
 	}
 
 	/* --------------- HELPERS --------------- */
 
-	private async deleteSubBoards(
-		dividedBoards: Board[] | ObjectId[] | string[],
-		boardSession: boolean
-	) {
-		const deletedCount = await this.boardRepository.deleteManySubBoards(
-			dividedBoards,
-			boardSession
-		);
-
-		if (deletedCount !== dividedBoards.length) throw Error(DELETE_FAILED);
-	}
-
-	private async deleteBoardUsers(
-		dividedBoards: Board[] | ObjectId[] | string[],
-		boardSession: boolean,
-		boardId: ObjectId | string
-	) {
-		const deletedCount = await this.deleteBoardUserService.deleteDividedBoardUsers(
-			dividedBoards,
-			boardSession,
-			boardId
-		);
-
-		if (deletedCount <= 0) throw Error(DELETE_FAILED);
-	}
-
-	private async deleteBoard(boardId: string, boardSession: boolean) {
-		const result = await this.boardRepository.deleteBoard(boardId, boardSession);
-
-		if (!result) throw Error(DELETE_FAILED);
-
-		return {
-			dividedBoards: result.dividedBoards,
-			_id: result._id,
-			slackEnable: result.slackEnable
-		};
-	}
-
-	private async deleteBoardBoardUsersAndSchedules(boardId: string, isMainBoard: boolean) {
+	private async deleteBoardBoardUsersAndSchedules(boardIdsToDelete: string[]) {
 		await this.boardRepository.startTransaction();
 		await this.deleteBoardUserService.startTransaction();
+		await this.deleteSheduleService.startTransaction();
+		const withSession = true;
 		try {
-			const { _id, dividedBoards, slackEnable } = await this.deleteBoard(boardId.toString(), true);
-			this.deleteSheduleService.findAndDeleteScheduleByBoardId(boardId);
+			const boardsToDelete = await this.boardRepository.getBoardsByBoardIdsList(boardIdsToDelete);
+			try {
+				const boardUsersDeleted = await this.deleteBoardUserService.deleteBoardUsersByBoardList(
+					boardIdsToDelete,
+					withSession
+				);
+				const schedulesDeleted = await this.deleteSheduleService.deleteSchedulesByBoardList(
+					boardIdsToDelete,
+					withSession
+				);
+				const boardsDeleted = await this.boardRepository.deleteBoardsByBoardList(
+					boardIdsToDelete,
+					withSession
+				);
 
-			if (isMainBoard && !isEmpty(dividedBoards)) {
-				await this.deleteSubBoards(dividedBoards, true);
-
-				await this.deleteBoardUsers(dividedBoards, true, _id);
-			} else {
-				await this.deleteSimpleBoardUsers(true, _id);
+				if (
+					!(
+						boardUsersDeleted.acknowledged &&
+						schedulesDeleted.acknowledged &&
+						boardsDeleted.acknowledged
+					)
+				)
+					throw new BadRequestException(DELETE_FAILED);
+			} catch (e) {
+				await this.boardRepository.abortTransaction();
+				await this.deleteBoardUserService.abortTransaction();
+				await this.deleteSheduleService.abortTransaction();
+				throw new BadRequestException(DELETE_FAILED);
 			}
-
-			// if slack is enable for the deleted board
-			if (slackEnable) {
-				// archive all related channels
-				// for that we need to fetch the board with all dividedBoards
-
-				const board = await this.boardRepository.getBoardPopulated(boardId);
-
-				this.archiveChannelService.execute({
-					type: ArchiveChannelDataOptions.BOARD,
-					data: {
-						id: board._id,
-						slackChannelId: board.slackChannelId,
-						dividedBoards: board.dividedBoards.map((i) => ({
-							id: i._id,
-							slackChannelId: i.slackChannelId
-						}))
-					},
-					cascade: true
-				});
-			}
-
 			await this.boardRepository.commitTransaction();
 			await this.deleteBoardUserService.commitTransaction();
+			await this.deleteSheduleService.commitTransaction();
+
+			this.archiveBoardsChannels(boardsToDelete);
 
 			return true;
-		} catch (e) {
-			await this.boardRepository.abortTransaction();
-			await this.deleteBoardUserService.abortTransaction();
+		} catch (error) {
 			throw new BadRequestException(DELETE_FAILED);
 		} finally {
 			await this.boardRepository.endSession();
 			await this.deleteBoardUserService.endSession();
+			await this.deleteSheduleService.endSession();
 		}
 	}
 
-	private async deleteSimpleBoardUsers(boardSession: boolean, boardId: string) {
-		const deletedCount = await this.deleteBoardUserService.deleteSimpleBoardUsers(
-			boardId,
-			boardSession
-		);
+	private archiveBoardsChannels(boardsDeleted: Board[]) {
+		boardsDeleted.forEach(async (board: Board) => {
+			const { slackEnable } = board;
 
-		if (deletedCount <= 0) throw Error(DELETE_FAILED);
+			// if slack is enable for the deleted board
+			if (slackEnable) {
+				// archive board channel
+				this.archiveChannelService.execute({
+					type: ArchiveChannelDataOptions.BOARD,
+					data: {
+						id: board._id,
+						slackChannelId: board.slackChannelId
+					}
+				});
+			}
+		});
 	}
 }

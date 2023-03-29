@@ -5,7 +5,7 @@ import BoardTimerDto from 'src/libs/dto/board-timer.dto';
 import ServerStoppedTimerEvent from 'src/modules/boards/events/server-stopped-timer.event';
 import StopBoardTimerServiceInterface from 'src/modules/boards/interfaces/services/stop-board-timer.service.interface';
 import { TYPES } from 'src/modules/boards/interfaces/types';
-import { BoardTimerRepositoryInterface } from '../repositories/board-timer.repository.interface';
+import { BoardTimerRepositoryInterface } from 'src/modules/boards/repositories/board-timer.repository.interface';
 
 @Injectable()
 export default class StopBoardTimerService implements StopBoardTimerServiceInterface {
@@ -22,6 +22,18 @@ export default class StopBoardTimerService implements StopBoardTimerServiceInter
 		this.logger.log(`Will stop timer. Board: "${boardTimerDto.boardId})"`);
 
 		const boardTimer = this.boardTimerRepository.findBoardTimerByBoardId(boardTimerDto.boardId);
+
+		if (!boardTimer?.timerHelper) {
+			this.logger.warn(`Timer not found for board: "${boardTimerDto.boardId}"`);
+
+			return;
+		}
+
+		if (boardTimer.timerHelper.isStopped) {
+			this.logger.warn(`Timer already stopped for board: "${boardTimerDto.boardId}"`);
+
+			return;
+		}
 
 		boardTimer.timerHelper.stop();
 

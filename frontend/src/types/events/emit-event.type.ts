@@ -1,3 +1,1 @@
-type EmitEvent = (eventName: string, payload: any) => void;
-
-export default EmitEvent;
+export type EmitEvent = (eventName: string, payload: any) => void;
