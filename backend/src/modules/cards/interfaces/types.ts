@@ -6,8 +6,7 @@ export const TYPES = {
 		GetCardService: 'GetCardService',
 		MergeCardService: 'MergeCardService',
 		UnmergeCardService: 'UnmergeCardService',
-		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase',
-		DeleteCardVotesFromColumnUseCase: 'DeleteCardVotesFromColumnUseCase'
+		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
 	},
 	applications: {
 		CreateCardApplication: 'CreateCardApplication',
@@ -18,8 +17,7 @@ export const TYPES = {
 		CreateCardUseCase: 'CreateCardUseCase',
 		MergeCardUseCase: 'MergeCardUseCase',
 		DeleteCardUseCase: 'DeleteCardUseCase',
-		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase',
-		DeleteCardVotesFromColumnUseCase: 'DeleteCardVotesFromColumnUseCase'
+		DeleteFromCardGroupUseCase: 'DeleteFromCardGroupUseCase'
 	},
 	repository: {
 		CardRepository: 'CardRepository'
