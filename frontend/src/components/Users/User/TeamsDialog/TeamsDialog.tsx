@@ -13,7 +13,6 @@ import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import Separator from '@/components/Primitives/Separator/Separator';
 import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
-import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
 
 type Props = {
   teamsList: TeamChecked[];
@@ -42,7 +41,6 @@ const ListTeams = ({
   const [teamsUserIsNotMember, setTeamsUserIsNotMember] = useState<TeamChecked[]>(teamsList);
 
   const { mutate } = useUpdateUserTeams(userId! as string);
-  const { refetch } = useTeamsWithoutUser(userId! as string);
 
   const handleClose = () => {
     setSearchTeam('');
@@ -74,13 +72,12 @@ const ListTeams = ({
 
     if (!isEmpty(teamUsers)) {
       mutate(teamUsers);
-      refetch();
     }
 
     setIsOpen(false);
   };
 
-  // filter
+  // Filter
   const filteredTeams = useMemo(() => {
     const input = searchTeam.toLowerCase().trim();
     return input

@@ -6,17 +6,26 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
+import { Team } from '@/types/team/team';
 import { TEAMS_KEY } from '.';
 
-// CHECK: This Mutation should return the Team the user was added to.
-// Instead atm it returns the TeamUser that was added.
-// That would allow us to bypass the sequential requests.
 const useUpdateUserTeams = (userId: string) => {
   const queryClient = useQueryClient();
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(updateAddTeamsToUser, {
-    onSuccess: async () => {
+    onSuccess: async (_, variables) => {
+      variables.forEach((team) => {
+        const teamId = team.team;
+        queryClient.setQueryData(
+          [TEAMS_KEY, 'not', 'user', userId],
+          (oldTeams: Team[] | undefined) => {
+            if (!oldTeams) return oldTeams;
+
+            return oldTeams.filter((oldTeam: any) => oldTeam._id !== teamId);
+          },
+        );
+      });
       await queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
 
       setToastState({
@@ -27,6 +36,7 @@ const useUpdateUserTeams = (userId: string) => {
     },
     onError: () => {
       queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, 'user', 'not', userId]);
       setToastState({
         open: true,
         content: 'Error while adding team(s) to the user',

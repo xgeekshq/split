@@ -31,7 +31,7 @@ const useDeleteTeamUser = (userId: string) => {
               name: removedTeam.name,
             };
 
-            return [...oldNotTeams, team];
+            return [...oldNotTeams, team].sort((a, b) => (a.name < b.name ? -1 : 1));
           },
         );
 
