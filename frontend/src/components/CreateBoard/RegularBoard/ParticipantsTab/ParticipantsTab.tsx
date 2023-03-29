@@ -14,7 +14,7 @@ const ParticipantsTab = ({ optionSelected, setOptionSelected }: Props) => {
   };
 
   return (
-    <Flex direction="column" gap="24">
+    <Flex direction="column" gap={24}>
       <RadioGroupParticipants
         optionSelected={optionSelected}
         handleSelection={handleChangeOption}

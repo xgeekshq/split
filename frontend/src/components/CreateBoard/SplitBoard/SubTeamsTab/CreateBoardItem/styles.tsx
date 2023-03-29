@@ -3,7 +3,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { styled } from '@/styles/stitches/stitches.config';
 
 const StyledMainBoardItem = styled(Flex, Box, {
-  backgroundColor: 'white',
+  backgroundColor: '$white',
   height: '$76',
   width: '100%',
   borderRadius: '$12',

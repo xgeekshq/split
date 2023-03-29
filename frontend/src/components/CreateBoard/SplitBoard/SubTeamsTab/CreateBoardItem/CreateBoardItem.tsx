@@ -28,7 +28,7 @@ interface CreateBoardItemInterface {
 }
 
 const SubBoardList = React.memo(({ dividedBoards, setBoard }: SubBoardListProp) => (
-  <Flex css={{ mb: '$50' }} direction="column" gap="8">
+  <Flex css={{ mb: '$50' }} direction="column" gap={8}>
     {dividedBoards.map((subBoard, index) => (
       <CreateSubBoardItem key={subBoard.title} board={subBoard} index={index} setBoard={setBoard} />
     ))}
@@ -55,9 +55,9 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
   } = useCreateBoard(team);
 
   return (
-    <Flex css={{ width: '100%', height: '100%' }} direction="column" gap="8">
+    <Flex css={{ width: '100%', height: '100%' }} direction="column" gap={8}>
       <StyledMainBoardItem align="center" elevation="1" justify="between" gap={24}>
-        <Flex align="center" gap="8" css={{ flex: 2 }}>
+        <Flex align="center" gap={8} css={{ flex: 2 }}>
           <Tooltip content="It’s a main board. All sub-team boards got merged into this main board.">
             <div>
               <Icon size={32} name="blob-split" />
@@ -73,7 +73,7 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
             <Separator orientation="vertical" size="md" />
             <Text>{board.dividedBoards.length}</Text>
           </Flex>
-          <Flex gap="4">
+          <Flex gap={4}>
             <Flex
               align="center"
               justify="center"
@@ -86,7 +86,7 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                   cursor: canReduce ? 'pointer' : 'default',
-                  backgroundColor: canReduce ? '$primary100' : 'white',
+                  backgroundColor: canReduce ? '$primary100' : '$white',
                 },
               }}
               onClick={handleRemoveTeam}
@@ -105,7 +105,7 @@ const CreateBoardItem = React.memo(({ team }: CreateBoardItemInterface) => {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                   cursor: canAdd ? 'pointer' : 'default',
-                  backgroundColor: canAdd ? '$primary100' : 'white',
+                  backgroundColor: canAdd ? '$primary100' : '$white',
                 },
               }}
               onClick={handleAddTeam}

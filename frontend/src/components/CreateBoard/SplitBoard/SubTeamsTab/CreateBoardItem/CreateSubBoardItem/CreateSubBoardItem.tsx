@@ -111,7 +111,7 @@ const CreateSubBoardItem = ({ board, index, setBoard }: CreateSubBoardItemProps)
             />
           </Flex>
         </Flex>
-        <Flex align="center" justify="end" gap="8" css={{ flex: 2 }}>
+        <Flex align="center" justify="end" gap={8} css={{ flex: 2 }}>
           <Text size="sm">Sub team {index + 1}</Text>
           <AvatarGroup listUsers={board.users} userId="1" hasDrawer />
         </Flex>

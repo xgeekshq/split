@@ -73,7 +73,7 @@ const NewSplitBoard: NextPage = () => {
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Recoil Atoms and Hooks
+  // Recoil Atoms
   const setToastState = useSetRecoilState(toastState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
@@ -87,14 +87,14 @@ const NewSplitBoard: NextPage = () => {
 
   // Team Hook
   const {
-    fetchUserBasedTeams: { data },
+    fetchUserBasedTeams: { data: userBasedTeams },
   } = useTeam();
 
   useEffect(() => {
-    if (data) {
-      setTeams(data);
+    if (userBasedTeams) {
+      setTeams(userBasedTeams);
     }
-  }, [data, setTeams]);
+  }, [userBasedTeams, setTeams]);
 
   const splitBoardTips = [
     {
@@ -148,14 +148,12 @@ const NewSplitBoard: NextPage = () => {
   // Handle back to boards list page
   const handleBack = useCallback(() => {
     setIsLoading(true);
-
     setBackButtonState(true);
     router.back();
   }, [router]);
 
   const handleCancelBtn = () => {
     setIsLoading(true);
-
     router.push(DASHBOARD_ROUTE);
   };
 
@@ -228,7 +226,7 @@ const NewSplitBoard: NextPage = () => {
     };
   }, [status, router, setToastState, setSelectedTeam, setBoardState, setHaveError]);
 
-  if (!session || !data) return null;
+  if (!session || !userBasedTeams) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>

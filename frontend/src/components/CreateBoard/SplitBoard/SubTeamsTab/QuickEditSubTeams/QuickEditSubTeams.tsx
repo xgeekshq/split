@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import {
   AlertDialog,
@@ -9,12 +10,11 @@ import {
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import Input from '@/components/Primitives/Inputs/Input/Input';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { Team } from '@/types/team/team';
-import Input from '@/components/Primitives/Inputs/Input/Input';
-import { useFormContext } from 'react-hook-form';
 
 type QuickEditSubTeamsProps = {
   team: Team;
@@ -123,7 +123,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
           </Text>
         </Flex>
         <Flex gap="24">
-          <Flex direction="column" gap="8">
+          <Flex direction="column" gap={8}>
             <Text label>Sub-teams count</Text>
             <Input css={{ mb: 0 }} id="maxTeams" max={maxTeams} min={minTeams} type="number" />
             <Flex>
@@ -135,7 +135,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
               </Text>
             </Flex>
           </Flex>
-          <Flex direction="column" gap="8">
+          <Flex direction="column" gap={8}>
             <Text label>Max sub-team members count</Text>
             <Input css={{ mb: 0 }} id="maxUsers" max={maxUsers} min={minUsers} type="number" />
             <Flex>
@@ -148,7 +148,7 @@ const QuickEditSubTeams = ({ team }: QuickEditSubTeamsProps) => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex gap="24" justify="end">
+        <Flex gap={24} justify="end">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleSaveConfigs} disabled={isSubmitDisabled}>
             Save configurations

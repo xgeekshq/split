@@ -76,7 +76,7 @@ const NewRegularBoard: NextPage = () => {
 
   // Team  Hook
   const {
-    fetchUserBasedTeams: { data },
+    fetchUserBasedTeams: { data: userBasedTeams },
   } = useTeam();
 
   const regularBoardTips = [
@@ -109,8 +109,8 @@ const NewRegularBoard: NextPage = () => {
   });
 
   useEffect(() => {
-    if (data) {
-      const availableTeams = data.filter((team) =>
+    if (userBasedTeams) {
+      const availableTeams = userBasedTeams.filter((team) =>
         team.users?.find(
           (teamUser) =>
             teamUser.user._id === session?.user.id &&
@@ -118,7 +118,7 @@ const NewRegularBoard: NextPage = () => {
         ),
       );
 
-      setTeams(session?.user.isSAdmin ? data : availableTeams);
+      setTeams(session?.user.isSAdmin ? userBasedTeams : availableTeams);
     }
 
     if (allUsers) {
@@ -129,7 +129,7 @@ const NewRegularBoard: NextPage = () => {
 
       setUsersList(usersWithChecked);
     }
-  }, [data, setTeams, allUsers, setUsersList, session]);
+  }, [userBasedTeams, setTeams, allUsers, setUsersList, session]);
 
   // Board Hook
   const {
@@ -162,9 +162,7 @@ const NewRegularBoard: NextPage = () => {
   // Handle back to boards list page
   const handleBack = useCallback(() => {
     setIsLoading(true);
-
     resetListUsersState();
-
     setBackButtonState(true);
     router.back();
   }, [resetListUsersState, router]);
@@ -172,7 +170,6 @@ const NewRegularBoard: NextPage = () => {
   const handleCancelBtn = () => {
     resetListUsersState();
     setIsLoading(true);
-
     router.push(DASHBOARD_ROUTE);
   };
 
@@ -247,7 +244,7 @@ const NewRegularBoard: NextPage = () => {
     };
   }, [router, setToastState, setSelectedTeam, setBoardState, status]);
 
-  if (!session || !data) return null;
+  if (!session || !userBasedTeams) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>

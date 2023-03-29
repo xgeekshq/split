@@ -50,7 +50,7 @@ const BoardConfigurations = ({ isRegularBoard }: BoardConfigurationsProps) => {
   };
 
   return (
-    <Flex direction="column" gap="24">
+    <Flex direction="column" gap={24}>
       <Text color="primary500">
         You can change the board configurations still later inside your retro board.
       </Text>

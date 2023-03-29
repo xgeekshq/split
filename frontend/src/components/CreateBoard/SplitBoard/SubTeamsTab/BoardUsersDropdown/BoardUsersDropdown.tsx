@@ -13,7 +13,7 @@ const BoardUsersDropdown = ({ haveError, users, title }: UsersBoxProps) => (
   <Dropdown openDelay={0} closeDelay={0}>
     <UserNamesContainer
       direction="column"
-      gap="2"
+      gap={2}
       css={{
         backgroundColor: haveError ? '$transparent' : '$white',
       }}

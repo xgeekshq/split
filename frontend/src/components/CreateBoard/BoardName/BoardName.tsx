@@ -12,7 +12,6 @@ type BoardNameProps = {
 };
 
 const BoardName = ({ title, description }: BoardNameProps) => {
-  // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
 
   return (

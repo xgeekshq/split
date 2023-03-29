@@ -181,7 +181,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         <SelectContent options={teamsNames} />
       </Select>
       {!isHelperEmpty && (
-        <Flex justify="start" gap="4" css={{ mt: '$8', color: '$dangerBase' }}>
+        <Flex justify="start" gap={4} css={{ mt: '$8', color: '$dangerBase' }}>
           {currentSelectTeamState === 'error' && <Icon size={16} name="info" />}
           <Text hint color={currentSelectTeamState === 'error' ? 'dangerBase' : 'primary300'}>
             {message}

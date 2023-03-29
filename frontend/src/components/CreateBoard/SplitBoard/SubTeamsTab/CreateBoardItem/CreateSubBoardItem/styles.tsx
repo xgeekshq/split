@@ -27,7 +27,7 @@ const LotteryButton = styled(Flex, {
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           backgroundColor: '$primary400',
-          color: 'white',
+          color: '$white',
         },
       },
     },

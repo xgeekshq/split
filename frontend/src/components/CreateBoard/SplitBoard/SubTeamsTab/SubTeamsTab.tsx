@@ -52,7 +52,7 @@ const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
 
   return (
     <Flex direction="column">
-      <Flex css={{ width: '100%' }} gap="22">
+      <Flex css={{ width: '100%' }} gap={22}>
         <SelectTeam previousTeam={previousTeam} />
         <BoardUsersDropdown users={stakeholders} haveError={haveError} title="Stakeholders" />
       </Flex>

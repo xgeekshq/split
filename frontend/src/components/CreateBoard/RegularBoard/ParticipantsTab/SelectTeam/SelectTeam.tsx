@@ -31,12 +31,6 @@ const SelectTeam = () => {
 
   const numberOfTeams = teams?.length ?? 0;
 
-  const handleTeamChange = (value: string) => {
-    const foundTeam = teams.find((team) => team.id === value);
-
-    setSelectedTeam(foundTeam);
-  };
-
   const teamsNames = useMemo(
     () =>
       teams.map((team) => ({
@@ -55,14 +49,14 @@ const SelectTeam = () => {
       if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === session?.user.id)
         return [
           {
-            user: teamUser.user._id,
+            user: teamUser.user,
             role: BoardUserRoles.RESPONSIBLE,
             votesCount: 0,
           },
         ];
       return [
         {
-          user: teamUser.user._id,
+          user: teamUser.user,
           role: BoardUserRoles.MEMBER,
           votesCount: 0,
         },
@@ -75,6 +69,12 @@ const SelectTeam = () => {
       board: { ...prev.board, team: selectedTeam.id },
     }));
   }, [selectedTeam, session?.user.id, setCreateBoardData]);
+
+  const handleTeamChange = (value: string) => {
+    const foundTeam = teams.find((team) => team.id === value);
+
+    setSelectedTeam(foundTeam);
+  };
 
   useEffect(() => {
     if (routerTeam) {
