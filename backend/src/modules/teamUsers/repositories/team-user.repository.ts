@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId, DeleteResult } from 'mongodb';
+import { DeleteResult, ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User from 'src/modules/users/entities/user.schema';
