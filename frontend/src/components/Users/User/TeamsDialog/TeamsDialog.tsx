@@ -141,18 +141,11 @@ const TeamsDialog = ({
           ))}
         </Flex>
       </Flex>
-      <Flex
-        justify="end"
-        align="center"
-        css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
-      >
-        <Dialog.Footer
-          handleAffirmative={handleAddTeams}
-          handleClose={handleClose}
-          affirmativeLabel="Add"
-          showSeparator={false}
-        />
-      </Flex>
+      <Dialog.Footer
+        handleAffirmative={handleAddTeams}
+        handleClose={handleClose}
+        affirmativeLabel="Add"
+      />
     </Dialog>
   );
 };

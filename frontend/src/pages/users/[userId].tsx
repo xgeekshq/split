@@ -51,7 +51,7 @@ const UserDetails = () => {
                 <Dots />
               </Flex>
             ) : (
-              <TeamsList teams={userTeamsList} />
+              <TeamsList teams={userTeams} />
             )}
           </QueryError>
         </Suspense>
