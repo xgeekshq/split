@@ -70,7 +70,7 @@ const BoardParticipantsSubHeader = ({
   };
 
   return (
-    <Flex justify="between" css={{ mt: '50px', px: '$150' }}>
+    <Flex justify="between" css={{ mt: '$32', px: '$150' }}>
       <Text heading="1">Participants</Text>
       {hasPermissions && (
         <Button size="sm" onClick={() => setIsOpen(true)}>

@@ -19,7 +19,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
   const { data: session } = useSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const setCreateBoardData = useSetRecoilState(createBoardDataState);
+  const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
   const setToastState = useSetRecoilState(toastState);
 
   const saveParticipants = (checkedUserList: UserList[]) => {
@@ -30,19 +30,37 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
       checkedUsersListToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
     );
 
-    const users = selectedUsers.map((user) =>
-      user._id === session?.user.id
-        ? { role: BoardUserRoles.RESPONSIBLE, user: user._id, votesCount: 0 }
-        : {
-            role: BoardUserRoles.MEMBER,
-            user: user._id,
-            votesCount: 0,
-          },
+    const addedUsers = selectedUsers
+      .filter((user) => !createBoardData.users.some((boardUser) => boardUser.user._id === user._id))
+      .map((user) =>
+        user._id === session?.user.id
+          ? { role: BoardUserRoles.RESPONSIBLE, user, votesCount: 0 }
+          : {
+              role: BoardUserRoles.MEMBER,
+              user,
+              votesCount: 0,
+            },
+      );
+
+    const newBoardUsers = [...createBoardData.users, ...addedUsers];
+
+    // Sort by Name
+    newBoardUsers.sort((a, b) => {
+      const aFullName = `${a.user.firstName.toLowerCase()} ${a.user.lastName.toLowerCase()}`;
+      const bFullName = `${b.user.firstName.toLowerCase()} ${b.user.lastName.toLowerCase()}`;
+
+      return aFullName < bFullName ? -1 : 1;
+    });
+
+    // This insures that the board creator stays always in first
+    const userAdminIndex = newBoardUsers.findIndex(
+      (member) => member.user._id === session?.user.id,
     );
+    newBoardUsers.unshift(newBoardUsers.splice(userAdminIndex, 1)[0]);
 
     setCreateBoardData((prev) => ({
       ...prev,
-      users,
+      users: newBoardUsers,
       board: { ...prev.board, team: null },
     }));
 

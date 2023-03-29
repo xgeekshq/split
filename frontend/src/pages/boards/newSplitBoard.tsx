@@ -188,9 +188,14 @@ const NewSplitBoard: NextPage = () => {
       return newSubBoard;
     });
 
+    const boardUsersDtos = boardState.users.map((boardUser) => ({
+      user: boardUser.user._id,
+      role: boardUser.role,
+    }));
+
     mutate({
       ...boardState.board,
-      users: boardState.users,
+      users: boardUsersDtos,
       title,
       dividedBoards: newDividedBoards,
       maxVotes,

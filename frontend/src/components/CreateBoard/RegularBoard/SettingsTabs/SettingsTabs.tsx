@@ -1,21 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
-import { createBoardError } from '@/store/createBoard/atoms/create-board.atom';
+import {
+  createBoardDataState,
+  createBoardError,
+} from '@/store/createBoard/atoms/create-board.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
-import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
+import { useSession } from 'next-auth/react';
+import { usersListState } from '@/store/team/atom/team.atom';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
+import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
 
 const SettingsTabs = () => {
+  const { data: session } = useSession();
+
   // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
   const setToastState = useSetRecoilState(toastState);
+  const [usersList, setUsersList] = useRecoilState(usersListState);
+  const setCreateBoardData = useSetRecoilState(createBoardDataState);
+
   const [optionSelected, setOptionSelected] = useState('team');
 
   const tabList: TabList[] = [
@@ -58,6 +69,33 @@ const SettingsTabs = () => {
       });
     }
   }, [activeTab, errors.maxVotes, errors.team, setToastState]);
+
+  useEffect(() => {
+    const updateCheckedUser = usersList.map((user) => ({
+      ...user,
+      isChecked: user._id === session?.user.id || user.isChecked,
+    }));
+
+    const users = updateCheckedUser.flatMap((user) =>
+      user.isChecked
+        ? [
+            {
+              role:
+                user._id === session?.user.id ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+              user,
+              votesCount: 0,
+            },
+          ]
+        : [],
+    );
+    setUsersList(updateCheckedUser);
+
+    setCreateBoardData((prev) => ({
+      ...prev,
+      users,
+      board: { ...prev.board, team: null },
+    }));
+  }, []);
 
   return (
     <Flex direction="column" gap={16}>

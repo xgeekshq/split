@@ -95,7 +95,7 @@ const BoardParticipants = () => {
   return recoilBoard ? (
     <Suspense fallback={<LoadingPage />}>
       <QueryError>
-        <Flex direction="column" gap={20} css={{ width: '100%', height: '100vh' }}>
+        <Flex direction="column" gap={32} css={{ width: '100%', height: '100vh' }}>
           <RegularBoardHeader isParticipantsPage />
           <ParticipantsList createdBy={boardData?.board.createdBy._id} />
         </Flex>

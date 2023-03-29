@@ -10,8 +10,8 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
 import BoardUsersDropdown from './BoardUsersDropdown/BoardUsersDropdown';
 import BoardSection from './CreateBoardItem/CreateBoardItem';
-import FakeBoardItem from './FakeBoardSection/FakeBoardItem';
-import QuickEditSubTeams from './QuickEditSubTeams';
+import FakeBoardItem from './FakeBoardItem/FakeBoardItem';
+import QuickEditSubTeams from './QuickEditSubTeams/QuickEditSubTeams';
 import SelectTeam from './SelectTeam/SelectTeam';
 
 type SubTeamsTabProps = {

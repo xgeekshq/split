@@ -114,7 +114,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
 
       return [
         {
-          user: teamUser.user._id,
+          user: teamUser.user,
           role: BoardUserRoles.MEMBER,
           votesCount: 0,
         },
