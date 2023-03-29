@@ -50,6 +50,8 @@ import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
+import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
+
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -63,10 +65,10 @@ export default class CardsController {
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private deleteCardApp: DeleteCardApplicationInterface,
-		@Inject(TYPES.applications.MergeCardApplication)
-		private mergeCardApp: MergeCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
 		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
+    @Inject(TYPES.applications.MergeCardUseCase)
+		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		private socketService: SocketGateway
 	) {}
 
@@ -330,10 +332,9 @@ export default class CardsController {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
 
-		const board = await this.mergeCardApp.mergeCards(boardId, draggedCardId, targetCardId);
+		const board = await this.mergeCardUseCase.execute({ boardId, draggedCardId, targetCardId });
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendMergeCards(socketId, mergeCardsDto);
+		if (board) this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
 		return HttpStatus.OK;
 	}
