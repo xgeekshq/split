@@ -4,7 +4,7 @@ import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { getBoardRequest } from '@/api/boardService';
+import { getBoardRequest, getPublicStatusRequest } from '@/api/boardService';
 import DragDropArea from '@/components/Board/DragDropArea';
 import RegularBoard from '@/components/Board/RegularBoard';
 import { BoardSettings } from '@/components/Board/Settings';
@@ -49,8 +49,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {},
     };
 
-  // if board is public and no session
-  if (!session) {
+  const boardIsPublic = await getPublicStatusRequest(boardId, context);
+
+  // if board is public and user has no session
+  if (boardIsPublic && !session) {
     // check if there are guest user cookies
     const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
     // if there isn´t cookies, the guest user is not registered

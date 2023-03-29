@@ -1,6 +1,6 @@
 {
   "name": "split",
-  "version": "v0.1.17",
+  "version": "v0.1.18",
   "private": true,
   "scripts": {
     "prepare": "concurrently \"npm:prepare:backend\" \"npm:prepare:frontend\" \"husky install\"",
@@ -14,7 +14,7 @@
     "pre-commit:frontend": "npm run pre-commit --prefix frontend"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.0",
+    "@commitlint/cli": "^17.5.0",
     "@commitlint/config-conventional": "^17.4.0",
     "concurrently": "^7.6.0",
     "husky": "^8.0.1"

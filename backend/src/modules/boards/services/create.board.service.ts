@@ -27,10 +27,22 @@ import { CreateBoardServiceInterface } from '../interfaces/services/create.board
 import Board from '../entities/board.schema';
 import { addDays, addMonths, isAfter } from 'date-fns';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { Inject, Injectable, Logger, NotFoundException, forwardRef } from '@nestjs/common';
+import {
+	BadRequestException,
+	Inject,
+	Injectable,
+	Logger,
+	NotFoundException,
+	forwardRef
+} from '@nestjs/common';
 import { Configs } from '../dto/configs.dto';
 import { TEAM_NOT_FOUND, TEAM_USERS_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
+
+type CreateBoardAndUsers = {
+	boardData: BoardDto;
+	userId: string;
+};
 
 @Injectable()
 export default class CreateBoardService implements CreateBoardServiceInterface {
@@ -54,43 +66,18 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 	) {}
 
 	async create(boardData: BoardDto, userId: string, fromSchedule = false): Promise<Board> {
-		const { team: teamId, recurrent, maxUsers, slackEnable, users, dividedBoards } = boardData;
+		const { team: teamId, recurrent, maxUsers, slackEnable } = boardData;
 
-		const boardUsersToCreate: BoardUserDto[] = [];
-		const haveDividedBoards = dividedBoards.length > 0;
-
-		let createdBoard;
-		let teamName;
+		const createBoardArgs: CreateBoardAndUsers = {
+			boardData,
+			userId
+		};
 
 		await this.boardRepository.startTransaction();
 		await this.createBoardUserService.startTransaction();
 
 		try {
-			try {
-				createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
-
-				if (teamId) {
-					teamName = await this.getTeamNameAndTeamUsers(
-						teamId,
-						boardUsersToCreate,
-						boardData.responsibles
-					);
-				}
-
-				if (!haveDividedBoards && !teamId) {
-					this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
-				}
-
-				await this.createBoardUserService.saveBoardUsers(
-					boardUsersToCreate,
-					createdBoard._id,
-					true
-				);
-			} catch (e) {
-				await this.boardRepository.abortTransaction();
-				await this.createBoardUserService.abortTransaction();
-				throw new CreateFailedException();
-			}
+			const { createdBoard, teamName } = await this.createBoardAndSaveBoardUsers(createBoardArgs);
 
 			await this.boardRepository.commitTransaction();
 			await this.createBoardUserService.commitTransaction();
@@ -127,56 +114,58 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		configs: Configs,
 		teamName: string
 	): Promise<string | null> {
-		const { maxUsersPerTeam } = configs;
-
 		let teamUsers = await this.getTeamUserService.getUsersOfTeam(teamId);
 
 		if (!teamUsers) throw new NotFoundException(TEAM_USERS_NOT_FOUND);
 
 		teamUsers = this.updateTeamUserNewJoinerOrResponsibleStatus(teamUsers, teamId);
 
-		const teamUsersWotStakeholders = teamUsers.filter(
-			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
-		);
-		const teamLength = teamUsersWotStakeholders.length;
+		const boardData = this.generateBoardData(teamUsers, configs, teamName, teamId);
 
-		const rawMaxTeams = teamLength / Number(maxUsersPerTeam);
-		const maxTeams = Math.ceil(rawMaxTeams);
-
-		if (maxTeams < 2 || maxUsersPerTeam < 2) {
-			return null;
+		if (!boardData) {
+			throw new BadRequestException();
 		}
 
-		const responsibles = [];
-		const today = new Date();
-
-		const boardData: BoardDto = {
-			...generateBoardDtoData(
-				`${teamName}-mainboard-${new Intl.DateTimeFormat('en-US', {
-					month: 'long'
-				}).format(today)}-${configs.date?.getFullYear()}`
-			).board,
-			users: [],
-			team: teamId,
-			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
-			recurrent: configs.recurrent,
-			maxVotes: configs.maxVotes ?? null,
-			hideCards: true,
-			postAnonymously: configs.postAnonymously,
-			hideVotes: configs.hideVotes ?? false,
-			maxUsers: Math.ceil(configs.maxUsersPerTeam),
-			slackEnable: configs.slackEnable,
-			responsibles
-		};
-
 		const board = await this.create(boardData, ownerId, true);
-
-		if (!board) return null;
 
 		return board._id.toString();
 	}
 
 	// /* --------------- HELPERS --------------- */
+
+	private async createBoardAndSaveBoardUsers({ boardData, userId }: CreateBoardAndUsers) {
+		const { team: teamId, users, dividedBoards } = boardData;
+		const boardUsersToCreate: BoardUserDto[] = [];
+		const haveDividedBoards = dividedBoards.length > 0;
+
+		try {
+			let teamName: string | undefined;
+			const createdBoard = await this.createBoard(boardData, userId, false, haveDividedBoards);
+
+			if (teamId) {
+				teamName = await this.getTeamNameAndTeamUsers(
+					teamId,
+					boardUsersToCreate,
+					boardData.responsibles
+				);
+			}
+
+			if (!haveDividedBoards && !teamId) {
+				this.saveParticipantsFromRegularBoardWithNoTeam(users, boardUsersToCreate);
+			}
+
+			await this.createBoardUserService.saveBoardUsers(boardUsersToCreate, createdBoard._id, true);
+
+			return {
+				createdBoard,
+				teamName
+			};
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+			await this.createBoardUserService.abortTransaction();
+			throw new CreateFailedException();
+		}
+	}
 
 	private async getTeamNameAndTeamUsers(
 		teamId: string,
@@ -225,6 +214,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 			const board = fillDividedBoardsUsersWithTeamUsers(translateBoard(populatedBoard));
 			this.slackCommunicationService.execute(board);
 		} else {
+			//this isn't tested on the create.board.service.spec.ts
 			this.logger.error(
 				`Call Slack Communication Service for board id "${boardId}" fails. Board not found.`
 			);
@@ -270,6 +260,47 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		});
 	}
 
+	private generateBoardData(
+		teamUsers: TeamUser[],
+		configs: Configs,
+		teamName: string,
+		teamId: string
+	): BoardDto {
+		const teamUsersWotStakeholders = teamUsers.filter(
+			(teamUser) => teamUser.role !== TeamRoles.STAKEHOLDER
+		);
+		const teamLength = teamUsersWotStakeholders.length;
+
+		const rawMaxTeams = teamLength / Number(configs.maxUsersPerTeam);
+		const maxTeams = Math.ceil(rawMaxTeams);
+
+		if (maxTeams < 2 || configs.maxUsersPerTeam < 2) {
+			return null;
+		}
+
+		const responsibles = [];
+		const today = new Date();
+
+		return {
+			...generateBoardDtoData(
+				`${teamName}-mainboard-${new Intl.DateTimeFormat('en-US', {
+					month: 'long'
+				}).format(today)}-${configs.date?.getFullYear()}`
+			).board,
+			users: [],
+			team: teamId,
+			dividedBoards: this.handleSplitBoards(maxTeams, teamUsersWotStakeholders, responsibles),
+			recurrent: configs.recurrent,
+			maxVotes: configs.maxVotes ?? null,
+			hideCards: true,
+			postAnonymously: configs.postAnonymously,
+			hideVotes: configs.hideVotes ?? false,
+			maxUsers: Math.ceil(configs.maxUsersPerTeam),
+			slackEnable: configs.slackEnable,
+			responsibles
+		};
+	}
+
 	private handleBoardUserRole(teamUser: TeamUser): string {
 		return teamUser.role === TeamRoles.ADMIN || teamUser.role === TeamRoles.STAKEHOLDER
 			? BoardRoles.RESPONSIBLE
@@ -302,6 +333,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 					canBeResponsible: true
 				});
 
+				//this isn't tested on the create.board.service.spec.ts
 				if (!updatedUser) {
 					this.logger.verbose(
 						`Update isNewJoiner and can be responsible fields failed for ${user._id}`
@@ -317,8 +349,8 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		});
 	}
 
-	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) =>
-		users
+	private sortUsersListByOldestCreatedDate = (users: TeamUser[]) => {
+		return users
 			.map((user) => {
 				return {
 					...user,
@@ -326,6 +358,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 				};
 			})
 			.sort((a, b) => Number(b.userCreated) - Number(a.userCreated));
+	};
 
 	private getAvailableUsersToBeResponsible = (availableUsers: TeamUser[]) => {
 		const availableUsersListSorted = this.sortUsersListByOldestCreatedDate(availableUsers);
@@ -407,6 +440,7 @@ export default class CreateBoardService implements CreateBoardServiceInterface {
 		const canBeResponsibles = availableUsers.filter(
 			(user) => !user.isNewJoiner && user.canBeResponsible
 		);
+
 		const responsiblesAvailable: TeamUser[] = [];
 		while (canBeResponsibles.length > 0 && responsiblesAvailable.length !== maxTeams) {
 			const idx = Math.floor(Math.random() * canBeResponsibles.length);

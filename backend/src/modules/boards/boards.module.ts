@@ -37,6 +37,7 @@ import {
 } from './boards.providers';
 import BoardsController from './controller/boards.controller';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
+import PublicBoardsController from './controller/publicBoards.controller';
 
 @Module({
 	imports: [
@@ -76,7 +77,7 @@ import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 		afterUserRequestedTimerStateSubscriber,
 		boardRepository
 	],
-	controllers: [BoardsController],
+	controllers: [BoardsController, PublicBoardsController],
 	exports: [
 		getBoardApplication,
 		createBoardService,

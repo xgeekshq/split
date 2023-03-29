@@ -28,7 +28,7 @@ import { CardGroupParams } from 'src/libs/dto/param/card.group.params';
 import { CardItemParams } from 'src/libs/dto/param/card.item.params';
 import { MergeCardsParams } from 'src/libs/dto/param/merge.cards.params';
 import { UnmergeCardsParams } from 'src/libs/dto/param/unmerge.cards.params';
-import { INSERT_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import JwtAuthenticationGuard from 'src/libs/guards/jwtAuth.guard';
 import RequestWithUser from 'src/libs/interfaces/requestWithUser.interface';
 import { BadRequestResponse } from 'src/libs/swagger/errors/bad-request.swagger';
@@ -43,14 +43,13 @@ import UpdateCardDto from '../dto/update.card.dto';
 import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
-import { replaceCard } from 'src/modules/boards/utils/clean-board';
-import Card from '../entities/card.schema';
-import { hideText } from 'src/libs/utils/hideText';
-import { CreateCardApplicationInterface } from '../interfaces/applications/create.card.application.interface';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
-import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
 import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
+import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
+import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -58,14 +57,14 @@ import { UnmergeCardApplicationInterface } from '../interfaces/applications/unme
 @Controller('boards')
 export default class CardsController {
 	constructor(
-		@Inject(TYPES.applications.CreateCardApplication)
-		private createCardApp: CreateCardApplicationInterface,
+		@Inject(TYPES.applications.CreateCardUseCase)
+		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
 		@Inject(TYPES.applications.UpdateCardApplication)
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private deleteCardApp: DeleteCardApplicationInterface,
-		@Inject(TYPES.applications.MergeCardApplication)
-		private mergeCardApp: MergeCardApplicationInterface,
+		@Inject(TYPES.applications.MergeCardUseCase)
+		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		@Inject(TYPES.applications.UnmergeCardApplication)
 		private unmergeCardApp: UnmergeCardApplicationInterface,
 		private socketService: SocketGateway
@@ -95,28 +94,18 @@ export default class CardsController {
 		@Param() { boardId }: BaseParam,
 		@Body() createCardDto: CreateCardDto
 	) {
-		const { card, colIdToAdd, socketId } = createCardDto;
+		const { socketId } = createCardDto;
 
-		const { newCard, hideCards, hideVotes } = await this.createCardApp.create(
+		const { newCardToReturn, newCardToSocket } = await this.createCardUseCase.execute({
 			boardId,
-			request.user._id,
-			card,
-			colIdToAdd
-		);
+			userId: request.user._id,
+			createCardDto
+		});
 
-		if (!newCard) throw new BadRequestException(INSERT_FAILED);
-
-		const cardWithHiddenInfo = replaceCard(
-			newCard,
-			hideText(request.user._id.toString()),
-			hideCards,
-			hideVotes
-		);
-
-		createCardDto.newCard = cardWithHiddenInfo as Card;
+		createCardDto.newCard = newCardToSocket;
 		this.socketService.sendAddCard(socketId, createCardDto);
 
-		return newCard;
+		return newCardToReturn;
 	}
 
 	@ApiOperation({ summary: 'Delete a specific card' })
@@ -341,10 +330,9 @@ export default class CardsController {
 		const { boardId, cardId: draggedCardId, targetCardId } = params;
 		const { socketId } = mergeCardsDto;
 
-		const board = await this.mergeCardApp.mergeCards(boardId, draggedCardId, targetCardId);
+		const board = await this.mergeCardUseCase.execute({ boardId, draggedCardId, targetCardId });
 
-		if (!board) throw new BadRequestException(UPDATE_FAILED);
-		this.socketService.sendMergeCards(socketId, mergeCardsDto);
+		if (board) this.socketService.sendMergeCards(socketId, mergeCardsDto);
 
 		return HttpStatus.OK;
 	}

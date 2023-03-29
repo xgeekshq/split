@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
-import { UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import Comment from 'src/modules/comments/schemas/comment.schema';
 import User from 'src/modules/users/entities/user.schema';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
@@ -12,6 +12,7 @@ import CardItem from '../entities/card.item.schema';
 import Card from '../entities/card.schema';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 
 @Injectable()
 export default class DeleteCardService implements DeleteCardServiceInterface {
@@ -34,6 +35,7 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			await this.cardRepository.commitTransaction();
 		} catch (e) {
 			await this.cardRepository.abortTransaction();
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
 		}
@@ -138,8 +140,8 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			});
 			const results = await Promise.all(promises);
 
-			if (results.some((i) => i === null)) {
-				throw Error(UPDATE_FAILED);
+			if (!results) {
+				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
 		}
 	}
@@ -157,8 +159,8 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			});
 			const results = await Promise.all(promises);
 
-			if (results.some((i) => i === null)) {
-				throw Error(UPDATE_FAILED);
+			if (!results) {
+				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
 		}
 
@@ -171,8 +173,8 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			});
 			const results = await Promise.all(promises);
 
-			if (results.some((i) => i === null)) {
-				throw Error(UPDATE_FAILED);
+			if (!results) {
+				throw new DeleteFailedException(DELETE_VOTE_FAILED);
 			}
 		}
 	}
