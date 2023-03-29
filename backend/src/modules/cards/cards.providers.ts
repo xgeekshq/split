@@ -52,6 +52,4 @@ export const mergeCardUseCase = {
 export const unmergeCardUseCase = {
 	provide: TYPES.applications.UnmergeCardUseCase,
 	useClass: UnmergeCardUseCase
- };
- 
-
+};
