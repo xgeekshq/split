@@ -4,13 +4,11 @@ import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
-	createCardApplication,
-	createCardService,
+	creacteCardUseCase,
 	deleteCardApplication,
 	deleteCardService,
 	getCardService,
-	mergeCardApplication,
-	mergeCardService,
+	mergeCardUseCase,
 	unmergeCardApplication,
 	unmergeCardService,
 	updateCardApplication,
@@ -22,19 +20,17 @@ import CardsController from './controller/cards.controller';
 	imports: [mongooseBoardModule, forwardRef(() => SocketModule), forwardRef(() => VotesModule)],
 	controllers: [CardsController],
 	providers: [
-		createCardService,
 		updateCardService,
 		getCardService,
 		deleteCardService,
 		updateCardService,
-		mergeCardService,
 		unmergeCardService,
-		createCardApplication,
 		updateCardApplication,
 		deleteCardApplication,
-		mergeCardApplication,
 		unmergeCardApplication,
-		cardRepository
+		cardRepository,
+		creacteCardUseCase,
+		mergeCardUseCase
 	],
 	exports: [getCardService, deleteCardService]
 })

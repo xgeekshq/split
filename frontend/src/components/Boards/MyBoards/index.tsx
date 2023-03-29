@@ -1,17 +1,14 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { getBoardsRequest } from '@/api/boardService';
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
-import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
+import useBoard from '@/hooks/useBoard';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
 import ListBoards from './ListBoards';
@@ -27,34 +24,14 @@ export interface OptionType {
   label: string;
 }
 
-const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
-  const setToastState = useSetRecoilState(toastState);
+const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
   const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const routerTeam = router.query.team as string;
   const userTeamsList = useRecoilValue(teamsListState);
 
-  const fetchBoards = useInfiniteQuery(
-    ['boards'],
-    ({ pageParam = 0 }) => getBoardsRequest(pageParam),
-    {
-      enabled: true,
-      refetchOnWindowFocus: false,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the boards',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
+  const { fetchBoards } = useBoard({ autoFetchBoards: true });
 
   const { data, isLoading } = fetchBoards;
 
@@ -129,6 +106,6 @@ const MyBoards = React.memo<MyBoardsProps>(({ userId, isSuperAdmin }) => {
       )}
     </>
   );
-});
+};
 
 export default MyBoards;

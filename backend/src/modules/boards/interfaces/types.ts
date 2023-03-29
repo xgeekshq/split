@@ -13,6 +13,7 @@ export const TYPES = {
 	},
 	applications: {
 		CreateBoardApplication: 'CreateBoardApplication',
+		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
 		DeleteBoardApplication: 'DeleteBoardApplication',
 		UpdateBoardApplication: 'UpdateBoardApplication',
 		GetBoardApplication: 'GetBoardApplication'

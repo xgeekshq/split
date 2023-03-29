@@ -185,7 +185,7 @@ const useCards = () => {
       setQueryDataDeleteCard(data);
       return { previousBoard: null, data };
     },
-    onSettled: () => {
+    onSuccess: () => {
       setToastState({
         open: true,
         type: ToastStateEnum.SUCCESS,

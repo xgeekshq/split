@@ -3,6 +3,7 @@ import { Document, ObjectId, SchemaTypes } from 'mongoose';
 import * as leanVirtualsPlugin from 'mongoose-lean-virtuals';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import BaseModel from 'src/libs/models/base.model';
+import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Team from 'src/modules/teams/entities/team.schema';
 import User from 'src/modules/users/entities/user.schema';
 import Column, { ColumnSchema } from '../../columns/entities/column.schema';
@@ -84,6 +85,9 @@ export default class Board extends BaseModel {
 
 	@Prop({ type: String })
 	createdAt: string;
+
+	updatedAt?: string;
+	users?: BoardUserDto[];
 }
 
 export const BoardSchema = SchemaFactory.createForClass(Board);
