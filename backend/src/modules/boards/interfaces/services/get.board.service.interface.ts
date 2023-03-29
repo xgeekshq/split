@@ -3,19 +3,25 @@ import Board from '../../entities/board.schema';
 import { BoardsAndPage } from '../boards-page.interface';
 import UserDto from 'src/modules/users/dto/user.dto';
 import BoardUser from '../../../boardUsers/entities/board.user.schema';
+import { QueryType } from '../findQuery';
+import { GetBoardsPaginatedPresenter } from '../../applications/get-boards-for-dashboard.use-case';
 
 export interface GetBoardServiceInterface {
-	getUserBoardsOfLast3Months(
+	getBoards(allBoards: boolean, query: QueryType, page, size): Promise<GetBoardsPaginatedPresenter>;
+
+	getSuperAdminBoards(
 		userId: string,
 		page?: number,
 		size?: number
-	): Promise<BoardsAndPage | null>;
+	): Promise<GetBoardsPaginatedPresenter>;
 
-	getSuperAdminBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
+	getUsersBoards(
+		userId: string,
+		page?: number,
+		size?: number
+	): Promise<GetBoardsPaginatedPresenter>;
 
-	getUsersBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
-
-	getTeamBoards(teamId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
+	getTeamBoards(teamId: string, page?: number, size?: number): Promise<GetBoardsPaginatedPresenter>;
 
 	getPersonalUserBoards(
 		userId: string,

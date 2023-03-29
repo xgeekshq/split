@@ -57,21 +57,6 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		};
 	}
 
-	async getUserBoardsOfLast3Months(userId: string, page: number, size?: number) {
-		const { boardIds, teamIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
-
-		const now = new Date();
-		const last3Months = new Date().setMonth(now.getMonth() - 3);
-		const query = {
-			$and: [
-				{ isSubBoard: false, updatedAt: { $gte: last3Months } },
-				{ $or: [{ _id: { $in: boardIds } }, { team: { $in: teamIds } }] }
-			]
-		};
-
-		return this.getBoards(false, query, page, size);
-	}
-
 	async getSuperAdminBoards(userId: string, page: number, size?: number) {
 		const { boardIds } = await this.getAllBoardIdsAndTeamIdsOfUser(userId);
 
@@ -169,9 +154,7 @@ export default class GetBoardService implements GetBoardServiceInterface {
 		return board.isPublic;
 	}
 
-	/* --------------- HELPERS --------------- */
-
-	private async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
+	async getBoards(allBoards: boolean, query: QueryType, page = 0, size = 10) {
 		const count = await this.boardRepository.getCountPage(query);
 
 		const hasNextPage = page + 1 < Math.ceil(count / (allBoards ? count : size));
@@ -180,6 +163,8 @@ export default class GetBoardService implements GetBoardServiceInterface {
 
 		return { boards: boards ?? [], hasNextPage, page };
 	}
+
+	/* --------------- HELPERS --------------- */
 
 	private async createBoardUserAndSendAccessToken(
 		board: string,

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
-import { BoardsAndPage } from '../interfaces/boards-page.interface';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
 import UserDto from 'src/modules/users/dto/user.dto';
@@ -12,13 +11,13 @@ export class GetBoardApplication implements GetBoardApplicationInterface {
 		private getBoardService: GetBoardServiceInterface
 	) {}
 
-	getUserBoardsOfLast3Months(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<BoardsAndPage | null> {
-		return this.getBoardService.getUserBoardsOfLast3Months(userId, page, size);
-	}
+	// getUserBoardsOfLast3Months(
+	// 	userId: string,
+	// 	page?: number,
+	// 	size?: number
+	// ): Promise<BoardsAndPage | null> {
+	// 	return this.getBoardService.getUserBoardsOfLast3Months(userId, page, size);
+	// }
 
 	getAllBoards(
 		teamId?: string,

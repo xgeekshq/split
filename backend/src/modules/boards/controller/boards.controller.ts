@@ -58,6 +58,8 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
+import { GetBoardsForDashboardDto } from '../applications/get-boards-for-dashboard.use-case';
+import { BoardsAndPage } from '../interfaces/boards-page.interface';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -69,6 +71,8 @@ export default class BoardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateBoardApplication)
 		private createBoardApp: CreateBoardApplicationInterface,
+		@Inject(TYPES.applications.GetBoardsForDashboardUseCase)
+		private getBoardsForDashboardUseCase: UseCase<GetBoardsForDashboardDto, BoardsAndPage | null>,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
 		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
 		@Inject(TYPES.applications.GetBoardApplication)
@@ -154,7 +158,7 @@ export default class BoardsController {
 	})
 	@Get('/dashboard')
 	getDashboardBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
-		return this.getBoardApp.getUserBoardsOfLast3Months(request.user._id, page, size);
+		return this.getBoardsForDashboardUseCase.execute({ userId: request.user._id, page, size });
 	}
 
 	@ApiOperation({ summary: 'Retrieve all boards from database' })

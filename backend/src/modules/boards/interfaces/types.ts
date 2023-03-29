@@ -16,7 +16,8 @@ export const TYPES = {
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
 		DeleteBoardApplication: 'DeleteBoardApplication',
 		UpdateBoardApplication: 'UpdateBoardApplication',
-		GetBoardApplication: 'GetBoardApplication'
+		GetBoardApplication: 'GetBoardApplication',
+		GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

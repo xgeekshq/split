@@ -13,6 +13,10 @@ import { DeleteBoardApplicationInterface } from '../interfaces/applications/dele
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
+import {
+	GetBoardsForDashboardDto,
+	GetBoardsPaginatedPresenter
+} from '../applications/get-boards-for-dashboard.use-case';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -26,6 +30,10 @@ describe('BoardsController', () => {
 				{
 					provide: Boards.TYPES.applications.CreateBoardApplication,
 					useValue: createMock<CreateBoardApplicationInterface>()
+				},
+				{
+					provide: Boards.TYPES.applications.GetBoardsForDashboardUseCase,
+					useValue: createMock<UseCase<GetBoardsForDashboardDto, GetBoardsPaginatedPresenter>>()
 				},
 				{
 					provide: Boards.TYPES.applications.DuplicateBoardUseCase,
