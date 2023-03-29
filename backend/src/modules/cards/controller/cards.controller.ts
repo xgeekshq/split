@@ -45,13 +45,11 @@ import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
 import { DeleteCardApplicationInterface } from '../interfaces/applications/delete.card.application.interface';
-import { MergeCardApplicationInterface } from '../interfaces/applications/merge.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
-
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -67,7 +65,7 @@ export default class CardsController {
 		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
 		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
-    @Inject(TYPES.applications.MergeCardUseCase)
+		@Inject(TYPES.applications.MergeCardUseCase)
 		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		private socketService: SocketGateway
 	) {}
