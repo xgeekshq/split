@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamServiceInterface } from '../interfaces/services/delete.team.service.interface';
 import { TYPES } from '../interfaces/types';
@@ -24,16 +24,8 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		await this.deleteTeamUserService.startTransaction();
 
 		try {
-			try {
-				await this.deleteTeam(teamId, true);
-				await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
+			await this.deleteTeam_TeamUsers_Boards(teamId);
 
-				await this.deleteBoardService.deleteBoardsByTeamId(teamId);
-			} catch (e) {
-				await this.teamRepository.abortTransaction();
-				await this.deleteTeamUserService.abortTransaction();
-				throw new BadRequestException(DELETE_FAILED);
-			}
 			await this.teamRepository.commitTransaction();
 			await this.deleteTeamUserService.commitTransaction();
 
@@ -46,6 +38,20 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		}
 	}
 
+	private async deleteTeam_TeamUsers_Boards(teamId: string) {
+		try {
+			await this.deleteTeam(teamId, true);
+			const a = await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);
+			console.log(a);
+
+			await this.deleteBoardService.deleteBoardsByTeamId(teamId);
+		} catch (e) {
+			await this.teamRepository.abortTransaction();
+			await this.deleteTeamUserService.abortTransaction();
+			throw new BadRequestException(DELETE_FAILED);
+		}
+	}
+
 	private async deleteTeam(teamId: string, withSession: boolean) {
 		const result = await this.teamRepository.findOneAndRemoveByField(
 			{
@@ -54,6 +60,6 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 			withSession
 		);
 
-		if (!result) throw new NotFoundException(DELETE_FAILED);
+		if (!result) throw new BadRequestException(DELETE_FAILED);
 	}
 }

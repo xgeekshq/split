@@ -46,7 +46,7 @@ const boards = BoardFactory.createMany(5, [
 	{ team: team2._id }
 ]);
 
-describe('CreateTeamService', () => {
+describe('GetTeamService', () => {
 	let teamService: GetTeamServiceInterface;
 	let teamRepositoryMock: DeepMocked<TeamRepositoryInterface>;
 	let getTeamUserServiceMock: DeepMocked<GetTeamUserServiceInterface>;
@@ -91,14 +91,14 @@ describe('CreateTeamService', () => {
 	});
 
 	describe('countAllTeams', () => {
-		it('should reaturn the number of existing teams', async () => {
+		it('should return the number of existing teams', async () => {
 			teamRepositoryMock.countDocuments.mockResolvedValue(teams.length);
 			await expect(teamService.countAllTeams()).resolves.toEqual(teams.length);
 		});
 	});
 
 	describe('getTeam', () => {
-		it('should reaturn team with users sorted by name', async () => {
+		it('should return team with users sorted by name', async () => {
 			teamRepositoryMock.getTeam.mockResolvedValue(team1);
 
 			team1.users.sort((a, b) => {

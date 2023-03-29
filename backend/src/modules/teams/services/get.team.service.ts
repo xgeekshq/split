@@ -81,8 +81,6 @@ export default class GetTeamService implements GetTeamServiceInterface {
 		const allTeams = await this.teamRepository.getAllTeams();
 		const teamUsers = await this.getTeamUserService.getAllTeamsOfUser(userId);
 
-		if (teamUsers.length === 0) return allTeams.map(({ _id, name }) => ({ _id, name }));
-
 		//ID's of the teams the user IS member
 		const teamsIds = teamUsers.map((team) => team.toString());
 

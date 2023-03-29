@@ -1,3 +1,4 @@
+import { DeleteResult } from 'mongodb';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
@@ -36,12 +37,15 @@ export default class DeleteTeamUserService implements DeleteTeamUserServiceInter
 		return deletedCount;
 	}
 
-	async deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number> {
-		const deletedCount = await this.teamUserRepository.deleteTeamUsersOfTeam(teamId, withSession);
+	async deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<boolean> {
+		const { acknowledged } = await this.teamUserRepository.deleteTeamUsersOfTeam(
+			teamId,
+			withSession
+		);
 
-		if (deletedCount <= 0) throw new BadRequestException(DELETE_FAILED);
+		if (!acknowledged) throw new BadRequestException(DELETE_FAILED);
 
-		return deletedCount;
+		return acknowledged;
 	}
 
 	startTransaction(): Promise<void> {
