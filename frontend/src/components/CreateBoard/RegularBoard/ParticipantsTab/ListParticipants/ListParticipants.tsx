@@ -23,8 +23,9 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
   const setToastState = useSetRecoilState(toastState);
 
   const saveParticipants = (checkedUserList: UserList[]) => {
-    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const checkedUsersListToBeSorted = [...checkedUserList];
+    const selectedUsers = checkedUserList.filter((user) => user.isChecked);
+    const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
 
     setUsersList(
       checkedUsersListToBeSorted.sort((a, b) => Number(b.isChecked) - Number(a.isChecked)),
@@ -42,7 +43,9 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
             },
       );
 
-    const newBoardUsers = [...createBoardData.users, ...addedUsers];
+    const newBoardUsers = [...createBoardData.users, ...addedUsers].filter(
+      (boardUser) => !unselectedUsers.some((user) => boardUser?.user._id === user._id),
+    );
 
     // Sort by Name
     newBoardUsers.sort((a, b) => {

@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { MouseEvent, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/ParticipantCard';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -10,12 +10,14 @@ import { createBoardDataState } from '@/store/createBoard/atoms/create-board.ato
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 
+import { usersListState } from '@/store/team/atom/team.atom';
 import ListParticipants from '../ListParticipants/ListParticipants';
 
 const BoardParticipantsList = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
+  const setUsersList = useSetRecoilState(usersListState);
 
   const handleOpen = (event: MouseEvent) => {
     event.preventDefault();
@@ -27,6 +29,17 @@ const BoardParticipantsList = () => {
       ...prev,
       users: prev.users.filter((user) => user.user._id !== userId),
     }));
+
+    setUsersList((prev) =>
+      prev.map((user) => {
+        if (user._id !== userId) return user;
+
+        return {
+          ...user,
+          isChecked: false,
+        };
+      }),
+    );
   };
 
   const updateIsResponsibleStatus = (checked: boolean, participant: BoardUser) => {
