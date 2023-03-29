@@ -1,5 +1,4 @@
 import { DeleteTeamServiceInterface } from './../interfaces/services/delete.team.service.interface';
-import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import User from 'src/modules/users/entities/user.schema';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
@@ -95,7 +94,7 @@ describe('DeleteTeamService', () => {
 		});
 
 		it('should throw BadRequest when boards not deleted', async () => {
-			deleteTeamUserServiceMock.deleteTeamUsersOfTeam.mockRejectedValue(BadRequestException);
+			deleteBoardServiceMock.deleteBoardsByTeamId.mockRejectedValue(BadRequestException);
 
 			await expect(teamService.delete(team1._id)).rejects.toThrowError(BadRequestException);
 		});
