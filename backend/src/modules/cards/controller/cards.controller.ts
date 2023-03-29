@@ -51,7 +51,6 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 
-
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
 @UseGuards(JwtAuthenticationGuard)
