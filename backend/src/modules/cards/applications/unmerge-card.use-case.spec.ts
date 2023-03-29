@@ -88,11 +88,13 @@ describe('UnmergeCardUseCase', () => {
 			unmergeCardDto.draggedCardId
 		);
 	});
+
 	it('should throw badRequest if getCardItemFromGroup fails', async () => {
 		cardServiceMock.getCardItemFromGroup.mockResolvedValueOnce(null);
 		await expect(useCase.execute(unmergeCardDto)).rejects.toThrow(BadRequestException);
 		await expect(cardRepositoryMock.endSession).toHaveBeenCalledTimes(1);
 	});
+
 	it('should call pullItem ', async () => {
 		await useCase.execute(unmergeCardDto);
 		expect(cardRepositoryMock.pullItem).toHaveBeenNthCalledWith(
@@ -102,6 +104,7 @@ describe('UnmergeCardUseCase', () => {
 			true
 		);
 	});
+
 	it('should throw badRequest if pullItem fails', async () => {
 		updateResultMock.modifiedCount = 2;
 		cardRepositoryMock.pullItem.mockResolvedValueOnce(updateResultMock);
