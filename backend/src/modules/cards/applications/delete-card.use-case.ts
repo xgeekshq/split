@@ -6,9 +6,12 @@ import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
-import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
-import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_VOTE_FAILED } from 'src/libs/exceptions/messages';
+import User from 'src/modules/users/entities/user.schema';
+import { ObjectId } from 'mongoose';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 
 @Injectable()
 export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
@@ -18,23 +21,35 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 		@Inject(Votes.TYPES.services.DeleteVoteService)
 		private deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
-		private readonly cardRepository: CardRepositoryInterface
+		private readonly cardRepository: CardRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		private updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	async execute(deleteCardUseCaseDto: DeleteCardUseCaseDto) {
 		const { boardId, cardId } = deleteCardUseCaseDto;
 		await this.cardRepository.startTransaction();
+		await this.updateBoardUserService.startTransaction();
 		try {
-			await this.deletedVotesFromCard(boardId, cardId);
-			const result = await this.cardRepository.updateCardsFromBoard(boardId, cardId, true);
+			try {
+				await this.deletedVotesFromCard(boardId, cardId);
 
-			if (result.modifiedCount != 1) throw new UpdateFailedException();
+				const result = await this.cardRepository.updateCardsFromBoard(boardId, cardId, true);
+
+				if (result.modifiedCount != 1) throw new Error('updateCardsFromBoard failed');
+			} catch (e) {
+				await this.cardRepository.abortTransaction();
+				await this.updateBoardUserService.abortTransaction();
+				throw new Error(e.message);
+			}
+
 			await this.cardRepository.commitTransaction();
+			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			await this.cardRepository.abortTransaction();
-			throw new DeleteFailedException(DELETE_VOTE_FAILED);
+			throw new DeleteFailedException(e.message ? e.message : DELETE_VOTE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
+			await this.updateBoardUserService.endSession();
 		}
 
 		return null;
@@ -42,34 +57,48 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 	private async deletedVotesFromCard(boardId: string, cardId: string) {
 		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
+		let votesByUsers;
 
 		if (!getCard) {
-			throw Error(UPDATE_FAILED);
+			throw Error('get failed');
 		}
 
 		if (getCard.votes?.length) {
-			const promises = getCard.votes.map((voteUserId) => {
-				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
-			});
-			const results = await Promise.all(promises);
-
-			if (!results) {
-				throw new DeleteFailedException(DELETE_VOTE_FAILED);
-			}
+			votesByUsers = this.getVotesByUser(getCard.votes);
 		}
 
-		if (Array.isArray(getCard.items)) {
-			const promises = [];
-			getCard.items.forEach(async (current) => {
-				current.votes.forEach(async (currentVote) => {
-					promises.push(this.deleteVoteService.decrementVoteUser(boardId, currentVote));
+		if (getCard.items[0].votes) {
+			votesByUsers = this.getVotesByUser(getCard.items[0].votes);
+		}
+
+		if (votesByUsers) {
+			try {
+				const promises = Array.from(votesByUsers).map(async ([userId, votesCount]) => {
+					return await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount, true);
 				});
-			});
-			const results = await Promise.all(promises);
 
-			if (!results) {
-				throw new DeleteFailedException(DELETE_VOTE_FAILED);
+				const results = await Promise.all(promises);
+
+				if (!results) {
+					throw new Error('decremento de votos falhou');
+				}
+			} catch (e) {
+				throw new Error(e.message);
 			}
 		}
+	}
+
+	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
+		const votesByUser = new Map<string, number>();
+		votes.forEach((userId) => {
+			if (!votesByUser.has(userId.toString())) {
+				votesByUser.set(userId.toString(), 1);
+			} else {
+				const count = votesByUser.get(userId.toString());
+				votesByUser.set(userId.toString(), count + 1);
+			}
+		});
+
+		return votesByUser;
 	}
 }

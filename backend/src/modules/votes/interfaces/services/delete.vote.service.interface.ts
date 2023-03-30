@@ -16,5 +16,10 @@ export interface DeleteVoteServiceInterface {
 		retryCount?: number
 	): Promise<void>;
 
-	decrementVoteUser(boardId: string, userId: string, count?: number | undefined): Promise<void>;
+	decrementVoteUser(
+		boardId: string,
+		userId: string,
+		count?: number | undefined,
+		withSession?: boolean
+	): Promise<void>;
 }
