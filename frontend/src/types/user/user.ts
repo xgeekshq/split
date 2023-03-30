@@ -21,7 +21,6 @@ export interface User {
 
 export interface UseUserType {
   loginAzure: () => Promise<void>;
-  resetToken: UseMutationResult<ResetTokenResponse, AxiosError, EmailUser>;
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;

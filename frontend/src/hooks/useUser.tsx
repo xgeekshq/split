@@ -2,15 +2,13 @@ import { AxiosError } from 'axios';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
-import { resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { resetUserPassword } from '@/api/authService';
 import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
 import {
   DeleteUser,
-  EmailUser,
   InfiniteUsersWithTeams,
   NewPassword,
   ResetPasswordResponse,
-  ResetTokenResponse,
   UseUserType,
 } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
@@ -21,14 +19,6 @@ import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
   const { setToastState, queryClient } = useUserUtils();
-
-  const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
-    (emailUser: EmailUser) => resetTokenEmail(emailUser),
-    {
-      mutationKey: ['forgotPassword'],
-      onSuccess: async (response: ResetTokenResponse) => response.message,
-    },
-  );
 
   const resetPassword = useMutation<ResetPasswordResponse, AxiosError, NewPassword>(
     (data: NewPassword) => resetUserPassword(data),
@@ -106,7 +96,6 @@ const useUser = (): UseUserType => {
 
   return {
     loginAzure,
-    resetToken,
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
