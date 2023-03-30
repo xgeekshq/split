@@ -3,7 +3,6 @@ import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
 import { Token } from '../token';
-import { CreateGuestUser } from './create-login.user';
 
 export interface User {
   _id: string;
@@ -26,7 +25,6 @@ export interface UseUserType {
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
-  registerGuestUser: UseMutationResult<GuestUser, unknown, CreateGuestUser, unknown>;
   loginGuestUser: UseMutationResult<GuestUser, unknown, GuestUser, unknown>;
 }
 

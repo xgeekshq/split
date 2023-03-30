@@ -3,7 +3,7 @@ import { setCookie } from 'cookies-next';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
-import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { loginGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
 import {
   DeleteUser,
@@ -22,21 +22,7 @@ import { InfiniteData, useMutation } from '@tanstack/react-query';
 import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
-  const { setToastState, queryClient, router } = useUserUtils();
-
-  const registerGuestUser = useMutation(registerGuest, {
-    onSuccess: (data, variables) => {
-      setCookie(GUEST_USER_COOKIE, data);
-      router.push({ pathname: `/boards/[boardId]`, query: { boardId: variables.board } });
-    },
-    onError: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Error login guest user',
-      });
-    },
-  });
+  const { setToastState, queryClient } = useUserUtils();
 
   const loginGuestUser = useMutation(loginGuest, {
     onSuccess: (data) => {
@@ -139,7 +125,6 @@ const useUser = (): UseUserType => {
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
-    registerGuestUser,
     loginGuestUser,
   };
 };
