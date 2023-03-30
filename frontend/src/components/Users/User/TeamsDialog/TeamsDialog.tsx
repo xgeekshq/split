@@ -7,14 +7,14 @@ import Checkbox from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbo
 import { useRouter } from 'next/router';
 
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
-import useTeam from '@/hooks/useTeam';
 import { TeamChecked } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
 import SearchInput from '@/components/Primitives/Inputs/SearchInput/SearchInput';
 import Separator from '@/components/Primitives/Separator/Separator';
+import useUpdateUserTeams from '@/hooks/teams/useUpdateUserTeams';
 
-type Props = {
+type TeamsDialogProps = {
   teamsList: TeamChecked[];
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -24,7 +24,7 @@ type Props = {
   joinedAt: string;
 };
 
-const ListTeams = ({
+const TeamsDialog = ({
   isOpen,
   setIsOpen,
   title,
@@ -32,21 +32,15 @@ const ListTeams = ({
   providerAccountCreatedAt,
   joinedAt,
   teamsList,
-}: Props) => {
+}: TeamsDialogProps) => {
   const [searchTeam, setSearchTeam] = useState<string>('');
-
-  const {
-    updateAddTeamsToUser: { mutate },
-  } = useTeam();
 
   const router = useRouter();
   const { userId } = router.query;
 
   const [teamsUserIsNotMember, setTeamsUserIsNotMember] = useState<TeamChecked[]>(teamsList);
 
-  const {
-    fetchTeamsUserIsNotMember: { refetch },
-  } = useTeam({ autoFetchTeamsUserIsNotMember: true });
+  const { mutate } = useUpdateUserTeams(userId! as string);
 
   const handleClose = () => {
     setSearchTeam('');
@@ -54,7 +48,7 @@ const ListTeams = ({
   };
 
   const handleChecked = (id: string) => {
-    const updateTeamsUserIsNotMember = teamsUserIsNotMember.map((team) =>
+    const updateTeamsUserIsNotMember: TeamChecked[] = teamsUserIsNotMember.map((team) =>
       team._id === id ? { ...team, isChecked: !team.isChecked } : team,
     );
 
@@ -78,13 +72,12 @@ const ListTeams = ({
 
     if (!isEmpty(teamUsers)) {
       mutate(teamUsers);
-      refetch();
     }
 
     setIsOpen(false);
   };
 
-  // filter
+  // Filter
   const filteredTeams = useMemo(() => {
     const input = searchTeam.toLowerCase().trim();
     return input
@@ -148,20 +141,13 @@ const ListTeams = ({
           ))}
         </Flex>
       </Flex>
-      <Flex
-        justify="end"
-        align="center"
-        css={{ padding: '$32', borderTop: '1px solid $colors$primary100' }}
-      >
-        <Dialog.Footer
-          handleAffirmative={handleAddTeams}
-          handleClose={handleClose}
-          affirmativeLabel="Add"
-          showSeparator={false}
-        />
-      </Flex>
+      <Dialog.Footer
+        handleAffirmative={handleAddTeams}
+        handleClose={handleClose}
+        affirmativeLabel="Add"
+      />
     </Dialog>
   );
 };
 
-export { ListTeams };
+export default TeamsDialog;

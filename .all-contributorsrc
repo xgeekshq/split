@@ -212,6 +212,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "juniorboos",
+      "name": "Milton Boos Junior",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61988699?v=4",
+      "profile": "http://juniorboos.github.io",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,

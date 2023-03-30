@@ -62,8 +62,4 @@ export default class UpdateCardService implements UpdateCardServiceInterface {
 	updateCardGroupText(boardId: string, cardId: string, userId: string, text: string) {
 		return this.cardRepository.updateCardGroupText(boardId, cardId, userId, text);
 	}
-
-	pullCardItem(boardId: string, itemId: string, session?: boolean) {
-		return this.cardRepository.pullItem(boardId, itemId, session);
-	}
 }

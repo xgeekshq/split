@@ -1,33 +1,26 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
 
-import { getDashboardHeaderInfo } from '@/api/authService';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useTeam from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { useRecoilState } from 'recoil';
-import { teamsListState } from '@/store/team/atom/team.atom';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
+import ScrollableContent from '@/components/Primitives/Layout/ScrollableContent/ScrollableContent';
+import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import useTeams from '@/hooks/teams/useTeams';
 
 const Teams = () => {
-  const [teamsList, setTeamsList] = useRecoilState(teamsListState);
-
-  const {
-    fetchUserBasedTeams: { data, isFetching },
-  } = useTeam();
-
-  useEffect(() => {
-    if (data) setTeamsList(data);
-  }, [data, setTeamsList]);
+  const { isSAdmin } = useCurrentSession();
+  const { data: teamsList, isLoading } = useTeams(isSAdmin);
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -38,18 +31,10 @@ const Teams = () => {
           label: 'Create new team',
         }}
       />
-      <Flex
-        direction="column"
-        css={{
-          height: '100%',
-          position: 'relative',
-          overflowY: 'auto',
-          pr: '$8',
-        }}
-      >
+      <ScrollableContent>
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {isFetching ? (
+            {isLoading || !teamsList ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
@@ -58,7 +43,7 @@ const Teams = () => {
             )}
           </QueryError>
         </Suspense>
-      </Flex>
+      </ScrollableContent>
     </Flex>
   );
 };
@@ -70,16 +55,16 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
-
-    await queryClient.prefetchQuery(['dashboardInfo'], () => getDashboardHeaderInfo(context));
+    await queryClient.prefetchQuery([TEAMS_KEY], () => {
+      if (isSAdmin) {
+        return getAllTeams(context);
+      }
+      return getUserTeams(userId, context);
+    });
 
     return {
       props: {

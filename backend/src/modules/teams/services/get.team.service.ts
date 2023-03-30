@@ -52,7 +52,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 			};
 		});
 
-		return teamsResult;
+		return teamsResult.sort((a, b) => (a.name < b.name ? -1 : 1));
 	}
 
 	async getAllTeams() {

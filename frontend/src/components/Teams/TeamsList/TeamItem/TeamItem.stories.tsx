@@ -39,7 +39,7 @@ const Template: ComponentStory<typeof TeamItem> = ({ team }) => {
     createTeamUser(user, team);
   }
 
-  return <TeamItem team={team} />;
+  return <TeamItem team={team} userId={user._id} isSAdmin={user.isSAdmin} />;
 };
 
 export const Default = Template.bind({});

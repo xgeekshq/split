@@ -7,21 +7,20 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useTeam from '@/hooks/useTeam';
+import { TEAMS_KEY } from '@/hooks/teams';
 import { teamsListState } from '@/store/team/atom/team.atom';
 import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
+import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useTeams from '@/hooks/teams/useTeams';
 
 const Boards = () => {
   const { data: session } = useSession({ required: true });
   const setTeamsList = useSetRecoilState(teamsListState);
 
-  const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
+  const { data } = useTeams(session?.user.isSAdmin ?? false);
 
   useEffect(() => {
     if (data) setTeamsList(data);
@@ -58,18 +57,20 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
+    await queryClient.prefetchQuery([TEAMS_KEY], () => {
+      if (isSAdmin) {
+        return getAllTeams(context);
+      }
+      return getUserTeams(userId, context);
+    });
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },
