@@ -33,7 +33,7 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
   const isTeamPage = pathname.includes('teams');
   const queryUserId = (!isTeamPage && query.userId ? query.userId : userId) as string;
 
-  const { mutate: deleteTeam } = useDeleteTeam();
+  const { mutate: deleteTeam } = useDeleteTeam(teamId);
   const { mutate: updateUser } = useUpdateTeamUser(teamId, queryUserId);
   const { mutate: deleteTeamUser } = useDeleteTeamUser(queryUserId);
 
@@ -91,7 +91,7 @@ const TeamItem = React.memo(({ team, userId, isSAdmin }: TeamItemProps) => {
     if (isTeamPage) {
       deleteTeam(teamId);
     } else {
-      deleteTeamUser(userFound._id!);
+      deleteTeamUser(userFound);
     }
   };
 

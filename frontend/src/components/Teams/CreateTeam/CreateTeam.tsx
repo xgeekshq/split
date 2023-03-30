@@ -28,7 +28,7 @@ const CreateTeam = () => {
   const { userId } = useCurrentSession();
   const { back, push } = useRouter();
 
-  const { mutateAsync: createTeam, status } = useCreateTeam();
+  const { mutate: createTeam, status } = useCreateTeam();
 
   const [disableButtons, setDisableButtons] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -53,15 +53,14 @@ const CreateTeam = () => {
     setUsersList(updateCheckedUser);
   }, [userId, setUsersList, usersList]);
 
-  const saveTeam = async (title: string) => {
+  const saveTeam = (title: string) => {
     const membersListToSubmit: CreateTeamUser[] = createTeamMembers.map((member) => ({
       ...member,
       user: member.user._id,
     }));
 
-    await createTeam({ name: title, users: membersListToSubmit });
+    createTeam({ name: title, users: membersListToSubmit });
     resetListUsersState();
-    push(ROUTES.Teams);
   };
 
   const handleBack = useCallback(() => {
@@ -78,6 +77,10 @@ const CreateTeam = () => {
   useEffect(() => {
     if (status === 'error') {
       setDisableButtons(false);
+    }
+
+    if (status === 'success') {
+      push(ROUTES.Teams);
     }
   }, [status]);
 

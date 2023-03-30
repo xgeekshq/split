@@ -14,13 +14,12 @@ const useDeleteTeamUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(deleteTeamUser, {
-    onSuccess: async (res) => {
-      const teamId = res.team;
-
+    onMutate: ({ team: teamId }) => {
       queryClient.setQueryData([TEAMS_KEY, 'user', userId], (oldTeams: Team[] | undefined) => {
         if (!oldTeams) return oldTeams;
 
         const removedTeam = oldTeams.find((team) => team.id === teamId);
+
         queryClient.setQueryData(
           [TEAMS_KEY, 'not', 'user', userId],
           (oldNotTeams: TeamChecked[] | undefined) => {
@@ -37,7 +36,8 @@ const useDeleteTeamUser = (userId: string) => {
 
         return oldTeams.filter((team) => team.id !== teamId);
       });
-
+    },
+    onSuccess: () => {
       setToastState({
         open: true,
         content: 'The user was successfully removed from the team.',

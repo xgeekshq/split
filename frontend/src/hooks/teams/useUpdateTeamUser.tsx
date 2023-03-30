@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { updateTeamUser } from '@/api/teamService';
-import { TeamUser, TeamUserUpdate } from '@/types/team/team.user';
+import { TeamUser } from '@/types/team/team.user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { Team } from '@/types/team/team';
 
@@ -15,9 +15,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(updateTeamUser, {
-    onSuccess: async (res: TeamUserUpdate) => {
-      const { role, canBeResponsible, isNewJoiner, user } = res;
-
+    onMutate: ({ role, canBeResponsible, isNewJoiner, user }) => {
       const updateUserInTeam = (teamUser: TeamUser, id: string) => {
         if (teamUser.user._id !== id) return teamUser;
         return {
@@ -61,7 +59,8 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
           };
         });
       }
-
+    },
+    onSuccess: () => {
       setToastState({
         open: true,
         content: 'The team user was successfully updated.',

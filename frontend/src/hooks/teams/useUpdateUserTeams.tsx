@@ -14,9 +14,8 @@ const useUpdateUserTeams = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(updateAddTeamsToUser, {
-    onSuccess: async (_, variables) => {
-      variables.forEach((team) => {
-        const teamId = team.team;
+    onMutate: (teams) => {
+      teams.forEach(({ team: teamId }) => {
         queryClient.setQueryData(
           [TEAMS_KEY, 'not', 'user', userId],
           (oldTeams: Team[] | undefined) => {
@@ -26,7 +25,9 @@ const useUpdateUserTeams = (userId: string) => {
           },
         );
       });
-      await queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
 
       setToastState({
         open: true,

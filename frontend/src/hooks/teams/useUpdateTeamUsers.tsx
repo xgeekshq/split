@@ -13,14 +13,14 @@ const useUpdateTeamUsers = (teamId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
   return useMutation(updateTeamUsers, {
-    onSuccess: async () => {
+    onSuccess: () => {
       setToastState({
         open: true,
         content: 'Team member/s successfully updated.',
         type: ToastStateEnum.SUCCESS,
       });
     },
-    onError: async () => {
+    onError: () => {
       setToastState({
         open: true,
         content: 'Error while updating the team.',
