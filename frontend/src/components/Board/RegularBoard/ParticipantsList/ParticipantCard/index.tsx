@@ -43,12 +43,11 @@ const ParticipantCard = React.memo<CardBodyProps>(
     return (
       <Flex direction="column">
         <InnerContainer align="center" elevation="1" justify="between">
-          <Flex align="center" gap="8" justify="start" css={{ flex: 2 }}>
+          <Flex align="center" gap={8} justify="start" css={{ flex: 2 }}>
             <Icon
               name="blob-personal"
+              size={32}
               css={{
-                width: '32px',
-                height: '$32',
                 zIndex: 1,
               }}
             />
@@ -58,7 +57,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
           </Flex>
           <Flex css={{ flex: 2 }} justify="between">
             {(isCurrentUserSAdmin || isCurrentUserResponsible) && (
-              <Flex align="center" gap="8" justify="start">
+              <Flex align="center" gap={8} justify="start">
                 <ConfigurationSwitch
                   handleCheckedChange={(checked: boolean) =>
                     updateIsResponsibleStatus(checked, participant)
@@ -95,7 +94,7 @@ const ParticipantCard = React.memo<CardBodyProps>(
               </Flex>
             )}
             {isMemberResponsible && !isCurrentUserResponsible && !isCurrentUserSAdmin && (
-              <Flex align="center" css={{ width: '100%' }} gap="8" justify="end">
+              <Flex align="center" css={{ width: '100%' }} gap={8} justify="end">
                 <Text size="sm" fontWeight="medium">
                   Responsible
                 </Text>

@@ -18,6 +18,7 @@ const LotteryButton = styled(Flex, {
   width: '$24',
   borderRadius: '$round',
   border: '1px solid $colors$primary400',
+  cursor: 'pointer',
   variants: {
     disabled: {
       true: {
