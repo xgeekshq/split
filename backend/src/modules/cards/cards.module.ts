@@ -26,7 +26,7 @@ import CardsController from './controller/cards.controller';
 		updateCardApplication,
 		deleteCardApplication,
 		cardRepository,
-		creacteCardUseCase,
+		createCardUseCase,
 		unmergeCardUseCase,
 		mergeCardUseCase
 	],
