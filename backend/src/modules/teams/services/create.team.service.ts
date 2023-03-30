@@ -1,8 +1,9 @@
+import TeamUserDto from 'src/modules/teamUsers/dto/team.user.dto';
 import { INSERT_FAILED } from 'src/libs/exceptions/messages';
 import { CreateTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/create.team.user.service.interface';
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import isEmpty from 'src/libs/utils/isEmpty';
-import { CreateTeamDto } from '../dto/crate-team.dto';
+import { CreateTeamDto } from '../dto/create-team.dto';
 import { CreateTeamServiceInterface } from '../interfaces/services/create.team.service.interface';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
 import { TYPES } from '../interfaces/types';
@@ -19,10 +20,6 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		private readonly createTeamUserService: CreateTeamUserServiceInterface
 	) {}
 
-	createTeam(name: string) {
-		return this.teamRepository.create({ name });
-	}
-
 	async create(teamData: CreateTeamDto) {
 		const { users, name } = teamData;
 
@@ -36,27 +33,40 @@ export default class CreateTeamService implements CreateTeamServiceInterface {
 		await this.createTeamUserService.startTransaction();
 
 		try {
+			const teamCreated = await this.createTeamAndTeamUsers(name, users);
+
+			await this.teamRepository.commitTransaction();
+			await this.createTeamUserService.commitTransaction();
+
+			return teamCreated;
+		} catch (error) {
+			throw new BadRequestException(INSERT_FAILED);
+		} finally {
+			await this.teamRepository.endSession();
+			await this.createTeamUserService.endSession();
+		}
+	}
+
+	private async createTeamAndTeamUsers(teamName: string, users: TeamUserDto[]) {
+		try {
 			const newTeam = await this.teamRepository.create({
-				name
+				name: teamName
 			});
+
+			if (!newTeam) throw new BadRequestException(INSERT_FAILED);
 
 			let teamUsers: TeamUser[] = [];
 
 			if (!isEmpty(users)) {
 				teamUsers = await this.createTeamUserService.createTeamUsers(users, newTeam._id);
-			}
 
-			await this.teamRepository.commitTransaction();
-			await this.createTeamUserService.commitTransaction();
+				if (teamUsers.length !== users.length) throw new BadRequestException(INSERT_FAILED);
+			}
 
 			return { ...newTeam, users: teamUsers };
 		} catch (error) {
 			await this.teamRepository.abortTransaction();
 			await this.createTeamUserService.abortTransaction();
-		} finally {
-			await this.teamRepository.endSession();
-			await this.createTeamUserService.endSession();
 		}
-		throw new BadRequestException(INSERT_FAILED);
 	}
 }

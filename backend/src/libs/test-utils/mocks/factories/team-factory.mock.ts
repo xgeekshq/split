@@ -9,7 +9,7 @@ const mockTeamData = () => {
 		_id: faker.database.mongodbObjectId(),
 		name: faker.company.companyName(),
 		createdAt: dateCreatedAt,
-		upddatedAt: faker.date.between(dateCreatedAt, Date.now())
+		updatedAt: faker.date.between(dateCreatedAt, Date.now())
 	};
 };
 

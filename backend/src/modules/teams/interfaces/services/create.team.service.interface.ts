@@ -3,6 +3,4 @@ import Team from '../../entities/team.schema';
 
 export interface CreateTeamServiceInterface {
 	create(teamData: TeamDto): Promise<Team>;
-
-	createTeam(name: string): Promise<Team>;
 }

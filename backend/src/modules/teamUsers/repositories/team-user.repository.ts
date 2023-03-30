@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
+import { DeleteResult, ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { MongoGenericRepository } from 'src/libs/repositories/mongo/mongo-generic.repository';
 import User from 'src/modules/users/entities/user.schema';
@@ -135,8 +135,8 @@ export class TeamUserRepository
 		);
 	}
 
-	deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number> {
-		return this.deleteMany(
+	deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<DeleteResult> {
+		return this.deleteManyWithAcknowledged(
 			{
 				team: teamId
 			},
