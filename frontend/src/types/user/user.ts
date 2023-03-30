@@ -25,7 +25,6 @@ export interface UseUserType {
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
-  loginGuestUser: UseMutationResult<GuestUser, unknown, GuestUser, unknown>;
 }
 
 export interface LoginUser {

@@ -1,9 +1,8 @@
 import { AxiosError } from 'axios';
-import { setCookie } from 'cookies-next';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
-import { loginGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
+import { resetTokenEmail, resetUserPassword } from '@/api/authService';
 import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
 import {
   DeleteUser,
@@ -14,7 +13,6 @@ import {
   ResetTokenResponse,
   UseUserType,
 } from '@/types/user/user';
-import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { InfiniteData, useMutation } from '@tanstack/react-query';
@@ -23,19 +21,6 @@ import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
   const { setToastState, queryClient } = useUserUtils();
-
-  const loginGuestUser = useMutation(loginGuest, {
-    onSuccess: (data) => {
-      setCookie(GUEST_USER_COOKIE, data);
-    },
-    onError: () => {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Error login guest user',
-      });
-    },
-  });
 
   const resetToken = useMutation<ResetTokenResponse, AxiosError, EmailUser>(
     (emailUser: EmailUser) => resetTokenEmail(emailUser),
@@ -125,7 +110,6 @@ const useUser = (): UseUserType => {
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
-    loginGuestUser,
   };
 };
 
