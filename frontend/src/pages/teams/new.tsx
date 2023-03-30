@@ -9,17 +9,16 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import QueryError from '@/components/Errors/QueryError';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { Suspense, useEffect } from 'react';
-import useUser from '@/hooks/useUser';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import useCurrentSession from '@/hooks/useCurrentSession';
+import useUsers from '@/hooks/users/useUsers';
+import { USERS_KEY } from '@/hooks/users';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });
 
-  const {
-    fetchUsers: { data: usersData, isLoading },
-  } = useUser();
+  const { data: usersData, isLoading } = useUsers();
 
   const setUsersListState = useSetRecoilState(usersListState);
   const setCreateTeamState = useSetRecoilState(createTeamState);
@@ -66,13 +65,11 @@ const NewTeam: NextPage = () => {
   );
 };
 
-export default NewTeam;
-
 export const getServerSideProps: GetServerSideProps = requireAuthentication(
   async (context: GetServerSidePropsContext) => {
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    await queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context));
 
     return {
       props: {
@@ -81,3 +78,5 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     };
   },
 );
+
+export default NewTeam;

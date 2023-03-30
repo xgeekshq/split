@@ -26,7 +26,6 @@ export interface UseUserType {
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
-  fetchUsers: UseQueryResult<User[], unknown>;
   getUserById: UseQueryResult<User, unknown>;
   fetchUsersWithTeams: UseInfiniteQueryResult<InfiniteUsersWithTeams, unknown>;
   registerGuestUser: UseMutationResult<GuestUser, unknown, CreateGuestUser, unknown>;

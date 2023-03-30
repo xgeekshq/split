@@ -3,6 +3,7 @@ import { GetServerSidePropsContext } from 'next';
 import fetchData from '@/utils/fetchData';
 import { User, UpdateUserIsAdmin, DeleteUser, InfiniteUsersWithTeams } from '../types/user/user';
 
+// #region GET
 export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]> =>
   fetchData(`/users`, { context, serverSide: !!context });
 
@@ -15,6 +16,7 @@ export const getAllUsersWithTeams = (
     context,
     serverSide: !!context,
   });
+// #endregion
 
 export const updateUserIsAdminRequest = (user: UpdateUserIsAdmin): Promise<User> =>
   fetchData(`/users/sadmin/`, { method: 'PUT', data: user });

@@ -6,7 +6,6 @@ import { signIn } from 'next-auth/react';
 import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
 import {
   deleteUserRequest,
-  getAllUsers,
   getAllUsersWithTeams,
   getUser,
   updateUserIsAdminRequest,
@@ -28,7 +27,6 @@ import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
-  autoFetchUsers?: boolean;
   autoFetchGetUser?: boolean;
   autoFetchUsersWithTeams?: boolean;
   options?: {
@@ -37,7 +35,6 @@ interface AutoFetchProps {
 }
 
 const useUser = ({
-  autoFetchUsers = false,
   autoFetchGetUser = false,
   autoFetchUsersWithTeams = false,
   options = {},
@@ -93,18 +90,6 @@ const useUser = ({
       redirect: true,
     });
   };
-
-  const fetchUsers = useQuery(['users'], () => getAllUsers(), {
-    enabled: autoFetchUsers,
-    refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the users',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
 
   const getUserById = useQuery(['userById', userId], () => getUser(userId), {
     enabled: autoFetchGetUser,
@@ -205,7 +190,6 @@ const useUser = ({
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
-    fetchUsers,
     getUserById,
     registerGuestUser,
     loginGuestUser,

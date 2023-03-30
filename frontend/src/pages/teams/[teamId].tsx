@@ -14,13 +14,14 @@ import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { TEAMS_KEY } from '@/hooks/teams';
-import useUser from '@/hooks/useUser';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ROUTES } from '@/utils/routes';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import useTeam from '@/hooks/teams/useTeam';
+import useUsers from '@/hooks/users/useUsers';
+import { USERS_KEY } from '@/hooks/users';
 
 const Team = () => {
   // Session Details
@@ -35,10 +36,7 @@ const Team = () => {
 
   // Hooks
   const { data: teamData, isLoading: loadingTeam } = useTeam(teamId as string);
-
-  const {
-    fetchUsers: { data: usersData, isLoading: loadingUsers },
-  } = useUser();
+  const { data: usersData, isLoading: loadingUsers } = useUsers();
 
   const userFound = teamData?.users.find((member) => member.user?._id === userId);
   const hasPermissions =
@@ -97,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery([TEAMS_KEY, teamId], () => getTeam(teamId, context)),
-    queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+    queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context)),
   ]);
 
   return {
