@@ -6,7 +6,7 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
+import { getAllTeams, getUserTeams } from '@/api/teamService';
 import BoardName from '@/components/CreateBoard/BoardName/BoardName';
 import SettingsTabs from '@/components/CreateBoard/SplitBoard/SettingsTabs/SettingsTabs';
 import QueryError from '@/components/Errors/QueryError';
@@ -19,9 +19,10 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
+import { TEAMS_KEY } from '@/hooks/teams';
+import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
   createBoardDataState,
@@ -68,6 +69,7 @@ const defaultBoard = {
 
 const NewSplitBoard: NextPage = () => {
   const router = useRouter();
+  const { isSAdmin } = useCurrentSession();
   const routerTeam = router.query.team;
   const { session } = useCurrentSession({ required: true });
 
@@ -86,10 +88,8 @@ const NewSplitBoard: NextPage = () => {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
 
-  // Team Hook
-  const {
-    fetchUserBasedTeams: { data: userBasedTeams },
-  } = useTeam();
+  // Team  Hook
+  const { data: userBasedTeams } = useTeams(isSAdmin);
 
   useEffect(() => {
     if (userBasedTeams) {
@@ -303,18 +303,20 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
+    await queryClient.prefetchQuery([TEAMS_KEY], () => {
+      if (isSAdmin) {
+        return getAllTeams(context);
+      }
+      return getUserTeams(userId, context);
+    });
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

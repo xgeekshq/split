@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useTeam from '@/hooks/useTeam';
+import useTeams from '@/hooks/teams/useTeams';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
@@ -19,13 +20,12 @@ type SubTeamsTabProps = {
 };
 
 const SubTeamsTab = React.memo<SubTeamsTabProps>(({ previousTeam }) => {
+  const { isSAdmin } = useCurrentSession();
   const [stakeholders, setStakeholders] = useState<User[]>([]);
   const selectedTeam = useRecoilValue(createBoardTeam);
   const haveError = useRecoilValue(createBoardError);
 
-  const {
-    fetchTeamsOfUser: { data: teams },
-  } = useTeam();
+  const { data: teams } = useTeams(isSAdmin);
 
   useEffect(() => {
     if (selectedTeam) {

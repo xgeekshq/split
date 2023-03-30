@@ -1,4 +1,4 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 
 import QueryError from '@/components/Errors/QueryError';
 import Layout from '@/components/layouts/Layout/Layout';
@@ -8,10 +8,8 @@ import UserHeader from '@/components/Users/User/Header/Header';
 
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getTeamsOfUser, getTeamsUserIsNotMemberRequest } from '@/api/teamService';
-import { useRecoilState } from 'recoil';
-import { teamsListState } from '@/store/team/atom/team.atom';
-import useTeam from '@/hooks/useTeam';
+import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
+import { TEAMS_KEY } from '@/hooks/teams';
 import useUser from '@/hooks/useUser';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
@@ -19,25 +17,20 @@ import { ROUTES } from '@/utils/routes';
 import { getUser } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
+import useUserTeams from '@/hooks/teams/useUserTeams';
 
 const UserDetails = () => {
-  const { replace } = useRouter();
-
-  // Recoil States
-  const [userTeamsList, setUserTeamsList] = useRecoilState(teamsListState);
+  const {
+    replace,
+    query: { userId },
+  } = useRouter();
 
   // Hooks
   const {
     getUserById: { data: userData, isFetching: fetchingUser },
   } = useUser();
 
-  const {
-    fetchTeamsOfSpecificUser: { data: userTeams, isFetching: fetchingTeams },
-  } = useTeam();
-
-  useEffect(() => {
-    if (userTeams) setUserTeamsList(userTeams);
-  }, [userTeams, setUserTeamsList]);
+  const { data: userTeams, isLoading: loadingTeams } = useUserTeams(userId! as string);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -53,12 +46,12 @@ const UserDetails = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {fetchingUser || fetchingTeams ? (
+            {fetchingUser || loadingTeams ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
             ) : (
-              <TeamsList teams={userTeamsList} />
+              <TeamsList teams={userTeams} />
             )}
           </QueryError>
         </Suspense>
@@ -75,9 +68,9 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
-    queryClient.prefetchQuery(['teams', userId], () => getTeamsOfUser(userId, context)),
-    queryClient.prefetchQuery(['teamsUserIsNotMember', userId], () =>
-      getTeamsUserIsNotMemberRequest(userId, context),
+    queryClient.prefetchQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, 'not', 'user', userId], () =>
+      getTeamsWithoutUser(userId, context),
     ),
   ]);
 

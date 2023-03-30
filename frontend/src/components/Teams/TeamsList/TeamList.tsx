@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import isEmpty from '@/utils/isEmpty';
 import EmptyTeams from './EmptyTeams/EmptyTeams';
 
 import TeamItem from './TeamItem/TeamItem';
@@ -11,12 +13,14 @@ export type TeamsListProps = {
 };
 
 const TeamsList = ({ teams }: TeamsListProps) => {
-  if (teams?.length === 0) return <EmptyTeams />;
+  const { userId, isSAdmin } = useCurrentSession();
+
+  if (isEmpty(teams)) return <EmptyTeams />;
 
   return (
     <Flex direction="column" gap="8">
       {teams.map((team: Team) => (
-        <TeamItem key={team.id} team={team} />
+        <TeamItem key={team.id} team={team} userId={userId} isSAdmin={isSAdmin} />
       ))}
     </Flex>
   );
