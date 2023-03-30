@@ -16,7 +16,7 @@ import {
 type InputProps = {
   id: string;
   type: 'text' | 'password' | 'email' | 'number';
-  placeholder: string;
+  placeholder?: string;
   icon?: 'eye' | 'eye-slash' | 'search';
   iconPosition?: 'left' | 'right';
   helperText?: string;
@@ -140,10 +140,13 @@ const Input: React.FC<InputProps> = ({
             }}
             onFocus={onFocusHandler}
             onChange={onChange}
+            {...(placeholder && { css: { pt: '$28', pb: '$8' } })}
           />
-          <PlaceholderText as="label" data-iconposition={iconPosition} htmlFor={id}>
-            {placeholder}
-          </PlaceholderText>
+          {placeholder && (
+            <PlaceholderText as="label" data-iconposition={iconPosition} htmlFor={id}>
+              {placeholder}
+            </PlaceholderText>
+          )}
         </Flex>
       </StyledInputWrapper>
       {(!isHelperEmpty || showCount) && (
