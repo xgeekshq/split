@@ -9,8 +9,7 @@ import {
 	deleteCardService,
 	getCardService,
 	mergeCardUseCase,
-	unmergeCardApplication,
-	unmergeCardService,
+	unmergeCardUseCase,
 	updateCardApplication,
 	updateCardService
 } from './cards.providers';
@@ -24,12 +23,11 @@ import CardsController from './controller/cards.controller';
 		getCardService,
 		deleteCardService,
 		updateCardService,
-		unmergeCardService,
 		updateCardApplication,
 		deleteCardApplication,
-		unmergeCardApplication,
 		cardRepository,
 		creacteCardUseCase,
+		unmergeCardUseCase,
 		mergeCardUseCase
 	],
 	exports: [getCardService, deleteCardService]
