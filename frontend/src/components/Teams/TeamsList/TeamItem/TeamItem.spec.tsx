@@ -7,50 +7,43 @@ import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { libraryMocks } from '@/utils/testing/mocks';
 import TeamItem, { TeamItemProps } from './TeamItem';
 
-const DEFAULT_PROPS = {
-  team: TeamFactory.create(),
-};
-
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
-const render = (props: TeamItemProps = DEFAULT_PROPS, options?: any) =>
-  renderWithProviders(<TeamItem {...props} />, {
-    routerOptions: mockRouter,
-    sessionOptions: {
-      user: options?.user,
+const render = (props: Partial<TeamItemProps> = {}, options?: any) =>
+  renderWithProviders(
+    <TeamItem
+      team={TeamFactory.create()}
+      isSAdmin={options?.user.isSAdmin ?? false}
+      userId={options?.user._id}
+      {...props}
+    />,
+    {
+      routerOptions: mockRouter,
     },
-  });
+  );
 
 describe('Components/Teams/TeamsList/TeamItem', () => {
-  let testProps: TeamItemProps;
   beforeEach(() => {
-    testProps = { ...DEFAULT_PROPS };
     jest.clearAllMocks();
   });
 
   it('should render correctly', () => {
     // Arrange
-    const teamItemProps = { ...testProps };
+    const team = TeamFactory.create();
 
     // Act
-    const { getByText } = render(teamItemProps);
+    const { getByText } = render({ team });
 
     // Assert
-    expect(getByText(teamItemProps.team.name)).toBeInTheDocument();
+    expect(getByText(team.name)).toBeInTheDocument();
   });
 
   it('should render the amount of team boards', () => {
     // Arrange
-    const teamItemProps = {
-      ...testProps,
-      team: {
-        ...testProps.team,
-        boardsCount: 3,
-      },
-    };
+    const team = TeamFactory.create({ boardsCount: 3 });
 
     // Act
-    const { getByText } = render(teamItemProps);
+    const { getByText } = render({ team });
 
     // Assert
     expect(getByText('3 team boards')).toBeInTheDocument();
@@ -58,16 +51,10 @@ describe('Components/Teams/TeamsList/TeamItem', () => {
 
   it('should render no team boards', () => {
     // Arrange
-    const teamItemProps = {
-      ...testProps,
-      team: {
-        ...testProps.team,
-        boardsCount: 0,
-      },
-    };
+    const team = TeamFactory.create({ boardsCount: 0 });
 
     // Act
-    const { getByText } = render(teamItemProps);
+    const { getByText } = render({ team });
 
     // Assert
     expect(getByText('No boards')).toBeInTheDocument();
@@ -76,16 +63,13 @@ describe('Components/Teams/TeamsList/TeamItem', () => {
   it('should render create first board', () => {
     // Arrange
     const teamAdmin = TeamUserFactory.create({ role: TeamUserRoles.ADMIN });
-    const teamItemProps = {
-      team: {
-        ...testProps.team,
-        boardsCount: 0,
-        users: [...testProps.team.users, teamAdmin],
-      },
-    };
+    const team = TeamFactory.create({
+      users: [teamAdmin],
+      boardsCount: 0,
+    });
 
     // Act
-    const { getByText } = render(teamItemProps, { user: teamAdmin.user });
+    const { getByText } = render({ team }, { user: teamAdmin.user });
 
     // Assert
     expect(getByText('Create first board')).toBeInTheDocument();

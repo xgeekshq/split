@@ -5,6 +5,7 @@ export type FooterProps = {
   affirmativeLabel?: string;
   handleAffirmative?: () => void;
   handleClose: () => void;
+  disabled?: boolean;
   buttonRef?: React.RefObject<HTMLButtonElement>;
   showSeparator?: boolean;
 };
@@ -13,6 +14,7 @@ const Footer = (props: FooterProps) => {
   const {
     handleAffirmative,
     handleClose,
+    disabled = false,
     affirmativeLabel,
     buttonRef,
     showSeparator = true,
@@ -32,7 +34,12 @@ const Footer = (props: FooterProps) => {
         Cancel
       </Button>
       {affirmativeLabel && (
-        <Button onClick={handleAffirmative} ref={buttonRef} data-testid="dialogFooterSubmit">
+        <Button
+          onClick={handleAffirmative}
+          ref={buttonRef}
+          data-testid="dialogFooterSubmit"
+          disabled={disabled}
+        >
           {affirmativeLabel}
         </Button>
       )}

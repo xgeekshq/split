@@ -2,13 +2,15 @@ import Breadcrumb from '@/components/Primitives/Breadcrumb/Breadcrumb';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { BreadcrumbType } from '@/types/board/Breadcrumb';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import { TeamChecked } from '@/types/team/team';
 import { User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import Badge from '@/components/Primitives/Badge/Badge';
-import ListTeams from '../ListTeams/ListTeams';
+import useTeamsWithoutUser from '@/hooks/teams/useTeamsWithoutUser';
+import TeamsDialog from '../TeamsDialog/TeamsDialog';
 
 export type UserHeaderProps = {
   user: User;
@@ -20,6 +22,14 @@ const UserHeader = ({ user }: UserHeaderProps) => {
   const handleOpen = () => {
     setIsOpen(true);
   };
+
+  const { data: teamsUserIsNotMember } = useTeamsWithoutUser(user._id);
+
+  const teamCheckedList: TeamChecked[] = useMemo(() => {
+    if (!teamsUserIsNotMember) return [];
+
+    return teamsUserIsNotMember.map((team) => ({ ...team, _id: team._id, isChecked: false }));
+  }, [teamsUserIsNotMember]);
 
   // Set breadcrumbs
   const breadcrumbItems: BreadcrumbType = [
@@ -49,7 +59,15 @@ const UserHeader = ({ user }: UserHeaderProps) => {
               <Icon name="plus" />
               Add user to new team
             </Button>
-            <ListTeams isOpen={isOpen} setIsOpen={setIsOpen} user={user} />
+            <TeamsDialog
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              confirmationLabel="Add new team"
+              title="Teams"
+              providerAccountCreatedAt={user.providerAccountCreatedAt}
+              joinedAt={user.joinedAt}
+              teamsList={teamCheckedList}
+            />
           </>
         </Flex>
       </Flex>
