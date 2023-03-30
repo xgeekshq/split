@@ -1,37 +1,40 @@
-import { Suspense, useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { getSession, useSession } from 'next-auth/react';
-import useTeam from '@/hooks/useTeam';
-import QueryError from '@/components/Errors/QueryError';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { StyledForm } from '@/styles/pages/pages.styles';
-import requireAuthentication from '@/components/HOC/requireAuthentication';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
-import { BoxRowContainer } from '@/components/CreateBoard/SelectBoardType/BoxRowContainer';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import BoardName from '@/components/CreateBoard/BoardName';
+import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { joiResolver } from '@hookform/resolvers/joi';
-import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { toastState } from '@/store/toast/atom/toast.atom';
+
+import { getAllTeams, getUserTeams } from '@/api/teamService';
+import { getAllUsers } from '@/api/userService';
+import BoardName from '@/components/CreateBoard/BoardName/BoardName';
+import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
+import SettingsTabs from '@/components/CreateBoard/RegularBoard/SettingsTabs/SettingsTabs';
+import QueryError from '@/components/Errors/QueryError';
+import requireAuthentication from '@/components/HOC/requireAuthentication';
+import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import { defaultRegularColumns } from '@/helper/board/defaultColumns';
+import { TEAMS_KEY } from '@/hooks/teams';
+import useTeams from '@/hooks/teams/useTeams';
+import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { teamsOfUser, usersListState } from '@/store/team/atom/team.atom';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
-import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
-import { getAllUsers } from '@/api/userService';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
-import useBoard from '@/hooks/useBoard';
-import isEmpty from '@/utils/isEmpty';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { toastState } from '@/store/toast/atom/toast.atom';
+import { StyledForm } from '@/styles/pages/pages.styles';
 import { BoardUserDto } from '@/types/board/board.user';
-import { defaultRegularColumns } from '@/helper/board/defaultColumns';
-import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
-import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
-import CreateFooter from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import { ToastStateEnum } from '@/utils/enums/toast-types';
+import isEmpty from '@/utils/isEmpty';
+import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 
 const defaultBoard = {
   users: [],
@@ -61,7 +64,7 @@ const defaultBoard = {
 
 const NewRegularBoard: NextPage = () => {
   const router = useRouter();
-  const { data: session } = useSession({ required: true });
+  const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,9 +77,7 @@ const NewRegularBoard: NextPage = () => {
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   // Team  Hook
-  const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
+  const { data: userBasedTeams } = useTeams(isSAdmin);
 
   const regularBoardTips = [
     {
@@ -108,31 +109,29 @@ const NewRegularBoard: NextPage = () => {
   });
 
   useEffect(() => {
-    if (data) {
-      const availableTeams = data.filter((team) =>
+    if (userBasedTeams) {
+      const availableTeams = userBasedTeams.filter((team) =>
         team.users?.find(
           (teamUser) =>
-            teamUser.user._id === session?.user.id &&
+            teamUser.user._id === userId &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
         ),
       );
 
-      setTeams(session?.user.isSAdmin ? data : availableTeams);
+      setTeams(isSAdmin ? userBasedTeams : availableTeams);
     }
 
     if (allUsers) {
       const usersWithChecked = allUsers.map((user) => ({
         ...user,
-        isChecked: user._id === session?.user.id,
+        isChecked: user._id === userId,
       }));
 
       setUsersList(usersWithChecked);
     }
-  }, [data, setTeams, allUsers, setUsersList, session]);
+  }, [userBasedTeams, setTeams, allUsers, setUsersList, isSAdmin, userId]);
 
-  /**
-   * Board  Hook
-   */
+  // Board Hook
   const {
     createBoard: { status, mutate },
   } = useBoard({ autoFetchBoard: false });
@@ -155,19 +154,15 @@ const NewRegularBoard: NextPage = () => {
   const resetListUsersState = useCallback(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user._id === userId,
     }));
     setUsersList(updateCheckedUser);
-  }, [session?.user.id, setUsersList, usersList]);
+  }, [userId, setUsersList, usersList]);
 
-  /**
-   * Handle back to boards list page
-   */
+  // Handle back to boards list page
   const handleBack = useCallback(() => {
     setIsLoading(true);
-
     resetListUsersState();
-
     setBackButtonState(true);
     router.back();
   }, [resetListUsersState, router]);
@@ -175,32 +170,32 @@ const NewRegularBoard: NextPage = () => {
   const handleCancelBtn = () => {
     resetListUsersState();
     setIsLoading(true);
-
     router.push(DASHBOARD_ROUTE);
   };
 
-  /**
-   * Save board
-
-   */
   const saveBoard = (title?: string, maxVotes?: number, slackEnable?: boolean) => {
     const users: BoardUserDto[] = [];
     const responsibles: string[] = [];
-
     const responsible = boardState.users.find((user) => user.role === BoardUserRoles.RESPONSIBLE);
 
+    if (!session) return;
+
     if (!isEmpty(responsible)) {
-      responsibles.push(responsible.user);
+      responsibles.push(responsible.user._id);
     }
 
-    if (isEmpty(boardState.users) && session) {
-      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+    if (isEmpty(boardState.users)) {
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
+    } else {
+      boardState.users.forEach((boardUser) => {
+        users.push({ role: boardUser.role, user: boardUser.user._id });
+      });
     }
 
     mutate({
       ...boardState.board,
       columns: defaultRegularColumns,
-      users: isEmpty(boardState.users) ? users : boardState.users,
+      users,
       title: title || defaultBoard.board.title,
       dividedBoards: [],
       maxVotes,
@@ -215,13 +210,13 @@ const NewRegularBoard: NextPage = () => {
   const saveEmptyBoard = () => {
     const users: BoardUserDto[] = [];
     if (session) {
-      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     }
 
     mutate({
       ...boardState.board,
       columns: defaultRegularColumns,
-      users: isEmpty(boardState.users) ? users : boardState.users,
+      users,
       title: defaultBoard.board.title,
       dividedBoards: [],
       maxUsers: boardState.count.maxUsersCount,
@@ -249,7 +244,7 @@ const NewRegularBoard: NextPage = () => {
     };
   }, [router, setToastState, setSelectedTeam, setBoardState, status]);
 
-  if (!session || !data) return null;
+  if (!session || !userBasedTeams) return null;
 
   return (
     <Suspense fallback={<LoadingPage />}>
@@ -298,23 +293,27 @@ const NewRegularBoard: NextPage = () => {
               />
             </>
           ) : (
-            <Flex align="center" justify="center" css={{ height: '100%' }}>
-              <Flex gap={16} direction="column">
-                <BoxRowContainer
-                  iconName="blob-arrow-right"
-                  title="Quick create"
-                  description="Jump the settings and just create a board. All configurations can still be done within the board itself."
-                  handleSelect={saveEmptyBoard}
-                  active
-                />
-                <BoxRowContainer
-                  iconName="blob-settings"
-                  title="Configure board"
-                  description="Select team or participants, configure your board and schedule a date and time."
-                  active
-                  handleSelect={addNewRegularBoard}
-                />
-              </Flex>
+            <Flex
+              gap={16}
+              direction="column"
+              align="center"
+              justify="center"
+              css={{ height: '100%' }}
+            >
+              <CreateBoardBox
+                iconName="blob-arrow-right"
+                title="Quick create"
+                description="Jump the settings and just create a board. All configurations can still be done within the board itself."
+                type="row"
+                onClick={saveEmptyBoard}
+              />
+              <CreateBoardBox
+                iconName="blob-settings"
+                title="Configure board"
+                description="Select team or participants, configure your board and schedule a date and time."
+                type="row"
+                onClick={addNewRegularBoard}
+              />
             </Flex>
           )}
         </Flex>
@@ -328,20 +327,23 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
-
-    await queryClient.prefetchQuery(['users'], () => getAllUsers(context));
+    await Promise.all([
+      queryClient.prefetchQuery([TEAMS_KEY], () => {
+        if (isSAdmin) {
+          return getAllTeams(context);
+        }
+        return getUserTeams(userId, context);
+      }),
+      queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+    ]);
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

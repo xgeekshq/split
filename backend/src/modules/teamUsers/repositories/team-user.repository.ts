@@ -115,7 +115,8 @@ export class TeamUserRepository
 					isNewJoiner: teamData.isNewJoiner,
 					canBeResponsible: teamData.canBeResponsible
 				}
-			}
+			},
+			{ new: true }
 		);
 	}
 

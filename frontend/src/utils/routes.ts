@@ -18,6 +18,8 @@ export const ROUTES = {
   BoardPage: (boardId: string): string => `${BOARDS_ROUTE}/${boardId}`,
   NewBoard: `${BOARDS_ROUTE}/new`,
   NewTeamBoard: (teamId: string) => `${BOARDS_ROUTE}/new?team=${teamId}`,
+  NewRegularBoard: `${BOARDS_ROUTE}/newRegularBoard`,
+  NewSplitBoard: `${BOARDS_ROUTE}/newSplitBoard`,
   Token: RESET_PASSWORD_ROUTE,
   TokenPage: (tokenId: string): string => `${RESET_PASSWORD_ROUTE}/${tokenId}`,
   Teams: TEAMS_ROUTE,

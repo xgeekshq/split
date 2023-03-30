@@ -23,6 +23,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
     const { userId, isSAdmin } = useCurrentSession();
 
     const [searchMember, setSearchMember] = useState<string>('');
+    const [disableUpdate, setDisableUpdate] = useState<boolean>(false);
 
     const [localUsersList, setLocalUsersList] = useState(usersList);
     const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
@@ -96,6 +97,12 @@ const UserListDialog = React.memo<UserListDialogProps>(
 
     useEffect(() => {
       setIsCheckAll(!localUsersList.map((user) => user.isChecked).includes(false));
+
+      if (localUsersList.every((user) => !user.isChecked)) {
+        setDisableUpdate(true);
+      } else {
+        setDisableUpdate(false);
+      }
     }, [localUsersList]);
 
     return (
@@ -155,6 +162,7 @@ const UserListDialog = React.memo<UserListDialogProps>(
           handleAffirmative={handleUpdateUsers}
           handleClose={handleClose}
           affirmativeLabel="Update"
+          disabled={disableUpdate}
         />
       </Dialog>
     );

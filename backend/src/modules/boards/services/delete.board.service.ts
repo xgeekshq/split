@@ -109,6 +109,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 	private archiveBoardsChannels(boardsDeleted: Board[]) {
 		boardsDeleted.forEach(async (board: Board) => {
 			const { slackEnable } = board;
+
 			// if slack is enable for the deleted board
 			if (slackEnable) {
 				// archive board channel

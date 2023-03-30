@@ -11,7 +11,7 @@ import { ListenEvent } from '@/types/events/listen-event.type';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import RegularBoardHeader from './ReagularHeader';
+import RegularBoardHeader from './RegularHeader';
 
 type RegularBoardProps = {
   socketId?: string;

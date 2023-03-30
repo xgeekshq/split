@@ -13,7 +13,6 @@ import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import { ArchiveChannelServiceInterface } from 'src/modules/communication/interfaces/archive-channel.service.interface';
-import Board from '../entities/board.schema';
 
 const boards = BoardFactory.createMany(2, [{ slackEnable: true }, { slackEnable: true }]);
 const board = BoardFactory.create({
