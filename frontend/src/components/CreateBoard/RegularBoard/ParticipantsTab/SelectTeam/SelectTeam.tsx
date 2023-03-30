@@ -1,7 +1,6 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
@@ -15,17 +14,20 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser } from '@/store/team/atom/team.atom';
+import { teamsOfUser, usersListState } from '@/store/team/atom/team.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { UserList } from '@/types/team/userList';
 
 const SelectTeam = () => {
-  const { data: session } = useSession();
+  const { userId } = useCurrentSession();
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
   // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
+  const setUsersList = useSetRecoilState(usersListState);
   const teams = useRecoilValue(teamsOfUser);
   const { setCreateBoardData } = useCreateBoard(selectedTeam);
 
@@ -46,7 +48,7 @@ const SelectTeam = () => {
     }
 
     const users = selectedTeam.users.flatMap((teamUser) => {
-      if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === session?.user.id)
+      if (teamUser.role === TeamUserRoles.STAKEHOLDER || teamUser.user._id === userId)
         return [
           {
             user: teamUser.user,
@@ -68,7 +70,14 @@ const SelectTeam = () => {
       users,
       board: { ...prev.board, team: selectedTeam.id },
     }));
-  }, [selectedTeam, session?.user.id, setCreateBoardData]);
+
+    setUsersList((prev) =>
+      prev.map((user: UserList) => ({
+        ...user,
+        isChecked: selectedTeam.users.some((teamUser) => teamUser.user._id === user._id),
+      })),
+    );
+  }, [selectedTeam, userId, setCreateBoardData]);
 
   const handleTeamChange = (value: string) => {
     const foundTeam = teams.find((team) => team.id === value);
