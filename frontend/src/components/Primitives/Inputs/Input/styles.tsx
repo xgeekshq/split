@@ -145,8 +145,6 @@ const StyledInput = styled('input', {
   outline: 'none',
   width: '100%',
   height: '$56',
-  pt: '$28',
-  pb: '$8',
   '&::-webkit-input-placeholder': {
     color: '$primary300',
   },
