@@ -1,5 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
 import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
@@ -62,7 +63,7 @@ const defaultBoard = {
 
 const NewRegularBoard: NextPage = () => {
   const router = useRouter();
-  const { data: session } = useSession({ required: true });
+  const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -113,23 +114,23 @@ const NewRegularBoard: NextPage = () => {
       const availableTeams = userBasedTeams.filter((team) =>
         team.users?.find(
           (teamUser) =>
-            teamUser.user._id === session?.user.id &&
+            teamUser.user._id === userId &&
             [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
         ),
       );
 
-      setTeams(session?.user.isSAdmin ? userBasedTeams : availableTeams);
+      setTeams(isSAdmin ? userBasedTeams : availableTeams);
     }
 
     if (allUsers) {
       const usersWithChecked = allUsers.map((user) => ({
         ...user,
-        isChecked: user._id === session?.user.id,
+        isChecked: user._id === userId,
       }));
 
       setUsersList(usersWithChecked);
     }
-  }, [userBasedTeams, setTeams, allUsers, setUsersList, session]);
+  }, [userBasedTeams, setTeams, allUsers, setUsersList, isSAdmin, userId]);
 
   // Board Hook
   const {
@@ -154,10 +155,10 @@ const NewRegularBoard: NextPage = () => {
   const resetListUsersState = useCallback(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id,
+      isChecked: user._id === userId,
     }));
     setUsersList(updateCheckedUser);
-  }, [session?.user.id, setUsersList, usersList]);
+  }, [userId, setUsersList, usersList]);
 
   // Handle back to boards list page
   const handleBack = useCallback(() => {
@@ -185,7 +186,7 @@ const NewRegularBoard: NextPage = () => {
     }
 
     if (isEmpty(boardState.users)) {
-      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     } else {
       boardState.users.forEach((boardUser) => {
         users.push({ role: boardUser.role, user: boardUser.user._id });
@@ -210,7 +211,7 @@ const NewRegularBoard: NextPage = () => {
   const saveEmptyBoard = () => {
     const users: BoardUserDto[] = [];
     if (session) {
-      users.push({ role: BoardUserRoles.RESPONSIBLE, user: session?.user.id });
+      users.push({ role: BoardUserRoles.RESPONSIBLE, user: userId });
     }
 
     mutate({

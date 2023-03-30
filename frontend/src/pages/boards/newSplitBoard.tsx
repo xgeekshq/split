@@ -1,5 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Suspense, useCallback, useEffect, useState } from 'react';
@@ -20,6 +20,7 @@ import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultSplitColumns } from '@/helper/board/defaultColumns';
 import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import useTeam from '@/hooks/useTeam';
 import SchemaCreateBoard from '@/schema/schemaCreateBoardForm';
 import {
@@ -68,7 +69,7 @@ const defaultBoard = {
 const NewSplitBoard: NextPage = () => {
   const router = useRouter();
   const routerTeam = router.query.team;
-  const { data: session } = useSession({ required: true });
+  const { session } = useCurrentSession({ required: true });
 
   const [isBackButtonDisable, setBackButtonState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

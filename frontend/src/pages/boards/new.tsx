@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
@@ -10,6 +9,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Text from '@/components/Primitives/Text/Text';
 import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
 import { ROUTES } from '@/utils/routes';
 
@@ -18,7 +18,7 @@ const NewBoard: NextPage = () => {
     back,
     query: { team },
   } = useRouter();
-  const { data: session } = useSession({ required: true });
+  const { session } = useCurrentSession({ required: true });
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
   const {

@@ -5,21 +5,21 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Tab, { TabList } from '@/components/Primitives/Tab/Tab';
 import Text from '@/components/Primitives/Text/Text';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import {
   createBoardDataState,
   createBoardError,
 } from '@/store/createBoard/atoms/create-board.atom';
+import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
+import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
-import { useSession } from 'next-auth/react';
-import { usersListState } from '@/store/team/atom/team.atom';
-import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
 import BoardConfigurations from '../../BoardConfigurations/BoardConfigurations';
+import ParticipantsTab from '../ParticipantsTab/ParticipantsTab';
 
 const SettingsTabs = () => {
-  const { data: session } = useSession();
+  const { userId } = useCurrentSession();
 
   // Recoil Atoms
   const haveError = useRecoilValue(createBoardError);
@@ -73,15 +73,14 @@ const SettingsTabs = () => {
   useEffect(() => {
     const updateCheckedUser = usersList.map((user) => ({
       ...user,
-      isChecked: user._id === session?.user.id || user.isChecked,
+      isChecked: user._id === userId || user.isChecked,
     }));
 
     const users = updateCheckedUser.flatMap((user) =>
       user.isChecked
         ? [
             {
-              role:
-                user._id === session?.user.id ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
+              role: user._id === userId ? BoardUserRoles.RESPONSIBLE : BoardUserRoles.MEMBER,
               user,
               votesCount: 0,
             },

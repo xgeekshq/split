@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -15,6 +14,7 @@ import {
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
 import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
@@ -28,7 +28,7 @@ type SelectTeamProps = {
 };
 
 const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
-  const { data: session } = useSession({ required: true });
+  const { userId, isSAdmin } = useCurrentSession({ required: true });
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
@@ -48,9 +48,9 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const hasPermissions = (team: Team) =>
     !!team.users?.find(
       (teamUser) =>
-        teamUser.user._id === session?.user.id &&
+        teamUser.user._id === userId &&
         [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-    ) || session?.user.isSAdmin;
+    ) || isSAdmin;
 
   const teamMembersCount = teamMembers?.length ?? 0;
   const numberOfTeams = teams?.filter((team) => hasPermissions(team)).length ?? 0;
@@ -99,7 +99,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     );
 
     return !haveMinMembers || !hasPermissions(selectedTeam);
-  }, [selectedTeam, session?.user.id, session?.user.isSAdmin]);
+  }, [selectedTeam, userId, isSAdmin]);
 
   const createBoard = useCallback(() => {
     if (!selectedTeam) {

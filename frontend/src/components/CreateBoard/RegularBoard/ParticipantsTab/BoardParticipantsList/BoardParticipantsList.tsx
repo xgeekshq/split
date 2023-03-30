@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { MouseEvent, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -6,6 +5,7 @@ import ParticipantCard from '@/components/Board/RegularBoard/ParticipantsList/Pa
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { BoardUser } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
@@ -15,7 +15,7 @@ import ListParticipants from '../ListParticipants/ListParticipants';
 
 const BoardParticipantsList = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession();
+  const { userId, isSAdmin } = useCurrentSession();
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
   const setUsersList = useSetRecoilState(usersListState);
 
@@ -24,10 +24,10 @@ const BoardParticipantsList = () => {
     setIsOpen(true);
   };
 
-  const handleRemoveParticipant = (userId: string) => {
+  const handleRemoveParticipant = (participantId: string) => {
     setCreateBoardData((prev) => ({
       ...prev,
-      users: prev.users.filter((user) => user.user._id !== userId),
+      users: prev.users.filter((user) => user.user._id !== participantId),
     }));
 
     setUsersList((prev) =>
@@ -71,10 +71,10 @@ const BoardParticipantsList = () => {
             participant={{ ...participant, _id: participant.user._id }}
             handleRemoveParticipant={handleRemoveParticipant}
             updateIsResponsibleStatus={updateIsResponsibleStatus}
-            isMemberCurrentUser={participant.user._id === session?.user.id}
+            isMemberCurrentUser={participant.user._id === userId}
             isCurrentUserResponsible
-            isCurrentUserSAdmin={!!session?.user.isSAdmin}
-            isCreatedByCurrentUser={session?.user.id === participant.user._id}
+            isCurrentUserSAdmin={!!isSAdmin}
+            isCreatedByCurrentUser={userId === participant.user._id}
           />
         ))}
       </Flex>

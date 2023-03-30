@@ -1,8 +1,8 @@
-import { useSession } from 'next-auth/react';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardDataState } from '@/store/createBoard/atoms/create-board.atom';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
@@ -16,7 +16,7 @@ type ListParticipantsProps = {
 };
 
 const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
-  const { data: session } = useSession();
+  const { userId } = useCurrentSession();
 
   const [usersList, setUsersList] = useRecoilState(usersListState);
   const [createBoardData, setCreateBoardData] = useRecoilState(createBoardDataState);
@@ -34,7 +34,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
     const addedUsers = selectedUsers
       .filter((user) => !createBoardData.users.some((boardUser) => boardUser.user._id === user._id))
       .map((user) =>
-        user._id === session?.user.id
+        user._id === userId
           ? { role: BoardUserRoles.RESPONSIBLE, user, votesCount: 0 }
           : {
               role: BoardUserRoles.MEMBER,
@@ -56,9 +56,7 @@ const ListParticipants = ({ isOpen, setIsOpen }: ListParticipantsProps) => {
     });
 
     // This insures that the board creator stays always in first
-    const userAdminIndex = newBoardUsers.findIndex(
-      (member) => member.user._id === session?.user.id,
-    );
+    const userAdminIndex = newBoardUsers.findIndex((member) => member.user._id === userId);
     newBoardUsers.unshift(newBoardUsers.splice(userAdminIndex, 1)[0]);
 
     setCreateBoardData((prev) => ({
