@@ -7,7 +7,6 @@ import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@
 import {
   deleteUserRequest,
   getAllUsersWithTeams,
-  getUser,
   updateUserIsAdminRequest,
 } from '@/api/userService';
 import {
@@ -22,12 +21,11 @@ import {
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query';
 
 import useUserUtils from './useUserUtils';
 
 interface AutoFetchProps {
-  autoFetchGetUser?: boolean;
   autoFetchUsersWithTeams?: boolean;
   options?: {
     search?: string;
@@ -35,11 +33,10 @@ interface AutoFetchProps {
 }
 
 const useUser = ({
-  autoFetchGetUser = false,
   autoFetchUsersWithTeams = false,
   options = {},
 }: AutoFetchProps = {}): UseUserType => {
-  const { setToastState, queryClient, userId, router } = useUserUtils();
+  const { setToastState, queryClient, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
     onSuccess: (data, variables) => {
@@ -90,18 +87,6 @@ const useUser = ({
       redirect: true,
     });
   };
-
-  const getUserById = useQuery(['userById', userId], () => getUser(userId), {
-    enabled: autoFetchGetUser,
-    refetchOnWindowFocus: false,
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error getting the user',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
 
   const fetchUsersWithTeams = useInfiniteQuery(
     ['usersWithTeams'],
@@ -190,7 +175,6 @@ const useUser = ({
     resetPassword,
     updateUserIsAdmin,
     deleteUser,
-    getUserById,
     registerGuestUser,
     loginGuestUser,
     fetchUsersWithTeams,

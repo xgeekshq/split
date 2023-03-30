@@ -1,4 +1,4 @@
-import { UseInfiniteQueryResult, UseMutationResult, UseQueryResult } from '@tanstack/react-query';
+import { UseInfiniteQueryResult, UseMutationResult } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
@@ -26,7 +26,6 @@ export interface UseUserType {
   resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
-  getUserById: UseQueryResult<User, unknown>;
   fetchUsersWithTeams: UseInfiniteQueryResult<InfiniteUsersWithTeams, unknown>;
   registerGuestUser: UseMutationResult<GuestUser, unknown, CreateGuestUser, unknown>;
   loginGuestUser: UseMutationResult<GuestUser, unknown, GuestUser, unknown>;
