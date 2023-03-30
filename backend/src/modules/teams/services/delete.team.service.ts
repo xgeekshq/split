@@ -24,7 +24,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		await this.deleteTeamUserService.startTransaction();
 
 		try {
-			await this.deleteTeam_TeamUsers_Boards(teamId);
+			await this.deleteTeamAndTeamUsersAndBoards(teamId);
 
 			await this.teamRepository.commitTransaction();
 			await this.deleteTeamUserService.commitTransaction();
@@ -38,7 +38,7 @@ export default class DeleteTeamService implements DeleteTeamServiceInterface {
 		}
 	}
 
-	private async deleteTeam_TeamUsers_Boards(teamId: string) {
+	private async deleteTeamAndTeamUsersAndBoards(teamId: string) {
 		try {
 			await this.deleteTeam(teamId, true);
 			await this.deleteTeamUserService.deleteTeamUsersOfTeam(teamId, true);

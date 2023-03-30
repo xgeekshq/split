@@ -1,3 +1,4 @@
+import { sortTeamUserListAlphabetically } from './../../users/utils/sortings';
 import { faker } from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { NotFoundException } from '@nestjs/common';
@@ -101,15 +102,7 @@ describe('GetTeamService', () => {
 		it('should return team with users sorted by name', async () => {
 			teamRepositoryMock.getTeam.mockResolvedValue(team1);
 
-			team1.users.sort((a, b) => {
-				const userA = a.user as User;
-				const userB = b.user as User;
-
-				const fullNameA = `${userA?.firstName.toLowerCase()} ${userA?.lastName.toLowerCase()}`;
-				const fullNameB = `${userB?.firstName.toLowerCase()} ${userB?.lastName.toLowerCase()}`;
-
-				return fullNameA < fullNameB ? -1 : 1;
-			});
+			team1.users = sortTeamUserListAlphabetically(team1.users);
 
 			await expect(teamService.getTeam(team1._id)).resolves.toEqual(team1);
 		});

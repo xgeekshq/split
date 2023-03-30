@@ -1,3 +1,4 @@
+import { sortTeamUserListAlphabetically } from './../../users/utils/sortings';
 import { TEAM_NOT_FOUND } from 'src/libs/exceptions/messages';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetTeamServiceInterface } from '../interfaces/services/get.team.service.interface';
@@ -6,7 +7,6 @@ import { TYPES } from '../interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamRepositoryInterface } from '../interfaces/repositories/team.repository.interface';
-import User from 'src/modules/users/entities/user.schema';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import { GetTeamUserServiceInterface } from 'src/modules/teamUsers/interfaces/services/get.team.user.service.interface';
 
@@ -30,15 +30,7 @@ export default class GetTeamService implements GetTeamServiceInterface {
 
 		if (!team) throw new NotFoundException(TEAM_NOT_FOUND);
 
-		team.users.sort((a, b) => {
-			const userA = a.user as User;
-			const userB = b.user as User;
-
-			const fullNameA = `${userA?.firstName.toLowerCase()} ${userA?.lastName.toLowerCase()}`;
-			const fullNameB = `${userB?.firstName.toLowerCase()} ${userB?.lastName.toLowerCase()}`;
-
-			return fullNameA < fullNameB ? -1 : 1;
-		});
+		team.users = sortTeamUserListAlphabetically(team.users);
 
 		return team;
 	}
