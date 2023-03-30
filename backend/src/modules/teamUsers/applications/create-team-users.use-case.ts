@@ -22,7 +22,7 @@ export class CreateTeamUsersUseCase implements UseCase<TeamUserDto[], TeamUser[]
 
 		if (teamUsersSaved.length < 1) throw new BadRequestException(INSERT_FAILED);
 
-		const teamWithAddUser = await this.getTeamService.getTeam(teamUsers[0].team);
+		await this.getTeamService.getTeam(teamUsers[0].team);
 
 		return teamUsersSaved;
 	}
