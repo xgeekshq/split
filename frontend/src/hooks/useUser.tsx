@@ -4,11 +4,7 @@ import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
 import { loginGuest, registerGuest, resetTokenEmail, resetUserPassword } from '@/api/authService';
-import {
-  deleteUserRequest,
-  getAllUsersWithTeams,
-  updateUserIsAdminRequest,
-} from '@/api/userService';
+import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
 import {
   DeleteUser,
   EmailUser,
@@ -21,21 +17,11 @@ import {
 import { GUEST_USER_COOKIE } from '@/utils/constants';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
-import { InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { InfiniteData, useMutation } from '@tanstack/react-query';
 
 import useUserUtils from './useUserUtils';
 
-interface AutoFetchProps {
-  autoFetchUsersWithTeams?: boolean;
-  options?: {
-    search?: string;
-  };
-}
-
-const useUser = ({
-  autoFetchUsersWithTeams = false,
-  options = {},
-}: AutoFetchProps = {}): UseUserType => {
+const useUser = (): UseUserType => {
   const { setToastState, queryClient, router } = useUserUtils();
 
   const registerGuestUser = useMutation(registerGuest, {
@@ -87,28 +73,6 @@ const useUser = ({
       redirect: true,
     });
   };
-
-  const fetchUsersWithTeams = useInfiniteQuery(
-    ['usersWithTeams'],
-    ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, options.search ?? ''),
-    {
-      enabled: autoFetchUsersWithTeams,
-      refetchOnWindowFocus: false,
-      keepPreviousData: true,
-      getNextPageParam: (lastPage) => {
-        const { hasNextPage, page } = lastPage;
-        if (hasNextPage) return page + 1;
-        return undefined;
-      },
-      onError: () => {
-        setToastState({
-          open: true,
-          content: 'Error getting the users',
-          type: ToastStateEnum.ERROR,
-        });
-      },
-    },
-  );
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
@@ -177,7 +141,6 @@ const useUser = ({
     deleteUser,
     registerGuestUser,
     loginGuestUser,
-    fetchUsersWithTeams,
   };
 };
 

@@ -10,7 +10,7 @@ export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]
 export const getUser = (userId: string, context?: GetServerSidePropsContext): Promise<User> =>
   fetchData(`/users/${userId}`, { context, serverSide: !!context });
 
-export const getAllUsersWithTeams = (
+export const getUsersWithTeams = (
   pageParam: number,
   searchUser?: string,
   context?: GetServerSidePropsContext,

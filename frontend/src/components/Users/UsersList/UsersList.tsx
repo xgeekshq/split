@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
-import useUser from '@/hooks/useUser';
 import { UserWithTeams } from '@/types/user/user';
 
+import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
 import UserItem from './UserItem/UserItem';
 import UsersSubHeader from './UsersSubHeader/UsersSubHeader';
 
@@ -12,9 +12,7 @@ const UsersList = () => {
   const [search, setSearch] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const {
-    fetchUsersWithTeams: { data, isFetching, hasNextPage, fetchNextPage, refetch },
-  } = useUser({ options: { search }, autoFetchUsersWithTeams: true });
+  const { data, isFetching, hasNextPage, fetchNextPage, refetch } = useUsersWithTeams(search);
   const userAmount = data?.pages[0].userAmount;
 
   const users = useMemo(() => {

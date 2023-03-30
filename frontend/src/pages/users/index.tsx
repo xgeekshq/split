@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { ReactElement, Suspense } from 'react';
 
-import { getAllUsersWithTeams } from '@/api/userService';
+import { getUsersWithTeams } from '@/api/userService';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
@@ -10,6 +10,8 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import UsersList from '@/components/Users/UsersList/UsersList';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { USERS_KEY } from '@/hooks/users';
+import { TEAMS_KEY } from '@/hooks/teams';
 
 const Users = () => (
   <Flex css={{ width: '100%' }} direction="column" gap="16">
@@ -29,8 +31,8 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     const queryClient = new QueryClient();
 
     await queryClient.prefetchInfiniteQuery(
-      ['usersWithTeams'],
-      ({ pageParam = 0 }) => getAllUsersWithTeams(pageParam, '', context),
+      [USERS_KEY, TEAMS_KEY],
+      ({ pageParam = 0 }) => getUsersWithTeams(pageParam, '', context),
       {
         structuralSharing: (_, newData) => ({
           pageParams: [null],
