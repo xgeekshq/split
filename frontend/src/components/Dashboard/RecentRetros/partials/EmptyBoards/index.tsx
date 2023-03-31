@@ -10,7 +10,7 @@ const EmptyBoards: React.FC = () => (
       You have not participated in any retro yet.
       <br />
       <Link href="/boards/new">
-        <Text link fontWeight="medium">
+        <Text link underline fontWeight="medium">
           Add a new retro board
         </Text>
       </Link>{' '}
