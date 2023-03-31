@@ -9,10 +9,10 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin, User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
 
 type UserItemActionsProps = {
   user: User;
@@ -32,9 +32,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
     await updateUserMutation(updateTeamUser);
   };
 
-  const {
-    deleteUser: { mutate: deleteUserMutation },
-  } = useUser();
+  const { mutate: deleteUserMutation } = useDeleteUser();
 
   const deleteUserDescription = (
     <Text>
