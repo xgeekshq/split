@@ -5,8 +5,8 @@ import { styled } from '@/styles/stitches/stitches.config';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
-import useUser from '@/hooks/useUser';
 import { SignUpEnum } from '@/utils/signUp.enum';
+import loginWithAzure from '@/hooks/users/loginWithAzure';
 import { OrSeparator } from '../LoginForm/styles';
 
 const Container = styled(Flex, { width: '100%' });
@@ -22,8 +22,6 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
   emailName,
   setEmailName,
 }) => {
-  const { loginAzure } = useUser();
-
   const handleEmailChange = () => {
     setEmailName((prev) => ({ ...prev, goback: true }));
     return setShowSignUp(SignUpEnum.SIGN_UP);
@@ -44,7 +42,7 @@ const SignUpOptionsForm: React.FC<SignUpOptionsFormProps> = ({
         css={{
           mt: '$32',
         }}
-        onClick={loginAzure}
+        onClick={loginWithAzure}
       >
         Log in with SSO
       </Button>

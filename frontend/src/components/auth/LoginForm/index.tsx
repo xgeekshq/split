@@ -11,7 +11,6 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
-import useUser from '@/hooks/useUser';
 import SchemaLoginForm from '@/schema/schemaLoginForm';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { LoginUser } from '@/types/user/user';
@@ -27,6 +26,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
+import loginWithAzure from '@/hooks/users/loginWithAzure';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 
@@ -34,10 +34,10 @@ interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
+const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
   const [loading, setLoading] = useState({ credentials: false, sso: false });
   const setToastState = useSetRecoilState(toastState);
-  const { loginAzure } = useUser();
+
   const methods = useForm<LoginUser>({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -53,7 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setShowTroubleLogin }) => {
     // deletes guest user cookies after login
     if (getCookie(GUEST_USER_COOKIE)) deleteCookie(GUEST_USER_COOKIE);
     setLoading((prevState) => ({ ...prevState, sso: true }));
-    loginAzure();
+    loginWithAzure();
   };
 
   const handleLogin = async (credentials: LoginUser) => {

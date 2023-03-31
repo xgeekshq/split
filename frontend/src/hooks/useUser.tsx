@@ -1,23 +1,12 @@
-import { RedirectableProviderType } from 'next-auth/providers';
-import { signIn } from 'next-auth/react';
-
 import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
 import { DeleteUser, InfiniteUsersWithTeams, UseUserType } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { InfiniteData, useMutation } from '@tanstack/react-query';
 
 import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
   const { setToastState, queryClient } = useUserUtils();
-
-  const loginAzure = async () => {
-    signIn<RedirectableProviderType>('azure-ad', {
-      callbackUrl: DASHBOARD_ROUTE,
-      redirect: true,
-    });
-  };
 
   const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
     onSuccess: () => {
@@ -79,7 +68,6 @@ const useUser = (): UseUserType => {
   });
 
   return {
-    loginAzure,
     updateUserIsAdmin,
     deleteUser,
   };
