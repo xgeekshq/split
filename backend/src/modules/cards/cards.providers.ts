@@ -1,7 +1,6 @@
 import { CreateCardUseCase } from './applications/create-card.use-case';
 import { DeleteCardUseCase } from './applications/delete-card.use-case';
 import { DeleteFromCardGroupUseCase } from './applications/delete-from-card-group.use-case';
-import { DeleteCardApplication } from './applications/delete.card.application';
 import { MergeCardUseCase } from './applications/merge-card.use-case';
 import { UnmergeCardApplication } from './applications/unmerge.card.application';
 import { UpdateCardApplication } from './applications/update.card.application';
@@ -35,11 +34,6 @@ export const unmergeCardService = {
 export const updateCardApplication = {
 	provide: TYPES.applications.UpdateCardApplication,
 	useClass: UpdateCardApplication
-};
-
-export const deleteCardApplication = {
-	provide: TYPES.applications.DeleteCardApplication,
-	useClass: DeleteCardApplication
 };
 
 export const unmergeCardApplication = {
