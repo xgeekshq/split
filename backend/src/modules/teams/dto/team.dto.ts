@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsMongoId, IsOptional } from 'class-validator';
-import { CreateTeamDto } from './crate-team.dto';
+import { CreateTeamDto } from './create-team.dto';
 
 export default class TeamDto extends CreateTeamDto {
 	@ApiPropertyOptional()
