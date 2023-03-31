@@ -1,4 +1,4 @@
-import { DeleteResult } from 'mongodb';
+import { BulkWriteResult, DeleteResult } from 'mongodb';
 import {
 	ClientSession,
 	FilterQuery,
@@ -99,6 +99,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 
 	update(id: string, item: T): Promise<T> {
 		return this._repository.findByIdAndUpdate(id, item).exec();
+	}
+
+	bulkWrite(writes: any): Promise<BulkWriteResult> {
+		return this._repository.bulkWrite(writes);
 	}
 
 	findOneByFieldAndUpdate(

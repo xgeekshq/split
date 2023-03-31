@@ -25,6 +25,32 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		return this.boardUserRepository.updateVoteUser(boardId, userId, count, withSession, decrement);
 	}
 
+	updateManyVoteUsers(
+		boardId: string,
+		usersIds: Map<string, number>,
+		withSession?: boolean,
+		decrement?: false
+	) {
+		const write = Array.from(usersIds).map(([userId, votesCount]) => {
+			return {
+				updateOne: {
+					filter: {
+						user: userId,
+						board: boardId
+					},
+					update: {
+						$inc: { votesCount: decrement ? (!votesCount ? -1 : -votesCount) : votesCount }
+					},
+					options: {
+						session: withSession
+					}
+				}
+			};
+		});
+
+		return this.boardUserRepository.updateManyVoteUsers(write);
+	}
+
 	startTransaction(): Promise<void> {
 		return this.boardUserRepository.startTransaction();
 	}

@@ -73,14 +73,15 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 		if (votesByUsers) {
 			try {
-				const promises = Array.from(votesByUsers).map(async ([userId, votesCount]) => {
-					return await this.deleteVoteService.decrementVoteUser(boardId, userId, -votesCount, true);
-				});
+				const result = await this.updateBoardUserService.updateManyVoteUsers(
+					boardId,
+					votesByUsers,
+					true,
+					true
+				);
 
-				const results = await Promise.all(promises);
-
-				if (!results) {
-					throw new Error('decremento de votos falhou');
+				if (result.ok !== 1) {
+					throw new Error(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
 				throw new Error(e.message);

@@ -7,6 +7,7 @@ import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
 import Board from 'src/modules/boards/entities/board.schema';
 import BoardUser, { BoardUserDocument } from 'src/modules/boardUsers/entities/board.user.schema';
 import { BoardUserRepositoryInterface } from '../interfaces/repositories/board-user.repository.interface';
+import { BulkWriteResult } from 'mongodb';
 
 @Injectable()
 export class BoardUserRepository
@@ -84,6 +85,9 @@ export class BoardUserRepository
 			null,
 			withSession
 		);
+	}
+	updateManyVoteUsers(write: any): Promise<BulkWriteResult> {
+		return this.bulkWrite(write);
 	}
 
 	/* DELETE BOARD USERS */
