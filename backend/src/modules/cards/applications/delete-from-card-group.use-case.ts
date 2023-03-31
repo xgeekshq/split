@@ -3,26 +3,26 @@ import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'src/modules/votes/interfaces/types';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
-import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
+import {
+	CARD_NOT_FOUND,
+	DELETE_FAILED,
+	DELETE_VOTE_FAILED,
+	UPDATE_FAILED
+} from 'src/libs/exceptions/messages';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
-import User from 'src/modules/users/entities/user.schema';
-import { ObjectId } from 'mongoose';
 import CardItem from '../entities/card.item.schema';
-import Comment from 'src/modules/comments/schemas/comment.schema';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { getUserWithVotes } from '../utils/get-user-with-votes';
+import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import Card from '../entities/card.schema';
 
 @Injectable()
 export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUseCaseDto, void> {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
 		private getCardService: GetCardServiceInterface,
-		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
@@ -31,38 +31,51 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 
 	async execute(deleteFromCardGroupUseCaseDto: DeleteFromCardGroupUseCaseDto) {
 		const { boardId, cardId, cardItemId } = deleteFromCardGroupUseCaseDto;
-		this.cardRepository.startTransaction();
+		await this.cardRepository.startTransaction();
+		await this.updateBoardUserService.startTransaction();
 		try {
-			await this.deletedVotesFromCardItem(boardId, cardItemId);
-			const card = await this.getCardService.getCardFromBoard(boardId, cardId);
-			const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
+			try {
+				await this.removeUserVotes(boardId, cardItemId);
 
-			if (
-				card &&
-				cardItems?.length === 1 &&
-				(card.votes.length >= 0 || card.comments.length >= 0)
-			) {
-				const newVotes = [...card.votes, ...cardItems[0].votes];
-				const newComments = [...card.comments, ...cardItems[0].comments];
-				await this.refactorLastItem(boardId, cardId, newVotes, newComments, cardItems);
+				const card = await this.getCardService.getCardFromBoard(boardId, cardId);
+
+				if (!card) throw new Error(CARD_NOT_FOUND);
+
+				const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
+
+				if (
+					card &&
+					cardItems?.length === 1 &&
+					(card.votes.length >= 0 || card.comments.length >= 0)
+				) {
+					await this.refactorLastItem(boardId, cardId, card, cardItems);
+				}
+
+				const result = await this.cardRepository.deleteCardFromCardItems(
+					boardId,
+					cardId,
+					cardItemId,
+					true
+				);
+
+				if (result.modifiedCount != 1) throw new UpdateFailedException();
+			} catch (e) {
+				await this.cardRepository.abortTransaction();
+				await this.updateBoardUserService.abortTransaction();
+				throw new Error(e.message);
 			}
-			const result = await this.cardRepository.deleteCardFromCardItems(
-				boardId,
-				cardId,
-				cardItemId,
-				true
-			);
 
-			if (result.modifiedCount != 1) throw new UpdateFailedException();
 			await this.cardRepository.commitTransaction();
+			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			await this.cardRepository.abortTransaction();
+			throw new DeleteFailedException(e.message ? e.message : DELETE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
+			await this.updateBoardUserService.endSession();
 		}
 	}
 
-	private async deletedVotesFromCardItem(boardId: string, cardItemId: string) {
+	private async removeUserVotes(boardId: string, cardItemId: string) {
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
 
 		if (!getCardItem) {
@@ -72,7 +85,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 
 		if (getCardItem.votes?.length) {
 			try {
-				const result = await this.updateBoardUserService.updateManyVoteUsers(
+				const result = await this.updateBoardUserService.updateManyUserVotes(
 					boardId,
 					usersWithVotes,
 					true,
@@ -91,18 +104,23 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 	private async refactorLastItem(
 		boardId: string,
 		cardId: string,
-		newVotes: (User | ObjectId | string)[],
-		newComments: Comment[],
+		card: Card,
 		cardItems: CardItem[]
 	) {
-		const boardWithLastCardRefactored = await this.cardRepository.refactorLastCardItem(
-			boardId,
-			cardId,
-			newVotes,
-			newComments,
-			cardItems
-		);
+		const newVotes = [...card.votes, ...cardItems[0].votes];
+		const newComments = [...card.comments, ...cardItems[0].comments];
+		try {
+			const boardWithLastCardRefactored = await this.cardRepository.refactorLastCardItem(
+				boardId,
+				cardId,
+				newVotes,
+				newComments,
+				cardItems
+			);
 
-		if (!boardWithLastCardRefactored) throw Error(UPDATE_FAILED);
+			if (!boardWithLastCardRefactored) throw Error(UPDATE_FAILED);
+		} catch (e) {
+			throw Error(e.message);
+		}
 	}
 }

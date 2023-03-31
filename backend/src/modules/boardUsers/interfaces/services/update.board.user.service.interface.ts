@@ -12,7 +12,7 @@ export interface UpdateBoardUserServiceInterface extends SessionInterface {
 		decrement?: boolean
 	): Promise<BoardUser>;
 
-	updateManyVoteUsers(
+	updateManyUserVotes(
 		boardId: string,
 		usersWithVotes: Map<string, number>,
 		withSession?: boolean,

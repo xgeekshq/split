@@ -73,7 +73,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 		if (votesByUsers) {
 			try {
-				const result = await this.updateBoardUserService.updateManyVoteUsers(
+				const result = await this.updateBoardUserService.updateManyUserVotes(
 					boardId,
 					votesByUsers,
 					true,

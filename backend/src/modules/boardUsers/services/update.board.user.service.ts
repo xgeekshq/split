@@ -25,7 +25,7 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 		return this.boardUserRepository.updateVoteUser(boardId, userId, count, withSession, decrement);
 	}
 
-	updateManyVoteUsers(
+	updateManyUserVotes(
 		boardId: string,
 		usersWithVotes: Map<string, number>,
 		withSession?: boolean,
