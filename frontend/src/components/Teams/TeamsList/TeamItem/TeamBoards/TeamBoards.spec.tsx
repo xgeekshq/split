@@ -6,19 +6,18 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import TeamBoards, { TeamBoardsProps } from './TeamBoards';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
-const render = (props: TeamBoardsProps) =>
-  renderWithProviders(<TeamBoards {...props} />, { routerOptions: mockRouter });
+const render = (props: Partial<TeamBoardsProps> = {}) =>
+  renderWithProviders(<TeamBoards team={TeamFactory.create()} havePermissions {...props} />, {
+    routerOptions: mockRouter,
+  });
 
 describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
   it('should render No boards', () => {
     // Arrange
-    const teamBoardsProps = {
-      team: TeamFactory.create({ boardsCount: 0 }),
-      havePermissions: false,
-    };
+    const team = TeamFactory.create({ boardsCount: 0 });
 
     // Act
-    const { getByText } = render(teamBoardsProps);
+    const { getByText } = render({ team, havePermissions: false });
 
     // Assert
     expect(getByText('No boards')).toBeInTheDocument();
@@ -26,21 +25,18 @@ describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
 
   it('should render Create first board', async () => {
     // Arrange
-    const teamBoardsProps = {
-      team: TeamFactory.create({ boardsCount: 0 }),
-      havePermissions: true,
-    };
+    const team = TeamFactory.create({ boardsCount: 0 });
 
     // Act
-    const { getByText } = render(teamBoardsProps);
+    const { getByText } = render({ team });
     const link = getByText('Create first board');
     fireEvent.click(link);
 
     // Assert
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith(
-        ROUTES.NewTeamBoard(teamBoardsProps.team.id),
-        ROUTES.NewTeamBoard(teamBoardsProps.team.id),
+        ROUTES.NewTeamBoard(team.id),
+        ROUTES.NewTeamBoard(team.id),
         expect.anything(),
       );
     });
@@ -51,21 +47,18 @@ describe('Components/Teams/TeamsList/TeamItem/TeamBoards', () => {
 
   it('should render N boards', async () => {
     // Arrange
-    const teamBoardsProps = {
-      team: TeamFactory.create({ boardsCount: 3 }),
-      havePermissions: true,
-    };
+    const team = TeamFactory.create({ boardsCount: 3 });
 
     // Act
-    const { getByText } = render(teamBoardsProps);
+    const { getByText } = render({ team });
     const link = getByText('3 team boards');
     fireEvent.click(link);
 
     // Assert
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith(
-        ROUTES.TeamBoards(teamBoardsProps.team.id),
-        ROUTES.TeamBoards(teamBoardsProps.team.id),
+        ROUTES.TeamBoards(team.id),
+        ROUTES.TeamBoards(team.id),
         expect.anything(),
       );
     });
