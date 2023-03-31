@@ -1,5 +1,4 @@
 import { UseMutationResult } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 
 import { Nullable } from '../common';
 import { Token } from '../token';
@@ -21,7 +20,6 @@ export interface User {
 
 export interface UseUserType {
   loginAzure: () => Promise<void>;
-  resetPassword: UseMutationResult<ResetPasswordResponse, AxiosError, NewPassword>;
   updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
 }

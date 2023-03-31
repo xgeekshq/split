@@ -1,16 +1,8 @@
-import { AxiosError } from 'axios';
 import { RedirectableProviderType } from 'next-auth/providers';
 import { signIn } from 'next-auth/react';
 
-import { resetUserPassword } from '@/api/authService';
 import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
-import {
-  DeleteUser,
-  InfiniteUsersWithTeams,
-  NewPassword,
-  ResetPasswordResponse,
-  UseUserType,
-} from '@/types/user/user';
+import { DeleteUser, InfiniteUsersWithTeams, UseUserType } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { InfiniteData, useMutation } from '@tanstack/react-query';
@@ -19,14 +11,6 @@ import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
   const { setToastState, queryClient } = useUserUtils();
-
-  const resetPassword = useMutation<ResetPasswordResponse, AxiosError, NewPassword>(
-    (data: NewPassword) => resetUserPassword(data),
-    {
-      mutationKey: ['resetPassword'],
-      onSuccess: async (response: ResetPasswordResponse) => response.message,
-    },
-  );
 
   const loginAzure = async () => {
     signIn<RedirectableProviderType>('azure-ad', {
@@ -96,7 +80,6 @@ const useUser = (): UseUserType => {
 
   return {
     loginAzure,
-    resetPassword,
     updateUserIsAdmin,
     deleteUser,
   };
