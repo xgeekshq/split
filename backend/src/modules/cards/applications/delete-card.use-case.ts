@@ -4,8 +4,6 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
-import * as Votes from 'src/modules/votes/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import {
@@ -22,8 +20,6 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
 		private getCardService: GetCardServiceInterface,
-		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
