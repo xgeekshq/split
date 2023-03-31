@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
@@ -12,6 +12,7 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 import useUser from '@/hooks/useUser';
 import { UpdateUserIsAdmin, User } from '@/types/user/user';
 import { ROUTES } from '@/utils/routes';
+import useUpdateUser from '@/hooks/users/useUpdateUser';
 
 type UserItemActionsProps = {
   user: User;
@@ -19,11 +20,8 @@ type UserItemActionsProps = {
 
 const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
   const { userId } = useCurrentSession();
-  const [checkedState, setCheckedState] = useState(user.isSAdmin);
 
-  const {
-    updateUserIsAdmin: { mutateAsync: updateUserMutation },
-  } = useUser();
+  const { mutateAsync: updateUserMutation } = useUpdateUser();
 
   const handleSuperAdminChange = async (checked: boolean) => {
     const updateTeamUser: UpdateUserIsAdmin = {
@@ -31,12 +29,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
       isSAdmin: checked,
     };
 
-    try {
-      await updateUserMutation(updateTeamUser);
-      setCheckedState(checked);
-    } catch (error) {
-      setCheckedState(!checked);
-    }
+    await updateUserMutation(updateTeamUser);
   };
 
   const {
@@ -62,7 +55,7 @@ const UserItemActions = React.memo(({ user }: UserItemActionsProps) => {
       <Flex css={{ alignItems: 'center' }} gap={24}>
         <ConfigurationSwitch
           handleCheckedChange={handleSuperAdminChange}
-          isChecked={checkedState}
+          isChecked={user.isSAdmin}
           title="Super Admin"
           disabled={userId === user._id}
           disabledInfo={userId !== user._id ? undefined : "Can't change your own role"}

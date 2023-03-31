@@ -19,7 +19,6 @@ export interface User {
 }
 
 export interface UseUserType {
-  updateUserIsAdmin: UseMutationResult<User, unknown, UpdateUserIsAdmin, unknown>;
   deleteUser: UseMutationResult<Boolean, unknown, DeleteUser, unknown>;
 }
 

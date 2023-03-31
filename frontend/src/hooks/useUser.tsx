@@ -1,4 +1,4 @@
-import { deleteUserRequest, updateUserIsAdminRequest } from '@/api/userService';
+import { deleteUserRequest } from '@/api/userService';
 import { DeleteUser, InfiniteUsersWithTeams, UseUserType } from '@/types/user/user';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { InfiniteData, useMutation } from '@tanstack/react-query';
@@ -7,32 +7,6 @@ import useUserUtils from './useUserUtils';
 
 const useUser = (): UseUserType => {
   const { setToastState, queryClient } = useUserUtils();
-
-  const updateUserIsAdmin = useMutation(updateUserIsAdminRequest, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['usersWithTeams']);
-
-      // // updates the usersList recoil
-      // const users = usersWithTeamsList.map((user) =>
-      //   user.user._id === data._id ? { ...user, isAdmin: data.isSAdmin } : user,
-      // );
-
-      // setUsersWithTeamsList(users);
-
-      setToastState({
-        open: true,
-        content: 'The team user was successfully updated.',
-        type: ToastStateEnum.SUCCESS,
-      });
-    },
-    onError: () => {
-      setToastState({
-        open: true,
-        content: 'Error while updating the user',
-        type: ToastStateEnum.ERROR,
-      });
-    },
-  });
 
   const deleteUser = useMutation(deleteUserRequest, {
     onMutate: (variables: DeleteUser) => {
@@ -68,7 +42,6 @@ const useUser = (): UseUserType => {
   });
 
   return {
-    updateUserIsAdmin,
     deleteUser,
   };
 };
