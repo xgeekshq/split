@@ -39,7 +39,7 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 						board: boardId
 					},
 					update: {
-						$inc: { votesCount: decrement ? (!votesCount ? -1 : -votesCount) : votesCount }
+						$inc: { votesCount: decrement ? -votesCount : votesCount }
 					}
 				}
 			};
