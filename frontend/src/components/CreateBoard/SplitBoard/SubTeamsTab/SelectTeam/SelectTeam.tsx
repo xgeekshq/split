@@ -74,7 +74,9 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     clearErrors();
     const foundTeam = teams.find((team) => team.id === value);
 
-    setValue('team', foundTeam?.id);
+    if (!foundTeam) return;
+
+    setValue('team', foundTeam.id);
     setSelectedTeam(foundTeam);
   };
 
@@ -84,21 +86,20 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         label: `${team.name} (${team.users.length} members)`,
         value: team.id,
       })),
-    [teams],
+    [availableTeams],
   );
 
-  const verifyIfCanCreateBoard = useCallback(() => {
+  const verifyIfCanCreateBoard = () => {
     if (!selectedTeam) {
-      return true;
+      return false;
     }
 
-    const haveMinMembers = !!(
-      selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-      MIN_MEMBERS
-    );
+    const haveMinMembers =
+      selectedTeam.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      MIN_MEMBERS;
 
-    return !haveMinMembers || !hasPermissions(selectedTeam);
-  }, [selectedTeam, userId, isSAdmin]);
+    return haveMinMembers;
+  };
 
   const createBoard = useCallback(() => {
     if (!selectedTeam) return;
@@ -133,25 +134,24 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
 
   useEffect(() => {
+    if (selectedTeam) {
+      const canCreateBoard = verifyIfCanCreateBoard();
+      setHaveError(!canCreateBoard);
+
+      if (canCreateBoard) {
+        createBoard();
+      }
+    }
+  }, [routerTeam, selectedTeam, verifyIfCanCreateBoard, createBoard]);
+
+  useEffect(() => {
     if (routerTeam) {
       setValue('team', routerTeam);
     }
 
     setHaveError(availableTeams.length <= 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availableTeams]);
-
-  useEffect(() => {
-    if (selectedTeam) {
-      const canNotCreateBoard = verifyIfCanCreateBoard();
-
-      setHaveError(canNotCreateBoard);
-
-      if (!canNotCreateBoard) {
-        createBoard();
-      }
-    }
-  }, [routerTeam, createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
+  }, []);
 
   return (
     <Flex direction="column" css={{ flex: 1 }}>
