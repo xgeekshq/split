@@ -11,7 +11,7 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
 import { NewPassword } from '@/types/user/user';
-import useResetPassword from '@/hooks/users/useResetPassword';
+import useResetPassword from '@/hooks/auth/useResetPassword';
 import { useEffect } from 'react';
 
 const MainContainer = styled('form', Flex, {

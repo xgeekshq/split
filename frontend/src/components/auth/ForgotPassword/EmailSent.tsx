@@ -7,7 +7,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import useResetToken from '@/hooks/users/useResetToken';
+import useResetToken from '@/hooks/auth/useResetToken';
 
 const MainContainer = styled('form', Flex, {
   width: '100%',

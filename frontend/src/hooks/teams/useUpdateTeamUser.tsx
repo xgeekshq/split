@@ -9,6 +9,7 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
+import { USERS_KEY } from '../users';
 
 const useUpdateTeamUser = (teamId: string, userId?: string) => {
   const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
       };
 
       if (userId) {
-        queryClient.setQueryData([TEAMS_KEY, 'user', userId], (oldTeams: Team[] | undefined) => {
+        queryClient.setQueryData([TEAMS_KEY, USERS_KEY, userId], (oldTeams: Team[] | undefined) => {
           if (!oldTeams) return oldTeams;
 
           const teamToUpdate = oldTeams.findIndex((team: Team) => team.id === teamId);
@@ -69,7 +70,7 @@ const useUpdateTeamUser = (teamId: string, userId?: string) => {
     },
     onError: () => {
       queryClient.invalidateQueries([TEAMS_KEY, teamId]);
-      queryClient.invalidateQueries([TEAMS_KEY, 'user', teamId]);
+      queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, teamId]);
 
       setToastState({
         open: true,

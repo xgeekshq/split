@@ -9,7 +9,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { getUsername } from '@/utils/getUsername';
-import useRegisterGuestUser from '@/hooks/users/useRegisterGuestUser';
+import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { useEffect } from 'react';
 import { OrSeparator, StyledForm } from '../LoginForm/styles';
 

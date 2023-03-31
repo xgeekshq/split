@@ -6,7 +6,7 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
-import { USERS_KEY } from '.';
+import { USERS_KEY } from '../users';
 
 const useResetToken = () => {
   const setToastState = useSetRecoilState(toastState);

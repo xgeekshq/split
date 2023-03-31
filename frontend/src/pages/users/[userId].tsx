@@ -66,8 +66,8 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery([USERS_KEY, userId], () => getUser(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, 'not', 'user', userId], () =>
+    queryClient.prefetchQuery([TEAMS_KEY, USERS_KEY, userId], () => getUserTeams(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, 'not', USERS_KEY, userId], () =>
       getTeamsWithoutUser(userId, context),
     ),
   ]);

@@ -8,6 +8,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { Team } from '@/types/team/team';
 import { TEAMS_KEY } from '.';
+import { USERS_KEY } from '../users';
 
 const useUpdateUserTeams = (userId: string) => {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ const useUpdateUserTeams = (userId: string) => {
     onMutate: (teams) => {
       teams.forEach(({ team: teamId }) => {
         queryClient.setQueryData(
-          [TEAMS_KEY, 'not', 'user', userId],
+          [TEAMS_KEY, 'not', USERS_KEY, userId],
           (oldTeams: Team[] | undefined) => {
             if (!oldTeams) return oldTeams;
 
@@ -27,7 +28,7 @@ const useUpdateUserTeams = (userId: string) => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
 
       setToastState({
         open: true,
@@ -36,8 +37,8 @@ const useUpdateUserTeams = (userId: string) => {
       });
     },
     onError: () => {
-      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
-      queryClient.invalidateQueries([TEAMS_KEY, 'user', 'not', userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
       setToastState({
         open: true,
         content: 'Error while adding team(s) to the user',

@@ -11,7 +11,7 @@ import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { EmailUser } from '@/types/user/user';
-import useResetToken from '@/hooks/users/useResetToken';
+import useResetToken from '@/hooks/auth/useResetToken';
 import EmailSent from './EmailSent';
 
 const MainContainer = styled('form', Flex, {

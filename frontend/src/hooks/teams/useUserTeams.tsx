@@ -7,11 +7,12 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { TEAMS_KEY } from '.';
+import { USERS_KEY } from '../users';
 
 const useUserTeams = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId), {
+  return useQuery([TEAMS_KEY, USERS_KEY, userId], () => getUserTeams(userId), {
     enabled: true,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

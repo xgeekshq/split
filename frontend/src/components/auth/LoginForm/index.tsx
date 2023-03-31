@@ -26,7 +26,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
-import loginWithAzure from '@/hooks/users/loginWithAzure';
+import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
 import LoginSSO from './LoginSSO';
 

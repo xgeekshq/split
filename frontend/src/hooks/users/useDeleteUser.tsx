@@ -22,9 +22,9 @@ const useDeleteUser = () => {
 
           return {
             ...oldData,
-            page: oldData.pages.map((page) => ({
+            pages: oldData.pages.map((page) => ({
               ...page,
-              userWithTeams: page.userWithTeams.filter((value) => value.user._id !== userId),
+              userWithTeams: page.userWithTeams.filter((user) => user.user._id !== userId),
             })),
           };
         },
