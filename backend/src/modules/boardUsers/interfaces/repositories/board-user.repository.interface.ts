@@ -33,5 +33,5 @@ export interface BoardUserRepositoryInterface extends BaseInterfaceRepository<Bo
 		withSession?: boolean
 	): Promise<DeleteResult>;
 
-	updateManyVoteUsers(write: any): Promise<BulkWriteResult>;
+	updateManyVoteUsers(arrayOperations: any, withSession: boolean): Promise<BulkWriteResult>;
 }

@@ -86,8 +86,8 @@ export class BoardUserRepository
 			withSession
 		);
 	}
-	updateManyVoteUsers(write: any): Promise<BulkWriteResult> {
-		return this.bulkWrite(write);
+	updateManyVoteUsers(arrayOperations: any, withSession: boolean): Promise<BulkWriteResult> {
+		return this.bulkWrite(arrayOperations, withSession);
 	}
 
 	/* DELETE BOARD USERS */

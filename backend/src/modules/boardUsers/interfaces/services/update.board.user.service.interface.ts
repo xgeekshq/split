@@ -14,7 +14,7 @@ export interface UpdateBoardUserServiceInterface extends SessionInterface {
 
 	updateManyVoteUsers(
 		boardId: string,
-		usersIds: Map<string, number>,
+		usersWithVotes: Map<string, number>,
 		withSession?: boolean,
 		decrement?: boolean
 	): Promise<BulkWriteResult>;

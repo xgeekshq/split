@@ -5,7 +5,6 @@ import { CardRepositoryInterface } from '../repository/card.repository.interface
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/services/delete.vote.service.interface';
 import * as Votes from 'src/modules/votes/interfaces/types';
-import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
@@ -13,6 +12,9 @@ import User from 'src/modules/users/entities/user.schema';
 import { ObjectId } from 'mongoose';
 import CardItem from '../entities/card.item.schema';
 import Comment from 'src/modules/comments/schemas/comment.schema';
+import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
+import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { getUserWithVotes } from '../utils/get-user-with-votes';
 
 @Injectable()
 export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUseCaseDto, void> {
@@ -22,7 +24,9 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		@Inject(Votes.TYPES.services.DeleteVoteService)
 		private deleteVoteService: DeleteVoteServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
-		private readonly cardRepository: CardRepositoryInterface
+		private readonly cardRepository: CardRepositoryInterface,
+		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
+		private updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	async execute(deleteFromCardGroupUseCaseDto: DeleteFromCardGroupUseCaseDto) {
@@ -64,15 +68,22 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		if (!getCardItem) {
 			throw Error(UPDATE_FAILED);
 		}
+		const usersWithVotes = getUserWithVotes(getCardItem.votes);
 
 		if (getCardItem.votes?.length) {
-			const promises = getCardItem.votes.map((voteUserId) => {
-				return this.deleteVoteService.decrementVoteUser(boardId, voteUserId);
-			});
-			const results = await Promise.all(promises);
+			try {
+				const result = await this.updateBoardUserService.updateManyVoteUsers(
+					boardId,
+					usersWithVotes,
+					true,
+					true
+				);
 
-			if (!results) {
-				throw new DeleteFailedException(DELETE_VOTE_FAILED);
+				if (result.ok !== 1) {
+					throw new Error(DELETE_VOTE_FAILED);
+				}
+			} catch (e) {
+				throw new Error(e.message);
 			}
 		}
 	}

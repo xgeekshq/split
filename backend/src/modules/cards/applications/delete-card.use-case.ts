@@ -14,9 +14,8 @@ import {
 	DELETE_FAILED,
 	DELETE_VOTE_FAILED
 } from 'src/libs/exceptions/messages';
-import User from 'src/modules/users/entities/user.schema';
-import { ObjectId } from 'mongoose';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
+import { getUserWithVotes } from '../utils/get-user-with-votes';
 
 @Injectable()
 export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
@@ -41,7 +40,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 				const result = await this.cardRepository.updateCardsFromBoard(boardId, cardId, true);
 
-				if (result.modifiedCount != 1) throw new Error(CARD_NOT_REMOVED);
+				if (result.modifiedCount !== 1) throw new Error(CARD_NOT_REMOVED);
 			} catch (e) {
 				await this.cardRepository.abortTransaction();
 				await this.updateBoardUserService.abortTransaction();
@@ -69,11 +68,11 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 		}
 
 		if (getCard.votes?.length) {
-			votesByUsers = this.getVotesByUser(getCard.votes);
+			votesByUsers = getUserWithVotes(getCard.votes);
 		}
 
 		if (getCard.items[0].votes) {
-			votesByUsers = this.getVotesByUser(getCard.items[0].votes);
+			votesByUsers = getUserWithVotes(getCard.items[0].votes);
 		}
 
 		if (votesByUsers) {
@@ -92,19 +91,5 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 				throw new Error(e.message);
 			}
 		}
-	}
-
-	private getVotesByUser(votes: string[] | User[] | ObjectId[]): Map<string, number> {
-		const votesByUser = new Map<string, number>();
-		votes.forEach((userId) => {
-			if (!votesByUser.has(userId.toString())) {
-				votesByUser.set(userId.toString(), 1);
-			} else {
-				const count = votesByUser.get(userId.toString());
-				votesByUser.set(userId.toString(), count + 1);
-			}
-		});
-
-		return votesByUser;
 	}
 }

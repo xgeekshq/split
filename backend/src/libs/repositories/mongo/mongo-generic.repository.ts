@@ -101,8 +101,10 @@ export class MongoGenericRepository<T> implements BaseInterfaceRepository<T> {
 		return this._repository.findByIdAndUpdate(id, item).exec();
 	}
 
-	bulkWrite(writes: any): Promise<BulkWriteResult> {
-		return this._repository.bulkWrite(writes);
+	bulkWrite(arrayOperations: any[], withSession: boolean): Promise<BulkWriteResult> {
+		return this._repository.bulkWrite(arrayOperations, {
+			session: withSession ? this._session : undefined
+		});
 	}
 
 	findOneByFieldAndUpdate(

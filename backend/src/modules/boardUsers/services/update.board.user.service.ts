@@ -27,11 +27,11 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 
 	updateManyVoteUsers(
 		boardId: string,
-		usersIds: Map<string, number>,
+		usersWithVotes: Map<string, number>,
 		withSession?: boolean,
 		decrement?: false
 	) {
-		const write = Array.from(usersIds).map(([userId, votesCount]) => {
+		const arrayOperations = Array.from(usersWithVotes).map(([userId, votesCount]) => {
 			return {
 				updateOne: {
 					filter: {
@@ -40,15 +40,12 @@ export default class UpdateBoardUserService implements UpdateBoardUserServiceInt
 					},
 					update: {
 						$inc: { votesCount: decrement ? (!votesCount ? -1 : -votesCount) : votesCount }
-					},
-					options: {
-						session: withSession
 					}
 				}
 			};
 		});
 
-		return this.boardUserRepository.updateManyVoteUsers(write);
+		return this.boardUserRepository.updateManyVoteUsers(arrayOperations, withSession);
 	}
 
 	startTransaction(): Promise<void> {
