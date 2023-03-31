@@ -8,7 +8,12 @@ import { DeleteVoteServiceInterface } from 'src/modules/votes/interfaces/service
 import * as Votes from 'src/modules/votes/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
-import { DELETE_VOTE_FAILED } from 'src/libs/exceptions/messages';
+import {
+	CARD_NOT_FOUND,
+	CARD_NOT_REMOVED,
+	DELETE_FAILED,
+	DELETE_VOTE_FAILED
+} from 'src/libs/exceptions/messages';
 import User from 'src/modules/users/entities/user.schema';
 import { ObjectId } from 'mongoose';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
@@ -36,7 +41,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 				const result = await this.cardRepository.updateCardsFromBoard(boardId, cardId, true);
 
-				if (result.modifiedCount != 1) throw new Error('updateCardsFromBoard failed');
+				if (result.modifiedCount != 1) throw new Error(CARD_NOT_REMOVED);
 			} catch (e) {
 				await this.cardRepository.abortTransaction();
 				await this.updateBoardUserService.abortTransaction();
@@ -46,7 +51,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 			await this.cardRepository.commitTransaction();
 			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			throw new DeleteFailedException(e.message ? e.message : DELETE_VOTE_FAILED);
+			throw new DeleteFailedException(e.message ? e.message : DELETE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
 			await this.updateBoardUserService.endSession();
@@ -60,7 +65,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 		let votesByUsers;
 
 		if (!getCard) {
-			throw Error('get failed');
+			throw Error(CARD_NOT_FOUND);
 		}
 
 		if (getCard.votes?.length) {
