@@ -11,7 +11,7 @@ import { BulkWriteResult } from 'mongodb';
 
 @Injectable()
 export class BoardUserRepository
-	extends MongoGenericRepository<BoardUser>
+	extends MongoGenericRepository<BoardUserDocument>
 	implements BoardUserRepositoryInterface
 {
 	constructor(@InjectModel(BoardUser.name) private model: Model<BoardUserDocument>) {

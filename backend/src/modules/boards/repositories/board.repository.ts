@@ -12,7 +12,7 @@ import { BoardRepositoryInterface } from './board.repository.interface';
 
 @Injectable()
 export class BoardRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements BoardRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {

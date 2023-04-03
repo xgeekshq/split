@@ -17,7 +17,7 @@ import User from 'src/modules/users/entities/user.schema';
 
 @Injectable()
 export class CardRepository
-	extends MongoGenericRepository<Board>
+	extends MongoGenericRepository<BoardDocument>
 	implements CardRepositoryInterface
 {
 	constructor(@InjectModel(Board.name) private model: Model<BoardDocument>) {
