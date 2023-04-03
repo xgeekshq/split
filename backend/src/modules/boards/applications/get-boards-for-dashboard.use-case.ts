@@ -2,15 +2,12 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import { TYPES } from '../interfaces/types';
-import { BoardsAndPage } from '../interfaces/boards-page.interface';
-
-export type GetBoardsForDashboardDto = { userId: string; page?: number; size?: number };
-
-export type GetBoardsPaginatedPresenter = BoardsAndPage | null;
+import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 
 @Injectable()
 export class GetBoardsForDashboardUseCase
-	implements UseCase<GetBoardsForDashboardDto, GetBoardsPaginatedPresenter>
+	implements UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>
 {
 	constructor(
 		@Inject(TYPES.services.GetBoardService)

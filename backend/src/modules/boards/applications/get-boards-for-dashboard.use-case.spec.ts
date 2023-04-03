@@ -4,19 +4,22 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 import faker from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { GetBoardsForDashboardUseCase } from './get-boards-for-dashboard.use-case';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
+import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
+import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { getBoardsForDashboardUseCase } from '../boards.providers';
 
 const userId = faker.datatype.uuid();
 
 describe('GetBoardsForDashboardUseCase', () => {
-	let useCase: GetBoardsForDashboardUseCase;
+	let useCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>;
 	let getBoardServiceMock: DeepMocked<GetBoardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				GetBoardsForDashboardUseCase,
+				getBoardsForDashboardUseCase,
 				{
 					provide: Boards.TYPES.services.GetBoardService,
 					useValue: createMock<GetBoardServiceInterface>()
@@ -24,7 +27,9 @@ describe('GetBoardsForDashboardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<GetBoardsForDashboardUseCase>(GetBoardsForDashboardUseCase);
+		useCase = module.get<UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>>(
+			Boards.TYPES.applications.GetBoardsForDashboardUseCase
+		);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
 	});
 

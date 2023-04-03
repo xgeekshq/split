@@ -53,16 +53,15 @@ import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import Board from '../entities/board.schema';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
-import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import {
-	GetBoardsForDashboardDto,
-	GetBoardsPaginatedPresenter
-} from '../applications/get-boards-for-dashboard.use-case';
-import { GetAllBoardsUseCaseDto } from '../applications/get-all-boards.use-case';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
+import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
+import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
+import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
+import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -73,18 +72,17 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 export default class BoardsController {
 	constructor(
 		@Inject(TYPES.applications.GetBoardsForDashboardUseCase)
-		private getBoardsForDashboardUseCase: UseCase<
-			GetBoardsForDashboardDto,
-			GetBoardsPaginatedPresenter
-		>,
+		private getBoardsForDashboardUseCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>,
 		@Inject(TYPES.applications.CreateBoardUseCase)
 		private createBoardUseCase: UseCase<CreateBoardUseCaseDto, Board>,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
 		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
 		@Inject(TYPES.applications.GetAllBoardsUseCase)
-		private getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>,
-		@Inject(TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplicationInterface,
+		private getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>,
+		@Inject(TYPES.applications.GetPersonalBoardsUseCase)
+		private getPersonalBoardsUseCase: UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>,
+		@Inject(TYPES.applications.GetBoardUseCase)
+		private getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
 		@Inject(TYPES.applications.DeleteBoardApplication)
@@ -208,7 +206,7 @@ export default class BoardsController {
 	getPersonalBoards(@Req() request: RequestWithUser, @Query() { page, size }: PaginationParams) {
 		const { _id: userId } = request.user;
 
-		return this.getBoardApp.getPersonalBoards(userId, page, size);
+		return this.getPersonalBoardsUseCase.execute({ userId, page, size });
 	}
 
 	@ApiOperation({ summary: 'Retrieve one board by id' })
@@ -234,7 +232,7 @@ export default class BoardsController {
 	@UseGuards(GetBoardGuard)
 	@Get(':boardId')
 	getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		return this.getBoardApp.getBoard(boardId, request.user);
+		return this.getBoardUseCase.execute({ boardId, user: request.user });
 	}
 
 	@ApiOperation({ summary: 'Update a specific board' })

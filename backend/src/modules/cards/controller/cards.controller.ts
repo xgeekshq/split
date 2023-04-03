@@ -161,11 +161,7 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId')
-	async deleteCardItem(
-		@Req() request: RequestWithUser,
-		@Param() params: CardItemParams,
-		@Body() deleteCardDto: DeleteCardDto
-	) {
+	async deleteCardItem(@Param() params: CardItemParams, @Body() deleteCardDto: DeleteCardDto) {
 		const { boardId, cardId, itemId } = params;
 		await this.deleteCardApp.deleteFromCardGroup(boardId, cardId, itemId);
 		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);

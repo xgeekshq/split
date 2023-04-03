@@ -7,17 +7,17 @@ import { GetBoardGuard } from 'src/libs/guards/getBoardPermissions.guard';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import {
-	GetBoardsForDashboardDto,
-	GetBoardsPaginatedPresenter
-} from '../applications/get-boards-for-dashboard.use-case';
-import { GetAllBoardsUseCaseDto } from '../applications/get-all-boards.use-case';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
+import GetBoardsForDashboardDto from '../presenter/boards-paginated.presenter';
+import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
+import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
+import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
+import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -34,7 +34,7 @@ describe('BoardsController', () => {
 				},
 				{
 					provide: Boards.TYPES.applications.GetBoardsForDashboardUseCase,
-					useValue: createMock<UseCase<GetBoardsForDashboardDto, GetBoardsPaginatedPresenter>>()
+					useValue: createMock<UseCase<GetBoardsForDashboardDto, BoardsPaginatedPresenter>>()
 				},
 				{
 					provide: Boards.TYPES.applications.DuplicateBoardUseCase,
@@ -42,12 +42,17 @@ describe('BoardsController', () => {
 				},
 				{
 					provide: Boards.TYPES.applications.GetAllBoardsUseCase,
-					useValue: createMock<UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>>()
+					useValue: createMock<UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>>()
 				},
 				{
-					provide: Boards.TYPES.applications.GetBoardApplication,
-					useValue: createMock<GetBoardApplicationInterface>()
+					provide: Boards.TYPES.applications.GetPersonalBoardsUseCase,
+					useValue: createMock<UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>>()
 				},
+				{
+					provide: Boards.TYPES.applications.GetBoardUseCase,
+					useValue: createMock<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>()
+				},
+
 				{
 					provide: Boards.TYPES.applications.UpdateBoardApplication,
 					useValue: createMock<UpdateBoardApplicationInterface>()

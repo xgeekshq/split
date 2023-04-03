@@ -5,16 +5,19 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import faker from '@faker-js/faker';
 import { BoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardDto-factory.mock';
 import { CreateBoardServiceInterface } from '../interfaces/services/create.board.service.interface';
-import { CreateBoardUseCase } from './create-board.use-case';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
+import Board from '../entities/board.schema';
+import { createBoardUseCase } from '../boards.providers';
 
 describe('CreateBoardUseCase', () => {
-	let createBoardMock: CreateBoardUseCase;
+	let useCase: UseCase<CreateBoardUseCaseDto, Board>;
 	let createBoardServiceMock: DeepMocked<CreateBoardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				CreateBoardUseCase,
+				createBoardUseCase,
 				{
 					provide: Boards.TYPES.services.CreateBoardService,
 					useValue: createMock<CreateBoardUserServiceInterface>()
@@ -22,7 +25,9 @@ describe('CreateBoardUseCase', () => {
 			]
 		}).compile();
 
-		createBoardMock = module.get<CreateBoardUseCase>(CreateBoardUseCase);
+		useCase = module.get<UseCase<CreateBoardUseCaseDto, Board>>(
+			Boards.TYPES.applications.CreateBoardUseCase
+		);
 
 		createBoardServiceMock = module.get(Boards.TYPES.services.CreateBoardService);
 	});
@@ -32,7 +37,7 @@ describe('CreateBoardUseCase', () => {
 	});
 
 	it('should be defined', () => {
-		expect(createBoardMock).toBeDefined();
+		expect(useCase).toBeDefined();
 	});
 
 	describe('execute', () => {
@@ -40,7 +45,7 @@ describe('CreateBoardUseCase', () => {
 			const boardData = BoardDtoFactory.create();
 			const userId = faker.datatype.uuid();
 
-			await createBoardMock.execute({ userId, boardData });
+			await useCase.execute({ userId, boardData });
 
 			expect(createBoardServiceMock.create).toBeCalledWith(boardData, userId);
 		});
