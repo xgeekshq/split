@@ -15,6 +15,18 @@ import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/g
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
 import { DuplicateBoardDto } from './duplicate-board.use-case';
+import { BoardUserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/boardUserDto-factory.mock';
+import { CreateFailedException } from 'src/libs/exceptions/createFailedBadRequestException';
+
+const DEFAULT_PROPS = {
+	boardId: faker.datatype.uuid(),
+	userId: faker.datatype.uuid(),
+	boardTitle: 'My Board'
+};
+const board = BoardFactory.create({
+	_id: DEFAULT_PROPS.boardId,
+	users: BoardUserDtoFactory.createMany(4)
+});
 
 describe('DuplicateBoardUseCase', () => {
 	let duplicateBoardMock: UseCase<DuplicateBoardDto, Board>;
@@ -56,14 +68,9 @@ describe('DuplicateBoardUseCase', () => {
 		createBoardUserServiceMock = module.get(BoardUsers.TYPES.services.CreateBoardUserService);
 	});
 
-	const DEFAULT_PROPS = {
-		boardId: faker.datatype.uuid(),
-		userId: faker.datatype.uuid(),
-		boardTitle: 'My Board'
-	};
-
 	beforeEach(() => {
 		jest.clearAllMocks();
+		jest.restoreAllMocks();
 	});
 
 	it('should be defined', () => {
@@ -89,7 +96,6 @@ describe('DuplicateBoardUseCase', () => {
 			const user = UserFactory.create({ _id: DEFAULT_PROPS.userId });
 			getUserServiceMock.getById.mockResolvedValueOnce(user);
 
-			const board = BoardFactory.create({ _id: DEFAULT_PROPS.boardId });
 			getBoardServiceMock.getBoard.mockResolvedValueOnce({ board });
 
 			await duplicateBoardMock.execute(DEFAULT_PROPS);
@@ -106,6 +112,14 @@ describe('DuplicateBoardUseCase', () => {
 
 			await duplicateBoardMock.execute(DEFAULT_PROPS);
 			expect(createBoardUserServiceMock.saveBoardUsers).toHaveBeenCalled();
+		});
+
+		it('should throw an error if boardRepository.create fails', async () => {
+			getBoardServiceMock.getBoard.mockResolvedValue({ board });
+			boardRepositoryMock.create.mockResolvedValue(null);
+			await expect(duplicateBoardMock.execute(DEFAULT_PROPS)).rejects.toThrowError(
+				CreateFailedException
+			);
 		});
 	});
 });
