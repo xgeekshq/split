@@ -12,11 +12,11 @@ export const TYPES = {
 		UpdateBoardTimerDurationService: 'UpdateBoardTimerDurationService'
 	},
 	applications: {
-		CreateBoardApplication: 'CreateBoardApplication',
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
 		DeleteBoardApplication: 'DeleteBoardApplication',
 		UpdateBoardApplication: 'UpdateBoardApplication',
-		GetBoardApplication: 'GetBoardApplication'
+		GetBoardApplication: 'GetBoardApplication',
+		CreateBoardUseCase: 'CreateBoardUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',
