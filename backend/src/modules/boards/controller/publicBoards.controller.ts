@@ -11,15 +11,15 @@ import {
 	ApiParam,
 	ApiTags
 } from '@nestjs/swagger';
-import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { TYPES } from '../interfaces/types';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 @ApiTags('PublicBoards')
 @Controller('publicBoards')
 export default class PublicBoardsController {
 	constructor(
-		@Inject(TYPES.applications.GetBoardApplication)
-		private getBoardApp: GetBoardApplicationInterface
+		@Inject(TYPES.applications.IsBoardPublicUseCase)
+		private isBoardPublicUseCase: UseCase<string, boolean>
 	) {}
 
 	@ApiOperation({ summary: 'Check if board is public' })
@@ -38,6 +38,6 @@ export default class PublicBoardsController {
 	})
 	@Get(':boardId/isPublic')
 	getBoard(@Param() { boardId }: BaseParam) {
-		return this.getBoardApp.isBoardPublic(boardId);
+		return this.isBoardPublicUseCase.execute(boardId);
 	}
 }
