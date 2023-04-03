@@ -3,23 +3,21 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import BoardRolePopover, { BoardRolePopoverProps } from './BoardRolePopover';
 
-const DEFAULT_PROPS = {
-  isNewJoinerHandler: jest.fn(),
-  isNewJoiner: false,
-  canBeResponsibleHandler: jest.fn(),
-  canBeResponsible: false,
-};
-
-const render = (props: BoardRolePopoverProps) =>
-  renderWithProviders(<BoardRolePopover {...props} />);
+const render = (props: Partial<BoardRolePopoverProps> = {}) =>
+  renderWithProviders(
+    <BoardRolePopover
+      isNewJoinerHandler={jest.fn()}
+      isNewJoiner={false}
+      canBeResponsibleHandler={jest.fn()}
+      canBeResponsible={false}
+      {...props}
+    />,
+  );
 
 describe('Components/Primitives/Popovers/BoardRolePopover', () => {
   it('should render correctly', async () => {
-    // Arrange
-    const boardRolePopoverProps = { ...DEFAULT_PROPS };
-
     // Act
-    const { getByTestId, getAllByTestId } = render(boardRolePopoverProps);
+    const { getByTestId, getAllByTestId } = render();
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
@@ -31,10 +29,10 @@ describe('Components/Primitives/Popovers/BoardRolePopover', () => {
 
   it('should handle isNewJoiner change', async () => {
     // Arrange
-    const boardRolePopoverProps = { ...DEFAULT_PROPS };
+    const isNewJoinerHandler = jest.fn();
 
     // Act
-    const { getByTestId, getByText } = render(boardRolePopoverProps);
+    const { getByTestId, getByText } = render({ isNewJoinerHandler });
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
@@ -47,16 +45,16 @@ describe('Components/Primitives/Popovers/BoardRolePopover', () => {
 
     // Assert
     await waitFor(() => {
-      expect(boardRolePopoverProps.isNewJoinerHandler).toHaveBeenCalled();
+      expect(isNewJoinerHandler).toHaveBeenCalled();
     });
   });
 
   it('should handle canBeResponsible change', async () => {
     // Arrange
-    const boardRolePopoverProps = { ...DEFAULT_PROPS };
+    const canBeResponsibleHandler = jest.fn();
 
     // Act
-    const { getByTestId, getByText } = render(boardRolePopoverProps);
+    const { getByTestId, getByText } = render({ canBeResponsibleHandler });
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
@@ -69,19 +67,13 @@ describe('Components/Primitives/Popovers/BoardRolePopover', () => {
 
     // Assert
     await waitFor(() => {
-      expect(boardRolePopoverProps.canBeResponsibleHandler).toHaveBeenCalled();
+      expect(canBeResponsibleHandler).toHaveBeenCalled();
     });
   });
 
   it('should disable isNewJoiner switch', async () => {
-    // Arrange
-    const boardRolePopoverProps = {
-      ...DEFAULT_PROPS,
-      canBeResponsible: true,
-    };
-
     // Act
-    const { getByTestId, getByText } = render(boardRolePopoverProps);
+    const { getByTestId, getByText } = render({ canBeResponsible: true });
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
@@ -95,14 +87,8 @@ describe('Components/Primitives/Popovers/BoardRolePopover', () => {
   });
 
   it('should disable canBeResponsible switch', async () => {
-    // Arrange
-    const boardRolePopoverProps = {
-      ...DEFAULT_PROPS,
-      isNewJoiner: true,
-    };
-
     // Act
-    const { getByTestId, getByText } = render(boardRolePopoverProps);
+    const { getByTestId, getByText } = render({ isNewJoiner: true });
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
@@ -116,13 +102,8 @@ describe('Components/Primitives/Popovers/BoardRolePopover', () => {
   });
 
   it('should enable both switches', async () => {
-    // Arrange
-    const boardRolePopoverProps = {
-      ...DEFAULT_PROPS,
-    };
-
     // Act
-    const { getByTestId, getByText } = render(boardRolePopoverProps);
+    const { getByTestId, getByText } = render();
     const trigger = getByTestId('boardRolePopoverTrigger');
     if (trigger) fireEvent.click(trigger);
 
