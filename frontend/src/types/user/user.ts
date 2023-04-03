@@ -1,7 +1,7 @@
 import { UseMutationResult } from '@tanstack/react-query';
 
-import { Nullable } from '../common';
-import { Token } from '../token';
+import { Nullable } from '@/types/common';
+import { Token } from '@/types/token';
 
 export interface User {
   _id: string;

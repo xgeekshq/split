@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from 'next';
 
 import fetchData from '@/utils/fetchData';
-import { User, UpdateUserIsAdmin, DeleteUser, InfiniteUsersWithTeams } from '../types/user/user';
+import { User, UpdateUserIsAdmin, DeleteUser, InfiniteUsersWithTeams } from '@/types/user/user';
 
 // #region GET
 export const getAllUsers = (context?: GetServerSidePropsContext): Promise<User[]> =>

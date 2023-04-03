@@ -11,7 +11,7 @@ import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { getUsername } from '@/utils/getUsername';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { useEffect } from 'react';
-import { OrSeparator, StyledForm } from '../LoginForm/styles';
+import { OrSeparator, StyledForm } from '@/components/auth/LoginForm/styles';
 
 const GuestUserForm = () => {
   const router = useRouter();

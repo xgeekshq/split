@@ -7,7 +7,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { SignUpEnum } from '@/utils/signUp.enum';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import { OrSeparator } from '../LoginForm/styles';
+import { OrSeparator } from '@/components/auth/LoginForm/styles';
 
 const Container = styled(Flex, { width: '100%' });
 
