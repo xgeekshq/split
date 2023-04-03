@@ -39,7 +39,7 @@ export const cardRepository = {
 	useClass: CardRepository
 };
 
-export const creacteCardUseCase = {
+export const createCardUseCase = {
 	provide: TYPES.applications.CreateCardUseCase,
 	useClass: CreateCardUseCase
 };

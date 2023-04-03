@@ -4,7 +4,7 @@ import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
-	creacteCardUseCase,
+	createCardUseCase,
 	deleteCardApplication,
 	deleteCardService,
 	getCardService,
@@ -26,7 +26,7 @@ import CardsController from './controller/cards.controller';
 		updateCardApplication,
 		deleteCardApplication,
 		cardRepository,
-		creacteCardUseCase,
+		createCardUseCase,
 		unmergeCardUseCase,
 		mergeCardUseCase
 	],
