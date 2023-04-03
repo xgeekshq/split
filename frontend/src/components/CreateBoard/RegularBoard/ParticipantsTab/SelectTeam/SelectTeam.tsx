@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
@@ -14,32 +14,41 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import { createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser, usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/team/atom/team.atom';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { UserList } from '@/types/team/userList';
+import useTeams from '@/hooks/teams/useTeams';
+import { Team } from '@/types/team/team';
 
 const SelectTeam = () => {
-  const { userId } = useCurrentSession();
+  const { userId, isSAdmin } = useCurrentSession();
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
-  // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
   const setUsersList = useSetRecoilState(usersListState);
-  const teams = useRecoilValue(teamsOfUser);
   const { setCreateBoardData } = useCreateBoard(selectedTeam);
+  const teamsQuery = useTeams(isSAdmin);
+  const teams = teamsQuery.data ?? [];
 
-  const numberOfTeams = teams?.length ?? 0;
+  const hasPermissions = (team: Team) =>
+    isSAdmin ||
+    team.users.find(
+      (teamUser) =>
+        teamUser.user._id === userId &&
+        [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
+    );
+  const availableTeams = teams.filter((team) => hasPermissions(team));
 
   const teamsNames = useMemo(
     () =>
-      teams.map((team) => ({
+      availableTeams.map((team) => ({
         label: `${team.name} (${team.users.length} members)`,
         value: team.id,
       })),
-    [teams],
+    [availableTeams],
   );
 
   const createBoard = useCallback(() => {
@@ -80,14 +89,14 @@ const SelectTeam = () => {
   }, [selectedTeam, userId, setCreateBoardData]);
 
   const handleTeamChange = (value: string) => {
-    const foundTeam = teams.find((team) => team.id === value);
+    const foundTeam = availableTeams.find((team) => team.id === value);
 
     setSelectedTeam(foundTeam);
   };
 
   useEffect(() => {
     if (routerTeam) {
-      const foundTeam = teams.find((team) => team.id === routerTeam);
+      const foundTeam = availableTeams.find((team) => team.id === routerTeam);
       setSelectedTeam(foundTeam);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,7 +111,7 @@ const SelectTeam = () => {
   return (
     <Flex direction="column" css={{ flex: 1 }}>
       <Select
-        disabled={numberOfTeams === 0}
+        disabled={availableTeams.length === 0}
         defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
           handleTeamChange(selectedOption);
@@ -112,7 +121,7 @@ const SelectTeam = () => {
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
             <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
-              {numberOfTeams === 0 ? 'No teams available' : 'Select Team'}
+              {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
           </Flex>
@@ -122,7 +131,7 @@ const SelectTeam = () => {
         </SelectTrigger>
         <SelectContent options={teamsNames} />
       </Select>
-      {numberOfTeams === 0 && (
+      {availableTeams.length === 0 && (
         <Flex justify="start" align="center" gap="4" css={{ mt: '$8', color: '$dangerBase' }}>
           <Icon size={16} name="info" />
           <Text hint color="dangerBase">

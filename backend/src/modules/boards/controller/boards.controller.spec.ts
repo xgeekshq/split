@@ -7,12 +7,12 @@ import { GetBoardGuard } from 'src/libs/guards/getBoardPermissions.guard';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
+import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -24,8 +24,8 @@ describe('BoardsController', () => {
 			controllers: [BoardsController],
 			providers: [
 				{
-					provide: Boards.TYPES.applications.CreateBoardApplication,
-					useValue: createMock<CreateBoardApplicationInterface>()
+					provide: Boards.TYPES.applications.CreateBoardUseCase,
+					useValue: createMock<UseCase<CreateBoardUseCaseDto, Board>>()
 				},
 				{
 					provide: Boards.TYPES.applications.DuplicateBoardUseCase,

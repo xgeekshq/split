@@ -21,18 +21,18 @@ describe('Components/Primitives/Avatars/AvatarGroup', () => {
     };
 
     // Act
-    const { getByText } = render(testProps);
+    const { getByText, getAllByText } = render(testProps);
 
     // Assert
     for (let i = 0; i < 2; i++) {
       expect(
-        getByText(
+        getAllByText(
           getInitials(
             (testProps.listUsers[i].user as User).firstName,
             (testProps.listUsers[i].user as User).lastName,
           ),
-        ),
-      );
+        )[0],
+      ).toBeInTheDocument();
     }
 
     expect(getByText(`+${testProps.listUsers.length - 2}`));
@@ -53,18 +53,18 @@ describe('Components/Primitives/Avatars/AvatarGroup', () => {
     };
 
     // Act
-    const { getByText } = render(testProps);
+    const { getAllByText } = render(testProps);
 
     // Assert
     for (let i = 0; i < 3; i++) {
       expect(
-        getByText(
+        getAllByText(
           getInitials(
             (testProps.listUsers[i].user as User).firstName,
             (testProps.listUsers[i].user as User).lastName,
           ),
-        ),
-      );
+        )[0],
+      ).toBeInTheDocument();
     }
   });
 
@@ -83,18 +83,18 @@ describe('Components/Primitives/Avatars/AvatarGroup', () => {
     };
 
     // Act
-    const { getByText } = render(testProps);
+    const { getAllByText } = render(testProps);
 
     // Assert
     for (let i = 0; i < 3; i++) {
       expect(
-        getByText(
+        getAllByText(
           getInitials(
             (testProps.listUsers[i].user as User).firstName,
             (testProps.listUsers[i].user as User).lastName,
           ),
-        ),
-      );
+        )[0],
+      ).toBeInTheDocument();
     }
   });
 
@@ -113,18 +113,18 @@ describe('Components/Primitives/Avatars/AvatarGroup', () => {
     };
 
     // Act
-    const { getByText } = render(testProps);
+    const { getAllByText } = render(testProps);
 
     // Assert
     for (let i = 0; i < 3; i++) {
       expect(
-        getByText(
+        getAllByText(
           getInitials(
             (testProps.listUsers[i].user as User).firstName,
             (testProps.listUsers[i].user as User).lastName,
           ),
-        ),
-      );
+        )[0],
+      ).toBeInTheDocument();
     }
   });
 

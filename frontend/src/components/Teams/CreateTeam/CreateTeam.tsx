@@ -107,7 +107,12 @@ const CreateTeam = () => {
                   <Text css={{ flex: 1 }} heading="3">
                     Team Members
                   </Text>
-                  <Button variant="link" size="sm" onClick={handleOpen}>
+                  <Button
+                    variant="link"
+                    size="sm"
+                    onClick={handleOpen}
+                    data-testid="addRemoveMembersTrigger"
+                  >
                     <Icon name="plus" />
                     Add/remove members
                   </Button>
