@@ -2,26 +2,21 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import Switch, { SwitchProps } from './Switch';
 
-const render = (props: SwitchProps) => renderWithProviders(<Switch {...props} />);
+const render = (props: Partial<SwitchProps> = {}) =>
+  renderWithProviders(<Switch checked={false} {...props} />);
 
 describe('Components/Primitives/Switches/Switch', () => {
   it('should render correctly', () => {
-    // Arrange
-    const switchProps: SwitchProps = { checked: false };
-
     // Act
-    const { getByTestId } = render(switchProps);
+    const { getByTestId } = render();
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
   });
 
   it('should render checked state', () => {
-    // Arrange
-    const switchProps: SwitchProps = { checked: true };
-
     // Act
-    const { getByTestId, getByRole } = render(switchProps);
+    const { getByTestId, getByRole } = render({ checked: true });
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
@@ -30,14 +25,10 @@ describe('Components/Primitives/Switches/Switch', () => {
 
   it('should handle checkedChange function', async () => {
     // Arrange
-    const mockHandleChangeFn = jest.fn();
-    const checkboxProps: SwitchProps = {
-      checked: false,
-      onCheckedChange: mockHandleChangeFn,
-    };
+    const onCheckedChange = jest.fn();
 
     // Act
-    const { getByTestId, getByRole } = render(checkboxProps);
+    const { getByTestId, getByRole } = render({ onCheckedChange });
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
@@ -46,7 +37,7 @@ describe('Components/Primitives/Switches/Switch', () => {
     fireEvent.click(getByRole('switch'));
 
     await waitFor(() => {
-      expect(mockHandleChangeFn).toBeCalled();
+      expect(onCheckedChange).toBeCalled();
     });
   });
 });

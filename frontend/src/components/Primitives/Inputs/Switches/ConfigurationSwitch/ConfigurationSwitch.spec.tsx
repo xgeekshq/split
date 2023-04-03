@@ -2,38 +2,29 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import ConfigurationSwitch, { ConfigurationSwitchProps } from './ConfigurationSwitch';
 
-const render = (props: ConfigurationSwitchProps) =>
-  renderWithProviders(<ConfigurationSwitch {...props} />);
+const render = (props: Partial<ConfigurationSwitchProps> = {}) =>
+  renderWithProviders(
+    <ConfigurationSwitch
+      title="Title"
+      isChecked={false}
+      handleCheckedChange={jest.fn()}
+      {...props}
+    />,
+  );
 
 describe('Components/Primitives/Switches/ConfigurationSwitch', () => {
   it('should render correctly', () => {
-    // Arrange
-    const mockHandleFn = jest.fn();
-    const configurationSwitchProps: ConfigurationSwitchProps = {
-      title: 'Title',
-      isChecked: false,
-      handleCheckedChange: mockHandleFn,
-    };
-
     // Act
-    const { getByTestId, getByText } = render(configurationSwitchProps);
+    const { getByTestId, getByText } = render();
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
-    expect(getByText(configurationSwitchProps.title)).toBeInTheDocument();
+    expect(getByText('Title')).toBeInTheDocument();
   });
 
   it('should render checked state', () => {
-    // Arrange
-    const mockHandleFn = jest.fn();
-    const configurationSwitchProps: ConfigurationSwitchProps = {
-      title: 'Title',
-      isChecked: true,
-      handleCheckedChange: mockHandleFn,
-    };
-
     // Act
-    const { getByTestId, getByRole } = render(configurationSwitchProps);
+    const { getByTestId, getByRole } = render({ isChecked: true });
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
@@ -42,15 +33,10 @@ describe('Components/Primitives/Switches/ConfigurationSwitch', () => {
 
   it('should handle checkedChange function', async () => {
     // Arrange
-    const mockHandleFn = jest.fn();
-    const configurationSwitchProps: ConfigurationSwitchProps = {
-      title: 'Title',
-      isChecked: false,
-      handleCheckedChange: mockHandleFn,
-    };
+    const handleCheckedChange = jest.fn();
 
     // Act
-    const { getByTestId, getByRole } = render(configurationSwitchProps);
+    const { getByTestId, getByRole } = render({ handleCheckedChange });
 
     // Assert
     expect(getByTestId('switch')).toBeInTheDocument();
@@ -59,7 +45,7 @@ describe('Components/Primitives/Switches/ConfigurationSwitch', () => {
     fireEvent.click(getByRole('switch'));
 
     await waitFor(() => {
-      expect(mockHandleFn).toBeCalled();
+      expect(handleCheckedChange).toBeCalled();
     });
   });
 });
