@@ -7,6 +7,7 @@ import { TeamFactory } from '@/utils/factories/team';
 import TeamHeader, { TeamHeaderProps } from './Header';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
+libraryMocks.mockReactQuery();
 const render = (props: Partial<TeamHeaderProps> = {}) =>
   renderWithProviders(<TeamHeader title="MyTeam" hasPermissions {...props} />, {
     routerOptions: mockRouter,
