@@ -26,7 +26,7 @@ const EmptyTeams = () => (
     <EmptyTeamsImage />
     <Text css={{ mt: '$40', textAlign: 'center' }} size="md">
       <Link href="/teams/new">
-        <Text link fontWeight="medium">
+        <Text link underline fontWeight="medium">
           Create your first team
         </Text>
       </Link>{' '}

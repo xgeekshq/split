@@ -18,7 +18,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import TipBar from '@/components/Primitives/Layout/TipBar/TipBar';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import { defaultRegularColumns } from '@/helper/board/defaultColumns';
-import { TEAMS_KEY } from '@/hooks/teams';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import useTeams from '@/hooks/teams/useTeams';
 import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';

@@ -1,6 +1,5 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from '@/styles/stitches/stitches.config';
@@ -10,11 +9,10 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
-import useUser from '@/hooks/useUser';
 import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
-import { toastState } from '@/store/toast/atom/toast.atom';
 import { NewPassword } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useResetPassword from '@/hooks/auth/useResetPassword';
+import { useEffect } from 'react';
 
 const MainContainer = styled('form', Flex, {
   width: '100%',
@@ -24,8 +22,7 @@ interface ResetPasswordProps {
   token: string;
 }
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
-  const setToastState = useSetRecoilState(toastState);
+const ResetPassword = ({ token }: ResetPasswordProps) => {
   const router = useRouter();
   const methods = useForm<NewPassword>({
     mode: 'onChange',
@@ -37,27 +34,18 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ token }) => {
     resolver: joiResolver(SchemaResetPasswordForm),
   });
 
-  const { resetPassword } = useUser();
+  const { mutateAsync, status } = useResetPassword();
 
   const handleRecoverPassword = async (params: NewPassword) => {
     params.token = token;
-    const res = await resetPassword.mutateAsync({ ...params, token });
-    if (!res.message) {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Something went wrong,please try again.',
-      });
-      return;
-    }
-
-    router.push('/');
-    setToastState({
-      open: true,
-      type: ToastStateEnum.SUCCESS,
-      content: 'Password updated successfully',
-    });
+    await mutateAsync({ ...params, token });
   };
+
+  useEffect(() => {
+    if (status === 'success') {
+      router.push('/');
+    }
+  }, [status]);
 
   return (
     <MainContainer
