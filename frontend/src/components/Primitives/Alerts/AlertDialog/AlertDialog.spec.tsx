@@ -8,10 +8,10 @@ import {
   AlertDialogProps,
   AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
-import Button from '../../Inputs/Button/Button';
-import Flex from '../../Layout/Flex/Flex';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-const render = ({ children, ...props }: AlertDialogProps) =>
+const render = ({ children, ...props }: Partial<AlertDialogProps> = {}) =>
   renderWithProviders(
     <AlertDialog>
       {/* Button to Open the Dialog */}
@@ -20,7 +20,12 @@ const render = ({ children, ...props }: AlertDialogProps) =>
       </AlertDialogTrigger>
 
       {/* Actual Dialog */}
-      <AlertDialogContent {...props} data-testid="alertDialog">
+      <AlertDialogContent
+        title="Title"
+        handleClose={jest.fn()}
+        {...props}
+        data-testid="alertDialog"
+      >
         {children}
         <Flex justify="end" gap="16">
           <AlertDialogCancel variant="primaryOutline">Cancel</AlertDialogCancel>
@@ -33,7 +38,7 @@ const render = ({ children, ...props }: AlertDialogProps) =>
 describe('Components/Primitives/Alerts/AlertDialog', () => {
   it('should render the trigger correctly', () => {
     // Act
-    const { getByTestId } = render({});
+    const { getByTestId } = render();
 
     // Assert
     expect(getByTestId('alertDialogTrigger')).toBeInTheDocument();
@@ -41,7 +46,7 @@ describe('Components/Primitives/Alerts/AlertDialog', () => {
 
   it('should open the alert dialog when trigger is clicked', async () => {
     // Act
-    const { getByTestId } = render({});
+    const { getByTestId } = render();
     fireEvent.click(getByTestId('alertDialogTrigger'));
 
     // Assert
@@ -52,37 +57,31 @@ describe('Components/Primitives/Alerts/AlertDialog', () => {
 
   it('should render the title', async () => {
     // Arrange
-    const alertDialogProps = {
-      title: 'Title',
-    };
+    const title = 'Title';
 
     // Act
-    const { getByText, getByTestId } = render(alertDialogProps);
+    const { getByText, getByTestId } = render({ title });
     fireEvent.click(getByTestId('alertDialogTrigger'));
 
     // Assert
     await waitFor(() => {
       expect(getByTestId('alertDialog')).toBeInTheDocument();
-      expect(getByText(alertDialogProps.title)).toBeInTheDocument();
+      expect(getByText(title)).toBeInTheDocument();
     });
   });
 
   it('should close the dialog when the x is clicked', async () => {
     // Arrange
-    const mockCloseFn = jest.fn();
-    const alertDialogProps = {
-      title: 'Title',
-      handleClose: mockCloseFn,
-    };
+    const handleClose = jest.fn();
 
     // Act
-    const { getByTestId } = render(alertDialogProps);
+    const { getByTestId } = render({ handleClose });
     fireEvent.click(getByTestId('alertDialogTrigger'));
     fireEvent.click(getByTestId('alertDialog').querySelector('svg')!);
 
     // Assert
     await waitFor(() => {
-      expect(mockCloseFn).toBeCalled();
+      expect(handleClose).toBeCalled();
     });
   });
 });
