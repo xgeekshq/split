@@ -3,8 +3,8 @@ import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
-import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import {
+	CARD_ITEM_NOT_FOUND,
 	CARD_NOT_FOUND,
 	DELETE_FAILED,
 	DELETE_VOTE_FAILED,
@@ -50,7 +50,6 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 				) {
 					await this.refactorLastItem(boardId, cardId, card, cardItems);
 				}
-
 				const result = await this.cardRepository.deleteCardFromCardItems(
 					boardId,
 					cardId,
@@ -58,7 +57,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 					true
 				);
 
-				if (result.modifiedCount != 1) throw new UpdateFailedException();
+				if (result.modifiedCount != 1) throw new Error(DELETE_FAILED);
 			} catch (e) {
 				await this.cardRepository.abortTransaction();
 				await this.updateBoardUserService.abortTransaction();
@@ -79,7 +78,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
 
 		if (!getCardItem) {
-			throw Error(UPDATE_FAILED);
+			throw Error(CARD_ITEM_NOT_FOUND);
 		}
 		const usersWithVotes = getUserWithVotes(getCardItem.votes);
 
