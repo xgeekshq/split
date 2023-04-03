@@ -34,8 +34,8 @@ const Team = () => {
   const setUsers = useSetRecoilState(usersListState);
 
   // Hooks
-  const { data: teamData, isLoading: loadingTeam } = useTeam(teamId as string);
-  const { data: usersData, isLoading: loadingUsers } = useUsers();
+  const { data: teamData, isLoading: isLoadingTeam } = useTeam(teamId as string);
+  const { data: usersData, isLoading: isLoadingUsers } = useUsers();
 
   const userFound = teamData?.users.find((member) => member.user?._id === userId);
   const hasPermissions =
@@ -68,7 +68,7 @@ const Team = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {loadingTeam || loadingUsers ? (
+            {isLoadingTeam || isLoadingUsers ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>

@@ -26,8 +26,8 @@ const UserDetails = () => {
   } = useRouter();
 
   // Hooks
-  const { data: userData, isLoading: loadingUser } = useUser(userId as string);
-  const { data: userTeams, isLoading: loadingTeams } = useUserTeams(userId as string);
+  const { data: userData, isLoading: isLoadingUser } = useUser(userId as string);
+  const { data: userTeams, isLoading: isLoadingTeams } = useUserTeams(userId as string);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -43,7 +43,7 @@ const UserDetails = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {loadingUser || loadingTeams ? (
+            {isLoadingUser || isLoadingTeams ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
