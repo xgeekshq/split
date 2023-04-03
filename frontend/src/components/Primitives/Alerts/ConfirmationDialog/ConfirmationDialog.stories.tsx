@@ -17,8 +17,7 @@ export default {
         A modal dialog that interrupts the user requesting some type of confirmation.
 
         **File Path:**
-        \`@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog.tsx\`
-        `,
+        \`@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog.tsx\``,
       },
     },
   },

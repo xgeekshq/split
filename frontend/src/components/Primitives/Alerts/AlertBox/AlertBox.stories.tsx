@@ -17,9 +17,7 @@ export default {
         An alert box that is displayed on the screen to inform or warn the user of something.
 
         **File Path:**
-        \`@/components/Primitives/Alerts/AlertBox/AlertBox.tsx\`
-        ${JSON.stringify(import.meta)}
-        `,
+        \`@/components/Primitives/Alerts/AlertBox/AlertBox.tsx\``,
       },
     },
   },
@@ -50,12 +48,12 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof AlertBox> = ({ ...args }) => <AlertBox {...args} />;
+const Template: ComponentStory<typeof AlertBox> = (args) => <AlertBox {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';
 
-export const WithButton: ComponentStory<typeof AlertBox> = ({ ...args }) => (
+export const WithButton: ComponentStory<typeof AlertBox> = (args) => (
   <AlertBox {...args}>
     <Button size="sm">Lorem Ipsum</Button>
   </AlertBox>
