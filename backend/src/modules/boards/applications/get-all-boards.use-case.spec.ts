@@ -5,10 +5,10 @@ import { GetBoardServiceInterface } from '../interfaces/services/get.board.servi
 import faker from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
-import { GetAllBoardsUseCaseDto } from './get-all-boards.use-case';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { GetBoardsPaginatedPresenter } from './get-boards-for-dashboard.use-case';
 import { getAllBoardsUseCase } from '../boards.providers';
+import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
+import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 
 const teams = TeamFactory.createMany(2);
 const teamIds = teams.map((team) => team._id);
@@ -24,7 +24,7 @@ const boardIds = boards.map((board) => board._id);
 const userId = faker.datatype.uuid();
 
 describe('GetAllBoardsUseCase', () => {
-	let useCase: UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>;
+	let useCase: UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>;
 	let getBoardServiceMock: DeepMocked<GetBoardServiceInterface>;
 
 	beforeAll(async () => {
@@ -38,7 +38,7 @@ describe('GetAllBoardsUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>>(
+		useCase = module.get<UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>>(
 			Boards.TYPES.applications.GetAllBoardsUseCase
 		);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
