@@ -128,6 +128,8 @@ const BoardHeader = () => {
                       mainBoardTitle: boardData?.board.title,
                     },
                   }}
+                  passHref
+                  legacyBehavior
                 >
                   <StyledBoardLink>{getSubBoard()?.title.replace('team ', '')}</StyledBoardLink>
                 </Link>

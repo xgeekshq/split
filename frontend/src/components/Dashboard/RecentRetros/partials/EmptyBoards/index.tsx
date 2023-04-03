@@ -8,7 +8,7 @@ const EmptyBoards: React.FC = () => (
     <EmptyBoardsText css={{ mt: '$24', textAlign: 'center' }} size="md">
       You have not participated in any retro yet.
       <br />
-      <Link href="/boards/new">
+      <Link href="/boards/new" passHref legacyBehavior>
         <StyledNewBoardLink underline fontWeight="medium">
           Add a new retro board
         </StyledNewBoardLink>
