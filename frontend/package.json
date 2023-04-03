@@ -61,7 +61,7 @@
     "react-select": "^5.7.0",
     "recoil": "^0.7.7",
     "socket.io-client": "^4.6.1",
-    "webpack": "^5.76.1"
+    "webpack": "^5.77.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -73,7 +73,7 @@
     "@storybook/addons": "^6.5.16",
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/react": "^6.5.16",
+    "@storybook/react": "^7.0.0",
     "@storybook/testing-library": "^0.0.13",
     "@storybook/theming": "^6.5.16",
     "@testing-library/jest-dom": "^5.16.5",

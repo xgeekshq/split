@@ -12,13 +12,13 @@ export const TYPES = {
 		UpdateBoardTimerDurationService: 'UpdateBoardTimerDurationService'
 	},
 	applications: {
-		CreateBoardApplication: 'CreateBoardApplication',
 		DuplicateBoardUseCase: 'DuplicateBoardUseCase',
 		DeleteBoardApplication: 'DeleteBoardApplication',
 		UpdateBoardApplication: 'UpdateBoardApplication',
 		GetBoardApplication: 'GetBoardApplication',
 		GetBoardsForDashboardUseCase: 'GetBoardsForDashboardUseCase',
-		GetAllBoardsUseCase: 'GetAllBoardUseCase'
+		GetAllBoardsUseCase: 'GetAllBoardUseCase',
+		CreateBoardUseCase: 'CreateBoardUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

@@ -10,7 +10,7 @@ import AfterUserRequestedTimerStateSubscriber from 'src/modules/boards/subscribe
 import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/after-user-started-timer.subscriber';
 import AfterUserStoppedTimerSubscriber from 'src/modules/boards/subscribers/after-user-stopped-timer.subscriber';
 import AfterUserUpdatedDurationSubscriber from 'src/modules/boards/subscribers/after-user-updated-duration.subscriber';
-import { CreateBoardApplication } from './applications/create.board.application';
+import { CreateBoardUseCase } from './applications/create-board.use-case';
 import { DeleteBoardApplication } from './applications/delete.board.application';
 import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
 import { GetAllBoardsUseCase } from './applications/get-all-boards.use-case';
@@ -42,11 +42,6 @@ export const updateBoardService = {
 export const deleteBoardService = {
 	provide: TYPES.services.DeleteBoardService,
 	useClass: DeleteBoardService
-};
-
-export const createBoardApplication = {
-	provide: TYPES.applications.CreateBoardApplication,
-	useClass: CreateBoardApplication
 };
 
 export const duplicateBoardUseCase = {
@@ -142,4 +137,9 @@ export const afterUserRequestedTimerStateSubscriber = {
 export const boardRepository = {
 	provide: TYPES.repositories.BoardRepository,
 	useClass: BoardRepository
+};
+
+export const createBoardUseCase = {
+	provide: TYPES.applications.CreateBoardUseCase,
+	useClass: CreateBoardUseCase
 };
