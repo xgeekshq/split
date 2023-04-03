@@ -7,7 +7,6 @@ import { GetBoardGuard } from 'src/libs/guards/getBoardPermissions.guard';
 import { BoardUserGuard } from 'src/libs/guards/boardRoles.guard';
 import { BoardPhases } from 'src/libs/enum/board.phases';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
-import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
@@ -52,14 +51,13 @@ describe('BoardsController', () => {
 					provide: Boards.TYPES.applications.GetBoardUseCase,
 					useValue: createMock<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>()
 				},
-
+				{
+					provide: Boards.TYPES.applications.DeleteBoardUseCase,
+					useValue: createMock<UseCase<string, boolean>>()
+				},
 				{
 					provide: Boards.TYPES.applications.UpdateBoardApplication,
 					useValue: createMock<UpdateBoardApplicationInterface>()
-				},
-				{
-					provide: Boards.TYPES.applications.DeleteBoardApplication,
-					useValue: createMock<DeleteBoardApplicationInterface>()
 				},
 				{
 					provide: SocketGateway,

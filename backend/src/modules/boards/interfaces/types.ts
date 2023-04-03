@@ -20,7 +20,8 @@ export const TYPES = {
 		GetPersonalBoardsUseCase: 'GetPersonalBoardsUseCase',
 		GetBoardUseCase: 'GetBoardUseCase',
 		CreateBoardUseCase: 'CreateBoardUseCase',
-		IsBoardPublicUseCase: 'IsBoardPublicUseCase'
+		IsBoardPublicUseCase: 'IsBoardPublicUseCase',
+		DeleteBoardUseCase: 'DeleteBoardUseCase'
 	},
 	repositories: {
 		BoardTimerRepository: 'BoardTimerRepository',

@@ -11,7 +11,7 @@ import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/afte
 import AfterUserStoppedTimerSubscriber from 'src/modules/boards/subscribers/after-user-stopped-timer.subscriber';
 import AfterUserUpdatedDurationSubscriber from 'src/modules/boards/subscribers/after-user-updated-duration.subscriber';
 import { CreateBoardUseCase } from './applications/create-board.use-case';
-import { DeleteBoardApplication } from './applications/delete.board.application';
+import { DeleteBoardUseCase } from './applications/delete-board.use-case';
 import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
 import { GetAllBoardsUseCase } from './applications/get-all-boards.use-case';
 import { GetBoardUseCase } from './applications/get-board.use-case';
@@ -81,9 +81,9 @@ export const updateBoardApplication = {
 	useClass: UpdateBoardApplication
 };
 
-export const deleteBoardApplication = {
-	provide: TYPES.applications.DeleteBoardApplication,
-	useClass: DeleteBoardApplication
+export const deleteBoardUseCase = {
+	provide: TYPES.applications.DeleteBoardUseCase,
+	useClass: DeleteBoardUseCase
 };
 
 export const boardTimerRepository = {
