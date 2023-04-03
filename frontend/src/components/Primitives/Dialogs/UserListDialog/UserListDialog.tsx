@@ -107,63 +107,65 @@ const UserListDialog = React.memo<UserListDialogProps>(
 
     return (
       <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
-        <Dialog.Header title={confirmationLabel} />
-        <Flex css={{ p: '$32' }} direction="column">
-          <SearchInput
-            currentValue={searchMember}
-            handleChange={(e) => {
-              setSearchMember(e.target.value);
-            }}
-            handleClear={() => {
-              setSearchMember('');
-            }}
-            placeholder="Search member"
-          />
-        </Flex>
-        <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
-          {title}
-        </Text>
-        <Flex direction="column" gap={8}>
-          <Flex align="center" css={{ px: '$32' }}>
-            <Flex css={{ flex: 1 }}>
-              <Flex align="center" gap={8}>
-                <Checkbox
-                  id="selectAll"
-                  checked={isCheckAll}
-                  handleChange={handleSelectAll}
-                  size="md"
-                />
-                <Text heading={5}>Name</Text>
+        <Flex direction="column" css={{ height: '100%' }} data-testid="userListDialog">
+          <Dialog.Header title={confirmationLabel} />
+          <Flex css={{ p: '$32' }} direction="column">
+            <SearchInput
+              currentValue={searchMember}
+              handleChange={(e) => {
+                setSearchMember(e.target.value);
+              }}
+              handleClear={() => {
+                setSearchMember('');
+              }}
+              placeholder="Search member"
+            />
+          </Flex>
+          <Text css={{ display: 'block', px: '$32', pb: '$24' }} heading="4">
+            {title}
+          </Text>
+          <Flex direction="column" gap={8}>
+            <Flex align="center" css={{ px: '$32' }}>
+              <Flex css={{ flex: 1 }}>
+                <Flex align="center" gap={8}>
+                  <Checkbox
+                    id="selectAll"
+                    checked={isCheckAll}
+                    handleChange={handleSelectAll}
+                    size="md"
+                  />
+                  <Text heading={5}>Name</Text>
+                </Flex>
+              </Flex>
+              <Flex css={{ flex: 1 }}>
+                <Text heading={5}>Email</Text>
               </Flex>
             </Flex>
-            <Flex css={{ flex: 1 }}>
-              <Text heading={5}>Email</Text>
+            <Separator orientation="horizontal" />
+          </Flex>
+          <Flex
+            direction="column"
+            justify="start"
+            css={{ height: '100%', overflowY: 'auto', py: '$16' }}
+          >
+            <Flex css={{ px: '$32' }} direction="column" gap={20}>
+              {filteredList?.map((user) => (
+                <CheckboxUserItem
+                  key={user._id}
+                  user={user}
+                  disabled={user._id === userId && !isSAdmin}
+                  handleChecked={handleChecked}
+                />
+              ))}
             </Flex>
           </Flex>
-          <Separator orientation="horizontal" />
+          <Dialog.Footer
+            handleAffirmative={handleUpdateUsers}
+            handleClose={handleClose}
+            affirmativeLabel="Update"
+            disabled={disableUpdate}
+          />
         </Flex>
-        <Flex
-          direction="column"
-          justify="start"
-          css={{ height: '100%', overflowY: 'auto', py: '$16' }}
-        >
-          <Flex css={{ px: '$32' }} direction="column" gap={20}>
-            {filteredList?.map((user) => (
-              <CheckboxUserItem
-                key={user._id}
-                user={user}
-                disabled={user._id === userId && !isSAdmin}
-                handleChecked={handleChecked}
-              />
-            ))}
-          </Flex>
-        </Flex>
-        <Dialog.Footer
-          handleAffirmative={handleUpdateUsers}
-          handleClose={handleClose}
-          affirmativeLabel="Update"
-          disabled={disableUpdate}
-        />
       </Dialog>
     );
   },
