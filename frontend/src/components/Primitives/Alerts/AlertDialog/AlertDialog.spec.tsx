@@ -56,17 +56,14 @@ describe('Components/Primitives/Alerts/AlertDialog', () => {
   });
 
   it('should render the title', async () => {
-    // Arrange
-    const title = 'Title';
-
     // Act
-    const { getByText, getByTestId } = render({ title });
+    const { getByText, getByTestId } = render();
     fireEvent.click(getByTestId('alertDialogTrigger'));
 
     // Assert
     await waitFor(() => {
       expect(getByTestId('alertDialog')).toBeInTheDocument();
-      expect(getByText(title)).toBeInTheDocument();
+      expect(getByText('Title')).toBeInTheDocument();
     });
   });
 
