@@ -13,7 +13,8 @@ import AfterUserUpdatedDurationSubscriber from 'src/modules/boards/subscribers/a
 import { CreateBoardApplication } from './applications/create.board.application';
 import { DeleteBoardApplication } from './applications/delete.board.application';
 import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
-import { GetBoardsForDashboardsUseCase } from './applications/get-boards-for-dashboard.use-case';
+import { GetAllBoardsUseCase } from './applications/get-all-boards.use-case';
+import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
 import { GetBoardApplication } from './applications/get.board.application';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
@@ -55,7 +56,12 @@ export const duplicateBoardUseCase = {
 
 export const getBoardsForDashboardUseCase = {
 	provide: TYPES.applications.GetBoardsForDashboardUseCase,
-	useClass: GetBoardsForDashboardsUseCase
+	useClass: GetBoardsForDashboardUseCase
+};
+
+export const getAllBoardsUseCase = {
+	provide: TYPES.applications.GetAllBoardsUseCase,
+	useClass: GetAllBoardsUseCase
 };
 
 export const getBoardApplication = {

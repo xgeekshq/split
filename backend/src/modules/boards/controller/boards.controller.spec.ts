@@ -17,6 +17,7 @@ import {
 	GetBoardsForDashboardDto,
 	GetBoardsPaginatedPresenter
 } from '../applications/get-boards-for-dashboard.use-case';
+import { GetAllBoardsUseCaseDto } from '../applications/get-all-boards.use-case';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -38,6 +39,10 @@ describe('BoardsController', () => {
 				{
 					provide: Boards.TYPES.applications.DuplicateBoardUseCase,
 					useValue: createMock<UseCase<DuplicateBoardDto, Board>>()
+				},
+				{
+					provide: Boards.TYPES.applications.GetAllBoardsUseCase,
+					useValue: createMock<UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>>()
 				},
 				{
 					provide: Boards.TYPES.applications.GetBoardApplication,

@@ -58,8 +58,11 @@ import { GetBoardApplicationInterface } from '../interfaces/applications/get.boa
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
-import { GetBoardsForDashboardDto } from '../applications/get-boards-for-dashboard.use-case';
-import { BoardsAndPage } from '../interfaces/boards-page.interface';
+import {
+	GetBoardsForDashboardDto,
+	GetBoardsPaginatedPresenter
+} from '../applications/get-boards-for-dashboard.use-case';
+import { GetAllBoardsUseCaseDto } from '../applications/get-all-boards.use-case';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -72,9 +75,14 @@ export default class BoardsController {
 		@Inject(TYPES.applications.CreateBoardApplication)
 		private createBoardApp: CreateBoardApplicationInterface,
 		@Inject(TYPES.applications.GetBoardsForDashboardUseCase)
-		private getBoardsForDashboardUseCase: UseCase<GetBoardsForDashboardDto, BoardsAndPage | null>,
+		private getBoardsForDashboardUseCase: UseCase<
+			GetBoardsForDashboardDto,
+			GetBoardsPaginatedPresenter
+		>,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
 		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
+		@Inject(TYPES.applications.GetAllBoardsUseCase)
+		private getAllBoardsUseCase: UseCase<GetAllBoardsUseCaseDto, GetBoardsPaginatedPresenter>,
 		@Inject(TYPES.applications.GetBoardApplication)
 		private getBoardApp: GetBoardApplicationInterface,
 		@Inject(TYPES.applications.UpdateBoardApplication)
@@ -179,7 +187,7 @@ export default class BoardsController {
 	getAllBoards(@Req() request: RequestWithUser, @Query() { page, size, team }: PaginationParams) {
 		const { _id: userId, isSAdmin } = request.user;
 
-		return this.getBoardApp.getAllBoards(team, userId, isSAdmin, page, size);
+		return this.getAllBoardsUseCase.execute({ team, userId, isSAdmin, page, size });
 	}
 
 	@ApiOperation({ summary: 'Retrieve personal boards from user' })

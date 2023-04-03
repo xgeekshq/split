@@ -9,7 +9,7 @@ export type GetBoardsForDashboardDto = { userId: string; page?: number; size?: n
 export type GetBoardsPaginatedPresenter = BoardsAndPage | null;
 
 @Injectable()
-export class GetBoardsForDashboardsUseCase
+export class GetBoardsForDashboardUseCase
 	implements UseCase<GetBoardsForDashboardDto, GetBoardsPaginatedPresenter>
 {
 	constructor(

@@ -9,19 +9,19 @@ import { GetBoardsPaginatedPresenter } from '../../applications/get-boards-for-d
 export interface GetBoardServiceInterface {
 	getBoards(allBoards: boolean, query: QueryType, page, size): Promise<GetBoardsPaginatedPresenter>;
 
-	getSuperAdminBoards(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<GetBoardsPaginatedPresenter>;
+	// getSuperAdminBoards(
+	// 	userId: string,
+	// 	page?: number,
+	// 	size?: number
+	// ): Promise<GetBoardsPaginatedPresenter>;
 
-	getUsersBoards(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<GetBoardsPaginatedPresenter>;
+	// getUsersBoards(
+	// 	userId: string,
+	// 	page?: number,
+	// 	size?: number
+	// ): Promise<GetBoardsPaginatedPresenter>;
 
-	getTeamBoards(teamId: string, page?: number, size?: number): Promise<GetBoardsPaginatedPresenter>;
+	//getTeamBoards(teamId: string, page?: number, size?: number): Promise<GetBoardsPaginatedPresenter>;
 
 	getPersonalUserBoards(
 		userId: string,

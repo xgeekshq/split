@@ -5,14 +5,6 @@ import UserDto from 'src/modules/users/dto/user.dto';
 import { GetBoardsPaginatedPresenter } from '../../applications/get-boards-for-dashboard.use-case';
 
 export interface GetBoardApplicationInterface {
-	getAllBoards(
-		teamId?: string,
-		userId?: string,
-		isSuperAdmin?: boolean,
-		page?: number,
-		size?: number
-	): Promise<GetBoardsPaginatedPresenter>;
-
 	getPersonalBoards(
 		userId?: string,
 		page?: number,
