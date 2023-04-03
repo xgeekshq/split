@@ -1,4 +1,3 @@
-import { UpdateResult } from 'mongodb';
 import { LeanDocument } from 'mongoose';
 import { BoardDocument } from 'src/modules/boards/entities/board.schema';
 
@@ -24,6 +23,4 @@ export interface UpdateCardServiceInterface {
 		userId: string,
 		text: string
 	): Promise<LeanDocument<BoardDocument>>;
-
-	pullCardItem(boardId: string, itemId: string, session?: boolean): Promise<UpdateResult>;
 }

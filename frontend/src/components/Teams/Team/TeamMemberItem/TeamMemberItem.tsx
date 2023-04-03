@@ -4,14 +4,15 @@ import { useRecoilState } from 'recoil';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
-import { membersListState } from '@/store/team/atom/team.atom';
 
-import useTeam from '@/hooks/useTeam';
 import RoleSelector from '@/components/Teams/Team/TeamMemberItem/RoleSelector/RoleSelector';
 import { InnerContainer } from '@/styles/pages/pages.styles';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import NewJoinerTooltip from '@/components/Primitives/Tooltips/NewJoinerTooltip/NewJoinerTooltip';
 import BoardRolePopover from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
+import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
+import { createTeamState } from '@/store/team/atom/team.atom';
+import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import MemberTitle from './MemberTitle/MemberTitle';
 
 export type TeamMemberItemProps = {
@@ -25,11 +26,9 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
     const { userId, isSAdmin } = useCurrentSession();
     const canChangeRole = hasPermissions && userId !== member.user._id;
 
-    const [membersList, setMembersList] = useRecoilState(membersListState);
+    const [createTeamMembers, setCreateTeamMembers] = useRecoilState(createTeamState);
 
-    const {
-      updateTeamUser: { mutate },
-    } = useTeam();
+    const { mutate } = useUpdateTeamUser(member.team!);
 
     const isNewJoinerHandler = (checked: boolean) => {
       if (isTeamPage && member.team) {
@@ -43,13 +42,13 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
 
         mutate(updateTeamUser);
       } else {
-        const listUsersMembers = membersList.map((user) =>
+        const updatedCreateTeamMembers = createTeamMembers.map((user) =>
           user.user._id === member.user._id
             ? { ...user, isNewJoiner: checked, canBeResponsible: !checked }
             : user,
         );
 
-        setMembersList(listUsersMembers);
+        setCreateTeamMembers(updatedCreateTeamMembers);
       }
     };
 
@@ -65,11 +64,31 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
 
         mutate(updateTeamUser);
       } else {
-        const listUsersMembers = membersList.map((user) =>
+        const updatedCreateTeamMembers = createTeamMembers.map((user) =>
           user.user._id === member.user._id ? { ...user, canBeResponsible: checked } : user,
         );
 
-        setMembersList(listUsersMembers);
+        setCreateTeamMembers(updatedCreateTeamMembers);
+      }
+    };
+
+    const handleRoleChange = (role: TeamUserRoles) => {
+      if (isTeamPage && member.team) {
+        const updateTeamUser: TeamUserUpdate = {
+          team: member.team,
+          user: member.user._id,
+          role,
+          isNewJoiner: member.isNewJoiner,
+          canBeResponsible: member.canBeResponsible,
+        };
+
+        mutate(updateTeamUser);
+      } else {
+        const updatedCreateTeamMembers = createTeamMembers.map((user) =>
+          user.user._id === member.user._id ? { ...user, role } : user,
+        );
+
+        setCreateTeamMembers(updatedCreateTeamMembers);
       }
     };
 
@@ -97,10 +116,9 @@ const TeamMemberItem = React.memo<TeamMemberItemProps>(
           </Flex>
           <Flex css={{ flex: '2' }} justify="end">
             <RoleSelector
-              isTeamPage={isTeamPage}
               role={member.role}
-              userId={member.user._id}
               canChangeRole={canChangeRole}
+              handleRoleChange={handleRoleChange}
             />
           </Flex>
         </InnerContainer>

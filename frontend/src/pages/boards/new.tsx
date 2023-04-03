@@ -1,32 +1,35 @@
-import { useCallback, useState } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import Text from '@/components/Primitives/Text/Text';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { BoxColumnContainer } from '@/components/CreateBoard/SelectBoardType/BoxColumnContainer';
-import useBoard from '@/hooks/useBoard';
-import LoadingPage from '@/components/Primitives/Loading/Page/Page';
-import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
+import { useCallback, useState } from 'react';
+
+import CreateBoardBox from '@/components/CreateBoard/CreateBoardBox/CreateBoardBox';
 import CreateHeader from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import LoadingPage from '@/components/Primitives/Loading/Page/Page';
+import Text from '@/components/Primitives/Text/Text';
+import useBoard from '@/hooks/useBoard';
+import useCurrentSession from '@/hooks/useCurrentSession';
+import { NEXT_PUBLIC_REGULAR_BOARD } from '@/utils/constants';
+import { ROUTES } from '@/utils/routes';
 
 const NewBoard: NextPage = () => {
-  const router = useRouter();
-  const { data: session } = useSession({ required: true });
-
+  const {
+    back,
+    query: { team },
+  } = useRouter();
+  const { session } = useCurrentSession({ required: true });
   const [isBackButtonDisable, setBackButtonState] = useState(false);
 
   const {
     createBoard: { status },
   } = useBoard({ autoFetchBoard: false });
 
-  /**
-   * Handle back to boards list page
-   */
+  // Handle back to boards list page
   const handleBack = useCallback(() => {
     setBackButtonState(true);
-    router.back();
-  }, [router]);
+    back();
+  }, [back]);
 
   if (!session) return null;
 
@@ -43,20 +46,23 @@ const NewBoard: NextPage = () => {
         </Text>
         <Flex gap={40}>
           {NEXT_PUBLIC_REGULAR_BOARD && (
-            <BoxColumnContainer
-              iconName="blob-team-retro"
-              title="Regular retro"
-              description="Make a retro with one team and the usual setup as you are used to it."
-              route="/boards/newRegularBoard"
-            />
+            <Link href={{ pathname: ROUTES.NewRegularBoard, query: team ? { team } : undefined }}>
+              <CreateBoardBox
+                iconName="blob-team-retro"
+                title="Regular retro"
+                description="Make a retro with one team and the usual setup as you are used to it."
+                type="column"
+              />
+            </Link>
           )}
-
-          <BoxColumnContainer
-            iconName="blob-split-retro"
-            title="SPLIT retro"
-            description="Make a retro with a huge team or a whole company. Split into sub-teams with associated boards, and finally merge everything into one main board."
-            route="/boards/newSplitBoard"
-          />
+          <Link href={{ pathname: ROUTES.NewSplitBoard, query: team ? { team } : undefined }}>
+            <CreateBoardBox
+              iconName="blob-split-retro"
+              title="SPLIT retro"
+              description="Make a retro with a huge team or a whole company. Split into sub-teams with associated boards, and finally merge everything into one main board."
+              type="column"
+            />
+          </Link>
         </Flex>
       </Flex>
       {status === 'loading' && <LoadingPage />}

@@ -10,6 +10,7 @@ const borderRadius = {
   40: '2.5rem',
   72: '4.5rem',
   80: '5rem',
+  800: '50rem',
   round: '50%',
   pill: '9999rem',
 };

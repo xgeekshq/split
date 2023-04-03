@@ -15,6 +15,8 @@ const SchemaCreateBoard = Joi.object({
   team: Joi.string().required().messages({
     'any.required': 'Please Select Team',
   }),
+  maxTeams: Joi.any(), // Dynamic validation inside QuickEditSubTeams
+  maxUsers: Joi.any(), // Dynamic validation inside QuickEditSubTeams
 });
 
 export default SchemaCreateBoard;

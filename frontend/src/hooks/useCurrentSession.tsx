@@ -7,14 +7,8 @@ type UserCurrentSessionProps = {
 const useCurrentSession = ({ required = false }: Partial<UserCurrentSessionProps> = {}) => {
   const { data: session, status } = useSession({ required });
 
-  if (!session?.user) {
-    return {
-      ...session,
-      status,
-    };
-  }
-
-  const { id: userId, isSAdmin } = session.user;
+  const userId = session?.user.id ?? '';
+  const isSAdmin = session?.user.isSAdmin ?? false;
 
   return {
     session,

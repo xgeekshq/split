@@ -27,6 +27,7 @@ const RadioGroupItem = styled(Item, {
   height: '$16',
   borderRadius: '100%',
   margin: '$4 $10',
+  cursor: 'pointer',
   '&[data-state="unchecked"]': {
     width: '$14',
     height: '$14',
