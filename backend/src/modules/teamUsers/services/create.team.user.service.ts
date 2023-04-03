@@ -13,14 +13,18 @@ export default class CreateTeamUserService implements CreateTeamUserServiceInter
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
 
-	async createTeamUsers(teamUsers: TeamUserDto[], teamId?: string): Promise<TeamUser[]> {
+	async createTeamUsers(
+		teamUsers: TeamUserDto[],
+		teamId?: string,
+		withSession?: boolean
+	): Promise<TeamUser[]> {
 		const teamUsersToSave = teamId
 			? teamUsers.map((teamUser) => ({ ...teamUser, team: teamId }))
 			: teamUsers;
 
-		const teamUsersSaved = await this.teamUserRepository.insertMany(teamUsersToSave);
+		const teamUsersSaved = await this.teamUserRepository.insertMany(teamUsersToSave, withSession);
 
-		if (teamUsersSaved.length < 1) throw new BadRequestException(INSERT_FAILED);
+		if (teamUsersSaved.length < teamUsers.length) throw new BadRequestException(INSERT_FAILED);
 
 		return teamUsersSaved;
 	}
@@ -33,6 +37,7 @@ export default class CreateTeamUserService implements CreateTeamUserServiceInter
 		return teamUserSaved;
 	}
 
+	// these functions are not tested since they make direct queries to the database
 	startTransaction(): Promise<void> {
 		return this.teamUserRepository.startTransaction();
 	}

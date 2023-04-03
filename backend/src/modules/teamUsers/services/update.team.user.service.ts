@@ -19,23 +19,46 @@ export default class UpdateTeamUserService implements UpdateTeamUserServiceInter
 		private deleteTeamUserService: DeleteTeamUserServiceInterface
 	) {}
 
+	// this function won't be tested since it is a direct query to the database
 	updateTeamUser(teamUserData: TeamUserDto): Promise<TeamUser> {
 		return this.teamUserRepository.updateTeamUser(teamUserData);
 	}
 
 	async addAndRemoveTeamUsers(addUsers: TeamUserDto[], removeUsers: string[]): Promise<TeamUser[]> {
 		try {
-			let createdTeamUsers: TeamUser[] = [];
-
-			if (addUsers.length > 0)
-				createdTeamUsers = await this.createTeamUserService.createTeamUsers(addUsers);
-
-			if (removeUsers.length > 0)
-				await this.deleteTeamUserService.deleteTeamUsers(removeUsers, false);
+			const createdTeamUsers: TeamUser[] =
+				(await this.addAndRemoveTeamUsersHandleAbortSession(addUsers, removeUsers)) ?? [];
+			await this.createTeamUserService.commitTransaction();
+			await this.deleteTeamUserService.commitTransaction();
 
 			return createdTeamUsers;
 		} catch (error) {
 			throw new BadRequestException(UPDATE_FAILED);
 		}
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async addAndRemoveTeamUsersHandleAbortSession(
+		addUsers: TeamUserDto[],
+		removeUsers: string[]
+	) {
+		let createdTeamUsers: TeamUser[];
+		try {
+			await this.createTeamUserService.startTransaction();
+			await this.deleteTeamUserService.startTransaction();
+
+			if (addUsers.length > 0)
+				createdTeamUsers = await this.createTeamUserService.createTeamUsers(addUsers, null, true);
+
+			if (removeUsers.length > 0)
+				await this.deleteTeamUserService.deleteTeamUsers(removeUsers, true);
+		} catch (error) {
+			await this.createTeamUserService.abortTransaction();
+			await this.deleteTeamUserService.abortTransaction();
+			throw new BadRequestException(UPDATE_FAILED);
+		}
+
+		return createdTeamUsers;
 	}
 }
