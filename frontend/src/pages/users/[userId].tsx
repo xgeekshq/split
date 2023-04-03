@@ -9,8 +9,7 @@ import UserHeader from '@/components/Users/User/Header/Header';
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
-import { TEAMS_KEY } from '@/hooks/teams';
-import useUser from '@/hooks/useUser';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import { ROUTES } from '@/utils/routes';
@@ -18,6 +17,7 @@ import { getUser } from '@/api/userService';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import useUserTeams from '@/hooks/teams/useUserTeams';
+import useUser from '@/hooks/users/useUser';
 
 const UserDetails = () => {
   const {
@@ -26,11 +26,8 @@ const UserDetails = () => {
   } = useRouter();
 
   // Hooks
-  const {
-    getUserById: { data: userData, isFetching: fetchingUser },
-  } = useUser();
-
-  const { data: userTeams, isLoading: loadingTeams } = useUserTeams(userId! as string);
+  const { data: userData, isLoading: isLoadingUser } = useUser(userId as string);
+  const { data: userTeams, isLoading: isLoadingTeams } = useUserTeams(userId as string);
 
   if (!userData || !userTeams) {
     replace(ROUTES.Users);
@@ -46,7 +43,7 @@ const UserDetails = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {fetchingUser || loadingTeams ? (
+            {isLoadingUser || isLoadingTeams ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
@@ -67,9 +64,9 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(asyn
 
   const queryClient = new QueryClient();
   await Promise.all([
-    queryClient.prefetchQuery(['userById', userId], () => getUser(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, 'user', userId], () => getUserTeams(userId, context)),
-    queryClient.prefetchQuery([TEAMS_KEY, 'not', 'user', userId], () =>
+    queryClient.prefetchQuery([USERS_KEY, userId], () => getUser(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, USERS_KEY, userId], () => getUserTeams(userId, context)),
+    queryClient.prefetchQuery([TEAMS_KEY, 'not', USERS_KEY, userId], () =>
       getTeamsWithoutUser(userId, context),
     ),
   ]);

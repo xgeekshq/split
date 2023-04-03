@@ -13,14 +13,14 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { TEAMS_KEY } from '@/hooks/teams';
-import useUser from '@/hooks/useUser';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ROUTES } from '@/utils/routes';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import useTeam from '@/hooks/teams/useTeam';
+import useUsers from '@/hooks/users/useUsers';
 
 const Team = () => {
   // Session Details
@@ -34,11 +34,8 @@ const Team = () => {
   const setUsers = useSetRecoilState(usersListState);
 
   // Hooks
-  const { data: teamData, isLoading: loadingTeam } = useTeam(teamId as string);
-
-  const {
-    fetchUsers: { data: usersData, isLoading: loadingUsers },
-  } = useUser();
+  const { data: teamData, isLoading: isLoadingTeam } = useTeam(teamId as string);
+  const { data: usersData, isLoading: isLoadingUsers } = useUsers();
 
   const userFound = teamData?.users.find((member) => member.user?._id === userId);
   const hasPermissions =
@@ -71,7 +68,7 @@ const Team = () => {
       >
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            {loadingTeam || loadingUsers ? (
+            {isLoadingTeam || isLoadingUsers ? (
               <Flex justify="center" css={{ mt: '$16' }}>
                 <Dots />
               </Flex>
@@ -97,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   await Promise.all([
     queryClient.prefetchQuery([TEAMS_KEY, teamId], () => getTeam(teamId, context)),
-    queryClient.prefetchQuery(['users'], () => getAllUsers(context)),
+    queryClient.prefetchQuery([USERS_KEY], () => getAllUsers(context)),
   ]);
 
   return {

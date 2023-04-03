@@ -1,28 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getTeam } from '@/api/teamService';
+import { getAllUsers } from '@/api/userService';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
-import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
+import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
-const useTeam = (teamId: string) => {
+const useUsers = () => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([TEAMS_KEY, teamId], () => getTeam(teamId), {
-    enabled: !!teamId,
+  return useQuery([USERS_KEY], () => getAllUsers(), {
+    enabled: true,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     onError: () => {
       setToastState({
         open: true,
-        content: 'Error getting the team',
+        content: 'Error getting the users',
         type: ToastStateEnum.ERROR,
       });
     },
   });
 };
 
-export default useTeam;
+export default useUsers;
