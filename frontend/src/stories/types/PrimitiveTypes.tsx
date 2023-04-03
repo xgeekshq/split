@@ -62,10 +62,6 @@ export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 40 | 48 | 100;
 // Primitive/Switch
 export type SwitchSizeType = 'xs' | 'sm' | 'md';
 
-// Primitive/Checkbox
-export type CheckboxSizeType = 'sm' | 'md';
-export type CheckboxVariantType = 'default' | 'error';
-
 // Primitive/Loading/Spinner
 export type SpinnerSizeType = 50 | 80 | 100 | 150 | 200;
 export type SpinnerColorType = 'light' | 'dark';
