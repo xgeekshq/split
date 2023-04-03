@@ -13,7 +13,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import useUsers from '@/hooks/users/useUsers';
-import { USERS_KEY } from '@/hooks/users';
+import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const NewTeam: NextPage = () => {
   const { session, userId } = useCurrentSession({ required: true });

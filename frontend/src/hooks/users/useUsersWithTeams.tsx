@@ -6,8 +6,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
-import { USERS_KEY } from '.';
-import { TEAMS_KEY } from '../teams';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useUsersWithTeams = (searchParam?: string) => {
   const setToastState = useSetRecoilState(toastState);

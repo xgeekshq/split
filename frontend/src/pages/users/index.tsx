@@ -10,8 +10,7 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import UsersList from '@/components/Users/UsersList/UsersList';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { USERS_KEY } from '@/hooks/users';
-import { TEAMS_KEY } from '@/hooks/teams';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const Users = () => (
   <Flex css={{ width: '100%' }} direction="column" gap="16">

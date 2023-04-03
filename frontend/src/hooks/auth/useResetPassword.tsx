@@ -5,7 +5,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
-import { USERS_KEY } from '../users';
+import { USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useResetPassword = () => {
   const setToastState = useSetRecoilState(toastState);

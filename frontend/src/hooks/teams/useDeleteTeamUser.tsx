@@ -7,8 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { Team, TeamChecked } from '@/types/team/team';
-import { TEAMS_KEY } from '.';
-import { USERS_KEY } from '../users';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useDeleteTeamUser = (userId: string) => {
   const queryClient = useQueryClient();

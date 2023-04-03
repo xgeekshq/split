@@ -13,7 +13,7 @@ import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import TeamHeader from '@/components/Teams/Team/Header/Header';
 import TeamMembersList from '@/components/Teams/Team/TeamMembersList';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import { TEAMS_KEY } from '@/hooks/teams';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { usersListState } from '@/store/team/atom/team.atom';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
@@ -21,7 +21,6 @@ import { ROUTES } from '@/utils/routes';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import useTeam from '@/hooks/teams/useTeam';
 import useUsers from '@/hooks/users/useUsers';
-import { USERS_KEY } from '@/hooks/users';
 
 const Team = () => {
   // Session Details

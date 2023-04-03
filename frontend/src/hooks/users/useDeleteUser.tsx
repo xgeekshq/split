@@ -6,8 +6,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { InfiniteUsersWithTeams } from '@/types/user/user';
 
-import { USERS_KEY } from '.';
-import { TEAMS_KEY } from '../teams';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useDeleteUser = () => {
   const queryClient = useQueryClient();

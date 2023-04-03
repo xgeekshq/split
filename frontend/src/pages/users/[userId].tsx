@@ -9,7 +9,7 @@ import UserHeader from '@/components/Users/User/Header/Header';
 import { GetServerSideProps } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { getTeamsWithoutUser, getUserTeams } from '@/api/teamService';
-import { TEAMS_KEY } from '@/hooks/teams';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 import { useRouter } from 'next/router';
 import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import { ROUTES } from '@/utils/routes';
@@ -18,7 +18,6 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import TeamsList from '@/components/Teams/TeamsList/TeamList';
 import useUserTeams from '@/hooks/teams/useUserTeams';
 import useUser from '@/hooks/users/useUser';
-import { USERS_KEY } from '@/hooks/users';
 
 const UserDetails = () => {
   const {
