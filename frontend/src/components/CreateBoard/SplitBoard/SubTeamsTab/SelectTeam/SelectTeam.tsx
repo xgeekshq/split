@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import {
@@ -16,12 +16,12 @@ import Text from '@/components/Primitives/Text/Text';
 import useCreateBoard from '@/hooks/useCreateBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import { createBoardError, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { Team } from '@/types/team/team';
 import { MIN_MEMBERS } from '@/utils/constants';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
+import useTeams from '@/hooks/teams/useTeams';
 
 type SelectTeamProps = {
   previousTeam?: string;
@@ -32,11 +32,11 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   const router = useRouter();
   const routerTeam = router.query.team as string;
 
-  // Recoil Atoms and Hooks
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
-  const teams = useRecoilValue(teamsOfUser);
   const setHaveError = useSetRecoilState(createBoardError);
   const { handleSplitBoards, setCreateBoardData, teamMembers } = useCreateBoard(selectedTeam);
+  const teamsQuery = useTeams(isSAdmin);
+  const teams = teamsQuery.data ?? [];
 
   const {
     setValue,
@@ -46,16 +46,17 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   } = useFormContext();
 
   const hasPermissions = (team: Team) =>
-    !!team.users?.find(
+    isSAdmin ||
+    team.users.find(
       (teamUser) =>
         teamUser.user._id === userId &&
         [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-    ) || isSAdmin;
+    );
+  const availableTeams = teams.filter((team) => hasPermissions(team));
 
   const teamMembersCount = teamMembers?.length ?? 0;
-  const numberOfTeams = teams?.filter((team) => hasPermissions(team)).length ?? 0;
   const message =
-    numberOfTeams === 0
+    availableTeams.length === 0
       ? ' In order to create a team board, you must be team-admin or stakeholder of at least one team.'
       : (errors.team?.message as string);
   const isHelperEmpty = isEmpty(message);
@@ -73,38 +74,35 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
     clearErrors();
     const foundTeam = teams.find((team) => team.id === value);
 
-    setValue('team', foundTeam?.id);
+    if (!foundTeam) return;
+
+    setValue('team', foundTeam.id);
     setSelectedTeam(foundTeam);
   };
 
   const teamsNames = useMemo(
     () =>
-      teams
-        .filter((team) => hasPermissions(team))
-        .map((team) => ({
-          label: `${team.name} (${team.users.length} members)`,
-          value: team.id,
-        })),
-    [teams],
+      availableTeams.map((team) => ({
+        label: `${team.name} (${team.users.length} members)`,
+        value: team.id,
+      })),
+    [availableTeams],
   );
 
-  const verifyIfCanCreateBoard = useCallback(() => {
+  const verifyIfCanCreateBoard = () => {
     if (!selectedTeam) {
-      return true;
+      return false;
     }
 
-    const haveMinMembers = !!(
-      selectedTeam.users?.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
-      MIN_MEMBERS
-    );
+    const haveMinMembers =
+      selectedTeam.users.filter((user) => user.role !== TeamUserRoles.STAKEHOLDER).length >=
+      MIN_MEMBERS;
 
-    return !haveMinMembers || !hasPermissions(selectedTeam);
-  }, [selectedTeam, userId, isSAdmin]);
+    return haveMinMembers;
+  };
 
   const createBoard = useCallback(() => {
-    if (!selectedTeam) {
-      return;
-    }
+    if (!selectedTeam) return;
 
     const maxUsersCount = Math.ceil(teamMembersCount / 2);
     const teamsCount = Math.ceil(teamMembersCount / maxUsersCount);
@@ -136,30 +134,29 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
   }, [handleSplitBoards, previousTeam, selectedTeam, setCreateBoardData, teamMembersCount]);
 
   useEffect(() => {
+    if (selectedTeam) {
+      const canCreateBoard = verifyIfCanCreateBoard();
+      setHaveError(!canCreateBoard);
+
+      if (canCreateBoard) {
+        createBoard();
+      }
+    }
+  }, [routerTeam, selectedTeam, verifyIfCanCreateBoard, createBoard]);
+
+  useEffect(() => {
     if (routerTeam) {
       setValue('team', routerTeam);
     }
 
-    setHaveError(numberOfTeams <= 0);
+    setHaveError(availableTeams.length <= 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [numberOfTeams]);
-
-  useEffect(() => {
-    if (selectedTeam) {
-      const canNotCreateBoard = verifyIfCanCreateBoard();
-
-      setHaveError(canNotCreateBoard);
-
-      if (!canNotCreateBoard) {
-        createBoard();
-      }
-    }
-  }, [routerTeam, createBoard, selectedTeam, setHaveError, verifyIfCanCreateBoard]);
+  }, []);
 
   return (
     <Flex direction="column" css={{ flex: 1 }}>
       <Select
-        disabled={numberOfTeams === 0}
+        disabled={availableTeams.length === 0}
         hasError={currentSelectTeamState === 'error'}
         defaultValue={teamsNames.find((option) => option.value === selectedTeam?.id)?.value}
         onValueChange={(selectedOption: string) => {
@@ -170,7 +167,7 @@ const SelectTeam = ({ previousTeam }: SelectTeamProps) => {
         <SelectTrigger css={{ padding: '$24' }}>
           <Flex direction="column">
             <Text size={selectedTeam ? 'sm' : 'md'} color="primary300">
-              {numberOfTeams === 0 ? 'No teams available' : 'Select Team'}
+              {availableTeams.length === 0 ? 'No teams available' : 'Select Team'}
             </Text>
             <SelectValue />
           </Flex>

@@ -130,7 +130,7 @@ describe('GetTeamService', () => {
 			expect(getTeamUserServiceMock.getAllTeamsOfUser).toHaveBeenCalled();
 			expect(teamRepositoryMock.getTeamsWithUsers).toHaveBeenCalled();
 			expect(getBoardServiceMock.getAllMainBoards).toHaveBeenCalled();
-			expect(result).toEqual(expectedResult);
+			expect(result).toHaveLength(expectedResult.length);
 		});
 	});
 

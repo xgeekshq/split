@@ -1,6 +1,6 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
@@ -8,25 +8,16 @@ import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import { TEAMS_KEY } from '@/hooks/teams';
-import { teamsListState } from '@/store/team/atom/team.atom';
-import { useSetRecoilState } from 'recoil';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
 import { getAllTeams, getUserTeams } from '@/api/teamService';
-import useTeams from '@/hooks/teams/useTeams';
+import useCurrentSession from '@/hooks/useCurrentSession';
 
 const Boards = () => {
-  const { data: session } = useSession({ required: true });
-  const setTeamsList = useSetRecoilState(teamsListState);
+  const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
-  const { data } = useTeams(session?.user.isSAdmin ?? false);
-
-  useEffect(() => {
-    if (data) setTeamsList(data);
-  }, [data, setTeamsList]);
-
-  if (!session || !data) return null;
+  if (!session) return null;
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -40,7 +31,7 @@ const Boards = () => {
       <Flex direction="column">
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            <MyBoards isSuperAdmin={session?.user.isSAdmin} userId={session?.user.id} />
+            <MyBoards isSuperAdmin={isSAdmin} userId={userId} />
           </QueryError>
         </Suspense>
       </Flex>

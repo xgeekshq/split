@@ -29,7 +29,6 @@ import {
   createBoardError,
   createBoardTeam,
 } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { CreateBoardDto } from '@/types/board/board';
@@ -80,7 +79,6 @@ const NewSplitBoard: NextPage = () => {
   const setToastState = useSetRecoilState(toastState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [haveError, setHaveError] = useRecoilState(createBoardError);
-  const [teams, setTeams] = useRecoilState(teamsOfUser);
   const [selectedTeam, setSelectedTeam] = useRecoilState(createBoardTeam);
 
   // User Board Hook
@@ -89,13 +87,8 @@ const NewSplitBoard: NextPage = () => {
   } = useBoard({ autoFetchBoard: false });
 
   // Team  Hook
-  const { data: userBasedTeams } = useTeams(isSAdmin);
-
-  useEffect(() => {
-    if (userBasedTeams) {
-      setTeams(userBasedTeams);
-    }
-  }, [userBasedTeams, setTeams]);
+  const teamsQuery = useTeams(isSAdmin);
+  const userBasedTeams = teamsQuery.data ?? [];
 
   const splitBoardTips = [
     {
@@ -142,7 +135,7 @@ const NewSplitBoard: NextPage = () => {
   });
 
   if (routerTeam && !selectedTeam) {
-    const foundTeam = teams.find((team) => team.id === routerTeam);
+    const foundTeam = userBasedTeams.find((team) => team.id === routerTeam);
     setSelectedTeam(foundTeam);
   }
 
