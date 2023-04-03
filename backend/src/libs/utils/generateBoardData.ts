@@ -1,6 +1,13 @@
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import { CreateBoardDto } from 'src/modules/boards/dto/createBoard.dto';
+import TeamDto from 'src/modules/teams/dto/team.dto';
+
+interface CreateBoardDto {
+	maxUsers: number;
+	board: BoardDto;
+	team: TeamDto | null;
+	users: BoardUserDto[];
+}
 
 export const generateSubBoardDtoData = (index: number, users: BoardUserDto[] = []): BoardDto => {
 	return {

@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import EmptyBoards from '@/components/Dashboard/RecentRetros/partials/EmptyBoards';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import isEmpty from '@/utils/isEmpty';
 import { useRouter } from 'next/router';
-import { teamsListState } from '@/store/team/atom/team.atom';
 import { filterTeamBoardsState } from '@/store/board/atoms/board.atom';
 import useBoard from '@/hooks/useBoard';
+import useTeams from '@/hooks/teams/useTeams';
+import useCurrentSession from '@/hooks/useCurrentSession';
 import FilterBoards from '../Filters/FilterBoards';
 import ListBoardsByTeam from './ListBoardsByTeam';
 import ListBoards from './ListBoards';
@@ -25,15 +26,17 @@ export interface OptionType {
 }
 
 const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
-  const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { isSAdmin } = useCurrentSession();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const routerTeam = router.query.team as string;
-  const userTeamsList = useRecoilValue(teamsListState);
 
+  const [filterState, setFilterState] = useRecoilState(filterTeamBoardsState);
+
+  const teamsQuery = useTeams(isSAdmin);
+  const userTeamsList = teamsQuery.data ?? [];
   const { fetchBoards } = useBoard({ autoFetchBoards: true });
-
-  const { data, isLoading } = fetchBoards;
+  const { data: paginatedBoards, isLoading } = fetchBoards;
 
   useEffect(() => {
     if (routerTeam) setFilterState(routerTeam);
@@ -44,7 +47,7 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
     const teams = new Map<string, Team>();
     const boardsTeamAndDate = new Map<string, Map<string, BoardType[]>>();
 
-    data?.pages.forEach((page) => {
+    paginatedBoards?.pages.forEach((page) => {
       page.boards?.forEach((board) => {
         const boardsOfTeam = boardsTeamAndDate.get(`${board.team?.id ?? `personal`}`);
         const date = new Date(board.updatedAt).toDateString();
@@ -62,7 +65,7 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
       });
     });
     return { boardsTeamAndDate, teams };
-  }, [data?.pages]);
+  }, [paginatedBoards?.pages]);
 
   const onScroll = () => {
     if (scrollRef.current) {
@@ -73,13 +76,13 @@ const MyBoards = ({ userId, isSuperAdmin }: MyBoardsProps) => {
     }
   };
 
+  if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
+    return <EmptyBoards />;
+
   const teamNames: OptionType[] = userTeamsList.map((team) => ({
     value: team.id,
     label: team.name,
   }));
-
-  if (filterState === 'all' && isEmpty(dataByTeamAndDate.boardsTeamAndDate.size) && !isLoading)
-    return <EmptyBoards />;
 
   const filteredTeam: Team | undefined = userTeamsList.find((team) => team.id === filterState);
 

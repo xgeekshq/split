@@ -24,12 +24,11 @@ import useBoard from '@/hooks/useBoard';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import SchemaCreateRegularBoard from '@/schema/schemaCreateRegularBoard';
 import { createBoardDataState, createBoardTeam } from '@/store/createBoard/atoms/create-board.atom';
-import { teamsOfUser, usersListState } from '@/store/team/atom/team.atom';
+import { usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { StyledForm } from '@/styles/pages/pages.styles';
 import { BoardUserDto } from '@/types/board/board.user';
 import { BoardUserRoles } from '@/utils/enums/board.user.roles';
-import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import isEmpty from '@/utils/isEmpty';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
@@ -73,7 +72,6 @@ const NewRegularBoard: NextPage = () => {
   const setToastState = useSetRecoilState(toastState);
   const [boardState, setBoardState] = useRecoilState(createBoardDataState);
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const setTeams = useSetRecoilState(teamsOfUser);
   const setSelectedTeam = useSetRecoilState(createBoardTeam);
 
   // Team  Hook
@@ -109,18 +107,6 @@ const NewRegularBoard: NextPage = () => {
   });
 
   useEffect(() => {
-    if (userBasedTeams) {
-      const availableTeams = userBasedTeams.filter((team) =>
-        team.users?.find(
-          (teamUser) =>
-            teamUser.user._id === userId &&
-            [TeamUserRoles.ADMIN, TeamUserRoles.STAKEHOLDER].includes(teamUser.role),
-        ),
-      );
-
-      setTeams(isSAdmin ? userBasedTeams : availableTeams);
-    }
-
     if (allUsers) {
       const usersWithChecked = allUsers.map((user) => ({
         ...user,
@@ -129,7 +115,7 @@ const NewRegularBoard: NextPage = () => {
 
       setUsersList(usersWithChecked);
     }
-  }, [userBasedTeams, setTeams, allUsers, setUsersList, isSAdmin, userId]);
+  }, [allUsers, setUsersList, userId]);
 
   // Board Hook
   const {

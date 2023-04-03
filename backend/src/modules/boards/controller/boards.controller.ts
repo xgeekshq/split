@@ -52,12 +52,12 @@ import BoardDto from '../dto/board.dto';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import Board from '../entities/board.schema';
-import { CreateBoardApplicationInterface } from '../interfaces/applications/create.board.application.interface';
 import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { GetBoardApplicationInterface } from '../interfaces/applications/get.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
+import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -67,8 +67,8 @@ const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissi
 @Controller('boards')
 export default class BoardsController {
 	constructor(
-		@Inject(TYPES.applications.CreateBoardApplication)
-		private createBoardApp: CreateBoardApplicationInterface,
+		@Inject(TYPES.applications.CreateBoardUseCase)
+		private createBoardUseCase: UseCase<CreateBoardUseCaseDto, Board>,
 		@Inject(TYPES.applications.DuplicateBoardUseCase)
 		private duplicateBoardUseCase: UseCase<DuplicateBoardDto, Board>,
 		@Inject(TYPES.applications.GetBoardApplication)
@@ -103,7 +103,7 @@ export default class BoardsController {
 	})
 	@Post()
 	createBoard(@Req() request: RequestWithUser, @Body() boardData: BoardDto) {
-		return this.createBoardApp.create(boardData, request.user._id);
+		return this.createBoardUseCase.execute({ userId: request.user._id, boardData });
 	}
 
 	@ApiOperation({ summary: 'Duplicate a board' })
