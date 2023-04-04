@@ -457,14 +457,16 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 	private async deleteVotesFromCards(boardId, cardsArray: Card[]) {
 		try {
-			const promises = cardsArray.map((card) => {
-				const usersWithVotes = this.mergeUsersVotes(card);
+			let usersWithVotes;
 
-				if (usersWithVotes.size > 0) {
-					return this.deletedVotesFromCard(boardId, usersWithVotes);
-				}
+			cardsArray.map((card) => {
+				const usersWithVotesToAdd = this.mergeUsersVotes(card);
+				usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, usersWithVotesToAdd);
 			});
-			await Promise.all(promises);
+
+			if (usersWithVotes.size > 0) {
+				await this.deletedVotesFromCard(boardId, usersWithVotes);
+			}
 		} catch (e) {
 			this.logger.error(e);
 			await this.updateBoardUserService.abortTransaction();
@@ -490,6 +492,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		}
 	}
 
+	//Merge card.votes with items votes
 	private mergeUsersVotes(card: Card): Map<string, number> {
 		let cardWithVotes: Map<string, number>;
 		let itemsWithVotes: Map<string, number>;
