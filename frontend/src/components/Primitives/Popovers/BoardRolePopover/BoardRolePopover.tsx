@@ -36,7 +36,7 @@ const BoardRolePopover = ({
             handleCheckedChange={isNewJoinerHandler}
             isChecked={isNewJoiner}
             title="New Joiner"
-            fontSize="sm"
+            size="sm"
             disabled={canBeResponsible}
           />
         </PopoverItem>
@@ -45,7 +45,7 @@ const BoardRolePopover = ({
             handleCheckedChange={canBeResponsibleHandler}
             isChecked={canBeResponsible}
             title="Responsible allowed"
-            fontSize="sm"
+            size="sm"
             disabled={isNewJoiner}
           />
         </PopoverItem>

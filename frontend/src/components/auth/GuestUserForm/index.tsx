@@ -8,17 +8,16 @@ import { START_PAGE_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
-import useUser from '@/hooks/useUser';
 import { getUsername } from '@/utils/getUsername';
-import { OrSeparator, StyledForm } from '../LoginForm/styles';
+import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
+import { useEffect } from 'react';
+import { OrSeparator, StyledForm } from '@/components/auth/LoginForm/styles';
 
 const GuestUserForm = () => {
   const router = useRouter();
   const board = router.query.boardId;
 
-  const {
-    registerGuestUser: { mutate, status },
-  } = useUser();
+  const { mutate, status } = useRegisterGuestUser();
 
   const methods = useForm<LoginGuestUser>({
     mode: 'onChange',
@@ -38,6 +37,12 @@ const GuestUserForm = () => {
   const handleClick = () => {
     router.push(START_PAGE_ROUTE);
   };
+
+  useEffect(() => {
+    if (status === 'success') {
+      router.push({ pathname: `/boards/[boardId]`, query: { boardId: board } });
+    }
+  }, [status]);
 
   return (
     <FormProvider {...methods}>

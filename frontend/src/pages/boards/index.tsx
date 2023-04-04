@@ -1,33 +1,23 @@
-import { ReactElement, Suspense, useEffect } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import MyBoards from '@/components/Boards/MyBoards';
 import QueryError from '@/components/Errors/QueryError';
 import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import useTeam from '@/hooks/useTeam';
-import { teamsListState } from '@/store/team/atom/team.atom';
-import { useSetRecoilState } from 'recoil';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { getAllTeams, getTeamsOfUser } from '@/api/teamService';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';
+import { getAllTeams, getUserTeams } from '@/api/teamService';
+import useCurrentSession from '@/hooks/useCurrentSession';
 
 const Boards = () => {
-  const { data: session } = useSession({ required: true });
-  const setTeamsList = useSetRecoilState(teamsListState);
+  const { session, userId, isSAdmin } = useCurrentSession({ required: true });
 
-  const {
-    fetchUserBasedTeams: { data },
-  } = useTeam();
-
-  useEffect(() => {
-    if (data) setTeamsList(data);
-  }, [data, setTeamsList]);
-
-  if (!session || !data) return null;
+  if (!session) return null;
 
   return (
     <Flex css={{ width: '100%' }} direction="column" gap="40">
@@ -41,7 +31,7 @@ const Boards = () => {
       <Flex direction="column">
         <Suspense fallback={<LoadingPage />}>
           <QueryError>
-            <MyBoards isSuperAdmin={session?.user.isSAdmin} userId={session?.user.id} />
+            <MyBoards isSuperAdmin={isSAdmin} userId={userId} />
           </QueryError>
         </Suspense>
       </Flex>
@@ -58,18 +48,20 @@ export const getServerSideProps: GetServerSideProps = requireAuthentication(
     // CHECK: 'getServerSession' should be used instead of 'getSession'
     // https://next-auth.js.org/configuration/nextjs#unstable_getserversession
     const session = await getSession({ req: context.req });
+    const userId = session?.user.id;
+    const isSAdmin = session?.user.isSAdmin ?? false;
 
     const queryClient = new QueryClient();
-
-    if (session?.user.isSAdmin) {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getAllTeams(context));
-    } else {
-      await queryClient.prefetchQuery(['userBasedTeams'], () => getTeamsOfUser(undefined, context));
-    }
+    await queryClient.prefetchQuery([TEAMS_KEY], () => {
+      if (isSAdmin) {
+        return getAllTeams(context);
+      }
+      return getUserTeams(userId, context);
+    });
 
     return {
       props: {
-        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+        dehydratedState: dehydrate(queryClient),
       },
     };
   },

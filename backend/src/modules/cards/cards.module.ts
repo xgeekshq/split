@@ -4,13 +4,12 @@ import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
-	creacteCardUseCase,
+	createCardUseCase,
 	deleteCardApplication,
 	deleteCardService,
 	getCardService,
 	mergeCardUseCase,
-	unmergeCardApplication,
-	unmergeCardService,
+	unmergeCardUseCase,
 	updateCardApplication,
 	updateCardService
 } from './cards.providers';
@@ -24,12 +23,11 @@ import CardsController from './controller/cards.controller';
 		getCardService,
 		deleteCardService,
 		updateCardService,
-		unmergeCardService,
 		updateCardApplication,
 		deleteCardApplication,
-		unmergeCardApplication,
 		cardRepository,
-		creacteCardUseCase,
+		createCardUseCase,
+		unmergeCardUseCase,
 		mergeCardUseCase
 	],
 	exports: [getCardService, deleteCardService]

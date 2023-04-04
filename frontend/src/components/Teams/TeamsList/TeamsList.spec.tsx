@@ -3,40 +3,34 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TeamFactory } from '@/utils/factories/team';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { ROUTES } from '@/utils/routes';
+import { Team } from '@/types/team/team';
 import TeamsList, { TeamsListProps } from './TeamList';
-
-const DEFAULT_PROPS = {
-  teams: TeamFactory.createMany(3),
-};
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
-const render = (props: TeamsListProps = DEFAULT_PROPS) =>
-  renderWithProviders(<TeamsList {...props} />, { routerOptions: mockRouter });
-
-describe('Components/Teams/TeamsList', () => {
-  let testProps: TeamsListProps;
-  beforeEach(() => {
-    testProps = { ...DEFAULT_PROPS };
+const render = (props: Partial<TeamsListProps> = {}) =>
+  renderWithProviders(<TeamsList teams={TeamFactory.createMany(3)} {...props} />, {
+    routerOptions: mockRouter,
   });
 
+describe('Components/Teams/TeamsList', () => {
   it('should render correctly', () => {
     // Arrange
-    const teamItemProps = { ...testProps };
+    const teams = TeamFactory.createMany(3);
 
     // Act
-    const { getAllByTestId } = render(teamItemProps);
+    const { getAllByTestId } = render({ teams });
 
     // Assert
-    expect(getAllByTestId('teamItem')).toHaveLength(teamItemProps.teams.length);
+    expect(getAllByTestId('teamItem')).toHaveLength(teams.length);
   });
 
   it('should render empty state correctly', async () => {
     // Arrange
-    const teamItemProps = { ...testProps, teams: [] };
+    const teams: Team[] = [];
 
     // Act
-    const { getByTestId, getByText } = render(teamItemProps);
+    const { getByTestId, getByText } = render({ teams });
     fireEvent.click(getByText('Create your first team'));
 
     // Assert

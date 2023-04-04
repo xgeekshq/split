@@ -16,7 +16,7 @@ const TeamMembersList = ({
   hasPermissions,
   isTeamPage = false,
 }: TeamMembersListProps) => (
-  <Flex direction="column" gap="8">
+  <Flex direction="column" gap="8" data-testid="teamMembersList">
     {teamUsers.map((teamUser) => (
       <TeamMemberItem
         key={teamUser.user._id}

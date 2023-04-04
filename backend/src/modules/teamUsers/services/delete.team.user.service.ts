@@ -33,15 +33,15 @@ export default class DeleteTeamUserService implements DeleteTeamUserServiceInter
 		return deletedCount;
 	}
 
-	async deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number> {
-		const { acknowledged, deletedCount } = await this.teamUserRepository.deleteTeamUsersOfTeam(
+	async deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<boolean> {
+		const { acknowledged } = await this.teamUserRepository.deleteTeamUsersOfTeam(
 			teamId,
 			withSession
 		);
 
 		if (!acknowledged) throw new BadRequestException(DELETE_FAILED);
 
-		return deletedCount;
+		return acknowledged;
 	}
 
 	// these functions are not tested since they make direct queries to the database

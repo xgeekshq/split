@@ -11,5 +11,8 @@ export interface DeleteBoardUserServiceInterface extends SessionInterface {
 	): Promise<number>;
 	deleteSimpleBoardUsers(boardId: ObjectId | string, withSession: boolean): Promise<number>;
 	deleteBoardUsers(boardUsers: string[]): Promise<number>;
-	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>;
+	deleteBoardUsersByBoardList(
+		teamBoardsIds: string[],
+		withSession?: boolean
+	): Promise<DeleteResult>;
 }

@@ -111,7 +111,7 @@ const BoardHeader = () => {
 
   return (
     <StyledHeader>
-      <Flex align="center" gap="20" justify="between">
+      <Flex align="center" gap="20" justify="between" css={{ width: '100%' }}>
         <Flex direction="column">
           <Flex align="center" gap={!isSubBoard ? 26 : undefined}>
             <Breadcrumb items={breadcrumbItems} />
@@ -128,6 +128,8 @@ const BoardHeader = () => {
                       mainBoardTitle: boardData?.board.title,
                     },
                   }}
+                  passHref
+                  legacyBehavior
                 >
                   <StyledBoardLink>{getSubBoard()?.title.replace('team ', '')}</StyledBoardLink>
                 </Link>

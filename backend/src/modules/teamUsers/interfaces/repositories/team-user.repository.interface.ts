@@ -1,9 +1,9 @@
+import { DeleteResult } from 'mongodb';
 import { BaseInterfaceRepository } from 'src/libs/repositories/interfaces/base.repository.interface';
 import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
 import TeamUserDto from '../../dto/team.user.dto';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
-import { DeleteResult } from 'mongodb';
 
 export interface TeamUserRepositoryInterface extends BaseInterfaceRepository<TeamUser> {
 	// GET
