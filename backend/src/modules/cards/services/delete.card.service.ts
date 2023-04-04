@@ -20,7 +20,7 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			await this.deleteVotesFromCards(boardId, cardsArray);
 			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			throw new DeleteFailedException();
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
 		} finally {
 			await this.updateBoardUserService.endSession();
 		}
@@ -52,10 +52,10 @@ export default class DeleteCardService implements DeleteCardServiceInterface {
 			);
 
 			if (result.ok !== 1) {
-				throw new Error(DELETE_VOTE_FAILED);
+				throw new Error();
 			}
-		} catch (e) {
-			throw new Error(e.message);
+		} catch {
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
 		}
 	}
 
