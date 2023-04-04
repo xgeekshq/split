@@ -3,6 +3,7 @@ import User from 'src/modules/users/entities/user.schema';
 import { UserWithTeams } from 'src/modules/users/interfaces/type-user-with-teams';
 import TeamUserDto from '../../dto/team.user.dto';
 import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
+import { DeleteResult } from 'mongodb';
 
 export interface TeamUserRepositoryInterface extends BaseInterfaceRepository<TeamUser> {
 	// GET
@@ -15,7 +16,7 @@ export interface TeamUserRepositoryInterface extends BaseInterfaceRepository<Tea
 	updateTeamUser(teamData: TeamUserDto): Promise<TeamUser | null>;
 	// DELETE
 	deleteTeamUser(teamUserId: string, withSession: boolean): Promise<TeamUser>;
-	deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<number>;
-	deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number>;
-	deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<number>;
+	deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<DeleteResult>;
+	deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<DeleteResult>;
+	deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<DeleteResult>;
 }

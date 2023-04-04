@@ -21,29 +21,39 @@ export default class DeleteTeamUserService implements DeleteTeamUserServiceInter
 	}
 
 	async deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<number> {
-		const deletedCount = await this.teamUserRepository.deleteTeamUsersOfUser(userId, withSession);
+		const { acknowledged, deletedCount } = await this.teamUserRepository.deleteTeamUsersOfUser(
+			userId,
+			withSession
+		);
 
-		if (deletedCount <= 0) throw new BadRequestException(DELETE_FAILED);
+		if (!acknowledged) throw new BadRequestException(DELETE_FAILED);
 
 		return deletedCount;
 	}
 
 	async deleteTeamUsers(teamUsers: string[], withSession: boolean): Promise<number> {
-		const deletedCount = await this.teamUserRepository.deleteTeamUsers(teamUsers, withSession);
+		const { acknowledged, deletedCount } = await this.teamUserRepository.deleteTeamUsers(
+			teamUsers,
+			withSession
+		);
 
-		if (deletedCount <= 0) throw new BadRequestException(DELETE_FAILED);
+		if (!acknowledged) throw new BadRequestException(DELETE_FAILED);
 
 		return deletedCount;
 	}
 
 	async deleteTeamUsersOfTeam(teamId: string, withSession: boolean): Promise<number> {
-		const deletedCount = await this.teamUserRepository.deleteTeamUsersOfTeam(teamId, withSession);
+		const { acknowledged, deletedCount } = await this.teamUserRepository.deleteTeamUsersOfTeam(
+			teamId,
+			withSession
+		);
 
-		if (deletedCount <= 0) throw new BadRequestException(DELETE_FAILED);
+		if (!acknowledged) throw new BadRequestException(DELETE_FAILED);
 
 		return deletedCount;
 	}
 
+	// these functions are not tested since they make direct queries to the database
 	startTransaction(): Promise<void> {
 		return this.teamUserRepository.startTransaction();
 	}
