@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
@@ -17,6 +17,8 @@ import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { getUserWithVotes } from '../utils/get-user-with-votes';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
 import Card from '../entities/card.schema';
+import { CardNotFoundException } from 'src/libs/exceptions/cardNotFoundException';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 @Injectable()
 export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUseCaseDto, void> {
@@ -29,6 +31,8 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		private updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
+	private logger: Logger = new Logger(DeleteFromCardGroupUseCase.name);
+
 	async execute(deleteFromCardGroupUseCaseDto: DeleteFromCardGroupUseCaseDto) {
 		const { boardId, cardId, cardItemId } = deleteFromCardGroupUseCaseDto;
 		await this.cardRepository.startTransaction();
@@ -39,7 +43,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 
 				const card = await this.getCardService.getCardFromBoard(boardId, cardId);
 
-				if (!card) throw new Error(CARD_NOT_FOUND);
+				if (!card) throw new CardNotFoundException(CARD_NOT_FOUND);
 
 				const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
 
@@ -57,17 +61,18 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 					true
 				);
 
-				if (result.modifiedCount != 1) throw new Error(DELETE_FAILED);
+				if (result.modifiedCount != 1) throw new DeleteFailedException(DELETE_FAILED);
 			} catch (e) {
 				await this.cardRepository.abortTransaction();
 				await this.updateBoardUserService.abortTransaction();
-				throw new Error(e.message);
+				throw new DeleteFailedException(e.message);
 			}
 
 			await this.cardRepository.commitTransaction();
 			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			throw new DeleteFailedException(e.message ? e.message : DELETE_FAILED);
+			this.logger.error(e);
+			throw new DeleteFailedException(DELETE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
 			await this.updateBoardUserService.endSession();
@@ -78,7 +83,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		const getCardItem = await this.getCardService.getCardItemFromGroup(boardId, cardItemId);
 
 		if (!getCardItem) {
-			throw Error(CARD_ITEM_NOT_FOUND);
+			throw new NotFoundException(CARD_ITEM_NOT_FOUND);
 		}
 		const usersWithVotes = getUserWithVotes(getCardItem.votes);
 
@@ -92,10 +97,10 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 				);
 
 				if (result.ok !== 1) {
-					throw new Error(DELETE_VOTE_FAILED);
+					throw new DeleteFailedException(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
-				throw new Error(e.message);
+				throw new DeleteFailedException(e.message);
 			}
 		}
 	}
@@ -117,9 +122,9 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 				cardItems
 			);
 
-			if (!boardWithLastCardRefactored) throw Error(UPDATE_FAILED);
+			if (!boardWithLastCardRefactored) throw new UpdateFailedException(UPDATE_FAILED);
 		} catch (e) {
-			throw Error(e.message);
+			throw new UpdateFailedException(e.message);
 		}
 	}
 }
