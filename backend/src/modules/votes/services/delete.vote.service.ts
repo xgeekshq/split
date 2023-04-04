@@ -16,6 +16,10 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import Card from 'src/modules/cards/entities/card.schema';
+import {
+	getUserWithVotes,
+	mergeTwoUsersWithVotes
+} from 'src/modules/cards/utils/get-user-with-votes';
 
 @Injectable()
 export default class DeleteVoteService implements DeleteVoteServiceInterface {
@@ -139,6 +143,17 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		} finally {
 			await this.updateBoardUserService.endSession();
 			await this.voteRepository.endSession();
+		}
+	}
+	async deleteCardVotesFromColumn(boardId: string, cardsArray: Card[]) {
+		await this.updateBoardUserService.startTransaction();
+		try {
+			await this.deleteVotesFromCards(boardId, cardsArray);
+			await this.updateBoardUserService.commitTransaction();
+		} catch (e) {
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
+		} finally {
+			await this.updateBoardUserService.endSession();
 		}
 	}
 
@@ -436,5 +451,64 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		userVotes.splice(0, Math.abs(count));
 
 		return votesOnCardItem.concat(userVotes);
+	}
+
+	//Delete card votes from column helpers
+
+	private async deleteVotesFromCards(boardId, cardsArray: Card[]) {
+		try {
+			const promises = cardsArray.map((card) => {
+				const usersWithVotes = this.mergeUsersVotes(card);
+
+				if (usersWithVotes.size > 0) {
+					return this.deletedVotesFromCard(boardId, usersWithVotes);
+				}
+			});
+			await Promise.all(promises);
+		} catch {
+			await this.updateBoardUserService.abortTransaction();
+			throw Error();
+		}
+	}
+
+	private async deletedVotesFromCard(boardId: string, usersWithVotes) {
+		try {
+			const result = await this.updateBoardUserService.updateManyUserVotes(
+				boardId,
+				usersWithVotes,
+				true,
+				true
+			);
+
+			if (result.ok !== 1) {
+				throw new Error();
+			}
+		} catch {
+			throw new DeleteFailedException(DELETE_VOTE_FAILED);
+		}
+	}
+
+	private mergeUsersVotes(card: Card): Map<string, number> {
+		let cardWithVotes: Map<string, number>;
+		let itemsWithVotes: Map<string, number>;
+		let usersWithVotes: Map<string, number>;
+
+		if (Object.keys(card.items).length === 1) {
+			usersWithVotes = getUserWithVotes(card.items[0].votes);
+		}
+
+		if (Object.keys(card.items).length > 1) {
+			card.items.forEach((item) => {
+				itemsWithVotes = getUserWithVotes(item.votes);
+				usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, itemsWithVotes);
+			});
+		}
+
+		if (card.votes?.length) {
+			cardWithVotes = getUserWithVotes(card.votes);
+			usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, cardWithVotes);
+		}
+
+		return usersWithVotes;
 	}
 }
