@@ -2,32 +2,25 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import Checkbox, { CheckboxProps } from './Checkbox';
 
-const render = (props: CheckboxProps) => renderWithProviders(<Checkbox {...props} />);
+const render = (props: Partial<CheckboxProps> = {}) =>
+  renderWithProviders(<Checkbox id="checkbox" size="sm" {...props} />);
 
-describe('Components/Primitives/Checkboxes/Checkbox', () => {
+describe('Components/Primitives/Inputs/Checkboxes/Checkbox', () => {
   it('should render correctly', () => {
     // Arrange
-    const checkboxProps: CheckboxProps = { id: 'checkbox', label: 'Label', size: 'sm' };
+    const label = 'Label';
 
     // Act
-    const { getByTestId, getByText } = render(checkboxProps);
+    const { getByTestId, getByText } = render({ label });
 
     // Assert
     expect(getByTestId('checkBox')).toBeInTheDocument();
-    expect(getByText(checkboxProps.label!)).toBeInTheDocument();
+    expect(getByText(label)).toBeInTheDocument();
   });
 
   it('should render checked state', () => {
-    // Arrange
-    const checkboxProps: CheckboxProps = {
-      id: 'checkbox',
-      label: 'Label',
-      size: 'sm',
-      checked: true,
-    };
-
     // Act
-    const { getByTestId, getByRole } = render(checkboxProps);
+    const { getByTestId, getByRole } = render({ checked: true });
 
     // Assert
     expect(getByTestId('checkBox')).toBeInTheDocument();
@@ -36,17 +29,10 @@ describe('Components/Primitives/Checkboxes/Checkbox', () => {
 
   it('should handle checkedChange function', async () => {
     // Arrange
-    const mockHandleChangeFn = jest.fn();
-    const checkboxProps: CheckboxProps = {
-      id: 'checkbox',
-      label: 'Label',
-      size: 'sm',
-      checked: false,
-      handleChange: mockHandleChangeFn,
-    };
+    const handleChange = jest.fn();
 
     // Act
-    const { getByTestId, getByRole } = render(checkboxProps);
+    const { getByTestId, getByRole } = render({ handleChange });
 
     // Assert
     expect(getByTestId('checkBox')).toBeInTheDocument();
@@ -55,7 +41,7 @@ describe('Components/Primitives/Checkboxes/Checkbox', () => {
     fireEvent.click(getByRole('checkbox'));
 
     await waitFor(() => {
-      expect(mockHandleChangeFn).toBeCalled();
+      expect(handleChange).toBeCalled();
     });
   });
 });

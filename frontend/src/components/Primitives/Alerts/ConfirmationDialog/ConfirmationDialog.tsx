@@ -5,9 +5,9 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTrigger,
-} from '../AlertDialog/AlertDialog';
-import Flex from '../../Layout/Flex/Flex';
-import Tooltip from '../../Tooltips/Tooltip/Tooltip';
+} from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Tooltip from '@/components/Primitives/Tooltips/Tooltip/Tooltip';
 
 export type ConfirmationDialogProps = {
   description: string | React.ReactNode;

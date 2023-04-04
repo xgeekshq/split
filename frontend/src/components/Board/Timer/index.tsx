@@ -46,7 +46,7 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
       type="button"
       variant="transparentHover"
       onClick={onClick}
-      size="xs"
+      size="xxs"
     >
       <TimeButtonTitle>{action}</TimeButtonTitle>
     </Button>
@@ -66,8 +66,14 @@ const Timer: React.FC<TimerProps> = ({ boardId, isAdmin, emitEvent, listenEvent 
     buildTimePanel(seconds, incrementDurationSeconds, decrementDurationSeconds);
 
   const buildControlButton = (action: string, onClick: any) => (
-    <Button onClick={onClick} size="xs" variant="transparent" disabled={!isAdmin}>
-      <Icon name={`timer-${action}`} size={28} />
+    <Button
+      onClick={onClick}
+      size="xs"
+      variant="transparent"
+      css={{ px: '$1', py: '$1' }}
+      disabled={!isAdmin}
+    >
+      <Icon name={`timer-${action}`} css={{ height: '$28 !important', width: '$28 !important' }} />
     </Button>
   );
   const buildStartButton = () => buildControlButton('start', startTimer);

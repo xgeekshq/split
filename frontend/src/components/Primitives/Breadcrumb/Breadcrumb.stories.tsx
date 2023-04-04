@@ -14,8 +14,7 @@ export default {
         Breadcrumbs allow users to navigate back to previous linked pages.
 
         **File Path:**
-        \`@/components/Primitives/Breadcrumb/Breadcrumb.tsx\` and \`@/components/Primitives/Breadcrumb/styles.tsx\`
-        `,
+        \`@/components/Primitives/Breadcrumb/Breadcrumb.tsx\``,
       },
     },
   },
@@ -48,7 +47,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Breadcrumb> = ({ ...args }) => <Breadcrumb {...args} />;
+const Template: ComponentStory<typeof Breadcrumb> = (args) => <Breadcrumb {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

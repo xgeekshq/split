@@ -15,7 +15,7 @@ export default {
         Header used in create pages.
 
         **File Path:**
-        \`@/components/Primitives/Layout/CreateHeader.tsx\`
+        \`@/components/Primitives/Layout/CreateHeader/CreateHeader.tsx\`
         `,
       },
     },
