@@ -50,21 +50,6 @@ describe('CreateTeamUserService', () => {
 		expect(teamUserService).toBeDefined();
 	});
 
-	describe('createTeamUser', () => {
-		it('should create team user', async () => {
-			teamUserRepositoryMock.create.mockResolvedValue(createdTeamUsers[0]);
-			await expect(teamUserService.createTeamUser(createTeamUserDtos[0])).resolves.toStrictEqual(
-				createdTeamUsers[0]
-			);
-		});
-		it('should throw Bad Request when team user is not created', async () => {
-			teamUserRepositoryMock.create.mockResolvedValue(null);
-			await expect(teamUserService.createTeamUser(createTeamUserDtos[0])).rejects.toThrow(
-				BadRequestException
-			);
-		});
-	});
-
 	describe('createTeamUsers', () => {
 		it('should create team users', async () => {
 			teamUserRepositoryMock.insertMany.mockResolvedValue(createdTeamUsers);

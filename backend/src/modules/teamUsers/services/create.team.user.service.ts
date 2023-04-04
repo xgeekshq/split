@@ -29,14 +29,6 @@ export default class CreateTeamUserService implements CreateTeamUserServiceInter
 		return teamUsersSaved;
 	}
 
-	async createTeamUser(teamUser: TeamUserDto): Promise<TeamUser> {
-		const teamUserSaved = await this.teamUserRepository.create({ ...teamUser });
-
-		if (!teamUserSaved) throw new BadRequestException(INSERT_FAILED);
-
-		return teamUserSaved;
-	}
-
 	// these functions are not tested since they make direct queries to the database
 	startTransaction(): Promise<void> {
 		return this.teamUserRepository.startTransaction();

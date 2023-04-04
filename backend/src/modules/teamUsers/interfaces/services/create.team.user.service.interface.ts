@@ -8,5 +8,4 @@ export interface CreateTeamUserServiceInterface extends SessionInterface {
 		teamId?: string,
 		withSession?: boolean
 	): Promise<TeamUser[]>;
-	createTeamUser(teamUser: TeamUserDto): Promise<TeamUser>;
 }
