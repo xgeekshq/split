@@ -44,6 +44,7 @@ export type ColorType =
   | 'primary400'
   | 'primary500'
   | 'primary800';
+export type OverflowType = 'wrap';
 
 // Primitive/Popover
 export type PopoverVariantType = 'dark' | 'light';
