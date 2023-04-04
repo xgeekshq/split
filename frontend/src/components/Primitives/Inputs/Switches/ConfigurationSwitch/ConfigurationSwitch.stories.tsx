@@ -3,11 +3,11 @@ import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
 
-import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 
 export default {
-  title: 'Primitives/Inputs/Switches/Switch',
-  component: Switch,
+  title: 'Primitives/Inputs/Switches/ConfigurationSwitch',
+  component: ConfigurationSwitch,
   parameters: {
     docs: {
       description: {
@@ -15,56 +15,57 @@ export default {
         A control that allows the user to toggle between checked and not checked.
 
         **File Path:**
-        \`@/components/Primitives/Inputs/Switches/Switch/Switch.tsx\`
+        \`@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch.tsx\`
         `,
       },
     },
   },
   args: {
-    size: 'md',
+    title: 'Lorem Ipsum',
+    text: 'Lorem Ipsum',
+    disabled: false,
   },
   argTypes: {
+    title: {
+      description: 'The title of the switch',
+    },
+    text: {
+      description: 'The text content of the switch',
+    },
     size: {
       control: { type: 'select' },
       description: 'The component size.',
     },
     disabled: {
-      control: { type: 'boolean' },
+      control: 'boolean',
       description: 'Disable the switch.',
-      table: {
-        type: { summary: 'boolean' },
-        defaultValue: { summary: 'false' },
-      },
-      defaultValue: false,
     },
-    checked: {
+    isChecked: {
       control: false,
       description: 'The controlled checked state of the switch.',
     },
-    onCheckedChange: {
+    handleCheckedChange: {
       control: false,
       description: 'Event handler called when the checked state of the switch changes.',
     },
-    icon: {
+    children: {
       control: false,
-      description: 'The icon displayed on the switch when toggled.',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'check' },
-      },
+    },
+    disabledInfo: {
+      control: 'text',
+      description: 'Text content of the tooltip that appears when the switch is disabled.',
     },
   },
 };
 
-const Template: ComponentStory<typeof Switch> = ({ size, disabled }) => {
+const Template: ComponentStory<typeof ConfigurationSwitch> = (props) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   return (
-    <Switch
-      size={size}
-      disabled={disabled}
-      checked={isChecked}
-      onCheckedChange={() => {
+    <ConfigurationSwitch
+      {...props}
+      isChecked={isChecked}
+      handleCheckedChange={() => {
         setIsChecked((prevState) => !prevState);
       }}
     />

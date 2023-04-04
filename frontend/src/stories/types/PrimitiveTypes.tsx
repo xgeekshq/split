@@ -61,9 +61,6 @@ export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';
 // Primitive/Svg
 export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 40 | 48 | 100;
 
-// Primitive/Switch
-export type SwitchSizeType = 'xs' | 'sm' | 'md';
-
 // Primitive/Loading/Spinner
 export type SpinnerSizeType = 50 | 80 | 100 | 150 | 200;
 export type SpinnerColorType = 'light' | 'dark';
