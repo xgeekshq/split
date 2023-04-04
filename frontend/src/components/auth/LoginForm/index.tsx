@@ -94,7 +94,6 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
       <StyledForm
         autoComplete="off"
         direction="column"
-        style={{ width: '100%' }}
         onSubmit={methods.handleSubmit((credentials: LoginUser) => {
           handleLogin(credentials);
         })}

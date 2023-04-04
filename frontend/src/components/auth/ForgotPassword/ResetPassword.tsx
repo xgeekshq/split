@@ -4,7 +4,6 @@ import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
-import LogoIcon from '@/components/icons/Logo';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
@@ -28,8 +27,8 @@ const ResetPassword = ({ token }: ResetPasswordProps) => {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      password: '',
-      passwordConf: '',
+      newPassword: '',
+      newPasswordConf: '',
     },
     resolver: joiResolver(SchemaResetPasswordForm),
   });
@@ -37,25 +36,23 @@ const ResetPassword = ({ token }: ResetPasswordProps) => {
   const { mutateAsync, status } = useResetPassword();
 
   const handleRecoverPassword = async (params: NewPassword) => {
-    params.token = token;
-    await mutateAsync({ ...params, token });
+    await mutateAsync(params);
   };
 
   useEffect(() => {
     if (status === 'success') {
       router.push('/');
     }
-  }, [status]);
+  }, [status, router]);
 
   return (
-    <MainContainer
-      direction="column"
-      onSubmit={methods.handleSubmit((params) => {
-        handleRecoverPassword(params);
-      })}
-    >
-      <FormProvider {...methods}>
-        <LogoIcon />
+    <FormProvider {...methods}>
+      <MainContainer
+        direction="column"
+        onSubmit={methods.handleSubmit((params) => {
+          handleRecoverPassword({ ...params, token });
+        })}
+      >
         <Text css={{ mt: '$24' }} heading="1">
           Reset Password
         </Text>
@@ -64,17 +61,15 @@ const ResetPassword = ({ token }: ResetPasswordProps) => {
         </Text>
         <Input
           css={{ mt: '$32' }}
-          helperText="Your Password must be at least 8 characters long"
-          icon="eye"
           iconPosition="right"
+          icon="eye"
           id="newPassword"
-          placeholder="Type password here"
+          placeholder="Type new password here"
           type="password"
         />
         <Input
-          helperText="Your Password must be at least 8 characters long"
-          icon="eye"
           iconPosition="right"
+          icon="eye"
           id="newPasswordConf"
           placeholder="Repeat password"
           type="password"
@@ -82,8 +77,8 @@ const ResetPassword = ({ token }: ResetPasswordProps) => {
         <Button size="lg" type="submit">
           Recover password
         </Button>
-      </FormProvider>
-    </MainContainer>
+      </MainContainer>
+    </FormProvider>
   );
 };
 
