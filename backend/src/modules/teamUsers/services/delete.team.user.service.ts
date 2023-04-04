@@ -3,7 +3,6 @@ import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteTeamUserServiceInterface } from '../interfaces/services/delete.team.user.service.interface';
 import { TYPES } from '../interfaces/types';
 import { TeamUserRepositoryInterface } from '../interfaces/repositories/team-user.repository.interface';
-import TeamUser from '../entities/team.user.schema';
 
 @Injectable()
 export default class DeleteTeamUserService implements DeleteTeamUserServiceInterface {
@@ -11,14 +10,6 @@ export default class DeleteTeamUserService implements DeleteTeamUserServiceInter
 		@Inject(TYPES.repositories.TeamUserRepository)
 		private readonly teamUserRepository: TeamUserRepositoryInterface
 	) {}
-
-	async deleteTeamUser(teamUserId: string, withSession: boolean): Promise<TeamUser> {
-		const deletedTeamUser = await this.teamUserRepository.deleteTeamUser(teamUserId, withSession);
-
-		if (!deletedTeamUser) throw new BadRequestException(DELETE_FAILED);
-
-		return deletedTeamUser;
-	}
 
 	async deleteTeamUsersOfUser(userId: string, withSession: boolean): Promise<number> {
 		const { acknowledged, deletedCount } = await this.teamUserRepository.deleteTeamUsersOfUser(

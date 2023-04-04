@@ -14,7 +14,7 @@ const createTeamUserDto: TeamUserDto = TeamUserDtoFactory.create();
 
 const createdTeamUser: TeamUser = TeamUserFactory.create({ ...createTeamUserDto });
 
-describe('DuplicateBoardUseCase', () => {
+describe('CreateTeamUserUseCase', () => {
 	let createTeamUser: UseCase<TeamUserDto, TeamUser>;
 	let teamUserRepositoryMock: DeepMocked<TeamUserRepositoryInterface>;
 

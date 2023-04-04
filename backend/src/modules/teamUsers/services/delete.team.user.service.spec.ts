@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { BadRequestException } from '@nestjs/common';
 import { deleteTeamUserService } from './../teamusers.providers';
-import { TeamUserFactory } from 'src/libs/test-utils/mocks/factories/teamUser-factory.mock';
-import TeamUser from 'src/modules/teamUsers/entities/team.user.schema';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
@@ -15,8 +13,6 @@ const removeTeamUsers: string[] = [
 	faker.datatype.uuid(),
 	faker.datatype.uuid()
 ];
-
-const deletedTeamUser: TeamUser = TeamUserFactory.create({ _id: removeTeamUsers[0] });
 
 const deleteManyFailResult = { acknowledged: false, deletedCount: faker.datatype.number() };
 const deleteManySuccessResult = { acknowledged: true, deletedCount: faker.datatype.number() };
@@ -50,22 +46,6 @@ describe('DeleteTeamUserService', () => {
 
 	it('should be defined', () => {
 		expect(teamUserService).toBeDefined();
-	});
-
-	describe('deleteTeamUser', () => {
-		it('should delete team user', async () => {
-			teamUserRepositoryMock.deleteTeamUser.mockResolvedValue(deletedTeamUser);
-			await expect(teamUserService.deleteTeamUser(removeTeamUsers[0], false)).resolves.toEqual(
-				deletedTeamUser
-			);
-		});
-
-		it('should throw error when team user is not deleted', async () => {
-			teamUserRepositoryMock.deleteTeamUser.mockResolvedValue(null);
-			await expect(async () =>
-				teamUserService.deleteTeamUser(removeTeamUsers[0], false)
-			).rejects.toThrowError(BadRequestException);
-		});
 	});
 
 	describe('deleteTeamUsersOfUser', () => {

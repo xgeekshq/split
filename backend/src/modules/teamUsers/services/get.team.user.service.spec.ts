@@ -5,7 +5,7 @@ import { createMock } from '@golevelup/ts-jest';
 import * as TeamUsers from 'src/modules/teamUsers/interfaces/types';
 import { TeamUserRepositoryInterface } from 'src/modules/teamUsers/interfaces/repositories/team-user.repository.interface';
 
-describe('CreateTeamUserService', () => {
+describe('GetTeamUserService', () => {
 	let teamUserService: GetTeamUserServiceInterface;
 
 	beforeAll(async () => {
