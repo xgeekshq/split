@@ -31,7 +31,7 @@ export const mergeTwoUsersWithVotes = (
 
 	for (const [key, value] of userToAdd) {
 		if (userWithVotes.has(key)) {
-			userWithVotes.set(key, userWithVotes.get(key)! + value);
+			userWithVotes.set(key, (userWithVotes.get(key) ?? 0) + value);
 		} else {
 			userWithVotes.set(key, value);
 		}
