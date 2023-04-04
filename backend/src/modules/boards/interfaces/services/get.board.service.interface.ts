@@ -1,45 +1,14 @@
-import { LoginGuestUserResponse } from './../../../../libs/dto/response/login-guest-user.response';
 import Board from '../../entities/board.schema';
-import { BoardsAndPage } from '../boards-page.interface';
-import UserDto from 'src/modules/users/dto/user.dto';
 import BoardUser from '../../../boardUsers/entities/board.user.schema';
+import { QueryType } from '../findQuery';
+import BoardsPaginatedPresenter from '../../presenter/boards-paginated.presenter';
+import UserDto from 'src/modules/users/dto/user.dto';
+import BoardPresenter from '../../presenter/board.presenter';
 
 export interface GetBoardServiceInterface {
-	getUserBoardsOfLast3Months(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<BoardsAndPage | null>;
+	getBoards(allBoards: boolean, query: QueryType, page, size): Promise<BoardsPaginatedPresenter>;
 
-	getSuperAdminBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
-
-	getUsersBoards(userId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
-
-	getTeamBoards(teamId: string, page?: number, size?: number): Promise<BoardsAndPage | null>;
-
-	getPersonalUserBoards(
-		userId: string,
-		page?: number,
-		size?: number
-	): Promise<BoardsAndPage | null>;
-
-	getBoard(
-		boardId: string,
-		user: UserDto
-	): Promise<
-		| { board: Board }
-		| null
-		| {
-				board: Board;
-				mainBoard: Board;
-		  }
-		| null
-		| {
-				guestUser: LoginGuestUserResponse;
-				board: Board;
-		  }
-		| null
-	>;
+	getBoard(boardId: string, user: UserDto): Promise<BoardPresenter>;
 
 	countBoards(userId: string): Promise<number>;
 

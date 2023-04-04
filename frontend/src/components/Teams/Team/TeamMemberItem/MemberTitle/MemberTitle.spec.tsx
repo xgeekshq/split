@@ -6,40 +6,36 @@ import { UserFactory } from '@/utils/factories/user';
 import MemberTitle, { MemberTitleProps } from './MemberTitle';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
-const render = (props: MemberTitleProps) =>
-  renderWithProviders(<MemberTitle {...props} />, { routerOptions: mockRouter });
-
-describe('Components/Teams/Team/TeamMemberItem/MemberTitle', () => {
-  let defaultProps: MemberTitleProps;
-  beforeEach(() => {
-    const user = UserFactory.create();
-    defaultProps = { name: user.firstName, userId: user._id, hasPermissions: false };
+const render = (props: Partial<MemberTitleProps>) =>
+  renderWithProviders(<MemberTitle name="User" userId="123" hasPermissions={false} {...props} />, {
+    routerOptions: mockRouter,
   });
 
+describe('Components/Teams/Team/TeamMemberItem/MemberTitle', () => {
   it('should render correctly', () => {
     // Arrange
-    const memberTitleProps = { ...defaultProps };
+    const user = UserFactory.create();
 
     // Act
-    const { getByText } = render(memberTitleProps);
+    const { getByText } = render({ name: user.firstName });
 
     // Assert
-    expect(getByText(memberTitleProps.name)).toBeInTheDocument();
+    expect(getByText(user.firstName)).toBeInTheDocument();
   });
 
   it('should redirect to user page', async () => {
     // Arrange
-    const memberTitleProps = { ...defaultProps, hasPermissions: true };
+    const user = UserFactory.create();
 
     // Act
-    const { getByText } = render(memberTitleProps);
-    fireEvent.click(getByText(memberTitleProps.name));
+    const { getByText } = render({ name: user.firstName, userId: user._id, hasPermissions: true });
+    fireEvent.click(getByText(user.firstName));
 
     // Assert
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith(
-        ROUTES.UserPage(memberTitleProps.userId),
-        ROUTES.UserPage(memberTitleProps.userId),
+        ROUTES.UserPage(user._id),
+        ROUTES.UserPage(user._id),
         expect.anything(),
       );
     });

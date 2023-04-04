@@ -2,9 +2,8 @@ import React from 'react';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserFactory } from '@/utils/factories/user';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import DuplicateBoardNameDialog, {
   DuplicateBoardNameDialogProps,
 } from './DuplicateBoardNameDialog';

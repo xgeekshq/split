@@ -1,28 +1,31 @@
 import React from 'react';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import { TeamFactory } from '@/utils/factories/team';
+import { TeamUserFactory } from '@/utils/factories/user';
 import TeamMembersList, { TeamMembersListProps } from './TeamMembersList';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
-const render = (props: TeamMembersListProps) =>
-  renderWithProviders(<TeamMembersList {...props} />, { routerOptions: mockRouter });
+const render = (props: Partial<TeamMembersListProps> = {}) =>
+  renderWithProviders(
+    <TeamMembersList
+      teamUsers={TeamUserFactory.createMany(3)}
+      hasPermissions
+      isTeamPage
+      {...props}
+    />,
+    { routerOptions: mockRouter },
+  );
 
 describe('Components/Teams/Team/TeamMembersList', () => {
   it('should render correctly', () => {
     // Arrange
-    const team = TeamFactory.create();
-    const teamMembersListProps: TeamMembersListProps = {
-      teamUsers: team.users,
-      isTeamPage: true,
-      hasPermissions: true,
-    };
+    const teamUsers = TeamUserFactory.createMany(3);
 
     // Act
-    const { getAllByTestId } = render(teamMembersListProps);
+    const { getAllByTestId } = render({ teamUsers });
 
     // Assert
-    expect(getAllByTestId('teamMemberItem')).toHaveLength(team.users.length);
+    expect(getAllByTestId('teamMemberItem')).toHaveLength(teamUsers.length);
   });
 });

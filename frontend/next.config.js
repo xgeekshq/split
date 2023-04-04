@@ -3,6 +3,7 @@
 
 module.exports = {
   reactStrictMode: false,
+  trailingSlash: true,
   output: 'standalone',
   swcMinify: true,
   publicRuntimeConfig: {

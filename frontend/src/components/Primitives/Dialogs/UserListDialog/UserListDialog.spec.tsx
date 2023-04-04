@@ -13,7 +13,7 @@ const render = (props: Partial<UserListDialogProps> = {}) =>
       setIsOpen={jest.fn()}
       isOpen
       confirmationHandler={jest.fn()}
-      confirmationLabel="Confirm"
+      confirmationLabel="confirm"
       title="Title"
       {...props}
     />,

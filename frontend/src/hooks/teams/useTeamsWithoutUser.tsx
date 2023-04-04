@@ -6,12 +6,12 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
-import { TEAMS_KEY } from '.';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useTeamsWithoutUser = (userId: string) => {
   const setToastState = useSetRecoilState(toastState);
 
-  return useQuery([TEAMS_KEY, 'not', 'user', userId], () => getTeamsWithoutUser(userId), {
+  return useQuery([TEAMS_KEY, 'not', USERS_KEY, userId], () => getTeamsWithoutUser(userId), {
     enabled: true,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

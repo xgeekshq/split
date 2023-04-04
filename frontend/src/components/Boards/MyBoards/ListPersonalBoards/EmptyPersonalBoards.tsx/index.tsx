@@ -16,6 +16,8 @@ const EmptyPersonalBoards = () => (
         href={{
           pathname: `/boards/new`,
         }}
+        passHref
+        legacyBehavior
       >
         <StyledNewBoardLink underline fontWeight="medium">
           Add a new personal board
