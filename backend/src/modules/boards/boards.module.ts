@@ -24,8 +24,12 @@ import {
 	deleteBoardApplication,
 	deleteBoardService,
 	duplicateBoardUseCase,
-	getBoardApplication,
+	getAllBoardsUseCase,
 	getBoardService,
+	getBoardUseCase,
+	getBoardsForDashboardUseCase,
+	getPersonalBoardsUseCase,
+	isBoardPublicUseCase,
 	pauseBoardTimerService,
 	sendBoardTimerStateService,
 	sendBoardTimerTimeLeftService,
@@ -59,10 +63,14 @@ import PublicBoardsController from './controller/publicBoards.controller';
 		deleteBoardService,
 		getBoardService,
 		duplicateBoardUseCase,
+		getBoardsForDashboardUseCase,
+		getAllBoardsUseCase,
+		getPersonalBoardsUseCase,
+		getBoardUseCase,
 		createBoardUseCase,
+		isBoardPublicUseCase,
 		updateBoardApplication,
 		deleteBoardApplication,
-		getBoardApplication,
 		boardTimerRepository,
 		sendBoardTimerStateService,
 		startBoardTimerService,
@@ -78,12 +86,6 @@ import PublicBoardsController from './controller/publicBoards.controller';
 		boardRepository
 	],
 	controllers: [BoardsController, PublicBoardsController],
-	exports: [
-		getBoardApplication,
-		createBoardService,
-		getBoardService,
-		updateBoardService,
-		deleteBoardService
-	]
+	exports: [createBoardService, getBoardService, updateBoardService, deleteBoardService]
 })
 export default class BoardsModule {}
