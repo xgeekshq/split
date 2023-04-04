@@ -27,8 +27,8 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
-import LoginSSO from './LoginSSO';
+import { OrSeparator, StyledForm, StyledHoverIconFlex } from '@/components/auth/LoginForm/styles';
+import LoginSSO from '@/components/auth/LoginForm/LoginSSO';
 
 interface LoginFormProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;

@@ -35,7 +35,7 @@ import { BoardPhases } from '@/utils/enums/board.phases';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
 import useCards from '@/hooks/useCards';
 import { UpdateBoardPhaseType } from '@/types/board/board';
-import { sortParticipantsList } from './participants';
+import { sortParticipantsList } from '@/pages/boards/[boardId]/participants';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const boardId = String(context.query.boardId);

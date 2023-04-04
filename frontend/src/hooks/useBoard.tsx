@@ -19,8 +19,7 @@ import UseBoardType from '@/types/board/useBoard';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
-
-import useBoardUtils from './useBoardUtils';
+import useBoardUtils from '@/hooks/useBoardUtils';
 
 interface AutoFetchProps {
   autoFetchBoard?: boolean;

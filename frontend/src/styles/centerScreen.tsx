@@ -1,4 +1,4 @@
-import { css } from './stitches/stitches.config';
+import { css } from '@/styles/stitches/stitches.config';
 
 const centerScreen = css({
   backgroundColor: 'white',

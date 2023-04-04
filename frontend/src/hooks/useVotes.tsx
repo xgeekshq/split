@@ -8,9 +8,9 @@ import isEmpty from '@/utils/isEmpty';
 import VoteDto from '@/types/vote/vote.dto';
 import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.atom';
 import { useSetRecoilState } from 'recoil';
+import { getRemainingVotes } from '@/utils/getRemainingVotes';
+import useBoardUtils from '@/hooks/useBoardUtils';
 import BoardType from '../types/board/board';
-import { getRemainingVotes } from '../utils/getRemainingVotes';
-import useBoardUtils from './useBoardUtils';
 
 enum Action {
   Add = 'add',

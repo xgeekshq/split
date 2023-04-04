@@ -6,7 +6,7 @@ import useCurrentSession from '@/hooks/useCurrentSession';
 import isEmpty from '@/utils/isEmpty';
 import EmptyTeams from '@/components/Teams/TeamsList/EmptyTeams/EmptyTeams';
 
-import TeamItem from './TeamItem/TeamItem';
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 
 export type TeamsListProps = {
   teams: Team[];
