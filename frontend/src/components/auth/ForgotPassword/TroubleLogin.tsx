@@ -12,7 +12,7 @@ import Text from '@/components/Primitives/Text/Text';
 import SchemaEmail from '@/schema/schemaEmail';
 import { EmailUser } from '@/types/user/user';
 import useResetToken from '@/hooks/auth/useResetToken';
-import EmailSent from './EmailSent';
+import EmailSent from '@/components/auth/ForgotPassword/EmailSent';
 
 const MainContainer = styled('form', Flex, {
   width: '100%',
@@ -22,9 +22,10 @@ interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
+const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
   const [currentEmail, setCurrentEmail] = useState('');
   const [showEmailSent, setShowEmailSent] = useState(false);
+
   const methods = useForm<EmailUser>({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -46,7 +47,18 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
     setShowEmailSent(true);
     setCurrentEmail(email);
   };
-  if (showEmailSent) return <EmailSent userEmail={currentEmail} />;
+
+  if (showEmailSent)
+    return (
+      <EmailSent
+        userEmail={currentEmail}
+        resendEmail={() => {
+          handleRecoverPassword(currentEmail);
+        }}
+        goBack={handleShowTroubleLogginIn}
+      />
+    );
+
   return (
     <MainContainer
       direction="column"
@@ -55,7 +67,6 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
       })}
     >
       <FormProvider {...methods}>
-        <Icon name="logo" />
         <Text css={{ mt: '$24' }} heading="1">
           Trouble logging in?
         </Text>
