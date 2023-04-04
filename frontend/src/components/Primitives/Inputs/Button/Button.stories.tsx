@@ -12,7 +12,7 @@ import {
   ButtonSizeType,
   ButtonVariant,
   ButtonSize,
-} from '../../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [...ButtonVariant];
 const SIZE_OPTIONS: ButtonSizeType[] = [...ButtonSize];

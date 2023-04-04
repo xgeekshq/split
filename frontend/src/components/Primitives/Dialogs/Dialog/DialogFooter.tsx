@@ -1,5 +1,5 @@
-import Button from '../../Inputs/Button/Button';
-import Flex from '../../Layout/Flex/Flex';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export type FooterProps = {
   affirmativeLabel?: string;

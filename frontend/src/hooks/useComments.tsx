@@ -15,7 +15,7 @@ import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.at
 import { useSetRecoilState } from 'recoil';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import useBoardUtils from '@/hooks/useBoardUtils';
-import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '../api/boardService';
+import { addCommentRequest, deleteCommentRequest, updateCommentRequest } from '@/api/boardService';
 
 const useComments = () => {
   const { queryClient, setToastState } = useBoardUtils();

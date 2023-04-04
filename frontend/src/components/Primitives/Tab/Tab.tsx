@@ -3,8 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { styled } from '@/styles/stitches/stitches.config';
 
 import { ReactNode } from 'react';
-import Flex from '../Layout/Flex/Flex';
-import Text from '../Text/Text';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 
 const StyledTabsRoot = styled(Tabs.Root, Flex, {});
 

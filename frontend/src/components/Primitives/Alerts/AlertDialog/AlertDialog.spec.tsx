@@ -8,8 +8,8 @@ import {
   AlertDialogProps,
   AlertDialogTrigger,
 } from '@/components/Primitives/Alerts/AlertDialog/AlertDialog';
-import Button from '../../Inputs/Button/Button';
-import Flex from '../../Layout/Flex/Flex';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const render = ({ children, ...props }: AlertDialogProps) =>
   renderWithProviders(

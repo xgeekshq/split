@@ -6,8 +6,8 @@ import Sprite from '@/components/icons/Sprite';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Text from '@/components/Primitives/Text/Text';
 import { colors } from '@/styles/stitches/partials/colors';
-import Card from '../components/Card';
-import { capitalize } from '../utils';
+import Card from '@/stories/components/Card';
+import { capitalize } from '@/stories/utils';
 
 const GROUPS = [
   'primary',

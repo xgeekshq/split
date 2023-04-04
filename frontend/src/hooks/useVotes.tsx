@@ -10,7 +10,7 @@ import { operationsQueueAtom } from '@/store/operations/atom/operations-queue.at
 import { useSetRecoilState } from 'recoil';
 import { getRemainingVotes } from '@/utils/getRemainingVotes';
 import useBoardUtils from '@/hooks/useBoardUtils';
-import BoardType from '../types/board/board';
+import BoardType from '@/types/board/board';
 
 enum Action {
   Add = 'add',

@@ -12,7 +12,7 @@ import {
   HeadingType,
   Overline,
   TextSizeType,
-} from '../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const FONT_WEIGHT_OPTIONS: FontWeightType[] = ['regular', 'medium', 'bold'];
 

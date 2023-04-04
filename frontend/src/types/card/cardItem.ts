@@ -1,5 +1,5 @@
 import { User } from '@/types/user/user';
-import CommentType from '../comment/comment';
+import CommentType from '@/types/comment/comment';
 
 export type CardGroupDragItem = {
   index: number;
