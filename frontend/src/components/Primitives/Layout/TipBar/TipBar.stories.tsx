@@ -14,7 +14,7 @@ export default {
         TipBar used to display Tips in pages where you create someting (Teams or Boards).
 
         **File Path:**
-        \`@/components/Primitives/Layout/TipBar.tsx\`
+        \`@/components/Primitives/Layout/TipBar/TipBar.tsx\`
         `,
       },
     },

@@ -1,4 +1,4 @@
-import React, { ReactNode, VFC } from 'react';
+import React, { ReactNode } from 'react';
 import { ComponentStory } from '@storybook/react';
 
 import dedent from 'ts-dedent';
@@ -73,7 +73,7 @@ export default {
   },
 };
 
-const StorybookFormProvider: VFC<{ children: ReactNode }> = ({ children }) => {
+const StorybookFormProvider = ({ children }: { children: ReactNode }) => {
   const methods = useForm();
   return (
     <FormProvider {...methods}>

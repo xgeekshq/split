@@ -1,9 +1,11 @@
-import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { DialogClose } from '@radix-ui/react-dialog';
+
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+
 import { StyledDialogTitle } from './styles';
-import Button from '../../Inputs/Button/Button';
-import Flex from '../../Layout/Flex/Flex';
-import Text from '../../Text/Text';
 
 export type HeaderProps = {
   title: string;
