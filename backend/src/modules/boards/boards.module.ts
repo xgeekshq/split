@@ -38,6 +38,7 @@ import {
 import BoardsController from './controller/boards.controller';
 import TeamUsersModule from 'src/modules/teamUsers/teamusers.module';
 import PublicBoardsController from './controller/publicBoards.controller';
+import { VotesModule } from '../votes/votes.module';
 
 @Module({
 	imports: [
@@ -48,6 +49,7 @@ import PublicBoardsController from './controller/publicBoards.controller';
 		CommunicationModule,
 		CardsModule,
 		forwardRef(() => AuthModule),
+		forwardRef(() => VotesModule),
 		BoardUsersModule,
 		JwtRegister,
 		mongooseBoardModule,
