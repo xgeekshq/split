@@ -12,6 +12,7 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import { DeleteFromCardGroupUseCase } from './delete-from-card-group.use-case';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
 import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 const deleteFromCardGroupMock: DeleteFromCardGroupUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -46,7 +47,7 @@ const cardItem = CardItemFactory.create();
 cardItem.votes = [faker.datatype.uuid(), faker.datatype.uuid()];
 
 describe('DeleteFromCardGroupUseCase', () => {
-	let useCase: DeleteFromCardGroupUseCase;
+	let useCase: UseCase<DeleteFromCardGroupUseCaseDto, void>;
 	let cardRepositoryMock: DeepMocked<CardRepositoryInterface>;
 	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let getCardServiceMock: DeepMocked<GetCardServiceInterface>;
@@ -69,7 +70,7 @@ describe('DeleteFromCardGroupUseCase', () => {
 				}
 			]
 		}).compile();
-		useCase = module.get<DeleteFromCardGroupUseCase>(DeleteFromCardGroupUseCase);
+		useCase = module.get<UseCase<DeleteFromCardGroupUseCaseDto, void>>(DeleteFromCardGroupUseCase);
 		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
 		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
 		getCardServiceMock = module.get(TYPES.services.GetCardService);

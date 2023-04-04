@@ -11,6 +11,7 @@ import faker from '@faker-js/faker';
 import { BulkWriteResult, UpdateResult } from 'mongodb';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 const deleteCardMock: DeleteCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -34,7 +35,7 @@ const bulkWriteResult = {
 };
 
 describe('DeleteCardUseCase', () => {
-	let useCase: DeleteCardUseCase;
+	let useCase: UseCase<DeleteCardUseCaseDto, void>;
 	let cardRepositoryMock: DeepMocked<CardRepositoryInterface>;
 	let updateBoardUserServiceMock: DeepMocked<UpdateBoardUserServiceInterface>;
 	let getCardServiceMock: DeepMocked<GetCardServiceInterface>;
@@ -57,7 +58,7 @@ describe('DeleteCardUseCase', () => {
 				}
 			]
 		}).compile();
-		useCase = module.get<DeleteCardUseCase>(DeleteCardUseCase);
+		useCase = module.get<UseCase<DeleteCardUseCaseDto, void>>(DeleteCardUseCase);
 		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
 		updateBoardUserServiceMock = module.get(BoardUsers.TYPES.services.UpdateBoardUserService);
 		getCardServiceMock = module.get(TYPES.services.GetCardService);
