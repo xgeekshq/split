@@ -7,7 +7,7 @@ import * as Schedules from 'src/modules/schedules/interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { deleteBoardService } from '../boards.providers';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { DeleteBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/delete.board.user.service.interface';
@@ -27,13 +27,14 @@ const deleteSuccessfulResult = {
 	acknowledged: true,
 	deletedCount: faker.datatype.number()
 };
+const boardIdsToDelete = boards.map((board) => board._id);
 
 describe('DeleteBoardService', () => {
 	let service: DeleteBoardServiceInterface;
 	let boardRepositoryMock: DeepMocked<BoardRepositoryInterface>;
 	let deleteBoardUserServiceMock: DeepMocked<DeleteBoardUserServiceInterface>;
 	let deleteSchedulesServiceMock: DeepMocked<DeleteSchedulesServiceInterface>;
-	let achiveChannelServiceMock: DeepMocked<ArchiveChannelServiceInterface>;
+	let archiveChannelServiceMock: DeepMocked<ArchiveChannelServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -61,7 +62,7 @@ describe('DeleteBoardService', () => {
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		deleteBoardUserServiceMock = module.get(BoardUsers.TYPES.services.DeleteBoardUserService);
 		deleteSchedulesServiceMock = module.get(Schedules.TYPES.services.DeleteSchedulesService);
-		achiveChannelServiceMock = module.get(
+		archiveChannelServiceMock = module.get(
 			CommunicationTypes.TYPES.services.SlackArchiveChannelService
 		);
 	});
@@ -86,42 +87,35 @@ describe('DeleteBoardService', () => {
 
 		//Slack Enabled
 		boardRepositoryMock.getBoardPopulated.mockResolvedValue(board);
-		achiveChannelServiceMock.execute.mockResolvedValue(null);
+		archiveChannelServiceMock.execute.mockResolvedValue(null);
 	});
 
 	it('should be defined', () => {
 		expect(service).toBeDefined();
 	});
 
-	describe('delete', () => {
+	describe('deleteBoardBoardUsersAndSchedules', () => {
 		it('should return true if deleteBoardBoardUsersAndSchedules succeded', async () => {
 			boardRepositoryMock.getBoardsByBoardIdsList.mockResolvedValue(boards);
-
-			await expect(service.delete('boardId')).resolves.toBe(true);
+			await expect(service.deleteBoardBoardUsersAndSchedules(boardIdsToDelete)).resolves.toBe(true);
 		});
-
-		it('should throw notFoundException when board not found ', async () => {
-			boardRepositoryMock.getBoard.mockResolvedValue(null);
-
-			await expect(service.delete('boardId')).rejects.toThrow(NotFoundException);
-		});
-
 		it('should throw error when deleteBoardUserService.deleteDividedBoardUsers fails', async () => {
 			deleteBoardUserServiceMock.deleteBoardUsersByBoardList.mockResolvedValue(deleteFailedResult);
-
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(
+				service.deleteBoardBoardUsersAndSchedules(boardIdsToDelete)
+			).rejects.toThrowError(BadRequestException);
 		});
-
 		it('should throw error when deleteSheduleService.deleteSchedulesByBoardList fails', async () => {
 			deleteSchedulesServiceMock.deleteSchedulesByBoardList.mockResolvedValue(deleteFailedResult);
-
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(
+				service.deleteBoardBoardUsersAndSchedules(boardIdsToDelete)
+			).rejects.toThrowError(BadRequestException);
 		});
-
 		it('should throw error if boardRepository.deleteBoardsByBoardList fails', async () => {
 			boardRepositoryMock.deleteBoardsByBoardList.mockResolvedValue(deleteFailedResult);
-
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(
+				service.deleteBoardBoardUsersAndSchedules(boardIdsToDelete)
+			).rejects.toThrowError(BadRequestException);
 		});
 	});
 
@@ -133,19 +127,25 @@ describe('DeleteBoardService', () => {
 		it('should throw error when deleteBoardUserService.deleteDividedBoardUsers fails', async () => {
 			deleteBoardUserServiceMock.deleteBoardUsersByBoardList.mockResolvedValue(deleteFailedResult);
 
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(service.deleteBoardsByTeamId('boardId')).rejects.toThrowError(
+				BadRequestException
+			);
 		});
 
 		it('should throw error when deleteSchedulesServiceMock.deleteSchedulesByBoardList fails', async () => {
 			deleteSchedulesServiceMock.deleteSchedulesByBoardList.mockResolvedValue(deleteFailedResult);
 
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(service.deleteBoardsByTeamId('boardId')).rejects.toThrowError(
+				BadRequestException
+			);
 		});
 
 		it('should throw error if boardRepository.deleteBoardsByBoardList fails', async () => {
 			boardRepositoryMock.deleteBoardsByBoardList.mockResolvedValue(deleteFailedResult);
 
-			await expect(service.delete('boardId')).rejects.toThrowError(BadRequestException);
+			await expect(service.deleteBoardsByTeamId('boardId')).rejects.toThrowError(
+				BadRequestException
+			);
 		});
 	});
 });

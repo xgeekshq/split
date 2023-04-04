@@ -1,7 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { MergeCardUseCase } from './merge-card.use-case';
 import { TYPES } from '../interfaces/types';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
@@ -10,6 +9,8 @@ import { BadRequestException } from '@nestjs/common';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { UpdateResult } from 'mongodb';
 import { CardItemFactory } from 'src/libs/test-utils/mocks/factories/cardItem-factory.mock';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { mergeCardUseCase } from '../cards.providers';
 
 const mergeCardDtoMock: MergeCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -29,13 +30,13 @@ const updateResult: UpdateResult = {
 };
 
 describe('MergeCardUseCase', () => {
-	let useCase: MergeCardUseCase;
+	let useCase: UseCase<MergeCardUseCaseDto, boolean>;
 	let cardRepositoryMock: DeepMocked<CardRepositoryInterface>;
 	let getCardServiceMock: DeepMocked<GetCardServiceInterface>;
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				MergeCardUseCase,
+				mergeCardUseCase,
 				{
 					provide: TYPES.services.GetCardService,
 					useValue: createMock<GetCardServiceInterface>()
@@ -46,7 +47,9 @@ describe('MergeCardUseCase', () => {
 				}
 			]
 		}).compile();
-		useCase = module.get<MergeCardUseCase>(MergeCardUseCase);
+		useCase = module.get<UseCase<MergeCardUseCaseDto, boolean>>(
+			TYPES.applications.MergeCardUseCase
+		);
 		getCardServiceMock = module.get(TYPES.services.GetCardService);
 		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
 

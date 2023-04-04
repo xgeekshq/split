@@ -52,7 +52,6 @@ import BoardDto from '../dto/board.dto';
 import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto';
 import { UpdateBoardDto } from 'src/modules/boards/dto/update-board.dto';
 import Board from '../entities/board.schema';
-import { DeleteBoardApplicationInterface } from '../interfaces/applications/delete.board.application.interface';
 import { UpdateBoardApplicationInterface } from '../interfaces/applications/update.board.application.interface';
 import { TYPES } from '../interfaces/types';
 import { DuplicateBoardDto } from '../applications/duplicate-board.use-case';
@@ -86,8 +85,8 @@ export default class BoardsController {
 		private getBoardUseCase: UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>,
 		@Inject(TYPES.applications.UpdateBoardApplication)
 		private updateBoardApp: UpdateBoardApplicationInterface,
-		@Inject(TYPES.applications.DeleteBoardApplication)
-		private deleteBoardApp: DeleteBoardApplicationInterface,
+		@Inject(TYPES.applications.DeleteBoardUseCase)
+		private deleteBoardUseCase: UseCase<string, boolean>,
 		private socketService: SocketGateway
 	) {}
 
@@ -331,7 +330,7 @@ export default class BoardsController {
 		@Query() { teamId }: TeamParamOptional,
 		@Query() { socketId }: BaseParamWSocket
 	) {
-		const result = await this.deleteBoardApp.delete(boardId);
+		const result = await this.deleteBoardUseCase.execute(boardId);
 
 		if (socketId && teamId) {
 			this.socketService.sendUpdatedBoards(socketId, teamId);
