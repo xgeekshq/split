@@ -33,7 +33,7 @@ describe('DeleteBoardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<string, boolean>>(Boards.TYPES.applications.DeleteBoardUseCase);
+		useCase = module.get(Boards.TYPES.applications.DeleteBoardUseCase);
 		deleteBoardServiceMock = module.get(Boards.TYPES.services.DeleteBoardService);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 	});
