@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
@@ -14,6 +14,8 @@ import {
 } from 'src/libs/exceptions/messages';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
 import { getUserWithVotes } from '../utils/get-user-with-votes';
+import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { CardNotFoundException } from 'src/libs/exceptions/cardNotFoundException';
 
 @Injectable()
 export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
@@ -26,6 +28,8 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 		private updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
+	private logger: Logger = new Logger(DeleteCardUseCase.name);
+
 	async execute(deleteCardUseCaseDto: DeleteCardUseCaseDto) {
 		const { boardId, cardId } = deleteCardUseCaseDto;
 		await this.cardRepository.startTransaction();
@@ -36,17 +40,18 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 				const result = await this.cardRepository.updateCardsFromBoard(boardId, cardId, true);
 
-				if (result.modifiedCount !== 1) throw new Error(CARD_NOT_REMOVED);
+				if (result.modifiedCount !== 1) throw new UpdateFailedException(CARD_NOT_REMOVED);
 			} catch (e) {
 				await this.cardRepository.abortTransaction();
 				await this.updateBoardUserService.abortTransaction();
-				throw new Error(e.message);
+				throw new DeleteFailedException(e.message);
 			}
 
 			await this.cardRepository.commitTransaction();
 			await this.updateBoardUserService.commitTransaction();
 		} catch (e) {
-			throw new DeleteFailedException(e.message ? e.message : DELETE_FAILED);
+			this.logger.error(e);
+			throw new DeleteFailedException(DELETE_FAILED);
 		} finally {
 			await this.cardRepository.endSession();
 			await this.updateBoardUserService.endSession();
@@ -60,7 +65,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 		let votesByUsers;
 
 		if (!getCard) {
-			throw Error(CARD_NOT_FOUND);
+			throw new CardNotFoundException(CARD_NOT_FOUND);
 		}
 
 		if (getCard.votes?.length) {
@@ -81,10 +86,10 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 				);
 
 				if (result.ok !== 1) {
-					throw new Error(DELETE_VOTE_FAILED);
+					throw new UpdateFailedException(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
-				throw new Error(e.message);
+				throw new UpdateFailedException(e.message);
 			}
 		}
 	}
