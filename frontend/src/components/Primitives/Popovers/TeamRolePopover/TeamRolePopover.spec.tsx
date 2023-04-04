@@ -2,7 +2,9 @@ import React from 'react';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import TeamRolePopover, { TeamRolePopoverProps } from './TeamRolePopover';
+import TeamRolePopover, {
+  TeamRolePopoverProps,
+} from '@/components/Primitives/Popovers/TeamRolePopover/TeamRolePopover';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
