@@ -6,7 +6,6 @@ import { UnmergeCardApplication } from './applications/unmerge.card.application'
 import { UpdateCardApplication } from './applications/update.card.application';
 import { TYPES } from './interfaces/types';
 import { CardRepository } from './repository/card.repository';
-import DeleteCardService from './services/delete.card.service';
 import GetCardService from './services/get.card.service';
 import { UnmergeCardService } from './services/unmerge.card.service';
 import UpdateCardService from './services/update.card.service';
@@ -19,11 +18,6 @@ export const getCardService = {
 export const updateCardService = {
 	provide: TYPES.services.UpdateCardService,
 	useClass: UpdateCardService
-};
-
-export const deleteCardService = {
-	provide: TYPES.services.DeleteCardService,
-	useClass: DeleteCardService
 };
 
 export const unmergeCardService = {
