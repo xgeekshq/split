@@ -1,4 +1,4 @@
-import CommentType from './comment';
+import CommentType from '@/types/comment/comment';
 
 export default interface AddCommentDto {
   boardId: string;

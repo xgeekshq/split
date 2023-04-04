@@ -17,8 +17,8 @@ import useDeleteTeam from '@/hooks/teams/useDeleteTeam';
 import useDeleteTeamUser from '@/hooks/teams/useDeleteTeamUser';
 import useUpdateTeamUser from '@/hooks/teams/useUpdateTeamUser';
 import { TeamUserUpdate } from '@/types/team/team.user';
-import TeamBoards from './TeamBoards/TeamBoards';
-import TeamTitle from './TeamTitle/TeamTitle';
+import TeamBoards from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
+import TeamTitle from '@/components/Teams/TeamsList/TeamItem/TeamTitle/TeamTitle';
 
 export type TeamItemProps = {
   team: Team;

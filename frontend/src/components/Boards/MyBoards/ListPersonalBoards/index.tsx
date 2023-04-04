@@ -8,7 +8,7 @@ import { toastState } from '@/store/toast/atom/toast.atom';
 import BoardType from '@/types/board/board';
 import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import ListBoards from '../ListBoards';
+import ListBoards from '@/components/Boards/MyBoards/ListBoards';
 import EmptyPersonalBoards from './EmptyPersonalBoards.tsx';
 
 interface ListBoardsByTeamProps {

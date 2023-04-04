@@ -1,6 +1,6 @@
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Content, { SidebarContentProps } from './Content';
+import Content, { SidebarContentProps } from '@/components/Sidebar/Content/Content';
 
 const DEFAULT_PROPS = { strategy: 'local' };
 

@@ -3,7 +3,9 @@ import { ROUTES } from '@/utils/routes';
 import { TeamFactory } from '@/utils/factories/team';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import TeamBoards, { TeamBoardsProps } from './TeamBoards';
+import TeamBoards, {
+  TeamBoardsProps,
+} from '@/components/Teams/TeamsList/TeamItem/TeamBoards/TeamBoards';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: Partial<TeamBoardsProps> = {}) =>

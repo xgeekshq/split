@@ -1,5 +1,5 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import TipBar, { TipBarProps } from './TipBar';
+import TipBar, { TipBarProps } from '@/components/Primitives/Layout/TipBar/TipBar';
 
 const DEFAULT_PROPS: TipBarProps = {
   tips: [

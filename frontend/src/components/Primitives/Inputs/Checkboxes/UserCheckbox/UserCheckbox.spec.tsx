@@ -1,7 +1,9 @@
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserListFactory } from '@/utils/factories/user';
-import UserCheckbox, { UserCheckboxProps } from './UserCheckbox';
+import UserCheckbox, {
+  UserCheckboxProps,
+} from '@/components/Primitives/Inputs/Checkboxes/UserCheckbox/UserCheckbox';
 
 const DEFAULT_PROPS = {
   user: UserListFactory.create({ isChecked: true }),

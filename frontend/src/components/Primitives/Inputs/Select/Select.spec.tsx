@@ -1,10 +1,16 @@
 // TODO: Test Select Options
 
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Flex from '../../Layout/Flex/Flex';
-import Text from '../../Text/Text';
-import Icon from '../../Icons/Icon/Icon';
-import { Select, SelectContent, SelectIcon, SelectTrigger, SelectValue } from './Select';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
+import {
+  Select,
+  SelectContent,
+  SelectIcon,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/Primitives/Inputs/Select/Select';
 
 const DUMMY_OPTIONS = [
   { label: 'Apple', value: 'Apple' },

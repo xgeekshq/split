@@ -1,9 +1,12 @@
 import React from 'react';
 import { Dialog as RadixDialog, Portal } from '@radix-ui/react-dialog';
-import { StyledDialogContent, StyledDialogOverlay } from './styles';
-import DialogFooter from './DialogFooter';
-import DialogHeader from './DialogHeader';
-import Flex from '../../Layout/Flex/Flex';
+import {
+  StyledDialogContent,
+  StyledDialogOverlay,
+} from '@/components/Primitives/Dialogs/Dialog/styles';
+import DialogFooter from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
+import DialogHeader from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 export type DialogProps = {
   isOpen: boolean;

@@ -3,15 +3,15 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import isEmpty from '@/utils/isEmpty';
-import Flex from '../../Layout/Flex/Flex';
-import Text from '../../Text/Text';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
 import {
   HelperTextWrapper,
   IconWrapper,
   PlaceholderText,
   StyledInput,
   StyledInputWrapper,
-} from './styles';
+} from '@/components/Primitives/Inputs/Input/styles';
 
 type InputProps = {
   id: string;

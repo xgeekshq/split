@@ -1,6 +1,8 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import Checkbox, { CheckboxProps } from './Checkbox';
+import Checkbox, {
+  CheckboxProps,
+} from '@/components/Primitives/Inputs/Checkboxes/Checkbox/Checkbox';
 
 const render = (props: CheckboxProps) => renderWithProviders(<Checkbox {...props} />);
 

@@ -1,6 +1,6 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import Switch, { SwitchProps } from './Switch';
+import Switch, { SwitchProps } from '@/components/Primitives/Inputs/Switches/Switch/Switch';
 
 const render = (props: SwitchProps) => renderWithProviders(<Switch {...props} />);
 

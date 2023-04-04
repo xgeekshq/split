@@ -1,8 +1,8 @@
 import React, { Dispatch, useState } from 'react';
 import { SignUpEnum } from '@/utils/signUp.enum';
-import RegisterForm from './RegisterForm';
-import SignUpForm from './SignUpForm';
-import SignUpOptionsForm from './SignUpOptionsForm';
+import RegisterForm from '@/components/auth/SignUp/RegisterForm';
+import SignUpForm from '@/components/auth/SignUp/SignUpForm';
+import SignUpOptionsForm from '@/components/auth/SignUp/SignUpOptionsForm';
 
 interface SignUpTabContentProps {
   setCurrentTab: Dispatch<React.SetStateAction<string>>;

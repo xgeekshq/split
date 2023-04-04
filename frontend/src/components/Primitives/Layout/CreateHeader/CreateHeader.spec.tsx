@@ -1,6 +1,8 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import CreateHeader, { CreateHeaderProps } from './CreateHeader';
+import CreateHeader, {
+  CreateHeaderProps,
+} from '@/components/Primitives/Layout/CreateHeader/CreateHeader';
 
 const DEFAULT_PROPS: CreateHeaderProps = {
   title: 'Create New Lorem',

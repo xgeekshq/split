@@ -1,10 +1,10 @@
 import { createMockRouter } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import Dialog, { DialogProps } from './Dialog';
-import { HeaderProps } from './DialogHeader';
-import { FooterProps } from './DialogFooter';
-import Flex from '../../Layout/Flex/Flex';
+import Dialog, { DialogProps } from '@/components/Primitives/Dialogs/Dialog/Dialog';
+import { HeaderProps } from '@/components/Primitives/Dialogs/Dialog/DialogHeader';
+import { FooterProps } from '@/components/Primitives/Dialogs/Dialog/DialogFooter';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 const DEFAULT_PROPS = {
   isOpen: true,

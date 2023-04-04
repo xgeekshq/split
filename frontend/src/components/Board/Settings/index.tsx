@@ -24,12 +24,12 @@ import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
-import ConfigurationSwitch from '../../Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
-import { ConfigurationSettings } from './partials/ConfigurationSettings';
-import { TeamResponsibleSettings } from './partials/TeamResponsible';
-import { ColumnBoxAndDelete } from './partials/Columns/ColumnBoxAndDelete';
-import { ColumnSettings } from './partials/Columns';
-import { colors } from '../Column/partials/OptionsMenu';
+import ConfigurationSwitch from '@/components/Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
+import { ConfigurationSettings } from '@/components/Board/Settings/partials/ConfigurationSettings';
+import { TeamResponsibleSettings } from '@/components/Board/Settings/partials/TeamResponsible';
+import { ColumnBoxAndDelete } from '@/components/Board/Settings/partials/Columns/ColumnBoxAndDelete';
+import { ColumnSettings } from '@/components/Board/Settings/partials/Columns';
+import { colors } from '@/components/Board/Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
 

@@ -1,6 +1,8 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
-import CreateFooter, { CreateFooterProps } from './CreateFooter';
+import CreateFooter, {
+  CreateFooterProps,
+} from '@/components/Primitives/Layout/CreateFooter/CreateFooter';
 
 const DEFAULT_PROPS: CreateFooterProps = {
   disableButton: false,

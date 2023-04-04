@@ -11,8 +11,8 @@ import useBoard from '@/hooks/useBoard';
 import BoardType from '@/types/board/board';
 import isEmpty from '@/utils/isEmpty';
 
-import CountCards from './CountCards';
-import DuplicateBoardNameDialog from './DuplicateBoardNameDialog';
+import CountCards from '@/components/CardBoard/CardBody/CountCards';
+import DuplicateBoardNameDialog from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
 
 export type CardEndProps = {
   board: BoardType;

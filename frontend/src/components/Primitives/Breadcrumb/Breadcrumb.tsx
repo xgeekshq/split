@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { BreadcrumbItemType, BreadcrumbType } from '@/types/board/Breadcrumb';
-import { StyledList, StyledBreadcrumbItem } from './styles';
+import { StyledList, StyledBreadcrumbItem } from '@/components/Primitives/Breadcrumb/styles';
 
 export type BreadcrumbProps = {
   items: BreadcrumbType;

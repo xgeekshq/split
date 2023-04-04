@@ -3,8 +3,8 @@ import { faker } from '@faker-js/faker';
 
 import { buildTestFactory } from '@/utils/testing';
 import ColumnType from '@/types/column';
-import { BoardUserFactory, UserFactory } from './user';
-import { TeamFactory } from './team';
+import { BoardUserFactory, UserFactory } from '@/utils/factories/user';
+import { TeamFactory } from '@/utils/factories/team';
 
 export const BoardFactory = buildTestFactory<BoardType>(() => {
   const _id = faker.database.mongodbObjectId();

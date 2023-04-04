@@ -5,7 +5,7 @@ import { TeamFactory } from '@/utils/factories/team';
 import { TeamUserFactory } from '@/utils/factories/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { libraryMocks } from '@/utils/testing/mocks';
-import TeamItem, { TeamItemProps } from './TeamItem';
+import TeamItem, { TeamItemProps } from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
