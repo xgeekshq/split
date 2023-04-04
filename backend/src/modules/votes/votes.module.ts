@@ -8,8 +8,8 @@ import SocketModule from 'src/modules/socket/socket.module';
 import { CardsModule } from '../cards/cards.module';
 import VotesController from './controller/votes.controller';
 import {
+	createCardGroupVoteUseCase,
 	createCardItemVoteUseCase,
-	createVoteApplication,
 	createVoteService,
 	deleteVoteApplication,
 	deleteVoteService,
@@ -28,8 +28,8 @@ import BoardUsersModule from '../boardUsers/boardusers.module';
 	],
 	controllers: [VotesController],
 	providers: [
-		createVoteApplication,
 		createCardItemVoteUseCase,
+		createCardGroupVoteUseCase,
 		createVoteService,
 		deleteVoteApplication,
 		deleteVoteService,

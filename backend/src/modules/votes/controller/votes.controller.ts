@@ -21,11 +21,11 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import VoteDto from '../dto/vote.dto';
-import { CreateVoteApplicationInterface } from '../interfaces/applications/create.vote.application.interface';
 import { DeleteVoteApplicationInterface } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CreateCardItemVoteUseCaseDto from '../dto/useCase/create-card-item-vote.use-case.dto';
+import CreateCardGroupVoteUseCaseDto from '../dto/useCase/create-card-group-vote.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Votes')
@@ -33,12 +33,12 @@ import CreateCardItemVoteUseCaseDto from '../dto/useCase/create-card-item-vote.u
 @Controller('boards')
 export default class VotesController {
 	constructor(
-		@Inject(TYPES.applications.CreateVoteApplication)
-		private createVoteApp: CreateVoteApplicationInterface,
 		@Inject(TYPES.applications.DeleteVoteApplication)
 		private deleteVoteApp: DeleteVoteApplicationInterface,
 		@Inject(TYPES.applications.CreateCardItemVoteUseCase)
 		private createCardItemVoteUseCase: UseCase<CreateCardItemVoteUseCaseDto, void>,
+		@Inject(TYPES.applications.CreateCardGroupVoteUseCase)
+		private createCardGroupVoteUseCase: UseCase<CreateCardGroupVoteUseCaseDto, void>,
 		private socketService: SocketGateway
 	) {}
 
@@ -129,7 +129,12 @@ export default class VotesController {
 		if (count < 0) {
 			await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id, count);
 		} else {
-			await this.createVoteApp.addVoteToCardGroup(boardId, cardId, request.user._id, count);
+			await this.createCardGroupVoteUseCase.execute({
+				boardId,
+				cardId,
+				userId: request.user._id,
+				count
+			});
 		}
 
 		this.socketService.sendUpdateVotes(socketId, data);

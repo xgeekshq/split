@@ -8,10 +8,10 @@ import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadReques
 import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
-import CreateCardItemVoteUseCaseDto from '../dto/useCase/create-card-item-vote.use-case.dto';
+import CreateCardGroupVoteUseCaseDto from '../dto/useCase/create-card-group-vote.use-case.dto';
 
 @Injectable()
-export class CreateCardItemVoteUseCase implements UseCase<CreateCardItemVoteUseCaseDto, void> {
+export class CreateCardGroupVoteUseCase implements UseCase<CreateCardGroupVoteUseCaseDto, void> {
 	private logger: Logger = new Logger('CreateVoteService');
 	constructor(
 		@Inject(TYPES.services.CreateVoteService)
@@ -22,21 +22,14 @@ export class CreateCardItemVoteUseCase implements UseCase<CreateCardItemVoteUseC
 		private updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
-	async execute({
-		boardId,
-		cardId,
-		userId,
-		cardItemId,
-		count,
-		retryCount
-	}: CreateCardItemVoteUseCaseDto) {
+	async execute({ boardId, cardId, userId, count, retryCount }: CreateCardGroupVoteUseCaseDto) {
 		await this.createVoteService.canUserVote(boardId, userId, count);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
 
 		try {
-			await this.addVoteToCardAndUser(boardId, userId, count, cardId, cardItemId, retryCount);
+			await this.addVoteToCardGroupAndUser(boardId, userId, count, cardId, retryCount);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
 		} catch (e) {
@@ -47,26 +40,22 @@ export class CreateCardItemVoteUseCase implements UseCase<CreateCardItemVoteUseC
 		}
 	}
 
-	private async addVoteToCardAndUser(
+	private async addVoteToCardGroupAndUser(
 		boardId: string,
 		userId: string,
 		count: number,
 		cardId: string,
-		cardItemId: string,
 		retryCount?: number
 	) {
 		let retryCountOperation = retryCount ?? 0;
 		const withSession = true;
 		try {
 			await this.createVoteService.incrementVoteUser(boardId, userId, count, withSession);
-
-			const votes = Array(count).fill(userId);
-
-			const updatedBoard = await this.voteRepository.insertCardItemVote(
+			const updatedBoard = await this.voteRepository.insertCardGroupVote(
 				boardId,
+				userId,
+				count,
 				cardId,
-				cardItemId,
-				votes,
 				withSession
 			);
 
@@ -80,14 +69,7 @@ export class CreateCardItemVoteUseCase implements UseCase<CreateCardItemVoteUseC
 				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.execute({
-					boardId,
-					cardId,
-					userId,
-					cardItemId,
-					count,
-					retryCount: retryCountOperation
-				});
+				await this.execute({ boardId, cardId, userId, count, retryCount: retryCountOperation });
 			} else {
 				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}

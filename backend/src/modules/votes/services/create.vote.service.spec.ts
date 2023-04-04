@@ -11,21 +11,17 @@ import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/servi
 import faker from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
-import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
-import Card from 'src/modules/cards/entities/card.schema';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { NotFoundException } from '@nestjs/common';
 import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services/get.board.service.interface';
 import BoardUser from 'src/modules/boardUsers/entities/board.user.schema';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/update.board.user.service.interface';
-import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const boardUser: BoardUser = BoardUserFactory.create({ board: board._id, votesCount: 0 });
-const card: Card = CardFactory.create();
 
 describe('CreateVoteService', () => {
 	let voteService: CreateVoteServiceInterface;
@@ -124,44 +120,6 @@ describe('CreateVoteService', () => {
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(UpdateFailedException);
 			}
-		});
-	});
-
-	describe('addVoteToCardGroup', () => {
-		it('should throw an error when the voteRepository.insertCardGroupVote fails', async () => {
-			//if the error code isn't of type  WRITE_ERROR_LOCK or retryCount is greater than 5
-			try {
-				voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
-				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-				expect(voteService.addVoteToCardGroup).toBeCalled();
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-
-			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
-			try {
-				voteRepositoryMock.insertCardGroupVote.mockRejectedValue({ code: WRITE_LOCK_ERROR });
-				await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(InsertFailedException);
-			}
-		});
-
-		it('should call all the functions when addVoteToCardGroup succeeds', async () => {
-			await voteService.addVoteToCardGroup(board._id, card._id, userId, 1);
-
-			expect(getBoardServiceMock.getBoardById).toBeCalledTimes(1);
-			expect(getBoardUserServiceMock.getBoardUser).toBeCalledTimes(1);
-			expect(updateBoardUserServiceMock.updateVoteUser).toBeCalled();
-			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
-		});
-
-		it('should throw an error when a commit transaction fails', async () => {
-			voteRepositoryMock.commitTransaction.mockRejectedValueOnce('Commit transaction failed');
-
-			expect(
-				async () => await voteService.addVoteToCardGroup(board._id, card._id, userId, 1)
-			).rejects.toThrow(InsertFailedException);
 		});
 	});
 });
