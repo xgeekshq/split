@@ -107,25 +107,25 @@ export default class CreateVoteService implements CreateVoteServiceInterface {
 	}
 
 	private async getBoardMaxVotes(boardId: string) {
-		const { _id, maxVotes } = await this.getBoardService.getBoardById(boardId);
+		const board = await this.getBoardService.getBoardById(boardId);
 
-		if (!_id) {
+		if (!board) {
 			throw new NotFoundException(BOARD_NOT_FOUND);
 		}
 
-		return maxVotes;
+		return board.maxVotes;
 	}
 
 	private async canBoardUserVote(boardId: string, userId: string, count: number, maxVotes: number) {
-		const { _id, votesCount } = await this.getBoardUserService.getBoardUser(boardId, userId);
+		const boardUser = await this.getBoardUserService.getBoardUser(boardId, userId);
 
-		if (!_id) {
+		if (!boardUser) {
 			return false;
 		}
 
-		const userCanVote = votesCount !== undefined && votesCount >= 0;
+		const userCanVote = boardUser.votesCount !== undefined && boardUser.votesCount >= 0;
 
-		return userCanVote ? votesCount + count <= maxVotes : false;
+		return userCanVote ? boardUser.votesCount + count <= maxVotes : false;
 	}
 
 	private async addVoteToCardAndUserOperations(

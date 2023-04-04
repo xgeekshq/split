@@ -6,40 +6,36 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import TeamTitle, { TeamTitleProps } from './TeamTitle';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
-const render = (props: TeamTitleProps) =>
-  renderWithProviders(<TeamTitle {...props} />, { routerOptions: mockRouter });
-
-describe('Components/Teams/TeamsList/TeamItem/TeamTitle', () => {
-  let defaultProps: TeamTitleProps;
-  beforeEach(() => {
-    const team = TeamFactory.create();
-    defaultProps = { title: team.name, teamId: team.id, isTeamPage: false };
+const render = (props: Partial<TeamTitleProps>) =>
+  renderWithProviders(<TeamTitle title="MyTeam" teamId="123" {...props} />, {
+    routerOptions: mockRouter,
   });
 
+describe('Components/Teams/TeamsList/TeamItem/TeamTitle', () => {
   it('should render correctly', () => {
     // Arrange
-    const teamTitleProps = { ...defaultProps };
+    const team = TeamFactory.create();
 
     // Act
-    const { getByText } = render(teamTitleProps);
+    const { getByText } = render({ title: team.name });
 
     // Assert
-    expect(getByText(teamTitleProps.title)).toBeInTheDocument();
+    expect(getByText(team.name)).toBeInTheDocument();
   });
 
   it('should redirect to team page', async () => {
     // Arrange
-    const teamTitleProps = { ...defaultProps, isTeamPage: true };
+    const team = TeamFactory.create();
 
     // Act
-    const { getByText } = render(teamTitleProps);
-    fireEvent.click(getByText(teamTitleProps.title));
+    const { getByText } = render({ title: team.name, teamId: team.id });
+    fireEvent.click(getByText(team.name));
 
     // Assert
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith(
-        ROUTES.TeamPage(teamTitleProps.teamId),
-        ROUTES.TeamPage(teamTitleProps.teamId),
+        ROUTES.TeamPage(team.id),
+        ROUTES.TeamPage(team.id),
         expect.anything(),
       );
     });

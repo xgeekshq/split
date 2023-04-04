@@ -21,6 +21,8 @@ const EmptyTeamBoards = ({ teamId }: EmptyTeamBoardsProps) => (
           pathname: `/boards/new`,
           query: { team: teamId },
         }}
+        passHref
+        legacyBehavior
       >
         <StyledNewBoardLink underline fontWeight="medium">
           Add a new team board

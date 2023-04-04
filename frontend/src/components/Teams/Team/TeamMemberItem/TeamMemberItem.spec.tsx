@@ -5,57 +5,42 @@ import { getFormattedUsername } from '@/utils/getFormattedUsername';
 import { libraryMocks } from '@/utils/testing/mocks';
 import TeamMemberItem, { TeamMemberItemProps } from './TeamMemberItem';
 
-const DEFAULT_PROPS = {
-  member: TeamUserFactory.create(),
-  isTeamPage: true,
-};
-
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 
-const render = (props: TeamMemberItemProps) =>
-  renderWithProviders(<TeamMemberItem {...props} />, { routerOptions: mockRouter });
+const render = (props: Partial<TeamMemberItemProps> = {}) =>
+  renderWithProviders(<TeamMemberItem member={TeamUserFactory.create()} isTeamPage {...props} />, {
+    routerOptions: mockRouter,
+  });
 
 describe('Components/Teams/Team/TeamMemberItem', () => {
   it('should render correctly', () => {
     // Arrange
-    const teamMemberItemProps = { ...DEFAULT_PROPS };
+    const member = TeamUserFactory.create();
 
     // Act
-    const { getByText, getByTestId } = render(teamMemberItemProps);
+    const { getByText, getByTestId } = render({ member });
 
     // Assert
     expect(
-      getByText(
-        getFormattedUsername(
-          teamMemberItemProps.member.user.firstName,
-          teamMemberItemProps.member.user.lastName,
-        ),
-      ),
+      getByText(getFormattedUsername(member.user.firstName, member.user.lastName)),
     ).toBeInTheDocument();
     expect(getByTestId('roleSelector')).toBeInTheDocument();
   });
 
   it('should allow to change new joiner status', () => {
-    // Arrange
-    const teamMemberItemProps = { ...DEFAULT_PROPS, hasPermissions: true };
-
     // Act
-    const { getByTestId } = render(teamMemberItemProps);
+    const { getByTestId } = render({ hasPermissions: true });
 
     // Assert
     expect(getByTestId('boardRolePopover')).toBeInTheDocument();
   });
 
   it('should not allow to change new joiner status', () => {
-    // Arrange
-    const teamMemberItemProps = {
-      ...DEFAULT_PROPS,
+    // Act
+    const { getByTestId } = render({
       member: TeamUserFactory.create({ isNewJoiner: true }),
       hasPermissions: false,
-    };
-
-    // Act
-    const { getByTestId } = render(teamMemberItemProps);
+    });
 
     // Assert
     expect(getByTestId('newJoinerTooltip')).toBeInTheDocument();

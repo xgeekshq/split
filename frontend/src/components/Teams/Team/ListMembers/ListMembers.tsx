@@ -4,14 +4,15 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import UserListDialog from '@/components/Primitives/Dialogs/UserListDialog/UserListDialog';
 import useCurrentSession from '@/hooks/useCurrentSession';
-import useTeam from '@/hooks/useTeam';
-import { membersListState, usersListState } from '@/store/team/atom/team.atom';
+import { createTeamState, usersListState } from '@/store/team/atom/team.atom';
 import { toastState } from '@/store/toast/atom/toast.atom';
 import { CreateTeamUser, TeamUserAddAndRemove } from '@/types/team/team.user';
 import { UserList } from '@/types/team/userList';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { verifyIfIsNewJoiner } from '@/utils/verifyIfIsNewJoiner';
+import useUpdateTeamUsers from '@/hooks/teams/useUpdateTeamUsers';
+import useTeam from '@/hooks/teams/useTeam';
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -20,31 +21,28 @@ type Props = {
 };
 
 const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
-  const { userId } = useCurrentSession();
-
-  const {
-    addAndRemoveTeamUser: { mutate },
-  } = useTeam({ autoFetchTeam: false });
-
   const {
     query: { teamId },
   } = useRouter();
 
+  const { userId } = useCurrentSession();
+  const { data: team } = useTeam(teamId as string);
+  const { mutate } = useUpdateTeamUsers(teamId as string);
+
   const [usersList, setUsersList] = useRecoilState(usersListState);
-  const [membersList, setMembersListState] = useRecoilState(membersListState);
+  const [createTeamMembers, setCreateTeamMembers] = useRecoilState(createTeamState);
 
   const setToastState = useSetRecoilState(toastState);
 
   const saveMembers = (checkedUserList: UserList[]) => {
-    const listOfUsers = [...membersList];
     const selectedUsers = checkedUserList.filter((user) => user.isChecked);
     const unselectedUsers = checkedUserList.filter((user) => !user.isChecked);
 
-    if (isTeamPage && teamId) {
-      const team = teamId as string;
+    if (isTeamPage && teamId && team) {
+      const teamUsers = team.users;
 
       const addedUsers = selectedUsers.filter(
-        (user) => !listOfUsers.some((teamUser) => teamUser.user?._id === user._id),
+        (user) => !teamUsers.some((teamUser) => teamUser.user?._id === user._id),
       );
 
       const addedUsersToSend: CreateTeamUser[] = addedUsers.map((teamUser) => {
@@ -58,34 +56,35 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
           role: TeamUserRoles.MEMBER,
           isNewJoiner,
           canBeResponsible: !isNewJoiner,
-          team,
+          team: teamId as string,
         };
       });
 
-      const removedUsers = listOfUsers.filter((teamUser) =>
+      const removedUsers = teamUsers.filter((teamUser) =>
         unselectedUsers.some((user) => teamUser.user?._id === user._id),
       );
       const removedUsersIds = removedUsers.map((user) => user._id);
+
       if (addedUsersToSend.length > 0 || removedUsersIds.length > 0) {
         const usersToUpdate: TeamUserAddAndRemove = {
           addUsers: addedUsersToSend,
           removeUsers: removedUsersIds,
-          team,
+          team: teamId as string,
         };
 
         mutate(usersToUpdate);
       }
 
       setIsOpen(false);
-
       return;
     }
 
+    // We are Creating a NEW Team
     const updatedListWithAdded = selectedUsers.map((user) => {
       const isNewJoiner = verifyIfIsNewJoiner(user.joinedAt, user.providerAccountCreatedAt);
 
       return (
-        listOfUsers.find((member) => member.user._id === user._id) || {
+        createTeamMembers.find((member) => member.user._id === user._id) || {
           user,
           role: TeamUserRoles.MEMBER,
           isNewJoiner,
@@ -113,7 +112,7 @@ const ListMembers = ({ isOpen, setIsOpen, isTeamPage }: Props) => {
       type: ToastStateEnum.SUCCESS,
     });
 
-    setMembersListState(updatedListWithAdded);
+    setCreateTeamMembers(updatedListWithAdded);
     setUsersList(checkedUserList);
 
     setIsOpen(false);

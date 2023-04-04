@@ -4,7 +4,7 @@ import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 import { TeamFactory } from '@/utils/factories/team';
 import { ComponentStory } from '@storybook/react';
 
-import { createTeamUser } from '../../../../stories/utils/createTeamUser';
+import { createTeamUser } from '@/stories/utils/createTeamUser';
 
 export default {
   title: 'Teams/TeamItem',
@@ -15,6 +15,10 @@ export default {
       'storybook/docs/panel': {
         hidden: true,
       },
+    },
+    nextRouter: {
+      pathname: '/teams',
+      query: {},
     },
   },
   args: {
@@ -39,8 +43,19 @@ const Template: ComponentStory<typeof TeamItem> = ({ team }) => {
     createTeamUser(user, team);
   }
 
-  return <TeamItem team={team} />;
+  return <TeamItem team={team} userId={user.id} isSAdmin={user.isSAdmin} />;
 };
 
 export const Default = Template.bind({});
-Default.storyName = 'Basic Usage';
+Default.storyName = 'Team Page';
+
+export const UserPage = Template.bind({});
+UserPage.storyName = 'User Page';
+UserPage.parameters = {
+  nextRouter: {
+    pathname: '/users',
+    query: {
+      userId: '420',
+    },
+  },
+};

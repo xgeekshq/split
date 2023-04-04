@@ -5,13 +5,12 @@ import SocketModule from '../socket/socket.module';
 import { VotesModule } from '../votes/votes.module';
 import {
 	cardRepository,
-	creacteCardUseCase,
+	createCardUseCase,
 	deleteCardUseCase,
 	deleteFromCardGroupUseCase,
 	getCardService,
 	mergeCardUseCase,
-	unmergeCardApplication,
-	unmergeCardService,
+	unmergeCardUseCase,
 	updateCardApplication,
 	updateCardService
 } from './cards.providers';
@@ -29,14 +28,13 @@ import CardsController from './controller/cards.controller';
 		updateCardService,
 		getCardService,
 		updateCardService,
-		unmergeCardService,
 		updateCardApplication,
-		unmergeCardApplication,
 		cardRepository,
-		creacteCardUseCase,
+		createCardUseCase,
 		mergeCardUseCase,
 		deleteCardUseCase,
-		deleteFromCardGroupUseCase
+		deleteFromCardGroupUseCase,
+		unmergeCardUseCase
 	],
 	exports: [getCardService]
 })

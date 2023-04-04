@@ -1,18 +1,15 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
 import { styled } from '@/styles/stitches/stitches.config';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
-const StyledHeader = styled('div', {
+const StyledHeader = styled(Flex, {
   width: '100%',
-  maxHeight: '108px',
-
   position: 'relative',
-
   padding: '$24 $37',
   borderBottomStyle: 'solid',
   borderBottomWidth: 1,
   borderBottomColor: '$primary100',
-
   backgroundColor: '$surface',
 });
 

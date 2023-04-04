@@ -10,10 +10,14 @@ import AfterUserRequestedTimerStateSubscriber from 'src/modules/boards/subscribe
 import AfterUserStartedTimerSubscriber from 'src/modules/boards/subscribers/after-user-started-timer.subscriber';
 import AfterUserStoppedTimerSubscriber from 'src/modules/boards/subscribers/after-user-stopped-timer.subscriber';
 import AfterUserUpdatedDurationSubscriber from 'src/modules/boards/subscribers/after-user-updated-duration.subscriber';
-import { CreateBoardApplication } from './applications/create.board.application';
-import { DeleteBoardApplication } from './applications/delete.board.application';
+import { CreateBoardUseCase } from './applications/create-board.use-case';
+import { DeleteBoardUseCase } from './applications/delete-board.use-case';
 import { DuplicateBoardUseCase } from './applications/duplicate-board.use-case';
-import { GetBoardApplication } from './applications/get.board.application';
+import { GetAllBoardsUseCase } from './applications/get-all-boards.use-case';
+import { GetBoardUseCase } from './applications/get-board.use-case';
+import { GetBoardsForDashboardUseCase } from './applications/get-boards-for-dashboard.use-case';
+import { GetPersonalBoardsUseCase } from './applications/get-personal-boards.use-case';
+import { IsBoardPublicUseCase } from './applications/is-board-public.use-case';
 import { UpdateBoardApplication } from './applications/update.board.application';
 import { TYPES } from './interfaces/types';
 import { BoardRepository } from './repositories/board.repository';
@@ -42,19 +46,34 @@ export const deleteBoardService = {
 	useClass: DeleteBoardService
 };
 
-export const createBoardApplication = {
-	provide: TYPES.applications.CreateBoardApplication,
-	useClass: CreateBoardApplication
-};
-
 export const duplicateBoardUseCase = {
 	provide: TYPES.applications.DuplicateBoardUseCase,
 	useClass: DuplicateBoardUseCase
 };
 
-export const getBoardApplication = {
-	provide: TYPES.applications.GetBoardApplication,
-	useClass: GetBoardApplication
+export const getBoardsForDashboardUseCase = {
+	provide: TYPES.applications.GetBoardsForDashboardUseCase,
+	useClass: GetBoardsForDashboardUseCase
+};
+
+export const getAllBoardsUseCase = {
+	provide: TYPES.applications.GetAllBoardsUseCase,
+	useClass: GetAllBoardsUseCase
+};
+
+export const getPersonalBoardsUseCase = {
+	provide: TYPES.applications.GetPersonalBoardsUseCase,
+	useClass: GetPersonalBoardsUseCase
+};
+
+export const getBoardUseCase = {
+	provide: TYPES.applications.GetBoardUseCase,
+	useClass: GetBoardUseCase
+};
+
+export const isBoardPublicUseCase = {
+	provide: TYPES.applications.IsBoardPublicUseCase,
+	useClass: IsBoardPublicUseCase
 };
 
 export const updateBoardApplication = {
@@ -62,9 +81,9 @@ export const updateBoardApplication = {
 	useClass: UpdateBoardApplication
 };
 
-export const deleteBoardApplication = {
-	provide: TYPES.applications.DeleteBoardApplication,
-	useClass: DeleteBoardApplication
+export const deleteBoardUseCase = {
+	provide: TYPES.applications.DeleteBoardUseCase,
+	useClass: DeleteBoardUseCase
 };
 
 export const boardTimerRepository = {
@@ -130,4 +149,9 @@ export const afterUserRequestedTimerStateSubscriber = {
 export const boardRepository = {
 	provide: TYPES.repositories.BoardRepository,
 	useClass: BoardRepository
+};
+
+export const createBoardUseCase = {
+	provide: TYPES.applications.CreateBoardUseCase,
+	useClass: CreateBoardUseCase
 };

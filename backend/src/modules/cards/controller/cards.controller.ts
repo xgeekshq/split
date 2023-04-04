@@ -44,10 +44,10 @@ import { UpdateCardPositionDto } from '../dto/update-position.card.dto';
 import { TYPES } from '../interfaces/types';
 import { MergeCardDto } from '../dto/group/merge.card.dto';
 import { UpdateCardApplicationInterface } from '../interfaces/applications/update.card.application.interface';
-import { UnmergeCardApplicationInterface } from '../interfaces/applications/unmerge.card.application.interface';
 import CreateCardUseCaseDto from '../dto/useCase/create-card.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
+import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import DeleteCardUseCaseDto from '../dto/useCase/delete-card.use-case.dto';
 import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.use-case.dto';
@@ -64,12 +64,12 @@ export default class CardsController {
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.MergeCardUseCase)
 		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
-		@Inject(TYPES.applications.UnmergeCardApplication)
-		private unmergeCardApp: UnmergeCardApplicationInterface,
 		@Inject(TYPES.applications.DeleteCardUseCase)
 		private deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
 		@Inject(TYPES.applications.DeleteFromCardGroupUseCase)
 		private deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
+		@Inject(TYPES.applications.UnmergeCardUseCase)
+		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
 		private socketService: SocketGateway
 	) {}
 
@@ -366,17 +366,15 @@ export default class CardsController {
 		@Body() unmergeCardsDto: UnmergeCardsDto
 	) {
 		const { boardId, cardId: cardGroupId, itemId: draggedCardId } = params;
-		const { columnId, socketId, newPosition } = unmergeCardsDto;
+		const { columnId, socketId, newPosition: position } = unmergeCardsDto;
 
-		const itemId = await this.unmergeCardApp.unmergeAndUpdatePosition(
+		const itemId = await this.unmergeCardUseCase.execute({
 			boardId,
 			cardGroupId,
 			draggedCardId,
 			columnId,
-			newPosition
-		);
-
-		if (!itemId) throw new BadRequestException(UPDATE_FAILED);
+			position
+		});
 
 		unmergeCardsDto.newCardItemId = itemId;
 		this.socketService.sendUnmergeCards(socketId, unmergeCardsDto);

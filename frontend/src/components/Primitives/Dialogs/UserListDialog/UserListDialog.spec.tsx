@@ -4,43 +4,47 @@ import { UserListFactory } from '@/utils/factories/user';
 import { fireEvent, waitFor } from '@testing-library/react';
 import UserListDialog, { UserListDialogProps } from './UserListDialog';
 
-const DEFAULT_PROPS = {
-  usersList: UserListFactory.createMany(3),
-  setIsOpen: jest.fn(),
-  isOpen: true,
-  confirmationHandler: jest.fn(),
-};
-
 const router = createMockRouter({});
 
-const render = (props: UserListDialogProps = DEFAULT_PROPS) =>
-  renderWithProviders(<UserListDialog {...props} />, { routerOptions: router });
+const render = (props: Partial<UserListDialogProps> = {}) =>
+  renderWithProviders(
+    <UserListDialog
+      usersList={UserListFactory.createMany(3)}
+      setIsOpen={jest.fn()}
+      isOpen
+      confirmationHandler={jest.fn()}
+      confirmationLabel="confirm"
+      title="Title"
+      {...props}
+    />,
+    { routerOptions: router },
+  );
 
 describe('Components/Primitives/Dialogs/UserListDialog', () => {
   it('should render correctly', () => {
     // Arrange
-    const testProps = { ...DEFAULT_PROPS };
+    const usersList = UserListFactory.createMany(3);
 
     // Act
-    const { getAllByTestId, getByTestId } = render(testProps);
+    const { getAllByTestId, getByTestId } = render({ usersList });
 
     // Assert
-    expect(getAllByTestId('checkboxUserItem')).toHaveLength(testProps.usersList.length);
+    expect(getAllByTestId('checkboxUserItem')).toHaveLength(usersList.length);
     expect(getByTestId('searchInput')).toBeInTheDocument();
   });
 
   it('should call confirmationHandler function', async () => {
     // Arrange
-    const testProps = { ...DEFAULT_PROPS };
+    const confirmationHandler = jest.fn();
 
     // Act
-    const { getByTestId } = render(testProps);
+    const { getByTestId } = render({ confirmationHandler });
 
     // Assert
     fireEvent.click(getByTestId('dialogFooterSubmit'));
 
     await waitFor(() => {
-      expect(testProps.confirmationHandler).toBeCalled();
+      expect(confirmationHandler).toBeCalled();
     });
   });
 });

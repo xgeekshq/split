@@ -28,9 +28,12 @@ export default class DeleteBoardUserService implements DeleteBoardUserServiceInt
 		return this.boardUserRepository.deleteSimpleBoardUsers(boardId, withSession);
 	}
 
-	deleteBoardUsersByBoardList(teamBoardsIds: string[], withSession?: boolean): Promise<DeleteResult>{
+	deleteBoardUsersByBoardList(
+		teamBoardsIds: string[],
+		withSession?: boolean
+	): Promise<DeleteResult> {
 		return this.boardUserRepository.deleteBoardUsersByBoardList(teamBoardsIds, withSession);
-	};
+	}
 
 	deleteBoardUsers(boardUsers: string[]): Promise<number> {
 		return this.boardUserRepository.deleteBoardUsers(boardUsers);
