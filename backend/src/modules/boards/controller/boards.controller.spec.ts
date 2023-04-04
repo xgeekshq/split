@@ -56,6 +56,15 @@ describe('BoardsController', () => {
 					useValue: createMock<UseCase<string, boolean>>()
 				},
 				{
+					provide: Boards.TYPES.applications.GetPersonalBoardsUseCase,
+					useValue: createMock<UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>>()
+				},
+				{
+					provide: Boards.TYPES.applications.GetBoardUseCase,
+					useValue: createMock<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>()
+				},
+
+				{
 					provide: Boards.TYPES.applications.UpdateBoardApplication,
 					useValue: createMock<UpdateBoardApplicationInterface>()
 				},
