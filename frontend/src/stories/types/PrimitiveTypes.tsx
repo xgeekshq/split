@@ -11,12 +11,14 @@ export const ButtonVariant = [
   'danger',
   'dangerOutline',
   'link',
+  'transparent',
+  'transparentHover',
 ] as const;
 
 // prettier-ignore
 export type ButtonVariantType = typeof ButtonVariant[number];
 
-export const ButtonSize = ['sm', 'md', 'lg'] as const;
+export const ButtonSize = ['xxs', 'xs', 'sm', 'md', 'lg'] as const;
 // prettier-ignore
 export type ButtonSizeType = typeof ButtonSize[number];
 
