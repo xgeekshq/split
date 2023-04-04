@@ -4,7 +4,7 @@ import { DeleteVoteApplication } from './applications/delete.vote.application';
 import { TYPES } from './interfaces/types';
 import CreateVoteService from './services/create.vote.service';
 import DeleteVoteService from './services/delete.vote.service';
-import { CreateVoteUseCase } from './applications/create-vote.use-case';
+import { CreateCardItemVoteUseCase } from './applications/create-card-item-vote.use-case';
 
 export const createVoteService = {
 	provide: TYPES.services.CreateVoteService,
@@ -16,9 +16,9 @@ export const deleteVoteService = {
 	useClass: DeleteVoteService
 };
 
-export const createVoteUseCase = {
-	provide: TYPES.applications.CreateVoteUseCase,
-	useClass: CreateVoteUseCase
+export const createCardItemVoteUseCase = {
+	provide: TYPES.applications.CreateCardItemVoteUseCase,
+	useClass: CreateCardItemVoteUseCase
 };
 
 export const createVoteApplication = {

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export default class CreateVoteUseCaseDto {
+export default class CreateCardItemVoteUseCaseDto {
 	@IsNotEmpty()
 	@IsString()
 	boardId: string;

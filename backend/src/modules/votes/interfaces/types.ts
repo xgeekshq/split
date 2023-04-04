@@ -9,6 +9,6 @@ export const TYPES = {
 	applications: {
 		CreateVoteApplication: 'CreateVoteApplication',
 		DeleteVoteApplication: 'DeleteVoteApplication',
-		CreateVoteUseCase: 'CreateVoteUseCase'
+		CreateCardItemVoteUseCase: 'CreateCardItemVoteUseCase'
 	}
 };
