@@ -18,7 +18,6 @@ import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 
 @Injectable()
 export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCasePresenter> {
@@ -32,16 +31,19 @@ export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCase
 		@Inject(Auth.TYPES.services.GetTokenAuthService)
 		private readonly getTokenAuthService: GetTokenAuthServiceInterface,
 		@Inject(Users.TYPES.services.UpdateUserService)
-		private readonly updateUserService: UpdateUserServiceInterface,
-		private socketService: SocketGateway
+		private readonly updateUserService: UpdateUserServiceInterface
 	) {}
 
-	async execute({ boardId, user }) {
+	async execute({ boardId, user, completionHandler }: GetBoardUseCaseDto) {
 		let board = await this.boardRepository.getBoardData(boardId);
 
 		if (!board) throw new NotFoundException(BOARD_NOT_FOUND);
 
-		const guestUser = await this.checkIfPublicBoardAndCreatePublicBoardUsers(board, user);
+		const guestUser = await this.checkIfPublicBoardAndCreatePublicBoardUsers(
+			board,
+			user,
+			completionHandler
+		);
 
 		board = cleanBoard(board, user._id);
 
@@ -62,25 +64,30 @@ export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCase
 
 	private async checkIfPublicBoardAndCreatePublicBoardUsers(
 		{ _id: boardId, isPublic }: Board,
-		user: UserDto
+		user: UserDto,
+		completionHandler: (boardUser: BoardGuestUserDto) => void
 	) {
 		const boardUserFound = await this.getBoardUserService.getBoardUser(boardId, user._id);
 
 		return !boardUserFound && isPublic && !user.isSAdmin
-			? await this.createPublicBoardUsers(boardId, user)
+			? await this.createPublicBoardUsers(boardId, user, completionHandler)
 			: undefined;
 	}
 
-	private async createPublicBoardUsers(boardId: string, user: UserDto) {
+	private async createPublicBoardUsers(
+		boardId: string,
+		user: UserDto,
+		completionHandler: (boardUser: BoardGuestUserDto) => void
+	) {
 		if (user.isAnonymous) {
 			const guestUser = await this.createBoardUserAndSendAccessToken(boardId, user._id);
 
-			await this.sendGuestBoardUser(boardId, user._id);
+			await this.sendGuestBoardUser(boardId, user._id, completionHandler);
 
 			return guestUser;
 		}
 		await this.createBoardUserService.createBoardUser(boardId, user._id);
-		await this.sendGuestBoardUser(boardId, user._id);
+		await this.sendGuestBoardUser(boardId, user._id, completionHandler);
 	}
 
 	private async createBoardUserAndSendAccessToken(
@@ -95,10 +102,14 @@ export class GetBoardUseCase implements UseCase<GetBoardUseCaseDto, BoardUseCase
 		return { accessToken, user };
 	}
 
-	private async sendGuestBoardUser(board: string, user: string) {
+	private async sendGuestBoardUser(
+		board: string,
+		user: string,
+		completionHandler: (boardUser: BoardGuestUserDto) => void
+	) {
 		const boardUser = await this.getGuestBoardUser(board, user);
 
-		this.socketService.sendUpdateBoardUsers(boardUser);
+		completionHandler(boardUser);
 	}
 
 	private async getGuestBoardUser(board: string, user: string): Promise<BoardGuestUserDto> {

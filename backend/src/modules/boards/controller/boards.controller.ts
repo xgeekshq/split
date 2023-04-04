@@ -62,6 +62,7 @@ import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
+import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -232,7 +233,11 @@ export default class BoardsController {
 	@UseGuards(GetBoardGuard)
 	@Get(':boardId')
 	getBoard(@Param() { boardId }: BaseParam, @Req() request: RequestWithUser) {
-		return this.getBoardUseCase.execute({ boardId, user: request.user });
+		const completionHandler = (boardUser: BoardGuestUserDto) => {
+			this.socketService.sendUpdateBoardUsers(boardUser);
+		};
+
+		return this.getBoardUseCase.execute({ boardId, user: request.user, completionHandler });
 	}
 
 	@ApiOperation({ summary: 'Update a specific board' })

@@ -13,7 +13,6 @@ import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
@@ -56,10 +55,6 @@ describe('GetBoardUseCase', () => {
 				{
 					provide: Users.TYPES.services.UpdateUserService,
 					useValue: createMock<UpdateUserServiceInterface>()
-				},
-				{
-					provide: SocketGateway,
-					useValue: createMock<SocketGateway>()
 				}
 			]
 		}).compile();
@@ -143,7 +138,13 @@ describe('GetBoardUseCase', () => {
 				board
 			};
 
-			const boardResult = await useCase.execute({ boardId: board._id, user: userDto });
+			const boardResult = await useCase.execute({
+				boardId: board._id,
+				user: userDto,
+				completionHandler() {
+					return;
+				}
+			});
 
 			expect(boardResult).toEqual(boardResponse);
 		});
@@ -171,7 +172,13 @@ describe('GetBoardUseCase', () => {
 			//format columns to hideVotes that is called on clean board function
 			board.columns = hideVotesFromColumns(board.columns, userDtoMock._id);
 
-			const boardResult = await useCase.execute({ boardId: board._id, user: userDtoMock });
+			const boardResult = await useCase.execute({
+				boardId: board._id,
+				user: userDtoMock,
+				completionHandler() {
+					return;
+				}
+			});
 
 			expect(boardResult.board).toEqual(board);
 		});
