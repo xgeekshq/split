@@ -13,8 +13,7 @@ export default {
         An image element with a fallback for representing the user.
 
         **File Path:**
-        \`@/components/Primitives/Avatars/Avatar/Avatar.tsx\`
-        `,
+        \`@/components/Primitives/Avatars/Avatar/Avatar.tsx\``,
       },
     },
   },
@@ -58,7 +57,7 @@ export default {
   },
 };
 
-const Template: ComponentStory<typeof Avatar> = ({ children, ...args }) => <Avatar {...args} />;
+const Template: ComponentStory<typeof Avatar> = (args) => <Avatar {...args} />;
 
 export const Default = Template.bind({});
 Default.storyName = 'Basic Usage';

@@ -29,7 +29,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Primitives/Layout/Box.tsx\`
+        \`@/components/Primitives/Layout/Box/Box.tsx\`
         `,
       },
     },

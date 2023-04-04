@@ -5,7 +5,7 @@ import dedent from 'ts-dedent';
 
 import Separator from '@/components/Primitives/Separator/Separator';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { SeparatorOrientationType, SeparatorSizeType } from '../../../stories/types/PrimitiveTypes';
+import { SeparatorOrientationType, SeparatorSizeType } from '@/stories/types/PrimitiveTypes';
 
 const ORIENTATION_OPTIONS: SeparatorOrientationType[] = ['horizontal', 'vertical'];
 

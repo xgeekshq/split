@@ -2,66 +2,57 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import CreateFooter, { CreateFooterProps } from './CreateFooter';
 
-const DEFAULT_PROPS: CreateFooterProps = {
-  disableButton: false,
-  hasError: false,
-  handleBack: jest.fn(),
-  formId: '',
-  confirmationLabel: 'Lorem Ipsum',
-};
-
-const render = (props: CreateFooterProps) => renderWithProviders(<CreateFooter {...props} />);
+const render = (props: Partial<CreateFooterProps> = {}) =>
+  renderWithProviders(
+    <CreateFooter
+      disableButton={false}
+      handleBack={jest.fn()}
+      formId="form"
+      confirmationLabel="Confirm"
+      {...props}
+    />,
+  );
 
 describe('Components/Primitives/Layout/CreateFooter', () => {
   it('should render correctly', () => {
-    // Arrange
-    const createFooterProps: CreateFooterProps = { ...DEFAULT_PROPS };
-
     // Act
-    const { getByTestId, getByText } = render(createFooterProps);
+    const { getByTestId, getByText } = render();
 
     // Assert
     expect(getByTestId('createFooter')).toBeInTheDocument();
-    expect(getByText(createFooterProps.confirmationLabel)).toBeInTheDocument();
+    expect(getByText('Confirm')).toBeInTheDocument();
     expect(getByText('Cancel')).toBeInTheDocument();
   });
 
   it('should disable the buttons', () => {
-    // Arrange
-    const createFooterProps: CreateFooterProps = { ...DEFAULT_PROPS, disableButton: true };
-
     // Act
-    const { getByText } = render(createFooterProps);
+    const { getByText } = render({ disableButton: true });
 
     // Assert
-    expect(getByText(createFooterProps.confirmationLabel)).toBeDisabled();
+    expect(getByText('Confirm')).toBeDisabled();
     expect(getByText('Cancel')).toBeDisabled();
   });
 
   it('should disable the confirmation button', () => {
-    // Arrange
-    const createFooterProps: CreateFooterProps = { ...DEFAULT_PROPS, hasError: true };
-
     // Act
-    const { getByText } = render(createFooterProps);
+    const { getByText } = render({ hasError: true });
 
     // Assert
-    expect(getByText(createFooterProps.confirmationLabel)).toBeDisabled();
+    expect(getByText('Confirm')).toBeDisabled();
     expect(getByText('Cancel')).not.toBeDisabled();
   });
 
   it('should call function to handle back', async () => {
     // Arrange
-    const mockHandleBack = jest.fn();
-    const createFooterProps: CreateFooterProps = { ...DEFAULT_PROPS, handleBack: mockHandleBack };
+    const handleBack = jest.fn();
 
     // Act
-    const { getByText } = render(createFooterProps);
+    const { getByText } = render({ handleBack });
     fireEvent.click(getByText('Cancel'));
 
     // Assert
     await waitFor(() => {
-      expect(mockHandleBack).toBeCalled();
+      expect(handleBack).toBeCalled();
     });
   });
 });
