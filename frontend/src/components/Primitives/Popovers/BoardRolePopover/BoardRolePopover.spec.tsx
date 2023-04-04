@@ -1,7 +1,9 @@
 import React from 'react';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import BoardRolePopover, { BoardRolePopoverProps } from './BoardRolePopover';
+import BoardRolePopover, {
+  BoardRolePopoverProps,
+} from '@/components/Primitives/Popovers/BoardRolePopover/BoardRolePopover';
 
 const render = (props: Partial<BoardRolePopoverProps> = {}) =>
   renderWithProviders(
