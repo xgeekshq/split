@@ -7,7 +7,7 @@ import requireAuthentication from '@/components/HOC/requireAuthentication';
 import Layout from '@/components/layouts/Layout/Layout';
 import LoadingPage from '@/components/Primitives/Loading/Page/Page';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
-import { TEAMS_KEY } from '@/hooks/teams';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import MainPageHeader from '@/components/layouts/Layout/MainPageHeader/MainPageHeader';
 import { ROUTES } from '@/utils/routes';

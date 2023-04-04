@@ -19,8 +19,8 @@ export const getUserTeams = (
 ): Promise<Team[]> =>
   fetchData(`/teams/user${userId ? `?userId=${userId}` : ''}`, { context, serverSide: !!context });
 
-export const getTeam = (id: string, context?: GetServerSidePropsContext): Promise<Team> =>
-  fetchData(`/teams/${id}`, { context, serverSide: !!context });
+export const getTeam = (teamId: string, context?: GetServerSidePropsContext): Promise<Team> =>
+  fetchData(`/teams/${teamId}`, { context, serverSide: !!context });
 
 export const getTeamsWithoutUser = (
   userId: string,
