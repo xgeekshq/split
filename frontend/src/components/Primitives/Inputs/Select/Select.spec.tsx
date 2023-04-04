@@ -1,9 +1,9 @@
 // TODO: Test Select Options
 
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Flex from '../../Layout/Flex/Flex';
-import Text from '../../Text/Text';
-import Icon from '../../Icons/Icon/Icon';
+import Flex from '@/components/Primitives/Layout/Flex/Flex';
+import Text from '@/components/Primitives/Text/Text';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import { Select, SelectContent, SelectIcon, SelectTrigger, SelectValue } from './Select';
 
 const DUMMY_OPTIONS = [
@@ -14,7 +14,7 @@ const DUMMY_OPTIONS = [
   { label: 'Pineapple', value: 'Pineapple' },
 ];
 
-const render = (disabled: boolean) =>
+const render = (disabled: boolean = false) =>
   renderWithProviders(
     <Select disabled={disabled}>
       <SelectTrigger css={{ padding: '$24' }}>
@@ -32,21 +32,19 @@ const render = (disabled: boolean) =>
     </Select>,
   );
 
-describe('Components/Primitives/Select', () => {
+describe('Components/Primitives/Inputs/Select', () => {
   it('should render correctly', () => {
-    // Arrange
-    const disableSelect: boolean = false;
     // Act
-    const { getByTestId } = render(disableSelect);
+    const { getByTestId } = render();
+
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
   });
 
   it('should render placeholder correctly', () => {
-    // Arrange
-    const disableSelect: boolean = false;
     // Act
-    const { getByTestId, getByText } = render(disableSelect);
+    const { getByTestId, getByText } = render();
+
     // Assert
     expect(getByTestId('select')).toBeInTheDocument();
     expect(getByText('Choose a fruit')).toBeInTheDocument();

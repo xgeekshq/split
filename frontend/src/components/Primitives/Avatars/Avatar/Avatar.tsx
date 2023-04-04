@@ -69,7 +69,6 @@ type AvatarType = {
   colors?: AvatarColor;
   src?: string;
   size?: number;
-  isClickable?: boolean;
   id?: string;
   isDefaultColor?: boolean;
   isBoardPage?: boolean;
@@ -77,7 +76,7 @@ type AvatarType = {
 
 type AvatarProps = AvatarType & React.ComponentProps<typeof AvatarRoot>;
 
-const Avatar: React.FC<AvatarProps> = ({
+const Avatar = ({
   src,
   size,
   colors = undefined,
@@ -86,7 +85,7 @@ const Avatar: React.FC<AvatarProps> = ({
   id,
   isDefaultColor,
   isBoardPage = false,
-}) => {
+}: AvatarProps) => {
   const avatarColor = useAvatarColor(id, isDefaultColor);
   if (colors === undefined) colors = avatarColor;
   if (fallbackText.includes('undefined')) {

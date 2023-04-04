@@ -74,19 +74,19 @@ const StyledTextArea = styled('textarea', {
   },
 });
 
-interface ResizableTextAreaProps {
+interface TextAreaProps {
   id: string;
   placeholder: string;
   disabled?: boolean;
   textColor?: '$primaryBase' | '$primary300';
 }
 
-const TextArea: React.FC<ResizableTextAreaProps> = ({ id, placeholder, disabled, textColor }) => {
-  TextArea.defaultProps = {
-    disabled: false,
-    textColor: '$primaryBase',
-  };
-
+const TextArea = ({
+  id,
+  placeholder,
+  disabled = false,
+  textColor = '$primaryBase',
+}: TextAreaProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   function textAreaAdjust(element: HTMLTextAreaElement | null) {

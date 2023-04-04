@@ -2,13 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TYPES } from '../interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { UnmergeCardUseCase } from './unmerge-card.use-case';
 import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import faker from '@faker-js/faker';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { BadRequestException } from '@nestjs/common';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import { unmergeCardUseCase } from '../cards.providers';
 
 const unmergeCardDto: UnmergeCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
@@ -29,14 +30,14 @@ const cardMock = CardFactory.create();
 const boardMock = BoardFactory.create();
 
 describe('UnmergeCardUseCase', () => {
-	let useCase: UnmergeCardUseCase;
+	let useCase: UseCase<UnmergeCardUseCaseDto, string>;
 	let cardRepositoryMock: DeepMocked<CardRepositoryInterface>;
 	let cardServiceMock: DeepMocked<GetCardServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				UnmergeCardUseCase,
+				unmergeCardUseCase,
 				{
 					provide: TYPES.services.GetCardService,
 					useValue: createMock<GetCardServiceInterface>()
@@ -47,7 +48,9 @@ describe('UnmergeCardUseCase', () => {
 				}
 			]
 		}).compile();
-		useCase = module.get<UnmergeCardUseCase>(UnmergeCardUseCase);
+		useCase = module.get<UseCase<UnmergeCardUseCaseDto, string>>(
+			TYPES.applications.UnmergeCardUseCase
+		);
 		cardRepositoryMock = module.get(TYPES.repository.CardRepository);
 		cardServiceMock = module.get(TYPES.services.GetCardService);
 		cardServiceMock.getCardItemFromGroup.mockResolvedValue(cardMock);

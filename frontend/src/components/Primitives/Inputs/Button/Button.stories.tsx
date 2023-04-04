@@ -12,7 +12,7 @@ import {
   ButtonSizeType,
   ButtonVariant,
   ButtonSize,
-} from '../../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const VARIANT_OPTIONS: ButtonVariantType[] = [...ButtonVariant];
 const SIZE_OPTIONS: ButtonSizeType[] = [...ButtonSize];
@@ -27,8 +27,7 @@ export default {
         Interactive element activated by a user. Once activated, it then performs an action.
 
         **File Path:**
-        \`@/components/Primitives/Inputs/Button/Button.tsx\`
-        `,
+        \`@/components/Primitives/Inputs/Button/Button.tsx\``,
       },
     },
   },

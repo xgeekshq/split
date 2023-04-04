@@ -17,8 +17,7 @@ export default {
       description: {
         component: dedent`
         **File Path:**
-        \`@/components/Primitives/Badge/Badge.tsx\`
-        `,
+        \`@/components/Primitives/Badge/Badge.tsx\``,
       },
     },
   },

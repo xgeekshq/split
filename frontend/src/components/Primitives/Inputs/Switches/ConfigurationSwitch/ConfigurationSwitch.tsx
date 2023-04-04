@@ -23,7 +23,7 @@ const ConfigurationSwitch = ({
   isChecked,
   handleCheckedChange,
   children,
-  disabled,
+  disabled = false,
   disabledInfo,
 }: ConfigurationSwitchProps) => (
   <Flex gap={20} data-testid="configurationSwitch">

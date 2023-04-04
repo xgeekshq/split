@@ -2,34 +2,25 @@ import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/dom';
 import CreateHeader, { CreateHeaderProps } from './CreateHeader';
 
-const DEFAULT_PROPS: CreateHeaderProps = {
-  title: 'Create New Lorem',
-  disableBack: false,
-  handleBack: jest.fn(),
-};
-
-const render = (props: CreateHeaderProps) => renderWithProviders(<CreateHeader {...props} />);
+const render = (props: Partial<CreateHeaderProps> = {}) =>
+  renderWithProviders(
+    <CreateHeader title="Title" disableBack={false} handleBack={jest.fn()} {...props} />,
+  );
 
 describe('Components/Primitives/Layout/CreateHeader', () => {
   it('should render correctly', () => {
-    // Arrange
-    const createHeaderProps: CreateHeaderProps = { ...DEFAULT_PROPS };
-
     // Act
-    const { getByTestId, getByText } = render(createHeaderProps);
+    const { getByTestId, getByText } = render();
 
     // Assert
     expect(getByTestId('createHeader')).toBeInTheDocument();
-    expect(getByText(createHeaderProps.title)).toBeInTheDocument();
+    expect(getByText('Title')).toBeInTheDocument();
     expect(getByTestId('createHeader').querySelector('button')).toBeInTheDocument();
   });
 
   it('should disable the back button', () => {
-    // Arrange
-    const createHeaderProps: CreateHeaderProps = { ...DEFAULT_PROPS, disableBack: true };
-
     // Act
-    const { getByTestId } = render(createHeaderProps);
+    const { getByTestId } = render({ disableBack: true });
 
     // Assert
     expect(getByTestId('createHeader').querySelector('button')).toBeDisabled();
@@ -37,16 +28,15 @@ describe('Components/Primitives/Layout/CreateHeader', () => {
 
   it('should call function to handle back', async () => {
     // Arrange
-    const mockHandleBack = jest.fn();
-    const createHeaderProps: CreateHeaderProps = { ...DEFAULT_PROPS, handleBack: mockHandleBack };
+    const handleBack = jest.fn();
 
     // Act
-    const { getByTestId } = render(createHeaderProps);
+    const { getByTestId } = render({ handleBack });
     fireEvent.click(getByTestId('createHeader').querySelector('button')!);
 
     // Assert
     await waitFor(() => {
-      expect(mockHandleBack).toBeCalled();
+      expect(handleBack).toBeCalled();
     });
   });
 });
