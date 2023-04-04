@@ -84,7 +84,7 @@ describe('DeleteTeamUserService', () => {
 		it('should delete team users associated with a team', async () => {
 			teamUserRepositoryMock.deleteTeamUsersOfTeam.mockResolvedValue(deleteManySuccessResult);
 			await expect(teamUserService.deleteTeamUsersOfTeam(teamId, false)).resolves.toEqual(
-				deleteManySuccessResult.deletedCount
+				deleteManySuccessResult.acknowledged
 			);
 		});
 
