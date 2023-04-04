@@ -40,7 +40,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		try {
 			const boardsToDelete = await this.boardRepository.getBoardsByBoardIdsList(boardIdsToDelete);
 
-			await this.deleteBoardBoardUsersAndSchedulesOperations(boardIdsToDelete, withSession);
+			await this.deleteBoardAndBoardUsersAndSchedulesOperations(boardIdsToDelete, withSession);
 
 			await this.boardRepository.commitTransaction();
 			await this.deleteBoardUserService.commitTransaction();
@@ -60,7 +60,7 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 
 	/* --------------- HELPERS --------------- */
 
-	private async deleteBoardBoardUsersAndSchedulesOperations(
+	private async deleteBoardAndBoardUsersAndSchedulesOperations(
 		boardIdsToDelete: string[],
 		withSession: boolean
 	) {
