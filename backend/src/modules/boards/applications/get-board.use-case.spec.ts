@@ -6,7 +6,6 @@ import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { getBoardUseCase } from '../boards.providers';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
@@ -14,13 +13,13 @@ import { GetBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
 import { GetTokenAuthServiceInterface } from 'src/modules/auth/interfaces/services/get-token.auth.service.interface';
 import { UpdateUserServiceInterface } from 'src/modules/users/interfaces/services/update.user.service.interface';
-import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
+import { GetBoardUseCase } from './get-board.use-case';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
@@ -36,7 +35,7 @@ describe('GetBoardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getBoardUseCase,
+				GetBoardUseCase,
 				{
 					provide: Boards.TYPES.repositories.BoardRepository,
 					useValue: createMock<BoardRepositoryInterface>()
@@ -56,17 +55,11 @@ describe('GetBoardUseCase', () => {
 				{
 					provide: Users.TYPES.services.UpdateUserService,
 					useValue: createMock<UpdateUserServiceInterface>()
-				},
-				{
-					provide: SocketGateway,
-					useValue: createMock<SocketGateway>()
 				}
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>(
-			Boards.TYPES.applications.GetBoardUseCase
-		);
+		useCase = module.get(GetBoardUseCase);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);
@@ -145,7 +138,13 @@ describe('GetBoardUseCase', () => {
 				board
 			};
 
-			const boardResult = await useCase.execute({ boardId: board._id, user: userDto });
+			const boardResult = await useCase.execute({
+				boardId: board._id,
+				user: userDto,
+				completionHandler() {
+					return;
+				}
+			});
 
 			expect(boardResult).toEqual(boardResponse);
 		});
@@ -173,7 +172,13 @@ describe('GetBoardUseCase', () => {
 			//format columns to hideVotes that is called on clean board function
 			board.columns = hideVotesFromColumns(board.columns, userDtoMock._id);
 
-			const boardResult = await useCase.execute({ boardId: board._id, user: userDtoMock });
+			const boardResult = await useCase.execute({
+				boardId: board._id,
+				user: userDtoMock,
+				completionHandler() {
+					return;
+				}
+			});
 
 			expect(boardResult.board).toEqual(board);
 		});

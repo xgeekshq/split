@@ -33,7 +33,7 @@ export class DuplicateBoardUseCase implements UseCase<DuplicateBoardDto, Board> 
 		private createBoardUserService: CreateBoardUserServiceInterface
 	) {}
 
-	async execute({ boardId, userId, boardTitle }) {
+	async execute({ boardId, userId, boardTitle }: DuplicateBoardDto) {
 		const currentUser = await this.getUserService.getById(userId);
 
 		if (!currentUser) {

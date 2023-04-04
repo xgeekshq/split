@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useSetRecoilState } from 'recoil';
 import { joiResolver } from '@hookform/resolvers/joi';
 
 import { styled } from '@/styles/stitches/stitches.config';
@@ -10,11 +9,9 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
-import useUser from '@/hooks/useUser';
 import SchemaEmail from '@/schema/schemaEmail';
-import { toastState } from '@/store/toast/atom/toast.atom';
 import { EmailUser } from '@/types/user/user';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useResetToken from '@/hooks/auth/useResetToken';
 import EmailSent from './EmailSent';
 
 const MainContainer = styled('form', Flex, {
@@ -26,7 +23,6 @@ interface TroubleLoginProps {
 }
 
 const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
-  const setToastState = useSetRecoilState(toastState);
   const [currentEmail, setCurrentEmail] = useState('');
   const [showEmailSent, setShowEmailSent] = useState(false);
   const methods = useForm<EmailUser>({
@@ -38,22 +34,15 @@ const TroubleLogin: React.FC<TroubleLoginProps> = ({ setShowTroubleLogin }) => {
     resolver: joiResolver(SchemaEmail),
   });
 
-  const { resetToken } = useUser();
+  const { mutateAsync } = useResetToken();
 
   const handleShowTroubleLogginIn = () => {
     setShowTroubleLogin(false);
   };
 
   const handleRecoverPassword = async (email: string) => {
-    const res = await resetToken.mutateAsync({ email });
-    if (res.message === 'EMAIL_SENDED_RECENTLY') {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.ERROR,
-        content: 'Email was sent recently please wait 1 minute and try again',
-      });
-      return;
-    }
+    await mutateAsync({ email });
+
     setShowEmailSent(true);
     setCurrentEmail(email);
   };

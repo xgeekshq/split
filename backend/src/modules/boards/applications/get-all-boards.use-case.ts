@@ -14,7 +14,7 @@ export class GetAllBoardsUseCase
 		private getBoardService: GetBoardServiceInterface
 	) {}
 
-	execute({ team, userId, isSAdmin, page, size }) {
+	execute({ team, userId, isSAdmin, page, size }: GetAllBoardsUseCaseDto) {
 		if (team) {
 			return this.getTeamBoards(team, page, size);
 		}

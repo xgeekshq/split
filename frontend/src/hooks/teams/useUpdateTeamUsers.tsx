@@ -6,7 +6,7 @@ import { ToastStateEnum } from '@/utils/enums/toast-types';
 import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
-import { TEAMS_KEY } from '.';
+import { TEAMS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useUpdateTeamUsers = (teamId: string) => {
   const queryClient = useQueryClient();

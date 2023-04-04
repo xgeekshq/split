@@ -8,7 +8,7 @@ import { CreateBoardServiceInterface } from '../interfaces/services/create.board
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CreateBoardUseCaseDto from '../dto/useCase/create-board.use-case.dto';
 import Board from '../entities/board.schema';
-import { createBoardUseCase } from '../boards.providers';
+import { CreateBoardUseCase } from './create-board.use-case';
 
 describe('CreateBoardUseCase', () => {
 	let useCase: UseCase<CreateBoardUseCaseDto, Board>;
@@ -17,7 +17,7 @@ describe('CreateBoardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				createBoardUseCase,
+				CreateBoardUseCase,
 				{
 					provide: Boards.TYPES.services.CreateBoardService,
 					useValue: createMock<CreateBoardUserServiceInterface>()
@@ -25,9 +25,7 @@ describe('CreateBoardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<CreateBoardUseCaseDto, Board>>(
-			Boards.TYPES.applications.CreateBoardUseCase
-		);
+		useCase = module.get(CreateBoardUseCase);
 
 		createBoardServiceMock = module.get(Boards.TYPES.services.CreateBoardService);
 	});

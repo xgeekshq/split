@@ -1,5 +1,4 @@
-import { FC, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useState } from 'react';
 
 import { styled } from '@/styles/stitches/stitches.config';
 
@@ -8,9 +7,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Separator from '@/components/Primitives/Separator/Separator';
 import Text from '@/components/Primitives/Text/Text';
-import useUser from '@/hooks/useUser';
-import { toastState } from '@/store/toast/atom/toast.atom';
-import { ToastStateEnum } from '@/utils/enums/toast-types';
+import useResetToken from '@/hooks/auth/useResetToken';
 
 const MainContainer = styled('form', Flex, {
   width: '100%',
@@ -20,27 +17,15 @@ interface EmailSentProps {
   userEmail: string;
 }
 
-const EmailSent: FC<EmailSentProps> = ({ userEmail }) => {
-  const { resetToken } = useUser();
+const EmailSent = ({ userEmail }: EmailSentProps) => {
+  const { mutateAsync } = useResetToken();
+
   const [currentEmail, setCurrentEmail] = useState('');
   const [showEmailSent, setShowEmailSent] = useState(false);
-  const setToastState = useSetRecoilState(toastState);
+
   const handleRecoverPassword = async (email: string) => {
-    const res = await resetToken.mutateAsync({ email });
-    if (res.message === 'EMAIL_SENDED_RECENTLY') {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.INFO,
-        content: 'Email was sent recently please wait 1 minute and try again',
-      });
-    }
-    if (res.message === 'please check your email') {
-      setToastState({
-        open: true,
-        type: ToastStateEnum.INFO,
-        content: 'Another link was sent to your email',
-      });
-    }
+    await mutateAsync({ email });
+
     setShowEmailSent(true);
     setCurrentEmail(userEmail);
   };

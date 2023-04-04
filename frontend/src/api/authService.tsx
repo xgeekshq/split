@@ -55,6 +55,3 @@ export const registerGuest = (newGuestUser: CreateGuestUser): Promise<GuestUser>
     method: 'POST',
     data: newGuestUser,
   });
-
-export const loginGuest = (guestUser: GuestUser): Promise<GuestUser> =>
-  fetchData('/auth/loginGuest', { isPublicRequest: true, method: 'POST', data: guestUser });

@@ -14,7 +14,7 @@ export class GetBoardsForDashboardUseCase
 		private getBoardService: GetBoardServiceInterface
 	) {}
 
-	async execute({ userId, page, size }) {
+	async execute({ userId, page, size }: GetBoardsUseCaseDto) {
 		const { boardIds, teamIds } = await this.getBoardService.getAllBoardIdsAndTeamIdsOfUser(userId);
 
 		const now = new Date();

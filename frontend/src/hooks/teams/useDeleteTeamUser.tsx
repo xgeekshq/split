@@ -7,7 +7,7 @@ import { useSetRecoilState } from 'recoil';
 import { toastState } from '@/store/toast/atom/toast.atom';
 
 import { Team, TeamChecked } from '@/types/team/team';
-import { TEAMS_KEY } from '.';
+import { TEAMS_KEY, USERS_KEY } from '@/utils/constants/reactQueryKeys';
 
 const useDeleteTeamUser = (userId: string) => {
   const queryClient = useQueryClient();
@@ -15,13 +15,13 @@ const useDeleteTeamUser = (userId: string) => {
 
   return useMutation(deleteTeamUser, {
     onMutate: ({ team: teamId }) => {
-      queryClient.setQueryData([TEAMS_KEY, 'user', userId], (oldTeams: Team[] | undefined) => {
+      queryClient.setQueryData([TEAMS_KEY, USERS_KEY, userId], (oldTeams: Team[] | undefined) => {
         if (!oldTeams) return oldTeams;
 
         const removedTeam = oldTeams.find((team) => team.id === teamId);
 
         queryClient.setQueryData(
-          [TEAMS_KEY, 'not', 'user', userId],
+          [TEAMS_KEY, 'not', USERS_KEY, userId],
           (oldNotTeams: TeamChecked[] | undefined) => {
             if (!oldNotTeams || !removedTeam) return oldNotTeams;
 
@@ -45,8 +45,8 @@ const useDeleteTeamUser = (userId: string) => {
       });
     },
     onError: () => {
-      queryClient.invalidateQueries([TEAMS_KEY, 'user', userId]);
-      queryClient.invalidateQueries([TEAMS_KEY, 'not', 'user', userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, USERS_KEY, userId]);
+      queryClient.invalidateQueries([TEAMS_KEY, 'not', USERS_KEY, userId]);
 
       setToastState({
         open: true,
