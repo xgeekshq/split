@@ -10,6 +10,7 @@ import VotesController from './controller/votes.controller';
 import {
 	createVoteApplication,
 	createVoteService,
+	createVoteUseCase,
 	deleteVoteApplication,
 	deleteVoteService,
 	voteRepository
@@ -28,6 +29,7 @@ import BoardUsersModule from '../boardUsers/boardusers.module';
 	controllers: [VotesController],
 	providers: [
 		createVoteApplication,
+		createVoteUseCase,
 		createVoteService,
 		deleteVoteApplication,
 		deleteVoteService,

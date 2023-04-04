@@ -10,16 +10,6 @@ export class CreateVoteApplication implements CreateVoteApplicationInterface {
 		private createVoteService: CreateVoteServiceInterface
 	) {}
 
-	addVoteToCard(
-		boardId: string,
-		cardId: string,
-		userId: string,
-		cardItemId: string,
-		count: number
-	) {
-		return this.createVoteService.addVoteToCard(boardId, cardId, userId, cardItemId, count);
-	}
-
 	addVoteToCardGroup(boardId: string, cardId: string, userId: string, count: number) {
 		return this.createVoteService.addVoteToCardGroup(boardId, cardId, userId, count);
 	}

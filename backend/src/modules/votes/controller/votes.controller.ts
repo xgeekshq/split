@@ -24,6 +24,8 @@ import VoteDto from '../dto/vote.dto';
 import { CreateVoteApplicationInterface } from '../interfaces/applications/create.vote.application.interface';
 import { DeleteVoteApplicationInterface } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
+import { UseCase } from 'src/libs/interfaces/use-case.interface';
+import CreateVoteUseCaseDto from '../dto/useCase/create-vote.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Votes')
@@ -35,6 +37,8 @@ export default class VotesController {
 		private createVoteApp: CreateVoteApplicationInterface,
 		@Inject(TYPES.applications.DeleteVoteApplication)
 		private deleteVoteApp: DeleteVoteApplicationInterface,
+		@Inject(TYPES.applications.CreateVoteUseCase)
+		private createVoteUseCase: UseCase<CreateVoteUseCaseDto, void>,
 		private socketService: SocketGateway
 	) {}
 
@@ -75,7 +79,13 @@ export default class VotesController {
 		if (count < 0) {
 			await this.deleteVoteApp.deleteVoteFromCard(boardId, cardId, request.user._id, itemId, count);
 		} else {
-			await this.createVoteApp.addVoteToCard(boardId, cardId, request.user._id, itemId, count);
+			await this.createVoteUseCase.execute({
+				boardId,
+				cardId,
+				userId: request.user._id,
+				cardItemId: itemId,
+				count
+			});
 		}
 
 		this.socketService.sendUpdateVotes(socketId, data);
