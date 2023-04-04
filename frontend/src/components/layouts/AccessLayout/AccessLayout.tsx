@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Banner from '@/components/icons/Banner';
-import { ImageBackground } from './styles';
+import { ImageBackground } from '@/components/layouts/AccessLayout/styles';
 
 type AccessLayoutProps = {
   children: ReactNode;

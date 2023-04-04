@@ -30,14 +30,14 @@ const Home = () => {
   const renderFooter = () => {
     if (!NEXT_PUBLIC_LOGIN_SSO_ONLY) {
       return currentTab === 'login' ? (
-        <Text css={{ textAlign: 'center' }}>
+        <Text css={{ textAlign: 'center', mt: '$8' }}>
           No account yet?{' '}
           <Text link onClick={handleTabState} css={{ color: '$highlight2Dark' }}>
             Sign up.
           </Text>
         </Text>
       ) : (
-        <Text css={{ textAlign: 'center' }}>
+        <Text css={{ textAlign: 'center', mt: '$8' }}>
           Already have an account?{' '}
           <Text link onClick={handleTabState} css={{ color: '$highlight2Dark' }}>
             Log in.
@@ -46,7 +46,7 @@ const Home = () => {
       );
     }
     return (
-      <Flex justify="center" align="center">
+      <Flex justify="center" align="center" css={{ mt: '$8' }}>
         SPLIT - A product by{' '}
         <StyledImage
           alt="xgeeks_logo"
