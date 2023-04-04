@@ -65,7 +65,6 @@ const ParticipantCard = React.memo<CardBodyProps>(
                   isChecked={isMemberResponsible}
                   size="sm"
                   title="Responsible"
-                  disabledInfo="Select another responsible for the board"
                   disabled={isCreatedByCurrentUser}
                 />
               </Flex>
