@@ -40,6 +40,7 @@ const SearchInput = ({
           placeholder=" "
           value={currentValue}
           onChange={handleChange}
+          css={{ pt: '$28', pb: '$8' }}
         />
         <PlaceholderText as="label">{placeholder}</PlaceholderText>
       </Flex>

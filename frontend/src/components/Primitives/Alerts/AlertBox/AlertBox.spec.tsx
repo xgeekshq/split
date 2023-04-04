@@ -1,6 +1,6 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import AlertBox, { AlertBoxProps } from '@/components/Primitives/Alerts/AlertBox/AlertBox';
 import Button from '@/components/Primitives/Inputs/Button/Button';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
 const render = ({ children, ...props }: Partial<AlertBoxProps> = {}) =>
   renderWithProviders(
