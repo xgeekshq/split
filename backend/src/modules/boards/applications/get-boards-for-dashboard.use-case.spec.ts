@@ -8,7 +8,7 @@ import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mo
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { getBoardsForDashboardUseCase } from '../boards.providers';
+import { GetBoardsForDashboardUseCase } from './get-boards-for-dashboard.use-case';
 
 const userId = faker.datatype.uuid();
 
@@ -19,7 +19,7 @@ describe('GetBoardsForDashboardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getBoardsForDashboardUseCase,
+				GetBoardsForDashboardUseCase,
 				{
 					provide: Boards.TYPES.services.GetBoardService,
 					useValue: createMock<GetBoardServiceInterface>()
@@ -27,9 +27,7 @@ describe('GetBoardsForDashboardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<GetBoardsUseCaseDto, BoardsPaginatedPresenter>>(
-			Boards.TYPES.applications.GetBoardsForDashboardUseCase
-		);
+		useCase = module.get(GetBoardsForDashboardUseCase);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
 	});
 

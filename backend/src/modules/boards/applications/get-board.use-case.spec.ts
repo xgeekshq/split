@@ -6,7 +6,6 @@ import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import faker from '@faker-js/faker';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { getBoardUseCase } from '../boards.providers';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import { BoardRepositoryInterface } from '../repositories/board.repository.interface';
@@ -21,6 +20,7 @@ import { UserDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/userDto-
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
 import { Tokens } from 'src/libs/interfaces/jwt/tokens.interface';
 import { hideVotesFromColumns } from '../utils/hideVotesFromColumns';
+import { GetBoardUseCase } from './get-board.use-case';
 
 const mainBoard = BoardFactory.create({ isSubBoard: false, isPublic: false });
 const subBoard = BoardFactory.create({ isSubBoard: true, isPublic: false });
@@ -36,7 +36,7 @@ describe('GetBoardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getBoardUseCase,
+				GetBoardUseCase,
 				{
 					provide: Boards.TYPES.repositories.BoardRepository,
 					useValue: createMock<BoardRepositoryInterface>()
@@ -64,9 +64,7 @@ describe('GetBoardUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>(
-			Boards.TYPES.applications.GetBoardUseCase
-		);
+		useCase = module.get(GetBoardUseCase);
 		boardRepositoryMock = module.get(Boards.TYPES.repositories.BoardRepository);
 		getBoardUserServiceMock = module.get(BoardUsers.TYPES.services.GetBoardUserService);
 		getTokenAuthServiceMock = module.get(Auth.TYPES.services.GetTokenAuthService);

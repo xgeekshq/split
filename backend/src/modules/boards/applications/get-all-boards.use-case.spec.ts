@@ -6,9 +6,9 @@ import faker from '@faker-js/faker';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { TeamFactory } from 'src/libs/test-utils/mocks/factories/team-factory.mock';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import { getAllBoardsUseCase } from '../boards.providers';
 import GetAllBoardsUseCaseDto from '../dto/useCase/get-all-boards.use-case.dto';
 import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
+import { GetAllBoardsUseCase } from './get-all-boards.use-case';
 
 const teams = TeamFactory.createMany(2);
 const teamIds = teams.map((team) => team._id);
@@ -30,7 +30,7 @@ describe('GetAllBoardsUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				getAllBoardsUseCase,
+				GetAllBoardsUseCase,
 				{
 					provide: Boards.TYPES.services.GetBoardService,
 					useValue: createMock<GetBoardServiceInterface>()
@@ -38,9 +38,7 @@ describe('GetAllBoardsUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get<UseCase<GetAllBoardsUseCaseDto, BoardsPaginatedPresenter>>(
-			Boards.TYPES.applications.GetAllBoardsUseCase
-		);
+		useCase = module.get(GetAllBoardsUseCase);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
 	});
 

@@ -3,7 +3,6 @@ import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import * as Users from 'src/modules/users/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { duplicateBoardUseCase } from '../boards.providers';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import Board from '../entities/board.schema';
 import { CreateBoardUserServiceInterface } from 'src/modules/boardUsers/interfaces/services/create.board.user.service.interface';
@@ -14,7 +13,7 @@ import faker from '@faker-js/faker';
 import { GetUserServiceInterface } from 'src/modules/users/interfaces/services/get.user.service.interface';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UserFactory } from 'src/libs/test-utils/mocks/factories/user-factory';
-import { DuplicateBoardDto } from './duplicate-board.use-case';
+import { DuplicateBoardDto, DuplicateBoardUseCase } from './duplicate-board.use-case';
 
 describe('DuplicateBoardUseCase', () => {
 	let duplicateBoardMock: UseCase<DuplicateBoardDto, Board>;
@@ -26,7 +25,7 @@ describe('DuplicateBoardUseCase', () => {
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				duplicateBoardUseCase,
+				DuplicateBoardUseCase,
 				{
 					provide: Users.TYPES.services.GetUserService,
 					useValue: createMock<GetUserServiceInterface>()
@@ -46,9 +45,7 @@ describe('DuplicateBoardUseCase', () => {
 			]
 		}).compile();
 
-		duplicateBoardMock = module.get<UseCase<DuplicateBoardDto, Board>>(
-			Boards.TYPES.applications.DuplicateBoardUseCase
-		);
+		duplicateBoardMock = module.get(DuplicateBoardUseCase);
 
 		getUserServiceMock = module.get(Users.TYPES.services.GetUserService);
 		getBoardServiceMock = module.get(Boards.TYPES.services.GetBoardService);
