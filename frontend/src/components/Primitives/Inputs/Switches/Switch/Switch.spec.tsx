@@ -5,7 +5,7 @@ import Switch, { SwitchProps } from './Switch';
 const render = (props: Partial<SwitchProps> = {}) =>
   renderWithProviders(<Switch checked={false} {...props} />);
 
-describe('Components/Primitives/Switches/Switch', () => {
+describe('Components/Primitives/Inputs/Switches/Switch', () => {
   it('should render correctly', () => {
     // Act
     const { getByTestId } = render();

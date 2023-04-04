@@ -5,7 +5,7 @@ import Checkbox, { CheckboxProps } from './Checkbox';
 const render = (props: Partial<CheckboxProps> = {}) =>
   renderWithProviders(<Checkbox id="checkbox" size="sm" {...props} />);
 
-describe('Components/Primitives/Checkboxes/Checkbox', () => {
+describe('Components/Primitives/Inputs/Checkboxes/Checkbox', () => {
   it('should render correctly', () => {
     // Arrange
     const label = 'Label';

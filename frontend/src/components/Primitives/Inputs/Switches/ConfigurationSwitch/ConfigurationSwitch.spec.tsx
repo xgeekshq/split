@@ -12,7 +12,7 @@ const render = (props: Partial<ConfigurationSwitchProps> = {}) =>
     />,
   );
 
-describe('Components/Primitives/Switches/ConfigurationSwitch', () => {
+describe('Components/Primitives/Inputs/Switches/ConfigurationSwitch', () => {
   it('should render correctly', () => {
     // Act
     const { getByTestId, getByText } = render();

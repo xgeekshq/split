@@ -16,7 +16,7 @@ const render = (props: Partial<UserCheckboxProps> = {}) =>
     { routerOptions: router },
   );
 
-describe('Components/Primitives/Checkboxes/UserCheckbox', () => {
+describe('Components/Primitives/Inputs/Checkboxes/UserCheckbox', () => {
   it('should render correctly', () => {
     // Arrange
     const user = UserListFactory.create({ isChecked: true });

@@ -32,7 +32,7 @@ const render = (disabled: boolean = false) =>
     </Select>,
   );
 
-describe('Components/Primitives/Select', () => {
+describe('Components/Primitives/Inputs/Select', () => {
   it('should render correctly', () => {
     // Act
     const { getByTestId } = render();

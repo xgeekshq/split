@@ -5,13 +5,13 @@ import Flex from '@/components/Primitives/Layout/Flex/Flex';
 
 import { IconWrapper, PlaceholderText, StyledInput, StyledInputWrapper } from '../Input/styles';
 
-interface InputProps {
+export type SearchInputProps = {
   placeholder: string;
   disabled?: boolean;
   currentValue?: string;
   handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear?: () => void;
-}
+};
 
 const SearchInput = ({
   placeholder,
@@ -19,7 +19,7 @@ const SearchInput = ({
   currentValue,
   handleChange,
   handleClear,
-}: InputProps) => (
+}: SearchInputProps) => (
   <Flex
     css={{ position: 'relative', width: '100%', mb: '$16', height: 'auto' }}
     direction="column"
@@ -36,13 +36,16 @@ const SearchInput = ({
       </IconWrapper>
       <Flex css={{ flexGrow: '1' }}>
         <StyledInput
+          id="searchInput"
           disabled={disabled}
           placeholder=" "
           value={currentValue}
           onChange={handleChange}
           css={{ pt: '$28', pb: '$8' }}
         />
-        <PlaceholderText as="label">{placeholder}</PlaceholderText>
+        <PlaceholderText as="label" htmlFor="searchInput">
+          {placeholder}
+        </PlaceholderText>
       </Flex>
       <IconWrapper
         justify="center"
@@ -53,6 +56,7 @@ const SearchInput = ({
           borderRadius: '100%',
         }}
         onClick={handleClear}
+        data-testid="searchInputClear"
       >
         <Icon
           name="close"
