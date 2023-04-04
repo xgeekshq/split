@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import { DELETE_VOTE_FAILED } from 'src/libs/exceptions/messages';
+import { DELETE_VOTE_FAILED, UPDATE_FAILED } from 'src/libs/exceptions/messages';
 import { arrayIdToString } from 'src/libs/utils/arrayIdToString';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { GetCardServiceInterface } from 'src/modules/cards/interfaces/services/get.card.service.interface';
@@ -36,7 +36,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		private getBoardService: GetBoardServiceInterface
 	) {}
 
-	private logger: Logger = new Logger('DeleteVoteService');
+	private logger: Logger = new Logger(DeleteVoteService.name);
 
 	async decrementVoteUser(boardId: string, userId: string, count?: number, withSession?: boolean) {
 		const updatedBoardUser = await this.updateBoardUserService.updateVoteUser(
@@ -465,13 +465,14 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				}
 			});
 			await Promise.all(promises);
-		} catch {
+		} catch (e) {
+			this.logger.error(e);
 			await this.updateBoardUserService.abortTransaction();
-			throw Error();
+			throw new UpdateFailedException(UPDATE_FAILED);
 		}
 	}
 
-	private async deletedVotesFromCard(boardId: string, usersWithVotes) {
+	private async deletedVotesFromCard(boardId: string, usersWithVotes: Map<string, number>) {
 		try {
 			const result = await this.updateBoardUserService.updateManyUserVotes(
 				boardId,
@@ -481,10 +482,11 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			);
 
 			if (result.ok !== 1) {
-				throw new Error();
+				throw new UpdateFailedException(UPDATE_FAILED);
 			}
-		} catch {
-			throw new DeleteFailedException(DELETE_VOTE_FAILED);
+		} catch (e) {
+			this.logger.error(e);
+			throw new UpdateFailedException(UPDATE_FAILED);
 		}
 	}
 
