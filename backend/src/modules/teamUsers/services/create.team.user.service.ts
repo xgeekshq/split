@@ -23,8 +23,9 @@ export default class CreateTeamUserService implements CreateTeamUserServiceInter
 			: teamUsers;
 
 		const teamUsersSaved = await this.teamUserRepository.insertMany(teamUsersToSave, withSession);
+		const areAllTeamUsersSaved = teamUsersSaved.length === teamUsersToSave.length;
 
-		if (teamUsersSaved.length < teamUsers.length) throw new BadRequestException(INSERT_FAILED);
+		if (!areAllTeamUsersSaved) throw new BadRequestException(INSERT_FAILED);
 
 		return teamUsersSaved;
 	}
