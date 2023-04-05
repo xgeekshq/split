@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { TYPES } from '../interfaces/types';
-import { CardRepositoryInterface } from '../repository/card.repository.interface';
-import { GetCardServiceInterface } from '../interfaces/services/get.card.service.interface';
+import { TYPES } from '../../interfaces/types';
+import { CardRepositoryInterface } from '../../repository/card.repository.interface';
+import { GetCardServiceInterface } from '../../interfaces/services/get.card.service.interface';
 import {
 	CARD_NOT_FOUND,
 	CARD_NOT_INSERTED,
@@ -9,7 +9,7 @@ import {
 	CARD_NOT_REMOVED
 } from 'src/libs/exceptions/messages';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
-import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
+import UpdateCardPositionUseCaseDto from '../../dto/useCase/update-card-position.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadRequestException';
