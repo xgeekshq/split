@@ -11,6 +11,7 @@ import {
 	mergeCardUseCase,
 	unmergeCardUseCase,
 	updateCardApplication,
+	updateCardPositionUseCase,
 	updateCardService
 } from './cards.providers';
 import CardsController from './controller/cards.controller';
@@ -28,7 +29,8 @@ import CardsController from './controller/cards.controller';
 		cardRepository,
 		createCardUseCase,
 		unmergeCardUseCase,
-		mergeCardUseCase
+		mergeCardUseCase,
+		updateCardPositionUseCase
 	],
 	exports: [getCardService, deleteCardService]
 })

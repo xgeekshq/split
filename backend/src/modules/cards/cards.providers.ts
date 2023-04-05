@@ -8,6 +8,7 @@ import { CardRepository } from './repository/card.repository';
 import DeleteCardService from './services/delete.card.service';
 import GetCardService from './services/get.card.service';
 import UpdateCardService from './services/update.card.service';
+import { UpdateCardPositionUseCase } from './applications/update-card-position.use-case';
 
 export const getCardService = {
 	provide: TYPES.services.GetCardService,
@@ -52,4 +53,9 @@ export const mergeCardUseCase = {
 export const unmergeCardUseCase = {
 	provide: TYPES.applications.UnmergeCardUseCase,
 	useClass: UnmergeCardUseCase
+};
+
+export const updateCardPositionUseCase = {
+	provide: TYPES.applications.UpdateCardPositionUseCase,
+	useClass: UpdateCardPositionUseCase
 };

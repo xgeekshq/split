@@ -50,6 +50,7 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use-case.dto';
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
+import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -61,6 +62,8 @@ export default class CardsController {
 		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
 		@Inject(TYPES.applications.UpdateCardApplication)
 		private updateCardApp: UpdateCardApplicationInterface,
+		@Inject(TYPES.applications.UpdateCardPositionUseCase)
+		private updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
@@ -283,9 +286,13 @@ export default class CardsController {
 	) {
 		const { boardId, cardId } = params;
 		const { targetColumnId, newPosition, socketId } = boardData;
-
 		try {
-			await this.updateCardApp.updateCardPosition(boardId, cardId, targetColumnId, newPosition);
+			await this.updateCardPositionUseCase.execute({
+				boardId,
+				cardId,
+				targetColumnId,
+				newPosition
+			});
 
 			this.socketService.sendUpdateCardPosition(socketId, boardData);
 
