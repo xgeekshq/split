@@ -25,12 +25,21 @@ export class CardItemVoteUseCase implements UseCase<CardItemVoteUseCaseDto, void
 		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
-	async execute({ boardId, cardId, userId, cardItemId, count }: CardItemVoteUseCaseDto) {
+	async execute({
+		boardId,
+		cardId,
+		userId,
+		cardItemId,
+		count,
+		completionHandler
+	}: CardItemVoteUseCaseDto) {
 		if (count < 0) {
 			await this.deleteVoteService.deleteVoteFromCard(boardId, cardId, userId, cardItemId, count);
 		} else {
 			await this.addVoteToCardAndUser(boardId, cardId, userId, cardItemId, count);
 		}
+
+		completionHandler();
 	}
 
 	private async addVoteToCardAndUser(

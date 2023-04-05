@@ -16,4 +16,6 @@ export default class CardGroupVoteUseCaseDto {
 	@IsNotEmpty()
 	@IsNumber()
 	count: number;
+
+	completionHandler: () => void;
 }

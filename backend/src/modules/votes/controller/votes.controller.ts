@@ -73,15 +73,18 @@ export default class VotesController {
 		const { boardId, cardId, itemId } = params;
 		const { count, socketId } = data;
 
+		const completionHandler = () => {
+			this.socketService.sendUpdateVotes(socketId, data);
+		};
+
 		await this.cardItemVoteUseCase.execute({
 			boardId,
 			cardId,
 			userId: request.user._id,
 			cardItemId: itemId,
-			count
+			count,
+			completionHandler
 		});
-
-		this.socketService.sendUpdateVotes(socketId, data);
 
 		return HttpStatus.OK;
 	}
@@ -119,9 +122,17 @@ export default class VotesController {
 		const { boardId, cardId } = params;
 		const { count, socketId } = data;
 
-		await this.cardGroupVoteUseCase.execute({ boardId, cardId, userId: request.user._id, count });
+		const completionHandler = () => {
+			this.socketService.sendUpdateVotes(socketId, data);
+		};
 
-		this.socketService.sendUpdateVotes(socketId, data);
+		await this.cardGroupVoteUseCase.execute({
+			boardId,
+			cardId,
+			userId: request.user._id,
+			count,
+			completionHandler
+		});
 
 		return HttpStatus.OK;
 	}

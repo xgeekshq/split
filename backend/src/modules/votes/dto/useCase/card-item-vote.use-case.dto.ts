@@ -20,4 +20,6 @@ export default class CardItemVoteUseCaseDto {
 	@IsNotEmpty()
 	@IsNumber()
 	count: number;
+
+	completionHandler: () => void;
 }

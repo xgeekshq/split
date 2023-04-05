@@ -25,12 +25,14 @@ export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, vo
 		private readonly deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
-	async execute({ boardId, cardId, userId, count }: CardGroupVoteUseCaseDto) {
+	async execute({ boardId, cardId, userId, count, completionHandler }: CardGroupVoteUseCaseDto) {
 		if (count < 0) {
 			await this.deleteVoteService.deleteVoteFromCardGroup(boardId, cardId, userId, count);
 		} else {
 			await this.addVoteToCardGroupAndUser(boardId, userId, count, cardId);
 		}
+
+		completionHandler();
 	}
 
 	private async addVoteToCardGroupAndUser(
