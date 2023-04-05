@@ -59,18 +59,18 @@ import DeleteFromCardGroupUseCaseDto from '../dto/useCase/delete-fom-card-group.
 export default class CardsController {
 	constructor(
 		@Inject(TYPES.applications.CreateCardUseCase)
-		private createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
+		private readonly createCardUseCase: UseCase<CreateCardUseCaseDto, CardCreationPresenter>,
 		@Inject(TYPES.applications.UpdateCardApplication)
-		private updateCardApp: UpdateCardApplicationInterface,
+		private readonly updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.MergeCardUseCase)
-		private mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
+		private readonly mergeCardUseCase: UseCase<MergeCardUseCaseDto, boolean>,
 		@Inject(TYPES.applications.DeleteCardUseCase)
-		private deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
+		private readonly deleteCardUseCase: UseCase<DeleteCardUseCaseDto, void>,
 		@Inject(TYPES.applications.DeleteFromCardGroupUseCase)
-		private deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
+		private readonly deleteFromCardGroupUseCase: UseCase<DeleteFromCardGroupUseCaseDto, void>,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
-		private unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
-		private socketService: SocketGateway
+		private readonly unmergeCardUseCase: UseCase<UnmergeCardUseCaseDto, string>,
+		private readonly socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Create a new card' })
@@ -131,14 +131,18 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId')
-	async deleteCard(
+	deleteCard(
 		@Req() request: RequestWithUser,
 		@Param() params: CardGroupParams,
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId } = params;
-		await this.deleteCardUseCase.execute({ boardId, cardId });
-		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+
+		const completionHandler = () => {
+			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+		};
+
+		this.deleteCardUseCase.execute({ boardId, cardId, completionHandler });
 
 		return HttpStatus.OK;
 	}
@@ -164,14 +168,18 @@ export default class CardsController {
 		type: InternalServerErrorResponse
 	})
 	@Delete(':boardId/card/:cardId/items/:itemId')
-	async deleteCardItem(
+	deleteCardItem(
 		@Req() request: RequestWithUser,
 		@Param() params: CardItemParams,
 		@Body() deleteCardDto: DeleteCardDto
 	) {
 		const { boardId, cardId, itemId: cardItemId } = params;
-		this.deleteFromCardGroupUseCase.execute({ boardId, cardId, cardItemId });
-		this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+
+		const completionHandler = () => {
+			this.socketService.sendDeleteCard(deleteCardDto.socketId, deleteCardDto);
+		};
+
+		this.deleteFromCardGroupUseCase.execute({ boardId, cardId, cardItemId, completionHandler });
 
 		return HttpStatus.OK;
 	}

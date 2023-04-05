@@ -31,8 +31,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 	private logger: Logger = new Logger(DeleteCardUseCase.name);
 
-	async execute(deleteCardUseCaseDto: DeleteCardUseCaseDto) {
-		const { boardId, cardId } = deleteCardUseCaseDto;
+	async execute({ boardId, cardId, completionHandler }: DeleteCardUseCaseDto) {
 		await this.cardRepository.startTransaction();
 		await this.updateBoardUserService.startTransaction();
 		try {
@@ -50,6 +49,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 
 			await this.cardRepository.commitTransaction();
 			await this.updateBoardUserService.commitTransaction();
+			completionHandler();
 		} catch (e) {
 			this.logger.error(e);
 			throw new DeleteFailedException(DELETE_FAILED);

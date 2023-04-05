@@ -16,4 +16,6 @@ export default class DeleteFromCardGroupUseCaseDto {
 	@IsNotEmpty()
 	@IsString()
 	cardItemId: string;
+
+	completionHandler: () => void;
 }
