@@ -91,14 +91,14 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 
 		if (!isEmpty(getCardItem.votes)) {
 			try {
-				const result = await this.updateBoardUserService.updateManyUserVotes(
+				const bulkWriteResult = await this.updateBoardUserService.updateManyUserVotes(
 					boardId,
 					usersWithVotes,
 					true,
 					true
 				);
 
-				if (!result.ok) {
+				if (!bulkWriteResult.ok) {
 					throw new DeleteFailedException(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
