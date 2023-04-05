@@ -15,7 +15,7 @@ import AddCommentDto from '@/types/comment/addComment.dto';
 import UpdateCommentDto from '@/types/comment/updateComment.dto';
 import { CARD_TEXT_DEFAULT } from '@/utils/constants';
 import { FlexForm } from '@/styles/pages/pages.styles';
-import Icon from '../Primitives/Icons/Icon/Icon';
+import Icon from '@/components/Primitives/Icons/Icon/Icon';
 
 type AddCardProps = {
   isUpdate: boolean;
