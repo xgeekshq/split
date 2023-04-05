@@ -19,16 +19,17 @@ import { DeleteFailedException } from 'src/libs/exceptions/deleteFailedBadReques
 import Card from '../entities/card.schema';
 import { CardNotFoundException } from 'src/libs/exceptions/cardNotFoundException';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
+import { isEmpty } from 'class-validator';
 
 @Injectable()
 export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUseCaseDto, void> {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
-		private getCardService: GetCardServiceInterface,
+		private readonly getCardService: GetCardServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	private logger: Logger = new Logger(DeleteFromCardGroupUseCase.name);
@@ -50,7 +51,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 				if (
 					card &&
 					cardItems?.length === 1 &&
-					(card.votes.length >= 0 || card.comments.length >= 0)
+					(!isEmpty(card.votes.length) || !isEmpty(card.comments.length))
 				) {
 					await this.refactorLastItem(boardId, cardId, card, cardItems);
 				}
@@ -87,7 +88,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 		}
 		const usersWithVotes = getUserWithVotes(getCardItem.votes);
 
-		if (getCardItem.votes?.length) {
+		if (!isEmpty(getCardItem.votes)) {
 			try {
 				const result = await this.updateBoardUserService.updateManyUserVotes(
 					boardId,
