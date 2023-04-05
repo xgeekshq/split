@@ -11,10 +11,10 @@ import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { getUsername } from '@/utils/getUsername';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { ReactElement } from 'react';
-import { StyledForm } from '@/components/auth/LoginForm/styles';
 import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import { CreateGuestUser } from '@/types/user/create-login.user';
 import Separator from '@/components/Primitives/Separator/Separator';
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 const LoginGuestUserPage = () => {
   const router = useRouter();
@@ -45,10 +45,9 @@ const LoginGuestUserPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         autoComplete="off"
         direction="column"
-        style={{ width: '100%' }}
         onSubmit={methods.handleSubmit(({ username }) => {
           const user = getUsername(username);
           handleLogin({ board, firstName: user.firstName, lastName: user.lastName });
@@ -77,7 +76,7 @@ const LoginGuestUserPage = () => {
             Sign In
           </Button>
         </Flex>
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };

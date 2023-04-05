@@ -20,10 +20,10 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { getInitials } from '@/utils/getInitials';
 import isEmpty from '@/utils/isEmpty';
 import Dialog from '@/components/Primitives/Dialogs/Dialog/Dialog';
-import { styled } from '@/styles/stitches/stitches.config';
 import { ScrollableContent } from '@/components/Boards/MyBoards/ListBoardMembers/styles';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import ColumnType, { CreateColumn } from '@/types/column';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import ConfigurationSwitch from '../../Primitives/Inputs/Switches/ConfigurationSwitch/ConfigurationSwitch';
 import { ConfigurationSettings } from './partials/ConfigurationSettings';
 import { TeamResponsibleSettings } from './partials/TeamResponsible';
@@ -32,8 +32,6 @@ import { ColumnSettings } from './partials/Columns';
 import { colors } from '../Column/partials/OptionsMenu';
 
 const DEFAULT_MAX_VOTES = 6;
-
-const StyledForm = styled('form', { height: '100%', display: 'flex', flexDirection: 'column' });
 
 type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -297,7 +295,9 @@ const BoardSettings = ({
   return (
     <Dialog isOpen={isOpen} setIsOpen={setIsOpen}>
       <FormProvider {...methods}>
-        <StyledForm
+        <FlexForm
+          direction="column"
+          css={{ height: '100%' }}
           onSubmit={methods.handleSubmit(({ title, maxVotes, formColumns }) => {
             updateBoard(title, maxVotes, formColumns);
           })}
@@ -477,7 +477,7 @@ const BoardSettings = ({
             affirmativeLabel="Save"
             buttonRef={submitBtnRef}
           />
-        </StyledForm>
+        </FlexForm>
       </FormProvider>
     </Dialog>
   );

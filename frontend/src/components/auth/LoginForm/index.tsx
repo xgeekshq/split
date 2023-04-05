@@ -28,7 +28,7 @@ import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
 import Separator from '@/components/Primitives/Separator/Separator';
-import { StyledForm } from './styles';
+import { FlexForm } from '@/styles/pages/pages.styles';
 import LoginSSO from './LoginSSO';
 
 interface LoginFormProps {
@@ -92,7 +92,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
     <LoginSSO handleLoginAzure={handleLoginAzure} />
   ) : (
     <FormProvider {...methods}>
-      <StyledForm
+      <FlexForm
         autoComplete="off"
         direction="column"
         onSubmit={methods.handleSubmit((credentials: LoginUser) => {
@@ -158,7 +158,7 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
             </Flex>
           </Flex>
         )}
-      </StyledForm>
+      </FlexForm>
     </FormProvider>
   );
 };
