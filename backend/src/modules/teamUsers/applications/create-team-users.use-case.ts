@@ -12,7 +12,7 @@ export class CreateTeamUsersUseCase implements UseCase<TeamUserDto[], TeamUser[]
 		private createTeamUserService: CreateTeamUserServiceInterface
 	) {}
 
-	async execute(teamUsers: TeamUserDto[]): Promise<TeamUser[]> {
+	execute(teamUsers: TeamUserDto[]): Promise<TeamUser[]> {
 		return this.createTeamUserService.createTeamUsers(teamUsers);
 	}
 }

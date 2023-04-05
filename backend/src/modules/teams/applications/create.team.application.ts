@@ -8,7 +8,7 @@ import { TYPES } from '../interfaces/types';
 export class CreateTeamApplication implements CreateTeamApplicationInterface {
 	constructor(
 		@Inject(TYPES.services.CreateTeamService)
-		private createTeamService: CreateTeamServiceInterface
+		private readonly createTeamService: CreateTeamServiceInterface
 	) {}
 
 	create(teamData: TeamDto) {
