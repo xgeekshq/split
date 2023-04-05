@@ -8,7 +8,7 @@ export const TYPES = {
 	},
 	applications: {
 		DeleteVoteApplication: 'DeleteVoteApplication',
-		CreateCardItemVoteUseCase: 'CreateCardItemVoteUseCase',
-		CreateCardGroupVoteUseCase: 'CreateCardGroupVoteUseCase'
+		CardItemVoteUseCase: 'CardItemVoteUseCase',
+		CardGroupVoteUseCase: 'CardGroupVoteUseCase'
 	}
 };

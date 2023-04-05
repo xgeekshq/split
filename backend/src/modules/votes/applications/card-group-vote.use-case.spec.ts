@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../../interfaces/types';
+import { TYPES } from '../interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CreateVoteServiceInterface } from '../../interfaces/services/create.vote.service.interface';
-import { VoteRepositoryInterface } from '../../interfaces/repositories/vote.repository.interface';
+import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
+import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
 import faker from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
@@ -14,22 +14,22 @@ import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadReques
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
-import CreateCardGroupVoteUseCaseDto from '../../dto/useCase/create-card-group-vote.use-case.dto';
-import { CreateCardGroupVoteUseCase } from './create-card-group-vote.use-case';
+import { CardGroupVoteUseCase } from './card-group-vote.use-case';
+import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const card: Card = CardFactory.create();
 
-describe('CreateCardGroupVoteUseCase', () => {
-	let useCase: UseCase<CreateCardGroupVoteUseCaseDto, void>;
+describe('CardGroupVoteUseCase', () => {
+	let useCase: UseCase<CardGroupVoteUseCaseDto, void>;
 	let voteRepositoryMock: DeepMocked<VoteRepositoryInterface>;
 	let createVoteServiceMock: DeepMocked<CreateVoteServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				CreateCardGroupVoteUseCase,
+				CardGroupVoteUseCase,
 				{
 					provide: TYPES.repositories.VoteRepository,
 					useValue: createMock<VoteRepositoryInterface>()
@@ -45,7 +45,7 @@ describe('CreateCardGroupVoteUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get(CreateCardGroupVoteUseCase);
+		useCase = module.get(CardGroupVoteUseCase);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
 	});

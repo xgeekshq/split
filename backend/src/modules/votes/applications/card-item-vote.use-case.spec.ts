@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../../interfaces/types';
+import { TYPES } from '../interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CreateVoteServiceInterface } from '../../interfaces/services/create.vote.service.interface';
-import { VoteRepositoryInterface } from '../../interfaces/repositories/vote.repository.interface';
+import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
+import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
 import faker from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
@@ -13,25 +13,25 @@ import CardItem from 'src/modules/cards/entities/card.item.schema';
 import Card from 'src/modules/cards/entities/card.schema';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
-import { CreateCardItemVoteUseCase } from './create-card-item-vote.use-case';
-import CreateCardItemVoteUseCaseDto from '../../dto/useCase/create-card-item-vote.use-case.dto';
+import { CardItemVoteUseCase } from './card-item-vote.use-case';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
+import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const card: Card = CardFactory.create();
 const cardItem: CardItem = card.items[0];
 
-describe('CreateCardItemVoteUseCase', () => {
-	let useCase: UseCase<CreateCardItemVoteUseCaseDto, void>;
+describe('CardItemVoteUseCase', () => {
+	let useCase: UseCase<CardItemVoteUseCaseDto, void>;
 	let voteRepositoryMock: DeepMocked<VoteRepositoryInterface>;
 	let createVoteServiceMock: DeepMocked<CreateVoteServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				CreateCardItemVoteUseCase,
+				CardItemVoteUseCase,
 				{
 					provide: TYPES.repositories.VoteRepository,
 					useValue: createMock<VoteRepositoryInterface>()
@@ -47,7 +47,7 @@ describe('CreateCardItemVoteUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get(CreateCardItemVoteUseCase);
+		useCase = module.get(CardItemVoteUseCase);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
 	});

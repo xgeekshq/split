@@ -13,19 +13,17 @@ import { GetBoardServiceInterface } from 'src/modules/boards/interfaces/services
 export default class CreateVoteService implements CreateVoteServiceInterface {
 	constructor(
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
-		private getBoardUserService: GetBoardUserServiceInterface,
+		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface,
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
 	async canUserVote(boardId: string, userId: string, count: number) {
 		const canUserVoteResult = await this.verifyIfUserCanVote(boardId, userId, count);
 
 		if (!canUserVoteResult) throw new InsertFailedException(INSERT_VOTE_FAILED);
-
-		return;
 	}
 
 	async incrementVoteUser(boardId: string, userId: string, count: number, withSession?: boolean) {

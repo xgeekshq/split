@@ -24,8 +24,8 @@ import VoteDto from '../dto/vote.dto';
 import { DeleteVoteApplicationInterface } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
-import CreateCardItemVoteUseCaseDto from '../dto/useCase/create-card-item-vote.use-case.dto';
-import CreateCardGroupVoteUseCaseDto from '../dto/useCase/create-card-group-vote.use-case.dto';
+import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
+import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Votes')
@@ -34,12 +34,12 @@ import CreateCardGroupVoteUseCaseDto from '../dto/useCase/create-card-group-vote
 export default class VotesController {
 	constructor(
 		@Inject(TYPES.applications.DeleteVoteApplication)
-		private deleteVoteApp: DeleteVoteApplicationInterface,
-		@Inject(TYPES.applications.CreateCardItemVoteUseCase)
-		private createCardItemVoteUseCase: UseCase<CreateCardItemVoteUseCaseDto, void>,
-		@Inject(TYPES.applications.CreateCardGroupVoteUseCase)
-		private createCardGroupVoteUseCase: UseCase<CreateCardGroupVoteUseCaseDto, void>,
-		private socketService: SocketGateway
+		private readonly deleteVoteApp: DeleteVoteApplicationInterface,
+		@Inject(TYPES.applications.CardItemVoteUseCase)
+		private readonly cardItemVoteUseCase: UseCase<CardItemVoteUseCaseDto, void>,
+		@Inject(TYPES.applications.CardGroupVoteUseCase)
+		private readonly cardGroupVoteUseCase: UseCase<CardGroupVoteUseCaseDto, void>,
+		private readonly socketService: SocketGateway
 	) {}
 
 	@ApiOperation({ summary: 'Add or Remove a vote to/from a specific card item' })
@@ -79,7 +79,7 @@ export default class VotesController {
 		if (count < 0) {
 			await this.deleteVoteApp.deleteVoteFromCard(boardId, cardId, request.user._id, itemId, count);
 		} else {
-			await this.createCardItemVoteUseCase.execute({
+			await this.cardItemVoteUseCase.execute({
 				boardId,
 				cardId,
 				userId: request.user._id,
@@ -129,7 +129,7 @@ export default class VotesController {
 		if (count < 0) {
 			await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id, count);
 		} else {
-			await this.createCardGroupVoteUseCase.execute({
+			await this.cardGroupVoteUseCase.execute({
 				boardId,
 				cardId,
 				userId: request.user._id,
