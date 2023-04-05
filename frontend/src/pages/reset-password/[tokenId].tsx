@@ -7,19 +7,13 @@ import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Button from '@/components/Primitives/Inputs/Button/Button';
-import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import Input from '@/components/Primitives/Inputs/Input/Input';
 import Text from '@/components/Primitives/Text/Text';
 import SchemaResetPasswordForm from '@/schema/schemaResetPasswordForm';
 import { NewPassword } from '@/types/user/user';
 import useResetPassword from '@/hooks/auth/useResetPassword';
-
-const MainContainer = styled('form', Flex, {
-  width: '100%',
-});
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -47,7 +41,7 @@ const ResetPasswordPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <MainContainer
+      <FlexForm
         direction="column"
         onSubmit={methods.handleSubmit((params) => {
           handleRecoverPassword({ ...params, token: tokenId });
@@ -77,7 +71,7 @@ const ResetPasswordPage = () => {
         <Button size="lg" type="submit">
           Recover password
         </Button>
-      </MainContainer>
+      </FlexForm>
     </FormProvider>
   );
 };

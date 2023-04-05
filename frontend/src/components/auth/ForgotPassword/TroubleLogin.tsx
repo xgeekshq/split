@@ -2,8 +2,6 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-import { styled } from '@/styles/stitches/stitches.config';
-
 import Icon from '@/components/Primitives/Icons/Icon/Icon';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
@@ -13,10 +11,7 @@ import SchemaEmail from '@/schema/schemaEmail';
 import { EmailUser } from '@/types/user/user';
 import useResetToken from '@/hooks/auth/useResetToken';
 import EmailSent from '@/components/auth/ForgotPassword/EmailSent';
-
-const MainContainer = styled('form', Flex, {
-  width: '100%',
-});
+import { FlexForm } from '@/styles/pages/pages.styles';
 
 interface TroubleLoginProps {
   setShowTroubleLogin: Dispatch<SetStateAction<boolean>>;
@@ -60,7 +55,7 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
     );
 
   return (
-    <MainContainer
+    <FlexForm
       direction="column"
       onSubmit={methods.handleSubmit(({ email }) => {
         handleRecoverPassword(email);
@@ -89,7 +84,7 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
           </Button>
         </Flex>
       </FormProvider>
-    </MainContainer>
+    </FlexForm>
   );
 };
 
