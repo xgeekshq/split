@@ -16,11 +16,11 @@ export default class UpdateColumnService implements UpdateColumnServiceInterface
 	constructor(
 		@Inject(Columns.TYPES.repositories.ColumnRepository)
 		private readonly columnRepository: ColumnRepositoryInterface,
-		private socketService: SocketGateway,
+		private readonly socketService: SocketGateway,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface,
+		private readonly getBoardService: GetBoardServiceInterface,
 		@Inject(Votes.TYPES.services.DeleteVoteService)
-		private deleteVoteService: DeleteVoteServiceInterface
+		private readonly deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
 	async updateColumn(boardId: string, column: UpdateColumnDto) {
