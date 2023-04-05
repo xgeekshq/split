@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "next lint",
     "pre-commit": "lint-staged",
     "cy:run": "cypress run",
     "cy:ci": "start-server-and-test dev http-get://localhost:3000 cy:run",
