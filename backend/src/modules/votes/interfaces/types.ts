@@ -7,7 +7,8 @@ export const TYPES = {
 		VoteRepository: 'VoteRepository'
 	},
 	applications: {
-		CreateVoteApplication: 'CreateVoteApplication',
-		DeleteVoteApplication: 'DeleteVoteApplication'
+		DeleteVoteApplication: 'DeleteVoteApplication',
+		CardItemVoteUseCase: 'CardItemVoteUseCase',
+		CardGroupVoteUseCase: 'CardGroupVoteUseCase'
 	}
 };
