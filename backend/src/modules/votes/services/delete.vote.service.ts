@@ -484,7 +484,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 				true
 			);
 
-			if (result.ok !== 1) {
+			if (!result.ok) {
 				throw new UpdateFailedException(UPDATE_FAILED);
 			}
 		} catch (e) {

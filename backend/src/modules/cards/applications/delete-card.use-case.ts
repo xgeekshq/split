@@ -80,7 +80,7 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 					true
 				);
 
-				if (result.ok !== 1) {
+				if (!result.ok) {
 					throw new UpdateFailedException(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
