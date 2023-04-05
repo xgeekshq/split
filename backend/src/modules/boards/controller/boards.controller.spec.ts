@@ -17,6 +17,7 @@ import BoardsPaginatedPresenter from '../presenter/boards-paginated.presenter';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
+import { GetBoardServiceInterface } from '../interfaces/services/get.board.service.interface';
 
 describe('BoardsController', () => {
 	let controller: BoardsController;
@@ -63,7 +64,10 @@ describe('BoardsController', () => {
 					provide: Boards.TYPES.applications.GetBoardUseCase,
 					useValue: createMock<UseCase<GetBoardUseCaseDto, BoardUseCasePresenter>>()
 				},
-
+				{
+					provide: Boards.TYPES.services.GetBoardService,
+					useValue: createMock<GetBoardServiceInterface>()
+				},
 				{
 					provide: Boards.TYPES.applications.UpdateBoardApplication,
 					useValue: createMock<UpdateBoardApplicationInterface>()

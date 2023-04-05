@@ -480,7 +480,7 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 		if (phase === BoardPhases.VOTINGPHASE) {
 			return (
 				`<!here> Hello team :xgeeks:,\n\nThe ${month} Retro Board is now ready to vote <${frontendUrl}/boards/${boardId}|HERE>, take a look and please add your votes.\n\n` +
-				`If you spot any problem, remember to help the team, opening an issue on <https://github.com/xgeekshq/split/issues |split github repo> or reach out to the team using <#split_dev> Slack channel.\n\n` +
+				`If you spot any problem, remember to help the team, opening an issue on <https://github.com/xgeekshq/split/issues |split github repo> or reach out to the team using <#C02F0J7J99Q|split_dev> Slack channel.\n\n` +
 				`Thank you for your collaboration! :ok_hand: Keep rocking :rocket:`
 			);
 		}

@@ -24,6 +24,10 @@ export class BoardRepository
 		return this.findOneById(boardId);
 	}
 
+	getBoardOwner(boardId: string): Promise<Board> {
+		return this.findOneById(boardId, 'createdBy');
+	}
+
 	isBoardPublic(boardId: string): Promise<Board> {
 		return this.findOneById(boardId, 'isPublic');
 	}
