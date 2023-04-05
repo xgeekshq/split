@@ -80,7 +80,10 @@ describe('CardItemVoteUseCase', () => {
 					cardId: card._id,
 					userId,
 					cardItemId: cardItem._id,
-					count: 1
+					count: 1,
+					completionHandler: () => {
+						return;
+					}
 				});
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
@@ -97,7 +100,10 @@ describe('CardItemVoteUseCase', () => {
 					cardId: card._id,
 					userId,
 					cardItemId: cardItem._id,
-					count: 1
+					count: 1,
+					completionHandler: () => {
+						return;
+					}
 				});
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
@@ -111,7 +117,10 @@ describe('CardItemVoteUseCase', () => {
 					cardId: card._id,
 					userId,
 					cardItemId: cardItem._id,
-					count: 1
+					count: 1,
+					completionHandler: () => {
+						return;
+					}
 				});
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
@@ -125,7 +134,10 @@ describe('CardItemVoteUseCase', () => {
 					cardId: card._id,
 					userId,
 					cardItemId: cardItem._id,
-					count: 1
+					count: 1,
+					completionHandler: () => {
+						return;
+					}
 				});
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
@@ -138,7 +150,10 @@ describe('CardItemVoteUseCase', () => {
 				cardId: card._id,
 				userId,
 				cardItemId: cardItem._id,
-				count: 1
+				count: 1,
+				completionHandler: () => {
+					return;
+				}
 			});
 			expect(createVoteServiceMock.canUserVote).toBeCalled();
 			expect(createVoteServiceMock.incrementVoteUser).toBeCalled();
@@ -155,7 +170,10 @@ describe('CardItemVoteUseCase', () => {
 						cardId: card._id,
 						userId,
 						cardItemId: cardItem._id,
-						count: 1
+						count: 1,
+						completionHandler: () => {
+							return;
+						}
 					})
 			).rejects.toThrow(InsertFailedException);
 		});
