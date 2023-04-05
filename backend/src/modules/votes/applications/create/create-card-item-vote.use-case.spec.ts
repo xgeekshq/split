@@ -1,35 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TYPES } from '../interfaces/types';
+import { TYPES } from '../../interfaces/types';
 import * as BoardUsers from 'src/modules/boardUsers/interfaces/types';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { CreateVoteServiceInterface } from '../interfaces/services/create.vote.service.interface';
-import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
+import { CreateVoteServiceInterface } from '../../interfaces/services/create.vote.service.interface';
+import { VoteRepositoryInterface } from '../../interfaces/repositories/vote.repository.interface';
 import { UpdateBoardServiceInterface } from 'src/modules/boards/interfaces/services/update.board.service.interface';
 import faker from '@faker-js/faker';
 import Board from 'src/modules/boards/entities/board.schema';
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { CardFactory } from 'src/libs/test-utils/mocks/factories/card-factory.mock';
+import CardItem from 'src/modules/cards/entities/card.item.schema';
 import Card from 'src/modules/cards/entities/card.schema';
 import { InsertFailedException } from 'src/libs/exceptions/insertFailedBadRequestException';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
+import { CreateCardItemVoteUseCase } from './create-card-item-vote.use-case';
+import CreateCardItemVoteUseCaseDto from '../../dto/useCase/create-card-item-vote.use-case.dto';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
-import CreateCardGroupVoteUseCaseDto from '../dto/useCase/create-card-group-vote.use-case.dto';
-import { CreateCardGroupVoteUseCase } from './create-card-group-vote.use-case';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
 const card: Card = CardFactory.create();
+const cardItem: CardItem = card.items[0];
 
-describe('CreateCardGroupVoteUseCase', () => {
-	let useCase: UseCase<CreateCardGroupVoteUseCaseDto, void>;
+describe('CreateCardItemVoteUseCase', () => {
+	let useCase: UseCase<CreateCardItemVoteUseCaseDto, void>;
 	let voteRepositoryMock: DeepMocked<VoteRepositoryInterface>;
 	let createVoteServiceMock: DeepMocked<CreateVoteServiceInterface>;
 
 	beforeAll(async () => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
-				CreateCardGroupVoteUseCase,
+				CreateCardItemVoteUseCase,
 				{
 					provide: TYPES.repositories.VoteRepository,
 					useValue: createMock<VoteRepositoryInterface>()
@@ -45,7 +47,7 @@ describe('CreateCardGroupVoteUseCase', () => {
 			]
 		}).compile();
 
-		useCase = module.get(CreateCardGroupVoteUseCase);
+		useCase = module.get(CreateCardItemVoteUseCase);
 		voteRepositoryMock = module.get(TYPES.repositories.VoteRepository);
 		createVoteServiceMock = module.get(TYPES.services.CreateVoteService);
 	});
@@ -56,7 +58,7 @@ describe('CreateCardGroupVoteUseCase', () => {
 
 		createVoteServiceMock.canUserVote.mockResolvedValue();
 		createVoteServiceMock.incrementVoteUser.mockResolvedValue();
-		voteRepositoryMock.insertCardGroupVote.mockResolvedValue(board);
+		voteRepositoryMock.insertCardItemVote.mockResolvedValue(board);
 	});
 
 	it('should be defined', () => {
@@ -72,6 +74,7 @@ describe('CreateCardGroupVoteUseCase', () => {
 					boardId: board._id,
 					cardId: card._id,
 					userId,
+					cardItemId: cardItem._id,
 					count: 1
 				});
 			} catch (ex) {
@@ -88,19 +91,21 @@ describe('CreateCardGroupVoteUseCase', () => {
 					boardId: board._id,
 					cardId: card._id,
 					userId,
+					cardItemId: cardItem._id,
 					count: 1
 				});
 			} catch (ex) {
 				expect(ex).toBeInstanceOf(InsertFailedException);
 			}
 
-			//if voteRepositoryMock.insertCardGroupVote fails
+			//if voteRepositoryMock.insertCardItemVote fails
 			try {
-				voteRepositoryMock.insertCardGroupVote.mockResolvedValueOnce(null);
+				voteRepositoryMock.insertCardItemVote.mockResolvedValueOnce(null);
 				await useCase.execute({
 					boardId: board._id,
 					cardId: card._id,
 					userId,
+					cardItemId: cardItem._id,
 					count: 1
 				});
 			} catch (ex) {
@@ -109,11 +114,12 @@ describe('CreateCardGroupVoteUseCase', () => {
 
 			//if the error code is WRITE_ERROR_LOCK and the retryCount is less than 5
 			try {
-				voteRepositoryMock.insertCardGroupVote.mockRejectedValueOnce({ code: WRITE_LOCK_ERROR });
+				voteRepositoryMock.insertCardItemVote.mockRejectedValueOnce({ code: WRITE_LOCK_ERROR });
 				await useCase.execute({
 					boardId: board._id,
 					cardId: card._id,
 					userId,
+					cardItemId: cardItem._id,
 					count: 1
 				});
 			} catch (ex) {
@@ -121,16 +127,17 @@ describe('CreateCardGroupVoteUseCase', () => {
 			}
 		});
 
-		it('should call all the functions when execute succeeds', async () => {
+		it('should call all the functions when execute  succeeds', async () => {
 			await useCase.execute({
 				boardId: board._id,
 				cardId: card._id,
 				userId,
+				cardItemId: cardItem._id,
 				count: 1
 			});
 			expect(createVoteServiceMock.canUserVote).toBeCalled();
 			expect(createVoteServiceMock.incrementVoteUser).toBeCalled();
-			expect(voteRepositoryMock.insertCardGroupVote).toBeCalled();
+			expect(voteRepositoryMock.insertCardItemVote).toBeCalled();
 		});
 
 		it('should throw an error when a commit transaction fails', async () => {
@@ -142,6 +149,7 @@ describe('CreateCardGroupVoteUseCase', () => {
 						boardId: board._id,
 						cardId: card._id,
 						userId,
+						cardItemId: cardItem._id,
 						count: 1
 					})
 			).rejects.toThrow(InsertFailedException);

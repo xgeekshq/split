@@ -3,8 +3,8 @@ import { DeleteVoteApplication } from './applications/delete.vote.application';
 import { TYPES } from './interfaces/types';
 import CreateVoteService from './services/create.vote.service';
 import DeleteVoteService from './services/delete.vote.service';
-import { CreateCardItemVoteUseCase } from './applications/create-card-item-vote.use-case';
-import { CreateCardGroupVoteUseCase } from './applications/create-card-group-vote.use-case';
+import { CreateCardItemVoteUseCase } from './applications/create/create-card-item-vote.use-case';
+import { CreateCardGroupVoteUseCase } from './applications/create/create-card-group-vote.use-case';
 
 export const createVoteService = {
 	provide: TYPES.services.CreateVoteService,
