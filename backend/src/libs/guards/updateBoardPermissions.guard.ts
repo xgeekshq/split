@@ -4,7 +4,8 @@ import {
 	ExecutionContext,
 	ForbiddenException,
 	Inject,
-	Injectable
+	Injectable,
+	NotFoundException
 } from '@nestjs/common';
 import * as Boards from 'src/modules/boards/interfaces/types';
 import User from 'src/modules/users/entities/user.schema';
@@ -26,6 +27,10 @@ export class UpdateBoardPermissionsGuard implements CanActivate {
 
 		try {
 			const board = await this.getBoardService.getBoardOwner(boardId);
+
+			if (!board) {
+				throw new NotFoundException();
+			}
 
 			return userToUpdate && String(board.createdBy) !== userToUpdate._id;
 		} catch (error) {
