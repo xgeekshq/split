@@ -27,13 +27,13 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.GetBoardUserService)
-		private getBoardUserService: GetBoardUserServiceInterface,
+		private readonly getBoardUserService: GetBoardUserServiceInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface,
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
 		@Inject(Cards.TYPES.services.GetCardService)
-		private getCardService: GetCardServiceInterface,
+		private readonly getCardService: GetCardServiceInterface,
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
 	private logger: Logger = new Logger(DeleteVoteService.name);
@@ -458,7 +458,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 
 	private async deleteVotesFromCards(boardId, cardsArray: Card[]) {
 		try {
-			let usersWithVotes;
+			let usersWithVotes: Map<string, number>;
 
 			cardsArray.map((card) => {
 				const usersWithVotesToAdd = this.mergeUsersVotes(card);
@@ -510,7 +510,7 @@ export default class DeleteVoteService implements DeleteVoteServiceInterface {
 			});
 		}
 
-		if (card.votes?.length) {
+		if (!isEmpty(card.votes)) {
 			cardWithVotes = getUserWithVotes(card.votes);
 			usersWithVotes = mergeTwoUsersWithVotes(usersWithVotes, cardWithVotes);
 		}
