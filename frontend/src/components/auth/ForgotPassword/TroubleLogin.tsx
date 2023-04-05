@@ -30,17 +30,22 @@ const TroubleLogin = ({ setShowTroubleLogin }: TroubleLoginProps) => {
     resolver: joiResolver(SchemaEmail),
   });
 
-  const { mutateAsync } = useResetToken();
+  const { mutate } = useResetToken();
 
   const handleShowTroubleLogginIn = () => {
     setShowTroubleLogin(false);
   };
 
-  const handleRecoverPassword = async (email: string) => {
-    await mutateAsync({ email });
-
-    setShowEmailSent(true);
-    setCurrentEmail(email);
+  const handleRecoverPassword = (email: string) => {
+    mutate(
+      { email },
+      {
+        onSuccess: () => {
+          setShowEmailSent(true);
+          setCurrentEmail(email);
+        },
+      },
+    );
   };
 
   if (showEmailSent)
