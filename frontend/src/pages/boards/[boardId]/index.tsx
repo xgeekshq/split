@@ -44,11 +44,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const session = await getSession(context);
 
-  if (boardId.includes('.map'))
-    return {
-      props: {},
-    };
-
   try {
     const boardIsPublic = await getPublicStatusRequest(boardId, context);
 
