@@ -24,5 +24,7 @@ export interface GetBoardServiceInterface {
 
 	getAllMainBoards(): Promise<Board[]>;
 
+	getBoardOwner(boardId: string): Promise<Board>;
+
 	isBoardPublic(boardId: string);
 }
