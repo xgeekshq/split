@@ -275,7 +275,7 @@ export default class BoardsController {
 
 	@ApiOperation({ summary: 'Update participants of a specific board' })
 	@ApiParam({ type: String, name: 'boardId', required: true })
-	@ApiBody({ type: BoardDto })
+	@ApiBody({ type: UpdateBoardUserDto })
 	@ApiOkResponse({
 		type: BoardDto,
 		description: 'Board participants updated successfully!'

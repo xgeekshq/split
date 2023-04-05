@@ -1,7 +1,7 @@
 import Team from 'src/modules/teams/entities/team.schema';
 import { UpdateBoardUserServiceInterface } from '../../boardUsers/interfaces/services/update.board.user.service.interface';
 import BoardUserDto from 'src/modules/boardUsers/dto/board.user.dto';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { getIdFromObjectId } from 'src/libs/utils/getIdFromObjectId';
 import isEmpty from 'src/libs/utils/isEmpty';
 import { TeamDto } from 'src/modules/communication/dto/team.dto';
@@ -256,7 +256,13 @@ export default class UpdateBoardService implements UpdateBoardServiceInterface {
 	}
 
 	async updateBoardParticipantsRole(boardUserToUpdateRole: BoardUserDto) {
+		const board = await this.boardRepository.getBoardOwner(boardUserToUpdateRole.board);
+
 		const user = boardUserToUpdateRole.user as User;
+
+		if (!board || String(board.createdBy) === String(user._id)) {
+			throw new BadRequestException();
+		}
 
 		const updatedBoardUser = await this.updateBoardUserService.updateBoardUserRole(
 			boardUserToUpdateRole.board,
