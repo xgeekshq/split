@@ -119,7 +119,7 @@ describe('DeleteCardUseCase', () => {
 
 	it('should throw error when update fails', async () => {
 		updateBoardUserServiceMock.updateManyUserVotes.mockResolvedValueOnce({
-			ok: 2
+			ok: 0
 		} as unknown as BulkWriteResult);
 
 		await expect(useCase.execute(deleteCardMock)).rejects.toThrow(DeleteFailedException);
