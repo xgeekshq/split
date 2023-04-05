@@ -62,6 +62,7 @@ import GetBoardsUseCaseDto from '../dto/useCase/get-boards.use-case.dto';
 import GetBoardUseCaseDto from '../dto/useCase/get-board.use-case.dto';
 import BoardUseCasePresenter from '../presenter/board.use-case.presenter';
 import BoardGuestUserDto from 'src/modules/boardUsers/dto/board.guest.user.dto';
+import { UpdateBoardPermissionsGuard } from 'src/libs/guards/updateBoardPermissions.guard';
 
 const BoardUser = (permissions: string[]) => SetMetadata('permissions', permissions);
 
@@ -301,7 +302,7 @@ export default class BoardsController {
 		type: InternalServerErrorResponse
 	})
 	@BoardUser([BoardRoles.RESPONSIBLE, TeamRoles.ADMIN, TeamRoles.STAKEHOLDER])
-	@UseGuards(BoardUserGuard)
+	@UseGuards(UpdateBoardPermissionsGuard, BoardUserGuard)
 	@Put(':boardId/participants')
 	updateBoardParticipants(@Body() boardData: UpdateBoardUserDto) {
 		return this.updateBoardApp.updateBoardParticipants(boardData);

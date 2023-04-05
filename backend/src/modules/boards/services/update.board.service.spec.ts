@@ -17,7 +17,7 @@ import { SendMessageServiceInterface } from 'src/modules/communication/interface
 import { BoardFactory } from 'src/libs/test-utils/mocks/factories/board-factory.mock';
 import { UpdateBoardDtoFactory } from 'src/libs/test-utils/mocks/factories/dto/updateBoardDto-factory.mock';
 import { BoardUserFactory } from 'src/libs/test-utils/mocks/factories/boardUser-factory.mock';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import {
 	createBoardUserService,
 	deleteBoardUserService,
@@ -448,24 +448,6 @@ describe('UpdateBoardService', () => {
 	});
 
 	describe('updateBoardParticipantsRole', () => {
-		it("should throw an error if the board isn't found or the boardUserToUpdateRole is the board creator", async () => {
-			try {
-				boardRepositoryMock.getBoardOwner.mockResolvedValueOnce(null);
-				await boardService.updateBoardParticipantsRole(boardUserDto);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(BadRequestException);
-			}
-
-			try {
-				const board_1: Board = { ...regularBoard, createdBy: (boardUserDto.user as User)._id };
-
-				boardRepositoryMock.getBoardOwner.mockResolvedValueOnce(board_1);
-				await boardService.updateBoardParticipantsRole(boardUserDto);
-			} catch (ex) {
-				expect(ex).toBeInstanceOf(BadRequestException);
-			}
-		});
-
 		it('should throw an error if the updateBoardUserRole fails', async () => {
 			updateBoardUserServiceMock.updateBoardUserRole.mockResolvedValueOnce(null);
 
