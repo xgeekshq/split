@@ -29,7 +29,7 @@ import { BoardUserRoles } from '@/utils/enums/board.user.roles';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 import isEmpty from '@/utils/isEmpty';
 import { GuestUser } from '@/types/user/user';
-import { DASHBOARD_ROUTE } from '@/utils/routes';
+import { BOARDS_ROUTE } from '@/utils/routes';
 import { getGuestUserCookies } from '@/utils/getGuestUserCookies';
 import { BoardPhases } from '@/utils/enums/board.phases';
 import ConfirmationDialog from '@/components/Primitives/Alerts/ConfirmationDialog/ConfirmationDialog';
@@ -72,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       redirect: {
         permanent: false,
-        destination: DASHBOARD_ROUTE,
+        destination: BOARDS_ROUTE,
       },
     };
   }
