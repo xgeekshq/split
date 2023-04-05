@@ -211,6 +211,22 @@ const Button = styled('button', {
       },
     },
     size: {
+      xl: {
+        height: '$64',
+        fontWeight: '$medium',
+        fontSize: '$24',
+        lineHeight: '$28',
+        px: '$32',
+        py: '$20',
+        '& svg': {
+          height: '$32',
+          width: '$32',
+        },
+        '& span': {
+          height: '$32',
+          width: '$32',
+        },
+      },
       lg: {
         height: '$56',
         fontWeight: '$medium',
@@ -294,6 +310,16 @@ const Button = styled('button', {
     },
   },
   compoundVariants: [
+    {
+      isIcon: 'true',
+      size: 'xl',
+      css: {
+        '& svg': {
+          height: '$60',
+          width: '$60',
+        },
+      },
+    },
     {
       isIcon: 'true',
       size: 'lg',

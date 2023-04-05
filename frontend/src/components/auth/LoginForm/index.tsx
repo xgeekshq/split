@@ -138,21 +138,18 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
             </Flex>
             <Flex gap="32">
               {NEXT_PUBLIC_ENABLE_GIT && (
-                <Button isIcon>
-                  <Icon css={{ width: '$60 !important', height: '$60 !important' }} name="github" />
+                <Button size="xl" isIcon>
+                  <Icon size={60} name="github" />
                 </Button>
               )}
               {NEXT_PUBLIC_ENABLE_GOOGLE && (
-                <Button isIcon>
-                  <Icon css={{ width: '$60 !important', height: '$60 !important' }} name="google" />
+                <Button size="xl" isIcon>
+                  <Icon size={60} name="google" />
                 </Button>
               )}
               {NEXT_PUBLIC_ENABLE_AZURE && (
-                <Button isIcon data-loading={loading.sso} onClick={handleLoginAzure}>
-                  <Icon
-                    css={{ width: '$60 !important', height: '$60 !important' }}
-                    name="microsoft"
-                  />
+                <Button size="xl" isIcon data-loading={loading.sso} onClick={handleLoginAzure}>
+                  <Icon size={60} name="microsoft" />
                 </Button>
               )}
             </Flex>
