@@ -6,12 +6,4 @@ export interface CreateVoteServiceInterface {
 		count: number,
 		withSession?: boolean
 	): Promise<void>;
-
-	// addVoteToCardGroup(
-	// 	boardId: string,
-	// 	cardId: string,
-	// 	userId: string,
-	// 	count: number,
-	// 	retryCount?: number
-	// ): Promise<void>;
 }
