@@ -16,16 +16,17 @@ import { UpdateBoardUserServiceInterface } from 'src/modules/boardUsers/interfac
 import { getUserWithVotes } from '../utils/get-user-with-votes';
 import { UpdateFailedException } from 'src/libs/exceptions/updateFailedBadRequestException';
 import { CardNotFoundException } from 'src/libs/exceptions/cardNotFoundException';
+import isEmpty from 'src/libs/utils/isEmpty';
 
 @Injectable()
 export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 	constructor(
 		@Inject(TYPES.services.GetCardService)
-		private getCardService: GetCardServiceInterface,
+		private readonly getCardService: GetCardServiceInterface,
 		@Inject(TYPES.repository.CardRepository)
 		private readonly cardRepository: CardRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	private logger: Logger = new Logger(DeleteCardUseCase.name);
@@ -56,23 +57,17 @@ export class DeleteCardUseCase implements UseCase<DeleteCardUseCaseDto, void> {
 			await this.cardRepository.endSession();
 			await this.updateBoardUserService.endSession();
 		}
-
-		return null;
 	}
 
 	private async deletedVotesFromCard(boardId: string, cardId: string) {
 		const getCard = await this.getCardService.getCardFromBoard(boardId, cardId);
-		let votesByUsers;
+		let votesByUsers: Map<string, number>;
 
 		if (!getCard) {
 			throw new CardNotFoundException(CARD_NOT_FOUND);
 		}
 
-		if (getCard.votes?.length) {
-			votesByUsers = getUserWithVotes(getCard.votes);
-		}
-
-		if (getCard.items[0].votes) {
+		if (!isEmpty(getCard.items[0].votes)) {
 			votesByUsers = getUserWithVotes(getCard.items[0].votes);
 		}
 
