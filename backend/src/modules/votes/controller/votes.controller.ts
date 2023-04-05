@@ -21,7 +21,6 @@ import { UnauthorizedResponse } from 'src/libs/swagger/errors/unauthorized.swagg
 import BoardDto from 'src/modules/boards/dto/board.dto';
 import SocketGateway from 'src/modules/socket/gateway/socket.gateway';
 import VoteDto from '../dto/vote.dto';
-import { DeleteVoteApplicationInterface } from '../interfaces/applications/delete.vote.application.interface';
 import { TYPES } from '../interfaces/types';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
@@ -33,8 +32,6 @@ import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto
 @Controller('boards')
 export default class VotesController {
 	constructor(
-		@Inject(TYPES.applications.DeleteVoteApplication)
-		private readonly deleteVoteApp: DeleteVoteApplicationInterface,
 		@Inject(TYPES.applications.CardItemVoteUseCase)
 		private readonly cardItemVoteUseCase: UseCase<CardItemVoteUseCaseDto, void>,
 		@Inject(TYPES.applications.CardGroupVoteUseCase)
@@ -76,17 +73,13 @@ export default class VotesController {
 		const { boardId, cardId, itemId } = params;
 		const { count, socketId } = data;
 
-		if (count < 0) {
-			await this.deleteVoteApp.deleteVoteFromCard(boardId, cardId, request.user._id, itemId, count);
-		} else {
-			await this.cardItemVoteUseCase.execute({
-				boardId,
-				cardId,
-				userId: request.user._id,
-				cardItemId: itemId,
-				count
-			});
-		}
+		await this.cardItemVoteUseCase.execute({
+			boardId,
+			cardId,
+			userId: request.user._id,
+			cardItemId: itemId,
+			count
+		});
 
 		this.socketService.sendUpdateVotes(socketId, data);
 
@@ -126,16 +119,7 @@ export default class VotesController {
 		const { boardId, cardId } = params;
 		const { count, socketId } = data;
 
-		if (count < 0) {
-			await this.deleteVoteApp.deleteVoteFromCardGroup(boardId, cardId, request.user._id, count);
-		} else {
-			await this.cardGroupVoteUseCase.execute({
-				boardId,
-				cardId,
-				userId: request.user._id,
-				count
-			});
-		}
+		await this.cardGroupVoteUseCase.execute({ boardId, cardId, userId: request.user._id, count });
 
 		this.socketService.sendUpdateVotes(socketId, data);
 

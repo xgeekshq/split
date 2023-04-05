@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export default class CardGroupVoteUseCaseDto {
 	@IsNotEmpty()
@@ -16,8 +16,4 @@ export default class CardGroupVoteUseCaseDto {
 	@IsNotEmpty()
 	@IsNumber()
 	count: number;
-
-	@IsOptional()
-	@IsNumber()
-	retryCount?: number;
 }

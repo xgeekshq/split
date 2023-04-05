@@ -9,6 +9,7 @@ import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import { WRITE_LOCK_ERROR } from 'src/libs/constants/database';
 import { VoteRepositoryInterface } from '../interfaces/repositories/vote.repository.interface';
 import CardGroupVoteUseCaseDto from '../dto/useCase/card-group-vote.use-case.dto';
+import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 
 @Injectable()
 export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, void> {
@@ -19,17 +20,33 @@ export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, vo
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface,
+		@Inject(TYPES.services.DeleteVoteService)
+		private readonly deleteVoteService: DeleteVoteServiceInterface
 	) {}
 
-	async execute({ boardId, cardId, userId, count, retryCount }: CardGroupVoteUseCaseDto) {
+	async execute({ boardId, cardId, userId, count }: CardGroupVoteUseCaseDto) {
+		if (count < 0) {
+			await this.deleteVoteService.deleteVoteFromCardGroup(boardId, cardId, userId, count);
+		} else {
+			await this.addVoteToCardGroupAndUser(boardId, userId, count, cardId);
+		}
+	}
+
+	private async addVoteToCardGroupAndUser(
+		boardId: string,
+		userId: string,
+		count: number,
+		cardId: string,
+		retryCount?: number
+	) {
 		await this.createVoteService.canUserVote(boardId, userId, count);
 
 		await this.updateBoardUserService.startTransaction();
 		await this.voteRepository.startTransaction();
 
 		try {
-			await this.addVoteToCardGroupAndUser(boardId, userId, count, cardId, retryCount);
+			await this.addVoteToCardGroupAndUserOperations(boardId, userId, count, cardId, retryCount);
 			await this.updateBoardUserService.commitTransaction();
 			await this.voteRepository.commitTransaction();
 		} catch (e) {
@@ -40,7 +57,7 @@ export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, vo
 		}
 	}
 
-	private async addVoteToCardGroupAndUser(
+	private async addVoteToCardGroupAndUserOperations(
 		boardId: string,
 		userId: string,
 		count: number,
@@ -69,7 +86,7 @@ export class CardGroupVoteUseCase implements UseCase<CardGroupVoteUseCaseDto, vo
 				retryCountOperation++;
 				await this.updateBoardUserService.endSession();
 				await this.voteRepository.endSession();
-				await this.execute({ boardId, cardId, userId, count, retryCount: retryCountOperation });
+				await this.addVoteToCardGroupAndUser(boardId, userId, count, cardId, retryCountOperation);
 			} else {
 				throw new InsertFailedException(INSERT_VOTE_FAILED);
 			}

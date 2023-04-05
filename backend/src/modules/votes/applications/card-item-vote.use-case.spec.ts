@@ -17,6 +17,7 @@ import { CardItemVoteUseCase } from './card-item-vote.use-case';
 import { UseCase } from 'src/libs/interfaces/use-case.interface';
 import { INSERT_VOTE_FAILED } from 'src/libs/exceptions/messages';
 import CardItemVoteUseCaseDto from '../dto/useCase/card-item-vote.use-case.dto';
+import { DeleteVoteServiceInterface } from '../interfaces/services/delete.vote.service.interface';
 
 const userId: string = faker.datatype.uuid();
 const board: Board = BoardFactory.create({ maxVotes: 3 });
@@ -35,6 +36,10 @@ describe('CardItemVoteUseCase', () => {
 				{
 					provide: TYPES.repositories.VoteRepository,
 					useValue: createMock<VoteRepositoryInterface>()
+				},
+				{
+					provide: TYPES.services.DeleteVoteService,
+					useValue: createMock<DeleteVoteServiceInterface>()
 				},
 				{
 					provide: TYPES.services.CreateVoteService,
