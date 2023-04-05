@@ -20,10 +20,11 @@ const CenteredContainer = styled('div', {
 const BodyContainer = styled(Flex, {
   width: '100%',
   margin: '$48',
+  gap: '$72',
 
   '@md': {
     margin: '$48 $72 $24',
-    width: '$400',
+    width: '$362',
   },
 });
 
