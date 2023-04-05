@@ -15,7 +15,7 @@ import UpdateBoardUserDto from 'src/modules/boardUsers/dto/update-board-user.dto
 export class UpdateBoardPermissionsGuard implements CanActivate {
 	constructor(
 		@Inject(Boards.TYPES.services.GetBoardService)
-		private getBoardService: GetBoardServiceInterface
+		private readonly getBoardService: GetBoardServiceInterface
 	) {}
 
 	async canActivate(context: ExecutionContext) {
