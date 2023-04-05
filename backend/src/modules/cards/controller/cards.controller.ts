@@ -51,6 +51,8 @@ import CardCreationPresenter from '../dto/useCase/presenters/create-card-res.use
 import UnmergeCardUseCaseDto from '../dto/useCase/unmerge-card.use-case.dto';
 import MergeCardUseCaseDto from '../dto/useCase/merge-card.use-case.dto';
 import UpdateCardPositionUseCaseDto from '../dto/useCase/update-card-position.use-case.dto';
+import Board from 'src/modules/boards/entities/board.schema';
+import UpdateCardTextUseCaseDto from '../dto/useCase/update-card-text.use-case.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Cards')
@@ -64,6 +66,8 @@ export default class CardsController {
 		private updateCardApp: UpdateCardApplicationInterface,
 		@Inject(TYPES.applications.UpdateCardPositionUseCase)
 		private updateCardPositionUseCase: UseCase<UpdateCardPositionUseCaseDto, void>,
+		@Inject(TYPES.applications.UpdateCardTextUseCase)
+		private updateCardTextUseCase: UseCase<UpdateCardTextUseCaseDto, Board>,
 		@Inject(TYPES.applications.DeleteCardApplication)
 		private deleteCardApp: DeleteCardApplicationInterface,
 		@Inject(TYPES.applications.UnmergeCardUseCase)
@@ -198,16 +202,17 @@ export default class CardsController {
 		@Param() params: CardItemParams,
 		@Body() updateCardDto: UpdateCardDto
 	) {
-		const { boardId, cardId, itemId } = params;
+		const { boardId, cardId, itemId: cardItemId } = params;
 		const { text, socketId } = updateCardDto;
+		const userId = request.user._id;
 
-		const board = await this.updateCardApp.updateCardText(
+		const board = await this.updateCardTextUseCase.execute({
 			boardId,
 			cardId,
-			itemId,
-			request.user._id,
+			cardItemId,
+			userId,
 			text
-		);
+		});
 
 		if (!board) throw new BadRequestException(UPDATE_FAILED);
 		this.socketService.sendUpdateCard(socketId, updateCardDto);

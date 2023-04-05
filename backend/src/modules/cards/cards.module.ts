@@ -12,7 +12,8 @@ import {
 	unmergeCardUseCase,
 	updateCardApplication,
 	updateCardPositionUseCase,
-	updateCardService
+	updateCardService,
+	updateCardTextUseCase
 } from './cards.providers';
 import CardsController from './controller/cards.controller';
 
@@ -30,7 +31,8 @@ import CardsController from './controller/cards.controller';
 		createCardUseCase,
 		unmergeCardUseCase,
 		mergeCardUseCase,
-		updateCardPositionUseCase
+		updateCardPositionUseCase,
+		updateCardTextUseCase
 	],
 	exports: [getCardService, deleteCardService]
 })

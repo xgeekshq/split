@@ -9,6 +9,7 @@ import DeleteCardService from './services/delete.card.service';
 import GetCardService from './services/get.card.service';
 import UpdateCardService from './services/update.card.service';
 import { UpdateCardPositionUseCase } from './applications/update/update-card-position.use-case';
+import { UpdateCardTextUseCase } from './applications/update/update-card-text.use-case';
 
 export const getCardService = {
 	provide: TYPES.services.GetCardService,
@@ -58,4 +59,9 @@ export const unmergeCardUseCase = {
 export const updateCardPositionUseCase = {
 	provide: TYPES.applications.UpdateCardPositionUseCase,
 	useClass: UpdateCardPositionUseCase
+};
+
+export const updateCardTextUseCase = {
+	provide: TYPES.applications.UpdateCardTextUseCase,
+	useClass: UpdateCardTextUseCase
 };

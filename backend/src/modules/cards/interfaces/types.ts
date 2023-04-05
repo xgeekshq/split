@@ -12,7 +12,8 @@ export const TYPES = {
 		CreateCardUseCase: 'CreateCardUseCase',
 		UnmergeCardUseCase: 'UnmergeCardUseCase',
 		MergeCardUseCase: 'MergeCardUseCase',
-		UpdateCardPositionUseCase: 'UpdateCardPositionUseCase'
+		UpdateCardPositionUseCase: 'UpdateCardPositionUseCase',
+		UpdateCardTextUseCase: 'UpdateCardTextUseCase'
 	},
 	repository: {
 		CardRepository: 'CardRepository'
