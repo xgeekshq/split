@@ -1,17 +1,18 @@
-import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import AlertBox, { AlertBoxProps } from '@/components/Primitives/Alerts/AlertBox/AlertBox';
-import Button from '../../Inputs/Button/Button';
+import Button from '@/components/Primitives/Inputs/Button/Button';
+import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 
-const render = (props: AlertBoxProps, children?: React.ReactNode) =>
-  renderWithProviders(<AlertBox {...props}>{children}</AlertBox>);
+const render = ({ children, ...props }: Partial<AlertBoxProps> = {}) =>
+  renderWithProviders(
+    <AlertBox type="info" title="Title" text="Text" {...props}>
+      {children}
+    </AlertBox>,
+  );
 
 describe('Components/Primitives/Alerts/AlertBox', () => {
   it('should render correctly', () => {
-    // Arrange
-    const alertBoxProps: AlertBoxProps = { type: 'info' };
-
     // Act
-    const { getByTestId } = render(alertBoxProps);
+    const { getByTestId } = render();
 
     // Assert
     expect(getByTestId('alertBox')).toBeInTheDocument();
@@ -42,11 +43,10 @@ describe('Components/Primitives/Alerts/AlertBox', () => {
 
   it('should render children', () => {
     // Arrange
-    const alertBoxProps: AlertBoxProps = { type: 'error', title: 'Title', text: 'This is Text' };
     const alertBoxChild = <Button>Button</Button>;
 
     // Act
-    const { getByTestId, getByText } = render(alertBoxProps, alertBoxChild);
+    const { getByTestId, getByText } = render({ children: alertBoxChild });
 
     // Assert
     expect(getByTestId('alertBox')).toBeInTheDocument();

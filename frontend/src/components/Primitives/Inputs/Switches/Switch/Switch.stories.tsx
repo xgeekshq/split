@@ -4,17 +4,11 @@ import { ComponentStory } from '@storybook/react';
 import dedent from 'ts-dedent';
 
 import Switch from '@/components/Primitives/Inputs/Switches/Switch/Switch';
-import { SwitchSizeType } from '../../../../../stories/types/PrimitiveTypes';
-
-const SIZE_OPTIONS: SwitchSizeType[] = ['xs', 'sm', 'md'];
 
 export default {
-  title: 'Primitives/Inputs/Switch',
+  title: 'Primitives/Inputs/Switches/Switch',
   component: Switch,
   parameters: {
-    controls: {
-      exclude: ['asChild', 'defaultChecked', 'icon', 'name', 'required'],
-    },
     docs: {
       description: {
         component: dedent`
@@ -31,12 +25,8 @@ export default {
   },
   argTypes: {
     size: {
-      options: SIZE_OPTIONS,
       control: { type: 'select' },
       description: 'The component size.',
-      table: {
-        type: { summary: SIZE_OPTIONS.join('|') },
-      },
     },
     disabled: {
       control: { type: 'boolean' },
@@ -54,6 +44,14 @@ export default {
     onCheckedChange: {
       control: false,
       description: 'Event handler called when the checked state of the switch changes.',
+    },
+    icon: {
+      control: false,
+      description: 'The icon displayed on the switch when toggled.',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: 'check' },
+      },
     },
   },
 };

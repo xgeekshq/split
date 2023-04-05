@@ -1,7 +1,5 @@
-import { isEmpty } from 'class-validator';
 import { DeleteBoardUserServiceInterface } from '../../boardUsers/interfaces/services/delete.board.user.service.interface';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DELETE_FAILED } from 'src/libs/exceptions/messages';
 import { DeleteSchedulesServiceInterface } from 'src/modules/schedules/interfaces/services/delete.schedules.service.interface';
 import * as Schedules from 'src/modules/schedules/interfaces/types';
@@ -22,29 +20,10 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		@Inject(BoardUsers.TYPES.services.DeleteBoardUserService)
 		private deleteBoardUserService: DeleteBoardUserServiceInterface,
 		@Inject(Schedules.TYPES.services.DeleteSchedulesService)
-		private deleteSheduleService: DeleteSchedulesServiceInterface,
+		private deleteScheduleService: DeleteSchedulesServiceInterface,
 		@Inject(CommunicationTypes.TYPES.services.SlackArchiveChannelService)
 		private archiveChannelService: ArchiveChannelServiceInterface
 	) {}
-
-	async delete(boardId: string) {
-		const board = await this.boardRepository.getBoard(boardId);
-
-		if (!board) {
-			throw new NotFoundException('Board not found!');
-		}
-
-		const boardIdsToDelete: string[] = [boardId];
-
-		if (!isEmpty(board.dividedBoards)) {
-			const dividedBoards = (board.dividedBoards as ObjectId[]).map((subBoardId) =>
-				subBoardId.toString()
-			);
-			boardIdsToDelete.push(...dividedBoards);
-		}
-
-		return this.deleteBoardBoardUsersAndSchedules(boardIdsToDelete);
-	}
 
 	async deleteBoardsByTeamId(teamId: string) {
 		const teamBoards = await this.boardRepository.getAllBoardsByTeamId(teamId);
@@ -53,46 +32,19 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		return this.deleteBoardBoardUsersAndSchedules(teamBoardsIds);
 	}
 
-	/* --------------- HELPERS --------------- */
-
-	private async deleteBoardBoardUsersAndSchedules(boardIdsToDelete: string[]) {
+	async deleteBoardBoardUsersAndSchedules(boardIdsToDelete: string[]) {
 		await this.boardRepository.startTransaction();
 		await this.deleteBoardUserService.startTransaction();
-		await this.deleteSheduleService.startTransaction();
+		await this.deleteScheduleService.startTransaction();
 		const withSession = true;
 		try {
 			const boardsToDelete = await this.boardRepository.getBoardsByBoardIdsList(boardIdsToDelete);
-			try {
-				const boardUsersDeleted = await this.deleteBoardUserService.deleteBoardUsersByBoardList(
-					boardIdsToDelete,
-					withSession
-				);
-				const schedulesDeleted = await this.deleteSheduleService.deleteSchedulesByBoardList(
-					boardIdsToDelete,
-					withSession
-				);
-				const boardsDeleted = await this.boardRepository.deleteBoardsByBoardList(
-					boardIdsToDelete,
-					withSession
-				);
 
-				if (
-					!(
-						boardUsersDeleted.acknowledged &&
-						schedulesDeleted.acknowledged &&
-						boardsDeleted.acknowledged
-					)
-				)
-					throw new BadRequestException(DELETE_FAILED);
-			} catch (e) {
-				await this.boardRepository.abortTransaction();
-				await this.deleteBoardUserService.abortTransaction();
-				await this.deleteSheduleService.abortTransaction();
-				throw new BadRequestException(DELETE_FAILED);
-			}
+			await this.deleteBoardAndBoardUsersAndSchedulesOperations(boardIdsToDelete, withSession);
+
 			await this.boardRepository.commitTransaction();
 			await this.deleteBoardUserService.commitTransaction();
-			await this.deleteSheduleService.commitTransaction();
+			await this.deleteScheduleService.commitTransaction();
 
 			this.archiveBoardsChannels(boardsToDelete);
 
@@ -102,7 +54,43 @@ export default class DeleteBoardService implements DeleteBoardServiceInterface {
 		} finally {
 			await this.boardRepository.endSession();
 			await this.deleteBoardUserService.endSession();
-			await this.deleteSheduleService.endSession();
+			await this.deleteScheduleService.endSession();
+		}
+	}
+
+	/* --------------- HELPERS --------------- */
+
+	private async deleteBoardAndBoardUsersAndSchedulesOperations(
+		boardIdsToDelete: string[],
+		withSession: boolean
+	) {
+		try {
+			const boardUsersDeleted = await this.deleteBoardUserService.deleteBoardUsersByBoardList(
+				boardIdsToDelete,
+				withSession
+			);
+			const schedulesDeleted = await this.deleteScheduleService.deleteSchedulesByBoardList(
+				boardIdsToDelete,
+				withSession
+			);
+			const boardsDeleted = await this.boardRepository.deleteBoardsByBoardList(
+				boardIdsToDelete,
+				withSession
+			);
+
+			if (
+				!(
+					boardUsersDeleted.acknowledged &&
+					schedulesDeleted.acknowledged &&
+					boardsDeleted.acknowledged
+				)
+			)
+				throw new BadRequestException(DELETE_FAILED);
+		} catch (e) {
+			await this.boardRepository.abortTransaction();
+			await this.deleteBoardUserService.abortTransaction();
+			await this.deleteScheduleService.abortTransaction();
+			throw new BadRequestException(DELETE_FAILED);
 		}
 	}
 

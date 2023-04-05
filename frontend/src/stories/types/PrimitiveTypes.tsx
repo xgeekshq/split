@@ -11,12 +11,14 @@ export const ButtonVariant = [
   'danger',
   'dangerOutline',
   'link',
+  'transparent',
+  'transparentHover',
 ] as const;
 
 // prettier-ignore
 export type ButtonVariantType = typeof ButtonVariant[number];
 
-export const ButtonSize = ['sm', 'md', 'lg'] as const;
+export const ButtonSize = ['xxs', 'xs', 'sm', 'md', 'lg'] as const;
 // prettier-ignore
 export type ButtonSizeType = typeof ButtonSize[number];
 
@@ -42,6 +44,7 @@ export type ColorType =
   | 'primary400'
   | 'primary500'
   | 'primary800';
+export type OverflowType = 'wrap';
 
 // Primitive/Popover
 export type PopoverVariantType = 'dark' | 'light';
@@ -59,20 +62,9 @@ export type SeparatorSizeType = 'sm' | 'md' | 'lg' | 'full';
 // Primitive/Svg
 export type SvgSizeType = 12 | 16 | 18 | 20 | 24 | 32 | 40 | 48 | 100;
 
-// Primitive/Switch
-export type SwitchSizeType = 'xs' | 'sm' | 'md';
-
-// Primitive/Checkbox
-export type CheckboxSizeType = 'sm' | 'md';
-export type CheckboxVariantType = 'default' | 'error';
-
 // Primitive/Loading/Spinner
 export type SpinnerSizeType = 50 | 80 | 100 | 150 | 200;
 export type SpinnerColorType = 'light' | 'dark';
-
-// Primitive/Loading/Dots
-export type DotsSizeType = 8 | 4 | 10 | 15 | 50 | 80 | 100;
-export type DotsColorType = 'primary800' | 'primary200' | 'white';
 
 // Primitive/Badge
 export type BadgeSizeType = 'xs' | 'sm' | 'md' | 'lg';

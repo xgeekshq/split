@@ -1,4 +1,4 @@
-import React, { VFC, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { ComponentStory } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -51,7 +51,7 @@ export default {
   },
 };
 
-const StorybookFormProvider: VFC<{ children: ReactNode }> = ({ children }) => {
+const StorybookFormProvider = ({ children }: { children: ReactNode }) => {
   const methods = useForm();
   return (
     <FormProvider {...methods}>

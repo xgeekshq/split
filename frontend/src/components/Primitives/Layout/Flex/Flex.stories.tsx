@@ -32,7 +32,7 @@ export default {
         Flex element, allows you to control how the elements are displayed in the page.
 
         **File Path:**
-        \`@/components/Primitives/Layout/Flex.tsx\`
+        \`@/components/Primitives/Layout/Flex/Flex.tsx\`
         `,
       },
     },

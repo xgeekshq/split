@@ -16,7 +16,7 @@ import {
   RadioGroupDirectionType,
   RadioGroupSizeType,
   RadioGroupFontWeightType,
-} from '../../../../stories/types/PrimitiveTypes';
+} from '@/stories/types/PrimitiveTypes';
 
 const DIRECTION_OPTIONS: RadioGroupDirectionType[] = ['row', 'column'];
 

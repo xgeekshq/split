@@ -12,18 +12,14 @@ import {
   HeadingType,
   Overline,
   TextSizeType,
+  OverflowType,
 } from '../../../stories/types/PrimitiveTypes';
 
 const FONT_WEIGHT_OPTIONS: FontWeightType[] = ['regular', 'medium', 'bold'];
-
 const DISPLAY_OPTIONS: DisplayType[] = [1, 2, 3];
-
 const HEADING_OPTIONS: HeadingType[] = [1, 2, 3, 4, 5, 6, 7];
-
 const OVERLINE_OPTIONS: Overline[] = [1, 2];
-
 const SIZE_OPTIONS: TextSizeType[] = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl'];
-
 const COLOR_OPTIONS: ColorType[] = [
   'white',
   'dangerBase',
@@ -34,6 +30,7 @@ const COLOR_OPTIONS: ColorType[] = [
   'primary500',
   'primary800',
 ];
+const OVERFLOW_OPTIONS: OverflowType[] = ['wrap'];
 
 const DISABLE_ARG_TYPES = {
   display: {
@@ -175,6 +172,23 @@ export default {
         defaultValue: { summary: 'true' },
       },
       defaultValue: true,
+    },
+    link: {
+      control: { type: 'boolean' },
+      description: 'When true will display text decoration on hover.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      defaultValue: false,
+    },
+    overflow: {
+      options: OVERFLOW_OPTIONS,
+      control: { type: 'select' },
+      description: 'Controls the component overflow.',
+      table: {
+        type: { summary: OVERFLOW_OPTIONS.join('|') },
+      },
     },
   },
 };
