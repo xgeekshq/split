@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 
-import { BannerContainer, ImageBackground } from '@/styles/pages/auth.styles';
+import {
+  BannerContainer,
+  BodyContainer,
+  FormContainer,
+  ImageBackground,
+  ImageContainer,
+} from '@/styles/pages/auth.styles';
 
 import TroubleLogin from '@/components/auth/ForgotPassword/TroubleLogin';
 import LoginForm from '@/components/auth/LoginForm';
@@ -102,35 +108,18 @@ const Home: NextPage = () => {
 
   return (
     <Flex justify="between" css={{ minHeight: '100vh', overflow: 'auto' }}>
-      <Flex direction="column" css={{ flexGrow: '1' }}>
+      <BodyContainer direction="column">
         <BannerContainer>
           <Banner />
         </BannerContainer>
-        <Flex
-          direction="column"
-          css={{
-            ml: '$72',
-            mr: '$72',
-            mt: '9.7%',
-            mb: '$24',
-            height: '100%',
-            justifyContent: 'space-between',
-          }}
-        >
+        <FormContainer direction="column">
           {renderBody()}
           {renderFooter()}
-        </Flex>
-      </Flex>
-      <Flex
-        css={{
-          width: '65%',
-          py: '$24',
-          pr: '$24',
-          flexShrink: 0,
-        }}
-      >
+        </FormContainer>
+      </BodyContainer>
+      <ImageContainer>
         <ImageBackground css={{ boxShadow: '-8px 8px 24px rgba(0, 0, 0, 0.16)' }} />
-      </Flex>
+      </ImageContainer>
     </Flex>
   );
 };

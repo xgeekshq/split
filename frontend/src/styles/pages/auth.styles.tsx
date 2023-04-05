@@ -16,6 +16,34 @@ const CenteredContainer = styled('div', {
   backgroundColor: '#ffffff',
   borderRadius: '$12',
 });
+
+const BodyContainer = styled(Flex, {
+  width: '100%',
+  margin: '$48',
+
+  '@md': {
+    margin: '$48 $72 $24',
+    width: '$400',
+  },
+});
+
+const FormContainer = styled(Flex, {
+  height: '100%',
+  justifyContent: 'space-between',
+});
+
+const ImageContainer = styled(Flex, {
+  flexGrow: 1,
+  py: '$24',
+  pr: '$24',
+  flexShrink: 0,
+  display: 'none',
+
+  '@md': {
+    display: 'flex',
+  },
+});
+
 const ImageBackground = styled(Flex, {
   height: '100%',
   width: '100%',
@@ -27,8 +55,16 @@ const ImageBackground = styled(Flex, {
 });
 
 const BannerContainer = styled(Flex, {
-  ml: '$72',
-  mt: '8.4%',
+  '& svg': {
+    maxWidth: '100%',
+  },
 });
 
-export { BannerContainer, CenteredContainer, ImageBackground };
+export {
+  BannerContainer,
+  CenteredContainer,
+  BodyContainer,
+  FormContainer,
+  ImageContainer,
+  ImageBackground,
+};
