@@ -19,7 +19,7 @@ export class CreateCardItemVoteUseCase implements UseCase<CreateCardItemVoteUseC
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	async execute({

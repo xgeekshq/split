@@ -19,7 +19,7 @@ export class CreateCardGroupVoteUseCase implements UseCase<CreateCardGroupVoteUs
 		@Inject(TYPES.repositories.VoteRepository)
 		private readonly voteRepository: VoteRepositoryInterface,
 		@Inject(BoardUsers.TYPES.services.UpdateBoardUserService)
-		private updateBoardUserService: UpdateBoardUserServiceInterface
+		private readonly updateBoardUserService: UpdateBoardUserServiceInterface
 	) {}
 
 	async execute({ boardId, cardId, userId, count, retryCount }: CreateCardGroupVoteUseCaseDto) {
