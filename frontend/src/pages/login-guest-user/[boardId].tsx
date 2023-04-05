@@ -11,9 +11,10 @@ import SchemaLoginGuestForm from '@/schema/schemaLoginGuestForm';
 import { getUsername } from '@/utils/getUsername';
 import useRegisterGuestUser from '@/hooks/auth/useRegisterGuestUser';
 import { ReactElement } from 'react';
-import { OrSeparator, StyledForm } from '@/components/auth/LoginForm/styles';
+import { StyledForm } from '@/components/auth/LoginForm/styles';
 import AccessLayout from '@/components/layouts/AccessLayout/AccessLayout';
 import { CreateGuestUser } from '@/types/user/create-login.user';
+import Separator from '@/components/Primitives/Separator/Separator';
 
 const LoginGuestUserPage = () => {
   const router = useRouter();
@@ -65,13 +66,13 @@ const LoginGuestUserPage = () => {
           Log in as guest
         </Button>
         <Flex align="center" direction="column" justify="center">
-          <OrSeparator>
-            <hr />
+          <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+            <Separator />
             <Text color="primary300" size="sm" fontWeight="medium">
-              or
+              OR
             </Text>
-            <hr />
-          </OrSeparator>
+            <Separator />
+          </Flex>
           <Button css={{ width: '100%' }} size="lg" onClick={handleClick}>
             Sign In
           </Button>

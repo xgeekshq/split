@@ -27,7 +27,8 @@ import { DASHBOARD_ROUTE } from '@/utils/routes';
 import Button from '@/components/Primitives/Inputs/Button/Button';
 import { getCookie, deleteCookie } from 'cookies-next';
 import loginWithAzure from '@/hooks/auth/loginWithAzure';
-import { OrSeparator, StyledForm, StyledHoverIconFlex } from './styles';
+import Separator from '@/components/Primitives/Separator/Separator';
+import { StyledForm } from './styles';
 import LoginSSO from './LoginSSO';
 
 interface LoginFormProps {
@@ -128,28 +129,31 @@ const LoginForm = ({ setShowTroubleLogin }: LoginFormProps) => {
         </Button>
         {AUTH_SSO && (
           <Flex align="center" direction="column" justify="center">
-            <OrSeparator>
-              <hr />
+            <Flex align="center" css={{ width: '100%', my: '$26' }} gap="16">
+              <Separator />
               <Text color="primary300" size="sm" fontWeight="medium">
-                or
+                OR
               </Text>
-              <hr />
-            </OrSeparator>
+              <Separator />
+            </Flex>
             <Flex gap="32">
               {NEXT_PUBLIC_ENABLE_GIT && (
-                <StyledHoverIconFlex>
-                  <Icon css={{ width: '$60', height: '$60' }} name="github" />
-                </StyledHoverIconFlex>
+                <Button isIcon>
+                  <Icon css={{ width: '$60 !important', height: '$60 !important' }} name="github" />
+                </Button>
               )}
               {NEXT_PUBLIC_ENABLE_GOOGLE && (
-                <StyledHoverIconFlex>
-                  <Icon css={{ width: '$60', height: '$60' }} name="google" />
-                </StyledHoverIconFlex>
+                <Button isIcon>
+                  <Icon css={{ width: '$60 !important', height: '$60 !important' }} name="google" />
+                </Button>
               )}
               {NEXT_PUBLIC_ENABLE_AZURE && (
-                <StyledHoverIconFlex data-loading={loading.sso} onClick={handleLoginAzure}>
-                  <Icon css={{ width: '$60', height: '$60' }} name="microsoft" />
-                </StyledHoverIconFlex>
+                <Button isIcon data-loading={loading.sso} onClick={handleLoginAzure}>
+                  <Icon
+                    css={{ width: '$60 !important', height: '$60 !important' }}
+                    name="microsoft"
+                  />
+                </Button>
               )}
             </Flex>
           </Flex>
