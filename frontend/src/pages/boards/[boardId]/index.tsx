@@ -49,24 +49,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {},
     };
 
-  const boardIsPublic = await getPublicStatusRequest(boardId, context);
-
-  // if board is public and user has no session
-  if (boardIsPublic && !session) {
-    // check if there are guest user cookies
-    const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies({ req, res }, true);
-    // if there isn´t cookies, the guest user is not registered
-    if (!cookiesGuestUser) {
-      return {
-        redirect: {
-          permanent: false,
-          destination: `/login-guest-user/${boardId}`,
-        },
-      };
-    }
-  }
-
   try {
+    const boardIsPublic = await getPublicStatusRequest(boardId, context);
+
+    // if board is public and user has no session
+    if (boardIsPublic && !session) {
+      // check if there are guest user cookies
+      const cookiesGuestUser: GuestUser | { user: string } = getGuestUserCookies(
+        { req, res },
+        true,
+      );
+      // if there isn´t cookies, the guest user is not registered
+      if (!cookiesGuestUser) {
+        return {
+          redirect: {
+            permanent: false,
+            destination: `/login-guest-user/${boardId}`,
+          },
+        };
+      }
+    }
+
     await queryClient.fetchQuery(['board', { id: boardId }], () =>
       getBoardRequest(boardId, context),
     );
