@@ -47,11 +47,12 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 
 				const cardItems = card?.items.filter((item) => item._id.toString() !== cardItemId);
 
-				if (
+				const isLastItem =
 					card &&
 					cardItems?.length === 1 &&
-					(!isEmpty(card.votes.length) || !isEmpty(card.comments.length))
-				) {
+					(!isEmpty(card.votes.length) || !isEmpty(card.comments.length));
+
+				if (isLastItem) {
 					await this.refactorLastItem(boardId, cardId, card, cardItems);
 				}
 				const result = await this.cardRepository.deleteCardFromCardItems(
@@ -97,7 +98,7 @@ export class DeleteFromCardGroupUseCase implements UseCase<DeleteFromCardGroupUs
 					true
 				);
 
-				if (result.ok !== 1) {
+				if (!result.ok) {
 					throw new DeleteFailedException(DELETE_VOTE_FAILED);
 				}
 			} catch (e) {
