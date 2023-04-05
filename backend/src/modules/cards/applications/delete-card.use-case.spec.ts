@@ -15,7 +15,10 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 
 const deleteCardMock: DeleteCardUseCaseDto = {
 	boardId: faker.datatype.uuid(),
-	cardId: faker.datatype.uuid()
+	cardId: faker.datatype.uuid(),
+	completionHandler() {
+		return;
+	}
 };
 
 const updateResult: UpdateResult = {

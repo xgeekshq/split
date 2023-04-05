@@ -17,7 +17,10 @@ import { UseCase } from 'src/libs/interfaces/use-case.interface';
 const deleteFromCardGroupMock: DeleteFromCardGroupUseCaseDto = {
 	boardId: faker.datatype.uuid(),
 	cardId: faker.datatype.uuid(),
-	cardItemId: faker.datatype.uuid()
+	cardItemId: faker.datatype.uuid(),
+	completionHandler() {
+		return;
+	}
 };
 
 const updateResult: UpdateResult = {
@@ -172,7 +175,7 @@ describe('DeleteFromCardGroupUseCase', () => {
 		});
 		it('should throw error if updateBoardUserService.updateManyUserVotes fails ', async () => {
 			updateBoardUserServiceMock.updateManyUserVotes.mockResolvedValueOnce({
-				ok: 2
+				ok: 0
 			} as unknown as BulkWriteResult);
 			await expect(useCase.execute(deleteFromCardGroupMock)).rejects.toThrow(DeleteFailedException);
 		});
