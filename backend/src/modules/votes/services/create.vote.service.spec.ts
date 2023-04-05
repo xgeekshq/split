@@ -102,9 +102,9 @@ describe('CreateVoteService', () => {
 		});
 
 		it('should return if user can vote', async () => {
-			const board_1 = { ...board };
-			board_1.maxVotes = null;
-			getBoardServiceMock.getBoardById.mockResolvedValue(board_1);
+			const board_one = { ...board };
+			board_one.maxVotes = null;
+			getBoardServiceMock.getBoardById.mockResolvedValue(board_one);
 
 			await voteService.canUserVote(board._id, userId, 1);
 
