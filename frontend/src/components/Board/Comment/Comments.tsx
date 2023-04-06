@@ -7,8 +7,8 @@ import Text from '@/components/Primitives/Text/Text';
 import { CardItemType } from '@/types/card/cardItem';
 import CommentType from '@/types/comment/comment';
 import { BoardPhases } from '@/utils/enums/board.phases';
-import AddCardOrComment from '../AddCardOrComment';
-import Comment from './Comment';
+import AddCardOrComment from '@/components/Board/AddCardOrComment';
+import Comment from '@/components/Board/Comment/Comment';
 
 interface CommentsListProps {
   comments: CommentType[];

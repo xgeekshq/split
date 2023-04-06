@@ -22,7 +22,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 
 import useCreateTeam from '@/hooks/teams/useCreateTeam';
 import { ROUTES } from '@/utils/routes';
-import ListMembers from '../Team/ListMembers/ListMembers';
+import ListMembers from '@/components/Teams/Team/ListMembers/ListMembers';
 
 const CreateTeam = () => {
   const { userId } = useCurrentSession();

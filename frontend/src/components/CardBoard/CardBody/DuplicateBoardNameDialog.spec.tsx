@@ -6,7 +6,7 @@ import { fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DuplicateBoardNameDialog, {
   DuplicateBoardNameDialogProps,
-} from './DuplicateBoardNameDialog';
+} from '@/components/CardBoard/CardBody/DuplicateBoardNameDialog';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 

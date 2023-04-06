@@ -1,6 +1,6 @@
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { fireEvent, waitFor } from '@testing-library/react';
-import CreateTeam from './CreateTeam';
+import CreateTeam from '@/components/Teams/CreateTeam/CreateTeam';
 
 const render = () => renderWithProviders(<CreateTeam />);
 

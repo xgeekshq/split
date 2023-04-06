@@ -1,5 +1,5 @@
 import { ComponentStory } from '@storybook/react';
-import Header from './Header';
+import Header from '@/components/Teams/Team/Header/Header';
 
 export default {
   title: 'Teams/Header',

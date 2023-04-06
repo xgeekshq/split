@@ -3,7 +3,9 @@ import { ROUTES } from '@/utils/routes';
 import { libraryMocks } from '@/utils/testing/mocks';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { UserFactory } from '@/utils/factories/user';
-import MemberTitle, { MemberTitleProps } from './MemberTitle';
+import MemberTitle, {
+  MemberTitleProps,
+} from '@/components/Teams/Team/TeamMemberItem/MemberTitle/MemberTitle';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 const render = (props: Partial<MemberTitleProps>) =>

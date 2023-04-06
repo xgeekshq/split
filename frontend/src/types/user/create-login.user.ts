@@ -1,4 +1,4 @@
-import { Token } from '../token';
+import { Token } from '@/types/token';
 
 export interface CreateOrLogin {
   strategy?: string;

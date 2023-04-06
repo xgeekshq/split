@@ -5,8 +5,8 @@ import Dots from '@/components/Primitives/Loading/Dots/Dots';
 import { UserWithTeams } from '@/types/user/user';
 
 import useUsersWithTeams from '@/hooks/users/useUsersWithTeams';
-import UserItem from './UserItem/UserItem';
-import UsersSubHeader from './UsersSubHeader/UsersSubHeader';
+import UserItem from '@/components/Users/UsersList/UserItem/UserItem';
+import UsersSubHeader from '@/components/Users/UsersList/UsersSubHeader/UsersSubHeader';
 
 const UsersList = () => {
   const [search, setSearch] = useState<string>('');

@@ -4,7 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
 import { TEAMS_ROUTE } from '@/utils/routes';
 import { TeamFactory } from '@/utils/factories/team';
-import TeamHeader, { TeamHeaderProps } from './Header';
+import TeamHeader, { TeamHeaderProps } from '@/components/Teams/Team/Header/Header';
 
 const { mockRouter } = libraryMocks.mockNextRouter({ pathname: '/teams' });
 libraryMocks.mockReactQuery();

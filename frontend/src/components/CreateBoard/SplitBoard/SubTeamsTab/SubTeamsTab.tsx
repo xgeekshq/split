@@ -9,11 +9,11 @@ import { TeamUser } from '@/types/team/team.user';
 import { User } from '@/types/user/user';
 import { TeamUserRoles } from '@/utils/enums/team.user.roles';
 
-import BoardUsersDropdown from './BoardUsersDropdown/BoardUsersDropdown';
-import BoardSection from './CreateBoardItem/CreateBoardItem';
-import FakeBoardItem from './FakeBoardItem/FakeBoardItem';
-import QuickEditSubTeams from './QuickEditSubTeams/QuickEditSubTeams';
-import SelectTeam from './SelectTeam/SelectTeam';
+import BoardUsersDropdown from '@/components/CreateBoard/SplitBoard/SubTeamsTab/BoardUsersDropdown/BoardUsersDropdown';
+import BoardSection from '@/components/CreateBoard/SplitBoard/SubTeamsTab/CreateBoardItem/CreateBoardItem';
+import FakeBoardItem from '@/components/CreateBoard/SplitBoard/SubTeamsTab/FakeBoardItem/FakeBoardItem';
+import QuickEditSubTeams from '@/components/CreateBoard/SplitBoard/SubTeamsTab/QuickEditSubTeams/QuickEditSubTeams';
+import SelectTeam from '@/components/CreateBoard/SplitBoard/SubTeamsTab/SelectTeam/SelectTeam';
 
 type SubTeamsTabProps = {
   previousTeam?: string;

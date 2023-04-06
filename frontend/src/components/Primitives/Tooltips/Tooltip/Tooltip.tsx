@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 
-import { StyledArrow, StyledContent } from './styles';
+import { StyledArrow, StyledContent } from '@/components/Primitives/Tooltips/Tooltip/styles';
 
 type Props = {
   content: ReactNode;

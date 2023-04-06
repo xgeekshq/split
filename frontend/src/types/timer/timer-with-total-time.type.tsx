@@ -1,4 +1,4 @@
-import { TimeDto } from './time.dto';
+import { TimeDto } from '@/types/timer/time.dto';
 
 export type TimeWithTotalTime = TimeDto & {
   total: number;

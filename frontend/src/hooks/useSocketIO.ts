@@ -24,9 +24,9 @@ import { BOARD_PHASE_SERVER_SENT, NEXT_PUBLIC_BACKEND_URL } from '@/utils/consta
 import isEmpty from '@/utils/isEmpty';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRecoilValue } from 'recoil';
-import useBoard from './useBoard';
-import useComments from './useComments';
-import useVotes from './useVotes';
+import useBoard from '@/hooks/useBoard';
+import useComments from '@/hooks/useComments';
+import useVotes from '@/hooks/useVotes';
 
 enum BoardAction {
   UPDATECARDPOSITION,

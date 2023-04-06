@@ -4,9 +4,9 @@ import { Team } from '@/types/team/team';
 import Flex from '@/components/Primitives/Layout/Flex/Flex';
 import useCurrentSession from '@/hooks/useCurrentSession';
 import isEmpty from '@/utils/isEmpty';
-import EmptyTeams from './EmptyTeams/EmptyTeams';
+import EmptyTeams from '@/components/Teams/TeamsList/EmptyTeams/EmptyTeams';
 
-import TeamItem from './TeamItem/TeamItem';
+import TeamItem from '@/components/Teams/TeamsList/TeamItem/TeamItem';
 
 export type TeamsListProps = {
   teams: Team[];

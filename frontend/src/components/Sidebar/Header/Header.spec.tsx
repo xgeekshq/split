@@ -3,7 +3,7 @@ import { libraryMocks } from '@/utils/testing/mocks';
 import { DASHBOARD_ROUTE } from '@/utils/routes';
 import { getInitials } from '@/utils/getInitials';
 import { renderWithProviders } from '@/utils/testing/renderWithProviders';
-import Header, { SidebarHeaderProps } from './Header';
+import Header, { SidebarHeaderProps } from '@/components/Sidebar/Header/Header';
 
 const DEFAULT_PROPS = { firstName: 'First', lastName: 'Last', email: 'first.last@mail.com' };
 
